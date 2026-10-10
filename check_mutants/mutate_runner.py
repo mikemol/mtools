@@ -61,6 +61,51 @@ sys.path.extend(
 from mikemol.fence.git_env import clean_env
 from mikemol.mutation.declarations import DECLARATION_FILE, Declared, plant, read_declarations
 
+_FNV_OFFSET = 2166136261
+_FNV_PRIME = 16777619
+_FNV_MASK = 0xFFFFFFFF
+
+
+def shard_spec(raw: str) -> tuple[int, int] | None:
+    """Read `MUTATE_SHARD`, `i/N`: this run's share of the grid, none when unset.
+
+    ⚑ A TARGET THAT TIMES OUT UNDER LOAD IS SPLIT, NOT GIVEN MORE TIME (operator 2026-10-10,
+    mtools:W970). Each shard runs only the sites whose stable hash falls in its share.
+
+    Returns:
+        `(index, count)`, or None for the whole grid.
+
+    Raises:
+        ValueError: when `raw` is not `i/N` with `0 <= i < N`.
+
+    """
+    if not raw:
+        return None
+    index, _, count = raw.partition("/")
+    if not (index.isdigit() and count.isdigit()) or int(count) < 1 or int(index) >= int(count):
+        msg = f"MUTATE_SHARD must be i/N with 0 <= i < N, got {raw!r}"
+        raise ValueError(msg)
+    return int(index), int(count)
+
+
+def in_shard(key: str, shard: tuple[int, int] | None) -> bool:
+    """Say whether a site or declared defect belongs to this shard.
+
+    ⚑ A HASH THAT IS THE SAME ON EVERY RUN AND EVERY HOST (FNV-1a over the key's bytes), not
+    `hash()`, which is randomised per process: every key lands in exactly one of the N shards, so
+    the union of the shards is the whole grid with no overlap.
+
+    Returns:
+        True for the whole grid, else whether the key's hash falls in this shard's share.
+
+    """
+    if shard is None:
+        return True
+    digest = _FNV_OFFSET
+    for byte in key.encode():
+        digest = ((digest ^ byte) * _FNV_PRIME) & _FNV_MASK
+    return digest % shard[1] == shard[0]
+
 
 def read_declared(dist: pathlib.Path) -> list[Declared]:
     """Read the distribution's declared defect classes, none when it has no `mutants.regex`.
@@ -591,18 +636,23 @@ def main(argv: list[str]) -> int:
     groups: dict[str, list[str]] = {"killed": [], "survived": [], "errored": []}
 
     # ⚑⚑ A MALFORMED `mutants.regex` REFUSES THE WHOLE GRID, naming the line (W629), rather than
-    # being read as "declared nothing".
+    # being read as "declared nothing". A MALFORMED `MUTATE_SHARD` REFUSES IT THE SAME WAY (W970).
     try:
-        declared = read_declared(grid.dist)
+        shard = shard_spec(os.environ.get("MUTATE_SHARD", ""))
+        declared = [d for d in read_declared(grid.dist) if in_shard(d.label, shard)]
     except ValueError as exc:
         sys.stderr.write(f"mutate: {exc}\n")
         return 1
+    attempted = [s for s in attempted if in_shard(s, shard)]
+    unreachable = [s for s in unreachable if in_shard(s, shard)]
+    jobs = [(site, mutant) for site, mutant in jobs if in_shard(site, shard)]
     verdicts, regex = _run_all(grid, [m for _site, m in jobs], declared, debug=debug)
     for (site, _mutant), got in zip(jobs, verdicts, strict=True):
         if debug:
             sys.stdout.write(f"    {site} -> {got}\n")
         groups[got].append(site)
-    code = _account(grid.dist.name, len(modules), attempted, unreachable, groups)
+    name = grid.dist.name if shard is None else f"{grid.dist.name} shard {shard[0]}/{shard[1]}"
+    code = _account(name, len(modules), attempted, unreachable, groups)
     # ⚑ BOTH ARE COMPUTED BEFORE EITHER DECIDES THE EXIT: `code or _regex_section(...)` would skip
     # printing the declared-defect section whenever the def-site grid had already failed.
     regex_code = _regex_section(regex)

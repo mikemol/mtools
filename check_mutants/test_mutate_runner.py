@@ -403,3 +403,63 @@ def test_a_malformed_declaration_file_refuses_the_whole_grid_naming_the_line(
     assert _run_main(grid) == 1
     assert "mutants.regex: line 2: " in capsys.readouterr().err
     assert seen == []
+
+
+_KEYS = [f"src/m{n}.py::f{k}" for n in range(8) for k in range(5)]
+_SHARDS = 4
+
+
+def _refused(raw: str) -> bool:
+    try:
+        mutate_runner.shard_spec(raw)
+    except ValueError as fault:
+        return "MUTATE_SHARD" in str(fault)
+    return False
+
+
+def test_a_shard_spec_is_index_slash_count_and_unset_means_the_whole_grid() -> None:
+    """W970: `i/N` parses and unset is None; anything else, or an index past the count, fails."""
+    assert mutate_runner.shard_spec("") is None
+    assert mutate_runner.shard_spec("2/6") == (2, 6)
+    assert all(_refused(bad) for bad in ("6/6", "a/3", "1", "1/0", "-1/3", "1/2/3"))
+
+
+def test_every_key_is_in_exactly_one_shard_and_every_shard_has_some() -> None:
+    """W970: the union of the N shards is the whole grid, with no overlap and no empty shard."""
+    homes = [
+        [i for i in range(_SHARDS) if mutate_runner.in_shard(key, (i, _SHARDS))] for key in _KEYS
+    ]
+    assert all(len(h) == 1 for h in homes)
+    assert {h[0] for h in homes} == set(range(_SHARDS))
+    assert all(mutate_runner.in_shard(key, None) for key in _KEYS)
+
+
+def test_two_shards_between_them_run_the_declared_defect_once(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W970: a declared defect belongs to one shard, and the header names the shard."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _seam(monkeypatch, 1, _FAILED)
+    outs = []
+    for index in range(2):
+        monkeypatch.setenv("MUTATE_SHARD", f"{index}/2")
+        assert _run_main(grid) == 0
+        outs.append(capsys.readouterr().out)
+    assert [f"shard {i}/2" in out for i, out in enumerate(outs)] == [True, True]
+    assert sum("src/mod.py::returns-two -> killed" in out for out in outs) == 1
+
+
+def test_a_malformed_shard_refuses_the_grid_before_running_anything(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W970: a bad `MUTATE_SHARD` is exit 1 naming the variable, and no suite runs."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    seen = _seam(monkeypatch, 1, _FAILED)
+    monkeypatch.setenv("MUTATE_SHARD", "9/3")
+    assert _run_main(grid) == 1
+    assert "MUTATE_SHARD" in capsys.readouterr().err
+    assert seen == []

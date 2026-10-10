@@ -110,3 +110,31 @@
   claim  = {W629: a bad line is exit 1 with `mutants.regex: line 2`, never read as declared-nothing.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_malformed_declaration_file_refuses_the_whole_grid_naming_the_line},
 }
+
+@misc{root-mutate-runner-shard-spec-is-index-slash-count-and-unset-means-the-whole-grid,
+  section = {mutate_runner},
+  title  = {W970: `i/N` parses and unset is None; anything else, or an index past the count, fails},
+  claim  = {W970: `i/N` parses and unset is None; anything else, or an index past the count, fails.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_shard_spec_is_index_slash_count_and_unset_means_the_whole_grid},
+}
+
+@misc{root-mutate-runner-every-key-is-in-exactly-one-shard-and-every-shard-has-some,
+  section = {mutate_runner},
+  title  = {W970: the union of the N shards is the whole grid, with no overlap and no empty shard},
+  claim  = {W970: the union of the N shards is the whole grid, with no overlap and no empty shard.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_every_key_is_in_exactly_one_shard_and_every_shard_has_some},
+}
+
+@misc{root-mutate-runner-two-shards-between-them-run-the-declared-defect-once,
+  section = {mutate_runner},
+  title  = {W970: a declared defect belongs to one shard, and the header names the shard},
+  claim  = {W970: a declared defect belongs to one shard, and the header names the shard.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_two_shards_between_them_run_the_declared_defect_once},
+}
+
+@misc{root-mutate-runner-malformed-shard-refuses-the-grid-before-running-anything,
+  section = {mutate_runner},
+  title  = {W970: a bad `MUTATE_SHARD` is exit 1 naming the variable, and no suite runs},
+  claim  = {W970: a bad `MUTATE_SHARD` is exit 1 naming the variable, and no suite runs.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_malformed_shard_refuses_the_grid_before_running_anything},
+}
