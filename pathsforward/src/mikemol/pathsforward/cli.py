@@ -163,6 +163,7 @@ _VALUED = (
     "gate_green",
     "gate_note",
     "block_matching",
+    "update_many",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -264,6 +265,27 @@ _APPLIES: dict[str, frozenset[str]] = {
     "drop": frozenset({"admit", "gate", "reference_arm", "root"}),
     "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
+    # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
+    # `attach` (one file pinned to many cards is a different act), plus `--write`.
+    "update_many": frozenset(
+        {
+            "blocked_on",
+            "blocked_kind",
+            "next",
+            "title",
+            "evidence_append",
+            "ticks_blocked",
+            "enables",
+            "add_enables",
+            "weight",
+            "touches",
+            "witness",
+            "vector",
+            "vector_source",
+            "caused_by",
+            "write",
+        }
+    ),
     "prune_landed": frozenset({"root"}),
     "inbound": frozenset({"root", "all"}),
     "payload": frozenset({"root"}),
@@ -481,6 +503,13 @@ def _parser() -> argparse.ArgumentParser:
         ),
     ):
         mode.add_argument(flag, metavar=metavar, help=text_help)
+    mode.add_argument(
+        "--update-many",
+        nargs="+",
+        metavar="SYMBOL_OR_SELECTOR",
+        help="W974: the --update field flags applied to many waypoints, all or none; operands "
+        "are symbols or `unscored`; a dry run without --write",
+    )
     mode.add_argument(
         "--certify",
         nargs="+",
@@ -1090,16 +1119,14 @@ def _armed(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
-def _update(ctx: Ctx) -> int:
-    """Set typed fields on a waypoint, or redact a literal from it.
+def _fields_of(ctx: Ctx) -> ops.Update:
+    """Read the field flags of an `--update` or `--update-many` into one Update.
 
     Returns:
-        EXIT_OK.
+        the Update the flags describe.
 
     """
-    if ctx.get("evidence_redact") is not None or ctx.get("replacement") is not None:
-        return _redact(ctx)
-    upd = ops.Update(
+    return ops.Update(
         status=ctx.get("status"),
         blocked_on=ctx.many("blocked_on"),
         blocked_kind=ctx.get("blocked_kind"),
@@ -1130,6 +1157,43 @@ def _update(ctx: Ctx) -> int:
         population=ctx.many("population"),
         deferred=ctx.many("deferred"),
     )
+
+
+def _update_many(ctx: Ctx) -> int:
+    """Apply one set of field flags to many waypoints, all or none; a dry run unless `--write`.
+
+    ⚑ ALL OR NONE (mtools:W974, el-openglo:W484). Every update is applied to a copy of the queue
+    first, so a refusal on the last symbol changes nothing and names it, and the dry run reports
+    exactly what `--write` would do. Operands are symbols or the selector `unscored`.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    write = bool(ctx.opts.get("write"))
+    upd = _fields_of(ctx)
+
+    def edit(state: State) -> int:
+        for sym in bulkblock.select_symbols(state, list(ctx.many("update_many") or ())):
+            ops.update(state, sym, upd, ctx.stamp())
+            _say(f"{'UPDATED' if write else 'WOULD UPDATE'} {sym}")
+        return EXIT_OK
+
+    if write:
+        return _mutate(ctx, edit)
+    return edit(store.load(ctx.path))
+
+
+def _update(ctx: Ctx) -> int:
+    """Set typed fields on a waypoint, or redact a literal from it.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    if ctx.get("evidence_redact") is not None or ctx.get("replacement") is not None:
+        return _redact(ctx)
+    upd = _fields_of(ctx)
 
     def edit(state: State) -> int:
         sym = ctx.get("update") or ""
@@ -1816,6 +1880,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "unlock": _unlock,
     "armed": _armed,
     "update": _update,
+    "update_many": _update_many,
     "add": _add,
     "drop": _drop,
     "embargo": _embargo,

@@ -4358,3 +4358,45 @@
   claim  = {W977: the quadratic `describe_rank` scan read `blocked_on` n*n times per queue view.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocker_index.py -k test_the_queue_view_reads_blockers_a_constant_number_of_times_per_card},
 }
+
+@misc{pathsforward-update-many-write-applies-the-flags-to-every-named-symbol,
+  section = {update_many},
+  title  = {The control: W1 and W5 both get the vector and its source in one call},
+  claim  = {The control: W1 and W5 both get the vector and its source in one call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_write_applies_the_flags_to_every_named_symbol},
+}
+
+@misc{pathsforward-update-many-dry-run-names-what-would-change-and-saves-nothing,
+  section = {update_many},
+  title  = {Without --write the lines say WOULD UPDATE and the file is byte-identical},
+  claim  = {Without --write the lines say WOULD UPDATE and the file is byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_a_dry_run_names_what_would_change_and_saves_nothing},
+}
+
+@misc{pathsforward-update-many-unscored-selector-takes-every-live-card-without-a-vector,
+  section = {update_many},
+  title  = {Not W3 (done) and not W4 (already scored); W2 is live and unscored, so it is taken},
+  claim  = {Not W3 (done) and not W4 (already scored); W2 is live and unscored, so it is taken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_the_unscored_selector_takes_every_live_card_without_a_vector},
+}
+
+@misc{pathsforward-update-many-unknown-operand-refuses-the-whole-call-and-changes-nothing,
+  section = {update_many},
+  title  = {W1 is valid but comes before the unknown W99: neither is changed},
+  claim  = {W1 is valid but comes before the unknown W99: neither is changed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_an_unknown_operand_refuses_the_whole_call_and_changes_nothing},
+}
+
+@misc{pathsforward-update-many-flag-the-mode-does-not-read-is-refused,
+  section = {update_many},
+  title  = {--status takes a lease per card and --attach pins one file; neither applies in bulk},
+  claim  = {--status takes a lease per card and --attach pins one file; neither applies in bulk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_a_flag_the_mode_does_not_read_is_refused},
+}
+
+@misc{pathsforward-update-many-malformed-vector-refuses-and-writes-nothing,
+  section = {update_many},
+  title  = {The per-card checks of --update still run, so a bad vector is exit 2 and no write},
+  claim  = {The per-card checks of --update still run, so a bad vector is exit 2 and no write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_a_malformed_vector_refuses_and_writes_nothing},
+}

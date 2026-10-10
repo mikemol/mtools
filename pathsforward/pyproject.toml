@@ -146,6 +146,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_ownership.py" = ["assert"]
 "tests/test_nudge_summary.py" = ["assert"]
 "tests/test_blocker_index.py" = ["assert"]
+"tests/test_update_many.py" = ["assert"]
 "tests/test_atomize_declared.py" = ["assert"]
 "tests/test_inbound.py" = ["assert"]
 # ⚑ THE STORE AND CLI WITNESSES RUN REAL PROCESSES, because the defects they close were races

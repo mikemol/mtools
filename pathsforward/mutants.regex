@@ -87,3 +87,9 @@ src/mikemol/pathsforward/payload.py|blocked-not-tallied|shut \+= text\(w, "statu
 src/mikemol/pathsforward/model.py|duplicate-blocker-counted-twice|if blocker and blocker not in seen:|if blocker:|def=blocker_index
 src/mikemol/pathsforward/model.py|empty-blocker-is-an-edge|if blocker and blocker not in seen:|if blocker not in seen:|def=blocker_index
 src/mikemol/pathsforward/model.py|index-ignored-by-describe-rank|if index is None else list\(index\.get\(sym, \[\]\)\)|if True else []|def=describe_rank
+
+# W974: bulk update. A done or already-scored card swept by the unscored selector, or an operand that is not a
+# card passing through, breaks the promise the mode makes.
+src/mikemol/pathsforward/bulkblock.py|unscored-takes-done-cards|if text\(w, "status"\) != "done"|if True|def=select_symbols
+src/mikemol/pathsforward/bulkblock.py|unscored-takes-scored-cards|and not text\(w, "vector"\)|and True|def=select_symbols
+src/mikemol/pathsforward/bulkblock.py|unknown-operand-passes|elif name in known:|elif True:|def=select_symbols

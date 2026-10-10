@@ -69,6 +69,41 @@ def plan(state: State, tag: str, target: str) -> Plan:
     return Plan(tuple(moved), tuple(kept))
 
 
+UNSCORED = "unscored"
+
+
+def select_symbols(state: State, names: list[str]) -> list[str]:
+    """Expand the operands of a bulk update into waypoint symbols, in the order given.
+
+    ⚑ AN OPERAND IS A SYMBOL OR A SELECTOR (mtools:W974, el-openglo:W484). `unscored` selects every
+    live waypoint with no vector, which is the mechanical scoring pass el-openglo needed 24 calls
+    for. A symbol that is not a card of this queue is refused by name before anything is changed.
+
+    Returns:
+        the symbols, de-duplicated, selector expansions in queue order.
+
+    Raises:
+        RefusedError: when an operand is neither a selector nor a symbol of this queue.
+
+    """
+    known = {text(w, "symbol") for w in state.waypoints}
+    chosen: list[str] = []
+    for name in names:
+        if name == UNSCORED:
+            found = [
+                text(w, "symbol")
+                for w in state.waypoints
+                if text(w, "status") != "done" and not text(w, "vector")
+            ]
+        elif name in known:
+            found = [name]
+        else:
+            msg = f"{name} is neither a waypoint of this queue nor a selector ({UNSCORED})"
+            raise RefusedError(msg)
+        chosen.extend(s for s in found if s not in chosen)
+    return chosen
+
+
 def apply(state: State, found: Plan, target: str) -> None:
     """Block each moved card on `target`, as `--update` would: agent kind, count restarted."""
     moving = set(found.moved)
