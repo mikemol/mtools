@@ -26,7 +26,9 @@ msg="${1:?the commit message file was not passed}"
 # absent" would break the day someone writes Rule 99. A fixture the test controls asserts the
 # MECHANISM; the default keeps the gate honest in the hook, where the real corpus is the subject.
 rules="${2:-findings/bazel/mtools.md}"
-md="mdstruct/.venv/bin/mdstruct"
+# ⚑ HOST STATE: under an isolated commit (W891) the cwd is a snapshot with no uv venvs, and
+# `MIKEMOL_REAL_ROOT` names the checkout that has them (W940). Unset, it is the cwd, as before.
+md="${MIKEMOL_REAL_ROOT:-.}/mdstruct/.venv/bin/mdstruct"
 
 # ⚑ THE READER'S ABSENCE IS REPORTED, NEVER SKIPPED. A missing tool that exits 0 here is the
 # "armed while refusing nothing" defect this repo refuses everywhere else.

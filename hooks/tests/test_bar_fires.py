@@ -95,9 +95,14 @@ def _ruff_argv() -> list[str]:
         candidate = (_DIST.parent / declared).resolve()
         if candidate.is_file():
             return [str(candidate)]
-    local = _DIST / ".venv" / "bin" / "ruff"
-    if local.is_file():
-        return [str(local)]
+    # ⚑ UNDER AN ISOLATED COMMIT (W939) THIS FILE RUNS FROM A SNAPSHOT THAT HAS NO `.venv`, and
+    # PATH's ruff is another version than the lock's (measured: 0.16.10 against 0.16.6). The gate
+    # names the real checkout in MIKEMOL_REAL_ROOT, and its venv is the one this arm means.
+    real = os.environ.get("MIKEMOL_REAL_ROOT")
+    for base in ([Path(real) / _DIST.name] if real else []) + [_DIST]:
+        local = base / ".venv" / "bin" / "ruff"
+        if local.is_file():
+            return [str(local)]
     found = shutil.which("ruff")
     if found:
         return [found]
@@ -1646,7 +1651,9 @@ def test_the_ratchet_check_captures_its_own_output() -> None:
     # ⚑ ANCHOR ON THE INVOCATION, NOT THE GUARD. The first `mikemol-ratchet` in the file is the
     # `[ -x ... ]` presence check; slicing from there missed the call site by nine lines and the
     # first cut of this test failed against a correct repair.
-    start = body.index('git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog"')
+    start = body.index(
+        'git_scrubbed "$tools/ratchet/.venv/bin/mikemol-ratchet" "$root/$dist" >"$rlog"'
+    )
     block = body[start : start + _RATCHET_BLOCK]
     assert 'note_failure "$dist: ratchet' in block
     assert '"$rlog"' in block, "the ratchet must capture its output for the verdict to replay"
@@ -6393,3 +6400,31 @@ def test_the_gate_refuses_an_orphan_warrant_and_admits_the_clean_tree(tmp_path: 
     assert f"ORPHAN WARRANT tests/test_bar_fires.py::{_ORPHAN}" in refused.stdout, (
         f"the refusal does not name the planted orphan:\n{refused.stdout}"
     )
+
+
+def test_every_gate_tool_lookup_goes_through_the_tools_root() -> None:
+    """⚑ A SNAPSHOT HAS NO UV VENVS, so a checkout-relative `.venv/bin/` read refuses a commit.
+
+    The first isolated commit (W937) died at `atomicwrite/.venv/bin/ruff not found` because the
+    snapshot holds the tracked tree and none of the host venvs (W939). Every executable lookup in
+    the gate now reads `$tools/<dist>/.venv/bin/...`, and `tools` is the real checkout when
+    `MIKEMOL_REAL_ROOT` names one. A bazel output (`bazel-bin/.../.venv/bin/`) is the snapshot's
+    own and stays. This holds the next call site added: a raw `.venv/bin/` outside `$tools/` and
+    outside prose is a regression to snapshot-blind lookups.
+    """
+    hooks = [
+        _GATE,
+        *(_GATE.parent / name for name in ("commit-msg", "pre-push", "post-commit")),
+        *(_GATE.parent.parent / name for name in ("rule_citations.sh", "roster_drift.sh")),
+    ]
+    code = [
+        line
+        for hook in hooks
+        for line in hook.read_text(encoding="utf-8").splitlines()
+        if not line.lstrip().startswith(("#", "say ", "record_refusal ", "printf "))
+    ]
+    mentions = [line for line in code if ".venv/bin/" in line]
+    assert any("$tools/" in line for line in mentions), "no lookup uses the tools root: dead arm"
+    named = ("$tools/", "MIKEMOL_REAL_ROOT", "bazel-bin/")
+    raw = [line for line in mentions if not any(mark in line for mark in named)]
+    assert not raw, f"snapshot-blind tool lookups: {raw}"

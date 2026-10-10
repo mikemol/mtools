@@ -38,6 +38,9 @@ def _decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """
     for name in [name for name in os.environ if name.startswith("GIT_")]:
         monkeypatch.delenv(name)
+    # ⚑ AN ISOLATED COMMIT'S GATE RUNS THIS SUITE WITH MIKEMOL_REAL_ROOT SET (W940), and the stub
+    # reads its launcher from there: unset, so the decoy's own absent launcher is what is judged.
+    monkeypatch.delenv("MIKEMOL_REAL_ROOT", raising=False)
     git = shutil.which("git")
     assert git is not None
     repo = tmp_path / "decoy"

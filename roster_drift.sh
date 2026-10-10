@@ -24,7 +24,8 @@
 set -uo pipefail
 
 cd "$(dirname "$0")" || exit 1
-py="hooks/.venv/bin/python3"
+# (Host state: `MIKEMOL_REAL_ROOT` names the checkout with the venvs under an isolated commit, W940.)
+py="${MIKEMOL_REAL_ROOT:-.}/hooks/.venv/bin/python3"
 
 if [ ! -x "$py" ]; then
     echo "  UNMEASURED: $py is not executable — a fact about the reader, not the roster"

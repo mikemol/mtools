@@ -155,7 +155,7 @@ def test_an_untracked_test_file_does_not_decide_the_commit(tmp_path: Path) -> No
     for argv in (["init", "-q"], ["add", "d/tests/test_staged.py"]):
         subprocess.run([git, *argv], cwd=tmp_path, check=True, capture_output=True)
     script = (
-        f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ndist=d\n{block.group(0)}'
+        f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ntools="$PWD"\ndist=d\n{block.group(0)}'
         'printf "fail=%s" "$fail"\n'
     )
     proc = _bash(script, tmp_path)
@@ -185,7 +185,7 @@ def test_a_tracked_test_with_unstaged_edits_refuses_the_commit(tmp_path: Path) -
         subprocess.run([git, *argv], cwd=tmp_path, check=True, capture_output=True)
     edited.write_text("def test_ok() -> None:\n    pass\n", encoding="utf-8")
     script = (
-        f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ndist=d\n{block.group(0)}'
+        f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ntools="$PWD"\ndist=d\n{block.group(0)}'
         'printf "fail=%s" "$fail"\n'
     )
     proc = _bash(script, tmp_path)

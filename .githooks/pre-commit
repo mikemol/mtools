@@ -318,10 +318,17 @@ case "$_dists" in
     ;;
 esac
 
+# ⚑⚑ THE TOOLS ARE HOST STATE AND COME FROM THE REAL CHECKOUT (W939, W940). An isolated commit
+# (`MIKEMOL_COMMIT_ISOLATED=1`, W891) runs this hook from a snapshot of the tree that lands, which
+# holds the tracked files and none of the uv venvs; `MIKEMOL_REAL_ROOT` names the real checkout and
+# every `.venv/bin/` lookup below goes through `$tools`. Unset (a normal commit) it is `$root`, so
+# nothing changes. The TREE gated is the index's either way (`checkout-index` below).
+tools="${MIKEMOL_REAL_ROOT:-$root}"
+
 # ⚑ TOOL PRESENCE IS CHECKED BEFORE ANY CHECK RUNS, so a missing tool cannot masquerade as a pass.
 for dist in $_dists; do
   for tool in ruff mypy python3; do
-    if [ ! -x "$dist/.venv/bin/$tool" ]; then
+    if [ ! -x "$tools/$dist/.venv/bin/$tool" ]; then
       say "$dist/.venv/bin/$tool not found — cannot run the gate, commit refused"
       say "  a skip here would report green over a check that never executed"
       record_refusal pre-commit " - $dist/.venv/bin/$tool absent"
@@ -343,7 +350,7 @@ done
 # populations from this file and refuses any `if [ -x ]` guard on a tool the loops do not cover.
 # ⚑ WRITTEN AS A PLAIN CHECK, NOT A ONE-ELEMENT LOOP: shellcheck's SC2043 is right that a `for`
 # over a single literal reads as a bad expansion. A second singleton tool gets its own check.
-_singleton=ratchet/.venv/bin/mikemol-ratchet
+_singleton=$tools/ratchet/.venv/bin/mikemol-ratchet
 if [ ! -x "$_singleton" ]; then
   say "$_singleton not found — cannot run the gate, commit refused"
   say "  a skip here would report green over a check that never executed"
@@ -623,8 +630,14 @@ for dist in $_dists; do
     say "$dist: leaving out untracked $_ut — the index does not hold it"
   done < <(git -C "$root" ls-files -z --others --exclude-standard -- \
              ":(glob)$dist/**/test_*.py" ":(glob)$dist/**/*_test.py")
+  # ⚑ UNDER AN ISOLATED COMMIT THE EDITABLE INSTALL NAMES THE REAL CHECKOUT'S `src`, so the snapshot's
+  # own `src` is put first on the path (W940): the smoke check imports what is being committed.
+  # (A test that finds its ruff beside itself reads MIKEMOL_REAL_ROOT for the real venv's; a
+  # global RUFF_BIN here was tried and broke ratchet's tests, which mean something else by it.)
+  _pyenv=()
+  if [ -n "${MIKEMOL_REAL_ROOT:-}" ]; then _pyenv=("PYTHONPATH=$root/$dist/src"); fi
   run_checked "$dist: pytest — every case passes" \
-    git_scrubbed env -C "$root/$dist" .venv/bin/python3 -m pytest -q ${_untracked_tests[@]+"${_untracked_tests[@]}"}
+    git_scrubbed env -C "$root/$dist" ${_pyenv[@]+"${_pyenv[@]}"} "$tools/$dist/.venv/bin/python3" -m pytest -q ${_untracked_tests[@]+"${_untracked_tests[@]}"}
 done
 
 # ⚑⚑ THE WARRANT LEDGER MUST STAY 1:1 AND CLOSED. A test arriving unwarranted is the membership
@@ -980,7 +993,7 @@ run_checked "every shell checker is invoked or declared parked" ./orphan_check.s
 # is excluded by the predicate, not by the population, so a worktree's own .claude/ still counts.
 say "claude-code census: is any untracked code living under .claude/?"
 run_checked "no untracked code (.py .rego .sh) under .claude/" \
-  hooks/.venv/bin/python3 -m mikemol.hooks.claude_code_census .
+  "$tools/hooks/.venv/bin/python3" -m mikemol.hooks.claude_code_census .
 
 # ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
 # rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
@@ -1011,7 +1024,7 @@ say "roster drift: does the textual roster still match the tools present?"
 # ⚑ `--concise` EXISTS TO MAKE THIS READABLE AND THE READER NEVER SAW IT. stubtest names the
 # exact symbol whose signature drifted; the bare label said only that the stub disagreed.
 run_checked "stubtest — the panflute stub still matches its module" \
-  git_scrubbed env -C mdstruct MYPYPATH=stubs .venv/bin/python3 -m mypy.stubtest panflute \
+  git_scrubbed env -C mdstruct MYPYPATH=stubs "$tools/mdstruct/.venv/bin/python3" -m mypy.stubtest panflute \
     --ignore-missing-stub --allowlist stubs/panflute-allowlist.txt --concise
 
 # ⚑⚑ THE PREVIEW-RULE DEBT IS RATCHETED, PAYDOWN-ONLY, OVER A SET. Blanket `--preview` finds
@@ -1048,7 +1061,12 @@ for dist in $_dists; do
   # Under `set -e` a refusing ratchet ended the script on this line: 19 new keys, exit 1, no
   # note_failure and no REFUSED verdict. The shape linter below records the same hazard; the class
   # is asserted by test_every_exit_status_read_survives_set_e.
-  if git_scrubbed ratchet/.venv/bin/mikemol-ratchet "$root/$dist" >"$rlog" 2>&1; then
+  # ⚑ THE CENSUS'S RUFF IS THE DISTRIBUTION'S OWN VENV'S, FROM THE TOOLS ROOT (W940). The ratchet
+  # defaults to `<dist>/.venv/bin/ruff` under the directory it is handed, which in a snapshot is a
+  # path with no venv (soak attempt 4: "COULD NOT CENSUS" for all 30 distributions); `RUFF_BIN` is
+  # the ratchet's own override. Unisolated, `$tools` is `$root` and this names what it defaulted to.
+  _rbin="$tools/$dist/.venv/bin"
+  if RUFF_BIN="$_rbin/ruff" git_scrubbed "$tools/ratchet/.venv/bin/mikemol-ratchet" "$root/$dist" >"$rlog" 2>&1; then
     _rc=0
   else
     _rc=$?
@@ -1076,7 +1094,7 @@ while IFS= read -r md; do
   # The refusal said a document had unreachable headings and made the author re-run the tool to
   # learn WHICH — for the one check whose whole output is a list of specific lines.
   _mdlog="$_witness_logs/mdverify-$(printf '%s' "$md" | tr -c 'a-zA-Z0-9' '_').log"
-  ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli verify "$staged/$md" >"$_mdlog" 2>&1 ) \
+  ( cd mdstruct && "$tools/mdstruct/.venv/bin/python3" -m mikemol.mdstruct.cli verify "$staged/$md" >"$_mdlog" 2>&1 ) \
     || { say "$md: headings unreachable to mdstruct — a bounded write would land in the wrong section"
          cat "$_mdlog" >&2
          fail=1; note_failure "$md: headings unreachable to mdstruct" "$_mdlog"; }
@@ -1106,7 +1124,7 @@ while IFS= read -r md; do
   # hazard at line 481, with this same remedy, about a different pipeline — a recorded lesson
   # is not an applied one, and here the record and the defect are in one file.
   _rag_rc=0
-  ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$staged/$md" ) \
+  ( cd mdstruct && "$tools/mdstruct/.venv/bin/python3" -m mikemol.mdstruct.cli lint "$staged/$md" ) \
     >"$_mdlog.now" 2>&1 || _rag_rc=$?
   if [ "$_rag_rc" -gt 1 ]; then
     say "$md: the shape linter FAILED (rc=$_rag_rc) — a count from a crashed reader is not zero"
@@ -1116,7 +1134,7 @@ while IFS= read -r md; do
     _rag_now=$(grep -c MD056 "$_mdlog.now" || true)
     _rag_head=0
     if git show "HEAD:$md" >"$_mdlog.head" 2>/dev/null; then
-      ( cd mdstruct && .venv/bin/python3 -m mikemol.mdstruct.cli lint "$_mdlog.head" ) \
+      ( cd mdstruct && "$tools/mdstruct/.venv/bin/python3" -m mikemol.mdstruct.cli lint "$_mdlog.head" ) \
         >"$_mdlog.was" 2>&1 || true
       _rag_head=$(grep -c MD056 "$_mdlog.was" || true)
     fi

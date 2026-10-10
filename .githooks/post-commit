@@ -96,7 +96,8 @@ fi
 # skips, because the running census reads the tree as it is when it finishes. It lives in THIS stub
 # and not in the shared mikemol-githook-post-commit, which every adopter runs. An absent venv is a
 # silent skip: the advisory then has no fresh ledger, which it already says.
-_census="$(git rev-parse --show-toplevel)/bazel-bin/hooks/.venv/bin/mikemol-pycheck"
+# (Under an isolated commit the build outputs are the real checkout's: `MIKEMOL_REAL_ROOT`, W940.)
+_census="${MIKEMOL_REAL_ROOT:-$(git rev-parse --show-toplevel)}/bazel-bin/hooks/.venv/bin/mikemol-pycheck"
 if [ -x "$_census" ]; then
     mkdir -p "$_git_dir/mtools"
     setsid flock -n "$_git_dir/mtools/ledger.lock" "$_census" --refresh-ledger "$(git rev-parse --show-toplevel)" \

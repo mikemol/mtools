@@ -16,7 +16,9 @@
 set -uo pipefail
 
 repo="$(git rev-parse --show-toplevel)"
-launcher="$repo/hooks/.venv/bin/mikemol-githook-pre-push"
+# ⚑ HOST STATE, as in commit-msg: a push made from inside an isolated commit's post-commit has a
+# snapshot for `$repo`, and the launcher lives in the real checkout `MIKEMOL_REAL_ROOT` names (W940).
+launcher="${MIKEMOL_REAL_ROOT:-$repo}/hooks/.venv/bin/mikemol-githook-pre-push"
 if [ ! -x "$launcher" ]; then
     printf 'pre-push: %s is missing or not executable - cannot run the hook, push refused\n' "$launcher" >&2
     exit 1

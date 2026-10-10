@@ -76,7 +76,11 @@ def commit_isolated(
             return step
     with Snapshot(root.name, namespace) as snap:
         snap.materialize(root, tree.stdout.strip())
-        work = {**scope, "GIT_WORK_TREE": str(snap.path)}
+        # ⚑ THE GATE'S TOOLS ARE HOST STATE (W939): `<dist>/.venv` is a uv venv in the real
+        # checkout, not a build output the snapshot can regrow (the bazel `.venv` holds python3
+        # only), so the hook is told where the real checkout is and reads its tools there; the
+        # TREE it gates is still the index's.
+        work = {**scope, "GIT_WORK_TREE": str(snap.path), "MIKEMOL_REAL_ROOT": str(root)}
         refreshed = run(["update-index", "-q", "--refresh"], work, snap.path)
         if _failed(refreshed):
             return refreshed
