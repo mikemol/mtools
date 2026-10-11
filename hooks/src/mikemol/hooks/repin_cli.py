@@ -18,6 +18,7 @@ The exit is 1 when any sync failed, else 0; 2 for a usage refusal.
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -25,6 +26,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import repin
+from mikemol.hooks.repin_metrics import publish, render
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -34,8 +36,15 @@ type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 EXIT_FAILED = 1
 EXIT_USAGE = 2
 SELF = "mtools"
-_USAGE = "usage: mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--write] [--no-sync]\n"
-_VALUED = frozenset({"--root", "--sha", "--dist"})
+PAR_ENV = "MIKEMOL_REPIN_PAR"
+_ENV = os.environ
+_PUBLISH = publish
+_RENDER = render
+_USAGE = (
+    "usage: mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--metrics FILE] [--write]"
+    " [--no-sync]\n"
+)
+_VALUED = frozenset({"--root", "--sha", "--dist", "--metrics"})
 _FLAGS = frozenset({"--write", "--no-sync"})
 
 
@@ -225,11 +234,16 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
     root = Path(valued.get("--root", [str(Path.home() / "github")])[-1])
     target = valued.get("--sha", [None])[-1]
     dists = frozenset(valued["--dist"]) if "--dist" in valued else None
-    refusal = _refusal(target, write="--write" in flags)
+    metrics = valued.get("--metrics", [None])[-1]
+    par = target if target is not None or metrics is None else (_ENV.get(PAR_ENV) or None)
+    refusal = _refusal(target, write="--write" in flags) or _refusal(par, write=False)
     if refusal is not None:
         sys.stderr.write(f"mikemol-repin: {refusal}\n")
         return EXIT_USAGE
-    sys.stdout.write("".join(f"{row.line()}\n" for row in survey(root, target, dists)))
+    rows = survey(root, par, dists)
+    sys.stdout.write("".join(f"{row.line()}\n" for row in rows))
+    if metrics is not None:
+        _PUBLISH(Path(metrics), _RENDER(rows, str(root), par))
     if "--write" not in flags or target is None:
         return 0
     results = apply(root, target, dists, runner, sync="--no-sync" not in flags)

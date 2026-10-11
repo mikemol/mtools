@@ -7982,3 +7982,53 @@
   claim  = {A load that never falls costs the bound and no more; the line says it went ahead.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_loadwait.py -k test_the_wait_is_bounded_and_the_commit_goes_ahead_saying_so},
 }
+
+@misc{hooks-repin-metrics-pin-behind-par-reads-one-and-a-current-one-reads-zero,
+  section = {repin_metrics},
+  title  = {The control: alpha differs from the par sha, bravo holds it; a wheel is vendored},
+  claim  = {The control: alpha differs from the par sha, bravo holds it; a wheel is vendored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_a_pin_behind_par_reads_one_and_a_current_one_reads_zero},
+}
+
+@misc{hooks-repin-metrics-pinned-sha-lives-on-its-own-info-series,
+  section = {repin_metrics},
+  title  = {The sha is a label of pin_info only, so a pin moving does not mint a new behind series},
+  claim  = {The sha is a label of pin_info only, so a pin moving does not mint a new behind series.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_the_pinned_sha_lives_on_its_own_info_series},
+}
+
+@misc{hooks-repin-metrics-without-a-par-sha-nothing-is-claimed-behind,
+  section = {repin_metrics},
+  title  = {No target means no behind series at all: a 0 would call a pin current against nothing},
+  claim  = {No target means no behind series at all: a 0 would call a pin current against nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_without_a_par_sha_nothing_is_claimed_behind},
+}
+
+@misc{hooks-repin-metrics-par-sha-is-declared-once-in-the-environment,
+  section = {repin_metrics},
+  title  = {The env var stands in for --sha when metrics are asked for, and never makes --write legal},
+  claim  = {The env var stands in for --sha when metrics are asked for, and never makes --write
+            legal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_the_par_sha_is_declared_once_in_the_environment},
+}
+
+@misc{hooks-repin-metrics-malformed-par-in-the-environment-is-refused,
+  section = {repin_metrics},
+  title  = {A par that is not a full commit is a usage refusal and no file is written},
+  claim  = {A par that is not a full commit is a usage refusal and no file is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_a_malformed_par_in_the_environment_is_refused},
+}
+
+@misc{hooks-repin-metrics-label-values-are-escaped,
+  section = {repin_metrics},
+  title  = {Backslash, quote and newline cannot break out of a label},
+  claim  = {Backslash, quote and newline cannot break out of a label.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_label_values_are_escaped},
+}
+
+@misc{hooks-repin-metrics-publish-leaves-no-temporary-file-and-replaces-the-old-text,
+  section = {repin_metrics},
+  title  = {The scraper sees the whole new file or the whole old one, and no sibling is left behind},
+  claim  = {The scraper sees the whole new file or the whole old one, and no sibling is left behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_publish_leaves_no_temporary_file_and_replaces_the_old_text},
+}
