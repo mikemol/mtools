@@ -8201,3 +8201,40 @@
   claim  = {A missing wheel is an empty record, which main turns into a failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_describe_leaves_an_empty_record_for_a_wheel_that_is_not_there},
 }
+
+@misc{hooks-revendor-cli-write-applies-at-the-repo-with-its-own-writer-and-prints-the-sums,
+  section = {revendor_cli},
+  title  = {The control: the apply gets this repo, this commit, this mtools and the repo's own writer},
+  claim  = {The control: the apply gets this repo, this commit, this mtools and the repo's own
+            writer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_write_applies_at_the_repo_with_its_own_writer_and_prints_the_sums},
+}
+
+@misc{hooks-revendor-cli-dry-run-prints-the-plan-and-builds-nothing,
+  section = {revendor_cli},
+  title  = {Without --write the plan names the new sha and the old pin and the apply is never called},
+  claim  = {Without --write the plan names the new sha and the old pin and the apply is never
+            called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_a_dry_run_prints_the_plan_and_builds_nothing},
+}
+
+@misc{hooks-revendor-cli-refused-apply-is-exit-one-and-says-why,
+  section = {revendor_cli},
+  title  = {The refusal reason is printed and no checksum line follows it},
+  claim  = {The refusal reason is printed and no checksum line follows it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_a_refused_apply_is_exit_one_and_says_why},
+}
+
+@misc{hooks-revendor-cli-repo-that-vendors-nothing-is-refused-before-any-plan,
+  section = {revendor_cli},
+  title  = {Handing wheels to a repo that references none would leave them unused},
+  claim  = {Handing wheels to a repo that references none would leave them unused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_a_repo_that_vendors_nothing_is_refused_before_any_plan},
+}
+
+@misc{hooks-revendor-cli-usage-refusals-exit-two-and-apply-nothing,
+  section = {revendor_cli},
+  title  = {A missing or short sha and a missing mtools checkout are refused},
+  claim  = {A missing or short sha and a missing mtools checkout are refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_usage_refusals_exit_two_and_apply_nothing},
+}

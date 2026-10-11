@@ -142,4 +142,9 @@ src/mikemol/hooks/wheel.py|both-sources-allowed|\("--mtools" in valued\) == \("-
 src/mikemol/hooks/wheel.py|short-sha-accepted|not revendor\.is_full_sha\(sha\) or |False or |def=_source_of
 src/mikemol/hooks/wheel.py|missing-wheel-passes|if failure is None and not all\(records\):|if False:|def=main
 src/mikemol/hooks/wheel.py|src-dist-unchecked|if not \(source\.tree / dist / "pyproject\.toml"\)\.is_file\(\):|if False:|def=extract
+src/mikemol/hooks/revendor_cli.py|vendors-nothing-accepted|if not old:|if False:|def=run_revendor
+src/mikemol/hooks/revendor_cli.py|dry-run-writes|if not write:|if False:|def=run_revendor
+src/mikemol/hooks/revendor_cli.py|repo-writer-not-used|"mikemol-paths-forward"|"mikemol-other"|def=run_revendor
+src/mikemol/hooks/revendor_cli.py|refusal-ignored|if failure is not None:|if False:|def=run_revendor
+src/mikemol/hooks/repin_cli.py|revendor-flag-ignored|if "--revendor" in flags:|if False:|def=main
 src/mikemol/hooks/repin_cli.py|env-par-ignored|else \(_ENV\.get\(PAR_ENV\) or None\)|else None|def=main

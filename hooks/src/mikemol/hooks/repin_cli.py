@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.hooks import repin
 from mikemol.hooks.repin_metrics import publish, render
+from mikemol.hooks.revendor_cli import run_revendor
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -42,12 +43,14 @@ _ENV = os.environ
 _NOW = time.time
 _PUBLISH = publish
 _RENDER = render
+_REVENDOR = run_revendor
 _USAGE = (
     "usage: mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--metrics FILE] [--write]"
     " [--no-sync]\n"
+    "       mikemol-repin --revendor --sha SHA40 [--root REPO] [--mtools DIR] [--write]\n"
 )
-_VALUED = frozenset({"--root", "--sha", "--dist", "--metrics"})
-_FLAGS = frozenset({"--write", "--no-sync"})
+_VALUED = frozenset({"--root", "--sha", "--dist", "--metrics", "--mtools"})
+_FLAGS = frozenset({"--write", "--no-sync", "--revendor"})
 
 
 @dataclass(frozen=True)
@@ -233,6 +236,11 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
         sys.stderr.write(_USAGE)
         return EXIT_USAGE
     valued, flags = parsed
+    if "--revendor" in flags:
+        repo = Path(valued.get("--root", [str(Path.cwd())])[-1])
+        mtools = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])
+        sha = valued.get("--sha", [""])[-1]
+        return _REVENDOR(repo, sha, mtools, runner, write="--write" in flags)
     root = Path(valued.get("--root", [str(Path.home() / "github")])[-1])
     target = valued.get("--sha", [None])[-1]
     dists = frozenset(valued["--dist"]) if "--dist" in valued else None

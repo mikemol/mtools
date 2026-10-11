@@ -21,6 +21,9 @@ entries by the build clock), so the bytes now depend on neither when nor from wh
 
 ⚑ ONE JSON OBJECT PER WHEEL ON STDOUT, `{"dist","wheel","sha256"}`, in the order the dists were
 named; a failure is one line on stderr and exit 1, and exit 2 is a usage refusal.
+
+⚑ THE DEFAULT RUNNER IS REPIN'S, RESOLVED AT CALL TIME: `repin_cli` imports the re-vendor chain that
+imports this module, so a name taken from it at import time would find it half built.
 """
 
 from __future__ import annotations
@@ -36,8 +39,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import revendor
-from mikemol.hooks.repin_cli import run_process
+from mikemol.hooks import repin_cli, revendor
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -167,7 +169,7 @@ def _source_of(valued: dict[str, str]) -> Source | None:
     return Source(sha, Path(valued["--mtools"]))
 
 
-def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int:
+def main(argv: Sequence[str] | None = None, runner: Runner | None = None) -> int:
     """Build the named dists' wheels at one commit and print a JSON line for each.
 
     Returns:
@@ -183,7 +185,7 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
     out = Path(valued["--out"])
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        failure = build_into(runner, source, dists, Path(tmp), out)
+        failure = build_into(runner or repin_cli.run_process, source, dists, Path(tmp), out)
     records = describe(out, dists, revendor.short_of(source.sha))
     if failure is None and not all(records):
         failure = "a built wheel is missing from the output directory"
