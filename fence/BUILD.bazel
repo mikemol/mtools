@@ -5,6 +5,7 @@
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
 load("@fence_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
@@ -300,8 +301,10 @@ sh_test(
 # ⚑⚑ THE MUTATION GRID AS A GATE TARGET — same shape as //ratchet:mutants, which carries the
 # rationale; //mdstruct:mutants is the F-arm (real deps). fence, like ratchet, passes under a
 # bare interpreter and cannot detect a wrong-interpreter defect.
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 3,
+    cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
