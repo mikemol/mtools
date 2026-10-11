@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W1004), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe (use \S or %7C) or a literal percent (%25).
+#
+# outcomes, cache and adapters. opa, plugin and spec are not declared yet.
+
+# outcomes.py: the outcome map is TOTAL and FUNCTIONAL, and each axis classifies by its own rule.
+src/mikemol/pytestspec/outcomes.py|unknown-column-not-reported|if rule\[3\] not in known|if False|def=problems
+src/mikemol/pytestspec/outcomes.py|cell-matched-twice-accepted|if len\(hits\) != 1:|if len(hits) < 1:|def=problems
+src/mikemol/pytestspec/outcomes.py|cell-matched-never-accepted|if len\(hits\) != 1:|if len(hits) > 1:|def=problems
+src/mikemol/pytestspec/outcomes.py|denied-and-withheld-reads-withheld|if verdict\.deny:|if verdict.deny and not verdict.withheld:|def=verdict_kind
+src/mikemol/pytestspec/outcomes.py|unevaluated-verdict-is-evaluated|if verdict is None:|if False:|def=verdict_kind
+src/mikemol/pytestspec/outcomes.py|wrong-deny-set-not-unmet|if frozenset\(rule_id\(m\) for m in verdict\.deny\) != expect\.deny:|if False:|def=expect_kind
+src/mikemol/pytestspec/outcomes.py|wrong-withheld-set-not-unmet|!= expect\.withheld:|!= expect.withheld and False:|def=expect_kind
+src/mikemol/pytestspec/outcomes.py|unevaluated-against-an-expect-is-no-expect|return NO_EXPECT if expect is None else MET|return NO_EXPECT|def=expect_kind
+src/mikemol/pytestspec/outcomes.py|every-case-undisposed|UNDISPOSED if disposition is None else disposition\.kind|UNDISPOSED|def=disposition_kind
+
+# cache.py: a result is cached only under ONE key the conftest named, and an entry names its own
+# impl and key, so a collision or a hand-copied file is a miss, never a wrong hit.
+src/mikemol/pytestspec/cache.py|two-keys-cached-anyway|return keys\.pop\(\) if len\(keys\) == 1 else None|return keys.pop() if len(keys) >= 1 else None|def=key_for
+src/mikemol/pytestspec/cache.py|non-string-answers-count-as-keys|if isinstance\(answer, str\)|if True|def=key_for
+src/mikemol/pytestspec/cache.py|entry-address-ignores-the-impl|f"\{impl\}\\0\{key\}"|f"{key}"|def=entry
+src/mikemol/pytestspec/cache.py|missing-entry-raises|except \(FileNotFoundError, json\.JSONDecodeError\):|except json.JSONDecodeError:|def=load
+src/mikemol/pytestspec/cache.py|corrupt-entry-raises|except \(FileNotFoundError, json\.JSONDecodeError\):|except FileNotFoundError:|def=load
+src/mikemol/pytestspec/cache.py|non-object-entry-hit|if not isinstance\(stored, dict\):|if False:|def=load
+src/mikemol/pytestspec/cache.py|entry-for-another-impl-hits|fields\.get\("impl"\) != impl or ||def=load
+src/mikemol/pytestspec/cache.py|entry-for-another-key-hits| or fields\.get\("key"\) != key||def=load
+src/mikemol/pytestspec/cache.py|entry-without-a-result-hits| or "result" not in fields||def=load
+src/mikemol/pytestspec/cache.py|unserialisable-result-raises|except \(TypeError, ValueError\):|except KeyError:|def=store
+src/mikemol/pytestspec/cache.py|entry-written-in-place|partial\.replace\(target\)|target.write_text(text, encoding="utf-8")|def=store
+src/mikemol/pytestspec/cache.py|entry-bytes-depend-on-key-order|sort_keys=True|sort_keys=False|def=store
+
+# adapters.py: a name offered twice is refused (which one ran would be an accident), only a named
+# callable is an implementation, and a fill keeps the case and runs the adapter on its fixture and
+# operands.
+src/mikemol/pytestspec/adapters.py|duplicate-implementation-accepted|if name in found:|if False:|def=registered
+src/mikemol/pytestspec/adapters.py|non-callable-offered|or not callable\(impl\)||def=registered
+src/mikemol/pytestspec/adapters.py|non-string-name-offered|not isinstance\(name, str\) or ||def=registered
+src/mikemol/pytestspec/adapters.py|non-table-answer-read|if not isinstance\(table, dict\):|if False:|def=registered
+src/mikemol/pytestspec/adapters.py|unknown-implementation-run|if adapter is None:|if False:|def=fill
+src/mikemol/pytestspec/adapters.py|case-without-a-fixture-run|if "fixture" not in case:|if False:|def=fill
+src/mikemol/pytestspec/adapters.py|case-fields-dropped-from-the-fill|\{\*\*case, "result"|{"result"|def=fill
+src/mikemol/pytestspec/adapters.py|operands-not-passed|case\.get\("operands"\)|None|def=fill
+src/mikemol/pytestspec/adapters.py|offered-names-unsorted|sorted\(adapters\)|adapters|def=fill

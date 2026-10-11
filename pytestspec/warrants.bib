@@ -486,3 +486,123 @@
   claim  = {Under any other impl the case is judged plainly: the same deny is a failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin.py -k test_scoped_expect_is_absent_under_another_impl},
 }
+
+@misc{pytestspec-units-stored-result-is-loaded-back-under-the-same-impl-and-key,
+  section = {units},
+  title  = {The control: what is stored under (impl, key) is what a load of (impl, key) returns},
+  claim  = {The control: what is stored under (impl, key) is what a load of (impl, key) returns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_stored_result_is_loaded_back_under_the_same_impl_and_key},
+}
+
+@misc{pytestspec-units-two-impls-with-one-key-keep-separate-entries,
+  section = {units},
+  title  = {The entry is addressed by the impl too, so the second impl does not overwrite the first},
+  claim  = {The entry is addressed by the impl too, so the second impl does not overwrite the first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_two_impls_with_one_key_keep_separate_entries},
+}
+
+@misc{pytestspec-units-entry-that-is-not-for-this-impl-and-key-or-holds-no-result-is-a-miss,
+  section = {units},
+  title  = {A collision, a hand-copied file, a half entry and garbage are all misses, never hits},
+  claim  = {A collision, a hand-copied file, a half entry and garbage are all misses, never hits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_an_entry_that_is_not_for_this_impl_and_key_or_holds_no_result_is_a_miss},
+}
+
+@misc{pytestspec-units-absent-entry-is-a-miss,
+  section = {units},
+  title  = {No file is a miss, not an error},
+  claim  = {No file is a miss, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_an_absent_entry_is_a_miss},
+}
+
+@misc{pytestspec-units-result-json-cannot-hold-is-not-stored-and-does-not-raise,
+  section = {units},
+  title  = {The case still runs: storing an object that is no JSON returns False and writes nothing},
+  claim  = {The case still runs: storing an object that is no JSON returns False and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_result_json_cannot_hold_is_not_stored_and_does_not_raise},
+}
+
+@misc{pytestspec-units-stored-entry-leaves-no-partial-file-and-sorts-its-result-keys,
+  section = {units},
+  title  = {The write goes through a partial file that is renamed away, and keys are written sorted},
+  claim  = {The write goes through a partial file that is renamed away, and keys are written sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_stored_entry_leaves_no_partial_file_and_sorts_its_result_keys},
+}
+
+@misc{pytestspec-units-one-key-named-is-the-cases-key,
+  section = {units},
+  title  = {One hookimpl's key, the same key named twice, and a key beside a None are all that key},
+  claim  = {One hookimpl's key, the same key named twice, and a key beside a None are all that key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_the_one_key_named_is_the_cases_key},
+}
+
+@misc{pytestspec-units-no-key-or-two-different-keys-means-the-case-is-not-cached,
+  section = {units},
+  title  = {Nothing named, only non-strings named, and two different keys named are all uncacheable},
+  claim  = {Nothing named, only non-strings named, and two different keys named are all uncacheable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_no_key_or_two_different_keys_means_the_case_is_not_cached},
+}
+
+@misc{pytestspec-units-every-offered-implementation-is-collected-by-name,
+  section = {units},
+  title  = {The control: two tables offering different names give both},
+  claim  = {The control: two tables offering different names give both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_every_offered_implementation_is_collected_by_name},
+}
+
+@misc{pytestspec-units-name-offered-by-two-plugins-is-refused,
+  section = {units},
+  title  = {Which one ran would be an accident, so the table refuses it},
+  claim  = {Which one ran would be an accident, so the table refuses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_name_offered_by_two_plugins_is_refused},
+}
+
+@misc{pytestspec-units-non-callables-non-string-names-and-non-tables-are-skipped,
+  section = {units},
+  title  = {Only a string name bound to a callable, in a dict, is an implementation},
+  claim  = {Only a string name bound to a callable, in a dict, is an implementation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_non_callables_non_string_names_and_non_tables_are_skipped},
+}
+
+@misc{pytestspec-units-fill-runs-the-adapter-on-the-fixture-and-operands-and-keeps-the-case,
+  section = {units},
+  title  = {The result is the adapter's output on (fixture, operands); every other field is kept},
+  claim  = {The result is the adapter's output on (fixture, operands); every other field is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_fill_runs_the_adapter_on_the_fixture_and_operands_and_keeps_the_case},
+}
+
+@misc{pytestspec-units-unknown-implementation-names-the-offered-ones-sorted,
+  section = {units},
+  title  = {The refusal lists what is offered, in name order},
+  claim  = {The refusal lists what is offered, in name order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_an_unknown_implementation_names_the_offered_ones_sorted},
+}
+
+@misc{pytestspec-units-case-with-no-fixture-cannot-be-filled,
+  section = {units},
+  title  = {There is nothing to run the implementation on},
+  claim  = {There is nothing to run the implementation on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_case_with_no_fixture_cannot_be_filled},
+}
+
+@misc{pytestspec-units-case-both-denied-and-withheld-is-denied,
+  section = {units},
+  title  = {The deny is the finding, so it wins over the withheld half},
+  claim  = {The deny is the finding, so it wins over the withheld half.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_case_both_denied_and_withheld_is_denied},
+}
+
+@misc{pytestspec-units-unevaluated-case-against-an-expect-reads-met,
+  section = {units},
+  title  = {The verdict axis already sends it to unmeasured; the expect axis says only that it stood},
+  claim  = {The verdict axis already sends it to unmeasured; the expect axis says only that it
+            stood.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_an_unevaluated_case_against_an_expect_reads_met},
+}
+
+@misc{pytestspec-units-disposition-names-its-kind-and-none-is-undisposed,
+  section = {units},
+  title  = {The disposition axis reads the declared kind, or `none`},
+  claim  = {The disposition axis reads the declared kind, or `none`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_disposition_names_its_kind_and_none_is_undisposed},
+}
