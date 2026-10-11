@@ -4,6 +4,7 @@
 # ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads both locks by LABEL at
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mdstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -183,8 +184,10 @@ sh_test(
 # without pandoc would have SKIPPED 54 cases and the grid would have reported those sites
 # SURVIVED — a verdict that depends on which machine ran it, inside the hermetic suite. The
 # pytest target above already carries this pair; a sibling that reads the same conftest must too.
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 2,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

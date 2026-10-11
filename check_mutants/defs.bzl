@@ -37,14 +37,16 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, **kwargs):
     """
     if shards < 1:
         fail("mutants_sharded: shards must be at least 1, got %d" % shards)
-    if kwargs.get("env"):
-        fail("mutants_sharded: env is set per shard (MUTATE_SHARD); do not pass one")
+    own = dict(kwargs.pop("env", {}))
+    for key in ("MUTATE_SHARD", "MUTATE_JOBS"):
+        if key in own:
+            fail("mutants_sharded: %s is set by the macro; do not pass it in env" % key)
     if cpus < 0:
         fail("mutants_sharded: cpus must not be negative, got %d" % cpus)
-    reserve = {}
+    reserve = own
     if cpus:
         kwargs["tags"] = list(kwargs.get("tags", [])) + ["cpu:%d" % cpus]
-        reserve = {"MUTATE_JOBS": str(cpus)}
+        reserve = dict(own, MUTATE_JOBS = str(cpus))
     if shards == 1:
         native.sh_test(name = name, env = reserve, **kwargs)
         return

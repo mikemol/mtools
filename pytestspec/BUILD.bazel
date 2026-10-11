@@ -3,6 +3,7 @@
 
 # ⚑ MIRRORS //pathsforward:BUILD.bazel, less its py_binary (a pytest plugin has no CLI; pytest
 # loads it) and its process-spawning `medium` tests (none here).
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@pytestspec_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -89,8 +90,10 @@ sh_test(
     size = "small",
 )
 
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 2,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
