@@ -1,0 +1,59 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W1003), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe (use \S or %7C) or a literal percent (%25).
+#
+# lexical and source. expand and cli are not declared yet.
+
+# lexical.py `physical_lines`: split on LF only, drop one CR before it, and drop the empty piece
+# after a final LF; never str.splitlines, whose form feed would invent a physical line.
+src/mikemol/icsstruct/lexical.py|cr-left-on-the-line|p\.removesuffix\("\\r"\)|p|def=physical_lines
+src/mikemol/icsstruct/lexical.py|final-empty-piece-kept|if not pieces\[-1\]:|if False:|def=physical_lines
+src/mikemol/icsstruct/lexical.py|split-on-formfeed-and-friends|text\.split\("\\n"\)|text.splitlines()|def=physical_lines
+
+# lexical.py `_outside_quotes` / `split_content_line`: the split is the first colon OUTSIDE quotes,
+# names and parameter keys are upper-cased, and a line with no value, no name or a parameter that
+# is not NAME=VALUE is Malformed with its reason.
+src/mikemol/icsstruct/lexical.py|quotes-ignored|elif not quoted and ch in stops:|elif ch in stops:|def=_outside_quotes
+src/mikemol/icsstruct/lexical.py|quote-never-closes|quoted = not quoted|quoted = True|def=_outside_quotes
+src/mikemol/icsstruct/lexical.py|valueless-line-accepted|if colon < 0:|if False:|def=split_content_line
+src/mikemol/icsstruct/lexical.py|empty-name-accepted|if not name:|if False:|def=split_content_line
+src/mikemol/icsstruct/lexical.py|parameter-without-equals-accepted|if not eq or not key:|if not key:|def=split_content_line
+src/mikemol/icsstruct/lexical.py|parameter-without-key-accepted|if not eq or not key:|if not eq:|def=split_content_line
+src/mikemol/icsstruct/lexical.py|parameter-key-case-kept|params\.append\(\(key\.upper\(\), pval\)\)|params.append((key, pval))|def=split_content_line
+src/mikemol/icsstruct/lexical.py|name-case-kept|Split\(name\.upper\(\), tuple\(params\), value\)|Split(name, tuple(params), value)|def=split_content_line
+
+# lexical.py `_logical` / `_unfold`: a continuation starts with one space or tab and folds onto the
+# logical line before it, dropping its one leading blank; one with nothing to fold onto and an
+# empty line are Malformed records.
+src/mikemol/icsstruct/lexical.py|tab-continuation-ignored|if line\[:1\] in \{" ", "\\t"\}:|if line[:1] in {" "}:|def=_logical
+src/mikemol/icsstruct/lexical.py|orphan-continuation-folded|if isinstance\(prev, _Logical\):|if False:|def=_logical
+src/mikemol/icsstruct/lexical.py|empty-line-lexed|elif not line:|elif False:|def=_logical
+src/mikemol/icsstruct/lexical.py|continuation-blank-kept|"".join\(r\[1:\] for r in raw\[1:\]\)|"".join(r for r in raw[1:])|def=_unfold
+
+# lexical.py `_Nester`: END closes the NEAREST open component of its name, every component open above
+# it is reported unclosed, a stray END is Malformed, siblings count from 1 under their own parent,
+# and BEGIN and END match case-insensitively.
+src/mikemol/icsstruct/lexical.py|stray-end-accepted|if target not in names:|if False:|def=_Nester.end
+src/mikemol/icsstruct/lexical.py|end-closes-the-outermost|len\(names\) - 1 - names\[::-1\]\.index\(target\)|names.index(target)|def=_Nester.end
+src/mikemol/icsstruct/lexical.py|components-above-an-end-not-reported|self\.unclose\(depth \+ 1\)|del self.stack[depth + 1 :]|def=_Nester.end
+src/mikemol/icsstruct/lexical.py|end-name-case-kept|target = split\.value\.upper\(\)|target = split.value|def=_Nester.end
+src/mikemol/icsstruct/lexical.py|begin-name-case-kept|name = split\.value\.upper\(\)|name = split.value|def=_Nester.begin
+src/mikemol/icsstruct/lexical.py|ordinals-start-at-zero|self\.ordinals\.get\(key, 0\) \+ 1|self.ordinals.get(key, 0)|def=_Nester.begin
+src/mikemol/icsstruct/lexical.py|ordinals-shared-across-parents|key = \(self\.path\(\), name\)|key = ((), name)|def=_Nester.begin
+src/mikemol/icsstruct/lexical.py|open-at-end-not-reported|nester\.unclose\(0\)|pass|def=lex
+
+# source.py: a secret URL is a credential, so the label is a stable hash prefix, a fetch error names
+# the status or the error type and never its text, and the calendar's own name wins as the label.
+src/mikemol/icsstruct/source.py|url-label-longer-than-twelve|hexdigest\(\)\[:12\]|hexdigest()[:16]|def=url_label
+src/mikemol/icsstruct/source.py|nested-calname-used|len\(record\.path\) == 1|len(record.path) >= 1|def=_calname
+src/mikemol/icsstruct/source.py|empty-calname-used|and record\.value|and True|def=_calname
+src/mikemol/icsstruct/source.py|non-utf8-passed-on|except UnicodeDecodeError:|except KeyError:|def=_decode
+src/mikemol/icsstruct/source.py|webcal-fetched-as-itself|"https" \+ location\[len\(scheme\) :\] if scheme == "webcal" else location|location|def=read
+src/mikemol/icsstruct/source.py|status-lost-from-the-error|f"\{label\}: fetch failed: HTTP \{exc\.status\}"|f"{label}: fetch failed"|def=read
+src/mikemol/icsstruct/source.py|error-text-leaks-the-location|fetch failed: \{type\(exc\)\.__name__\}|fetch failed: {exc}|def=read
+src/mikemol/icsstruct/source.py|calendar-name-ignored|Source\(_calname\(text\) or label, text\)|Source(label, text)|def=read
