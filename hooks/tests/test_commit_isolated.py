@@ -289,3 +289,31 @@ def test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit(
     assert code == ck.EXIT_NOT_COMMITTED
     assert shown.startswith("NOT COMMITTED repo")
     assert _git(root, "rev-parse", "HEAD") == before
+
+
+def test_the_reason_names_what_decided_the_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1015: forced, opted out, or what the repository's pre-commit says, each in its own words."""
+    root = _decoy(tmp_path, monkeypatch)
+    assert ck.isolation_reason(root, {ck.ISOLATED_ENV: "1"}) == f"forced by {ck.ISOLATED_ENV}=1"
+    assert ck.isolation_reason(root, {ck.ISOLATED_ENV: "0"}) == f"opted out by {ck.ISOLATED_ENV}=0"
+    assert ck.isolation_reason(root, {}) == (
+        "the repository's pre-commit does not name MIKEMOL_REAL_ROOT"
+    )
+    _hook_text(root, "MIKEMOL_REAL_ROOT\n")
+    assert ck.isolation_reason(root, {}) == "the repository's pre-commit names MIKEMOL_REAL_ROOT"
+
+
+def test_the_lock_state_is_held_or_none_with_its_reason() -> None:
+    """An empty claim reason means the claim is held above; any other is why there is none."""
+    assert ck.lock_state("") == "held"
+    assert ck.lock_state("the fence venv is not built") == "none (the fence venv is not built)"
+
+
+def test_the_routing_line_names_the_path_its_reason_and_the_lock() -> None:
+    """One line, before the verdict: which path ran, why, and the lock."""
+    isolated = ck.routing_line(isolated=True, reason="why", lock="held")
+    assert isolated == "mikemol-commit: path: isolated (why); lock: held"
+    plain = ck.routing_line(isolated=False, reason="because", lock="none (x)")
+    assert plain == "mikemol-commit: path: plain (because); lock: none (x)"

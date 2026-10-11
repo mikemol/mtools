@@ -179,6 +179,8 @@ def test_the_real_main_commits_under_the_target_repositorys_claim(tmp_path: Path
         timeout=_TIMEOUT_S,
     )
     assert "COMMITTED paperkit" in done.stdout, done.stderr
+    routing = "mikemol-commit: path: plain (the repository's pre-commit does not name"
+    assert f"{routing} MIKEMOL_REAL_ROOT); lock: held" in done.stdout
     gitdir = (target / ".git").resolve()
     assert f"CLAIM=claim:path:{gitdir}/mtools/commit --" in log.read_text(encoding="utf-8")
 

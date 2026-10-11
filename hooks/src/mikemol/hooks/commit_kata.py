@@ -504,6 +504,48 @@ def claim_of(
     return Claim(argv, held)
 
 
+def isolation_reason(root: Path, env: Mapping[str, str]) -> str:
+    """Say why `isolation_wanted` answered as it did.
+
+    Returns:
+        the cause: the forcing or opting-out variable, or what the repository's pre-commit says.
+
+    """
+    flag = env.get(ISOLATED_ENV)
+    if flag == "1":
+        return f"forced by {ISOLATED_ENV}=1"
+    if flag == "0":
+        return f"opted out by {ISOLATED_ENV}=0"
+    if supports_isolation(root):
+        return "the repository's pre-commit names MIKEMOL_REAL_ROOT"
+    return "the repository's pre-commit does not name MIKEMOL_REAL_ROOT"
+
+
+def lock_state(claim: str) -> str:
+    """Say whether the commit holds the repository's claim.
+
+    Returns:
+        "held" when the claim is already taken above this process, else "none" and the reason.
+
+    """
+    return f"none ({claim})" if claim else "held"
+
+
+def routing_line(*, isolated: bool, reason: str, lock: str) -> str:
+    """Name the path this commit took and its lock, so a repo can tell a fallback from a choice.
+
+    ⚑ A HOOK THAT DOES NOT NAME MIKEMOL_REAL_ROOT FALLS TO THE PLAIN PATH WITHOUT A WORD (the
+    linux-sources trial, 2026-10-11, mtools:W1015): the commit printed COMMITTED and nothing said
+    which path ran or whether it held the lock.
+
+    Returns:
+        one line, before the verdict.
+
+    """
+    path = "isolated" if isolated else "plain"
+    return f"mikemol-commit: path: {path} ({reason}); lock: {lock}"
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -527,4 +569,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     waited = wait_for_load(env)
     if waited:
         sys.stdout.write(waited + "\n")
-    return commit(root, request, sys.stdout, isolated=isolation_wanted(root, env))
+    isolated = isolation_wanted(root, env)
+    reason = isolation_reason(root, env)
+    sys.stdout.write(routing_line(isolated=isolated, reason=reason, lock=lock_state(claim)) + "\n")
+    return commit(root, request, sys.stdout, isolated=isolated)

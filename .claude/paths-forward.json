@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1016,
+  "counter": 1017,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 127,
+      "ticks_blocked": 128,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 126,
+      "ticks_blocked": 127,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 131,
+      "ticks_blocked": 132,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-11T16:02:11Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -16154,7 +16154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16689,7 +16689,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16984,7 +16984,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 54,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -17494,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -17535,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -17558,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -17981,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "completed": null
     },
     {
@@ -18155,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 29,
+      "ticks_blocked": 30,
       "completed": null
     },
     {
@@ -18934,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -20757,7 +20757,7 @@
     {
       "symbol": "W1015",
       "title": "mikemol-commit prints which path it took, isolated or plain, and why, so a hook that does not name MIKEMOL_REAL_ROOT is visible from its output",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "kata",
@@ -20770,13 +20770,14 @@
       "issued_at": "2026-10-11T20:53:25Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W954",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T21:44:06Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1016",
       "title": "mikemol-commit finds the fence beside its own interpreter when MIKEMOL_FENCE_BIN is unset, so a repo with the hooks and fence wheels in one venv gets the commit lock without the launcher",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "kata",
@@ -20785,14 +20786,33 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: fb8056c [PUSHED]: commit_kata.fence_of falls back to the mikemol-membudget beside the running interpreter when MIKEMOL_FENCE_BIN is unset; 3 tests, 3 warrants; bazel test_commit_claim, mypy, ruff, hooks mutants pass. A repo re-pinned to this sha (mikemol-repin --revendor) loses the 'no commit lock' line.",
       "issued_at": "2026-10-11T20:56:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-11T20:56:48Z",
+      "last_worked": "2026-10-11T21:44:05Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T214405Z"
+    },
+    {
+      "symbol": "W1017",
+      "title": "Fleet survey mode: list every repo whose pre-commit hook does not name MIKEMOL_REAL_ROOT and every hook or gate-script lookup that resolves against the snapshot root",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "kata",
+        "commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "A read-only mode (dry run, per repo, one row each: hook present, names MIKEMOL_REAL_ROOT yes or no, tool lookups still rooted at the snapshot) so the adoption of isolated mikemol-commit is a measured census and a metric, not a hand survey; reference adoption: linux-sources efd2150 (gate_staged.sh takes venv, worktree and git calls from MIKEMOL_REAL_ROOT) and d3a428d (the hook names it). Today a hand grep found 11 repos not naming it: amr-skills, luthen-observability, nemik, el-openglo, aeternum, rosettapkg, paperkit, resumes, gabion, gcalculus, summit, and life has no hook file",
+      "evidence": "",
+      "issued_at": "2026-10-11T21:54:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "mtools:W954",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

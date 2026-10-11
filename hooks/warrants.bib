@@ -8423,3 +8423,25 @@
   claim  = {The linux-sources shape: no MIKEMOL_FENCE_BIN, a fence in the interpreter's bin/.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_fence_installed_beside_the_interpreter_takes_the_claim},
 }
+
+@misc{hooks-commit-isolated-reason-names-what-decided-the-path,
+  section = {commit_isolated},
+  title  = {W1015: forced, opted out, or what the repository's pre-commit says, each in its own words},
+  claim  = {W1015: forced, opted out, or what the repository's pre-commit says, each in its own
+            words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_reason_names_what_decided_the_path},
+}
+
+@misc{hooks-commit-isolated-lock-state-is-held-or-none-with-its-reason,
+  section = {commit_isolated},
+  title  = {An empty claim reason means the claim is held above; any other is why there is none},
+  claim  = {An empty claim reason means the claim is held above; any other is why there is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_lock_state_is_held_or_none_with_its_reason},
+}
+
+@misc{hooks-commit-isolated-routing-line-names-the-path-its-reason-and-the-lock,
+  section = {commit_isolated},
+  title  = {One line, before the verdict: which path ran, why, and the lock},
+  claim  = {One line, before the verdict: which path ran, why, and the lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_routing_line_names_the_path_its_reason_and_the_lock},
+}
