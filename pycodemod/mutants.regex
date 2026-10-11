@@ -82,3 +82,14 @@ src/mikemol/pycodemod/cli_judgedfix.py|unsafe-always-on|if flags\.unsafe:|if Tru
 src/mikemol/pycodemod/cli_judgedfix.py|unsafe-never-on|if flags\.unsafe:|if False:|def=fix_planner
 src/mikemol/pycodemod/cli_judgedfix.py|ruff-failure-reads-as-clean|if code not in JUDGED:|if False:|def=ruff_fix
 src/mikemol/pycodemod/cli_judgedfix.py|any-selection-passes|if _RULES\.fullmatch\(select\) is None:|if False:|def=check_select
+
+# W975: `-> None` only where the text proves it. Annotating an abstract method, a generator, a def
+# with a valued return or a stub is a false promise; counting a nested def's return against its outer
+# def, or a lambda's yield as the outer def's, hides a def that qualifies.
+src/mikemol/pycodemod/nonereturns.py|abstract-annotated|if any\(_decorator_name\(d\) in ABSTRACT for d in function\.decorators\):|if False:|def=refusal
+src/mikemol/pycodemod/nonereturns.py|generator-annotated|if own\.generator:|if False:|def=refusal
+src/mikemol/pycodemod/nonereturns.py|valued-return-annotated|if own\.valued:|if False:|def=refusal
+src/mikemol/pycodemod/nonereturns.py|stub-annotated|return "stub body" if _is_stub\(function\) else None|return None|def=refusal
+src/mikemol/pycodemod/nonereturns.py|nested-def-return-counted|return False|return True|def=_Own.visit_FunctionDef
+src/mikemol/pycodemod/nonereturns.py|lambda-yield-counted|return False|return True|def=_Own.visit_Lambda
+src/mikemol/pycodemod/nonereturns.py|annotated-def-reannotated|if original_node\.returns is not None:|if False:|def=_Planner.leave_FunctionDef

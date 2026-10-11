@@ -6027,3 +6027,66 @@
   claim  = {A changed, an added and a removed line each count once.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_changed_lines_counts_every_differing_line},
 }
+
+@misc{pycodemod-nonereturns-def-with-no-valued-return-is-annotated,
+  section = {nonereturns},
+  title  = {The control: a plain def, a bare return, a method and an async def all take `-> None`},
+  claim  = {The control: a plain def, a bare return, a method and an async def all take `-> None`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_def_with_no_valued_return_is_annotated},
+}
+
+@misc{pycodemod-nonereturns-valued-return-is-left-alone-and-named,
+  section = {nonereturns},
+  title  = {`return X` and `return None` both carry a value expression},
+  claim  = {`return X` and `return None` both carry a value expression.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_valued_return_is_left_alone_and_named},
+}
+
+@misc{pycodemod-nonereturns-nested-def-or-lambda-return-is-not-the-outer-defs,
+  section = {nonereturns},
+  title  = {The inner function returns a value; the outer one returns nothing and is annotated},
+  claim  = {The inner function returns a value; the outer one returns nothing and is annotated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_nested_def_or_lambda_return_is_not_the_outer_defs},
+}
+
+@misc{pycodemod-nonereturns-generator-is-left-alone,
+  section = {nonereturns},
+  title  = {A yield, or a yield from, makes the def a generator whatever its returns say},
+  claim  = {A yield, or a yield from, makes the def a generator whatever its returns say.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_generator_is_left_alone},
+}
+
+@misc{pycodemod-nonereturns-abstract-method-and-an-overload-are-left-alone,
+  section = {nonereturns},
+  title  = {Their bodies promise nothing about the implementation},
+  claim  = {Their bodies promise nothing about the implementation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_an_abstract_method_and_an_overload_are_left_alone},
+}
+
+@misc{pycodemod-nonereturns-stub-body-is-left-alone-but-a-docstring-and-pass-is-not,
+  section = {nonereturns},
+  title  = {`...` and `raise NotImplementedError` mean an override fills it in; `pass` is a no-op},
+  claim  = {`...` and `raise NotImplementedError` mean an override fills it in; `pass` is a no-op.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_stub_body_is_left_alone_but_a_docstring_and_pass_is_not},
+}
+
+@misc{pycodemod-nonereturns-def-that-already-has-a-return-annotation-is-untouched,
+  section = {nonereturns},
+  title  = {Neither changed nor listed},
+  claim  = {Neither changed nor listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_def_that_already_has_a_return_annotation_is_untouched},
+}
+
+@misc{pycodemod-nonereturns-worklist-rows-carry-the-defs-line-numbers,
+  section = {nonereturns},
+  title  = {A refusal is findable: `line, name, why`},
+  claim  = {A refusal is findable: `line, name, why`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_the_worklist_rows_carry_the_defs_line_numbers},
+}
+
+@misc{pycodemod-nonereturns-yield-inside-a-lambda-does-not-make-the-outer-def-a-generator,
+  section = {nonereturns},
+  title  = {The lambda is its own scope: the outer def returns nothing and is annotated},
+  claim  = {The lambda is its own scope: the outer def returns nothing and is annotated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_yield_inside_a_lambda_does_not_make_the_outer_def_a_generator},
+}
