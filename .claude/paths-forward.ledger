@@ -1627,3 +1627,8 @@
 2026-10-11T20:58:57Z  tick  W1016 advanced  unblock   "commit_kata.fence_of: the fence beside the interpreter is the fallback when MIKEMOL_FENCE_BIN is unset; 3 tests and 3 warrants; hooks gate running, uncommitted"
 2026-10-11T21:46:09Z  tick  W1015 advanced  unblock   "mikemol-commit prints 'path: isolated|plain (reason); lock: held|none' before the verdict; isolation_reason, lock_state and routing_line with 4 tests and 3 warrants; hooks gate running, uncommitted"
 2026-10-11T21:54:05Z  interrupt W1017 minted    -         "Fleet survey mode: list every repo whose pre-commit hook does not name MIKEMOL_REAL_ROOT and every hook or gate-script lookup that resolves against the snapshot root"  evidence=mtools:W954
+2026-10-11T22:39:29Z  tick  W1015 advanced  unblock   "landed f04f0a2: mikemol-commit prints its path and lock line; github-8f told; W797 (gate audit of sibling-tree reads) now working"
+2026-10-11T22:41:57Z  tick  W1018 minted    -         "A shared check that a sibling checkout is at a recorded sha and clean, so a gate that reads it refuses to certify otherwise"  evidence=W797
+2026-10-11T22:41:58Z  tick  W1019 minted    -         "Send each repo in the W797 audit table the sibling reads its gates make, asking it to mint a card that pins them or adopts the shared check"  evidence=W797
+2026-10-11T22:42:04Z  tick  W797 advanced  collapse  "audit done: ~100 files scanned, 3 tiers in .claude/design/W797-sibling-tree-reads.md; minted W1018 (shared pin check) and W1019 (letters to repos)"
+2026-10-11T22:58:21Z  interrupt W1020 minted    -         "mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on it"  evidence=luthen-observability:W832

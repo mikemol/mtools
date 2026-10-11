@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1017,
+  "counter": 1020,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 128,
+      "ticks_blocked": 129,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 127,
+      "ticks_blocked": 128,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 132,
+      "ticks_blocked": 133,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-11T16:02:11Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 67,
       "completed": null
     },
     {
@@ -16154,7 +16154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16162,7 +16162,7 @@
     {
       "symbol": "W797",
       "title": "Audit commit gates that read a sibling repo's live working tree and pin each to a recorded commit",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "gate",
@@ -16178,10 +16178,11 @@
       "issued_at": "2026-10-06T00:31:41Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-06T00:31:41Z",
+      "last_worked": "2026-10-11T22:39:29Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
-      "vector_source": "agent"
+      "vector_source": "agent",
+      "completed": null
     },
     {
       "symbol": "W798",
@@ -16689,7 +16690,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16984,7 +16985,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -17494,7 +17495,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "completed": null
     },
     {
@@ -17535,7 +17536,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "completed": null
     },
     {
@@ -17558,7 +17559,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "completed": null
     },
     {
@@ -17981,7 +17982,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "completed": null
     },
     {
@@ -18155,7 +18156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -18934,7 +18935,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 29,
+      "ticks_blocked": 30,
       "completed": null
     },
     {
@@ -19573,11 +19574,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add an Isolated commit section to docs/adopting-a-hook.md: isolation is on only where .githooks/pre-commit text names MIKEMOL_REAL_ROOT (commit_kata.supports_isolation); the hook then runs in a snapshot of the tree that lands, so host tools (venvs, bazel-bin) come from ${MIKEMOL_REAL_ROOT:-root}; MIKEMOL_COMMIT_ISOLATED=0|1 overrides; MIKEMOL_SNAPSHOT_ROOT moves the namespace; MIKEMOL_COMMIT_TIMEOUT_S bounds the run. Link .claude/design/W939-isolated-gate-tools.md. Test: a doc-names-every-env-var check.",
-      "evidence": "",
+      "evidence": "2026-10-11: 2026-10-11 github-8f, five pitfalls from amr-skills:W297 (done, c2774f9; isolated, lock held, bazel 70/70), each seen only from inside the snapshot: (1) a relative declared root resolves against the snapshot, so a sibling-repo remote check passes vacuously; (2) the hook needs its tools from the real checkout; (3) commit_isolated runs the hook with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set, so git -C <sibling> answers for the COMMITTING repo: strip them from any git call about another repo; (4) tests that run git in their own root fail in a snapshot (no .git); (5) do not read MIKEMOL_REAL_ROOT in library code, since bazel env_inherit hands it to every test: make the anchor a parameter and read the variable only in the entrypoint. To go into docs/adopting-a-hook.md.",
       "issued_at": "2026-10-10T16:02:39Z",
       "minted_during": "interrupt",
       "caused_by": "github:W-substrate-94",
-      "last_worked": null,
+      "last_worked": "2026-10-11T22:58:23Z",
       "ticks_blocked": 0
     },
     {
@@ -20757,7 +20758,7 @@
     {
       "symbol": "W1015",
       "title": "mikemol-commit prints which path it took, isolated or plain, and why, so a hook that does not name MIKEMOL_REAL_ROOT is visible from its output",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "kata",
@@ -20765,14 +20766,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add one line to mikemol-commit's output before the verdict: 'path: isolated' or 'path: plain (hook does not name MIKEMOL_REAL_ROOT)' and the lock state ('lock: held' or 'no commit lock: fence venv not built'); evidence: linux-sources trial 2026-10-11 printed COMMITTED and one fence-venv line but nothing saying it had fallen to the plain path, so the repo could not tell",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: f04f0a2 [PUSHED]: mikemol-commit prints 'path: isolated|plain (reason); lock: held|none (reason)' before the verdict; isolation_reason, lock_state, routing_line; 4 tests, an end-to-end assertion, 3 warrants; the commit gate (full hooks suite and mutants) passed. Local bazel :mutants runs failed three times on a .pyc in the shared venv modified during execution, not on a survivor.",
       "issued_at": "2026-10-11T20:53:25Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W954",
-      "last_worked": "2026-10-11T21:44:06Z",
+      "last_worked": "2026-10-11T22:39:22Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T223922Z"
     },
     {
       "symbol": "W1016",
@@ -20807,10 +20808,73 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "A read-only mode (dry run, per repo, one row each: hook present, names MIKEMOL_REAL_ROOT yes or no, tool lookups still rooted at the snapshot) so the adoption of isolated mikemol-commit is a measured census and a metric, not a hand survey; reference adoption: linux-sources efd2150 (gate_staged.sh takes venv, worktree and git calls from MIKEMOL_REAL_ROOT) and d3a428d (the hook names it). Today a hand grep found 11 repos not naming it: amr-skills, luthen-observability, nemik, el-openglo, aeternum, rosettapkg, paperkit, resumes, gabion, gcalculus, summit, and life has no hook file",
-      "evidence": "",
+      "evidence": "2026-10-11: 2026-10-11 github-8f: items (3) strip GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE from git calls about another repo, and (5) library code that reads MIKEMOL_REAL_ROOT instead of taking an anchor parameter, look checkable by this survey mode; (1) a relative declared root and (4) tests that run git in their own root are candidates. Source: amr-skills:W297 adoption, c2774f9.",
       "issued_at": "2026-10-11T21:54:05Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W954",
+      "last_worked": "2026-10-11T22:58:23Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1018",
+      "title": "A shared check that a sibling checkout is at a recorded sha and clean, so a gate that reads it refuses to certify otherwise",
+      "status": "ready",
+      "enables": [
+        "W1019"
+      ],
+      "touches": [
+        "gate",
+        "pin",
+        "reproducibility"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-11: 2026-10-11 github-8f (from amr-skills:W297, c2774f9): git called for a SIBLING repo from inside the isolated hook inherits GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE and answers for the COMMITTING repo, so this check must strip those three from every git call it makes about another repo. A relative declared root resolves against the snapshot and a sibling check passes vacuously: take the root as an absolute parameter.",
+      "issued_at": "2026-10-11T22:41:57Z",
+      "minted_during": "tick",
+      "caused_by": "W797",
+      "last_worked": "2026-10-11T22:58:22Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1019",
+      "title": "Send each repo in the W797 audit table the sibling reads its gates make, asking it to mint a card that pins them or adopts the shared check",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "gate",
+        "fleet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T22:41:58Z",
+      "minted_during": "tick",
+      "caused_by": "W797",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1020",
+      "title": "mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on it",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W832"
+      ],
+      "touches": [
+        "hooks",
+        "commit",
+        "snapshot"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T22:58:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W832",
       "last_worked": null,
       "ticks_blocked": 0
     }
