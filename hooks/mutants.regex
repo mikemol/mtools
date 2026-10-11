@@ -129,4 +129,11 @@ src/mikemol/hooks/revendor.py|missing-marker-passes|if marker not in archived:|i
 src/mikemol/hooks/revendor.py|full-sha-prefix-match|_FULL_SHA\.fullmatch\(text\)|_FULL_SHA.match(text)|def=is_full_sha
 src/mikemol/hooks/revendor.py|first-vendor-unsaid| or "none"||def=plan_lines
 src/mikemol/hooks/revendor.py|short-is-whole|return sha\[:_SHORT\]|return sha|def=short_of
+src/mikemol/hooks/revendor_apply.py|dirty-tree-allowed|return code != 0 or bool\(out\.strip\(\)\)|return False|def=dirty
+src/mikemol/hooks/revendor_apply.py|hash-mismatch-passes|if not live or live != fresh:|if False:|def=same_reading
+src/mikemol/hooks/revendor_apply.py|empty-hash-matches|if not live or live != fresh:|if live != fresh:|def=same_reading
+src/mikemol/hooks/revendor_apply.py|stale-wheels-kept|for stale in sorted\(old - \{short\}\):|for stale in []:|def=swap
+src/mikemol/hooks/revendor_apply.py|local-version-unwritten|project\.write_text\(edited, encoding="utf-8"\)|pass|def=build
+src/mikemol/hooks/revendor_apply.py|lock-skipped|for step in \(\["uv", "lock"\], \["uv", "sync", "--frozen"\]\):|for step in (["uv", "sync", "--frozen"],):|def=swap
+src/mikemol/hooks/revendor_apply.py|pins-not-moved|project\.write_text\(moved, encoding="utf-8"\)|pass|def=swap
 src/mikemol/hooks/repin_cli.py|env-par-ignored|else \(_ENV\.get\(PAR_ENV\) or None\)|else None|def=main

@@ -8096,3 +8096,59 @@
             none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_the_plan_names_the_new_sha_the_old_pin_and_the_source},
 }
+
+@misc{hooks-revendor-apply-apply-builds-checks-and-swaps-both-dists,
+  section = {revendor_apply},
+  title  = {The control: new wheels carry the local version, old ones go, pins move, lock then sync},
+  claim  = {The control: new wheels carry the local version, old ones go, pins move, lock then sync.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_apply_builds_checks_and_swaps_both_dists},
+}
+
+@misc{hooks-revendor-apply-checksums-are-those-of-the-wheels-in-the-tree,
+  section = {revendor_apply},
+  title  = {The record for vendor/wheels/README.md hashes what is on disk, not what was built},
+  claim  = {The record for vendor/wheels/README.md hashes what is on disk, not what was built.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_the_checksums_are_those_of_the_wheels_in_the_tree},
+}
+
+@misc{hooks-revendor-apply-dirty-tree-is-refused-before-anything-is-built,
+  section = {revendor_apply},
+  title  = {Uncommitted changes to the files a re-vendor writes stop it before git archive runs},
+  claim  = {Uncommitted changes to the files a re-vendor writes stop it before git archive runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_dirty_tree_is_refused_before_anything_is_built},
+}
+
+@misc{hooks-revendor-apply-writer-that-reads-the-queue-differently-stops-the-swap,
+  section = {revendor_apply},
+  title  = {Both hashes are named and the repo is exactly as it was},
+  claim  = {Both hashes are named and the repo is exactly as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_writer_that_reads_the_queue_differently_stops_the_swap},
+}
+
+@misc{hooks-revendor-apply-live-writer-that-gives-no-hash-stops-the-swap,
+  section = {revendor_apply},
+  title  = {An empty live hash can equal nothing: a writer that fails is not a match},
+  claim  = {An empty live hash can equal nothing: a writer that fails is not a match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_live_writer_that_gives_no_hash_stops_the_swap},
+}
+
+@misc{hooks-revendor-apply-failed-build-names-the-dist-and-leaves-the-repo,
+  section = {revendor_apply},
+  title  = {A failing build says which exit and writes nothing into the repo},
+  claim  = {A failing build says which exit and writes nothing into the repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_failed_build_names_the_dist_and_leaves_the_repo},
+}
+
+@misc{hooks-revendor-apply-archived-pyproject-without-the-version-is-refused,
+  section = {revendor_apply},
+  title  = {No 0.1.0 line means a refusal naming the dist, not a wheel with the wrong version},
+  claim  = {No 0.1.0 line means a refusal naming the dist, not a wheel with the wrong version.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_an_archived_pyproject_without_the_version_is_refused},
+}
+
+@misc{hooks-revendor-apply-failed-lock-is-named,
+  section = {revendor_apply},
+  title  = {Past the swap the failure is reported by step: the lock, not a generic error},
+  claim  = {Past the swap the failure is reported by step: the lock, not a generic error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_failed_lock_is_named},
+}
