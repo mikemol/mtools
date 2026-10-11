@@ -60,3 +60,4 @@ atomize_closure	Atomize keeps the import cone
 projects	Paperkit projects and foreign bibs
 orempty	orempty
 cli_orempty	cli_orempty
+cli_judgedfix	cli_judgedfix

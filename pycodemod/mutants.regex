@@ -72,3 +72,13 @@ src/mikemol/pycodemod/projects.py|owners-shallowest-first|return len\(directory\
 src/mikemol/pycodemod/projects.py|containment-not-ownership|if owner != directory:|if owner is None:|def=_project
 src/mikemol/pycodemod/projects.py|no-list-reads-as-none|return DEFAULT_WARRANTS|return ()|def=_warrants
 src/mikemol/pycodemod/projects.py|non-string-token-accepted|len\(tokens\) != len\(listed\)|False|def=_warrants
+
+# W976: judged-fix. A fix run unisolated reads the project's ruff configuration instead of the rules asked
+# for; unsafe fixes applied when not asked would corrupt files the judge only catches by luck; a ruff
+# that cannot run read as "no change" is a clean bill from a tool that never ran; a selection that is
+# not a plain rule list could smuggle an option into ruff.
+src/mikemol/pycodemod/cli_judgedfix.py|fix-not-isolated|"--fix", "--isolated", "--quiet"|"--fix", "--quiet"|def=fix_planner
+src/mikemol/pycodemod/cli_judgedfix.py|unsafe-always-on|if flags\.unsafe:|if True:|def=fix_planner
+src/mikemol/pycodemod/cli_judgedfix.py|unsafe-never-on|if flags\.unsafe:|if False:|def=fix_planner
+src/mikemol/pycodemod/cli_judgedfix.py|ruff-failure-reads-as-clean|if code not in JUDGED:|if False:|def=ruff_fix
+src/mikemol/pycodemod/cli_judgedfix.py|any-selection-passes|if _RULES\.fullmatch\(select\) is None:|if False:|def=check_select

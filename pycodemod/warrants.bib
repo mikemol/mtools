@@ -5977,3 +5977,53 @@
   claim  = { Nothing to rewrite means no tool is started.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_orempty.py -k test_a_file_with_no_site_is_not_judged},
 }
+
+@misc{pycodemod-cli-judgedfix-write-lands-the-fix-the-judge-accepts,
+  section = {cli_judgedfix},
+  title  = {The control: the copy is fixed, mypy finds fewer, and the real file takes the candidate},
+  claim  = {The control: the copy is fixed, mypy finds fewer, and the real file takes the candidate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_write_lands_the_fix_the_judge_accepts},
+}
+
+@misc{pycodemod-cli-judgedfix-dry-run-reports-and-writes-nothing,
+  section = {cli_judgedfix},
+  title  = {The default is a plan under the label judged-fix: judged, said, untouched},
+  claim  = {The default is a plan under the label judged-fix: judged, said, untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_dry_run_reports_and_writes_nothing},
+}
+
+@misc{pycodemod-cli-judgedfix-unsafe-adds-the-unsafe-fixes-flag-and-the-fix-runs-isolated-on-a-copy,
+  section = {cli_judgedfix},
+  title  = {--unsafe reaches ruff; the copy is never in the tree, so no probe is left beside the file},
+  claim  = {--unsafe reaches ruff; the copy is never in the tree, so no probe is left beside the
+            file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_unsafe_adds_the_unsafe_fixes_flag_and_the_fix_runs_isolated_on_a_copy},
+}
+
+@misc{pycodemod-cli-judgedfix-fix-the-judge-rejects-is-not-written,
+  section = {cli_judgedfix},
+  title  = {Mypy finds no fewer: exit 1, the file keeps its text, the rejection is named},
+  claim  = {Mypy finds no fewer: exit 1, the file keeps its text, the rejection is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_fix_the_judge_rejects_is_not_written},
+}
+
+@misc{pycodemod-cli-judgedfix-ruff-that-cannot-run-is-a-worklist-row-and-no-write,
+  section = {cli_judgedfix},
+  title  = {Exit 2 from ruff is never a clean bill: the row says so and the file is untouched},
+  claim  = {Exit 2 from ruff is never a clean bill: the row says so and the file is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_ruff_that_cannot_run_is_a_worklist_row_and_no_write},
+}
+
+@misc{pycodemod-cli-judgedfix-rule-selection-must-be-a-comma-list-of-codes,
+  section = {cli_judgedfix},
+  title  = {Anything that could smuggle another ruff option is refused by name},
+  claim  = {Anything that could smuggle another ruff option is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_rule_selection_must_be_a_comma_list_of_codes},
+}
+
+@misc{pycodemod-cli-judgedfix-changed-lines-counts-every-differing-line,
+  section = {cli_judgedfix},
+  title  = {A changed, an added and a removed line each count once},
+  claim  = {A changed, an added and a removed line each count once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_changed_lines_counts_every_differing_line},
+}

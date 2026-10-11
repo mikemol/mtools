@@ -68,6 +68,7 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
+from mikemol.pycodemod.cli_judgedfix import JudgedFixFlags, check_select, print_judged_fix
 from mikemol.pycodemod.cli_orempty import OrEmptyFlags, print_orempty
 from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, print_typedargs
 from mikemol.pycodemod.commentary import (
@@ -128,6 +129,18 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+
+
+def _handle_judgedfix(ns: argparse.Namespace) -> int:
+    select = _str(ns, "select")
+    refusal = check_select(select)
+    if refusal is not None:
+        sys.stderr.write(f"judged-fix: {refusal}\n")
+        return _REFUSED
+    flags = JudgedFixFlags(
+        root=_str(ns, "root"), select=select, unsafe=_flag(ns, "unsafe"), write=_flag(ns, "write")
+    )
+    return print_judged_fix(_str_list(ns, "paths"), flags)
 
 
 def _handle_orempty(ns: argparse.Namespace) -> int:
@@ -1139,6 +1152,7 @@ MODES = {
     "atomize-imports": _handle_atomize,
     "typed-args": _handle_typedargs,
     "or-empty": _handle_orempty,
+    "judged-fix": _handle_judgedfix,
     "by-path-runs": _handle_by_path_runs,
 }
 
@@ -1423,6 +1437,15 @@ def _add_typedargs_mode(make: _Make) -> None:
     typed.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
+def _add_judgedfix_mode(make: _Make) -> None:
+    fix = make("judged-fix", "ruff's fixes for chosen rules, kept per file only when mypy agrees")
+    fix.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    fix.add_argument("--select", required=True, help="comma list of ruff rules, e.g. ANN,FA")
+    fix.add_argument("--unsafe", action="store_true", help="also apply ruff's unsafe fixes")
+    fix.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    fix.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
 def _add_runs_mode(make: _Make) -> None:
     run = make("by-path-runs", "scripts run by path (python3 pkg/x.py) instead of by package")
     run.add_argument(
@@ -1445,6 +1468,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_atomize_mode,
     _add_typedargs_mode,
     _add_orempty_mode,
+    _add_judgedfix_mode,
     _add_runs_mode,
 )
 
