@@ -2,9 +2,9 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 928,
+  "counter": 1012,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-09T23:33:57Z",
+  "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
   "predecessor_job_id": "2f761c86",
   "bindings": {
@@ -874,11 +874,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-09-27: commit 8c24617: model.leverage/describe_rank added; ordered() sorts (status, -leverage, file order); render.queue falls back to describe_rank when rank_reason is unset, never overwriting a set value. 6 new tests (test_model.py), 6 warrants. 285 pytest/ruff/mypy clean on host venv; full preflight (all dists) green, pushed to origin/main.",
+      "evidence": "2026-09-27: commit 8c24617: model.leverage/describe_rank added; ordered() sorts (status, -leverage, file order); render.queue falls back to describe_rank when rank_reason is unset, never overwriting a set value. 6 new tests (test_model.py), 6 warrants. 285 pytest/ruff/mypy clean on host venv; full preflight (all dists) green, pushed to origin/main. | 2026-10-10: 2026-10-10 substrate-94 (substrate:W304): at 314 waypoints (~270 blocked) nemik-rank substrate --check reports the next ready item with the top cross-repo weight, weights sync without DRIFT after status changes, and --queue renders without error. Holds at scale; not independently audited against a hand ranking.",
       "issued_at": "2026-09-26T22:09:44Z",
       "minted_during": "interrupt",
       "caused_by": "nemik-bb",
-      "last_worked": "2026-09-27T00:09:53Z",
+      "last_worked": "2026-10-10T16:38:07Z",
       "ticks_blocked": 0
     },
     {
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 100,
+      "ticks_blocked": 121,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 98,
+      "ticks_blocked": 120,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 103,
+      "ticks_blocked": 125,
       "completed": null
     },
     {
@@ -11474,16 +11474,16 @@
       ],
       "touches": [],
       "blocked_on": [
-        "operator: act create the GitHub org mikemol-tools (name decided 2026-10-01, not yet created) and the GitHub App the runners register through; luthen then supplies the key custody command and applies the runner pool (luthen-observability:W257)"
+        "luthen-observability:W257"
       ],
-      "blocked_kind": "human",
+      "blocked_kind": "agent",
       "next_bounded_step": "After the org and App exist: tell luthen-observability so the custody command and the runner pool can proceed; then mtools:W317 names the org in the split plan",
-      "evidence": "2026-10-04: 2026-10-04 CORRECTION of this card's first wording, which said the org did not exist: read from the GitHub API with the operator's gh login, the org mikemol-tools EXISTS (id 336508376, created 2026-10-01T12:04:59Z, 0 public repos, the operator is an active admin) and orgs/mikemol-tools/installations lists no App; the operator's other orgs are acmeism, rosettacode, RowdyRocs, v4cat-oss. The first wording came from a peer's 'once the org ... exist' and from W257's 2026-10-01T12:00:09Z 'not yet created', neither checked against GitHub; the org was created five minutes after that line. Only the App is missing. The blocked_on text still says 'create the org and the App'; the hold is the operator's to re-word (standing 5) | 2026-10-05: 2026-10-05 THE APP EXISTS (operator, first-hand; confirmed by gh api orgs/mikemol-tools/installations): slug mikemol-tools-runners, App ID 5197626, Client ID Iv23liCgaitwTQBzNPlQ, installation 168150198, repository_selection all, permissions organization_self_hosted_runners write and metadata read. The private key was downloaded to ~/Downloads (plaintext on disk, against W257 design section 5); mtools did not open it. Letter to luthen-observability inbox 2026-10-05-mtools-runner-github-app-exists.md asks for the key-custody command. This card's blocked_on text is now stale (org and App both exist); re-wording or lifting the hold is the operator's, standing 5.",
+      "evidence": "2026-10-04: 2026-10-04 CORRECTION of this card's first wording, which said the org did not exist: read from the GitHub API with the operator's gh login, the org mikemol-tools EXISTS (id 336508376, created 2026-10-01T12:04:59Z, 0 public repos, the operator is an active admin) and orgs/mikemol-tools/installations lists no App; the operator's other orgs are acmeism, rosettacode, RowdyRocs, v4cat-oss. The first wording came from a peer's 'once the org ... exist' and from W257's 2026-10-01T12:00:09Z 'not yet created', neither checked against GitHub; the org was created five minutes after that line. Only the App is missing. The blocked_on text still says 'create the org and the App'; the hold is the operator's to re-word (standing 5) | 2026-10-05: 2026-10-05 THE APP EXISTS (operator, first-hand; confirmed by gh api orgs/mikemol-tools/installations): slug mikemol-tools-runners, App ID 5197626, Client ID Iv23liCgaitwTQBzNPlQ, installation 168150198, repository_selection all, permissions organization_self_hosted_runners write and metadata read. The private key was downloaded to ~/Downloads (plaintext on disk, against W257 design section 5); mtools did not open it. Letter to luthen-observability inbox 2026-10-05-mtools-runner-github-app-exists.md asks for the key-custody command. This card's blocked_on text is now stale (org and App both exist); re-wording or lifting the hold is the operator's, standing 5. | 2026-10-10: 2026-10-10: luthen-observability's letter inbox/2026-10-05-luthen-observability-w257-key-custody-already-done.md: the runner App key is already in OpenBao (secret/luthen/github/runner-app v1, 2026-10-05T13:41:02Z, applied by the operator), so no custody command is owed; the hold's wording is the operator's to re-word. mtools:W319 and W317 stay behind luthen-observability:W257 (D5 cache-write fence, Flux HelmReleases).",
       "issued_at": "2026-10-04T13:20:58Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
-      "last_worked": "2026-10-05T13:12:44Z",
-      "ticks_blocked": 72,
+      "last_worked": "2026-10-11T16:02:11Z",
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -11549,24 +11549,22 @@
     {
       "symbol": "W580",
       "title": "Decide whether the inbound-asks hook is wired once in the operator's user-level settings (one install via MTOOLS_ROOT, every repo covered) or per repo",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
         "nemik"
       ],
-      "blocked_on": [
-        "operator: decide whether the inbound-asks hook is wired once in your user-level ~/.claude/settings.json (one MTOOLS_ROOT launcher, every repo covered, runs in repos without a loop too, silent there) or per repo (each owner applies the W579 lines), or both"
-      ],
-      "blocked_kind": "human",
-      "next_bounded_step": "Operator decides user-level versus per-repo (or both); if user-level, add a MTOOLS_ROOT launcher beside hooks/adopt/tools-hook and draft the ~/.claude/settings.json lines as a patch for the operator to apply",
-      "evidence": "2026-10-04: the structural answer to 'without nudges and without guessing': the operator's user-level settings (~/.claude/settings.json) apply to EVERY repo, so one UserPromptSubmit and SessionStart entry naming a launcher that resolves mtools' own build through MTOOLS_ROOT (as hooks/adopt/tools-hook does) would cover every repo with a queue, with no per-repo pins and no per-repo wiring; the project is already CLAUDE_PROJECT_DIR, and the reader would be mtools' own pathsforward, so no repo needs its pinned reader bumped. Costs: it is the operator's file (a drafted grant, applied by them); it runs in every repo including ones without a loop (the hook is silent when there is no queue file); the launcher hooks/bin/mikemol-hook-inbound-asks currently resolves bazel-bin under CLAUDE_PROJECT_DIR, so a user-level variant needs MTOOLS_ROOT. Luthen's queue-hygiene hook doc (docs/queue-hygiene-hook.md) is the same shape for --prune-landed. Per-repo wiring remains the alternative, where each owner applies the W579 lines | 2026-10-09: 2026-10-09 TRIAGE: this card is the operator's decision (it edits their user-level settings), so it is no agent's ready work. Costs and benefits are in this evidence (2026-10-04). | 2026-10-09: 2026-10-09 OPERATOR RULING (AskUserQuestion, standing rule 8): wire the inbound-asks hook ONCE at user level (~/.claude/settings.json), not per repo. The work that follows is W881. This row stays held: standing rule 5 says a hold on a human is lifted by the operator, not by an agent.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: the structural answer to 'without nudges and without guessing': the operator's user-level settings (~/.claude/settings.json) apply to EVERY repo, so one UserPromptSubmit and SessionStart entry naming a launcher that resolves mtools' own build through MTOOLS_ROOT (as hooks/adopt/tools-hook does) would cover every repo with a queue, with no per-repo pins and no per-repo wiring; the project is already CLAUDE_PROJECT_DIR, and the reader would be mtools' own pathsforward, so no repo needs its pinned reader bumped. Costs: it is the operator's file (a drafted grant, applied by them); it runs in every repo including ones without a loop (the hook is silent when there is no queue file); the launcher hooks/bin/mikemol-hook-inbound-asks currently resolves bazel-bin under CLAUDE_PROJECT_DIR, so a user-level variant needs MTOOLS_ROOT. Luthen's queue-hygiene hook doc (docs/queue-hygiene-hook.md) is the same shape for --prune-landed. Per-repo wiring remains the alternative, where each owner applies the W579 lines | 2026-10-09: 2026-10-09 TRIAGE: this card is the operator's decision (it edits their user-level settings), so it is no agent's ready work. Costs and benefits are in this evidence (2026-10-04). | 2026-10-09: 2026-10-09 OPERATOR RULING (AskUserQuestion, standing rule 8): wire the inbound-asks hook ONCE at user level (~/.claude/settings.json), not per repo. The work that follows is W881. This row stays held: standing rule 5 says a hold on a human is lifted by the operator, not by an agent. | 2026-10-10: 2026-10-10 OPERATOR (typed): 'mtools:W580 .. yes, should get wired into my global settings.' Confirms the 2026-10-09 ruling; W881 landed the launcher and drafted the settings lines. The merge into ~/.claude/settings.json is the operator's.",
       "issued_at": "2026-10-04T18:50:16Z",
       "minted_during": "tick",
       "caused_by": "operator",
-      "last_worked": "2026-10-09T13:51:50Z",
-      "ticks_blocked": 2,
-      "completed": null
+      "last_worked": "2026-10-10T15:55:45Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T155545Z"
     },
     {
       "symbol": "W581",
@@ -11799,12 +11797,12 @@
       ],
       "blocked_kind": "human",
       "next_bounded_step": "Ask substrate for the repoint result; cite its card once it names one",
-      "evidence": "2026-10-04: drained from queue.md item 8 (2026-10-04): port e571b02; substrate's W33 owns the repoint; real consumers are 7 scratch tmi_* tools, tool_usage.py does not import it | 2026-10-05: 2026-10-05 ESCALATED after 16 blocked ticks (the loop's rule), once: the block on substrate:W33 is unchanged (letter 2026-10-04-mtools-transcriptstruct-repoint.md in substrate's inbox, no live substrate session in ListAgents), so it is re-filed as an operator decision with its three options, and nudging stops until something changes | 2026-10-05: 2026-10-05 OPERATOR RULED via AskUserQuestion: option 'Draft the patch' (mtools drafts the repoint as a ready-to-apply patch in substrate's inbox for its next session). The drafting is W672. This row's hold is the operator's to lift (standing rule 5): to release it, run  mikemol-paths-forward --state .claude/paths-forward.json --update W592 --status blocked --blocked-on W672 --blocked-kind agent | 2026-10-05: 2026-10-05 OPERATOR: 'Go ahead and apply the patch.' Tried to apply in substrate: the pycheck hook REFUSES any edit to scratch/tmi_status.py (792 findings: 'this file cannot be made clean in one edit, and an edit that leaves it dirty is refused too'), so the load_units repoint cannot land by Edit from this session; a sed through Bash would route around the gate and was not used. mikemol-transcriptstruct is already a substrate dependency (pyproject.toml:322, pin 03749d5). Substrate's tree is a never-committed index (Selftest.mk, tmi_status.py, tmi_index.py and transcriptstruct.py are all staged adds). Nothing in substrate was changed.",
+      "evidence": "2026-10-04: drained from queue.md item 8 (2026-10-04): port e571b02; substrate's W33 owns the repoint; real consumers are 7 scratch tmi_* tools, tool_usage.py does not import it | 2026-10-05: 2026-10-05 ESCALATED after 16 blocked ticks (the loop's rule), once: the block on substrate:W33 is unchanged (letter 2026-10-04-mtools-transcriptstruct-repoint.md in substrate's inbox, no live substrate session in ListAgents), so it is re-filed as an operator decision with its three options, and nudging stops until something changes | 2026-10-05: 2026-10-05 OPERATOR RULED via AskUserQuestion: option 'Draft the patch' (mtools drafts the repoint as a ready-to-apply patch in substrate's inbox for its next session). The drafting is W672. This row's hold is the operator's to lift (standing rule 5): to release it, run  mikemol-paths-forward --state .claude/paths-forward.json --update W592 --status blocked --blocked-on W672 --blocked-kind agent | 2026-10-05: 2026-10-05 OPERATOR: 'Go ahead and apply the patch.' Tried to apply in substrate: the pycheck hook REFUSES any edit to scratch/tmi_status.py (792 findings: 'this file cannot be made clean in one edit, and an edit that leaves it dirty is refused too'), so the load_units repoint cannot land by Edit from this session; a sed through Bash would route around the gate and was not used. mikemol-transcriptstruct is already a substrate dependency (pyproject.toml:322, pin 03749d5). Substrate's tree is a never-committed index (Selftest.mk, tmi_status.py, tmi_index.py and transcriptstruct.py are all staged adds). Nothing in substrate was changed. | 2026-10-10: 2026-10-10 substrate-94 (live): NOT done. mikemol-transcriptstruct installed and pinned (mtools 6c242bba) but Selftest.mk and the seven tmi_* tools still use scratch/transcriptstruct.py. substrate:W33 is blocked on substrate:W300 (precommit as a bazel build) which is blocked on substrate:W314 (HEAD lacks staged gate tooling, an operator decision). ETA: not this week unless the operator picks a bootstrap path. Substrate will drop the old ledger.bib_keys argv when it repins. A live substrate session now exists, so option (a) keep waiting has a named upstream chain: substrate:W314.",
       "issued_at": "2026-10-04T19:06:24Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-05T12:23:22Z",
-      "ticks_blocked": 36,
+      "last_worked": "2026-10-10T16:38:06Z",
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -13291,21 +13289,21 @@
     {
       "symbol": "W670",
       "title": "mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their recorded F-arm history",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Continue with the remaining 15 by their docstring claims; a module with strong tests (atomicwrite) kills every declaration, which is itself the answer",
+      "next_bounded_step": null,
       "evidence": "2026-10-05: 2026-10-05 first slice: mdstruct (exclude-dropped-at-the-walk, from the W659 F-arm) and hooks (check-ignores-the-layout-runner, from the W669 F-arm) declared, each checked to plant before the runner. Remaining: ledger, transcriptstruct, mutation itself, fence, ratchet, witness and the rest, mined from their commits and swarm notes | 2026-10-05: 2026-10-05 second slice, each checked to plant and then run through the runner's own run_declared (all killed, none equivalent): pycodemod 10 in all (7 added from this session's F-arms: alias-rebinding-not-followed, every-prefixed-def-registered, artifact-vocabularies-swapped, touches-one-file-rule-never-fires, touches-root-names-dropped, placement-overrides-dropped, plus the 4 earlier), ledger 1 (unreadable-bib-smoothed-to-empty, W601), pathsforward 1 (wrap-never-breaks, W604), hooks 2 (adds program-filter-inverted, W587), mutation 4 (its own reader: climbing-module-allowed, duplicate-name-allowed, miss-no-longer-caught, miss-reads-as-applied). Declared so far: pathwalk 3, pycodemod 10, mdstruct 1, hooks 2, ledger 1, pathsforward 1, mutation 4. Still none: the other 19 distributions | 2026-10-05: CORRECTION to the count above: 27 distributions carry a :mutants target and 7 declare, so TWENTY remain, not 19 | 2026-10-05: 2026-10-05 third slice (6 declarations from F-arms recorded in commit bodies, each plant-checked then killed by run_declared; 22 of 22 across the five dists run): pycodemod shared-is-lcm-not-gcd (W607) and failure-not-subtracted-from-success (W612); hooks check-exit-never-fails (W621); pathsforward caused-by-no-longer-claims (W577); pathwalk suffix-validation-inverted (W575); transcriptstruct reference-name-type-unchecked (W620, the dist's first). Declared now: pathwalk 4, pycodemod 12, mdstruct 1, hooks 3, ledger 1, pathsforward 2, mutation 4, transcriptstruct 1 = 28 defects in 8 distributions; 19 distributions still declare none | 2026-10-05: 2026-10-05 fourth slice, FIRST SURVIVORS: ratchet declared 9 defects from core.py's own design comments (not from history); 4 SURVIVED and all 4 were real gaps, none equivalent. fan-out-absolved-as-a-move: the verdict test passed because the other arrival kept the exit code 1, and its report assertion was VACUOUS (it checked lowercase 'moved' against the report's 'MOVED', so it could never fail: fixed, and the class minted as W671). many-retired-absolved-as-a-move: no test for two retirements and one arrival. suspect-softens-the-verdict: Diff.grew had one reader (a test) and never with a suspect. readback-not-checked: the OSError path was untested. Added 3 tests in test_core.py and tests/test_write_landing.py (4 generated warrants), all 9 killed after. Declared now: 37 defects in 9 distributions; 18 declare none | 2026-10-05: 2026-10-05 fifth slice: fence declared 11 defects from git_env.py and label_lease.py's own docstring claims; 4 SURVIVED, all real test gaps: the default deadline returned raw (the fixture default 600 was already a whole minute above the floor, so a floored default looked identical), clamped at exact equality (no boundary test), module_of keeping the LAST .agda argument (no test with two), and a ledger that is not UTF-8 read lossily (no test with a bad byte). 4 tests, 4 generated warrants; all 11 killed after. Declared now: 48 defects in 10 distributions; 17 declare none. Two of the two dists run so far (ratchet, fence) had 4 survivors each out of 9 and 11 declared: the claims a module's own docstring makes are a rich source of missing tests | 2026-10-05: CORRECTION: the 2026-10-05T07:18 ledger line says 7 new tests; it is 8 (ratchet 3 in test_core.py plus 1 in test_write_landing.py, fence 4), plus one fixed assertion | 2026-10-05: 2026-10-05 sixth slice: atomicwrite declared 7 from durable.py's docstring (write-through the inode, permissions narrowed to 0600, umask ignored, temp left behind, exception swallowed, umask left changed, bytes as text): ALL 7 KILLED, a genuinely well-tested module. witness declared 8 from raw_bib.py (lossy decode, collision merged silently, the same bib twice reported as a collision, first-wins, directory and absent not named, accepted edge reported as dropped, edge vocabulary narrowed): 1 SURVIVED, the same-bib-twice guard (seen[key] != one) had no test; added test_the_same_bib_listed_twice_is_not_a_collision with its real-collision control, 1 generated warrant, all 8 killed after. Declared now: 63 defects in 12 distributions; 15 declare none (importdag, gatecheck, gradekit, treeio, memres, buildtel, mutantcell, pkgbuild, bibparse, corpus, grade, gmailstruct, audiostruct, icsstruct, pytestspec). Survival rate by dist so far: ratchet 4 of 9, fence 4 of 11, witness 1 of 8, atomicwrite 0 of 7 | 2026-10-05: 2026-10-05 seventh slice: bibparse declared 11 from edges.py and resolve.py's docstring claims (duplicate key allowed, list split on commas only, absent check/rests-on reading as a value, missing bib skipped, label without // guessed, colon token not a label, label package dropped, missing paper.toml defaulted, default warrants renamed, non-string warrants accepted): ALL 11 KILLED, no test added, a well-tested module like atomicwrite. Declared now: 74 defects in 13 distributions; 14 declare none (importdag, gatecheck, gradekit, treeio, memres, buildtel, mutantcell, pkgbuild, corpus, grade, gmailstruct, audiostruct, icsstruct, pytestspec). bazel test //bibparse:mutants passes. | 2026-10-05: 2026-10-05 eighth slice: grade declared 13 from grade.py's own design comments (clamp takes the strongest premise, below includes the floor, rungs order inverted, baseline axis swapped, a flipped check graded indeterminate, imported below behavioral, a stopped unfold not noted, delegation reads the self grade, truncation not transitive, scope defaulting to fragment, pessimistic reading not floored, content sensitivity inverted, hop check always agreeing): ALL 13 KILLED, no test added. Declared now: 87 defects in 14 distributions; 13 declare none (importdag, gatecheck, gradekit, treeio, memres, buildtel, mutantcell, pkgbuild, corpus, gmailstruct, audiostruct, icsstruct, pytestspec). bazel test //grade:mutants passes. Survival so far: ratchet 4/9, fence 4/11, witness 1/8, atomicwrite 0/7, bibparse 0/11, grade 0/13: the pure-function distributions with design comments are well tested; the survivors came from I/O-edged modules. | 2026-10-05: 2026-10-05 ninth slice: treeio (write.py and restore.py only; 18 declared from their docstrings): 3 SURVIVED, all real test gaps. fsync-dropped (no test that the temp is flushed before the replace; the fsync claim was untested), cleanup-only-on-exception (no test with an interrupt, a KeyboardInterrupt is not an Exception and must still remove the temp), saved-not-sorted (the untracked half is returned sorted and only one file was ever saved, so order could not show). 3 tests added (the last saves six files in a scrambled order), 3 generated warrants; all 18 killed after; bazel test //treeio/... 30 of 30 pass. Declared now: 105 defects in 15 distributions; 12 declare none (importdag, gatecheck, gradekit, memres, buildtel, mutantcell, pkgbuild, corpus, gmailstruct, audiostruct, icsstruct, pytestspec). treeio has 21 modules and only these two are declared: the other 19 remain. The I/O-edged hunch held: 3 of 18 survived here, against 0 of 31 in the pure-function dists (bibparse, grade). | 2026-10-05: 2026-10-05 tenth slice: mutantcell (cellstage.py only, 16 declared from its docstrings): 2 SURVIVED, both real gaps. cache-tag-invented: the no-tag branch (cache_tag or '') was unreachable on CPython and untested; a test now sets sys.implementation.cache_tag to None. swap-writes-through-the-hardlink: the module-swap analogue of the hardlink test the content toggle already had; a test now hardlinks the staged module to a source and checks the source keeps its content. 2 tests, 2 generated warrants; all 16 killed after; bazel test //mutantcell/... 19 of 19 pass. Declared now: 121 defects in 16 distributions; 11 declare none (importdag, gatecheck, gradekit, memres, buildtel, pkgbuild, corpus, gmailstruct, audiostruct, icsstruct, pytestspec). mutantcell has 9 modules and only cellstage is declared. Survival by kind: I/O-edged modules 5 of 34 across treeio and mutantcell (plus ratchet 4/9, fence 4/11, witness 1/8), pure-function dists 0 of 31. | 2026-10-05: 2026-10-05 eleventh slice: memres (mem_db.py and sweep_budget.py, 23 declared from their docstrings): 4 SURVIVED on the first run, 2 real and 2 EQUIVALENT. Real: measured-at-is-the-earliest (no test with two cells recorded at different times; a test now patches time.time twice) and two-arguments-accepted (usage exit 2 was tested with 0 and 1 arguments, never 2; main(['a-db','manifest']) is now asserted). Equivalent, re-aimed rather than kept: empty-project 'low or 1' (round(1/1048576, 1) is 0.0, the same as 0) now drops the floor entirely ('round(low'), and missing-MemTotal 'return 1' (int(1*0.4) is 0, the same as 0) now returns 100. All 23 killed after; bazel test //memres/... 18 of 18 pass. 2 tests (1 new, 1 extended), 1 generated warrant. Declared now: 144 defects in 17 distributions; 10 declare none (importdag, gatecheck, gradekit, buildtel, pkgbuild, corpus, gmailstruct, audiostruct, icsstruct, pytestspec). memres has 8 modules and only mem_db and sweep_budget are declared. A declaration that survives is not always a missing test: two here were equivalent, and the discriminator is whether the mutant's output differs on ANY input. | 2026-10-05: 2026-10-05 twelfth slice: gatecheck (rungate.py only, 15 declared from its docstrings: the flags that are load-bearing, dry-run, the exit code passed through, the repo root, the budget owner asked under the root with a stripped answer, capture and passthrough): 2 SURVIVED, both real. capture-raises-on-failure and passthrough-captures-output: the real seams capture_output and run_passthrough were only tested on exit 0 and on a plain exit code, so neither 'its status is read by the caller, never raised' nor 'the terminal's own stdout' was asserted. 2 tests, 2 generated warrants; all 15 killed after; bazel test //gatecheck/... 18 of 18 pass. Declared now: 159 defects in 18 distributions; 9 declare none (importdag, gradekit, buildtel, pkgbuild, corpus, gmailstruct, audiostruct, icsstruct, pytestspec). gatecheck has 8 modules and only rungate is declared. | 2026-10-09: 2026-10-09 TRIAGE recount (ls ./*/mutants.regex against ./*/pyproject.toml): 20 distributions declare mutants; the 10 that declare none are audiostruct, buildtel, corpus, debtplan, gmailstruct, gradekit, icsstruct, importdag, pkgbuild, pytestspec (debtplan is new to the list since the earlier count). The card is real and current. | 2026-10-09: 2026-10-09 thirteenth slice: importdag declares its first 6 (resolve.py's eager/deferred split: try-star-not-a-try, handlers-never-walked, eager-import-counted-deferred, deferred-import-counted-eager, halves-swapped, import-level-invented), mutants.regex wired into the :mutants data; ALL 6 KILLED, no test added (a pure-function module with design comments, as bibparse and grade were). bazel test //importdag:mutants passes. Declared distributions now 21; 9 declare none: audiostruct, buildtel, corpus, debtplan, gmailstruct, gradekit, icsstruct, pkgbuild, pytestspec. importdag's other modules (closure, closure_census, dagbzl, dagderive, dagnames, imports) are not declared.",
       "issued_at": "2026-10-05T05:48:13Z",
       "minted_during": "tick",
       "caused_by": "W629",
-      "last_worked": "2026-10-09T19:08:10Z",
+      "last_worked": "2026-10-11T15:49:07Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T154907Z"
     },
     {
       "symbol": "W671",
@@ -16156,7 +16154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 24,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16691,7 +16689,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 24,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16986,7 +16984,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -17184,7 +17182,7 @@
     {
       "symbol": "W843",
       "title": "pinned_files repository rule and paperkit_gate macro: a gate runs a sibling repo (the paperkit engine) at a recorded commit with named files, never its live working tree",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "resumes:W12",
         "summit:W194",
@@ -17200,14 +17198,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Slice 1: rules_py/pinned.bzl repository rule pinned_files(remote, commit, prefix): git archive of the commit, names from git ls-tree (no glob), BUILD exporting each.",
-      "evidence": "2026-10-08: 2026-10-08 tick: the later slices moved here from next_bounded_step to keep the tick payload under budget. Slice 2: gate.bzl paperkit_gate(name, project, engine) running python -m paperkit.gate from runfiles with only the engine checkout on PYTHONPATH. Slice 3: prove on resumes (5 projects), then gcalculus bibstruct stages, summit. | 2026-10-09: 2026-10-09: returned from working to ready (nemik-check: one working card per queue). Nothing of slice 1 is in the tree; W846 is the card in hand.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-08: 2026-10-08 tick: the later slices moved here from next_bounded_step to keep the tick payload under budget. Slice 2: gate.bzl paperkit_gate(name, project, engine) running python -m paperkit.gate from runfiles with only the engine checkout on PYTHONPATH. Slice 3: prove on resumes (5 projects), then gcalculus bibstruct stages, summit. | 2026-10-09: 2026-10-09: returned from working to ready (nemik-check: one working card per queue). Nothing of slice 1 is in the tree; W846 is the card in hand. | 2026-10-10: 2026-10-10: mtools-side slices are in the tree and used: pinned_files (ecf573b, 9d9d632), paperkit_gate with env, PAPERKIT_ENGINE and package-root projects (c7ca75f, f53d3d8, fa95cab), the shared engine environment and stage runner (c57b0be), gate_stages options (49702e0). Slice 3 (prove on resumes' projects, gcalculus' stages, summit) is each consumer's own card (resumes:W12, summit:W194, gcalculus:W91, rosettapkg:W122, el-openglo:W455), which this card enables.",
       "issued_at": "2026-10-06T23:11:55Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": "2026-10-09T18:45:11Z",
+      "last_worked": "2026-10-10T09:33:01Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T093301Z"
     },
     {
       "symbol": "W844",
@@ -17233,7 +17231,7 @@
     {
       "symbol": "W845",
       "title": "A repo's gate reads an immutable snapshot of what it gates, never the live working tree: a tree object from a temporary index (git write-tree), materialized by git archive and gated there, so an edit mid-run cannot invalidate or poison a run",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "gate",
@@ -17244,13 +17242,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Wire the existing mikemol-snapshot into the one place that runs the gate: have the pre-commit run its bazel lines as 'mikemol-snapshot REPO --index -- <bazel ...>' so the tree cannot change under the run; first measure a cold bazel build inside the snapshot path (the fixed path keeps the output base) and the cost per commit; pinned_files (W843) then reuses the materializer.",
-      "evidence": "2026-10-07: OPERATOR RULING 2026-10-06: scratch paths are FIXED, period, and exposure to scratch space is NAMESPACED. So the snapshot lives at one fixed, namespaced path per repo (not a per-run mktemp, not a path that varies by sha), e.g. /var/tmp/mikemol/gate/<repo>/tree, which also keeps bazel's output base and analysis cache. One writer at a time by flock held for the whole run (the run reads a tree nothing can rewrite under it); the tree sha is stamped in the directory so a reader can tell which snapshot it is; the path is counted in the zram budget (project-zram1-real-limit). Anything else that wants scratch asks the same namespace for its own fixed path. | 2026-10-09: 2026-10-09 TRIAGE against the tree: the materializer HALF IS DONE. hooks/snapshot.py (mikemol-snapshot REPO [--index|--working] [-- CMD...]) exists with 6 tests, takes a flock for the CMD's run, stamps .tree, and updates only what changed. Measured here: mtools --index materializes 24 MB at <namespace>/mtools/tree, and a second run changes nothing. NOT done: nothing calls it; .githooks/pre-commit still gates the live tree (its 'snapshot' lines are the script copying itself). Found while measuring: --help was read as the repo name ~/github/--help and git failed with exit 3; an argument beginning with - is now a usage error (7 tests, 1 warrant, 1 mutant, bazel hooks test_snapshot test_bar_fires mutants pass).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-07: OPERATOR RULING 2026-10-06: scratch paths are FIXED, period, and exposure to scratch space is NAMESPACED. So the snapshot lives at one fixed, namespaced path per repo (not a per-run mktemp, not a path that varies by sha), e.g. /var/tmp/mikemol/gate/<repo>/tree, which also keeps bazel's output base and analysis cache. One writer at a time by flock held for the whole run (the run reads a tree nothing can rewrite under it); the tree sha is stamped in the directory so a reader can tell which snapshot it is; the path is counted in the zram budget (project-zram1-real-limit). Anything else that wants scratch asks the same namespace for its own fixed path. | 2026-10-09: 2026-10-09 TRIAGE against the tree: the materializer HALF IS DONE. hooks/snapshot.py (mikemol-snapshot REPO [--index|--working] [-- CMD...]) exists with 6 tests, takes a flock for the CMD's run, stamps .tree, and updates only what changed. Measured here: mtools --index materializes 24 MB at <namespace>/mtools/tree, and a second run changes nothing. NOT done: nothing calls it; .githooks/pre-commit still gates the live tree (its 'snapshot' lines are the script copying itself). Found while measuring: --help was read as the repo name ~/github/--help and git failed with exit 3; an argument beginning with - is now a usage error (7 tests, 1 warrant, 1 mutant, bazel hooks test_snapshot test_bar_fires mutants pass). | 2026-10-10: 2026-10-10: DONE through W891. The commit's gate now reads a snapshot of the tree that lands: isolated.commit_isolated builds the tree from a private index (git write-tree), materializes it with snapshot.Snapshot at the fixed namespaced path under its flock, and runs the pre-commit there; it is the default where a repo's pre-commit names MIKEMOL_REAL_ROOT (b3d94d2). An edit mid-run no longer changes the gate's inputs. Peers adopt per the letter to luthen-observability.",
       "issued_at": "2026-10-07T01:49:51Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
-      "last_worked": "2026-10-09T19:15:02Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T13:04:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T130442Z"
     },
     {
       "symbol": "W846",
@@ -17495,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -17536,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -17559,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -17982,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -18156,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -18183,7 +18182,7 @@
     {
       "symbol": "W889",
       "title": "A session working a card holds a fence claim on its touches tags, so an overlapping session sees the holder and the files instead of deferring by judgment",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "fence",
@@ -18191,20 +18190,16 @@
         "pathsforward",
         "nemik"
       ],
-      "blocked_on": [
-        "W911",
-        "W912",
-        "W913"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Umbrella: lands when the claim verb, the hook that takes it for a working card, and the overlaps view exist (W911-W913); design in .claude/design/W889-work-claims.md.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
       "evidence": "2026-10-09: 2026-10-09 ATOMIZED. fence.admit already has the zero-capacity claim and the commit uses it; the gap is a lease owned by a long-lived process (the session), not by the command hold spawns. Advisory with a name on it, not a mutex: the commit claim is the only true mutex.",
       "issued_at": "2026-10-09T18:43:57Z",
       "minted_during": "tick",
       "caused_by": "W884",
-      "last_worked": "2026-10-09T23:45:44Z",
+      "last_worked": "2026-10-11T11:44:09Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T114409Z"
     },
     {
       "symbol": "W890",
@@ -18228,47 +18223,38 @@
     {
       "symbol": "W891",
       "title": "mikemol-commit: judge the commit's own paths in a private index or snapshot, so the gate neither holds .git/index.lock for its whole run nor refuses on another session's unstaged files",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W901",
-        "W902",
-        "W903",
-        "W904"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Umbrella: lands when the isolated commit is proven, built, syncs the real index, and is adopted (W901-W904); design in .claude/design/W891-isolated-commit.md.",
-      "evidence": "2026-10-09: 2026-10-09 measured in luthen-observability with two live sessions (github-45 host and luthen-observability-61): (1) mikemol-commit holds .git/index.lock for the whole gate (minutes), so the other session's git add fails with 'Unable to create index.lock'; (2) the gate's index-matches-tree check refuses a commit because ANOTHER session's tracked files are unstaged (12 files named in the verdict), so neither session can commit alone and the fix so far was one combined commit of both sessions' work (e715ccb), which mixes authorship and sweeps unreviewed files. Wanted: the gate runs against a snapshot of exactly the commit's paths (private GIT_INDEX_FILE or a temp worktree) so it holds no shared lock and judges only what it commits; related to the per-repo fence claim (39e7414), which serialises mikemol-commit callers but not plain git add. Related: mtools:W884, mtools:W798. | 2026-10-09: 2026-10-09 ATOMIZED. Mechanism: private index plus mikemol-snapshot of the commit's tree, then git commit with GIT_DIR=real, GIT_WORK_TREE=snapshot, GIT_INDEX_FILE=private and cwd the snapshot, so the repo's own hooks run unchanged on a tree that equals the index by construction (hook_index passes), the real index.lock is never taken, and bazel keeps its warm output base at the fixed snapshot path (operator ruling 2026-10-06). Composes W845 (snapshot) and W884/W886 (the commit claim).",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 measured in luthen-observability with two live sessions (github-45 host and luthen-observability-61): (1) mikemol-commit holds .git/index.lock for the whole gate (minutes), so the other session's git add fails with 'Unable to create index.lock'; (2) the gate's index-matches-tree check refuses a commit because ANOTHER session's tracked files are unstaged (12 files named in the verdict), so neither session can commit alone and the fix so far was one combined commit of both sessions' work (e715ccb), which mixes authorship and sweeps unreviewed files. Wanted: the gate runs against a snapshot of exactly the commit's paths (private GIT_INDEX_FILE or a temp worktree) so it holds no shared lock and judges only what it commits; related to the per-repo fence claim (39e7414), which serialises mikemol-commit callers but not plain git add. Related: mtools:W884, mtools:W798. | 2026-10-09: 2026-10-09 ATOMIZED. Mechanism: private index plus mikemol-snapshot of the commit's tree, then git commit with GIT_DIR=real, GIT_WORK_TREE=snapshot, GIT_INDEX_FILE=private and cwd the snapshot, so the repo's own hooks run unchanged on a tree that equals the index by construction (hook_index passes), the real index.lock is never taken, and bazel keeps its warm output base at the fixed snapshot path (operator ruling 2026-10-06). Composes W845 (snapshot) and W884/W886 (the commit claim). | 2026-10-10: all slices landed: W901 0a6dea5, W902 3bc9844, W903 cc41abd, W904 b3d94d2; tool-lookups W939/W940/W941; isolated commit is the default in mtools",
       "issued_at": "2026-10-09T20:54:01Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W684",
-      "last_worked": "2026-10-09T23:41:51Z",
+      "last_worked": "2026-10-10T11:56:43Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T115643Z"
     },
     {
       "symbol": "W892",
       "title": "Answer gcalculus:W222: mtools: gate_stages takes env and engine, so a stage can import the pinned paper",
-      "status": "blocked",
+      "status": "done",
       "enables": [
         "gcalculus:W222"
       ],
       "touches": [],
-      "blocked_on": [
-        "W895",
-        "W896",
-        "W897"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Umbrella for gcalculus:W222: lands when the engine env, the stage runner, the gate_stages option and the reply letter (W895-W897, W900) are done.",
-      "evidence": "2026-10-09: 2026-10-09 ATOMIZED (design in .claude/design/W892-W893-gcalculus-gate.md): shared engine_env (W895), engine_stage_main (W896), gate_stages per-stage options (W897), reply (W900).",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 ATOMIZED (design in .claude/design/W892-W893-gcalculus-gate.md): shared engine_env (W895), engine_stage_main (W896), gate_stages per-stage options (W897), reply (W900). | 2026-10-10: all slices landed: W895/W896 c57b0be, W897 49702e0, W900 letter; second letter gcalculus/inbox/2026-10-10-mtools-gate-stages-options-landed.md",
       "issued_at": "2026-10-09T21:25:19Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W222",
-      "last_worked": "2026-10-09T23:35:21Z",
-      "ticks_blocked": 1,
-      "completed": null
+      "last_worked": "2026-10-10T03:13:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T031340Z"
     },
     {
       "symbol": "W893",
@@ -18292,30 +18278,24 @@
     {
       "symbol": "W894",
       "title": "htmlstruct: a structure tool for html and mhtml files, routed from the structural-query hook",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W905",
-        "W906",
-        "W907",
-        "W908",
-        "W909"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Umbrella: lands when the dist is scaffolded, both readers, the script and the routing exist (W905-W909); design in .claude/design/W894-htmlstruct.md.",
-      "evidence": "2026-10-09: 2026-10-09 ATOMIZED by the agent without waiting (operator directive: planning and project management are the same act). Standard library only; read-only first cut; routing via the struct-tools table so the structural-query hook names the tool.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-09: 2026-10-09 ATOMIZED by the agent without waiting (operator directive: planning and project management are the same act). Standard library only; read-only first cut; routing via the struct-tools table so the structural-query hook names the tool. | 2026-10-10: umbrella: W905 26bbc94, W949 7c8ccc4, W950-W953 528c1fb, W907 87c91b8, W908 026cac4, W909 786eb4f; htmlstruct scaffolded, readers, MHTML, command and routing all landed",
       "issued_at": "2026-10-09T21:58:36Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-09T23:41:52Z",
+      "last_worked": "2026-10-10T17:35:01Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T173501Z"
     },
     {
       "symbol": "W895",
       "title": "rules_py: one engine_env(engine) function builds the pinned engine's environment, shared by paperkit_gate_main and the new stage runner",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W892"
       ],
@@ -18326,19 +18306,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Extract the env-building lines of paperkit_gate_main (PYTHONPATH of the checkout above the package, PAPERKIT_ENGINE, PAPERKIT_SCRATCH from TEST_TMPDIR) into rules_py/engine_env.py with a test, and have paperkit_gate_main call it.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed c57b0be PUSHED: engine_env.py, paperkit_gate_main refactored, 6 characterization tests, warrants",
       "issued_at": "2026-10-09T23:35:13Z",
       "minted_during": "tick",
       "caused_by": "W892",
-      "last_worked": "2026-10-10T02:34:04Z",
+      "last_worked": "2026-10-10T03:01:15Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T030115Z"
     },
     {
       "symbol": "W896",
       "title": "rules_py: engine_stage_main.py runs one stage script as a subprocess under the pinned engine's environment",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W892"
       ],
@@ -18349,18 +18329,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "engine_stage_main --engine=gate.py-rootpath --script=SCRIPT [-- ARGS]: refuse a missing input, set the engine env via engine_env, run the script with sys.executable, return its status; tested with a stand-in engine tree.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed c57b0be PUSHED: engine_stage_main.py + 4 tests",
       "issued_at": "2026-10-09T23:35:13Z",
       "minted_during": "tick",
       "caused_by": "W892",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T03:01:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T030116Z"
     },
     {
       "symbol": "W897",
       "title": "gate_stages: a stage may carry an options dict (env, engine_repo, engine_files) and then runs under engine_stage_main with the engine's files as data",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W892",
         "gcalculus:W222",
@@ -18373,13 +18354,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Extend the stage tuple with an optional 4th element, a dict {engine_repo, engine_files, env, imports}: engine_repo wires engine_stage_main; env passes to py_test with rootpath expansion; imports (runfiles-relative directories, e.g. ../bibparse_pinned/bibparse/src) go to py_test imports so a pinned source dir lands on sys.path; add a sample stage proving each loads and runs.",
-      "evidence": "2026-10-10: 2026-10-09 (gcalculus-22): gcalculus:W93 slice 2 needs a pinned copy of mikemol-bibparse's src dir (pinned_files at mtools a10c6c4, prefix bibparse/src/) on the stage's path. A rootpath names a FILE, not a directory, so a PYTHONPATH=$(rootpath ...) cannot name the dir; py_test's imports attribute takes runfiles-relative directories and puts them on sys.path, so the option carries imports as well as env. W897 now also enables gcalculus:W93.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-09 (gcalculus-22): gcalculus:W93 slice 2 needs a pinned copy of mikemol-bibparse's src dir (pinned_files at mtools a10c6c4, prefix bibparse/src/) on the stage's path. A rootpath names a FILE, not a directory, so a PYTHONPATH=$(rootpath ...) cannot name the dir; py_test's imports attribute takes runfiles-relative directories and puts them on sys.path, so the option carries imports as well as env. W897 now also enables gcalculus:W93. | 2026-10-10: landed 49702e0 PUSHED: rules_py/gate.bzl gate_stages 4th element options",
       "issued_at": "2026-10-09T23:35:14Z",
       "minted_during": "tick",
       "caused_by": "W892",
-      "last_worked": "2026-10-10T00:17:00Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T03:12:50Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T031250Z"
     },
     {
       "symbol": "W898",
@@ -18453,7 +18435,7 @@
     {
       "symbol": "W901",
       "title": "Prove isolated commit on real git: hooks run in the snapshot under a private index, HEAD moves, the real index.lock never exists, a peer's unstaged file does not refuse",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W891"
       ],
@@ -18464,18 +18446,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A test over throwaway repos with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set and cwd the snapshot: assert the pre-commit ran there, HEAD advanced, no .git/index.lock during the hook, the real worktree untouched, post-commit unchanged.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 0a6dea5 PUSHED: hooks/tests/test_isolated_commit.py, 4 claims hold on real git",
       "issued_at": "2026-10-09T23:41:29Z",
       "minted_during": "tick",
       "caused_by": "W891",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T05:49:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T054928Z"
     },
     {
       "symbol": "W902",
       "title": "commit_kata: an isolated mode builds the commit's private index and runs git commit against the snapshot of its tree",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W891"
       ],
@@ -18486,18 +18469,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In commit_kata add isolated=true: private index from read-tree HEAD plus add -A of the paths, write-tree, mikemol-snapshot of that tree, then git commit with the three env vars and cwd the snapshot; opt in with MIKEMOL_COMMIT_ISOLATED=1.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 3bc9844 PUSHED: isolated.py, commit_kata isolated mode, 6 witnesses, mutation grid green",
       "issued_at": "2026-10-09T23:41:30Z",
       "minted_during": "tick",
       "caused_by": "W891",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T06:08:49Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T060849Z"
     },
     {
       "symbol": "W903",
       "title": "commit_kata isolated mode syncs the real index afterwards and handles a staged deletion",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W891"
       ],
@@ -18507,18 +18491,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After a landed isolated commit run git reset -q on the committed paths so the real index reads clean; test a deleted path and a path that was never tracked; this is the luthen bug class.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10: the real-index sync (reset -q -- paths) and the staged-deletion case landed inside W902's commit with tests (test_commit_isolated: staged deletion, clean status, new file); what W903 still owns: a peer's STAGED file at a committed path, and a refused commit leaving the real index as it was | 2026-10-10: landed cc41abd PUSHED: peer-staged and refused-commit witnesses; real-index sync and staged deletion landed with W902 3bc9844",
       "issued_at": "2026-10-09T23:41:31Z",
       "minted_during": "tick",
       "caused_by": "W891",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T06:25:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T062519Z"
     },
     {
       "symbol": "W904",
       "title": "Adopt isolated commit in mtools after a soak, and tell luthen-observability and the peers",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W891"
       ],
@@ -18528,18 +18513,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After the opt-in has run clean for several commits flip the default, archive the letter from luthen-observability:W684, and send one letter naming the env switch and how to turn it off.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10 soak plan: from this tick mtools' own commits run with MIKEMOL_COMMIT_ISOLATED=1; adopt (flip the default, letter luthen-observability W684 and the peers) after N clean isolated commits. Count so far: 0. | 2026-10-10: 2026-10-10 soak commit 1 (W937) REFUSED in isolated mode: pre-commit: atomicwrite/.venv/bin/ruff not found. The snapshot lacks untracked build outputs (.venv, bazel-bin); the gate cannot run from it as is. Minted W939; adoption waits on it. Soak count: 0 clean. | 2026-10-10: 2026-10-10 soak: 1 clean isolated commit (a000194, W940, attempt 8 of 8; the 7 refusals before it were the tool-lookup fixes, W939/W940). Real worktree and index stayed clean afterwards. Count: 1 clean. | 2026-10-10: 2026-10-10 soak 2 clean (9fa2d89, W941, first try). Adoption rule: flip the default to isolated after 5 clean isolated commits in a row; then letter luthen-observability (W684) and the peers. Count: 2. | 2026-10-10: 2026-10-10 soak 3 clean: ba7fd0e (W918). Its first attempt was refused by two load timeouts (W942), which are not isolation. Count: 3 of 5. | 2026-10-10: 2026-10-10 soak 4 clean: bc3797e (W919); its first attempt was refused by ruff_selector (a real defect in my change, not isolation) and the W942 timeout. Count: 4 of 5. | 2026-10-10: 2026-10-10 soak 5 clean: 3bdc47a (W935, CPU ceiling), first try in isolated mode. Five in a row (a000194, 9fa2d89, ba7fd0e, bc3797e, 3bdc47a); every refusal between them named a defect of its own change or a load timeout (W942), none was isolation. THRESHOLD MET: flip the default next. | 2026-10-10: 2026-10-10 soak 6 clean: 3406959 (W920). Default flip in flight: isolation_wanted / supports_isolation in commit_kata (opt-out =0, force =1, unset = the repo's pre-commit names MIKEMOL_REAL_ROOT). Remaining after it lands: the letters to luthen-observability (W684) and the peers (what they get, and the lookup change a peer's hooks need to adopt). | 2026-10-10: landed b3d94d2 PUSHED (committed with no flag): isolation_wanted/supports_isolation; letter to luthen-observability (inbox/2026-10-10-mtools-isolated-commit-is-the-default-w684.md) carries what peers get and the three adoption steps. Other peers adopt by editing their own hooks; none is told individually (they are off until they do).",
       "issued_at": "2026-10-09T23:41:32Z",
       "minted_during": "tick",
       "caused_by": "W891",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T11:56:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T115642Z"
     },
     {
       "symbol": "W905",
       "title": "Scaffold the htmlstruct distribution and wire it as one new dist",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W894"
       ],
@@ -18549,18 +18535,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run the scaffold tool for htmlstruct (src, tests, BUILD, pyproject, mutants, warrants, rubric), integrate it alone and run the gate before anything else lands (an untracked dist breaks the commit gate).",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 26bbc94 [PUSHED]: htmlstruct scaffolded by mikemol-new-dist; venv_check one-test fix",
       "issued_at": "2026-10-09T23:41:40Z",
       "minted_during": "tick",
       "caused_by": "W894",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T14:47:06Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T144706Z"
     },
     {
       "symbol": "W906",
       "title": "htmlstruct: the HTML reader with outline, links, tables, meta and text by id, standard library only",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W894"
       ],
@@ -18569,18 +18556,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A tolerant html.parser tree; typed results; unreadable input is a Skip; tests per verb with a control each.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: umbrella: W949-W953 landed (7c8ccc4, 528c1fb)",
       "issued_at": "2026-10-09T23:41:41Z",
       "minted_during": "tick",
       "caused_by": "W894",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T15:53:27Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T155327Z"
     },
     {
       "symbol": "W907",
       "title": "htmlstruct: the MHTML reader with the parts list, the root part and Content-Location addressing",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W894"
       ],
@@ -18589,18 +18577,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "email.parser over multipart/related; the root part answers every HTML verb through the HTML reader; a sub-resource is addressed by Content-Location; tests with a built archive.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 87c91b8 [PUSHED]: htmlstruct mhtml.py, 8 tests, 6 mutants",
       "issued_at": "2026-10-09T23:41:42Z",
       "minted_during": "tick",
       "caused_by": "W894",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T16:25:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T162502Z"
     },
     {
       "symbol": "W908",
       "title": "htmlstruct: the console script with its verbs and exit codes",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W894"
       ],
@@ -18609,18 +18598,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A htmlstruct script with outline, links, tables, meta, text and parts; an unknown verb or a missing file is a usage refusal (exit 2), never an empty answer.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 026cac4 [PUSHED]: htmlstruct cli.py, 6 tests, 6 mutants, console script registered",
       "issued_at": "2026-10-09T23:41:43Z",
       "minted_during": "tick",
       "caused_by": "W894",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T17:15:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T171559Z"
     },
     {
       "symbol": "W909",
       "title": "Route html and mhtml to htmlstruct: a struct-tools row, the structural-query refusal, and a hooks-probe row",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W894"
       ],
@@ -18630,13 +18620,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the routing-table row claiming .html .htm .mhtml .mht, a structural-query test that a grep over an .html refuses naming htmlstruct, and a probe row for it.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 786eb4f [PUSHED]: struct-tools html row + live-table test; probe row declined (adopters)",
       "issued_at": "2026-10-09T23:41:43Z",
       "minted_during": "tick",
       "caused_by": "W894",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T17:34:56Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T173456Z"
     },
     {
       "symbol": "W910",
@@ -18662,7 +18653,7 @@
     {
       "symbol": "W911",
       "title": "fence: a claim verb whose lease is owned by a long-lived process, with release and a listing of holders",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W889"
       ],
@@ -18672,18 +18663,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "mikemol-membudget claim LABEL [--owner-pid N] writes a zero-capacity lease owned by that process's pid:starttime and returns; release drops it; claims lists holder and age; tests: exclusion, dead-owner gc, listing.",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-09T23:45:38Z",
       "minted_during": "tick",
       "caused_by": "W889",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T10:03:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T100342Z"
     },
     {
       "symbol": "W912",
       "title": "A working card's touches are claimed by the session through the context hook, and a refusal names the holder",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W889"
       ],
@@ -18694,18 +18686,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In the tick-gate or user-prompt hook, when a card is working, run the claim verb per claim:label:touch:<repo>:<tag>; an existing holder is printed with its age as advisory context, never a block; unclaimed on done.",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-09T23:45:39Z",
       "minted_during": "tick",
       "caused_by": "W889",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T11:03:14Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T110314Z"
     },
     {
       "symbol": "W913",
       "title": "nemik-overlaps and the inbound context line print the live claim holders beside overlapping cards",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W889"
       ],
@@ -18715,13 +18708,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read fence's claims listing for the repo and show holder and age next to each OVERLAP row; owned by nemik, so a letter or card there; test with a fixture ledger.",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-09T23:45:39Z",
       "minted_during": "tick",
       "caused_by": "W889",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T11:44:04Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T114404Z"
     },
     {
       "symbol": "W914",
@@ -18767,7 +18761,7 @@
     {
       "symbol": "W916",
       "title": "Answer luthen-observability:W710: a run-time guard predicate for the fenced commit, from a declared reading",
-      "status": "blocked",
+      "status": "done",
       "enables": [
         "luthen-observability:W710"
       ],
@@ -18776,21 +18770,16 @@
         "commit",
         "hooks"
       ],
-      "blocked_on": [
-        "W918",
-        "W919",
-        "W920",
-        "W921"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Umbrella for luthen-observability:W710: lands when the trip rule, the reading source, the watcher, the policy row and the reply letter (W918-W922) are done; design in .claude/design/W710-runtime-guard.md.",
-      "evidence": "",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: all slices landed: W918 ba7fd0e, W919 bc3797e, W920 3406959, W921 0de78c4, reply W922; closing letter luthen-observability/inbox/2026-10-10-mtools-w710-runtime-guard-landed.md (how a host enables it; the watcher-ends-at-first-trip flaw found and fixed)",
       "issued_at": "2026-10-10T00:12:56Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W710",
-      "last_worked": "2026-10-10T00:13:17Z",
+      "last_worked": "2026-10-10T12:52:52Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261010T125252Z"
     },
     {
       "symbol": "W917",
@@ -18817,7 +18806,7 @@
     {
       "symbol": "W918",
       "title": "fence guard: the pure trip rule (streak after each sample, first trip index), where an unreadable sample neither counts nor resets",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W916"
       ],
@@ -18827,18 +18816,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A module in fence with streak_after and trip_index over a sample list, cleanroomed from luthen's kine_guard (a design, not a copy); tests with planted series incl. the blind-sample and exactly-at-threshold cases; mutants.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed ba7fd0e PUSHED (isolated mode; a first attempt was refused by two load timeouts, W942, not by the code)",
       "issued_at": "2026-10-10T00:13:09Z",
       "minted_during": "interrupt",
       "caused_by": "W916",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T10:09:33Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T100933Z"
     },
     {
       "symbol": "W919",
       "title": "fence guard: a reading source that asks a named endpoint a PromQL instant query",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W916"
       ],
@@ -18848,18 +18838,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A reader taking an endpoint name, a query and a resolver; the endpoint address comes from a host-supplied name-to-url file (no address in mtools); an unreadable answer is a blind sample, not a value; tested with an injected opener and a planted response.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed bc3797e PUSHED (isolated mode). The first attempt was refused by a real defect (ruff_selector: a comment cited the rule's code while the selector names it) and a hooks:mutants load timeout (W942).",
       "issued_at": "2026-10-10T00:13:09Z",
       "minted_during": "interrupt",
       "caused_by": "W916",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T10:47:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T104759Z"
     },
     {
       "symbol": "W920",
       "title": "fence guard: a watcher that samples while the fenced command runs and interrupts the named process on a trip",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W916"
       ],
@@ -18870,18 +18861,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run alongside the command: sample every interval, feed the rule, on a trip send the declared signal to the descendant named by the row (the bazel client), end on the command exiting never on a timeout; injected clock, reader and signaller for tests.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 3406959 PUSHED (isolated): watcher.py, 10 witnesses incl. a real sh/sleep/SIGTERM arm, 4 mutants",
       "issued_at": "2026-10-10T00:13:10Z",
       "minted_during": "interrupt",
       "caused_by": "W916",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T11:44:00Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T114400Z"
     },
     {
       "symbol": "W921",
       "title": "mikemol-commit reads its guards from a policy row, so a limit is declared and not a literal",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W916"
       ],
@@ -18892,13 +18884,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A TOML policy (the katas.toml pattern) with guard rows: reading, endpoint name, threshold, samples, interval, signal, target process name; the commit passes the rows to the watcher; an absent file means no guard, said once.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 0de78c4 PUSHED: fence/policy.py, guard_cli.py, claim_of guard layer; watcher revised to run until the command exits (a trip 20 ms in found no bazel and the first design ended there)",
       "issued_at": "2026-10-10T00:13:10Z",
       "minted_during": "interrupt",
       "caused_by": "W916",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-10T12:52:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T125238Z"
     },
     {
       "symbol": "W922",
@@ -18941,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -19044,6 +19037,1680 @@
       "last_worked": "2026-10-10T02:33:52Z",
       "ticks_blocked": 0,
       "completed": "20261010T023352Z"
+    },
+    {
+      "symbol": "W929",
+      "title": "Answer nemik:W276: an attach mode that stores a repo-relative file reference and its hash in a waypoint",
+      "status": "done",
+      "enables": [
+        "nemik:W276"
+      ],
+      "touches": [
+        "pathsforward",
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: all slices landed: W930 2a7866f, W931 c4d4b56, W932 842ab10, reply W933; nemik-c3 messaged",
+      "issued_at": "2026-10-10T02:44:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W276",
+      "last_worked": "2026-10-10T04:32:33Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T043233Z"
+    },
+    {
+      "symbol": "W930",
+      "title": "pathsforward: a waypoint may carry attachments, each a repo-relative path and a sha256, validated on load",
+      "status": "done",
+      "enables": [
+        "W929"
+      ],
+      "touches": [
+        "pathsforward",
+        "model"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 2a7866f PUSHED: pathsforward attach.py + check wiring + 8 witnesses; first gate attempt refused on a test_inbound 60s timeout under load (W934)",
+      "issued_at": "2026-10-10T02:44:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W929",
+      "last_worked": "2026-10-10T03:48:41Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T034841Z"
+    },
+    {
+      "symbol": "W931",
+      "title": "pathsforward --update W<n> --attach PATH stores the file's reference and hash",
+      "status": "done",
+      "enables": [
+        "W929"
+      ],
+      "touches": [
+        "pathsforward",
+        "cli"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed c4d4b56 PUSHED: attach.resolve, Update.attachment, --attach, 7 witnesses",
+      "issued_at": "2026-10-10T02:44:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "W929",
+      "last_worked": "2026-10-10T04:11:56Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T041156Z"
+    },
+    {
+      "symbol": "W932",
+      "title": "pathsforward --check reports an attachment whose file is missing or whose hash no longer matches",
+      "status": "done",
+      "enables": [
+        "W929"
+      ],
+      "touches": [
+        "pathsforward",
+        "check"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 842ab10 PUSHED: attach.drift in check(), 5 witnesses incl. unchanged control",
+      "issued_at": "2026-10-10T02:44:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "W929",
+      "last_worked": "2026-10-10T04:32:33Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T043233Z"
+    },
+    {
+      "symbol": "W933",
+      "title": "Reply to nemik on W276 with the attach design and the card citations",
+      "status": "done",
+      "enables": [
+        "W929"
+      ],
+      "touches": [
+        "nemik"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10: letter written to nemik/inbox/2026-10-10-mtools-attach-claimed-w929.md; the handled letter moved to inbox/archive.",
+      "issued_at": "2026-10-10T02:44:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "W929",
+      "last_worked": "2026-10-10T02:45:06Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T024506Z"
+    },
+    {
+      "symbol": "W934",
+      "title": "pathsforward test_inbound timed out at 60s inside the full pre-commit gate (passes alone): find what it waits on and make its cost load-independent",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed b47a98f PUSHED: test_inbound sweep 16.7s -> 0.28s",
+      "issued_at": "2026-10-10T03:38:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "W930",
+      "last_worked": "2026-10-10T04:48:15Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T044815Z"
+    },
+    {
+      "symbol": "W935",
+      "title": "pathsforward: a check that no single test's own duration approaches its bazel timeout (pytest --durations in the suite), so a slow sweep is found before the full gate times it out",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 6905cd5 PUSHED: pytest_main ceiling = TEST_TIMEOUT/4, full-tree run found one test over 15s (audiostruct stubtest 31.6s, medium target), admitted by scaling",
+      "issued_at": "2026-10-10T04:36:50Z",
+      "minted_during": "tick",
+      "caused_by": "W934",
+      "last_worked": "2026-10-10T05:33:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T053339Z"
+    },
+    {
+      "symbol": "W936",
+      "title": "Answer nemik:W292: fold mtools' inbox letters into waypoints (nemik-check --letters --fold --repo mtools)",
+      "status": "done",
+      "enables": [
+        "nemik:W292"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10: nemik-check --letters --fold --repo mtools listed 2 live orphans, both now cited: luthen-observability's key-custody letter recorded on W576 and archived; gcalculus's two-hook-defects letter taken as W937 and W938, reply gcalculus/inbox/2026-10-10-mtools-two-hook-defects-taken.md, letter archived. The third (summit pycodemod modes, answered) is a stale orphan left for the operator's archive call.",
+      "issued_at": "2026-10-10T06:25:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W292",
+      "last_worked": "2026-10-10T06:25:57Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T062557Z"
+    },
+    {
+      "symbol": "W937",
+      "title": "shellcheck hook: judge only the findings an edit ADDS, so an edit to a shell file carrying an old finding is not refused",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "shellcheck"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed c5f2c58 PUSHED: shellcheck.added_only + baseline, 7 witnesses, mutants declared; first isolated-mode attempt refused (W939)",
+      "issued_at": "2026-10-10T06:25:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "inbox/2026-10-08-gcalculus-two-hook-defects.md",
+      "last_worked": "2026-10-10T06:58:49Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T065849Z"
+    },
+    {
+      "symbol": "W938",
+      "title": "pycheck edit gate: stage the temporary copy beside the real file, so a relative import in a package __init__.py type-checks",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "pycheck"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 80a067b PUSHED: not reproducible at HEAD (W868 shadow-file); __init__.py guard and control added",
+      "issued_at": "2026-10-10T06:25:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "inbox/2026-10-08-gcalculus-two-hook-defects.md",
+      "last_worked": "2026-10-10T07:24:44Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T072444Z"
+    },
+    {
+      "symbol": "W939",
+      "title": "Isolated commit: the pre-commit reads its tools (.venv, bazel-bin) from the real root, not the snapshot",
+      "status": "done",
+      "enables": [
+        "W904"
+      ],
+      "touches": [
+        "commit",
+        "hooks",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10 ATOMIZED (design .claude/design/W939-isolated-gate-tools.md): W940 venv_bin + presence after prebuild + arm; W941 end-to-end decoy. | 2026-10-10: all slices landed: W940 a000194, W941 9fa2d89; isolated commits clean twice",
+      "issued_at": "2026-10-10T06:45:17Z",
+      "minted_during": "interrupt",
+      "caused_by": "W904",
+      "last_worked": "2026-10-10T09:32:46Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T093246Z"
+    },
+    {
+      "symbol": "W940",
+      "title": "pre-commit: one venv_bin function finds every tool under the real root when isolated, and an arm that no raw .venv/bin survives",
+      "status": "done",
+      "enables": [
+        "W939"
+      ],
+      "touches": [
+        "commit",
+        "hooks",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed a000194 PUSHED, committed IN ISOLATED MODE on attempt 8: seven refusals each named one snapshot-blind lookup (presence, test_gate_suite stub, ruff version in test_bar_fires, ratchet census RUFF_BIN, commit-msg venv, pre-push decoy env, rule_citations.sh); fixed across pre-commit, commit-msg, pre-push, post-commit, rule_citations.sh, roster_drift.sh; arm over all six. Real tree stayed clean after the commit (index synced).",
+      "issued_at": "2026-10-10T07:41:52Z",
+      "minted_during": "tick",
+      "caused_by": "W939",
+      "last_worked": "2026-10-10T09:21:11Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T092111Z"
+    },
+    {
+      "symbol": "W941",
+      "title": "Isolated commit end to end on a decoy repo whose pre-commit needs a tool only the real root has",
+      "status": "done",
+      "enables": [
+        "W939"
+      ],
+      "touches": [
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 9fa2d89 PUSHED in ISOLATED mode on the first try (soak 2)",
+      "issued_at": "2026-10-10T07:41:53Z",
+      "minted_during": "tick",
+      "caused_by": "W939",
+      "last_worked": "2026-10-10T09:32:45Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T093245Z"
+    },
+    {
+      "symbol": "W942",
+      "title": "Two targets timed out in a full isolated gate (fence test_membudget_cli at 60s, hooks:mutants at 300s) and pass alone: measure each alone and under load, and make the cost load-independent or the size honest",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "gate",
+        "fence",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-10: 2026-10-10: PART OF THIS IS MINE. The W935 ceiling measured wall time and refused two healthy tests under full-gate load (1.2s alone -> 45s, 1.3s -> 21.7s); changed to CPU time (commit in flight). The remaining timeouts (hooks:mutants 300s, fence test_membudget_cli 60s) are wall-clock sizes of heavy-but-legitimate targets under 700 parallel actions: measure CPU for each alone, then size honestly. | 2026-10-10: 2026-10-10 fd9f8fe: hooks:mutants exclusive. Its own full gate had 0 TIMEOUT lines and passed first try (gate 1 of 3). Close after two more full gates without a load timeout. | 2026-10-10: 2026-10-10 gate 2 of 3 clean: 96890f9 (W944), 0 TIMEOUT lines, first try. | 2026-10-10: 2026-10-10: the exclusive tag on hooks:mutants is gone (W969, 291c3f9); the target is three shards and the full gate passed without it.",
+      "issued_at": "2026-10-10T10:00:24Z",
+      "minted_during": "interrupt",
+      "caused_by": "W918",
+      "last_worked": "2026-10-10T22:02:35Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W943",
+      "title": "mikemol-new-dist: a new distribution is a command (umbrella; design .claude/design/W943-new-dist.md)",
+      "status": "done",
+      "enables": [
+        "W905"
+      ],
+      "touches": [
+        "hooks",
+        "scaffold"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: W944 core 96890f9 + W945 shell b83ed78 landed",
+      "issued_at": "2026-10-10T13:05:53Z",
+      "minted_during": "tick",
+      "caused_by": "W905",
+      "last_worked": "2026-10-10T13:36:04Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T133604Z"
+    },
+    {
+      "symbol": "W944",
+      "title": "new_dist pure core: skeleton, module_edit and install_edit as text-to-text functions, tested over fixtures",
+      "status": "done",
+      "enables": [
+        "W943"
+      ],
+      "touches": [
+        "hooks",
+        "scaffold"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: landed 96890f9 PUSHED: hooks/new_dist.py, 20 witnesses, 5 mutants",
+      "issued_at": "2026-10-10T13:05:54Z",
+      "minted_during": "tick",
+      "caused_by": "W943",
+      "last_worked": "2026-10-10T13:20:58Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T132058Z"
+    },
+    {
+      "symbol": "W945",
+      "title": "mikemol-new-dist shell and console script, run against a throwaway copy of the repository's files",
+      "status": "done",
+      "enables": [
+        "W943"
+      ],
+      "touches": [
+        "hooks",
+        "scaffold"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit b83ed78 [PUSHED]: new_dist_cli + console script, 3 tests, mutants, warrants",
+      "issued_at": "2026-10-10T13:05:55Z",
+      "minted_during": "tick",
+      "caused_by": "W943",
+      "last_worked": "2026-10-10T13:31:10Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T133110Z"
+    },
+    {
+      "symbol": "W946",
+      "title": "mikemol-commit honours MIKEMOL_COMMIT_TIMEOUT_S",
+      "status": "done",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit e748402 [PUSHED]",
+      "issued_at": "2026-10-10T13:36:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "paperkit:W299",
+      "last_worked": "2026-10-10T13:56:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T135602Z"
+    },
+    {
+      "symbol": "W947",
+      "title": "paths-forward bulk block: --block-matching blocks every open card with a given touches tag on one card, dry-run first",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "kata",
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 6ae3ce9 [PUSHED]: bulkblock.py, --block-matching/--on/--write, 9 tests, 3 mutants",
+      "issued_at": "2026-10-10T13:49:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W13",
+      "last_worked": "2026-10-10T14:11:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T141159Z"
+    },
+    {
+      "symbol": "W948",
+      "title": "snapshot materialize repairs a snapshot that lost tracked files: verify the tree, not only the stamp",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "isolated-commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 6a2d85c [PUSHED]: Snapshot._lost + materialize restores lost files",
+      "issued_at": "2026-10-10T14:16:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "W905",
+      "last_worked": "2026-10-10T14:58:41Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T145841Z"
+    },
+    {
+      "symbol": "W949",
+      "title": "htmlstruct: a tolerant html.parser tree with typed nodes; unreadable input is a Skip",
+      "status": "done",
+      "enables": [
+        "W906"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 7c8ccc4 [PUSHED]: htmlstruct tree.py, 11 tests, 4 mutants",
+      "issued_at": "2026-10-10T14:48:39Z",
+      "minted_during": "tick",
+      "caused_by": "W906",
+      "last_worked": "2026-10-10T15:21:10Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T152110Z"
+    },
+    {
+      "symbol": "W950",
+      "title": "htmlstruct: outline, the heading hierarchy of a tree",
+      "status": "done",
+      "enables": [
+        "W906"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 528c1fb [PUSHED]: htmlstruct outline.py",
+      "issued_at": "2026-10-10T14:48:40Z",
+      "minted_during": "tick",
+      "caused_by": "W906",
+      "last_worked": "2026-10-10T15:53:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T155319Z"
+    },
+    {
+      "symbol": "W951",
+      "title": "htmlstruct: links, every anchor with href and text",
+      "status": "done",
+      "enables": [
+        "W906"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 528c1fb [PUSHED]: htmlstruct links.py",
+      "issued_at": "2026-10-10T14:48:40Z",
+      "minted_during": "tick",
+      "caused_by": "W906",
+      "last_worked": "2026-10-10T15:53:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T155320Z"
+    },
+    {
+      "symbol": "W952",
+      "title": "htmlstruct: tables as rows of cell text, and meta as name to content",
+      "status": "done",
+      "enables": [
+        "W906"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 528c1fb [PUSHED]: htmlstruct tables.py and meta.py",
+      "issued_at": "2026-10-10T14:48:41Z",
+      "minted_during": "tick",
+      "caused_by": "W906",
+      "last_worked": "2026-10-10T15:53:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T155321Z"
+    },
+    {
+      "symbol": "W953",
+      "title": "htmlstruct: text by element id",
+      "status": "done",
+      "enables": [
+        "W906"
+      ],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 528c1fb [PUSHED]: htmlstruct text.py",
+      "issued_at": "2026-10-10T14:48:42Z",
+      "minted_during": "tick",
+      "caused_by": "W906",
+      "last_worked": "2026-10-10T15:53:22Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T155322Z"
+    },
+    {
+      "symbol": "W954",
+      "title": "Document isolated commit for hook authors: MIKEMOL_REAL_ROOT, MIKEMOL_COMMIT_ISOLATED, MIKEMOL_SNAPSHOT_ROOT in docs/adopting-a-hook.md and hooks/README.md",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "docs"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add an Isolated commit section to docs/adopting-a-hook.md: isolation is on only where .githooks/pre-commit text names MIKEMOL_REAL_ROOT (commit_kata.supports_isolation); the hook then runs in a snapshot of the tree that lands, so host tools (venvs, bazel-bin) come from ${MIKEMOL_REAL_ROOT:-root}; MIKEMOL_COMMIT_ISOLATED=0|1 overrides; MIKEMOL_SNAPSHOT_ROOT moves the namespace; MIKEMOL_COMMIT_TIMEOUT_S bounds the run. Link .claude/design/W939-isolated-gate-tools.md. Test: a doc-names-every-env-var check.",
+      "evidence": "",
+      "issued_at": "2026-10-10T16:02:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W-substrate-94",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W955",
+      "title": "paths-forward writer preserves the owner group and mode of every file it replaces, whoever runs it",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10 operator: not simply reject root; root can have a light touch too, so the writer must preserve ownership and permissions rather than refuse. Incident: a root run left luthen-observability paths-forward.json root-owned mode 600 and unreadable to every session until a manual chown. | 2026-10-10: commit 6868dd2 [PUSHED]: ownership.py, store/ledger/marks use it, 6 tests, 5 mutants",
+      "issued_at": "2026-10-10T16:39:41Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W15",
+      "last_worked": "2026-10-10T17:02:11Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T170211Z"
+    },
+    {
+      "symbol": "W956",
+      "title": "mikemol-repin: survey every repo's pinned mikemol dist against a sha (dry run), then write one sha to every spec and run uv sync",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: umbrella: W957 82bcb9d, W958 c666548, W959 6f87ab4",
+      "issued_at": "2026-10-10T17:03:15Z",
+      "minted_during": "tick",
+      "caused_by": "github:W16",
+      "last_worked": "2026-10-10T18:57:50Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T185750Z"
+    },
+    {
+      "symbol": "W957",
+      "title": "repin core: find git and vendored-wheel mtools pins in a pyproject text, and rewrite the sha of the selected dists",
+      "status": "done",
+      "enables": [
+        "W956"
+      ],
+      "touches": [
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 82bcb9d [PUSHED]: hooks/repin.py, 11 tests, 6 mutants",
+      "issued_at": "2026-10-10T17:41:19Z",
+      "minted_during": "tick",
+      "caused_by": "W956",
+      "last_worked": "2026-10-10T18:00:57Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T180057Z"
+    },
+    {
+      "symbol": "W958",
+      "title": "repin shell: survey every repo's pins against a sha, and with --write rewrite them and run uv sync per repo",
+      "status": "done",
+      "enables": [
+        "W956"
+      ],
+      "touches": [
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit c666548 [PUSHED]: hooks/repin_cli.py, 7 tests, 7 mutants",
+      "issued_at": "2026-10-10T17:41:26Z",
+      "minted_during": "tick",
+      "caused_by": "W956",
+      "last_worked": "2026-10-10T18:30:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T183019Z"
+    },
+    {
+      "symbol": "W959",
+      "title": "repin console script mikemol-repin, registered, with its INSTALL.md entry and an adoption doc line",
+      "status": "done",
+      "enables": [
+        "W956"
+      ],
+      "touches": [
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 6f87ab4 [PUSHED]: mikemol-repin registered, INSTALL.md, docs/repinning.md",
+      "issued_at": "2026-10-10T17:41:27Z",
+      "minted_during": "tick",
+      "caused_by": "W956",
+      "last_worked": "2026-10-10T18:57:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T185743Z"
+    },
+    {
+      "symbol": "W960",
+      "title": "gate_stages imports option takes a repo name and computes the bazel canonical path, so adopters stop hardcoding +_repo_rules2+ numbering",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "gate-stages"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In rules_py gate.bzl options, accept imports_repo=[(repo, subpath)] and expand to the runfiles path via Label canonical-name resolution instead of the literal '../+_repo_rules2+mtools_bibparse/...'; test with a repo name whose numbering differs; tell gcalculus-f6 when it lands. Evidence 2026-10-10 gcalculus-22: engine stage every_gcalc_leaf_certifies passes (775 leaves, 56 s) and three bibparse stages with imports pass; hooks c5f2c58 probe 8/8 with a relative launcher.",
+      "evidence": "",
+      "issued_at": "2026-10-10T17:55:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "gcalculus:W-engine-stage",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W961",
+      "title": "bump-blocked prints a summary by default: rows only for external blockers (operator asks, repo:W<n>) with a card count, the per-card listing behind --verbose",
+      "status": "done",
+      "enables": [
+        "substrate:W318"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 654b647 [PUSHED]: ops.nudge_summary + --verbose, 7 tests, 4 mutants",
+      "issued_at": "2026-10-10T18:18:32Z",
+      "minted_during": "interrupt",
+      "caused_by": "substrate:W318",
+      "last_worked": "2026-10-10T19:48:06Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T194806Z"
+    },
+    {
+      "symbol": "W962",
+      "title": "repin scans a repo it is pointed at, and never reads through symlinks or bazel-* directories",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit fb6a1de [PUSHED]: repos() reads a root that is a repo; _scannable skips links, bazel-*, hidden",
+      "issued_at": "2026-10-10T19:00:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "substrate:W318",
+      "last_worked": "2026-10-10T19:20:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T192016Z"
+    },
+    {
+      "symbol": "W963",
+      "title": "mikemol-membudget records a 13 MB peak floor for a trivial payload because the forked python image counts",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "membudget"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure first (run 64 x -- /usr/bin/true; a 200 MiB allocation: python 212 vs bash 211), then in fence subtract the pre-exec baseline maxrss or spawn without the fork; add a tiny-payload arm to test_membudget_cli asserting a peak under a few MB. Fold in the two arms substrate could not verify: two clients on one ledger, and the load-gate refusal with MAXLOAD's default. Evidence 2026-10-10 substrate-94: a self-SIGKILL payload runs once and exits 137 in python while bash climbs to REFUSED exit 3, so that direction is already better.",
+      "evidence": "",
+      "issued_at": "2026-10-10T19:11:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "substrate:W326",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W964",
+      "title": "mikemol-membudget describe: print default MB, ceiling MB and the verb roster as parseable rows",
+      "status": "done",
+      "enables": [
+        "substrate:W331"
+      ],
+      "touches": [
+        "membudget"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 7ff52eb [PUSHED]: membudget describe, 4 tests, 3 mutants. First attempt refused by a //pycodemod:mutants timeout under load (565 s alone); atomized as W967-W969.",
+      "issued_at": "2026-10-10T19:39:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "substrate:W331",
+      "last_worked": "2026-10-10T20:45:13Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T204513Z"
+    },
+    {
+      "symbol": "W965",
+      "title": "bump-blocked rows count the cards behind an external blocker transitively and shorten the symbol list",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In ops.nudge_summary count every card that waits on the blocker through blocked_on chains in the same queue (W315 on W314, W300 on W314, everything on W300), not only cards naming it directly; print the first few direct symbols then 'and N more'; say '1 card' in the singular. The nudge decision (which party is due) still follows the direct cards. Test: a chain of three plus a fan-out, asserting the transitive count and the shortened list. substrate-94 measured 1 direct vs about 250 transitive for operator ask W314 (nemik-operator weight 264).",
+      "evidence": "",
+      "issued_at": "2026-10-10T19:51:37Z",
+      "minted_during": "tick",
+      "caused_by": "substrate:W318",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W966",
+      "title": "repin rows carry the file and line each pin came from, so a survey can be checked from its own output",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add path:line to every survey row (repo-relative pyproject.toml:LINE; line from the match offset). Decide and test two things linux-sources left open: a repo's uv.lock transitive pins get no row (the lock follows the pyproject; --write runs uv sync) and say so in docs/repinning.md; a repo with two pyproject files is out of scope today (only the root file is read) and the doc says that. Keep the old columns first so existing parsers still split.",
+      "evidence": "",
+      "issued_at": "2026-10-10T20:03:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "linux-sources:W-repin-path",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W967",
+      "title": "Measure where the mutants targets spend their time: seconds per module for pycodemod, hooks and pathsforward",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10 measurement (from the three dists' mutants test.log headers and wall times): pycodemod 778 def-sites in 63 modules, 565 s alone = 0.73 s/site; hooks 408 sites in 55 modules, ~240 s = 0.59 s/site; pathsforward 379 sites in 41 modules, ~250 s = 0.66 s/site. Cost is proportional to def-sites, about 0.6-0.75 s each, so the cost of a shard is its site count. Target shards of at most ~150 sites (~100 s): pycodemod 6, hooks 3, pathsforward 3. Not measured: per-module times (the runner prints none) and how much of the per-site cost is suite startup; W968 should print per-shard wall time so the next tick has it.",
+      "issued_at": "2026-10-10T20:42:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "W964",
+      "last_worked": "2026-10-10T20:46:12Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T204612Z"
+    },
+    {
+      "symbol": "W968",
+      "title": "Shard a dist's mutants target by module so no one target is long enough to time out under load",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: umbrella: W970 eef94d8, W971+W972 89a1493",
+      "issued_at": "2026-10-10T20:42:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "W964",
+      "last_worked": "2026-10-10T21:44:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T214436Z"
+    },
+    {
+      "symbol": "W969",
+      "title": "Apply the mutants sharding to hooks and pathsforward after pycodemod proves it",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 291c3f9 [PUSHED]: hooks x3 (140/137/131) and pathsforward x3 (124/130/125), hooks:mutants exclusive tag removed; passed the full commit gate",
+      "issued_at": "2026-10-10T20:42:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W964",
+      "last_worked": "2026-10-10T22:02:34Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T220234Z"
+    },
+    {
+      "symbol": "W970",
+      "title": "mutate_runner takes MUTATE_SHARD=i/N and runs only the def-sites and declared defects whose stable hash falls in shard i",
+      "status": "done",
+      "enables": [
+        "W968"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit eef94d8 [PUSHED]: shard_spec, in_shard (FNV-1a), main filters sites and declared defects; 4 tests | 2026-10-11: 2026-10-11: follow-up found by the none-returns commit's refusal: each shard's runner started cpu_count suites, so six pycodemod shards oversubscribed the host 6x and timed out healthy neighbours (test_operands 3 s alone, 65 s in the gate). pool_size(jobs, cpus, share) now gives a shard cpu_count/shards; committed with W975.",
+      "issued_at": "2026-10-10T20:46:43Z",
+      "minted_during": "tick",
+      "caused_by": "W968",
+      "last_worked": "2026-10-11T01:53:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T211855Z"
+    },
+    {
+      "symbol": "W971",
+      "title": "mutants_sharded BUILD macro: N shard sh_tests plus a test_suite named mutants, so the label the gate runs keeps working",
+      "status": "done",
+      "enables": [
+        "W968"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: check_mutants/defs.bzl mutants_sharded; shards=1 is the plain target, N declares <name>_i + test_suite <name>. Committed with W972.",
+      "issued_at": "2026-10-10T20:46:43Z",
+      "minted_during": "tick",
+      "caused_by": "W968",
+      "last_worked": "2026-10-10T21:26:22Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T212622Z"
+    },
+    {
+      "symbol": "W972",
+      "title": "shard pycodemod's mutants into six and run it under the gate load",
+      "status": "done",
+      "enables": [
+        "W968"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 89a1493 [PUSHED]: pycodemod mutants x6 (139/129/129/127/118/136 = 778), 349 s in parallel vs 565 s single; passed the full commit gate",
+      "issued_at": "2026-10-10T20:46:44Z",
+      "minted_during": "tick",
+      "caused_by": "W968",
+      "last_worked": "2026-10-10T21:44:32Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T214432Z"
+    },
+    {
+      "symbol": "W973",
+      "title": "payload caps a stanza's unblocks and enables lists and prints (+N more), so one card that unblocks hundreds cannot break the budget",
+      "status": "done",
+      "enables": [
+        "el-openglo:W484"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit ea0a8a9 [PUSHED]: payload counts >20 blocked cards; model.blocker_index makes ordered() linear (8.3 s -> 0.11 s on 1,500 cards); 5 tests, 5 mutants",
+      "issued_at": "2026-10-10T21:43:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W484",
+      "last_worked": "2026-10-10T22:50:31Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T225031Z"
+    },
+    {
+      "symbol": "W974",
+      "title": "paths-forward bulk update: --update takes a symbol list or --where unscored, so one pass scores or edits many cards",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit b42f908 [PUSHED]: --update-many (symbols or unscored), dry run first, all or none; 6 tests, 3 mutants; first gate run caught a surviving declared mutant, fixed by asserting empty output",
+      "issued_at": "2026-10-10T21:43:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W484",
+      "last_worked": "2026-10-10T23:50:51Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T235051Z"
+    },
+    {
+      "symbol": "W975",
+      "title": "pycodemod untyped-defs mode: add -> None to a def whose returns carry no value, census by idiom, residue stays residue",
+      "status": "done",
+      "enables": [
+        "aeternum:W114"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: 2026-10-10: build on the judge in W976 (paperkit-f5's judged-fix: parse and fewer-mypy-errors per file), so the -> None rewrite and the Any-params step share one judge. | 2026-10-10: 2026-10-10 aeternum-90: stopgap aeternum scripts/annotate_none.py (aeternum 420a13e): rule 1 only (-> None where no return carries a value), mypy-judged per file, dry-run default; 8 of 12 pipeline files kept, 4 reverted. Use as a reference for the W976 engine; aeternum retires it when W975 lands. Rule 2 (return inference from return expressions) is aeternum:W115, in scope if wanted. | 2026-10-11: 2026-10-10 20:28 EDT plan (not started, reboot at 21:00): a planner on the W976 judge. Rule 1 only first: add '-> None' to a def with no return carrying a value, not a generator, not abstract/overload/Protocol stub; reuse orempty/typedargs libcst planning style (src/mikemol/pycodemod/typedargs.py is the shape); census by idiom as worklist rows (return-only, params-only, fully-unannotated, left alone and why). Rule 2 (return inference, aeternum:W115) and Any-params stay out until rule 1 lands. aeternum's stopgap scripts/annotate_none.py (aeternum 420a13e) is the reference. | 2026-10-11: commit 58269d8 [PUSHED]: nonereturns planner (9 tests, 7 mutants). CLI mode none-returns committed next (4 tests, 1 mutant, bazel green). | 2026-10-11: commit 3abbdcc [PUSHED]: none-returns CLI mode (4 tests, 1 mutant) over the nonereturns planner (58269d8); pool_size share fix for shards. Rule 2 (aeternum:W115) not in.",
+      "issued_at": "2026-10-10T21:43:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "aeternum:W114",
+      "last_worked": "2026-10-11T03:04:52Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T030452Z"
+    },
+    {
+      "symbol": "W976",
+      "title": "pycodemod judged-fix: apply ruff fixes per file and keep a file only if it parses and mypy reports fewer errors",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "typing"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: 2026-10-10 20:10 EDT: judged-fix written in pycodemod (cli_judgedfix.py, cli.py registration, tests/test_cli_judgedfix.py, 5 mutants, warrants); commit started ahead of the 21:00 EDT host reboot (github:W17). If HEAD has no 'pycodemod: judged-fix' commit after the reboot, the working tree still holds it: re-run hooks/bin/mikemol-commit . --waypoint W976 ... pycodemod. Next: W975 (-> None planner on this judge), then the hooks-venv reinstall for the new console scripts (uv pip install --editable hooks). | 2026-10-11: commit 7d4a458 [PUSHED] at 20:2x EDT, before the reboot: pycodemod judged-fix, 7 tests, 5 mutants. Next: W975 on this judge.",
+      "issued_at": "2026-10-10T21:50:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "paperkit:W-judged-fix",
+      "last_worked": "2026-10-11T00:26:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T002636Z"
+    },
+    {
+      "symbol": "W977",
+      "title": "describe_rank scans the whole queue per row: the mirror render is quadratic like ordered() was",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-10: commit 01587c9 [PUSHED]: describe_rank(index), render.queue builds blocker_index once; 2 tests, 1 mutant",
+      "issued_at": "2026-10-10T22:50:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "W973",
+      "last_worked": "2026-10-10T23:14:00Z",
+      "ticks_blocked": 0,
+      "completed": "20261010T231400Z"
+    },
+    {
+      "symbol": "W978",
+      "title": "judged-fix per-file selftest command as a second judge, so a fix that passes mypy but breaks the file's own selftest is refused",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "typing"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T00:27:51Z",
+      "minted_during": "tick",
+      "caused_by": "paperkit:W-judged-fix",
+      "last_worked": "2026-10-11T06:58:29Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T065829Z"
+    },
+    {
+      "symbol": "W979",
+      "title": "repin survey publishes a pin census as metrics so fleet pin drift against the par sha is a series, not a one-off survey",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "kata",
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T00:58:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W16",
+      "last_worked": "2026-10-11T07:22:08Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T072208Z"
+    },
+    {
+      "symbol": "W980",
+      "title": "Reserve CPUs for a mutants target through bazel (tags cpu:K plus MUTATE_JOBS=K in the macro) and move every dist's mutants onto mutants_sharded",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: 2026-10-11: a default cap of 4 suites per runner was tried (W975's second commit) and made fence, katas, mdstruct, treeio and hooks mutants TIME OUT in the gate (unsharded grids need the width); withdrawn. The cost is intrinsic: ~17 core-seconds per def-site, so thousands of sites are tens of core-minutes. So: shard every grid to bounded size first (W967 counts), THEN narrow each shard and reserve its CPUs with tags cpu:K, and separately cut the per-site cost (mutantcell sensitivity: run only the tests that reach the mutated def). | 2026-10-11: 2026-10-11 census (MUTATE_PLAN=1, sites+declared): pycodemod 804+34 (6 shards, ~134 each), hooks 408+57 (3), pathsforward 384+41 (3), fence 172+34, treeio 95+14, mdstruct 90+1, importdag 76+6, pytestspec 59, mutation 54+4, ledger 52, memres 52+23, katas 49+42, buildtel 50, ratchet 47(+2 unreachable)+9, audiostruct 47, gmailstruct 47, debtplan 46, htmlstruct 40+25, gradekit 40, witness 37+8, gatecheck 36+15, icsstruct 35, corpus 30, bibparse 22+11, grade 17+13, atomicwrite 7+17, pathwalk 7+4, pkgbuild 7, procrun 1+4; transcriptstruct 55+1; mutantcell: runner import fails (rc=1, its own gate). Total ~2,900 mutable sites. Next: per-dist seconds-per-site (the timeouts under the cap hit fence, katas, mdstruct, treeio: heavy suites per site), then shards where sites*cost exceeds a target; fence 172 is the first candidate.",
+      "issued_at": "2026-10-11T02:21:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W970",
+      "last_worked": "2026-10-11T06:16:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T061636Z"
+    },
+    {
+      "symbol": "W981",
+      "title": "mutate_runner MUTATE_PLAN=1 prints a distribution's def-site and declared-defect counts and runs no suite",
+      "status": "done",
+      "enables": [
+        "W980"
+      ],
+      "touches": [
+        "mutants"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T03:06:09Z",
+      "minted_during": "tick",
+      "caused_by": "W980",
+      "last_worked": "2026-10-11T05:55:46Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T055546Z"
+    },
+    {
+      "symbol": "W982",
+      "title": "mikemol-commit waits for the host load to fall below a limit before it starts a gate, so a gate does not time out its own targets on a saturated host",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T03:40:28Z",
+      "minted_during": "interrupt",
+      "caused_by": "W981",
+      "last_worked": "2026-10-11T05:12:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T051207Z"
+    },
+    {
+      "symbol": "W983",
+      "title": "mutantcell: its mutation runner fails to import under MUTATE_PLAN (rc=1), so its grid cannot be counted or sharded",
+      "status": "done",
+      "enables": [
+        "W980"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T05:56:59Z",
+      "minted_during": "tick",
+      "caused_by": "W980",
+      "last_worked": "2026-10-11T05:57:18Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T055718Z"
+    },
+    {
+      "symbol": "W984",
+      "title": "Shard the mid-size mutation grids onto mutants_sharded with cpus: treeio (95), mdstruct (90), importdag (76), pytestspec (59), transcriptstruct (55), mutation (54)",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T06:16:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "W980",
+      "last_worked": "2026-10-11T06:25:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T062540Z"
+    },
+    {
+      "symbol": "W985",
+      "title": "Shard the small mutation grids onto mutants_sharded with cpus: ledger, memres, katas, buildtel, ratchet, audiostruct, gmailstruct, debtplan, htmlstruct, gradekit, witness, gatecheck",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T06:16:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "W980",
+      "last_worked": "2026-10-11T06:38:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T063828Z"
+    },
+    {
+      "symbol": "W987",
+      "title": "repin_metrics: a scan_time gauge (unix seconds of the census) so a dead census alerts off a series, not the textfile mtime",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T07:28:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W806",
+      "last_worked": "2026-10-11T07:49:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T074909Z"
+    },
+    {
+      "symbol": "W988",
+      "title": "Lift luthen-observability's checks/revendor_mtools (plan, then --apply: re-vendor hooks and pathsforward wheels at one sha) into mikemol-repin, so vendored pins move by tool",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T07:57:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W811",
+      "last_worked": "2026-10-11T09:29:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T092921Z"
+    },
+    {
+      "symbol": "W989",
+      "title": "revendor core: hooks/revendor.py holds the pure parts of luthen's checks/revendor_mtools (wheel_name, pinned_shorts, move_sources, with_local_version, plan_lines) with tests and mutants",
+      "status": "done",
+      "enables": [
+        "W988"
+      ],
+      "touches": [
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T08:11:11Z",
+      "minted_during": "tick",
+      "caused_by": "W988",
+      "last_worked": "2026-10-11T08:19:29Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T081929Z"
+    },
+    {
+      "symbol": "W990",
+      "title": "revendor apply: build both wheels from git archive, check the new writer's --hash on a queue copy in a throwaway venv, then swap wheels and pins, behind a runner seam so tests run no uv",
+      "status": "done",
+      "enables": [
+        "W988"
+      ],
+      "touches": [
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T08:11:11Z",
+      "minted_during": "tick",
+      "caused_by": "W988",
+      "last_worked": "2026-10-11T08:50:46Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T085046Z"
+    },
+    {
+      "symbol": "W991",
+      "title": "mikemol-repin --revendor SHA [--apply]: the CLI flag over revendor, plus the docs/repinning.md section that replaces 'vendored wheels are yours to rebuild'",
+      "status": "done",
+      "enables": [
+        "W988"
+      ],
+      "touches": [
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T08:11:12Z",
+      "minted_during": "tick",
+      "caused_by": "W988",
+      "last_worked": "2026-10-11T09:29:18Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T092918Z"
+    },
+    {
+      "symbol": "W992",
+      "title": "mikemol-wheel: build any mtools dist's wheel at a commit (archive, +g local version, uv build, sha256), generalizing revendor.build",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T08:57:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "paperkit:W315",
+      "last_worked": "2026-10-11T09:16:34Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T091634Z"
+    },
+    {
+      "symbol": "W993",
+      "title": "work_claims core: pure parts of the working-card claim hook (wanted labels from a queue, the session pid from the process ancestry, the owner string, the plan of claims to take and release)",
+      "status": "done",
+      "enables": [
+        "W912"
+      ],
+      "touches": [
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T10:11:25Z",
+      "minted_during": "tick",
+      "caused_by": "W912",
+      "last_worked": "2026-10-11T10:20:48Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T102048Z"
+    },
+    {
+      "symbol": "W994",
+      "title": "work-claims hook: mikemol-hook-work-claims runs the claim verbs through a runner seam on UserPromptSubmit and releases on SessionEnd, advisory context only, wired in .claude/settings.json",
+      "status": "done",
+      "enables": [
+        "W912"
+      ],
+      "touches": [
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T10:11:26Z",
+      "minted_during": "tick",
+      "caused_by": "W912",
+      "last_worked": "2026-10-11T11:03:10Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T110310Z"
+    },
+    {
+      "symbol": "W995",
+      "title": "paths-forward --add/--update: a repeated --touches (or --enables) flag keeps only the last value without saying so; append, or refuse",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:03:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "W994",
+      "last_worked": "2026-10-11T11:20:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T112001Z"
+    },
+    {
+      "symbol": "W996",
+      "title": "inbound-asks context line prints the live claim holder beside a tag another session is working, by calling nemik-overlaps",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "locks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "nemik:W305 (dd3b73e) put the holder on nemik-overlaps rows and left the inbound-asks hook to mtools; have mikemol.hooks.inbound_asks add the holder for this repo's working-card tags, advisory, absent tool said once, behind its runner seam.",
+      "evidence": "",
+      "issued_at": "2026-10-11T11:44:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "W913",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W997",
+      "title": "mutation: declare audiostruct's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:19Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T12:20:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T122038Z"
+    },
+    {
+      "symbol": "W998",
+      "title": "mutation: declare buildtel's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:19Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T12:49:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T124959Z"
+    },
+    {
+      "symbol": "W999",
+      "title": "mutation: declare corpus's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:19Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T13:17:10Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T131710Z"
+    },
+    {
+      "symbol": "W1000",
+      "title": "mutation: declare debtplan's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T13:53:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T135302Z"
+    },
+    {
+      "symbol": "W1001",
+      "title": "mutation: declare gmailstruct's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T14:16:57Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T141657Z"
+    },
+    {
+      "symbol": "W1002",
+      "title": "mutation: declare gradekit's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T14:46:56Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T144656Z"
+    },
+    {
+      "symbol": "W1003",
+      "title": "mutation: declare icsstruct's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T15:17:25Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T151725Z"
+    },
+    {
+      "symbol": "W1004",
+      "title": "mutation: declare pytestspec's first defect classes from its modules' docstrings, and test what survives",
+      "status": "done",
+      "enables": [
+        "W670"
+      ],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "",
+      "issued_at": "2026-10-11T11:47:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T15:49:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261011T154901Z"
+    },
+    {
+      "symbol": "W1005",
+      "title": "mutation: a nested def is named find_cycle.<locals>.visit in the grid's report but find_cycle.visit in a regex def= scope, so the report's own name plants nothing",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Seen 2026-10-11 declaring debtplan: five declarations scoped def=find_cycle.<locals>.visit (the name the KILLED list prints) came back UNAPPLIED; def_sites() yields find_cycle.visit. Make the scope accept both spellings, or print the name def_sites uses.",
+      "evidence": "",
+      "issued_at": "2026-10-11T13:43:49Z",
+      "minted_during": "tick",
+      "caused_by": "W1000",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1006",
+      "title": "mutation: declare pytestspec's opa module (the pinned evaluator and its failures)",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "pytestspec gave 20 survivors of 30 on its cache/adapters/outcomes (only reached through a pytest session), against 0 of 31 in the pure-function dists. Start with pytestspec's plugin and opa.",
+      "evidence": "",
+      "issued_at": "2026-10-11T15:49:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "W670",
+      "last_worked": "2026-10-11T15:49:10Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1007",
+      "title": "Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row, replacing the hand-applied W881 patch",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W818",
+        "luthen-observability:W821"
+      ],
+      "touches": [
+        "hooks",
+        "adopt"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T16:08:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "W881",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1008",
+      "title": "Declare ~/.config/mikemol/katas.toml as a luthen terraform/user row from a tracked source in mtools",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W818",
+        "luthen-observability:W820"
+      ],
+      "touches": [
+        "katas",
+        "hostkit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T16:08:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "W879",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1009",
+      "title": "mutation: declare buildtel's bb_log and buildpulse modules",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T16:11:29Z",
+      "minted_during": "tick",
+      "caused_by": "W670",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1010",
+      "title": "mutation: declare audiostruct's stages module",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T16:11:30Z",
+      "minted_during": "tick",
+      "caused_by": "W670",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1011",
+      "title": "mutation: declare gmailstruct's fetch and auth modules",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T16:11:31Z",
+      "minted_during": "tick",
+      "caused_by": "W670",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1012",
+      "title": "mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist merge)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T16:13:52Z",
+      "minted_during": "tick",
+      "caused_by": "W670",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -19169,6 +20836,13 @@
       "title": "standing rule: deny a hand git push (a push publishes); the commit half is dropped, a hook cannot tell the katas from a hand commit",
       "dropped_at": "2026-10-06T16:31:36Z",
       "reason": "operator ruled 2026-10-06: leave pushes as they are",
+      "recoverable": true
+    },
+    {
+      "symbol": "W986",
+      "title": "luthen: a producer turns mikemol-repin --metrics textfile into luthen_ pin-drift series, plus a Grafana row for pins behind the par sha",
+      "dropped_at": "2026-10-11T07:16:19Z",
+      "reason": "mis-wired: the luthen half is luthen's to mint; W979 only needed to tell them, and does so by message",
       "recoverable": true
     }
   ],

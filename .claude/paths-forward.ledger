@@ -1450,3 +1450,166 @@
 2026-10-10T02:18:01Z  interrupt W928 minted    -         "mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes are held by orphans"  evidence=W910
 2026-10-10T02:19:37Z  tick  W925 advanced  sweep     "three mechanizations: prune drops empty rubric rows (W925), no pipe-into-grep -q race in hook scripts (W926, a real flake), probe resolves a relative launcher (W927); bazel hooks green; commit in flight"
 2026-10-10T02:33:53Z  tick  W928 advanced  unblock   "mikemol-commit's git wait is on the process, output in files: an orphan can no longer hold the claim (60 s control vs 1 s); bazel hooks green; commit in flight"
+2026-10-10T02:44:45Z  interrupt W929 minted    -         "Answer nemik:W276: an attach mode that stores a repo-relative file reference and its hash in a waypoint"  evidence=nemik:W276
+2026-10-10T02:44:54Z  interrupt W930 minted    -         "pathsforward: a waypoint may carry attachments, each a repo-relative path and a sha256, validated on load"  evidence=W929
+2026-10-10T02:44:55Z  interrupt W931 minted    -         "pathsforward --update W<n> --attach PATH stores the file's reference and hash"  evidence=W929
+2026-10-10T02:44:55Z  interrupt W932 minted    -         "pathsforward --check reports an attachment whose file is missing or whose hash no longer matches"  evidence=W929
+2026-10-10T02:44:56Z  interrupt W933 minted    -         "Reply to nemik on W276 with the attach design and the card citations"  evidence=W929
+2026-10-10T03:01:04Z  tick  W895 advanced  collapse  "engine_env + engine_stage_main landed c57b0be; paperkit_gate_main refactored, 10 tests, warrants"
+2026-10-10T03:02:39Z  tick  W897 advanced  unblock   "gate_stages options (engine_repo, engine_files, env, imports) in commit flight; gcalculus message pending the PUSHED marker"
+2026-10-10T03:23:06Z  tick  W930 advanced  unblock   "attachments field + shape check (attach.py, 8 witnesses incl. clean control) green in bazel, commit in flight; W892 closed"
+2026-10-10T03:38:52Z  interrupt W934 minted    -         "pathsforward test_inbound timed out at 60s inside the full pre-commit gate (passes alone): find what it waits on and make its cost load-independent"  evidence=W930
+2026-10-10T03:58:18Z  tick  W931 advanced  unblock   "--attach verb green in bazel (55 targets), commit in flight; W930 landed 2a7866f"
+2026-10-10T04:17:43Z  tick  W932 advanced  unblock   "attachment drift check green in bazel (56 targets), commit in flight; W931 landed c4d4b56 and nemik-c3 messaged"
+2026-10-10T04:36:50Z  tick  W935 minted    -         "pathsforward: a check that no single test's own duration approaches its bazel timeout (pytest --durations in the suite), so a slow sweep is found before the full gate times it out"  evidence=W934
+2026-10-10T04:36:54Z  tick  W934 advanced  unblock   "test_inbound budget sweep 16.7s -> 0.28s (pathsforward 56 bazel targets green), commit in flight; W935 minted to mechanize slow-test detection; W929 chain closed 842ab10"
+2026-10-10T04:51:55Z  tick  W935 advanced  unblock   "per-test 15s ceiling in rules_py/pytest_main.py with 4 witnesses green; full //... run in flight to find existing tests over it before commit; W934 landed b47a98f"
+2026-10-10T05:38:17Z  tick  W901 advanced  unblock   "isolated-commit experiment passes all 4 claims on real git (hooks suite 80 targets green), commit in flight"
+2026-10-10T05:58:05Z  tick  W902 advanced  unblock   "isolated mode green (hooks 85 targets incl. mutation grid), commit in flight; W901 landed 0a6dea5"
+2026-10-10T06:11:55Z  tick  W903 advanced  unblock   "peer-staged and refused-commit witnesses green (8 tests), commit in flight; W902 landed 3bc9844"
+2026-10-10T06:25:20Z  interrupt W936 minted    -         "Answer nemik:W292: fold mtools' inbox letters into waypoints (nemik-check --letters --fold --repo mtools)"  evidence=nemik:W292
+2026-10-10T06:25:42Z  interrupt W937 minted    -         "shellcheck hook: judge only the findings an edit ADDS, so an edit to a shell file carrying an old finding is not refused"  evidence=inbox/2026-10-08-gcalculus-two-hook-defects.md
+2026-10-10T06:25:43Z  interrupt W938 minted    -         "pycheck edit gate: stage the temporary copy beside the real file, so a relative import in a package __init__.py type-checks"  evidence=inbox/2026-10-08-gcalculus-two-hook-defects.md
+2026-10-10T06:26:16Z  tick  W936 advanced  collapse  "inbox folded: 2 live letters cited (W576 evidence, W937/W938 minted), reply to gcalculus, 3 letters archived; W903 landed cc41abd; W937 working"
+2026-10-10T06:44:52Z  tick  W937 advanced  unblock   "shellcheck judges only added findings (7 witnesses, hooks 82 targets green incl. mutants), committed via ISOLATED mode as soak commit 1; W903 landed cc41abd"
+2026-10-10T06:45:17Z  interrupt W939 minted    -         "Isolated commit: the pre-commit reads its tools (.venv, bazel-bin) from the real root, not the snapshot"  evidence=W904
+2026-10-10T07:12:44Z  tick  W938 advanced  unblock   "W938 reproduced against HEAD: already fixed by W868 (shadow-file); __init__.py guard + control added, commit in flight; W937 landed c5f2c58"
+2026-10-10T07:41:52Z  tick  W940 minted    -         "pre-commit: one venv_bin function finds every tool (checkout .venv, else bazel-bin), presence checked after the prebuild, and an arm that no raw .venv/bin survives"  evidence=W939
+2026-10-10T07:41:53Z  tick  W941 minted    -         "Isolated commit end to end on a decoy repo whose pre-commit needs a tool only the real root has"  evidence=W939
+2026-10-10T07:42:04Z  tick  W939 advanced  collapse  "atomized: design W939-isolated-gate-tools.md, W940 venv_bin+arm, W941 decoy e2e; measuring bazel build //atomicwrite:.venv inside the snapshot; W938 landed 80a067b"
+2026-10-10T07:46:41Z  tick  W940 advanced  unblock   "venv_bin: tools root (MIKEMOL_REAL_ROOT) in pre-commit + arm; bazel .venv has python3 only so design revised; committing in ISOLATED mode (soak attempt 2)"
+2026-10-10T09:22:21Z  tick  W941 advanced  unblock   "decoy e2e (hook needs a tool only the real root has) + normal-commit control green (10 tests); committing via ISOLATED mode as soak 2; W940 landed a000194"
+2026-10-10T09:35:56Z  tick  W918 advanced  unblock   "guard.py pure trip rule + 9 witnesses + 4 mutants, fence 23 targets green; committing via ISOLATED mode (soak 3); W941/W939/W843 closed"
+2026-10-10T10:00:24Z  interrupt W942 minted    -         "Two targets timed out in a full isolated gate (fence test_membudget_cli at 60s, hooks:mutants at 300s) and pass alone: measure each alone and under load, and make the cost load-independent or the size honest"  evidence=W918
+2026-10-10T10:13:56Z  tick  W919 advanced  unblock   "reading.py (named endpoint, host-file address, http.client only, all failures blind) + 7 witnesses + 4 mutants, fence green; committing via ISOLATED mode (soak 4)"
+2026-10-10T10:52:46Z  tick  W920 advanced  unblock   "watcher.py (descendants_named from /proc, watch loop, Guard thread) + 10 witnesses incl. a real sh/sleep/SIGTERM arm + 4 mutants, fence green; committing via ISOLATED mode (candidate soak 5); W919 landed bc3797e"
+2026-10-10T11:16:55Z  tick  W920 advanced  unblock   "gate refused W920's commit: my W935 wall-clock ceiling failed two healthy tests under load; ceiling now CPU time (W935 fix committing first, isolated), then W920 retries"
+2026-10-10T11:44:02Z  tick  W904 advanced  collapse  "five clean isolated commits -> default flipped (isolation_wanted), committed with no flag; W920 landed 3406959; W935 CPU ceiling 3bdc47a"
+2026-10-10T12:03:00Z  tick  W921 advanced  unblock   "policy.py + guard_cli.py + claim_of guard layer, 36+ witnesses, 8 mutants, fence/hooks green (32 targets); committing (default isolated mode); W904 b3d94d2 default flip landed"
+2026-10-10T12:52:59Z  tick  W916 advanced  collapse  "run-time guard complete: W918-W921 landed (ba7fd0e, bc3797e, 3406959, 0de78c4), closing letter to luthen-observability; W942 (gate timeouts under load) next"
+2026-10-10T12:55:02Z  tick  W942 advanced  unblock   "diagnosis: hooks:mutants is the load that starved neighbours (victims coincide in 4 gates); tags=[exclusive] on it, committing (the gate is the measurement)"
+2026-10-10T13:05:53Z  tick  W943 minted    -         "mikemol-new-dist: a new distribution is a command (umbrella; design .claude/design/W943-new-dist.md)"  evidence=W905
+2026-10-10T13:05:54Z  tick  W944 minted    -         "new_dist pure core: skeleton, module_edit and install_edit as text-to-text functions, tested over fixtures"  evidence=W943
+2026-10-10T13:05:55Z  tick  W945 minted    -         "mikemol-new-dist shell and console script, run against a throwaway copy of the repository's files"  evidence=W943
+2026-10-10T13:12:18Z  tick  W944 advanced  collapse  "new_dist pure core (skeleton, module_edit, install_edit) + 20 witnesses + 5 mutants green; committing (default mode); W845 closed through W891; W942 gate 1 of 3 clean"
+2026-10-10T13:24:40Z  tick  W945 advanced  collapse  "new-dist shell + console script written; commit in flight"
+2026-10-10T13:36:37Z  interrupt W946 minted    -         "mikemol-commit honours MIKEMOL_COMMIT_TIMEOUT_S"  evidence=paperkit:W299
+2026-10-10T13:49:56Z  interrupt W947 minted    -         "paths-forward bulk block: --block-matching blocks every open card with a given touches tag on one card, dry-run first"  evidence=github:W13
+2026-10-10T13:59:58Z  tick  W947 advanced  sweep     "--block-matching bulk block written, 9 tests, 865 pathsforward tests green; commit in flight"
+2026-10-10T14:14:17Z  tick  W905 advanced  collapse  "first run of mikemol-new-dist: htmlstruct scaffolded, builds under bazel, warrant written; commit in flight"
+2026-10-10T14:16:22Z  interrupt W948 minted    -         "snapshot materialize repairs a snapshot that lost tracked files: verify the tree, not only the stamp"  evidence=W905
+2026-10-10T14:48:27Z  tick  W948 advanced  unblock   "snapshot materialize restores files lost under a matching stamp; commit in flight"
+2026-10-10T14:48:39Z  tick  W949 minted    -         "htmlstruct: a tolerant html.parser tree with typed nodes; unreadable input is a Skip"  evidence=W906
+2026-10-10T14:48:40Z  tick  W950 minted    -         "htmlstruct: outline, the heading hierarchy of a tree"  evidence=W906
+2026-10-10T14:48:40Z  tick  W951 minted    -         "htmlstruct: links, every anchor with href and text"  evidence=W906
+2026-10-10T14:48:41Z  tick  W952 minted    -         "htmlstruct: tables as rows of cell text, and meta as name to content"  evidence=W906
+2026-10-10T14:48:42Z  tick  W953 minted    -         "htmlstruct: text by element id"  evidence=W906
+2026-10-10T15:12:33Z  tick  W949 advanced  unblock   "htmlstruct tree.py written, 12 bazel targets green incl. mutants; commit in flight; W950-W953 wait on it"
+2026-10-10T15:43:48Z  tick  W950 advanced  sweep     "htmlstruct outline/links/tables/meta/text readers written, 17 bazel targets green incl. mutants; one commit in flight for W950-W953"
+2026-10-10T16:02:39Z  interrupt W954 minted    -         "Document isolated commit for hook authors: MIKEMOL_REAL_ROOT, MIKEMOL_COMMIT_ISOLATED, MIKEMOL_SNAPSHOT_ROOT in docs/adopting-a-hook.md and hooks/README.md"  evidence=github:W-substrate-94
+2026-10-10T16:13:33Z  tick  W907 advanced  unblock   "htmlstruct mhtml.py written (own multipart split), 18 bazel targets green incl. 6 mutants; commit in flight"
+2026-10-10T16:39:41Z  interrupt W955 minted    -         "paths-forward writer preserves the owner group and mode of every file it replaces, whoever runs it"  evidence=github:W15
+2026-10-10T17:03:15Z  tick  W956 minted    -         "mikemol-repin: survey every repo's pinned mikemol dist against a sha (dry run), then write one sha to every spec and run uv sync"  evidence=github:W16
+2026-10-10T17:06:23Z  tick  W908 advanced  unblock   "mikemol-htmlstruct command written, 19 bazel targets green incl. 25 declared mutants; commit in flight; W956 minted for github:W16"
+2026-10-10T17:18:20Z  tick  W909 advanced  sweep     "html/mhtml routing row + live-table test; probe row declined (adopters' tables); commit in flight"
+2026-10-10T17:41:19Z  tick  W957 minted    -         "repin core: find git and vendored-wheel mtools pins in a pyproject text, and rewrite the sha of the selected dists"  evidence=W956
+2026-10-10T17:41:26Z  tick  W958 minted    -         "repin shell: survey every repo's pins against a sha, and with --write rewrite them and run uv sync per repo"  evidence=W956
+2026-10-10T17:41:27Z  tick  W959 minted    -         "repin console script mikemol-repin, registered, with its INSTALL.md entry and an adoption doc line"  evidence=W956
+2026-10-10T17:46:19Z  tick  W957 advanced  collapse  "repin core written, 11 tests + 6 mutants green under bazel; W956 atomized into W957-W959; commit in flight"
+2026-10-10T17:55:05Z  interrupt W960 minted    -         "gate_stages imports option takes a repo name and computes the bazel canonical path, so adopters stop hardcoding +_repo_rules2+ numbering"  evidence=gcalculus:W-engine-stage
+2026-10-10T18:14:57Z  tick  W958 advanced  collapse  "repin shell written, 7 tests + 7 mutants green under bazel; commit in flight"
+2026-10-10T18:18:32Z  interrupt W961 minted    -         "bump-blocked prints a summary by default: rows only for external blockers (operator asks, repo:W<n>) with a card count, the per-card listing behind --verbose"  evidence=substrate:W318
+2026-10-10T18:41:35Z  tick  W959 advanced  sweep     "mikemol-repin script registered, INSTALL.md, docs/repinning.md; real-fleet dry run read 49 pins; commit in flight"
+2026-10-10T19:00:53Z  interrupt W962 minted    -         "repin scans a repo it is pointed at, and never reads through symlinks or bazel-* directories"  evidence=substrate:W318
+2026-10-10T19:11:22Z  interrupt W963 minted    -         "mikemol-membudget records a 13 MB peak floor for a trivial payload because the forked python image counts"  evidence=substrate:W326
+2026-10-10T19:31:39Z  tick  W961 advanced  sweep     "bump-blocked summary default + --verbose, 7 tests + 4 mutants green under bazel; commit in flight"
+2026-10-10T19:39:59Z  interrupt W964 minted    -         "mikemol-membudget describe: print default MB, ceiling MB and the verb roster as parseable rows"  evidence=substrate:W331
+2026-10-10T19:51:37Z  tick  W965 minted    -         "bump-blocked rows count the cards behind an external blocker transitively and shorten the symbol list"  evidence=substrate:W318
+2026-10-10T19:51:38Z  tick  W964 advanced  unblock   "membudget describe verb + 4 tests + 3 mutants green; W965 minted from substrate-94's W961 follow-up; commit in flight"
+2026-10-10T20:03:05Z  interrupt W966 minted    -         "repin rows carry the file and line each pin came from, so a survey can be checked from its own output"  evidence=linux-sources:W-repin-path
+2026-10-10T20:42:37Z  interrupt W967 minted    -         "Measure where the mutants targets spend their time: seconds per module for pycodemod, hooks and pathsforward"  evidence=W964
+2026-10-10T20:42:38Z  interrupt W968 minted    -         "Shard a dist's mutants target by module so no one target is long enough to time out under load"  evidence=W964
+2026-10-10T20:42:39Z  interrupt W969 minted    -         "Apply the mutants sharding to hooks and pathsforward after pycodemod proves it"  evidence=W964
+2026-10-10T20:46:43Z  tick  W970 minted    -         "mutate_runner takes MUTATE_SHARD=i/N and runs only the def-sites and declared defects whose stable hash falls in shard i"  evidence=W968
+2026-10-10T20:46:43Z  tick  W971 minted    -         "mutants_sharded BUILD macro: N shard sh_tests plus a test_suite named mutants, so the label the gate runs keeps working"  evidence=W968
+2026-10-10T20:46:44Z  tick  W972 minted    -         "shard pycodemod's mutants into six and run it under the gate load"  evidence=W968
+2026-10-10T20:48:41Z  tick  W970 advanced  collapse  "W967 measured (0.6-0.75 s/site, ~150-site shards); W968 atomized into W970-W972; runner shard support written, 19 runner tests green; commit in flight"
+2026-10-10T21:26:23Z  tick  W972 advanced  collapse  "mutants_sharded macro + pycodemod x6: shards 139/129/129/127/118/136 = 778 sites, all pass, 349 s vs 565 s; commit in flight"
+2026-10-10T21:43:53Z  interrupt W973 minted    -         "payload caps a stanza's unblocks and enables lists and prints (+N more), so one card that unblocks hundreds cannot break the budget"  evidence=el-openglo:W484
+2026-10-10T21:43:54Z  interrupt W974 minted    -         "paths-forward bulk update: --update takes a symbol list or --where unscored, so one pass scores or edits many cards"  evidence=el-openglo:W484
+2026-10-10T21:43:55Z  interrupt W975 minted    -         "pycodemod untyped-defs mode: add -> None to a def whose returns carry no value, census by idiom, residue stays residue"  evidence=aeternum:W114
+2026-10-10T21:50:19Z  tick  W969 advanced  collapse  "hooks and pathsforward mutants x3 each (sums 408 and 379), hooks:mutants exclusive tag removed; 6 shards pass in 271 s; commit in flight"
+2026-10-10T21:50:55Z  interrupt W976 minted    -         "pycodemod judged-fix: apply ruff fixes per file and keep a file only if it parses and mypy reports fewer errors"  evidence=paperkit:W-judged-fix
+2026-10-10T22:18:21Z  tick  W973 advanced  unblock   "payload counts >20 blocked cards instead of listing them; reproduced el-openglo's refusal shape (450 blocked) and fixed; their unblocks-list diagnosis was wrong, cause was the also-live line; commit in flight"
+2026-10-10T22:38:01Z  tick  W973 advanced  collapse  "gate timeout on test_payload traced to a quadratic ordered(): blocker_index makes it one pass (8.3 s -> 0.11 s); payload cap kept; 62 pathsforward targets green; commit in flight"
+2026-10-10T22:50:33Z  interrupt W977 minted    -         "describe_rank scans the whole queue per row: the mirror render is quadratic like ordered() was"  evidence=W973
+2026-10-10T22:56:09Z  tick  W977 advanced  sweep     "describe_rank takes the blocker index; render.queue builds it once; 62 pathsforward targets green; commit in flight; aeternum stopgap recorded on W975"
+2026-10-10T23:22:02Z  tick  W974 advanced  sweep     "--update-many (symbols or unscored, dry run first, all or none) written; 63 pathsforward targets green; commit in flight"
+2026-10-11T00:08:13Z  tick  W976 advanced  collapse  "judged-fix mode (planner under the shared judge) written, 7 tests + 5 mutants, mutants x6 and test pass under bazel; commit started 20:10 EDT ahead of the 21:00 reboot"
+2026-10-11T00:27:51Z  tick  W978 minted    -         "judged-fix per-file selftest command as a second judge, so a fix that passes mypy but breaks the file's own selftest is refused"  evidence=paperkit:W-judged-fix
+2026-10-11T00:27:58Z  tick  W975 advanced  sweep     "20:28 EDT, no gate commit after 20:30 ahead of the 21:00 reboot: W975 plan written to evidence; W978 minted (judged-fix selftest judge) for paperkit-f5"
+2026-10-11T00:58:57Z  interrupt W979 minted    -         "repin survey publishes a pin census as metrics so fleet pin drift against the par sha is a series, not a one-off survey"  evidence=github:W16
+2026-10-11T01:01:49Z  hash  --   diverged  --        "divergence: payload 041c98b79a7dad91, file v2:2cd67faadd86ad94; the FILE wins"
+2026-10-11T01:01:57Z  tick  --   checked   -         "resumed after the host reboot: cron 3e42fddc (7,37 * * * *) found live and recorded with --armed; HEAD 7d4a458; W975 working"
+2026-10-11T01:09:58Z  tick  W975 advanced  collapse  "post-reboot: loop re-recorded (cron 3e42fddc); nonereturns planner written (9 tests, 7 mutants, bazel green); commit in flight; CLI mode next"
+2026-10-11T02:21:54Z  interrupt W980 minted    -         "Reserve CPUs for a mutants target through bazel (tags cpu:K plus MUTATE_JOBS=K in the macro) and move every dist's mutants onto mutants_sharded"  evidence=W970
+2026-10-11T03:06:09Z  tick  W981 minted    -         "mutate_runner MUTATE_PLAN=1 prints a distribution's def-site and declared-defect counts and runs no suite"  evidence=W980
+2026-10-11T03:07:47Z  tick  W981 advanced  collapse  "MUTATE_PLAN census of 31 dists (~2,900 mutable sites) recorded on W980; mutantcell's runner import fails (own gate, to check); commit in flight"
+2026-10-11T03:40:28Z  interrupt W982 minted    -         "mikemol-commit waits for the host load to fall below a limit before it starts a gate, so a gate does not time out its own targets on a saturated host"  evidence=W981
+2026-10-11T05:12:04Z  tick  W982 advanced  mechanize "215856f: opt-in load wait in mikemol-commit (MIKEMOL_COMMIT_MAXLOAD); 4 tests, 4 mutants"
+2026-10-11T05:55:46Z  tick  W981 advanced  mechanize "bdf52cb: MUTATE_PLAN prints a dist's site counts without running the grid"
+2026-10-11T05:56:59Z  tick  W983 minted    -         "mutantcell: its mutation runner fails to import under MUTATE_PLAN (rc=1), so its grid cannot be counted or sharded"  evidence=W980
+2026-10-11T05:57:19Z  tick  W983 advanced  collapse  "not a repo defect: mutantcell/.venv holds a stale mikemol-mutation 0.1.0 without declarations.py, shadowing the source path; the bazel gate uses source deps. Census row for mutantcell is a local-venv artifact (uv sync refreshes it)"
+2026-10-11T05:58:54Z  tick  W980 advanced  mechanize "mutants_sharded gains cpus=K (cpu:K tag + MUTATE_JOBS=K); pycodemod/hooks/pathsforward opt in (commit gating); fence sharded 3 x cpus 8, passes locally in 53s, uncommitted"
+2026-10-11T06:16:33Z  interrupt W984 minted    -         "Shard the mid-size mutation grids onto mutants_sharded with cpus: treeio (95), mdstruct (90), importdag (76), pytestspec (59), transcriptstruct (55), mutation (54)"  evidence=W980
+2026-10-11T06:16:33Z  interrupt W985 minted    -         "Shard the small mutation grids onto mutants_sharded with cpus: ledger, memres, katas, buildtel, ratchet, audiostruct, gmailstruct, debtplan, htmlstruct, gradekit, witness, gatecheck"  evidence=W980
+2026-10-11T06:16:39Z  tick  W980 advanced  sweep     "0634169 fence sharded; 88443cf cpus macro; remainder atomized into W984 (mid-size dists) and W985 (small dists)"
+2026-10-11T06:22:40Z  tick  W984 advanced  mechanize "scratchpad codemod turned 6 mid-size dists to mutants_sharded 2x6 (12 targets pass in 41s); macro now merges caller env; commit gating. W985's 12 small dists converted 1x6 too, all pass, awaiting the lock"
+2026-10-11T06:48:37Z  tick  W978 advanced  mechanize "judged-fix --selftest CMD: second judge in the shared judge (cli_typedargs), restore-on-every-exit; 2 tests, 3 mutants; 80 pycodemod targets pass; commit gating"
+2026-10-11T07:16:12Z  tick  W986 minted    -         "luthen: a producer turns mikemol-repin --metrics textfile into luthen_ pin-drift series, plus a Grafana row for pins behind the par sha"  evidence=W979
+2026-10-11T07:16:22Z  tick  W979 advanced  mechanize "mikemol-repin --metrics: pin census textfile (7 tests, 6 mutants, hooks shards pass); luthen told; commit gating"
+2026-10-11T07:28:57Z  interrupt W987 minted    -         "repin_metrics: a scan_time gauge (unix seconds of the census) so a dead census alerts off a series, not the textfile mtime"  evidence=luthen-observability:W806
+2026-10-11T07:43:03Z  tick  W987 advanced  mechanize "scan_time_seconds gauge in the repin census (2 tests, 2 mutants; hooks shards, mypy, ruff pass); commit gating"
+2026-10-11T07:57:15Z  interrupt W988 minted    -         "Lift luthen-observability's checks/revendor_mtools (plan, then --apply: re-vendor hooks and pathsforward wheels at one sha) into mikemol-repin, so vendored pins move by tool"  evidence=luthen-observability:W811
+2026-10-11T08:11:11Z  tick  W989 minted    -         "revendor core: hooks/revendor.py holds the pure parts of luthen's checks/revendor_mtools (wheel_name, pinned_shorts, move_sources, with_local_version, plan_lines) with tests and mutants"  evidence=W988
+2026-10-11T08:11:11Z  tick  W990 minted    -         "revendor apply: build both wheels from git archive, check the new writer's --hash on a queue copy in a throwaway venv, then swap wheels and pins, behind a runner seam so tests run no uv"  evidence=W988
+2026-10-11T08:11:12Z  tick  W991 minted    -         "mikemol-repin --revendor SHA [--apply]: the CLI flag over revendor, plus the docs/repinning.md section that replaces 'vendored wheels are yours to rebuild'"  evidence=W988
+2026-10-11T08:13:28Z  tick  W989 advanced  collapse  "W988 (lift luthen's revendor tool) atomized into W989 core / W990 apply / W991 CLI; W989 pure core written (7 tests, 5 mutants; hooks shards, mypy, ruff pass); commit gating"
+2026-10-11T08:44:44Z  tick  W990 advanced  mechanize "revendor_apply: build/same_reading/swap behind a Runner seam, 8 tests over a fake git+uv on a real dir, 7 mutants; hooks shards, mypy, ruff pass; commit gating"
+2026-10-11T08:57:43Z  interrupt W992 minted    -         "mikemol-wheel: build any mtools dist's wheel at a commit (archive, +g local version, uv build, sha256), generalizing revendor.build"  evidence=paperkit:W315
+2026-10-11T09:05:33Z  tick  W992 advanced  mechanize "mikemol-wheel: one tool for any dist's wheel at a commit (--mtools or --src), JSON line per wheel; determinism measured against real uv and fixed with SOURCE_DATE_EPOCH + epoch stamp; revendor_apply delegates; 7 tests, 7 mutants, 94 hooks targets pass; commit gating"
+2026-10-11T09:23:03Z  tick  W991 advanced  mechanize "mikemol-repin --revendor [--write]: plan/apply over revendor_apply for one repo, docs for --revendor and mikemol-wheel; 5 tests, 5 mutants; 95 hooks targets pass; commit gating"
+2026-10-11T09:46:33Z  tick  W911 advanced  mechanize "fence claim/release/claims verbs: zero-capacity claim owned by a named long-lived pid, owner-only release, gc reaps dead owners; 17 tests, 7 mutants; fence+hooks 126 targets pass; commit gating"
+2026-10-11T10:11:25Z  tick  W993 minted    -         "work_claims core: pure parts of the working-card claim hook (wanted labels from a queue, the session pid from the process ancestry, the owner string, the plan of claims to take and release)"  evidence=W912
+2026-10-11T10:11:26Z  tick  W994 minted    -         "work-claims hook: mikemol-hook-work-claims runs the claim verbs through a runner seam on UserPromptSubmit and releases on SessionEnd, advisory context only, wired in .claude/settings.json"  evidence=W912
+2026-10-11T10:14:53Z  tick  W993 advanced  collapse  "W912 atomized into W993 (pure core) and W994 (hook); work_claims core written, 10 tests, 6 mutants, hooks shards/mypy/ruff/bar_fires pass; commit gating"
+2026-10-11T10:47:26Z  tick  W994 advanced  mechanize "mikemol-hook-work-claims: claims a working card's touches for the session through the fence verbs, advisory, fail-open launcher, wired in settings; 12 tests, 5 mutants; 97 hooks targets pass; commit gating"
+2026-10-11T11:03:10Z  interrupt W995 minted    -         "paths-forward --add/--update: a repeated --touches (or --enables) flag keeps only the last value without saying so; append, or refuse"  evidence=W994
+2026-10-11T11:13:22Z  tick  W995 advanced  mechanize "repeated list flags extend instead of keeping the last (touches, enables, blocked-on, add-enables, exdate); 2 tests, 2 mutants; 63 pathsforward targets pass; commit gating"
+2026-10-11T11:42:55Z  tick  W670 advanced  sweep     "fourteenth slice: pkgbuild declares 15, 5 survived (all real gaps), 3 tests + 1 usage case added, all killed; W913 now blocked on nemik:W305; commit gating"
+2026-10-11T11:44:03Z  interrupt W996 minted    -         "inbound-asks context line prints the live claim holder beside a tag another session is working, by calling nemik-overlaps"  evidence=W913
+2026-10-11T11:47:19Z  interrupt W997 minted    -         "mutation: declare audiostruct's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:19Z  interrupt W998 minted    -         "mutation: declare buildtel's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:19Z  interrupt W999 minted    -         "mutation: declare corpus's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:20Z  interrupt W1000 minted    -         "mutation: declare debtplan's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:20Z  interrupt W1001 minted    -         "mutation: declare gmailstruct's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:20Z  interrupt W1002 minted    -         "mutation: declare gradekit's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:21Z  interrupt W1003 minted    -         "mutation: declare icsstruct's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T11:47:21Z  interrupt W1004 minted    -         "mutation: declare pytestspec's first defect classes from its modules' docstrings, and test what survives"  evidence=W670
+2026-10-11T12:14:07Z  tick  W997 advanced  sweep     "audiostruct declares 20 defects (records, render), all killed, no test added; commit gating"
+2026-10-11T12:44:58Z  tick  W998 advanced  sweep     "buildtel declares 24 (bb_records, image_digest), 1 survived (top-20 cap, real gap), 1 test added, all killed; commit gating"
+2026-10-11T13:12:56Z  tick  W999 advanced  sweep     "corpus declares 28 (suite_pragmas, tree_root, import_edges): 6 survived, all real gaps, 2 tests + 1 case added, all killed; commit gating"
+2026-10-11T13:43:49Z  tick  W1005 minted    -         "mutation: a nested def is named find_cycle.<locals>.visit in the grid's report but find_cycle.visit in a regex def= scope, so the report's own name plants nothing"  evidence=W1000
+2026-10-11T13:43:53Z  tick  W1000 advanced  sweep     "debtplan declares 23 (cycle, reduce, ledger, resolutions, rows): 2 survived (real gaps) + 5 unapplied from a nested-def naming mismatch (W1005), 2 tests added, all killed; commit gating"
+2026-10-11T14:12:22Z  tick  W1001 advanced  sweep     "gmailstruct declares 21 (records), 1 survived (non-ASCII digits in internalDate, real gap), 1 case added, all killed; commit gating"
+2026-10-11T14:41:52Z  tick  W1002 advanced  sweep     "gradekit declares 24 (jsonio, effective, read_grade), all killed, no test added; commit gating"
+2026-10-11T15:12:06Z  tick  W1003 advanced  sweep     "icsstruct declares 31 (lexical, source), all killed, no test added; commit gating"
+2026-10-11T15:44:21Z  tick  W1004 advanced  sweep     "pytestspec declares 30 (cache, adapters, outcomes), 20 survived (modules only reached through a pytest session), 17 unit tests added, all killed; last of W670's eight dists; commit gating"
+2026-10-11T15:49:07Z  interrupt W1006 minted    -         "mutation: declare the I/O-edged modules the first slices left out (pytestspec plugin and opa, buildtel bb_log and buildpulse, audiostruct stages, gmailstruct fetch and auth), where survivors are likeliest"  evidence=W670
+2026-10-11T16:08:33Z  interrupt W1007 minted    -         "Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row, replacing the hand-applied W881 patch"  evidence=W881
+2026-10-11T16:08:34Z  interrupt W1008 minted    -         "Declare ~/.config/mikemol/katas.toml as a luthen terraform/user row from a tracked source in mtools"  evidence=W879
+2026-10-11T16:11:29Z  tick  W1009 minted    -         "mutation: declare buildtel's bb_log and buildpulse modules"  evidence=W670
+2026-10-11T16:11:30Z  tick  W1010 minted    -         "mutation: declare audiostruct's stages module"  evidence=W670
+2026-10-11T16:11:31Z  tick  W1011 minted    -         "mutation: declare gmailstruct's fetch and auth modules"  evidence=W670
+2026-10-11T16:13:52Z  tick  W1012 minted    -         "mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist merge)"  evidence=W670
+2026-10-11T16:14:27Z  tick  W1006 advanced  sweep     "atomized W1006 into W1006/W1009-W1012; pytestspec opa: 9 witnesses and 18 declarations written, test_opa 21 pass locally, bazel mutants grid still running (uncommitted)"

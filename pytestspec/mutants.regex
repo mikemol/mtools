@@ -7,7 +7,7 @@
 # moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
 # A pattern cannot hold a literal pipe (use \S or %7C) or a literal percent (%25).
 #
-# outcomes, cache and adapters. opa, plugin and spec are not declared yet.
+# outcomes, cache, adapters and opa. plugin and spec are not declared yet.
 
 # outcomes.py: the outcome map is TOTAL and FUNCTIONAL, and each axis classifies by its own rule.
 src/mikemol/pytestspec/outcomes.py|unknown-column-not-reported|if rule\[3\] not in known|if False|def=problems
@@ -47,3 +47,25 @@ src/mikemol/pytestspec/adapters.py|case-without-a-fixture-run|if "fixture" not i
 src/mikemol/pytestspec/adapters.py|case-fields-dropped-from-the-fill|\{\*\*case, "result"|{"result"|def=fill
 src/mikemol/pytestspec/adapters.py|operands-not-passed|case\.get\("operands"\)|None|def=fill
 src/mikemol/pytestspec/adapters.py|offered-names-unsorted|sorted\(adapters\)|adapters|def=fill
+
+# opa.py: the evaluator is pinned and its failures are errors, never verdicts. A failed version
+# command is no pin, the case rides stdin to the spec's own package, a failed eval raises, and the
+# error carries the stream that spoke, on one line, cut short.
+src/mikemol/pytestspec/opa.py|version-exit-status-ignored|if proc\.returncode != 0 or version is None:|if version is None:|def=resolve
+src/mikemol/pytestspec/opa.py|wrong-version-accepted|if version != PINNED:|if False:|def=resolve
+src/mikemol/pytestspec/opa.py|empty-version-token-indexed|tokens\[0\] if tokens else None|tokens[0]|def=_field
+src/mikemol/pytestspec/opa.py|spec-without-package-queried|if name is None:|if False:|def=package_of
+src/mikemol/pytestspec/opa.py|non-list-set-iterated|if not isinstance\(value, list\):|if False:|def=_strings
+src/mikemol/pytestspec/opa.py|messages-left-unsorted|sorted\(str\(v\) for v in cast\("list\[object\]", value\)\)|(str(v) for v in cast("list[object]", value))|def=_strings
+src/mikemol/pytestspec/opa.py|empty-list-indexed|if isinstance\(value, list\) and value:|if isinstance(value, list):|def=_first
+src/mikemol/pytestspec/opa.py|non-object-read-as-one|if isinstance\(value, dict\):|if True:|def=_key
+src/mikemol/pytestspec/opa.py|withheld-dropped-from-the-verdict|withheld=_strings\(_key\(value, "withheld"\)\)|withheld=()|def=verdict_from
+src/mikemol/pytestspec/opa.py|no-deny-rule-reads-admitted|if "deny" not in value:|if False:|def=verdict_from
+src/mikemol/pytestspec/opa.py|case-not-sent-on-stdin|"--stdin-input",||def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|extra-data-not-loaded|\*extra,||def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|package-query-dropped|f"data\.\{package_of\(spec\)\}"|"data"|def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|resolved-opa-not-run|resolved\[0\],|"opa",|def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|failed-eval-read-as-a-verdict|if proc\.returncode != 0:|if False:|def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|stdout-preferred-over-stderr|proc\.stderr\.strip\(\) or proc\.stdout|proc.stdout or proc.stderr.strip()|def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|error-keeps-its-newlines|" "\.join\(\(proc\.stderr\.strip\(\) or proc\.stdout\)\.split\(\)\)|(proc.stderr.strip() or proc.stdout)|def=evaluator.evaluate
+src/mikemol/pytestspec/opa.py|error-not-cut-short|said\[:500\]|said|def=evaluator.evaluate

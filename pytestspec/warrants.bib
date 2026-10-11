@@ -606,3 +606,61 @@
   claim  = {The disposition axis reads the declared kind, or `none`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_units.py -k test_a_disposition_names_its_kind_and_none_is_undisposed},
 }
+
+@misc{pytestspec-opa-withheld-messages-are-read-from-their-own-key,
+  section = {opa},
+  title  = {The withheld half is the `withheld` set, not a copy of `deny`},
+  claim  = {The withheld half is the `withheld` set, not a copy of `deny`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_withheld_messages_are_read_from_their_own_key},
+}
+
+@misc{pytestspec-opa-set-that-is-not-a-list-reads-as-no-messages,
+  section = {opa},
+  title  = {A string where a set belongs is not iterated into characters; it reads as none},
+  claim  = {A string where a set belongs is not iterated into characters; it reads as none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_set_that_is_not_a_list_reads_as_no_messages},
+}
+
+@misc{pytestspec-opa-document-of-the-wrong-shape-is-withheld-and-never-raises,
+  section = {opa},
+  title  = {Every step of the walk to the package document tolerates a value of the wrong shape},
+  claim  = {Every step of the walk to the package document tolerates a value of the wrong shape.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_document_of_the_wrong_shape_is_withheld_and_never_raises},
+}
+
+@misc{pytestspec-opa-opa-whose-version-command-fails-is-refused-though-it-prints-the-pin,
+  section = {opa},
+  title  = {The exit status is read as well as the Version line: a pin printed on a failure is no pin},
+  claim  = {The exit status is read as well as the Version line: a pin printed on a failure is no
+            pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_an_opa_whose_version_command_fails_is_refused_though_it_prints_the_pin},
+}
+
+@misc{pytestspec-opa-version-line-with-no-value-is-refused-not-indexed,
+  section = {opa},
+  title  = {`Version:` with nothing after it is no version, and is refused rather than IndexError},
+  claim  = {`Version:` with nothing after it is no version, and is refused rather than IndexError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_version_line_with_no_value_is_refused_not_indexed},
+}
+
+@misc{pytestspec-opa-case-goes-on-stdin-and-the-spec-package-is-queried,
+  section = {opa},
+  title  = {The argv is: format, stdin input, the spec, each extra data path, then the package query},
+  claim  = {The argv is: format, stdin input, the spec, each extra data path, then the package
+            query.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_the_case_goes_on_stdin_and_the_spec_package_is_queried},
+}
+
+@misc{pytestspec-opa-failed-eval-reports-stderr-on-one-line-cut-short,
+  section = {opa},
+  title  = {A nonzero exit raises naming stderr (not stdout), newlines folded and the length cut},
+  claim  = {A nonzero exit raises naming stderr (not stdout), newlines folded and the length cut.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_failed_eval_reports_stderr_on_one_line_cut_short},
+}
+
+@misc{pytestspec-opa-failed-eval-with-an-empty-stderr-reports-stdout,
+  section = {opa},
+  title  = {A compile error opa prints on stdout, with stderr empty, still reaches the failure},
+  claim  = {A compile error opa prints on stdout, with stderr empty, still reaches the failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_failed_eval_with_an_empty_stderr_reports_stdout},
+}
