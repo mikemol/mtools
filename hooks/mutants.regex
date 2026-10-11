@@ -147,4 +147,10 @@ src/mikemol/hooks/revendor_cli.py|dry-run-writes|if not write:|if False:|def=run
 src/mikemol/hooks/revendor_cli.py|repo-writer-not-used|"mikemol-paths-forward"|"mikemol-other"|def=run_revendor
 src/mikemol/hooks/revendor_cli.py|refusal-ignored|if failure is not None:|if False:|def=run_revendor
 src/mikemol/hooks/repin_cli.py|revendor-flag-ignored|if "--revendor" in flags:|if False:|def=main
+src/mikemol/hooks/work_claims.py|ready-cards-claim|card\.get\("status"\) != _WORKING or|card.get("status") == _WORKING or|def=wanted
+src/mikemol/hooks/work_claims.py|session-walk-stuck|pid = parent\(pid\)|pid = pid|def=session_pid
+src/mikemol/hooks/work_claims.py|path-claims-read-as-touch|words\[0\]\.startswith\(LABEL_PREFIX\) and owner|owner|def=claims_of
+src/mikemol/hooks/work_claims.py|release-others-claims|if who == owner\}|if who != owner}|def=plan
+src/mikemol/hooks/work_claims.py|release-wanted-claims|if label not in wished\)\)|if label in wished))|def=plan
+src/mikemol/hooks/work_claims.py|refusal-prefix-kept|\.split\(_REFUSED, 1\)\[-1\]|.split(_REFUSED, 1)[0]|def=advice
 src/mikemol/hooks/repin_cli.py|env-par-ignored|else \(_ENV\.get\(PAR_ENV\) or None\)|else None|def=main

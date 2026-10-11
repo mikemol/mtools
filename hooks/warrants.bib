@@ -8238,3 +8238,74 @@
   claim  = {A missing or short sha and a missing mtools checkout are refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_usage_refusals_exit_two_and_apply_nothing},
 }
+
+@misc{hooks-work-claims-working-card-claims-each-of-its-tags-sorted-and-deduplicated,
+  section = {work_claims},
+  title  = {The control: two working cards sharing a tag give each tag once, in order},
+  claim  = {The control: two working cards sharing a tag give each tag once, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_a_working_card_claims_each_of_its_tags_sorted_and_deduplicated},
+}
+
+@misc{hooks-work-claims-only-a-working-card-claims,
+  section = {work_claims},
+  title  = {Ready, blocked and done cards are plans or history, not a presence},
+  claim  = {Ready, blocked and done cards are plans or history, not a presence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_only_a_working_card_claims},
+}
+
+@misc{hooks-work-claims-unreadable-queue-claims-nothing,
+  section = {work_claims},
+  title  = {A missing, malformed or odd-shaped queue is no claims, never an error},
+  claim  = {A missing, malformed or odd-shaped queue is no claims, never an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_an_unreadable_queue_claims_nothing},
+}
+
+@misc{hooks-work-claims-start-time-and-parent-come-from-after-the-comm-field,
+  section = {work_claims},
+  title  = {A comm with spaces and a closing parenthesis cannot shift the fields},
+  claim  = {A comm with spaces and a closing parenthesis cannot shift the fields.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_the_start_time_and_parent_come_from_after_the_comm_field},
+}
+
+@misc{hooks-work-claims-session-is-the-nearest-ancestor-with-the-name,
+  section = {work_claims},
+  title  = {Walk up from the hook's shell to the first claude, skipping the others above it},
+  claim  = {Walk up from the hook's shell to the first claude, skipping the others above it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_the_session_is_the_nearest_ancestor_with_the_name},
+}
+
+@misc{hooks-work-claims-no-session-ancestor-is-none-and-the-walk-is-bounded,
+  section = {work_claims},
+  title  = {A tree with no claude, or a parent loop, ends at None instead of spinning},
+  claim  = {A tree with no claude, or a parent loop, ends at None instead of spinning.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_no_session_ancestor_is_none_and_the_walk_is_bounded},
+}
+
+@misc{hooks-work-claims-claims-listing-reads-label-and-owner,
+  section = {work_claims},
+  title  = {Only touch claims with an owner are read; other lines are skipped},
+  claim  = {Only touch claims with an owner are read; other lines are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_the_claims_listing_reads_label_and_owner},
+}
+
+@misc{hooks-work-claims-plan-takes-what-is-missing-and-releases-only-its-own-unwanted,
+  section = {work_claims},
+  title  = {Held by me and wanted: nothing; wanted and absent: take; mine and unwanted: release},
+  claim  = {Held by me and wanted: nothing; wanted and absent: take; mine and unwanted: release.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_the_plan_takes_what_is_missing_and_releases_only_its_own_unwanted},
+}
+
+@misc{hooks-work-claims-claim-another-owner-holds-is-taken-again-to-learn-the-holder,
+  section = {work_claims},
+  title  = {Wanted and held by someone else is not mine, so the plan tries it and the ledger answers},
+  claim  = {Wanted and held by someone else is not mine, so the plan tries it and the ledger
+            answers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_a_claim_another_owner_holds_is_taken_again_to_learn_the_holder},
+}
+
+@misc{hooks-work-claims-refusal-becomes-one-advisory-line-naming-the-holder,
+  section = {work_claims},
+  title  = {The ledger's last line, minus its prefix, is the detail; an empty one still says held},
+  claim  = {The ledger's last line, minus its prefix, is the detail; an empty one still says held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_a_refusal_becomes_one_advisory_line_naming_the_holder},
+}

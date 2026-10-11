@@ -433,6 +433,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_revendor_apply.py" = ["assert"]
 "tests/test_wheel.py" = ["assert"]
 "tests/test_revendor_cli.py" = ["assert"]
+"tests/test_work_claims.py" = ["assert"]
 "src/mikemol/hooks/repin_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file"]
