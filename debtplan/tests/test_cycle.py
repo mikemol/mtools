@@ -39,6 +39,18 @@ def test_the_cycle_starts_at_the_repeated_file_not_at_the_walk_start() -> None:
     assert find_cycle({"a": ("b",), "b": ("c",), "c": ("b",)}) == ["b", "c", "b"]
 
 
+def test_with_two_cycles_the_one_that_sorts_first_wins_whatever_the_build_order() -> None:
+    """The walk starts in name order, so the answer does not depend on how the graph was built."""
+    graph: dict[str, tuple[str, ...]] = {"y": ("z",), "z": ("y",), "a": ("b",), "b": ("a",)}
+    assert find_cycle(graph) == ["a", "b", "a"]
+
+
+def test_a_finished_branch_is_not_part_of_a_later_cycle() -> None:
+    """Where x waits on a dead end y and on z, and z waits on x, the loop is x, z, x without y."""
+    graph: dict[str, tuple[str, ...]] = {"x": ("y", "z"), "y": (), "z": ("x",)}
+    assert find_cycle(graph) == ["x", "z", "x"]
+
+
 def test_a_cycle_is_found_from_a_later_start() -> None:
     """The walk covers every file, so a loop apart from the first file's component is found."""
     graph: dict[str, tuple[str, ...]] = {"a": ("b",), "b": (), "c": ("d",), "d": ("c",)}

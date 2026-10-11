@@ -36,12 +36,13 @@ def test_independent_waits_are_both_kept() -> None:
 
 def test_the_direct_waits_are_sorted() -> None:
     """The reduction is deterministic whatever order the waits arrived in."""
-    rows = [
-        Row("a.py", 1, (), ("top.py",)),
-        Row("b.py", 1, (), ("top.py",)),
-        Row("top.py", 1, ("b.py", "a.py"), ()),
-    ]
-    assert direct_waits(rows)["top.py"] == ("a.py", "b.py")
+    # ⚑ TWELVE LEAVES, NOT TWO: the waits pass through a set whose order is the hash seed's, and
+    # two strings come out sorted half the time. A mutant that dropped the sort survived one gate
+    # run for that reason (measured 2026-10-11); twelve make it a one-in-479-million chance.
+    names = [f"leaf{n:02d}.py" for n in range(12)]
+    rows = [Row(name, 1, (), ("top.py",)) for name in names]
+    rows.append(Row("top.py", 1, tuple(reversed(names)), ()))
+    assert direct_waits(rows)["top.py"] == tuple(names)
 
 
 def test_a_file_that_waits_on_nothing_has_no_direct_waits() -> None:

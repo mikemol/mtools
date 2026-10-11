@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W1000), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S.
+#
+# cycle, reduce, ledger, resolutions and rows. cli, config, mint, plan, queue and universe are not
+# declared yet.
+
+# cycle.py: a plan that could block its own cards is refused, so a cycle is found, returned closed,
+# and starts where it begins; a file waiting on itself is the cycle [file, file].
+src/mikemol/debtplan/cycle.py|closing-edge-ignored|if state\.get\(nxt\) == ON_PATH:|if False:|def=find_cycle.visit
+src/mikemol/debtplan/cycle.py|cycle-not-closed|return \[\*path\[path\.index\(nxt\) :\], nxt\]|return path[path.index(nxt) :]|def=find_cycle.visit
+src/mikemol/debtplan/cycle.py|cycle-carries-the-path-before-it|path\.index\(nxt\) :\]|0 :]|def=find_cycle.visit
+src/mikemol/debtplan/cycle.py|walked-nodes-left-on-the-path|path\.pop\(\)|pass|def=find_cycle.visit
+src/mikemol/debtplan/cycle.py|nested-cycle-lost|found = visit\(nxt\)|found = []|def=find_cycle.visit
+src/mikemol/debtplan/cycle.py|start-order-unsorted|for start in sorted\(waits\):|for start in waits:|def=find_cycle
+
+# reduce.py: what is left when implied waits are dropped orders the files exactly as the closure did;
+# a file that waits on nothing maps to an empty tuple, and the waits are sorted.
+src/mikemol/debtplan/reduce.py|implied-waits-kept|if not any\(g in by\[h\] for h in waits if h != g\)|if True|def=direct_waits
+src/mikemol/debtplan/reduce.py|direct-waits-unsorted|tuple\(sorted\(g for|tuple((g for|def=direct_waits
+src/mikemol/debtplan/reduce.py|waitless-file-dropped|for file, waits in by\.items\(\)|for file, waits in by.items() if waits|def=direct_waits
+
+# ledger.py: a malformed ledger is a refusal that says which row, never a plan over a guess; a
+# count is a positive integer, a bool is not one, and zero is refused (a clean file has no row).
+src/mikemol/debtplan/ledger.py|bad-json-escapes-as-a-decode-error|except json\.JSONDecodeError as exc:|except KeyError as exc:|def=parse_ledger
+src/mikemol/debtplan/ledger.py|non-object-ledger-accepted|if not isinstance\(loaded, dict\):|if False:|def=parse_ledger
+src/mikemol/debtplan/ledger.py|bool-count-accepted|isinstance\(value, bool\) or ||def=parse_ledger
+src/mikemol/debtplan/ledger.py|float-count-accepted| or not isinstance\(value, int\)||def=parse_ledger
+src/mikemol/debtplan/ledger.py|zero-count-accepted|or value < 1:|or value < 0:|def=parse_ledger
+src/mikemol/debtplan/ledger.py|refusal-does-not-name-the-row| \{key!r\} must be a positive| must be a positive|def=parse_ledger
+
+# resolutions.py: an ambiguous name is settled by data, and a malformed declaration is a refusal,
+# not a name silently left unsettled.
+src/mikemol/debtplan/resolutions.py|bad-json-escapes-as-a-decode-error|except json\.JSONDecodeError as exc:|except KeyError as exc:|def=parse_resolutions
+src/mikemol/debtplan/resolutions.py|non-object-resolutions-accepted|if not isinstance\(loaded, dict\):|if False:|def=parse_resolutions
+src/mikemol/debtplan/resolutions.py|non-string-path-accepted|if not isinstance\(value, str\):|if False:|def=parse_resolutions
+
+# rows.py: a file is ready when no debt file and no unsettled name stands ahead of it, and ready
+# files sort first, then the ones most files wait on, then by name.
+src/mikemol/debtplan/rows.py|ready-ignores-unsettled-names|return not self\.waits_on and not self\.unsettled|return not self.waits_on|def=Row.ready
+src/mikemol/debtplan/rows.py|ready-ignores-waits|return not self\.waits_on and not self\.unsettled|return not self.unsettled|def=Row.ready
+src/mikemol/debtplan/rows.py|order-ignores-unsettled-names|len\(row\.waits_on\) \+ len\(row\.unsettled\)|len(row.waits_on)|def=order_key
+src/mikemol/debtplan/rows.py|most-waited-on-sorts-last|-len\(row\.waited_by\)|len(row.waited_by)|def=order_key
+src/mikemol/debtplan/rows.py|name-tiebreak-dropped|-len\(row\.waited_by\), row\.file\)|-len(row.waited_by), "")|def=order_key
