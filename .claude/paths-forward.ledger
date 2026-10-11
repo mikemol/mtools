@@ -1621,3 +1621,4 @@
 2026-10-11T19:17:50Z  interrupt W1013 minted    -         "mutation: declare pytestspec's spec module (judge, load_cases, disposition_of, expectation)"  evidence=W1012
 2026-10-11T19:17:51Z  interrupt W1014 minted    -         "mutation: declare pytestspec plugin's SpecItem and SpecFile machinery (_skips, _cache_root, _not_ported, runtest), reached today only through pytester"  evidence=W1012
 2026-10-11T19:17:55Z  tick  W1011 advanced  sweep     "landed: gmailstruct fetch and auth 47 declared defects killed (8be65b3); minted W1013 (pytestspec spec) and W1014 (SpecItem machinery), W1013 now working"
+2026-10-11T20:08:48Z  tick  W1014 advanced  sweep     "pytestspec SpecItem and SpecFile machinery: 38 defect classes declared against the pytester sessions; grid running, survivors not yet known, uncommitted"

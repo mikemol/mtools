@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 125,
+      "ticks_blocked": 126,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 124,
+      "ticks_blocked": 125,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 129,
+      "ticks_blocked": 130,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-11T16:02:11Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -16154,7 +16154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16689,7 +16689,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16984,7 +16984,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -17494,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -17535,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -17558,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -17981,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 29,
+      "ticks_blocked": 30,
       "completed": null
     },
     {
@@ -18155,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -18934,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -20719,26 +20719,26 @@
     {
       "symbol": "W1013",
       "title": "mutation: declare pytestspec's spec module (judge, load_cases, disposition_of, expectation)",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: f3e0474 [PUSHED]: pytestspec spec module declares 49 defect classes; 13 survived (rule_id spacing and colon, unsorted mismatch ids, withheld join, unknown expect key, blank reason, port-fix pairing) and are killed by 11 new tests, 2 added load cases and 11 warrants; bazel mutants, test_spec, test_spec_units, ruff, mypy pass",
       "issued_at": "2026-10-11T19:17:50Z",
       "minted_during": "interrupt",
       "caused_by": "W1012",
-      "last_worked": "2026-10-11T19:17:54Z",
+      "last_worked": "2026-10-11T20:06:57Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T200657Z"
     },
     {
       "symbol": "W1014",
       "title": "mutation: declare pytestspec plugin's SpecItem and SpecFile machinery (_skips, _cache_root, _not_ported, runtest), reached today only through pytester",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "mutation"
@@ -20750,8 +20750,9 @@
       "issued_at": "2026-10-11T19:17:51Z",
       "minted_during": "interrupt",
       "caused_by": "W1012",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T20:06:58Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

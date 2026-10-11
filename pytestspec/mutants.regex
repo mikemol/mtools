@@ -155,3 +155,48 @@ src/mikemol/pytestspec/spec.py|port-fix-pairs-with-itself| or pair == name||def=
 src/mikemol/pytestspec/spec.py|port-fix-pairs-with-a-stranger| or pair not in names||def=disposition_of
 src/mikemol/pytestspec/spec.py|port-fix-loses-its-pair|return Disposition\(kind, reason, pair\)|return Disposition(kind, reason)|def=disposition_of
 src/mikemol/pytestspec/spec.py|other-dispositions-carry-a-pair|return Disposition\(kind, reason\)|return Disposition(kind, reason, "x")|def=disposition_of
+
+# plugin.py `_skips`, `_cache_root` and `SpecItem`: --skip-declared spares only a declared unmeasured
+# case, an unmeasured case is a strict xfail, and an unevaluable case fails as UNMEASURED.
+src/mikemol/pytestspec/plugin.py|skip-flag-ignored|chosen = cast\("object", config\.getoption\("skip_declared"\)\) is True|chosen = True|def=_skips
+src/mikemol/pytestspec/plugin.py|skip-spares-every-disposition| and disposition\.kind == UNMEASURED||def=_skips
+src/mikemol/pytestspec/plugin.py|skip-spares-an-undeclared-case|chosen and disposition is not None and |chosen and |def=_skips
+src/mikemol/pytestspec/plugin.py|cache-root-always-set|return Path\(root\) if isinstance\(root, str\) else None|return Path(str(root))|def=_cache_root
+src/mikemol/pytestspec/plugin.py|unmeasured-not-xfail|if disposition is not None and disposition\.kind == UNMEASURED:|if False:|def=SpecItem.__init__
+src/mikemol/pytestspec/plugin.py|unmeasured-xfail-not-strict|strict=True|strict=False|def=SpecItem.__init__
+src/mikemol/pytestspec/plugin.py|unmeasured-xfail-reason-dropped|reason=disposition\.reason|reason=""|def=SpecItem.__init__
+src/mikemol/pytestspec/plugin.py|no-evaluator-installed|if found is None:|if False:|def=SpecItem._evaluator
+src/mikemol/pytestspec/plugin.py|skipped-case-evaluated|if _skips\(self\.config, self\.disposition\):|if False:|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|skipped-case-unlabelled|DECLARED-SKIPPED \(not evaluated\): --skip-declared|skipped|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|evaluation-error-escapes|except \(opa\.OpaUnavailableError, SpecDataError\) as exc:|except KeyError as exc:|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|unmeasured-failure-unlabelled|msg = f"UNMEASURED \(not evaluated, not passed\): \{exc\}"|msg = f"{exc}"|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|judgment-never-raised|if failure is not None:|if False:|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|impl-name-passed-unchecked|expectation\(self\.name, self\.case, impl if isinstance\(impl, str\) else None\)|expectation(self.name, self.case, None)|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|no-impl-fills-anyway|if not isinstance\(name, str\):|if False:|def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|cache-asked-for-a-case-without-a-fixture| and "fixture" in self\.case||def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|cache-asked-for-an-unoffered-impl|name in offered and ||def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|cache-hit-ignored|if hit:|if False:|def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|cache-hit-not-counted|counts\[CACHED\] \+= 1|pass|def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|cache-hit-result-dropped|return \{\*\*self\.case, "result": result\}|return self.case|def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|filled-result-not-stored|cache\.store\(root, name, key, filled\["result"\]\)|pass|def=SpecItem._filled
+src/mikemol/pytestspec/plugin.py|spec-failure-not-reported-by-case|if isinstance\(excinfo\.value, SpecFailedError\):|if False:|def=SpecItem.repr_failure
+src/mikemol/pytestspec/plugin.py|spec-failure-loses-its-case-name|return f"\{self\.name\}: \{excinfo\.value\}"|return str(excinfo.value)|def=SpecItem.repr_failure
+src/mikemol/pytestspec/plugin.py|report-info-loses-the-case|f"spec: \{self\.name\}"|"spec"|def=SpecItem.reportinfo
+
+# plugin.py `SpecFile.collect` and `pytest_collect_file`: bad case data is a collection ERROR, never
+# zero items; a library under a declared data path is not a spec.
+src/mikemol/pytestspec/plugin.py|data-paths-unchecked-at-collection|            data_paths\(self\.config\)|            pass|def=SpecFile.collect
+src/mikemol/pytestspec/plugin.py|expect-unvalidated-at-collection|                expectation\(name, case\)|                pass|def=SpecFile.collect
+src/mikemol/pytestspec/plugin.py|bad-case-data-escapes-collection|except SpecDataError as exc:|except KeyError as exc:|def=SpecFile.collect
+src/mikemol/pytestspec/plugin.py|library-claimed-as-a-spec| and not library||def=pytest_collect_file
+src/mikemol/pytestspec/plugin.py|library-matched-by-equality|file_path\.is_relative_to\(p\)|file_path == p|def=pytest_collect_file
+
+# plugin.py `_not_ported`, `pytest_collection_modifyitems` and `_count_declarations`: a do-not-port
+# case is deselected (and counted) under every implementation but the origin.
+src/mikemol/pytestspec/plugin.py|origin-deselects-do-not-port|impl != adapters\.ORIGIN|impl == adapters.ORIGIN|def=_not_ported
+src/mikemol/pytestspec/plugin.py|every-other-disposition-deselected|and item\.disposition\.kind == DO_NOT_PORT|and item.disposition.kind != DO_NOT_PORT|def=_not_ported
+src/mikemol/pytestspec/plugin.py|nothing-deselected|if dropped:|if False:|def=pytest_collection_modifyitems
+src/mikemol/pytestspec/plugin.py|deselected-items-kept|items\[:\] = \[item for item in items if not _not_ported\(item, impl\)\]|pass|def=pytest_collection_modifyitems
+src/mikemol/pytestspec/plugin.py|deselection-not-reported|config\.hook\.pytest_deselected\(items=dropped\)|pass|def=pytest_collection_modifyitems
+src/mikemol/pytestspec/plugin.py|declarations-uncounted|if kind in \{DO_NOT_PORT, PORT_FIX\}:|if False:|def=_count_declarations
+src/mikemol/pytestspec/plugin.py|skipped-cases-uncounted|counts\[DECLARED_SKIPPED\] \+= 1|pass|def=_count_declarations
