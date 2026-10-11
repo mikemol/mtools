@@ -646,6 +646,9 @@ def main(argv: list[str]) -> int:
     attempted = [s for s in attempted if in_shard(s, shard)]
     unreachable = [s for s in unreachable if in_shard(s, shard)]
     jobs = [(site, mutant) for site, mutant in jobs if in_shard(site, shard)]
+    if os.environ.get("MUTATE_PLAN"):
+        sys.stdout.write(plan_line(grid.dist.name, attempted, unreachable, len(declared)))
+        return 0
     verdicts, regex = _run_all(
         grid,
         [m for _site, m in jobs],
@@ -663,6 +666,20 @@ def main(argv: list[str]) -> int:
     # printing the declared-defect section whenever the def-site grid had already failed.
     regex_code = _regex_section(regex)
     return 1 if code or regex_code else 0
+
+
+def plan_line(name: str, attempted: list[str], unreachable: list[str], declared: int) -> str:
+    """Say how big a grid is without running it: `MUTATE_PLAN=1` (mtools:W981).
+
+    ⚑ SHARD COUNTS COME FROM DATA, NOT A GUESS (W967's method): a grid costs about its mutable
+    sites times a suite run, so `sites` is what decides how many shards a `:mutants` target needs.
+
+    Returns:
+        one line: the grid's name, its mutable sites, its unreachable ones and its declared defects.
+
+    """
+    sites = len(attempted) - len(unreachable)
+    return f"{name}: sites={sites} unreachable={len(unreachable)} declared={declared}\n"
 
 
 def pool_size(jobs: str, cpus: int, share: int) -> int:

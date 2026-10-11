@@ -484,3 +484,25 @@ def test_an_explicit_job_count_wins_over_the_share() -> None:
     assert mutate_runner.pool_size("3", 12, 6) == THREE_JOBS
     assert mutate_runner.pool_size("1", 12, 1) == 1
     assert mutate_runner.pool_size("0", 12, 1) == 1
+
+
+def test_plan_mode_prints_the_grid_size_and_runs_no_suite(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W981: MUTATE_PLAN=1 says how many sites a grid has and starts nothing."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    seen = _seam(monkeypatch, 1, _FAILED)
+    monkeypatch.setenv("MUTATE_PLAN", "1")
+    assert _run_main(grid) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("dist: sites=")
+    assert "declared=1" in out
+    assert seen == []
+
+
+def test_plan_line_counts_mutable_sites_without_the_unreachable_ones() -> None:
+    """Sites that cannot be mutated do not count toward the cost of a grid."""
+    line = mutate_runner.plan_line("d", ["a", "b", "c"], ["c"], 2)
+    assert line == "d: sites=2 unreachable=1 declared=2\n"

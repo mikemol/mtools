@@ -155,3 +155,17 @@
             mdstruct, treeio) time out. They shard first, then narrow.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_unsharded_runner_uses_every_cpu_and_a_shard_takes_its_share},
 }
+
+@misc{root-mutate-runner-plan-mode-prints-the-grid-size-and-runs-no-suite,
+  section = {mutate_runner},
+  title  = {W981: MUTATE_PLAN=1 says how many sites a grid has and starts nothing},
+  claim  = {W981: MUTATE_PLAN=1 says how many sites a grid has and starts nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_plan_mode_prints_the_grid_size_and_runs_no_suite},
+}
+
+@misc{root-mutate-runner-plan-line-counts-mutable-sites-without-the-unreachable-ones,
+  section = {mutate_runner},
+  title  = {Sites that cannot be mutated do not count toward the cost of a grid},
+  claim  = {Sites that cannot be mutated do not count toward the cost of a grid.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_plan_line_counts_mutable_sites_without_the_unreachable_ones},
+}
