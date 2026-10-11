@@ -68,3 +68,4 @@ new_dist_cli	The new-distribution generator's shell (W945)
 commit_limit	The commit time limit's override (W946)
 repin	The repin core (W957)
 repin_cli	The repin shell (W958)
+loadwait	Waiting for host load before a gate

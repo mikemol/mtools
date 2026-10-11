@@ -426,6 +426,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # The snapshot is git plus a command the caller names, and its fixed namespaced path under /var/tmp is
 # the operator's ruling (2026-10-06), not an accident: a hardcoded temp path is the point.
 "tests/test_repin_cli.py" = ["assert"]
+"tests/test_loadwait.py" = ["assert"]
 "src/mikemol/hooks/repin_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file"]

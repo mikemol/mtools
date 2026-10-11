@@ -7954,3 +7954,31 @@
   claim  = {W962: no link is read as data; `is_symlink` is patched, so no link is ever created.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_symlinked_or_bazel_directory_is_never_read},
 }
+
+@misc{hooks-loadwait-commit-waits-until-the-load-falls-and-says-how-long,
+  section = {loadwait},
+  title  = {The control: two high readings then a low one is two polls and a line saying so},
+  claim  = {The control: two high readings then a low one is two polls and a line saying so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_loadwait.py -k test_a_commit_waits_until_the_load_falls_and_says_how_long},
+}
+
+@misc{hooks-loadwait-nothing-is-asked-so-nothing-waits,
+  section = {loadwait},
+  title  = {Unset or zero is off: no reading is even taken},
+  claim  = {Unset or zero is off: no reading is even taken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_loadwait.py -k test_nothing_is_asked_so_nothing_waits},
+}
+
+@misc{hooks-loadwait-load-already-under-the-limit-does-not-wait,
+  section = {loadwait},
+  title  = {A quiet host is not delayed and prints nothing},
+  claim  = {A quiet host is not delayed and prints nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_loadwait.py -k test_a_load_already_under_the_limit_does_not_wait},
+}
+
+@misc{hooks-loadwait-wait-is-bounded-and-the-commit-goes-ahead-saying-so,
+  section = {loadwait},
+  title  = {A load that never falls costs the bound and no more; the line says it went ahead},
+  claim  = {A load that never falls costs the bound and no more; the line says it went ahead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_loadwait.py -k test_the_wait_is_bounded_and_the_commit_goes_ahead_saying_so},
+}

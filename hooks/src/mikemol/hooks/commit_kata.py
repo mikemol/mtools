@@ -38,7 +38,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks.isolated import commit_isolated
+from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
+
+wait_for_load = _wait_for_load
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -502,4 +505,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         os.execve(claim.argv[0], claim.argv, claim.env)
     if claim:
         sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
+    waited = wait_for_load(env)
+    if waited:
+        sys.stdout.write(waited + "\n")
     return commit(root, request, sys.stdout, isolated=isolation_wanted(root, env))

@@ -114,3 +114,7 @@ src/mikemol/hooks/repin_cli.py|write-without-sha-admitted|return "--write needs 
 src/mikemol/hooks/repin_cli.py|root-repo-ignored|if \(root / "pyproject\.toml"\)\.is_file\(\):|if False:|def=repos
 src/mikemol/hooks/repin_cli.py|bazel-directory-read|name\.startswith\(\(".", "bazel-"\)\)|name.startswith(".")|def=_scannable
 src/mikemol/hooks/repin_cli.py|symlink-read|and not directory\.is_symlink\(\)|and True|def=_scannable
+src/mikemol/hooks/loadwait.py|wait-ignores-limit|while load >= limit and waited < bound:|while load >= limit and waited < bound and False:|def=wait_for_load
+src/mikemol/hooks/loadwait.py|gave-up-unsaid|ending = "going ahead anyway" if load >= limit else "load fell"|ending = "load fell"|def=wait_for_load
+src/mikemol/hooks/loadwait.py|quiet-host-prints|if waited == 0:|if waited == -1:|def=wait_for_load
+src/mikemol/hooks/loadwait.py|off-by-default|if limit <= 0:|if limit < 0:|def=wait_for_load

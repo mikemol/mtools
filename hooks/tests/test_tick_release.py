@@ -122,7 +122,7 @@ def test_the_writer_is_asked_to_unlock_the_holder_the_queue_recorded(tmp_path: P
     record = tmp_path / "record"
     writer = _writer(tmp_path / "pf", record)
     queue = tmp_path / "q.json"
-    assert tick_release.release_with_writer(writer, queue, "github-b3")
+    assert tick_release.release_with_writer(writer, queue, "github-b3", 60.0)
     assert record.read_text(encoding="utf-8").split() == [
         "--state",
         str(queue),
