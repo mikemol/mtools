@@ -94,6 +94,7 @@ mikemol-hook-tick-gate = "mikemol.hooks.entry:tick_gate_main"
 mikemol-hook-after-compaction = "mikemol.hooks.entry:after_compaction_main"
 # W815: SessionEnd releases the host tick lock, through the one writer, if this session still holds it.
 mikemol-hook-tick-release = "mikemol.hooks.entry:tick_release_main"
+mikemol-hook-work-claims = "mikemol.hooks.entry:work_claims_main"
 # W814: PreToolUse(Read) denies a whole-file read of an oversized file, naming the cheaper read.
 mikemol-hook-read-guard = "mikemol.hooks.entry:read_guard_main"
 # ⚑ THE SAME LINTER BY HAND — one file, one tree, one command — and deliberately NOT named
@@ -377,6 +378,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # path the payload names, and the holder the queue itself recorded; never a shell, and bounded by a
 # one-second timeout inside SessionEnd's shared 1.5 s budget.
 "src/mikemol/hooks/tick_release.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"src/mikemol/hooks/work_claims_hook.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ THE CENSUS NAMES ITS FILES FROM GIT'S INDEX (W794; operator: inputs named, never globbed), so
 # running `git ls-files` IS the module's responsibility: the argv is git's own resolved path, a
 # fixed subcommand and the root, never a shell.
@@ -434,6 +436,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_wheel.py" = ["assert"]
 "tests/test_revendor_cli.py" = ["assert"]
 "tests/test_work_claims.py" = ["assert"]
+"tests/test_work_claims_hook.py" = ["assert"]
 "src/mikemol/hooks/repin_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file"]

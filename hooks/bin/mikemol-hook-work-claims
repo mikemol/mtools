@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W994: the work-claims context hook. The logic is mikemol.hooks.work_claims_hook; this launcher is
+# the stable path the harness's settings name.
+#
+# ⚑ FAIL OPEN. This hook is advisory: it takes the fence claims for the touches of the card being
+# worked and prints who else holds one. If it cannot run, a note on stderr and exit 0 is the right
+# failure; blocking would stop every prompt for a declaration nobody is obliged to honour.
+#
+# ⚑ THE REAL PATH, NOT `bazel-bin`: CPython reached through the convenience symlink prints
+# "Could not find platform dependent libraries" on every call; the same venv by its real path is
+# silent (see mikemol-hook-no-verify).
+set -uo pipefail
+
+root="${CLAUDE_PROJECT_DIR:-}"
+entry="$(basename "$0")"
+if [ -z "$root" ]; then
+    echo "work-claims: CLAUDE_PROJECT_DIR is unset; no claims taken" >&2
+    exit 0
+fi
+
+venv="$root/bazel-bin/hooks/.venv"
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    echo "work-claims: the hook venv is not built (bazel build //hooks:.venv); no claims taken" >&2
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"

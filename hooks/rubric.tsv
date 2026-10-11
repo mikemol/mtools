@@ -75,3 +75,4 @@ revendor_apply	Applying a re-vendor: build, check the writer, swap
 wheel	Building mtools wheels at one commit
 revendor_cli	The repin --revendor mode
 work_claims	A session claiming the touches of its working card
+work_claims_hook	The work-claims context hook

@@ -8309,3 +8309,87 @@
   claim  = {The ledger's last line, minus its prefix, is the detail; an empty one still says held.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims.py -k test_a_refusal_becomes_one_advisory_line_naming_the_holder},
 }
+
+@misc{hooks-work-claims-hook-working-card-claims-its-tag-with-the-session-as-owner,
+  section = {work_claims_hook},
+  title  = {The control: the claim verb is called for the tag, owned by the claude process},
+  claim  = {The control: the claim verb is called for the tag, owned by the claude process.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_a_working_card_claims_its_tag_with_the_session_as_owner},
+}
+
+@misc{hooks-work-claims-hook-claim-another-session-holds-becomes-one-advisory-line,
+  section = {work_claims_hook},
+  title  = {Exit 3 from the ledger is advice naming the holder, never a failure},
+  claim  = {Exit 3 from the ledger is advice naming the holder, never a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_a_claim_another_session_holds_becomes_one_advisory_line},
+}
+
+@misc{hooks-work-claims-hook-claim-already-held-by-this-session-is-not-taken-again,
+  section = {work_claims_hook},
+  title  = {The second prompt asks the ledger what it holds and claims nothing},
+  claim  = {The second prompt asks the ledger what it holds and claims nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_a_claim_already_held_by_this_session_is_not_taken_again},
+}
+
+@misc{hooks-work-claims-hook-tag-no-card-works-any-more-is-released-but-a-peers-claim-is-not,
+  section = {work_claims_hook},
+  title  = {Mine and unwanted goes; a claim another owner holds stays},
+  claim  = {Mine and unwanted goes; a claim another owner holds stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_a_tag_no_card_works_any_more_is_released_but_a_peers_claim_is_not},
+}
+
+@misc{hooks-work-claims-hook-session-end-releases-every-claim-this-session-holds-and-claims-nothing,
+  section = {work_claims_hook},
+  title  = {With a card still working, SessionEnd still wants nothing},
+  claim  = {With a card still working, SessionEnd still wants nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_session_end_releases_every_claim_this_session_holds_and_claims_nothing},
+}
+
+@misc{hooks-work-claims-hook-missing-fence-venv-is-said-only-when-there-was-something-to-claim,
+  section = {work_claims_hook},
+  title  = {A working card gets a notice; an idle queue gets silence},
+  claim  = {A working card gets a notice; an idle queue gets silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_a_missing_fence_venv_is_said_only_when_there_was_something_to_claim},
+}
+
+@misc{hooks-work-claims-hook-no-claude-ancestor-is-said-and-nothing-is-claimed,
+  section = {work_claims_hook},
+  title  = {Without a session process to own it, no claim is made and the notice says why},
+  claim  = {Without a session process to own it, no claim is made and the notice says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_no_claude_ancestor_is_said_and_nothing_is_claimed},
+}
+
+@misc{hooks-work-claims-hook-command-name-is-read-from-between-the-outer-parentheses,
+  section = {work_claims_hook},
+  title  = {A comm with spaces and a parenthesis is still read whole},
+  claim  = {A comm with spaces and a parenthesis is still read whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_the_command_name_is_read_from_between_the_outer_parentheses},
+}
+
+@misc{hooks-work-claims-hook-unreadable-queue-claims-nothing,
+  section = {work_claims_hook},
+  title  = {A malformed queue file is no claims, not an error},
+  claim  = {A malformed queue file is no claims, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_an_unreadable_queue_claims_nothing},
+}
+
+@misc{hooks-work-claims-hook-same-advice-is-not-repeated-within-a-session,
+  section = {work_claims_hook},
+  title  = {The first emission is new, an identical second one is not, a changed one is},
+  claim  = {The first emission is new, an identical second one is not, a changed one is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_the_same_advice_is_not_repeated_within_a_session},
+}
+
+@misc{hooks-work-claims-hook-main-prints-context-for-a-held-claim-and-always-exits-zero,
+  section = {work_claims_hook},
+  title  = {End to end over the payload: one additionalContext JSON, exit 0},
+  claim  = {End to end over the payload: one additionalContext JSON, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_main_prints_context_for_a_held_claim_and_always_exits_zero},
+}
+
+@misc{hooks-work-claims-hook-event-it-does-not-serve-and-a-bad-payload-say-nothing,
+  section = {work_claims_hook},
+  title  = {Other events and unreadable input exit 0 with no output},
+  claim  = {Other events and unreadable input exit 0 with no output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_an_event_it_does_not_serve_and_a_bad_payload_say_nothing},
+}

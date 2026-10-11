@@ -33,12 +33,14 @@ from mikemol.hooks import (
     tick_gate,
     tick_release,
     tick_stop,
+    work_claims_hook,
 )
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 _ROUTES = "--routes"
+_WORK_CLAIMS = work_claims_hook.main
 
 
 def _guarded(prog: str, run: Callable[[], int]) -> int:
@@ -209,6 +211,16 @@ def tick_release_main() -> int:
 
     """
     return _guarded("mikemol-hook-tick-release", tick_release.main)
+
+
+def work_claims_main() -> int:
+    """Run `mikemol-hook-work-claims` behind the argv contract (W994).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-work-claims", _WORK_CLAIMS)
 
 
 def read_guard_main() -> int:
