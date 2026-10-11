@@ -4,6 +4,7 @@
 # ⚑ THE LOCK IS EXPORTED, NOT A TARGET. `pip.parse` in MODULE.bazel reads both locks by LABEL at
 # module-extension evaluation time, which is before any target in this package is built — so what
 # is needed is visibility of the files, not a rule producing them.
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@ratchet_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -136,8 +137,10 @@ sh_test(
 # `.venv` here is a one-line refusal rather than a grid run under the sandbox's python.
 # ⚑ FIRST DECLARED 2026-09-19 (W2). An earlier draft lived only in a scratchpad and died with it;
 # "//ratchet:mutants failed in 0.6s" in the record describes that draft, not this target.
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 1,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

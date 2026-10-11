@@ -4,6 +4,7 @@
 # ⚑ MIRRORS //pkgbuild:BUILD.bazel (and through it //corpus and //icsstruct) TARGET FOR TARGET; the
 # rationale for each shape lives there, this file says only where it differs. `@buildtel_dev` is
 # declared in MODULE.bazel beside this distribution's birth (mtools:W543, paperkit:W142).
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@buildtel_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
@@ -90,8 +91,10 @@ sh_test(
     size = "small",
 )
 
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 1,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

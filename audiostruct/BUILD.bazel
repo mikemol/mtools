@@ -4,6 +4,7 @@
 # ⚑ MIRRORS //icsstruct:BUILD.bazel AT ITS BIRTH (afdc10f), which mirrors //transcriptstruct. The
 # rationale for each shape lives there; this file says only where it differs.
 # `@audiostruct_dev` is declared in MODULE.bazel beside this distribution's birth (W262).
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@audiostruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@audiostruct_gpu//:requirements.bzl", gpu_all_requirements = "all_requirements")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
@@ -231,8 +232,10 @@ sh_test(
     size = "small",
 )
 
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 1,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

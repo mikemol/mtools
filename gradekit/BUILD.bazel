@@ -11,6 +11,7 @@
 # Bazel targets below depend on their `py_library` (B). The pip hubs stay independent of them,
 # because a path source in requirements.txt breaks the pip extension for every distribution. Five
 # edits per sibling edge, each marked SIBLING below.
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@gradekit_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -111,8 +112,10 @@ sh_test(
 # ⚑ THE MUTATION GATE: every def-site body is mutated and the gate refuses if any survives, so
 # every function here is executed by a test whose assertion reads its result. The siblings' defs
 # are not mutated and not required to be covered.
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 1,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

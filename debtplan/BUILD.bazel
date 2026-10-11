@@ -5,6 +5,7 @@
 # rationale for each shape lives there, this file says only where it differs. ONE TOOL, one py_binary
 # (cli, `mikemol-debtplan`). `@debtplan_dev` and `@debtplan_deps` are declared in MODULE.bazel beside
 # this distribution's birth (mtools:W790).
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@debtplan_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
@@ -109,8 +110,10 @@ sh_test(
 
 # ⚑ THE MUTATION GATE: every def-site body is mutated and the gate refuses if any survives, so
 # every function here is executed by a test whose assertion reads its result.
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 1,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

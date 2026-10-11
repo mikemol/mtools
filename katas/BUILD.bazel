@@ -4,6 +4,7 @@
 # ⚑ MIRRORS //procrun and //atomicwrite TARGET FOR TARGET: this is a LIBRARY, standard library only
 # for now. The rationale for each shape lives in //pkgbuild. `@katas_dev` is declared in
 # MODULE.bazel beside this distribution's birth (mtools:W872).
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@katas_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -112,8 +113,10 @@ sh_test(
     size = "small",
 )
 
-sh_test(
+mutants_sharded(
     name = "mutants",
+    shards = 1,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
