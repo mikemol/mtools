@@ -375,3 +375,17 @@
             how the defect went unseen.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_main.py -k test_a_missing_workdir_is_created_before_any_stage},
 }
+
+@misc{audiostruct-stages-unknown-stage-is-named-as-unknown-not-as-misfitting,
+  section = {stages},
+  title  = {`summarize` is refused for being no stage, before the previous-results check can speak},
+  claim  = {`summarize` is refused for being no stage, before the previous-results check can speak.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_an_unknown_stage_is_named_as_unknown_not_as_misfitting},
+}
+
+@misc{audiostruct-stages-fewer-results-than-sources-is-refused-not-truncated,
+  section = {stages},
+  title  = {A results list shorter than the sources does not silently drop the last source},
+  claim  = {A results list shorter than the sources does not silently drop the last source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stages.py -k test_fewer_results_than_sources_is_refused_not_truncated},
+}

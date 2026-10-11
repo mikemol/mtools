@@ -7,8 +7,8 @@
 # moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
 # A pattern cannot hold a literal pipe: use \S.
 #
-# records.py and render.py only: the pure readers and the transcript. stages, gpu, main, cli and
-# whisperx_site are not declared yet.
+# records.py, render.py and stages.py: the pure readers, the transcript and the stage runner. gpu,
+# main, cli and whisperx_site are not declared yet.
 
 # records.py: a time is a finite number, and a bool is not a time (it is an int).
 src/mikemol/audiostruct/records.py|bool-accepted-as-a-time|isinstance\(value, bool\) or not|False or not|def=_number
@@ -44,3 +44,29 @@ src/mikemol/audiostruct/render.py|segment-text-unstripped|record\.text\.strip\(\
 src/mikemol/audiostruct/render.py|time-rounded-not-truncated|whole = int\(seconds\)|whole = round(seconds)|def=stamp
 src/mikemol/audiostruct/render.py|hours-never-shown|if hours else|if False else|def=stamp
 src/mikemol/audiostruct/render.py|transcript-unterminated|\*map\(line, records\)\]\) \+ "\\n"|*map(line, records)])|def=markdown
+
+# stages.py `_message`: a stage error names the stage, the source and the error's TYPE, never its
+# message (which can hold the token), and an OSError also names its file, quoted.
+src/mikemol/audiostruct/stages.py|error-message-kept|\{type\(exc\)\.__name__\}|{exc}|def=_message
+src/mikemol/audiostruct/stages.py|os-error-file-not-named|if isinstance\(exc, OSError\):|if False:|def=_message
+src/mikemol/audiostruct/stages.py|absent-file-named|if filename is not None:|if True:|def=_message
+src/mikemol/audiostruct/stages.py|file-name-unquoted|\{filename!r\}|{filename}|def=_message
+
+# stages.py `_each` and `_stage`: the library's exception is not kept as a cause, a model that fails
+# to load is named for every source, and a source count that does not match is refused.
+src/mikemol/audiostruct/stages.py|step-error-keeps-its-cause|\) from None|) from exc|def=_each
+src/mikemol/audiostruct/stages.py|load-error-keeps-its-cause|\) from None|) from exc|def=_stage
+src/mikemol/audiostruct/stages.py|load-failure-names-one-source|_message\(stage, _EVERY, exc\)|_message(stage, "source", exc)|def=_stage
+src/mikemol/audiostruct/stages.py|short-results-truncated|zip\(labels, pairs, strict=True\)|zip(labels, pairs, strict=False)|def=_each
+
+# stages.py `run_stage`: a stage is known, takes results only after transcribe, and is released; the
+# token reaches only the diarizer factory.
+src/mikemol/audiostruct/stages.py|unknown-stage-run|if stage not in STAGES:|if False:|def=run_stage
+src/mikemol/audiostruct/stages.py|stage-fit-unchecked|if \(stage == "transcribe"\) != \(not previous\):|if False:|def=run_stage
+src/mikemol/audiostruct/stages.py|transcribe-wants-results|\) != \(not previous\):|) == (not previous):|def=run_stage
+src/mikemol/audiostruct/stages.py|model-not-released|pipeline\.release\(\)|pass|def=run_stage
+src/mikemol/audiostruct/stages.py|aligner-gets-no-transcript|list\(zip\(clips, previous, strict=True\)\), pipeline\.aligner|[(c, None) for c in clips], pipeline.aligner|def=run_stage
+src/mikemol/audiostruct/stages.py|token-not-given-to-the-diarizer|return pipeline\.diarizer\(pipeline\.token\(\)\)|return pipeline.diarizer("")|def=run_stage.diarizer
+
+# stages.py `run`: each stage is handed the stage before's results.
+src/mikemol/audiostruct/stages.py|previous-results-dropped|run_stage\(stage, pipeline, sources, results\)|run_stage(stage, pipeline, sources, [])|def=run

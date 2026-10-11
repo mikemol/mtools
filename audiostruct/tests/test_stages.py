@@ -332,3 +332,15 @@ def test_run_stage_refuses_results_that_do_not_fit_the_stage(
     with pytest.raises(ValueError, match=stage):
         run_stage(stage, harness.pipeline(), _SOURCES, previous)
     assert harness.log == []
+
+
+def test_an_unknown_stage_is_named_as_unknown_not_as_misfitting() -> None:
+    """`summarize` is refused for being no stage, before the previous-results check can speak."""
+    with pytest.raises(ValueError, match="unknown stage 'summarize'"):
+        run_stage("summarize", _Harness().pipeline(), _SOURCES, [{"segments": []}])
+
+
+def test_fewer_results_than_sources_is_refused_not_truncated() -> None:
+    """A results list shorter than the sources does not silently drop the last source."""
+    with pytest.raises(ValueError, match="shorter"):
+        records(_SOURCES, [{"segments": []}])
