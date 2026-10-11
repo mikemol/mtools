@@ -131,6 +131,7 @@ sh_test(
 mutants_sharded(
     name = "mutants",
     shards = 6,
+    cpus = 4,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

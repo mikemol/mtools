@@ -24,27 +24,36 @@ Usage, in a distribution's BUILD.bazel, in place of its `sh_test(name = "mutants
                     size = "medium", timeout = "long")
 """
 
-def mutants_sharded(name = "mutants", shards = 1, **kwargs):
+def mutants_sharded(name = "mutants", shards = 1, cpus = 0, **kwargs):
     """Declare a distribution's mutation grid as `shards` targets and a suite named `name`.
 
     Args:
         name: the suite's name, and the stem of the shard targets (`<name>_<i>`).
         shards: how many shards; 1 declares the single plain target.
+        cpus: when above 0, each shard reserves that many CPUs with bazel's `cpu:K` tag and its
+            runner starts exactly that many suites (`MUTATE_JOBS=K`), so the scheduler's count of
+            a shard is the width it really uses (mtools:W980). 0 leaves both unset.
         **kwargs: the arguments of the `sh_test` each shard is (srcs, args, data, size, timeout).
     """
     if shards < 1:
         fail("mutants_sharded: shards must be at least 1, got %d" % shards)
     if kwargs.get("env"):
         fail("mutants_sharded: env is set per shard (MUTATE_SHARD); do not pass one")
+    if cpus < 0:
+        fail("mutants_sharded: cpus must not be negative, got %d" % cpus)
+    reserve = {}
+    if cpus:
+        kwargs["tags"] = list(kwargs.get("tags", [])) + ["cpu:%d" % cpus]
+        reserve = {"MUTATE_JOBS": str(cpus)}
     if shards == 1:
-        native.sh_test(name = name, **kwargs)
+        native.sh_test(name = name, env = reserve, **kwargs)
         return
     names = []
     for i in range(shards):
         shard = "%s_%d" % (name, i)
         native.sh_test(
             name = shard,
-            env = {"MUTATE_SHARD": "%d/%d" % (i, shards)},
+            env = dict(reserve, MUTATE_SHARD = "%d/%d" % (i, shards)),
             **kwargs
         )
         names.append(shard)
