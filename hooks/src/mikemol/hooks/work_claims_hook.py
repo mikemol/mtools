@@ -118,6 +118,25 @@ def queue_of(project: Path) -> object:
     return loaded
 
 
+def find_tool(project: Path) -> Path | None:
+    """Find the fence membudget the claims go through.
+
+    ⚑ THE BAZEL-BUILT VENV FIRST, as the hook launchers use, then the checkout's own: measured
+    2026-10-11 the checkout's `fence/.venv` was installed before the `mikemol-membudget` script
+    existed and had none, so a hook that only looked there said 'not built' beside a built tool.
+
+    Returns:
+        the first executable file among the two, or None.
+
+    """
+    built = Path("bazel-bin") / "fence" / ".venv" / "bin" / "mikemol-membudget"
+    for relative in (built, MEMBUDGET):
+        path = project / relative
+        if path.is_file() and os.access(path, os.X_OK):
+            return path
+    return None
+
+
 def claim_lines(
     project: Path, event: str, run: Runner, stat_of: StatReader, hook_pid: int
 ) -> list[str]:
@@ -131,8 +150,8 @@ def claim_lines(
 
     """
     want = [] if event == "SessionEnd" else work_claims.wanted(queue_of(project), project.name)
-    tool = project / MEMBUDGET
-    if not tool.is_file() or not os.access(tool, os.X_OK):
+    tool = find_tool(project)
+    if tool is None:
         return ["work claim: not taken (the fence membudget venv is not built)"] if want else []
     session = work_claims.session_pid(
         hook_pid,

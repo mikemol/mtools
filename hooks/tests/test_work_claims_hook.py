@@ -154,6 +154,22 @@ def test_a_missing_fence_venv_is_said_only_when_there_was_something_to_claim(
     assert _lines(idle, "UserPromptSubmit", _Fence(), _table()) == []
 
 
+def test_the_bazel_built_membudget_is_found_when_the_checkouts_venv_has_none(
+    tmp_path: Path,
+) -> None:
+    """The bazel-bin venv is looked in first, and a checkout venv without the script is skipped."""
+    project = _project(tmp_path, ("working", "bazel"), tool=False)
+    assert work_claims_hook.find_tool(project) is None
+    built = project / "bazel-bin" / "fence" / ".venv" / "bin" / "mikemol-membudget"
+    built.parent.mkdir(parents=True)
+    built.write_text("#!/bin/sh\n", encoding="utf-8")
+    built.chmod(0o755)
+    assert work_claims_hook.find_tool(project) == built
+    fence = _Fence()
+    assert _lines(project, "UserPromptSubmit", fence, _table()) == []
+    assert fence.verbs() == ["claims", "claim"]
+
+
 def test_no_claude_ancestor_is_said_and_nothing_is_claimed(tmp_path: Path) -> None:
     """Without a session process to own it, no claim is made and the notice says why."""
     project = _project(tmp_path, ("working", "bazel"))

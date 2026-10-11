@@ -8393,3 +8393,11 @@
   claim  = {Other events and unreadable input exit 0 with no output.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_an_event_it_does_not_serve_and_a_bad_payload_say_nothing},
 }
+
+@misc{hooks-work-claims-hook-bazel-built-membudget-is-found-when-the-checkouts-venv-has-none,
+  section = {work_claims_hook},
+  title  = {The bazel-bin venv is looked in first, and a checkout venv without the script is skipped},
+  claim  = {The bazel-bin venv is looked in first, and a checkout venv without the script is
+            skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_the_bazel_built_membudget_is_found_when_the_checkouts_venv_has_none},
+}
