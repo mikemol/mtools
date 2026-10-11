@@ -84,6 +84,16 @@ def test_error_code_that_is_not_an_identifier_is_not_quoted() -> None:
     assert _REFRESH not in _rendered(caught.value)
 
 
+@pytest.mark.parametrize(
+    "body",
+    [b"not json", b"[]", b'{"error": "\\u00e9_x"}', b'{"error": 5}'],
+)
+def test_an_error_body_without_a_plain_code_reads_as_unreadable(body: bytes) -> None:
+    """A body with no JSON, no object, no ASCII code or no string code is not quoted."""
+    with pytest.raises(ExchangeError, match="HTTP 400, unreadable"):
+        _exchange(_Fake(_BAD_REQUEST, body))
+
+
 def test_success_without_both_fields_is_an_error() -> None:
     """A 200 lacking access_token or expires_in is refused, never returned half-formed."""
     halves: tuple[object, ...] = (
@@ -91,6 +101,7 @@ def test_success_without_both_fields_is_an_error() -> None:
         {"expires_in": 5},
         [],
         {"access_token": ""},
+        {"access_token": "", "expires_in": 5},
     )
     for value in halves:
         with pytest.raises(ExchangeError, match="no access_token"):

@@ -7,7 +7,7 @@
 # moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
 # A pattern cannot hold a literal pipe: use \S or %7C.
 #
-# records.py only. auth, cli, consent and fetch are not declared yet.
+# records.py, fetch.py and auth.py. cli and consent are not declared yet.
 
 # records.py `message`: two fields may be absent and only two, a present field of the wrong type is
 # always Unreadable, and an Unreadable keeps the id when one was readable.
@@ -40,3 +40,58 @@ src/mikemol/gmailstruct/records.py|children-never-walked|if "parts" not in node:
 src/mikemol/gmailstruct/records.py|child-path-forgets-its-parents|\(\*path, index\)|(index,)|def=_walk
 src/mikemol/gmailstruct/records.py|root-path-unnamed|if path else "root"|if path else ""|def=_where
 src/mikemol/gmailstruct/records.py|missing-payload-walked|if "payload" not in rec:|if False:|def=parts
+
+# fetch.py `_json` and `search`: a failed request is an error and never a shorter result, a body that
+# is not JSON reads as None, and the page token is followed only while Google offers a real one.
+src/mikemol/gmailstruct/fetch.py|bad-json-raises|except \(ValueError, UnicodeDecodeError\):|except KeyError:|def=_json
+src/mikemol/gmailstruct/fetch.py|failed-page-read-as-empty|if status != _OK:|if False:|def=search
+src/mikemol/gmailstruct/fetch.py|failed-page-number-shifted|listing page \{page_no\} failed|listing page {page_no + 1} failed|def=search
+src/mikemol/gmailstruct/fetch.py|query-not-sent|params = \{"q": query\}|params = {}|def=search
+src/mikemol/gmailstruct/fetch.py|page-token-not-sent|params = \{"q": query\} \S \(\{"pageToken": token\} if token else \{\}\)|params = {"q": query}|def=search
+src/mikemol/gmailstruct/fetch.py|only-the-first-page-listed|if not isinstance\(following, str\) or not following:|if True:|def=search
+src/mikemol/gmailstruct/fetch.py|empty-token-followed| or not following:|:|def=search
+src/mikemol/gmailstruct/fetch.py|non-string-token-followed|if not isinstance\(following, str\) or not following:|if not following:|def=search
+
+# fetch.py `show` and `raw`: an id goes into a URL path only as plain ASCII letters and digits, a
+# failed request is an error, and the raw bytes are the base64url Gmail returned, decoded strictly.
+src/mikemol/gmailstruct/fetch.py|show-id-unchecked|if not msg_id\.isascii\(\) or not msg_id\.isalnum\(\):|if False:|def=show
+src/mikemol/gmailstruct/fetch.py|show-unicode-id-accepted|not msg_id\.isascii\(\) or ||def=show
+src/mikemol/gmailstruct/fetch.py|show-punctuated-id-accepted| or not msg_id\.isalnum\(\)||def=show
+src/mikemol/gmailstruct/fetch.py|show-failed-fetch-read-as-a-message|if status != _OK:|if False:|def=show
+src/mikemol/gmailstruct/fetch.py|show-asks-for-the-full-format|\{'format': 'metadata'\}|{'format': 'full'}|def=show
+src/mikemol/gmailstruct/fetch.py|raw-id-unchecked|if not msg_id\.isascii\(\) or not msg_id\.isalnum\(\):|if False:|def=raw
+src/mikemol/gmailstruct/fetch.py|raw-unicode-id-accepted|not msg_id\.isascii\(\) or ||def=raw
+src/mikemol/gmailstruct/fetch.py|raw-punctuated-id-accepted| or not msg_id\.isalnum\(\)||def=raw
+src/mikemol/gmailstruct/fetch.py|raw-failed-fetch-read-as-a-message|if status != _OK:|if False:|def=raw
+src/mikemol/gmailstruct/fetch.py|raw-asks-for-metadata|\{'format': 'raw'\}|{'format': 'metadata'}|def=raw
+src/mikemol/gmailstruct/fetch.py|raw-field-absent-accepted|if not isinstance\(text, str\) or not text:|if False:|def=raw
+src/mikemol/gmailstruct/fetch.py|raw-field-empty-accepted| or not text:|:|def=raw
+src/mikemol/gmailstruct/fetch.py|raw-body-not-an-object-trusted|if isinstance\(value, dict\) else \{\}|if True else {}|def=raw
+src/mikemol/gmailstruct/fetch.py|bad-base64-escapes-as-binascii|except binascii\.Error:|except KeyError:|def=raw
+
+# auth.py `decrypt`: age's exit status is read, its stderr is quoted (folded and cut) only when it
+# failed, and a token that is not UTF-8, or is empty once stripped, is an error with no plaintext.
+src/mikemol/gmailstruct/auth.py|age-failure-accepted|if status != 0:|if False:|def=decrypt
+src/mikemol/gmailstruct/auth.py|age-message-not-cut|\.split\(\)\)\[:300\]|.split())|def=decrypt
+src/mikemol/gmailstruct/auth.py|age-message-keeps-its-newlines|" "\.join\(err\.decode\("utf-8", "replace"\)\.split\(\)\)|err.decode("utf-8", "replace")|def=decrypt
+src/mikemol/gmailstruct/auth.py|silent-age-quoted-empty|if said else|if True else|def=decrypt
+src/mikemol/gmailstruct/auth.py|identity-and-file-swapped|"--identity", str\(identity\), str\(path\)|"--identity", str(path), str(identity)|def=decrypt
+src/mikemol/gmailstruct/auth.py|token-left-unstripped|out\.decode\("utf-8"\)\.strip\(\)|out.decode("utf-8")|def=decrypt
+src/mikemol/gmailstruct/auth.py|non-utf8-token-escapes|except UnicodeDecodeError:|except KeyError:|def=decrypt
+src/mikemol/gmailstruct/auth.py|empty-token-accepted|if not token:|if False:|def=decrypt
+
+# auth.py `_oauth_error` and `exchange`: only a plain identifier OAuth code is quoted, never the body;
+# a non-200 status, a body that is not JSON, and a response without both fields are each an error.
+src/mikemol/gmailstruct/auth.py|unreadable-error-body-raises|except \(ValueError, UnicodeDecodeError\):|except KeyError:|def=_oauth_error
+src/mikemol/gmailstruct/auth.py|non-object-error-body-trusted|if isinstance\(value, dict\):|if True:|def=_oauth_error
+src/mikemol/gmailstruct/auth.py|unicode-error-code-echoed|code\.isascii\(\) and ||def=_oauth_error
+src/mikemol/gmailstruct/auth.py|punctuated-error-code-echoed|and code\.replace\("_", ""\)\.isalnum\(\)||def=_oauth_error
+src/mikemol/gmailstruct/auth.py|non-string-error-code-echoed|isinstance\(code, str\) and ||def=_oauth_error
+src/mikemol/gmailstruct/auth.py|grant-type-wrong|"grant_type": "refresh_token"|"grant_type": "password"|def=exchange
+src/mikemol/gmailstruct/auth.py|client-id-and-secret-swapped|"client_id": client_id,|"client_id": client_secret,|def=exchange
+src/mikemol/gmailstruct/auth.py|failed-exchange-accepted|if status != _OK:|if False:|def=exchange
+src/mikemol/gmailstruct/auth.py|non-json-exchange-escapes|except \(ValueError, UnicodeDecodeError\):|except KeyError:|def=exchange
+src/mikemol/gmailstruct/auth.py|exchange-body-not-an-object-trusted|if isinstance\(value, dict\) else \{\}|if True else {}|def=exchange
+src/mikemol/gmailstruct/auth.py|missing-fields-accepted|if not isinstance\(token, str\) or not token or not isinstance\(expires, int\):|if False:|def=exchange
+src/mikemol/gmailstruct/auth.py|empty-access-token-accepted| or not token or not isinstance\(expires, int\)| or not isinstance(expires, int)|def=exchange
+src/mikemol/gmailstruct/auth.py|expiry-not-required| or not isinstance\(expires, int\):|:|def=exchange

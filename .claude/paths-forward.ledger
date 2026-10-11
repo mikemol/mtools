@@ -1617,3 +1617,4 @@
 2026-10-11T17:42:20Z  tick  W1012 advanced  sweep     "pytestspec plugin: 24 witnesses (test_plugin_units, passing), 18 warrants, 27 declared defects; bazel mutants grid running, uncommitted"
 2026-10-11T17:58:14Z  tick  W1009 advanced  sweep     "buildtel bb_log and buildpulse: 60 defect classes declared in mutants.regex; grid running, survivors not yet known, uncommitted"
 2026-10-11T18:15:13Z  tick  W1010 advanced  sweep     "audiostruct stages: 18 defect classes declared, 2 witnesses added for the expected survivors (unknown stage, truncated results); grid running, uncommitted"
+2026-10-11T18:55:38Z  tick  W1011 advanced  sweep     "gmailstruct fetch and auth: 47 defect classes declared; grid running, survivors not yet known, uncommitted"

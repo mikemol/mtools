@@ -87,7 +87,7 @@ def test_show_fetches_metadata_for_one_message() -> None:
     assert _query(url) == {"format": "metadata"}
 
 
-@pytest.mark.parametrize("bad", ["../x", "a1?format=raw", "", "a 1"])
+@pytest.mark.parametrize("bad", ["../x", "a1?format=raw", "", "a 1", "é1", "a-1"])
 def test_show_refuses_an_id_that_is_not_an_identifier(bad: str) -> None:
     """An id that could alter the URL is refused before any request is made."""
     gmail = _Gmail()
@@ -151,3 +151,41 @@ def test_response_without_raw_is_refused() -> None:
     """A 200 with no raw field is an error, never an empty .eml."""
     with pytest.raises(FetchError, match="no raw field"):
         raw("a1", _ACCESS, _Gmail((_OK, _dumps({"id": "a1"}))))
+
+
+@pytest.mark.parametrize("bad", ["../x", "a1?format=metadata", "", "a 1", "é1", "a-1"])
+def test_raw_refuses_an_id_that_is_not_an_identifier(bad: str) -> None:
+    """An id that could alter the URL is refused before any request is made, as for `show`."""
+    gmail = _Gmail()
+    with pytest.raises(FetchError, match="letters and digits"):
+        raw(bad, _ACCESS, gmail)
+    assert gmail.requests == []
+
+
+def test_failed_raw_names_the_status() -> None:
+    """A message whose raw bytes cannot be fetched is an error, never an empty .eml."""
+    with pytest.raises(FetchError, match="a1 failed: HTTP 403"):
+        raw("a1", _ACCESS, _Gmail((_FORBIDDEN, b"")))
+
+
+@pytest.mark.parametrize("body", [_dumps({"raw": ""}), _dumps([1]), b"not json"])
+def test_a_raw_response_with_no_usable_field_is_refused(body: bytes) -> None:
+    """An empty raw field, a body that is no object and a body that is no JSON are all refused."""
+    with pytest.raises(FetchError, match="no raw field"):
+        raw("a1", _ACCESS, _Gmail((_OK, body)))
+
+
+def test_a_listing_page_that_is_not_json_is_a_record_and_not_a_crash() -> None:
+    """A page body that cannot be parsed reads as an unreadable page, and the walk goes on."""
+    records = search("x", _ACCESS, _Gmail((_OK, b"not json")), 10)
+    assert len(records) == 1
+    assert isinstance(records[0], Unreadable)
+
+
+@pytest.mark.parametrize("token", ["", 5])
+def test_a_next_page_token_that_is_empty_or_not_a_string_ends_the_walk(token: object) -> None:
+    """Only a non-empty string token asks for another page: nothing else is followed."""
+    page = _dumps({"messages": [{"id": "a1", "threadId": "t1"}], "nextPageToken": token})
+    gmail = _Gmail((_OK, page), (_OK, _PAGE_TWO))
+    search("x", _ACCESS, gmail, 10)
+    assert len(gmail.requests) == 1

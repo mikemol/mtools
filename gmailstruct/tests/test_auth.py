@@ -60,6 +60,18 @@ def test_failed_decrypt_quotes_ages_own_error() -> None:
         _decrypt(fake)
 
 
+def test_a_long_multiline_age_error_is_folded_to_one_line_and_cut() -> None:
+    """The quoted cause is one line of at most 300 characters, however much age said."""
+    cut = 300
+    fake = _Fake(1, b"", b"first line\nsecond line " + b"x" * (cut + 100))
+    with pytest.raises(DecryptError) as caught:
+        _decrypt(fake)
+    cause = str(caught.value).split("): ", 1)[1]
+    assert "\n" not in cause
+    assert cause.startswith("first line second line x")
+    assert len(cause) == cut
+
+
 def test_failed_decrypt_with_stderr_on_the_terminal_says_where_the_cause_went() -> None:
     """A runner that let stderr through returns none; the error points at the terminal."""
     with pytest.raises(DecryptError, match="age's own message is printed above"):

@@ -496,3 +496,52 @@
   claim  = {A failing age leaves no .age behind, so a retry is not refused by a half-written file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_failed_age_writes_no_file},
 }
+
+@misc{gmailstruct-fetch-raw-refuses-an-id-that-is-not-an-identifier,
+  section = {fetch},
+  title  = {An id that could alter the URL is refused before any request is made, as for `show`},
+  claim  = {An id that could alter the URL is refused before any request is made, as for `show`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_raw_refuses_an_id_that_is_not_an_identifier},
+}
+
+@misc{gmailstruct-fetch-failed-raw-names-the-status,
+  section = {fetch},
+  title  = {A message whose raw bytes cannot be fetched is an error, never an empty .eml},
+  claim  = {A message whose raw bytes cannot be fetched is an error, never an empty .eml.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_failed_raw_names_the_status},
+}
+
+@misc{gmailstruct-fetch-raw-response-with-no-usable-field-is-refused,
+  section = {fetch},
+  title  = {An empty raw field, a body that is no object and a body that is no JSON are all refused},
+  claim  = {An empty raw field, a body that is no object and a body that is no JSON are all refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_a_raw_response_with_no_usable_field_is_refused},
+}
+
+@misc{gmailstruct-fetch-listing-page-that-is-not-json-is-a-record-and-not-a-crash,
+  section = {fetch},
+  title  = {A page body that cannot be parsed reads as an unreadable page, and the walk goes on},
+  claim  = {A page body that cannot be parsed reads as an unreadable page, and the walk goes on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_a_listing_page_that_is_not_json_is_a_record_and_not_a_crash},
+}
+
+@misc{gmailstruct-fetch-next-page-token-that-is-empty-or-not-a-string-ends-the-walk,
+  section = {fetch},
+  title  = {Only a non-empty string token asks for another page: nothing else is followed},
+  claim  = {Only a non-empty string token asks for another page: nothing else is followed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fetch.py -k test_a_next_page_token_that_is_empty_or_not_a_string_ends_the_walk},
+}
+
+@misc{gmailstruct-auth-long-multiline-age-error-is-folded-to-one-line-and-cut,
+  section = {auth},
+  title  = {The quoted cause is one line of at most 300 characters, however much age said},
+  claim  = {The quoted cause is one line of at most 300 characters, however much age said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_auth.py -k test_a_long_multiline_age_error_is_folded_to_one_line_and_cut},
+}
+
+@misc{gmailstruct-exchange-error-body-without-a-plain-code-reads-as-unreadable,
+  section = {exchange},
+  title  = {A body with no JSON, no object, no ASCII code or no string code is not quoted},
+  claim  = {A body with no JSON, no object, no ASCII code or no string code is not quoted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exchange.py -k test_an_error_body_without_a_plain_code_reads_as_unreadable},
+}
