@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W1002), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe (use \S or %7C) or a literal percent (%25).
+#
+# jsonio, effective and read_grade. cli, grades_rec and verdict are not declared yet.
+
+# jsonio.py: a grade record is built only of strings, integers, booleans, lists, objects and null;
+# a float is refused, a non-string key is refused, and each refusal names where it was.
+src/mikemol/gradekit/jsonio.py|float-accepted-as-json|if isinstance\(value, int\):|if isinstance(value, (int, float)):|def=check_json
+src/mikemol/gradekit/jsonio.py|non-string-key-accepted|if not isinstance\(key, str\):|if False:|def=check_json
+src/mikemol/gradekit/jsonio.py|list-position-unnamed|f"\{where\}\[\{index\}\]"|where|def=check_json
+src/mikemol/gradekit/jsonio.py|object-key-unnamed|f"\{where\}\.\{key\}"|where|def=check_json
+src/mikemol/gradekit/jsonio.py|bad-json-escapes-as-a-decode-error|except json\.JSONDecodeError as exc:|except KeyError as exc:|def=read_json
+src/mikemol/gradekit/jsonio.py|non-object-narrowed-to-a-record|if not isinstance\(value, dict\):|if False:|def=as_record
+src/mikemol/gradekit/jsonio.py|non-list-narrowed-to-a-list|if not isinstance\(value, list\):|if False:|def=as_list
+src/mikemol/gradekit/jsonio.py|non-string-narrowed-to-text|if not isinstance\(value, str\):|if False:|def=as_text
+src/mikemol/gradekit/jsonio.py|missing-field-accepted|if name not in record:|if False:|def=field
+
+# effective.py: a delegation is read from the same check string the grader reads; a concept check
+# delegates to the library, a result check to a project and an optional claim, nothing else crosses.
+src/mikemol/gradekit/effective.py|concept-delegates-to-a-project|"owner": "library"|"owner": "project"|def=delegation
+src/mikemol/gradekit/effective.py|result-claim-never-null|"claim": claim or None|"claim": claim|def=delegation
+src/mikemol/gradekit/effective.py|every-check-crosses|if kind == "result":|if True:|def=delegation
+
+# effective.py: the owners' EFFECTIVE grade crosses the edge with what clamped it (carrying the self
+# grade is the truncation the module exists to close), and a spec is `<project>=<file>`.
+src/mikemol/gradekit/effective.py|owner-spec-without-equals-accepted|if not sep:|if False:|def=owner_grades
+src/mikemol/gradekit/effective.py|owner-self-grade-crosses-not-effective|"effective_grade": field\(row, "effective_grade", path\)|"effective_grade": field(row, "grade", path)|def=owner_grades
+src/mikemol/gradekit/effective.py|owner-clamp-name-dropped|"clamped_by": row\.get\("clamped_by"\)|"clamped_by": None|def=owner_grades
+src/mikemol/gradekit/effective.py|no-owners-option-still-cuts|if OWNERS_OPTION not in words:|if False:|def=split_owners
+
+# effective.py `run`: a project is required, claims are reported in key order, and a project dir
+# with no final component is named whole.
+src/mikemol/gradekit/effective.py|project-dir-not-required|if not rest:|if False:|def=run
+src/mikemol/gradekit/effective.py|claims-unsorted|sorted\(clamped, key=key_of\)|clamped|def=run
+src/mikemol/gradekit/effective.py|project-name-not-falling-back| or str\(project_dir\)||def=run
+
+# read_grade.py: absent `reachable` means reachable, and the justification travels with the rung.
+src/mikemol/gradekit/read_grade.py|absent-reachable-means-unreachable|calc\.get\("reachable", True\)|calc.get("reachable", False)|def=reading
+src/mikemol/gradekit/read_grade.py|baseline-always-true|bool\(field\(calc, "baseline", where\)\)|True|def=reading
+src/mikemol/gradekit/read_grade.py|flip-set-dropped|result\.get\("tests", \[\]\)|[]|def=reading
+src/mikemol/gradekit/read_grade.py|not-lower-reason-dropped|result\.get\("not_lower", ""\)|""|def=reading
+src/mikemol/gradekit/read_grade.py|extra-arguments-accepted|if len\(words\) != 1:|if len(words) < 1:|def=run
