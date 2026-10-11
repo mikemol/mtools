@@ -1613,3 +1613,5 @@
 2026-10-11T16:11:31Z  tick  W1011 minted    -         "mutation: declare gmailstruct's fetch and auth modules"  evidence=W670
 2026-10-11T16:13:52Z  tick  W1012 minted    -         "mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist merge)"  evidence=W670
 2026-10-11T16:14:27Z  tick  W1006 advanced  sweep     "atomized W1006 into W1006/W1009-W1012; pytestspec opa: 9 witnesses and 18 declarations written, test_opa 21 pass locally, bazel mutants grid still running (uncommitted)"
+2026-10-11T17:36:31Z  tick  W1006 advanced  sweep     "landed: pytestspec opa 18 declared defects killed, W1012 (plugin) now working"  evidence=531aeaa
+2026-10-11T17:42:20Z  tick  W1012 advanced  sweep     "pytestspec plugin: 24 witnesses (test_plugin_units, passing), 18 warrants, 27 declared defects; bazel mutants grid running, uncommitted"

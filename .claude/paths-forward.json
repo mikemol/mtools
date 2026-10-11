@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 121,
+      "ticks_blocked": 122,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 120,
+      "ticks_blocked": 121,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 125,
+      "ticks_blocked": 126,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-11T16:02:11Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 60,
       "completed": null
     },
     {
@@ -16154,7 +16154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16689,7 +16689,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16984,7 +16984,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -17494,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -17535,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -17558,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -17981,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -18155,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -18934,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -20580,21 +20580,21 @@
     {
       "symbol": "W1006",
       "title": "mutation: declare pytestspec's opa module (the pinned evaluator and its failures)",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "pytestspec gave 20 survivors of 30 on its cache/adapters/outcomes (only reached through a pytest session), against 0 of 31 in the pure-function dists. Start with pytestspec's plugin and opa.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: 531aeaa [PUSHED]: pytestspec opa declares 18 defect classes, 8 new witnesses with a scripted stand-in opa, 8 warrants; bazel :mutants (2 shards), test_opa, ruff, mypy pass, no survivors or unapplied",
       "issued_at": "2026-10-11T15:49:07Z",
       "minted_during": "interrupt",
       "caused_by": "W670",
-      "last_worked": "2026-10-11T15:49:10Z",
+      "last_worked": "2026-10-11T17:36:27Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T173627Z"
     },
     {
       "symbol": "W1007",
@@ -20697,7 +20697,7 @@
     {
       "symbol": "W1012",
       "title": "mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist merge)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "mutation"
@@ -20709,8 +20709,9 @@
       "issued_at": "2026-10-11T16:13:52Z",
       "minted_during": "tick",
       "caused_by": "W670",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T17:36:17Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

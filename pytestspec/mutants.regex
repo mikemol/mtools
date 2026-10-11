@@ -7,7 +7,7 @@
 # moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
 # A pattern cannot hold a literal pipe (use \S or %7C) or a literal percent (%25).
 #
-# outcomes, cache, adapters and opa. plugin and spec are not declared yet.
+# outcomes, cache, adapters, opa and plugin. spec is not declared yet.
 
 # outcomes.py: the outcome map is TOTAL and FUNCTIONAL, and each axis classifies by its own rule.
 src/mikemol/pytestspec/outcomes.py|unknown-column-not-reported|if rule\[3\] not in known|if False|def=problems
@@ -69,3 +69,36 @@ src/mikemol/pytestspec/opa.py|failed-eval-read-as-a-verdict|if proc\.returncode 
 src/mikemol/pytestspec/opa.py|stdout-preferred-over-stderr|proc\.stderr\.strip\(\) or proc\.stdout|proc.stdout or proc.stderr.strip()|def=evaluator.evaluate
 src/mikemol/pytestspec/opa.py|error-keeps-its-newlines|" "\.join\(\(proc\.stderr\.strip\(\) or proc\.stdout\)\.split\(\)\)|(proc.stderr.strip() or proc.stdout)|def=evaluator.evaluate
 src/mikemol/pytestspec/opa.py|error-not-cut-short|said\[:500\]|said|def=evaluator.evaluate
+
+# plugin.py: only a .rego file that is not opa's own test is a spec, a missing data path is an error
+# naming each one, an outcome is counted once into its own spec's row, and the xdist merge takes a
+# declaration once but sums an outcome. The collection and item machinery is reached through real
+# sessions in test_plugin and is not declared here.
+src/mikemol/pytestspec/plugin.py|opas-own-test-claimed| and not path\.name\.endswith\(OPA_TEST_SUFFIX\)||def=claims
+src/mikemol/pytestspec/plugin.py|any-file-claimed|path\.name\.endswith\(SPEC_SUFFIX\) and ||def=claims
+src/mikemol/pytestspec/plugin.py|missing-data-path-accepted|if missing:|if False:|def=data_paths
+src/mikemol/pytestspec/plugin.py|missing-paths-unseparated|', '\.join\(missing\)|''.join(missing)|def=data_paths
+src/mikemol/pytestspec/plugin.py|non-path-data-kept| if isinstance\(p, Path\)\)|)|def=_declared_data
+src/mikemol/pytestspec/plugin.py|setup-pass-counted|if report\.when != "call" and report\.passed:|if False:|def=_outcome
+src/mikemol/pytestspec/plugin.py|setup-reads-a-recorded-column|if report\.when == "call" else \{\}|if True else {}|def=_outcome
+src/mikemol/pytestspec/plugin.py|non-string-column-trusted|return column if isinstance\(column, str\) else outcomes\.UNMEASURED_COLUMN|return column|def=_outcome
+src/mikemol/pytestspec/plugin.py|no-column-reads-admitted|else outcomes\.UNMEASURED_COLUMN|else outcomes.ADMITTED|def=_outcome
+src/mikemol/pytestspec/plugin.py|node-id-not-cut-to-its-spec|nodeid\.split\("::", 1\)\[0\]|nodeid|def=_tally
+src/mikemol/pytestspec/plugin.py|forwarded-report-counted-again| and not forwarded||def=_Differential.pytest_runtest_logreport
+src/mikemol/pytestspec/plugin.py|every-report-reads-forwarded|getattr\(report, "node", None\)\) is not None|getattr(report, "node", None)) is None|def=_Differential.pytest_runtest_logreport
+src/mikemol/pytestspec/plugin.py|report-for-no-spec-counted|counts is not None and ||def=_Differential.pytest_runtest_logreport
+src/mikemol/pytestspec/plugin.py|decided-nothing-counted|outcome is not None and ||def=_Differential.pytest_runtest_logreport
+src/mikemol/pytestspec/plugin.py|worker-hands-over-nothing|if isinstance\(output, dict\):|if False:|def=_Differential.pytest_sessionfinish
+src/mikemol/pytestspec/plugin.py|worker-hands-over-its-live-tally|dict\(counts\) for spec|counts for spec|def=_Differential.pytest_sessionfinish
+src/mikemol/pytestspec/plugin.py|spec-rows-unsorted|sorted\(self\.config\.stash\.get\(TALLY, \{\}\)\.items\(\)\)|self.config.stash.get(TALLY, {}).items()|def=_Differential.pytest_terminal_summary
+src/mikemol/pytestspec/plugin.py|implementation-always-as-written|impl if isinstance\(impl, str\) else "as-written"|"as-written"|def=_Differential.pytest_terminal_summary
+src/mikemol/pytestspec/plugin.py|columns-comma-separated|" "\.join\(f"|",".join(f"|def=_Differential.pytest_terminal_summary
+src/mikemol/pytestspec/plugin.py|declaration-summed-across-workers|mine\[column\] = max\(mine\[column\], counts\.get\(column, 0\)\)|mine[column] += counts.get(column, 0)|def=_XdistMerge.pytest_testnodedown
+src/mikemol/pytestspec/plugin.py|outcome-maxed-across-workers|mine\[column\] \+= counts\.get\(column, 0\)|mine[column] = max(mine[column], counts.get(column, 0))|def=_XdistMerge.pytest_testnodedown
+src/mikemol/pytestspec/plugin.py|unreported-column-raises|\+= counts\.get\(column, 0\)|+= counts[column]|def=_XdistMerge.pytest_testnodedown
+src/mikemol/pytestspec/plugin.py|worker-without-a-tally-merged|if not isinstance\(received, dict\):|if False:|def=_XdistMerge.pytest_testnodedown
+src/mikemol/pytestspec/plugin.py|worker-output-trusted-unchecked|if isinstance\(output, dict\)|if True|def=_XdistMerge.pytest_testnodedown
+src/mikemol/pytestspec/plugin.py|new-spec-row-opened-empty|tallies\.setdefault\(spec, dict\.fromkeys\(COLUMNS, 0\)\)|tallies.setdefault(spec, {})|def=_XdistMerge.pytest_testnodedown
+src/mikemol/pytestspec/plugin.py|xdist-merge-always-registered|if config\.pluginmanager\.hasplugin\("xdist"\):|if True:|def=pytest_configure
+src/mikemol/pytestspec/plugin.py|xdist-merge-never-registered|if config\.pluginmanager\.hasplugin\("xdist"\):|if False:|def=pytest_configure
+src/mikemol/pytestspec/plugin.py|differential-counter-not-registered|config\.pluginmanager\.register\(_Differential\(config\), "pytestspec-differential"\)|pass|def=pytest_configure

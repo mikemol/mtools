@@ -664,3 +664,130 @@
   claim  = {A compile error opa prints on stdout, with stderr empty, still reaches the failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_opa.py -k test_a_failed_eval_with_an_empty_stderr_reports_stdout},
 }
+
+@misc{pytestspec-plugin-units-rego-file-is-a-spec,
+  section = {plugin},
+  title  = {A `.rego` file is collected as a spec},
+  claim  = {A `.rego` file is collected as a spec.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_rego_file_is_a_spec},
+}
+
+@misc{pytestspec-plugin-units-opas-own-test-files-and-other-files-are-not-specs,
+  section = {plugin},
+  title  = {A `_test.rego` is opa's unit test of a spec, and anything not `.rego` is not a spec},
+  claim  = {A `_test.rego` is opa's unit test of a spec, and anything not `.rego` is not a spec.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_opas_own_test_files_and_other_files_are_not_specs},
+}
+
+@misc{pytestspec-plugin-units-data-paths-are-the-declared-paths-and-skip-what-is-not-a-path,
+  section = {plugin},
+  title  = {Only a Path entry of the ini list is a data path; a string entry is dropped},
+  claim  = {Only a Path entry of the ini list is a data path; a string entry is dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_data_paths_are_the_declared_paths_and_skip_what_is_not_a_path},
+}
+
+@misc{pytestspec-plugin-units-no-declared-data-is-no-data-paths,
+  section = {plugin},
+  title  = {An ini key that is unset or not a list declares nothing},
+  claim  = {An ini key that is unset or not a list declares nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_no_declared_data_is_no_data_paths},
+}
+
+@misc{pytestspec-plugin-units-declared-path-that-does-not-exist-is-refused-and-named,
+  section = {plugin},
+  title  = {A missing library is an error naming every missing path, not a silent skip},
+  claim  = {A missing library is an error naming every missing path, not a silent skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_declared_path_that_does_not_exist_is_refused_and_named},
+}
+
+@misc{pytestspec-plugin-units-differential-counter-is-always-registered-and-the-merge-only-under-xdist,
+  section = {plugin},
+  title  = {The xdist merge implements a hook only xdist declares, so it is registered only with it},
+  claim  = {The xdist merge implements a hook only xdist declares, so it is registered only with it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_the_differential_counter_is_always_registered_and_the_merge_only_under_xdist},
+}
+
+@misc{pytestspec-plugin-units-call-report-is-counted-under-the-column-it-recorded,
+  section = {plugin},
+  title  = {The call recorded its column; the report is counted there, once},
+  claim  = {The call recorded its column; the report is counted there, once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_call_report_is_counted_under_the_column_it_recorded},
+}
+
+@misc{pytestspec-plugin-units-passing-setup-or-teardown-decides-nothing,
+  section = {plugin},
+  title  = {Only a call, or a phase that failed, is an outcome},
+  claim  = {Only a call, or a phase that failed, is an outcome.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_passing_setup_or_teardown_decides_nothing},
+}
+
+@misc{pytestspec-plugin-units-failed-setup-is-unmeasured-whatever-it-carries,
+  section = {plugin},
+  title  = {A setup error never reached a verdict, so it ignores a column its properties name},
+  claim  = {A setup error never reached a verdict, so it ignores a column its properties name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_failed_setup_is_unmeasured_whatever_it_carries},
+}
+
+@misc{pytestspec-plugin-units-call-with-no-usable-column-is-unmeasured,
+  section = {plugin},
+  title  = {A call that recorded no column, or a column that is no string, measured nothing},
+  claim  = {A call that recorded no column, or a column that is no string, measured nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_call_with_no_usable_column_is_unmeasured},
+}
+
+@misc{pytestspec-plugin-units-forwarded-report-is-not-counted-again,
+  section = {plugin},
+  title  = {The worker counted it and hands its tally over, so the controller does not},
+  claim  = {The worker counted it and hands its tally over, so the controller does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_forwarded_report_is_not_counted_again},
+}
+
+@misc{pytestspec-plugin-units-report-for-no-spec-is-ignored,
+  section = {plugin},
+  title  = {A node that is not under a spec with an open tally counts nowhere and does not raise},
+  claim  = {A node that is not under a spec with an open tally counts nowhere and does not raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_report_for_no_spec_is_ignored},
+}
+
+@misc{pytestspec-plugin-units-worker-hands-over-a-copy-of-its-tallies,
+  section = {plugin},
+  title  = {The handed-over tally is a snapshot: later counting does not reach into it},
+  claim  = {The handed-over tally is a snapshot: later counting does not reach into it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_worker_hands_over_a_copy_of_its_tallies},
+}
+
+@misc{pytestspec-plugin-units-session-that-is-no-worker-hands-nothing-over,
+  section = {plugin},
+  title  = {With no worker output to write into, finishing the session does nothing},
+  claim  = {With no worker output to write into, finishing the session does nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_session_that_is_no_worker_hands_nothing_over},
+}
+
+@misc{pytestspec-plugin-units-differential-line-is-one-row-per-spec-in-name-order,
+  section = {plugin},
+  title  = {Every column is printed, specs sorted, under the chosen implementation or as-written},
+  claim  = {Every column is printed, specs sorted, under the chosen implementation or as-written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_the_differential_line_is_one_row_per_spec_in_name_order},
+}
+
+@misc{pytestspec-plugin-units-declarations-are-taken-once-and-outcomes-are-summed-across-workers,
+  section = {plugin},
+  title  = {Each worker collected every declaration, but a case ran on one worker only},
+  claim  = {Each worker collected every declaration, but a case ran on one worker only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_declarations_are_taken_once_and_outcomes_are_summed_across_workers},
+}
+
+@misc{pytestspec-plugin-units-column-a-worker-did-not-report-adds-nothing,
+  section = {plugin},
+  title  = {A worker's tally may omit a column; the missing one counts as zero, not as an error},
+  claim  = {A worker's tally may omit a column; the missing one counts as zero, not as an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_column_a_worker_did_not_report_adds_nothing},
+}
+
+@misc{pytestspec-plugin-units-worker-that-handed-over-no-tally-merges-nothing,
+  section = {plugin},
+  title  = {No output, output that is no object, or a tally that is no object leaves the merge alone},
+  claim  = {No output, output that is no object, or a tally that is no object leaves the merge
+            alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_worker_that_handed_over_no_tally_merges_nothing},
+}
