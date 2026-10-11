@@ -74,3 +74,10 @@ src/mikemol/fence/watcher.py|children-only|queue\.append\(pid\)|pass|def=descend
 src/mikemol/fence/membudget_cli.py|describe-default-retyped|f"default_mb \{DEFAULT_MB\}"|"default_mb 192"|def=cmd_describe
 src/mikemol/fence/membudget_cli.py|describe-ceiling-retyped|f"max_mb \{CEILING_MB\}"|"max_mb 384"|def=cmd_describe
 src/mikemol/fence/membudget_cli.py|describe-roster-copied|for v in VERBS|for v in ("run", "status")|def=cmd_describe
+src/mikemol/fence/claims.py|held-claim-readmitted|if verdict is not admit\.Verdict\.ADMIT:|if False:|def=take
+src/mikemol/fence/claims.py|dead-owner-accepted|if not host\.is_alive\(owner\):|if False:|def=take
+src/mikemol/fence/claims.py|claim-costs-budget|admit\.Lease\(lease_id, 0, owner,|admit.Lease(lease_id, 1, owner,|def=take
+src/mikemol/fence/claims.py|release-by-label-only|and lease\.owner == owner\)|and True)|def=drop
+src/mikemol/fence/claims.py|listing-includes-plain-leases|if admit\.claim_key\(lease\.label\) is not None|if True|def=listing
+src/mikemol/fence/claims.py|negative-age|max\(0, epoch - lease\.epoch\)|epoch - lease.epoch|def=listing
+src/mikemol/fence/membudget_cli.py|default-owner-is-the-short-command|os\.getppid\(\)|os.getpid()|def=_claim_operands

@@ -199,7 +199,7 @@ def test_the_capabilities_verb_names_the_zram_gate_so_a_caller_can_ask_before_re
 ) -> None:
     """An older membudget has no such verb: asking is how 'too old' is told from 'supported'."""
     assert membudget_cli.main(["capabilities"]) == 0
-    assert capsys.readouterr().out.split() == ["zram-gate"]
+    assert capsys.readouterr().out.split() == ["zram-gate", "claims"]
 
 
 def test_a_ceiling_that_is_not_a_number_is_a_usage_error() -> None:

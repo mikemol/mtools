@@ -58,8 +58,10 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.fence import admit, autosize, core, label_lease, ledger, peaks
+from mikemol.fence import admit, autosize, claims, core, label_lease, ledger, peaks
 from mikemol.fence.cgroup import FenceUnavailableError
+
+_CLAIMS = claims
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping, Sequence
@@ -131,7 +133,8 @@ USAGE = (
     "usage: mikemol-membudget {run MB|auto [LABEL] -- CMD... | hold N [LABEL] -- CMD..."
     " | init [MB] [--unit W] | init --reset MB [--unit W] | status"
     " | lease LEDGER LABEL DEFAULT_MB CEILING_MB"
-    " | deadline LEDGER LABEL DEFAULT_S CEILING_S}\n"
+    " | deadline LEDGER LABEL DEFAULT_S CEILING_S"
+    " | claim LABEL [--owner-pid N] | release LABEL [--owner-pid N] | claims}\n"
 )
 
 
@@ -796,7 +799,84 @@ def cmd_deadline(args: Sequence[str], _ctx: Context) -> int:
     return label_lease.main(["deadline", *args])
 
 
-CAPABILITIES = ("zram-gate",)
+def _claim_operands(verb: str, args: Sequence[str]) -> tuple[str, int]:
+    """Read `LABEL [--owner-pid N]` for a claim verb, the caller's parent being the default owner.
+
+    Returns:
+        the label and the owning pid.
+
+    Raises:
+        UsageError: the operands are malformed; the message names the verb.
+
+    """
+    try:
+        return _CLAIMS.parse(args, os.getppid())
+    except ValueError as exc:
+        msg = f"{verb} {exc}"
+        raise UsageError(msg) from exc
+
+
+def cmd_claim(args: Sequence[str], ctx: Context) -> int:
+    """`claim LABEL [--owner-pid N]`: take a zero-capacity claim owned by a long-lived process.
+
+    ⚑ THE CLAIM OUTLIVES THIS COMMAND (W911): its owner is the named pid (default the caller's
+    parent, the session), reaped by gc when that process dies. A held claim is a refusal, exit 3,
+    naming the holder, its lease id and its age: advisory with a name on it, never a wait.
+
+    Returns:
+        0 printing the lease id; 3 naming the holder when the claim is held.
+
+    """
+    label, pid = _claim_operands("claim", args)
+    store = store_of(ctx.env)
+    admit.ensure(store, ctx.host.default_total())
+    outcome = _CLAIMS.take(store, ctx.host, label, pid, _CLAIMS.now())
+    if not outcome.ok:
+        _say(f"REFUSED — {outcome.message}")
+        return admit.EXIT_REFUSED
+    sys.stdout.write(f"{outcome.message}\n")
+    return 0
+
+
+def cmd_release(args: Sequence[str], ctx: Context) -> int:
+    """`release LABEL [--owner-pid N]`: drop the claims on LABEL that the owner holds.
+
+    Returns:
+        0 when a claim was dropped; 3 when that owner held none.
+
+    """
+    label, pid = _claim_operands("release", args)
+    store = store_of(ctx.env)
+    admit.ensure(store, ctx.host.default_total())
+    outcome = _CLAIMS.drop(store, ctx.host, label, pid)
+    if not outcome.ok:
+        _say(f"REFUSED — {outcome.message}")
+        return admit.EXIT_REFUSED
+    _say(outcome.message)
+    return 0
+
+
+def cmd_claims(args: Sequence[str], ctx: Context) -> int:
+    """`claims`: reap the dead and list every live claim with its holder and age.
+
+    Returns:
+        0.
+
+    Raises:
+        UsageError: `claims` was given operands.
+
+    """
+    if args:
+        msg = "claims takes no operands"
+        raise UsageError(msg)
+    store = store_of(ctx.env)
+    admit.ensure(store, ctx.host.default_total())
+    lines = _CLAIMS.listing(admit.reap(store, ctx.host.is_alive), _CLAIMS.now())
+    sys.stdout.write("".join(f"{line}\n" for line in lines) or "(no claims)\n")
+    return 0
+
+
+CAPABILITIES = ("zram-gate", "claims")
 
 
 def cmd_capabilities(_args: Sequence[str], _ctx: Context) -> int:
@@ -842,6 +922,9 @@ VERBS: dict[str, Callable[[Sequence[str], Context], int]] = {
     "lease": cmd_lease,
     "deadline": cmd_deadline,
     "peaks": cmd_peaks,
+    "claim": cmd_claim,
+    "release": cmd_release,
+    "claims": cmd_claims,
 }
 
 

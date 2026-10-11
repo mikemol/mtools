@@ -22,3 +22,4 @@ watcher	The guard watcher (W920)
 policy	The guard policy (W921)
 guard_cli	The guard launcher (W921)
 membudget_describe	membudget describe (W964)
+claims	Claims owned by a long-lived process

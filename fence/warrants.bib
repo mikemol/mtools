@@ -2228,3 +2228,80 @@
   claim  = {Parseable by splitting on whitespace: two fields, the number rows numeric.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_describe.py -k test_every_row_is_a_name_and_one_value},
 }
+
+@misc{fence-claims-claim-is-held-and-listed-with-its-owner,
+  section = {claims},
+  title  = {The control: the lease id is printed and `claims` names the label, the owner and the id},
+  claim  = {The control: the lease id is printed and `claims` names the label, the owner and the id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_a_claim_is_held_and_listed_with_its_owner},
+}
+
+@misc{fence-claims-second-taker-is-refused-and-told-who-holds-it,
+  section = {claims},
+  title  = {Exit 3, the holder's owner and lease id named, and the first claim untouched},
+  claim  = {Exit 3, the holder's owner and lease id named, and the first claim untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_a_second_taker_is_refused_and_told_who_holds_it},
+}
+
+@misc{fence-claims-other-labels-do-not-exclude-each-other,
+  section = {claims},
+  title  = {Two different touches tags are two claims},
+  claim  = {Two different touches tags are two claims.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_other_labels_do_not_exclude_each_other},
+}
+
+@misc{fence-claims-path-claims-compare-by-realpath,
+  section = {claims},
+  title  = {Two spellings of one path are one claim},
+  claim  = {Two spellings of one path are one claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_path_claims_compare_by_realpath},
+}
+
+@misc{fence-claims-only-the-owner-releases-and-then-the-claim-is-free,
+  section = {claims},
+  title  = {A non-owner's release is refused and changes nothing; the owner's frees the label},
+  claim  = {A non-owner's release is refused and changes nothing; the owner's frees the label.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_only_the_owner_releases_and_then_the_claim_is_free},
+}
+
+@misc{fence-claims-dead-owners-claim-is-reaped,
+  section = {claims},
+  title  = {A lease whose owner is gone is not listed and does not exclude the next taker},
+  claim  = {A lease whose owner is gone is not listed and does not exclude the next taker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_a_dead_owners_claim_is_reaped},
+}
+
+@misc{fence-claims-claim-for-a-process-that-is-not-running-is-refused,
+  section = {claims},
+  title  = {It would be born unowned; the refusal says the owner is not running and nothing is held},
+  claim  = {It would be born unowned; the refusal says the owner is not running and nothing is held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_a_claim_for_a_process_that_is_not_running_is_refused},
+}
+
+@misc{fence-claims-claim-costs-no-budget,
+  section = {claims},
+  title  = {The lease is zero units: status still shows nothing leased},
+  claim  = {The lease is zero units: status still shows nothing leased.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_a_claim_costs_no_budget},
+}
+
+@misc{fence-claims-default-owner-is-the-callers-parent,
+  section = {claims},
+  title  = {Without --owner-pid the claim belongs to the session, not to the short command},
+  claim  = {Without --owner-pid the claim belongs to the session, not to the short command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_the_default_owner_is_the_callers_parent},
+}
+
+@misc{fence-claims-malformed-invocations-exit-2,
+  section = {claims},
+  title  = {A missing or non-claim label, a bad pid and stray operands are usage errors},
+  claim  = {A missing or non-claim label, a bad pid and stray operands are usage errors.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_malformed_invocations_exit_2},
+}
+
+@misc{fence-claims-listing-gives-each-claims-age-from-its-epoch,
+  section = {claims},
+  title  = {Age is the given clock minus the lease's epoch, never negative; non-claims are skipped},
+  claim  = {Age is the given clock minus the lease's epoch, never negative; non-claims are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claims.py -k test_the_listing_gives_each_claims_age_from_its_epoch},
+}
