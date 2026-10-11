@@ -147,9 +147,38 @@ def test_main_install_prints_the_python_path(
     assert capsys.readouterr().out == f"{venv_dir.resolve() / 'bin' / 'python'}\n"
 
 
+def test_a_glob_with_zero_or_many_matches_is_refused_naming_its_cardinality(tmp_path: Path) -> None:
+    """`_only` takes exactly one: no match and two matches are both SystemExit, never index 0."""
+    one = tmp_path / "a"
+    two = tmp_path / "b"
+    assert wheel._only([one], "thing") == one
+    for matches in ([], [one, two]):
+        with pytest.raises(SystemExit) as refused:
+            wheel._only(matches, "thing")
+        assert f"expected exactly one thing, found {len(matches)}" in str(refused.value)
+
+
+def test_install_links_the_interpreter_and_writes_no_pth_without_dependencies(
+    tmp_path: Path,
+) -> None:
+    """`--copies` loses libpython, so the venv's python is a link; no deps means no .pth."""
+    whl = _built(tmp_path)
+    venv_dir = tmp_path / "cellvenv"
+    python = wheel.install(str(venv_dir), str(whl))
+    assert Path(python).is_symlink()
+    assert not list(venv_dir.glob("lib/python*/site-packages/_pydeps.pth"))
+
+
 @pytest.mark.parametrize(
     "argv",
-    [[], ["build"], ["build", "only-one"], ["install", "only-one"], ["frobnicate", "a", "b"]],
+    [
+        [],
+        ["build"],
+        ["build", "only-one"],
+        ["build", "a", "b", "extra"],
+        ["install", "only-one"],
+        ["frobnicate", "a", "b"],
+    ],
 )
 def test_main_refuses_arguments_that_fit_no_command(argv: list[str]) -> None:
     """Wrong or missing arguments end in SystemExit carrying the usage text."""

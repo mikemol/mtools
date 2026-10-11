@@ -93,6 +93,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_wheel.py" = ["assert"]
+# ⚑ `_only` IS TESTED BY NAME: its cardinality refusal (zero and many) is reachable from no public
+# call without building a venv with two site-packages, and testing a boundary needs crossing it.
+"tests/test_wheel.py" = ["assert", "private-member-access"]
 "tests/test_pyc.py" = ["assert"]
 "tests/test_pyinfo.py" = ["assert"]

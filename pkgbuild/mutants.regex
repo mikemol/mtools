@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S.
+
+# wheel.py: a glob's CARDINALITY is part of its answer (zero and many both refused).
+src/mikemol/pkgbuild/wheel.py|many-matches-accepted|if len\(matches\) != 1:|if len(matches) < 1:|def=_only
+src/mikemol/pkgbuild/wheel.py|no-matches-accepted|if len\(matches\) != 1:|if len(matches) > 1:|def=_only
+
+# wheel.py build: the cwd the PEP 517 build changes into is put back.
+src/mikemol/pkgbuild/wheel.py|cwd-not-restored|os\.chdir\(cwd\)|pass|def=build
+
+# wheel.py install: a built venv is reused, the interpreter is symlinked (--copies loses libpython),
+# and the dep roots are named once each in a .pth, written only when there is one.
+src/mikemol/pkgbuild/wheel.py|complete-marker-not-written|\(tmp / "\.pk-complete"\)\.write_text\(""\)|pass|def=install
+src/mikemol/pkgbuild/wheel.py|interpreter-copied-not-linked|symlinks=True|symlinks=False|def=install
+src/mikemol/pkgbuild/wheel.py|dep-root-listed-twice|if r not in roots:|if True:|def=_populate
+src/mikemol/pkgbuild/wheel.py|pth-written-with-no-roots|if roots:|if True:|def=_populate
+src/mikemol/pkgbuild/wheel.py|dep-root-from-the-wrong-split|d\.split\(_SITE_MARKER\)\[0\]|d.split(_SITE_MARKER)[-1]|def=_populate
+
+# wheel.py main: the argument counts that select a command.
+src/mikemol/pkgbuild/wheel.py|build-takes-extra-arguments|len\(args\) == _ARGC_BUILD|len(args) >= _ARGC_BUILD|def=main
+src/mikemol/pkgbuild/wheel.py|install-needs-no-wheel|len\(args\) >= _ARGC_INSTALL_MIN|len(args) >= 1|def=main
+
+# pyc.py: the artifact is reproducible and authoritative (a content hash, never rechecked, errors raise).
+src/mikemol/pkgbuild/pyc.py|pyc-rechecks-the-source|PycInvalidationMode\.UNCHECKED_HASH|PycInvalidationMode.CHECKED_HASH|def=main
+src/mikemol/pkgbuild/pyc.py|pyc-keeps-mtime|PycInvalidationMode\.UNCHECKED_HASH|PycInvalidationMode.TIMESTAMP|def=main
+src/mikemol/pkgbuild/pyc.py|compile-error-swallowed|doraise=True|doraise=False|def=main
+
+# pyinfo.py: the two lines are `executable: <repr>` and `version: <number only>`.
+src/mikemol/pkgbuild/pyinfo.py|version-is-the-whole-banner|sys\.version\.split\(\)\[0\]|sys.version|def=main
+src/mikemol/pkgbuild/pyinfo.py|executable-unquoted|\{sys\.executable!r\}|{sys.executable}|def=main

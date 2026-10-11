@@ -96,3 +96,17 @@
   claim  = {Output is exactly the `executable:` and `version:` lines, paperkit's spelling.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyinfo.py -k test_pyinfo_prints_sys_executable_and_the_version_number},
 }
+
+@misc{pkgbuild-wheel-glob-with-zero-or-many-matches-is-refused-naming-its-cardinality,
+  section = {wheel},
+  title  = {`_only` takes exactly one: no match and two matches are both SystemExit, never index 0},
+  claim  = {`_only` takes exactly one: no match and two matches are both SystemExit, never index 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_a_glob_with_zero_or_many_matches_is_refused_naming_its_cardinality},
+}
+
+@misc{pkgbuild-wheel-install-links-the-interpreter-and-writes-no-pth-without-dependencies,
+  section = {wheel},
+  title  = {`--copies` loses libpython, so the venv's python is a link; no deps means no .pth},
+  claim  = {`--copies` loses libpython, so the venv's python is a link; no deps means no .pth.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_install_links_the_interpreter_and_writes_no_pth_without_dependencies},
+}
