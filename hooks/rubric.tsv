@@ -70,3 +70,4 @@ repin	The repin core (W957)
 repin_cli	The repin shell (W958)
 loadwait	Waiting for host load before a gate
 repin_metrics	The pin census as a textfile
+revendor	Re-vendoring the mtools wheels at one commit

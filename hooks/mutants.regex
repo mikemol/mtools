@@ -124,4 +124,9 @@ src/mikemol/hooks/repin_metrics.py|label-unescaped|value = value\.replace\(raw, 
 src/mikemol/hooks/repin_metrics.py|publish-not-atomic|scratch\.replace\(path\)|path.write_text(text, encoding="utf-8")|def=publish
 src/mikemol/hooks/repin_metrics.py|scan-time-dropped|if scanned is not None:|if False:|def=render
 src/mikemol/hooks/repin_cli.py|scan-time-zero|_RENDER\(rows, str\(root\), par, int\(_NOW\(\)\)\)|_RENDER(rows, str(root), par, 0)|def=main
+src/mikemol/hooks/revendor.py|no-pins-read|return \{m\.group\(2\) for m in _SOURCE\.finditer\(pyproject\)\}|return set()|def=pinned_shorts
+src/mikemol/hooks/revendor.py|missing-marker-passes|if marker not in archived:|if False:|def=with_local_version
+src/mikemol/hooks/revendor.py|full-sha-prefix-match|_FULL_SHA\.fullmatch\(text\)|_FULL_SHA.match(text)|def=is_full_sha
+src/mikemol/hooks/revendor.py|first-vendor-unsaid| or "none"||def=plan_lines
+src/mikemol/hooks/revendor.py|short-is-whole|return sha\[:_SHORT\]|return sha|def=short_of
 src/mikemol/hooks/repin_cli.py|env-par-ignored|else \(_ENV\.get\(PAR_ENV\) or None\)|else None|def=main

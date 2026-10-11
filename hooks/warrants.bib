@@ -8046,3 +8046,53 @@
   claim  = {The body is a pure function of its inputs: no clock given, no series.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_metrics.py -k test_a_render_without_a_clock_claims_no_scan_time},
 }
+
+@misc{hooks-revendor-both-dists-move-to-the-new-sha-and-nothing-else-changes,
+  section = {revendor},
+  title  = {The control: each path takes the new sha and the rest of the text is byte for byte kept},
+  claim  = {The control: each path takes the new sha and the rest of the text is byte for byte kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_both_dists_move_to_the_new_sha_and_nothing_else_changes},
+}
+
+@misc{hooks-revendor-vendored-wheel-of-another-dist-is-not-ours-to-move,
+  section = {revendor},
+  title  = {Only hooks and pathsforward move: a ledger wheel keeps its own sha},
+  claim  = {Only hooks and pathsforward move: a ledger wheel keeps its own sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_a_vendored_wheel_of_another_dist_is_not_ours_to_move},
+}
+
+@misc{hooks-revendor-pyproject-that-vendors-nothing-reads-no-pins,
+  section = {revendor},
+  title  = {No vendored paths: no pins, and the move is the identity},
+  claim  = {No vendored paths: no pins, and the move is the identity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_a_pyproject_that_vendors_nothing_reads_no_pins},
+}
+
+@misc{hooks-revendor-wheel-name-carries-the-local-version,
+  section = {revendor},
+  title  = {The name is the one uv build writes for a +g local version},
+  claim  = {The name is the one uv build writes for a +g local version.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_the_wheel_name_carries_the_local_version},
+}
+
+@misc{hooks-revendor-local-version-is-set-once-in-the-archived-text,
+  section = {revendor},
+  title  = {The first 0.1.0 line becomes the +g form; a text without it is None, not a no-op},
+  claim  = {The first 0.1.0 line becomes the +g form; a text without it is None, not a no-op.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_the_local_version_is_set_once_in_the_archived_text},
+}
+
+@misc{hooks-revendor-only-a-full-lowercase-commit-is-a-target,
+  section = {revendor},
+  title  = {A short sha, a branch or an uppercase sha would write a pin that does not pin},
+  claim  = {A short sha, a branch or an uppercase sha would write a pin that does not pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_only_a_full_lowercase_commit_is_a_target},
+}
+
+@misc{hooks-revendor-plan-names-the-new-sha-the-old-pin-and-the-source,
+  section = {revendor},
+  title  = {The plan says where the archive comes from and what it replaces; a first vendor says none},
+  claim  = {The plan says where the archive comes from and what it replaces; a first vendor says
+            none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_the_plan_names_the_new_sha_the_old_pin_and_the_source},
+}
