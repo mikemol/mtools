@@ -88,7 +88,8 @@ class _World:
 
     def __call__(self, argv: Sequence[str], cwd: Path) -> tuple[int, str]:
         self.calls.append(list(argv))
-        key = " ".join(argv[:2])
+        bare = argv[2:] if argv[0] == "env" else argv
+        key = " ".join(bare[:2])
         if key in self.failing:
             return EXIT_FAILED, "it broke"
         if argv[-1] == "--hash":

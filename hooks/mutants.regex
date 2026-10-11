@@ -133,7 +133,13 @@ src/mikemol/hooks/revendor_apply.py|dirty-tree-allowed|return code != 0 or bool\
 src/mikemol/hooks/revendor_apply.py|hash-mismatch-passes|if not live or live != fresh:|if False:|def=same_reading
 src/mikemol/hooks/revendor_apply.py|empty-hash-matches|if not live or live != fresh:|if live != fresh:|def=same_reading
 src/mikemol/hooks/revendor_apply.py|stale-wheels-kept|for stale in sorted\(old - \{short\}\):|for stale in []:|def=swap
-src/mikemol/hooks/revendor_apply.py|local-version-unwritten|project\.write_text\(edited, encoding="utf-8"\)|pass|def=build
 src/mikemol/hooks/revendor_apply.py|lock-skipped|for step in \(\["uv", "lock"\], \["uv", "sync", "--frozen"\]\):|for step in (["uv", "sync", "--frozen"],):|def=swap
 src/mikemol/hooks/revendor_apply.py|pins-not-moved|project\.write_text\(moved, encoding="utf-8"\)|pass|def=swap
+src/mikemol/hooks/wheel.py|epoch-not-in-build-env|f"SOURCE_DATE_EPOCH=\{EPOCH\}"|"SOURCE_DATE_EPOCH=0"|def=build_into
+src/mikemol/hooks/wheel.py|tree-not-stamped|        stamp\(work / "src" / dist\)|        pass|def=build_into
+src/mikemol/hooks/wheel.py|version-edit-dropped|project\.write_text\(edited, encoding="utf-8"\)|pass|def=build_into
+src/mikemol/hooks/wheel.py|both-sources-allowed|\("--mtools" in valued\) == \("--src" in valued\)|False|def=_source_of
+src/mikemol/hooks/wheel.py|short-sha-accepted|not revendor\.is_full_sha\(sha\) or |False or |def=_source_of
+src/mikemol/hooks/wheel.py|missing-wheel-passes|if failure is None and not all\(records\):|if False:|def=main
+src/mikemol/hooks/wheel.py|src-dist-unchecked|if not \(source\.tree / dist / "pyproject\.toml"\)\.is_file\(\):|if False:|def=extract
 src/mikemol/hooks/repin_cli.py|env-par-ignored|else \(_ENV\.get\(PAR_ENV\) or None\)|else None|def=main

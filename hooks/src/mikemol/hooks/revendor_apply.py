@@ -5,7 +5,8 @@
 ⚑ EVERY PROCESS IS A SEAM, NO PROCESS IS IMPORTED. git and uv run through a `Runner`
 `(argv, cwd) -> (exit, stdout)`, so the tests drive the whole sequence with a fake that does what
 git and uv do to the disk and never start either. The pure half (names, pin rewrite, plan) is
-`revendor`; this is the half that reads and writes files and calls out.
+`revendor`; the wheel build itself is `wheel` (mtools:W992, `mikemol-wheel`), shared with every
+caller that needs a wheel at a commit; this is the half that reads and writes the repo.
 
 ⚑ THE SAFETY CHECK IS BUILT IN, NOT REMEMBERED. Before the live venv is touched the new wheels are
 installed in a THROWAWAY venv, and the new writer's `--hash` over a COPY of the queue must equal the
@@ -22,13 +23,12 @@ from __future__ import annotations
 
 import hashlib
 import shutil
-import tarfile
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import revendor
+from mikemol.hooks import revendor, wheel
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -67,33 +67,14 @@ def dirty(run: Runner, repo: Path) -> bool:
 
 
 def build(run: Runner, target: Target, work: Path) -> str | None:
-    """Archive both dists at the commit and build their wheels into `work/dist`.
-
-    The local version `+g<short>` is set in the ARCHIVED pyproject only, never in the checkout.
+    """Build both dists' wheels at the commit into `work/dist`, through `wheel.build_into`.
 
     Returns:
         why it failed, or None when both wheels were built.
 
     """
-    short = revendor.short_of(target.sha)
-    tar = work / "mtools.tar"
-    argv = ["git", "-C", str(target.mtools), "archive", "--format=tar", f"--output={tar}"]
-    code, out = run([*argv, target.sha, *revendor.DISTS], work)
-    if code != 0:
-        return _failed("git archive", code, out)
-    with tarfile.open(tar) as archive:
-        archive.extractall(work / "src", filter="data")
-    for dist in revendor.DISTS:
-        project = work / "src" / dist / "pyproject.toml"
-        edited = revendor.with_local_version(project.read_text(encoding="utf-8"), short)
-        if edited is None:
-            return f"{dist}/pyproject.toml has no version {revendor.VERSION} to extend"
-        project.write_text(edited, encoding="utf-8")
-        argv = ["uv", "build", "--wheel", "--quiet", "--out-dir", str(work / "dist")]
-        code, out = run(argv, work / "src" / dist)
-        if code != 0:
-            return _failed(f"uv build {dist}", code, out)
-    return None
+    source = wheel.Source(target.sha, target.mtools)
+    return wheel.build_into(run, source, revendor.DISTS, work, work / "dist")
 
 
 def _hash_of(run: Runner, writer: Path, state: Path, work: Path) -> str:

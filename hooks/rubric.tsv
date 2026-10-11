@@ -72,3 +72,4 @@ loadwait	Waiting for host load before a gate
 repin_metrics	The pin census as a textfile
 revendor	Re-vendoring the mtools wheels at one commit
 revendor_apply	Applying a re-vendor: build, check the writer, swap
+wheel	Building mtools wheels at one commit

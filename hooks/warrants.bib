@@ -8152,3 +8152,52 @@
   claim  = {Past the swap the failure is reported by step: the lock, not a generic error.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_failed_lock_is_named},
 }
+
+@misc{hooks-wheel-checkout-builds-every-dist-and-prints-a-json-line-each,
+  section = {wheel},
+  title  = {The control: one record per dist in the order named, the sha256 of the file written},
+  claim  = {The control: one record per dist in the order named, the sha256 of the file written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_a_checkout_builds_every_dist_and_prints_a_json_line_each},
+}
+
+@misc{hooks-wheel-build-runs-at-the-fixed-epoch-on-a-tree-stamped-with-it,
+  section = {wheel},
+  title  = {The inputs that make the bytes depend on neither the clock nor the archive},
+  claim  = {The inputs that make the bytes depend on neither the clock nor the archive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_the_build_runs_at_the_fixed_epoch_on_a_tree_stamped_with_it},
+}
+
+@misc{hooks-wheel-unpacked-tree-is-built-without-git-and-never-edited,
+  section = {wheel},
+  title  = {--src copies the dists, so the caller's tree keeps its version and no git runs},
+  claim  = {--src copies the dists, so the caller's tree keeps its version and no git runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_an_unpacked_tree_is_built_without_git_and_never_edited},
+}
+
+@misc{hooks-wheel-dist-missing-from-the-tree-is-a-failure-naming-it,
+  section = {wheel},
+  title  = {Exit 1 and the dist named, with nothing built},
+  claim  = {Exit 1 and the dist named, with nothing built.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_a_dist_missing_from_the_tree_is_a_failure_naming_it},
+}
+
+@misc{hooks-wheel-failed-build-is-exit-one-with-the-dist-named,
+  section = {wheel},
+  title  = {The failure line names the step, the dist and the exit, and prints no record},
+  claim  = {The failure line names the step, the dist and the exit, and prints no record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_a_failed_build_is_exit_one_with_the_dist_named},
+}
+
+@misc{hooks-wheel-usage-refusals-exit-two-and-build-nothing,
+  section = {wheel},
+  title  = {No dists, no out, a short sha, and neither or both sources are all refused},
+  claim  = {No dists, no out, a short sha, and neither or both sources are all refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_usage_refusals_exit_two_and_build_nothing},
+}
+
+@misc{hooks-wheel-describe-leaves-an-empty-record-for-a-wheel-that-is-not-there,
+  section = {wheel},
+  title  = {A missing wheel is an empty record, which main turns into a failure},
+  claim  = {A missing wheel is an empty record, which main turns into a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_describe_leaves_an_empty_record_for_a_wheel_that_is_not_there},
+}
