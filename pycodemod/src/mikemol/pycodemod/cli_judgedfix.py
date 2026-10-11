@@ -50,6 +50,7 @@ class JudgedFixFlags:
     select: str
     unsafe: bool
     write: bool
+    selftest: str = ""
 
 
 def check_select(select: str) -> str | None:
@@ -119,5 +120,5 @@ def print_judged_fix(paths: Sequence[str], flags: JudgedFixFlags, run: Runner = 
         the exit code `print_judged` computed: 0 done, 1 worklist, 2 a tool could not run.
 
     """
-    shared = TypedArgsFlags(root=flags.root, write=flags.write)
+    shared = TypedArgsFlags(root=flags.root, write=flags.write, selftest=flags.selftest)
     return print_judged(paths, shared, (LABEL, fix_planner(flags, run)), run)

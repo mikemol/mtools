@@ -6118,3 +6118,18 @@
   claim  = {The census: `g` returns a value and is named, while `f` is annotated.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_nonereturns.py -k test_a_def_left_alone_is_a_worklist_row_with_its_line_and_reason},
 }
+
+@misc{pycodemod-cli-judgedfix-selftest-that-passes-sees-the-candidate-and-the-fix-lands,
+  section = {cli_judgedfix},
+  title  = {The control for the second judge: the command ran with the fixed text in the file},
+  claim  = {The control for the second judge: the command ran with the fixed text in the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_selftest_that_passes_sees_the_candidate_and_the_fix_lands},
+}
+
+@misc{pycodemod-cli-judgedfix-fix-mypy-accepts-but-the-selftest-refuses-is-not-written,
+  section = {cli_judgedfix},
+  title  = {The bibstruct case: mypy is happy, the file's own selftest crashes, the file is untouched},
+  claim  = {The bibstruct case: mypy is happy, the file's own selftest crashes, the file is
+            untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_fix_mypy_accepts_but_the_selftest_refuses_is_not_written},
+}

@@ -94,3 +94,6 @@ src/mikemol/pycodemod/nonereturns.py|nested-def-return-counted|return False|retu
 src/mikemol/pycodemod/nonereturns.py|lambda-yield-counted|return False|return True|def=_Own.visit_Lambda
 src/mikemol/pycodemod/nonereturns.py|annotated-def-reannotated|if original_node\.returns is not None:|if False:|def=_Planner.leave_FunctionDef
 src/mikemol/pycodemod/cli_nonereturns.py|worklist-dropped|Plan\(planned\.text, planned\.sites, planned\.worklist\)|Plan(planned.text, planned.sites)|def=plan_none_returns
+src/mikemol/pycodemod/cli_typedargs.py|selftest-not-run|if verdict\.ok and flags\.selftest:|if False:|def=_check_file
+src/mikemol/pycodemod/cli_typedargs.py|selftest-failure-ignored|if code == 0:|if True:|def=_selftest
+src/mikemol/pycodemod/cli_typedargs.py|original-not-restored|path\.write_text\(texts\[0\], encoding="utf-8"\)|pass|def=_selftest

@@ -53,10 +53,15 @@ LABEL = "typed-args"
 
 @dataclass(frozen=True, slots=True)
 class TypedArgsFlags:
-    """What a judged codemod was asked: the project to judge in, and write or not."""
+    """What a judged codemod was asked: the project to judge in, write or not, a second judge.
+
+    `selftest` is a command (split on whitespace, no shell) run in the root with the accepted
+    candidate in the file's place; empty means no second judge.
+    """
 
     root: str
     write: bool
+    selftest: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -186,6 +191,22 @@ def _settle(label: str, path: Path, changes: int, verdict: Verdict, *, write: bo
     return 0
 
 
+def _selftest(
+    root: Path, path: Path, texts: tuple[str, str], command: str, run: Runner
+) -> str | None:
+    # Run the file's own selftest with the candidate (texts[1]) in its place, and put the original
+    # (texts[0]) back on every exit; None when it passed, else its exit and last output line.
+    try:
+        path.write_text(texts[1], encoding="utf-8")
+        code, out, err = run(command.split(), root)
+    finally:
+        path.write_text(texts[0], encoding="utf-8")
+    if code == 0:
+        return None
+    last = (out + err).strip().splitlines()[-1:] or ["no output"]
+    return f"selftest failed (exit {code}): {last[0][:CLIP]}"
+
+
 def _check_file(
     root: Path, path: Path, flags: TypedArgsFlags, run: Runner, plan: tuple[str, Planner]
 ) -> int:
@@ -207,6 +228,12 @@ def _check_file(
     if not planned.changes:
         return worklist
     verdict = judge(root, rel, original, planned.text, run)
+    if verdict.ok and flags.selftest:
+        broke = _selftest(root, path, (original, verdict.text), flags.selftest, run)
+        if broke is not None:
+            moved = f"findings {verdict.before}->{verdict.after}"
+            _say(f"{label} rejected {path} {moved} parsers={planned.changes}: {broke}")
+            return 1
     return max(worklist, _settle(label, path, planned.changes, verdict, write=flags.write))
 
 

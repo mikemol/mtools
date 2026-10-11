@@ -4,6 +4,8 @@
 
 W976. ⚑ THE ACCEPTED WRITE IS THE POSITIVE CONTROL: the rejection, the ruff failure and the dry run
 only mean something beside a run where the same fix does land.
+
+W978. ⚑ THE SELFTEST IS A SECOND JUDGE: mypy accepting a fix is not the file still working.
 """
 
 from __future__ import annotations
@@ -28,18 +30,25 @@ FIXED = "a: int = 1\n"
 NAME = "tool.py"
 FAILED_RUFF = 2
 TWO_ADDED = 2
+SELFTEST = "selftest"
+SELFTEST_CRASH = 3
 
 
 class _Tools:
-    """A stand-in for the project's ruff and mypy that records every call."""
+    """A stand-in for the project's ruff, mypy and selftest that records every call."""
 
-    def __init__(self, *, fewer: bool = True, ruff_code: int = 0) -> None:
+    def __init__(self, *, fewer: bool = True, ruff_code: int = 0, selftest_code: int = 0) -> None:
         self.calls: list[list[str]] = []
         self.fewer = fewer
         self.ruff_code = ruff_code
+        self.selftest_code = selftest_code
+        self.held: list[str] = []
 
     def __call__(self, argv: Sequence[str], cwd: Path) -> tuple[int, str, str]:
         self.calls.append(list(argv))
+        if argv[0] == SELFTEST:
+            self.held.append((cwd / NAME).read_text(encoding="utf-8"))
+            return self.selftest_code, "97 ok\n", "crashed in parse\n"
         named = cwd / argv[-1]
         if argv[0].endswith("mypy"):
             fixed = ": int" in named.read_text(encoding="utf-8")
@@ -57,8 +66,8 @@ class _Tools:
         return next(c for c in self.calls if "--isolated" in c)
 
 
-def _flags(root: Path, *, write: bool, unsafe: bool = False) -> JudgedFixFlags:
-    return JudgedFixFlags(str(root), "ANN,FA", unsafe=unsafe, write=write)
+def _flags(root: Path, *, write: bool, unsafe: bool = False, selftest: str = "") -> JudgedFixFlags:
+    return JudgedFixFlags(str(root), "ANN,FA", unsafe=unsafe, write=write, selftest=selftest)
 
 
 def _target(tmp_path: Path) -> Path:
@@ -118,6 +127,30 @@ def test_a_ruff_that_cannot_run_is_a_worklist_row_and_no_write(
     assert print_judged_fix([str(target)], _flags(tmp_path, write=True), tools) == 1
     assert target.read_text(encoding="utf-8") == SOURCE
     assert "ruff could not run (exit 2)" in capsys.readouterr().out
+
+
+def test_a_selftest_that_passes_sees_the_candidate_and_the_fix_lands(tmp_path: Path) -> None:
+    """The control for the second judge: the command ran with the fixed text in the file."""
+    target = _target(tmp_path)
+    tools = _Tools()
+    flags = _flags(tmp_path, write=True, selftest=SELFTEST)
+    assert print_judged_fix([str(target)], flags, tools) == 0
+    assert tools.held == [FIXED]
+    assert target.read_text(encoding="utf-8") == FIXED
+
+
+def test_a_fix_mypy_accepts_but_the_selftest_refuses_is_not_written(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The bibstruct case: mypy is happy, the file's own selftest crashes, the file is untouched."""
+    target = _target(tmp_path)
+    tools = _Tools(selftest_code=SELFTEST_CRASH)
+    flags = _flags(tmp_path, write=True, selftest=f"{SELFTEST} --check")
+    assert print_judged_fix([str(target)], flags, tools) == 1
+    assert target.read_text(encoding="utf-8") == SOURCE
+    said = capsys.readouterr().out
+    assert "selftest failed (exit 3): crashed in parse" in said
+    assert "judged-fix written" not in said
 
 
 def test_a_rule_selection_must_be_a_comma_list_of_codes() -> None:

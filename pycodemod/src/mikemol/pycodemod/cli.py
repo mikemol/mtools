@@ -144,7 +144,11 @@ def _handle_judgedfix(ns: argparse.Namespace) -> int:
         sys.stderr.write(f"judged-fix: {refusal}\n")
         return _REFUSED
     flags = JudgedFixFlags(
-        root=_str(ns, "root"), select=select, unsafe=_flag(ns, "unsafe"), write=_flag(ns, "write")
+        root=_str(ns, "root"),
+        select=select,
+        unsafe=_flag(ns, "unsafe"),
+        write=_flag(ns, "write"),
+        selftest=_str(ns, "selftest"),
     )
     return print_judged_fix(_str_list(ns, "paths"), flags)
 
@@ -1457,6 +1461,11 @@ def _add_judgedfix_mode(make: _Make) -> None:
     fix.add_argument("--select", required=True, help="comma list of ruff rules, e.g. ANN,FA")
     fix.add_argument("--unsafe", action="store_true", help="also apply ruff's unsafe fixes")
     fix.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    fix.add_argument(
+        "--selftest",
+        default="",
+        help="a command run in --root with the candidate in place; a nonzero exit refuses the file",
+    )
     fix.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
