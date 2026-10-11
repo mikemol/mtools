@@ -8401,3 +8401,25 @@
             skipped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_the_bazel_built_membudget_is_found_when_the_checkouts_venv_has_none},
 }
+
+@misc{hooks-commit-claim-named-fence-wins-over-the-one-beside-the-interpreter,
+  section = {commit_claim},
+  title  = {The launcher's choice is kept: the sibling is only a fallback},
+  claim  = {The launcher's choice is kept: the sibling is only a fallback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_named_fence_wins_over_the_one_beside_the_interpreter},
+}
+
+@misc{hooks-commit-claim-with-no-fence-named-the-one-beside-the-interpreter-is-used,
+  section = {commit_claim},
+  title  = {A repo with the hooks and fence wheels in one venv has no launcher; its own script serves},
+  claim  = {A repo with the hooks and fence wheels in one venv has no launcher; its own script
+            serves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_with_no_fence_named_the_one_beside_the_interpreter_is_used},
+}
+
+@misc{hooks-commit-claim-fence-installed-beside-the-interpreter-takes-the-claim,
+  section = {commit_claim},
+  title  = {The linux-sources shape: no MIKEMOL_FENCE_BIN, a fence in the interpreter's bin/},
+  claim  = {The linux-sources shape: no MIKEMOL_FENCE_BIN, a fence in the interpreter's bin/.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_fence_installed_beside_the_interpreter_takes_the_claim},
+}

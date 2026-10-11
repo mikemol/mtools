@@ -423,8 +423,27 @@ class Claim:
     env: dict[str, str]
 
 
+def fence_of(env: Mapping[str, str], python: str) -> str:
+    """Name the fence to claim with: the one the launcher named, else the one beside `python`.
+
+    ⚑ A REPO THAT INSTALLS THE HOOKS AND FENCE WHEELS INTO ONE VENV HAS NO LAUNCHER, so nothing set
+    `MIKEMOL_FENCE_BIN` and its commits ran unlocked with a note, though `mikemol-membudget` sat in
+    the same `bin/` (linux-sources, 2026-10-11, github-8f). The venv's own script is the fallback.
+
+    Returns:
+        the named path when set and non-empty, else `<python's directory>/mikemol-membudget`.
+
+    """
+    named = env.get(FENCE_ENV, "")
+    return named or str(Path(python).parent / "mikemol-membudget")
+
+
 def claim_of(
-    root: Path, env: Mapping[str, str], own: Sequence[str], run: Runner = run_git
+    root: Path,
+    env: Mapping[str, str],
+    own: Sequence[str],
+    run: Runner = run_git,
+    python: str = sys.executable,
 ) -> Claim | str:
     """Plan the re-exec of this commit under a blocking per-repository fence claim (W886, W910).
 
@@ -449,8 +468,8 @@ def claim_of(
     """
     if env.get(HELD_ENV):
         return ""
-    fence = env.get(FENCE_ENV, "")
-    if not fence or not os.access(fence, os.X_OK):
+    fence = fence_of(env, python)
+    if not os.access(fence, os.X_OK):
         return "the fence venv is not built ('bazel build //fence:.venv')"
     gitdir = run(["-C", str(root), "rev-parse", "--absolute-git-dir"])
     if gitdir.returncode != 0:

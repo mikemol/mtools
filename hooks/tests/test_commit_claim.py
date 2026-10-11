@@ -119,7 +119,8 @@ def test_a_nested_call_does_not_take_a_second_claim(tmp_path: Path) -> None:
 def test_no_fence_or_no_git_checkout_gives_a_reason_not_a_claim(tmp_path: Path) -> None:
     """Both gaps are said, and neither is an exception."""
     target = _repo(tmp_path, "r")
-    assert "fence venv" in str(commit_kata.claim_of(target, {}, ["x"]))
+    nowhere = str(tmp_path / "empty" / "python")
+    assert "fence venv" in str(commit_kata.claim_of(target, {}, ["x"], python=nowhere))
     plain = tmp_path / "plain"
     plain.mkdir()
     got = commit_kata.claim_of(plain, {commit_kata.FENCE_ENV: str(_fence(tmp_path))}, ["x"])
@@ -180,3 +181,29 @@ def test_the_real_main_commits_under_the_target_repositorys_claim(tmp_path: Path
     assert "COMMITTED paperkit" in done.stdout, done.stderr
     gitdir = (target / ".git").resolve()
     assert f"CLAIM=claim:path:{gitdir}/mtools/commit --" in log.read_text(encoding="utf-8")
+
+
+def test_a_named_fence_wins_over_the_one_beside_the_interpreter() -> None:
+    """The launcher's choice is kept: the sibling is only a fallback."""
+    named = {commit_kata.FENCE_ENV: "/named/fence"}
+    assert commit_kata.fence_of(named, "/venv/bin/python") == "/named/fence"
+
+
+def test_with_no_fence_named_the_one_beside_the_interpreter_is_used() -> None:
+    """A repo with the hooks and fence wheels in one venv has no launcher; its own script serves."""
+    expected = "/venv/bin/mikemol-membudget"
+    assert commit_kata.fence_of({}, "/venv/bin/python") == expected
+    assert commit_kata.fence_of({commit_kata.FENCE_ENV: ""}, "/venv/bin/python") == expected
+
+
+def test_a_fence_installed_beside_the_interpreter_takes_the_claim(tmp_path: Path) -> None:
+    """The linux-sources shape: no MIKEMOL_FENCE_BIN, a fence in the interpreter's bin/."""
+    target = _repo(tmp_path, "linux-sources")
+    bindir = tmp_path / "venv" / "bin"
+    bindir.mkdir(parents=True)
+    fence = bindir / "mikemol-membudget"
+    fence.write_text(_FENCE, encoding="utf-8")
+    fence.chmod(_EXECUTABLE)
+    got = commit_kata.claim_of(target, {}, ["python", "x"], python=str(bindir / "python"))
+    assert isinstance(got, commit_kata.Claim)
+    assert got.argv[0] == str(fence)
