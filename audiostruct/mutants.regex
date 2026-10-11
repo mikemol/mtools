@@ -1,0 +1,46 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W997), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S.
+#
+# records.py and render.py only: the pure readers and the transcript. stages, gpu, main, cli and
+# whisperx_site are not declared yet.
+
+# records.py: a time is a finite number, and a bool is not a time (it is an int).
+src/mikemol/audiostruct/records.py|bool-accepted-as-a-time|isinstance\(value, bool\) or not|False or not|def=_number
+src/mikemol/audiostruct/records.py|nonfinite-time-accepted| or not math\.isfinite\(value\)||def=_number
+
+# records.py: a segment's start and end are required; a word's timing and score are None, never 0.0.
+src/mikemol/audiostruct/records.py|absent-required-time-not-refused|if key not in body:|if False:|def=_required
+src/mikemol/audiostruct/records.py|absent-optional-time-read-as-zero|if key in body else None|if key in body else 0.0|def=_optional
+
+# records.py: a speaker is a string or None, never a stand-in label.
+src/mikemol/audiostruct/records.py|absent-speaker-refused|if value is None or isinstance\(value, str\):|if isinstance(value, str):|def=_speaker
+src/mikemol/audiostruct/records.py|nonstring-speaker-accepted|if value is None or isinstance\(value, str\):|if True:|def=_speaker
+
+# records.py: a segment's text is "text", a word's is "word", and there is no fallback between them.
+src/mikemol/audiostruct/records.py|word-text-falls-back-to-text|value = body\.get\(key\)|value = body.get(key, body.get("text"))|def=_text
+src/mikemol/audiostruct/records.py|text-not-required|if not isinstance\(value, str\):|if False:|def=_text
+
+# records.py: words are optional, a malformed one names its position, and a segment is well-formed
+# only when it ends no earlier than it starts.
+src/mikemol/audiostruct/records.py|unaligned-segment-needs-words|body\.get\("words", \[\]\)|body.get("words", None)|def=_words
+src/mikemol/audiostruct/records.py|word-position-unnamed|msg = f"word \{n\}: \{exc\}"|msg = f"{exc}"|def=_words
+src/mikemol/audiostruct/records.py|end-before-start-accepted|if end < start:|if False:|def=_segment
+src/mikemol/audiostruct/records.py|zero-length-segment-refused|if end < start:|if end <= start:|def=_segment
+
+# records.py: every segment lands in exactly one record, with its position, and the raw JSON sorted.
+src/mikemol/audiostruct/records.py|unplaced-raw-unsorted|sort_keys=True|sort_keys=False|def=normalize
+src/mikemol/audiostruct/records.py|unplaced-index-off-by-one|Unplaced\(source, index, raw, str\(exc\)\)|Unplaced(source, index + 1, raw, str(exc))|def=normalize
+
+# render.py: no stand-in speaker, truncation to the second, hours only past one, no time for a gap.
+src/mikemol/audiostruct/render.py|unattributed-uses-a-standin|else UNATTRIBUTED|else "UNKNOWN"|def=line
+src/mikemol/audiostruct/render.py|unplaced-gets-a-timestamp|return f"\*\*\[! unplaced segment|return f"**[00:00] [! unplaced segment|def=line
+src/mikemol/audiostruct/render.py|segment-text-unstripped|record\.text\.strip\(\)|record.text|def=line
+src/mikemol/audiostruct/render.py|time-rounded-not-truncated|whole = int\(seconds\)|whole = round(seconds)|def=stamp
+src/mikemol/audiostruct/render.py|hours-never-shown|if hours else|if False else|def=stamp
+src/mikemol/audiostruct/render.py|transcript-unterminated|\*map\(line, records\)\]\) \+ "\\n"|*map(line, records)])|def=markdown
