@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W999), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S.
+#
+# suite_pragmas, tree_root and import_edges. corpus.py and suite_discovery.py are not declared yet.
+
+# suite_pragmas.py: a suite declares its own deps and tenant; an absent or unreadable declaration is
+# the empty answer, and a tenant outside the caller's admitted set declares nothing.
+src/mikemol/corpus/suite_pragmas.py|unreadable-suite-raises|except OSError:|except KeyError:|def=_source
+src/mikemol/corpus/suite_pragmas.py|whole-pragma-line-returned|match\.group\(1\)|match.group(0)|def=_captured
+src/mikemol/corpus/suite_pragmas.py|requirements-not-trimmed|tuple\(p\.strip\(\) for p in declared\.split\(","\) if p\.strip\(\)\)|tuple(declared.split(","))|def=requires
+src/mikemol/corpus/suite_pragmas.py|empty-requirement-kept| if p\.strip\(\)\)|)|def=requires
+src/mikemol/corpus/suite_pragmas.py|unadmitted-tenant-invented|declared is not None and declared in admitted|declared is not None|def=tenant
+src/mikemol/corpus/suite_pragmas.py|tenant-flag-without-dashes|f"--\{declared\}"|declared|def=tenant
+
+# tree_root.py: the tree is GIVEN; a root that resolves to nothing is refused, a label and a
+# containment test both go by a separator, and a flag is never taken as the operand.
+src/mikemol/corpus/tree_root.py|label-keeps-the-root|text\.removeprefix\(prefix\)|text|def=TreeRoot.label
+src/mikemol/corpus/tree_root.py|label-cuts-a-sibling-prefix|prefix if prefix\.endswith\("/"\) else prefix \+ "/"|prefix|def=TreeRoot.label
+src/mikemol/corpus/tree_root.py|sibling-directory-held|str\(self\.path\)\.rstrip\("/"\) \+ "/"|str(self.path)|def=TreeRoot.holds
+src/mikemol/corpus/tree_root.py|missing-tree-accepted|if not absolute\.is_dir\(\):|if False:|def=of
+src/mikemol/corpus/tree_root.py|root-flag-not-required|if ROOT_FLAG not in rest:|if False:|def=from_argv
+src/mikemol/corpus/tree_root.py|flag-taken-as-the-operand| or operand\[0\]\.startswith\("-"\)||def=from_argv
+src/mikemol/corpus/tree_root.py|operand-left-in-the-arguments|del rest\[at : at \+ 2\]|del rest[at : at + 1]|def=from_argv
+src/mikemol/corpus/tree_root.py|namespace-package-accepted|if not isinstance\(found, Path\):|if False:|def=package_files
+src/mikemol/corpus/tree_root.py|census-skips-the-existence-check|return \[of\(root\) for root in roots\]|return [TreeRoot(Path(root)) for root in roots]|def=census
+
+# import_edges.py: AST not import; module-level and deferred are different edges and never merged;
+# a relative import is no edge and an unparseable file yields none.
+src/mikemol/corpus/import_edges.py|unparseable-file-raises|except \(OSError, SyntaxError\):|except OSError:|def=_parse
+src/mikemol/corpus/import_edges.py|relative-import-named|not node\.level and node\.module|node.module|def=_named
+src/mikemol/corpus/import_edges.py|submodule-kept-in-top-level-name|a\.name\.split\("\."\)\[0\]|a.name|def=_named
+src/mikemol/corpus/import_edges.py|relative-import-named-dotted|not node\.level and node\.module|node.module|def=_named_dotted
+src/mikemol/corpus/import_edges.py|from-import-drops-the-package| \S \{node\.module\}||def=_named_dotted
+src/mikemol/corpus/import_edges.py|else-branch-imports-missed|return \[node\.body, node\.orelse\]|return [node.body]|def=_eager_bodies
+src/mikemol/corpus/import_edges.py|except-handlers-not-walked|, \*\[h\.body for h in node\.handlers\]||def=_eager_bodies
+src/mikemol/corpus/import_edges.py|match-cases-not-walked|\[case\.body for case in node\.cases\]|[]|def=_eager_bodies
+src/mikemol/corpus/import_edges.py|definition-imports-not-walked|if isinstance\(node, _LAZY\):|if False:|def=_lazy
+src/mikemol/corpus/import_edges.py|deferred-in-an-if-missed|out \S= _lazy\(nested, namer\)|pass|def=_lazy
+src/mikemol/corpus/import_edges.py|dotted-reading-ignored|reading\.endswith\("dotted"\)|False|def=_edges
+src/mikemol/corpus/import_edges.py|deferred-reading-ignored|reading\.startswith\("deferred"\)|False|def=_edges
+src/mikemol/corpus/import_edges.py|readings-share-a-cache-slot|key = \(path, reading\)|key = (path, "")|def=_edges

@@ -328,3 +328,18 @@
             every discovered file; the failure surfaces when the suite is RUN.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_suite_pragmas.py -k test_an_unreadable_file_declares_nothing},
 }
+
+@misc{corpus-import-edges-else-and-match-bodies-are-eager-and-a-def-inside-an-if-is-deferred,
+  section = {import_edges},
+  title  = {The else branch and a match case execute on import; a def under an `if` waits for a call},
+  claim  = {The else branch and a match case execute on import; a def under an `if` waits for a
+            call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_else_and_match_bodies_are_eager_and_a_def_inside_an_if_is_deferred},
+}
+
+@misc{corpus-import-edges-relative-import-with-a-module-name-is-no-edge-in-either-spelling,
+  section = {import_edges},
+  title  = {`from .sibling import thing` names `sibling` only relative to a package: no edge at all},
+  claim  = {`from .sibling import thing` names `sibling` only relative to a package: no edge at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_a_relative_import_with_a_module_name_is_no_edge_in_either_spelling},
+}

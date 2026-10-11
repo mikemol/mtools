@@ -40,6 +40,7 @@ def test_the_dependency_pragma_is_read_wherever_it_sits(tmp_path: Path) -> None:
         ("# selftest-requires: numpy\n", ("numpy",)),
         ("# selftest-requires: numpy, scipy\n", ("numpy", "scipy")),
         ("# selftest-requires:   numpy ,  scipy  \n", ("numpy", "scipy")),
+        ("# selftest-requires: numpy, , scipy,\n", ("numpy", "scipy")),
         ("x = 1\n# selftest-requires: panflute\n", ("panflute",)),
     )
     for src, want in cases:

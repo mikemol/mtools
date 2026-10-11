@@ -129,6 +129,48 @@ def test_a_known_local_import_is_seen(tmp_path: Path) -> None:
     assert "mypkg" in import_edges.module_level(str(path))
 
 
+_BRANCHES = """
+if True:
+    pass
+else:
+    import in_else
+
+match 1:
+    case 1:
+        import in_case
+
+if True:
+    def inner():
+        import deferred_in_if
+
+from .sibling import thing
+"""
+
+
+def test_else_and_match_bodies_are_eager_and_a_def_inside_an_if_is_deferred(
+    tmp_path: Path,
+) -> None:
+    """The else branch and a match case execute on import; a def under an `if` waits for a call."""
+    path = tmp_path / "branches.py"
+    path.write_text(_BRANCHES, encoding="utf-8")
+    eager = import_edges.module_level(str(path))
+    assert {"in_else", "in_case"} <= eager
+    assert "deferred_in_if" not in eager
+    assert import_edges.deferred(str(path)) == {"deferred_in_if"}
+
+
+def test_a_relative_import_with_a_module_name_is_no_edge_in_either_spelling(
+    tmp_path: Path,
+) -> None:
+    """`from .sibling import thing` names `sibling` only relative to a package: no edge at all."""
+    path = tmp_path / "branches.py"
+    path.write_text(_BRANCHES, encoding="utf-8")
+    flat = import_edges.module_level(str(path))
+    dotted = import_edges.module_level_dotted(str(path))
+    assert "sibling" not in flat
+    assert not any(name.startswith("sibling") for name in dotted)
+
+
 def test_the_dotted_reading_names_submodule_candidates(tmp_path: Path) -> None:
     """`from X import Y` yields `X` and the candidate `X.Y`; the top-level reading yields `X`.
 
