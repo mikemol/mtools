@@ -4400,3 +4400,17 @@
   claim  = {The per-card checks of --update still run, so a bad vector is exit 2 and no write.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_a_malformed_vector_refuses_and_writes_nothing},
 }
+
+@misc{pathsforward-cli-repeated-touches-flag-accumulates-instead-of-keeping-the-last,
+  section = {cli},
+  title  = {W995: `--touches a --touches b` stores both; it once stored [b] and said nothing},
+  claim  = {W995: `--touches a --touches b` stores both; it once stored [b] and said nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_repeated_touches_flag_accumulates_instead_of_keeping_the_last},
+}
+
+@misc{pathsforward-cli-repeated-enables-flag-accumulates-and-a-bare-one-still-clears,
+  section = {cli},
+  title  = {The extend action must not break `--enables` with no value, which empties the edges},
+  claim  = {The extend action must not break `--enables` with no value, which empties the edges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_repeated_enables_flag_accumulates_and_a_bare_one_still_clears},
+}

@@ -584,7 +584,7 @@ def _parser() -> argparse.ArgumentParser:
         help="raise a counter lagging a claimed symbol up to it (never lower); ledgered",
     )
     ap.add_argument("--status", choices=STATUSES)
-    ap.add_argument("--blocked-on", nargs="*", metavar="WHO")
+    ap.add_argument("--blocked-on", action="extend", nargs="*", metavar="WHO")
     ap.add_argument("--blocked-kind", choices=BLOCKED_KINDS)
     ap.add_argument("--next", metavar="TEXT")
     ap.add_argument("--title", metavar="TEXT", help="--update: replace a stale one-line title")
@@ -604,9 +604,10 @@ def _parser() -> argparse.ArgumentParser:
     # ⚑ `nargs="*"`, LIKE `--blocked-on` (nemik AND mtools, 2026-09-26): the bare flag now means
     # CLEAR. `ctx.many` already returns `None` only when the flag is absent, and `Update.enables` /
     # `_set_given` already treat `()` as "set to empty"; `+` was the one thing blocking it.
-    ap.add_argument("--enables", nargs="*", metavar="SYMBOL")
+    ap.add_argument("--enables", action="extend", nargs="*", metavar="SYMBOL")
     ap.add_argument(
         "--add-enables",
+        action="extend",
         nargs="+",
         metavar="SYMBOL",
         help="--update: append to the edges already there (--enables sets the whole list)",
@@ -616,7 +617,11 @@ def _parser() -> argparse.ArgumentParser:
         metavar="PATH",
         help="--update: pin a repo-relative file to the waypoint by its sha256 (nemik:W276)",
     )
-    ap.add_argument("--touches", nargs="+", metavar="TAG")
+    # ⚑ A REPEATED LIST FLAG ACCUMULATES (W995): argparse's default `store` kept only the LAST
+    # `--touches`, so `--touches hooks --touches locks` stored [locks] with no word said and the
+    # work-claims hook claimed one of two tags. `extend` appends each occurrence; a bare `--enables`
+    # or `--blocked-on` still clears, as `extend` of nothing onto an absent flag yields `[]`.
+    ap.add_argument("--touches", action="extend", nargs="+", metavar="TAG")
     ap.add_argument(
         "--witness", metavar="QUERY", help="--add/--update: a one-line Rego query, stored unread"
     )
@@ -659,6 +664,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     ap.add_argument(
         "--exdate",
+        action="extend",
         nargs="*",
         metavar="RFC5545",
         help="--update: the whole EXDATE list, each as --dtstart; needs an RRULE; bare clears",

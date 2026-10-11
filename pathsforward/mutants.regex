@@ -93,3 +93,5 @@ src/mikemol/pathsforward/model.py|index-ignored-by-describe-rank|if index is Non
 src/mikemol/pathsforward/bulkblock.py|unscored-takes-done-cards|if text\(w, "status"\) != "done"|if True|def=select_symbols
 src/mikemol/pathsforward/bulkblock.py|unscored-takes-scored-cards|and not text\(w, "vector"\)|and True|def=select_symbols
 src/mikemol/pathsforward/bulkblock.py|unknown-operand-passes|elif name in known:|elif True:|def=select_symbols
+src/mikemol/pathsforward/cli.py|touches-keeps-last|"--touches", action="extend", nargs="\+"|"--touches", nargs="+"|def=_parser
+src/mikemol/pathsforward/cli.py|enables-keeps-last|"--enables", action="extend", nargs="\*"|"--enables", nargs="*"|def=_parser

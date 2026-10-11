@@ -478,6 +478,24 @@ def test_update_replaces_touches_whole(tmp_path: Path) -> None:
     assert (code, w["touches"], "last_worked" in w) == (_OK, ["adapter", "cleanup"], False)
 
 
+def test_a_repeated_touches_flag_accumulates_instead_of_keeping_the_last(tmp_path: Path) -> None:
+    """W995: `--touches a --touches b` stores both; it once stored [b] and said nothing."""
+    path = _file(tmp_path)
+    assert _code(path, "--update", "W1", "--touches", "hooks", "--touches", "locks") == _OK
+    assert _first(path)["touches"] == ["hooks", "locks"]
+    assert _code(path, "--update", "W1", "--touches", "x", "y", "--touches", "z") == _OK
+    assert _first(path)["touches"] == ["x", "y", "z"]
+
+
+def test_a_repeated_enables_flag_accumulates_and_a_bare_one_still_clears(tmp_path: Path) -> None:
+    """The extend action must not break `--enables` with no value, which empties the edges."""
+    path = _file(tmp_path, [_wp("W1"), _wp("W2"), _wp("W3")])
+    assert _code(path, "--update", "W1", "--enables", "W2", "--enables", "W3") == _OK
+    assert _first(path)["enables"] == ["W2", "W3"]
+    assert _code(path, "--update", "W1", "--enables") == _OK
+    assert _first(path)["enables"] == []
+
+
 @pytest.mark.parametrize("title", _BAD_TITLES)
 def test_a_blank_or_multiline_title_is_refused(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], title: str
