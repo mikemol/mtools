@@ -149,8 +149,10 @@ def test_cases_load_in_file_order(tmp_path: Path) -> None:
         (None, "no case data"),
         ("{", "not JSON"),
         ("[]", "non-empty JSON list"),
+        ('{"case": "x"}', "non-empty JSON list"),
         ("[1]", "not an object"),
         ('[{"x": 1}]', "no string `case`"),
+        ('[{"case": ""}]', "no string `case`"),
     ],
 )
 def test_bad_case_data_is_refused(tmp_path: Path, text: str | None, needle: str) -> None:

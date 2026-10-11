@@ -7,7 +7,7 @@
 # moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
 # A pattern cannot hold a literal pipe (use \S or %7C) or a literal percent (%25).
 #
-# outcomes, cache, adapters, opa and plugin. spec is not declared yet.
+# outcomes, cache, adapters, opa, plugin and spec.
 
 # outcomes.py: the outcome map is TOTAL and FUNCTIONAL, and each axis classifies by its own rule.
 src/mikemol/pytestspec/outcomes.py|unknown-column-not-reported|if rule\[3\] not in known|if False|def=problems
@@ -102,3 +102,56 @@ src/mikemol/pytestspec/plugin.py|new-spec-row-opened-empty|tallies\.setdefault\(
 src/mikemol/pytestspec/plugin.py|xdist-merge-always-registered|if config\.pluginmanager\.hasplugin\("xdist"\):|if True:|def=pytest_configure
 src/mikemol/pytestspec/plugin.py|xdist-merge-never-registered|if config\.pluginmanager\.hasplugin\("xdist"\):|if False:|def=pytest_configure
 src/mikemol/pytestspec/plugin.py|differential-counter-not-registered|config\.pluginmanager\.register\(_Differential\(config\), "pytestspec-differential"\)|pass|def=pytest_configure
+
+# spec.py `cases_path` and `load_cases`: absent or malformed case data is an error, never zero cases.
+src/mikemol/pytestspec/spec.py|case-file-keeps-the-rego-suffix|spec\.name\.removesuffix\("\.rego"\)|spec.name|def=cases_path
+src/mikemol/pytestspec/spec.py|absent-case-file-read-as-an-os-error|if not path\.is_file\(\):|if False:|def=load_cases
+src/mikemol/pytestspec/spec.py|bad-json-escapes-as-a-json-error|except json\.JSONDecodeError as exc:|except KeyError as exc:|def=load_cases
+src/mikemol/pytestspec/spec.py|empty-case-list-accepted|if not isinstance\(raw, list\) or not raw:|if not isinstance(raw, list):|def=load_cases
+src/mikemol/pytestspec/spec.py|case-object-accepted-as-a-list|if not isinstance\(raw, list\) or not raw:|if not raw:|def=load_cases
+src/mikemol/pytestspec/spec.py|non-object-record-accepted|if not isinstance\(rec, dict\):|if False:|def=load_cases
+src/mikemol/pytestspec/spec.py|unnamed-case-accepted|if not isinstance\(name, str\) or not name:|if False:|def=load_cases
+src/mikemol/pytestspec/spec.py|empty-case-name-accepted|if not isinstance\(name, str\) or not name:|if not isinstance(name, str):|def=load_cases
+
+# spec.py `rule_id` and `_ids`: a rule id is the token before the FIRST colon, stripped, and every
+# expected id is a non-empty string, stripped.
+src/mikemol/pytestspec/spec.py|rule-id-keeps-its-spaces|\.split\(":", 1\)\[0\]\.strip\(\)|.split(":", 1)[0]|def=rule_id
+src/mikemol/pytestspec/spec.py|rule-id-cut-at-the-last-colon|\.split\(":", 1\)\[0\]|.rsplit(":", 1)[0]|def=rule_id
+src/mikemol/pytestspec/spec.py|blank-expected-id-accepted|isinstance\(i, str\) and i\.strip\(\)|isinstance(i, str)|def=_ids
+src/mikemol/pytestspec/spec.py|non-list-expected-ids-accepted|not isinstance\(raw, list\) or not all\(|not all(|def=_ids
+src/mikemol/pytestspec/spec.py|expected-id-keeps-its-spaces|frozenset\(str\(i\)\.strip\(\)|frozenset(str(i)|def=_ids
+
+# spec.py `expectation`: an expect is an object of deny and/or withheld id lists naming at least one
+# id, scoped by an `impl` list that binds it only under those implementations.
+src/mikemol/pytestspec/spec.py|no-expect-refused|if expect is None:|if False:|def=expectation
+src/mikemol/pytestspec/spec.py|non-object-expect-accepted|if not isinstance\(expect, dict\):|if False:|def=expectation
+src/mikemol/pytestspec/spec.py|unknown-expect-key-accepted|if unknown:|if False:|def=expectation
+src/mikemol/pytestspec/spec.py|impl-key-unknown|- \{\*_EXPECT_KEYS, _IMPL_KEY\}|- {*_EXPECT_KEYS}|def=expectation
+src/mikemol/pytestspec/spec.py|expect-naming-no-rule-accepted|if not found\.deny and not found\.withheld:|if False:|def=expectation
+src/mikemol/pytestspec/spec.py|scope-always-absent|if _IMPL_KEY not in fields:|if False:|def=expectation
+src/mikemol/pytestspec/spec.py|empty-scope-accepted|if not scope:|if False:|def=expectation
+src/mikemol/pytestspec/spec.py|scoped-expect-binds-everywhere|return found if impl in scope else None|return found|def=expectation
+
+# spec.py `_mismatch` and `judge`: a mismatch names the missing and the unexpected ids, sorted, and
+# the failure text is None only when nothing differs.
+src/mikemol/pytestspec/spec.py|equal-sets-reported-as-a-mismatch|if got == want:|if False:|def=_mismatch
+src/mikemol/pytestspec/spec.py|missing-ids-unsorted|sorted\(want - got\)|want - got|def=_mismatch
+src/mikemol/pytestspec/spec.py|extra-ids-unsorted|sorted\(got - want\)|got - want|def=_mismatch
+src/mikemol/pytestspec/spec.py|empty-extra-set-blank|\(got - want\)\) or "none"|(got - want)) or ""|def=_mismatch
+src/mikemol/pytestspec/spec.py|empty-missing-set-blank|\(want - got\)\) or "none"|(want - got)) or ""|def=_mismatch
+src/mikemol/pytestspec/spec.py|clean-judgment-is-an-empty-string|" [%7C] "\.join\(parts\) or None|" %7C ".join(parts)|def=judge
+src/mikemol/pytestspec/spec.py|withheld-messages-run-together|"; "\.join\(verdict\.withheld\)|"".join(verdict.withheld)|def=judge
+src/mikemol/pytestspec/spec.py|deny-messages-run-together|"; "\.join\(verdict\.deny\)|"".join(verdict.deny)|def=judge
+
+# spec.py `disposition_of`: a disposition is one of three kinds, argues itself with a reason, and a
+# port-fix names ANOTHER case of the same spec.
+src/mikemol/pytestspec/spec.py|undeclared-disposition-refused|if kind is None:|if False:|def=disposition_of
+src/mikemol/pytestspec/spec.py|unknown-disposition-accepted|or kind not in DISPOSITIONS||def=disposition_of
+src/mikemol/pytestspec/spec.py|reason-not-required|if not isinstance\(reason, str\) or not reason\.strip\(\):|if False:|def=disposition_of
+src/mikemol/pytestspec/spec.py|blank-reason-accepted| or not reason\.strip\(\)||def=disposition_of
+src/mikemol/pytestspec/spec.py|every-disposition-needs-a-pair|if kind != PORT_FIX:|if False:|def=disposition_of
+src/mikemol/pytestspec/spec.py|port-fix-pair-unchecked|if not isinstance\(pair, str\) or pair == name or pair not in names:|if False:|def=disposition_of
+src/mikemol/pytestspec/spec.py|port-fix-pairs-with-itself| or pair == name||def=disposition_of
+src/mikemol/pytestspec/spec.py|port-fix-pairs-with-a-stranger| or pair not in names||def=disposition_of
+src/mikemol/pytestspec/spec.py|port-fix-loses-its-pair|return Disposition\(kind, reason, pair\)|return Disposition(kind, reason)|def=disposition_of
+src/mikemol/pytestspec/spec.py|other-dispositions-carry-a-pair|return Disposition\(kind, reason\)|return Disposition(kind, reason, "x")|def=disposition_of

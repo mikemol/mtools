@@ -791,3 +791,80 @@
             alone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plugin_units.py -k test_a_worker_that_handed_over_no_tally_merges_nothing},
 }
+
+@misc{pytestspec-spec-units-rule-id-is-the-stripped-token-before-the-first-colon,
+  section = {spec},
+  title  = {Spaces around the id are dropped, and a later colon belongs to the message},
+  claim  = {Spaces around the id are dropped, and a later colon belongs to the message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_a_rule_id_is_the_stripped_token_before_the_first_colon},
+}
+
+@misc{pytestspec-spec-units-unknown-expect-key-is-named-beside-a-good-one,
+  section = {spec},
+  title  = {A stray key is refused for being unknown, not hidden behind the ids that were valid},
+  claim  = {A stray key is refused for being unknown, not hidden behind the ids that were valid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_an_unknown_expect_key_is_named_beside_a_good_one},
+}
+
+@misc{pytestspec-spec-units-missing-ids-are-listed-in-sorted-order,
+  section = {spec},
+  title  = {Several missing ids read as a sorted list, however the set happens to iterate},
+  claim  = {Several missing ids read as a sorted list, however the set happens to iterate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_missing_ids_are_listed_in_sorted_order},
+}
+
+@misc{pytestspec-spec-units-unexpected-ids-are-listed-in-sorted-order,
+  section = {spec},
+  title  = {Several unexpected ids read as a sorted list, however the set happens to iterate},
+  claim  = {Several unexpected ids read as a sorted list, however the set happens to iterate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_unexpected_ids_are_listed_in_sorted_order},
+}
+
+@misc{pytestspec-spec-units-withheld-messages-are-joined-with-semicolons,
+  section = {spec},
+  title  = {Every withheld reason is kept, separated, in the unmeasured failure},
+  claim  = {Every withheld reason is kept, separated, in the unmeasured failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_withheld_messages_are_joined_with_semicolons},
+}
+
+@misc{pytestspec-spec-units-case-that-declares-no-disposition-has-none,
+  section = {spec},
+  title  = {The absence of a disposition is None, not a refusal},
+  claim  = {The absence of a disposition is None, not a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_a_case_that_declares_no_disposition_has_none},
+}
+
+@misc{pytestspec-spec-units-disposition-that-is-not-port-fix-carries-no-pair,
+  section = {spec},
+  title  = {Do-not-port and unmeasured keep their reason and have no `pairs_with`},
+  claim  = {Do-not-port and unmeasured keep their reason and have no `pairs_with`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_a_disposition_that_is_not_port_fix_carries_no_pair},
+}
+
+@misc{pytestspec-spec-units-port-fix-keeps-the-case-it-pairs-with,
+  section = {spec},
+  title  = {The origin's pinning case is carried on the disposition},
+  claim  = {The origin's pinning case is carried on the disposition.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_a_port_fix_keeps_the_case_it_pairs_with},
+}
+
+@misc{pytestspec-spec-units-port-fix-must-pair-with-another-case-of-the-spec,
+  section = {spec},
+  title  = {Itself, a case not in the spec, and no string at all are each refused},
+  claim  = {Itself, a case not in the spec, and no string at all are each refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_a_port_fix_must_pair_with_another_case_of_the_spec},
+}
+
+@misc{pytestspec-spec-units-disposition-needs-a-reason-that-says-something,
+  section = {spec},
+  title  = {A missing, empty or blank reason is refused: a declaration must argue itself},
+  claim  = {A missing, empty or blank reason is refused: a declaration must argue itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_a_disposition_needs_a_reason_that_says_something},
+}
+
+@misc{pytestspec-spec-units-unknown-disposition-is-refused,
+  section = {spec},
+  title  = {Only the three kinds exist},
+  claim  = {Only the three kinds exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spec_units.py -k test_an_unknown_disposition_is_refused},
+}
