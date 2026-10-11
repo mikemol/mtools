@@ -783,3 +783,10 @@
   claim  = {A list, a non-text buffer and bad base64 are each an OSError, never an empty log.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log_post.py -k test_post_refuses_an_answer_that_is_not_a_chunk},
 }
+
+@misc{buildtel-bb-records-main-lists-only-the-most-common-twenty-commands,
+  section = {bb_records},
+  title  = {Twenty-five distinct commands report as twenty, the commonest first, in a count of all},
+  claim  = {Twenty-five distinct commands report as twenty, the commonest first, in a count of all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_main_lists_only_the_most_common_twenty_commands},
+}

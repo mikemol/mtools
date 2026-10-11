@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W998), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S.
+#
+# bb_records.py and image_digest.py only. bb_log, buildpulse, coord_sample, logs_push, probe and
+# proc are not declared yet.
+
+# bb_records.py `command`: the check a record ran is the text inside `sh -c '...'`, else the head.
+src/mikemol/buildtel/bb_records.py|snippet-without-the-marker-not-cut|if start < 0:|if False:|def=command
+src/mikemol/buildtel/bb_records.py|marker-kept-in-the-command|start \+ len\(SNIPPET_MARK\)|start|def=command
+src/mikemol/buildtel/bb_records.py|command-runs-past-its-closing-quote|rest\.split\("'", 1\)\[0\]|rest.split("'", 1)[-1]|def=command
+src/mikemol/buildtel/bb_records.py|head-not-bounded|snippet\[:SNIPPET_HEAD\]|snippet|def=command
+
+# bb_records.py `_int`: a protobuf-JSON int64 arrives as a string; anything else counts as 0.
+src/mikemol/buildtel/bb_records.py|any-string-parsed-as-an-int|and value\.isdigit\(\)||def=_int
+
+# bb_records.py `_add`: a record this reader cannot interpret is COUNTED unreadable, never dropped,
+# and the worker, cpu and memory figures fold in as a sum, a sum and a maximum.
+src/mikemol/buildtel/bb_records.py|non-object-record-counted-readable|if not isinstance\(rec, dict\):|if False:|def=_add
+src/mikemol/buildtel/bb_records.py|record-without-a-snippet-counted|or not isinstance\(snippet, str\)||def=_add
+src/mikemol/buildtel/bb_records.py|unknown-worker-hidden|else "\?"|else ""|def=_add
+src/mikemol/buildtel/bb_records.py|cpu-overwritten-not-summed|tally\.cpu_nanos \+= |tally.cpu_nanos = |def=_add
+src/mikemol/buildtel/bb_records.py|peak-memory-summed-not-maxed|max\(tally\.peak_memory_max, _int\(usage\.get\("peakMemoryBytes"\)\)\)|tally.peak_memory_max + _int(usage.get("peakMemoryBytes"))|def=_add
+
+# bb_records.py `collect`: every page is folded, and a page that is no object ends the walk.
+src/mikemol/buildtel/bb_records.py|only-the-first-page-read|if not isinstance\(nxt, str\) or not nxt:|if True:|def=collect
+src/mikemol/buildtel/bb_records.py|non-object-page-walked-on|if not isinstance\(page, dict\):|if False:|def=collect
+
+# bb_records.py `main`: usage and unreachable are distinct exits, a flag is not an invocation id,
+# the report is seconds and the top commands only.
+src/mikemol/buildtel/bb_records.py|flag-taken-as-an-invocation-id| or args\[0\]\.startswith\("-"\)||def=main
+src/mikemol/buildtel/bb_records.py|unreachable-reported-as-usage|return EXIT_UNREACHABLE|return EXIT_USAGE|def=main
+src/mikemol/buildtel/bb_records.py|cpu-reported-in-nanoseconds|tally\.cpu_nanos / NANOS|tally.cpu_nanos|def=main
+src/mikemol/buildtel/bb_records.py|every-command-listed|most_common\(TOP_COMMANDS\)|most_common()|def=main
+
+# image_digest.py `digest`: `absent` is a stable answer for everything but an unknown image name.
+src/mikemol/buildtel/image_digest.py|unknown-image-accepted|if image not in IMAGES:|if False:|def=digest
+src/mikemol/buildtel/image_digest.py|missing-query-run-anyway|if not query\.is_file\(\) or not python\.is_file\(\):|if False:|def=digest
+src/mikemol/buildtel/image_digest.py|failed-query-trusted|if status != 0 or not out\.strip\(\):|if not out.strip():|def=digest
+src/mikemol/buildtel/image_digest.py|empty-output-parsed|if status != 0 or not out\.strip\(\):|if status != 0:|def=digest
+src/mikemol/buildtel/image_digest.py|non-object-answer-trusted|if not isinstance\(rec, dict\):|if False:|def=digest
+src/mikemol/buildtel/image_digest.py|unanswered-digest-trusted|state == "answered" and isinstance|isinstance|def=digest
+src/mikemol/buildtel/image_digest.py|empty-digest-returned|isinstance\(found, str\) and found:|isinstance(found, str):|def=digest
+
+# image_digest.py `main`: the default image is the paperkit pool's.
+src/mikemol/buildtel/image_digest.py|default-image-is-the-other-pool|else IMAGES\[0\]|else IMAGES[1]|def=main

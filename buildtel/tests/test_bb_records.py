@@ -26,6 +26,7 @@ _USAGE_EXIT = 2
 _UNREACHABLE_EXIT = 3
 _NOT_FOUND = 404
 _UNREADABLE = 3
+_DISTINCT = 25
 
 
 def _record(worker: object, snippet: object, cpu: str = "", peak: str = "") -> object:
@@ -202,6 +203,21 @@ def test_main_prints_the_tally_as_json(capsys: pytest.CaptureFixture[str]) -> No
         "by_worker": {"w1": 1},
         "by_command": {"a": 1},
     }
+
+
+def test_main_lists_only_the_most_common_twenty_commands(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Twenty-five distinct commands report as twenty, the commonest first, in a count of all."""
+    rows = [_record("w", f"sh -c 'c{n}'") for n in range(_DISTINCT)]
+    rows += [_record("w", "sh -c 'c0'")]
+    page: object = {"execution": rows}
+    assert bb_records.main(["inv"], lambda _i, _t: page) == 0
+    said = capsys.readouterr().out
+    assert '"c19": 1' in said
+    assert '"c20"' not in said
+    assert said.index('"c0": 2') < said.index('"c1": 1')
+    assert f'"records": {_DISTINCT + 1}' in said
 
 
 @pytest.mark.parametrize("argv", [[], ["-h"], ["a", "b"]])
