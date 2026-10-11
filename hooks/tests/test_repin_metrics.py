@@ -26,6 +26,7 @@ _WHEEL = (
 )
 _BEHIND = 'mikemol_repin_behind_par{repo="alpha",dist="hooks"} 1'
 _PINS = 3
+_CLOCK = 1_700_000_000
 
 
 def _tree(tmp_path: Path) -> Path:
@@ -94,6 +95,21 @@ def test_a_malformed_par_in_the_environment_is_refused(
     tree = _tree(tmp_path / "tree")
     assert repin_cli.main(["--root", str(tree), "--metrics", str(out)]) == repin_cli.EXIT_USAGE
     assert not out.exists()
+
+
+def test_the_census_carries_the_time_it_was_taken(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """scan_time_seconds is the run's clock in whole unix seconds, not the file's mtime."""
+    monkeypatch.setattr(repin_cli, "_NOW", lambda: _CLOCK + 0.9)
+    lines = _run(_tree(tmp_path / "tree"), tmp_path / "pins.prom", "--sha", _NEW)
+    assert f"mikemol_repin_scan_time_seconds {_CLOCK}" in lines
+
+
+def test_a_render_without_a_clock_claims_no_scan_time() -> None:
+    """The body is a pure function of its inputs: no clock given, no series."""
+    assert "scan_time" not in repin_metrics.render([], "/r", None)
+    assert f"scan_time_seconds {_CLOCK}" in repin_metrics.render([], "/r", None, _CLOCK)
 
 
 def test_label_values_are_escaped() -> None:

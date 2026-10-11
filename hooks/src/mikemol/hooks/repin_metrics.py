@@ -56,16 +56,24 @@ def _header(name: str, help_text: str) -> list[str]:
     return [f"# HELP {PREFIX}_{name} {help_text}", f"# TYPE {PREFIX}_{name} gauge"]
 
 
-def render(rows: Iterable[Row], root: str, par: str | None) -> str:
+def render(rows: Iterable[Row], root: str, par: str | None, scanned: int | None = None) -> str:
     """Render the census as the textfile body.
 
+    ⚑ `scan_time_seconds` IS WHEN THE CENSUS WAS TAKEN, in unix seconds, so a dead census alerts
+    off a series rather than the textfile's mtime (luthen-observability:W806, mtools:W987). It is a
+    parameter, never read here, so the body is a pure function of its inputs.
+
     Returns:
-        the exposition text, ending in a newline; `behind_par` is left out when `par` is None.
+        the exposition text, ending in a newline; `behind_par` is left out when `par` is None and
+        `scan_time_seconds` when `scanned` is None.
 
     """
     census = list(rows)
     out = _header("pins", "pins found in the scan")
     out.append(f"{PREFIX}_pins {len(census)}")
+    if scanned is not None:
+        out += _header("scan_time_seconds", "unix time the census was taken")
+        out.append(f"{PREFIX}_scan_time_seconds {scanned}")
     out += _header("scan_info", "the root the census read")
     out.append(_series("scan_info", {"root": root}, 1))
     if par is not None:

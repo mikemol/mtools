@@ -21,6 +21,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -38,6 +39,7 @@ EXIT_USAGE = 2
 SELF = "mtools"
 PAR_ENV = "MIKEMOL_REPIN_PAR"
 _ENV = os.environ
+_NOW = time.time
 _PUBLISH = publish
 _RENDER = render
 _USAGE = (
@@ -243,7 +245,7 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
     rows = survey(root, par, dists)
     sys.stdout.write("".join(f"{row.line()}\n" for row in rows))
     if metrics is not None:
-        _PUBLISH(Path(metrics), _RENDER(rows, str(root), par))
+        _PUBLISH(Path(metrics), _RENDER(rows, str(root), par, int(_NOW())))
     if "--write" not in flags or target is None:
         return 0
     results = apply(root, target, dists, runner, sync="--no-sync" not in flags)
