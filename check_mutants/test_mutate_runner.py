@@ -407,6 +407,9 @@ def test_a_malformed_declaration_file_refuses_the_whole_grid_naming_the_line(
 
 _KEYS = [f"src/m{n}.py::f{k}" for n in range(8) for k in range(5)]
 _SHARDS = 4
+_CPUS = 12
+_SIX = 6
+THREE_JOBS = 3
 
 
 def _refused(raw: str) -> bool:
@@ -463,3 +466,21 @@ def test_a_malformed_shard_refuses_the_grid_before_running_anything(
     assert _run_main(grid) == 1
     assert "MUTATE_SHARD" in capsys.readouterr().err
     assert seen == []
+
+
+def test_an_unsharded_runner_uses_every_cpu_and_a_shard_takes_its_share() -> None:
+    """W970: six shards of one distribution must not each start a full machine's worth of suites.
+
+    A cap on the unsharded runners was tried and withdrawn on 2026-10-11: four suites made the
+    big unsharded grids (fence, katas, mdstruct, treeio) time out. They shard first, then narrow.
+    """
+    assert mutate_runner.pool_size("", _CPUS, 1) == _CPUS
+    assert mutate_runner.pool_size("", _CPUS, _SIX) == _CPUS // _SIX
+    assert mutate_runner.pool_size("", 2, _SIX) == 1
+
+
+def test_an_explicit_job_count_wins_over_the_share() -> None:
+    """MUTATE_JOBS is the operator's bound; `1` restores the serial run."""
+    assert mutate_runner.pool_size("3", 12, 6) == THREE_JOBS
+    assert mutate_runner.pool_size("1", 12, 1) == 1
+    assert mutate_runner.pool_size("0", 12, 1) == 1

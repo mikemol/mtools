@@ -138,3 +138,20 @@
   claim  = {W970: a bad `MUTATE_SHARD` is exit 1 naming the variable, and no suite runs.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_malformed_shard_refuses_the_grid_before_running_anything},
 }
+
+@misc{root-mutate-runner-explicit-job-count-wins-over-the-share,
+  section = {mutate_runner},
+  title  = {MUTATE_JOBS is the operator's bound; `1` restores the serial run},
+  claim  = {MUTATE_JOBS is the operator's bound; `1` restores the serial run.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_explicit_job_count_wins_over_the_share},
+}
+
+@misc{root-mutate-runner-unsharded-runner-uses-every-cpu-and-a-shard-takes-its-share,
+  section = {mutate_runner},
+  title  = {W970: six shards of one distribution must not each start a full machine's worth of suites},
+  claim  = {W970: six shards of one distribution must not each start a full machine's worth of
+            suites. A cap on the unsharded runners was tried and withdrawn on
+            2026-10-11: four suites made the big unsharded grids (fence, katas,
+            mdstruct, treeio) time out. They shard first, then narrow.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_unsharded_runner_uses_every_cpu_and_a_shard_takes_its_share},
+}

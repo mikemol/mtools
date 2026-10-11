@@ -6090,3 +6090,31 @@
   claim  = {The lambda is its own scope: the outer def returns nothing and is annotated.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_nonereturns.py -k test_a_yield_inside_a_lambda_does_not_make_the_outer_def_a_generator},
 }
+
+@misc{pycodemod-cli-nonereturns-write-lands-the-annotation-the-judge-accepts,
+  section = {cli_nonereturns},
+  title  = {The control: the def takes `-> None` and the file is rewritten},
+  claim  = {The control: the def takes `-> None` and the file is rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_nonereturns.py -k test_write_lands_the_annotation_the_judge_accepts},
+}
+
+@misc{pycodemod-cli-nonereturns-dry-run-reports-and-writes-nothing,
+  section = {cli_nonereturns},
+  title  = {The default is a plan under the label none-returns: judged, said, untouched},
+  claim  = {The default is a plan under the label none-returns: judged, said, untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_nonereturns.py -k test_a_dry_run_reports_and_writes_nothing},
+}
+
+@misc{pycodemod-cli-nonereturns-judge-that-sees-no-drop-rejects-and-the-file-is-untouched,
+  section = {cli_nonereturns},
+  title  = {Four of aeternum's twelve files reverted this way: the annotation changed nothing},
+  claim  = {Four of aeternum's twelve files reverted this way: the annotation changed nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_nonereturns.py -k test_a_judge_that_sees_no_drop_rejects_and_the_file_is_untouched},
+}
+
+@misc{pycodemod-cli-nonereturns-def-left-alone-is-a-worklist-row-with-its-line-and-reason,
+  section = {cli_nonereturns},
+  title  = {The census: `g` returns a value and is named, while `f` is annotated},
+  claim  = {The census: `g` returns a value and is named, while `f` is annotated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_nonereturns.py -k test_a_def_left_alone_is_a_worklist_row_with_its_line_and_reason},
+}

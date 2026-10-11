@@ -93,3 +93,4 @@ src/mikemol/pycodemod/nonereturns.py|stub-annotated|return "stub body" if _is_st
 src/mikemol/pycodemod/nonereturns.py|nested-def-return-counted|return False|return True|def=_Own.visit_FunctionDef
 src/mikemol/pycodemod/nonereturns.py|lambda-yield-counted|return False|return True|def=_Own.visit_Lambda
 src/mikemol/pycodemod/nonereturns.py|annotated-def-reannotated|if original_node\.returns is not None:|if False:|def=_Planner.leave_FunctionDef
+src/mikemol/pycodemod/cli_nonereturns.py|worklist-dropped|Plan\(planned\.text, planned\.sites, planned\.worklist\)|Plan(planned.text, planned.sites)|def=plan_none_returns

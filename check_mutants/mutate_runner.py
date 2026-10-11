@@ -646,7 +646,13 @@ def main(argv: list[str]) -> int:
     attempted = [s for s in attempted if in_shard(s, shard)]
     unreachable = [s for s in unreachable if in_shard(s, shard)]
     jobs = [(site, mutant) for site, mutant in jobs if in_shard(site, shard)]
-    verdicts, regex = _run_all(grid, [m for _site, m in jobs], declared, debug=debug)
+    verdicts, regex = _run_all(
+        grid,
+        [m for _site, m in jobs],
+        declared,
+        debug=debug,
+        share=1 if shard is None else shard[1],
+    )
     for (site, _mutant), got in zip(jobs, verdicts, strict=True):
         if debug:
             sys.stdout.write(f"    {site} -> {got}\n")
@@ -659,8 +665,26 @@ def main(argv: list[str]) -> int:
     return 1 if code or regex_code else 0
 
 
+def pool_size(jobs: str, cpus: int, share: int) -> int:
+    """Decide how many mutant suites one runner runs at once.
+
+    ⚑ A SHARD GETS ITS SHARE OF THE MACHINE, NOT ALL OF IT (mtools:W970). Bazel schedules each
+    shard as one test, but each shard's runner used to start `cpu_count` suites, so six shards of
+    one distribution oversubscribed the host six times over and starved every healthy neighbour
+    into a timeout (measured 2026-10-11: `test_operands` 3 s alone, 65 s in the gate). An explicit
+    `MUTATE_JOBS` still wins.
+
+    Returns:
+        the worker count, at least one.
+
+    """
+    if jobs:
+        return max(1, int(jobs))
+    return max(1, cpus // max(1, share))
+
+
 def _run_all(
-    grid: Grid, mutants: list[Mutant], declared: list[Declared], *, debug: bool
+    grid: Grid, mutants: list[Mutant], declared: list[Declared], *, debug: bool, share: int = 1
 ) -> tuple[list[str], list[tuple[str, str]]]:
     """Run every def-site mutant and every declared defect in one pool, results in input order.
 
@@ -677,9 +701,9 @@ def _run_all(
     # Raising the ceiling was refused (a standing rule) and so was narrowing the grid. Each mutant
     # already builds in its OWN temp tree with its OWN `HOME`, so they share nothing to race on;
     # results are gathered in SITE ORDER, so the report is the serial report, byte for byte.
-    # `MUTATE_JOBS` bounds the pool; `1` restores the serial run.
-    workers = int(os.environ.get("MUTATE_JOBS", "") or (os.cpu_count() or 1))
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+    # `MUTATE_JOBS` bounds the pool; `1` restores the serial run; a shard takes its share (above).
+    workers = pool_size(os.environ.get("MUTATE_JOBS", ""), os.cpu_count() or 1, share)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(run, grid, mutant, debug=debug) for mutant in mutants]
         planted = [pool.submit(run_declared, grid, d, debug=debug) for d in declared]
         verdicts = [f.result() for f in futures]

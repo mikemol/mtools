@@ -69,6 +69,7 @@ from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
 from mikemol.pycodemod.cli_judgedfix import JudgedFixFlags, check_select, print_judged_fix
+from mikemol.pycodemod.cli_nonereturns import print_none_returns
 from mikemol.pycodemod.cli_orempty import OrEmptyFlags, print_orempty
 from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, print_typedargs
 from mikemol.pycodemod.commentary import (
@@ -129,6 +130,11 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+
+
+def _handle_nonereturns(ns: argparse.Namespace) -> int:
+    flags = TypedArgsFlags(root=_str(ns, "root"), write=_flag(ns, "write"))
+    return print_none_returns(_str_list(ns, "paths"), flags)
 
 
 def _handle_judgedfix(ns: argparse.Namespace) -> int:
@@ -1153,6 +1159,7 @@ MODES = {
     "typed-args": _handle_typedargs,
     "or-empty": _handle_orempty,
     "judged-fix": _handle_judgedfix,
+    "none-returns": _handle_nonereturns,
     "by-path-runs": _handle_by_path_runs,
 }
 
@@ -1437,6 +1444,13 @@ def _add_typedargs_mode(make: _Make) -> None:
     typed.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
+def _add_nonereturns_mode(make: _Make) -> None:
+    none = make("none-returns", "-> None on a def that provably returns nothing, judged by mypy")
+    none.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    none.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    none.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
 def _add_judgedfix_mode(make: _Make) -> None:
     fix = make("judged-fix", "ruff's fixes for chosen rules, kept per file only when mypy agrees")
     fix.add_argument("--root", required=True, help="the project whose .venv judges each file")
@@ -1469,6 +1483,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_typedargs_mode,
     _add_orempty_mode,
     _add_judgedfix_mode,
+    _add_nonereturns_mode,
     _add_runs_mode,
 )
 
