@@ -92,6 +92,7 @@ def test_missing_required_field_is_unreadable_with_its_id(key: str) -> None:
     [
         ({"internalDate": 1727780400000}, "internalDate"),
         ({"internalDate": "-5"}, "internalDate"),
+        ({"internalDate": "١٧٢٧٧٨٠٤٠٠٠٠٠"}, "internalDate"),
         ({"labelIds": "INBOX"}, "labelIds"),
         ({"labelIds": ["INBOX", 7]}, "labelIds"),
         ({"snippet": None}, "snippet"),

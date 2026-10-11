@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W670, W1001), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. Each is a mistake a plausible
+# edit could make that `body -> raise` cannot express (the def is still called, only its verdict
+# moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
+# A pattern cannot hold a literal pipe: use \S or %7C.
+#
+# records.py only. auth, cli, consent and fetch are not declared yet.
+
+# records.py `message`: two fields may be absent and only two, a present field of the wrong type is
+# always Unreadable, and an Unreadable keeps the id when one was readable.
+src/mikemol/gmailstruct/records.py|absent-labels-refused|if "labelIds" not in rec:|if False:|def=_labels
+src/mikemol/gmailstruct/records.py|absent-snippet-refused|if "snippet" not in rec:|if False:|def=_snippet
+src/mikemol/gmailstruct/records.py|non-string-label-accepted|if not isinstance\(item, str\):|if False:|def=_labels
+src/mikemol/gmailstruct/records.py|nondecimal-date-accepted|if not value\.isascii\(\) or not value\.isdigit\(\):|if False:|def=_internal_date
+src/mikemol/gmailstruct/records.py|unicode-digits-accepted-as-a-date|not value\.isascii\(\) or ||def=_internal_date
+src/mikemol/gmailstruct/records.py|missing-payload-accepted|if payload is None:|if False:|def=_headers
+src/mikemol/gmailstruct/records.py|non-object-header-accepted|if header is None:|if False:|def=_headers
+src/mikemol/gmailstruct/records.py|header-position-unnamed|msg = f"payload\.headers\[\{ordinal\}\]: \{err\}"|msg = str(err)|def=_headers
+src/mikemol/gmailstruct/records.py|unreadable-message-loses-its-id|Unreadable\(id=msg_id, reason=str\(err\)\)|Unreadable(id=None, reason=str(err))|def=message
+
+# records.py `pages`: one record per listed entry and one per page that cannot be read; a listing
+# whose token chain is wrong is a record, never a partial count read as complete.
+src/mikemol/gmailstruct/records.py|unreadable-page-not-recorded|if page is None:|if False:|def=pages
+src/mikemol/gmailstruct/records.py|truncated-listing-undetected|if has_next == \(page_no == last\):|if False:|def=pages
+src/mikemol/gmailstruct/records.py|empty-page-needs-messages|if "messages" not in page:|if False:|def=pages
+src/mikemol/gmailstruct/records.py|entry-page-and-ordinal-swapped|_text\(entry, "threadId"\), page, ordinal\)|_text(entry, "threadId"), ordinal, page)|def=_entry
+
+# records.py base64url: strict, padding or not.
+src/mikemol/gmailstruct/records.py|lenient-base64-repair|validate=True|validate=False|def=decode_base64url
+src/mikemol/gmailstruct/records.py|padding-not-restored|"=" \* \(-len\(text\) %25 4\)|""|def=decode_base64url
+
+# records.py `parts`: every node of the tree is a record, containers included, depth-first; a bad
+# node names its path and its children are still walked.
+src/mikemol/gmailstruct/records.py|part-without-a-body-accepted|if body is None:|if False:|def=_part
+src/mikemol/gmailstruct/records.py|undecodable-data-passed-on|except binascii\.Error as err:|except KeyError as err:|def=_part
+src/mikemol/gmailstruct/records.py|children-never-walked|if "parts" not in node:|if True:|def=_walk
+src/mikemol/gmailstruct/records.py|child-path-forgets-its-parents|\(\*path, index\)|(index,)|def=_walk
+src/mikemol/gmailstruct/records.py|root-path-unnamed|if path else "root"|if path else ""|def=_where
+src/mikemol/gmailstruct/records.py|missing-payload-walked|if "payload" not in rec:|if False:|def=parts
