@@ -790,3 +790,80 @@
   claim  = {Twenty-five distinct commands report as twenty, the commonest first, in a count of all.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_records.py -k test_main_lists_only_the_most_common_twenty_commands},
 }
+
+@misc{buildtel-bb-log-trailing-slash-after-the-id-in-a-url-is-dropped,
+  section = {bb_log},
+  title  = {The id is the text after `invocation/` without the slash a pasted URL may end in},
+  claim  = {The id is the text after `invocation/` without the slash a pasted URL may end in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_trailing_slash_after_the_id_in_a_url_is_dropped},
+}
+
+@misc{buildtel-bb-log-repeating-next-id-is-read-once-more-and-then-stops,
+  section = {bb_log},
+  title  = {An id that advanced once and then repeats ends the read at its second sight},
+  claim  = {An id that advanced once and then repeats ends the read at its second sight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_repeating_next_id_is_read_once_more_and_then_stops},
+}
+
+@misc{buildtel-bb-log-each-picked-failure-line-ends-its-own-line,
+  section = {bb_log},
+  title  = {Two failure lines come back as two lines, not run together},
+  claim  = {Two failure lines come back as two lines, not run together.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_each_picked_failure_line_ends_its_own_line},
+}
+
+@misc{buildtel-bb-log-url-with-no-id-after-it-is-a-usage-error,
+  section = {bb_log},
+  title  = {`invocation/` with nothing after it names no invocation, so nothing is fetched},
+  claim  = {`invocation/` with nothing after it names no invocation, so nothing is fetched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_url_with_no_id_after_it_is_a_usage_error},
+}
+
+@misc{buildtel-bb-log-count-after-a-flag-that-is-not-tail-is-a-usage-error,
+  section = {bb_log},
+  title  = {Only `--tail` takes a count: any other word with a number after it is refused},
+  claim  = {Only `--tail` takes a count: any other word with a number after it is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_log.py -k test_a_count_after_a_flag_that_is_not_tail_is_a_usage_error},
+}
+
+@misc{buildtel-buildpulse-load-skips-a-sample-that-has-no-total,
+  section = {buildpulse},
+  title  = {A record with an `at` and a `done` but no `total` is skipped, not read as a sample},
+  claim  = {A record with an `at` and a `done` but no `total` is skipped, not read as a sample.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_load_skips_a_sample_that_has_no_total},
+}
+
+@misc{buildtel-buildpulse-rate-takes-a-reference-exactly-one-window-old,
+  section = {buildpulse},
+  title  = {A sample exactly at the window's edge is inside it: 70 actions in 10 minutes is 7/min},
+  claim  = {A sample exactly at the window's edge is inside it: 70 actions in 10 minutes is 7/min.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_rate_takes_a_reference_exactly_one_window_old},
+}
+
+@misc{buildtel-buildpulse-freeze-runs-from-the-first-agreeing-sample-after-the-last-move,
+  section = {buildpulse},
+  title  = {Earlier moves and agreements do not count: only those since the counter last changed},
+  claim  = {Earlier moves and agreements do not count: only those since the counter last changed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_a_freeze_runs_from_the_first_agreeing_sample_after_the_last_move},
+}
+
+@misc{buildtel-buildpulse-freeze-exactly-as-long-as-the-threshold-is-a-stall,
+  section = {buildpulse},
+  title  = {Thirty frozen minutes against a thirty-minute threshold is a stall, not almost one},
+  claim  = {Thirty frozen minutes against a thirty-minute threshold is a stall, not almost one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_a_freeze_exactly_as_long_as_the_threshold_is_a_stall},
+}
+
+@misc{buildtel-buildpulse-sample-taken-at-the-instant-of-the-move-does-not-start-the-freeze,
+  section = {buildpulse},
+  title  = {A sample stamped with the move's own time is not after it, so it dates no freeze},
+  claim  = {A sample stamped with the move's own time is not after it, so it dates no freeze.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_a_sample_taken_at_the_instant_of_the_move_does_not_start_the_freeze},
+}
+
+@misc{buildtel-buildpulse-estimate-of-exactly-an-hour-reads-in-hours,
+  section = {buildpulse},
+  title  = {Sixty minutes left is `1.0h`, not `60m`},
+  claim  = {Sixty minutes left is `1.0h`, not `60m`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_an_estimate_of_exactly_an_hour_reads_in_hours},
+}

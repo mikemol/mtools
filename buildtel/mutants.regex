@@ -7,7 +7,7 @@
 # moves). A line that stops matching is a STALE declaration and fails the grid as UNAPPLIED.
 # A pattern cannot hold a literal pipe: use \S.
 #
-# bb_records.py and image_digest.py only. bb_log, buildpulse, coord_sample, logs_push, probe and
+# bb_records.py, image_digest.py, bb_log.py and buildpulse.py. coord_sample, logs_push, probe and
 # proc are not declared yet.
 
 # bb_records.py `command`: the check a record ran is the text inside `sh -c '...'`, else the head.
@@ -49,3 +49,80 @@ src/mikemol/buildtel/image_digest.py|empty-digest-returned|isinstance\(found, st
 
 # image_digest.py `main`: the default image is the paperkit pool's.
 src/mikemol/buildtel/image_digest.py|default-image-is-the-other-pool|else IMAGES\[0\]|else IMAGES[1]|def=main
+
+# bb_log.py `invocation_id`: the bare id of an id or of the URL bazel printed.
+src/mikemol/buildtel/bb_log.py|url-kept-whole|if mark else given|if False else given|def=invocation_id
+src/mikemol/buildtel/bb_log.py|trailing-slash-kept|tail\.strip\("/"\)|tail|def=invocation_id
+
+# bb_log.py `post`: a missing log is never read as an empty one.
+src/mikemol/buildtel/bb_log.py|http-error-read-as-a-chunk|if resp\.status != HTTP_OK:|if False:|def=post
+src/mikemol/buildtel/bb_log.py|non-object-body-trusted|if not isinstance\(raw, dict\):|if False:|def=post
+src/mikemol/buildtel/bb_log.py|non-string-chunk-trusted|if not isinstance\(buffer, str\) or not isinstance\(following, str\):|if False:|def=post
+src/mikemol/buildtel/bb_log.py|next-chunk-ignored|record\.get\("nextChunkId", ""\)|""|def=post
+src/mikemol/buildtel/bb_log.py|bad-base64-raises-unwrapped|except \(binascii\.Error, ValueError\) as problem:|except KeyError as problem:|def=post
+
+# bb_log.py `collect`: bounded, and every page folded in order.
+src/mikemol/buildtel/bb_log.py|stuck-chunk-id-followed|if not following or following == chunk_id:|if not following:|def=collect
+src/mikemol/buildtel/bb_log.py|last-chunk-dropped|if not following or following == chunk_id:|if False:|def=collect
+src/mikemol/buildtel/bb_log.py|first-page-only|chunk_id = following|break|def=collect
+
+# bb_log.py `last_lines` and `failures`: the tail is the LAST lines, newline-terminated, and a failing
+# test's whole block (to the closing rule) is picked beside errors and failed targets.
+src/mikemol/buildtel/bb_log.py|zero-count-keeps-everything|if count > 0 else \[\]|if count >= 0 else []|def=last_lines
+src/mikemol/buildtel/bb_log.py|first-lines-kept|lines\[-count:\]|lines[:count]|def=last_lines
+src/mikemol/buildtel/bb_log.py|tail-lines-unterminated|f"\{line\}\\n" for line in kept|line for line in kept|def=last_lines
+src/mikemol/buildtel/bb_log.py|test-block-never-closes|if line\.startswith\(BLOCK_CLOSE\):|if False:|def=failures
+src/mikemol/buildtel/bb_log.py|test-block-never-opens|if line\.startswith\(BLOCK_OPEN\):|if False:|def=failures
+src/mikemol/buildtel/bb_log.py|error-lines-not-picked|line\.startswith\(FAILURE_PREFIXES\) or FAILED_WORD in line|FAILED_WORD in line|def=failures
+src/mikemol/buildtel/bb_log.py|failed-targets-not-picked|line\.startswith\(FAILURE_PREFIXES\) or FAILED_WORD in line|line.startswith(FAILURE_PREFIXES)|def=failures
+src/mikemol/buildtel/bb_log.py|every-line-picked|elif line\.startswith\(FAILURE_PREFIXES\) or FAILED_WORD in line:|else:|def=failures
+src/mikemol/buildtel/bb_log.py|picked-lines-unterminated|f"\{line\}\\n" for line in picked|line for line in picked|def=failures
+
+# bb_log.py `_parse`, `_render` and `main`: a flag is not an id, `--tail` wants a number, usage and
+# unreachable are distinct exits, and a log read empty says so rather than staying silent.
+src/mikemol/buildtel/bb_log.py|flag-taken-as-the-id| or args\[0\]\.startswith\("-"\)||def=_parse
+src/mikemol/buildtel/bb_log.py|empty-id-accepted|if not invoked:|if False:|def=_parse
+src/mikemol/buildtel/bb_log.py|tail-count-not-a-number-accepted| and rest\[1\]\.isdigit\(\)||def=_parse
+src/mikemol/buildtel/bb_log.py|tail-flag-unchecked|rest\[0\] == TAIL_FLAG and ||def=_parse
+src/mikemol/buildtel/bb_log.py|default-shows-everything|\(\): Request\(invoked\),|(): Request(invoked, count=None),|def=_parse
+src/mikemol/buildtel/bb_log.py|failures-flag-shows-everything|count=None, only_failures=True|count=None|def=_parse
+src/mikemol/buildtel/bb_log.py|failures-never-selected|if request\.only_failures:|if False:|def=_render
+src/mikemol/buildtel/bb_log.py|tail-never-applied|text if request\.count is None else last_lines\(text, request\.count\)|text|def=_render
+src/mikemol/buildtel/bb_log.py|unreachable-reported-as-usage|return EXIT_UNREACHABLE|return EXIT_USAGE|def=main
+src/mikemol/buildtel/bb_log.py|empty-log-not-said|if not text:|if False:|def=main
+src/mikemol/buildtel/bb_log.py|usage-error-exits-clean|return EXIT_USAGE|return 0|def=main
+
+# buildpulse.py reads: the NEWEST progress and the newest failure line of the log's tail, parsed.
+src/mikemol/buildtel/buildpulse.py|oldest-progress-read|last: object = hits\[-1\]|last: object = hits[0]|def=read_progress
+src/mikemol/buildtel/buildpulse.py|counter-commas-not-stripped|done\.replace\(",", ""\)|done|def=read_progress
+src/mikemol/buildtel/buildpulse.py|no-progress-not-zero|if not isinstance\(hits, list\) or not hits:|if False:|def=read_progress
+src/mikemol/buildtel/buildpulse.py|oldest-trouble-read|hits\[-1\]\[:TROUBLE_MAX\]|hits[0][:TROUBLE_MAX]|def=read_trouble
+src/mikemol/buildtel/buildpulse.py|trouble-line-not-clipped|hits\[-1\]\[:TROUBLE_MAX\]|hits[-1]|def=read_trouble
+src/mikemol/buildtel/buildpulse.py|clean-tail-reads-trouble|if hits else ""|if True else ""|def=read_trouble
+src/mikemol/buildtel/buildpulse.py|dead-build-reads-alive|return status == 0|return status != 0|def=build_alive
+src/mikemol/buildtel/buildpulse.py|absent-state-raises|if not state\.exists\(\):|if False:|def=load
+src/mikemol/buildtel/buildpulse.py|non-object-sample-trusted|if not isinstance\(rec, dict\):|if False:|def=load
+src/mikemol/buildtel/buildpulse.py|sample-without-a-total-trusted| and isinstance\(total, float\)||def=load
+
+# buildpulse.py `rate`, `stalled` and `eta`: the rate is against the OLDEST sample inside the
+# window, a freeze is measured from the oldest agreeing sample after the last disagreeing one, and an
+# estimate is withheld when it cannot be honest.
+src/mikemol/buildtel/buildpulse.py|window-edge-excluded|now\.at - p\.at <= window|now.at - p.at < window|def=rate
+src/mikemol/buildtel/buildpulse.py|newest-sample-is-the-reference|ref = inside\[0\]|ref = inside[-1]|def=rate
+src/mikemol/buildtel/buildpulse.py|clock-standing-still-rated|if now\.at <= ref\.at:|if now.at < ref.at:|def=rate
+src/mikemol/buildtel/buildpulse.py|rate-in-seconds-not-minutes|mins = \(now\.at - ref\.at\) / SECONDS_PER_MINUTE|mins = now.at - ref.at|def=rate
+src/mikemol/buildtel/buildpulse.py|freeze-dated-from-the-first-move|since = max\(moved\) if moved else None|since = min(moved) if moved else None|def=stalled
+src/mikemol/buildtel/buildpulse.py|freeze-dated-from-the-newest-agreement|held = \(now\.at - min\(agreeing\)\)|held = (now.at - max(agreeing))|def=stalled
+src/mikemol/buildtel/buildpulse.py|freeze-at-the-edge-not-a-stall|held \* SECONDS_PER_MINUTE >= stall_after|held * SECONDS_PER_MINUTE > stall_after|def=stalled
+src/mikemol/buildtel/buildpulse.py|sample-at-the-move-counts-as-agreeing|and \(since is None or p\.at > since\)|and (since is None or p.at >= since)|def=stalled
+src/mikemol/buildtel/buildpulse.py|no-history-stalled|if not past:|if past:|def=stalled
+src/mikemol/buildtel/buildpulse.py|estimate-at-zero-rate|if per_min <= 0 or now\.total <= now\.done:|if now.total <= now.done:|def=eta
+src/mikemol/buildtel/buildpulse.py|estimate-when-done|if per_min <= 0 or now\.total <= now\.done:|if per_min <= 0:|def=eta
+src/mikemol/buildtel/buildpulse.py|hour-boundary-in-minutes|if mins >= MINUTES_PER_HOUR:|if mins > MINUTES_PER_HOUR:|def=eta
+
+# buildpulse.py `main`: each terminal state is named and exits non-zero, and no log is exit 2.
+src/mikemol/buildtel/buildpulse.py|no-log-exits-clean|return EXIT_NO_LOG|return 0|def=main
+src/mikemol/buildtel/buildpulse.py|failure-signature-exits-clean|if trouble:|if False:|def=main
+src/mikemol/buildtel/buildpulse.py|gone-build-exits-clean|if not is_alive\(\):|if False:|def=main
+src/mikemol/buildtel/buildpulse.py|stall-exits-clean|if held:|if False:|def=main
+src/mikemol/buildtel/buildpulse.py|first-sample-not-recorded|append\(state, now\)|pass|def=main

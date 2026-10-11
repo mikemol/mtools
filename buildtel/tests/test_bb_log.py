@@ -155,3 +155,37 @@ def test_anything_but_an_id_with_one_known_flag_is_a_usage_error() -> None:
         out, err = io.StringIO(), io.StringIO()
         assert bb_log.main(list(argv), _pages("x\n"), out, err) == bb_records.EXIT_USAGE
         assert "usage: mikemol-buildlog" in err.getvalue()
+
+
+def test_a_trailing_slash_after_the_id_in_a_url_is_dropped() -> None:
+    """The id is the text after `invocation/` without the slash a pasted URL may end in."""
+    assert bb_log.invocation_id(f"{URL}/") == INVOCATION
+
+
+def test_a_repeating_next_id_is_read_once_more_and_then_stops() -> None:
+    """An id that advanced once and then repeats ends the read at its second sight."""
+
+    def repeating(invoked: str, chunk_id: str) -> tuple[str, str]:
+        del invoked, chunk_id
+        return "again\n", "same"
+
+    assert bb_log.collect(INVOCATION, repeating) == "again\nagain\n"
+
+
+def test_each_picked_failure_line_ends_its_own_line() -> None:
+    """Two failure lines come back as two lines, not run together."""
+    assert bb_log.failures("ERROR: a\nFAILED: b\n") == "ERROR: a\nFAILED: b\n"
+
+
+def test_a_url_with_no_id_after_it_is_a_usage_error() -> None:
+    """`invocation/` with nothing after it names no invocation, so nothing is fetched."""
+    out, err = io.StringIO(), io.StringIO()
+    assert bb_log.main(["invocation/"], _pages("x\n"), out, err) == bb_records.EXIT_USAGE
+    assert not out.getvalue()
+
+
+def test_a_count_after_a_flag_that_is_not_tail_is_a_usage_error() -> None:
+    """Only `--tail` takes a count: any other word with a number after it is refused."""
+    out, err = io.StringIO(), io.StringIO()
+    code = bb_log.main([INVOCATION, "--bogus", "5"], _pages("x\n"), out, err)
+    assert code == bb_records.EXIT_USAGE

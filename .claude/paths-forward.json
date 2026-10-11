@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 122,
+      "ticks_blocked": 123,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 121,
+      "ticks_blocked": 122,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 126,
+      "ticks_blocked": 127,
       "completed": null
     },
     {
@@ -11483,7 +11483,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
       "last_worked": "2026-10-11T16:02:11Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -16154,7 +16154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16689,7 +16689,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16984,7 +16984,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 49,
+      "ticks_blocked": 50,
       "completed": null
     },
     {
@@ -17494,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -17535,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -17558,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -17981,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -18155,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -18934,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -20643,7 +20643,7 @@
     {
       "symbol": "W1009",
       "title": "mutation: declare buildtel's bb_log and buildpulse modules",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "mutation"
@@ -20655,8 +20655,9 @@
       "issued_at": "2026-10-11T16:11:29Z",
       "minted_during": "tick",
       "caused_by": "W670",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-11T17:56:05Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1010",
@@ -20697,21 +20698,21 @@
     {
       "symbol": "W1012",
       "title": "mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist merge)",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "mutation"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: 9fad584 [PUSHED]: pytestspec plugin declares 27 defect classes, 24 witnesses in tests/test_plugin_units.py, 18 warrants; bazel :mutants (2 shards), test_plugin_units, ruff, mypy pass, no survivors or unapplied",
       "issued_at": "2026-10-11T16:13:52Z",
       "minted_during": "tick",
       "caused_by": "W670",
-      "last_worked": "2026-10-11T17:36:17Z",
+      "last_worked": "2026-10-11T17:56:04Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261011T175604Z"
     }
   ],
   "residue": [

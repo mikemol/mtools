@@ -344,3 +344,48 @@ def test_main_exits_0_for_an_alive_moving_build(tmp_path: Path) -> None:
     log = _write_log(tmp_path, "[43 / 100] eval\n")
     buildpulse.append(Path(str(log) + ".pulse"), Sample(at=_T0, done=_DONE_BEFORE, total=100))
     assert _run(log, alive=True, clock=_T0 + 40 * _MINUTE) == 0
+
+
+def test_load_skips_a_sample_that_has_no_total(tmp_path: Path) -> None:
+    """A record with an `at` and a `done` but no `total` is skipped, not read as a sample."""
+    state = tmp_path / "s.pulse"
+    state.write_text('{"at": 1.0, "done": 2.0}\n', encoding="utf-8")
+    assert buildpulse.load(state) == []
+
+
+def test_rate_takes_a_reference_exactly_one_window_old() -> None:
+    """A sample exactly at the window's edge is inside it: 70 actions in 10 minutes is 7/min."""
+    past = [Sample(at=_T0, done=0, total=_TOTAL)]
+    now = Sample(at=_T0 + 600.0, done=70, total=_TOTAL)
+    assert buildpulse.rate(now, past, 600.0) == (7.0, 10.0)
+
+
+def test_a_freeze_runs_from_the_first_agreeing_sample_after_the_last_move() -> None:
+    """Earlier moves and agreements do not count: only those since the counter last changed."""
+    steps = ((0, 5), (100, 4), (200, 5), (300, 6), (400, 5), (500, 5))
+    past = [Sample(at=_T0 + at, done=done, total=_TOTAL) for at, done in steps]
+    now = Sample(at=_T0 + 1000.0, done=5, total=_TOTAL)
+    assert buildpulse.stalled(now, past, 0.0) == pytest.approx(10.0)
+
+
+def test_a_freeze_exactly_as_long_as_the_threshold_is_a_stall() -> None:
+    """Thirty frozen minutes against a thirty-minute threshold is a stall, not almost one."""
+    past = [Sample(at=_T0, done=_DONE_BEFORE, total=_TOTAL)]
+    now = Sample(at=_T0 + 1800.0, done=_DONE_BEFORE, total=_TOTAL)
+    assert buildpulse.stalled(now, past, 1800.0) == pytest.approx(30.0)
+
+
+def test_a_sample_taken_at_the_instant_of_the_move_does_not_start_the_freeze() -> None:
+    """A sample stamped with the move's own time is not after it, so it dates no freeze."""
+    past = [
+        Sample(at=_T0 + 100.0, done=_DONE_BEFORE - 1, total=_TOTAL),
+        Sample(at=_T0 + 100.0, done=_DONE_BEFORE, total=_TOTAL),
+    ]
+    now = Sample(at=_T0 + 1000.0, done=_DONE_BEFORE, total=_TOTAL)
+    assert not buildpulse.stalled(now, past, 0.0)
+
+
+def test_an_estimate_of_exactly_an_hour_reads_in_hours() -> None:
+    """Sixty minutes left is `1.0h`, not `60m`."""
+    now = Sample(at=_T0, done=0, total=60)
+    assert buildpulse.eta(now, 1.0) == " · ~1.0h left at this rate (linear est.)"
