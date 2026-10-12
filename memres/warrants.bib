@@ -710,3 +710,80 @@
   claim  = {The limits would cross, and no allowance could satisfy both.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_rail_whose_ceiling_is_below_its_floor_is_refused},
 }
+
+@misc{memres-railrun-available-and-free-swap-are-read-in-megabytes,
+  section = {railrun},
+  title  = {2048 kB is 2 MB and 1024 kB is 1 MB; every other line is ignored},
+  claim  = {2048 kB is 2 MB and 1024 kB is 1 MB; every other line is ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_available_and_free_swap_are_read_in_megabytes},
+}
+
+@misc{memres-railrun-meminfo-with-no-swap-line-reads-zero-swap,
+  section = {railrun},
+  title  = {A host with no swap still has a level},
+  claim  = {A host with no swap still has a level.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_meminfo_with_no_swap_line_reads_zero_swap},
+}
+
+@misc{memres-railrun-meminfo-with-no-available-line-is-no-reading,
+  section = {railrun},
+  title  = {With no MemAvailable there is nothing to feed the rail},
+  claim  = {With no MemAvailable there is nothing to feed the rail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_meminfo_with_no_available_line_is_no_reading},
+}
+
+@misc{memres-railrun-line-that-is-short-or-not-a-number-is-not-read,
+  section = {railrun},
+  title  = {`MemAvailable:` alone, or with a word, is a malformed line, not a zero},
+  claim  = {`MemAvailable:` alone, or with a word, is a malformed line, not a zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_line_that_is_short_or_not_a_number_is_not_read},
+}
+
+@misc{memres-railrun-level-counts-only-what-is-available-unless-swap-is-weighted,
+  section = {railrun},
+  title  = {Weight 0 is the default and counts nothing of free swap; a weight adds that share of it},
+  claim  = {Weight 0 is the default and counts nothing of free swap; a weight adds that share of it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_the_level_counts_only_what_is_available_unless_swap_is_weighted},
+}
+
+@misc{memres-railrun-smaller-allowance-is-a-shrink-and-nothing-else,
+  section = {railrun},
+  title  = {Evaluations and shrinks rise by one; recoveries and holds do not},
+  claim  = {Evaluations and shrinks rise by one; recoveries and holds do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_smaller_allowance_is_a_shrink_and_nothing_else},
+}
+
+@misc{memres-railrun-larger-allowance-is-a-recovery-and-nothing-else,
+  section = {railrun},
+  title  = {Evaluations and recoveries rise by one; shrinks and holds do not},
+  claim  = {Evaluations and recoveries rise by one; shrinks and holds do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_larger_allowance_is_a_recovery_and_nothing_else},
+}
+
+@misc{memres-railrun-unchanged-allowance-is-a-hold-and-nothing-else,
+  section = {railrun},
+  title  = {Evaluations and holds rise by one; shrinks and recoveries do not},
+  claim  = {Evaluations and holds rise by one; shrinks and recoveries do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_an_unchanged_allowance_is_a_hold_and_nothing_else},
+}
+
+@misc{memres-railrun-counts-accumulate-across-evaluations,
+  section = {railrun},
+  title  = {Three evaluations: a shrink, a hold, a recovery},
+  claim  = {Three evaluations: a shrink, a hold, a recovery.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_counts_accumulate_across_evaluations},
+}
+
+@misc{memres-railrun-metrics-carry-the-allowance-the-reading-and-the-counts,
+  section = {railrun},
+  title  = {Every series is present once with its value, and the text ends in a newline},
+  claim  = {Every series is present once with its value, and the text ends in a newline.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_the_metrics_carry_the_allowance_the_reading_and_the_counts},
+}
+
+@misc{memres-railrun-reading-gauges-are-absent-while-there-is-no-reading,
+  section = {railrun},
+  title  = {Before the rail has two samples only the allowance and the counts are published},
+  claim  = {Before the rail has two samples only the allowance and the counts are published.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_the_reading_gauges_are_absent_while_there_is_no_reading},
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1042,
+  "counter": 1043,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 133,
+      "ticks_blocked": 134,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 132,
+      "ticks_blocked": 133,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 137,
+      "ticks_blocked": 138,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 71,
+      "ticks_blocked": 72,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16966,24 +16966,22 @@
     {
       "symbol": "W833",
       "title": "replace rubric.tsv with rubric.jsonl across mtools: 32 files, paper.toml, BUILD inputs, tests, and the pre-commit's grep|cut over the rubric",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "rubric",
         "format",
         "jsonl"
       ],
-      "blocked_on": [
-        "paperkit:W295"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Operator 2026-10-06: tsv to jsonl. Blocked on paperkit:W295 (the reader and paperkit-rubric). Then: convert each dist's rubric.tsv (32: atomicwrite audiostruct bibparse buildtel check_mutants check_ratchet check_ruff corpus debtplan fence gatecheck gmailstruct grade gradekit hooks icsstruct importdag ledger mdstruct memres mutantcell mutation pathsforward pathwalk pkgbuild pycodemod pytestspec ratchet rules_py transcriptstruct treeio witness), point each paper.toml rubric = at it (25), rename the BUILD data inputs, update tests that name rubric.tsv (hooks test_bar_fires, test_no_verify, test_standing_facts, standing_test.rego, grade test_ladder, check_mutants MODULE), and replace .githooks/pre-commit lines 711-719 (grep -v ^# | cut -f1 | sort -u, a textual query over a structured file) with paperkit-rubric --keys. Pin the paperkit sha that carries the reader. Four other tracked .tsv files (.claude/design/*.tsv, pycodemod/differential/origin-modes.tsv) are data, not rubrics: survey for a follow-up.",
-      "evidence": "",
+      "evidence": "2026-10-12: 2026-10-12 paperkit:W295 LANDED (paperkit 16a7b88, pushed; paperkit-d8). paperkit/rubric.py is the one reader: a rubric.jsonl (one object per line {key,title[,scheme]}) or the TSV, both to the same [key, title[, scheme]] rows; bib.rubric_path picks rubric.jsonl when it exists and no [paper] rubric is declared (no paper.toml edit needed). Console script paperkit-rubric, in paperkit's own wheel, so it exists on a pin to paperkit 16a7b88 or later: paperkit-rubric --to-jsonl FILE (JSON Lines to stdout), paperkit-rubric --keys FILE (sorted unique keys, to replace the pre-commit's grep|cut|sort); strict argv (unknown flag rc 2, writes nothing); refusals name file:line (invalid JSON, non-object row, unknown or repeated field, missing key or title, empty scheme, duplicate key). Their round trip of 15 files had 0 mismatches. WATCH: comment lines (#) in the TSVs do NOT survive (JSON Lines has none): move each file's comment to its neighbouring doc. TSV support is dropped last, after the fleet has moved, so there is no deadline. First step for this card: pin a paperkit sha at or after 16a7b88 where mtools gates can run paperkit-rubric (paperkit:W289 is paperkit's consumption of its own wheel; the pin route is to be read), then convert one dist end to end (warrants tooling, mikemol-gen-warrants, already writes whichever of rubric.jsonl or rubric.tsv a dist has) before the other 31.",
       "issued_at": "2026-10-06T19:33:31Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
-      "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 60,
+      "last_worked": "2026-10-12T08:26:50Z",
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -17493,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -17534,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -17557,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -17980,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -18154,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -18933,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -20952,7 +20950,6 @@
         "bazel"
       ],
       "blocked_on": [
-        "W1033",
         "W1034",
         "W1035"
       ],
@@ -20962,7 +20959,7 @@
       "issued_at": "2026-10-12T02:18:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-12T04:39:26Z",
+      "last_worked": "2026-10-12T08:32:41Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21137,7 +21134,7 @@
     {
       "symbol": "W1033",
       "title": "memres gains a pure rail model: level, slope and acceleration from a window of memory samples, and a next_allowance policy that shrinks parallelism when use accelerates and recovers when it decays",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1034"
       ],
@@ -21147,19 +21144,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 210c7a7 [PUSHED]: memres/rail.py, the pure second-order rail: reading (finite differences of level, slope, acceleration), projected_mb (second order, capped at the measured level), capacity (floor and ceiling), next_allowance (shrink at once, recover one cell); 17 tests and warrants; memres tests, mypy, ruff and the mutation grid passed, and the commit gate passed",
       "issued_at": "2026-10-12T04:37:51Z",
       "minted_during": "tick",
       "caused_by": "W1024",
-      "last_worked": "2026-10-12T07:55:49Z",
+      "last_worked": "2026-10-12T08:31:36Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T083136Z"
     },
     {
       "symbol": "W1034",
       "title": "A memory-rail sampler applies the allowance by resizing the fence ledger total (and held leases once they can be resized) and writes its engagement counts as a textfile",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1035"
       ],
@@ -21174,8 +21171,9 @@
       "issued_at": "2026-10-12T04:37:52Z",
       "minted_during": "tick",
       "caused_by": "W1024",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T08:31:37Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1035",
@@ -21338,6 +21336,27 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-a9",
       "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1043",
+      "title": "pycodemod gains a docstring-shape verb: split a multi-line first paragraph at its first sentence end onto its own line (D205), judged like judged-fix, dry run by default, --write to apply",
+      "status": "ready",
+      "enables": [
+        "paperkit:W335"
+      ],
+      "touches": [
+        "pycodemod",
+        "docstring"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 paperkit:W335/W305 census (paperkit repo-wide ruff --statistics, today): ANN001 753, D205 279 (multi-line summary, no blank line after it), D401 178 (non-imperative), D209 28, D400 16, D415 10. judged-fix --select ANN,FA --unsafe found nothing for ANN001 (needs inference; typed-args is that verb, driven by paperkit as paperkit:W336) and rejected honestly on layout.py (46 to 46). Ask: a docstring-shape verb that, for a docstring whose first paragraph spans several lines, splits at the first sentence end (or the first ' - ' or ':' if none) onto its own line followed by a blank line, re-wrapping the remainder; ruff --fix already handles D209; judged exactly like judged-fix (a file is accepted only if it still parses, its D205/D209 count drops and no other ruff rule rises); dry run by default, --write to apply, --selftest CMD as in W978. D401 (imperative mood) is NOT to be automated without a verb list. paperkit offered to write it but prefers the owner of the judged-fix machinery (pycodemod) to own it. Read first: pycodemod's judged-fix and its --selftest seam (W978), and whether libcst keeps docstring text byte-exact apart from the split.",
+      "issued_at": "2026-10-12T08:32:41Z",
+      "minted_during": "tick",
+      "caused_by": "paperkit:W335",
+      "last_worked": "2026-10-12T08:32:49Z",
       "ticks_blocked": 0
     }
   ],
