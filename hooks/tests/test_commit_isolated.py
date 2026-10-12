@@ -317,3 +317,52 @@ def test_the_routing_line_names_the_path_its_reason_and_the_lock() -> None:
     assert isolated == "mikemol-commit: path: isolated (why); lock: held"
     plain = ck.routing_line(isolated=False, reason="because", lock="none (x)")
     assert plain == "mikemol-commit: path: plain (because); lock: none (x)"
+
+
+def _ignoring_dir(root: Path) -> None:
+    """Make `vend/` ignore everything in it, as a wheels directory does (W1039)."""
+    (root / "vend").mkdir()
+    (root / "vend" / ".gitignore").write_text("*\n", encoding="utf-8")
+    _git(root, "add", "-f", "vend/.gitignore")
+    _git(root, "commit", "--quiet", "-m", "vend")
+
+
+def test_an_ignored_file_named_exactly_is_committed_on_both_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1039: a new, ignored file the caller names is theirs to add, isolated or plain."""
+    root = _decoy(tmp_path, monkeypatch)
+    _ignoring_dir(root)
+    (root / "vend" / "new.whl").write_text(_EDITED, encoding="utf-8")
+    request = ck.Request(waypoint="W1", subject="vend", paths=("vend/new.whl",))
+    code, shown = _isolated(root, request)
+    assert code == 0, shown
+    assert _git(root, "show", "HEAD:vend/new.whl") == _EDITED
+    (root / "vend" / "plain.whl").write_text(_PEER, encoding="utf-8")
+    plain = ck.Request(waypoint="W1", subject="vend", paths=("vend/plain.whl",))
+    assert ck.prepare(root, plain) is not None
+    assert "vend/plain.whl" in _git(root, "diff", "--cached", "--name-only")
+
+
+def test_an_ignored_file_under_a_named_directory_is_not_taken(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A directory expands to what is not ignored, so a scratch file cannot ride in."""
+    root = _decoy(tmp_path, monkeypatch)
+    _ignoring_dir(root)
+    (root / "vend" / "scratch.whl").write_text(_PEER, encoding="utf-8")
+    (root / "a.txt").write_text(_EDITED, encoding="utf-8")
+    request = ck.Request(waypoint="W1", subject="dir", paths=("a.txt", "vend"))
+    code, shown = _isolated(root, request)
+    assert code == 0, shown
+    held = _git(root, "ls-tree", "-r", "--name-only", "HEAD", "vend").split()
+    assert held == ["vend/.gitignore"]
+
+
+def test_only_a_regular_file_is_forced(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A directory and a missing path go to the plain add; no link is created to test the rest."""
+    root = _decoy(tmp_path, monkeypatch)
+    assert ck.add_argv_list(root, ["a.txt", "gone.txt", "."]) == [
+        ["add", "-f", "--", "a.txt"],
+        ["add", "-A", "--", "gone.txt", "."],
+    ]

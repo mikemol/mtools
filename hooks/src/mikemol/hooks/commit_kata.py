@@ -37,11 +37,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.isolated import commit_isolated
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 
 wait_for_load = _wait_for_load
+add_argv_list = _add_argv_list
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -293,9 +295,9 @@ def prepare(root: Path, request: Request, run: Runner = run_git) -> list[str] | 
 
     """
     wanted = wanted_of(root, request, run)
-    for target in wanted:
-        if (root / target).exists():
-            run(["-C", str(root), "add", "-A", "--", target])
+    present = [target for target in wanted if (root / target).exists()]
+    for argv in add_argv_list(root, present):
+        run(["-C", str(root), *argv])
     pathspecs = [target for target in wanted if tracked(root, target, run)]
     if not pathspecs:
         return None

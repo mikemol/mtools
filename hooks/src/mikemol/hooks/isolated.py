@@ -47,6 +47,36 @@ def _failed(done: Done) -> bool:
     return done.returncode != 0
 
 
+def exact_files(root: Path, paths: Sequence[str]) -> list[str]:
+    """Pick the paths the caller named exactly: a regular file, never a link or a directory.
+
+    ⚑ BY INTENT, NOT BY TRACKING (W1039). A re-vendor writes new sha-named wheels under a directory
+    that ignores everything; they are untracked AND ignored, and a plain `add` refuses them. A file
+    the caller names is theirs to add; what a directory expands to is not, so an ignored scratch
+    file cannot ride in. A link is refused as data (no-symlinks ruling), so it is never forced.
+
+    Returns:
+        the named paths that exist as regular files, in the order given.
+
+    """
+    return [p for p in paths if (root / p).is_file() and not (root / p).is_symlink()]
+
+
+def add_argv_list(root: Path, paths: Sequence[str]) -> list[list[str]]:
+    """Plan the `git add` calls for `paths`: the exact files forced, then the rest as before.
+
+    Returns:
+        the argument lists (after `git`), the forced add first when there is anything to force.
+
+    """
+    forced = exact_files(root, paths)
+    rest = [p for p in paths if p not in forced]
+    plan = [["add", "-f", "--", *forced]] if forced else []
+    if rest:
+        plan.append(["add", "-A", "--", *rest])
+    return plan
+
+
 def commit_isolated(
     root: Path,
     paths: Sequence[str],
@@ -69,9 +99,10 @@ def commit_isolated(
     index.unlink(missing_ok=True)
     scope = {"GIT_DIR": str(git_dir), "GIT_INDEX_FILE": str(index)}
     read = run(["read-tree", "HEAD"], scope, root)
-    added = run(["add", "-A", "--", *paths], {**scope, "GIT_WORK_TREE": str(root)}, root)
+    tracked_tree = {**scope, "GIT_WORK_TREE": str(root)}
+    adds = [run(argv, tracked_tree, root) for argv in add_argv_list(root, paths)]
     tree = run(["write-tree"], scope, root)
-    for step in (read, added, tree):
+    for step in (read, *adds, tree):
         if _failed(step):
             return step
     with Snapshot(root.name, namespace) as snap:

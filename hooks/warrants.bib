@@ -8535,3 +8535,24 @@
             venv's python3, found by glob so a new one cannot escape the rule.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_every_launcher_that_runs_the_bazel_venv_forbids_bytecode_before_it_does},
 }
+
+@misc{hooks-commit-isolated-ignored-file-named-exactly-is-committed-on-both-paths,
+  section = {commit_isolated},
+  title  = {W1039: a new, ignored file the caller names is theirs to add, isolated or plain},
+  claim  = {W1039: a new, ignored file the caller names is theirs to add, isolated or plain.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_ignored_file_named_exactly_is_committed_on_both_paths},
+}
+
+@misc{hooks-commit-isolated-ignored-file-under-a-named-directory-is-not-taken,
+  section = {commit_isolated},
+  title  = {A directory expands to what is not ignored, so a scratch file cannot ride in},
+  claim  = {A directory expands to what is not ignored, so a scratch file cannot ride in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_ignored_file_under_a_named_directory_is_not_taken},
+}
+
+@misc{hooks-commit-isolated-only-a-regular-file-is-forced,
+  section = {commit_isolated},
+  title  = {A directory and a missing path go to the plain add; no link is created to test the rest},
+  claim  = {A directory and a missing path go to the plain add; no link is created to test the rest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_only_a_regular_file_is_forced},
+}
