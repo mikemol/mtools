@@ -1665,3 +1665,7 @@
 2026-10-12T09:01:11Z  tick  W1035 advanced  sweep     "W1034 CLI landed 435fb26; paperkit letter written (W1035); W1024 closed; W1038 wording edited, gate running"
 2026-10-12T09:12:36Z  tick  W1039 advanced  mechanism "exact-file force-add (isolated.py add_argv_list) + 3 tests; gate running"
 2026-10-12T09:42:07Z  tick  W1041 advanced  mechanism "payload stanza caps blocked_on at LIST_CAP with (+N more); tests; gate running"
+2026-10-12T11:06:32Z  tick  W1044 minted    -         "pycodemod docshape.py: the pure planner that splits a docstring's multi-line first paragraph at its first sentence end (D205), text in and Plan out, refusing what it cannot split"  evidence=W1043
+2026-10-12T11:06:32Z  tick  W1045 minted    -         "pycodemod judge takes a measurement seam, so a codemod can be judged by ruff rule counts as typed-args is by mypy messages"  evidence=W1043
+2026-10-12T11:06:33Z  tick  W1046 minted    -         "pycodemod docshape verb: wire the docshape planner under the ruff-count judge, dry run by default, --write and --selftest as judged-fix"  evidence=W1043
+2026-10-12T11:09:56Z  tick  W1044 advanced  collapse  "W1043 atomized into W1044/W1045/W1046; W1044 docshape.py planner + tests written, gate running"

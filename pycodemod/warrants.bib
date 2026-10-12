@@ -6133,3 +6133,109 @@
             untouched.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_judgedfix.py -k test_a_fix_mypy_accepts_but_the_selftest_refuses_is_not_written},
 }
+
+@misc{pycodemod-docshape-two-line-paragraph-splits-at-its-first-sentence-end,
+  section = {docshape},
+  title  = {The summary takes the first sentence; the rest follows a blank line},
+  claim  = {The summary takes the first sentence; the rest follows a blank line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_two_line_paragraph_splits_at_its_first_sentence_end},
+}
+
+@misc{pycodemod-docshape-summary-on-the-second-line-is-split-in-place,
+  section = {docshape},
+  title  = {A docstring that opens with a bare quote keeps its opening line},
+  claim  = {A docstring that opens with a bare quote keeps its opening line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_summary_on_the_second_line_is_split_in_place},
+}
+
+@misc{pycodemod-docshape-closing-quote-after-the-last-word-stays-there,
+  section = {docshape},
+  title  = {The remainder's last line takes the closing quote when the paragraph ended the docstring},
+  claim  = {The remainder's last line takes the closing quote when the paragraph ended the
+            docstring.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_closing_quote_after_the_last_word_stays_there},
+}
+
+@misc{pycodemod-docshape-later-paragraphs-are-untouched,
+  section = {docshape},
+  title  = {Only the first paragraph changes; what follows the blank line is byte-for-byte},
+  claim  = {Only the first paragraph changes; what follows the blank line is byte-for-byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_later_paragraphs_are_untouched},
+}
+
+@misc{pycodemod-docshape-correct-docstring-is-left-alone-and-nothing-is-counted,
+  section = {docshape},
+  title  = {A summary already followed by a blank line, and a one-line docstring, plan no change},
+  claim  = {A summary already followed by a blank line, and a one-line docstring, plan no change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_correct_docstring_is_left_alone_and_nothing_is_counted},
+}
+
+@misc{pycodemod-docshape-remainder-is-wrapped-at-the-width,
+  section = {docshape},
+  title  = {A long remainder breaks into lines no wider than the width, indent included},
+  claim  = {A long remainder breaks into lines no wider than the width, indent included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_the_remainder_is_wrapped_at_the_width},
+}
+
+@misc{pycodemod-docshape-backslash-refuses-the-paragraph,
+  section = {docshape},
+  title  = {Joining lines around a backslash could change meaning, so it is a worklist row},
+  claim  = {Joining lines around a backslash could change meaning, so it is a worklist row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_backslash_refuses_the_paragraph},
+}
+
+@misc{pycodemod-docshape-indented-or-bulleted-continuation-refuses,
+  section = {docshape},
+  title  = {Layout that carries meaning (a list, a doctest, a code block) is never joined},
+  claim  = {Layout that carries meaning (a list, a doctest, a code block) is never joined.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_an_indented_or_bulleted_continuation_refuses},
+}
+
+@misc{pycodemod-docshape-paragraph-with-no-split-point-is-a-worklist-row,
+  section = {docshape},
+  title  = {One sentence over two lines, with no dash or colon, has nowhere to split},
+  claim  = {One sentence over two lines, with no dash or colon, has nowhere to split.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_paragraph_with_no_split_point_is_a_worklist_row},
+}
+
+@misc{pycodemod-docshape-summary-wider-than-the-width-is-refused,
+  section = {docshape},
+  title  = {The verb never trades D205 for E501},
+  claim  = {The verb never trades D205 for E501.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_summary_wider_than_the_width_is_refused},
+}
+
+@misc{pycodemod-docshape-methods-classes-and-the-module-are-all-planned-bottom-up,
+  section = {docshape},
+  title  = {Several docstrings in one file are split in one pass, and the words all survive},
+  claim  = {Several docstrings in one file are split in one pass, and the words all survive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_methods_classes_and_the_module_are_all_planned_bottom_up},
+}
+
+@misc{pycodemod-docshape-second-pass-changes-nothing,
+  section = {docshape},
+  title  = {The planner is idempotent: its own output plans no further change},
+  claim  = {The planner is idempotent: its own output plans no further change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_second_pass_changes_nothing},
+}
+
+@misc{pycodemod-docshape-file-that-does-not-parse-is-returned-with-a-row,
+  section = {docshape},
+  title  = {A syntax error is a worklist row, never a traceback},
+  claim  = {A syntax error is a worklist row, never a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_file_that_does_not_parse_is_returned_with_a_row},
+}
+
+@misc{pycodemod-docshape-raw-prefix-and-single-quotes-are-kept,
+  section = {docshape},
+  title  = {The opening prefix and quote style are carried through unchanged},
+  claim  = {The opening prefix and quote style are carried through unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_raw_prefix_and_single_quotes_are_kept},
+}
+
+@misc{pycodemod-docshape-colon-is-the-fallback-split-point-and-a-dash-is-not,
+  section = {docshape},
+  title  = {With no sentence end that leaves a remainder, ': ' splits; ' - ' would drop the dash},
+  claim  = {With no sentence end that leaves a remainder, ': ' splits; ' - ' would drop the dash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_colon_is_the_fallback_split_point_and_a_dash_is_not},
+}
