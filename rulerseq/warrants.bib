@@ -1,0 +1,100 @@
+
+@misc{rulerseq-ruler-cycle-order-is-the-two-adic-valuation,
+  section = {ruler},
+  title  = {Boundaries 1..8 have orders 0,1,0,2,0,1,0,3 (OEIS A007814)},
+  claim  = {Boundaries 1..8 have orders 0,1,0,2,0,1,0,3 (OEIS A007814).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_cycle_order_is_the_two_adic_valuation},
+}
+
+@misc{rulerseq-ruler-cycle-order-refuses-the-header-rule-and-below,
+  section = {ruler},
+  title  = {Row-boundary 0 (the header rule) has no lowest set bit, so it is an error naming it},
+  claim  = {Row-boundary 0 (the header rule) has no lowest set bit, so it is an error naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_cycle_order_refuses_the_header_rule_and_below},
+}
+
+@misc{rulerseq-ruler-motif-family-is-self-similar-and-prefix-closed,
+  section = {ruler},
+  title  = {Order 1 is a dot and two dashes, order 2 adds four dots, and each order prefixes the next},
+  claim  = {Order 1 is a dot and two dashes, order 2 adds four dots, and each order prefixes the
+            next.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_motif_family_is_self_similar_and_prefix_closed},
+}
+
+@misc{rulerseq-ruler-f-is-length-faithful-over-every-byte,
+  section = {ruler},
+  title  = {The motif of an 8-bit tuple has exactly the tuple's value as its length},
+  claim  = {The motif of an 8-bit tuple has exactly the tuple's value as its length.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_f_is_length_faithful_over_every_byte},
+}
+
+@misc{rulerseq-ruler-tex-names-are-the-original-letters-and-unique,
+  section = {ruler},
+  title  = {A dot is o and a dash is X, so the names are fixed strings and differ per order},
+  claim  = {A dot is o and a dash is X, so the names are fixed strings and differ per order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_tex_names_are_the_original_letters_and_unique},
+}
+
+@misc{rulerseq-ruler-md-reading-doubles-its-on-length-each-order,
+  section = {ruler},
+  title  = {Orders 0..3 give 0.5, 1, 2 and 4 pt on-lengths with a 1.5 pt gap, so no order flattens},
+  claim  = {Orders 0..3 give 0.5, 1, 2 and 4 pt on-lengths with a 1.5 pt gap, so no order flattens.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_md_reading_doubles_its_on_length_each_order},
+}
+
+@misc{rulerseq-ruler-html-reading-names-one-class-per-order,
+  section = {ruler},
+  title  = {Boundary i carries the class rs-<order>},
+  claim  = {Boundary i carries the class rs-<order>.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_html_reading_names_one_class_per_order},
+}
+
+@misc{rulerseq-ruler-unknown-target-is-refused-with-the-original-words,
+  section = {ruler},
+  title  = {The message is the original's, including its omission of html from the list},
+  claim  = {The message is the original's, including its omission of html from the list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_an_unknown_target_is_refused_with_the_original_words},
+}
+
+@misc{rulerseq-ruler-dash-pattern-and-the-gradient-follow-the-motif,
+  section = {ruler},
+  title  = {Order 1 is one dot and two dashes in pt for tikz and in px for the gradient},
+  claim  = {Order 1 is one dot and two dashes in pt for tikz and in px for the gradient.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_dash_pattern_and_the_gradient_follow_the_motif},
+}
+
+@misc{rulerseq-ruler-geometry-is-a-parameter-not-baked,
+  section = {ruler},
+  title  = {Changing the lengths changes the output, so the numbers are not magic},
+  claim  = {Changing the lengths changes the output, so the numbers are not magic.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_geometry_is_a_parameter_not_baked},
+}
+
+@misc{rulerseq-ruler-preamble-has-one-custom-line-per-order,
+  section = {ruler},
+  title  = {A two-variable table has orders 0 and 1, so two lines; zero variables still gives order 0},
+  claim  = {A two-variable table has orders 0 and 1, so two lines; zero variables still gives order
+            0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_preamble_has_one_custom_line_per_order},
+}
+
+@misc{rulerseq-ruler-stylesheet-has-one-class-per-order-with-the-prefix,
+  section = {ruler},
+  title  = {Order 0 is `.rs-0` with the border-image gradient; a prefix renames the class},
+  claim  = {Order 0 is `.rs-0` with the border-image gradient; a prefix renames the class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_stylesheet_has_one_class_per_order_with_the_prefix},
+}
+
+@misc{rulerseq-ruler-any-row-count-gets-a-prefix-of-the-ruler-sequence,
+  section = {ruler},
+  title  = {Thirteen rows, not a power of two, encode as the first twelve boundaries of A007814},
+  claim  = {Thirteen rows, not a power of two, encode as the first twelve boundaries of A007814.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_any_row_count_gets_a_prefix_of_the_ruler_sequence},
+}
+
+@misc{rulerseq-ruler-selftest-passes-and-says-so,
+  section = {ruler},
+  title  = {The ported selftest returns 0 with the five-line banner paperkit's printed},
+  claim  = {The ported selftest returns 0 with the five-line banner paperkit's printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruler.py -k test_the_selftest_passes_and_says_so},
+}

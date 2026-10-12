@@ -1690,3 +1690,5 @@
 2026-10-12T20:12:42Z  tick  W1053 advanced  collapse  "waldo mode: read apply_set and peer_token, wrote .claude/design/W1053-waldo.md, atomized into W1054-W1059; W1052/W1048 re-blocked on luthen W888"
 2026-10-12T20:21:47Z  interrupt W1060 minted    -         "waldo.recipe: an ordered list of waldo phases with before/after gates, halts and a durable phase marker, resumable"  evidence=W1053
 2026-10-12T20:43:56Z  tick  W1055 advanced  mechanism "waldo scaffolded (W1054); compare.py written; W1052 un-cycled (ready; W888 done); luthen rail dormant until ~2026-10-13T20Z; github-8f allowed one commit attempt at a time: W1042 attempt running"
+2026-10-12T21:33:26Z  interrupt W1061 minted    -         "Commit gate runs a dist's mutants only when the commit touches that dist, not every dist on every commit"  evidence=W1045
+2026-10-12T21:35:07Z  tick  W1062 minted    -         "Derive a mutants shard's timeout from its own solo runtime and the measured CPU stretch, and say both in the verdict line"  evidence=W1052

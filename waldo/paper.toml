@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.waldo: Waldo: a narrow tool that holds one privilege and does only a declared action, with a declared allowed set, refuse-with-diff, same-plan apply and witnesses."
+subtitle = "The witnesses behind mikemol.waldo."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "WALDO.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

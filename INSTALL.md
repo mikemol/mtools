@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 28 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 30 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -55,10 +55,12 @@ with no scripts is a library that other distributions import.
 - `pycodemod` (`mikemol-pycodemod`): structural queries over Python source. Script: `mikemol-pycodemod`.
 - `pytestspec` (`mikemol-pytestspec`): a pytest plugin that collects Rego specs. A library, no scripts.
 - `ratchet` (`mikemol-ratchet`): a paydown-only ratchet over a baseline set. Script: `mikemol-ratchet`.
+- `rulerseq` (`mikemol-rulerseq`): Ruler-sequence table rules: the 2-adic valuation of a row boundary rendered as a Morse motif, so a rule's pattern carries a row enumeration's binary structure (WCAG 1.4.1). A library, no scripts.
 - `transcriptstruct` (`mikemol-transcriptstruct`): Claude Code transcripts read losslessly. Script:
   `mikemol-transcriptstruct`.
 - `treeio` (`mikemol-treeio`): one read/write seam over a working tree and git history. Scripts:
   `mikemol-vfs`, `mikemol-edit-snapshot`.
+- `waldo` (`mikemol-waldo`): Waldo: a narrow tool that holds one privilege and does only a declared action, with a declared allowed set, refuse-with-diff, same-plan apply and witnesses. A library, no scripts.
 - `witness` (`mikemol-witness`): the witness contract. A library, no scripts.
 
 The package list comes from each directory's `pyproject.toml`, which is also what the gate's `_dists`

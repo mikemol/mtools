@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1060,
+  "counter": 1062,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-12T21:34:29Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 144,
+      "ticks_blocked": 145,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -11800,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 83,
+      "ticks_blocked": 84,
       "completed": null
     },
     {
@@ -16152,7 +16155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -17532,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -17555,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -17978,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 49,
+      "ticks_blocked": 50,
       "completed": null
     },
     {
@@ -18152,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 47,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -18931,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -21362,7 +21365,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -21408,7 +21411,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -21474,7 +21477,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W338",
       "last_worked": "2026-10-12T20:41:49Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -21499,7 +21502,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -21527,7 +21530,7 @@
     {
       "symbol": "W1051",
       "title": "mikemol-cpu-census in memres: cores used per cgroup over a window, so what is using the host is one command",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "memres",
@@ -21535,14 +21538,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-12: 2026-10-12 MEASURED by hand (scratch cpu_by_cgroup.py, 10 s window, 24 cores): / 24.14 cores = saturated; kubepods 12.26, of which ONE pod (eb3797c8, holds a buildbuddy executor process) 9.97; user.slice 10.11 (luthen-check-producer.service 2.86, claude-nemik 2.58, konsole 1.16); system 1.04. CPU PSI some avg60 45.7%; memory and io PSI about 0. The host is CPU-oversubscribed, not memory- or io-bound. This tool makes that reading one command. | 2026-10-12: 2026-10-12 READY, commit held on W1052 (luthen-observability:W886): memres cpucensus.py, tests/test_cpucensus.py (12 tests incl. a fake cgroup tree, no links), 12 warrants, rubric row, console script mikemol-cpu-census in pyproject and BUILD, assert exemption; bazel test //memres:test_cpucensus mypy ruff mutants green. Files: memres/src/mikemol/memres/cpucensus.py, memres/tests/test_cpucensus.py, memres/pyproject.toml, memres/BUILD.bazel, memres/rubric.tsv, memres/warrants.bib.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 MEASURED by hand (scratch cpu_by_cgroup.py, 10 s window, 24 cores): / 24.14 cores = saturated; kubepods 12.26, of which ONE pod (eb3797c8, holds a buildbuddy executor process) 9.97; user.slice 10.11 (luthen-check-producer.service 2.86, claude-nemik 2.58, konsole 1.16); system 1.04. CPU PSI some avg60 45.7%; memory and io PSI about 0. The host is CPU-oversubscribed, not memory- or io-bound. This tool makes that reading one command. | 2026-10-12: 2026-10-12 READY, commit held on W1052 (luthen-observability:W886): memres cpucensus.py, tests/test_cpucensus.py (12 tests incl. a fake cgroup tree, no links), 12 warrants, rubric row, console script mikemol-cpu-census in pyproject and BUILD, assert exemption; bazel test //memres:test_cpucensus mypy ruff mutants green. Files: memres/src/mikemol/memres/cpucensus.py, memres/tests/test_cpucensus.py, memres/pyproject.toml, memres/BUILD.bazel, memres/rubric.tsv, memres/warrants.bib. | 2026-10-12: 62ed4eb [PUSHED]: mikemol-cpu-census (memres), committed under load as attempt 2 of github-8f's one-at-a-time allowance.",
       "issued_at": "2026-10-12T18:23:06Z",
       "minted_during": "interrupt",
       "caused_by": "W1045",
-      "last_worked": "2026-10-12T19:43:48Z",
+      "last_worked": "2026-10-12T21:00:05Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T210005Z"
     },
     {
       "symbol": "W1052",
@@ -21592,7 +21595,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
       "last_worked": "2026-10-12T20:21:56Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -21726,7 +21729,7 @@
       "minted_during": "tick",
       "caused_by": "W1053",
       "last_worked": "2026-10-12T20:12:27Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -21749,8 +21752,28 @@
       "minted_during": "interrupt",
       "caused_by": "W1053",
       "last_worked": "2026-10-12T20:21:55Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
+    },
+    {
+      "symbol": "W1062",
+      "title": "Derive a mutants shard's timeout from its own solo runtime and the measured CPU stretch, and say both in the verdict line",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "gate",
+        "mutants",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 github-8f (second-order fix, not a retry): the shard timeout is a typed 900 s and a 373 s solo shard meets it when load stretches it 2.4x. DESIGN: (1) bound = the shard's own solo runtime (recorded by the gate ledger from prior green runs) x the stretch factor measured at start from CPU PSI some or run-queue wait, with a floor of the solo runtime itself; (2) the bound and the stretch are written into the verdict line so a timeout says what it expected; (3) the other lever is fewer than six shards at once: a local_resources share sized from live headroom at start (the rail's own reading, mtools:W1024 family). Measured today: pycodemod shard solo 373 s at load ~100; 12 shards at 190 s solo each still all timed out at 900 s together; cpu PSI some 45-59% for hours. Needs: where the gate ledger lives and whether it records per-target runtimes (unread), and how mutants_sharded takes a timeout (rules_py/mutants).",
+      "issued_at": "2026-10-12T21:35:07Z",
+      "minted_during": "tick",
+      "caused_by": "W1052",
+      "last_worked": "2026-10-12T21:35:14Z",
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -21883,6 +21906,13 @@
       "title": "luthen: a producer turns mikemol-repin --metrics textfile into luthen_ pin-drift series, plus a Grafana row for pins behind the par sha",
       "dropped_at": "2026-10-11T07:16:19Z",
       "reason": "mis-wired: the luthen half is luthen's to mint; W979 only needed to tell them, and does so by message",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1061",
+      "title": "Commit gate runs a dist's mutants only when the commit touches that dist, not every dist on every commit",
+      "dropped_at": "2026-10-12T21:33:34Z",
+      "reason": "premise unverified: bazel's test cache already skips dists whose inputs did not change, and every refusal so far named only the changed dist's targets, so the gate does not rerun every dist's mutants per commit; the cost is the changed dist's own shards",
       "recoverable": true
     }
   ],

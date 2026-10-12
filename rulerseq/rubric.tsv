@@ -1,0 +1,4 @@
+# rubric.tsv — the sections of the rulerseq warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+ruler	ruler-sequence generator and readings

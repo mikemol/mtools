@@ -1,0 +1,84 @@
+
+@misc{waldo-compare-plan-inside-the-allowed-set-is-clean,
+  section = {compare},
+  title  = {The positive control: every planned change is allowed, nothing is required},
+  claim  = {The positive control: every planned change is allowed, nothing is required.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_plan_inside_the_allowed_set_is_clean},
+}
+
+@misc{waldo-compare-already-converged-row-is-simply-absent-and-still-clean,
+  section = {compare},
+  title  = {The allowed set is a superset: allowed rows missing from the plan are not a difference},
+  claim  = {The allowed set is a superset: allowed rows missing from the plan are not a difference.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_an_already_converged_row_is_simply_absent_and_still_clean},
+}
+
+@misc{waldo-compare-planned-change-outside-the-set-is-extra,
+  section = {compare},
+  title  = {A row the plan makes that nobody allowed is refused and printed with a plus},
+  claim  = {A row the plan makes that nobody allowed is refused and printed with a plus.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_planned_change_outside_the_set_is_extra},
+}
+
+@misc{waldo-compare-same-address-with-other-actions-is-extra,
+  section = {compare},
+  title  = {Allowing a create does not allow a delete of the same address},
+  claim  = {Allowing a create does not allow a delete of the same address.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_the_same_address_with_other_actions_is_extra},
+}
+
+@misc{waldo-compare-required-change-the-plan-lacks-is-missing,
+  section = {compare},
+  title  = {Only required rows must be present; the diff prints it with a minus},
+  claim  = {Only required rows must be present; the diff prints it with a minus.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_required_change_the_plan_lacks_is_missing},
+}
+
+@misc{waldo-compare-missing-lines-precede-extra-lines,
+  section = {compare},
+  title  = {The printed diff reads required-but-absent first, then planned-but-undeclared},
+  claim  = {The printed diff reads required-but-absent first, then planned-but-undeclared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_missing_lines_precede_extra_lines},
+}
+
+@misc{waldo-compare-action-order-inside-a-replace-is-not-a-difference,
+  section = {compare},
+  title  = {Delete then create and create then delete are one change},
+  claim  = {Delete then create and create then delete are one change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_action_order_inside_a_replace_is_not_a_difference},
+}
+
+@misc{waldo-compare-replace-renders-its-actions-joined-with-plus,
+  section = {compare},
+  title  = {A two-action change prints as create+delete in the diff and in the planned rows},
+  claim  = {A two-action change prints as create+delete in the diff and in the planned rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_replace_renders_its_actions_joined_with_plus},
+}
+
+@misc{waldo-compare-rows-are-read-into-a-set-and-an-absent-list-is-empty,
+  section = {compare},
+  title  = {Parsed rows become changes; None is the empty set, not an error},
+  claim  = {Parsed rows become changes; None is the empty set, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_rows_are_read_into_a_set_and_an_absent_list_is_empty},
+}
+
+@misc{waldo-compare-malformed-row-is-refused-not-skipped,
+  section = {compare},
+  title  = {A row that is not an address with a list of text actions raises, naming where},
+  claim  = {A row that is not an address with a list of text actions raises, naming where.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_malformed_row_is_refused_not_skipped},
+}
+
+@misc{waldo-compare-error-names-the-row-that-is-wrong,
+  section = {compare},
+  title  = {The index of the bad row is in the message so a set file can be fixed},
+  claim  = {The index of the bad row is in the message so a set file can be fixed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_the_error_names_the_row_that_is_wrong},
+}
+
+@misc{waldo-compare-value-that-is-not-a-list-is-named-as-such,
+  section = {compare},
+  title  = {A string or a number where rows belong is refused as a non-list, not read row by row},
+  claim  = {A string or a number where rows belong is refused as a non-list, not read row by row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_value_that_is_not_a_list_is_named_as_such},
+}

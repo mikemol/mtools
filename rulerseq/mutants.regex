@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops
+# matching is a STALE declaration and fails the grid as UNAPPLIED.
+src/mikemol/rulerseq/ruler.py|order-off-by-one|\.bit_length\(\) - 1|.bit_length()|def=cycle_order
+src/mikemol/rulerseq/ruler.py|header-rule-allowed|if i < _FIRST_BOUNDARY:|if i < 0:|def=cycle_order
+src/mikemol/rulerseq/ruler.py|bit-ignored|if bits\[i\] == 0:|if bits[i] == 1:|def=emit_f
+src/mikemol/rulerseq/ruler.py|motif-length-wrong|s \* \(1 << i\)|s * (i + 1)|def=emit_f
+src/mikemol/rulerseq/ruler.py|symbol-never-flips|DASH if s == DOT else DOT|DOT|def=emit_f
+src/mikemol/rulerseq/ruler.py|name-collapses-dash|"o" if c == DOT else "X"|"o"|def=rule_name
+src/mikemol/rulerseq/ruler.py|gap-dropped|pos \+= gap|pos += 0|def=css_stops
+src/mikemol/rulerseq/ruler.py|md-flattens|on = _MD_ON_BASE_PT \* \(1 << k\)|on = _MD_ON_BASE_PT|def=_md_dash
+src/mikemol/rulerseq/ruler.py|html-class-constant|return f"rs-\{k\}"|return "rs-0"|def=rule
+src/mikemol/rulerseq/ruler.py|unknown-target-accepted|if target == "md":|if target:|def=rule
+src/mikemol/rulerseq/ruler.py|preamble-misses-zero|range\(max\(n_vars, 1\)\)|range(n_vars)|def=nicematrix_defs
+src/mikemol/rulerseq/ruler.py|last-boundary-dropped|range\(_FIRST_BOUNDARY, n_rows\)|range(_FIRST_BOUNDARY, n_rows - 1)|def=column_encoding

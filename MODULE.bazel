@@ -275,6 +275,22 @@ pip.parse(
     requirements_lock = "//pathwalk:requirements.txt",
 )
 
+# ⚑ `mikemol-waldo` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
+# it declares a dependency.
+pip.parse(
+    hub_name = "waldo_deps",
+    python_version = "3.13",
+    requirements_lock = "//waldo:requirements.txt",
+)
+
+# ⚑ `mikemol-rulerseq` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
+# it declares a dependency.
+pip.parse(
+    hub_name = "rulerseq_deps",
+    python_version = "3.13",
+    requirements_lock = "//rulerseq:requirements.txt",
+)
+
 # ⚑ `mikemol-htmlstruct` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
 # it declares a dependency.
 pip.parse(
@@ -480,6 +496,16 @@ pip.parse(
     uv_lock = "//pathwalk:uv.lock",
 )
 pip.parse(
+    hub_name = "waldo_dev",
+    python_version = "3.13",
+    uv_lock = "//waldo:uv.lock",
+)
+pip.parse(
+    hub_name = "rulerseq_dev",
+    python_version = "3.13",
+    uv_lock = "//rulerseq:uv.lock",
+)
+pip.parse(
     hub_name = "htmlstruct_dev",
     python_version = "3.13",
     uv_lock = "//htmlstruct:uv.lock",
@@ -551,8 +577,12 @@ use_repo(
     "gradekit_deps",
     "gradekit_dev",
     "pathwalk_deps",
+    "waldo_deps",
+    "rulerseq_deps",
     "htmlstruct_deps",
     "pathwalk_dev",
+    "waldo_dev",
+    "rulerseq_dev",
     "htmlstruct_dev",
     "treeio_deps",
     "treeio_dev",
