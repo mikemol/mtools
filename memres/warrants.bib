@@ -879,3 +879,95 @@
   claim  = {The rail asked and was not obeyed: only `failures` moves.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_resize_that_did_not_take_is_counted_apart_from_the_evaluations},
 }
+
+@misc{memres-railcli-minimum-flags-give-the-defaults,
+  section = {railcli},
+  title  = {A cell size and a ceiling are enough: floor 1, no reserve, ten seconds ahead, stdout},
+  claim  = {A cell size and a ceiling are enough: floor 1, no reserve, ten seconds ahead, stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_the_minimum_flags_give_the_defaults},
+}
+
+@misc{memres-railcli-every-flag-is-read-into-the-plan,
+  section = {railcli},
+  title  = {Each option lands in its own field},
+  claim  = {Each option lands in its own field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_every_flag_is_read_into_the_plan},
+}
+
+@misc{memres-railcli-missing-required-flag-is-an-argparse-usage-error,
+  section = {railcli},
+  title  = {No ceiling is exit 2 from argparse, not a default},
+  claim  = {No ceiling is exit 2 from argparse, not a default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_a_missing_required_flag_is_an_argparse_usage_error},
+}
+
+@misc{memres-railcli-rail-that-cannot-exist-is-refused-with-its-reason,
+  section = {railcli},
+  title  = {A ceiling of 0 sits below the floor of 1},
+  claim  = {A ceiling of 0 sits below the floor of 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_a_rail_that_cannot_exist_is_refused_with_its_reason},
+}
+
+@misc{memres-railcli-live-run-with-no-fence-on-the-path-is-refused,
+  section = {railcli},
+  title  = {The refusal names `--dry-run` as the way to run without the fence},
+  claim  = {The refusal names `--dry-run` as the way to run without the fence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_a_live_run_with_no_fence_on_the_path_is_refused},
+}
+
+@misc{memres-railcli-dry-run-needs-no-fence-and-publishes-to-stdout,
+  section = {railcli},
+  title  = {The control for the refusal above: with --dry-run and the real meminfo, one round runs},
+  claim  = {The control for the refusal above: with --dry-run and the real meminfo, one round runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_a_dry_run_needs_no_fence_and_publishes_to_stdout},
+}
+
+@misc{memres-railcli-interrupting-the-loop-ends-it-cleanly,
+  section = {railcli},
+  title  = {Ctrl-C during the sleep is exit 0, not a traceback},
+  claim  = {Ctrl-C during the sleep is exit 0, not a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_interrupting_the_loop_ends_it_cleanly},
+}
+
+@misc{memres-railcli-textfile-replaces-the-old-one-and-leaves-nothing-behind,
+  section = {railcli},
+  title  = {The write is a rename over the target, so no temporary file remains and old text is gone},
+  claim  = {The write is a rename over the target, so no temporary file remains and old text is
+            gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_the_textfile_replaces_the_old_one_and_leaves_nothing_behind},
+}
+
+@misc{memres-railcli-fence-runner-returns-the-programs-exit-status,
+  section = {railcli},
+  title  = {Whatever the fence exits with is what the loop sees},
+  claim  = {Whatever the fence exits with is what the loop sees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_the_fence_runner_returns_the_programs_exit_status},
+}
+
+@misc{memres-railcli-fence-runner-says-127-when-the-program-is-not-found,
+  section = {railcli},
+  title  = {No program on the path is a status, not an exception},
+  claim  = {No program on the path is a status, not an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_the_fence_runner_says_127_when_the_program_is_not_found},
+}
+
+@misc{memres-railcli-fence-that-runs-too-long-is-stopped-with-124,
+  section = {railcli},
+  title  = {A wedged resize cannot hold the sampler},
+  claim  = {A wedged resize cannot hold the sampler.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_a_fence_that_runs_too_long_is_stopped_with_124},
+}
+
+@misc{memres-railcli-real-seams-read-a-file-publish-to-a-file-and-run-the-fence,
+  section = {railcli},
+  title  = {Meminfo from the given path, the textfile when named, the fence runner unless dry},
+  claim  = {Meminfo from the given path, the textfile when named, the fence runner unless dry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_the_real_seams_read_a_file_publish_to_a_file_and_run_the_fence},
+}
+
+@misc{memres-railcli-unreadable-meminfo-reads-as-nothing-and-a-dry-run-has-no-runner,
+  section = {railcli},
+  title  = {The loop skips an empty round; a dry run publishes to stdout and never resizes},
+  claim  = {The loop skips an empty round; a dry run publishes to stdout and never resizes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_an_unreadable_meminfo_reads_as_nothing_and_a_dry_run_has_no_runner},
+}
