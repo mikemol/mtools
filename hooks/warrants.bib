@@ -8514,3 +8514,24 @@
   claim  = {mtools:W1031: the dists come from the pyproject, so the fence is built and moved too.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_a_repo_that_vendors_the_fence_has_it_planned_and_applied},
 }
+
+@misc{hooks-wheel-relative-out-and-mtools-reach-the-build-as-absolute-paths,
+  section = {wheel},
+  title  = {Every step runs in a temp directory, so a relative `--out` must be made absolute first},
+  claim  = {Every step runs in a temp directory, so a relative `--out` must be made absolute first.
+            luthen-observability:W843: `--out vendor/wheels` left the wheel under the
+            temp tree and the tool reported it missing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_a_relative_out_and_mtools_reach_the_build_as_absolute_paths},
+}
+
+@misc{hooks-bin-launchers-argv-every-launcher-that-runs-the-bazel-venv-forbids-bytecode-before-it-does,
+  section = {adopt-launcher},
+  title  = {W1032: an interpreter run from `bazel-bin` must not rewrite a `.pyc` in that venv},
+  claim  = {W1032: an interpreter run from `bazel-bin` must not rewrite a `.pyc` in that venv. Those
+            `__pycache__` entries are links into bazel outputs, and a hook (run on every
+            tool call) replacing one with a regular file while a `bazel test` reads the
+            venv voids the test with "input dependency ... was modified during
+            execution". The population is every `mikemol-*` launcher that calls the
+            venv's python3, found by glob so a new one cannot escape the rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_every_launcher_that_runs_the_bazel_venv_forbids_bytecode_before_it_does},
+}

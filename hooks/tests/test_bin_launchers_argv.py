@@ -129,3 +129,28 @@ def test_an_absent_venv_denies_a_gate(tmp_path: Path, entry: str) -> None:
         proc = _run(entry, root, *args, stdin=_PAYLOAD)
         assert proc.returncode == 0
         assert _decision(proc.stdout) == "deny"
+
+
+_BAZEL_VENV_CALL = '"$real/bin/python3"'
+_NO_BYTECODE = "export PYTHONDONTWRITEBYTECODE=1"
+_BAZEL_VENV_LAUNCHERS = 16
+
+
+def test_every_launcher_that_runs_the_bazel_venv_forbids_bytecode_before_it_does() -> None:
+    """W1032: an interpreter run from `bazel-bin` must not rewrite a `.pyc` in that venv.
+
+    Those `__pycache__` entries are links into bazel outputs, and a hook (run on every tool call)
+    replacing one with a regular file while a `bazel test` reads the venv voids the test with
+    "input dependency ... was modified during execution". The population is every `mikemol-*`
+    launcher that calls the venv's python3, found by glob so a new one cannot escape the rule.
+    """
+    launchers = [
+        p for p in sorted(_BIN.glob("mikemol-*")) if _BAZEL_VENV_CALL in p.read_text("utf-8")
+    ]
+    assert len(launchers) >= _BAZEL_VENV_LAUNCHERS
+    late: list[str] = []
+    for path in launchers:
+        text = path.read_text(encoding="utf-8")
+        if _NO_BYTECODE not in text or text.index(_NO_BYTECODE) > text.index(_BAZEL_VENV_CALL):
+            late.append(path.name)
+    assert not late, late

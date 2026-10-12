@@ -15,6 +15,8 @@
 # would be fail-shut. The module itself finds the reader (NEMIK_CHECK, PATH, then the sibling
 # nemik checkout's venv), so nothing is put on PATH here.
 set -uo pipefail
+# ⚑ W1032: NOTHING RUN FROM bazel-bin REWRITES A .pyc IN IT (a hook per tool call raced bazel test).
+export PYTHONDONTWRITEBYTECODE=1
 
 root="${CLAUDE_PROJECT_DIR:-}"
 if [ -z "$root" ]; then

@@ -110,6 +110,17 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             "bin/mikemol-hooks-preflight",
             # W796: the stable launcher for `mikemol-commit`, EXECUTED by test_commit_launcher.
             "bin/mikemol-commit",
+            # ⚑ W1032: THE OTHER EIGHT LAUNCHERS THAT RUN THE bazel-bin VENV, READ by
+            # test_bin_launchers_argv's glob so none can escape the no-bytecode rule. Named one by
+            # one (a gate never globs its inputs); the test's floor counts them.
+            "bin/mikemol-hook-after-compaction",
+            "bin/mikemol-hook-build-failure",
+            "bin/mikemol-hook-pycheck-advise",
+            "bin/mikemol-hook-read-guard",
+            "bin/mikemol-hook-tick-gate",
+            "bin/mikemol-hook-tick-release",
+            "bin/mikemol-hook-tick-stop",
+            "bin/mikemol-hook-work-claims",
             # ⚑ W238: the standing launcher and its policy, EXECUTED by test_standing_facts with
             # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
             "bin/mikemol-hook-standing",
@@ -366,7 +377,7 @@ sh_test(
 # rationale; //mdstruct:mutants is the F-arm (real deps).
 mutants_sharded(
     name = "mutants",
-    shards = 3,
+    shards = 12,
     cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
@@ -388,6 +399,13 @@ mutants_sharded(
     # the operator ruled (2026-10-10) that a target that is too big under load is SPLIT, not
     # serialized (W969). Three shards of about 136 sites are three short targets bazel schedules
     # beside the rest, and `:mutants` still names all of them.
+    # ⚑⚑ THREE WAS NOT ENOUGH AT LOAD 90 TO 120, AND THE FIX IS MORE SHARDS, NOT A LONGER TIMEOUT
+    # (W1037, operator ruling 2026-10-10). Three gates in a row timed all three shards out at exactly
+    # 300 s while every other target passed. Each shard reserves 8 of the host's 24 CPUs, so three
+    # run at once and each does a third of the work; twelve shards of the same width are still run
+    # three at a time but each does a twelfth, so each fits inside its limit, and the total work is
+    # unchanged. Splitting finer at the SAME `cpus` is what shortens a target; a smaller `cpus` would
+    # only make each shard slower.
 )
 
 # ⚑⚑⚑ THE DISTRIBUTION'S `.venv`, AS A BUILD ARTIFACT. One macro call; the same four lines appear

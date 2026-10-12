@@ -19,6 +19,8 @@
 # ⚑ THE READER LIVES IN pathsforward/.venv HERE, NOT IN A ROOT .venv, so its bin directory is put
 # on PATH for the hook; the module looks in `<project>/.venv/bin` first and then on PATH.
 set -uo pipefail
+# ⚑ W1032: NOTHING RUN FROM bazel-bin REWRITES A .pyc IN IT (a hook per tool call raced bazel test).
+export PYTHONDONTWRITEBYTECODE=1
 
 # ⚑ MTOOLS_ROOT NAMES THE CHECKOUT THAT HOLDS THE BUILT VENV (W881, operator ruling on W580): wired
 # once in the user-level settings, the hook serves every repo, whose own directory

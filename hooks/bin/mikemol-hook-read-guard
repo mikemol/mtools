@@ -16,6 +16,8 @@
 # "Could not find platform dependent libraries" on every call; the same venv by its real path is
 # silent (see mikemol-hook-no-verify).
 set -uo pipefail
+# ⚑ W1032: NOTHING RUN FROM bazel-bin REWRITES A .pyc IN IT (a hook per tool call raced bazel test).
+export PYTHONDONTWRITEBYTECODE=1
 
 root="${CLAUDE_PROJECT_DIR:-}"
 entry="$(basename "$0")"

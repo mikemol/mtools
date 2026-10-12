@@ -164,9 +164,13 @@ def _source_of(valued: dict[str, str]) -> Source | None:
     sha = valued.get("--sha", "")
     if not revendor.is_full_sha(sha) or ("--mtools" in valued) == ("--src" in valued):
         return None
+    # ⚑ ABSOLUTE, NOT RESOLVED: every build step runs in a temporary directory, so a path given
+    # relative to where the caller stood would name somewhere else there (luthen-observability:W843:
+    # `--out vendor/wheels` left the wheel under the temp tree and the tool reported it missing).
+    # `.absolute()` does not follow links, which this tool never does.
     if "--src" in valued:
-        return Source(sha, None, Path(valued["--src"]))
-    return Source(sha, Path(valued["--mtools"]))
+        return Source(sha, None, Path(valued["--src"]).absolute())
+    return Source(sha, Path(valued["--mtools"]).absolute())
 
 
 def main(argv: Sequence[str] | None = None, runner: Runner | None = None) -> int:
@@ -182,7 +186,7 @@ def main(argv: Sequence[str] | None = None, runner: Runner | None = None) -> int
         sys.stderr.write(_USAGE)
         return EXIT_USAGE
     dists, valued = parsed
-    out = Path(valued["--out"])
+    out = Path(valued["--out"]).absolute()
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         failure = build_into(runner or repin_cli.run_process, source, dists, Path(tmp), out)

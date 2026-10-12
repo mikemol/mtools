@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1032,
+  "counter": 1039,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 131,
+      "ticks_blocked": 132,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 130,
+      "ticks_blocked": 131,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 135,
+      "ticks_blocked": 136,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16983,7 +16983,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 58,
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -17493,7 +17493,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -17534,7 +17534,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -17557,7 +17557,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -17980,7 +17980,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -18154,7 +18154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -18933,7 +18933,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "completed": null
     },
     {
@@ -19572,11 +19572,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add an Isolated commit section to docs/adopting-a-hook.md: isolation is on only where .githooks/pre-commit text names MIKEMOL_REAL_ROOT (commit_kata.supports_isolation); the hook then runs in a snapshot of the tree that lands, so host tools (venvs, bazel-bin) come from ${MIKEMOL_REAL_ROOT:-root}; MIKEMOL_COMMIT_ISOLATED=0|1 overrides; MIKEMOL_SNAPSHOT_ROOT moves the namespace; MIKEMOL_COMMIT_TIMEOUT_S bounds the run. Link .claude/design/W939-isolated-gate-tools.md. Test: a doc-names-every-env-var check.",
-      "evidence": "2026-10-11: 2026-10-11 github-8f, five pitfalls from amr-skills:W297 (done, c2774f9; isolated, lock held, bazel 70/70), each seen only from inside the snapshot: (1) a relative declared root resolves against the snapshot, so a sibling-repo remote check passes vacuously; (2) the hook needs its tools from the real checkout; (3) commit_isolated runs the hook with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set, so git -C <sibling> answers for the COMMITTING repo: strip them from any git call about another repo; (4) tests that run git in their own root fail in a snapshot (no .git); (5) do not read MIKEMOL_REAL_ROOT in library code, since bazel env_inherit hands it to every test: make the anchor a parameter and read the variable only in the entrypoint. To go into docs/adopting-a-hook.md.",
+      "evidence": "2026-10-11: 2026-10-11 github-8f, five pitfalls from amr-skills:W297 (done, c2774f9; isolated, lock held, bazel 70/70), each seen only from inside the snapshot: (1) a relative declared root resolves against the snapshot, so a sibling-repo remote check passes vacuously; (2) the hook needs its tools from the real checkout; (3) commit_isolated runs the hook with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set, so git -C <sibling> answers for the COMMITTING repo: strip them from any git call about another repo; (4) tests that run git in their own root fail in a snapshot (no .git); (5) do not read MIKEMOL_REAL_ROOT in library code, since bazel env_inherit hands it to every test: make the anchor a parameter and read the variable only in the entrypoint. To go into docs/adopting-a-hook.md. | 2026-10-12: 2026-10-12 github-8f (nemik adoption): the commit lock needs the mikemol-fence dist (pyproject name mikemol-fence, import mikemol.fence, console script mikemol-membudget) in the repo's venv beside the interpreter; repos do NOT carry //fence (that bazel target exists only in mtools). linux-sources pins hooks, fence, pathsforward, pycodemod and mdstruct and prints 'lock: held'. Put the dist name and that rule in docs/adopting-a-hook.md; for a repo that vendors wheels, mikemol-wheel fence plus a uv source path and a dependency, after which mikemol-repin --revendor (272b370) moves it with the pair.",
       "issued_at": "2026-10-10T16:02:39Z",
       "minted_during": "interrupt",
       "caused_by": "github:W-substrate-94",
-      "last_worked": "2026-10-11T22:58:23Z",
+      "last_worked": "2026-10-12T07:25:37Z",
       "ticks_blocked": 0
     },
     {
@@ -20942,7 +20942,7 @@
     {
       "symbol": "W1024",
       "title": "mikemol-sweep-budget sizes the mutation sweep from live headroom: its 0.4 of MemTotal default ignores swap pressure and the sandbox's own RAM (24 cells ran at once, 51482 MB, and filled swap)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "paperkit:W334"
       ],
@@ -20951,15 +20951,20 @@
         "gate",
         "bazel"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
+      "blocked_on": [
+        "W1033",
+        "W1034",
+        "W1035"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: design in .claude/design/W1024-live-headroom-budget.md. Work W1033 (pure rail model in memres), then W1034 (sampler and vehicle), then W1035 (letter so paperkit's pre-commit calls the mtools budget). W1029 and W1030 are the lease-resize verb and the engagement series it will use.",
       "evidence": "2026-10-12: 2026-10-12 OPERATOR PRINCIPLE (relayed by github-8f): true fixes are second-order, not first-order and not thresholds; rails are neither linear nor static. So the sweep budget is not sized once from MemTotal minus a constant: it is a LEASE that follows live headroom, level (MemAvailable plus swap and sandbox headroom), slope and acceleration, re-evaluated while the run goes, shrinking allowed parallelism when memory use accelerates and recovering when it decays. luthen W842 and host W26 supply the predictors. The vehicle should be the existing membudget and fence leases IF they can be resized mid-run (to be read from fence's source, not assumed). Publish rail engagement as a metric (leases granted, shrunk, refused): how often a rail engages is the oracle for throttling. The static nvme sandbox_base (host ~/.bazelrc, 2026-10-12) is the stopgap beneath it. | 2026-10-12: 2026-10-12 READ (fence/src/mikemol/fence/membudget_cli.py:437 and admit.py): the ledger TOTAL can be resized in place under the lock keeping every live lease (membudget init --reset N, resize(): a sibling renamed over the ledger, so a reader sees old or new). A lease already held CANNOT be resized: admit.py has acquire, release and gc, no verb that changes a held lease's mb. So 'shrink while the run goes' has two real forms: (a) resize the total, which throttles NEW admissions only and leaves running cells at their size, or (b) a new fence verb to resize a held lease, which does not exist (a card of its own if the lease is to follow the live rail). Rail-engagement counts (granted, shrunk, refused) are not published today.",
       "issued_at": "2026-10-12T02:18:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-12T02:20:42Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T04:39:26Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1025",
@@ -21090,7 +21095,7 @@
     {
       "symbol": "W1031",
       "title": "mikemol-repin --revendor also vendors the fence wheel when a repo vendors the hooks wheel, so the commit lock works there with no path into another repo's build",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -21099,19 +21104,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 272b370 [PUSHED]: revendor.vendored reads which of hooks, pathsforward and fence a pyproject names; Target.dists carries them through apply and the CLI; the fence is opt-in by presence; 5 tests, 5 warrants; full gate passed on the second attempt (the first timed out on test_commit_isolated and all three hooks mutants shards, with a cold gate server after my shutdown and the host at load 100+)",
       "issued_at": "2026-10-12T03:13:49Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-a9",
-      "last_worked": "2026-10-12T03:13:56Z",
+      "last_worked": "2026-10-12T04:36:02Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T043602Z"
     },
     {
       "symbol": "W1032",
       "title": "A tool run from the bazel-bin hooks venv does not write bytecode into it: a stale .pyc rewritten there by mikemol-commit (ours or a peer's) voids any bazel test reading that venv with 'modified during execution'",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks",
@@ -21125,7 +21130,151 @@
       "issued_at": "2026-10-12T04:22:15Z",
       "minted_during": "interrupt",
       "caused_by": "W1022",
-      "last_worked": "2026-10-12T04:22:22Z",
+      "last_worked": "2026-10-12T05:42:55Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1033",
+      "title": "memres gains a pure rail model: level, slope and acceleration from a window of memory samples, and a next_allowance policy that shrinks parallelism when use accelerates and recovers when it decays",
+      "status": "ready",
+      "enables": [
+        "W1034"
+      ],
+      "touches": [
+        "memres",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T04:37:51Z",
+      "minted_during": "tick",
+      "caused_by": "W1024",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1034",
+      "title": "A memory-rail sampler applies the allowance by resizing the fence ledger total (and held leases once they can be resized) and writes its engagement counts as a textfile",
+      "status": "ready",
+      "enables": [
+        "W1035"
+      ],
+      "touches": [
+        "memres",
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T04:37:52Z",
+      "minted_during": "tick",
+      "caused_by": "W1024",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1035",
+      "title": "Send paperkit the letter asking its pre-commit to call the mtools memres budget and rail, and its sweep cells to hold fence leases",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "memres",
+        "fleet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T04:37:53Z",
+      "minted_during": "tick",
+      "caused_by": "W1024",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1036",
+      "title": "mikemol-wheel makes a relative --out, --mtools and --src absolute before its build steps run in a temp directory, so luthen's --out vendor/wheels builds",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W843"
+      ],
+      "touches": [
+        "hooks",
+        "repin"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T04:39:26Z",
+      "minted_during": "tick",
+      "caused_by": "luthen-observability:W843",
+      "last_worked": "2026-10-12T05:42:54Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1037",
+      "title": "hooks:mutants is twelve shards, not three, so each fits its 300 s limit at host load 90 to 120 (the operator's split-not-lengthen rule)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "bazel",
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T06:42:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1032",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1038",
+      "title": "mikemol-commit's no-lock note says what to do (add the mikemol-fence dist to this repo's pins) instead of naming a bazel target that exists only in mtools",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "kata",
+        "commit",
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T07:25:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1039",
+      "title": "mikemol-commit adds a path the caller named exactly even when it is gitignored, so a re-vendor of wheels under an ignore-everything vendor directory is not refused",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "kata",
+        "commit",
+        "vendor"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 design note. github-8f's suggested fix is 'add with -f only for paths already tracked (git ls-files)'. That covers a MODIFIED tracked wheel but not the case that bites: a re-vendor writes NEW sha-named wheels (mikemol_hooks-0.1.0+g<new>-...whl), which are untracked and ignored, so they would still be refused. The honest rule is by intent, not by tracking: a path the caller names EXACTLY (a file, never a directory, glob or pathspec magic) is force-added; anything a directory expands to is not, so an ignored scratch file cannot ride in. mikemol-commit's PATHs are already the caller's explicit list. Read commit_kata.prepare and isolated_paths for where the add runs (isolated: 'git add -A -- <paths>' in commit_isolated, private index) before changing it; refuse a path that is a symlink, per the no-symlinks ruling.",
+      "issued_at": "2026-10-12T07:25:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-12T07:25:51Z",
       "ticks_blocked": 0
     }
   ],

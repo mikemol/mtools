@@ -154,3 +154,21 @@ def test_describe_leaves_an_empty_record_for_a_wheel_that_is_not_there(tmp_path:
     records = wheel.describe(tmp_path, DISTS, SHORT)
     assert records[0]["dist"] == "atomicwrite"
     assert records[1] == {}
+
+
+def test_a_relative_out_and_mtools_reach_the_build_as_absolute_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Every step runs in a temp directory, so a relative `--out` must be made absolute first.
+
+    luthen-observability:W843: `--out vendor/wheels` left the wheel under the temp tree and the
+    tool reported it missing.
+    """
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "m").mkdir()
+    tools = _Tools()
+    assert wheel.main([*DISTS, "--sha", SHA, "--out", "out", "--mtools", "m"], tools) == 0
+    builds = [c for c in tools.calls if c[0] == "env"]
+    assert {c[c.index("--out-dir") + 1] for c in builds} == {str(tmp_path / "out")}
+    archive = next(c for c in tools.calls if c[0] == "git")
+    assert archive[2] == str(tmp_path / "m")

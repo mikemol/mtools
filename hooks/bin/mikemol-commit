@@ -23,6 +23,8 @@
 # export where the fence is (an unbuilt fence is a stderr note from the commit, and the commit runs
 # unlocked, as before the lock existed).
 set -euo pipefail
+# ⚑ W1032: NOTHING RUN FROM bazel-bin REWRITES A .pyc IN IT (a hook per tool call raced bazel test).
+export PYTHONDONTWRITEBYTECODE=1
 
 root="${MIKEMOL_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
 venv="$root/bazel-bin/hooks/.venv"
