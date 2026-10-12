@@ -24,4 +24,13 @@ src/mikemol/waldo/contract.py|exit-only-any-type|not isinstance\(exit_only, bool
 src/mikemol/waldo/contract.py|bare-witness-passes|if not has_condition\(witness\):|if False:|def=_witness_findings
 src/mikemol/waldo/contract.py|required-unallowed-unseen|contract\.required - contract\.allowed|contract.allowed - contract.required|def=lint
 src/mikemol/waldo/contract.py|fresh-since-not-a-condition|or witness\.fresh_since|or False|def=has_condition
+src/mikemol/waldo/custody.py|fingerprint-too-long|\[:FINGERPRINT_HEX\]|[:FINGERPRINT_HEX + 4]|def=fingerprint
+src/mikemol/waldo/custody.py|repr-leaks-the-value|return f"Secret\(\{self\.fingerprint\(\)\}\)"|return f"Secret({self._value})"|def=Secret.__repr__
+src/mikemol/waldo/custody.py|str-leaks-the-value|return repr\(self\)|return self._value|def=Secret.__str__
+src/mikemol/waldo/custody.py|scrub-an-empty-secret|if value:|if True:|def=scrub
+src/mikemol/waldo/custody.py|current-user-by-default|if as_current_user:|if True:|def=require_identity
+src/mikemol/waldo/custody.py|open-directory-accepted|st_mode & OPEN_BITS|st_mode & 0|def=write_secret
+src/mikemol/waldo/custody.py|link-accepted|if path\.is_symlink\(\):|if False:|def=_refuse_link
+src/mikemol/waldo/custody.py|blank-file-is-a-secret|Secret\(text\) if text else None|Secret(text)|def=read_secret
+src/mikemol/waldo/custody.py|expiry-always-shown|if expires is None:|if False:|def=describe
 src/mikemol/waldo/contract.py|advances-not-a-condition|or witness\.advances|or False|def=has_condition

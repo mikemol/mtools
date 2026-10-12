@@ -279,3 +279,87 @@
   claim  = {Any single non-empty list counts as a declared condition, and none counts as none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_has_condition_sees_each_of_the_five_lists},
 }
+
+@misc{waldo-custody-fingerprint-is-twelve-hex-of-the-sha256,
+  section = {custody},
+  title  = {Twelve lowercase hex digits, stable for a value, different for another},
+  claim  = {Twelve lowercase hex digits, stable for a value, different for another.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_the_fingerprint_is_twelve_hex_of_the_sha256},
+}
+
+@misc{waldo-custody-secret-prints-as-its-fingerprint-on-every-path,
+  section = {custody},
+  title  = {repr, str, an f-string and a format spec never contain the value},
+  claim  = {repr, str, an f-string and a format spec never contain the value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_a_secret_prints_as_its_fingerprint_on_every_path},
+}
+
+@misc{waldo-custody-reveal-is-the-one-way-out,
+  section = {custody},
+  title  = {The value comes back through reveal and nothing else changes it},
+  claim  = {The value comes back through reveal and nothing else changes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_reveal_is_the_one_way_out},
+}
+
+@misc{waldo-custody-scrub-replaces-the-value-wherever-it-appears,
+  section = {custody},
+  title  = {An error message that echoes command output cannot carry the secret out},
+  claim  = {An error message that echoes command output cannot carry the secret out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_scrub_replaces_the_value_wherever_it_appears},
+}
+
+@misc{waldo-custody-scrub-leaves-text-alone-when-the-secret-is-empty,
+  section = {custody},
+  title  = {An empty secret has nothing to find, so the text is returned untouched},
+  claim  = {An empty secret has nothing to find, so the text is returned untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_scrub_leaves_text_alone_when_the_secret_is_empty},
+}
+
+@misc{waldo-custody-file-is-owner-only-in-an-owner-only-directory,
+  section = {custody},
+  title  = {0600 on the file, 0700 on a directory the writer created, and the value reads back},
+  claim  = {0600 on the file, 0700 on a directory the writer created, and the value reads back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_the_file_is_owner_only_in_an_owner_only_directory},
+}
+
+@misc{waldo-custody-rewrite-replaces-the-secret-and-leaves-no-temporary-file,
+  section = {custody},
+  title  = {The rename swaps the value whole; nothing but the one file remains in the directory},
+  claim  = {The rename swaps the value whole; nothing but the one file remains in the directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_a_rewrite_replaces_the_secret_and_leaves_no_temporary_file},
+}
+
+@misc{waldo-custody-directory-open-to-the-group-is-refused-not-tightened,
+  section = {custody},
+  title  = {An existing directory with group access is the caller's to fix; nothing is written},
+  claim  = {An existing directory with group access is the caller's to fix; nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_a_directory_open_to_the_group_is_refused_not_tightened},
+}
+
+@misc{waldo-custody-link-is-refused-for-the-file-and-for-its-directory,
+  section = {custody},
+  title  = {The guard refuses a path it is told is a link; no link is created to test it},
+  claim  = {The guard refuses a path it is told is a link; no link is created to test it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_a_link_is_refused_for_the_file_and_for_its_directory},
+}
+
+@misc{waldo-custody-reading-nothing-or-blank-text-is-none,
+  section = {custody},
+  title  = {No file and a blank file both read as no secret},
+  claim  = {No file and a blank file both read as no secret.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_reading_nothing_or_blank_text_is_none},
+}
+
+@misc{waldo-custody-no-identity-is-refused-unless-one-is-named-or-the-caller-opts-in,
+  section = {custody},
+  title  = {The control is the two ways in: a named identity and an explicit as_current_user},
+  claim  = {The control is the two ways in: a named identity and an explicit as_current_user.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_no_identity_is_refused_unless_one_is_named_or_the_caller_opts_in},
+}
+
+@misc{waldo-custody-describe-shows-the-fingerprint-and-the-expiry-never-the-value,
+  section = {custody},
+  title  = {What the queue may see: fingerprint, and the expiry in UTC when known},
+  claim  = {What the queue may see: fingerprint, and the expiry in UTC when known.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_describe_shows_the_fingerprint_and_the_expiry_never_the_value},
+}

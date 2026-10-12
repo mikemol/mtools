@@ -1695,3 +1695,4 @@
 2026-10-12T21:38:36Z  tick  W1055 advanced  mechanism "waldo compare tested (18 tests, 7 declared defects); rulerseq+waldo gate green locally (22 tests); attempt 4 (both dists, one commit) running; W1062 minted"
 2026-10-12T22:03:05Z  tick  W1057 advanced  mechanism "waldo.witness: six kinds incl advances/fresh_since, 14 tests, 7 declared defects, bazel //waldo green; attempt 5 running"
 2026-10-12T22:31:29Z  tick  W1056 advanced  mechanism "waldo.contract: parse + unknown-key refusal + witness lint, 59 waldo tests green, attempt 6 running; W1053/W1059 blockers trimmed"
+2026-10-12T23:01:02Z  tick  W1058 advanced  mechanism "waldo.custody: Secret/fingerprint/scrub/0600-0700 store/identity, 12 tests, 9 declared defects, bazel //waldo green; attempt 7 running"

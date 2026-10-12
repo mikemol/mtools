@@ -4,3 +4,4 @@
 compare	refuse-with-diff core
 witness	witness evaluator
 contract	contract parse and witness lint
+custody	secret custody
