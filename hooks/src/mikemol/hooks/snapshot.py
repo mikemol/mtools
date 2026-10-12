@@ -156,12 +156,16 @@ class Snapshot:
         incremental diff never rewrote them, so two commits were refused until the stamp was
         removed by hand.
 
+        ⚑ A TRACKED LINK IS NEVER "LOST": it is not carried (see `_extract`), so counting it missing
+        would re-extract, and re-name, it on every commit. Mode 120000 is git's symlink.
+
         Returns:
             the missing paths, in tree order.
 
         """
-        names = _git(root, ["ls-tree", "-r", "-z", "--name-only", tree]).split("\0")
-        return [n for n in names if n and not (self.path / n).is_file()]
+        entries = _git(root, ["ls-tree", "-r", "-z", tree]).split("\0")
+        names = [e.partition("\t")[2] for e in entries if e and not e.startswith("120000")]
+        return [n for n in names if not (self.path / n).is_file()]
 
     def _changes(self, root: Path, before: str, tree: str) -> dict[str, list[str]]:
         if not before or not self.path.is_dir():
@@ -178,16 +182,33 @@ class Snapshot:
 
 
 def _extract(root: Path, tree: str, names: Sequence[str], dest: Path) -> None:
+    """Write `names` of `tree` under `dest`, refusing every tracked link.
+
+    ⚑ A TRACKED SYMLINK IS REFUSED, NAMED AND NEVER FOLLOWED OR RECREATED (operator ruling
+    2026-10-02: a link reads whatever it points at). The `data` filter alone raised
+    LinkOutsideDestinationError on luthen-observability's `images/paperkit-executor`, a tracked link
+    to a sibling repo, and every isolated commit there traced back (luthen-observability:W832).
+    """
     done = subprocess.run(
         [_git_bin(), "-C", str(root), "archive", "--format=tar", tree, "--", *names],
         capture_output=True,
         check=True,
     )
+    refused: list[str] = []
     with tempfile.SpooledTemporaryFile() as spool:
         spool.write(done.stdout)
         spool.seek(0)
         with tarfile.open(fileobj=spool) as archive:
-            archive.extractall(dest, filter="data")
+            for member in archive:
+                if member.issym() or member.islnk():
+                    refused.append(member.name)
+                else:
+                    archive.extract(member, dest, filter="data")
+    if refused:
+        sys.stderr.write(
+            "mikemol-snapshot: tracked symlink not carried (a link is refused, never followed): "
+            f"{', '.join(refused)}\n"
+        )
 
 
 def main(argv: Sequence[str] | None = None) -> int:

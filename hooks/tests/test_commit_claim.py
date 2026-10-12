@@ -209,3 +209,39 @@ def test_a_fence_installed_beside_the_interpreter_takes_the_claim(tmp_path: Path
     got = commit_kata.claim_of(target, {}, ["python", "x"], python=str(bindir / "python"))
     assert isinstance(got, commit_kata.Claim)
     assert got.argv[0] == str(fence)
+
+
+def _bazel_bin(tmp_path: Path) -> tuple[str, Path]:
+    """Lay out the bazel build: a hooks venv with no fence, and a fence venv beside it.
+
+    Returns:
+        the hooks venv's interpreter path, and the fence venv's script (made executable).
+
+    """
+    top = tmp_path / "bazel-bin"
+    fence = top / "fence" / ".venv" / "bin" / "mikemol-membudget"
+    fence.parent.mkdir(parents=True)
+    fence.write_text(_FENCE, encoding="utf-8")
+    fence.chmod(_EXECUTABLE)
+    return str(top / "hooks" / ".venv" / "bin" / "python3"), fence
+
+
+def test_the_fence_venv_beside_the_hooks_venv_in_a_bazel_build_is_found(tmp_path: Path) -> None:
+    """The build keeps the fence in `bazel-bin/fence/.venv`, not in the hooks venv's bin/."""
+    python, fence = _bazel_bin(tmp_path)
+    assert commit_kata.fence_of({}, python) == str(fence)
+
+
+def test_the_script_beside_the_interpreter_wins_over_the_bazel_sibling(tmp_path: Path) -> None:
+    """When both exist the nearer one is used."""
+    python, _ = _bazel_bin(tmp_path)
+    near = tmp_path / "bazel-bin" / "hooks" / ".venv" / "bin" / "mikemol-membudget"
+    near.parent.mkdir(parents=True)
+    near.write_text(_FENCE, encoding="utf-8")
+    near.chmod(_EXECUTABLE)
+    assert commit_kata.fence_of({}, python) == str(near)
+
+
+def test_a_shallow_interpreter_path_has_no_bazel_sibling_and_does_not_raise() -> None:
+    """A path too short to have a `bazel-bin` above it falls back to the script beside it."""
+    assert commit_kata.fence_of({}, "/bin/python") == "/bin/mikemol-membudget"

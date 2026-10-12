@@ -8445,3 +8445,36 @@
   claim  = {One line, before the verdict: which path ran, why, and the lock.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_routing_line_names_the_path_its_reason_and_the_lock},
 }
+
+@misc{hooks-snapshot-tracked-symlink-is-refused-and-named-not-followed-or-crashed-on,
+  section = {snapshot},
+  title  = {⚑ A tracked link to a sibling directory is not carried and not followed; the rest lands},
+  claim  = { A tracked link to a sibling directory is not carried and not followed; the rest lands.
+            luthen-observability tracks `images/paperkit-executor` as a link to a
+            sibling repo; the `data` filter raised on it and every isolated commit there
+            traced back (luthen-observability:W832). Operator ruling 2026-10-02: a link
+            is refused and named, never followed or recreated. The link here exists only
+            in tmp_path, to prove the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snapshot.py -k test_a_tracked_symlink_is_refused_and_named_not_followed_or_crashed_on},
+}
+
+@misc{hooks-commit-claim-fence-venv-beside-the-hooks-venv-in-a-bazel-build-is-found,
+  section = {commit_claim},
+  title  = {The build keeps the fence in `bazel-bin/fence/.venv`, not in the hooks venv's bin/},
+  claim  = {The build keeps the fence in `bazel-bin/fence/.venv`, not in the hooks venv's bin/.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_fence_venv_beside_the_hooks_venv_in_a_bazel_build_is_found},
+}
+
+@misc{hooks-commit-claim-script-beside-the-interpreter-wins-over-the-bazel-sibling,
+  section = {commit_claim},
+  title  = {When both exist the nearer one is used},
+  claim  = {When both exist the nearer one is used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_script_beside_the_interpreter_wins_over_the_bazel_sibling},
+}
+
+@misc{hooks-commit-claim-shallow-interpreter-path-has-no-bazel-sibling-and-does-not-raise,
+  section = {commit_claim},
+  title  = {A path too short to have a `bazel-bin` above it falls back to the script beside it},
+  claim  = {A path too short to have a `bazel-bin` above it falls back to the script beside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_shallow_interpreter_path_has_no_bazel_sibling_and_does_not_raise},
+}

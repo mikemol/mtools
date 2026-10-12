@@ -423,19 +423,38 @@ class Claim:
     env: dict[str, str]
 
 
+# From `bazel-bin/hooks/.venv/bin`, `bazel-bin` is the parent two levels above `.venv`.
+BAZEL_BIN_DEPTH = 2
+
+
 def fence_of(env: Mapping[str, str], python: str) -> str:
-    """Name the fence to claim with: the one the launcher named, else the one beside `python`.
+    """Name the fence to claim with: the one the launcher named, else one found near `python`.
 
     ⚑ A REPO THAT INSTALLS THE HOOKS AND FENCE WHEELS INTO ONE VENV HAS NO LAUNCHER, so nothing set
     `MIKEMOL_FENCE_BIN` and its commits ran unlocked with a note, though `mikemol-membudget` sat in
     the same `bin/` (linux-sources, 2026-10-11, github-8f). The venv's own script is the fallback.
 
+    ⚑ MTOOLS' OWN BAZEL BUILD KEEPS THE FENCE IN A VENV BESIDE THE HOOKS VENV, not inside it:
+    `bazel-bin/hooks/.venv/bin/python3` and `bazel-bin/fence/.venv/bin/mikemol-membudget`. A commit
+    run straight from that build (linux-sources, after its repin to f04f0a2) found neither the
+    variable nor a script in `bin/`, so that sibling build is the second fallback.
+
     Returns:
-        the named path when set and non-empty, else `<python's directory>/mikemol-membudget`.
+        the named path when set and non-empty, else the first of `<python's directory>/
+        mikemol-membudget` and the sibling bazel venv's script that is executable, else the first.
 
     """
     named = env.get(FENCE_ENV, "")
-    return named or str(Path(python).parent / "mikemol-membudget")
+    if named:
+        return named
+    here = Path(python).parent
+    beside = here / "mikemol-membudget"
+    found = [beside]
+    if len(here.parents) > BAZEL_BIN_DEPTH:
+        found.append(
+            here.parents[BAZEL_BIN_DEPTH] / "fence" / ".venv" / "bin" / "mikemol-membudget"
+        )
+    return str(next((c for c in found if os.access(c, os.X_OK)), beside))
 
 
 def claim_of(

@@ -56,6 +56,9 @@ mikemol-repin --revendor --sha <40-hex commit> [--root REPO] [--mtools DIR]     
 mikemol-repin --revendor --sha <40-hex commit> [--root REPO] [--mtools DIR] --write  # do it
 ```
 
+* **A repo that vendors no wheel does not use `--revendor`**: it exits 2 with "vendors no hooks or
+  pathsforward wheel" (linux-sources, 2026-10-11). Such a repo pins by git source, so the plain
+  `--sha <commit> --write` above is its move.
 * `--root` is the repo that vendors (default the current directory); `--mtools` is the mtools
   checkout to build from (default `~/github/mtools`). It moves the `hooks` and `pathsforward`
   wheels together; a repo that vendors neither is refused.

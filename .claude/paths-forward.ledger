@@ -1632,3 +1632,5 @@
 2026-10-11T22:41:58Z  tick  W1019 minted    -         "Send each repo in the W797 audit table the sibling reads its gates make, asking it to mint a card that pins them or adopts the shared check"  evidence=W797
 2026-10-11T22:42:04Z  tick  W797 advanced  collapse  "audit done: ~100 files scanned, 3 tiers in .claude/design/W797-sibling-tree-reads.md; minted W1018 (shared pin check) and W1019 (letters to repos)"
 2026-10-11T22:58:21Z  interrupt W1020 minted    -         "mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on it"  evidence=luthen-observability:W832
+2026-10-11T23:17:46Z  interrupt W1021 minted    -         "Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute existing di"  evidence=amr-skills:W305
+2026-10-11T23:32:39Z  interrupt W1022 minted    -         "fence_of also finds the fence venv that sits beside the hooks venv in a bazel-bin layout, so mikemol-commit run from mtools' own bazel build takes the commit lock"  evidence=github-8f

@@ -142,3 +142,31 @@ def test_an_unknown_flag_is_a_usage_error_not_a_repository_name(
     assert snapshot.main(["--help"]) == snapshot.EXIT_USAGE
     assert snapshot.main(["--bogus", "--index"]) == snapshot.EXIT_USAGE
     assert "usage: mikemol-snapshot" in capsys.readouterr().err
+
+
+def test_a_tracked_symlink_is_refused_and_named_not_followed_or_crashed_on(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """⚑ A tracked link to a sibling directory is not carried and not followed; the rest lands.
+
+    luthen-observability tracks `images/paperkit-executor` as a link to a sibling repo; the `data`
+    filter raised on it and every isolated commit there traced back (luthen-observability:W832).
+    Operator ruling 2026-10-02: a link is refused and named, never followed or recreated. The link
+    here exists only in tmp_path, to prove the refusal.
+    """
+    root = _repo(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "secret.txt").write_text("secret\n", encoding="utf-8")
+    (root / "link").symlink_to("../outside")
+    _git(root, "add", "-A")
+    tree = snapshot.tree_of(root, working=False)
+    with snapshot.Snapshot("repo", tmp_path / "space") as snap:
+        snap.materialize(root, tree)
+        assert (snap.path / "keep.txt").is_file()
+        assert not (snap.path / "link").is_symlink()
+        assert not (snap.path / "link").exists()
+        assert snap.materialize(root, tree) == []
+    assert "tracked symlink not carried (a link is refused, never followed): link\n" in (
+        capsys.readouterr().err
+    )

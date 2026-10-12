@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1020,
+  "counter": 1022,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -16162,7 +16162,7 @@
     {
       "symbol": "W797",
       "title": "Audit commit gates that read a sibling repo's live working tree and pin each to a recorded commit",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "gate",
@@ -16173,16 +16173,16 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Known cases: rosettapkg cite-check reads ~/github/linux-sources (rosettapkg:W121); el-openglo's worklist gate locates ~/github/paperkit as its engine (not vendored). Find the rest by scanning each repo's hooks and gate scripts for Path.home()/github/<repo> and ~/github/<repo> reads. For each, record the pinned sha the gate should read, and make a gate that sees a dirty or moved sibling refuse to certify instead of exit 1 on an unsound verdict. Feeds katas.py probe: a gate that passes alone and fails at commit time is a candidate",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-11: af3d913 [PUSHED]: audit written to .claude/design/W797-sibling-tree-reads.md (tier A pinned, tier B 17 readers that certify from a sibling's live tree, tier C fleet readers by design); W1018 (shared pin check) and W1019 (letters) minted",
       "issued_at": "2026-10-06T00:31:41Z",
       "minted_during": "interrupt",
       "caused_by": "W790",
-      "last_worked": "2026-10-11T22:39:29Z",
+      "last_worked": "2026-10-11T23:07:56Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
-      "completed": null
+      "completed": "20261011T230756Z"
     },
     {
       "symbol": "W798",
@@ -20859,7 +20859,7 @@
     {
       "symbol": "W1020",
       "title": "mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on it",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "luthen-observability:W832"
       ],
@@ -20875,6 +20875,45 @@
       "issued_at": "2026-10-11T22:58:21Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W832",
+      "last_worked": "2026-10-11T23:07:57Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1021",
+      "title": "Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute existing di",
+      "status": "ready",
+      "enables": [
+        "amr-skills:W305"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T23:17:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "amr-skills:W305",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1022",
+      "title": "fence_of also finds the fence venv that sits beside the hooks venv in a bazel-bin layout, so mikemol-commit run from mtools' own bazel build takes the commit lock",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "kata",
+        "commit",
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-11T23:32:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
       "last_worked": null,
       "ticks_blocked": 0
     }
