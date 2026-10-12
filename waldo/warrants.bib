@@ -363,3 +363,150 @@
   claim  = {What the queue may see: fingerprint, and the expiry in UTC when known.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_custody.py -k test_describe_shows_the_fingerprint_and_the_expiry_never_the_value},
 }
+
+@misc{waldo-pipeline-plan-within-the-set-is-applied-with-the-same-artifact-and-witnessed,
+  section = {pipeline},
+  title  = {The positive control: applied once with plan-1, the witness met, exit 0},
+  claim  = {The positive control: applied once with plan-1, the witness met, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_plan_within_the_set_is_applied_with_the_same_artifact_and_witnessed},
+}
+
+@misc{waldo-pipeline-empty-plan-is-converged-and-still-witnessed,
+  section = {pipeline},
+  title  = {A converged set applies nothing but its witnesses still run},
+  claim  = {A converged set applies nothing but its witnesses still run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_an_empty_plan_is_converged_and_still_witnessed},
+}
+
+@misc{waldo-pipeline-planned-change-outside-the-set-applies-nothing-and-prints-the-diff,
+  section = {pipeline},
+  title  = {Refused with the plus line and the planned rows; apply and witnesses never run},
+  claim  = {Refused with the plus line and the planned rows; apply and witnesses never run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_planned_change_outside_the_set_applies_nothing_and_prints_the_diff},
+}
+
+@misc{waldo-pipeline-dry-run-stops-at-matches,
+  section = {pipeline},
+  title  = {Dry plans and compares, applies nothing and runs no after-witness},
+  claim  = {Dry plans and compares, applies nothing and runs no after-witness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_dry_run_stops_at_matches},
+}
+
+@misc{waldo-pipeline-plan-that-is-not-admitted-is-refused-with-a-scrubbed-tail,
+  section = {pipeline},
+  title  = {The plan step's own output reaches the verdict with the secret scrubbed out},
+  claim  = {The plan step's own output reaches the verdict with the secret scrubbed out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_plan_that_is_not_admitted_is_refused_with_a_scrubbed_tail},
+}
+
+@misc{waldo-pipeline-unreadable-plan-is-cannot-run,
+  section = {pipeline},
+  title  = {A malformed change row is exit 2, and nothing is applied},
+  claim  = {A malformed change row is exit 2, and nothing is applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_an_unreadable_plan_is_cannot_run},
+}
+
+@misc{waldo-pipeline-unsound-contract-runs-nothing,
+  section = {pipeline},
+  title  = {A witness that cannot fail is found by lint before any step runs: exit 2, no plan made},
+  claim  = {A witness that cannot fail is found by lint before any step runs: exit 2, no plan made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_an_unsound_contract_runs_nothing},
+}
+
+@misc{waldo-pipeline-failed-precondition-refuses-before-any-plan,
+  section = {pipeline},
+  title  = {The before-witness runs first; its failure ends the run with no plan made},
+  claim  = {The before-witness runs first; its failure ends the run with no plan made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_failed_precondition_refuses_before_any_plan},
+}
+
+@misc{waldo-pipeline-failed-apply-is-reported-scrubbed-and-not-witnessed,
+  section = {pipeline},
+  title  = {Exit 1 with the apply's rc, the secret scrubbed from its tail, and no witness run},
+  claim  = {Exit 1 with the apply's rc, the secret scrubbed from its tail, and no witness run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_failed_apply_is_reported_scrubbed_and_not_witnessed},
+}
+
+@misc{waldo-pipeline-failed-witness-after-an-apply-names-the-act-and-the-witness,
+  section = {pipeline},
+  title  = {Applied but unproven is exit 1 with the state saying both},
+  claim  = {Applied but unproven is exit 1 with the state saying both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_a_failed_witness_after_an_apply_names_the_act_and_the_witness},
+}
+
+@misc{waldo-pipeline-advances-witness-compares-the-reading-before-the-act-with-after,
+  section = {pipeline},
+  title  = {A version that moved passes; a standing green does not, though both read green},
+  claim  = {A version that moved passes; a standing green does not, though both read green.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_an_advances_witness_compares_the_reading_before_the_act_with_after},
+}
+
+@misc{waldo-pipeline-verdict-is-one-json-line,
+  section = {pipeline},
+  title  = {A line with no newline that parses back to the same verdict},
+  claim  = {A line with no newline that parses back to the same verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pipeline.py -k test_the_verdict_is_one_json_line},
+}
+
+@misc{waldo-cli-standard-invocation-is-built-and-matches-its-shape,
+  section = {cli},
+  title  = {The positive control: the built command is the documented one, with and without --dry},
+  claim  = {The positive control: the built command is the documented one, with and without --dry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_standard_invocation_is_built_and_matches_its_shape},
+}
+
+@misc{waldo-cli-command-off-the-standard-shape-does-not-match,
+  section = {cli},
+  title  = {Relative paths, pipes, chaining, inline scripts, spaces and extra flags are all refused},
+  claim  = {Relative paths, pipes, chaining, inline scripts, spaces and extra flags are all refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_command_off_the_standard_shape_does_not_match},
+}
+
+@misc{waldo-cli-invocation-refuses-what-it-cannot-make-standard,
+  section = {cli},
+  title  = {A relative path and a name with a space or a shell character raise instead of building},
+  claim  = {A relative path and a name with a space or a shell character raise instead of building.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_invocation_refuses_what_it_cannot_make_standard},
+}
+
+@misc{waldo-cli-main-runs-a-set-and-prints-one-json-line,
+  section = {cli},
+  title  = {The positive control: an allowed plan is applied, one line on stdout, nothing on stderr},
+  claim  = {The positive control: an allowed plan is applied, one line on stdout, nothing on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_main_runs_a_set_and_prints_one_json_line},
+}
+
+@misc{waldo-cli-refusal-prints-the-diff-to-stderr-and-the-command-to-run,
+  section = {cli},
+  title  = {A plan outside the set: exit 1, the plus line on stderr, `run` on the verdict},
+  claim  = {A plan outside the set: exit 1, the plus line on stderr, `run` on the verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_refusal_prints_the_diff_to_stderr_and_the_command_to_run},
+}
+
+@misc{waldo-cli-dry-flag-stops-at-matches,
+  section = {cli},
+  title  = {--dry plans and compares only},
+  claim  = {--dry plans and compares only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_dry_flag_stops_at_matches},
+}
+
+@misc{waldo-cli-missing-set-is-cannot-run,
+  section = {cli},
+  title  = {No such file is exit 2 with the reason, not a traceback},
+  claim  = {No such file is exit 2 with the reason, not a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_missing_set_is_cannot_run},
+}
+
+@misc{waldo-cli-set-that-is-not-json-or-not-a-contract-is-cannot-run,
+  section = {cli},
+  title  = {Broken JSON and a typo'd key are both exit 2},
+  claim  = {Broken JSON and a typo'd key are both exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_set_that_is_not_json_or_not_a_contract_is_cannot_run},
+}
+
+@misc{waldo-cli-command-off-the-standard-shape-is-refused-before-anything-runs,
+  section = {cli},
+  title  = {The mode will not print a command it would not itself build},
+  claim  = {The mode will not print a command it would not itself build.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_command_off_the_standard_shape_is_refused_before_anything_runs},
+}

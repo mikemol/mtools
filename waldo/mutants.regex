@@ -33,4 +33,19 @@ src/mikemol/waldo/custody.py|open-directory-accepted|st_mode & OPEN_BITS|st_mode
 src/mikemol/waldo/custody.py|link-accepted|if path\.is_symlink\(\):|if False:|def=_refuse_link
 src/mikemol/waldo/custody.py|blank-file-is-a-secret|Secret\(text\) if text else None|Secret(text)|def=read_secret
 src/mikemol/waldo/custody.py|expiry-always-shown|if expires is None:|if False:|def=describe
+src/mikemol/waldo/pipeline.py|unsound-contract-runs|if findings:|if False:|def=_gate
+src/mikemol/waldo/pipeline.py|failed-precondition-ignored|if failed:|if False:|def=_gate
+src/mikemol/waldo/pipeline.py|unadmitted-plan-proceeds|if artifact is None:|if False:|def=_plan
+src/mikemol/waldo/pipeline.py|outside-set-applied|if not diff\.clean\(\):|if False:|def=_plan
+src/mikemol/waldo/pipeline.py|empty-plan-applied|if not planned\.changes:|if False:|def=_apply
+src/mikemol/waldo/pipeline.py|apply-failure-ignored|if code == 0:|if True:|def=_apply
+src/mikemol/waldo/pipeline.py|dry-run-applies|if dry:|if False:|def=execute
+src/mikemol/waldo/pipeline.py|converged-reads-applied|"applied" if planned\.changes else "converged"|"applied"|def=execute
+src/mikemol/waldo/pipeline.py|failed-witness-exits-ok|\(EXIT_REFUSED if failed else EXIT_OK\)|EXIT_OK|def=execute
+src/mikemol/waldo/pipeline.py|plan-tail-unscrubbed|scrub\(tail, \*secrets\)|tail|def=_plan
+src/mikemol/waldo/pipeline.py|apply-tail-unscrubbed|scrub\(out, \*secrets\)|out|def=_apply
+src/mikemol/waldo/cli.py|off-shape-command-accepted|if command is not None and not matches_shape\(command\):|if False:|def=main
+src/mikemol/waldo/cli.py|run-command-never-attached|if code != EXIT_OK and command is not None:|if False:|def=main
+src/mikemol/waldo/cli.py|shape-matches-a-prefix|SHAPE\.fullmatch\(command\)|SHAPE.match(command)|def=matches_shape
+src/mikemol/waldo/cli.py|relative-path-accepted|if not repo\.is_absolute\(\) or not interpreter\.is_absolute\(\):|if False:|def=invocation
 src/mikemol/waldo/contract.py|advances-not-a-condition|or witness\.advances|or False|def=has_condition

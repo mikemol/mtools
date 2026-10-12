@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-12T23:33:05Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 148,
+      "ticks_blocked": 149,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 153,
+      "ticks_blocked": 154,
       "completed": null
     },
     {
@@ -11800,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 87,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -16152,7 +16155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -17532,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -17555,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -17978,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -18152,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 52,
       "completed": null
     },
     {
@@ -18931,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -21362,7 +21365,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -21408,7 +21411,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 10,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -21497,7 +21500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 10,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -21575,7 +21578,6 @@
         "fleet"
       ],
       "blocked_on": [
-        "W1058",
         "W1059",
         "W1060"
       ],
@@ -21585,7 +21587,7 @@
       "issued_at": "2026-10-12T19:58:44Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
-      "last_worked": "2026-10-12T22:25:58Z",
+      "last_worked": "2026-10-12T23:33:06Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21676,7 +21678,7 @@
     {
       "symbol": "W1058",
       "title": "waldo.custody: Secret type that prints only its fingerprint, atomic 0600-in-0700 store, identity-explicit refusal",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1053"
       ],
@@ -21685,36 +21687,34 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 3f56d43 [PUSHED]: waldo.custody, 12 tests, 9 declared defects.",
       "issued_at": "2026-10-12T20:12:18Z",
       "minted_during": "tick",
       "caused_by": "W1053",
-      "last_worked": "2026-10-12T22:51:06Z",
+      "last_worked": "2026-10-12T23:32:09Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T233209Z"
     },
     {
       "symbol": "W1059",
       "title": "waldo.pipeline and CLI: plan, compare, apply the same artifact, witness, one JSON verdict line; exits 0, 1 and 2",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "W1053"
       ],
       "touches": [
         "waldo"
       ],
-      "blocked_on": [
-        "W1058"
-      ],
+      "blocked_on": [],
       "blocked_kind": "agent",
       "next_bounded_step": "Emit and test the standard invocation shape: env -C <repo> <abs interpreter> -m mikemol.waldo --contract <name>; test over the printed line.",
       "evidence": "2026-10-12: 2026-10-12 operator note via github-8f: the permission auto-classifier fires on SHAPE and will probably not object to a command of the form 'env -C <repo> <absolute interpreter> -m <module> --set <name>': absolute interpreter path, cwd set by env -C, one module, a named declared set, no pipes, chaining or inline scripts. REQUIREMENT for this card: that is the STANDARD INVOCATION SHAPE the mode documents and EMITS (the command a refusal or a halt prints for the operator to run, and the shape of every handed command in a waypoint --next); add a test that the mode's printed command matches it (a regex over the printed line: starts 'env -C ', an absolute path interpreter, '-m <module>', no pipe/semicolon/&&/-c). Do not rely on the classifier staying quiet: the declared set and the witnesses are the actual safety. Cluster and host applies stay the operator's.",
       "issued_at": "2026-10-12T20:12:18Z",
       "minted_during": "tick",
       "caused_by": "W1053",
-      "last_worked": "2026-10-12T22:25:59Z",
-      "ticks_blocked": 1,
+      "last_worked": "2026-10-12T23:32:10Z",
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -21737,7 +21737,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1053",
       "last_worked": "2026-10-12T20:21:55Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
