@@ -43,12 +43,17 @@ _WRITES = ("pyproject.toml", "uv.lock", str(WHEELS))
 
 @dataclass(frozen=True)
 class Target:
-    """What to re-vendor: the vendoring repo, the mtools checkout, the commit, the live writer."""
+    """What to re-vendor: the vendoring repo, the mtools checkout, the commit, the live writer.
+
+    `dists` are the wheels the repo vendors (`revendor.vendored`): the pair, plus the fence when the
+    repo has added it, all moved to the one commit together.
+    """
 
     repo: Path
     mtools: Path
     sha: str
     writer: Path
+    dists: tuple[str, ...] = revendor.DISTS
 
 
 def _failed(what: str, code: int, out: str) -> str:
@@ -74,7 +79,7 @@ def build(run: Runner, target: Target, work: Path) -> str | None:
 
     """
     source = wheel.Source(target.sha, target.mtools)
-    return wheel.build_into(run, source, revendor.DISTS, work, work / "dist")
+    return wheel.build_into(run, source, target.dists, work, work / "dist")
 
 
 def _hash_of(run: Runner, writer: Path, state: Path, work: Path) -> str:
@@ -94,7 +99,7 @@ def same_reading(run: Runner, target: Target, work: Path) -> str | None:
     code, out = run(["uv", "venv", "--quiet", str(venv)], work)
     if code != 0:
         return _failed("uv venv", code, out)
-    wheels = [str(work / "dist" / revendor.wheel_name(d, short)) for d in revendor.DISTS]
+    wheels = [str(work / "dist" / revendor.wheel_name(d, short)) for d in target.dists]
     python = str(venv / "bin" / "python")
     code, out = run(["uv", "pip", "install", "--quiet", "--python", python, *wheels], work)
     if code != 0:
@@ -116,11 +121,11 @@ def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
 
     """
     short = revendor.short_of(target.sha)
-    for dist in revendor.DISTS:
+    for dist in target.dists:
         name = revendor.wheel_name(dist, short)
         shutil.copyfile(work / "dist" / name, target.repo / WHEELS / name)
     for stale in sorted(old - {short}):
-        for dist in revendor.DISTS:
+        for dist in target.dists:
             gone = str(WHEELS / revendor.wheel_name(dist, stale))
             run(["git", "rm", "--quiet", "--force", gone], target.repo)
     project = target.repo / "pyproject.toml"
@@ -158,6 +163,6 @@ def checksums(target: Target) -> dict[str, str]:
     """
     short = revendor.short_of(target.sha)
     wheels = {
-        dist: target.repo / WHEELS / revendor.wheel_name(dist, short) for dist in revendor.DISTS
+        dist: target.repo / WHEELS / revendor.wheel_name(dist, short) for dist in target.dists
     }
     return {dist: hashlib.sha256(path.read_bytes()).hexdigest() for dist, path in wheels.items()}

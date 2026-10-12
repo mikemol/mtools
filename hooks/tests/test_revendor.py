@@ -71,3 +71,32 @@ def test_the_plan_names_the_new_sha_the_old_pin_and_the_source() -> None:
     assert OLD in text
     assert "from mtools" in text
     assert "(none)" in "\n".join(revendor.plan_lines(SHA, set(), "mtools"))
+
+
+FENCE_LINE = f'mikemol-fence = {{ path = "vendor/wheels/{revendor.wheel_name("fence", OLD)}" }}\n'
+
+
+def test_a_repo_that_vendors_the_fence_moves_it_with_the_pair() -> None:
+    """mtools:W1031: the fence wheel, once added, takes the new sha with hooks and pathsforward."""
+    text = SOURCES + FENCE_LINE
+    assert revendor.pinned_shorts(text) == {OLD}
+    moved = revendor.move_sources(text, NEW)
+    assert moved.count(NEW) == len((*revendor.DISTS, "fence"))
+    assert moved.replace(NEW, OLD) == text
+
+
+def test_the_dists_a_repo_vendors_are_read_from_its_pyproject() -> None:
+    """The pair always; the fence only when its wheel path is named; nothing reads as the pair."""
+    assert revendor.vendored(SOURCES) == revendor.DISTS
+    assert revendor.vendored(SOURCES + FENCE_LINE) == (*revendor.DISTS, "fence")
+    assert revendor.vendored(FENCE_LINE) == ("fence",)
+    assert revendor.vendored("dependencies = []\n") == revendor.DISTS
+
+
+def test_the_plan_builds_each_dist_the_repo_vendors() -> None:
+    """With the fence vendored the plan archives, builds and moves three, not two."""
+    dists = (*revendor.DISTS, "fence")
+    text = "\n".join(revendor.plan_lines(SHA, {OLD}, "mtools", dists))
+    assert f"uv build --wheel fence -> {revendor.wheel_name('fence', NEW)}" in text
+    assert "move the 3 [tool.uv.sources]" in text
+    assert "move the 2 [tool.uv.sources]" in "\n".join(revendor.plan_lines(SHA, {OLD}, "mtools"))

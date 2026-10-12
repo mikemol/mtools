@@ -58,12 +58,13 @@ def run_revendor(repo: Path, sha: str, mtools: Path, runner: Runner, *, write: b
     old = revendor.pinned_shorts(project.read_text(encoding="utf-8"))
     if not old:
         return _refuse(f"{repo.name} vendors no hooks or pathsforward wheel")
-    for line in revendor.plan_lines(sha, old, mtools.name):
+    dists = revendor.vendored(project.read_text(encoding="utf-8"))
+    for line in revendor.plan_lines(sha, old, mtools.name, dists):
         _say(f"PLAN {line}")
     if not write:
         return 0
     writer = repo / ".venv" / "bin" / "mikemol-paths-forward"
-    target = revendor_apply.Target(repo, mtools, sha, writer)
+    target = revendor_apply.Target(repo, mtools, sha, writer, dists)
     failure = revendor_apply.apply(runner, target)
     if failure is not None:
         _say(f"REFUSED {failure}")

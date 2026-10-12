@@ -139,3 +139,18 @@ def test_usage_refusals_exit_two_and_apply_nothing(
     codes = [repin_cli.main(args, _runner) for args in refused]
     assert codes == [repin_cli.EXIT_USAGE] * len(refused)
     assert apply.targets == []
+
+
+def test_a_repo_that_vendors_the_fence_has_it_planned_and_applied(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """mtools:W1031: the dists come from the pyproject, so the fence is built and moved too."""
+    repo = _repo(tmp_path)
+    project = repo / "pyproject.toml"
+    fence = f'mikemol-fence = {{ path = "vendor/wheels/{revendor.wheel_name("fence", OLD)}" }}\n'
+    project.write_text(project.read_text(encoding="utf-8") + fence, encoding="utf-8")
+    apply = _Apply()
+    _install(monkeypatch, apply)
+    assert repin_cli.main(_args(repo, tmp_path / "mtools", "--write"), _runner) == 0
+    assert apply.targets[0].dists == (*revendor.DISTS, "fence")
+    assert "uv build --wheel fence" in capsys.readouterr().out

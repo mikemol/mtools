@@ -20,12 +20,30 @@ from __future__ import annotations
 import re
 
 DISTS = ("hooks", "pathsforward")
+# ⚑ THE FENCE IS OPT-IN BY PRESENCE (mtools:W1031, luthen-observability:W843). A repo that vendors
+# the hooks wheel has no commit lock unless `mikemol-membudget` sits beside its interpreter, which
+# is the fence wheel. A repo adds that wheel once (`mikemol-wheel fence`, a `[tool.uv.sources]`
+# path and a dependency); from then on `--revendor` moves it with the pair.
+KNOWN = (*DISTS, "fence")
 VERSION = "0.1.0"
 _SOURCE = re.compile(
-    r"(vendor/wheels/mikemol_(?:hooks|pathsforward)-0\.1\.0\+g)([0-9a-f]+)(-py3-none-any\.whl)"
+    r"(vendor/wheels/mikemol_(?:hooks|pathsforward|fence)-0\.1\.0\+g)([0-9a-f]+)"
+    r"(-py3-none-any\.whl)"
 )
 _FULL_SHA = re.compile(r"[0-9a-f]{40}")
 _SHORT = 7
+
+
+def vendored(pyproject: str) -> tuple[str, ...]:
+    """Name the mtools dists a pyproject vendors, in `KNOWN` order.
+
+    Returns:
+        each dist whose wheel path the file names; the hooks and pathsforward pair when it names
+        none (the caller refuses a repo that vendors nothing before it gets here).
+
+    """
+    found = tuple(d for d in KNOWN if f"vendor/wheels/mikemol_{d}-" in pyproject)
+    return found or DISTS
 
 
 def wheel_name(dist: str, short: str) -> str:
@@ -91,7 +109,7 @@ def with_local_version(archived: str, short: str) -> str | None:
     return archived.replace(marker, f'version = "{VERSION}+g{short}"', 1)
 
 
-def plan_lines(sha: str, old: set[str], source: str) -> list[str]:
+def plan_lines(sha: str, old: set[str], source: str, dists: tuple[str, ...] = DISTS) -> list[str]:
     """Say what an apply would do, for printing before it does it.
 
     Returns:
@@ -101,11 +119,11 @@ def plan_lines(sha: str, old: set[str], source: str) -> list[str]:
     short = short_of(sha)
     kept = ", ".join(sorted(old)) or "none"
     return [
-        f"git archive {short} {' '.join(DISTS)} from {source}; +g{short} in the archive only",
-        *(f"uv build --wheel {d} -> {wheel_name(d, short)}" for d in DISTS),
-        "throwaway venv: install both; the new writer's --hash on a COPY of the queue == live",
+        f"git archive {short} {' '.join(dists)} from {source}; +g{short} in the archive only",
+        *(f"uv build --wheel {d} -> {wheel_name(d, short)}" for d in dists),
+        "throwaway venv: install all; the new writer's --hash on a COPY of the queue == live",
         f"copy the wheels to vendor/wheels, git rm the old ({kept})",
-        f"move the two [tool.uv.sources] paths in pyproject.toml to +g{short}",
+        f"move the {len(dists)} [tool.uv.sources] paths in pyproject.toml to +g{short}",
         "uv lock, uv sync --frozen",
         "print the new sha256 lines for vendor/wheels/README.md (a hand-written record)",
     ]

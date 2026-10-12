@@ -40,7 +40,7 @@ def _pyproject(short: str) -> str:
 def _archive(argv: Sequence[str], archived: str) -> tuple[int, str]:
     out = next(a for a in argv if a.startswith("--output=")).removeprefix("--output=")
     with tarfile.open(out, "w") as tar:
-        for dist in revendor.DISTS:
+        for dist in revendor.KNOWN:
             data = archived.encode()
             info = tarfile.TarInfo(f"{dist}/pyproject.toml")
             info.size = len(data)
@@ -151,6 +151,38 @@ def test_the_checksums_are_those_of_the_wheels_in_the_tree(tmp_path: Path) -> No
     path = target.repo / "vendor" / "wheels" / revendor.wheel_name("pathsforward", NEW)
     assert sums["pathsforward"] == hashlib.sha256(path.read_bytes()).hexdigest()
     assert set(sums) == set(revendor.DISTS)
+
+
+def _repo_with_the_fence(tmp_path: Path) -> Target:
+    """Make the repo of `_repo`, and add the fence wheel and its source line beside the pair.
+
+    Returns:
+        the target, whose dists include the fence.
+
+    """
+    base = _repo(tmp_path)
+    fence = f'mikemol-fence = {{ path = "vendor/wheels/{revendor.wheel_name("fence", OLD)}" }}\n'
+    project = base.repo / "pyproject.toml"
+    project.write_text(project.read_text(encoding="utf-8") + fence, encoding="utf-8")
+    (base.repo / "vendor" / "wheels" / revendor.wheel_name("fence", OLD)).write_text(
+        "old fence wheel", encoding="utf-8"
+    )
+    return Target(base.repo, base.mtools, SHA, base.writer, (*revendor.DISTS, "fence"))
+
+
+def test_a_vendored_fence_is_rebuilt_swapped_and_checksummed_with_the_pair(
+    tmp_path: Path,
+) -> None:
+    """mtools:W1031: the fence wheel is built at the commit, the old one goes, the pin moves."""
+    target = _repo_with_the_fence(tmp_path)
+    assert revendor_apply.apply(_World(), target) is None
+    wheels = target.repo / "vendor" / "wheels"
+    assert sorted(p.name for p in wheels.iterdir()) == sorted(
+        revendor.wheel_name(d, NEW) for d in target.dists
+    )
+    text = (target.repo / "pyproject.toml").read_text(encoding="utf-8")
+    assert revendor.pinned_shorts(text) == {NEW}
+    assert set(revendor_apply.checksums(target)) == {"hooks", "pathsforward", "fence"}
 
 
 def test_a_dirty_tree_is_refused_before_anything_is_built(tmp_path: Path) -> None:
