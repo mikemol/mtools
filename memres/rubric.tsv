@@ -8,3 +8,4 @@ mem_converge	The Convergence Check: Which Grid Projects Still Run on the Floor, 
 sweep_budget	The Sweep Budget: The Operator Override, Else Forty Percent of a Planted MemTotal
 cpuweight	The CPU Weight: A Planted cgroup Host Weighted, Joined and Verified, With the Server Moved In
 zswap_probe	The Zswap Probe: One Planted cgroup Sampled in a Pass, Every Field Labelled, the Selftest Honest
+rail	The Memory Rail: Level, Slope and Acceleration of Headroom, an Allowance That Shrinks At Once and Recovers a Cell at a Time, and Never More Optimistic Than the Level Measured

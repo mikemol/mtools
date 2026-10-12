@@ -591,3 +591,122 @@
   claim  = {Two cells recorded at different times: `measured_at` is the later one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mem_db.py -k test_provenance_reports_the_latest_measurement_time_not_the_earliest},
 }
+
+@misc{memres-rail-fewer-than-two-samples-is-no-reading,
+  section = {rail},
+  title  = {One point has no direction},
+  claim  = {One point has no direction.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_fewer_than_two_samples_is_no_reading},
+}
+
+@misc{memres-rail-time-that-does-not-advance-is-no-reading,
+  section = {rail},
+  title  = {Two samples at one instant would divide by zero; they read as nothing},
+  claim  = {Two samples at one instant would divide by zero; they read as nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_time_that_does_not_advance_is_no_reading},
+}
+
+@misc{memres-rail-two-samples-give-a-slope-and-no-acceleration,
+  section = {rail},
+  title  = {The newest step is the slope; with nothing before it the acceleration is zero},
+  claim  = {The newest step is the slope; with nothing before it the acceleration is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_two_samples_give_a_slope_and_no_acceleration},
+}
+
+@misc{memres-rail-three-samples-give-the-acceleration-over-half-their-span,
+  section = {rail},
+  title  = {Steps of -10 then -20 per second over a 2 s span: slope -20, growing by 10 per second},
+  claim  = {Steps of -10 then -20 per second over a 2 s span: slope -20, growing by 10 per second.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_three_samples_give_the_acceleration_over_half_their_span},
+}
+
+@misc{memres-rail-only-the-newest-three-samples-are-read,
+  section = {rail},
+  title  = {An older fourth sample does not change the reading},
+  claim  = {An older fourth sample does not change the reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_only_the_newest_three_samples_are_read},
+}
+
+@misc{memres-rail-repeated-earlier-time-leaves-the-slope-and-no-acceleration,
+  section = {rail},
+  title  = {If the two older samples share a time, there is no earlier step to compare with},
+  claim  = {If the two older samples share a time, there is no earlier step to compare with.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_repeated_earlier_time_leaves_the_slope_and_no_acceleration},
+}
+
+@misc{memres-rail-falling-level-projects-lower-and-an-accelerating-fall-lower-still,
+  section = {rail},
+  title  = {Level 10000 falling 100 MB/s for 10 s is 9000; accelerating at -10 it is 8500},
+  claim  = {Level 10000 falling 100 MB/s for 10 s is 9000; accelerating at -10 it is 8500.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_falling_level_projects_lower_and_an_accelerating_fall_lower_still},
+}
+
+@misc{memres-rail-rising-level-never-projects-above-the-level-measured-now,
+  section = {rail},
+  title  = {The rail does not hand out memory that is only forecast},
+  claim  = {The rail does not hand out memory that is only forecast.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_rising_level_never_projects_above_the_level_measured_now},
+}
+
+@misc{memres-rail-capacity-counts-whole-cells-after-the-reserve,
+  section = {rail},
+  title  = {10240 free less 4096 held back is 6144, which is three 2048 MB cells},
+  claim  = {10240 free less 4096 held back is 6144, which is three 2048 MB cells.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_capacity_counts_whole_cells_after_the_reserve},
+}
+
+@misc{memres-rail-capacity-is-never-below-the-floor-or-above-the-ceiling,
+  section = {rail},
+  title  = {Headroom under the reserve still runs one cell; a flood is held at the ceiling},
+  claim  = {Headroom under the reserve still runs one cell; a flood is held at the ceiling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_capacity_is_never_below_the_floor_or_above_the_ceiling},
+}
+
+@misc{memres-rail-fall-in-capacity-is-taken-whole,
+  section = {rail},
+  title  = {From 24 cells to what three cells of headroom carry, in one evaluation},
+  claim  = {From 24 cells to what three cells of headroom carry, in one evaluation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_fall_in_capacity_is_taken_whole},
+}
+
+@misc{memres-rail-rise-in-capacity-adds-one-cell-at-a-time,
+  section = {rail},
+  title  = {Plenty of headroom after a squeeze recovers by a single step},
+  claim  = {Plenty of headroom after a squeeze recovers by a single step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_rise_in_capacity_adds_one_cell_at_a_time},
+}
+
+@misc{memres-rail-allowance-that-the-headroom-just-carries-holds,
+  section = {rail},
+  title  = {Capacity equal to the allowance is no change},
+  claim  = {Capacity equal to the allowance is no change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_an_allowance_that_the_headroom_just_carries_holds},
+}
+
+@misc{memres-rail-with-no-reading-the-previous-allowance-holds-inside-the-limits,
+  section = {rail},
+  title  = {No information keeps what was, clamped to the floor and the ceiling},
+  claim  = {No information keeps what was, clamped to the floor and the ceiling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_with_no_reading_the_previous_allowance_holds_inside_the_limits},
+}
+
+@misc{memres-rail-accelerating-fall-costs-a-cell-that-the-same-steady-fall-does-not,
+  section = {rail},
+  title  = {Same level and slope; only the second-order term differs, and it removes a cell},
+  claim  = {Same level and slope; only the second-order term differs, and it removes a cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_an_accelerating_fall_costs_a_cell_that_the_same_steady_fall_does_not},
+}
+
+@misc{memres-rail-rail-with-a-cell-of-no-size-is-refused,
+  section = {rail},
+  title  = {It would divide by zero in `capacity`},
+  claim  = {It would divide by zero in `capacity`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_rail_with_a_cell_of_no_size_is_refused},
+}
+
+@misc{memres-rail-rail-whose-ceiling-is-below-its-floor-is-refused,
+  section = {rail},
+  title  = {The limits would cross, and no allowance could satisfy both},
+  claim  = {The limits would cross, and no allowance could satisfy both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rail.py -k test_a_rail_whose_ceiling_is_below_its_floor_is_refused},
+}

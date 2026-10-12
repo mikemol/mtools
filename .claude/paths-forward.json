@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1039,
+  "counter": 1042,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 132,
+      "ticks_blocked": 133,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 131,
+      "ticks_blocked": 132,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 136,
+      "ticks_blocked": 137,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 70,
+      "ticks_blocked": 71,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16983,7 +16983,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 60,
       "completed": null
     },
     {
@@ -17493,7 +17493,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -17534,7 +17534,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -17557,7 +17557,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -17980,7 +17980,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -18154,7 +18154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -18933,7 +18933,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -19990,7 +19990,7 @@
       "evidence": "2026-10-10: 2026-10-10: build on the judge in W976 (paperkit-f5's judged-fix: parse and fewer-mypy-errors per file), so the -> None rewrite and the Any-params step share one judge. | 2026-10-10: 2026-10-10 aeternum-90: stopgap aeternum scripts/annotate_none.py (aeternum 420a13e): rule 1 only (-> None where no return carries a value), mypy-judged per file, dry-run default; 8 of 12 pipeline files kept, 4 reverted. Use as a reference for the W976 engine; aeternum retires it when W975 lands. Rule 2 (return inference from return expressions) is aeternum:W115, in scope if wanted. | 2026-10-11: 2026-10-10 20:28 EDT plan (not started, reboot at 21:00): a planner on the W976 judge. Rule 1 only first: add '-> None' to a def with no return carrying a value, not a generator, not abstract/overload/Protocol stub; reuse orempty/typedargs libcst planning style (src/mikemol/pycodemod/typedargs.py is the shape); census by idiom as worklist rows (return-only, params-only, fully-unannotated, left alone and why). Rule 2 (return inference, aeternum:W115) and Any-params stay out until rule 1 lands. aeternum's stopgap scripts/annotate_none.py (aeternum 420a13e) is the reference. | 2026-10-11: commit 58269d8 [PUSHED]: nonereturns planner (9 tests, 7 mutants). CLI mode none-returns committed next (4 tests, 1 mutant, bazel green). | 2026-10-11: commit 3abbdcc [PUSHED]: none-returns CLI mode (4 tests, 1 mutant) over the nonereturns planner (58269d8); pool_size share fix for shards. Rule 2 (aeternum:W115) not in.",
       "issued_at": "2026-10-10T21:43:55Z",
       "minted_during": "interrupt",
-      "caused_by": "aeternum:W114",
+      "caused_by": "inbox/2026-10-10-aeternum-ask-pycodemod-untyped-defs-mode.md",
       "last_worked": "2026-10-11T03:04:52Z",
       "ticks_blocked": 0,
       "completed": "20261011T030452Z"
@@ -20963,7 +20963,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T04:39:26Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -21116,7 +21116,7 @@
     {
       "symbol": "W1032",
       "title": "A tool run from the bazel-bin hooks venv does not write bytecode into it: a stale .pyc rewritten there by mikemol-commit (ours or a peer's) voids any bazel test reading that venv with 'modified during execution'",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -21125,19 +21125,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-12: 2026-10-12 evidence: hooks:mutants_0 failed three times locally with 'input dependency .../bazel-out/k8-fastbuild/bin/hooks/.venv/lib/python3.13/site-packages/mikemol/hooks/__pycache__/commit_kata.cpython-313.pyc (and entry.cpython-313.pyc once) was modified during execution', on runs where no source had changed since the build. Those __pycache__ entries are links into bazel outputs (mikemol-compileall refused: 'is a symlink and will be changed into a regular file'), so an interpreter that finds the .pyc stale against the source rewrites it. mikemol-commit is exactly that interpreter: github-8f's linux-sources commits from bazel-bin/hooks/.venv/bin/mikemol-commit, and mtools' own launcher runs from there too. Candidate fix, to measure first: PYTHONDONTWRITEBYTECODE=1 (or -B) in the launchers hooks/bin/mikemol-*, and sys.dont_write_bytecode set before the first mikemol import in the console-script entry, so nothing run from a bazel output writes into it.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 evidence: hooks:mutants_0 failed three times locally with 'input dependency .../bazel-out/k8-fastbuild/bin/hooks/.venv/lib/python3.13/site-packages/mikemol/hooks/__pycache__/commit_kata.cpython-313.pyc (and entry.cpython-313.pyc once) was modified during execution', on runs where no source had changed since the build. Those __pycache__ entries are links into bazel outputs (mikemol-compileall refused: 'is a symlink and will be changed into a regular file'), so an interpreter that finds the .pyc stale against the source rewrites it. mikemol-commit is exactly that interpreter: github-8f's linux-sources commits from bazel-bin/hooks/.venv/bin/mikemol-commit, and mtools' own launcher runs from there too. Candidate fix, to measure first: PYTHONDONTWRITEBYTECODE=1 (or -B) in the launchers hooks/bin/mikemol-*, and sys.dont_write_bytecode set before the first mikemol import in the console-script entry, so nothing run from a bazel output writes into it. | 2026-10-12: 4184cd9 [PUSHED]: PYTHONDONTWRITEBYTECODE=1 exported in every hooks/bin launcher that runs the bazel-bin venv (12 files, 16 names with the 4 links, not written through); a glob test fails if any launcher lacks it or sets it after the python call; the 8 launchers the sandbox could not see are named in the test target's data. After it, all 12 hooks:mutants shards pass locally with no .pyc collision (5 earlier runs failed on one).",
       "issued_at": "2026-10-12T04:22:15Z",
       "minted_during": "interrupt",
       "caused_by": "W1022",
-      "last_worked": "2026-10-12T05:42:55Z",
+      "last_worked": "2026-10-12T07:55:47Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T075547Z"
     },
     {
       "symbol": "W1033",
       "title": "memres gains a pure rail model: level, slope and acceleration from a window of memory samples, and a next_allowance policy that shrinks parallelism when use accelerates and recovers when it decays",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1034"
       ],
@@ -21152,8 +21152,9 @@
       "issued_at": "2026-10-12T04:37:51Z",
       "minted_during": "tick",
       "caused_by": "W1024",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T07:55:49Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1034",
@@ -21198,7 +21199,7 @@
     {
       "symbol": "W1036",
       "title": "mikemol-wheel makes a relative --out, --mtools and --src absolute before its build steps run in a temp directory, so luthen's --out vendor/wheels builds",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "luthen-observability:W843"
       ],
@@ -21208,19 +21209,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 4184cd9 [PUSHED]: mikemol-wheel makes --out, --mtools and --src absolute (Path.absolute, no link followed) before its steps run in a temp directory; 1 test, 1 warrant; reproduced first with the built tool (absolute --out built the fence wheel, relative did not)",
       "issued_at": "2026-10-12T04:39:26Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W843",
-      "last_worked": "2026-10-12T05:42:54Z",
+      "last_worked": "2026-10-12T07:55:48Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T075548Z"
     },
     {
       "symbol": "W1037",
       "title": "hooks:mutants is twelve shards, not three, so each fits its 300 s limit at host load 90 to 120 (the operator's split-not-lengthen rule)",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -21229,13 +21230,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 4184cd9 [PUSHED]: hooks:mutants is 12 shards of cpus=8 (was 3): three gates in a row timed all three shards out at 300 s at host load 90 to 120; the same width, run three at a time, each a twelfth of the work; all 12 pass locally and in the commit gate",
       "issued_at": "2026-10-12T06:42:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1032",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T07:55:48Z",
+      "ticks_blocked": 0,
+      "completed": "20261012T075548Z"
     },
     {
       "symbol": "W1038",
@@ -21270,11 +21272,72 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-12: 2026-10-12 design note. github-8f's suggested fix is 'add with -f only for paths already tracked (git ls-files)'. That covers a MODIFIED tracked wheel but not the case that bites: a re-vendor writes NEW sha-named wheels (mikemol_hooks-0.1.0+g<new>-...whl), which are untracked and ignored, so they would still be refused. The honest rule is by intent, not by tracking: a path the caller names EXACTLY (a file, never a directory, glob or pathspec magic) is force-added; anything a directory expands to is not, so an ignored scratch file cannot ride in. mikemol-commit's PATHs are already the caller's explicit list. Read commit_kata.prepare and isolated_paths for where the add runs (isolated: 'git add -A -- <paths>' in commit_isolated, private index) before changing it; refuse a path that is a symlink, per the no-symlinks ruling.",
+      "evidence": "2026-10-12: 2026-10-12 design note. github-8f's suggested fix is 'add with -f only for paths already tracked (git ls-files)'. That covers a MODIFIED tracked wheel but not the case that bites: a re-vendor writes NEW sha-named wheels (mikemol_hooks-0.1.0+g<new>-...whl), which are untracked and ignored, so they would still be refused. The honest rule is by intent, not by tracking: a path the caller names EXACTLY (a file, never a directory, glob or pathspec magic) is force-added; anything a directory expands to is not, so an ignored scratch file cannot ride in. mikemol-commit's PATHs are already the caller's explicit list. Read commit_kata.prepare and isolated_paths for where the add runs (isolated: 'git add -A -- <paths>' in commit_isolated, private index) before changing it; refuse a path that is a symlink, per the no-symlinks ruling. | 2026-10-12: 2026-10-12 luthen-observability found a probable ROOT CAUSE for the ignored wheels: when mikemol-wheel's --out is a directory it creates, uv build leaves an untracked .gitignore containing * in it, so git then refuses the new wheel ('paths are ignored by one of your .gitignore files'); luthen deleted that file by hand. github-8f's nemik case (a vendor/wheels/.gitignore of * with the wheels force-tracked) may be the same file left by an earlier build. mtools:W1042 stops the tool leaving it; this card still stands for repos that already have the file and for any other ignored path a caller names exactly.",
       "issued_at": "2026-10-12T07:25:36Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-12T07:25:51Z",
+      "last_worked": "2026-10-12T08:05:14Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1040",
+      "title": "mikemol-commit's time cap follows the build's progress, not the wall clock, and on any exit stops the bazel client, removes the index.lock its killed git left and releases the commit claim",
+      "status": "ready",
+      "enables": [
+        "paperkit:W303"
+      ],
+      "touches": [
+        "kata",
+        "commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T07:57:19Z",
+      "minted_during": "tick",
+      "caused_by": "inbox/2026-10-10-paperkit-mikemol-commit-timeout-orphans-the-build.md",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1041",
+      "title": "pathsforward --payload caps a stanza's enables and unblocks list at a count and prints (+N more), so one card that unblocks hundreds does not exceed the payload budget",
+      "status": "ready",
+      "enables": [
+        "el-openglo:W484"
+      ],
+      "touches": [
+        "pathsforward",
+        "payload"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T07:57:20Z",
+      "minted_during": "tick",
+      "caused_by": "inbox/2026-10-10-el-openglo-pathsforward-bulk-update-and-payload-budget.md",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1042",
+      "title": "mikemol-wheel builds into its own temp directory and copies the wheels out, so uv build's .gitignore of * is never left in the caller's vendor/wheels",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "repin"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T08:05:13Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability-a9",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],
