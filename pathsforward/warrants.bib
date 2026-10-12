@@ -4414,3 +4414,10 @@
   claim  = {The extend action must not break `--enables` with no value, which empties the edges.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_repeated_enables_flag_accumulates_and_a_bare_one_still_clears},
 }
+
+@misc{pathsforward-check-root-that-names-the-home-directory-with-a-tilde-is-judged-where-it-points,
+  section = {check},
+  title  = {amr-skills:W305: `~/repo` keeps the host's user name out of a committed queue},
+  claim  = {amr-skills:W305: `~/repo` keeps the host's user name out of a committed queue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_root_that_names_the_home_directory_with_a_tilde_is_judged_where_it_points},
+}

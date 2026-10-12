@@ -1634,3 +1634,5 @@
 2026-10-11T22:58:21Z  interrupt W1020 minted    -         "mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on it"  evidence=luthen-observability:W832
 2026-10-11T23:17:46Z  interrupt W1021 minted    -         "Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute existing di"  evidence=amr-skills:W305
 2026-10-11T23:32:39Z  interrupt W1022 minted    -         "fence_of also finds the fence venv that sits beside the hooks venv in a bazel-bin layout, so mikemol-commit run from mtools' own bazel build takes the commit lock"  evidence=github-8f
+2026-10-12T00:42:25Z  interrupt W1023 minted    -         "pathsforward --render prints the state file's path relative to its project, so a committed mirror does not carry the host's home directory"  evidence=amr-skills:W305
+2026-10-12T00:42:25Z  tick  W1021 advanced  unblock   "project_root accepts a leading ~ (attach.project_path): check.root, attach.drift and three cli sites expand it; 1 test, 1 warrant; the render-header half is W1023"

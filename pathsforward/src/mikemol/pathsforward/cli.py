@@ -753,7 +753,7 @@ def _claimant(ctx: Ctx, state: State) -> lease.Claimant:
 
     """
     held = lock.current(state)
-    root = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+    root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
     return lease.Claimant(held[0] if held else _UNLOCKED, _head_sha(root), ctx.now)
 
 
@@ -1053,7 +1053,7 @@ def _tend_leases(ctx: Ctx, state: State, holder: str) -> None:
     the record, so a stuck lapse does not repeat every tick. A `MOVED` line names each renewed
     tag whose base commit is no longer HEAD: reported, never refused.
     """
-    root = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+    root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
     for tag in lease.renew(state, holder, _head_sha(root), ctx.now):
         _say(f"MOVED {tag}: base is not HEAD; re-read before writing")
     for x in lease.lapsed(state, ctx.now):
@@ -1203,7 +1203,7 @@ def _update(ctx: Ctx) -> int:
 
     def edit(state: State) -> int:
         sym = ctx.get("update") or ""
-        root = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+        root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
         pinned = _pinned(upd, root, ctx.get("attach"))
         ops.update(state, sym, pinned, ctx.stamp())
         code = _lease_for_status(ctx, state, sym, upd.status)

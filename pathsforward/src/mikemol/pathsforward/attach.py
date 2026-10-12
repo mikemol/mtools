@@ -112,6 +112,20 @@ def findings(state: State) -> list[str]:
     return found
 
 
+def project_path(value: str) -> Path:
+    """Read a `project_root` value as a path, expanding a leading `~` to the home directory.
+
+    ⚑ A COMMITTED QUEUE MAY NAME `~/github/<repo>` instead of an absolute home directory (amr-skills
+    :W305): it keeps the host's user name out of a file that is published. Only a leading `~` is
+    expanded; the value is otherwise taken as written.
+
+    Returns:
+        the path.
+
+    """
+    return Path(value).expanduser()
+
+
 def drift(state: State) -> list[str]:
     """Report an attachment whose file is gone, no longer a plain file, or no longer hashes alike.
 
@@ -123,7 +137,7 @@ def drift(state: State) -> list[str]:
         one finding per drifted attachment, naming the waypoint and the path.
 
     """
-    root = Path(text(state.doc, "project_root"))
+    root = project_path(text(state.doc, "project_root"))
     found: list[str] = []
     for w in state.waypoints:
         for path, digest in entries(w):

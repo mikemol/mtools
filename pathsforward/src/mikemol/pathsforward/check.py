@@ -521,12 +521,15 @@ def unscored(state: State) -> int:
 def root(state: State) -> list[str]:
     """Report a `project_root` that is not an absolute, existing directory.
 
+    A leading `~` is expanded first, so a committed queue can name `~/github/<repo>` (amr-skills
+    :W305) and be judged on the directory it stands for.
+
     Returns:
         [] or one finding.
 
     """
     value = text(state.doc, "project_root")
-    path = Path(value)
+    path = attach.project_path(value)
     if value and path.is_absolute() and path.is_dir():
         return []
     return [f"project_root {value!r}: not an absolute existing directory"]

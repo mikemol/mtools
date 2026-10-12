@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1022,
+  "counter": 1023,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -20859,7 +20859,7 @@
     {
       "symbol": "W1020",
       "title": "mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on it",
-      "status": "working",
+      "status": "done",
       "enables": [
         "luthen-observability:W832"
       ],
@@ -20870,19 +20870,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: f96a0db [PUSHED]: mikemol-snapshot refuses a tracked symlink and names it on stderr (never followed or recreated, per the no-symlinks ruling); the lost-file check ignores links; 1 test (link only in tmp_path), 1 warrant; full gate passed. The first attempt was refused: warrants for W1022's tests were appended to hooks/warrants.bib while the commit was queued behind the lock, so it carried warrants for tests it did not include.",
       "issued_at": "2026-10-11T22:58:21Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W832",
-      "last_worked": "2026-10-11T23:07:57Z",
+      "last_worked": "2026-10-12T00:39:01Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T003901Z"
     },
     {
       "symbol": "W1021",
       "title": "Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute existing di",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "amr-skills:W305"
       ],
@@ -20894,13 +20894,14 @@
       "issued_at": "2026-10-11T23:17:46Z",
       "minted_during": "interrupt",
       "caused_by": "amr-skills:W305",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T00:39:59Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1022",
       "title": "fence_of also finds the fence venv that sits beside the hooks venv in a bazel-bin layout, so mikemol-commit run from mtools' own bazel build takes the commit lock",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "kata",
@@ -20909,11 +20910,33 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: f96a0db [PUSHED]: commit_kata.fence_of tries the script beside the interpreter, then bazel-bin/fence/.venv/bin/mikemol-membudget beside the hooks venv; 3 tests, 3 warrants; docs/repinning.md says a repo that vendors no wheel uses plain --write",
       "issued_at": "2026-10-11T23:32:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
+      "last_worked": "2026-10-12T00:39:03Z",
+      "ticks_blocked": 0,
+      "completed": "20261012T003903Z"
+    },
+    {
+      "symbol": "W1023",
+      "title": "pathsforward --render prints the state file's path relative to its project, so a committed mirror does not carry the host's home directory",
+      "status": "ready",
+      "enables": [
+        "amr-skills:W305"
+      ],
+      "touches": [
+        "pathsforward",
+        "render"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T00:42:25Z",
+      "minted_during": "interrupt",
+      "caused_by": "amr-skills:W305",
       "last_worked": null,
       "ticks_blocked": 0
     }

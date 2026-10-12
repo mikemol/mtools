@@ -214,6 +214,19 @@ def test_a_missing_root_is_found(tmp_path: Path) -> None:
     assert len(chk.root(_state(tmp_path / "absent"))) == 1
 
 
+def test_a_root_that_names_the_home_directory_with_a_tilde_is_judged_where_it_points(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """amr-skills:W305: `~/repo` keeps the host's user name out of a committed queue."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    (tmp_path / "repo").mkdir()
+    state = _state(tmp_path)
+    state.doc["project_root"] = "~/repo"
+    assert chk.root(state) == []
+    state.doc["project_root"] = "~/absent"
+    assert len(chk.root(state)) == 1
+
+
 def test_evidence_naming_a_missing_path_is_found(tmp_path: Path) -> None:
     """An evidence path that does not exist is found; one that exists is not (positive control)."""
     (tmp_path / "here.txt").write_text("x", encoding="utf-8")
