@@ -34,8 +34,23 @@ _SIX = 6
 _TWO = 2
 
 
-def _witness(**kinds: tuple[str, ...]) -> Witness:
-    return Witness("w", ("cmd",), **kinds)
+def _witness(
+    *,
+    json_empty: tuple[str, ...] = (),
+    must_contain: tuple[str, ...] = (),
+    must_match: tuple[str, ...] = (),
+    advances: tuple[str, ...] = (),
+    fresh_since: tuple[str, ...] = (),
+) -> Witness:
+    return Witness(
+        "w",
+        ("cmd",),
+        json_empty=json_empty,
+        must_contain=must_contain,
+        must_match=must_match,
+        advances=advances,
+        fresh_since=fresh_since,
+    )
 
 
 def test_a_clean_exit_with_nothing_declared_is_met() -> None:

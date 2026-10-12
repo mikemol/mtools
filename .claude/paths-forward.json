@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 147,
+      "ticks_blocked": 148,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 85,
+      "ticks_blocked": 86,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 52,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 49,
+      "ticks_blocked": 50,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -21576,7 +21576,6 @@
       ],
       "blocked_on": [
         "W1056",
-        "W1057",
         "W1058",
         "W1059",
         "W1060"
@@ -21587,7 +21586,7 @@
       "issued_at": "2026-10-12T19:58:44Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
-      "last_worked": "2026-10-12T21:57:53Z",
+      "last_worked": "2026-10-12T22:25:58Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21636,29 +21635,6 @@
     {
       "symbol": "W1056",
       "title": "waldo.contract: parse and validate a contract file, plus witness lint that refuses a witness passing on empty or default output",
-      "status": "blocked",
-      "enables": [
-        "W1053"
-      ],
-      "touches": [
-        "waldo"
-      ],
-      "blocked_on": [
-        "W1057"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "2026-10-12: order: the witness lint needs the witness evaluator, so W1057 goes first; W1056 builds the contract parser and runs the lint over W1057's judge.",
-      "issued_at": "2026-10-12T20:12:16Z",
-      "minted_during": "tick",
-      "caused_by": "W1053",
-      "last_worked": "2026-10-12T21:58:04Z",
-      "ticks_blocked": 0,
-      "completed": null
-    },
-    {
-      "symbol": "W1057",
-      "title": "waldo.witness: run the exit-code, json_empty, must_contain and must_match witnesses over an injected runner",
       "status": "working",
       "enables": [
         "W1053"
@@ -21667,15 +21643,36 @@
         "waldo"
       ],
       "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-12: order: the witness lint needs the witness evaluator, so W1057 goes first; W1056 builds the contract parser and runs the lint over W1057's judge.",
+      "issued_at": "2026-10-12T20:12:16Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T22:24:28Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1057",
+      "title": "waldo.witness: run the exit-code, json_empty, must_contain and must_match witnesses over an injected runner",
+      "status": "done",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: afe3a9c [PUSHED]: waldo.witness, six kinds, 14 tests, 7 declared defects.",
       "issued_at": "2026-10-12T20:12:17Z",
       "minted_during": "tick",
       "caused_by": "W1053",
-      "last_worked": "2026-10-12T21:58:05Z",
+      "last_worked": "2026-10-12T22:24:27Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T222427Z"
     },
     {
       "symbol": "W1058",
@@ -21710,7 +21707,6 @@
       ],
       "blocked_on": [
         "W1056",
-        "W1057",
         "W1058"
       ],
       "blocked_kind": "agent",
@@ -21719,7 +21715,7 @@
       "issued_at": "2026-10-12T20:12:18Z",
       "minted_during": "tick",
       "caused_by": "W1053",
-      "last_worked": "2026-10-12T21:57:52Z",
+      "last_worked": "2026-10-12T22:25:59Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21743,7 +21739,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1053",
       "last_worked": "2026-10-12T20:21:55Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {

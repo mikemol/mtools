@@ -3,3 +3,4 @@
 # key <TAB> heading title
 compare	refuse-with-diff core
 witness	witness evaluator
+contract	contract parse and witness lint

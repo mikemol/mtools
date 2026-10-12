@@ -53,6 +53,7 @@ class Witness:
     must_match: tuple[str, ...] = ()
     advances: tuple[str, ...] = ()
     fresh_since: tuple[str, ...] = ()
+    exit_only: bool = False
 
 
 @dataclass(frozen=True)

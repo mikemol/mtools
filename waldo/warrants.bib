@@ -181,3 +181,101 @@
   claim  = {The pre-act reading is taken once for `advances` witnesses and used when judging after.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_capture_before_reads_only_witnesses_that_advance_and_feeds_run_all},
 }
+
+@misc{waldo-contract-contract-of-luthens-shape-parses-and-lints-clean,
+  section = {contract},
+  title  = {The positive control: every field is read and nothing is found wrong},
+  claim  = {The positive control: every field is read and nothing is found wrong.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_contract_of_luthens_shape_parses_and_lints_clean},
+}
+
+@misc{waldo-contract-empty-object-is-the-empty-contract,
+  section = {contract},
+  title  = {Every part is optional; an empty contract allows nothing and witnesses nothing},
+  claim  = {Every part is optional; an empty contract allows nothing and witnesses nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_empty_object_is_the_empty_contract},
+}
+
+@misc{waldo-contract-contract-that-is-not-an-object-is-refused,
+  section = {contract},
+  title  = {The top level must be an object},
+  claim  = {The top level must be an object.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_contract_that_is_not_an_object_is_refused},
+}
+
+@misc{waldo-contract-unknown-top-level-key-is-refused-not-ignored,
+  section = {contract},
+  title  = {A typo'd `alowed` must not read as a contract that allows nothing},
+  claim  = {A typo'd `alowed` must not read as a contract that allows nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_unknown_top_level_key_is_refused_not_ignored},
+}
+
+@misc{waldo-contract-unknown-witness-key-is-refused,
+  section = {contract},
+  title  = {A witness key outside the six kinds, the name, the argv and exit_only is a typo},
+  claim  = {A witness key outside the six kinds, the name, the argv and exit_only is a typo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_an_unknown_witness_key_is_refused},
+}
+
+@misc{waldo-contract-malformed-witness-is-refused-with-its-reason,
+  section = {contract},
+  title  = {Each way a witness row can be wrong has its own message},
+  claim  = {Each way a witness row can be wrong has its own message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_malformed_witness_is_refused_with_its_reason},
+}
+
+@misc{waldo-contract-repeated-witness-name-is-refused,
+  section = {contract},
+  title  = {Two witnesses with one name would make a verdict ambiguous},
+  claim  = {Two witnesses with one name would make a verdict ambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_repeated_witness_name_is_refused},
+}
+
+@misc{waldo-contract-plan-env-and-root-must-be-text,
+  section = {contract},
+  title  = {A number where an environment value or the root belongs is refused},
+  claim  = {A number where an environment value or the root belongs is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_plan_env_and_root_must_be_text},
+}
+
+@misc{waldo-contract-malformed-change-row-is-a-shape-error-not-a-pass,
+  section = {contract},
+  title  = {The compare module's refusal reaches the caller through parse},
+  claim  = {The compare module's refusal reaches the caller through parse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_malformed_change_row_is_a_shape_error_not_a_pass},
+}
+
+@misc{waldo-contract-required-row-that-is-not-allowed-is-a-finding,
+  section = {contract},
+  title  = {A row the plan must contain but that nobody allowed could never be applied},
+  claim  = {A row the plan must contain but that nobody allowed could never be applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_required_row_that_is_not_allowed_is_a_finding},
+}
+
+@misc{waldo-contract-witness-with-no-condition-must-say-exit-only,
+  section = {contract},
+  title  = {The exit code alone is a choice that has to be written down},
+  claim  = {The exit code alone is a choice that has to be written down.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_witness_with_no_condition_must_say_exit_only},
+}
+
+@misc{waldo-contract-witness-that-passes-on-an-empty-reading-is-a-finding,
+  section = {contract},
+  title  = {A condition satisfied by no information proves nothing},
+  claim  = {A condition satisfied by no information proves nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_a_witness_that_passes_on_an_empty_reading_is_a_finding},
+}
+
+@misc{waldo-contract-advances-and-fresh-since-and-json-empty-cannot-pass-a-blank-reading,
+  section = {contract},
+  title  = {The three kinds that compare against the world fail every probe, so they lint clean},
+  claim  = {The three kinds that compare against the world fail every probe, so they lint clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_advances_and_fresh_since_and_json_empty_cannot_pass_a_blank_reading},
+}
+
+@misc{waldo-contract-has-condition-sees-each-of-the-five-lists,
+  section = {contract},
+  title  = {Any single non-empty list counts as a declared condition, and none counts as none},
+  claim  = {Any single non-empty list counts as a declared condition, and none counts as none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_has_condition_sees_each_of_the_five_lists},
+}
