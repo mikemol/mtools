@@ -1692,3 +1692,5 @@
 2026-10-12T20:43:56Z  tick  W1055 advanced  mechanism "waldo scaffolded (W1054); compare.py written; W1052 un-cycled (ready; W888 done); luthen rail dormant until ~2026-10-13T20Z; github-8f allowed one commit attempt at a time: W1042 attempt running"
 2026-10-12T21:33:26Z  interrupt W1061 minted    -         "Commit gate runs a dist's mutants only when the commit touches that dist, not every dist on every commit"  evidence=W1045
 2026-10-12T21:35:07Z  tick  W1062 minted    -         "Derive a mutants shard's timeout from its own solo runtime and the measured CPU stretch, and say both in the verdict line"  evidence=W1052
+2026-10-12T21:38:36Z  tick  W1055 advanced  mechanism "waldo compare tested (18 tests, 7 declared defects); rulerseq+waldo gate green locally (22 tests); attempt 4 (both dists, one commit) running; W1062 minted"
+2026-10-12T22:03:05Z  tick  W1057 advanced  mechanism "waldo.witness: six kinds incl advances/fresh_since, 14 tests, 7 declared defects, bazel //waldo green; attempt 5 running"

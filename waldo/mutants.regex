@@ -11,3 +11,10 @@ src/mikemol/waldo/compare.py|non-list-read-row-by-row|if not isinstance\(rows, l
 src/mikemol/waldo/compare.py|none-is-an-error|if rows is None:|if False:|def=changes_from
 src/mikemol/waldo/compare.py|empty-address-allowed|not isinstance\(address, str\) or not address|not isinstance(address, str)|def=_row
 src/mikemol/waldo/compare.py|empty-actions-allowed|not isinstance\(actions, list\) or not actions|not isinstance(actions, list)|def=_row
+src/mikemol/waldo/witness.py|exit-status-swallowed|code or int\(bool\(unmet\)\)|int(bool(unmet))|def=judge
+src/mikemol/waldo/witness.py|standing-state-advances|elif now == group_of\(pattern, before\):|elif False:|def=_not_advanced
+src/mikemol/waldo/witness.py|advances-without-a-before|if before is None:|if False:|def=_not_advanced
+src/mikemol/waldo/witness.py|stale-heartbeat-fresh|elif stamp < started:|elif False:|def=_not_fresh
+src/mikemol/waldo/witness.py|fresh-without-a-start|if started is None:|if False:|def=_not_fresh
+src/mikemol/waldo/witness.py|missing-key-empty|key not in found or found\[key\]|key in found and found[key]|def=non_empty
+src/mikemol/waldo/witness.py|tail-from-the-front|\[-TAIL_LINES:\]|[:TAIL_LINES]|def=tail_of

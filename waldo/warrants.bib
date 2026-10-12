@@ -82,3 +82,102 @@
   claim  = {A string or a number where rows belong is refused as a non-list, not read row by row.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_compare.py -k test_a_value_that_is_not_a_list_is_named_as_such},
 }
+
+@misc{waldo-witness-clean-exit-with-nothing-declared-is-met,
+  section = {witness},
+  title  = {The control: no conditions and exit 0 is a pass, and the result carries its name and tail},
+  claim  = {The control: no conditions and exit 0 is a pass, and the result carries its name and
+            tail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_a_clean_exit_with_nothing_declared_is_met},
+}
+
+@misc{waldo-witness-non-zero-exit-fails-whatever-the-output-says,
+  section = {witness},
+  title  = {The command's own status survives even when every condition is met},
+  claim  = {The command's own status survives even when every condition is met.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_a_non_zero_exit_fails_whatever_the_output_says},
+}
+
+@misc{waldo-witness-must-contain-names-the-text-that-is-absent,
+  section = {witness},
+  title  = {The unmet line says which text was missing and the rc is 1},
+  claim  = {The unmet line says which text was missing and the rc is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_must_contain_names_the_text_that_is_absent},
+}
+
+@misc{waldo-witness-must-match-is-a-regular-expression,
+  section = {witness},
+  title  = {A pattern that matches passes; one that does not is named},
+  claim  = {A pattern that matches passes; one that does not is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_must_match_is_a_regular_expression},
+}
+
+@misc{waldo-witness-json-empty-needs-the-key-present-and-empty,
+  section = {witness},
+  title  = {Exit 0 with a drift list is a failure; a missing key is one too, not a pass},
+  claim  = {Exit 0 with a drift list is a failure; a missing key is one too, not a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_json_empty_needs_the_key_present_and_empty},
+}
+
+@misc{waldo-witness-advances-needs-a-pre-act-reading-that-differs,
+  section = {witness},
+  title  = {A resourceVersion that moved passes; the same one before and after does not},
+  claim  = {A resourceVersion that moved passes; the same one before and after does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_advances_needs_a_pre_act_reading_that_differs},
+}
+
+@misc{waldo-witness-advances-is-unmet-without-a-pre-act-reading,
+  section = {witness},
+  title  = {With nothing to compare to, the witness cannot pass: a standing green is not success},
+  claim  = {With nothing to compare to, the witness cannot pass: a standing green is not success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_advances_is_unmet_without_a_pre_act_reading},
+}
+
+@misc{waldo-witness-fresh-since-needs-a-time-at-or-after-the-start,
+  section = {witness},
+  title  = {A heartbeat from this run passes; a stale one, an unreadable one and no start do not},
+  claim  = {A heartbeat from this run passes; a stale one, an unreadable one and no start do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_fresh_since_needs_a_time_at_or_after_the_start},
+}
+
+@misc{waldo-witness-json-object-is-read-from-first-brace-to-last,
+  section = {witness},
+  title  = {Text around the object is ignored; an array or broken JSON is not an object},
+  claim  = {Text around the object is ignored; an array or broken JSON is not an object.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_the_json_object_is_read_from_first_brace_to_last},
+}
+
+@misc{waldo-witness-group-of-reads-the-first-group-or-nothing,
+  section = {witness},
+  title  = {A pattern without a group gives None even when it matches},
+  claim  = {A pattern without a group gives None even when it matches.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_group_of_reads_the_first_group_or_nothing},
+}
+
+@misc{waldo-witness-tail-is-the-last-non-empty-lines,
+  section = {witness},
+  title  = {At most six lines survive, blank lines are dropped, and the order is kept},
+  claim  = {At most six lines survive, blank lines are dropped, and the order is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_the_tail_is_the_last_non_empty_lines},
+}
+
+@misc{waldo-witness-run-all-runs-each-witness-in-order-and-judges-it,
+  section = {witness},
+  title  = {One result per witness, in the order declared, each judged on its own output},
+  claim  = {One result per witness, in the order declared, each judged on its own output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_run_all_runs_each_witness_in_order_and_judges_it},
+}
+
+@misc{waldo-witness-witness-with-no-argv-fails-with-exit-two,
+  section = {witness},
+  title  = {A declared witness that names no command is a failure, not a skipped check},
+  claim  = {A declared witness that names no command is a failure, not a skipped check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_a_witness_with_no_argv_fails_with_exit_two},
+}
+
+@misc{waldo-witness-capture-before-reads-only-witnesses-that-advance-and-feeds-run-all,
+  section = {witness},
+  title  = {The pre-act reading is taken once for `advances` witnesses and used when judging after},
+  claim  = {The pre-act reading is taken once for `advances` witnesses and used when judging after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_capture_before_reads_only_witnesses_that_advance_and_feeds_run_all},
+}
