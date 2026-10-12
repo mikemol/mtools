@@ -971,3 +971,87 @@
   claim  = {The loop skips an empty round; a dry run publishes to stdout and never resizes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_railcli.py -k test_an_unreadable_meminfo_reads_as_nothing_and_a_dry_run_has_no_runner},
 }
+
+@misc{memres-cpucensus-usage-line-is-read-among-the-others,
+  section = {cpucensus},
+  title  = {`usage_usec` is taken from a stat file that also has user and system lines},
+  claim  = {`usage_usec` is taken from a stat file that also has user and system lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_the_usage_line_is_read_among_the_others},
+}
+
+@misc{memres-cpucensus-stat-without-a-usable-usage-line-is-nothing,
+  section = {cpucensus},
+  title  = {Missing, non-numeric and empty values are None, never zero},
+  claim  = {Missing, non-numeric and empty values are None, never zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_a_stat_without_a_usable_usage_line_is_nothing},
+}
+
+@misc{memres-cpucensus-cores-are-microseconds-used-over-microseconds-elapsed,
+  section = {cpucensus},
+  title  = {Forty CPU-seconds in a ten-second window is four cores; ten is one},
+  claim  = {Forty CPU-seconds in a ten-second window is four cores; ten is one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_cores_are_microseconds_used_over_microseconds_elapsed},
+}
+
+@misc{memres-cpucensus-rows-are-busiest-first-with-ties-in-name-order,
+  section = {cpucensus},
+  title  = {Equal use sorts by name so two readings of the same host print the same table},
+  claim  = {Equal use sorts by name so two readings of the same host print the same table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_rows_are_busiest_first_with_ties_in_name_order},
+}
+
+@misc{memres-cpucensus-cgroup-that-ended-started-or-restarted-has-no-row,
+  section = {cpucensus},
+  title  = {Gone, new and backwards counters are all left out, not printed as zero or negative},
+  claim  = {Gone, new and backwards counters are all left out, not printed as zero or negative.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_a_cgroup_that_ended_started_or_restarted_has_no_row},
+}
+
+@misc{memres-cpucensus-render-prints-only-the-top-rows,
+  section = {cpucensus},
+  title  = {One `cores  name` line each, cut at the limit},
+  claim  = {One `cores name` line each, cut at the limit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_render_prints_only_the_top_rows},
+}
+
+@misc{memres-cpucensus-walk-reads-nested-cgroups-and-names-the-root-slash,
+  section = {cpucensus},
+  title  = {The root is `/`, a child is its relative path, and a grandchild joins with a slash},
+  claim  = {The root is `/`, a child is its relative path, and a grandchild joins with a slash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_the_walk_reads_nested_cgroups_and_names_the_root_slash},
+}
+
+@misc{memres-cpucensus-walk-stops-at-the-depth,
+  section = {cpucensus},
+  title  = {Depth two reads the root's children and grandchildren but not the great-grandchildren},
+  claim  = {Depth two reads the root's children and grandchildren but not the great-grandchildren.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_the_walk_stops_at_the_depth},
+}
+
+@misc{memres-cpucensus-malformed-stat-is-left-out-beside-a-good-one,
+  section = {cpucensus},
+  title  = {A cgroup whose stat has no usage line is skipped; its sibling still reads},
+  claim  = {A cgroup whose stat has no usage line is skipped; its sibling still reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_a_malformed_stat_is_left_out_beside_a_good_one},
+}
+
+@misc{memres-cpucensus-directory-without-a-stat-file-is-not-a-cgroup,
+  section = {cpucensus},
+  title  = {Only directories holding `cpu.stat` count; the others are walked through},
+  claim  = {Only directories holding `cpu.stat` count; the others are walked through.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_a_directory_without_a_stat_file_is_not_a_cgroup},
+}
+
+@misc{memres-cpucensus-main-takes-two-snapshots-a-window-apart-and-prints-the-table,
+  section = {cpucensus},
+  title  = {The seams stand in for the filesystem and the clock: the table is busiest first},
+  claim  = {The seams stand in for the filesystem and the clock: the table is busiest first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_main_takes_two_snapshots_a_window_apart_and_prints_the_table},
+}
+
+@misc{memres-cpucensus-window-that-is-not-positive-is-refused,
+  section = {cpucensus},
+  title  = {Zero or negative seconds would divide by zero or print nonsense: exit 2, nothing read},
+  claim  = {Zero or negative seconds would divide by zero or print nonsense: exit 2, nothing read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cpucensus.py -k test_a_window_that_is_not_positive_is_refused},
+}

@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-12T20:41:11Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -21326,7 +21323,7 @@
     {
       "symbol": "W1042",
       "title": "mikemol-wheel builds into its own temp directory and copies the wheels out, so uv build's .gitignore of * is never left in the caller's vendor/wheels",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -21334,14 +21331,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-12: 2026-10-12 READY, commit held on W1052 (luthen-observability:W886): hooks/wheel.py publish() builds in a temp dir and copies only .whl to --out, so uv build's .gitignore of * never lands in the caller's vendor/wheels; tests (fake uv now leaves the .gitignore like the real one) + 2 warrants; bazel test //hooks:test_wheel mypy ruff green. Files: hooks/src/mikemol/hooks/wheel.py, hooks/tests/test_wheel.py, hooks/warrants.bib.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 READY, commit held on W1052 (luthen-observability:W886): hooks/wheel.py publish() builds in a temp dir and copies only .whl to --out, so uv build's .gitignore of * never lands in the caller's vendor/wheels; tests (fake uv now leaves the .gitignore like the real one) + 2 warrants; bazel test //hooks:test_wheel mypy ruff green. Files: hooks/src/mikemol/hooks/wheel.py, hooks/tests/test_wheel.py, hooks/warrants.bib. | 2026-10-12: 04d4f46 [PUSHED]: wheel.publish copies only .whl from a temp build dir; committed through the gate under load (started at load 69, cpu PSI avg60 45.5) with MAXLOAD 100 after github-8f allowed one attempt at a time.",
       "issued_at": "2026-10-12T08:05:13Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-a9",
-      "last_worked": "2026-10-12T19:13:18Z",
+      "last_worked": "2026-10-12T20:53:47Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T205347Z"
     },
     {
       "symbol": "W1043",

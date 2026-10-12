@@ -200,6 +200,7 @@ venv_from_hub(
         "mikemol-sweep-budget": "mikemol.memres.sweep_budget:main",
         "mikemol-cpuweight": "mikemol.memres.cpuweight:main",
         "mikemol-rail": "mikemol.memres.railcli:main",
+        "mikemol-cpu-census": "mikemol.memres.cpucensus:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

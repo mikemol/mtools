@@ -31,6 +31,7 @@ mikemol-mem-harvest = "mikemol.memres.mem_harvest:main"
 mikemol-sweep-budget = "mikemol.memres.sweep_budget:main"
 mikemol-cpuweight = "mikemol.memres.cpuweight:main"
 mikemol-rail = "mikemol.memres.railcli:main"
+mikemol-cpu-census = "mikemol.memres.cpucensus:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -106,6 +107,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_railrun.py" = ["assert"]
 "tests/test_railloop.py" = ["assert"]
 "tests/test_railcli.py" = ["assert"]
+"tests/test_cpucensus.py" = ["assert"]
 # ⚑ THE ONE MODULE THAT RUNS A PROGRAM: `mikemol-membudget`, resolved to an absolute path by
 # `shutil.which` first and called with an argv list, never a shell and never untrusted input.
 "src/mikemol/memres/railcli.py" = [
