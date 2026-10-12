@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1023,
+  "counter": 1030,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 129,
+      "ticks_blocked": 130,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 128,
+      "ticks_blocked": 129,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 133,
+      "ticks_blocked": 134,
       "completed": null
     },
     {
@@ -11468,23 +11468,21 @@
     {
       "symbol": "W576",
       "title": "Create the runner GitHub App on the existing org mikemol-tools, so luthen can apply the runner pool and the operator can run the key custody command",
-      "status": "blocked",
+      "status": "done",
       "enables": [
         "W319"
       ],
       "touches": [],
-      "blocked_on": [
-        "luthen-observability:W257"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "After the org and App exist: tell luthen-observability so the custody command and the runner pool can proceed; then mtools:W317 names the org in the split plan",
-      "evidence": "2026-10-04: 2026-10-04 CORRECTION of this card's first wording, which said the org did not exist: read from the GitHub API with the operator's gh login, the org mikemol-tools EXISTS (id 336508376, created 2026-10-01T12:04:59Z, 0 public repos, the operator is an active admin) and orgs/mikemol-tools/installations lists no App; the operator's other orgs are acmeism, rosettacode, RowdyRocs, v4cat-oss. The first wording came from a peer's 'once the org ... exist' and from W257's 2026-10-01T12:00:09Z 'not yet created', neither checked against GitHub; the org was created five minutes after that line. Only the App is missing. The blocked_on text still says 'create the org and the App'; the hold is the operator's to re-word (standing 5) | 2026-10-05: 2026-10-05 THE APP EXISTS (operator, first-hand; confirmed by gh api orgs/mikemol-tools/installations): slug mikemol-tools-runners, App ID 5197626, Client ID Iv23liCgaitwTQBzNPlQ, installation 168150198, repository_selection all, permissions organization_self_hosted_runners write and metadata read. The private key was downloaded to ~/Downloads (plaintext on disk, against W257 design section 5); mtools did not open it. Letter to luthen-observability inbox 2026-10-05-mtools-runner-github-app-exists.md asks for the key-custody command. This card's blocked_on text is now stale (org and App both exist); re-wording or lifting the hold is the operator's, standing 5. | 2026-10-10: 2026-10-10: luthen-observability's letter inbox/2026-10-05-luthen-observability-w257-key-custody-already-done.md: the runner App key is already in OpenBao (secret/luthen/github/runner-app v1, 2026-10-05T13:41:02Z, applied by the operator), so no custody command is owed; the hold's wording is the operator's to re-word. mtools:W319 and W317 stay behind luthen-observability:W257 (D5 cache-write fence, Flux HelmReleases).",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-04: 2026-10-04 CORRECTION of this card's first wording, which said the org did not exist: read from the GitHub API with the operator's gh login, the org mikemol-tools EXISTS (id 336508376, created 2026-10-01T12:04:59Z, 0 public repos, the operator is an active admin) and orgs/mikemol-tools/installations lists no App; the operator's other orgs are acmeism, rosettacode, RowdyRocs, v4cat-oss. The first wording came from a peer's 'once the org ... exist' and from W257's 2026-10-01T12:00:09Z 'not yet created', neither checked against GitHub; the org was created five minutes after that line. Only the App is missing. The blocked_on text still says 'create the org and the App'; the hold is the operator's to re-word (standing 5) | 2026-10-05: 2026-10-05 THE APP EXISTS (operator, first-hand; confirmed by gh api orgs/mikemol-tools/installations): slug mikemol-tools-runners, App ID 5197626, Client ID Iv23liCgaitwTQBzNPlQ, installation 168150198, repository_selection all, permissions organization_self_hosted_runners write and metadata read. The private key was downloaded to ~/Downloads (plaintext on disk, against W257 design section 5); mtools did not open it. Letter to luthen-observability inbox 2026-10-05-mtools-runner-github-app-exists.md asks for the key-custody command. This card's blocked_on text is now stale (org and App both exist); re-wording or lifting the hold is the operator's, standing 5. | 2026-10-10: 2026-10-10: luthen-observability's letter inbox/2026-10-05-luthen-observability-w257-key-custody-already-done.md: the runner App key is already in OpenBao (secret/luthen/github/runner-app v1, 2026-10-05T13:41:02Z, applied by the operator), so no custody command is owed; the hold's wording is the operator's to re-word. mtools:W319 and W317 stay behind luthen-observability:W257 (D5 cache-write fence, Flux HelmReleases). | 2026-10-12: 2026-10-12 CLOSED: the deliverable is complete and verified first-hand. The org mikemol-tools exists (gh api, 2026-10-04); the App mikemol-tools-runners (id 5197626, installation 168150198) is installed on it with exactly metadata:read and organization_self_hosted_runners:write (operator and gh api orgs/mikemol-tools/installations, 2026-10-05); the App key is in OpenBao secret/luthen/github/runner-app v1 (luthen-observability W257, 2026-10-05T13:41Z), so no custody command is owed. W576 was re-pointed at luthen-observability:W257 on 2026-10-12, which made a two-way wait (W257 and W411 cite W576; W576 cited W257); that edge was mine to cut. What still holds luthen-observability:W257 is its own D5 (the same-repo-PR cache-write fence, the operator's), and luthen-observability:W411 waits on W257's design; neither is waiting on W576 any more.",
       "issued_at": "2026-10-04T13:20:58Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W257",
-      "last_worked": "2026-10-11T16:02:11Z",
-      "ticks_blocked": 9,
-      "completed": null
+      "last_worked": "2026-10-12T02:20:12Z",
+      "ticks_blocked": 0,
+      "completed": "20261012T022012Z"
     },
     {
       "symbol": "W577",
@@ -11802,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -16154,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16690,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16985,7 +16983,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-06T19:33:38Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -17495,7 +17493,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "completed": null
     },
     {
@@ -17536,7 +17534,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "completed": null
     },
     {
@@ -17559,7 +17557,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "completed": null
     },
     {
@@ -17982,7 +17980,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -18156,7 +18154,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 31,
+      "ticks_blocked": 32,
       "completed": null
     },
     {
@@ -18935,7 +18933,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 30,
+      "ticks_blocked": 31,
       "completed": null
     },
     {
@@ -20882,21 +20880,21 @@
     {
       "symbol": "W1021",
       "title": "Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute existing di",
-      "status": "working",
+      "status": "done",
       "enables": [
         "amr-skills:W305"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 65e0581 [PUSHED]: pathsforward accepts a leading ~ in project_root (attach.project_path in check.root, attach.drift and three cli sites); 1 test, 1 warrant; full gate passed. The mirror header that prints the absolute state path is W1023.",
       "issued_at": "2026-10-11T23:17:46Z",
       "minted_during": "interrupt",
       "caused_by": "amr-skills:W305",
-      "last_worked": "2026-10-12T00:39:59Z",
+      "last_worked": "2026-10-12T01:28:22Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T012822Z"
     },
     {
       "symbol": "W1022",
@@ -20922,7 +20920,7 @@
     {
       "symbol": "W1023",
       "title": "pathsforward --render prints the state file's path relative to its project, so a committed mirror does not carry the host's home directory",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "amr-skills:W305"
       ],
@@ -20937,6 +20935,155 @@
       "issued_at": "2026-10-12T00:42:25Z",
       "minted_during": "interrupt",
       "caused_by": "amr-skills:W305",
+      "last_worked": "2026-10-12T01:28:25Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1024",
+      "title": "mikemol-sweep-budget sizes the mutation sweep from live headroom: its 0.4 of MemTotal default ignores swap pressure and the sandbox's own RAM (24 cells ran at once, 51482 MB, and filled swap)",
+      "status": "ready",
+      "enables": [
+        "paperkit:W334"
+      ],
+      "touches": [
+        "memres",
+        "gate",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 OPERATOR PRINCIPLE (relayed by github-8f): true fixes are second-order, not first-order and not thresholds; rails are neither linear nor static. So the sweep budget is not sized once from MemTotal minus a constant: it is a LEASE that follows live headroom, level (MemAvailable plus swap and sandbox headroom), slope and acceleration, re-evaluated while the run goes, shrinking allowed parallelism when memory use accelerates and recovering when it decays. luthen W842 and host W26 supply the predictors. The vehicle should be the existing membudget and fence leases IF they can be resized mid-run (to be read from fence's source, not assumed). Publish rail engagement as a metric (leases granted, shrunk, refused): how often a rail engages is the oracle for throttling. The static nvme sandbox_base (host ~/.bazelrc, 2026-10-12) is the stopgap beneath it. | 2026-10-12: 2026-10-12 READ (fence/src/mikemol/fence/membudget_cli.py:437 and admit.py): the ledger TOTAL can be resized in place under the lock keeping every live lease (membudget init --reset N, resize(): a sibling renamed over the ledger, so a reader sees old or new). A lease already held CANNOT be resized: admit.py has acquire, release and gc, no verb that changes a held lease's mb. So 'shrink while the run goes' has two real forms: (a) resize the total, which throttles NEW admissions only and leaves running cells at their size, or (b) a new fence verb to resize a held lease, which does not exist (a card of its own if the lease is to follow the live rail). Rail-engagement counts (granted, shrunk, refused) are not published today.",
+      "issued_at": "2026-10-12T02:18:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-12T02:20:42Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1025",
+      "title": "The gate runner stops a gate tree's bazel server when the gate ends or gives gate trees a short --max_idle_secs (15 to 30 minutes), keeping back-to-back commits warm",
+      "status": "ready",
+      "enables": [
+        "paperkit:W334"
+      ],
+      "touches": [
+        "kata",
+        "commit",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T02:18:40Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1026",
+      "title": "mikemol-cpuweight gives each repo its own build scope (gate-<repo>.scope) and writes an optional memory.high and memory.max to it, so memory is attributable and bounded per repo",
+      "status": "ready",
+      "enables": [
+        "paperkit:W334"
+      ],
+      "touches": [
+        "memres",
+        "cpuweight"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 same principle as W1024 (operator, via github-8f): a memory.high or memory.max on the scope is a static threshold; the fix is second-order (level, slope, acceleration of the scope's memory, adjusted while it runs), published as rail-engagement metrics. A static memory.max is at most the stopgap beneath it, and only from paperkit's full-sweep VmHWM (floor so far 9.23 GB for the gate server).",
+      "issued_at": "2026-10-12T02:18:41Z",
+      "minted_during": "interrupt",
+      "caused_by": "paperkit-d8",
+      "last_worked": "2026-10-12T02:20:21Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1027",
+      "title": "A regression check that fails when a gate's peak sandbox size exceeds a declared budget (now the nvme sandbox directory)",
+      "status": "ready",
+      "enables": [
+        "paperkit:W334"
+      ],
+      "touches": [
+        "gate",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T02:18:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1028",
+      "title": "mikemol-repin --revendor takes --no-sync, so a repo with undeclared packages in its venv can revendor in place without uv sync --frozen removing them",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "repin"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T02:18:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "amr-skills-bb",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1029",
+      "title": "fence gains a verb that resizes a held lease without killing or refusing it, so the lease itself can follow the live memory rail",
+      "status": "ready",
+      "enables": [
+        "W1024"
+      ],
+      "touches": [
+        "fence",
+        "membudget",
+        "memres"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 github-8f's suggested shape (a repo-level choice, theirs; to correct from the code): a resize verb for a HELD lease that does not kill or refuse; it changes the lease's size and, for a lease that owns a cgroup scope (W1026), sets that scope's memory.high to the new size, so the holder is throttled by reclaim pressure and not killed; a shrink below current use just applies pressure until the holder drops. Interim rail until it exists: resize the ledger TOTAL (membudget init --reset N) to throttle new admissions only. Read first: admit.py has acquire, release and gc and no verb that changes a held lease's mb; the ledger is rewritten as a sibling renamed over the file under the lock (Store.rewrite).",
+      "issued_at": "2026-10-12T02:21:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-12T02:21:40Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1030",
+      "title": "fence publishes its rail engagement counts (leases granted, resized, refused) as a Prometheus textfile series luthen can chart",
+      "status": "ready",
+      "enables": [
+        "W1024"
+      ],
+      "touches": [
+        "fence",
+        "membudget"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T02:21:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
       "last_worked": null,
       "ticks_blocked": 0
     }

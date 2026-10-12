@@ -96,8 +96,11 @@ def mirror(state: State, state_path: Path) -> str:
         the markdown text.
 
     """
+    # ⚑ THE FILE IS NAMED FROM ITS PROJECT, NOT FROM THE HOST: `.claude/paths-forward.json`, so a
+    # committed mirror does not carry the home directory it was rendered under (amr-skills:W305).
+    shown = state_path.relative_to(state_path.parent.parent)
     lines = [DERIVED, "# paths-forward", ""]
-    lines += wrap("state file:", f"`{state_path}`", "")
+    lines += wrap("state file:", f"`{shown}`", "")
     lines += [
         "",
         (

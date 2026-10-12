@@ -4421,3 +4421,10 @@
   claim  = {amr-skills:W305: `~/repo` keeps the host's user name out of a committed queue.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_root_that_names_the_home_directory_with_a_tilde_is_judged_where_it_points},
 }
+
+@misc{pathsforward-render-mirror-names-its-state-file-from-the-project-not-the-host,
+  section = {render},
+  title  = {amr-skills:W305: the header says `.claude/paths-forward.json`, never the home directory},
+  claim  = {amr-skills:W305: the header says `.claude/paths-forward.json`, never the home directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_mirror_names_its_state_file_from_the_project_not_the_host},
+}

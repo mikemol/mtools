@@ -159,6 +159,14 @@ def test_the_mirror_carries_the_v2_hash() -> None:
     assert f"hash `{v2(state.waypoints)}`" in render.mirror(state, _PATH)
 
 
+def test_the_mirror_names_its_state_file_from_the_project_not_the_host() -> None:
+    """amr-skills:W305: the header says `.claude/paths-forward.json`, never the home directory."""
+    state_path = Path("/home/someone/github/repo/.claude/paths-forward.json")
+    body = render.mirror(_state([]), state_path)
+    assert "`.claude/paths-forward.json`" in body
+    assert "/home/someone" not in body
+
+
 def test_a_pipe_in_a_title_does_not_break_the_table() -> None:
     """A pipe in a title never reaches the table, so no row can gain a cell."""
     assert _table_widths(render.mirror(_state([]), _PATH)) == {3}
