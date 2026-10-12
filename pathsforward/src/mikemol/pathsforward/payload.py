@@ -218,6 +218,24 @@ def _host_value(value: object) -> str:
     return str(value)
 
 
+LIST_CAP = 12
+"""Most symbols a stanza names from one list before it counts the rest (W1041)."""
+
+
+def capped(items: list[str]) -> str:
+    """Join a symbol list, keeping the first LIST_CAP and counting the rest (W1041).
+
+    ⚑ A card that waits on hundreds cannot shrink below its own list, so the stanza would exceed the
+    payload budget at every rung; the file holds the full list.
+
+    Returns:
+        the comma-joined items, with `(+N more)` appended when some were dropped.
+
+    """
+    shown = ",".join(items[:LIST_CAP])
+    return f"{shown}(+{len(items) - LIST_CAP} more)" if len(items) > LIST_CAP else shown
+
+
 def stanza(w: Json) -> str:
     """Render one live waypoint in full.
 
@@ -228,7 +246,7 @@ def stanza(w: Json) -> str:
     """
     on = strlist(w, "blocked_on")
     kind = text(w, "blocked_kind") or "-"
-    blocked = f" blocked_on={','.join(on)}({kind})" if on else ""
+    blocked = f" blocked_on={capped(on)}({kind})" if on else ""
     evidence = text(w, "evidence").splitlines()
     witness = text(w, "witness")
     times = " ".join(

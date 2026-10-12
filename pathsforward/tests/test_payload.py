@@ -412,6 +412,23 @@ def test_stanza_carries_the_rfc5545_times_only_when_set() -> None:
     )
 
 
+def test_a_stanza_names_a_long_blocker_list_up_to_the_cap_and_counts_the_rest() -> None:
+    """W1041: hundreds of blockers print LIST_CAP symbols and `(+N more)`; a short list is whole."""
+    many = [f"W{n}" for n in range(1, _HUNDREDS + 1)]
+    line = pl.stanza(_wp("W5", "blocked", blocked_on=many, blocked_kind="agent")).splitlines()[0]
+    listed = line.split("blocked_on=")[1].split("(agent)")[0]
+    assert listed == ",".join(many[: pl.LIST_CAP]) + f"(+{_HUNDREDS - pl.LIST_CAP} more)"
+    short = pl.stanza(_wp("W5", "blocked", blocked_on=["W1", "W2"], blocked_kind="agent"))
+    assert "blocked_on=W1,W2(agent)" in short
+
+
+def test_a_list_exactly_at_the_cap_is_not_marked() -> None:
+    """The boundary: LIST_CAP symbols print whole, and one more prints `(+1 more)`."""
+    at = [f"W{n}" for n in range(pl.LIST_CAP)]
+    assert pl.capped(at) == ",".join(at)
+    assert pl.capped([*at, "W99"]).endswith("(+1 more)")
+
+
 def test_stanza_carries_each_alarm_on_the_when_line() -> None:
     """The next tick sees every alarm beside the time it counts from (W279)."""
     w = _wp("W5", due="20261002", alarms=["RELATED=END:-PT2H", "VALUE=DATE-TIME:20261001T190000Z"])

@@ -4428,3 +4428,18 @@
   claim  = {amr-skills:W305: the header says `.claude/paths-forward.json`, never the home directory.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_mirror_names_its_state_file_from_the_project_not_the_host},
 }
+
+@misc{pathsforward-payload-stanza-names-a-long-blocker-list-up-to-the-cap-and-counts-the-rest,
+  section = {payload},
+  title  = {W1041: hundreds of blockers print LIST_CAP symbols and `(+N more)`; a short list is whole},
+  claim  = {W1041: hundreds of blockers print LIST_CAP symbols and `(+N more)`; a short list is
+            whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_stanza_names_a_long_blocker_list_up_to_the_cap_and_counts_the_rest},
+}
+
+@misc{pathsforward-payload-list-exactly-at-the-cap-is-not-marked,
+  section = {payload},
+  title  = {The boundary: LIST_CAP symbols print whole, and one more prints `(+1 more)`},
+  claim  = {The boundary: LIST_CAP symbols print whole, and one more prints `(+1 more)`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_a_list_exactly_at_the_cap_is_not_marked},
+}
