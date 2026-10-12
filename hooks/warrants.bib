@@ -8556,3 +8556,17 @@
   claim  = {A directory and a missing path go to the plain add; no link is created to test the rest.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_only_a_regular_file_is_forced},
 }
+
+@misc{hooks-wheel-caller-gets-the-wheels-and-never-uvs-gitignore,
+  section = {wheel},
+  title  = {W1042: the build runs in a temp directory, so no `.gitignore` of `*` reaches the output},
+  claim  = {W1042: the build runs in a temp directory, so no `.gitignore` of `*` reaches the output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_the_caller_gets_the_wheels_and_never_uvs_gitignore},
+}
+
+@misc{hooks-wheel-existing-output-directory-keeps-its-own-files,
+  section = {wheel},
+  title  = {Publishing adds wheels beside what is there and removes nothing},
+  claim  = {Publishing adds wheels beside what is there and removes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_an_existing_output_directory_keeps_its_own_files},
+}

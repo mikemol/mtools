@@ -126,6 +126,18 @@ def build_into(
     return None
 
 
+def publish(staged: Path, out: Path) -> None:
+    """Copy the wheels `uv build` left in `staged` into `out`, and nothing else (W1042).
+
+    ⚑ `uv build --out-dir` writes a `.gitignore` of `*` into a directory it creates, and a caller's
+    `vendor/wheels` that held it refused every later `git add` of a wheel
+    (luthen-observability:W843). The build therefore runs in a temporary directory and only the
+    `.whl` files cross, so the caller's directory gains the wheels and no ignore file.
+    """
+    for wheel in sorted(staged.glob("*.whl")):
+        shutil.copy2(wheel, out / wheel.name)
+
+
 def describe(out: Path, dists: Sequence[str], short: str) -> list[dict[str, str]]:
     """Name and hash the wheels `build_into` left in `out`.
 
@@ -189,7 +201,10 @@ def main(argv: Sequence[str] | None = None, runner: Runner | None = None) -> int
     out = Path(valued["--out"]).absolute()
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        failure = build_into(runner or repin_cli.run_process, source, dists, Path(tmp), out)
+        staged = Path(tmp) / "wheels"
+        failure = build_into(runner or repin_cli.run_process, source, dists, Path(tmp), staged)
+        if failure is None:
+            publish(staged, out)
     records = describe(out, dists, revendor.short_of(source.sha))
     if failure is None and not all(records):
         failure = "a built wheel is missing from the output directory"

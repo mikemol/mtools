@@ -1669,3 +1669,23 @@
 2026-10-12T11:06:32Z  tick  W1045 minted    -         "pycodemod judge takes a measurement seam, so a codemod can be judged by ruff rule counts as typed-args is by mypy messages"  evidence=W1043
 2026-10-12T11:06:33Z  tick  W1046 minted    -         "pycodemod docshape verb: wire the docshape planner under the ruff-count judge, dry run by default, --write and --selftest as judged-fix"  evidence=W1043
 2026-10-12T11:09:56Z  tick  W1044 advanced  collapse  "W1043 atomized into W1044/W1045/W1046; W1044 docshape.py planner + tests written, gate running"
+2026-10-12T12:47:02Z  interrupt W1047 minted    -         "Reuse-readiness census: for each published component report what stops a stranger adopting it, as a dry-run mode and a metric"  evidence=github:W28
+2026-10-12T12:58:50Z  tick  W1045 advanced  unblock   "judge takes a measurement seam (TypedArgsFlags.measure, judge texts tuple) + measure.ruff_measure; tests green, commit in flight"
+2026-10-12T13:22:22Z  interrupt W1048 minted    -         "Host paperkit's render/checks/rulerseq.py as the new dist mikemol-rulerseq (module mikemol.rulerseq): public names unchanged, selftest kept, warrants and gate wired"  evidence=paperkit:W338
+2026-10-12T14:37:10Z  interrupt W1049 minted    -         "Lease sizing learned per label: the fence's default lease for a command class is a percentile of its recorded peaks plus a declared margin, with a cold-start default, so a class that uses 1 GiB stops reserving 4"  evidence=github-8f
+2026-10-12T15:08:15Z  interrupt W1050 minted    -         "pycodemod:mutants is twelve shards, not six: shard 0 passes alone in 373 s at host load 100 and five of six time out inside the commit gate"  evidence=W1045
+2026-10-12T18:23:06Z  interrupt W1051 minted    -         "mikemol-cpu-census in memres: cores used per cgroup over a window, so what is using the host is one command"  evidence=W1045
+2026-10-12T18:23:07Z  interrupt W1052 minted    -         "Host: give the buildbuddy executor pod a lower CPU priority than user.slice (cpu.weight or limit)"  evidence=W1045
+2026-10-12T18:30:06Z  tick  W1048 advanced  unblock   "rulerseq dist scaffolded and ported (0 differences vs paperkit d6096c9); W1045 blocked on W1052; W1050 closed as measured no-op; W1051/W1052/W1049 minted"
+2026-10-12T18:43:43Z  tick  W1042 advanced  sweep     "wheel.publish: build in temp, copy only wheels; green; commit held on luthen W886"
+2026-10-12T19:13:22Z  tick  W1051 advanced  mechanism "mikemol-cpu-census: cpucensus.py + 12 tests + warrants + console script written; bazel gate running; commit held on W1052 (luthen W886)"
+2026-10-12T19:43:52Z  tick  W1046 advanced  mechanism "docshape verb: cli_docshape.py + cli.py mode + 7 tests + warrants; gate running; commit held on luthen W886 (W885 is done)"
+2026-10-12T19:58:44Z  interrupt W1053 minted    -         "Design the waldo mode: a narrow tool holding one privilege, with a declared allowed set, refuse-with-diff, same-plan apply and witnesses"  evidence=luthen-observability:W889
+2026-10-12T20:12:15Z  tick  W1054 minted    -         "Scaffold the mikemol-waldo dist (module mikemol.waldo) with mikemol-new-dist, stdlib only"  evidence=W1053
+2026-10-12T20:12:15Z  tick  W1055 minted    -         "waldo.compare: Change, compare(allowed, required, planned) and the -/+ diff render, lifted from luthen's apply_set, pure"  evidence=W1053
+2026-10-12T20:12:16Z  tick  W1056 minted    -         "waldo.contract: parse and validate a contract file, plus witness lint that refuses a witness passing on empty or default output"  evidence=W1053
+2026-10-12T20:12:17Z  tick  W1057 minted    -         "waldo.witness: run the exit-code, json_empty, must_contain and must_match witnesses over an injected runner"  evidence=W1053
+2026-10-12T20:12:18Z  tick  W1058 minted    -         "waldo.custody: Secret type that prints only its fingerprint, atomic 0600-in-0700 store, identity-explicit refusal"  evidence=W1053
+2026-10-12T20:12:18Z  tick  W1059 minted    -         "waldo.pipeline and CLI: plan, compare, apply the same artifact, witness, one JSON verdict line; exits 0, 1 and 2"  evidence=W1053
+2026-10-12T20:12:42Z  tick  W1053 advanced  collapse  "waldo mode: read apply_set and peer_token, wrote .claude/design/W1053-waldo.md, atomized into W1054-W1059; W1052/W1048 re-blocked on luthen W888"
+2026-10-12T20:21:47Z  interrupt W1060 minted    -         "waldo.recipe: an ordered list of waldo phases with before/after gates, halts and a durable phase marker, resumable"  evidence=W1053

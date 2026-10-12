@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1046,
+  "counter": 1060,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-12T20:41:11Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 138,
+      "ticks_blocked": 145,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 137,
+      "ticks_blocked": 144,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 142,
+      "ticks_blocked": 149,
       "completed": null
     },
     {
@@ -11800,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 76,
+      "ticks_blocked": 83,
       "completed": null
     },
     {
@@ -16152,7 +16155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 48,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 48,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -17532,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -17555,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -17978,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 42,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -18152,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 40,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -18931,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 39,
+      "ticks_blocked": 46,
       "completed": null
     },
     {
@@ -20803,12 +20806,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "A read-only mode (dry run, per repo, one row each: hook present, names MIKEMOL_REAL_ROOT yes or no, tool lookups still rooted at the snapshot) so the adoption of isolated mikemol-commit is a measured census and a metric, not a hand survey; reference adoption: linux-sources efd2150 (gate_staged.sh takes venv, worktree and git calls from MIKEMOL_REAL_ROOT) and d3a428d (the hook names it). Today a hand grep found 11 repos not naming it: amr-skills, luthen-observability, nemik, el-openglo, aeternum, rosettapkg, paperkit, resumes, gabion, gcalculus, summit, and life has no hook file",
-      "evidence": "2026-10-11: 2026-10-11 github-8f: items (3) strip GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE from git calls about another repo, and (5) library code that reads MIKEMOL_REAL_ROOT instead of taking an anchor parameter, look checkable by this survey mode; (1) a relative declared root and (4) tests that run git in their own root are candidates. Source: amr-skills:W297 adoption, c2774f9.",
+      "next_bounded_step": "Express the five adoption pitfalls as a Rego contract with a test file of refusing and admitting cases, shipped with mtools; the survey mode evaluates it per repo and publishes the result as a series; each adopter can run the same contract locally",
+      "evidence": "2026-10-11: 2026-10-11 github-8f: items (3) strip GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE from git calls about another repo, and (5) library code that reads MIKEMOL_REAL_ROOT instead of taking an anchor parameter, look checkable by this survey mode; (1) a relative declared root and (4) tests that run git in their own root are candidates. Source: amr-skills:W297 adoption, c2774f9. | 2026-10-12: 2026-10-12 operator: Rego is the LANGUAGE of boundary contract enforcement, and the authority is federatable: each party can author and publish its own contracts in the same language and others evaluate them against their own material, rather than one central authority answering for everyone. Consequence for this card: the adoption pitfalls (naming MIKEMOL_REAL_ROOT, no tool lookup rooted at the snapshot, no library code reading the variable, stripped GIT_* variables for sibling git calls, tests that need .git) are a CONTRACT mtools publishes for adopters; ship them as Rego with tests in mtools, and let each repo evaluate the contract against its own hook and gate script, so adoption is checked by the adopter, from the producer's published terms, with the survey mode only the cross-repo aggregator.",
       "issued_at": "2026-10-11T21:54:05Z",
       "minted_during": "interrupt",
       "caused_by": "mtools:W954",
-      "last_worked": "2026-10-11T22:58:23Z",
+      "last_worked": "2026-10-12T12:51:41Z",
       "ticks_blocked": 0
     },
     {
@@ -20996,11 +20999,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-12: 2026-10-12 same principle as W1024 (operator, via github-8f): a memory.high or memory.max on the scope is a static threshold; the fix is second-order (level, slope, acceleration of the scope's memory, adjusted while it runs), published as rail-engagement metrics. A static memory.max is at most the stopgap beneath it, and only from paperkit's full-sweep VmHWM (floor so far 9.23 GB for the gate server).",
+      "evidence": "2026-10-12: 2026-10-12 same principle as W1024 (operator, via github-8f): a memory.high or memory.max on the scope is a static threshold; the fix is second-order (level, slope, acceleration of the scope's memory, adjusted while it runs), published as rail-engagement metrics. A static memory.max is at most the stopgap beneath it, and only from paperkit's full-sweep VmHWM (floor so far 9.23 GB for the gate server). | 2026-10-12: 2026-10-12 github-8f ruling input: memory.high must NOT be set on memory.current alone (reclaims warm cache needlessly). Design: memory.high = lease (non-reclaimable) + an explicit cache allowance sized from the measured file peak; memory.max above that. The lease quantity is non-reclaimable memory (see W1029).",
       "issued_at": "2026-10-12T02:18:41Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit-d8",
-      "last_worked": "2026-10-12T02:20:21Z",
+      "last_worked": "2026-10-12T14:17:48Z",
       "ticks_blocked": 0
     },
     {
@@ -21058,11 +21061,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-12: 2026-10-12 github-8f's suggested shape (a repo-level choice, theirs; to correct from the code): a resize verb for a HELD lease that does not kill or refuse; it changes the lease's size and, for a lease that owns a cgroup scope (W1026), sets that scope's memory.high to the new size, so the holder is throttled by reclaim pressure and not killed; a shrink below current use just applies pressure until the holder drops. Interim rail until it exists: resize the ledger TOTAL (membudget init --reset N) to throttle new admissions only. Read first: admit.py has acquire, release and gc and no verb that changes a held lease's mb; the ledger is rewritten as a sibling renamed over the file under the lock (Store.rewrite).",
+      "evidence": "2026-10-12: 2026-10-12 github-8f's suggested shape (a repo-level choice, theirs; to correct from the code): a resize verb for a HELD lease that does not kill or refuse; it changes the lease's size and, for a lease that owns a cgroup scope (W1026), sets that scope's memory.high to the new size, so the holder is throttled by reclaim pressure and not killed; a shrink below current use just applies pressure until the holder drops. Interim rail until it exists: resize the ledger TOTAL (membudget init --reset N) to throttle new admissions only. Read first: admit.py has acquire, release and gc and no verb that changes a held lease's mb; the ledger is rewritten as a sibling renamed over the file under the lock (Store.rewrite). | 2026-10-12: 2026-10-12 github-8f measurement (linux-sources:W341, whole-session scope, 78 min, 6144 MB lease): memory.current peak 8521 MiB = anon 2901 + file 5566 + swap 5; the lease was 2.1x loose as anon, 39% over as current. RULING for this card: a lease means NON-RECLAIMABLE memory (anon + unreclaimable kernel: slab_unreclaimable, kernel stack, page tables), not memory.current; a lease resize moves that quantity.",
       "issued_at": "2026-10-12T02:21:33Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-12T02:21:40Z",
+      "last_worked": "2026-10-12T14:17:45Z",
       "ticks_blocked": 0
     },
     {
@@ -21079,11 +21082,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-12: 2026-10-12 github-8f ask: the engagement series carries, per lease, BOTH the anon (non-reclaimable) peak and the memory.current peak (and file separately), so leases are sized from measured peaks. Yes: designed in. Caveat from the source measurement: scope was the whole session, so its peak includes other work. | 2026-10-12: 2026-10-12 github-8f (linux-sources:W344-346): record memory.peak (anon, current, file where the kernel gives them) from the lease's cgroup (app.slice/.mikemol-fence.<pid>.<epoch>) at RELEASE, the final value, never from the 1-minute scrape (3 samples over a 194 s build; a direct memory.peak read gave 1021 MiB). Short builds are invisible to a scrape. The recorded peaks are the input to the learned-lease card.",
       "issued_at": "2026-10-12T02:21:34Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
+      "last_worked": "2026-10-12T14:37:11Z",
       "ticks_blocked": 0
     },
     {
@@ -21332,12 +21335,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-12: 2026-10-12 READY, commit held on W1052 (luthen-observability:W886): hooks/wheel.py publish() builds in a temp dir and copies only .whl to --out, so uv build's .gitignore of * never lands in the caller's vendor/wheels; tests (fake uv now leaves the .gitignore like the real one) + 2 warrants; bazel test //hooks:test_wheel mypy ruff green. Files: hooks/src/mikemol/hooks/wheel.py, hooks/tests/test_wheel.py, hooks/warrants.bib.",
       "issued_at": "2026-10-12T08:05:13Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-a9",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T19:13:18Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1043",
@@ -21351,7 +21355,6 @@
         "docstring"
       ],
       "blocked_on": [
-        "W1044",
         "W1045",
         "W1046"
       ],
@@ -21362,13 +21365,13 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
       "symbol": "W1044",
       "title": "pycodemod docshape.py: the pure planner that splits a docstring's multi-line first paragraph at its first sentence end (D205), text in and Plan out, refusing what it cannot split",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1043"
       ],
@@ -21378,19 +21381,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 092bba2 [PUSHED]: docshape.plan (sentence end, else colon; dash dropped as a split point because it would lose a word); gate mutants passed at the commit's load wait",
       "issued_at": "2026-10-12T11:06:32Z",
       "minted_during": "tick",
       "caused_by": "W1043",
-      "last_worked": "2026-10-12T11:06:37Z",
+      "last_worked": "2026-10-12T12:55:12Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T125512Z"
     },
     {
       "symbol": "W1045",
       "title": "pycodemod judge takes a measurement seam, so a codemod can be judged by ruff rule counts as typed-args is by mypy messages",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1043"
       ],
@@ -21398,15 +21401,18 @@
         "pycodemod",
         "judge"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1052"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-12: 2026-10-12: code and tests green (test_measure, the four CLI suites, mypy, ruff; shards 0, 1 and 4 pass alone); six commit attempts refused on pycodemod:mutants shards that TIME OUT at 900 s under host CPU saturation (24.14 of 24 cores, PSI cpu 46%). Blocked on W1052 (CPU bound on the buildbuddy executor, routed by github-8f to luthen-observability, whose card symbol is pending). No retry loop, per github-8f. Files are staged-by-name in the tree, uncommitted: cli_typedargs.py, measure.py, test_measure.py, pyproject.toml, rubric.tsv, warrants.bib.",
       "issued_at": "2026-10-12T11:06:32Z",
       "minted_during": "tick",
       "caused_by": "W1043",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T18:24:17Z",
+      "ticks_blocked": 6,
+      "completed": null
     },
     {
       "symbol": "W1046",
@@ -21426,8 +21432,328 @@
       "issued_at": "2026-10-12T11:06:33Z",
       "minted_during": "tick",
       "caused_by": "W1043",
-      "last_worked": null,
+      "last_worked": "2026-10-12T20:11:35Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1047",
+      "title": "Reuse-readiness census: for each published component report what stops a stranger adopting it, as a dry-run mode and a metric",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "kata",
+        "publish",
+        "adoption"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Write the boundary policy first as Rego plus its test file (refusing and admitting cases per class), the census and the export builder both read it; schema fields and repo classes are its input",
+      "evidence": "2026-10-12: 2026-10-12 operator: some repos' contents are NOT meant to be shared; mechanization and schema are insisted on partly because boundaries are easier to enforce when material is not in prose. Reading for this card: the census needs a declared boundary class per repo before it can judge anything (public-bound, private, mixed), and the structured parts of our material are where boundaries can be enforced by field, while free text (evidence, letters, notes, commit messages) is where leaks happen. Existing prior art in the fleet: the address-literals gate and scan-literal (pattern scans of prose), nemik's public copy behind luthen's withheld list (path-level). Candidate stronger mechanisms to evaluate, not decided: a visibility label per waypoint field so an export builder drops fields by label; a taint list built on the private side (hashed identifiers of sensitive terms, never the terms) that gates the prose of public-bound repos. | 2026-10-12: 2026-10-12 operator: the boundary-by-schema reason is a large part of why Rego, and it folds into the same why-Rego as everything else we write in Rego. Consequence: express the boundary rules (repo class, field visibility, the hashed taint list) as Rego policies over the schema, with the requirement in the policy and the Python only measuring (the fleet pattern: a check emits what it measured as JSON, the policy under policy/ holds the deny and withheld sets and its own test file with refusing and admitting cases, opa test is the falsifiability record). One authority then serves the gate, the export builder and the census, as plan.rego already does for host and cluster plans and workload posture.",
+      "issued_at": "2026-10-12T12:47:02Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W28",
+      "last_worked": "2026-10-12T12:50:07Z",
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1048",
+      "title": "Host paperkit's render/checks/rulerseq.py as the new dist mikemol-rulerseq (module mikemol.rulerseq): public names unchanged, selftest kept, warrants and gate wired",
+      "status": "blocked",
+      "enables": [
+        "nemik:W389"
+      ],
+      "touches": [
+        "rulerseq",
+        "fleet"
+      ],
+      "blocked_on": [
+        "W1052"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: source: paperkit d6096c9ee98f164b877243af6ea3fd5ec43116e9 render/checks/rulerseq.py (git show d6096c9:render/checks/rulerseq.py); last changed by 0893d86 in paperkit. nemik:W389/W382/W388 also consume it. | 2026-10-12: 2026-10-12 READY TO COMMIT, held: rulerseq dist (src ruler.py selftest.py __init__ __main__, tests/test_ruler.py 17 tests, 14 warrants, 12 declared defects, scaffold from mikemol-new-dist, MODULE.bazel and INSTALL.md edited by the scaffold) passes bazel test //rulerseq/... including mutants (20/20 killed after the nicematrix_defs(0) assertion was tightened). Differential vs paperkit d6096c9: 0 differences. Commit waits on the CPU bound (W1052 -> luthen-observability:W886); then: commit rulerseq + MODULE.bazel + INSTALL.md, tell paperkit-d8 and nemik-71 the dist name (mikemol-rulerseq, module mikemol.rulerseq) and the sha. Renamed privates: _rule_name -> rule_name, _css_stops -> css_stops. | 2026-10-12: 2026-10-12: re-blocked from luthen W886 (landed, rail reads hold) to luthen-observability:W888 (the child that makes the rail engage). | 2026-10-12: 2026-10-12 coupling: MODULE.bazel and INSTALL.md also carry the waldo scaffold (W1054); commit rulerseq and waldo together or split those hunks first.",
+      "issued_at": "2026-10-12T13:22:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "paperkit:W338",
+      "last_worked": "2026-10-12T20:41:49Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1049",
+      "title": "Lease sizing learned per label: the fence's default lease for a command class is a percentile of its recorded peaks plus a declared margin, with a cold-start default, so a class that uses 1 GiB stops reserving 4",
+      "status": "blocked",
+      "enables": [
+        "linux-sources:W346"
+      ],
+      "touches": [
+        "memres",
+        "fence",
+        "lease"
+      ],
+      "blocked_on": [
+        "W1030"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: design: fed by the peaks W1030 records at release; mtools memres already has an observation store of cell peaks (mem_learn, mem_db, mem_project) that is the natural home; lease = percentile of prior peaks per label + margin, cold-start default, measured quantity is non-reclaimable (see W1029).",
+      "issued_at": "2026-10-12T14:37:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-12T14:37:16Z",
+      "ticks_blocked": 6,
+      "completed": null
+    },
+    {
+      "symbol": "W1050",
+      "title": "pycodemod:mutants is twelve shards, not six: shard 0 passes alone in 373 s at host load 100 and five of six time out inside the commit gate",
+      "status": "done",
+      "enables": [
+        "W1045"
+      ],
+      "touches": [
+        "pycodemod",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 MEASURED, NO CHANGE: twelve shards (each 190 s alone, shards 1 and 4 and 0 pass alone) all TIMEOUT at 900 s when run together, exactly as six did. Not a shard-count problem: the host load of 100-140 is paperkit's mutation sweep on the buildbuddy executor (eval.py processes), so the aggregate work cannot finish. BUILD change reverted to six. The cure is the memory/cpu rail (W1024 family, W1026) and paperkit's sweep leasing through the fence (W1035 letter), not more shards.",
+      "issued_at": "2026-10-12T15:08:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1045",
+      "last_worked": "2026-10-12T18:14:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261012T181419Z"
+    },
+    {
+      "symbol": "W1051",
+      "title": "mikemol-cpu-census in memres: cores used per cgroup over a window, so what is using the host is one command",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "memres",
+        "host"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 MEASURED by hand (scratch cpu_by_cgroup.py, 10 s window, 24 cores): / 24.14 cores = saturated; kubepods 12.26, of which ONE pod (eb3797c8, holds a buildbuddy executor process) 9.97; user.slice 10.11 (luthen-check-producer.service 2.86, claude-nemik 2.58, konsole 1.16); system 1.04. CPU PSI some avg60 45.7%; memory and io PSI about 0. The host is CPU-oversubscribed, not memory- or io-bound. This tool makes that reading one command. | 2026-10-12: 2026-10-12 READY, commit held on W1052 (luthen-observability:W886): memres cpucensus.py, tests/test_cpucensus.py (12 tests incl. a fake cgroup tree, no links), 12 warrants, rubric row, console script mikemol-cpu-census in pyproject and BUILD, assert exemption; bazel test //memres:test_cpucensus mypy ruff mutants green. Files: memres/src/mikemol/memres/cpucensus.py, memres/tests/test_cpucensus.py, memres/pyproject.toml, memres/BUILD.bazel, memres/rubric.tsv, memres/warrants.bib.",
+      "issued_at": "2026-10-12T18:23:06Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1045",
+      "last_worked": "2026-10-12T19:43:48Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1052",
+      "title": "Host: give the buildbuddy executor pod a lower CPU priority than user.slice (cpu.weight or limit)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "host",
+        "gate",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12: the executor pod (kubepods-burstable, ~10 of 24 cores, running paperkit mutation eval.py actions) and the commit gate (user.slice) share the CPU at equal default weight with no limit, so a gate target's wall time follows the executor's load; the gate's mutants shards (190 s alone) hit the 900 s timeout. Unknown to me: the executor's configured action concurrency (/config/executor.yaml inside the pod). Ask for the host session (github-8f): cpu.weight on kubepods below user.slice, or a CPU limit on the pod. | 2026-10-12: 2026-10-12 github-8f: taken by luthen-observability:W883 (working). Cause read from the cluster: the executor pod requests 1 CPU and is limited to 24, sets no action concurrency, so BuildBuddy sizes its runner pool from the 24-core limit (about 10 cores busy). Planned rail: resize the executor's CPU limit in place from node CPU PSI. Nothing changed on the executor yet. | 2026-10-12: 2026-10-12 read luthen's W883: umbrella with children W885 (decision function), W886 (actuator, dry-run first), W884 (cgroup CPU pressure leg, held on host apply W274). The child that bounds the executor is W886; re-blocked on it by citation. | 2026-10-12: 2026-10-12 20:1xZ: luthen W886 (actuator) landed but its first live dry run read HOLD: node pressure baseline is dominated by the executor itself, so the rail will almost never engage. Measured here at the same time: load 82, cpu PSI some 51%. The executor is NOT bounded. The child that makes it engage is luthen-observability:W888 (re-aim at the peers' per-session CPU pressure from W884, floor from the median); it enables this card. Re-blocked on it by citation. | 2026-10-12: 2026-10-12 20:2xZ luthen W888 landed (45b2c383) but its live dry run reads HOLD (squeeze_min 0.155, release_max 0.219, base_mean null: the new series has no history older than a day); it self-activates from about 2026-10-13T20Z and W883 closes on observation. Measured now: load 64, CPU PSI some avg60 44%. The executor is still unbounded until then. Re-blocked on the umbrella luthen-observability:W883 (nemik may warn UmbrellaBlockShape: no child step remains; W883 closes on observation). At 2026-10-13T20Z re-read luthen's dry run and the PSI here. | 2026-10-12: 2026-10-12 per github-8f: re-pointed from the umbrella luthen-observability:W883 (which lists W1052 under enables: a dependency cycle) to its child W888, which is DONE (45b2c383). The ask is delivered; what remains is observation (the rail self-activates about 2026-10-13T20Z; luthen closes W883 on observation). So W1052 is ready, not blocked; W1045 and W1048 wait on it (still open) until an observation shows the executor bounded.",
+      "issued_at": "2026-10-12T18:23:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1045",
+      "last_worked": "2026-10-12T20:42:50Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1053",
+      "title": "Design the waldo mode: a narrow tool holding one privilege, with a declared allowed set, refuse-with-diff, same-plan apply and witnesses",
+      "status": "blocked",
+      "enables": [
+        "luthen-observability:W889"
+      ],
+      "touches": [
+        "waldo",
+        "fleet"
+      ],
+      "blocked_on": [
+        "W1054",
+        "W1055",
+        "W1056",
+        "W1057",
+        "W1058",
+        "W1059",
+        "W1060"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: 2026-10-12 ask from luthen-observability:W889 (operator's word: a waldo is a narrow tool that holds one privilege and does only a declared action on behalf of others; the permission classifier fires on SHAPE, so the privileged act is a named verb with a declared contract). Two built instances to extract from: (1) luthen checks/apply_set.py + checks/apply_sets/<name>.json: plan fresh, compare with a declared allowed SUPERSET (+ required rows), refuse with a -/+ diff and apply NOTHING on any row outside it, else apply the SAME plan, then event-bound after-witnesses (exit code, json_empty, must_contain, must_match), one JSON verdict line; a converged row is absent so the set must be a superset; a finished oneshot unloads so the witness must be the journal. (2) amr-skills peer_token.py: bounded token, 0600 in a 0700 dir by atomic rename, prints only a fingerprint and expiry, refuses unless an identity is chosen, renews under a third of its life. Shared contract wanted: declared allowed set, refuse-with-diff, apply the same artifact, witnesses that cannot pass on defaults or a retry, fingerprint-only output, no secret in output. Read cassian-observability's six recipe files for the idiom before designing. NEXT: atomize (read the three sources, write .claude/design/W1053-waldo.md, then pure core / witnesses / CLI cards). Not started; commits are paused on W1052. | 2026-10-12: 2026-10-12 atomized: design in .claude/design/W1053-waldo.md; children W1054 scaffold, W1055 compare, W1056 contract+witness lint, W1057 witness, W1058 custody, W1059 pipeline+CLI. Open: cassian-observability's six recipe files were not found on this host (no ~/github/cassian-observability); ask luthen where they live before the contract schema is frozen. | 2026-10-12: 2026-10-12 read luthen's extract of cassian's recipes: plan-vault-apply-recipe-design.md and checks/recipe.py (the .sh recipes still unread). Design updated: before-witnesses, advances and fresh_since witness kinds, a skipped verdict, halts, durable phase marker; new child W1060 (waldo.recipe).",
+      "issued_at": "2026-10-12T19:58:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W889",
+      "last_worked": "2026-10-12T20:21:56Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1054",
+      "title": "Scaffold the mikemol-waldo dist (module mikemol.waldo) with mikemol-new-dist, stdlib only",
+      "status": "ready",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 scaffolded with mikemol-new-dist and uv sync (dist dir waldo/, MODULE.bazel and INSTALL.md edited by the scaffold). NOT COMMITTED: MODULE.bazel and INSTALL.md now carry BOTH the rulerseq (W1048) and waldo edits, so the two dists must land in ONE commit (or the hunks be split), else a hub is registered for a dist that is not in the tree and every commit fails the gate (memory: untracked-dist-breaks-gate). W1055-W1058 replace the scaffold's smoke test and add the modules.",
+      "issued_at": "2026-10-12T20:12:15Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:41:54Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1055",
+      "title": "waldo.compare: Change, compare(allowed, required, planned) and the -/+ diff render, lifted from luthen's apply_set, pure",
+      "status": "working",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T20:12:15Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:41:55Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1056",
+      "title": "waldo.contract: parse and validate a contract file, plus witness lint that refuses a witness passing on empty or default output",
+      "status": "ready",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1054"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T20:12:16Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:12:31Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1057",
+      "title": "waldo.witness: run the exit-code, json_empty, must_contain and must_match witnesses over an injected runner",
+      "status": "ready",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1054"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T20:12:17Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:12:31Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1058",
+      "title": "waldo.custody: Secret type that prints only its fingerprint, atomic 0600-in-0700 store, identity-explicit refusal",
+      "status": "ready",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1054"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T20:12:18Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:12:31Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1059",
+      "title": "waldo.pipeline and CLI: plan, compare, apply the same artifact, witness, one JSON verdict line; exits 0, 1 and 2",
+      "status": "blocked",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1055",
+        "W1056",
+        "W1057",
+        "W1058"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T20:12:18Z",
+      "minted_during": "tick",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:12:27Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1060",
+      "title": "waldo.recipe: an ordered list of waldo phases with before/after gates, halts and a durable phase marker, resumable",
+      "status": "blocked",
+      "enables": [
+        "W1053"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1059"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-12: Source: cassian plan-vault-apply-recipe-design.md (phases P-1..P10, STAR-S/STAR-R, halts, .auto.tfvars as the durable phase marker, section 5 resumability). Open: the .sh recipes (quiesce-sku-builds.sh, openbao-rotate-prove.sh, vault-apply.d/) are not read yet; read them before freezing this card's schema.",
+      "issued_at": "2026-10-12T20:21:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1053",
+      "last_worked": "2026-10-12T20:21:55Z",
+      "ticks_blocked": 1,
+      "completed": null
     }
   ],
   "residue": [

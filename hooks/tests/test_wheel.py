@@ -59,6 +59,10 @@ class _Tools:
         text = (cwd / "pyproject.toml").read_text(encoding="utf-8")
         version = text.split('version = "')[1].split('"')[0]
         outdir = Path(argv[argv.index("--out-dir") + 1])
+        if not outdir.exists():
+            # uv build leaves a `.gitignore` of `*` in an output directory it creates (W1042)
+            outdir.mkdir(parents=True)
+            (outdir / ".gitignore").write_text("*\n", encoding="utf-8")
         (outdir / f"mikemol_{cwd.name}-{version}-py3-none-any.whl").write_text(text, "utf-8")
         return 0, ""
 
@@ -169,6 +173,26 @@ def test_a_relative_out_and_mtools_reach_the_build_as_absolute_paths(
     tools = _Tools()
     assert wheel.main([*DISTS, "--sha", SHA, "--out", "out", "--mtools", "m"], tools) == 0
     builds = [c for c in tools.calls if c[0] == "env"]
-    assert {c[c.index("--out-dir") + 1] for c in builds} == {str(tmp_path / "out")}
+    staged = {Path(c[c.index("--out-dir") + 1]) for c in builds}
+    assert all(path.is_absolute() for path in staged)
+    assert (tmp_path / "out" / revendor.wheel_name("atomicwrite", SHORT)).is_file()
     archive = next(c for c in tools.calls if c[0] == "git")
     assert archive[2] == str(tmp_path / "m")
+
+
+def test_the_caller_gets_the_wheels_and_never_uvs_gitignore(tmp_path: Path) -> None:
+    """W1042: the build runs in a temp directory, so no `.gitignore` of `*` reaches the output."""
+    out = tmp_path / "vendor" / "wheels"
+    assert wheel.main(_args(out, "--mtools", str(tmp_path)), _Tools()) == 0
+    names = sorted(path.name for path in out.iterdir())
+    assert names == sorted(revendor.wheel_name(dist, SHORT) for dist in DISTS)
+    assert not (out / ".gitignore").exists()
+
+
+def test_an_existing_output_directory_keeps_its_own_files(tmp_path: Path) -> None:
+    """Publishing adds wheels beside what is there and removes nothing."""
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "keep.txt").write_text("mine", encoding="utf-8")
+    assert wheel.main(_args(out, "--mtools", str(tmp_path)), _Tools()) == 0
+    assert (out / "keep.txt").read_text(encoding="utf-8") == "mine"
