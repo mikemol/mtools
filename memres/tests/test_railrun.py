@@ -87,7 +87,15 @@ def test_the_metrics_carry_the_allowance_the_reading_and_the_counts() -> None:
     assert "mikemol_rail_shrinks_total 2" in lines
     assert "mikemol_rail_recoveries_total 1" in lines
     assert "mikemol_rail_holds_total 2" in lines
+    assert "mikemol_rail_apply_failures_total 0" in lines
     assert text.endswith("\n")
+
+
+def test_a_resize_that_did_not_take_is_counted_apart_from_the_evaluations() -> None:
+    """The rail asked and was not obeyed: only `failures` moves."""
+    assert railrun.failed(Counts(_THREE, 1, 1, 1)) == Counts(_THREE, 1, 1, 1, 1)
+    text = railrun.metrics_text(_FIVE, None, Counts(failures=_TWO))
+    assert "mikemol_rail_apply_failures_total 2" in text.splitlines()
 
 
 def test_the_reading_gauges_are_absent_while_there_is_no_reading() -> None:

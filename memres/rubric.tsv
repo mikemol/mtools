@@ -10,3 +10,4 @@ cpuweight	The CPU Weight: A Planted cgroup Host Weighted, Joined and Verified, W
 zswap_probe	The Zswap Probe: One Planted cgroup Sampled in a Pass, Every Field Labelled, the Selftest Honest
 rail	The Memory Rail: Level, Slope and Acceleration of Headroom, an Allowance That Shrinks At Once and Recovers a Cell at a Time, and Never More Optimistic Than the Level Measured
 railrun	The Rail Sampler's Pure Half: Meminfo Read Into a Level, Every Evaluation Counted as Exactly One of a Shrink, a Recovery or a Hold, and the Rail Published as Metrics
+railloop	The Rail Sampler's Loop: The Fence Resized Only When the Allowance Changes, a Refused Resize Keeping the Old Allowance and Counted, and a Round Limit That Sleeps Between Rounds

@@ -787,3 +787,95 @@
   claim  = {Before the rail has two samples only the allowance and the counts are published.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_the_reading_gauges_are_absent_while_there_is_no_reading},
 }
+
+@misc{memres-railloop-allowance-becomes-a-ledger-total-in-whole-megabytes,
+  section = {railloop},
+  title  = {Three 1000 MB cells are a 3000 MB total; a total is never less than one MB},
+  claim  = {Three 1000 MB cells are a 3000 MB total; a total is never less than one MB.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_an_allowance_becomes_a_ledger_total_in_whole_megabytes},
+}
+
+@misc{memres-railloop-resize-is-the-fence-init-reset-command,
+  section = {railloop},
+  title  = {`mikemol-membudget init --reset <MB>` is the verb that resizes the total, keeping leases},
+  claim  = {`mikemol-membudget init --reset <MB>` is the verb that resizes the total, keeping
+            leases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_the_resize_is_the_fence_init_reset_command},
+}
+
+@misc{memres-railloop-loop-starts-at-the-ceiling-with-nothing-counted,
+  section = {railloop},
+  title  = {A sampler started on a calm host takes nothing back},
+  claim  = {A sampler started on a calm host takes nothing back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_the_loop_starts_at_the_ceiling_with_nothing_counted},
+}
+
+@misc{memres-railloop-first-sample-has-no-reading-and-the-allowance-holds,
+  section = {railloop},
+  title  = {One sample has no slope: the allowance stays and the evaluation counts as a hold},
+  claim  = {One sample has no slope: the allowance stays and the evaluation counts as a hold.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_the_first_sample_has_no_reading_and_the_allowance_holds},
+}
+
+@misc{memres-railloop-only-the-newest-window-of-samples-is-kept,
+  section = {railloop},
+  title  = {Four evaluations leave three samples: enough for slope and acceleration, no more},
+  claim  = {Four evaluations leave three samples: enough for slope and acceleration, no more.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_only_the_newest_window_of_samples_is_kept},
+}
+
+@misc{memres-railloop-unreadable-meminfo-changes-nothing-and-calls-no-fence,
+  section = {railloop},
+  title  = {With no MemAvailable the evaluation is skipped: same state, no reading gauge},
+  claim  = {With no MemAvailable the evaluation is skipped: same state, no reading gauge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_unreadable_meminfo_changes_nothing_and_calls_no_fence},
+}
+
+@misc{memres-railloop-hold-at-the-ceiling-writes-nothing-to-the-ledger,
+  section = {railloop},
+  title  = {The first evaluation on a calm host holds, and the fence is not called},
+  claim  = {The first evaluation on a calm host holds, and the fence is not called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_a_hold_at_the_ceiling_writes_nothing_to_the_ledger},
+}
+
+@misc{memres-railloop-shrink-is-applied-to-the-ledger-and-counted,
+  section = {railloop},
+  title  = {A squeeze drops the allowance to the floor and asks the fence for a 1000 MB total},
+  claim  = {A squeeze drops the allowance to the floor and asks the fence for a 1000 MB total.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_a_shrink_is_applied_to_the_ledger_and_counted},
+}
+
+@misc{memres-railloop-resize-the-fence-refused-keeps-the-old-allowance-and-counts-the-failure,
+  section = {railloop},
+  title  = {The rail asked and was not obeyed: the allowance stays so the next round asks again},
+  claim  = {The rail asked and was not obeyed: the allowance stays so the next round asks again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_a_resize_the_fence_refused_keeps_the_old_allowance_and_counts_the_failure},
+}
+
+@misc{memres-railloop-dry-run-decides-and-publishes-but-calls-no-fence,
+  section = {railloop},
+  title  = {With no runner the allowance still moves and is published; the ledger is untouched},
+  claim  = {With no runner the allowance still moves and is published; the ledger is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_a_dry_run_decides_and_publishes_but_calls_no_fence},
+}
+
+@misc{memres-railloop-loop-evaluates-each-round-sleeps-between-rounds-and-resizes-once,
+  section = {railloop},
+  title  = {Three rounds: calm, calm, squeezed. Two sleeps (none after the last), three writes},
+  claim  = {Three rounds: calm, calm, squeezed. Two sleeps (none after the last), three writes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_the_loop_evaluates_each_round_sleeps_between_rounds_and_resizes_once},
+}
+
+@misc{memres-railloop-endless-loop-sleeps-after-every-round-until-stopped,
+  section = {railloop},
+  title  = {With no round limit the loop sleeps after each round; the stop here is a fake sleep},
+  claim  = {With no round limit the loop sleeps after each round; the stop here is a fake sleep.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railloop.py -k test_an_endless_loop_sleeps_after_every_round_until_stopped},
+}
+
+@misc{memres-railrun-resize-that-did-not-take-is-counted-apart-from-the-evaluations,
+  section = {railrun},
+  title  = {The rail asked and was not obeyed: only `failures` moves},
+  claim  = {The rail asked and was not obeyed: only `failures` moves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_railrun.py -k test_a_resize_that_did_not_take_is_counted_apart_from_the_evaluations},
+}

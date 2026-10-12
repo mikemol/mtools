@@ -49,6 +49,7 @@ class Counts:
     shrinks: int = 0
     recoveries: int = 0
     holds: int = 0
+    failures: int = 0
 
 
 def parse_meminfo(text: str) -> Memory | None:
@@ -95,6 +96,16 @@ def tally(counts: Counts, before: int, after: int) -> Counts:
     return replace(counts, evaluations=total, holds=counts.holds + 1)
 
 
+def failed(counts: Counts) -> Counts:
+    """Record one resize the fence refused or could not run: the rail asked and was not obeyed.
+
+    Returns:
+        the counts with `failures` raised by one and nothing else changed.
+
+    """
+    return replace(counts, failures=counts.failures + 1)
+
+
 def metrics_text(allowance: int, state: Reading | None, counts: Counts) -> str:
     """Render the rail as a Prometheus textfile: the allowance, the reading and the engagement.
 
@@ -133,5 +144,8 @@ def metrics_text(allowance: int, state: Reading | None, counts: Counts) -> str:
         "# HELP mikemol_rail_holds_total Evaluations that left the allowance as it was.",
         "# TYPE mikemol_rail_holds_total counter",
         f"mikemol_rail_holds_total {counts.holds}",
+        "# HELP mikemol_rail_apply_failures_total Resizes of the fence total that did not take.",
+        "# TYPE mikemol_rail_apply_failures_total counter",
+        f"mikemol_rail_apply_failures_total {counts.failures}",
     ]
     return "\n".join(lines) + "\n"
