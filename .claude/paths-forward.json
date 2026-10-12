@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 134,
+      "ticks_blocked": 135,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 133,
+      "ticks_blocked": 134,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 138,
+      "ticks_blocked": 139,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 72,
+      "ticks_blocked": 73,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 38,
+      "ticks_blocked": 39,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -20940,7 +20940,7 @@
     {
       "symbol": "W1024",
       "title": "mikemol-sweep-budget sizes the mutation sweep from live headroom: its 0.4 of MemTotal default ignores swap pressure and the sandbox's own RAM (24 cells ran at once, 51482 MB, and filled swap)",
-      "status": "blocked",
+      "status": "done",
       "enables": [
         "paperkit:W334"
       ],
@@ -20949,19 +20949,16 @@
         "gate",
         "bazel"
       ],
-      "blocked_on": [
-        "W1034",
-        "W1035"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Umbrella: design in .claude/design/W1024-live-headroom-budget.md. Work W1033 (pure rail model in memres), then W1034 (sampler and vehicle), then W1035 (letter so paperkit's pre-commit calls the mtools budget). W1029 and W1030 are the lease-resize verb and the engagement series it will use.",
-      "evidence": "2026-10-12: 2026-10-12 OPERATOR PRINCIPLE (relayed by github-8f): true fixes are second-order, not first-order and not thresholds; rails are neither linear nor static. So the sweep budget is not sized once from MemTotal minus a constant: it is a LEASE that follows live headroom, level (MemAvailable plus swap and sandbox headroom), slope and acceleration, re-evaluated while the run goes, shrinking allowed parallelism when memory use accelerates and recovering when it decays. luthen W842 and host W26 supply the predictors. The vehicle should be the existing membudget and fence leases IF they can be resized mid-run (to be read from fence's source, not assumed). Publish rail engagement as a metric (leases granted, shrunk, refused): how often a rail engages is the oracle for throttling. The static nvme sandbox_base (host ~/.bazelrc, 2026-10-12) is the stopgap beneath it. | 2026-10-12: 2026-10-12 READ (fence/src/mikemol/fence/membudget_cli.py:437 and admit.py): the ledger TOTAL can be resized in place under the lock keeping every live lease (membudget init --reset N, resize(): a sibling renamed over the ledger, so a reader sees old or new). A lease already held CANNOT be resized: admit.py has acquire, release and gc, no verb that changes a held lease's mb. So 'shrink while the run goes' has two real forms: (a) resize the total, which throttles NEW admissions only and leaves running cells at their size, or (b) a new fence verb to resize a held lease, which does not exist (a card of its own if the lease is to follow the live rail). Rail-engagement counts (granted, shrunk, refused) are not published today.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 OPERATOR PRINCIPLE (relayed by github-8f): true fixes are second-order, not first-order and not thresholds; rails are neither linear nor static. So the sweep budget is not sized once from MemTotal minus a constant: it is a LEASE that follows live headroom, level (MemAvailable plus swap and sandbox headroom), slope and acceleration, re-evaluated while the run goes, shrinking allowed parallelism when memory use accelerates and recovering when it decays. luthen W842 and host W26 supply the predictors. The vehicle should be the existing membudget and fence leases IF they can be resized mid-run (to be read from fence's source, not assumed). Publish rail engagement as a metric (leases granted, shrunk, refused): how often a rail engages is the oracle for throttling. The static nvme sandbox_base (host ~/.bazelrc, 2026-10-12) is the stopgap beneath it. | 2026-10-12: 2026-10-12 READ (fence/src/mikemol/fence/membudget_cli.py:437 and admit.py): the ledger TOTAL can be resized in place under the lock keeping every live lease (membudget init --reset N, resize(): a sibling renamed over the ledger, so a reader sees old or new). A lease already held CANNOT be resized: admit.py has acquire, release and gc, no verb that changes a held lease's mb. So 'shrink while the run goes' has two real forms: (a) resize the total, which throttles NEW admissions only and leaves running cells at their size, or (b) a new fence verb to resize a held lease, which does not exist (a card of its own if the lease is to follow the live rail). Rail-engagement counts (granted, shrunk, refused) are not published today. | 2026-10-12: umbrella complete: rail model 210c7a7, railrun cc6ed56, railloop 4ea8988, mikemol-rail CLI 435fb26 [PUSHED]; paperkit letter written (W1035). Follow-ups W1029 (lease resize), W1030 (engagement series) remain as own cards.",
       "issued_at": "2026-10-12T02:18:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-12T08:32:41Z",
-      "ticks_blocked": 1,
-      "completed": null
+      "last_worked": "2026-10-12T09:00:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261012T090040Z"
     },
     {
       "symbol": "W1025",
@@ -21156,7 +21153,7 @@
     {
       "symbol": "W1034",
       "title": "A memory-rail sampler applies the allowance by resizing the fence ledger total (and held leases once they can be resized) and writes its engagement counts as a textfile",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1035"
       ],
@@ -21166,19 +21163,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 435fb26 [PUSHED]: mikemol-rail CLI (railcli.py, console script, tests, warrants)",
       "issued_at": "2026-10-12T04:37:52Z",
       "minted_during": "tick",
       "caused_by": "W1024",
-      "last_worked": "2026-10-12T08:31:37Z",
+      "last_worked": "2026-10-12T08:59:25Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T085925Z"
     },
     {
       "symbol": "W1035",
       "title": "Send paperkit the letter asking its pre-commit to call the mtools memres budget and rail, and its sweep cells to hold fence leases",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "memres",
@@ -21186,13 +21183,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: letter written: paperkit/inbox/2026-10-12-mtools-memory-rail-and-fence-leases.md (not a commit in this repo)",
       "issued_at": "2026-10-12T04:37:53Z",
       "minted_during": "tick",
       "caused_by": "W1024",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T09:00:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261012T090035Z"
     },
     {
       "symbol": "W1036",
@@ -21240,7 +21238,7 @@
     {
       "symbol": "W1038",
       "title": "mikemol-commit's no-lock note says what to do (add the mikemol-fence dist to this repo's pins) instead of naming a bazel target that exists only in mtools",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "kata",
@@ -21254,8 +21252,9 @@
       "issued_at": "2026-10-12T07:25:35Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-12T09:00:43Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1039",

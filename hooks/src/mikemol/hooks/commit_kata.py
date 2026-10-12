@@ -489,7 +489,7 @@ def claim_of(
         return ""
     fence = fence_of(env, python)
     if not os.access(fence, os.X_OK):
-        return "the fence venv is not built ('bazel build //fence:.venv')"
+        return "the fence venv is not built (add the mikemol-fence dist to this repo's pins)"
     gitdir = run(["-C", str(root), "rev-parse", "--absolute-git-dir"])
     if gitdir.returncode != 0:
         return f"{root} is not a git checkout"
