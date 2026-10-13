@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1108,
+  "counter": 1109,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 165,
+      "ticks_blocked": 166,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 164,
+      "ticks_blocked": 165,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 169,
+      "ticks_blocked": 170,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 103,
+      "ticks_blocked": 104,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 67,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -22058,13 +22058,13 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
       "symbol": "W1078",
       "title": "mikemol-paths-forward --tick-open: take the lock and remember the holder, then bump-blocked, check, inbound, rank and weights sync, one summary",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "pathsforward",
@@ -22072,58 +22072,54 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Design --tick-open as one verb over lock (remembering the holder in state), bump-blocked, check, inbound, rank/weights; consumers: gabion:W1050, nemik:W426, amr-skills:W345",
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 FINDING from using it: host 'katas.py tick begin' (run from mtools) took the lock as holder 'github-b3', not as this session's holder mtools-tick-opus; the stop hook then asks for --unlock mtools-tick-opus and would not match. I released github-b3 by hand and took mtools-tick-opus. The mode must REMEMBER the holder it took (state, not typed) and the kata must call it, so begin and end use one name.",
       "issued_at": "2026-10-13T01:38:52Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T08:59:33Z",
+      "last_worked": "2026-10-13T11:30:27Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T113027Z"
     },
     {
       "symbol": "W1079",
       "title": "mikemol-paths-forward --tick-close W: ledger, render, commit the state files through mikemol-commit, close only on COMMITTED, release the held lock",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "pathsforward",
         "kata",
         "commit"
       ],
-      "blocked_on": [
-        "W1078"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 census converged (github-8f): gabion, nemik (nemik:W426), amr-skills, gcalculus, luthen typed the same close ritual by hand 15+ times. Subsumes the mikemol-commit --close request (gcalculus, amr-skills): ONE mode, no second way. close = ledger, render, stage the three state files, commit through mikemol-commit, close the card only on COMMITTED with the hash in the evidence, release the lock with the holder --tick-open took (the caller never types a holder; amr-skills got it wrong once). NOTE the host katas.py already has tick begin|end (lock, heartbeat, ledger line, W2 evidence, flush, unlock): reconcile so the kata calls this mode and there is not a second implementation.",
       "issued_at": "2026-10-13T01:38:54Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T01:39:52Z",
-      "ticks_blocked": 11,
-      "completed": null
+      "last_worked": "2026-10-13T11:30:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261013T113028Z"
     },
     {
       "symbol": "W1080",
       "title": "--tick-close also trims the closed card from blocked_on, promotes a named next card to working, and prints the nemik warning delta by shape",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "pathsforward",
         "kata"
       ],
-      "blocked_on": [
-        "W1079"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "2026-10-13: 2026-10-13 luthen's additions: after closing Wn, trim Wn from every dependent's blocked_on (--bump-blocked, local citations), promote a named card to working (--next Wm), print the nemik-warning delta (before and after, by shape).",
       "issued_at": "2026-10-13T01:38:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -22344,11 +22340,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-13: 2026-10-13 triaged against the tree: the isolated path already satisfies amr-skills:W347 without add -N. The named paths enter a private index (add -A / add -f), the snapshot is materialized from that tree alone, and the pre-commit hook runs inside it, so an unnamed untracked file never reaches the gate. Witnessed by hooks/tests/test_commit_isolated_new.py: a hook that refuses unless new.txt (named) is in the gate tree and refuses if stray.txt (unnamed, untracked) is; plus the control (new.txt left unnamed => refused). Not done and not needed: a REFUSAL of an unnamed new file (it would refuse a peer's scratch file the commit never carries).",
       "issued_at": "2026-10-13T01:45:30Z",
       "minted_during": "tick",
       "caused_by": "amr-skills:W347",
-      "last_worked": null,
+      "last_worked": "2026-10-13T11:33:52Z",
       "ticks_blocked": 0
     },
     {
@@ -22391,7 +22387,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 10,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -22413,7 +22409,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 10,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -22499,7 +22495,7 @@
     {
       "symbol": "W1100",
       "title": "bazel admit chooses the sandbox base and job count at launch from live headroom, so the home rc carries no sandbox_base",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "gcalculus:W263"
       ],
@@ -22510,13 +22506,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Base is not the cause for mtools (solo test_cli 3.9 s on both bases at load 97). Measure the gate's peak parallelism: run one commit gate with a bazel --profile and read running actions over time; then lower --jobs / --local_test_jobs from live headroom at launch.",
+      "next_bounded_step": "Measure the gate under the cap: peak running actions from a bazel --profile of one gate run, and the same hooks-only commit's wall time idle vs loaded; tune the floor/fraction from that. (Attempt 29 gate took 101 s bazel wall.)",
       "evidence": "2026-10-13: 2026-10-13 github-8f/gcalculus:W263 + the 2026-10-12 memory incident. History: ~/.bazelrc had build --sandbox_base=/dev/shm; paperkit's gate ran 24 parallel sandboxes of ~2 GiB (48-51 GiB) in that RAM-backed tmpfs and put the host at the OOM brink, so github-8f moved the base to nvme (/var/cache/bazel-mikemol/sandbox). MEASURED today by gcalculus, same tree, one gate_root each: nvme base FAILED three times at 620-656 s, /dev/shm base PASSED at 275 s (outside any sandbox 258-271 s): the disk base multiplies some arm's CPU past a per-arm cap. A static path is wrong both ways. DESIGN: at launch, through the existing admit step (mikemol-bazel-admit and the membudget lease), the sandbox goes on a tmpfs only when MemAvailable minus the lease's projected footprint (jobs x measured sandbox size, from the gate ledger) stays above a reserve, and the JOB COUNT is lowered to fit rather than the sandbox moved; otherwise the nvme base, with the stretch it implies printed in the verdict. Measure the footprint per target in the ledger (instrument window written beside the cap, as window = cap / rate). The home rc then carries no sandbox_base. The host rc edit is the host's (github-8f), not done here. Interim: repos with a one-sandbox gate pass --sandbox_base=/dev/shm on their command line. Related: W1027 (peak sandbox-size check), W1024 (the rail), W1062 (shard timeout from solo runtime x stretch). | 2026-10-13: 2026-10-13 measured at /proc/loadavg 97/119/115 (24 cores): //pathsforward:test_cli solo, fresh execution each (--test_env=MEAS=...; --nocache_test_results is barred): default sandbox base critical path 3.91 s, elapsed 6.7 s; --sandbox_base=/dev/shm critical path 3.95 s, elapsed 6.4 s. No difference, and no stretch: solo it is ~4 s at full load. So the 60 s timeouts in the commit gate (attempt 23: test_cli, debtplan:test_mint timed out, test_store 138 s) are not sandbox-setup cost of one test and not CPU share of one test; they arise only when the gate runs ~840 targets at once (concurrency inside the gate). Profiles: scratchpad prof_default.gz, prof_shm.gz. | 2026-10-13: 2026-10-13 landed: mikemol-gate-jobs 080f91b (tool), 0255f54 (pre-commit passes --jobs/--local_test_jobs, refuses if the tool is absent). First gate run under the cap: bazel Elapsed 1037.6 s, Critical Path 66.4 s, i.e. ~17 min wall for a hooks-only commit when load needs it; not yet measured: peak parallelism and the same commit at an idle host. Open: whether the cap is too tight (floor 2 at load >22).",
       "issued_at": "2026-10-13T03:07:54Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
-      "last_worked": "2026-10-13T11:20:01Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T11:30:28Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1101",
@@ -22661,6 +22658,24 @@
       "last_worked": "2026-10-13T08:48:50Z",
       "ticks_blocked": 0,
       "completed": "20261013T084850Z"
+    },
+    {
+      "symbol": "W1109",
+      "title": "Profile one commit gate under the job cap: peak running actions over time (bazel --profile) and the same commit's wall time idle versus loaded",
+      "status": "ready",
+      "enables": [
+        "W1100"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T11:31:40Z",
+      "minted_during": "tick",
+      "caused_by": "W1100",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

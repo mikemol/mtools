@@ -8732,3 +8732,17 @@
   claim  = {The tool takes none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_argument_is_a_usage_error},
 }
+
+@misc{hooks-commit-isolated-new-named-new-file-is-in-the-gate-tree-and-an-unnamed-one-is-not,
+  section = {commit_isolated_new},
+  title  = {The hook passes only if new.txt is there and stray.txt is not; HEAD then holds new.txt},
+  claim  = {The hook passes only if new.txt is there and stray.txt is not; HEAD then holds new.txt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_new.py -k test_a_named_new_file_is_in_the_gate_tree_and_an_unnamed_one_is_not},
+}
+
+@misc{hooks-commit-isolated-new-same-gate-refuses-when-the-new-file-is-not-named,
+  section = {commit_isolated_new},
+  title  = {The control: naming only a.txt leaves new.txt out of the gate tree, so the hook refuses},
+  claim  = {The control: naming only a.txt leaves new.txt out of the gate tree, so the hook refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_new.py -k test_the_same_gate_refuses_when_the_new_file_is_not_named},
+}
