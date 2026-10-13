@@ -22,6 +22,15 @@ src/mikemol/waldo/witness.py|equal-counts-as-increase|elif now <= was:|elif now 
 src/mikemol/waldo/witness.py|mangled-read-reasoned-about|now is None or was is None|now is None and was is None|def=_not_increased
 src/mikemol/waldo/witness.py|increase-without-a-before|if before is None:|if False:|def=_not_increased
 src/mikemol/waldo/contract.py|increases-not-a-condition|or witness\.increases|or False|def=has_condition
+src/mikemol/waldo/marker.py|carriage-return-value-allowed|if "\\n" in value or "\\r" in value:|if "\\n" in value:|def=render
+src/mikemol/waldo/marker.py|bad-key-written|KEY\.fullmatch\(key\) is None|False|def=render
+src/mikemol/waldo/marker.py|repeated-key-accepted|if key in values:|if False:|def=parse
+src/mikemol/waldo/marker.py|comment-line-read-as-data|if not line\.strip\(\) or line\.lstrip\(\)\.startswith\("#"\):|if not line.strip():|def=parse
+src/mikemol/waldo/marker.py|link-accepted|if path\.is_symlink\(\):|if False:|def=_refuse_link
+src/mikemol/waldo/marker.py|absent-marker-crashes|if not path\.is_file\(\):|if False:|def=read
+src/mikemol/waldo/marker.py|no-marker-unseen|if marker is None:|if False:|def=mismatches
+src/mikemol/waldo/marker.py|wrong-value-unseen|if key in marker and marker\[key\] != want|if key in marker and False|def=mismatches
+src/mikemol/waldo/marker.py|mismatch-not-refused|if problems:|if False:|def=require_standing
 src/mikemol/waldo/contract.py|unknown-key-ignored|if unknown:|if False:|def=_refuse_unknown
 src/mikemol/waldo/contract.py|repeated-name-allowed|if repeated:|if False:|def=_witnesses
 src/mikemol/waldo/contract.py|exit-only-any-type|not isinstance\(exit_only, bool\)|False|def=witness_from

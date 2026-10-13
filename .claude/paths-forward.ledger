@@ -1702,3 +1702,4 @@
 2026-10-12T23:55:11Z  tick  W1065 minted    -         "waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the thing destroyed"  evidence=W1060
 2026-10-12T23:55:12Z  tick  W1066 minted    -         "waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry re-assertion and a refused re-run of a done point of no return"  evidence=W1060
 2026-10-12T23:58:47Z  tick  W1063 advanced  collapse  "cassian .sh recipes read; W1060 atomized into W1063-W1066; waldo increases witness kind built (109 tests) and committing as attempt 9"
+2026-10-13T00:23:45Z  tick  W1064 advanced  mechanism "waldo.marker: write/read/parse/render/mismatches/require_standing, 123 waldo tests, 9 more declared defects, bazel //waldo green; attempt 10 running"

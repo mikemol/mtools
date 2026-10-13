@@ -531,3 +531,73 @@
   claim  = {Any single non-empty list counts as a declared condition, and none counts as none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_has_condition_sees_each_of_the_six_lists},
 }
+
+@misc{waldo-marker-what-is-written-is-read-back-exactly-and-in-order,
+  section = {marker},
+  title  = {The positive control: the same values, in the same order, with the header as comments},
+  claim  = {The positive control: the same values, in the same order, with the header as comments.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_what_is_written_is_read_back_exactly_and_in_order},
+}
+
+@misc{waldo-marker-no-marker-reads-as-none-not-as-empty,
+  section = {marker},
+  title  = {A fresh start is not an empty marker: absence and emptiness mean different phases},
+  claim  = {A fresh start is not an empty marker: absence and emptiness mean different phases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_no_marker_reads_as_none_not_as_empty},
+}
+
+@misc{waldo-marker-rewrite-replaces-whole-and-leaves-no-temporary-file,
+  section = {marker},
+  title  = {The rename swaps the phase; only the marker remains in the directory},
+  claim  = {The rename swaps the phase; only the marker remains in the directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_a_rewrite_replaces_whole_and_leaves_no_temporary_file},
+}
+
+@misc{waldo-marker-comments-blank-lines-and-spacing-are-tolerated,
+  section = {marker},
+  title  = {Hand-reading aids do not change the values; surrounding spaces are trimmed},
+  claim  = {Hand-reading aids do not change the values; surrounding spaces are trimmed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_comments_blank_lines_and_spacing_are_tolerated},
+}
+
+@misc{waldo-marker-ambiguous-marker-is-refused-naming-the-line,
+  section = {marker},
+  title  = {A repeated key and a malformed line raise instead of being read as a phase},
+  claim  = {A repeated key and a malformed line raise instead of being read as a phase.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_an_ambiguous_marker_is_refused_naming_the_line},
+}
+
+@misc{waldo-marker-render-refuses-a-bad-key-and-a-value-that-spans-lines,
+  section = {marker},
+  title  = {Writing what could not be read back is refused at the write},
+  claim  = {Writing what could not be read back is refused at the write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_render_refuses_a_bad_key_and_a_value_that_spans_lines},
+}
+
+@misc{waldo-marker-link-is-refused-for-the-file-and-its-directory,
+  section = {marker},
+  title  = {The guard refuses a path it is told is a link; none is created to test it},
+  claim  = {The guard refuses a path it is told is a link; none is created to test it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_a_link_is_refused_for_the_file_and_its_directory},
+}
+
+@misc{waldo-marker-marker-that-holds-the-standing-flags-is-required-quietly,
+  section = {marker},
+  title  = {The control: every expected flag present and equal means no refusal},
+  claim  = {The control: every expected flag present and equal means no refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_a_marker_that_holds_the_standing_flags_is_required_quietly},
+}
+
+@misc{waldo-marker-every-mismatch-is-named-at-once,
+  section = {marker},
+  title  = {A wrong value and a missing key both appear in the one refusal, wrong values first},
+  claim  = {A wrong value and a missing key both appear in the one refusal, wrong values first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_every_mismatch_is_named_at_once},
+}
+
+@misc{waldo-marker-no-marker-at-all-is-one-mismatch,
+  section = {marker},
+  title  = {A phase that needs flags cannot start from nothing},
+  claim  = {A phase that needs flags cannot start from nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_no_marker_at_all_is_one_mismatch},
+}
