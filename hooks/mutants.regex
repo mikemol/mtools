@@ -190,6 +190,7 @@ src/mikemol/hooks/gatejobs.py|jobs-have-no-floor|max\(MIN_JOBS, min\(cores, |min
 src/mikemol/hooks/gatejobs.py|jobs-have-no-cap|min\(cores, round|(round|def=jobs
 src/mikemol/hooks/gatejobs.py|unreadable-load-is-busy|return 0\.0|return 1000.0|def=load_of
 src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|def=main
+src/mikemol/hooks/gatejobs.py|explain-never-notes-the-floor|cores - load1 < MIN_JOBS|False|def=explain
 
 # W1082 (nemik:W426): PUSHED is what the remote holds, not what the tracking ref claims.
 src/mikemol/hooks/commit_kata.py|tracking-ref-trusted|if remote == sha or on_remote\(root, sha, remote, run\):|if tracked:|def=published

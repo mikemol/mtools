@@ -8916,3 +8916,17 @@
   claim  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_staged.py -k test_a_refused_commit_leaves_head_and_the_real_index_as_they_were},
 }
+
+@misc{hooks-gatejobs-explain-states-the-cap-the-cores-and-the-load,
+  section = {gatejobs},
+  title  = {Under load 97 on 24 cores the line says jobs=2, both readings, and that the floor held},
+  claim  = {Under load 97 on 24 cores the line says jobs=2, both readings, and that the floor held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_explain_states_the_cap_the_cores_and_the_load},
+}
+
+@misc{hooks-gatejobs-explain-does-not-claim-the-floor-on-an-idle-host,
+  section = {gatejobs},
+  title  = {The control: at load 0.5 the cap is every core and the line carries no floor note},
+  claim  = {The control: at load 0.5 the cap is every core and the line carries no floor note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_explain_does_not_claim_the_floor_on_an_idle_host},
+}

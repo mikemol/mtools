@@ -45,6 +45,21 @@ def jobs(cores: int, load1: float) -> int:
     return max(MIN_JOBS, min(cores, round(cores - load1)))
 
 
+def explain(cores: int, load1: float) -> str:
+    """Describe the cap and the readings it came from (W1157).
+
+    ⚑ SO NOBODY HAS TO INFER THAT A GATE RAN AT THE FLOOR UNDER LOAD 100: one line with the jobs,
+    cores, load and floor, marked when the load pushed the count down to the floor.
+
+    Returns:
+        the line, newline-terminated.
+
+    """
+    count = jobs(cores, load1)
+    held = " (held at the floor)" if cores - load1 < MIN_JOBS else ""
+    return f"gate jobs={count} cores={cores} load1={load1:g} floor={MIN_JOBS}{held}\n"
+
+
 def load_of(path: Path) -> float:
     """Read the one-minute load.
 
@@ -67,15 +82,20 @@ def main(
     """Print the bazel job flags the gate should use now.
 
     Returns:
-        0, or 2 when an argument is given (the tool takes none).
+        0, or 2 when an argument other than `--explain` is given.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
     sink = sys.stdout if out is None else out
-    if args:
-        sys.stderr.write("usage: mikemol-gate-jobs  (no arguments)\n")
+    if args not in ([], ["--explain"]):
+        sys.stderr.write("usage: mikemol-gate-jobs [--explain]\n")
         return 2
-    count = jobs(os.cpu_count() or MIN_JOBS if cores is None else cores, load_of(loadavg))
+    have = os.cpu_count() or MIN_JOBS if cores is None else cores
+    load = load_of(loadavg)
+    if args:
+        sink.write(explain(have, load))
+        return 0
+    count = jobs(have, load)
     sink.write(f"--jobs={count}\n--local_test_jobs={count}\n")
     return 0
 

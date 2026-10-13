@@ -60,8 +60,22 @@ def test_an_unreadable_load_reads_as_an_idle_host(tmp_path: Path) -> None:
     assert gatejobs.jobs(_CORES, gatejobs.load_of(tmp_path / "absent")) == _CORES
 
 
+def test_explain_states_the_cap_the_cores_and_the_load(tmp_path: Path) -> None:
+    """Under load 97 on 24 cores the line says jobs=2, both readings, and that the floor held."""
+    out = io.StringIO()
+    assert gatejobs.main(["--explain"], out, _CORES, _load(tmp_path, "97.33 1 1\n")) == 0
+    assert out.getvalue() == "gate jobs=2 cores=24 load1=97.33 floor=2 (held at the floor)\n"
+
+
+def test_explain_does_not_claim_the_floor_on_an_idle_host(tmp_path: Path) -> None:
+    """The control: at load 0.5 the cap is every core and the line carries no floor note."""
+    out = io.StringIO()
+    assert gatejobs.main(["--explain"], out, _CORES, _load(tmp_path, "0.5 1 1\n")) == 0
+    assert out.getvalue() == "gate jobs=24 cores=24 load1=0.5 floor=2\n"
+
+
 def test_an_argument_is_a_usage_error(tmp_path: Path) -> None:
-    """The tool takes none."""
+    """The tool takes only --explain."""
     out = io.StringIO()
     assert gatejobs.main(["--jobs=3"], out, _CORES, _load(tmp_path, "1 1 1\n")) == _USAGE
     assert not out.getvalue()
