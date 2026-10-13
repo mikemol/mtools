@@ -85,3 +85,4 @@ commit_isolated_ignored	Isolated commit and ignored files: a file named exactly 
 commit_unpushed	A commit whose push did not complete prints the exact push to run before its verdict, and a pushed commit prints none
 gatejobs	The Gate Job Count: Free Cores From the Live Load, Floored So the Gate Always Progresses, Capped at the Core Count, and an Unreadable Load Is an Idle Host
 commit_isolated_new	Isolated commit and new files: a named new file is in the gate's tree, an unnamed untracked one never is
+commit_remote	PUSHED is read from the remote with ls-remote: a lying tracking ref is a REMOTE-MISMATCH naming the remote, a peer pushing on top is still PUSHED, an unreachable remote is UNVERIFIED

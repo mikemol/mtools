@@ -54,7 +54,7 @@ src/mikemol/hooks/commit_kata.py|wait-override-ignored|env\.get\(TIMEOUT_ENV\) o
 
 # W924: the verdict says whether the sha is on origin/main. Always PUSHED hides an unpushed commit;
 # skipping the no-ref test reports a repository with no remote as LOCAL.
-src/mikemol/hooks/commit_kata.py|always-pushed|return "PUSHED" if ancestor\.returncode == 0 else "LOCAL: not on origin/main"|return "PUSHED"|def=published
+src/mikemol/hooks/commit_kata.py|always-pushed|return f"\{MISMATCH_MARK\} remote=\{remote\[:SHORT\]\}" if tracked else "LOCAL: not on origin/main"|return "PUSHED"|def=published
 src/mikemol/hooks/commit_kata.py|no-remote-reads-local|if ref\.returncode != 0:|if False:|def=published
 
 # W925: a prune drops the rubric rows that have no warrant left, by the pairing gate's own rule, and
@@ -181,8 +181,8 @@ src/mikemol/hooks/isolated.py|reset-not-retried|range\(REFRESH_ATTEMPTS - 1\)|ra
 src/mikemol/hooks/isolated.py|refresh-not-run|note = refresh_index\(root, paths, run\)|note = ""|def=commit_isolated
 
 # W1097: a commit whose push did not complete prints the repair, and only then.
-src/mikemol/hooks/commit_kata.py|unpushed-repair-never-printed|if LOCAL_MARK in line:|if False:|def=commit
-src/mikemol/hooks/commit_kata.py|repair-printed-always|if LOCAL_MARK in line:|if True:|def=commit
+src/mikemol/hooks/commit_kata.py|unpushed-repair-never-printed|if any\(mark in line for mark in LOCAL_MARKS\):|if False:|def=commit
+src/mikemol/hooks/commit_kata.py|repair-printed-always|if any\(mark in line for mark in LOCAL_MARKS\):|if True:|def=commit
 
 # W1100: the gate's job count is the free cores, floored, capped, and an unreadable load is an idle host.
 src/mikemol/hooks/gatejobs.py|jobs-ignore-the-load|round\(cores - load1\)|cores|def=jobs
@@ -190,3 +190,9 @@ src/mikemol/hooks/gatejobs.py|jobs-have-no-floor|max\(MIN_JOBS, min\(cores, |min
 src/mikemol/hooks/gatejobs.py|jobs-have-no-cap|min\(cores, round|(round|def=jobs
 src/mikemol/hooks/gatejobs.py|unreadable-load-is-busy|return 0\.0|return 1000.0|def=load_of
 src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|def=main
+
+# W1082 (nemik:W426): PUSHED is what the remote holds, not what the tracking ref claims.
+src/mikemol/hooks/commit_kata.py|tracking-ref-trusted|if remote == sha or on_remote\(root, sha, remote, run\):|if tracked:|def=published
+src/mikemol/hooks/commit_kata.py|mismatch-reported-as-local|return f"\{MISMATCH_MARK\} remote=\{remote\[:SHORT\]\}" if tracked else|return "LOCAL: not on origin/main" if tracked else|def=published
+src/mikemol/hooks/commit_kata.py|unverified-reads-pushed|word = "PUSHED" if tracked else|word = "PUSHED" if True else|def=published
+src/mikemol/hooks/commit_kata.py|remote-ahead-not-fetched|run\(\["-C", str\(root\), "fetch", "-q", "origin", "main"\]\)|pass|def=on_remote

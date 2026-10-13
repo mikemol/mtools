@@ -426,6 +426,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_isolated_routing.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_isolated_ignored.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_isolated_new.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_commit_remote.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_unpushed.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_gatejobs.py" =["assert"]
 "tests/test_index_refresh.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

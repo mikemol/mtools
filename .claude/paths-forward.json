@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 166,
+      "ticks_blocked": 167,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 165,
+      "ticks_blocked": 166,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 170,
+      "ticks_blocked": 171,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 104,
+      "ticks_blocked": 105,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 70,
+      "ticks_blocked": 71,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -22058,7 +22058,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -22144,7 +22144,7 @@
     {
       "symbol": "W1082",
       "title": "mikemol-commit prints PUSHED only after git ls-remote shows the remote main at or above the commit, else REMOTE-MISMATCH with the remote sha",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "commit",
@@ -22152,13 +22152,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "Landed once its commit prints COMMITTED",
       "evidence": "",
       "issued_at": "2026-10-13T01:39:35Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W426",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T12:06:43Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1083",
@@ -22329,7 +22330,7 @@
     {
       "symbol": "W1092",
       "title": "mikemol-commit intent-adds each NEW path it is named before the gate, and refuses a new file that is not named",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "amr-skills:W347"
       ],
@@ -22339,13 +22340,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 triaged against the tree: the isolated path already satisfies amr-skills:W347 without add -N. The named paths enter a private index (add -A / add -f), the snapshot is materialized from that tree alone, and the pre-commit hook runs inside it, so an unnamed untracked file never reaches the gate. Witnessed by hooks/tests/test_commit_isolated_new.py: a hook that refuses unless new.txt (named) is in the gate tree and refuses if stray.txt (unnamed, untracked) is; plus the control (new.txt left unnamed => refused). Not done and not needed: a REFUSAL of an unnamed new file (it would refuse a peer's scratch file the commit never carries).",
       "issued_at": "2026-10-13T01:45:30Z",
       "minted_during": "tick",
       "caused_by": "amr-skills:W347",
-      "last_worked": "2026-10-13T11:33:52Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T12:03:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261013T120321Z"
     },
     {
       "symbol": "W1093",
@@ -22387,7 +22389,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -22409,7 +22411,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -22495,7 +22497,7 @@
     {
       "symbol": "W1100",
       "title": "bazel admit chooses the sandbox base and job count at launch from live headroom, so the home rc carries no sandbox_base",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "gcalculus:W263"
       ],
@@ -22511,7 +22513,7 @@
       "issued_at": "2026-10-13T03:07:54Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
-      "last_worked": "2026-10-13T11:30:28Z",
+      "last_worked": "2026-10-13T12:06:44Z",
       "ticks_blocked": 0,
       "completed": null
     },

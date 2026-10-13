@@ -8746,3 +8746,39 @@
   claim  = {The control: naming only a.txt leaves new.txt out of the gate tree, so the hook refuses.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_new.py -k test_the_same_gate_refuses_when_the_new_file_is_not_named},
 }
+
+@misc{hooks-commit-remote-commit-the-remote-holds-is-pushed,
+  section = {commit_remote},
+  title  = {The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED]},
+  claim  = {The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED].},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_a_commit_the_remote_holds_is_pushed},
+}
+
+@misc{hooks-commit-remote-tracking-ref-that-lies-is-a-remote-mismatch-naming-the-remote,
+  section = {commit_remote},
+  title  = {The tracking ref is moved by hand to HEAD, nothing is pushed: the remote's sha is named},
+  claim  = {The tracking ref is moved by hand to HEAD, nothing is pushed: the remote's sha is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_a_tracking_ref_that_lies_is_a_remote_mismatch_naming_the_remote},
+}
+
+@misc{hooks-commit-remote-unpushed-commit-over-an-honest-tracking-ref-is-local,
+  section = {commit_remote},
+  title  = {Nothing pushed and the tracking ref honest: the old LOCAL verdict, unchanged},
+  claim  = {Nothing pushed and the tracking ref honest: the old LOCAL verdict, unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_an_unpushed_commit_over_an_honest_tracking_ref_is_local},
+}
+
+@misc{hooks-commit-remote-peer-pushing-on-top-does-not-unpush-the-commit,
+  section = {commit_remote},
+  title  = {The remote moved past the commit to a sha this clone lacks: still PUSHED, after one fetch},
+  claim  = {The remote moved past the commit to a sha this clone lacks: still PUSHED, after one
+            fetch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_a_peer_pushing_on_top_does_not_unpush_the_commit},
+}
+
+@misc{hooks-commit-remote-unreachable-remote-is-unverified-not-pushed,
+  section = {commit_remote},
+  title  = {ls-remote fails: the line says UNVERIFIED and never a bare [PUSHED]},
+  claim  = {ls-remote fails: the line says UNVERIFIED and never a bare [PUSHED].},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_an_unreachable_remote_is_unverified_not_pushed},
+}

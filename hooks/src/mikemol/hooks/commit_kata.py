@@ -63,7 +63,8 @@ TRAILER_ENV = "COMMIT_TRAILER"
 DEFAULT_TRAILER = "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 COMMIT_TIMEOUT_S = 10800  # a cold-cache paperkit gate outlasted 3000 s twice (2026-10-07)
 SHORT = 7
-LOCAL_MARK = "[LOCAL:"  # what a COMMITTED line carries when the push did not complete (W1097)
+LOCAL_MARKS = ("[LOCAL:", "[REMOTE-MISMATCH")  # a COMMITTED line whose push did not land (W1097)
+MISMATCH_MARK = "REMOTE-MISMATCH"  # the tracking ref says pushed and the remote disagrees (W1082)
 EXIT_NOT_COMMITTED = 1
 TIMED_OUT = 124
 EXIT_USAGE = 2
@@ -322,7 +323,50 @@ def published(root: Path, sha: str, run: Runner = run_git) -> str:
     if ref.returncode != 0:
         return "no origin/main"
     ancestor = run(["-C", str(root), "merge-base", "--is-ancestor", sha, "origin/main"])
-    return "PUSHED" if ancestor.returncode == 0 else "LOCAL: not on origin/main"
+    tracked = ancestor.returncode == 0
+    remote = remote_head(root, run)
+    if remote is None:
+        word = "PUSHED" if tracked else "LOCAL: not on origin/main"
+        return f"{word}; UNVERIFIED: git ls-remote origin failed"
+    if remote == sha or on_remote(root, sha, remote, run):
+        return "PUSHED"
+    return f"{MISMATCH_MARK} remote={remote[:SHORT]}" if tracked else "LOCAL: not on origin/main"
+
+
+def remote_head(root: Path, run: Runner = run_git) -> str | None:
+    """Ask the remote itself where its main is (W1082), not the tracking ref a push last wrote.
+
+    ⚑ THE TRACKING REF IS A CLAIM, THE REMOTE IS THE FACT. `origin/main` moves when a push or a
+    fetch moves it, so a ref that was updated by hand, or left by a push that a hook later undid,
+    reads PUSHED over a remote that never held the commit.
+
+    Returns:
+        the remote's full sha for `refs/heads/main`, or None when `git ls-remote` failed or said
+        nothing (offline, no such remote, no such branch).
+
+    """
+    asked = run(["-C", str(root), "ls-remote", "origin", "refs/heads/main"])
+    words = asked.stdout.split()
+    return words[0] if asked.returncode == 0 and words else None
+
+
+def on_remote(root: Path, sha: str, remote: str, run: Runner = run_git) -> bool:
+    """Say whether the remote's main is at or above `sha`.
+
+    A remote that moved past the commit (a peer pushed on top) names a sha this clone may not hold
+    yet; one fetch of main brings it, then the ancestry is asked once more.
+
+    Returns:
+        True when `sha` is `remote` or an ancestor of it.
+
+    """
+    asked = ["-C", str(root), "merge-base", "--is-ancestor", sha, remote]
+    if run(asked).returncode == 0:
+        return True
+    if run(["-C", str(root), "cat-file", "-e", f"{remote}^{{commit}}"]).returncode == 0:
+        return False
+    run(["-C", str(root), "fetch", "-q", "origin", "main"])
+    return run(asked).returncode == 0
 
 
 def made_by(root: Path, request: Request, span: str, run: Runner = run_git) -> bool:
@@ -408,7 +452,7 @@ def commit(
     mine = made_by(root, request, span, run) if moved else True
     if mine:
         line = verdict(root, before, after, done.returncode, run)
-        if LOCAL_MARK in line:
+        if any(mark in line for mark in LOCAL_MARKS):
             out.write(f"push not completed: run  git -C {root} push origin HEAD:main\n")
         out.write(f"{line}\n")
     else:
