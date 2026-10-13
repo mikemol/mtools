@@ -275,6 +275,14 @@ pip.parse(
     requirements_lock = "//pathwalk:requirements.txt",
 )
 
+# ⚑ `mikemol-frontier` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
+# it declares a dependency.
+pip.parse(
+    hub_name = "frontier_deps",
+    python_version = "3.13",
+    requirements_lock = "//frontier:requirements.txt",
+)
+
 # ⚑ `mikemol-waldo` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
 # it declares a dependency.
 pip.parse(
@@ -496,6 +504,11 @@ pip.parse(
     uv_lock = "//pathwalk:uv.lock",
 )
 pip.parse(
+    hub_name = "frontier_dev",
+    python_version = "3.13",
+    uv_lock = "//frontier:uv.lock",
+)
+pip.parse(
     hub_name = "waldo_dev",
     python_version = "3.13",
     uv_lock = "//waldo:uv.lock",
@@ -577,10 +590,12 @@ use_repo(
     "gradekit_deps",
     "gradekit_dev",
     "pathwalk_deps",
+    "frontier_deps",
     "waldo_deps",
     "rulerseq_deps",
     "htmlstruct_deps",
     "pathwalk_dev",
+    "frontier_dev",
     "waldo_dev",
     "rulerseq_dev",
     "htmlstruct_dev",

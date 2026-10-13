@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops
+# matching is a STALE declaration and fails the grid as UNAPPLIED.
+
+src/mikemol/frontier/walk.py|unknown-edge-accepted|if first not in known or second not in known:|if False:|def=frontier
+src/mikemol/frontier/walk.py|repeated-edge-listed-twice|if first not in before\[second\]:|if True:|def=frontier
+src/mikemol/frontier/walk.py|gate-never-asked|unmet = \[\] if waits else|unmet = [] if True else|def=frontier
+src/mikemol/frontier/walk.py|cycle-never-seen|if state\.get\(after\) == 1:|if False:|def=_cycles
+src/mikemol/frontier/walk.py|cycle-not-rotated|low = places\.index\(min\(places\)\)|low = 0|def=_canonical
+src/mikemol/frontier/walk.py|realized-node-held-back|if waits or unmet:|if waits or unmet or True:|def=frontier

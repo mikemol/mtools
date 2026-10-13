@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the frontier warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+smoke	The Scaffold's One Witness: The Package Imports and Says What It Is
+walk	The Frontier Walk: A Diamond Is Ready Exactly When Its Predecessors Are Realized, a Cycle Is Named, a Gate Is a World Fact, and the Predicate Is the Authority

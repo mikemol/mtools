@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 30 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 31 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -25,6 +25,7 @@ with no scripts is a library that other distributions import.
 - `corpus` (`mikemol-corpus`): which Python files are a tree's corpus. A library, no scripts.
 - `fence` (`mikemol-fence`): run a command inside a cgroup and report what it consumed. Scripts:
   `mikemol-fence`, `mikemol-membudget`.
+- `frontier` (`mikemol-frontier`): Pure frontier walk over plain nodes and edges: ready, deferred with the unmet predecessor or gate, realized, and a named cycle A library, no scripts.
 - `gatecheck` (`mikemol-gatecheck`): pre-commit and gate helpers. Scripts: `mikemol-hook-index`,
   `mikemol-hook-grid`, `mikemol-absence-audit`, `mikemol-lint-bzl`, `mikemol-witness-reach`.
 - `gmailstruct` (`mikemol-gmailstruct`): Gmail API message JSON read losslessly. Script: `mikemol-gmail`.

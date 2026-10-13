@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.frontier: Pure frontier walk over plain nodes and edges: ready, deferred with the unmet predecessor or gate, realized, and a named cycle"
+subtitle = "The witnesses behind mikemol.frontier."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "FRONTIER.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

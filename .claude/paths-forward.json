@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 175,
+      "ticks_blocked": 176,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 174,
+      "ticks_blocked": 175,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 179,
+      "ticks_blocked": 180,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 113,
+      "ticks_blocked": 114,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 77,
+      "ticks_blocked": 78,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 76,
+      "ticks_blocked": 77,
       "completed": null
     },
     {
@@ -20836,21 +20836,23 @@
     {
       "symbol": "W1019",
       "title": "Send each repo in the W797 audit table the sibling reads its gates make, asking it to mint a card that pins them or adopts the shared check",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "gate",
         "fleet"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1018"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-11T22:41:58Z",
       "minted_during": "tick",
       "caused_by": "W797",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1020",
@@ -21362,7 +21364,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -21408,7 +21410,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -21497,7 +21499,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -21952,7 +21954,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -21975,7 +21977,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -21996,7 +21998,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -22036,7 +22038,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -22058,7 +22060,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -22388,7 +22390,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 21,
       "completed": null
     },
     {
@@ -22410,7 +22412,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 21,
       "completed": null
     },
     {
@@ -22496,7 +22498,7 @@
     {
       "symbol": "W1100",
       "title": "bazel admit chooses the sandbox base and job count at launch from live headroom, so the home rc carries no sandbox_base",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "gcalculus:W263"
       ],
@@ -22505,15 +22507,17 @@
         "memres",
         "gate"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1109"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Measure the gate under the cap: peak running actions from a bazel --profile of one gate run, and the same hooks-only commit's wall time idle vs loaded; tune the floor/fraction from that. (Attempt 29 gate took 101 s bazel wall.)",
       "evidence": "2026-10-13: 2026-10-13 github-8f/gcalculus:W263 + the 2026-10-12 memory incident. History: ~/.bazelrc had build --sandbox_base=/dev/shm; paperkit's gate ran 24 parallel sandboxes of ~2 GiB (48-51 GiB) in that RAM-backed tmpfs and put the host at the OOM brink, so github-8f moved the base to nvme (/var/cache/bazel-mikemol/sandbox). MEASURED today by gcalculus, same tree, one gate_root each: nvme base FAILED three times at 620-656 s, /dev/shm base PASSED at 275 s (outside any sandbox 258-271 s): the disk base multiplies some arm's CPU past a per-arm cap. A static path is wrong both ways. DESIGN: at launch, through the existing admit step (mikemol-bazel-admit and the membudget lease), the sandbox goes on a tmpfs only when MemAvailable minus the lease's projected footprint (jobs x measured sandbox size, from the gate ledger) stays above a reserve, and the JOB COUNT is lowered to fit rather than the sandbox moved; otherwise the nvme base, with the stretch it implies printed in the verdict. Measure the footprint per target in the ledger (instrument window written beside the cap, as window = cap / rate). The home rc then carries no sandbox_base. The host rc edit is the host's (github-8f), not done here. Interim: repos with a one-sandbox gate pass --sandbox_base=/dev/shm on their command line. Related: W1027 (peak sandbox-size check), W1024 (the rail), W1062 (shard timeout from solo runtime x stretch). | 2026-10-13: 2026-10-13 measured at /proc/loadavg 97/119/115 (24 cores): //pathsforward:test_cli solo, fresh execution each (--test_env=MEAS=...; --nocache_test_results is barred): default sandbox base critical path 3.91 s, elapsed 6.7 s; --sandbox_base=/dev/shm critical path 3.95 s, elapsed 6.4 s. No difference, and no stretch: solo it is ~4 s at full load. So the 60 s timeouts in the commit gate (attempt 23: test_cli, debtplan:test_mint timed out, test_store 138 s) are not sandbox-setup cost of one test and not CPU share of one test; they arise only when the gate runs ~840 targets at once (concurrency inside the gate). Profiles: scratchpad prof_default.gz, prof_shm.gz. | 2026-10-13: 2026-10-13 landed: mikemol-gate-jobs 080f91b (tool), 0255f54 (pre-commit passes --jobs/--local_test_jobs, refuses if the tool is absent). First gate run under the cap: bazel Elapsed 1037.6 s, Critical Path 66.4 s, i.e. ~17 min wall for a hooks-only commit when load needs it; not yet measured: peak parallelism and the same commit at an idle host. Open: whether the cap is too tight (floor 2 at load >22). | 2026-10-13: 2026-10-13 RECONCILED with the operator rule 'avoid wall-clock timeouts' (via github-8f): this card's job cap limits CONCURRENCY, not time, so it is compliant and stays.",
       "issued_at": "2026-10-13T03:07:54Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -22767,71 +22771,79 @@
     {
       "symbol": "W1115",
       "title": "Gate ledger rows carry each check's CPU seconds, peak parallelism and the first line of its refusal, beside pass/fail; old rows still read",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1116"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1122"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "2026-10-13: 2026-10-13 operator request via github-8f: profile the pre-commit checks so they can be classified by cheapness for automatic runs from the harness (hooks at some minimum frequency) instead of work piling up behind commit checks and the commit aborting on a simple error. Properties: (1) CPU seconds per check, NEVER wall time (host chronically oversubscribed; operator rule: no wall-clock reliance, it makes synchronization nondeterministic), peak parallelism, refusal frequency, first-failure rank; (2) a histogram of 'refused because' by check from the ledger; (3) a Victoria series per check plus a dashboard, and a classification column; (4) a proposed, not decided, heuristic: a check under N CPU-seconds solo that catches at least M percent of aborts is a candidate for the edit hook, N and M derived from the ledger's distribution. DESIGN: the existing gate ledger (hooks/src/mikemol/hooks/gate_ledger.py, TSV: iso8601, gate, status, seconds) records WALL seconds, so the first step is the recorder: add CPU seconds (rusage children delta), peak parallelism and the first line of the refusal as extra columns; the reader treats a short row as an old row (cause unknown, CPU unknown), as it already skips short rows. Peak parallelism needs the check's concurrent children count; where it cannot be measured say so rather than write 0. Chain: W1115 recorder -> W1116 --profile -> W1117 Victoria series + dashboard (a luthen ask: the dashboard) and W1118 classification + heuristic. | 2026-10-13: 2026-10-13 luthen-observability-d9 asks for gate START and END epochs and host per row, to correlate RAPL package power with commit-gate runs (luthen W934/W932, read-only). Today's module row has only an END stamp (local time, no timezone, no host) and a duration in seconds, and mtools' own pre-commit does not call mikemol-gate-ledger at all (only el-openglo and substrate keep a .gate-outcomes.tsv, in their own shapes). So add to this card's columns: start_epoch, end_epoch (UTC seconds, integers, not local-time strings) and host, and wire mtools' own pre-commit to record per check.",
       "issued_at": "2026-10-13T14:15:51Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1116",
       "title": "mikemol-gate-ledger --profile: per check CPU seconds, refusal rate, first-failure rank and a refused-because histogram, no wall-clock figure",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1117",
         "W1118"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1115"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-13T14:15:52Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1117",
       "title": "Publish the gate profile as a Victoria series per check (cpu_seconds, refusals, fraction of refusals) with a dashboard",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1116"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-13T14:15:53Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1118",
       "title": "Per-check classification (auto-at-edit, auto-at-stop, commit-only) the operator sets and the harness hook mapping reads, with a proposed N and M from the ledger's own distribution",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1116"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-13T14:15:55Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1119",
@@ -22984,7 +22996,7 @@
     {
       "symbol": "W1127",
       "title": "A library dist frontier: pure frontier(nodes, edges, realized) returning ready, deferred with the unmet predecessor or gate, and realized, plus cycle detection that names the cycle",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1128",
         "W1129"
@@ -22992,45 +23004,50 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "New dist frontier via mikemol-new-dist: pure frontier(nodes, edges, realized) returning ready, deferred (unmet predecessor or gate per node), realized; cycle detection naming the cycle; tests: diamond, cycle, deferred node whose predicate flips",
       "evidence": "2026-10-13: 2026-10-13 github-8f request, from luthen-observability:W943's first check (read at that card): nemik rank.frontier decides open from a stored RDF state triple (rank.py:203); debtplan Row.ready is a property over precomputed waits_on/unsettled tuples (rows.py:30); pathsforward's readiness is inside the queue sort; none takes a per-node predicate. Spec: a pure function, no rdflib, no I/O, nodes and edges as plain data, realized a predicate over a node, returning ready, deferred (with the unmet predecessor or gate per node) and realized, plus cycle detection that names the cycle. Tests: a diamond, a cycle, a deferred node whose predicate flips. Shape precedent mtools:W947. Adapters: W1128 debtplan, W1129 pathsforward (mine); nemik's adapter over its stored state is nemik's, and luthen's apply_set walks it (luthen W943). nemik-71 is separately answering whether a Terraform root's resources can be a node type; not a dependency of this function.",
       "issued_at": "2026-10-13T18:03:51Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W943",
-      "last_worked": "2026-10-13T18:04:01Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T21:13:34Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1128",
       "title": "debtplan Row.ready becomes a thin adapter over the frontier dist, with tests unchanged",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1127"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-13T18:03:51Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W943",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1129",
       "title": "pathsforward readiness (the queue sort's ready test) becomes a thin adapter over the frontier dist, with ordering tests unchanged",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1127"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-13T18:03:52Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W943",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1130",
@@ -23054,19 +23071,19 @@
     {
       "symbol": "W1131",
       "title": "pathsforward --block-behind-open: block each ready card behind its open enablers (local and repo:W<n>), idempotent, dry run without --write",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Pure function over the State: ready cards with open enablers get blocked_on = those enablers (local and repo:W<n> via the foreign resolver), working left and reported; mode --block-behind-open, dry run without --write, all-or-none",
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 nemik:W476 (read in nemik's queue): ReadyBehindOpen (nemik:W465) flags a card stored ready or working while an open card enables it, for the case the umbrella rule (2+ own children) leaves out; fleet count 88, 55 of them paperkit W145-W200; mtools W1115-W1118 (behind W1122), W1019, W1100, W1128-W1130, W833. Design: a pure function over the State (blocked_on gets the open enablers, blocked_kind agent) in its own module, wired as an idempotent mode beside --prune-landed and --block-matching (W947 precedent: dry run without --write, then all-or-none). DECISIONS: (1) only READY cards are blocked; a WORKING card is being done by definition, so it is reported and left. (2) only OPEN enablers count (not done, not residue); a cross-repo enabler is read through the same foreign resolution as --prune-landed and written as repo:W<n>. (3) the existing prune returns the card to ready when the enabler lands, so no new unblock path. (4) The assumption to state in the output: it treats 'X enables Y' as 'Y waits for X'; an edge that is only a hint, not a prerequisite, should be dropped first (nemik's umbrella rule says the same). (5) a card that already has a blocked_on of its own keeps it and gains the enablers.",
       "issued_at": "2026-10-13T19:15:27Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W476",
-      "last_worked": "2026-10-13T19:54:44Z",
+      "last_worked": "2026-10-13T21:13:27Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T211327Z"
     },
     {
       "symbol": "W1132",
