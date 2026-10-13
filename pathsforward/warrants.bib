@@ -4542,3 +4542,17 @@
   claim  = {The way back is the existing prune: W1 done, W2 is ready again.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_behindopen.py -k test_the_prune_returns_the_card_to_ready_when_the_enabler_lands},
 }
+
+@misc{pathsforward-behindopen-ring-of-three-is-left-alone-too-not-deadlocked,
+  section = {behindopen},
+  title  = {The first version caught only a pair: W1, W2 and W3 enabling one another in a ring},
+  claim  = {The first version caught only a pair: W1, W2 and W3 enabling one another in a ring.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_behindopen.py -k test_a_ring_of_three_is_left_alone_too_not_deadlocked},
+}
+
+@misc{pathsforward-behindopen-card-hanging-off-a-ring-is-blocked-but-the-ring-is-not,
+  section = {behindopen},
+  title  = {W4 is enabled by ring member W1 (open): it waits; the three in the ring stay ready},
+  claim  = {W4 is enabled by ring member W1 (open): it waits; the three in the ring stay ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_behindopen.py -k test_a_card_hanging_off_a_ring_is_blocked_but_the_ring_is_not},
+}

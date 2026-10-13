@@ -16,9 +16,10 @@ keeps the blocker it has. A done or dropped card is not an enabler.
 ⚑ IT TAKES "X ENABLES Y" TO MEAN "Y WAITS FOR X". An edge that is only a hint should be dropped
 first (nemik's umbrella rule says the same), or this will block on a card the work does not need.
 
-⚑ A MUTUAL PAIR IS LEFT ALONE, NAMED, NOT DEADLOCKED: if X enables Y and Y enables X, blocking each
-on the other would leave both waiting for ever. Only enablers in THIS queue are read here; a card in
-another queue that enables one of ours is nemik's graph to read (W1133).
+⚑ A CARD ON AN ENABLING CYCLE IS LEFT ALONE, NAMED, NOT DEADLOCKED: if X enables Y and Y enables X,
+or any longer ring does, blocking each on the next would leave them all waiting for ever. Only
+enablers in THIS queue are read here; a card in another queue that enables one of ours is nemik's
+graph to read (W1133).
 """
 
 from __future__ import annotations
@@ -62,6 +63,30 @@ def _open_enablers(state: State) -> dict[str, list[str]]:
     return found
 
 
+def _cycle_through(sym: str, enablers: dict[str, list[str]]) -> str | None:
+    """Say whether `sym` sits on an enabling cycle, and through which of its enablers.
+
+    ⚑ A RING OF ANY LENGTH, NOT ONLY A PAIR. The first version caught X enables Y and Y enables X
+    and nothing longer: three ready cards enabling one another in a ring were each blocked on the
+    next, and all three would have waited for ever (found on re-reading it, 2026-10-13).
+
+    Returns:
+        the enabler of `sym` from which following enablers leads back to `sym`, or None.
+
+    """
+    for first in enablers.get(sym, []):
+        seen: set[str] = set()
+        pending = [first]
+        while pending:
+            node = pending.pop()
+            if node == sym:
+                return first
+            if node not in seen:
+                seen.add(node)
+                pending.extend(enablers.get(node, []))
+    return None
+
+
 def plan(state: State) -> Plan:
     """Decide which ready cards would be blocked behind which open enablers, changing nothing.
 
@@ -79,9 +104,9 @@ def plan(state: State) -> Plan:
         behind = tuple(enablers.get(sym, []))
         if not behind or status not in {_READY, _WORKING}:
             continue
-        pair = next((other for other in behind if sym in enablers.get(other, [])), None)
-        if pair is not None:
-            mutual.append((sym, pair))
+        ring = _cycle_through(sym, enablers)
+        if ring is not None:
+            mutual.append((sym, ring))
         elif status == _WORKING:
             working.append((sym, behind))
         else:

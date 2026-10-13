@@ -108,7 +108,28 @@ def test_a_mutual_pair_is_named_and_left_not_deadlocked(
     path = _state(tmp_path, [_card("W1", enables=["W2"]), _card("W2", enables=["W1"])])
     assert _run(path, "--write") == _OK
     assert {_card_of(path, s)["status"] for s in ("W1", "W2")} == {"ready"}
-    assert "which it also enables" in capsys.readouterr().out
+    assert "on an enabling cycle, through" in capsys.readouterr().out
+
+
+def test_a_ring_of_three_is_left_alone_too_not_deadlocked(tmp_path: Path) -> None:
+    """The first version caught only a pair: W1, W2 and W3 enabling one another in a ring."""
+    ring = [_card("W1", enables=["W2"]), _card("W2", enables=["W3"]), _card("W3", enables=["W1"])]
+    path = _state(tmp_path, ring)
+    assert _run(path, "--write") == _OK
+    assert {_card_of(path, s)["status"] for s in ("W1", "W2", "W3")} == {"ready"}
+
+
+def test_a_card_hanging_off_a_ring_is_blocked_but_the_ring_is_not(tmp_path: Path) -> None:
+    """W4 is enabled by ring member W1 (open): it waits; the three in the ring stay ready."""
+    ring = [
+        _card("W1", enables=["W2", "W4"]),
+        _card("W2", enables=["W3"]),
+        _card("W3", enables=["W1"]),
+    ]
+    path = _state(tmp_path, [*ring, _card("W4")])
+    assert _run(path, "--write") == _OK
+    assert _card_of(path, "W4")["blocked_on"] == ["W1"]
+    assert _card_of(path, "W1")["status"] == "ready"
 
 
 def test_a_blocker_the_card_already_had_is_kept_and_the_enabler_is_added(tmp_path: Path) -> None:

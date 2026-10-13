@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1133,
+  "counter": 1134,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 176,
+      "ticks_blocked": 177,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 175,
+      "ticks_blocked": 176,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 180,
+      "ticks_blocked": 181,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 114,
+      "ticks_blocked": 115,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 80,
+      "ticks_blocked": 81,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 78,
+      "ticks_blocked": 79,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 77,
+      "ticks_blocked": 78,
       "completed": null
     },
     {
@@ -20852,7 +20852,7 @@
       "minted_during": "tick",
       "caused_by": "W797",
       "last_worked": null,
-      "ticks_blocked": 1
+      "ticks_blocked": 2
     },
     {
       "symbol": "W1020",
@@ -21364,7 +21364,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 38,
+      "ticks_blocked": 39,
       "completed": null
     },
     {
@@ -21410,7 +21410,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -21499,7 +21499,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -21954,7 +21954,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -21977,7 +21977,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -21998,7 +21998,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -22038,7 +22038,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -22060,7 +22060,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -22390,7 +22390,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -22412,7 +22412,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -22517,7 +22517,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -22786,7 +22786,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 1
+      "ticks_blocked": 2
     },
     {
       "symbol": "W1116",
@@ -22807,7 +22807,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 1
+      "ticks_blocked": 2
     },
     {
       "symbol": "W1117",
@@ -22825,7 +22825,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 1
+      "ticks_blocked": 2
     },
     {
       "symbol": "W1118",
@@ -22843,7 +22843,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 1
+      "ticks_blocked": 2
     },
     {
       "symbol": "W1119",
@@ -22996,58 +22996,37 @@
     {
       "symbol": "W1127",
       "title": "A library dist frontier: pure frontier(nodes, edges, realized) returning ready, deferred with the unmet predecessor or gate, and realized, plus cycle detection that names the cycle",
-      "status": "working",
+      "status": "done",
       "enables": [
-        "W1128",
         "W1129"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "New dist frontier via mikemol-new-dist: pure frontier(nodes, edges, realized) returning ready, deferred (unmet predecessor or gate per node), realized; cycle detection naming the cycle; tests: diamond, cycle, deferred node whose predicate flips",
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 github-8f request, from luthen-observability:W943's first check (read at that card): nemik rank.frontier decides open from a stored RDF state triple (rank.py:203); debtplan Row.ready is a property over precomputed waits_on/unsettled tuples (rows.py:30); pathsforward's readiness is inside the queue sort; none takes a per-node predicate. Spec: a pure function, no rdflib, no I/O, nodes and edges as plain data, realized a predicate over a node, returning ready, deferred (with the unmet predecessor or gate per node) and realized, plus cycle detection that names the cycle. Tests: a diamond, a cycle, a deferred node whose predicate flips. Shape precedent mtools:W947. Adapters: W1128 debtplan, W1129 pathsforward (mine); nemik's adapter over its stored state is nemik's, and luthen's apply_set walks it (luthen W943). nemik-71 is separately answering whether a Terraform root's resources can be a node type; not a dependency of this function.",
       "issued_at": "2026-10-13T18:03:51Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W943",
-      "last_worked": "2026-10-13T21:13:34Z",
+      "last_worked": "2026-10-13T21:31:41Z",
       "ticks_blocked": 0,
-      "completed": null
-    },
-    {
-      "symbol": "W1128",
-      "title": "debtplan Row.ready becomes a thin adapter over the frontier dist, with tests unchanged",
-      "status": "blocked",
-      "enables": [],
-      "touches": [],
-      "blocked_on": [
-        "W1127"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "",
-      "issued_at": "2026-10-13T18:03:51Z",
-      "minted_during": "interrupt",
-      "caused_by": "luthen-observability:W943",
-      "last_worked": null,
-      "ticks_blocked": 1
+      "completed": "20261013T213141Z"
     },
     {
       "symbol": "W1129",
-      "title": "pathsforward readiness (the queue sort's ready test) becomes a thin adapter over the frontier dist, with ordering tests unchanged",
-      "status": "blocked",
+      "title": "pathsforward's graph passes (--prune-landed, --block-behind-open) walk with the frontier dist, once a runtime dependency is accepted",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W1127"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-13: 2026-10-13 triage against the tree: pathsforward has no ready FUNCTION to adapt; 'ready' is a stored status the writer maintains, and what walks the graph are --prune-landed and --block-behind-open (W1131). Those two are the real frontier computations, and --block-behind-open's enabler map plus cycle check is exactly frontier(...).deferred and .cycles. DECISION NEEDED FIRST: pathsforward's pyproject declares dependencies = [] and its wheel is vendored fleet-wide (nemik, luthen, amr-skills ...); a dependency on mikemol-frontier ripples to every consumer's vendoring (the repin tool already handles hooks, pathsforward and the optional fence, so a fourth wheel is a known cost, not a new kind). The ring-of-three bug in behindopen (W1134) was fixed locally with a 15-line reachability check meanwhile. Asked github-8f whether to accept the dependency.",
       "issued_at": "2026-10-13T18:03:52Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W943",
-      "last_worked": null,
-      "ticks_blocked": 1
+      "last_worked": "2026-10-13T21:44:05Z",
+      "ticks_blocked": 0
     },
     {
       "symbol": "W1130",
@@ -23116,6 +23095,23 @@
       "caused_by": "nemik:W476",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1134",
+      "title": "behindopen leaves a card on an enabling cycle of any length alone (the first version caught only a direct pair, and a ring of three would have deadlocked)",
+      "status": "working",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Landed once its commit prints COMMITTED",
+      "evidence": "",
+      "issued_at": "2026-10-13T21:43:53Z",
+      "minted_during": "tick",
+      "caused_by": "W1131",
+      "last_worked": "2026-10-13T21:44:06Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [
@@ -23255,6 +23251,13 @@
       "title": "Commit gate runs a dist's mutants only when the commit touches that dist, not every dist on every commit",
       "dropped_at": "2026-10-12T21:33:34Z",
       "reason": "premise unverified: bazel's test cache already skips dists whose inputs did not change, and every refusal so far named only the changed dist's targets, so the gate does not rerun every dist's mutants per commit; the cost is the changed dist's own shards",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1128",
+      "title": "debtplan Row.ready becomes a thin adapter over the frontier dist, with tests unchanged",
+      "dropped_at": "2026-10-13T21:43:53Z",
+      "reason": "Rejected collapse: Row.ready is two stored tuples on ONE row (waits_on, unsettled) and its graph comes from the import-closure computation, not from a walk; the frontier of that graph with nothing realized is exactly the rows with empty waits, so an adapter restates Row.ready and adds a dependency (debtplan would need mikemol-frontier in its wheels) for no new behaviour. Revisit if debtplan ever needs a realized predicate over a live world (2026-10-13).",
       "recoverable": true
     }
   ],

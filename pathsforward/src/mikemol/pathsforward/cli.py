@@ -128,7 +128,7 @@ def _block_behind_open(ctx: Ctx) -> int:
         for sym, behind in found.working:
             _say(f"KEPT {sym} (working, behind {', '.join(behind)})")
         for sym, other in found.mutual:
-            _say(f"KEPT {sym} (enabled by {other}, which it also enables)")
+            _say(f"KEPT {sym} (on an enabling cycle, through {other})")
         if write:
             behindopen.apply(state, found)
         return EXIT_OK

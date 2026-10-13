@@ -111,7 +111,9 @@ src/mikemol/pathsforward/cli.py|tick-close-unlocks-nobody|"unlock": holder\}|"un
 src/mikemol/pathsforward/cli.py|tick-close-skips-the-prune|\(_prune_landed, _render, _check, _unlock\)|(_render, _check, _unlock)|def=_tick_close
 
 # W1131 (nemik:W476): a ready card is blocked behind its OPEN enablers; working and mutual cards are left; the card's own blocker is kept.
-src/mikemol/pathsforward/behindopen.py|mutual-pair-deadlocked|pair = next\(\(other for other in behind if sym in enablers\.get\(other, \[\]\)\), None\)|pair = None|def=plan
+src/mikemol/pathsforward/behindopen.py|cycle-deadlocked|ring = _cycle_through\(sym, enablers\)|ring = None|def=plan
 src/mikemol/pathsforward/behindopen.py|working-card-moved|elif status == _WORKING:|elif False:|def=plan
 src/mikemol/pathsforward/behindopen.py|own-blocker-dropped|\[\*kept, \*\(b for b in behind\[sym\] if b not in kept\)\]|list(behind[sym])|def=apply
 src/mikemol/pathsforward/behindopen.py|block-kind-unset|w\["blocked_kind"\], w\["ticks_blocked"\] = _AGENT, 0|w["blocked_kind"], w["ticks_blocked"] = None, 0|def=apply
+src/mikemol/pathsforward/behindopen.py|ring-of-three-missed|if node == sym:|if False:|def=_cycle_through
+src/mikemol/pathsforward/behindopen.py|ring-walk-never-extends|pending\.extend\(enablers\.get\(node, \[\]\)\)|pass|def=_cycle_through
