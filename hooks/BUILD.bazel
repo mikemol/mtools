@@ -456,6 +456,8 @@ venv_from_hub(
         # W829: the PostToolUseFailure build-failure report.
         "mikemol-hook-build-failure": "mikemol.hooks.entry:build_failure_main",
         "mikemol-build-failure": "mikemol.hooks.build_failure:report_main",
+        # W1100: the commit gate's bazel job count from the host's free cores.
+        "mikemol-gate-jobs": "mikemol.hooks.gatejobs:main",
         "mikemol-commit": "mikemol.hooks.commit_kata:main",
         "mikemol-hooks-probe": "mikemol.hooks.probe:main",
         "mikemol-snapshot": "mikemol.hooks.snapshot:main",

@@ -8696,3 +8696,39 @@
   claim  = {The positive control: PUSHED, and no line asks for a push.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_unpushed.py -k test_a_commit_whose_hook_pushes_is_published_and_prints_no_repair},
 }
+
+@misc{hooks-gatejobs-idle-host-gets-every-core,
+  section = {gatejobs},
+  title  = {The positive control: nothing running, the count is the core count},
+  claim  = {The positive control: nothing running, the count is the core count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_idle_host_gets_every_core},
+}
+
+@misc{hooks-gatejobs-count-is-the-free-cores-and-never-below-the-floor,
+  section = {gatejobs},
+  title  = {Half loaded gets about half; a host at load 97 on 24 cores is held to the floor, not zero},
+  claim  = {Half loaded gets about half; a host at load 97 on 24 cores is held to the floor, not
+            zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_the_count_is_the_free_cores_and_never_below_the_floor},
+}
+
+@misc{hooks-gatejobs-it-prints-one-flag-per-line-for-the-hook-to-read,
+  section = {gatejobs},
+  title  = {Two flags, one per line, the same number in both},
+  claim  = {Two flags, one per line, the same number in both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_it_prints_one_flag_per_line_for_the_hook_to_read},
+}
+
+@misc{hooks-gatejobs-unreadable-load-reads-as-an-idle-host,
+  section = {gatejobs},
+  title  = {A missing file and a garbled one both fall back to today's behaviour: every core},
+  claim  = {A missing file and a garbled one both fall back to today's behaviour: every core.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_unreadable_load_reads_as_an_idle_host},
+}
+
+@misc{hooks-gatejobs-argument-is-a-usage-error,
+  section = {gatejobs},
+  title  = {The tool takes none},
+  claim  = {The tool takes none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_argument_is_a_usage_error},
+}

@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 165,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 162,
+      "ticks_blocked": 164,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 167,
+      "ticks_blocked": 169,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 101,
+      "ticks_blocked": 103,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 67,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -22058,13 +22058,13 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
       "symbol": "W1078",
       "title": "mikemol-paths-forward --tick-open: take the lock and remember the holder, then bump-blocked, check, inbound, rank and weights sync, one summary",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pathsforward",
@@ -22072,13 +22072,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "Design --tick-open as one verb over lock (remembering the holder in state), bump-blocked, check, inbound, rank/weights; consumers: gabion:W1050, nemik:W426, amr-skills:W345",
       "evidence": "2026-10-13: 2026-10-13 FINDING from using it: host 'katas.py tick begin' (run from mtools) took the lock as holder 'github-b3', not as this session's holder mtools-tick-opus; the stop hook then asks for --unlock mtools-tick-opus and would not match. I released github-b3 by hand and took mtools-tick-opus. The mode must REMEMBER the holder it took (state, not typed) and the kata must call it, so begin and end use one name.",
       "issued_at": "2026-10-13T01:38:52Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T01:42:49Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T08:59:33Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1079",
@@ -22100,7 +22101,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:52Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -22122,7 +22123,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 11,
       "completed": null
     },
     {
@@ -22390,7 +22391,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -22412,7 +22413,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -22439,7 +22440,7 @@
     {
       "symbol": "W1097",
       "title": "mikemol-commit takes the repo-mutation lease for the whole commit, reset and push, and prints the repair when it cannot proceed",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
@@ -22447,58 +22448,53 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": null,
       "evidence": "2026-10-13: Symptoms (2026-10-13, attempt 13): post-commit printed [LOCAL: not on origin/main] with 'pre-push: BLOCKED, git operation in flight (index.lock present)' and 'PUSH ABANDONED (exit 1)'; afterwards git status showed the new files as staged deletions plus untracked (the real index never got the post-commit reset). Cause: an index.lock held at that moment (by another session's git, or by the commit's own steps; unknown which). Fix: retry the reset and the push a bounded number of times, name the holder if it can be told, and print the exact repair when it cannot. Related: W1040 (release the claim, remove a stale index.lock). | 2026-10-13: 2026-10-13 github-8f: likely cause (unverified, theirs): their 'katas.py tick end' started a background flush commit in 8 repos (mtools among them) at about the time of attempt 13, so it probably held the mtools index while the push and reset ran; I cannot confirm from here because the lock was gone by the time I looked (check the timestamps on the lock holder before accepting). Either way the fix is NOT a retry loop: commits collide on index.lock because nothing holds a mutex. Fleet rule (memory: repo mutations take a blocking lease): reuse the fence/membudget lease (total 1), wait on the holder's pid, never leave files staged. So: mikemol-commit takes the repo-mutation lease for the whole commit-reset-push, and the host's katas.py flush must take the SAME lease (recorded on W796, the kata graduation, so the kata calls the mode and not a second implementation). Print the repair command when it cannot proceed.",
       "issued_at": "2026-10-13T02:40:20Z",
       "minted_during": "interrupt",
       "caused_by": "W1068",
-      "last_worked": "2026-10-13T08:49:42Z",
+      "last_worked": "2026-10-13T08:58:30Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T085830Z"
     },
     {
       "symbol": "W1098",
       "title": "katas flush skips repos with a live session and takes the repo-mutation lease for the others",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "kata",
         "commit"
       ],
-      "blocked_on": [
-        "W1097"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "The live-session skip and the ceiling landed (f3ed1fe, a9b3b78); the repo-mutation lease around the commit is W1097's",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 github-8f: the host katas.py flush is a CONFIRMED FLAKE reported by two repos (mtools attempt 13 index.lock; el-openglo:W74 staged-directory gate refused: 'ln: ... .gate-outcomes.tsv: File exists'), therefore a blocker per the flakes rule. Root cause read from the sources: ~/github/.claude/katas/katas.py line 156 builds a raw 'git commit -m <msg> -- <paths>' argv and flush() (line 259) starts it with 'Queue: state sync' in every repo whose index.lock is absent AT THAT INSTANT (a check-then-act race, not a mutex), taking no repo lock and no isolated path. mtools' PORT (katas/src/mikemol/katas/fleet.py, W796/W875) already starts mikemol-commit via commits.commit_argv, but still guards only with in_flight() (index.lock exists) and the Fleet.skip_flush list. THIS CARD (smallest first): (a) skip any repo with a live session (they commit their own queue through mikemol-commit; only repos with no session need the sync), (b) take the repo-mutation lease (fence/membudget, total 1) for the rest, around the whole commit. Live-session detection is the open question: skip_flush is a caller-supplied list today; options are the session-claims registry (work_claims_hook) or the tick lock holder in the queue.",
       "issued_at": "2026-10-13T02:51:12Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T07:19:01Z",
-      "ticks_blocked": 3,
-      "completed": null
+      "last_worked": "2026-10-13T08:58:31Z",
+      "ticks_blocked": 0,
+      "completed": "20261013T085831Z"
     },
     {
       "symbol": "W1099",
       "title": "Point the host katas.py flush at the ported mikemol.katas flush so no second implementation of the queue sync remains",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "kata"
       ],
-      "blocked_on": [
-        "W1098",
-        "W796"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "2026-10-13: 2026-10-13: the host katas.py flush (raw git commit, no lock) is the second implementation; the port in mtools already routes through mikemol-commit. Graduation is W796 (operator-held on W879). Until then github-8f has no tick end without the flush (katas tick has only begin and end), so collisions at :19 and :49 each hour persist; W1098 is the mitigation that can land first.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-13: 2026-10-13: the host katas.py flush (raw git commit, no lock) is the second implementation; the port in mtools already routes through mikemol-commit. Graduation is W796 (operator-held on W879). Until then github-8f has no tick end without the flush (katas tick has only begin and end), so collisions at :19 and :49 each hour persist; W1098 is the mitigation that can land first. | 2026-10-13: 2026-10-13 github-8f (peer-reported, three real host runs 07:49/08:19/08:49Z): mikemol-katas tick end writes heartbeat and ledger line, updates W2, releases the host tick lock, accepted by the stop hook, started no flush (W1098 skip); github-8f now uses it each host tick. Old katas.py file stays until W879.",
       "issued_at": "2026-10-13T02:51:13Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T02:51:25Z",
-      "ticks_blocked": 7,
-      "completed": null
+      "last_worked": "2026-10-13T08:59:27Z",
+      "ticks_blocked": 0,
+      "completed": "20261013T085927Z"
     },
     {
       "symbol": "W1100",
@@ -22514,12 +22510,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-13: 2026-10-13 github-8f/gcalculus:W263 + the 2026-10-12 memory incident. History: ~/.bazelrc had build --sandbox_base=/dev/shm; paperkit's gate ran 24 parallel sandboxes of ~2 GiB (48-51 GiB) in that RAM-backed tmpfs and put the host at the OOM brink, so github-8f moved the base to nvme (/var/cache/bazel-mikemol/sandbox). MEASURED today by gcalculus, same tree, one gate_root each: nvme base FAILED three times at 620-656 s, /dev/shm base PASSED at 275 s (outside any sandbox 258-271 s): the disk base multiplies some arm's CPU past a per-arm cap. A static path is wrong both ways. DESIGN: at launch, through the existing admit step (mikemol-bazel-admit and the membudget lease), the sandbox goes on a tmpfs only when MemAvailable minus the lease's projected footprint (jobs x measured sandbox size, from the gate ledger) stays above a reserve, and the JOB COUNT is lowered to fit rather than the sandbox moved; otherwise the nvme base, with the stretch it implies printed in the verdict. Measure the footprint per target in the ledger (instrument window written beside the cap, as window = cap / rate). The home rc then carries no sandbox_base. The host rc edit is the host's (github-8f), not done here. Interim: repos with a one-sandbox gate pass --sandbox_base=/dev/shm on their command line. Related: W1027 (peak sandbox-size check), W1024 (the rail), W1062 (shard timeout from solo runtime x stretch).",
+      "next_bounded_step": "Base is not the cause for mtools (solo test_cli 3.9 s on both bases at load 97). Measure the gate's peak parallelism: run one commit gate with a bazel --profile and read running actions over time; then lower --jobs / --local_test_jobs from live headroom at launch.",
+      "evidence": "2026-10-13: 2026-10-13 github-8f/gcalculus:W263 + the 2026-10-12 memory incident. History: ~/.bazelrc had build --sandbox_base=/dev/shm; paperkit's gate ran 24 parallel sandboxes of ~2 GiB (48-51 GiB) in that RAM-backed tmpfs and put the host at the OOM brink, so github-8f moved the base to nvme (/var/cache/bazel-mikemol/sandbox). MEASURED today by gcalculus, same tree, one gate_root each: nvme base FAILED three times at 620-656 s, /dev/shm base PASSED at 275 s (outside any sandbox 258-271 s): the disk base multiplies some arm's CPU past a per-arm cap. A static path is wrong both ways. DESIGN: at launch, through the existing admit step (mikemol-bazel-admit and the membudget lease), the sandbox goes on a tmpfs only when MemAvailable minus the lease's projected footprint (jobs x measured sandbox size, from the gate ledger) stays above a reserve, and the JOB COUNT is lowered to fit rather than the sandbox moved; otherwise the nvme base, with the stretch it implies printed in the verdict. Measure the footprint per target in the ledger (instrument window written beside the cap, as window = cap / rate). The home rc then carries no sandbox_base. The host rc edit is the host's (github-8f), not done here. Interim: repos with a one-sandbox gate pass --sandbox_base=/dev/shm on their command line. Related: W1027 (peak sandbox-size check), W1024 (the rail), W1062 (shard timeout from solo runtime x stretch). | 2026-10-13: 2026-10-13 measured at /proc/loadavg 97/119/115 (24 cores): //pathsforward:test_cli solo, fresh execution each (--test_env=MEAS=...; --nocache_test_results is barred): default sandbox base critical path 3.91 s, elapsed 6.7 s; --sandbox_base=/dev/shm critical path 3.95 s, elapsed 6.4 s. No difference, and no stretch: solo it is ~4 s at full load. So the 60 s timeouts in the commit gate (attempt 23: test_cli, debtplan:test_mint timed out, test_store 138 s) are not sandbox-setup cost of one test and not CPU share of one test; they arise only when the gate runs ~840 targets at once (concurrency inside the gate). Profiles: scratchpad prof_default.gz, prof_shm.gz.",
       "issued_at": "2026-10-13T03:07:54Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
-      "last_worked": "2026-10-13T03:08:02Z",
+      "last_worked": "2026-10-13T09:52:53Z",
       "ticks_blocked": 0
     },
     {

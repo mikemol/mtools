@@ -83,3 +83,4 @@ commit_isolated_hooks	Isolated commit finds a host tool only the real root has, 
 commit_isolated_routing	Isolated commit routing: a path nowhere is not a commit, the reason names what decided, the lock state and the routing line
 commit_isolated_ignored	Isolated commit and ignored files: a file named exactly is taken, a directory's ignored files are not, only regular files are forced
 commit_unpushed	A commit whose push did not complete prints the exact push to run before its verdict, and a pushed commit prints none
+gatejobs	The Gate Job Count: Free Cores From the Live Load, Floored So the Gate Always Progresses, Capped at the Core Count, and an Unreadable Load Is an Idle Host

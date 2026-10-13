@@ -183,3 +183,10 @@ src/mikemol/hooks/isolated.py|refresh-not-run|note = refresh_index\(root, paths,
 # W1097: a commit whose push did not complete prints the repair, and only then.
 src/mikemol/hooks/commit_kata.py|unpushed-repair-never-printed|if LOCAL_MARK in line:|if False:|def=commit
 src/mikemol/hooks/commit_kata.py|repair-printed-always|if LOCAL_MARK in line:|if True:|def=commit
+
+# W1100: the gate's job count is the free cores, floored, capped, and an unreadable load is an idle host.
+src/mikemol/hooks/gatejobs.py|jobs-ignore-the-load|round\(cores - load1\)|cores|def=jobs
+src/mikemol/hooks/gatejobs.py|jobs-have-no-floor|max\(MIN_JOBS, min\(cores, |min(cores, (|def=jobs
+src/mikemol/hooks/gatejobs.py|jobs-have-no-cap|min\(cores, round|(round|def=jobs
+src/mikemol/hooks/gatejobs.py|unreadable-load-is-busy|return 0\.0|return 1000.0|def=load_of
+src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|def=main
