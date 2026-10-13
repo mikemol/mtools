@@ -213,3 +213,9 @@ src/mikemol/hooks/pycheck_clear.py|ledger-stops-at-the-first|codes = \[clear_one
 src/mikemol/hooks/revendor_apply.py|nosync-still-syncs|if target\.sync else \[\["uv", "lock"\]\]|if True else [["uv", "lock"]]|def=swap
 src/mikemol/hooks/revendor.py|plan-hides-the-sync-warning|SYNC_LINE if sync else NO_SYNC_LINE|NO_SYNC_LINE|def=plan_lines
 src/mikemol/hooks/revendor_cli.py|nosync-flag-ignored|sync = "--no-sync" not in flags|sync = True|def=run_revendor
+
+# W1119 (luthen-observability:W934): a ledger row carries UTC start and end epochs and the host.
+src/mikemol/hooks/gate_ledger.py|start-not-derived|start = end - int\(float\(seconds\)\)|start = end|def=stamp_of
+src/mikemol/hooks/gate_ledger.py|measured-start-ignored|if start is None:|if True:|def=stamp_of
+src/mikemol/hooks/gate_ledger.py|row-loses-the-stamp|\\t\{when\.start\}\\t\{when\.end\}\\t\{when\.host\}|\\t|def=record
+src/mikemol/hooks/gate_ledger.py|cli-ignores-the-start|stamp_of\(seconds, start\)|stamp_of(seconds)|def=main

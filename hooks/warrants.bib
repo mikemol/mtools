@@ -7542,34 +7542,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_real_index_reads_the_committed_path_as_committed},
 }
 
-@misc{hooks-commit-isolated-staged-deletion-lands-as-a-deletion,
-  section = {commit_isolated},
-  title  = {`git rm` then commit the path: HEAD no longer has it, and neither does the worktree},
-  claim  = {`git rm` then commit the path: HEAD no longer has it, and neither does the worktree.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_staged_deletion_lands_as_a_deletion},
-}
-
-@misc{hooks-commit-isolated-new-file-is-taken-though-git-does-not-track-it-yet,
-  section = {commit_isolated},
-  title  = {Nothing is staged in the real index, so existence on disk is what makes a path count},
-  claim  = {Nothing is staged in the real index, so existence on disk is what makes a path count.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_new_file_is_taken_though_git_does_not_track_it_yet},
-}
-
-@misc{hooks-commit-isolated-peers-staged-file-at-another-path-stays-staged,
-  section = {commit_isolated},
-  title  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact},
-  claim  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_peers_staged_file_at_another_path_stays_staged},
-}
-
-@misc{hooks-commit-isolated-refused-commit-leaves-head-and-the-real-index-as-they-were,
-  section = {commit_isolated},
-  title  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock},
-  claim  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_refused_commit_leaves_head_and_the_real_index_as_they_were},
-}
-
 @misc{hooks-shellcheck-added-no-baseline-judges-everything,
   section = {shellcheck_added},
   title  = {A new file, or an unmeasured baseline, has nothing old to subtract},
@@ -8887,4 +8859,60 @@
   title  = {amr-skills:W358: --no-sync makes the target not sync; without it the plan warns},
   claim  = {amr-skills:W358: --no-sync makes the target not sync; without it the plan warns.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_no_sync_reaches_the_apply_and_the_plan_says_the_venv_is_left_alone},
+}
+
+@misc{hooks-gate-ledger-stamp-recorded-row-carries-start-end-and-host-after-the-original-four,
+  section = {gate_ledger_stamp},
+  title  = {The first four columns are the old row; the stamp follows as integers and a host},
+  claim  = {The first four columns are the old row; the stamp follows as integers and a host.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger_stamp.py -k test_a_recorded_row_carries_start_end_and_host_after_the_original_four},
+}
+
+@misc{hooks-gate-ledger-stamp-start-is-the-end-less-the-duration-unless-the-caller-measured-it,
+  section = {gate_ledger_stamp},
+  title  = {Derived start = end - seconds; a measured start wins; a bad duration gives start = end},
+  claim  = {Derived start = end - seconds; a measured start wins; a bad duration gives start = end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger_stamp.py -k test_the_start_is_the_end_less_the_duration_unless_the_caller_measured_it},
+}
+
+@misc{hooks-gate-ledger-stamp-four-column-row-still-reads-beside-a-stamped-one,
+  section = {gate_ledger_stamp},
+  title  = {The control: an old row and a new row of the same gate both count in the history},
+  claim  = {The control: an old row and a new row of the same gate both count in the history.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger_stamp.py -k test_a_four_column_row_still_reads_beside_a_stamped_one},
+}
+
+@misc{hooks-gate-ledger-stamp-command-line-takes-a-measured-start,
+  section = {gate_ledger_stamp},
+  title  = {`--record GATE STATUS SECONDS --start EPOCH` writes that start, an integer},
+  claim  = {`--record GATE STATUS SECONDS --start EPOCH` writes that start, an integer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_ledger_stamp.py -k test_the_command_line_takes_a_measured_start},
+}
+
+@misc{hooks-commit-isolated-staged-staged-deletion-lands-as-a-deletion,
+  section = {commit_isolated_staged},
+  title  = {`git rm` then commit the path: HEAD no longer has it, and neither does the worktree},
+  claim  = {`git rm` then commit the path: HEAD no longer has it, and neither does the worktree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_staged.py -k test_a_staged_deletion_lands_as_a_deletion},
+}
+
+@misc{hooks-commit-isolated-staged-new-file-is-taken-though-git-does-not-track-it-yet,
+  section = {commit_isolated_staged},
+  title  = {Nothing is staged in the real index, so existence on disk is what makes a path count},
+  claim  = {Nothing is staged in the real index, so existence on disk is what makes a path count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_staged.py -k test_a_new_file_is_taken_though_git_does_not_track_it_yet},
+}
+
+@misc{hooks-commit-isolated-staged-peers-staged-file-at-another-path-stays-staged,
+  section = {commit_isolated_staged},
+  title  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact},
+  claim  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_staged.py -k test_a_peers_staged_file_at_another_path_stays_staged},
+}
+
+@misc{hooks-commit-isolated-staged-refused-commit-leaves-head-and-the-real-index-as-they-were,
+  section = {commit_isolated_staged},
+  title  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock},
+  claim  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_staged.py -k test_a_refused_commit_leaves_head_and_the_real_index_as_they_were},
 }

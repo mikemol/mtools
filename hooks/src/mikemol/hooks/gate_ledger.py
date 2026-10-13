@@ -33,6 +33,7 @@ them.
 from __future__ import annotations
 
 import argparse
+import socket
 import sys
 import time
 from collections import defaultdict
@@ -53,15 +54,51 @@ class Stat:
     median: float
 
 
-def record(ledger: Path, gate: str, status: str, seconds: str) -> None:
+@dataclass(frozen=True, slots=True)
+class Stamp:
+    """When a gate ran and where: UTC start and end epoch seconds, and the host (W1119)."""
+
+    start: int
+    end: int
+    host: str
+
+
+def stamp_of(seconds: str, start: int | None = None) -> Stamp:
+    """Stamp a run that has just ended and took `seconds`.
+
+    ⚑ EPOCHS ARE UTC INTEGERS, NOT LOCAL-TIME STRINGS (luthen-observability:W934 correlates gate
+    runs with package power and needs an unambiguous axis). The end is now. The start is the one
+    the caller measured when it passes `start`; otherwise it is the end less the duration, and an
+    unreadable duration gives a start equal to the end rather than a guess.
+
+    Returns:
+        the stamp, on this host.
+
+    """
+    end = int(time.time())
+    if start is None:
+        try:
+            start = end - int(float(seconds))
+        except ValueError:
+            start = end
+    return Stamp(start, end, socket.gethostname())
+
+
+def record(ledger: Path, gate: str, status: str, seconds: str, stamp: Stamp | None = None) -> None:
     """Append one outcome, never raising.
+
+    The row is `iso8601 gate status seconds start_epoch end_epoch host`, tab-separated; the first
+    four columns are the original row, so an old reader sees the same row it always did and a new
+    reader treats a four-column row as one with no stamp.
 
     ⚑ A ledger failure must not break the gate it measures: the instrument must not become a
     new failure mode.
     """
+    when = stamp_of(seconds) if stamp is None else stamp
+    row = f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{gate}\t{status}\t{seconds}"
     try:
         with ledger.open("a", encoding="utf-8") as fh:
-            fh.write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{gate}\t{status}\t{seconds}\n")
+            fh.write(f"{row}\t{when.start}\t{when.end}\t{when.host}\n")
     except OSError:
         return
 
@@ -166,12 +203,15 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--record", nargs=3, metavar=("GATE", "STATUS", "SECONDS"))
     mode.add_argument("--order", action="store_true")
     mode.add_argument("--report", action="store_true")
+    ap.add_argument("--start", type=int, metavar="EPOCH", help="--record: the measured UTC start")
     opts: dict[str, object] = vars(ap.parse_args(sys.argv[1:] if argv is None else argv))
     ledger = Path(str(opts["ledger"]))
     given = opts["record"]
     if isinstance(given, list):
         gate, status, seconds = (str(part) for part in cast("list[object]", given))
-        record(ledger, gate, status, seconds)
+        measured = opts["start"]
+        start = measured if isinstance(measured, int) else None
+        record(ledger, gate, status, seconds, stamp_of(seconds, start))
     elif opts["order"] is True:
         sys.stdout.write("".join(f"{gate}\n" for gate in order(ledger)))
     else:

@@ -88,3 +88,5 @@ commit_isolated_new	Isolated commit and new files: a named new file is in the ga
 commit_remote	PUSHED is read from the remote with ls-remote: a lying tracking ref is a REMOTE-MISMATCH naming the remote, a peer pushing on top is still PUSHED, an unreachable remote is UNVERIFIED
 pycheck_clear	pycheck --clear PATH formats, applies only the safe fixes, formats again and returns the gate's own verdict, never claiming one over a file it could not clear
 pycheck_clear_ledger	pycheck --clear-ledger ROOT clears every file the debt ledger names and returns the strictest answer, a refusal outranking an unjudged file outranking a clean run
+gate_ledger_stamp	A gate-ledger row carries UTC start and end epochs and the host after the original four columns, and a four-column row still reads
+commit_isolated_staged	Isolated commit and the staged index: a staged deletion lands as a deletion, a new file is taken, a peer's staged path stays staged, and a refusal leaves HEAD and the index as they were
