@@ -813,3 +813,24 @@
   claim  = {A garbled stat and a directory named `self` are left out; the rest still sums.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proctree.py -k test_an_unreadable_entry_is_skipped_and_a_non_process_entry_is_ignored},
 }
+
+@misc{katas-waiter-stream-log-shows-the-childs-first-line-while-it-is-still-running,
+  section = {waiter_stream},
+  title  = {RUNNING with a line in the log, then the sentinel lets it end and the log reads done},
+  claim  = {RUNNING with a line in the log, then the sentinel lets it end and the log reads done.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_stream.py -k test_the_log_shows_the_childs_first_line_while_it_is_still_running},
+}
+
+@misc{katas-waiter-stream-command-that-cannot-be-started-is-recorded-not-raised,
+  section = {waiter_stream},
+  title  = {A missing binary gives status 127, the reason in the log, and the rc line},
+  claim  = {A missing binary gives status 127, the reason in the log, and the rc line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_stream.py -k test_a_command_that_cannot_be_started_is_recorded_not_raised},
+}
+
+@misc{katas-waiter-stream-timeout-ends-the-childs-whole-tree-not-just-the-child,
+  section = {waiter_stream},
+  title  = {The grandchild a timed-out child started is gone afterwards: its group was ended},
+  claim  = {The grandchild a timed-out child started is gone afterwards: its group was ended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_stream.py -k test_a_timeout_ends_the_childs_whole_tree_not_just_the_child},
+}

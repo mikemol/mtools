@@ -113,11 +113,17 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_waiter_seconds.py" = ["assert"]
 "tests/test_flush_held.py" = ["assert"]
 "tests/test_proctree.py" = ["assert"]
+"tests/test_waiter_stream.py" = ["assert"]
 "tests/test_scaffold.py" = ["assert"]
 "tests/test_waiter.py" = ["assert", "suspicious-subprocess-import"]
-# ⚑ `waiter` names `subprocess.TimeoutExpired`, the exception `capture` documents for a child that
-# outlasts its timeout; it starts no child except through `capture`.
-"src/mikemol/katas/waiter.py" = ["suspicious-subprocess-import"]
+# ⚑ `waiter` runs ONE child, with its output going straight into the log as it is produced (W1125):
+# `mikemol.procrun.capture` returns the output only when the child ends, so the log would be silent
+# while a commit runs and W1126's hang witness could not see it grow. The argv is the caller's,
+# never a shell.
+"src/mikemol/katas/waiter.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 # ⚑ STARTING A DETACHED CHILD IS `detach`'S ONE RESPONSIBILITY (a Popen that outlives the caller,
 # which `mikemol.procrun.capture` cannot be: it waits), and the exemption is scoped to that file.
 # The argv is built here from the interpreter and literals plus the caller's argv, never a shell.

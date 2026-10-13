@@ -17,3 +17,4 @@ hosttick	The Host Tick: The Lock Is Taken Under the Holder's Name, and a Tick Cl
 policy	The Policy File: The Host's Values Are Read From a Data File, Every Missing Required Key Is Named Together, and Nothing Defaults to a Machine
 cli	The Command Line: The Host Katas' Subcommand Names Run the Modules, a Delegated One Prints the mtools Command, and a Policy Gap Is Named
 proctree	The Process Tree's CPU: the Root and Every Live Descendant Summed From /proc, a Command Name With Parentheses Read Correctly, and a Gone Root Is None Not Zero
+waiter_stream	The Waiter's Stream: The Child's Output Lands in the Log While It Runs, a Child That Cannot Start Is Recorded as 127, and a Timeout Ends the Child's Whole Process Group

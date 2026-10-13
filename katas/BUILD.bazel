@@ -116,7 +116,12 @@ sh_test(
 
 mutants_sharded(
     name = "mutants",
-    shards = 1,
+    # ⚑ SIX SHARDS, NOT A LONGER TIMEOUT (W1037's precedent, operator ruling 2026-10-10). The grid is
+    # about 138 mutants (def-sites plus declared defects), each re-running a 119-test suite that is
+    # 5 s alone and several times that at load 90. One shard reached its 300 s limit, and three did
+    # too (measured 2026-10-13: 46 mutants in the first of three); six put about 23 in each, at the
+    # same width.
+    shards = 6,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

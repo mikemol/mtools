@@ -12,7 +12,7 @@ from mikemol.katas import commits, waiter
 if TYPE_CHECKING:
     from pathlib import Path
 
-_THREE = "import sys; print('out'); sys.stderr.write('err\\n'); sys.exit(3)"
+_THREE = "import sys; print('out', flush=True); sys.stderr.write('err\\n'); sys.exit(3)"
 _EXIT_THREE = [sys.executable, "-c", _THREE]
 _OK = [sys.executable, "-c", "print('fine')"]
 _SLEEP = [sys.executable, "-c", "import time; time.sleep(30)"]

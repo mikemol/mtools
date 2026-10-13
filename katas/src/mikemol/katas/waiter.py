@@ -24,6 +24,8 @@ CONSUMED BY: `detach.start`, which runs this module as `python -m mikemol.katas.
 
 from __future__ import annotations
 
+import contextlib
+import os
 import signal
 import subprocess
 import sys
@@ -31,16 +33,18 @@ import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.procrun.proc import capture
-
 if TYPE_CHECKING:
     from collections.abc import Sequence
+    from typing import TextIO
 
 TIMEOUT_S = 11000.0
 """How long the child may run: above `mikemol-commit`'s own 10800 s."""
 
 TIMED_OUT = 124
 """The status a child that outlasted its timeout is recorded with, as `mikemol-commit` spells it."""
+
+NOT_STARTED = 127
+"""The status a command that could not be started is recorded with, as a shell spells it."""
 
 TERMINATED = 143
 """The exit a SIGTERM becomes (128 + 15), so the cleanup still runs."""
@@ -112,18 +116,59 @@ def run(
     """
     started = time.monotonic()
     try:
-        try:
-            done = capture(argv, timeout=timeout)
-            status, body = done.returncode, done.stdout + done.stderr
-        except subprocess.TimeoutExpired:
-            status, body = TIMED_OUT, f"timed out after {timeout:g} s (no verdict)\n"
+        with log.open("w", encoding="utf-8") as sink:
+            status = _stream(argv, sink, timeout)
     finally:
         for path in removals:
             path.unlink(missing_ok=True)
     if status == 0:
         seconds_of(log).write_text(f"{time.monotonic() - started:.1f}\n", encoding="utf-8")
-    log.write_text(f"{body}\nrc={status}\n", encoding="utf-8")
+    with log.open("a", encoding="utf-8") as sink:
+        sink.write(f"\nrc={status}\n")
     return status
+
+
+def _end(child: subprocess.Popen[bytes]) -> None:
+    """End a child and everything it started; it leads its own session, so its group is its tree."""
+    with contextlib.suppress(ProcessLookupError):
+        os.killpg(child.pid, signal.SIGKILL)
+    child.wait()
+
+
+def _stream(argv: Sequence[str], sink: TextIO, timeout: float) -> int:
+    """Run `argv` with its output going straight into `sink` as it is produced (W1125).
+
+    ⚑ THE LOG GROWS WHILE THE CHILD RUNS. It was written whole after the child ended, so a running
+    commit was a silent file; W1126's hang witness (no growth and no tree CPU) needs the growth to
+    be there to observe. Both streams share the one file, in the order the child wrote them.
+
+    Returns:
+        the child's status; `TIMED_OUT` when it outlasted `timeout`; `NOT_STARTED` when it could not
+        be started at all (the reason is in the log).
+
+    """
+    try:
+        child = subprocess.Popen(
+            list(argv),
+            stdin=subprocess.DEVNULL,
+            stdout=sink,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+    except OSError as problem:
+        sink.write(f"cannot start {argv[0] if argv else '(nothing)'}: {problem}\n")
+        sink.flush()
+        return NOT_STARTED
+    try:
+        return child.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _end(child)
+        sink.write(f"timed out after {timeout:g} s (no verdict)\n")
+        sink.flush()
+        return TIMED_OUT
+    finally:
+        if child.poll() is None:
+            _end(child)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

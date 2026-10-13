@@ -24,7 +24,7 @@ src/mikemol/katas/commits.py|failure-read-as-done|int\(match\[1\]\) == 0|int(mat
 src/mikemol/katas/commits.py|missing-log-not-guarded|if not log\.exists\(\):|if False:|def=commit_state
 
 # W874: the detached commit's body. A timeout is recorded with 124, the status mikemol-commit uses.
-src/mikemol/katas/waiter.py|timeout-not-recorded-as-124|status, body = TIMED_OUT, |status, body = 1, |def=run
+src/mikemol/katas/waiter.py|timeout-not-recorded-as-124|return TIMED_OUT|return 1|def=_stream
 
 # The cleanup removes its paths whatever the result: skipping it leaves a stale index.lock behind.
 src/mikemol/katas/waiter.py|removals-not-removed|path\.unlink\(missing_ok=True\)|pass|def=run
@@ -123,3 +123,9 @@ src/mikemol/katas/proctree.py|tree-forgets-descendants|total \+= ticks|pass|def=
 src/mikemol/katas/proctree.py|gone-root-reads-zero|if own is None:|if False:|def=tree_ticks
 src/mikemol/katas/proctree.py|stime-dropped|int\(fields\[_UTIME\]\) \+ int\(fields\[_STIME\]\)|int(fields[_UTIME])|def=_read
 src/mikemol/katas/proctree.py|comm-parsed-from-the-first-paren|text\.rindex\("\)"\)|text.index(")")|def=_read
+
+# W1125: the child's output goes into the log as it runs, a child that cannot start is recorded, and a timeout ends the tree.
+src/mikemol/katas/waiter.py|stderr-dropped|stderr=subprocess\.STDOUT|stderr=subprocess.DEVNULL|def=_stream
+src/mikemol/katas/waiter.py|child-shares-the-waiters-group|start_new_session=True|start_new_session=False|def=_stream
+src/mikemol/katas/waiter.py|unstartable-child-reads-ok|return NOT_STARTED|return 0|def=_stream
+src/mikemol/katas/waiter.py|timeout-leaves-the-tree|os\.killpg\(child\.pid, signal\.SIGKILL\)|pass|def=_end
