@@ -805,6 +805,13 @@ if [ ! -x "$_gate_jobs_tool" ]; then
   exit 1
 fi
 mapfile -t _gate_jobs < <("$_gate_jobs_tool")
+# ⚑ W1159: SAY THE CAP AND WHAT IT CAME FROM, so nobody infers a gate that ran at 2 jobs under load 100.
+if ! _gate_explained=$("$_gate_jobs_tool" --explain); then
+  say "mikemol-gate-jobs --explain failed — cannot state the cap, commit refused"
+  record_refusal pre-commit " - mikemol-gate-jobs --explain failed"
+  exit 1
+fi
+say "$_gate_explained"
 if ( cd "$staged" && git_scrubbed bazel test --nokeep_going "${_gate_jobs[@]}" //... --test_output=errors ) 2>&1 \
     | tee "$staged/.suite.log"; then
     _suite_rc=0
