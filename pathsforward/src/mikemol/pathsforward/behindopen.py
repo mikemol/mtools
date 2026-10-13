@@ -20,6 +20,12 @@ first (nemik's umbrella rule says the same), or this will block on a card the wo
 or any longer ring does, blocking each on the next would leave them all waiting for ever. Only
 enablers in THIS queue are read here; a card in another queue that enables one of ours is nemik's
 graph to read (W1133).
+
+⚑ THE ENABLER MAP IS THE FRONTIER WALK'S `deferred` (W1129), through the generated copy that
+pathsforward carries so it stays dependency-free (W1135). The walk's `cycles` is NOT used for the
+"on a cycle" test: it names one cycle per back edge, so a card that closes a ring only through a
+cross edge (A->B->C->A with B->D->C) is a member of the ring and in none of the named cycles, and
+blocking it would deadlock. `_cycle_through` asks the member question directly.
 """
 
 from __future__ import annotations
@@ -27,6 +33,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from mikemol.pathsforward.frontier_walk import frontier
 from mikemol.pathsforward.model import strlist, text
 
 if TYPE_CHECKING:
@@ -54,13 +61,15 @@ def _open_enablers(state: State) -> dict[str, list[str]]:
         symbol -> the enablers' symbols, in queue order.
 
     """
-    open_cards = {text(w, "symbol"): w for w in state.waypoints if text(w, "status") not in _CLOSED}
-    found: dict[str, list[str]] = {}
-    for sym, card in open_cards.items():
-        for target in strlist(card, "enables"):
-            if target in open_cards and target != sym:
-                found.setdefault(target, []).append(sym)
-    return found
+    status = {text(w, "symbol"): text(w, "status") for w in state.waypoints}
+    edges = [
+        (text(w, "symbol"), target)
+        for w in state.waypoints
+        for target in strlist(w, "enables")
+        if target in status and target != text(w, "symbol")
+    ]
+    verdict = frontier(status, edges, lambda sym: status[sym] in _CLOSED)
+    return {sym: list(waits) for sym, waits in verdict.deferred}
 
 
 def _cycle_through(sym: str, enablers: dict[str, list[str]]) -> str | None:

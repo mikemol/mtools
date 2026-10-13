@@ -119,6 +119,23 @@ def test_a_ring_of_three_is_left_alone_too_not_deadlocked(tmp_path: Path) -> Non
     assert {_card_of(path, s)["status"] for s in ("W1", "W2", "W3")} == {"ready"}
 
 
+def test_a_ring_member_the_walk_names_in_no_cycle_is_left_alone_too(tmp_path: Path) -> None:
+    """W4 closes the ring only through a cross edge, so the walk's `cycles` omits it.
+
+    W2 enables W3 and W4, and W4 enables W3: W4 is a ring member all the same, and blocking it
+    would leave W1 to W4 waiting for ever.
+    """
+    cards = [
+        _card("W1", enables=["W2"]),
+        _card("W2", enables=["W3", "W4"]),
+        _card("W3", enables=["W1"]),
+        _card("W4", enables=["W3"]),
+    ]
+    path = _state(tmp_path, cards)
+    assert _run(path, "--write") == _OK
+    assert {_card_of(path, s)["status"] for s in ("W1", "W2", "W3", "W4")} == {"ready"}
+
+
 def test_a_card_hanging_off_a_ring_is_blocked_but_the_ring_is_not(tmp_path: Path) -> None:
     """W4 is enabled by ring member W1 (open): it waits; the three in the ring stay ready."""
     ring = [

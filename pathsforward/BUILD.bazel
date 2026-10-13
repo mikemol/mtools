@@ -52,8 +52,12 @@ py_library(
             "$(location pyproject.toml)",
         ],
         # W850: test_certify runs the real policy under the hash-pinned opa, named by OPA_BIN.
-        data = ["pyproject.toml", "@opa//file"],
-        env = {"OPA_BIN": "$(location @opa//file)"},
+        data = ["pyproject.toml", "@opa//file", "//frontier:src/mikemol/frontier/walk.py"],
+        env = {
+            "OPA_BIN": "$(location @opa//file)",
+            # W1135: test_frontier_copy compares the generated copy to this module.
+            "FRONTIER_WALK": "$(location //frontier:src/mikemol/frontier/walk.py)",
+        },
         size = "medium" if src in ("tests/test_lock.py", "tests/test_store.py") else "small",
         deps = [
             ":pathsforward",

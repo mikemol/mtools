@@ -4556,3 +4556,19 @@
   claim  = {W4 is enabled by ring member W1 (open): it waits; the three in the ring stay ready.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_behindopen.py -k test_a_card_hanging_off_a_ring_is_blocked_but_the_ring_is_not},
 }
+
+@misc{pathsforward-behindopen-ring-member-the-walk-names-in-no-cycle-is-left-alone-too,
+  section = {behindopen},
+  title  = {W4 closes the ring only through a cross edge, so the walk's `cycles` omits it},
+  claim  = {W4 closes the ring only through a cross edge, so the walk's `cycles` omits it. W2
+            enables W3 and W4, and W4 enables W3: W4 is a ring member all the same, and
+            blocking it would leave W1 to W4 waiting for ever.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_behindopen.py -k test_a_ring_member_the_walk_names_in_no_cycle_is_left_alone_too},
+}
+
+@misc{pathsforward-frontier-copy-copy-is-byte-identical-to-the-frontier-module,
+  section = {frontier_copy},
+  title  = {Both files exist and hold the same bytes},
+  claim  = {Both files exist and hold the same bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frontier_copy.py -k test_the_copy_is_byte_identical_to_the_frontier_module},
+}
