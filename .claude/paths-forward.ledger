@@ -1707,3 +1707,31 @@
 2026-10-13T01:11:51Z  tick  W1067 minted    -         "waldo.phases model: Phase and Recipe, status over the done-witnesses, and the pure eligibility of a phase"  evidence=W1066
 2026-10-13T01:11:53Z  tick  W1068 minted    -         "waldo.run_phase: run one phase through marker, entry witnesses, confirmation and the pipeline, then record the marker"  evidence=W1066
 2026-10-13T01:16:54Z  tick  W1069 minted    -         "Registry check mode: a landed metric family with no row, or a row naming no panel, fails (luthen-observability:W905)"  evidence=luthen-observability:W905
+2026-10-13T01:18:21Z  tick  W1067 advanced  mechanism "waldo.phases model (Phase/Recipe/read_done/eligibility/statuses/lint), 145 waldo tests, 10 more declared defects, bazel //waldo green; attempt 12 running; W1066 atomized into W1067/W1068; answered luthen W905"
+2026-10-13T01:19:09Z  interrupt W1070 minted    -         "Web-subset gate: modules marked web-portable pass an AST allowlist and required annotations, no waivers (a pycheck mode or sibling)"  evidence=nemik:W422
+2026-10-13T01:19:10Z  interrupt W1071 minted    -         "Transpile step: pinned py2many produces the TypeScript as a build output that is never edited"  evidence=nemik:W422
+2026-10-13T01:19:10Z  interrupt W1072 minted    -         "Conformance runner: one shared corpus through the Python and the generated TypeScript, failing on any difference with the input printed"  evidence=nemik:W422
+2026-10-13T01:19:11Z  interrupt W1073 minted    -         "Spike harness on nemik.pieces.assemble: gate, transpile and conformance, and what the output says about narrowing the subset"  evidence=nemik:W422
+2026-10-13T01:19:12Z  interrupt W1074 minted    -         "Spike on nemik flow.solve for the Fraction to BigInt gap"  evidence=nemik:W422
+2026-10-13T01:22:54Z  interrupt W1075 minted    -         "Websubset: one declared list of the portable-marked modules, read by the gate and the census, never a glob"  evidence=nemik:W422
+2026-10-13T01:22:54Z  interrupt W1076 minted    -         "Websubset census: --check-file full report and --census ROOT jsonl ledger, one row per module and refused construct"  evidence=nemik:W422
+2026-10-13T01:22:55Z  interrupt W1077 minted    -         "Websubset card sync: one generated card per module with debt via mikemol-debtplan mint, touches portable-subset, closed when clean"  evidence=nemik:W422
+2026-10-13T01:38:52Z  interrupt W1078 minted    -         "mikemol-paths-forward --tick-open: take the lock and remember the holder, then bump-blocked, check, inbound, rank and weights sync, one summary"  evidence=github-8f
+2026-10-13T01:38:54Z  interrupt W1079 minted    -         "mikemol-paths-forward --tick-close W: ledger, render, commit the state files through mikemol-commit, close only on COMMITTED, release the held lock"  evidence=github-8f
+2026-10-13T01:38:56Z  interrupt W1080 minted    -         "--tick-close also trims the closed card from blocked_on, promotes a named next card to working, and prints the nemik warning delta by shape"  evidence=github-8f
+2026-10-13T01:38:57Z  interrupt W1081 minted    -         "Refuse paths-forward state writes while the repo's gate or board is running, and print why"  evidence=github-8f
+2026-10-13T01:39:35Z  interrupt W1082 minted    -         "mikemol-commit prints PUSHED only after git ls-remote shows the remote main at or above the commit, else REMOTE-MISMATCH with the remote sha"  evidence=nemik:W426
+2026-10-13T01:39:37Z  interrupt W1083 minted    -         "pycodemod mode taking FILE OLD NEW triples with an exactly-one-match assertion, for files the pycheck bar refuses to Edit"  evidence=paperkit:W341
+2026-10-13T01:39:39Z  interrupt W1084 minted    -         "A paperkit lock-regen, bazel shutdown and isolated commit chain as one mode"  evidence=github-8f
+2026-10-13T01:39:42Z  interrupt W1085 minted    -         "pycheck --clear PATH: format, safe lint fix, then the full check, in one command"  evidence=github-8f
+2026-10-13T01:39:45Z  interrupt W1086 minted    -         "A CPU-pinned verify mode: the suite minus the hanging groups, failures diffed against HEAD"  evidence=github-8f
+2026-10-13T01:42:33Z  tick  W1087 minted    -         "mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only if clean"  evidence=github-8f
+2026-10-13T01:42:35Z  tick  W1088 minted    -         "mikemol-commit --wait with --message-file, and --explain printing the refusal's cause and the failing check's source"  evidence=github-8f
+2026-10-13T01:42:36Z  tick  W1089 minted    -         "mikemol-paths-forward --add-many and --atomize PARENT t1 t2 ...: children with enables and caused-by, parent blocked on them"  evidence=github-8f
+2026-10-13T01:42:37Z  tick  W1090 minted    -         "mikemol-commit --prepare: a per-repo declared regen list run in order (format, check, gen-warrants, test)"  evidence=github-8f
+2026-10-13T01:42:39Z  tick  W1091 minted    -         "transcriptstruct filter: --tool Bash, --tail N and --field command, so a window of recent commands fits the cap"  evidence=github-8f
+2026-10-13T01:45:30Z  tick  W1092 minted    -         "mikemol-commit intent-adds each NEW path it is named before the gate, and refuses a new file that is not named"  evidence=amr-skills:W347
+2026-10-13T01:46:17Z  tick  W1093 minted    -         "pycheck chooses the project's ruff config by ruff's own precedence and prints which config and line-length drove a refusal"  evidence=github-8f
+2026-10-13T01:57:21Z  tick  W1094 minted    -         "Chain census: normalise each Bash command, find recurring sequences and concurrent sets per session, print a jsonl ledger"  evidence=github-8f
+2026-10-13T01:57:23Z  tick  W1095 minted    -         "Chain census kata: run hourly, publish per-repo repeated chains as a Victoria series, mint one shared card for a chain in two repos"  evidence=github-8f
+2026-10-13T01:57:59Z  tick  W1068 advanced  mechanism "waldo.runphase written (158 waldo tests, 9 declared defects, bazel gate running); minted W1078-W1095 from github-8f's katas census (close ritual, pycheck --install, ruling W1093, chain census); katas tick begin holder mismatch recorded on W1078"

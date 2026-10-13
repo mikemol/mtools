@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1069,
+  "counter": 1095,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-13T01:11:14Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6126,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "completed": null
     },
     {
@@ -6174,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 153,
+      "ticks_blocked": 154,
       "completed": null
     },
     {
@@ -10057,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "completed": null
     },
     {
@@ -11803,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 92,
+      "ticks_blocked": 93,
       "completed": null
     },
     {
@@ -16155,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16691,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17494,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -17535,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -17558,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -17981,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 58,
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -18155,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -18934,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -21365,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 16,
+      "ticks_blocked": 17,
       "completed": null
     },
     {
@@ -21411,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 15,
+      "ticks_blocked": 16,
       "completed": null
     },
     {
@@ -21500,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 15,
+      "ticks_blocked": 16,
       "completed": null
     },
     {
@@ -21587,7 +21584,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
       "last_worked": "2026-10-12T23:55:48Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -21736,7 +21733,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1053",
       "last_worked": "2026-10-13T01:12:03Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -21833,7 +21830,6 @@
         "waldo"
       ],
       "blocked_on": [
-        "W1067",
         "W1068"
       ],
       "blocked_kind": "agent",
@@ -21842,14 +21838,14 @@
       "issued_at": "2026-10-12T23:55:12Z",
       "minted_during": "tick",
       "caused_by": "W1060",
-      "last_worked": "2026-10-13T01:12:00Z",
-      "ticks_blocked": 0,
+      "last_worked": "2026-10-13T01:40:00Z",
+      "ticks_blocked": 1,
       "completed": null
     },
     {
       "symbol": "W1067",
       "title": "waldo.phases model: Phase and Recipe, status over the done-witnesses, and the pure eligibility of a phase",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1066"
       ],
@@ -21858,35 +21854,33 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-13: 21b5890 [PUSHED]: waldo.phases (Phase, Recipe, Status, read_done, eligibility, statuses, lint, names); 145 waldo tests, 10 more declared defects.",
       "issued_at": "2026-10-13T01:11:51Z",
       "minted_during": "tick",
       "caused_by": "W1066",
-      "last_worked": "2026-10-13T01:12:01Z",
+      "last_worked": "2026-10-13T01:39:56Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T013956Z"
     },
     {
       "symbol": "W1068",
       "title": "waldo.run_phase: run one phase through marker, entry witnesses, confirmation and the pipeline, then record the marker",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "W1066"
       ],
       "touches": [
         "waldo"
       ],
-      "blocked_on": [
-        "W1067"
-      ],
+      "blocked_on": [],
       "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-13T01:11:53Z",
       "minted_during": "tick",
       "caused_by": "W1066",
-      "last_worked": "2026-10-13T01:11:59Z",
+      "last_worked": "2026-10-13T01:39:58Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -21907,6 +21901,524 @@
       "caused_by": "luthen-observability:W905",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1070",
+      "title": "Web-subset gate: modules marked web-portable pass an AST allowlist and required annotations, no waivers (a pycheck mode or sibling)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycheck",
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 checked first: nothing in mtools does this. pycodemod's existing 'portable' mode is about SQL literals a database engine rejects (W608), unrelated; call this mode websubset to avoid the clash. No py2many or transpile reference anywhere in the tracked tree. Gate list from github-8f: AST allowlist plus required annotations; refuse metaclasses, eval/exec, dynamic attributes, *args tricks, float-dependent equality, and anything py2many cannot translate; no waivers; under the edit gate (pycheck) or a sibling. | 2026-10-13: 2026-10-13 extended per operator ruling: --check-file (full report), --census ROOT (W1076), card sync (W1077) and one declared list of portable-marked modules (W1075), all in the pycheck style; no waivers.",
+      "issued_at": "2026-10-13T01:19:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": "2026-10-13T01:23:07Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1071",
+      "title": "Transpile step: pinned py2many produces the TypeScript as a build output that is never edited",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "websubset",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:19:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1072",
+      "title": "Conformance runner: one shared corpus through the Python and the generated TypeScript, failing on any difference with the input printed",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1071"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:19:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": "2026-10-13T01:19:21Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1073",
+      "title": "Spike harness on nemik.pieces.assemble: gate, transpile and conformance, and what the output says about narrowing the subset",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1070",
+        "W1071",
+        "W1072"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 github-8f request (operator): identical semantics for Python machinery in a web interface with no client/server dynamics, proven in Python once and reused mechanically; typed Python subset consumed by py2many (TypeScript backend), enforced like ruff and mypy. The first spike's output is the evidence for whether the subset needs narrowing (py2many's TypeScript backend is less mature than its others, unverified here). nemik:W422 owns nemik.pieces.assemble.",
+      "issued_at": "2026-10-13T01:19:11Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": "2026-10-13T01:19:22Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1074",
+      "title": "Spike on nemik flow.solve for the Fraction to BigInt gap",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1073"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:19:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": "2026-10-13T01:19:23Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1075",
+      "title": "Websubset: one declared list of the portable-marked modules, read by the gate and the census, never a glob",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:22:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1076",
+      "title": "Websubset census: --check-file full report and --census ROOT jsonl ledger, one row per module and refused construct",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1070",
+        "W1075"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 github-8f/operator ruling: do not pick the order by hand; census ledger = one row per module and per refused construct (jsonl or toml with named fields, no whitespace formats), read from the one declared list. Also derive the per-file count ledger (path to positive integer) that mikemol-debtplan reads. First consumer gcalculus (gcalculus:W255), then nemik pieces and flow.",
+      "issued_at": "2026-10-13T01:22:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": "2026-10-13T01:23:04Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1077",
+      "title": "Websubset card sync: one generated card per module with debt via mikemol-debtplan mint, touches portable-subset, closed when clean",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "websubset",
+        "debtplan"
+      ],
+      "blocked_on": [
+        "W1076"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 FINDING before building: mtools already has the card-sync machinery. mikemol-debtplan (debtplan/, mtools:W790) is the planning core drained from luthen's mypy_plan: plan(ledger, root, universe) derives waits from the import closure (importdag), mint(plan, queue, style) syncs one card per debt file under the tick lock (add missing, rewrite with direct waits, retire what left, a card being worked keeps its status). Per-file ledger = JSON object path to positive count. So this card is: produce that ledger from the websubset census and run mint with a portable-subset style (touches tag portable-subset), NOT a second card generator. Read debtplan.mint's style parameter first to see whether a style is a value or needs a code change.",
+      "issued_at": "2026-10-13T01:22:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W422",
+      "last_worked": "2026-10-13T01:23:06Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1078",
+      "title": "mikemol-paths-forward --tick-open: take the lock and remember the holder, then bump-blocked, check, inbound, rank and weights sync, one summary",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "kata"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 FINDING from using it: host 'katas.py tick begin' (run from mtools) took the lock as holder 'github-b3', not as this session's holder mtools-tick-opus; the stop hook then asks for --unlock mtools-tick-opus and would not match. I released github-b3 by hand and took mtools-tick-opus. The mode must REMEMBER the holder it took (state, not typed) and the kata must call it, so begin and end use one name.",
+      "issued_at": "2026-10-13T01:38:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-13T01:42:49Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1079",
+      "title": "mikemol-paths-forward --tick-close W: ledger, render, commit the state files through mikemol-commit, close only on COMMITTED, release the held lock",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "kata",
+        "commit"
+      ],
+      "blocked_on": [
+        "W1078"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 census converged (github-8f): gabion, nemik (nemik:W426), amr-skills, gcalculus, luthen typed the same close ritual by hand 15+ times. Subsumes the mikemol-commit --close request (gcalculus, amr-skills): ONE mode, no second way. close = ledger, render, stage the three state files, commit through mikemol-commit, close the card only on COMMITTED with the hash in the evidence, release the lock with the holder --tick-open took (the caller never types a holder; amr-skills got it wrong once). NOTE the host katas.py already has tick begin|end (lock, heartbeat, ledger line, W2 evidence, flush, unlock): reconcile so the kata calls this mode and there is not a second implementation.",
+      "issued_at": "2026-10-13T01:38:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-13T01:39:52Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1080",
+      "title": "--tick-close also trims the closed card from blocked_on, promotes a named next card to working, and prints the nemik warning delta by shape",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "kata"
+      ],
+      "blocked_on": [
+        "W1079"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 luthen's additions: after closing Wn, trim Wn from every dependent's blocked_on (--bump-blocked, local citations), promote a named card to working (--next Wm), print the nemik-warning delta (before and after, by shape).",
+      "issued_at": "2026-10-13T01:38:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-13T01:39:54Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1081",
+      "title": "Refuse paths-forward state writes while the repo's gate or board is running, and print why",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:38:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1082",
+      "title": "mikemol-commit prints PUSHED only after git ls-remote shows the remote main at or above the commit, else REMOTE-MISMATCH with the remote sha",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:39:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W426",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1083",
+      "title": "pycodemod mode taking FILE OLD NEW triples with an exactly-one-match assertion, for files the pycheck bar refuses to Edit",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:39:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "paperkit:W341",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1084",
+      "title": "A paperkit lock-regen, bazel shutdown and isolated commit chain as one mode",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:39:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1085",
+      "title": "pycheck --clear PATH: format, safe lint fix, then the full check, in one command",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycheck"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:39:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1086",
+      "title": "A CPU-pinned verify mode: the suite minus the hanging groups, failures diffed against HEAD",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:39:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1087",
+      "title": "mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only if clean",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pycheck"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 seed: nemik's tools/pyfmt.sh SCRATCH DEST (20 lines of POSIX sh: ruff format --stdin-filename DEST < draft > DEST.new then mv, ruff check, mypy; repo .venv python). Gaps the mode must close: (1) it writes DEST before checking, so a dirty draft leaves a dirty file: --install refuses and leaves DEST untouched; (2) mypy needs a built venv for a brand-new module; (3) it cannot place non-.py files. This is also a rail: the hand cp skips the edit gate. Used by paperkit, mtools (my scratch-lint-then-cp routine, ~10 times today), nemik, gcalculus.",
+      "issued_at": "2026-10-13T01:42:33Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-13T01:42:48Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1088",
+      "title": "mikemol-commit --wait with --message-file, and --explain printing the refusal's cause and the failing check's source",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:42:35Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1089",
+      "title": "mikemol-paths-forward --add-many and --atomize PARENT t1 t2 ...: children with enables and caused-by, parent blocked on them",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:42:36Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1090",
+      "title": "mikemol-commit --prepare: a per-repo declared regen list run in order (format, check, gen-warrants, test)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:42:37Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1091",
+      "title": "transcriptstruct filter: --tool Bash, --tail N and --field command, so a window of recent commands fits the cap",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "transcriptstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:42:39Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1092",
+      "title": "mikemol-commit intent-adds each NEW path it is named before the gate, and refuses a new file that is not named",
+      "status": "ready",
+      "enables": [
+        "amr-skills:W347"
+      ],
+      "touches": [
+        "commit",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:45:30Z",
+      "minted_during": "tick",
+      "caused_by": "amr-skills:W347",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1093",
+      "title": "pycheck chooses the project's ruff config by ruff's own precedence and prints which config and line-length drove a refusal",
+      "status": "ready",
+      "enables": [
+        "gcalculus:W262"
+      ],
+      "touches": [
+        "pycheck",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 RULING: a DEFECT (config discovery gap), not a house width. Read from the source: project_root.config_for returns the nearest pyproject.toml and pycheck_format.py passes it as ruff --config. When that pyproject has no [tool.ruff] table and a ruff.toml sits beside it (gcalculus), ruff gets the pyproject, finds no settings and formats at its default 88, while the repo's own ruff.toml says 100. Fix: choose the config by ruff's own precedence (.ruff.toml, then ruff.toml, then pyproject.toml WITH a [tool.ruff] table), and in every refusal print which config file drove the check and its line-length, so the answer is the repo's own and is visible. The mtools dists already all declare line-length = 100 in pyproject, so nothing changes for them. Do not add a fleet-wide width: a repo that declares one is obeyed. Test: a project with ruff.toml (100) and a pyproject without [tool.ruff] formats at 100 and names ruff.toml; a project with neither prints that it fell back to ruff's default.",
+      "issued_at": "2026-10-13T01:46:17Z",
+      "minted_during": "tick",
+      "caused_by": "gcalculus:W262",
+      "last_worked": "2026-10-13T01:46:25Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1094",
+      "title": "Chain census: normalise each Bash command, find recurring sequences and concurrent sets per session, print a jsonl ledger",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "transcriptstruct",
+        "kata"
+      ],
+      "blocked_on": [
+        "W1091"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 operator (via github-8f): 'now we keep an eye out for normalization opportunities', as an instrument not a hand-run research agent. Normalise each Bash command (shas, waypoint symbols, repo names, timestamps, paths become placeholders); find sequences of two or more that recur IN ORDER and sets of independent commands issued together, per session; ledger = jsonl with named fields repo, normalised chain, count, window, replaced_by (an existing mode that matches, if any). WINDOW RULE: write window = cap / rate beside the cap, since a transcript tail shorter than the interval is unobservable.",
+      "issued_at": "2026-10-13T01:57:21Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-13T01:57:30Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1095",
+      "title": "Chain census kata: run hourly, publish per-repo repeated chains as a Victoria series, mint one shared card for a chain in two repos",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "kata",
+        "transcriptstruct"
+      ],
+      "blocked_on": [
+        "W1094"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13: card feed rules: a chain recurring in two or more repos mints ONE card at mtools (the shared shape written once), a chain in one repo goes to that repo, and cards sharing a shape are blocked on it with --block-matching. The series carries the top rows as labels (luthen scrapes it).",
+      "issued_at": "2026-10-13T01:57:23Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-13T01:57:32Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

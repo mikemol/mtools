@@ -29,6 +29,7 @@ from mikemol.waldo.witness import judge
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
+    from mikemol.waldo.contract import Contract
     from mikemol.waldo.witness import Run, Witness
 
 DONE = "done"
@@ -37,8 +38,23 @@ WAITING = "waiting"
 
 
 @dataclass(frozen=True)
+class ConfirmSpec:
+    """How a point of no return is confirmed: the variable, where to read it, what to read."""
+
+    name: str
+    source: str
+    reading: Witness
+    pattern: str
+
+
+@dataclass(frozen=True)
 class Phase:
-    """One phase: what it needs, what it records, how to tell it happened, if it can be undone."""
+    """One phase: what it needs, what it records, how to tell it happened, if it can be undone.
+
+    `entry` witnesses are re-run when the phase starts (never trusted from an earlier pass),
+    `contract` is the waldo contract the phase applies (None for a phase that only records), and
+    `confirm` makes the phase wait for a confirmation read off the thing it will change.
+    """
 
     name: str
     needs: Mapping[str, str] = field(default_factory=dict)
@@ -46,6 +62,9 @@ class Phase:
     after: tuple[str, ...] = ()
     done: Witness | None = None
     point_of_no_return: bool = False
+    entry: tuple[Witness, ...] = ()
+    contract: Contract | None = None
+    confirm: ConfirmSpec | None = None
 
 
 @dataclass(frozen=True)

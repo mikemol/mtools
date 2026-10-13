@@ -736,3 +736,95 @@
             return.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_phases.py -k test_lint_finds_each_unsoundness},
 }
+
+@misc{waldo-runphase-first-phase-applies-and-writes-the-marker,
+  section = {runphase},
+  title  = {The positive control: applied once and the marker records the phase},
+  claim  = {The positive control: applied once and the marker records the phase.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_the_first_phase_applies_and_writes_the_marker},
+}
+
+@misc{waldo-runphase-phase-out-of-order-is-refused-and-leaves-no-marker,
+  section = {runphase},
+  title  = {p2 before p1: refused with the reasons, nothing applied, no marker written},
+  claim  = {p2 before p1: refused with the reasons, nothing applied, no marker written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_phase_out_of_order_is_refused_and_leaves_no_marker},
+}
+
+@misc{waldo-runphase-failed-entry-witness-refuses-and-leaves-the-marker,
+  section = {runphase},
+  title  = {The precondition is re-run at entry: not scoped now means no apply and no marker move},
+  claim  = {The precondition is re-run at entry: not scoped now means no apply and no marker move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_failed_entry_witness_refuses_and_leaves_the_marker},
+}
+
+@misc{waldo-runphase-missing-confirmation-is-refused-with-how-and-without-the-answer,
+  section = {runphase},
+  title  = {No variable: refused, the instructions name the standard command, the accessor is absent},
+  claim  = {No variable: refused, the instructions name the standard command, the accessor is
+            absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_missing_confirmation_is_refused_with_how_and_without_the_answer},
+}
+
+@misc{waldo-runphase-wrong-confirmation-is-refused-and-not-echoed,
+  section = {runphase},
+  title  = {A wrong answer: refused, nothing applied, neither value in the verdict},
+  claim  = {A wrong answer: refused, nothing applied, neither value in the verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_wrong_confirmation_is_refused_and_not_echoed},
+}
+
+@misc{waldo-runphase-right-confirmation-applies-records-a-fingerprint-and-moves-the-marker,
+  section = {runphase},
+  title  = {The point of no return runs once confirmed; only the fingerprint is reported},
+  claim  = {The point of no return runs once confirmed; only the fingerprint is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_the_right_confirmation_applies_records_a_fingerprint_and_moves_the_marker},
+}
+
+@misc{waldo-runphase-dry-run-stops-at-matches-and-never-moves-the-marker,
+  section = {runphase},
+  title  = {Dry confirms nothing is written even when everything would pass},
+  claim  = {Dry confirms nothing is written even when everything would pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_dry_run_stops_at_matches_and_never_moves_the_marker},
+}
+
+@misc{waldo-runphase-point-of-no-return-already-done-is-not-run-again,
+  section = {runphase},
+  title  = {The world shows p2 done: refused, even with the right confirmation},
+  claim  = {The world shows p2 done: refused, even with the right confirmation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_point_of_no_return_already_done_is_not_run_again},
+}
+
+@misc{waldo-runphase-contract-that-refuses-leaves-the-marker,
+  section = {runphase},
+  title  = {The pipeline's refusal (a plan outside the set) is the phase's, and the marker stays},
+  claim  = {The pipeline's refusal (a plan outside the set) is the phase's, and the marker stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_contract_that_refuses_leaves_the_marker},
+}
+
+@misc{waldo-runphase-phase-without-a-contract-only-records-its-marker,
+  section = {runphase},
+  title  = {A recording phase: no apply, state `recorded`, the marker moves},
+  claim  = {A recording phase: no apply, state `recorded`, the marker moves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_phase_without_a_contract_only_records_its_marker},
+}
+
+@misc{waldo-runphase-unknown-phase-and-an-unsound-recipe-are-cannot-run,
+  section = {runphase},
+  title  = {Exit 2 with the reason; nothing is read or written},
+  claim  = {Exit 2 with the reason; nothing is read or written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_an_unknown_phase_and_an_unsound_recipe_are_cannot_run},
+}
+
+@misc{waldo-runphase-ambiguous-marker-is-cannot-run-not-a-guess,
+  section = {runphase},
+  title  = {A marker with a repeated key stops the run before anything is read or applied},
+  claim  = {A marker with a repeated key stops the run before anything is read or applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_an_ambiguous_marker_is_cannot_run_not_a_guess},
+}
+
+@misc{waldo-runphase-marker-that-cannot-be-written-after-success-is-reported,
+  section = {runphase},
+  title  = {The world moved and the marker did not: exit 1 and a state that says so},
+  claim  = {The world moved and the marker did not: exit 1 and a state that says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_marker_that_cannot_be_written_after_success_is_reported},
+}

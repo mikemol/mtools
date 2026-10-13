@@ -37,6 +37,15 @@ src/mikemol/waldo/confirm.py|answer-is-stripped|\.removesuffix\("\\n"\)|.strip()
 src/mikemol/waldo/confirm.py|empty-answer-compared|if not given:|if False:|def=check
 src/mikemol/waldo/confirm.py|wrong-answer-accepted|if not hmac\.compare_digest|if hmac.compare_digest|def=check
 src/mikemol/waldo/confirm.py|off-shape-command-handed-out|if not matches_shape\(command\):|if False:|def=instructions
+src/mikemol/waldo/runphase.py|entry-assertion-ignored|if failed:|if False:|def=_entry
+src/mikemol/waldo/runphase.py|no-confirmation-needed|if spec is None:|if True:|def=_confirmation
+src/mikemol/waldo/runphase.py|ineligible-phase-runs|if reasons:|if False:|def=_before
+src/mikemol/waldo/runphase.py|entry-witness-skipped|if stopped is not None:|if False:|def=_before
+src/mikemol/waldo/runphase.py|dry-run-writes-the-marker|if code != EXIT_OK or dry:|if code != EXIT_OK:|def=run_phase
+src/mikemol/waldo/runphase.py|failed-phase-moves-the-marker|if code != EXIT_OK or dry:|if dry:|def=run_phase
+src/mikemol/waldo/runphase.py|marker-forgets-earlier-flags|\{\*\*\(state or \{\}\), \*\*phase\.sets\}|dict(phase.sets)|def=run_phase
+src/mikemol/waldo/runphase.py|confirmation-never-reported|if confirmed:|if False:|def=run_phase
+src/mikemol/waldo/runphase.py|unknown-phase-runs|if phase is None or findings:|if False:|def=run_phase
 src/mikemol/waldo/phases.py|point-of-no-return-rerun|if phase\.point_of_no_return and done\.get\(phase\.name, False\):|if False:|def=eligibility
 src/mikemol/waldo/phases.py|undone-predecessor-ignored|and not done\.get\(earlier, False\)|and False|def=eligibility
 src/mikemol/waldo/phases.py|marker-flags-ignored|if phase\.needs:|if False:|def=eligibility
