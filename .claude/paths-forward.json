@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1066,
+  "counter": 1069,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -17,7 +17,7 @@
   },
   "lock": {
     "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-13T00:44:15Z"
+    "taken_at": "2026-10-13T01:11:14Z"
   },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
@@ -6126,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 153,
+      "ticks_blocked": 154,
       "completed": null
     },
     {
@@ -6174,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 152,
+      "ticks_blocked": 153,
       "completed": null
     },
     {
@@ -10057,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -11803,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 91,
+      "ticks_blocked": 92,
       "completed": null
     },
     {
@@ -16155,7 +16155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16691,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17494,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -17535,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -17558,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -17981,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -18155,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -18934,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 54,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -21365,7 +21365,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 15,
+      "ticks_blocked": 16,
       "completed": null
     },
     {
@@ -21411,7 +21411,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 14,
+      "ticks_blocked": 15,
       "completed": null
     },
     {
@@ -21500,7 +21500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 14,
+      "ticks_blocked": 15,
       "completed": null
     },
     {
@@ -21587,7 +21587,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
       "last_worked": "2026-10-12T23:55:48Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -21727,7 +21727,6 @@
         "waldo"
       ],
       "blocked_on": [
-        "W1065",
         "W1066"
       ],
       "blocked_kind": "agent",
@@ -21736,7 +21735,7 @@
       "issued_at": "2026-10-12T20:21:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1053",
-      "last_worked": "2026-10-13T00:43:21Z",
+      "last_worked": "2026-10-13T01:12:03Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21805,7 +21804,7 @@
     {
       "symbol": "W1065",
       "title": "waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the thing destroyed",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1060"
       ],
@@ -21814,21 +21813,45 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-13: dd3974d [PUSHED]: waldo.confirm (issue, check, instructions, Challenge, ConfirmError); 135 waldo tests, 6 more declared defects.",
       "issued_at": "2026-10-12T23:55:11Z",
       "minted_during": "tick",
       "caused_by": "W1060",
-      "last_worked": "2026-10-13T00:43:20Z",
+      "last_worked": "2026-10-13T00:57:52Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T005752Z"
     },
     {
       "symbol": "W1066",
       "title": "waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry re-assertion and a refused re-run of a done point of no return",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1060"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1067",
+        "W1068"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-13: 2026-10-13 atomized: W1067 the pure phase model (Phase, Recipe, status, eligibility), W1068 run_phase (marker, entry witnesses, confirmation, pipeline, record the marker).",
+      "issued_at": "2026-10-12T23:55:12Z",
+      "minted_during": "tick",
+      "caused_by": "W1060",
+      "last_worked": "2026-10-13T01:12:00Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1067",
+      "title": "waldo.phases model: Phase and Recipe, status over the done-witnesses, and the pure eligibility of a phase",
+      "status": "working",
+      "enables": [
+        "W1066"
       ],
       "touches": [
         "waldo"
@@ -21837,9 +21860,51 @@
       "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "",
-      "issued_at": "2026-10-12T23:55:12Z",
+      "issued_at": "2026-10-13T01:11:51Z",
       "minted_during": "tick",
-      "caused_by": "W1060",
+      "caused_by": "W1066",
+      "last_worked": "2026-10-13T01:12:01Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1068",
+      "title": "waldo.run_phase: run one phase through marker, entry witnesses, confirmation and the pipeline, then record the marker",
+      "status": "blocked",
+      "enables": [
+        "W1066"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [
+        "W1067"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:11:53Z",
+      "minted_during": "tick",
+      "caused_by": "W1066",
+      "last_worked": "2026-10-13T01:11:59Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1069",
+      "title": "Registry check mode: a landed metric family with no row, or a row naming no panel, fails (luthen-observability:W905)",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W905"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T01:16:54Z",
+      "minted_during": "tick",
+      "caused_by": "luthen-observability:W905",
       "last_worked": null,
       "ticks_blocked": 0
     }

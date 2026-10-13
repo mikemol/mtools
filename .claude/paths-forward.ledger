@@ -1703,3 +1703,7 @@
 2026-10-12T23:55:12Z  tick  W1066 minted    -         "waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry re-assertion and a refused re-run of a done point of no return"  evidence=W1060
 2026-10-12T23:58:47Z  tick  W1063 advanced  collapse  "cassian .sh recipes read; W1060 atomized into W1063-W1066; waldo increases witness kind built (109 tests) and committing as attempt 9"
 2026-10-13T00:23:45Z  tick  W1064 advanced  mechanism "waldo.marker: write/read/parse/render/mismatches/require_standing, 123 waldo tests, 9 more declared defects, bazel //waldo green; attempt 10 running"
+2026-10-13T00:47:13Z  tick  W1065 advanced  mechanism "waldo.confirm: issue/check/instructions, 135 waldo tests, 6 more declared defects, bazel //waldo green; attempt 11 running; luthen W883 rail dormant until ~2026-10-13T20Z"
+2026-10-13T01:11:51Z  tick  W1067 minted    -         "waldo.phases model: Phase and Recipe, status over the done-witnesses, and the pure eligibility of a phase"  evidence=W1066
+2026-10-13T01:11:53Z  tick  W1068 minted    -         "waldo.run_phase: run one phase through marker, entry witnesses, confirmation and the pipeline, then record the marker"  evidence=W1066
+2026-10-13T01:16:54Z  tick  W1069 minted    -         "Registry check mode: a landed metric family with no row, or a row naming no panel, fails (luthen-observability:W905)"  evidence=luthen-observability:W905

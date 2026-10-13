@@ -37,6 +37,16 @@ src/mikemol/waldo/confirm.py|answer-is-stripped|\.removesuffix\("\\n"\)|.strip()
 src/mikemol/waldo/confirm.py|empty-answer-compared|if not given:|if False:|def=check
 src/mikemol/waldo/confirm.py|wrong-answer-accepted|if not hmac\.compare_digest|if hmac.compare_digest|def=check
 src/mikemol/waldo/confirm.py|off-shape-command-handed-out|if not matches_shape\(command\):|if False:|def=instructions
+src/mikemol/waldo/phases.py|point-of-no-return-rerun|if phase\.point_of_no_return and done\.get\(phase\.name, False\):|if False:|def=eligibility
+src/mikemol/waldo/phases.py|undone-predecessor-ignored|and not done\.get\(earlier, False\)|and False|def=eligibility
+src/mikemol/waldo/phases.py|marker-flags-ignored|if phase\.needs:|if False:|def=eligibility
+src/mikemol/waldo/phases.py|done-phase-reads-ready|if done\.get\(phase\.name, False\):|if False:|def=statuses
+src/mikemol/waldo/phases.py|waiting-reads-ready|WAITING if reasons else READY|READY|def=statuses
+src/mikemol/waldo/phases.py|repeated-name-unseen|if phase\.name in seen:|if False:|def=lint
+src/mikemol/waldo/phases.py|forward-predecessor-unseen|if earlier not in seen|if earlier in seen|def=lint
+src/mikemol/waldo/phases.py|unwitnessed-ponr-unseen|if phase\.point_of_no_return and phase\.done is None:|if False:|def=lint
+src/mikemol/waldo/phases.py|phase-without-witness-run|if phase\.done is None or not phase\.done\.argv:|if False:|def=read_done
+src/mikemol/waldo/phases.py|failed-witness-reads-done|started=started\)\.rc == 0|started=started).rc != 0|def=read_done
 src/mikemol/waldo/contract.py|unknown-key-ignored|if unknown:|if False:|def=_refuse_unknown
 src/mikemol/waldo/contract.py|repeated-name-allowed|if repeated:|if False:|def=_witnesses
 src/mikemol/waldo/contract.py|exit-only-any-type|not isinstance\(exit_only, bool\)|False|def=witness_from
