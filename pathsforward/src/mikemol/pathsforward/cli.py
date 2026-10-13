@@ -319,6 +319,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "vector_source",
             "caused_by",
             "write",
+            "exclude",
         }
     ),
     "prune_landed": frozenset({"root"}),
@@ -554,7 +555,8 @@ def _parser() -> argparse.ArgumentParser:
         nargs="+",
         metavar="SYMBOL_OR_SELECTOR",
         help="W974: the --update field flags applied to many waypoints, all or none; operands "
-        "are symbols or `unscored`; a dry run without --write",
+        "are symbols, `unscored` or `open` (every card not done; --except SYMBOL[=REASON] skips "
+        "cards and prints each reason); a dry run without --write",
     )
     mode.add_argument(
         "--certify",
@@ -1289,8 +1291,16 @@ def _update_many(ctx: Ctx) -> int:
     write = bool(ctx.opts.get("write"))
     upd = _fields_of(ctx)
 
+    skipped: dict[str, str] = {}
+    for item in ctx.many("exclude") or ():
+        name, _, reason = item.partition("=")
+        skipped[name] = reason
+
     def edit(state: State) -> int:
-        for sym in bulkblock.select_symbols(state, list(ctx.many("update_many") or ())):
+        chosen = bulkblock.select_symbols(state, list(ctx.many("update_many") or ()), skipped)
+        for sym, reason in skipped.items():
+            _say(f"EXCLUDED {sym}" + (f" ({reason})" if reason else ""))
+        for sym in chosen:
             ops.update(state, sym, upd, ctx.stamp())
             _say(f"{'UPDATED' if write else 'WOULD UPDATE'} {sym}")
         return EXIT_OK

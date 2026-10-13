@@ -4572,3 +4572,18 @@
   claim  = {Both files exist and hold the same bytes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_frontier_copy.py -k test_the_copy_is_byte_identical_to_the_frontier_module},
 }
+
+@misc{pathsforward-update-many-open-selector-takes-every-card-not-done-less-the-excluded-with-their-reasons,
+  section = {update_many},
+  title  = {W1 to W5 less W3 (done) and W2 (excluded, reason printed); W4 is taken though scored},
+  claim  = {W1 to W5 less W3 (done) and W2 (excluded, reason printed); W4 is taken though scored. W4
+            is the control against `unscored`: `open` does not look at the vector.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_the_open_selector_takes_every_card_not_done_less_the_excluded_with_their_reasons},
+}
+
+@misc{pathsforward-update-many-excluded-symbol-that-is-no-card-refuses-and-changes-nothing,
+  section = {update_many},
+  title  = {A typo in --except must not silently exclude nothing},
+  claim  = {A typo in --except must not silently exclude nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_an_excluded_symbol_that_is_no_card_refuses_and_changes_nothing},
+}

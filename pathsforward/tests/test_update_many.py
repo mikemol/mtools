@@ -122,3 +122,34 @@ def test_a_malformed_vector_refuses_and_writes_nothing(tmp_path: Path) -> None:
     argv = ["--update-many", "W1", "W5", "--vector", "WV:1/R:H", "--vector-source", "agent"]
     assert _run(path, *argv, "--write") == cli.EXIT_REFUSED
     assert path.read_bytes() == before
+
+
+def test_the_open_selector_takes_every_card_not_done_less_the_excluded_with_their_reasons(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1 to W5 less W3 (done) and W2 (excluded, reason printed); W4 is taken though scored.
+
+    ⚑ W4 is the control against `unscored`: `open` does not look at the vector.
+    """
+    path = _state(tmp_path)
+    argv = ["--update-many", "open", "--except", "W2=held on W1", "--vector", _VEC]
+    assert _run(path, *argv, "--vector-source", "signal", "--write") == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "EXCLUDED W2 (held on W1)",
+        "UPDATED W1",
+        "UPDATED W4",
+        "UPDATED W5",
+    ]
+    assert _vectors(path) == {"W1": _VEC, "W2": None, "W3": None, "W4": _VEC, "W5": _VEC}
+
+
+def test_an_excluded_symbol_that_is_no_card_refuses_and_changes_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A typo in --except must not silently exclude nothing."""
+    path = _state(tmp_path)
+    before = path.read_bytes()
+    argv = ["--update-many", "open", "--except", "W99=typo", "--vector", _VEC]
+    assert _run(path, *argv, "--vector-source", "signal", "--write") == cli.EXIT_REFUSED
+    assert path.read_bytes() == before
+    assert not capsys.readouterr().out

@@ -70,23 +70,36 @@ def plan(state: State, tag: str, target: str) -> Plan:
 
 
 UNSCORED = "unscored"
+OPEN = "open"
 
 
-def select_symbols(state: State, names: list[str]) -> list[str]:
+def select_symbols(
+    state: State, names: list[str], excluded: dict[str, str] | None = None
+) -> list[str]:
     """Expand the operands of a bulk update into waypoint symbols, in the order given.
 
     ⚑ AN OPERAND IS A SYMBOL OR A SELECTOR (mtools:W974, el-openglo:W484). `unscored` selects every
     live waypoint with no vector, which is the mechanical scoring pass el-openglo needed 24 calls
-    for. A symbol that is not a card of this queue is refused by name before anything is changed.
+    for. `open` selects every card not done (W1154), so a goal's edges are one command. A symbol
+    that is not a card of this queue is refused by name before anything is changed.
+
+    ⚑ AN EXCLUSION IS A SYMBOL OF THIS QUEUE, REFUSED OTHERWISE: a typo would silently exclude
+    nothing. The caller prints each exclusion with its reason.
 
     Returns:
-        the symbols, de-duplicated, selector expansions in queue order.
+        the symbols, de-duplicated, selector expansions in queue order, without the excluded.
 
     Raises:
-        RefusedError: when an operand is neither a selector nor a symbol of this queue.
+        RefusedError: when an operand is neither a selector nor a symbol of this queue, or an
+            excluded symbol is not a card of this queue.
 
     """
     known = {text(w, "symbol") for w in state.waypoints}
+    skipped = excluded or {}
+    for sym in skipped:
+        if sym not in known:
+            msg = f"--except {sym} is not a waypoint of this queue"
+            raise RefusedError(msg)
     chosen: list[str] = []
     for name in names:
         if name == UNSCORED:
@@ -95,12 +108,14 @@ def select_symbols(state: State, names: list[str]) -> list[str]:
                 for w in state.waypoints
                 if text(w, "status") != "done" and not text(w, "vector")
             ]
+        elif name == OPEN:
+            found = [text(w, "symbol") for w in state.waypoints if text(w, "status") != "done"]
         elif name in known:
             found = [name]
         else:
-            msg = f"{name} is neither a waypoint of this queue nor a selector ({UNSCORED})"
+            msg = f"{name} is neither a waypoint of this queue nor a selector ({UNSCORED}, {OPEN})"
             raise RefusedError(msg)
-        chosen.extend(s for s in found if s not in chosen)
+        chosen.extend(s for s in found if s not in chosen and s not in skipped)
     return chosen
 
 
