@@ -778,3 +778,38 @@
   claim  = {The detached start is handed the repo's derived ceiling, not left to the default limit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_flush_starts_each_commit_under_its_repos_ceiling},
 }
+
+@misc{katas-proctree-sum-is-the-root-and-every-descendant-and-not-the-unrelated-process,
+  section = {proctree},
+  title  = {15 + 20 + 30 + 40 = 105 ticks; the 19998-tick stranger is left out},
+  claim  = {15 + 20 + 30 + 40 = 105 ticks; the 19998-tick stranger is left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proctree.py -k test_the_sum_is_the_root_and_every_descendant_and_not_the_unrelated_process},
+}
+
+@misc{katas-proctree-seconds-are-the-ticks-over-the-tick-rate,
+  section = {proctree},
+  title  = {105 ticks at 100 per second is 1.05 s},
+  claim  = {105 ticks at 100 per second is 1.05 s.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proctree.py -k test_seconds_are_the_ticks_over_the_tick_rate},
+}
+
+@misc{katas-proctree-gone-root-is-none-not-zero,
+  section = {proctree},
+  title  = {A finished child and an idle one are different answers},
+  claim  = {A finished child and an idle one are different answers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proctree.py -k test_a_gone_root_is_none_not_zero},
+}
+
+@misc{katas-proctree-command-name-with-spaces-and-parentheses-is-read-from-the-last-parenthesis,
+  section = {proctree},
+  title  = {The fields are counted after the LAST ')', so a comm like `a (b) c` does not shift them},
+  claim  = {The fields are counted after the LAST ')', so a comm like `a (b) c` does not shift them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proctree.py -k test_a_command_name_with_spaces_and_parentheses_is_read_from_the_last_parenthesis},
+}
+
+@misc{katas-proctree-unreadable-entry-is-skipped-and-a-non-process-entry-is-ignored,
+  section = {proctree},
+  title  = {A garbled stat and a directory named `self` are left out; the rest still sums},
+  claim  = {A garbled stat and a directory named `self` are left out; the rest still sums.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proctree.py -k test_an_unreadable_entry_is_skipped_and_a_non_process_entry_is_ignored},
+}

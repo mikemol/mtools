@@ -117,3 +117,9 @@ src/mikemol/katas/cli.py|tick-note-ignored|given\.get\("--note", ""\)|""|def=_ti
 src/mikemol/katas/cli.py|commit-drops-its-arguments|\(str\(ctx\.policy\.commit_tool\), \*ctx\.args\)|(str(ctx.policy.commit_tool),)|def=_commit
 src/mikemol/katas/cli.py|archive-needs-no-letter|len\(ctx\.args\) < _ARCHIVE_MINIMUM|len(ctx.args) < 1|def=_archive
 src/mikemol/katas/cli.py|flush-skip-ignored|ctx\.args\[:1\] == \["--skip"\]|False|def=_flush
+
+# W1124: the CPU of a process tree is the root plus every live descendant, and a gone root is None.
+src/mikemol/katas/proctree.py|tree-forgets-descendants|total \+= ticks|pass|def=tree_ticks
+src/mikemol/katas/proctree.py|gone-root-reads-zero|if own is None:|if False:|def=tree_ticks
+src/mikemol/katas/proctree.py|stime-dropped|int\(fields\[_UTIME\]\) \+ int\(fields\[_STIME\]\)|int(fields[_UTIME])|def=_read
+src/mikemol/katas/proctree.py|comm-parsed-from-the-first-paren|text\.rindex\("\)"\)|text.index(")")|def=_read
