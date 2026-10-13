@@ -601,3 +601,66 @@
   claim  = {A phase that needs flags cannot start from nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_marker.py -k test_no_marker_at_all_is_one_mismatch},
 }
+
+@misc{waldo-confirm-value-read-off-the-target-confirms-and-is-reported-as-a-fingerprint,
+  section = {confirm},
+  title  = {The positive control: the accessor is accepted, and only its fingerprint comes back},
+  claim  = {The positive control: the accessor is accepted, and only its fingerprint comes back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_the_value_read_off_the_target_confirms_and_is_reported_as_a_fingerprint},
+}
+
+@misc{waldo-confirm-one-trailing-newline-is-tolerated-but-nothing-else,
+  section = {confirm},
+  title  = {A value pasted with its newline confirms; padding, case changes and a prefix do not},
+  claim  = {A value pasted with its newline confirms; padding, case changes and a prefix do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_one_trailing_newline_is_tolerated_but_nothing_else},
+}
+
+@misc{waldo-confirm-missing-or-empty-answer-says-what-to-supply-and-where-to-read-it,
+  section = {confirm},
+  title  = {No variable and an empty one both ask for the value, naming the variable and the source},
+  claim  = {No variable and an empty one both ask for the value, naming the variable and the source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_a_missing_or_empty_answer_says_what_to_supply_and_where_to_read_it},
+}
+
+@misc{waldo-confirm-no-message-carries-the-expected-or-the-supplied-value,
+  section = {confirm},
+  title  = {A refusal names the variable and the source and neither secret},
+  claim  = {A refusal names the variable and the source and neither secret.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_no_message_carries_the_expected_or_the_supplied_value},
+}
+
+@misc{waldo-confirm-reading-without-the-value-issues-no-challenge,
+  section = {confirm},
+  title  = {A confirmation nobody can check is not issued},
+  claim  = {A confirmation nobody can check is not issued.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_a_reading_without_the_value_issues_no_challenge},
+}
+
+@misc{waldo-confirm-pattern-without-a-group-issues-no-challenge,
+  section = {confirm},
+  title  = {The answer is the first group; a pattern that has none has no answer},
+  claim  = {The answer is the first group; a pattern that has none has no answer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_a_pattern_without_a_group_issues_no_challenge},
+}
+
+@misc{waldo-confirm-guessable-value-is-refused-at-issue,
+  section = {confirm},
+  title  = {A value shorter than the minimum could be guessed, so it cannot be the check},
+  claim  = {A value shorter than the minimum could be guessed, so it cannot be the check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_a_guessable_value_is_refused_at_issue},
+}
+
+@misc{waldo-confirm-instructions-name-the-variable-the-source-and-the-standard-command,
+  section = {confirm},
+  title  = {What the operator is told: where to read it, what to set, and the command to re-run},
+  claim  = {What the operator is told: where to read it, what to set, and the command to re-run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_the_instructions_name_the_variable_the_source_and_the_standard_command},
+}
+
+@misc{waldo-confirm-instructions-refuse-a-command-off-the-standard-shape,
+  section = {confirm},
+  title  = {The confirmation never hands out a command the mode would not itself build},
+  claim  = {The confirmation never hands out a command the mode would not itself build.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_confirm.py -k test_instructions_refuse_a_command_off_the_standard_shape},
+}

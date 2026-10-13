@@ -8,3 +8,4 @@ custody	secret custody
 pipeline	waldo pipeline
 cli	waldo command line and invocation shape
 marker	durable phase marker
+confirm	point-of-no-return confirmation

@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-13T00:44:15Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 152,
+      "ticks_blocked": 153,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 156,
+      "ticks_blocked": 157,
       "completed": null
     },
     {
@@ -11800,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 90,
+      "ticks_blocked": 91,
       "completed": null
     },
     {
@@ -16152,7 +16155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -17532,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -17555,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 55,
+      "ticks_blocked": 56,
       "completed": null
     },
     {
@@ -17978,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -18152,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 54,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -18931,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -21362,7 +21365,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 14,
+      "ticks_blocked": 15,
       "completed": null
     },
     {
@@ -21408,7 +21411,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 13,
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -21497,7 +21500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 13,
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -21584,7 +21587,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
       "last_worked": "2026-10-12T23:55:48Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -21724,7 +21727,6 @@
         "waldo"
       ],
       "blocked_on": [
-        "W1064",
         "W1065",
         "W1066"
       ],
@@ -21734,7 +21736,7 @@
       "issued_at": "2026-10-12T20:21:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1053",
-      "last_worked": "2026-10-13T00:14:34Z",
+      "last_worked": "2026-10-13T00:43:21Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21782,7 +21784,7 @@
     {
       "symbol": "W1064",
       "title": "waldo.marker: a durable phase marker file written atomically and read back, with per-phase assertions of standing flags",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1060"
       ],
@@ -21791,19 +21793,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-13: ac8321b [PUSHED]: waldo.marker (render, parse, write, read, mismatches, require_standing); 123 waldo tests, 9 more declared defects.",
       "issued_at": "2026-10-12T23:55:10Z",
       "minted_during": "tick",
       "caused_by": "W1060",
-      "last_worked": "2026-10-13T00:14:33Z",
+      "last_worked": "2026-10-13T00:43:19Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T004319Z"
     },
     {
       "symbol": "W1065",
       "title": "waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the thing destroyed",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1060"
       ],
@@ -21817,8 +21819,9 @@
       "issued_at": "2026-10-12T23:55:11Z",
       "minted_during": "tick",
       "caused_by": "W1060",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T00:43:20Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1066",

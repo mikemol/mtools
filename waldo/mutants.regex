@@ -31,6 +31,12 @@ src/mikemol/waldo/marker.py|absent-marker-crashes|if not path\.is_file\(\):|if F
 src/mikemol/waldo/marker.py|no-marker-unseen|if marker is None:|if False:|def=mismatches
 src/mikemol/waldo/marker.py|wrong-value-unseen|if key in marker and marker\[key\] != want|if key in marker and False|def=mismatches
 src/mikemol/waldo/marker.py|mismatch-not-refused|if problems:|if False:|def=require_standing
+src/mikemol/waldo/confirm.py|guessable-value-issued|if len\(found\.group\(1\)\) < MIN_LENGTH:|if False:|def=issue
+src/mikemol/waldo/confirm.py|groupless-pattern-issued|found is None or not found\.groups\(\)|found is None|def=issue
+src/mikemol/waldo/confirm.py|answer-is-stripped|\.removesuffix\("\\n"\)|.strip()|def=check
+src/mikemol/waldo/confirm.py|empty-answer-compared|if not given:|if False:|def=check
+src/mikemol/waldo/confirm.py|wrong-answer-accepted|if not hmac\.compare_digest|if hmac.compare_digest|def=check
+src/mikemol/waldo/confirm.py|off-shape-command-handed-out|if not matches_shape\(command\):|if False:|def=instructions
 src/mikemol/waldo/contract.py|unknown-key-ignored|if unknown:|if False:|def=_refuse_unknown
 src/mikemol/waldo/contract.py|repeated-name-allowed|if repeated:|if False:|def=_witnesses
 src/mikemol/waldo/contract.py|exit-only-any-type|not isinstance\(exit_only, bool\)|False|def=witness_from
