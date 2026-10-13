@@ -202,3 +202,9 @@ src/mikemol/hooks/pycheck_clear.py|clear-skips-the-fix|fixed = None if formatted
 src/mikemol/hooks/pycheck_clear.py|clear-writes-nothing|if after != before:|if False:|def=clear
 src/mikemol/hooks/pycheck_clear.py|clear-forgets-the-verdict|return steps\.check\(path\)|return 0|def=clear
 src/mikemol/hooks/pycheck_clear.py|unrunnable-step-checked-anyway|if after is None:|if False:|def=clear
+
+# W1110: --clear-ledger clears every ledger file and the strictest answer wins.
+src/mikemol/hooks/pycheck_clear.py|ledger-refusal-softened|if refused:|if False:|def=clear_ledger
+src/mikemol/hooks/pycheck_clear.py|ledger-unjudged-softened|return EXIT_NOT_RUN if unjudged else 0|return 0|def=clear_ledger
+src/mikemol/hooks/pycheck_clear.py|ledger-unreadable-clears-on|if listed is None:|if False:|def=clear_ledger
+src/mikemol/hooks/pycheck_clear.py|ledger-stops-at-the-first|codes = \[clear_one\(root / name\) for name in listed\]|codes = [clear_one(root / name) for name in listed[:1]]|def=clear_ledger

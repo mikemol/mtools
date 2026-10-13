@@ -433,6 +433,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_raced.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pycheck_install.py" = ["assert"]
 "tests/test_pycheck_clear.py" = ["assert"]
+"tests/test_pycheck_clear_ledger.py" = ["assert"]
 # Its witnesses make throwaway git repositories under tmp_path and run real git against them.
 "tests/test_snapshot.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

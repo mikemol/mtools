@@ -3,11 +3,11 @@
 
 state file: `.claude/paths-forward.json`
 
-counter 1109 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:f92f763592866d67`
+counter 1110 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:8b67c1c9c201f6e2`
 
 | # | symbol | status |
 |---|---|---|
-| 1 | W1085 | working |
+| 1 | W1110 | working |
 | 2 | W1007 | ready |
 | 3 | W1008 | ready |
 | 4 | W1030 | ready |
@@ -1092,17 +1092,18 @@ counter 1109 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:f92
 | 1083 | W1078 | done |
 | 1084 | W1079 | done |
 | 1085 | W1082 | done |
-| 1086 | W1087 | done |
-| 1087 | W1097 | done |
-| 1088 | W1098 | done |
-| 1089 | W1099 | done |
-| 1090 | W1101 | done |
+| 1086 | W1085 | done |
+| 1087 | W1087 | done |
+| 1088 | W1097 | done |
+| 1089 | W1098 | done |
+| 1090 | W1099 | done |
+| 1091 | W1101 | done |
 
 ## waypoints
 
-1. **W1085** (working) pycheck --clear PATH: format, safe lint fix, then the full check, in one command
-   - next: Design --clear PATH: format_text, then ruff check --fix (safe fixes only) via the project's ruff, then the
-     full check; exits 0/1/3 as --check-file
+1. **W1110** (working) mikemol-pycheck --clear-ledger ROOT: --clear over every file in the root's debt ledger, one
+   summary, the strictest status
+   - next: Landed once its commit prints COMMITTED; then tell gabion-85 the mode exists so they need not card it
 2. **W1007** (ready) Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row, replacing
    the hand-applied W881 patch
 3. **W1008** (ready) Declare ~/.config/mikemol/katas.toml as a luthen terraform/user row from a tracked source in mtools
@@ -3134,14 +3135,15 @@ counter 1109 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:f92
    mikemol-commit, close only on COMMITTED, release the held lock
 1085. **W1082** (done) mikemol-commit prints PUSHED only after git ls-remote shows the remote main at or above the
    commit, else REMOTE-MISMATCH with the remote sha
-1086. **W1087** (done) mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only
+1086. **W1085** (done) pycheck --clear PATH: format, safe lint fix, then the full check, in one command
+1087. **W1087** (done) mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only
    if clean
-1087. **W1097** (done) mikemol-commit takes the repo-mutation lease for the whole commit, reset and push, and prints the
+1088. **W1097** (done) mikemol-commit takes the repo-mutation lease for the whole commit, reset and push, and prints the
    repair when it cannot proceed
-1088. **W1098** (done) katas flush skips repos with a live session and takes the repo-mutation lease for the others
-1089. **W1099** (done) Point the host katas.py flush at the ported mikemol.katas flush so no second implementation of
+1089. **W1098** (done) katas flush skips repos with a live session and takes the repo-mutation lease for the others
+1090. **W1099** (done) Point the host katas.py flush at the ported mikemol.katas flush so no second implementation of
    the queue sync remains
-1090. **W1101** (done) Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the
+1091. **W1101** (done) Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the
    W1087 commit, attempt 15)
 
 ## residue

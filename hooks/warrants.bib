@@ -8824,3 +8824,45 @@
   claim  = {--clear with no path, or two, is the usage message.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_the_flag_takes_exactly_one_path},
 }
+
+@misc{hooks-pycheck-clear-ledger-every-file-admitted-is-exit-zero-with-the-tally,
+  section = {pycheck_clear_ledger},
+  title  = {The positive control: three admitted, exit 0, and each file was visited in order},
+  claim  = {The positive control: three admitted, exit 0, and each file was visited in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_every_file_admitted_is_exit_zero_with_the_tally},
+}
+
+@misc{hooks-pycheck-clear-ledger-one-refused-file-makes-the-whole-run-refused,
+  section = {pycheck_clear_ledger},
+  title  = {The strictest answer wins, and the later files are still cleared},
+  claim  = {The strictest answer wins, and the later files are still cleared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_one_refused_file_makes_the_whole_run_refused},
+}
+
+@misc{hooks-pycheck-clear-ledger-not-checked-file-without-a-refusal-is-exit-three-and-a-refusal-outranks-it,
+  section = {pycheck_clear_ledger},
+  title  = {3 alone is 3; 3 beside a 1 is 1},
+  claim  = {3 alone is 3; 3 beside a 1 is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_a_not_checked_file_without_a_refusal_is_exit_three_and_a_refusal_outranks_it},
+}
+
+@misc{hooks-pycheck-clear-ledger-unreadable-ledger-clears-nothing-and-is-exit-three,
+  section = {pycheck_clear_ledger},
+  title  = {No ledger: exit 3, the reason said, no file touched},
+  claim  = {No ledger: exit 3, the reason said, no file touched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_an_unreadable_ledger_clears_nothing_and_is_exit_three},
+}
+
+@misc{hooks-pycheck-clear-ledger-empty-ledger-is-clean,
+  section = {pycheck_clear_ledger},
+  title  = {A ledger naming nothing has nothing to clear: exit 0},
+  claim  = {A ledger naming nothing has nothing to clear: exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_an_empty_ledger_is_clean},
+}
+
+@misc{hooks-pycheck-clear-ledger-flag-takes-exactly-one-root,
+  section = {pycheck_clear_ledger},
+  title  = {--clear-ledger with no root, or two, is the usage message},
+  claim  = {--clear-ledger with no root, or two, is the usage message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_the_flag_takes_exactly_one_root},
+}

@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 SAFE_RULES = "I,W,COM812"
 """The ruff rules whose autofix is applied: import order, whitespace, a trailing comma."""
 
+EXIT_REFUSED = 1
 EXIT_NOT_RUN = 3
 
 
@@ -68,6 +69,39 @@ def fix_text(path: Path, text: str, err: TextIO) -> str | None:
         err.write(f"mikemol-pycheck: {path}: ruff check --fix failed: {done.stderr.strip()}\n")
         return None
     return done.stdout
+
+
+def clear_ledger(
+    root: Path,
+    names: Callable[[Path], list[str] | None],
+    clear_one: Callable[[Path], int],
+    out: TextIO,
+    err: TextIO,
+) -> int:
+    """Clear every file the root's debt ledger names, then say how many of each answer came back.
+
+    ⚑ ONE WRAPPER, NOT A SCRIPT PER REPO (gabion:W1051 ran `--clear` over ~700 files from a scratch
+    wrapper). The strictest answer wins, as in `--changed`: a refused file outranks a not-checked
+    one, which outranks a clean run, so the exit never softens.
+
+    Returns:
+        1 if any file was refused, else 3 if any went unjudged or the ledger could not be read,
+        else 0 (also when the ledger names nothing).
+
+    """
+    listed = names(root)
+    if listed is None:
+        err.write(f"mikemol-pycheck: {root}: no readable debt ledger; nothing cleared\n")
+        return EXIT_NOT_RUN
+    codes = [clear_one(root / name) for name in listed]
+    refused, unjudged = codes.count(EXIT_REFUSED), codes.count(EXIT_NOT_RUN)
+    out.write(
+        f"mikemol-pycheck: {len(codes)} ledger files: {len(codes) - refused - unjudged} admitted, "
+        f"{refused} refused, {unjudged} not checked\n"
+    )
+    if refused:
+        return EXIT_REFUSED
+    return EXIT_NOT_RUN if unjudged else 0
 
 
 def clear(path: Path, steps: Steps, out: TextIO, err: TextIO) -> int:

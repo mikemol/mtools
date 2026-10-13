@@ -64,6 +64,7 @@ CHANGED_FLAG = "--changed"
 FORMAT_FLAG = "--format"
 INSTALL_FLAG = "--install"
 CLEAR_FLAG = "--clear"
+CLEAR_LEDGER_FLAG = "--clear-ledger"
 
 # A flag and its one argument: nothing else is accepted, except --install SRC DEST.
 EXPECTED_ARGS = 2
@@ -76,7 +77,8 @@ EXIT_NOT_CHECKED = 3
 
 USAGE = (
     f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT"
-    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {CLEAR_FLAG} PATH | {INSTALL_FLAG} SRC DEST)\n"
+    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {CLEAR_FLAG} PATH | {CLEAR_LEDGER_FLAG} ROOT"
+    f" | {INSTALL_FLAG} SRC DEST)\n"
 )
 
 
@@ -261,7 +263,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args[:1] == [INSTALL_FLAG] and len(args) == INSTALL_ARGS:
         return _install_here(args)
-    if len(args) == EXPECTED_ARGS and args[0] in {FORMAT_FLAG, CLEAR_FLAG}:
+    if len(args) == EXPECTED_ARGS and args[0] in {FORMAT_FLAG, CLEAR_FLAG, CLEAR_LEDGER_FLAG}:
         return _rewrite_here(args[0], Path(args[1]).resolve())
     return _flag_here(args)
 
@@ -275,7 +277,22 @@ def _rewrite_here(flag: str, target: Path) -> int:
     """
     if flag == CLEAR_FLAG:
         return _clear_here(target)
+    if flag == CLEAR_LEDGER_FLAG:
+        return pycheck_clear.clear_ledger(
+            target, _ledger_names, _clear_here, sys.stdout, sys.stderr
+        )
     return pycheck_format.format_file(target, sys.stdout, sys.stderr)
+
+
+def _ledger_names(root: Path) -> list[str] | None:
+    """Name the files the root's debt ledger lists, in order.
+
+    Returns:
+        the ledger's keys sorted, or None when it is missing or unreadable.
+
+    """
+    ledger = pycheck_closure.read_ledger(root)
+    return None if ledger is None else sorted(ledger)
 
 
 def _flag_here(args: list[str]) -> int:
