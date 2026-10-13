@@ -140,6 +140,8 @@ _VALUED = (
     "verify",
     "lock",
     "unlock",
+    "tick_open",
+    "tick_close",
     "armed",
     "update",
     "add",
@@ -288,6 +290,8 @@ _APPLIES: dict[str, frozenset[str]] = {
     ),
     "prune_landed": frozenset({"root"}),
     "inbound": frozenset({"root", "all"}),
+    "tick_open": frozenset({"root", "exclude", "verbose"}),
+    "tick_close": frozenset({"kind", "evidence"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
     "certify": frozenset({"root", "facts"}),
@@ -474,6 +478,14 @@ def _parser() -> argparse.ArgumentParser:
         ("--verify", "HASH", "compare a payload's state_hash"),
         ("--lock", "HOLDER", "take the tick lock (exit 3 if held)"),
         ("--unlock", "HOLDER", "release the tick lock"),
+        (
+            "--tick-open",
+            "HOLDER",
+            (
+                "W1078: take the lock as HOLDER, then bump-blocked, inbound and check, and print "
+                "the close command with the same HOLDER"
+            ),
+        ),
         ("--armed", "JOB_ID", "record job_id and heartbeat"),
         ("--update", "SYMBOL", "set typed fields on a waypoint"),
         ("--add", "TITLE", "mint the next W<n> as ready"),
@@ -517,20 +529,30 @@ def _parser() -> argparse.ArgumentParser:
         help="W850: each waypoint's realizability verdict {ref, level, reference_arm, residue}, "
         "one JSON line each, judged by the pinned opa; reads, never writes",
     )
-    mode.add_argument("--drop", nargs=2, metavar=("SYMBOL", "REASON"), help="move to residue")
-    mode.add_argument(
-        "--skip",
-        nargs=2,
-        metavar=("SYMBOL", "REASON"),
-        help="W847: record a symbol the counter issued that no waypoint or residue holds",
-    )
-    mode.add_argument(
-        "--mint-residue",
-        nargs=2,
-        metavar=("SYMBOL", "GATE"),
-        help="W853: mint one claimable card from SYMBOL's residue at GATE, caused by SYMBOL; "
-        "a rerun finds the card and mints nothing",
-    )
+    # ⚑ ONE TABLE FOR THE FIXED-ARITY MODES, for the same reason as the one-value table above:
+    # `--tick-close` (W1079) is room made here, never a waiver.
+    for flag, names, text_help in (
+        ("--drop", ("SYMBOL", "REASON"), "move to residue"),
+        (
+            "--skip",
+            ("SYMBOL", "REASON"),
+            "W847: record a symbol the counter issued that no waypoint or residue holds",
+        ),
+        (
+            "--mint-residue",
+            ("SYMBOL", "GATE"),
+            (
+                "W853: mint one claimable card from SYMBOL's residue at GATE, caused by SYMBOL; "
+                "a rerun finds the card and mints nothing"
+            ),
+        ),
+        (
+            "--tick-close",
+            ("HOLDER", "SYMBOL", "OUTCOME", "MECHANISM", "NOTE"),
+            "W1079: the --ledger line, then --render, --check and --unlock HOLDER, in one verb",
+        ),
+    ):
+        mode.add_argument(flag, nargs=len(names), metavar=names, help=text_help)
     mode.add_argument(
         "--embargo",
         nargs=2,
@@ -1107,6 +1129,56 @@ def _unlock(ctx: Ctx) -> int:
         return EXIT_OK
 
     return _mutate(ctx, edit)
+
+
+def _tick_open(ctx: Ctx) -> int:
+    """Open a tick as HOLDER in one verb: take the lock, bump blocked, inbound, check (W1078).
+
+    ⚑ ONE NAME FOR BEGIN AND END. A host kata took the lock as its own holder while the stop hook
+    asked for `--unlock mtools-tick-opus`, and the two never matched. This takes the lock as the
+    holder it is given, runs the other opening steps under that same context, and ENDS by printing
+    the unlock command with the same holder, so the name is carried by the tool and not retyped.
+    A held lock stops it before any other step runs (exit 3, as `--lock`).
+
+    Returns:
+        EXIT_OK, EXIT_LOCKED when another holder has the lock, or the first failing step's status.
+
+    """
+    holder = ctx.get("tick_open") or ""
+    held = replace(ctx, opts={**ctx.opts, "lock": holder})
+    code = _lock(held)
+    if code != EXIT_OK:
+        return code
+    for step in (_bump_blocked, _inbound, _check):
+        code = max(code, step(held))
+    _say(f"tick open as {holder}; close: --ledger ..., --render, --check, --unlock {holder}")
+    return code
+
+
+def _tick_close(ctx: Ctx) -> int:
+    """Close a tick in one verb: the ledger line, the render, the check, then the unlock (W1079).
+
+    ⚑ THE UNLOCK IS NOT CONDITIONAL ON THE REST. A ledger line refused for an unlisted outcome, or
+    a check that fails, still ends the tick, and a lock nobody releases makes the next tick wait
+    it out; so the unlock runs last whatever the earlier steps did, and the first failure is the
+    status.
+
+    Returns:
+        EXIT_OK, or the first failing step's status (a refused ledger line is EXIT_REFUSED).
+
+    """
+    holder, *entry = ctx.many("tick_close") or ("", "", "", "", "")
+    closing = replace(ctx, opts={**ctx.opts, "ledger": tuple(entry), "unlock": holder})
+    code = EXIT_OK
+    try:
+        code = _ledger_mode(closing)
+    except ops.RefusedError as exc:
+        _warn(f"not ledgered: {exc}")
+        code = EXIT_REFUSED
+    for step in (_render, _check, _unlock):
+        result = step(closing)
+        code = code or result
+    return code
 
 
 def _armed(ctx: Ctx) -> int:
@@ -1884,6 +1956,8 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "check_evidence": _check_evidence,
     "lock": _lock,
     "unlock": _unlock,
+    "tick_open": _tick_open,
+    "tick_close": _tick_close,
     "armed": _armed,
     "update": _update,
     "update_many": _update_many,
