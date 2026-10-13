@@ -66,6 +66,7 @@ SHORT = 7
 EXIT_NOT_COMMITTED = 1
 TIMED_OUT = 124
 EXIT_USAGE = 2
+EXIT_RACED = 4
 FENCE_ENV = "MIKEMOL_FENCE_BIN"
 HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
 COMMIT_LIMIT_ENV = "MIKEMOL_COMMIT_TIMEOUT_S"
@@ -323,6 +324,40 @@ def published(root: Path, sha: str, run: Runner = run_git) -> str:
     return "PUSHED" if ancestor.returncode == 0 else "LOCAL: not on origin/main"
 
 
+def made_by(root: Path, request: Request, span: str, run: Runner = run_git) -> bool:
+    """Say whether a commit in `span` (a rev range) is the one `request` asked for (nemik:W428).
+
+    ⚑ HEAD MOVING IS NOT THIS RUN'S COMMIT LANDING. While an isolated gate ran, the host flush
+    committed `Queue: state sync` (Waypoint: none) and the old verdict read HEAD, saw it had moved,
+    and printed COMMITTED for the sweep's commit; the waypoint it was gating never landed. A commit
+    is this run's when its subject is the request's and it carries the request's Waypoint trailer.
+
+    Returns:
+        True when some commit in the range carries both.
+
+    """
+    listed = run(["-C", str(root), "rev-list", span]).stdout.split()
+    for sha in listed:
+        lines = run(["-C", str(root), "log", "-1", "--format=%B", sha]).stdout.splitlines()
+        if lines[:1] == [request.subject] and f"Waypoint: {request.waypoint}" in lines:
+            return True
+    return False
+
+
+def raced(root: Path, before: str, after: str, run: Runner = run_git) -> str:
+    """Say that HEAD moved to a commit this run did not make (nemik:W428).
+
+    Returns:
+        the RACED line, naming HEAD's sha and subject.
+
+    """
+    subject = run(["-C", str(root), "log", "-1", "--format=%s", after]).stdout.strip()
+    return (
+        f"RACED {root.name}: HEAD moved to {after[:SHORT]} {subject}, which this run did not make; "
+        f"its own commit did not land (HEAD was {before[:SHORT]})"
+    )
+
+
 def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git) -> str:
     """Say what a commit did, from HEAD and not from the gate's last stage.
 
@@ -367,9 +402,15 @@ def commit(
     if shown:
         out.write(f"{shown}\n")
     after = head_of(root, run)
-    out.write(f"{verdict(root, before, after, done.returncode, run)}\n")
-    if after and after != before:
-        return 0
+    moved = bool(after) and after != before
+    span = f"{before}..{after}" if before else after
+    mine = made_by(root, request, span, run) if moved else True
+    if mine:
+        out.write(f"{verdict(root, before, after, done.returncode, run)}\n")
+    else:
+        out.write(f"{raced(root, before, after, run)}\n")
+    if moved:
+        return 0 if mine else EXIT_RACED
     return done.returncode or EXIT_NOT_COMMITTED
 
 

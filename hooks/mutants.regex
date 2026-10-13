@@ -160,3 +160,17 @@ src/mikemol/hooks/work_claims_hook.py|bazel-venv-ignored|for relative in \(built
 src/mikemol/hooks/work_claims_hook.py|no-session-claims-anyway|if session is None or owner is None:|if False:|def=claim_lines
 src/mikemol/hooks/work_claims_hook.py|advice-repeats|if path\.read_text\(encoding="utf-8"\) == digest:|if False:|def=unchanged_since_last
 src/mikemol/hooks/repin_cli.py|env-par-ignored|else \(_ENV\.get\(PAR_ENV\) or None\)|else None|def=main
+src/mikemol/hooks/pycheck_install.py|link-accepted|if path\.is_symlink\(\):|if False:|def=_prepare
+src/mikemol/hooks/pycheck_install.py|python-draft-unformatted|return draft if dest\.suffix != PYTHON else gate\.format_text\(dest, draft, err\)|return draft|def=_prepare
+src/mikemol/hooks/pycheck_install.py|unprepared-draft-installed|if text is None:|if False:|def=install
+src/mikemol/hooks/pycheck_install.py|python-placed-without-the-gate|if dest\.suffix != PYTHON:|if True:|def=install
+src/mikemol/hooks/pycheck_install.py|no-verdict-installed|if ok is None:|if False:|def=install
+src/mikemol/hooks/pycheck_install.py|dirty-draft-installed|if not ok:|if False:|def=install
+
+# W1107 (nemik:W428): a moved HEAD is this run's COMMITTED only when its own commit is in the range.
+src/mikemol/hooks/commit_kata.py|raced-read-as-committed|made_by\(root, request, span, run\) if moved else True|True|def=commit
+src/mikemol/hooks/commit_kata.py|raced-exits-zero|return 0 if mine else EXIT_RACED|return 0|def=commit
+src/mikemol/hooks/commit_kata.py|subject-alone-identifies|\[request\.subject\] and f"Waypoint: \{request\.waypoint\}" in lines|[request.subject]|def=made_by
+src/mikemol/hooks/commit_kata.py|waypoint-alone-identifies|lines\[:1\] == \[request\.subject\] and |True and |def=made_by
+src/mikemol/hooks/commit_kata.py|own-commit-never-found|return True|return False|def=made_by
+src/mikemol/hooks/commit_kata.py|any-moved-head-is-ours|return False|return True|def=made_by

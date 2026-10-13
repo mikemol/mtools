@@ -76,3 +76,5 @@ wheel	Building mtools wheels at one commit
 revendor_cli	The repin --revendor mode
 work_claims	A session claiming the touches of its working card
 work_claims_hook	The work-claims context hook
+pycheck-install	install a draft only if the edit gate admits it
+commit_raced	A moved HEAD is COMMITTED only when this run's own commit is in the range; a sweep's commit landing during the gate is RACED

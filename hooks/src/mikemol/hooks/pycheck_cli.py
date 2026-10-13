@@ -40,7 +40,14 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import project_root, pycheck, pycheck_census, pycheck_closure, pycheck_format
+from mikemol.hooks import (
+    project_root,
+    pycheck,
+    pycheck_census,
+    pycheck_closure,
+    pycheck_format,
+    pycheck_install,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping, Sequence
@@ -54,9 +61,11 @@ CENSUS_FLAG = "--census"
 REFRESH_FLAG = "--refresh-ledger"
 CHANGED_FLAG = "--changed"
 FORMAT_FLAG = "--format"
+INSTALL_FLAG = "--install"
 
-# A flag and its one argument: nothing else is accepted.
+# A flag and its one argument: nothing else is accepted, except --install SRC DEST.
 EXPECTED_ARGS = 2
+INSTALL_ARGS = 3
 
 EXIT_ADMITTED = 0
 EXIT_REFUSED = 1
@@ -65,7 +74,7 @@ EXIT_NOT_CHECKED = 3
 
 USAGE = (
     f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT"
-    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH)\n"
+    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {INSTALL_FLAG} SRC DEST)\n"
 )
 
 
@@ -216,15 +225,39 @@ def _check_here(path: Path) -> int:
     return check(path, pycheck.analyze, project_root.project_for, sys.stdout, sys.stderr)
 
 
+def _install_here(args: Sequence[str]) -> int:
+    """Install a draft with the real gate and formatter and the standard streams.
+
+    Returns:
+        the exit code from `pycheck_install.install`.
+
+    """
+    gate = pycheck_install.Gate(pycheck.analyze, pycheck_format.format_text)
+    src, dest = Path(args[1]).resolve(), Path(args[2]).absolute()
+    return pycheck_install.install(src, dest, gate, sys.stdout, sys.stderr)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Parse one flag and its argument and print or write the gate's answer.
 
     Returns:
-        the exit code from `check`, `census` or `refresh`, or EXIT_USAGE for anything but exactly
-        one known flag and its argument.
+        the exit code from `check`, `census`, `refresh` or `install`, or EXIT_USAGE for anything
+        but exactly one known flag and its arguments.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
+    if args[:1] == [INSTALL_FLAG] and len(args) == INSTALL_ARGS:
+        return _install_here(args)
+    return _flag_here(args)
+
+
+def _flag_here(args: list[str]) -> int:
+    """Run the one-argument flags.
+
+    Returns:
+        the exit code from `check`, `census`, `refresh` or `check_changed`, or EXIT_USAGE.
+
+    """
     known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG, FORMAT_FLAG}
     if len(args) != EXPECTED_ARGS or args[0] not in known:
         sys.stderr.write(USAGE)

@@ -32,6 +32,32 @@ EXIT_FORMATTED = 0
 EXIT_NOT_RUN = 3
 
 
+def format_text(path: Path, text: str, err: TextIO) -> str | None:
+    """Format `text` as its project's `ruff format` would if it were the content of `path`.
+
+    `path` need not exist yet: the project is the nearest one upward of it, and the file's content
+    is fed on stdin under `--stdin-filename`, so a draft is formatted for the place it is going.
+
+    Returns:
+        the formatted text, or None (the reason on `err`) when `path` has no governing project or
+        interpreter or the formatter failed.
+
+    """
+    root = project_root.project_for(str(path))
+    venv_py = project_root.venv_python_for(str(path))
+    if root is None or venv_py is None:
+        err.write(f"mikemol-pycheck: {path}: no governing project or interpreter; not formatted\n")
+        return None
+    cfg = root / project_root.MARKER
+    argv = [str(venv_py), "-m", "ruff", "format", "--config", str(cfg), "--no-cache"]
+    argv += ["--force-exclude", "--stdin-filename", str(path), "-"]
+    done = subprocess.run(argv, input=text, capture_output=True, text=True, check=False, cwd=root)
+    if done.returncode != 0:
+        err.write(f"mikemol-pycheck: {path}: ruff format failed: {done.stderr.strip()}\n")
+        return None
+    return done.stdout
+
+
 def format_file(path: Path, out: TextIO, err: TextIO) -> int:
     """Rewrite `path` as its project's `ruff format` would, when that changes it.
 
@@ -40,26 +66,17 @@ def format_file(path: Path, out: TextIO, err: TextIO) -> int:
         read, has no governing project or interpreter, or the formatter failed.
 
     """
-    root = project_root.project_for(str(path))
-    venv_py = project_root.venv_python_for(str(path))
-    if root is None or venv_py is None:
-        err.write(f"mikemol-pycheck: {path}: no governing project or interpreter; not formatted\n")
-        return EXIT_NOT_RUN
     try:
         before = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as problem:
         err.write(f"mikemol-pycheck: {path}: cannot be read ({problem}); not formatted\n")
         return EXIT_NOT_RUN
-    cfg = root / project_root.MARKER
-    argv = [str(venv_py), "-m", "ruff", "format", "--config", str(cfg), "--no-cache"]
-    argv += ["--force-exclude", "--stdin-filename", str(path), "-"]
-    done = subprocess.run(argv, input=before, capture_output=True, text=True, check=False, cwd=root)
-    if done.returncode != 0:
-        err.write(f"mikemol-pycheck: {path}: ruff format failed: {done.stderr.strip()}\n")
+    after = format_text(path, before, err)
+    if after is None:
         return EXIT_NOT_RUN
-    if done.stdout == before:
+    if after == before:
         out.write(f"mikemol-pycheck: {path}: already formatted\n")
         return EXIT_FORMATTED
-    path.write_text(done.stdout, encoding="utf-8")
+    path.write_text(after, encoding="utf-8")
     out.write(f"mikemol-pycheck: {path}: formatted\n")
     return EXIT_FORMATTED

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1106,
+  "counter": 1108,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 159,
+      "ticks_blocked": 161,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 160,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 165,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 97,
+      "ticks_blocked": 99,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 64,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 64,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 62,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22058,7 +22058,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22100,7 +22100,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:52Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22122,7 +22122,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22390,7 +22390,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -22412,7 +22412,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -22465,16 +22465,15 @@
         "commit"
       ],
       "blocked_on": [
-        "W1105",
-        "W1106"
+        "W1097"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "Commit the liveness unit (one attempt), then the gate-time ceiling (MIKEMOL_COMMIT_TIMEOUT_S from measured gate time), then lease once W1097 lands",
+      "next_bounded_step": "The live-session skip and the ceiling landed (f3ed1fe, a9b3b78); the repo-mutation lease around the commit is W1097's",
       "evidence": "2026-10-13: 2026-10-13 github-8f: the host katas.py flush is a CONFIRMED FLAKE reported by two repos (mtools attempt 13 index.lock; el-openglo:W74 staged-directory gate refused: 'ln: ... .gate-outcomes.tsv: File exists'), therefore a blocker per the flakes rule. Root cause read from the sources: ~/github/.claude/katas/katas.py line 156 builds a raw 'git commit -m <msg> -- <paths>' argv and flush() (line 259) starts it with 'Queue: state sync' in every repo whose index.lock is absent AT THAT INSTANT (a check-then-act race, not a mutex), taking no repo lock and no isolated path. mtools' PORT (katas/src/mikemol/katas/fleet.py, W796/W875) already starts mikemol-commit via commits.commit_argv, but still guards only with in_flight() (index.lock exists) and the Fleet.skip_flush list. THIS CARD (smallest first): (a) skip any repo with a live session (they commit their own queue through mikemol-commit; only repos with no session need the sync), (b) take the repo-mutation lease (fence/membudget, total 1) for the rest, around the whole commit. Live-session detection is the open question: skip_flush is a caller-supplied list today; options are the session-claims registry (work_claims_hook) or the tick lock holder in the queue.",
       "issued_at": "2026-10-13T02:51:12Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T06:41:17Z",
+      "last_worked": "2026-10-13T07:19:01Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -22497,7 +22496,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T02:51:25Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -22591,7 +22590,7 @@
     {
       "symbol": "W1105",
       "title": "katas waiter takes --timeout S and writes the child's elapsed seconds beside the log (LOG.seconds) when the child ends 0",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1098",
         "W1106"
@@ -22599,33 +22598,70 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T06:41:12Z",
       "minted_during": "tick",
       "caused_by": "W1098",
-      "last_worked": "2026-10-13T06:41:16Z",
+      "last_worked": "2026-10-13T07:15:18Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T071518Z"
     },
     {
       "symbol": "W1106",
       "title": "katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch (floor and cap), via the waiter --timeout",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1098"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Landed once its commit prints COMMITTED; then tell github-8f the flush ceiling is in and the lease waits on W1097",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T06:41:13Z",
       "minted_during": "tick",
       "caused_by": "W1098",
-      "last_worked": "2026-10-13T07:12:15Z",
+      "last_worked": "2026-10-13T07:19:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261013T071901Z"
+    },
+    {
+      "symbol": "W1107",
+      "title": "mikemol-commit prints COMMITTED only when the commit it made is in HEAD's ancestry, else RACED with HEAD's sha and subject (non-zero), with a test where a second committer lands during the gate",
+      "status": "working",
+      "enables": [
+        "W1082"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read commit_kata verdict path: compare the sha mikemol-commit created against HEAD ancestry; RACED branch; test with a second committer",
+      "evidence": "",
+      "issued_at": "2026-10-13T07:15:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W428",
+      "last_worked": "2026-10-13T07:15:25Z",
       "ticks_blocked": 0,
       "completed": null
+    },
+    {
+      "symbol": "W1108",
+      "title": "mikemol-commit leaves the real index matching the new HEAD for the paths it committed (nemik measured it stale after a clean isolated commit), printing what it refreshed, with a test where another path stays staged",
+      "status": "ready",
+      "enables": [
+        "W1107"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T07:28:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W428",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

@@ -8570,3 +8570,94 @@
   claim  = {Publishing adds wheels beside what is there and removes nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_an_existing_output_directory_keeps_its_own_files},
 }
+
+@misc{hooks-pycheck-install-clean-draft-is-formatted-judged-as-dest-and-placed,
+  section = {pycheck-install},
+  title  = {The positive control: the formatted text is judged under DEST's name, then written},
+  claim  = {The positive control: the formatted text is judged under DEST's name, then written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_a_clean_draft_is_formatted_judged_as_dest_and_placed},
+}
+
+@misc{hooks-pycheck-install-refused-draft-prints-the-whole-report-and-leaves-dest-untouched,
+  section = {pycheck-install},
+  title  = {Exit 1 and the report; an existing DEST keeps its bytes and no temporary file is left},
+  claim  = {Exit 1 and the report; an existing DEST keeps its bytes and no temporary file is left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_a_refused_draft_prints_the_whole_report_and_leaves_dest_untouched},
+}
+
+@misc{hooks-pycheck-install-refused-draft-does-not-create-dest,
+  section = {pycheck-install},
+  title  = {A new DEST that would be dirty is never created, not even its directory},
+  claim  = {A new DEST that would be dirty is never created, not even its directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_a_refused_draft_does_not_create_dest},
+}
+
+@misc{hooks-pycheck-install-no-verdict-is-not-checked-and-writes-nothing,
+  section = {pycheck-install},
+  title  = {The gate could not judge: exit 3, the reason on stderr, DEST absent},
+  claim  = {The gate could not judge: exit 3, the reason on stderr, DEST absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_no_verdict_is_not_checked_and_writes_nothing},
+}
+
+@misc{hooks-pycheck-install-no-formatter-is-not-checked-and-the-gate-is-never-asked,
+  section = {pycheck-install},
+  title  = {A draft that cannot be formatted for its place is not judged unformatted},
+  claim  = {A draft that cannot be formatted for its place is not judged unformatted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_no_formatter_is_not_checked_and_the_gate_is_never_asked},
+}
+
+@misc{hooks-pycheck-install-unreadable-draft-is-not-checked,
+  section = {pycheck-install},
+  title  = {A missing SRC: exit 3 naming it, nothing written},
+  claim  = {A missing SRC: exit 3 naming it, nothing written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_an_unreadable_draft_is_not_checked},
+}
+
+@misc{hooks-pycheck-install-non-python-file-is-placed-without-the-gate-and-says-so,
+  section = {pycheck-install},
+  title  = {The edit gate judges Python only: a .toml is copied, the gate and formatter never run},
+  claim  = {The edit gate judges Python only: a .toml is copied, the gate and formatter never run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_a_non_python_file_is_placed_without_the_gate_and_says_so},
+}
+
+@misc{hooks-pycheck-install-link-is-refused-for-the-draft-the-file-and-its-directory,
+  section = {pycheck-install},
+  title  = {The guard refuses a path it is told is a link; none is created to test it},
+  claim  = {The guard refuses a path it is told is a link; none is created to test it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_a_link_is_refused_for_the_draft_the_file_and_its_directory},
+}
+
+@misc{hooks-pycheck-install-flag-takes-exactly-two-paths,
+  section = {pycheck-install},
+  title  = {--install with one path, or three, is the usage message, not an install},
+  claim  = {--install with one path, or three, is the usage message, not an install.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_install.py -k test_the_flag_takes_exactly_two_paths},
+}
+
+@misc{hooks-commit-raced-sweep-that-lands-during-the-gate-is-raced-not-committed,
+  section = {commit_raced},
+  title  = {HEAD moved, but to the sweep's commit: RACED with HEAD's subject, and a non-zero exit},
+  claim  = {HEAD moved, but to the sweep's commit: RACED with HEAD's subject, and a non-zero exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_a_sweep_that_lands_during_the_gate_is_raced_not_committed},
+}
+
+@misc{hooks-commit-raced-commit-with-our-subject-but-another-waypoint-is-raced,
+  section = {commit_raced},
+  title  = {The subject alone does not identify a run's commit: the Waypoint trailer must match too},
+  claim  = {The subject alone does not identify a run's commit: the Waypoint trailer must match too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_a_commit_with_our_subject_but_another_waypoint_is_raced},
+}
+
+@misc{hooks-commit-raced-same-request-with-no-second-committer-is-committed,
+  section = {commit_raced},
+  title  = {The positive control: nothing raced, so the verdict is COMMITTED and the exit is 0},
+  claim  = {The positive control: nothing raced, so the verdict is COMMITTED and the exit is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_the_same_request_with_no_second_committer_is_committed},
+}
+
+@misc{hooks-commit-raced-our-commit-beneath-a-later-one-is-still-committed,
+  section = {commit_raced},
+  title  = {A commit this run made, with a sweep then sitting on top of it, is found in the range},
+  claim  = {A commit this run made, with a sweep then sitting on top of it, is found in the range.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_our_commit_beneath_a_later_one_is_still_committed},
+}
