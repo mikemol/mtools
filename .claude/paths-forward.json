@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1102,
+  "counter": 1106,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -17,7 +17,7 @@
   },
   "lock": {
     "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-13T06:27:02Z"
+    "taken_at": "2026-10-13T06:40:43Z"
   },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
@@ -6126,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -6174,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 156,
+      "ticks_blocked": 157,
       "completed": null
     },
     {
@@ -10057,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -11803,7 +11803,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 95,
+      "ticks_blocked": 96,
       "completed": null
     },
     {
@@ -16155,7 +16155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16691,7 +16691,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17494,7 +17494,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -17535,7 +17535,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -17558,7 +17558,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -17981,7 +17981,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 62,
       "completed": null
     },
     {
@@ -18155,7 +18155,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 60,
       "completed": null
     },
     {
@@ -18934,7 +18934,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 58,
+      "ticks_blocked": 59,
       "completed": null
     },
     {
@@ -21365,7 +21365,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 19,
+      "ticks_blocked": 20,
       "completed": null
     },
     {
@@ -21411,7 +21411,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -21500,7 +21500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -21955,7 +21955,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -21978,7 +21978,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -21999,7 +21999,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -22039,7 +22039,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -22061,7 +22061,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -22103,7 +22103,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:52Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -22125,7 +22125,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -22243,19 +22243,19 @@
     {
       "symbol": "W1087",
       "title": "mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only if clean",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "pycheck"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "Re-attempt the commit (one attempt) once W1101 shards test_commit_isolated; hooks mutants grid not yet run",
       "evidence": "2026-10-13: 2026-10-13 seed: nemik's tools/pyfmt.sh SCRATCH DEST (20 lines of POSIX sh: ruff format --stdin-filename DEST < draft > DEST.new then mv, ruff check, mypy; repo .venv python). Gaps the mode must close: (1) it writes DEST before checking, so a dirty draft leaves a dirty file: --install refuses and leaves DEST untouched; (2) mypy needs a built venv for a brand-new module; (3) it cannot place non-.py files. This is also a rail: the hand cp skips the edit gate. Used by paperkit, mtools (my scratch-lint-then-cp routine, ~10 times today), nemik, gcalculus.",
       "issued_at": "2026-10-13T01:42:33Z",
       "minted_during": "tick",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T02:40:40Z",
+      "last_worked": "2026-10-13T06:29:44Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -22393,7 +22393,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -22415,7 +22415,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -22461,20 +22461,23 @@
     {
       "symbol": "W1098",
       "title": "katas flush skips repos with a live session and takes the repo-mutation lease for the others",
-      "status": "working",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "kata",
         "commit"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1105",
+        "W1106"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Commit the liveness unit (one attempt), then the gate-time ceiling (MIKEMOL_COMMIT_TIMEOUT_S from measured gate time), then lease once W1097 lands",
       "evidence": "2026-10-13: 2026-10-13 github-8f: the host katas.py flush is a CONFIRMED FLAKE reported by two repos (mtools attempt 13 index.lock; el-openglo:W74 staged-directory gate refused: 'ln: ... .gate-outcomes.tsv: File exists'), therefore a blocker per the flakes rule. Root cause read from the sources: ~/github/.claude/katas/katas.py line 156 builds a raw 'git commit -m <msg> -- <paths>' argv and flush() (line 259) starts it with 'Queue: state sync' in every repo whose index.lock is absent AT THAT INSTANT (a check-then-act race, not a mutex), taking no repo lock and no isolated path. mtools' PORT (katas/src/mikemol/katas/fleet.py, W796/W875) already starts mikemol-commit via commits.commit_argv, but still guards only with in_flight() (index.lock exists) and the Fleet.skip_flush list. THIS CARD (smallest first): (a) skip any repo with a live session (they commit their own queue through mikemol-commit; only repos with no session need the sync), (b) take the repo-mutation lease (fence/membudget, total 1) for the rest, around the whole commit. Live-session detection is the open question: skip_flush is a caller-supplied list today; options are the session-claims registry (work_claims_hook) or the tick lock holder in the queue.",
       "issued_at": "2026-10-13T02:51:12Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T06:27:32Z",
+      "last_worked": "2026-10-13T06:41:17Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -22497,7 +22500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T02:51:25Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -22553,6 +22556,76 @@
       "issued_at": "2026-10-13T06:26:16Z",
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W259",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1103",
+      "title": "waldo cli.main takes a command callable of the set name, so a consumer need not pre-read --set from argv",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T06:29:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W902",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1104",
+      "title": "docs/repinning.md: mikemol-wheel's ignored vendor/wheels/.gitignore makes an isolated commit refuse a NEW wheel, and a library wheel must also be a hashed hermetic input of the consumer's bazel rung",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T06:29:50Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W902",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1105",
+      "title": "katas waiter takes --timeout S and writes the child's elapsed seconds beside the log (LOG.seconds) when the child ends 0",
+      "status": "working",
+      "enables": [
+        "W1098",
+        "W1106"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T06:41:12Z",
+      "minted_during": "tick",
+      "caused_by": "W1098",
+      "last_worked": "2026-10-13T06:41:16Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1106",
+      "title": "katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch (floor and cap), via the waiter --timeout",
+      "status": "ready",
+      "enables": [
+        "W1098"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T06:41:13Z",
+      "minted_during": "tick",
+      "caused_by": "W1098",
       "last_worked": null,
       "ticks_blocked": 0
     }

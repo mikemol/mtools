@@ -1743,3 +1743,9 @@
 2026-10-13T03:07:54Z  interrupt W1100 minted    -         "bazel admit chooses the sandbox base and job count at launch from live headroom, so the home rc carries no sandbox_base"  evidence=gcalculus:W263
 2026-10-13T06:26:16Z  interrupt W1101 minted    -         "Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the W1087 commit, attempt 15)"  evidence=W1087
 2026-10-13T06:26:16Z  interrupt W1102 minted    -         "Answer gcalculus:W259: Promotion candidate for mtools: scripts/after_leaf_change.sh (snapshot, arms bazel)"  evidence=gcalculus:W259
+2026-10-13T06:28:01Z  tick  W1098 advanced  unblock   "Liveness unit (fresh tick lock / gate-red card skip) built and green under bazel; commit in flight; ceiling and lease remain; W1101/W1102 minted, W1090 schema noted"
+2026-10-13T06:29:49Z  interrupt W1103 minted    -         "waldo cli.main takes a command callable of the set name, so a consumer need not pre-read --set from argv"  evidence=luthen-observability:W902
+2026-10-13T06:29:50Z  interrupt W1104 minted    -         "docs/repinning.md: mikemol-wheel's ignored vendor/wheels/.gitignore makes an isolated commit refuse a NEW wheel, and a library wheel must also be a hashed hermetic input of the consumer's bazel rung"  evidence=luthen-observability:W902
+2026-10-13T06:41:12Z  tick  W1105 minted    -         "katas waiter takes --timeout S and writes the child's elapsed seconds beside the log (LOG.seconds) when the child ends 0"  evidence=W1098
+2026-10-13T06:41:13Z  tick  W1106 minted    -         "katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch (floor and cap), via the waiter --timeout"  evidence=W1098
+2026-10-13T06:42:37Z  tick  W1105 advanced  unblock   "waiter --timeout S and LOG.seconds built, 14 tests green; W1105/W1106 minted from W1098 (ceiling split); commit in flight"

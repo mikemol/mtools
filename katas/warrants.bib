@@ -701,3 +701,38 @@
             in.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_held.py -k test_a_repo_with_a_live_session_or_a_red_gate_is_not_a_target},
 }
+
+@misc{katas-waiter-seconds-clean-run-leaves-the-seconds-it-took,
+  section = {waiter_seconds},
+  title  = {The seconds file beside the log holds one non-negative number},
+  claim  = {The seconds file beside the log holds one non-negative number.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_seconds.py -k test_a_clean_run_leaves_the_seconds_it_took},
+}
+
+@misc{katas-waiter-seconds-failed-run-leaves-no-seconds,
+  section = {waiter_seconds},
+  title  = {Only a passing gate is a measure of the gate},
+  claim  = {Only a passing gate is a measure of the gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_seconds.py -k test_a_failed_run_leaves_no_seconds},
+}
+
+@misc{katas-waiter-seconds-timeout-flag-reaches-the-run-and-a-timeout-leaves-no-seconds,
+  section = {waiter_seconds},
+  title  = {A 30 s sleep under `--timeout 0.2` ends as 124 from the command line},
+  claim  = {A 30 s sleep under `--timeout 0.2` ends as 124 from the command line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_seconds.py -k test_the_timeout_flag_reaches_the_run_and_a_timeout_leaves_no_seconds},
+}
+
+@misc{katas-waiter-seconds-split-timeout-peels-a-leading-pair-and-otherwise-leaves-the-argv,
+  section = {waiter_seconds},
+  title  = {A good value is taken; none leaves the argv and the default},
+  claim  = {A good value is taken; none leaves the argv and the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_seconds.py -k test_split_timeout_peels_a_leading_pair_and_otherwise_leaves_the_argv},
+}
+
+@misc{katas-waiter-seconds-bad-timeout-value-falls-back-to-the-default-limit,
+  section = {waiter_seconds},
+  title  = {A word, zero or a negative is not a limit: the default stands, the pair is still peeled},
+  claim  = {A word, zero or a negative is not a limit: the default stands, the pair is still peeled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_seconds.py -k test_a_bad_timeout_value_falls_back_to_the_default_limit},
+}

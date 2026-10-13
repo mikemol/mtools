@@ -57,6 +57,11 @@ src/mikemol/katas/liveness.py|holderless-lock-is-live|not holder or not isinstan
 src/mikemol/katas/liveness.py|closed-gate-card-still-holds|card\.get\("status"\) not in _CLOSED|True|def=is_red
 src/mikemol/katas/liveness.py|lock-never-holds|taken is not None and|False and|def=is_live
 
+# W1105: only a passing child leaves seconds; the flag sets the limit; a bad value is the default.
+src/mikemol/katas/waiter.py|seconds-left-by-a-failure|if status == 0:|if True:|def=run
+src/mikemol/katas/waiter.py|timeout-flag-ignored|removals, limit\)|removals)|def=main
+src/mikemol/katas/waiter.py|bad-limit-accepted|\(limit if limit > 0 else TIMEOUT_S\)|(limit)|def=split_timeout
+
 # The probe holds the real index locked while the hook runs, as a real commit does.
 src/mikemol/katas/fleet.py|probe-does-not-hold-the-lock|held\.touch\(\)|pass|def=probe
 
