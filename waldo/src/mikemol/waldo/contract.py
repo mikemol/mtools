@@ -45,6 +45,7 @@ WITNESS_KEYS = frozenset(
         "must_contain",
         "must_match",
         "advances",
+        "increases",
         "fresh_since",
         "exit_only",
     }
@@ -150,6 +151,7 @@ def witness_from(value: object, where: str) -> Witness:
         must_contain=_texts(fields.get("must_contain"), f"{where}.must_contain"),
         must_match=_texts(fields.get("must_match"), f"{where}.must_match"),
         advances=_texts(fields.get("advances"), f"{where}.advances"),
+        increases=_texts(fields.get("increases"), f"{where}.increases"),
         fresh_since=_texts(fields.get("fresh_since"), f"{where}.fresh_since"),
         exit_only=exit_only,
     )
@@ -222,6 +224,7 @@ def has_condition(witness: Witness) -> bool:
         or witness.must_contain
         or witness.must_match
         or witness.advances
+        or witness.increases
         or witness.fresh_since
     )
 

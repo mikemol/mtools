@@ -97,6 +97,36 @@ the shared mode:
 Also adopted from the design: carry the COMPLETE var set on every apply (our `plan_env`), never rely on
 committed defaults; assert a standing flag at the top of every phase it must hold (their OQ-2).
 
+## What cassian's .sh recipes add (read 2026-10-12: `openbao-vault-apply.sh`, `vault-apply.d/00-lib.sh`,
+`81-p8-revoke.sh`; the other fragments and stage-a.d are not read)
+
+The recipe layer (W1060) is concrete in these files:
+
+1. **One phase per invocation.** The driver sources every fragment and dispatches `status | guard | p0..p10`:
+   "run ONE phase at a time". `status` reads the world and says which phase is done; `guard` runs the
+   clean-start refusals alone. A run is never "all phases".
+2. **The durable phase marker is a file the recipe writes** (`write_tfvars`: the five gate variables) and
+   reads back (`tfvar`), not a re-derived judgement; each phase begins by ASSERTING the standing flags it
+   needs (`assert_deploy_renewer_true`, `assert_tpm_unseal_true`) and refuses when the marker disagrees.
+3. **The point-of-no-return confirmation is a challenge-response, not a y/n.** P8 requires
+   `P8_CONFIRM_REVOKE=<the genesis root's accessor>`: a value read off the very thing about to be destroyed,
+   so only someone who looked can supply it. The waldo confirmation token is therefore a *named reading* the
+   operator must reproduce, not a typed phrase.
+4. **Entry re-assertion.** P8 re-reads the token's policies (scoped, not root) and re-proves the renewer
+   heartbeat at its own entry; it does not trust P5's earlier pass.
+5. **A code-contract witness.** P8 greps the *comment-stripped* deployed fragments for the code that makes
+   the phase safe (`revoke -accessor`, reads the genesis Secret, confirm-dead lookup, a replay-gating
+   helper). If the code is absent the phase halts with the named residue: "authored to its constructible
+   floor". A phase may exist and refuse until its precondition is in the source, saying exactly what is
+   missing; comments are stripped so the check cannot match prose that describes the bug.
+6. **`advances` is a strictly-greater numeric comparison, with a mangled-read refusal.**
+   `witness_renewer_heartbeat` requires the heartbeat `ts` to be numeric before AND after and the after
+   value to be strictly greater, refusing a non-numeric read rather than reasoning about it. W1057's
+   `advances` is "differs"; a numeric `increases` kind is W1063.
+7. **A failure inside a witness is distinguished from a failed condition.** A Job that did not complete in
+   120 s is a warning while the heartbeat advance is "the real witness": the witness that matters is
+   named, and weaker signals are demoted to notes.
+
 ## Cards (atomized)
 
 W1053 stays the umbrella. Children are minted from this note; each is one landable unit with its own

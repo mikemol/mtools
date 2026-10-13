@@ -108,6 +108,27 @@ def test_advances_is_unmet_without_a_pre_act_reading() -> None:
     )
 
 
+def test_increases_needs_a_number_strictly_above_the_pre_act_reading() -> None:
+    """A heartbeat that moved up passes; equal and lower do not; a standing value is refused."""
+    w = Witness("hb", ("hb",), increases=(r"ts=(\d+)",))
+    assert judge(w, 0, "ts=12", before="ts=11").rc == 0
+    equal = judge(w, 0, "ts=11", before="ts=11")
+    assert equal.unmet == (r"increases ts=(\d+): 11 is not above 11",)
+    lower = judge(w, 0, "ts=10", before="ts=11")
+    assert lower.unmet == (r"increases ts=(\d+): 10 is not above 11",)
+
+
+def test_increases_refuses_a_mangled_read_and_a_missing_pre_act_reading() -> None:
+    """A non-number on either side is refused, not reasoned about; no pre-act reading is unmet."""
+    w = Witness("hb", ("hb",), increases=(r"ts=(\w+)",))
+    after_bad = judge(w, 0, "ts=soon", before="ts=11")
+    assert after_bad.unmet == (r"increases ts=(\w+): not a number before and after",)
+    before_bad = judge(w, 0, "ts=12", before="ts=then")
+    assert before_bad.unmet == (r"increases ts=(\w+): not a number before and after",)
+    missing = judge(w, 0, "ts=12")
+    assert missing.unmet == (r"increases ts=(\w+): no pre-act reading",)
+
+
 def test_fresh_since_needs_a_time_at_or_after_the_start() -> None:
     """A heartbeat from this run passes; a stale one, an unreadable one and no start do not."""
     w = _witness(fresh_since=(r"ts=(\d+)",))
@@ -168,6 +189,13 @@ def test_a_witness_with_no_argv_fails_with_exit_two() -> None:
     """A declared witness that names no command is a failure, not a skipped check."""
     results = run_all([Witness("empty", ())], _Runner({}))
     assert (results[0].rc, results[0].unmet) == (_TWO, ("no argv",))
+
+
+def test_capture_before_also_reads_a_witness_that_declares_increases() -> None:
+    """The pre-act reading is taken for `increases` witnesses as it is for `advances`."""
+    rising = Witness("rising", ("r",), increases=(r"n=(\d+)",))
+    runner = _Runner({"r": [(0, "n=1")]})
+    assert capture_before([rising], runner) == {"rising": "n=1"}
 
 
 def test_capture_before_reads_only_witnesses_that_advance_and_feeds_run_all() -> None:

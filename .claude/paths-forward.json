@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1062,
+  "counter": 1066,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-12T23:33:05Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6126,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 150,
+      "ticks_blocked": 151,
       "completed": null
     },
     {
@@ -6174,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -10057,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "completed": null
     },
     {
@@ -11803,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 88,
+      "ticks_blocked": 89,
       "completed": null
     },
     {
@@ -16155,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-09T13:43:33Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16691,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17494,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -17535,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -17558,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 54,
       "completed": null
     },
     {
@@ -17981,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-09T13:40:51Z",
-      "ticks_blocked": 54,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -18155,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 52,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -18934,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 52,
       "completed": null
     },
     {
@@ -21365,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -21411,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -21500,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 11,
+      "ticks_blocked": 12,
       "completed": null
     },
     {
@@ -21578,7 +21575,6 @@
         "fleet"
       ],
       "blocked_on": [
-        "W1059",
         "W1060"
       ],
       "blocked_kind": "agent",
@@ -21587,7 +21583,7 @@
       "issued_at": "2026-10-12T19:58:44Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W889",
-      "last_worked": "2026-10-12T23:33:06Z",
+      "last_worked": "2026-10-12T23:55:48Z",
       "ticks_blocked": 1,
       "completed": null
     },
@@ -21699,7 +21695,7 @@
     {
       "symbol": "W1059",
       "title": "waldo.pipeline and CLI: plan, compare, apply the same artifact, witness, one JSON verdict line; exits 0, 1 and 2",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1053"
       ],
@@ -21707,15 +21703,15 @@
         "waldo"
       ],
       "blocked_on": [],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Emit and test the standard invocation shape: env -C <repo> <abs interpreter> -m mikemol.waldo --contract <name>; test over the printed line.",
-      "evidence": "2026-10-12: 2026-10-12 operator note via github-8f: the permission auto-classifier fires on SHAPE and will probably not object to a command of the form 'env -C <repo> <absolute interpreter> -m <module> --set <name>': absolute interpreter path, cwd set by env -C, one module, a named declared set, no pipes, chaining or inline scripts. REQUIREMENT for this card: that is the STANDARD INVOCATION SHAPE the mode documents and EMITS (the command a refusal or a halt prints for the operator to run, and the shape of every handed command in a waypoint --next); add a test that the mode's printed command matches it (a regex over the printed line: starts 'env -C ', an absolute path interpreter, '-m <module>', no pipe/semicolon/&&/-c). Do not rely on the classifier staying quiet: the declared set and the witnesses are the actual safety. Cluster and host applies stay the operator's.",
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-12: 2026-10-12 operator note via github-8f: the permission auto-classifier fires on SHAPE and will probably not object to a command of the form 'env -C <repo> <absolute interpreter> -m <module> --set <name>': absolute interpreter path, cwd set by env -C, one module, a named declared set, no pipes, chaining or inline scripts. REQUIREMENT for this card: that is the STANDARD INVOCATION SHAPE the mode documents and EMITS (the command a refusal or a halt prints for the operator to run, and the shape of every handed command in a waypoint --next); add a test that the mode's printed command matches it (a regex over the printed line: starts 'env -C ', an absolute path interpreter, '-m <module>', no pipe/semicolon/&&/-c). Do not rely on the classifier staying quiet: the declared set and the witnesses are the actual safety. Cluster and host applies stay the operator's. | 2026-10-12: ddbc791 [PUSHED]: waldo.pipeline (execute, Seams, verdict_line) and waldo.cli (main, invocation, matches_shape); 105 waldo tests, 16 more declared defects.",
       "issued_at": "2026-10-12T20:12:18Z",
       "minted_during": "tick",
       "caused_by": "W1053",
-      "last_worked": "2026-10-12T23:32:10Z",
+      "last_worked": "2026-10-12T23:53:20Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261012T235320Z"
     },
     {
       "symbol": "W1060",
@@ -21728,16 +21724,19 @@
         "waldo"
       ],
       "blocked_on": [
-        "W1059"
+        "W1063",
+        "W1064",
+        "W1065",
+        "W1066"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "2026-10-12: Source: cassian plan-vault-apply-recipe-design.md (phases P-1..P10, STAR-S/STAR-R, halts, .auto.tfvars as the durable phase marker, section 5 resumability). Open: the .sh recipes (quiesce-sku-builds.sh, openbao-rotate-prove.sh, vault-apply.d/) are not read yet; read them before freezing this card's schema.",
+      "evidence": "2026-10-12: Source: cassian plan-vault-apply-recipe-design.md (phases P-1..P10, STAR-S/STAR-R, halts, .auto.tfvars as the durable phase marker, section 5 resumability). Open: the .sh recipes (quiesce-sku-builds.sh, openbao-rotate-prove.sh, vault-apply.d/) are not read yet; read them before freezing this card's schema. | 2026-10-12: 2026-10-12 atomized after reading cassian's openbao-vault-apply.sh, 00-lib.sh and 81-p8-revoke.sh (design note updated): W1063 increases witness, W1064 marker, W1065 confirm, W1066 phases. luthen's port is luthen W902; they will report contract refusals (exit_only audit).",
       "issued_at": "2026-10-12T20:21:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1053",
-      "last_worked": "2026-10-12T20:21:55Z",
-      "ticks_blocked": 6,
+      "last_worked": "2026-10-12T23:55:46Z",
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -21758,6 +21757,87 @@
       "minted_during": "tick",
       "caused_by": "W1052",
       "last_worked": "2026-10-12T21:35:14Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1063",
+      "title": "waldo.witness gains an increases kind: a numeric group strictly greater than before, refusing a non-numeric read",
+      "status": "working",
+      "enables": [
+        "W1060"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T23:55:09Z",
+      "minted_during": "tick",
+      "caused_by": "W1060",
+      "last_worked": "2026-10-12T23:55:47Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1064",
+      "title": "waldo.marker: a durable phase marker file written atomically and read back, with per-phase assertions of standing flags",
+      "status": "ready",
+      "enables": [
+        "W1060"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T23:55:10Z",
+      "minted_during": "tick",
+      "caused_by": "W1060",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1065",
+      "title": "waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the thing destroyed",
+      "status": "ready",
+      "enables": [
+        "W1060"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T23:55:11Z",
+      "minted_during": "tick",
+      "caused_by": "W1060",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1066",
+      "title": "waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry re-assertion and a refused re-run of a done point of no return",
+      "status": "ready",
+      "enables": [
+        "W1060"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-12T23:55:12Z",
+      "minted_during": "tick",
+      "caused_by": "W1060",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],

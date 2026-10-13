@@ -1696,3 +1696,9 @@
 2026-10-12T22:03:05Z  tick  W1057 advanced  mechanism "waldo.witness: six kinds incl advances/fresh_since, 14 tests, 7 declared defects, bazel //waldo green; attempt 5 running"
 2026-10-12T22:31:29Z  tick  W1056 advanced  mechanism "waldo.contract: parse + unknown-key refusal + witness lint, 59 waldo tests green, attempt 6 running; W1053/W1059 blockers trimmed"
 2026-10-12T23:01:02Z  tick  W1058 advanced  mechanism "waldo.custody: Secret/fingerprint/scrub/0600-0700 store/identity, 12 tests, 9 declared defects, bazel //waldo green; attempt 7 running"
+2026-10-12T23:42:06Z  tick  W1059 advanced  mechanism "waldo.pipeline + CLI + standard invocation shape: 105 waldo tests, 16 more declared defects, bazel //waldo green; attempt 8 running"
+2026-10-12T23:55:09Z  tick  W1063 minted    -         "waldo.witness gains an increases kind: a numeric group strictly greater than before, refusing a non-numeric read"  evidence=W1060
+2026-10-12T23:55:10Z  tick  W1064 minted    -         "waldo.marker: a durable phase marker file written atomically and read back, with per-phase assertions of standing flags"  evidence=W1060
+2026-10-12T23:55:11Z  tick  W1065 minted    -         "waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the thing destroyed"  evidence=W1060
+2026-10-12T23:55:12Z  tick  W1066 minted    -         "waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry re-assertion and a refused re-run of a done point of no return"  evidence=W1060
+2026-10-12T23:58:47Z  tick  W1063 advanced  collapse  "cassian .sh recipes read; W1060 atomized into W1063-W1066; waldo increases witness kind built (109 tests) and committing as attempt 9"

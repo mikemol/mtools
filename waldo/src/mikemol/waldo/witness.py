@@ -13,6 +13,9 @@ show:
     must_match    regular expressions the output must match
     advances      regular expressions whose first group must DIFFER from the same group in the
                   pre-act reading (a resourceVersion or refresh time that moved)
+    increases     like advances, but the group is a number that must be STRICTLY GREATER than in
+                  the pre-act reading; a non-number on either side is refused (W1063, from
+                  cassian's heartbeat witness)
     fresh_since   regular expressions whose first group is a unix time at or after the run's start
                   (a heartbeat written by THIS run, not a Job's exit code)
 
@@ -52,6 +55,7 @@ class Witness:
     must_contain: tuple[str, ...] = ()
     must_match: tuple[str, ...] = ()
     advances: tuple[str, ...] = ()
+    increases: tuple[str, ...] = ()
     fresh_since: tuple[str, ...] = ()
     exit_only: bool = False
 
@@ -134,6 +138,30 @@ def _not_advanced(patterns: Sequence[str], out: str, before: str | None) -> list
     return unmet
 
 
+def _not_increased(patterns: Sequence[str], out: str, before: str | None) -> list[str]:
+    """Name the patterns whose number is not strictly greater than in the pre-act reading.
+
+    A value that is not a number, before or after, is refused rather than reasoned about: a mangled
+    read is not evidence either way.
+
+    Returns:
+        the unmet descriptions; with no pre-act reading every pattern is unmet.
+
+    """
+    unmet: list[str] = []
+    for pattern in patterns:
+        now = _stamp(group_of(pattern, out))
+        if before is None:
+            unmet.append(f"increases {pattern}: no pre-act reading")
+            continue
+        was = _stamp(group_of(pattern, before))
+        if now is None or was is None:
+            unmet.append(f"increases {pattern}: not a number before and after")
+        elif now <= was:
+            unmet.append(f"increases {pattern}: {now:g} is not above {was:g}")
+    return unmet
+
+
 def _stamp(text: str | None) -> float | None:
     """Read a unix time.
 
@@ -185,6 +213,7 @@ def judge(
     unmet += [f"must_contain {text}" for text in witness.must_contain if text not in out]
     unmet += [f"must_match {rx}" for rx in witness.must_match if re.search(rx, out) is None]
     unmet += _not_advanced(witness.advances, out, before)
+    unmet += _not_increased(witness.increases, out, before)
     unmet += _not_fresh(witness.fresh_since, out, started)
     return Result(witness.name, code or int(bool(unmet)), tuple(unmet), tail_of(out))
 
@@ -196,7 +225,7 @@ def capture_before(witnesses: Sequence[Witness], run: Run) -> dict[str, str]:
         the output by witness name, for the witnesses that declare `advances`.
 
     """
-    return {w.name: run(w.argv)[1] for w in witnesses if w.advances and w.argv}
+    return {w.name: run(w.argv)[1] for w in witnesses if (w.advances or w.increases) and w.argv}
 
 
 def run_all(

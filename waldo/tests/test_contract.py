@@ -31,7 +31,12 @@ _GOOD = {
     "before": [{"name": "tree-clean", "argv": ["git", "status"], "must_match": ["clean"]}],
     "after": [_ROLLED],
 }
-_WORLD_KINDS = (("advances", r"v=(\d+)"), ("fresh_since", r"ts=(\d+)"), ("json_empty", "x"))
+_WORLD_KINDS = (
+    ("advances", r"v=(\d+)"),
+    ("increases", r"v=(\d+)"),
+    ("fresh_since", r"ts=(\d+)"),
+    ("json_empty", "x"),
+)
 
 
 def test_a_contract_of_luthens_shape_parses_and_lints_clean() -> None:
@@ -145,9 +150,9 @@ def test_advances_and_fresh_since_and_json_empty_cannot_pass_a_blank_reading() -
 
 
 @pytest.mark.parametrize(
-    "kind", ["json_empty", "must_contain", "must_match", "advances", "fresh_since"]
+    "kind", ["json_empty", "must_contain", "must_match", "advances", "increases", "fresh_since"]
 )
-def test_has_condition_sees_each_of_the_five_lists(kind: str) -> None:
+def test_has_condition_sees_each_of_the_six_lists(kind: str) -> None:
     """Any single non-empty list counts as a declared condition, and none counts as none."""
     assert not has_condition(Witness("w", ("x",)))
     witness = witness_from({"name": "w", "argv": ["x"], kind: ["a"]}, "after[0]")

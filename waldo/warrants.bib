@@ -273,13 +273,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_advances_and_fresh_since_and_json_empty_cannot_pass_a_blank_reading},
 }
 
-@misc{waldo-contract-has-condition-sees-each-of-the-five-lists,
-  section = {contract},
-  title  = {Any single non-empty list counts as a declared condition, and none counts as none},
-  claim  = {Any single non-empty list counts as a declared condition, and none counts as none.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_has_condition_sees_each_of_the_five_lists},
-}
-
 @misc{waldo-custody-fingerprint-is-twelve-hex-of-the-sha256,
   section = {custody},
   title  = {Twelve lowercase hex digits, stable for a value, different for another},
@@ -509,4 +502,32 @@
   title  = {The mode will not print a command it would not itself build},
   claim  = {The mode will not print a command it would not itself build.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_command_off_the_standard_shape_is_refused_before_anything_runs},
+}
+
+@misc{waldo-witness-increases-needs-a-number-strictly-above-the-pre-act-reading,
+  section = {witness},
+  title  = {A heartbeat that moved up passes; equal and lower do not; a standing value is refused},
+  claim  = {A heartbeat that moved up passes; equal and lower do not; a standing value is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_increases_needs_a_number_strictly_above_the_pre_act_reading},
+}
+
+@misc{waldo-witness-increases-refuses-a-mangled-read-and-a-missing-pre-act-reading,
+  section = {witness},
+  title  = {A non-number on either side is refused, not reasoned about; no pre-act reading is unmet},
+  claim  = {A non-number on either side is refused, not reasoned about; no pre-act reading is unmet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_increases_refuses_a_mangled_read_and_a_missing_pre_act_reading},
+}
+
+@misc{waldo-witness-capture-before-also-reads-a-witness-that-declares-increases,
+  section = {witness},
+  title  = {The pre-act reading is taken for `increases` witnesses as it is for `advances`},
+  claim  = {The pre-act reading is taken for `increases` witnesses as it is for `advances`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness.py -k test_capture_before_also_reads_a_witness_that_declares_increases},
+}
+
+@misc{waldo-contract-has-condition-sees-each-of-the-six-lists,
+  section = {contract},
+  title  = {Any single non-empty list counts as a declared condition, and none counts as none},
+  claim  = {Any single non-empty list counts as a declared condition, and none counts as none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_contract.py -k test_has_condition_sees_each_of_the_six_lists},
 }

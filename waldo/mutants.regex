@@ -18,6 +18,10 @@ src/mikemol/waldo/witness.py|stale-heartbeat-fresh|elif stamp < started:|elif Fa
 src/mikemol/waldo/witness.py|fresh-without-a-start|if started is None:|if False:|def=_not_fresh
 src/mikemol/waldo/witness.py|missing-key-empty|key not in found or found\[key\]|key in found and found[key]|def=non_empty
 src/mikemol/waldo/witness.py|tail-from-the-front|\[-TAIL_LINES:\]|[:TAIL_LINES]|def=tail_of
+src/mikemol/waldo/witness.py|equal-counts-as-increase|elif now <= was:|elif now < was:|def=_not_increased
+src/mikemol/waldo/witness.py|mangled-read-reasoned-about|now is None or was is None|now is None and was is None|def=_not_increased
+src/mikemol/waldo/witness.py|increase-without-a-before|if before is None:|if False:|def=_not_increased
+src/mikemol/waldo/contract.py|increases-not-a-condition|or witness\.increases|or False|def=has_condition
 src/mikemol/waldo/contract.py|unknown-key-ignored|if unknown:|if False:|def=_refuse_unknown
 src/mikemol/waldo/contract.py|repeated-name-allowed|if repeated:|if False:|def=_witnesses
 src/mikemol/waldo/contract.py|exit-only-any-type|not isinstance\(exit_only, bool\)|False|def=witness_from
