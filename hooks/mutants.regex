@@ -133,7 +133,7 @@ src/mikemol/hooks/revendor_apply.py|dirty-tree-allowed|return code != 0 or bool\
 src/mikemol/hooks/revendor_apply.py|hash-mismatch-passes|if not live or live != fresh:|if False:|def=same_reading
 src/mikemol/hooks/revendor_apply.py|empty-hash-matches|if not live or live != fresh:|if live != fresh:|def=same_reading
 src/mikemol/hooks/revendor_apply.py|stale-wheels-kept|for stale in sorted\(old - \{short\}\):|for stale in []:|def=swap
-src/mikemol/hooks/revendor_apply.py|lock-skipped|for step in \(\["uv", "lock"\], \["uv", "sync", "--frozen"\]\):|for step in (["uv", "sync", "--frozen"],):|def=swap
+src/mikemol/hooks/revendor_apply.py|lock-skipped|steps = \[\["uv", "lock"\], \["uv", "sync", "--frozen"\]\] if target\.sync else \[\["uv", "lock"\]\]|steps = [["uv", "sync", "--frozen"]]|def=swap
 src/mikemol/hooks/revendor_apply.py|pins-not-moved|project\.write_text\(moved, encoding="utf-8"\)|pass|def=swap
 src/mikemol/hooks/wheel.py|epoch-not-in-build-env|f"SOURCE_DATE_EPOCH=\{EPOCH\}"|"SOURCE_DATE_EPOCH=0"|def=build_into
 src/mikemol/hooks/wheel.py|tree-not-stamped|        stamp\(work / "src" / dist\)|        pass|def=build_into
@@ -143,7 +143,7 @@ src/mikemol/hooks/wheel.py|short-sha-accepted|not revendor\.is_full_sha\(sha\) o
 src/mikemol/hooks/wheel.py|missing-wheel-passes|if failure is None and not all\(records\):|if False:|def=main
 src/mikemol/hooks/wheel.py|src-dist-unchecked|if not \(source\.tree / dist / "pyproject\.toml"\)\.is_file\(\):|if False:|def=extract
 src/mikemol/hooks/revendor_cli.py|vendors-nothing-accepted|if not old:|if False:|def=run_revendor
-src/mikemol/hooks/revendor_cli.py|dry-run-writes|if not write:|if False:|def=run_revendor
+src/mikemol/hooks/revendor_cli.py|dry-run-writes|if "--write" not in flags:|if False:|def=run_revendor
 src/mikemol/hooks/revendor_cli.py|repo-writer-not-used|"mikemol-paths-forward"|"mikemol-other"|def=run_revendor
 src/mikemol/hooks/revendor_cli.py|refusal-ignored|if failure is not None:|if False:|def=run_revendor
 src/mikemol/hooks/repin_cli.py|revendor-flag-ignored|if "--revendor" in flags:|if False:|def=main
@@ -208,3 +208,8 @@ src/mikemol/hooks/pycheck_clear.py|ledger-refusal-softened|if refused:|if False:
 src/mikemol/hooks/pycheck_clear.py|ledger-unjudged-softened|return EXIT_NOT_RUN if unjudged else 0|return 0|def=clear_ledger
 src/mikemol/hooks/pycheck_clear.py|ledger-unreadable-clears-on|if listed is None:|if False:|def=clear_ledger
 src/mikemol/hooks/pycheck_clear.py|ledger-stops-at-the-first|codes = \[clear_one\(root / name\) for name in listed\]|codes = [clear_one(root / name) for name in listed[:1]]|def=clear_ledger
+
+# W1120/W1121 (amr-skills:W358): --no-sync never runs uv sync, and the plan warns that the sync removes packages.
+src/mikemol/hooks/revendor_apply.py|nosync-still-syncs|if target\.sync else \[\["uv", "lock"\]\]|if True else [["uv", "lock"]]|def=swap
+src/mikemol/hooks/revendor.py|plan-hides-the-sync-warning|SYNC_LINE if sync else NO_SYNC_LINE|NO_SYNC_LINE|def=plan_lines
+src/mikemol/hooks/revendor_cli.py|nosync-flag-ignored|sync = "--no-sync" not in flags|sync = True|def=run_revendor

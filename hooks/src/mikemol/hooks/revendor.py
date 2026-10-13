@@ -109,8 +109,22 @@ def with_local_version(archived: str, short: str) -> str | None:
     return archived.replace(marker, f'version = "{VERSION}+g{short}"', 1)
 
 
-def plan_lines(sha: str, old: set[str], source: str, dists: tuple[str, ...] = DISTS) -> list[str]:
+SYNC_LINE = (
+    "uv lock, uv sync --frozen: REMOVES every package not named in uv.lock from .venv "
+    "(use --no-sync where extras are installed on purpose)"
+)
+NO_SYNC_LINE = "uv lock only (--no-sync): .venv is left exactly as it is"
+
+
+def plan_lines(
+    sha: str, old: set[str], source: str, dists: tuple[str, ...] = DISTS, *, sync: bool = True
+) -> list[str]:
     """Say what an apply would do, for printing before it does it.
+
+    ⚑ THE SYNC LINE CARRIES ITS OWN WARNING (amr-skills:W358). `uv sync --frozen` makes `.venv`
+    match `uv.lock` exactly, so it REMOVES every package the lock does not name: a re-vendor run in
+    a checkout with deliberately installed extras (amr-skills' vllm stack, ~142 packages) deleted
+    them. The plan said only "uv sync --frozen"; the warning sat in a README nobody read then.
 
     Returns:
         one line per step, in order.
@@ -124,6 +138,6 @@ def plan_lines(sha: str, old: set[str], source: str, dists: tuple[str, ...] = DI
         "throwaway venv: install all; the new writer's --hash on a COPY of the queue == live",
         f"copy the wheels to vendor/wheels, git rm the old ({kept})",
         f"move the {len(dists)} [tool.uv.sources] paths in pyproject.toml to +g{short}",
-        "uv lock, uv sync --frozen",
+        SYNC_LINE if sync else NO_SYNC_LINE,
         "print the new sha256 lines for vendor/wheels/README.md (a hand-written record)",
     ]

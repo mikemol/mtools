@@ -43,8 +43,11 @@ def _refuse(why: str) -> int:
     return EXIT_USAGE
 
 
-def run_revendor(repo: Path, sha: str, mtools: Path, runner: Runner, *, write: bool) -> int:
-    """Print the plan and, with `write`, re-vendor the repo at the commit.
+def run_revendor(repo: Path, sha: str, mtools: Path, runner: Runner, flags: frozenset[str]) -> int:
+    """Print the plan and, with `--write` in `flags`, re-vendor the repo at the commit.
+
+    `--no-sync` in `flags` makes the apply run `uv lock` and never `uv sync --frozen`, which would
+    remove every package the lock does not name from the repo's `.venv` (amr-skills:W358).
 
     Returns:
         0 when planned or applied, 1 when refused or failed, 2 for a usage refusal.
@@ -59,12 +62,13 @@ def run_revendor(repo: Path, sha: str, mtools: Path, runner: Runner, *, write: b
     if not old:
         return _refuse(f"{repo.name} vendors no hooks or pathsforward wheel")
     dists = revendor.vendored(project.read_text(encoding="utf-8"))
-    for line in revendor.plan_lines(sha, old, mtools.name, dists):
+    sync = "--no-sync" not in flags
+    for line in revendor.plan_lines(sha, old, mtools.name, dists, sync=sync):
         _say(f"PLAN {line}")
-    if not write:
+    if "--write" not in flags:
         return 0
     writer = repo / ".venv" / "bin" / "mikemol-paths-forward"
-    target = revendor_apply.Target(repo, mtools, sha, writer, dists)
+    target = revendor_apply.Target(repo, mtools, sha, writer, dists, sync)
     failure = revendor_apply.apply(runner, target)
     if failure is not None:
         _say(f"REFUSED {failure}")

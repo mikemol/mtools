@@ -8866,3 +8866,25 @@
   claim  = {--clear-ledger with no root, or two, is the usage message.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear_ledger.py -k test_the_flag_takes_exactly_one_root},
 }
+
+@misc{hooks-revendor-apply-without-sync-the-lock-runs-and-the-sync-never-does,
+  section = {revendor_apply},
+  title  = {amr-skills:W358: --no-sync swaps and locks but never runs uv sync, which removes packages},
+  claim  = {amr-skills:W358: --no-sync swaps and locks but never runs uv sync, which removes
+            packages.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_without_sync_the_lock_runs_and_the_sync_never_does},
+}
+
+@misc{hooks-revendor-apply-plan-warns-that-the-sync-removes-packages-and-names-the-way-out,
+  section = {revendor_apply},
+  title  = {The plan's own sync line says what it does to .venv; --no-sync says it leaves it alone},
+  claim  = {The plan's own sync line says what it does to .venv; --no-sync says it leaves it alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_the_plan_warns_that_the_sync_removes_packages_and_names_the_way_out},
+}
+
+@misc{hooks-revendor-cli-no-sync-reaches-the-apply-and-the-plan-says-the-venv-is-left-alone,
+  section = {revendor_cli},
+  title  = {amr-skills:W358: --no-sync makes the target not sync; without it the plan warns},
+  claim  = {amr-skills:W358: --no-sync makes the target not sync; without it the plan warns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_no_sync_reaches_the_apply_and_the_plan_says_the_venv_is_left_alone},
+}

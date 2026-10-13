@@ -233,3 +233,25 @@ def test_a_failed_lock_is_named(tmp_path: Path) -> None:
     target = _repo(tmp_path)
     why = revendor_apply.apply(_World(failing=frozenset({"uv lock"})), target) or ""
     assert "uv lock failed (exit 3)" in why
+
+
+def test_without_sync_the_lock_runs_and_the_sync_never_does(tmp_path: Path) -> None:
+    """amr-skills:W358: --no-sync swaps and locks but never runs uv sync, which removes packages."""
+    base = _repo(tmp_path)
+    target = Target(base.repo, base.mtools, base.sha, base.writer, base.dists, sync=False)
+    world = _World()
+    assert revendor_apply.apply(world, target) is None
+    steps = [" ".join(c[:2]) for c in world.calls]
+    assert "uv lock" in steps
+    assert "uv sync" not in steps
+    assert revendor.pinned_shorts((target.repo / "pyproject.toml").read_text("utf-8")) == {NEW}
+
+
+def test_the_plan_warns_that_the_sync_removes_packages_and_names_the_way_out() -> None:
+    """The plan's own sync line says what it does to .venv; --no-sync says it leaves it alone."""
+    synced = revendor.plan_lines(SHA, {OLD}, "mtools")
+    quiet = revendor.plan_lines(SHA, {OLD}, "mtools", sync=False)
+    assert any("REMOVES every package not named in uv.lock" in line for line in synced)
+    assert any("--no-sync" in line and "sync --frozen" in line for line in synced)
+    assert not any("sync --frozen" in line for line in quiet)
+    assert any(".venv is left exactly as it is" in line for line in quiet)

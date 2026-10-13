@@ -240,7 +240,7 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
         repo = Path(valued.get("--root", [str(Path.cwd())])[-1])
         mtools = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])
         sha = valued.get("--sha", [""])[-1]
-        return _REVENDOR(repo, sha, mtools, runner, write="--write" in flags)
+        return _REVENDOR(repo, sha, mtools, runner, frozenset(flags))
     root = Path(valued.get("--root", [str(Path.home() / "github")])[-1])
     target = valued.get("--sha", [None])[-1]
     dists = frozenset(valued["--dist"]) if "--dist" in valued else None

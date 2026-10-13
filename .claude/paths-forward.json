@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1119,
+  "counter": 1121,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -22332,9 +22332,7 @@
       "symbol": "W1092",
       "title": "mikemol-commit intent-adds each NEW path it is named before the gate, and refuses a new file that is not named",
       "status": "done",
-      "enables": [
-        "amr-skills:W347"
-      ],
+      "enables": [],
       "touches": [
         "commit",
         "hooks"
@@ -22342,11 +22340,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-13: 2026-10-13 triaged against the tree: the isolated path already satisfies amr-skills:W347 without add -N. The named paths enter a private index (add -A / add -f), the snapshot is materialized from that tree alone, and the pre-commit hook runs inside it, so an unnamed untracked file never reaches the gate. Witnessed by hooks/tests/test_commit_isolated_new.py: a hook that refuses unless new.txt (named) is in the gate tree and refuses if stray.txt (unnamed, untracked) is; plus the control (new.txt left unnamed => refused). Not done and not needed: a REFUSAL of an unnamed new file (it would refuse a peer's scratch file the commit never carries).",
+      "evidence": "2026-10-13: 2026-10-13 triaged against the tree: the isolated path already satisfies amr-skills:W347 without add -N. The named paths enter a private index (add -A / add -f), the snapshot is materialized from that tree alone, and the pre-commit hook runs inside it, so an unnamed untracked file never reaches the gate. Witnessed by hooks/tests/test_commit_isolated_new.py: a hook that refuses unless new.txt (named) is in the gate tree and refuses if stray.txt (unnamed, untracked) is; plus the control (new.txt left unnamed => refused). Not done and not needed: a REFUSAL of an unnamed new file (it would refuse a peer's scratch file the commit never carries). | 2026-10-13: 2026-10-13 enables edge to amr-skills:W347 trimmed: W347 was dropped by amr-skills (answered by this card), so the edge pointed into residue (amr-skills-bb).",
       "issued_at": "2026-10-13T01:45:30Z",
       "minted_during": "tick",
       "caused_by": "amr-skills:W347",
-      "last_worked": "2026-10-13T12:03:21Z",
+      "last_worked": "2026-10-13T14:54:40Z",
       "ticks_blocked": 0,
       "completed": "20261013T120321Z"
     },
@@ -22716,21 +22714,21 @@
     {
       "symbol": "W1112",
       "title": "--tick-close prunes local landed blockers before its check and prints what it pruned",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1080"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Landed once its commit (attempt 36) prints COMMITTED",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T13:15:24Z",
       "minted_during": "interrupt",
       "caused_by": "gabion:W1050",
-      "last_worked": "2026-10-13T14:11:19Z",
+      "last_worked": "2026-10-13T15:26:46Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T152646Z"
     },
     {
       "symbol": "W1113",
@@ -22850,6 +22848,39 @@
       "issued_at": "2026-10-13T14:49:13Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W934",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1120",
+      "title": "mikemol-repin --revendor takes --no-sync, as the plain --write mode does, so it never runs uv sync --frozen in a checkout with undeclared packages",
+      "status": "working",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Landed once its commit (attempt 38) prints COMMITTED; W1121 lands in the same change",
+      "evidence": "",
+      "issued_at": "2026-10-13T15:18:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "amr-skills:W358",
+      "last_worked": "2026-10-13T15:26:47Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1121",
+      "title": "The --revendor plan's last line says uv sync --frozen REMOVES packages not in uv.lock",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T15:18:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "amr-skills:W358",
       "last_worked": null,
       "ticks_blocked": 0
     }

@@ -54,6 +54,8 @@ class Target:
     sha: str
     writer: Path
     dists: tuple[str, ...] = revendor.DISTS
+    sync: bool = True
+    """False runs `uv lock` only: `uv sync --frozen` removes packages the lock does not name."""
 
 
 def _failed(what: str, code: int, out: str) -> str:
@@ -131,7 +133,8 @@ def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
     project = target.repo / "pyproject.toml"
     moved = revendor.move_sources(project.read_text(encoding="utf-8"), short)
     project.write_text(moved, encoding="utf-8")
-    for step in (["uv", "lock"], ["uv", "sync", "--frozen"]):
+    steps = [["uv", "lock"], ["uv", "sync", "--frozen"]] if target.sync else [["uv", "lock"]]
+    for step in steps:
         code, out = run(step, target.repo)
         if code != 0:
             return _failed(" ".join(step), code, out)

@@ -154,3 +154,18 @@ def test_a_repo_that_vendors_the_fence_has_it_planned_and_applied(
     assert repin_cli.main(_args(repo, tmp_path / "mtools", "--write"), _runner) == 0
     assert apply.targets[0].dists == (*revendor.DISTS, "fence")
     assert "uv build --wheel fence" in capsys.readouterr().out
+
+
+def test_no_sync_reaches_the_apply_and_the_plan_says_the_venv_is_left_alone(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """amr-skills:W358: --no-sync makes the target not sync; without it the plan warns."""
+    repo = _repo(tmp_path)
+    apply = _Apply()
+    _install(monkeypatch, apply)
+    assert repin_cli.main(_args(repo, tmp_path / "mtools", "--write", "--no-sync"), _runner) == 0
+    assert apply.targets[0].sync is False
+    assert ".venv is left exactly as it is" in capsys.readouterr().out
+    assert repin_cli.main(_args(repo, tmp_path / "mtools", "--write"), _runner) == 0
+    assert apply.targets[1].sync is True
+    assert "REMOVES every package not named in uv.lock" in capsys.readouterr().out
