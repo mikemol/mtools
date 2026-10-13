@@ -432,11 +432,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_index_refresh.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_raced.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pycheck_install.py" = ["assert"]
+"tests/test_pycheck_clear.py" = ["assert"]
 # Its witnesses make throwaway git repositories under tmp_path and run real git against them.
 "tests/test_snapshot.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Running the project's own ruff format is `--format`'s whole job: an argv list, no shell.
 "src/mikemol/hooks/pycheck_format.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"src/mikemol/hooks/pycheck_clear.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # The snapshot is git plus a command the caller names, and its fixed namespaced path under /var/tmp is
 # the operator's ruling (2026-10-06), not an accident: a hardcoded temp path is the point.
 "tests/test_repin_cli.py" = ["assert"]

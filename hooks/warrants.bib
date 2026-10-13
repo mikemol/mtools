@@ -8782,3 +8782,45 @@
   claim  = {ls-remote fails: the line says UNVERIFIED and never a bare [PUSHED].},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_an_unreachable_remote_is_unverified_not_pushed},
 }
+
+@misc{hooks-pycheck-clear-dirty-file-is-rewritten-and-then-judged,
+  section = {pycheck_clear},
+  title  = {The safe fix rewrites the file; the check then runs on it and its status is returned},
+  claim  = {The safe fix rewrites the file; the check then runs on it and its status is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_a_dirty_file_is_rewritten_and_then_judged},
+}
+
+@misc{hooks-pycheck-clear-clean-file-is-not-rewritten-but-is-still-judged,
+  section = {pycheck_clear},
+  title  = {The positive control: nothing to clear, no write, the verdict still comes back},
+  claim  = {The positive control: nothing to clear, no write, the verdict still comes back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_a_clean_file_is_not_rewritten_but_is_still_judged},
+}
+
+@misc{hooks-pycheck-clear-step-that-cannot-run-leaves-the-file-and-skips-the-verdict,
+  section = {pycheck_clear},
+  title  = {No formatter: exit 3, the file untouched, and no verdict claimed over an uncleared file},
+  claim  = {No formatter: exit 3, the file untouched, and no verdict claimed over an uncleared file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_a_step_that_cannot_run_leaves_the_file_and_skips_the_verdict},
+}
+
+@misc{hooks-pycheck-clear-unreadable-file-is-not-cleared,
+  section = {pycheck_clear},
+  title  = {A missing path is exit 3, nothing checked},
+  claim  = {A missing path is exit 3, nothing checked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_an_unreadable_file_is_not_cleared},
+}
+
+@misc{hooks-pycheck-clear-safe-rules-do-not-include-the-import-deleting-fix,
+  section = {pycheck_clear},
+  title  = {F401 deletes an import a module re-exports on purpose, so it is never in the safe list},
+  claim  = {F401 deletes an import a module re-exports on purpose, so it is never in the safe list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_the_safe_rules_do_not_include_the_import_deleting_fix},
+}
+
+@misc{hooks-pycheck-clear-flag-takes-exactly-one-path,
+  section = {pycheck_clear},
+  title  = {--clear with no path, or two, is the usage message},
+  claim  = {--clear with no path, or two, is the usage message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_clear.py -k test_the_flag_takes_exactly_one_path},
+}

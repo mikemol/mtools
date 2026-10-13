@@ -44,6 +44,7 @@ from mikemol.hooks import (
     project_root,
     pycheck,
     pycheck_census,
+    pycheck_clear,
     pycheck_closure,
     pycheck_format,
     pycheck_install,
@@ -62,6 +63,7 @@ REFRESH_FLAG = "--refresh-ledger"
 CHANGED_FLAG = "--changed"
 FORMAT_FLAG = "--format"
 INSTALL_FLAG = "--install"
+CLEAR_FLAG = "--clear"
 
 # A flag and its one argument: nothing else is accepted, except --install SRC DEST.
 EXPECTED_ARGS = 2
@@ -74,7 +76,7 @@ EXIT_NOT_CHECKED = 3
 
 USAGE = (
     f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT"
-    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {INSTALL_FLAG} SRC DEST)\n"
+    f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {CLEAR_FLAG} PATH | {INSTALL_FLAG} SRC DEST)\n"
 )
 
 
@@ -225,6 +227,17 @@ def _check_here(path: Path) -> int:
     return check(path, pycheck.analyze, project_root.project_for, sys.stdout, sys.stderr)
 
 
+def _clear_here(target: Path) -> int:
+    """Clear one file with the real formatter, safe fixer and gate, on the standard streams.
+
+    Returns:
+        the exit code from `pycheck_clear.clear`.
+
+    """
+    steps = pycheck_clear.Steps(pycheck_format.format_text, pycheck_clear.fix_text, _check_here)
+    return pycheck_clear.clear(target, steps, sys.stdout, sys.stderr)
+
+
 def _install_here(args: Sequence[str]) -> int:
     """Install a draft with the real gate and formatter and the standard streams.
 
@@ -248,7 +261,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args[:1] == [INSTALL_FLAG] and len(args) == INSTALL_ARGS:
         return _install_here(args)
+    if len(args) == EXPECTED_ARGS and args[0] in {FORMAT_FLAG, CLEAR_FLAG}:
+        return _rewrite_here(args[0], Path(args[1]).resolve())
     return _flag_here(args)
+
+
+def _rewrite_here(flag: str, target: Path) -> int:
+    """Run a flag that rewrites one file: `--format`, or `--clear` (format, safe fixes, check).
+
+    Returns:
+        the exit code from `pycheck_clear.clear` or `pycheck_format.format_file`.
+
+    """
+    if flag == CLEAR_FLAG:
+        return _clear_here(target)
+    return pycheck_format.format_file(target, sys.stdout, sys.stderr)
 
 
 def _flag_here(args: list[str]) -> int:
@@ -258,13 +285,11 @@ def _flag_here(args: list[str]) -> int:
         the exit code from `check`, `census`, `refresh` or `check_changed`, or EXIT_USAGE.
 
     """
-    known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG, FORMAT_FLAG}
+    known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG}
     if len(args) != EXPECTED_ARGS or args[0] not in known:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     target = Path(args[1]).resolve()
-    if args[0] == FORMAT_FLAG:
-        return pycheck_format.format_file(target, sys.stdout, sys.stderr)
     tracked = pycheck_census.tracked_python
     if args[0] == CHANGED_FLAG:
         changed = pycheck_census.changed_python

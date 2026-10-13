@@ -196,3 +196,9 @@ src/mikemol/hooks/commit_kata.py|tracking-ref-trusted|if remote == sha or on_rem
 src/mikemol/hooks/commit_kata.py|mismatch-reported-as-local|return f"\{MISMATCH_MARK\} remote=\{remote\[:SHORT\]\}" if tracked else|return "LOCAL: not on origin/main" if tracked else|def=published
 src/mikemol/hooks/commit_kata.py|unverified-reads-pushed|word = "PUSHED" if tracked else|word = "PUSHED" if True else|def=published
 src/mikemol/hooks/commit_kata.py|remote-ahead-not-fetched|run\(\["-C", str\(root\), "fetch", "-q", "origin", "main"\]\)|pass|def=on_remote
+
+# W1085: --clear formats, applies the safe fixes, formats again, and returns the check's own status.
+src/mikemol/hooks/pycheck_clear.py|clear-skips-the-fix|fixed = None if formatted is None else steps\.fix_text\(path, formatted, err\)|fixed = formatted|def=clear
+src/mikemol/hooks/pycheck_clear.py|clear-writes-nothing|if after != before:|if False:|def=clear
+src/mikemol/hooks/pycheck_clear.py|clear-forgets-the-verdict|return steps\.check\(path\)|return 0|def=clear
+src/mikemol/hooks/pycheck_clear.py|unrunnable-step-checked-anyway|if after is None:|if False:|def=clear
