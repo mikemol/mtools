@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, cast
 from mikemol.pathsforward import (
     admission,
     attach,
+    behindopen,
     bulkblock,
     certify,
     delivered,
@@ -106,6 +107,37 @@ def _block_matching(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _block_behind_open(ctx: Ctx) -> int:
+    """Block each ready card behind the open cards that enable it; a dry run unless `--write`.
+
+    ⚑ DRY RUN FIRST, as `--block-matching`: without `--write` nothing is saved and the lines say
+    WOULD BLOCK. A working card is LISTED with its enablers and left; a mutual pair is named and
+    left, never deadlocked (mtools:W1131, nemik:W476).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        found = behindopen.plan(state)
+        verb = "BLOCKED" if write else "WOULD BLOCK"
+        for sym, behind in found.moved:
+            _say(f"{verb} {sym} on {', '.join(behind)}")
+        for sym, behind in found.working:
+            _say(f"KEPT {sym} (working, behind {', '.join(behind)})")
+        for sym, other in found.mutual:
+            _say(f"KEPT {sym} (enabled by {other}, which it also enables)")
+        if write:
+            behindopen.apply(state, found)
+        return EXIT_OK
+
+    if write:
+        return _mutate(ctx, edit)
+    return edit(store.load(ctx.path))
+
+
 def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
     """Give an update the (path, sha256) of the file `--attach` names, resolved under the root.
 
@@ -127,6 +159,7 @@ _FLAGS = (
     "selftest",
     "bump_blocked",
     "prune_landed",
+    "block_behind_open",
     "inbound",
     "preamble_clear",
     "outcomes_clear",
@@ -289,6 +322,7 @@ _APPLIES: dict[str, frozenset[str]] = {
         }
     ),
     "prune_landed": frozenset({"root"}),
+    "block_behind_open": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
     "tick_close": frozenset({"kind", "evidence"}),
@@ -1974,6 +2008,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "bump_blocked": _bump_blocked,
     "block_matching": _block_matching,
     "prune_landed": _prune_landed,
+    "block_behind_open": _block_behind_open,
     "inbound": _inbound,
     "ledger": _ledger_mode,
     "show": _show,
