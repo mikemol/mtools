@@ -24,7 +24,7 @@ src/mikemol/katas/commits.py|failure-read-as-done|int\(match\[1\]\) == 0|int(mat
 src/mikemol/katas/commits.py|missing-log-not-guarded|if not log\.exists\(\):|if False:|def=commit_state
 
 # W874: the detached commit's body. A timeout is recorded with 124, the status mikemol-commit uses.
-src/mikemol/katas/waiter.py|timeout-not-recorded-as-124|return TIMED_OUT|return 1|def=_stream
+src/mikemol/katas/waiter.py|timeout-not-recorded-as-124|return TIMED_OUT|return 1|def=_watch
 
 # The cleanup removes its paths whatever the result: skipping it leaves a stale index.lock behind.
 src/mikemol/katas/waiter.py|removals-not-removed|path\.unlink\(missing_ok=True\)|pass|def=run
@@ -135,3 +135,10 @@ src/mikemol/katas/hangwatch.py|gone-tree-counts-as-still|seen\.cpu is None or |F
 src/mikemol/katas/hangwatch.py|progress-never-resets|seen != state\.last|False|def=step
 src/mikemol/katas/hangwatch.py|count-never-advances|state\.still \+ 1|state.still|def=step
 src/mikemol/katas/hangwatch.py|hung-one-poll-early|state\.still >= patience|state.still >= patience - 1|def=hung
+
+# W1130: a child is ended when hung (log and tree CPU both still), never for being slow, and the backstop remains.
+src/mikemol/katas/waiter.py|hang-never-detected|if hangwatch\.hung\(state, watch\.patience\):|if False:|def=_watch
+src/mikemol/katas/waiter.py|tree-cpu-never-read|watch\.cpu\(child\.pid\)|None|def=_watch
+src/mikemol/katas/waiter.py|log-size-never-read|os\.fstat\(sink\.fileno\(\)\)\.st_size|0|def=_watch
+src/mikemol/katas/waiter.py|hung-recorded-as-one|return HUNG|return 1|def=_watch
+src/mikemol/katas/waiter.py|backstop-never-fires|if time\.monotonic\(\) >= deadline:|if False:|def=_watch

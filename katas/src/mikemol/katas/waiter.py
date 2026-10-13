@@ -11,9 +11,11 @@ remove afterwards (a probe's temp index and the `index.lock` it held). A SIGTERM
 so the `finally` still runs: a probe killed without it left a stale `.git/index.lock` that blocked
 every later git operation in the repo (host katas record, 2026-10-06).
 
-⚑ A TIMEOUT IS A RESULT, NOT A HANG: the child is abandoned at `TIMEOUT_S` and the log says so with
-rc 124, the status `mikemol-commit` itself reports for a commit that timed out. The limit sits above
-that commit's own (10800 s), so the commit's own verdict arrives first when it can.
+⚑ A HANG IS AN ABSENCE, NOT A DEADLINE (W1130; operator: "avoid wall-clock timeouts"). The child is
+ended, with rc 125, only after `Watch.patience` polls in which neither its log nor its process
+tree's CPU changed (`hangwatch`, `proctree`). One wall-clock backstop remains, `TIMEOUT_S`, rc 124,
+for a child that never looks hung and never ends; it sits above `mikemol-commit`'s own 10800 s so
+the commit's own verdict arrives first when it can. W1132 removes the rest of the clock.
 
 ⚑ `--timeout S` (W1105) SETS THAT LIMIT PER RUN, and a child that ends 0 leaves the seconds it took
 in `LOG.seconds`: the measure a flush derives its next ceiling from (W1106), so a gate that has
@@ -30,11 +32,14 @@ import signal
 import subprocess
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.katas import hangwatch, proctree
+
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
     from typing import TextIO
 
 TIMEOUT_S = 11000.0
@@ -42,6 +47,12 @@ TIMEOUT_S = 11000.0
 
 TIMED_OUT = 124
 """The status a child that outlasted its timeout is recorded with, as `mikemol-commit` spells it."""
+
+HUNG = 125
+"""The status a child that showed no progress is recorded with (log and tree CPU both unchanged)."""
+
+POLL_S = 5.0
+"""How often a running child is read; the wait ends the moment the child does."""
 
 NOT_STARTED = 127
 """The status a command that could not be started is recorded with, as a shell spells it."""
@@ -57,6 +68,15 @@ _REMOVE = "--rm"
 _TIMEOUT = "--timeout"
 _PAIR = 2
 _MINIMUM_ARGS = 2
+
+
+@dataclass(frozen=True)
+class Watch:
+    """How a running child is watched: the poll interval, the patience, and the CPU reader."""
+
+    poll_s: float = POLL_S
+    patience: int = hangwatch.PATIENCE
+    cpu: Callable[[int], float | None] = proctree.cpu_seconds
 
 
 def split_removals(argv: Sequence[str]) -> tuple[list[Path], list[str]]:
@@ -107,17 +127,18 @@ def run(
     argv: Sequence[str],
     removals: Sequence[Path] = (),
     timeout: float = TIMEOUT_S,
+    watch: Watch | None = None,
 ) -> int:
     """Run `argv`, write its output then `rc=N` to `log`, and remove `removals` whatever happened.
 
     Returns:
-        the child's status, or TIMED_OUT when it outlasted `timeout`.
+        the child's status; HUNG when it showed no progress; TIMED_OUT at the backstop `timeout`.
 
     """
     started = time.monotonic()
     try:
         with log.open("w", encoding="utf-8") as sink:
-            status = _stream(argv, sink, timeout)
+            status = _stream(argv, sink, timeout, Watch() if watch is None else watch)
     finally:
         for path in removals:
             path.unlink(missing_ok=True)
@@ -135,7 +156,7 @@ def _end(child: subprocess.Popen[bytes]) -> None:
     child.wait()
 
 
-def _stream(argv: Sequence[str], sink: TextIO, timeout: float) -> int:
+def _stream(argv: Sequence[str], sink: TextIO, timeout: float, watch: Watch) -> int:
     """Run `argv` with its output going straight into `sink` as it is produced (W1125).
 
     ⚑ THE LOG GROWS WHILE THE CHILD RUNS. It was written whole after the child ended, so a running
@@ -160,15 +181,47 @@ def _stream(argv: Sequence[str], sink: TextIO, timeout: float) -> int:
         sink.flush()
         return NOT_STARTED
     try:
-        return child.wait(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        _end(child)
-        sink.write(f"timed out after {timeout:g} s (no verdict)\n")
-        sink.flush()
-        return TIMED_OUT
+        return _watch(child, sink, timeout, watch)
     finally:
         if child.poll() is None:
             _end(child)
+
+
+def _watch(child: subprocess.Popen[bytes], sink: TextIO, timeout: float, watch: Watch) -> int:
+    """Wait for `child`, ending it only if it is HUNG or the backstop passes (W1130).
+
+    ⚑ A HANG IS AN ABSENCE, NOT A DEADLINE (operator rule: avoid wall-clock timeouts). Each poll
+    reads the log's size and the CPU of the child's whole tree; `hangwatch` calls it hung only after
+    `watch.patience` polls in a row in which neither changed. A slow child on a loaded host still
+    advances its CPU every poll, so it is never ended for being slow.
+
+    ⚑ ONE WALL-CLOCK BACKSTOP REMAINS, AND WHY: a child that keeps writing or computing forever (a
+    runaway loop) never looks hung, and a flush must not hold an index lock for ever. `timeout` is
+    that bound, deliberately far above any observed gate, and W1132 removes the rest of the clock.
+
+    Returns:
+        the child's status; `HUNG` when it showed no progress; `TIMED_OUT` at the backstop.
+
+    """
+    deadline = time.monotonic() + timeout
+    state = hangwatch.State()
+    while True:
+        try:
+            return child.wait(timeout=min(watch.poll_s, max(deadline - time.monotonic(), 0.0)))
+        except subprocess.TimeoutExpired:
+            pass
+        reading = hangwatch.Reading(os.fstat(sink.fileno()).st_size, watch.cpu(child.pid))
+        state = hangwatch.step(state, reading)
+        if hangwatch.hung(state, watch.patience):
+            _end(child)
+            sink.write(f"no progress for {watch.patience} polls (log and CPU unchanged); ended\n")
+            sink.flush()
+            return HUNG
+        if time.monotonic() >= deadline:
+            _end(child)
+            sink.write(f"timed out after {timeout:g} s (the backstop; no verdict)\n")
+            sink.flush()
+            return TIMED_OUT
 
 
 def main(argv: Sequence[str] | None = None) -> int:

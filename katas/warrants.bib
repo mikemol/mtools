@@ -877,3 +877,31 @@
   claim  = {A guard on the constant: a handful of silent polls is a pause, not a hang.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_the_default_patience_is_many_polls_not_a_few},
 }
+
+@misc{katas-waiter-hang-silent-child-is-ended-as-hung-and-the-log-says-why,
+  section = {waiter_hang},
+  title  = {No log growth and no tree CPU for the patience: rc 125, the reason logged},
+  claim  = {No log growth and no tree CPU for the patience: rc 125, the reason logged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_hang.py -k test_a_silent_child_is_ended_as_hung_and_the_log_says_why},
+}
+
+@misc{katas-waiter-hang-slow-child-whose-cpu-advances-is-never-ended,
+  section = {waiter_hang},
+  title  = {The control: it outlasts the patience many times over, its CPU moves, it exits 0 itself},
+  claim  = {The control: it outlasts the patience many times over, its CPU moves, it exits 0 itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_hang.py -k test_a_slow_child_whose_cpu_advances_is_never_ended},
+}
+
+@misc{katas-waiter-hang-child-whose-log-keeps-growing-is-never-ended-though-its-cpu-is-frozen,
+  section = {waiter_hang},
+  title  = {Output alone is progress: twenty lines over a second against a patience of four polls},
+  claim  = {Output alone is progress: twenty lines over a second against a patience of four polls.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_hang.py -k test_a_child_whose_log_keeps_growing_is_never_ended_though_its_cpu_is_frozen},
+}
+
+@misc{katas-waiter-hang-backstop-still-ends-a-child-that-always-looks-busy,
+  section = {waiter_hang},
+  title  = {A runaway that always looks busy is bounded by the one wall-clock backstop, rc 124},
+  claim  = {A runaway that always looks busy is bounded by the one wall-clock backstop, rc 124.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_hang.py -k test_the_backstop_still_ends_a_child_that_always_looks_busy},
+}
