@@ -791,7 +791,21 @@ fi
 # ⚑ THE SECOND WRONG FORM IS THE INSTRUCTIVE ONE: it looks like it captures the status and the
 # assignment happens in a subshell that exits before the parent reads it. Reasoning about shell
 # scoping produced two wrong answers in a row here; running four candidates produced the right one.
-if ( cd "$staged" && git_scrubbed bazel test --nokeep_going //... --test_output=errors ) 2>&1 \
+# ⚑ W1100: THE JOB COUNT FOLLOWS THE HOST'S FREE CORES. Bazel's default is the core count, and on a host
+# already at load 50 to 120 that is a second oversubscription: a test that takes 4 s alone (measured
+# 2026-10-13, test_cli at load 97) was cut at its 60 s timeout and four commits were refused. The tool
+# prints `--jobs=N` and `--local_test_jobs=N`, one per line; an absent tool or an empty answer leaves
+# bazel's default. It REFUSES when the tool is absent, like every other tool here: a skip would run
+# the suite at the oversubscribed count that this exists to avoid, and say nothing. `bazel build
+# //hooks:.venv`, which the prebuild above runs, builds it.
+_gate_jobs_tool="$root/bazel-bin/hooks/.venv/bin/mikemol-gate-jobs"
+if [ ! -x "$_gate_jobs_tool" ]; then
+  say "mikemol-gate-jobs not found at $_gate_jobs_tool — cannot size the suite's jobs, commit refused"
+  record_refusal pre-commit " - mikemol-gate-jobs absent"
+  exit 1
+fi
+mapfile -t _gate_jobs < <("$_gate_jobs_tool")
+if ( cd "$staged" && git_scrubbed bazel test --nokeep_going "${_gate_jobs[@]}" //... --test_output=errors ) 2>&1 \
     | tee "$staged/.suite.log"; then
     _suite_rc=0
 else
