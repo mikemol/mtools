@@ -1735,3 +1735,11 @@
 2026-10-13T01:57:21Z  tick  W1094 minted    -         "Chain census: normalise each Bash command, find recurring sequences and concurrent sets per session, print a jsonl ledger"  evidence=github-8f
 2026-10-13T01:57:23Z  tick  W1095 minted    -         "Chain census kata: run hourly, publish per-repo repeated chains as a Victoria series, mint one shared card for a chain in two repos"  evidence=github-8f
 2026-10-13T01:57:59Z  tick  W1068 advanced  mechanism "waldo.runphase written (158 waldo tests, 9 declared defects, bazel gate running); minted W1078-W1095 from github-8f's katas census (close ritual, pycheck --install, ruling W1093, chain census); katas tick begin holder mismatch recorded on W1078"
+2026-10-13T02:32:36Z  interrupt W1096 minted    -         "A failing gate check prints its own words and its cause: exit code or signal, wall and CPU time against the cap, never a bare name"  evidence=gcalculus:W262
+2026-10-13T02:40:20Z  interrupt W1097 minted    -         "mikemol-commit survives a brief index.lock: retry the post-commit reset and push, and say so when it could not"  evidence=W1068
+2026-10-13T02:47:46Z  tick  W1087 advanced  mechanism "pycheck --install SRC DEST built (pycheck_install.py, format_text refactor, CLI wiring), 9 tests, 6 declared defects, bazel hooks tests/mypy/ruff green; attempt 14 running; W1097 now owned by the lease design (not a retry loop)"
+2026-10-13T02:51:12Z  interrupt W1098 minted    -         "katas flush skips repos with a live session and takes the repo-mutation lease for the others"  evidence=github-8f
+2026-10-13T02:51:13Z  interrupt W1099 minted    -         "Point the host katas.py flush at the ported mikemol.katas flush so no second implementation of the queue sync remains"  evidence=github-8f
+2026-10-13T03:07:54Z  interrupt W1100 minted    -         "bazel admit chooses the sandbox base and job count at launch from live headroom, so the home rc carries no sandbox_base"  evidence=gcalculus:W263
+2026-10-13T06:26:16Z  interrupt W1101 minted    -         "Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the W1087 commit, attempt 15)"  evidence=W1087
+2026-10-13T06:26:16Z  interrupt W1102 minted    -         "Answer gcalculus:W259: Promotion candidate for mtools: scripts/after_leaf_change.sh (snapshot, arms bazel)"  evidence=gcalculus:W259

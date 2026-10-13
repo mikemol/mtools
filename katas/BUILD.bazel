@@ -29,6 +29,7 @@ SIBLINGS = [
 # PATH, an undeclared host tool made visible and filterable by the tag below (ratchet's precedent).
 _NEEDS_GIT = [
     "tests/test_fleet.py",
+    "tests/test_flush_held.py",
     "tests/test_survey.py",
     "tests/test_pulse.py",
     "tests/test_cli.py",

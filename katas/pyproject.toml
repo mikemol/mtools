@@ -108,6 +108,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_cli.py" = ["assert"]
 "tests/test_hosttick.py" = ["assert"]
 "tests/test_survey.py" = ["assert"]
+"tests/test_liveness.py" = ["assert"]
+"tests/test_flush_held.py" = ["assert"]
 "tests/test_scaffold.py" = ["assert"]
 "tests/test_waiter.py" = ["assert", "suspicious-subprocess-import"]
 # ⚑ `waiter` names `subprocess.TimeoutExpired`, the exception `capture` documents for a child that

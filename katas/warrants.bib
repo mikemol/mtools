@@ -651,3 +651,53 @@
   claim  = {Status rows, then nemik-check's warnings, then the ranking, from the policy's nemik dir.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_pulse_runs_the_nemik_tools_the_policy_names},
 }
+
+@misc{.-liveness-fresh-tick-lock-holds-the-repo-and-an-unheld-repo-is-not,
+  section = {liveness},
+  title  = {The positive control: the lock-free repo beside it is read the same way and goes free},
+  claim  = {The positive control: the lock-free repo beside it is read the same way and goes free.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness.py -k test_a_fresh_tick_lock_holds_the_repo_and_an_unheld_repo_is_not},
+}
+
+@misc{.-liveness-stale-lock-does-not-hold-the-repo,
+  section = {liveness},
+  title  = {Older than the window the holder is taken to be dead: the loop's own takeover rule},
+  claim  = {Older than the window the holder is taken to be dead: the loop's own takeover rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness.py -k test_a_stale_lock_does_not_hold_the_repo},
+}
+
+@misc{.-liveness-lock-with-no-holder-or-an-unreadable-time-holds-nothing,
+  section = {liveness},
+  title  = {An empty holder and a garbled stamp are no claim},
+  claim  = {An empty holder and a garbled stamp are no claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness.py -k test_a_lock_with_no_holder_or_an_unreadable_time_holds_nothing},
+}
+
+@misc{.-liveness-open-gate-red-card-holds-the-repo-and-a-done-one-does-not,
+  section = {liveness},
+  title  = {The card holds the flush while it is open and releases it when it is done or dropped},
+  claim  = {The card holds the flush while it is open and releases it when it is done or dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness.py -k test_an_open_gate_red_card_holds_the_repo_and_a_done_one_does_not},
+}
+
+@misc{.-liveness-unrelated-open-card-does-not-hold-the-repo,
+  section = {liveness},
+  title  = {Only the gate-red words hold it},
+  claim  = {Only the gate-red words hold it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness.py -k test_an_unrelated_open_card_does_not_hold_the_repo},
+}
+
+@misc{.-liveness-missing-or-malformed-queue-holds-nothing,
+  section = {liveness},
+  title  = {No queue, a non-object queue and a non-list card set are no claim, and none raises},
+  claim  = {No queue, a non-object queue and a non-list card set are no claim, and none raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness.py -k test_a_missing_or_malformed_queue_holds_nothing},
+}
+
+@misc{katas-flush-held-repo-with-a-live-session-or-a-red-gate-is-not-a-target,
+  section = {flush_held},
+  title  = {A fresh tick lock and an open gate-red card each keep the flush out; the quiet repo is in},
+  claim  = {A fresh tick lock and an open gate-red card each keep the flush out; the quiet repo is
+            in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_held.py -k test_a_repo_with_a_live_session_or_a_red_gate_is_not_a_target},
+}

@@ -50,6 +50,13 @@ src/mikemol/katas/fleet.py|flush-ignores-a-running-commit|!= commits\.RUNNING|!=
 # The host's skip list is honoured.
 src/mikemol/katas/fleet.py|flush-ignores-the-skip-list|if repo not in fleet\.skip_flush|if True|def=flush_targets
 
+# W1098: a repo with a live session or a red gate is not flushed.
+src/mikemol/katas/fleet.py|flush-ignores-held-repos|and repo not in held|and True|def=flush_targets
+src/mikemol/katas/liveness.py|lock-never-goes-stale|now - taken <= LOCK_WINDOW|True|def=is_live
+src/mikemol/katas/liveness.py|holderless-lock-is-live|not holder or not isinstance\(stamp, str\)|not isinstance(stamp, str)|def=_taken
+src/mikemol/katas/liveness.py|closed-gate-card-still-holds|card\.get\("status"\) not in _CLOSED|True|def=is_red
+src/mikemol/katas/liveness.py|lock-never-holds|taken is not None and|False and|def=is_live
+
 # The probe holds the real index locked while the hook runs, as a real commit does.
 src/mikemol/katas/fleet.py|probe-does-not-hold-the-lock|held\.touch\(\)|pass|def=probe
 

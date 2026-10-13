@@ -14,11 +14,12 @@ from __future__ import annotations
 
 import shutil
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from mikemol.procrun.proc import capture
 
-from mikemol.katas import commits, detach, workstreams
+from mikemol.katas import commits, detach, liveness, workstreams
 
 if TYPE_CHECKING:
     from collections.abc import Collection
@@ -132,22 +133,28 @@ def status(fleet: Fleet) -> list[str]:
     return [status_row(fleet, repo) for repo in workstreams.repos(fleet.root)]
 
 
-def flush_targets(fleet: Fleet, skip: Collection[str] = ()) -> list[str]:
+def flush_targets(
+    fleet: Fleet, skip: Collection[str] = (), now: datetime | None = None
+) -> list[str]:
     """Name the repos that should get a queue commit now.
 
     A repo is a target when its queue files differ from HEAD, no commit is in flight (an index
-    lock, or a detached commit of ours still running), and it is on neither the fleet's skip list
-    nor the caller's.
+    lock, or a detached commit of ours still running), it is on neither the fleet's skip list nor
+    the caller's, and `liveness.held` does not name it (a fresh tick lock, or a gate-red card).
+    `now` is the clock for that lock's age; None reads the real one.
 
     Returns:
         the repo names, sorted.
 
     """
+    names = workstreams.repos(fleet.root)
+    held = liveness.held(fleet.root, names, datetime.now(UTC) if now is None else now)
     return [
         repo
-        for repo in workstreams.repos(fleet.root)
+        for repo in names
         if repo not in fleet.skip_flush
         and repo not in skip
+        and repo not in held
         and not in_flight(fleet, repo)
         and commits.commit_state(log_of(fleet, repo)) != commits.RUNNING
         and queue_pending(fleet, repo)
