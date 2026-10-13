@@ -736,3 +736,45 @@
   claim  = {A word, zero or a negative is not a limit: the default stands, the pair is still peeled.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_seconds.py -k test_a_bad_timeout_value_falls_back_to_the_default_limit},
 }
+
+@misc{katas-flush-ceiling-unmeasured-repo-gets-the-bounded-default,
+  section = {flush_ceiling},
+  title  = {No `.seconds` file: the default, which is below the cap},
+  claim  = {No `.seconds` file: the default, which is below the cap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_an_unmeasured_repo_gets_the_bounded_default},
+}
+
+@misc{katas-flush-ceiling-measured-repo-gets-its-seconds-times-the-stretch,
+  section = {flush_ceiling},
+  title  = {A 400 s gate is allowed 400 times the stretch, between the floor and the cap},
+  claim  = {A 400 s gate is allowed 400 times the stretch, between the floor and the cap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_a_measured_repo_gets_its_seconds_times_the_stretch},
+}
+
+@misc{katas-flush-ceiling-fast-gate-is-held-to-the-floor-and-a-slow-one-to-the-cap,
+  section = {flush_ceiling},
+  title  = {Two seconds is lifted to the floor; a day is cut to the cap},
+  claim  = {Two seconds is lifted to the floor; a day is cut to the cap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_a_fast_gate_is_held_to_the_floor_and_a_slow_one_to_the_cap},
+}
+
+@misc{katas-flush-ceiling-garbled-measure-reads-as-unmeasured,
+  section = {flush_ceiling},
+  title  = {Text that is not a number is no measure, and never raises},
+  claim  = {Text that is not a number is no measure, and never raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_a_garbled_measure_reads_as_unmeasured},
+}
+
+@misc{katas-flush-ceiling-waiter-argv-carries-the-limit-before-the-removals,
+  section = {flush_ceiling},
+  title  = {A limit becomes a `--timeout` pair right after the log; none leaves the argv unchanged},
+  claim  = {A limit becomes a `--timeout` pair right after the log; none leaves the argv unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_the_waiter_argv_carries_the_limit_before_the_removals},
+}
+
+@misc{katas-flush-ceiling-flush-starts-each-commit-under-its-repos-ceiling,
+  section = {flush_ceiling},
+  title  = {The detached start is handed the repo's derived ceiling, not left to the default limit},
+  claim  = {The detached start is handed the repo's derived ceiling, not left to the default limit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flush_ceiling.py -k test_flush_starts_each_commit_under_its_repos_ceiling},
+}

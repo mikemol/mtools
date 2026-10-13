@@ -4,6 +4,7 @@ workstreams	The Workstreams: A Directory Is One When It Carries a Queue, Dot-Nam
 commits	The Detached Commit: The mikemol-commit Argv Names Only What Was Asked, and a Log Reads Running, Done or Failed From Its Last rc Line
 waiter	The Waiter: A Command's Output Then rc=N Lands in Its Log, a Timeout Is Recorded as 124, and the Cleanup Runs Whatever the Result
 waiter_seconds	The Waiter's Limit and Measure: --timeout Sets the Limit, a Bad Value Is the Default, and Only a Passing Child Leaves the Seconds It Took
+flush_ceiling	The Flush Ceiling: A Commit's Limit Is Its Own Repo's Measured Gate Times a Stretch Between a Floor and the Cap, and an Unmeasured Repo Gets a Bounded Default
 detach	The Detached Start: The Waiter Argv Carries the Log, the Cleanup Pairs and the Command, and a Started Command's Log Reads Running Then Done
 fleet	The Fleet: Git State Per Workstream, a Flush That Starts a Detached Commit Only Where the Queue Is Pending and Nothing Is Running, and a Probe That Cleans Up After Itself
 flush_held	The Held Flush: A Repo With a Live Session or a Red Gate Is Not a Flush Target While a Quiet Repo With the Same Pending Queue Is

@@ -62,6 +62,14 @@ src/mikemol/katas/waiter.py|seconds-left-by-a-failure|if status == 0:|if True:|d
 src/mikemol/katas/waiter.py|timeout-flag-ignored|removals, limit\)|removals)|def=main
 src/mikemol/katas/waiter.py|bad-limit-accepted|\(limit if limit > 0 else TIMEOUT_S\)|(limit)|def=split_timeout
 
+# W1106: a flush commit's ceiling is its own measure times the stretch, between the floor and cap.
+src/mikemol/katas/fleet.py|ceiling-ignores-the-stretch|measured \* STRETCH|measured|def=ceiling
+src/mikemol/katas/fleet.py|ceiling-has-no-floor|max\(CEILING_FLOOR_S, |(|def=ceiling
+src/mikemol/katas/fleet.py|ceiling-has-no-cap|min\(CEILING_CAP_S, |(|def=ceiling
+src/mikemol/katas/fleet.py|unmeasured-is-unbounded|return UNMEASURED_S|return CEILING_CAP_S * 100|def=ceiling
+src/mikemol/katas/fleet.py|flush-gives-no-ceiling|, timeout=ceiling\(fleet, repo\)\)|)|def=flush
+src/mikemol/katas/detach.py|limit-not-passed-on|if timeout is not None:|if False:|def=waiter_argv
+
 # The probe holds the real index locked while the hook runs, as a real commit does.
 src/mikemol/katas/fleet.py|probe-does-not-hold-the-lock|held\.touch\(\)|pass|def=probe
 

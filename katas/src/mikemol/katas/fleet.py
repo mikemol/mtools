@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.procrun.proc import capture
 
-from mikemol.katas import commits, detach, liveness, workstreams
+from mikemol.katas import commits, detach, liveness, waiter, workstreams
 
 if TYPE_CHECKING:
     from collections.abc import Collection
@@ -37,6 +37,18 @@ IN_FLIGHT = "IN-FLIGHT"
 
 SYNC_SUBJECT = "Queue: state sync"
 """The subject `flush` gives the commit it starts."""
+
+STRETCH = 3.0
+"""How many times its last measured passing time a flush commit may take before it is abandoned."""
+
+CEILING_FLOOR_S = 600.0
+"""The least a flush commit is ever given, so a fast gate under load is not cut off."""
+
+CEILING_CAP_S = 10800.0
+"""The most it is ever given: `mikemol-commit`'s own limit, never an open-ended index hold."""
+
+UNMEASURED_S = 1800.0
+"""What a repo never flushed to a pass is given: a bounded guess, replaced by its first measure."""
 
 _NAME_WIDTH = 22
 _PENDING_WIDTH = 3
@@ -161,8 +173,27 @@ def flush_targets(
     ]
 
 
+def ceiling(fleet: Fleet, repo: str) -> float:
+    """Give a flush commit in `repo` its wall-clock limit, from how long its gate last took to pass.
+
+    ⚑ DERIVED FROM THE REPO'S OWN MEASURE, NOT A SHARED NUMBER: a gate of two minutes and one of two
+    hours should not share a limit. A repo with no passing flush yet gets `UNMEASURED_S`; one with a
+    measure gets it times `STRETCH`, held between `CEILING_FLOOR_S` and `CEILING_CAP_S`.
+
+    Returns:
+        the seconds.
+
+    """
+    path = waiter.seconds_of(log_of(fleet, repo))
+    try:
+        measured = float(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return UNMEASURED_S
+    return min(CEILING_CAP_S, max(CEILING_FLOOR_S, measured * STRETCH))
+
+
 def flush(fleet: Fleet, binary: Path, skip: Collection[str] = ()) -> list[str]:
-    """Start a detached queue commit in every repo `flush_targets` names.
+    """Start a detached queue commit in every repo `flush_targets` names, each under its ceiling.
 
     Returns:
         the repos a commit was started in.
@@ -171,7 +202,8 @@ def flush(fleet: Fleet, binary: Path, skip: Collection[str] = ()) -> list[str]:
     started = flush_targets(fleet, skip)
     for repo in started:
         request = commits.Request(repo, "none", SYNC_SUBJECT)
-        detach.start(log_of(fleet, repo), commits.commit_argv(binary, request))
+        argv = commits.commit_argv(binary, request)
+        detach.start(log_of(fleet, repo), argv, timeout=ceiling(fleet, repo))
     return started
 
 

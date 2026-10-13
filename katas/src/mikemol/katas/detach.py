@@ -27,30 +27,37 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def waiter_argv(log: Path, argv: Sequence[str], removals: Sequence[Path] = ()) -> list[str]:
+def waiter_argv(
+    log: Path, argv: Sequence[str], removals: Sequence[Path] = (), timeout: float | None = None
+) -> list[str]:
     """Build the argv that runs `argv` under the waiter, writing `log`.
 
     Returns:
-        this interpreter running `mikemol.katas.waiter`, the log, a `--rm` pair per path to remove,
-        then the command.
+        this interpreter running `mikemol.katas.waiter`, the log, a `--timeout` pair when a limit
+        was given, a `--rm` pair per path to remove, then the command.
 
     """
     command = [sys.executable, "-m", "mikemol.katas.waiter", str(log)]
+    if timeout is not None:
+        command += ["--timeout", f"{timeout:g}"]
     for path in removals:
         command += ["--rm", str(path)]
     return [*command, *argv]
 
 
-def start(log: Path, argv: Sequence[str], removals: Sequence[Path] = ()) -> None:
+def start(
+    log: Path, argv: Sequence[str], removals: Sequence[Path] = (), timeout: float | None = None
+) -> None:
     """Start `argv` detached, with `log` emptied first so a stale `rc=` cannot read as this run's.
 
-    The caller returns at once; poll `commits.commit_state(log)` for the outcome.
+    The caller returns at once; poll `commits.commit_state(log)` for the outcome. A `timeout` is the
+    wall-clock limit the waiter holds the child to, in seconds.
     """
     log.parent.mkdir(parents=True, exist_ok=True)
     log.write_text("", encoding="utf-8")
     env = {**os.environ, "PYTHONPATH": os.pathsep.join(entry for entry in sys.path if entry)}
     subprocess.Popen(
-        waiter_argv(log, argv, removals),
+        waiter_argv(log, argv, removals, timeout),
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,

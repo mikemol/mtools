@@ -3,18 +3,18 @@
 
 state file: `.claude/paths-forward.json`
 
-counter 1106 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:0ea8b13843ce89f4`
+counter 1106 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:6e0b6760131a8f69`
 
 | # | symbol | status |
 |---|---|---|
 | 1 | W1105 | working |
-| 2 | W1007 | ready |
-| 3 | W1008 | ready |
-| 4 | W1030 | ready |
-| 5 | W1046 | ready |
-| 6 | W1070 | ready |
-| 7 | W1071 | ready |
-| 8 | W1106 | ready |
+| 2 | W1106 | working |
+| 3 | W1007 | ready |
+| 4 | W1008 | ready |
+| 5 | W1030 | ready |
+| 6 | W1046 | ready |
+| 7 | W1070 | ready |
+| 8 | W1071 | ready |
 | 9 | W798 | ready |
 | 10 | W803 | ready |
 | 11 | W1018 | ready |
@@ -1099,18 +1099,20 @@ counter 1106 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:0ea
 
 1. **W1105** (working) katas waiter takes --timeout S and writes the child's elapsed seconds beside the log
    (LOG.seconds) when the child ends 0
-2. **W1007** (ready) Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row, replacing
-   the hand-applied W881 patch
-3. **W1008** (ready) Declare ~/.config/mikemol/katas.toml as a luthen terraform/user row from a tracked source in mtools
-4. **W1030** (ready) fence publishes its rail engagement counts (leases granted, resized, refused) as a Prometheus
-   textfile series luthen can chart
-5. **W1046** (ready) pycodemod docshape verb: wire the docshape planner under the ruff-count judge, dry run by default,
-   --write and --selftest as judged-fix
-6. **W1070** (ready) Web-subset gate: modules marked web-portable pass an AST allowlist and required annotations, no
-   waivers (a pycheck mode or sibling)
-7. **W1071** (ready) Transpile step: pinned py2many produces the TypeScript as a build output that is never edited
-8. **W1106** (ready) katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch
+2. **W1106** (working) katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch
    (floor and cap), via the waiter --timeout
+   - next: Landed once its commit prints COMMITTED; then tell github-8f the flush ceiling is in and the lease waits on
+     W1097
+3. **W1007** (ready) Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row, replacing
+   the hand-applied W881 patch
+4. **W1008** (ready) Declare ~/.config/mikemol/katas.toml as a luthen terraform/user row from a tracked source in mtools
+5. **W1030** (ready) fence publishes its rail engagement counts (leases granted, resized, refused) as a Prometheus
+   textfile series luthen can chart
+6. **W1046** (ready) pycodemod docshape verb: wire the docshape planner under the ruff-count judge, dry run by default,
+   --write and --selftest as judged-fix
+7. **W1070** (ready) Web-subset gate: modules marked web-portable pass an AST allowlist and required annotations, no
+   waivers (a pycheck mode or sibling)
+8. **W1071** (ready) Transpile step: pinned py2many produces the TypeScript as a build output that is never edited
 9. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
    captured by BuildBuddy
    - next: Rule (operator 2026-10-06): a bazel gate never globs or declares a directory as input; name every file

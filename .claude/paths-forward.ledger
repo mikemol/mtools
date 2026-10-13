@@ -1749,3 +1749,4 @@
 2026-10-13T06:41:12Z  tick  W1105 minted    -         "katas waiter takes --timeout S and writes the child's elapsed seconds beside the log (LOG.seconds) when the child ends 0"  evidence=W1098
 2026-10-13T06:41:13Z  tick  W1106 minted    -         "katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch (floor and cap), via the waiter --timeout"  evidence=W1098
 2026-10-13T06:42:37Z  tick  W1105 advanced  unblock   "waiter --timeout S and LOG.seconds built, 14 tests green; W1105/W1106 minted from W1098 (ceiling split); commit in flight"
+2026-10-13T07:12:19Z  tick  W1106 advanced  unblock   "fleet.ceiling (measured seconds x3, floor 600 s, cap 10800 s, unmeasured 1800 s) passed to the detached start as the waiter --timeout; 6+ tests green; commit in flight"
