@@ -3,11 +3,11 @@
 
 state file: `.claude/paths-forward.json`
 
-counter 1129 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:353a70e4ef600703`
+counter 1130 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:43b7dcfff3b4ba60`
 
 | # | symbol | status |
 |---|---|---|
-| 1 | W1125 | working |
+| 1 | W1126 | working |
 | 2 | W1007 | ready |
 | 3 | W1008 | ready |
 | 4 | W1030 | ready |
@@ -36,7 +36,7 @@ counter 1129 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:353
 | 27 | W1113 | ready |
 | 28 | W1115 | ready |
 | 29 | W1122 | ready |
-| 30 | W1126 | ready |
+| 30 | W1130 | ready |
 | 31 | W581 | ready |
 | 32 | W622 | ready |
 | 33 | W793 | ready |
@@ -179,951 +179,953 @@ counter 1129 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:353
 | 170 | W922 | done |
 | 171 | W1105 | done |
 | 172 | W1124 | done |
-| 173 | W1 | done |
-| 174 | W2 | done |
-| 175 | W20 | done |
-| 176 | W23 | done |
-| 177 | W28 | done |
-| 178 | W29 | done |
-| 179 | W30 | done |
-| 180 | W33 | done |
-| 181 | W34 | done |
-| 182 | W37 | done |
-| 183 | W38 | done |
-| 184 | W39 | done |
-| 185 | W41 | done |
-| 186 | W44 | done |
-| 187 | W51 | done |
-| 188 | W52 | done |
-| 189 | W53 | done |
-| 190 | W54 | done |
-| 191 | W55 | done |
-| 192 | W56 | done |
-| 193 | W57 | done |
-| 194 | W58 | done |
-| 195 | W59 | done |
-| 196 | W60 | done |
-| 197 | W61 | done |
-| 198 | W62 | done |
-| 199 | W63 | done |
-| 200 | W64 | done |
-| 201 | W65 | done |
-| 202 | W66 | done |
-| 203 | W67 | done |
-| 204 | W68 | done |
-| 205 | W69 | done |
-| 206 | W70 | done |
-| 207 | W71 | done |
-| 208 | W72 | done |
-| 209 | W73 | done |
-| 210 | W74 | done |
-| 211 | W75 | done |
-| 212 | W76 | done |
-| 213 | W77 | done |
-| 214 | W78 | done |
-| 215 | W79 | done |
-| 216 | W80 | done |
-| 217 | W81 | done |
-| 218 | W82 | done |
-| 219 | W83 | done |
-| 220 | W84 | done |
-| 221 | W85 | done |
-| 222 | W87 | done |
-| 223 | W89 | done |
-| 224 | W90 | done |
-| 225 | W91 | done |
-| 226 | W93 | done |
-| 227 | W94 | done |
-| 228 | W97 | done |
-| 229 | W98 | done |
-| 230 | W99 | done |
-| 231 | W100 | done |
-| 232 | W102 | done |
-| 233 | W103 | done |
-| 234 | W104 | done |
-| 235 | W105 | done |
-| 236 | W106 | done |
-| 237 | W107 | done |
-| 238 | W108 | done |
-| 239 | W109 | done |
-| 240 | W111 | done |
-| 241 | W112 | done |
-| 242 | W114 | done |
-| 243 | W115 | done |
-| 244 | W116 | done |
-| 245 | W118 | done |
-| 246 | W119 | done |
-| 247 | W120 | done |
-| 248 | W122 | done |
-| 249 | W125 | done |
-| 250 | W126 | done |
-| 251 | W127 | done |
-| 252 | W128 | done |
-| 253 | W131 | done |
-| 254 | W132 | done |
-| 255 | W133 | done |
-| 256 | W187 | done |
-| 257 | W189 | done |
-| 258 | W191 | done |
-| 259 | W192 | done |
-| 260 | W194 | done |
-| 261 | W195 | done |
-| 262 | W196 | done |
-| 263 | W197 | done |
-| 264 | W198 | done |
-| 265 | W199 | done |
-| 266 | W200 | done |
-| 267 | W201 | done |
-| 268 | W202 | done |
-| 269 | W203 | done |
-| 270 | W205 | done |
-| 271 | W206 | done |
-| 272 | W207 | done |
-| 273 | W208 | done |
-| 274 | W210 | done |
-| 275 | W211 | done |
-| 276 | W212 | done |
-| 277 | W213 | done |
-| 278 | W215 | done |
-| 279 | W216 | done |
-| 280 | W217 | done |
-| 281 | W218 | done |
-| 282 | W219 | done |
-| 283 | W220 | done |
-| 284 | W222 | done |
-| 285 | W223 | done |
-| 286 | W224 | done |
-| 287 | W225 | done |
-| 288 | W226 | done |
-| 289 | W240 | done |
-| 290 | W243 | done |
-| 291 | W244 | done |
-| 292 | W247 | done |
-| 293 | W248 | done |
-| 294 | W253 | done |
-| 295 | W254 | done |
-| 296 | W255 | done |
-| 297 | W256 | done |
-| 298 | W257 | done |
-| 299 | W258 | done |
-| 300 | W259 | done |
-| 301 | W260 | done |
-| 302 | W261 | done |
-| 303 | W262 | done |
-| 304 | W263 | done |
-| 305 | W264 | done |
-| 306 | W266 | done |
-| 307 | W267 | done |
-| 308 | W268 | done |
-| 309 | W269 | done |
-| 310 | W271 | done |
-| 311 | W273 | done |
-| 312 | W274 | done |
-| 313 | W275 | done |
-| 314 | W277 | done |
-| 315 | W280 | done |
-| 316 | W283 | done |
-| 317 | W289 | done |
-| 318 | W290 | done |
-| 319 | W291 | done |
-| 320 | W292 | done |
-| 321 | W293 | done |
-| 322 | W294 | done |
-| 323 | W295 | done |
-| 324 | W297 | done |
-| 325 | W298 | done |
-| 326 | W301 | done |
-| 327 | W302 | done |
-| 328 | W303 | done |
-| 329 | W304 | done |
-| 330 | W305 | done |
-| 331 | W306 | done |
-| 332 | W307 | done |
-| 333 | W308 | done |
-| 334 | W311 | done |
-| 335 | W314 | done |
-| 336 | W316 | done |
-| 337 | W318 | done |
-| 338 | W320 | done |
-| 339 | W321 | done |
-| 340 | W324 | done |
-| 341 | W325 | done |
-| 342 | W326 | done |
-| 343 | W327 | done |
-| 344 | W332 | done |
-| 345 | W333 | done |
-| 346 | W334 | done |
-| 347 | W335 | done |
-| 348 | W336 | done |
-| 349 | W337 | done |
-| 350 | W338 | done |
-| 351 | W339 | done |
-| 352 | W340 | done |
-| 353 | W341 | done |
-| 354 | W342 | done |
-| 355 | W343 | done |
-| 356 | W344 | done |
-| 357 | W345 | done |
-| 358 | W346 | done |
-| 359 | W348 | done |
-| 360 | W349 | done |
-| 361 | W350 | done |
-| 362 | W351 | done |
-| 363 | W352 | done |
-| 364 | W355 | done |
-| 365 | W357 | done |
-| 366 | W358 | done |
-| 367 | W360 | done |
-| 368 | W362 | done |
-| 369 | W363 | done |
-| 370 | W364 | done |
-| 371 | W365 | done |
-| 372 | W366 | done |
-| 373 | W367 | done |
-| 374 | W368 | done |
-| 375 | W369 | done |
-| 376 | W370 | done |
-| 377 | W371 | done |
-| 378 | W372 | done |
-| 379 | W373 | done |
-| 380 | W375 | done |
-| 381 | W376 | done |
-| 382 | W378 | done |
-| 383 | W379 | done |
-| 384 | W380 | done |
-| 385 | W382 | done |
-| 386 | W384 | done |
-| 387 | W385 | done |
-| 388 | W386 | done |
-| 389 | W388 | done |
-| 390 | W389 | done |
-| 391 | W390 | done |
-| 392 | W391 | done |
-| 393 | W392 | done |
-| 394 | W393 | done |
-| 395 | W394 | done |
-| 396 | W395 | done |
-| 397 | W396 | done |
-| 398 | W397 | done |
-| 399 | W398 | done |
-| 400 | W399 | done |
-| 401 | W400 | done |
-| 402 | W401 | done |
-| 403 | W402 | done |
-| 404 | W403 | done |
-| 405 | W404 | done |
-| 406 | W405 | done |
-| 407 | W406 | done |
-| 408 | W407 | done |
-| 409 | W409 | done |
-| 410 | W410 | done |
-| 411 | W411 | done |
-| 412 | W412 | done |
-| 413 | W413 | done |
-| 414 | W414 | done |
-| 415 | W415 | done |
-| 416 | W417 | done |
-| 417 | W418 | done |
-| 418 | W419 | done |
-| 419 | W420 | done |
-| 420 | W421 | done |
-| 421 | W422 | done |
-| 422 | W423 | done |
-| 423 | W424 | done |
-| 424 | W427 | done |
-| 425 | W428 | done |
-| 426 | W431 | done |
-| 427 | W432 | done |
-| 428 | W433 | done |
-| 429 | W434 | done |
-| 430 | W435 | done |
-| 431 | W436 | done |
-| 432 | W437 | done |
-| 433 | W438 | done |
-| 434 | W439 | done |
-| 435 | W440 | done |
-| 436 | W441 | done |
-| 437 | W442 | done |
-| 438 | W443 | done |
-| 439 | W444 | done |
-| 440 | W445 | done |
-| 441 | W446 | done |
-| 442 | W447 | done |
-| 443 | W448 | done |
-| 444 | W449 | done |
-| 445 | W450 | done |
-| 446 | W451 | done |
-| 447 | W452 | done |
-| 448 | W453 | done |
-| 449 | W454 | done |
-| 450 | W455 | done |
-| 451 | W456 | done |
-| 452 | W457 | done |
-| 453 | W458 | done |
-| 454 | W459 | done |
-| 455 | W460 | done |
-| 456 | W461 | done |
-| 457 | W462 | done |
-| 458 | W463 | done |
-| 459 | W467 | done |
-| 460 | W468 | done |
-| 461 | W469 | done |
-| 462 | W470 | done |
-| 463 | W471 | done |
-| 464 | W472 | done |
-| 465 | W473 | done |
-| 466 | W475 | done |
-| 467 | W476 | done |
-| 468 | W477 | done |
-| 469 | W478 | done |
-| 470 | W480 | done |
-| 471 | W481 | done |
-| 472 | W483 | done |
-| 473 | W485 | done |
-| 474 | W503 | done |
-| 475 | W516 | done |
-| 476 | W523 | done |
-| 477 | W524 | done |
-| 478 | W526 | done |
-| 479 | W529 | done |
-| 480 | W531 | done |
-| 481 | W532 | done |
-| 482 | W533 | done |
-| 483 | W534 | done |
-| 484 | W535 | done |
-| 485 | W536 | done |
-| 486 | W539 | done |
-| 487 | W542 | done |
-| 488 | W543 | done |
-| 489 | W544 | done |
-| 490 | W545 | done |
-| 491 | W546 | done |
-| 492 | W547 | done |
-| 493 | W548 | done |
-| 494 | W549 | done |
-| 495 | W550 | done |
-| 496 | W552 | done |
-| 497 | W554 | done |
-| 498 | W555 | done |
-| 499 | W556 | done |
-| 500 | W557 | done |
-| 501 | W558 | done |
-| 502 | W560 | done |
-| 503 | W561 | done |
-| 504 | W563 | done |
-| 505 | W565 | done |
-| 506 | W566 | done |
-| 507 | W568 | done |
-| 508 | W569 | done |
-| 509 | W570 | done |
-| 510 | W571 | done |
-| 511 | W572 | done |
-| 512 | W573 | done |
-| 513 | W574 | done |
-| 514 | W575 | done |
-| 515 | W576 | done |
-| 516 | W678 | done |
-| 517 | W679 | done |
-| 518 | W683 | done |
-| 519 | W684 | done |
-| 520 | W685 | done |
-| 521 | W686 | done |
-| 522 | W687 | done |
-| 523 | W688 | done |
-| 524 | W690 | done |
-| 525 | W691 | done |
-| 526 | W692 | done |
-| 527 | W693 | done |
-| 528 | W694 | done |
-| 529 | W695 | done |
-| 530 | W696 | done |
-| 531 | W697 | done |
-| 532 | W698 | done |
-| 533 | W699 | done |
-| 534 | W700 | done |
-| 535 | W701 | done |
-| 536 | W702 | done |
-| 537 | W703 | done |
-| 538 | W704 | done |
-| 539 | W705 | done |
-| 540 | W706 | done |
-| 541 | W707 | done |
-| 542 | W708 | done |
-| 543 | W709 | done |
-| 544 | W710 | done |
-| 545 | W711 | done |
-| 546 | W730 | done |
-| 547 | W731 | done |
-| 548 | W733 | done |
-| 549 | W734 | done |
-| 550 | W735 | done |
-| 551 | W736 | done |
-| 552 | W737 | done |
-| 553 | W738 | done |
-| 554 | W739 | done |
-| 555 | W741 | done |
-| 556 | W742 | done |
-| 557 | W743 | done |
-| 558 | W753 | done |
-| 559 | W754 | done |
-| 560 | W755 | done |
-| 561 | W756 | done |
-| 562 | W757 | done |
-| 563 | W758 | done |
-| 564 | W759 | done |
-| 565 | W767 | done |
-| 566 | W768 | done |
-| 567 | W769 | done |
-| 568 | W770 | done |
-| 569 | W771 | done |
-| 570 | W772 | done |
-| 571 | W774 | done |
-| 572 | W776 | done |
-| 573 | W778 | done |
-| 574 | W779 | done |
-| 575 | W780 | done |
-| 576 | W783 | done |
-| 577 | W788 | done |
-| 578 | W791 | done |
-| 579 | W792 | done |
-| 580 | W794 | done |
-| 581 | W795 | done |
-| 582 | W801 | done |
-| 583 | W802 | done |
-| 584 | W808 | done |
-| 585 | W810 | done |
-| 586 | W811 | done |
-| 587 | W812 | done |
-| 588 | W813 | done |
-| 589 | W814 | done |
-| 590 | W815 | done |
-| 591 | W818 | done |
-| 592 | W863 | done |
-| 593 | W864 | done |
-| 594 | W865 | done |
-| 595 | W866 | done |
-| 596 | W869 | done |
-| 597 | W870 | done |
-| 598 | W872 | done |
-| 599 | W873 | done |
-| 600 | W874 | done |
-| 601 | W875 | done |
-| 602 | W876 | done |
-| 603 | W877 | done |
-| 604 | W878 | done |
-| 605 | W882 | done |
-| 606 | W892 | done |
-| 607 | W893 | done |
-| 608 | W895 | done |
-| 609 | W896 | done |
-| 610 | W898 | done |
-| 611 | W901 | done |
-| 612 | W902 | done |
-| 613 | W903 | done |
-| 614 | W904 | done |
-| 615 | W905 | done |
-| 616 | W906 | done |
-| 617 | W907 | done |
-| 618 | W908 | done |
-| 619 | W909 | done |
-| 620 | W911 | done |
-| 621 | W912 | done |
-| 622 | W913 | done |
-| 623 | W915 | done |
-| 624 | W916 | done |
-| 625 | W917 | done |
-| 626 | W918 | done |
-| 627 | W919 | done |
-| 628 | W920 | done |
-| 629 | W921 | done |
-| 630 | W929 | done |
-| 631 | W930 | done |
-| 632 | W931 | done |
-| 633 | W932 | done |
-| 634 | W933 | done |
-| 635 | W936 | done |
-| 636 | W939 | done |
-| 637 | W940 | done |
-| 638 | W941 | done |
-| 639 | W943 | done |
-| 640 | W944 | done |
-| 641 | W945 | done |
-| 642 | W949 | done |
-| 643 | W950 | done |
-| 644 | W951 | done |
-| 645 | W952 | done |
-| 646 | W953 | done |
-| 647 | W957 | done |
-| 648 | W958 | done |
-| 649 | W959 | done |
-| 650 | W961 | done |
-| 651 | W964 | done |
-| 652 | W970 | done |
-| 653 | W971 | done |
-| 654 | W972 | done |
-| 655 | W973 | done |
-| 656 | W975 | done |
-| 657 | W981 | done |
-| 658 | W983 | done |
-| 659 | W989 | done |
-| 660 | W990 | done |
-| 661 | W991 | done |
-| 662 | W993 | done |
-| 663 | W994 | done |
-| 664 | W997 | done |
-| 665 | W998 | done |
-| 666 | W999 | done |
-| 667 | W1000 | done |
-| 668 | W1001 | done |
-| 669 | W1002 | done |
-| 670 | W1003 | done |
-| 671 | W1004 | done |
-| 672 | W1020 | done |
-| 673 | W1021 | done |
-| 674 | W1023 | done |
-| 675 | W1024 | done |
-| 676 | W1033 | done |
-| 677 | W1034 | done |
-| 678 | W1036 | done |
-| 679 | W1041 | done |
-| 680 | W1044 | done |
-| 681 | W1048 | done |
-| 682 | W1050 | done |
-| 683 | W1053 | done |
-| 684 | W1054 | done |
-| 685 | W1055 | done |
-| 686 | W1056 | done |
-| 687 | W1057 | done |
-| 688 | W1058 | done |
-| 689 | W1059 | done |
-| 690 | W1060 | done |
-| 691 | W1063 | done |
-| 692 | W1064 | done |
-| 693 | W1065 | done |
-| 694 | W1066 | done |
-| 695 | W1067 | done |
-| 696 | W1068 | done |
-| 697 | W1106 | done |
-| 698 | W1107 | done |
-| 699 | W1108 | done |
-| 700 | W1112 | done |
-| 701 | W1119 | done |
-| 702 | W3 | done |
-| 703 | W4 | done |
-| 704 | W8 | done |
-| 705 | W9 | done |
-| 706 | W18 | done |
-| 707 | W19 | done |
-| 708 | W21 | done |
-| 709 | W22 | done |
-| 710 | W24 | done |
-| 711 | W11 | done |
-| 712 | W14 | done |
-| 713 | W15 | done |
-| 714 | W16 | done |
-| 715 | W25 | done |
-| 716 | W26 | done |
-| 717 | W27 | done |
-| 718 | W31 | done |
-| 719 | W32 | done |
-| 720 | W45 | done |
-| 721 | W48 | done |
-| 722 | W49 | done |
-| 723 | W50 | done |
-| 724 | W86 | done |
-| 725 | W88 | done |
-| 726 | W121 | done |
-| 727 | W123 | done |
-| 728 | W124 | done |
-| 729 | W134 | done |
-| 730 | W135 | done |
-| 731 | W136 | done |
-| 732 | W137 | done |
-| 733 | W138 | done |
-| 734 | W139 | done |
-| 735 | W140 | done |
-| 736 | W141 | done |
-| 737 | W142 | done |
-| 738 | W143 | done |
-| 739 | W144 | done |
-| 740 | W145 | done |
-| 741 | W146 | done |
-| 742 | W147 | done |
-| 743 | W148 | done |
-| 744 | W149 | done |
-| 745 | W150 | done |
-| 746 | W151 | done |
-| 747 | W152 | done |
-| 748 | W153 | done |
-| 749 | W154 | done |
-| 750 | W155 | done |
-| 751 | W156 | done |
-| 752 | W157 | done |
-| 753 | W158 | done |
-| 754 | W159 | done |
-| 755 | W160 | done |
-| 756 | W161 | done |
-| 757 | W162 | done |
-| 758 | W163 | done |
-| 759 | W164 | done |
-| 760 | W165 | done |
-| 761 | W166 | done |
-| 762 | W167 | done |
-| 763 | W168 | done |
-| 764 | W169 | done |
-| 765 | W170 | done |
-| 766 | W171 | done |
-| 767 | W172 | done |
-| 768 | W173 | done |
-| 769 | W174 | done |
-| 770 | W175 | done |
-| 771 | W176 | done |
-| 772 | W177 | done |
-| 773 | W178 | done |
-| 774 | W179 | done |
-| 775 | W180 | done |
-| 776 | W181 | done |
-| 777 | W182 | done |
-| 778 | W183 | done |
-| 779 | W184 | done |
-| 780 | W185 | done |
-| 781 | W186 | done |
-| 782 | W188 | done |
-| 783 | W193 | done |
-| 784 | W204 | done |
-| 785 | W209 | done |
-| 786 | W227 | done |
-| 787 | W229 | done |
-| 788 | W230 | done |
-| 789 | W233 | done |
-| 790 | W234 | done |
-| 791 | W235 | done |
-| 792 | W236 | done |
-| 793 | W237 | done |
-| 794 | W238 | done |
-| 795 | W239 | done |
-| 796 | W246 | done |
-| 797 | W249 | done |
-| 798 | W250 | done |
-| 799 | W251 | done |
-| 800 | W252 | done |
-| 801 | W272 | done |
-| 802 | W329 | done |
-| 803 | W354 | done |
-| 804 | W359 | done |
-| 805 | W361 | done |
-| 806 | W374 | done |
-| 807 | W377 | done |
-| 808 | W383 | done |
-| 809 | W425 | done |
-| 810 | W426 | done |
-| 811 | W429 | done |
-| 812 | W430 | done |
-| 813 | W464 | done |
-| 814 | W465 | done |
-| 815 | W466 | done |
-| 816 | W474 | done |
-| 817 | W479 | done |
-| 818 | W482 | done |
-| 819 | W484 | done |
-| 820 | W487 | done |
-| 821 | W488 | done |
-| 822 | W489 | done |
-| 823 | W490 | done |
-| 824 | W491 | done |
-| 825 | W492 | done |
-| 826 | W493 | done |
-| 827 | W494 | done |
-| 828 | W495 | done |
-| 829 | W496 | done |
-| 830 | W497 | done |
-| 831 | W498 | done |
-| 832 | W499 | done |
-| 833 | W500 | done |
-| 834 | W501 | done |
-| 835 | W502 | done |
-| 836 | W505 | done |
-| 837 | W506 | done |
-| 838 | W507 | done |
-| 839 | W508 | done |
-| 840 | W509 | done |
-| 841 | W510 | done |
-| 842 | W511 | done |
-| 843 | W513 | done |
-| 844 | W514 | done |
-| 845 | W515 | done |
-| 846 | W517 | done |
-| 847 | W518 | done |
-| 848 | W519 | done |
-| 849 | W520 | done |
-| 850 | W521 | done |
-| 851 | W522 | done |
-| 852 | W525 | done |
-| 853 | W527 | done |
-| 854 | W528 | done |
-| 855 | W537 | done |
-| 856 | W538 | done |
-| 857 | W540 | done |
-| 858 | W541 | done |
-| 859 | W551 | done |
-| 860 | W553 | done |
-| 861 | W559 | done |
-| 862 | W567 | done |
-| 863 | W577 | done |
-| 864 | W578 | done |
-| 865 | W579 | done |
-| 866 | W580 | done |
-| 867 | W582 | done |
-| 868 | W583 | done |
-| 869 | W584 | done |
-| 870 | W585 | done |
-| 871 | W586 | done |
-| 872 | W587 | done |
-| 873 | W588 | done |
-| 874 | W589 | done |
-| 875 | W590 | done |
-| 876 | W591 | done |
-| 877 | W593 | done |
-| 878 | W594 | done |
-| 879 | W595 | done |
-| 880 | W596 | done |
-| 881 | W597 | done |
-| 882 | W598 | done |
-| 883 | W599 | done |
-| 884 | W600 | done |
-| 885 | W601 | done |
-| 886 | W602 | done |
-| 887 | W603 | done |
-| 888 | W604 | done |
-| 889 | W605 | done |
-| 890 | W606 | done |
-| 891 | W607 | done |
-| 892 | W608 | done |
-| 893 | W609 | done |
-| 894 | W610 | done |
-| 895 | W611 | done |
-| 896 | W612 | done |
-| 897 | W613 | done |
-| 898 | W614 | done |
-| 899 | W615 | done |
-| 900 | W616 | done |
-| 901 | W617 | done |
-| 902 | W618 | done |
-| 903 | W619 | done |
-| 904 | W620 | done |
-| 905 | W621 | done |
-| 906 | W623 | done |
-| 907 | W624 | done |
-| 908 | W625 | done |
-| 909 | W626 | done |
-| 910 | W627 | done |
-| 911 | W628 | done |
-| 912 | W629 | done |
-| 913 | W630 | done |
-| 914 | W631 | done |
-| 915 | W632 | done |
-| 916 | W633 | done |
-| 917 | W634 | done |
-| 918 | W635 | done |
-| 919 | W636 | done |
-| 920 | W637 | done |
-| 921 | W638 | done |
-| 922 | W639 | done |
-| 923 | W640 | done |
-| 924 | W641 | done |
-| 925 | W642 | done |
-| 926 | W643 | done |
-| 927 | W644 | done |
-| 928 | W645 | done |
-| 929 | W646 | done |
-| 930 | W647 | done |
-| 931 | W648 | done |
-| 932 | W649 | done |
-| 933 | W650 | done |
-| 934 | W651 | done |
-| 935 | W652 | done |
-| 936 | W653 | done |
-| 937 | W654 | done |
-| 938 | W655 | done |
-| 939 | W656 | done |
-| 940 | W657 | done |
-| 941 | W658 | done |
-| 942 | W659 | done |
-| 943 | W660 | done |
-| 944 | W661 | done |
-| 945 | W662 | done |
-| 946 | W663 | done |
-| 947 | W664 | done |
-| 948 | W665 | done |
-| 949 | W666 | done |
-| 950 | W667 | done |
-| 951 | W668 | done |
-| 952 | W669 | done |
-| 953 | W670 | done |
-| 954 | W671 | done |
-| 955 | W672 | done |
-| 956 | W712 | done |
-| 957 | W713 | done |
-| 958 | W714 | done |
-| 959 | W715 | done |
-| 960 | W716 | done |
-| 961 | W717 | done |
-| 962 | W718 | done |
-| 963 | W719 | done |
-| 964 | W720 | done |
-| 965 | W721 | done |
-| 966 | W722 | done |
-| 967 | W723 | done |
-| 968 | W724 | done |
-| 969 | W725 | done |
-| 970 | W726 | done |
-| 971 | W727 | done |
-| 972 | W728 | done |
-| 973 | W744 | done |
-| 974 | W745 | done |
-| 975 | W746 | done |
-| 976 | W747 | done |
-| 977 | W748 | done |
-| 978 | W749 | done |
-| 979 | W750 | done |
-| 980 | W760 | done |
-| 981 | W761 | done |
-| 982 | W762 | done |
-| 983 | W763 | done |
-| 984 | W764 | done |
-| 985 | W765 | done |
-| 986 | W766 | done |
-| 987 | W773 | done |
-| 988 | W777 | done |
-| 989 | W781 | done |
-| 990 | W782 | done |
-| 991 | W784 | done |
-| 992 | W785 | done |
-| 993 | W786 | done |
-| 994 | W787 | done |
-| 995 | W789 | done |
-| 996 | W790 | done |
-| 997 | W797 | done |
-| 998 | W800 | done |
-| 999 | W805 | done |
-| 1000 | W807 | done |
-| 1001 | W809 | done |
-| 1002 | W820 | done |
-| 1003 | W821 | done |
-| 1004 | W823 | done |
-| 1005 | W824 | done |
-| 1006 | W825 | done |
-| 1007 | W826 | done |
-| 1008 | W827 | done |
-| 1009 | W828 | done |
-| 1010 | W829 | done |
-| 1011 | W830 | done |
-| 1012 | W832 | done |
-| 1013 | W834 | done |
-| 1014 | W835 | done |
-| 1015 | W836 | done |
-| 1016 | W837 | done |
-| 1017 | W838 | done |
-| 1018 | W839 | done |
-| 1019 | W840 | done |
-| 1020 | W842 | done |
-| 1021 | W844 | done |
-| 1022 | W845 | done |
-| 1023 | W846 | done |
-| 1024 | W847 | done |
-| 1025 | W848 | done |
-| 1026 | W849 | done |
-| 1027 | W850 | done |
-| 1028 | W851 | done |
-| 1029 | W852 | done |
-| 1030 | W853 | done |
-| 1031 | W854 | done |
-| 1032 | W855 | done |
-| 1033 | W856 | done |
-| 1034 | W862 | done |
-| 1035 | W867 | done |
-| 1036 | W868 | done |
-| 1037 | W871 | done |
-| 1038 | W880 | done |
-| 1039 | W881 | done |
-| 1040 | W884 | done |
-| 1041 | W885 | done |
-| 1042 | W886 | done |
-| 1043 | W888 | done |
-| 1044 | W889 | done |
-| 1045 | W891 | done |
-| 1046 | W894 | done |
-| 1047 | W910 | done |
-| 1048 | W924 | done |
-| 1049 | W925 | done |
-| 1050 | W926 | done |
-| 1051 | W927 | done |
-| 1052 | W928 | done |
-| 1053 | W934 | done |
-| 1054 | W935 | done |
-| 1055 | W937 | done |
-| 1056 | W938 | done |
-| 1057 | W946 | done |
-| 1058 | W947 | done |
-| 1059 | W948 | done |
-| 1060 | W955 | done |
-| 1061 | W956 | done |
-| 1062 | W962 | done |
-| 1063 | W967 | done |
-| 1064 | W968 | done |
-| 1065 | W969 | done |
-| 1066 | W974 | done |
-| 1067 | W976 | done |
-| 1068 | W977 | done |
-| 1069 | W978 | done |
-| 1070 | W979 | done |
-| 1071 | W980 | done |
-| 1072 | W982 | done |
-| 1073 | W984 | done |
-| 1074 | W985 | done |
-| 1075 | W987 | done |
-| 1076 | W988 | done |
-| 1077 | W992 | done |
-| 1078 | W995 | done |
-| 1079 | W1006 | done |
-| 1080 | W1009 | done |
-| 1081 | W1010 | done |
-| 1082 | W1011 | done |
-| 1083 | W1012 | done |
-| 1084 | W1013 | done |
-| 1085 | W1014 | done |
-| 1086 | W1015 | done |
-| 1087 | W1016 | done |
-| 1088 | W1022 | done |
-| 1089 | W1031 | done |
-| 1090 | W1032 | done |
-| 1091 | W1035 | done |
-| 1092 | W1037 | done |
-| 1093 | W1038 | done |
-| 1094 | W1039 | done |
-| 1095 | W1042 | done |
-| 1096 | W1051 | done |
-| 1097 | W1078 | done |
-| 1098 | W1079 | done |
-| 1099 | W1082 | done |
-| 1100 | W1085 | done |
-| 1101 | W1087 | done |
-| 1102 | W1092 | done |
-| 1103 | W1097 | done |
-| 1104 | W1098 | done |
-| 1105 | W1099 | done |
-| 1106 | W1101 | done |
-| 1107 | W1110 | done |
-| 1108 | W1120 | done |
-| 1109 | W1121 | done |
-| 1110 | W1123 | done |
+| 173 | W1125 | done |
+| 174 | W1 | done |
+| 175 | W2 | done |
+| 176 | W20 | done |
+| 177 | W23 | done |
+| 178 | W28 | done |
+| 179 | W29 | done |
+| 180 | W30 | done |
+| 181 | W33 | done |
+| 182 | W34 | done |
+| 183 | W37 | done |
+| 184 | W38 | done |
+| 185 | W39 | done |
+| 186 | W41 | done |
+| 187 | W44 | done |
+| 188 | W51 | done |
+| 189 | W52 | done |
+| 190 | W53 | done |
+| 191 | W54 | done |
+| 192 | W55 | done |
+| 193 | W56 | done |
+| 194 | W57 | done |
+| 195 | W58 | done |
+| 196 | W59 | done |
+| 197 | W60 | done |
+| 198 | W61 | done |
+| 199 | W62 | done |
+| 200 | W63 | done |
+| 201 | W64 | done |
+| 202 | W65 | done |
+| 203 | W66 | done |
+| 204 | W67 | done |
+| 205 | W68 | done |
+| 206 | W69 | done |
+| 207 | W70 | done |
+| 208 | W71 | done |
+| 209 | W72 | done |
+| 210 | W73 | done |
+| 211 | W74 | done |
+| 212 | W75 | done |
+| 213 | W76 | done |
+| 214 | W77 | done |
+| 215 | W78 | done |
+| 216 | W79 | done |
+| 217 | W80 | done |
+| 218 | W81 | done |
+| 219 | W82 | done |
+| 220 | W83 | done |
+| 221 | W84 | done |
+| 222 | W85 | done |
+| 223 | W87 | done |
+| 224 | W89 | done |
+| 225 | W90 | done |
+| 226 | W91 | done |
+| 227 | W93 | done |
+| 228 | W94 | done |
+| 229 | W97 | done |
+| 230 | W98 | done |
+| 231 | W99 | done |
+| 232 | W100 | done |
+| 233 | W102 | done |
+| 234 | W103 | done |
+| 235 | W104 | done |
+| 236 | W105 | done |
+| 237 | W106 | done |
+| 238 | W107 | done |
+| 239 | W108 | done |
+| 240 | W109 | done |
+| 241 | W111 | done |
+| 242 | W112 | done |
+| 243 | W114 | done |
+| 244 | W115 | done |
+| 245 | W116 | done |
+| 246 | W118 | done |
+| 247 | W119 | done |
+| 248 | W120 | done |
+| 249 | W122 | done |
+| 250 | W125 | done |
+| 251 | W126 | done |
+| 252 | W127 | done |
+| 253 | W128 | done |
+| 254 | W131 | done |
+| 255 | W132 | done |
+| 256 | W133 | done |
+| 257 | W187 | done |
+| 258 | W189 | done |
+| 259 | W191 | done |
+| 260 | W192 | done |
+| 261 | W194 | done |
+| 262 | W195 | done |
+| 263 | W196 | done |
+| 264 | W197 | done |
+| 265 | W198 | done |
+| 266 | W199 | done |
+| 267 | W200 | done |
+| 268 | W201 | done |
+| 269 | W202 | done |
+| 270 | W203 | done |
+| 271 | W205 | done |
+| 272 | W206 | done |
+| 273 | W207 | done |
+| 274 | W208 | done |
+| 275 | W210 | done |
+| 276 | W211 | done |
+| 277 | W212 | done |
+| 278 | W213 | done |
+| 279 | W215 | done |
+| 280 | W216 | done |
+| 281 | W217 | done |
+| 282 | W218 | done |
+| 283 | W219 | done |
+| 284 | W220 | done |
+| 285 | W222 | done |
+| 286 | W223 | done |
+| 287 | W224 | done |
+| 288 | W225 | done |
+| 289 | W226 | done |
+| 290 | W240 | done |
+| 291 | W243 | done |
+| 292 | W244 | done |
+| 293 | W247 | done |
+| 294 | W248 | done |
+| 295 | W253 | done |
+| 296 | W254 | done |
+| 297 | W255 | done |
+| 298 | W256 | done |
+| 299 | W257 | done |
+| 300 | W258 | done |
+| 301 | W259 | done |
+| 302 | W260 | done |
+| 303 | W261 | done |
+| 304 | W262 | done |
+| 305 | W263 | done |
+| 306 | W264 | done |
+| 307 | W266 | done |
+| 308 | W267 | done |
+| 309 | W268 | done |
+| 310 | W269 | done |
+| 311 | W271 | done |
+| 312 | W273 | done |
+| 313 | W274 | done |
+| 314 | W275 | done |
+| 315 | W277 | done |
+| 316 | W280 | done |
+| 317 | W283 | done |
+| 318 | W289 | done |
+| 319 | W290 | done |
+| 320 | W291 | done |
+| 321 | W292 | done |
+| 322 | W293 | done |
+| 323 | W294 | done |
+| 324 | W295 | done |
+| 325 | W297 | done |
+| 326 | W298 | done |
+| 327 | W301 | done |
+| 328 | W302 | done |
+| 329 | W303 | done |
+| 330 | W304 | done |
+| 331 | W305 | done |
+| 332 | W306 | done |
+| 333 | W307 | done |
+| 334 | W308 | done |
+| 335 | W311 | done |
+| 336 | W314 | done |
+| 337 | W316 | done |
+| 338 | W318 | done |
+| 339 | W320 | done |
+| 340 | W321 | done |
+| 341 | W324 | done |
+| 342 | W325 | done |
+| 343 | W326 | done |
+| 344 | W327 | done |
+| 345 | W332 | done |
+| 346 | W333 | done |
+| 347 | W334 | done |
+| 348 | W335 | done |
+| 349 | W336 | done |
+| 350 | W337 | done |
+| 351 | W338 | done |
+| 352 | W339 | done |
+| 353 | W340 | done |
+| 354 | W341 | done |
+| 355 | W342 | done |
+| 356 | W343 | done |
+| 357 | W344 | done |
+| 358 | W345 | done |
+| 359 | W346 | done |
+| 360 | W348 | done |
+| 361 | W349 | done |
+| 362 | W350 | done |
+| 363 | W351 | done |
+| 364 | W352 | done |
+| 365 | W355 | done |
+| 366 | W357 | done |
+| 367 | W358 | done |
+| 368 | W360 | done |
+| 369 | W362 | done |
+| 370 | W363 | done |
+| 371 | W364 | done |
+| 372 | W365 | done |
+| 373 | W366 | done |
+| 374 | W367 | done |
+| 375 | W368 | done |
+| 376 | W369 | done |
+| 377 | W370 | done |
+| 378 | W371 | done |
+| 379 | W372 | done |
+| 380 | W373 | done |
+| 381 | W375 | done |
+| 382 | W376 | done |
+| 383 | W378 | done |
+| 384 | W379 | done |
+| 385 | W380 | done |
+| 386 | W382 | done |
+| 387 | W384 | done |
+| 388 | W385 | done |
+| 389 | W386 | done |
+| 390 | W388 | done |
+| 391 | W389 | done |
+| 392 | W390 | done |
+| 393 | W391 | done |
+| 394 | W392 | done |
+| 395 | W393 | done |
+| 396 | W394 | done |
+| 397 | W395 | done |
+| 398 | W396 | done |
+| 399 | W397 | done |
+| 400 | W398 | done |
+| 401 | W399 | done |
+| 402 | W400 | done |
+| 403 | W401 | done |
+| 404 | W402 | done |
+| 405 | W403 | done |
+| 406 | W404 | done |
+| 407 | W405 | done |
+| 408 | W406 | done |
+| 409 | W407 | done |
+| 410 | W409 | done |
+| 411 | W410 | done |
+| 412 | W411 | done |
+| 413 | W412 | done |
+| 414 | W413 | done |
+| 415 | W414 | done |
+| 416 | W415 | done |
+| 417 | W417 | done |
+| 418 | W418 | done |
+| 419 | W419 | done |
+| 420 | W420 | done |
+| 421 | W421 | done |
+| 422 | W422 | done |
+| 423 | W423 | done |
+| 424 | W424 | done |
+| 425 | W427 | done |
+| 426 | W428 | done |
+| 427 | W431 | done |
+| 428 | W432 | done |
+| 429 | W433 | done |
+| 430 | W434 | done |
+| 431 | W435 | done |
+| 432 | W436 | done |
+| 433 | W437 | done |
+| 434 | W438 | done |
+| 435 | W439 | done |
+| 436 | W440 | done |
+| 437 | W441 | done |
+| 438 | W442 | done |
+| 439 | W443 | done |
+| 440 | W444 | done |
+| 441 | W445 | done |
+| 442 | W446 | done |
+| 443 | W447 | done |
+| 444 | W448 | done |
+| 445 | W449 | done |
+| 446 | W450 | done |
+| 447 | W451 | done |
+| 448 | W452 | done |
+| 449 | W453 | done |
+| 450 | W454 | done |
+| 451 | W455 | done |
+| 452 | W456 | done |
+| 453 | W457 | done |
+| 454 | W458 | done |
+| 455 | W459 | done |
+| 456 | W460 | done |
+| 457 | W461 | done |
+| 458 | W462 | done |
+| 459 | W463 | done |
+| 460 | W467 | done |
+| 461 | W468 | done |
+| 462 | W469 | done |
+| 463 | W470 | done |
+| 464 | W471 | done |
+| 465 | W472 | done |
+| 466 | W473 | done |
+| 467 | W475 | done |
+| 468 | W476 | done |
+| 469 | W477 | done |
+| 470 | W478 | done |
+| 471 | W480 | done |
+| 472 | W481 | done |
+| 473 | W483 | done |
+| 474 | W485 | done |
+| 475 | W503 | done |
+| 476 | W516 | done |
+| 477 | W523 | done |
+| 478 | W524 | done |
+| 479 | W526 | done |
+| 480 | W529 | done |
+| 481 | W531 | done |
+| 482 | W532 | done |
+| 483 | W533 | done |
+| 484 | W534 | done |
+| 485 | W535 | done |
+| 486 | W536 | done |
+| 487 | W539 | done |
+| 488 | W542 | done |
+| 489 | W543 | done |
+| 490 | W544 | done |
+| 491 | W545 | done |
+| 492 | W546 | done |
+| 493 | W547 | done |
+| 494 | W548 | done |
+| 495 | W549 | done |
+| 496 | W550 | done |
+| 497 | W552 | done |
+| 498 | W554 | done |
+| 499 | W555 | done |
+| 500 | W556 | done |
+| 501 | W557 | done |
+| 502 | W558 | done |
+| 503 | W560 | done |
+| 504 | W561 | done |
+| 505 | W563 | done |
+| 506 | W565 | done |
+| 507 | W566 | done |
+| 508 | W568 | done |
+| 509 | W569 | done |
+| 510 | W570 | done |
+| 511 | W571 | done |
+| 512 | W572 | done |
+| 513 | W573 | done |
+| 514 | W574 | done |
+| 515 | W575 | done |
+| 516 | W576 | done |
+| 517 | W678 | done |
+| 518 | W679 | done |
+| 519 | W683 | done |
+| 520 | W684 | done |
+| 521 | W685 | done |
+| 522 | W686 | done |
+| 523 | W687 | done |
+| 524 | W688 | done |
+| 525 | W690 | done |
+| 526 | W691 | done |
+| 527 | W692 | done |
+| 528 | W693 | done |
+| 529 | W694 | done |
+| 530 | W695 | done |
+| 531 | W696 | done |
+| 532 | W697 | done |
+| 533 | W698 | done |
+| 534 | W699 | done |
+| 535 | W700 | done |
+| 536 | W701 | done |
+| 537 | W702 | done |
+| 538 | W703 | done |
+| 539 | W704 | done |
+| 540 | W705 | done |
+| 541 | W706 | done |
+| 542 | W707 | done |
+| 543 | W708 | done |
+| 544 | W709 | done |
+| 545 | W710 | done |
+| 546 | W711 | done |
+| 547 | W730 | done |
+| 548 | W731 | done |
+| 549 | W733 | done |
+| 550 | W734 | done |
+| 551 | W735 | done |
+| 552 | W736 | done |
+| 553 | W737 | done |
+| 554 | W738 | done |
+| 555 | W739 | done |
+| 556 | W741 | done |
+| 557 | W742 | done |
+| 558 | W743 | done |
+| 559 | W753 | done |
+| 560 | W754 | done |
+| 561 | W755 | done |
+| 562 | W756 | done |
+| 563 | W757 | done |
+| 564 | W758 | done |
+| 565 | W759 | done |
+| 566 | W767 | done |
+| 567 | W768 | done |
+| 568 | W769 | done |
+| 569 | W770 | done |
+| 570 | W771 | done |
+| 571 | W772 | done |
+| 572 | W774 | done |
+| 573 | W776 | done |
+| 574 | W778 | done |
+| 575 | W779 | done |
+| 576 | W780 | done |
+| 577 | W783 | done |
+| 578 | W788 | done |
+| 579 | W791 | done |
+| 580 | W792 | done |
+| 581 | W794 | done |
+| 582 | W795 | done |
+| 583 | W801 | done |
+| 584 | W802 | done |
+| 585 | W808 | done |
+| 586 | W810 | done |
+| 587 | W811 | done |
+| 588 | W812 | done |
+| 589 | W813 | done |
+| 590 | W814 | done |
+| 591 | W815 | done |
+| 592 | W818 | done |
+| 593 | W863 | done |
+| 594 | W864 | done |
+| 595 | W865 | done |
+| 596 | W866 | done |
+| 597 | W869 | done |
+| 598 | W870 | done |
+| 599 | W872 | done |
+| 600 | W873 | done |
+| 601 | W874 | done |
+| 602 | W875 | done |
+| 603 | W876 | done |
+| 604 | W877 | done |
+| 605 | W878 | done |
+| 606 | W882 | done |
+| 607 | W892 | done |
+| 608 | W893 | done |
+| 609 | W895 | done |
+| 610 | W896 | done |
+| 611 | W898 | done |
+| 612 | W901 | done |
+| 613 | W902 | done |
+| 614 | W903 | done |
+| 615 | W904 | done |
+| 616 | W905 | done |
+| 617 | W906 | done |
+| 618 | W907 | done |
+| 619 | W908 | done |
+| 620 | W909 | done |
+| 621 | W911 | done |
+| 622 | W912 | done |
+| 623 | W913 | done |
+| 624 | W915 | done |
+| 625 | W916 | done |
+| 626 | W917 | done |
+| 627 | W918 | done |
+| 628 | W919 | done |
+| 629 | W920 | done |
+| 630 | W921 | done |
+| 631 | W929 | done |
+| 632 | W930 | done |
+| 633 | W931 | done |
+| 634 | W932 | done |
+| 635 | W933 | done |
+| 636 | W936 | done |
+| 637 | W939 | done |
+| 638 | W940 | done |
+| 639 | W941 | done |
+| 640 | W943 | done |
+| 641 | W944 | done |
+| 642 | W945 | done |
+| 643 | W949 | done |
+| 644 | W950 | done |
+| 645 | W951 | done |
+| 646 | W952 | done |
+| 647 | W953 | done |
+| 648 | W957 | done |
+| 649 | W958 | done |
+| 650 | W959 | done |
+| 651 | W961 | done |
+| 652 | W964 | done |
+| 653 | W970 | done |
+| 654 | W971 | done |
+| 655 | W972 | done |
+| 656 | W973 | done |
+| 657 | W975 | done |
+| 658 | W981 | done |
+| 659 | W983 | done |
+| 660 | W989 | done |
+| 661 | W990 | done |
+| 662 | W991 | done |
+| 663 | W993 | done |
+| 664 | W994 | done |
+| 665 | W997 | done |
+| 666 | W998 | done |
+| 667 | W999 | done |
+| 668 | W1000 | done |
+| 669 | W1001 | done |
+| 670 | W1002 | done |
+| 671 | W1003 | done |
+| 672 | W1004 | done |
+| 673 | W1020 | done |
+| 674 | W1021 | done |
+| 675 | W1023 | done |
+| 676 | W1024 | done |
+| 677 | W1033 | done |
+| 678 | W1034 | done |
+| 679 | W1036 | done |
+| 680 | W1041 | done |
+| 681 | W1044 | done |
+| 682 | W1048 | done |
+| 683 | W1050 | done |
+| 684 | W1053 | done |
+| 685 | W1054 | done |
+| 686 | W1055 | done |
+| 687 | W1056 | done |
+| 688 | W1057 | done |
+| 689 | W1058 | done |
+| 690 | W1059 | done |
+| 691 | W1060 | done |
+| 692 | W1063 | done |
+| 693 | W1064 | done |
+| 694 | W1065 | done |
+| 695 | W1066 | done |
+| 696 | W1067 | done |
+| 697 | W1068 | done |
+| 698 | W1106 | done |
+| 699 | W1107 | done |
+| 700 | W1108 | done |
+| 701 | W1112 | done |
+| 702 | W1119 | done |
+| 703 | W3 | done |
+| 704 | W4 | done |
+| 705 | W8 | done |
+| 706 | W9 | done |
+| 707 | W18 | done |
+| 708 | W19 | done |
+| 709 | W21 | done |
+| 710 | W22 | done |
+| 711 | W24 | done |
+| 712 | W11 | done |
+| 713 | W14 | done |
+| 714 | W15 | done |
+| 715 | W16 | done |
+| 716 | W25 | done |
+| 717 | W26 | done |
+| 718 | W27 | done |
+| 719 | W31 | done |
+| 720 | W32 | done |
+| 721 | W45 | done |
+| 722 | W48 | done |
+| 723 | W49 | done |
+| 724 | W50 | done |
+| 725 | W86 | done |
+| 726 | W88 | done |
+| 727 | W121 | done |
+| 728 | W123 | done |
+| 729 | W124 | done |
+| 730 | W134 | done |
+| 731 | W135 | done |
+| 732 | W136 | done |
+| 733 | W137 | done |
+| 734 | W138 | done |
+| 735 | W139 | done |
+| 736 | W140 | done |
+| 737 | W141 | done |
+| 738 | W142 | done |
+| 739 | W143 | done |
+| 740 | W144 | done |
+| 741 | W145 | done |
+| 742 | W146 | done |
+| 743 | W147 | done |
+| 744 | W148 | done |
+| 745 | W149 | done |
+| 746 | W150 | done |
+| 747 | W151 | done |
+| 748 | W152 | done |
+| 749 | W153 | done |
+| 750 | W154 | done |
+| 751 | W155 | done |
+| 752 | W156 | done |
+| 753 | W157 | done |
+| 754 | W158 | done |
+| 755 | W159 | done |
+| 756 | W160 | done |
+| 757 | W161 | done |
+| 758 | W162 | done |
+| 759 | W163 | done |
+| 760 | W164 | done |
+| 761 | W165 | done |
+| 762 | W166 | done |
+| 763 | W167 | done |
+| 764 | W168 | done |
+| 765 | W169 | done |
+| 766 | W170 | done |
+| 767 | W171 | done |
+| 768 | W172 | done |
+| 769 | W173 | done |
+| 770 | W174 | done |
+| 771 | W175 | done |
+| 772 | W176 | done |
+| 773 | W177 | done |
+| 774 | W178 | done |
+| 775 | W179 | done |
+| 776 | W180 | done |
+| 777 | W181 | done |
+| 778 | W182 | done |
+| 779 | W183 | done |
+| 780 | W184 | done |
+| 781 | W185 | done |
+| 782 | W186 | done |
+| 783 | W188 | done |
+| 784 | W193 | done |
+| 785 | W204 | done |
+| 786 | W209 | done |
+| 787 | W227 | done |
+| 788 | W229 | done |
+| 789 | W230 | done |
+| 790 | W233 | done |
+| 791 | W234 | done |
+| 792 | W235 | done |
+| 793 | W236 | done |
+| 794 | W237 | done |
+| 795 | W238 | done |
+| 796 | W239 | done |
+| 797 | W246 | done |
+| 798 | W249 | done |
+| 799 | W250 | done |
+| 800 | W251 | done |
+| 801 | W252 | done |
+| 802 | W272 | done |
+| 803 | W329 | done |
+| 804 | W354 | done |
+| 805 | W359 | done |
+| 806 | W361 | done |
+| 807 | W374 | done |
+| 808 | W377 | done |
+| 809 | W383 | done |
+| 810 | W425 | done |
+| 811 | W426 | done |
+| 812 | W429 | done |
+| 813 | W430 | done |
+| 814 | W464 | done |
+| 815 | W465 | done |
+| 816 | W466 | done |
+| 817 | W474 | done |
+| 818 | W479 | done |
+| 819 | W482 | done |
+| 820 | W484 | done |
+| 821 | W487 | done |
+| 822 | W488 | done |
+| 823 | W489 | done |
+| 824 | W490 | done |
+| 825 | W491 | done |
+| 826 | W492 | done |
+| 827 | W493 | done |
+| 828 | W494 | done |
+| 829 | W495 | done |
+| 830 | W496 | done |
+| 831 | W497 | done |
+| 832 | W498 | done |
+| 833 | W499 | done |
+| 834 | W500 | done |
+| 835 | W501 | done |
+| 836 | W502 | done |
+| 837 | W505 | done |
+| 838 | W506 | done |
+| 839 | W507 | done |
+| 840 | W508 | done |
+| 841 | W509 | done |
+| 842 | W510 | done |
+| 843 | W511 | done |
+| 844 | W513 | done |
+| 845 | W514 | done |
+| 846 | W515 | done |
+| 847 | W517 | done |
+| 848 | W518 | done |
+| 849 | W519 | done |
+| 850 | W520 | done |
+| 851 | W521 | done |
+| 852 | W522 | done |
+| 853 | W525 | done |
+| 854 | W527 | done |
+| 855 | W528 | done |
+| 856 | W537 | done |
+| 857 | W538 | done |
+| 858 | W540 | done |
+| 859 | W541 | done |
+| 860 | W551 | done |
+| 861 | W553 | done |
+| 862 | W559 | done |
+| 863 | W567 | done |
+| 864 | W577 | done |
+| 865 | W578 | done |
+| 866 | W579 | done |
+| 867 | W580 | done |
+| 868 | W582 | done |
+| 869 | W583 | done |
+| 870 | W584 | done |
+| 871 | W585 | done |
+| 872 | W586 | done |
+| 873 | W587 | done |
+| 874 | W588 | done |
+| 875 | W589 | done |
+| 876 | W590 | done |
+| 877 | W591 | done |
+| 878 | W593 | done |
+| 879 | W594 | done |
+| 880 | W595 | done |
+| 881 | W596 | done |
+| 882 | W597 | done |
+| 883 | W598 | done |
+| 884 | W599 | done |
+| 885 | W600 | done |
+| 886 | W601 | done |
+| 887 | W602 | done |
+| 888 | W603 | done |
+| 889 | W604 | done |
+| 890 | W605 | done |
+| 891 | W606 | done |
+| 892 | W607 | done |
+| 893 | W608 | done |
+| 894 | W609 | done |
+| 895 | W610 | done |
+| 896 | W611 | done |
+| 897 | W612 | done |
+| 898 | W613 | done |
+| 899 | W614 | done |
+| 900 | W615 | done |
+| 901 | W616 | done |
+| 902 | W617 | done |
+| 903 | W618 | done |
+| 904 | W619 | done |
+| 905 | W620 | done |
+| 906 | W621 | done |
+| 907 | W623 | done |
+| 908 | W624 | done |
+| 909 | W625 | done |
+| 910 | W626 | done |
+| 911 | W627 | done |
+| 912 | W628 | done |
+| 913 | W629 | done |
+| 914 | W630 | done |
+| 915 | W631 | done |
+| 916 | W632 | done |
+| 917 | W633 | done |
+| 918 | W634 | done |
+| 919 | W635 | done |
+| 920 | W636 | done |
+| 921 | W637 | done |
+| 922 | W638 | done |
+| 923 | W639 | done |
+| 924 | W640 | done |
+| 925 | W641 | done |
+| 926 | W642 | done |
+| 927 | W643 | done |
+| 928 | W644 | done |
+| 929 | W645 | done |
+| 930 | W646 | done |
+| 931 | W647 | done |
+| 932 | W648 | done |
+| 933 | W649 | done |
+| 934 | W650 | done |
+| 935 | W651 | done |
+| 936 | W652 | done |
+| 937 | W653 | done |
+| 938 | W654 | done |
+| 939 | W655 | done |
+| 940 | W656 | done |
+| 941 | W657 | done |
+| 942 | W658 | done |
+| 943 | W659 | done |
+| 944 | W660 | done |
+| 945 | W661 | done |
+| 946 | W662 | done |
+| 947 | W663 | done |
+| 948 | W664 | done |
+| 949 | W665 | done |
+| 950 | W666 | done |
+| 951 | W667 | done |
+| 952 | W668 | done |
+| 953 | W669 | done |
+| 954 | W670 | done |
+| 955 | W671 | done |
+| 956 | W672 | done |
+| 957 | W712 | done |
+| 958 | W713 | done |
+| 959 | W714 | done |
+| 960 | W715 | done |
+| 961 | W716 | done |
+| 962 | W717 | done |
+| 963 | W718 | done |
+| 964 | W719 | done |
+| 965 | W720 | done |
+| 966 | W721 | done |
+| 967 | W722 | done |
+| 968 | W723 | done |
+| 969 | W724 | done |
+| 970 | W725 | done |
+| 971 | W726 | done |
+| 972 | W727 | done |
+| 973 | W728 | done |
+| 974 | W744 | done |
+| 975 | W745 | done |
+| 976 | W746 | done |
+| 977 | W747 | done |
+| 978 | W748 | done |
+| 979 | W749 | done |
+| 980 | W750 | done |
+| 981 | W760 | done |
+| 982 | W761 | done |
+| 983 | W762 | done |
+| 984 | W763 | done |
+| 985 | W764 | done |
+| 986 | W765 | done |
+| 987 | W766 | done |
+| 988 | W773 | done |
+| 989 | W777 | done |
+| 990 | W781 | done |
+| 991 | W782 | done |
+| 992 | W784 | done |
+| 993 | W785 | done |
+| 994 | W786 | done |
+| 995 | W787 | done |
+| 996 | W789 | done |
+| 997 | W790 | done |
+| 998 | W797 | done |
+| 999 | W800 | done |
+| 1000 | W805 | done |
+| 1001 | W807 | done |
+| 1002 | W809 | done |
+| 1003 | W820 | done |
+| 1004 | W821 | done |
+| 1005 | W823 | done |
+| 1006 | W824 | done |
+| 1007 | W825 | done |
+| 1008 | W826 | done |
+| 1009 | W827 | done |
+| 1010 | W828 | done |
+| 1011 | W829 | done |
+| 1012 | W830 | done |
+| 1013 | W832 | done |
+| 1014 | W834 | done |
+| 1015 | W835 | done |
+| 1016 | W836 | done |
+| 1017 | W837 | done |
+| 1018 | W838 | done |
+| 1019 | W839 | done |
+| 1020 | W840 | done |
+| 1021 | W842 | done |
+| 1022 | W844 | done |
+| 1023 | W845 | done |
+| 1024 | W846 | done |
+| 1025 | W847 | done |
+| 1026 | W848 | done |
+| 1027 | W849 | done |
+| 1028 | W850 | done |
+| 1029 | W851 | done |
+| 1030 | W852 | done |
+| 1031 | W853 | done |
+| 1032 | W854 | done |
+| 1033 | W855 | done |
+| 1034 | W856 | done |
+| 1035 | W862 | done |
+| 1036 | W867 | done |
+| 1037 | W868 | done |
+| 1038 | W871 | done |
+| 1039 | W880 | done |
+| 1040 | W881 | done |
+| 1041 | W884 | done |
+| 1042 | W885 | done |
+| 1043 | W886 | done |
+| 1044 | W888 | done |
+| 1045 | W889 | done |
+| 1046 | W891 | done |
+| 1047 | W894 | done |
+| 1048 | W910 | done |
+| 1049 | W924 | done |
+| 1050 | W925 | done |
+| 1051 | W926 | done |
+| 1052 | W927 | done |
+| 1053 | W928 | done |
+| 1054 | W934 | done |
+| 1055 | W935 | done |
+| 1056 | W937 | done |
+| 1057 | W938 | done |
+| 1058 | W946 | done |
+| 1059 | W947 | done |
+| 1060 | W948 | done |
+| 1061 | W955 | done |
+| 1062 | W956 | done |
+| 1063 | W962 | done |
+| 1064 | W967 | done |
+| 1065 | W968 | done |
+| 1066 | W969 | done |
+| 1067 | W974 | done |
+| 1068 | W976 | done |
+| 1069 | W977 | done |
+| 1070 | W978 | done |
+| 1071 | W979 | done |
+| 1072 | W980 | done |
+| 1073 | W982 | done |
+| 1074 | W984 | done |
+| 1075 | W985 | done |
+| 1076 | W987 | done |
+| 1077 | W988 | done |
+| 1078 | W992 | done |
+| 1079 | W995 | done |
+| 1080 | W1006 | done |
+| 1081 | W1009 | done |
+| 1082 | W1010 | done |
+| 1083 | W1011 | done |
+| 1084 | W1012 | done |
+| 1085 | W1013 | done |
+| 1086 | W1014 | done |
+| 1087 | W1015 | done |
+| 1088 | W1016 | done |
+| 1089 | W1022 | done |
+| 1090 | W1031 | done |
+| 1091 | W1032 | done |
+| 1092 | W1035 | done |
+| 1093 | W1037 | done |
+| 1094 | W1038 | done |
+| 1095 | W1039 | done |
+| 1096 | W1042 | done |
+| 1097 | W1051 | done |
+| 1098 | W1078 | done |
+| 1099 | W1079 | done |
+| 1100 | W1082 | done |
+| 1101 | W1085 | done |
+| 1102 | W1087 | done |
+| 1103 | W1092 | done |
+| 1104 | W1097 | done |
+| 1105 | W1098 | done |
+| 1106 | W1099 | done |
+| 1107 | W1101 | done |
+| 1108 | W1110 | done |
+| 1109 | W1120 | done |
+| 1110 | W1121 | done |
+| 1111 | W1123 | done |
 
 ## waypoints
 
-1. **W1125** (working) katas waiter streams the child's output into its log as it runs, so progress is observable, and
-   still ends the log with rc=N
-   - next: Rewrite waiter.run to Popen the child with stdout/stderr into the log file as it runs, then append the blank
-     line and rc=N; keep commit_state reading the last rc line
+1. **W1126** (working) katas hangwatch: a pure decision that a child is hung only after K polls in which neither its log
+   size nor its tree CPU changed
+   - next: waiter polls the child's log size and its tree CPU (proctree.cpu_seconds); a hang is both unchanged for K
+     consecutive polls; then end the child's group and record rc 125. Pure decision function first (injected readings),
+     loop second.
 2. **W1007** (ready) Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row, replacing
    the hand-applied W881 patch
 3. **W1008** (ready) Declare ~/.config/mikemol/katas.toml as a luthen terraform/user row from a tracked source in mtools
@@ -1186,8 +1188,8 @@ counter 1129 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:353
    refusal, beside pass/fail; old rows still read
 29. **W1122** (ready) mtools' own pre-commit records each check to a gate ledger with mikemol-gate-ledger --record (live
    hook: tool first, hook last)
-30. **W1126** (ready) katas waiter declares a child hung only when its log has stopped growing and its tree's CPU has
-   stopped advancing, then ends it; no wall-clock timeout
+30. **W1130** (ready) katas waiter polls its child with hangwatch and proctree and ends a hung child's group with status
+   125, in place of the wall-clock --timeout
 31. **W581** (ready) Verify the inbound-asks and nemik-check hooks' additionalContext at SessionStart in a fresh Claude
    Code session, and record what the model saw
    - next: Only SessionStart is unverified: UserPromptSubmit is confirmed with a real UNCLAIMED row (luthen) and with
@@ -1600,1605 +1602,1607 @@ counter 1129 · heartbeat 2026-10-11T01:01:56Z · job `3e42fddc` · hash `v2:353
    when the child ends 0
 172. **W1124** (done) katas proctree: the CPU seconds of a process and all its descendants, read from /proc (utime plus
    stime), None when the root is gone
-173. **W1** (done) Land the 17 staged paths once the BEP sink on luthen answers
-174. **W2** (done) Wire mutate_check.sh as a gate target per distribution (operator ruled; DAG absorbs the cost)
-175. **W20** (done) mdstruct budget FILE — per-section bytes, lines, headings below, depth, over spans' population
+173. **W1125** (done) katas waiter streams the child's output into its log as it runs, so progress is observable, and
+   still ends the log with rc=N
+174. **W1** (done) Land the 17 staged paths once the BEP sink on luthen answers
+175. **W2** (done) Wire mutate_check.sh as a gate target per distribution (operator ruled; DAG absorbs the cost)
+176. **W20** (done) mdstruct budget FILE — per-section bytes, lines, headings below, depth, over spans' population
    (substrate: a 41 KB section in 4 lines reads as small by lines)
-176. **W23** (done) The BuildBuddy sink moved from retired loopback NodePorts to a ClusterIP by name; .bazelrc and
+177. **W23** (done) The BuildBuddy sink moved from retired loopback NodePorts to a ClusterIP by name; .bazelrc and
    bep_probe.py carried the stale numbers
-177. **W28** (done) mikemol-hook-shellcheck: remove the [tool.mikemol-hooks.shellcheck.exclude] waiver table (operator
+178. **W28** (done) mikemol-hook-shellcheck: remove the [tool.mikemol-hooks.shellcheck.exclude] waiver table (operator
    ruling 2026-09-26: no waivers); refusal routes a wrong rule to mtools as a checker defect
-178. **W29** (done) fence: mikemol-membudget hold `<N>` `<LABEL>` -- `<cmd>`, an accounting-only lease verb (no fence,
+179. **W29** (done) fence: mikemol-membudget hold `<N>` `<LABEL>` -- `<cmd>`, an accounting-only lease verb (no fence,
    no climb, never caps the command; units-agnostic; nested holds on two ledgers never cross parents)
-179. **W30** (done) fence FIFO admission: DESIGN the WAIT-line protocol (implementation split to W47)
+180. **W30** (done) fence FIFO admission: DESIGN the WAIT-line protocol (implementation split to W47)
    - next: None -- this waypoint is done. See W47.
-180. **W33** (done) pycodemod driver slice 1: cli.py with argparse and ONE MODES map, per-mode printers that print their
+181. **W33** (done) pycodemod driver slice 1: cli.py with argparse and ONE MODES map, per-mode printers that print their
    denominator, retired and DO-NOT-PORT spellings as refusing redirects, and the first modes calls, owes, dead
-181. **W34** (done) pycodemod driver umbrella: closes when every per-mode waypoint lands
-182. **W37** (done) pycodemod DO-NOT-PORT letter to substrate: every origin mode not ported (control, fingerprint, most
+182. **W34** (done) pycodemod driver umbrella: closes when every per-mode waypoint lands
+183. **W37** (done) pycodemod DO-NOT-PORT letter to substrate: every origin mode not ported (control, fingerprint, most
    sql, --sqlname, --last, discriminates) with where each lives and why
-183. **W38** (done) fence FIFO, step 1: measure the bash membudget client against WAIT lines (does its gc keep them,
+184. **W38** (done) fence FIFO, step 1: measure the bash membudget client against WAIT lines (does its gc keep them,
    does its admission ignore them) before designing the Python side
-184. **W39** (done) answer rosettapkg W13/W14 (◆fanout-backward, ◆fanout-backward-measured): mtools' census
+185. **W39** (done) answer rosettapkg W13/W14 (◆fanout-backward, ◆fanout-backward-measured): mtools' census
    (findings/CENSUS-remaining-work.md:1018-1024) rules the backward list consumer-side, so nothing mtools produces
    unblocks them; say so and ask rosettapkg to re-point or close the blockers
-185. **W41** (done) mikemol-hook-shellcheck follows sourced files: run shellcheck with -x and cwd at the governing
+186. **W41** (done) mikemol-hook-shellcheck follows sourced files: run shellcheck with -x and cwd at the governing
    project root (else the file's directory), so SC1091 on an in-tree source stops being a false finding — the
    checker-defect fix that lets W28 remove mtools' own SC1091 waiver
-186. **W44** (done) tell nemik-bb the sha(s) for W40, W42, W43 and ask it to test them against nemik's queue
-187. **W51** (done) mikemol-paths-forward: rank_reason is read (render.py) but never computed or written -- ordered()
+187. **W44** (done) tell nemik-bb the sha(s) for W40, W42, W43 and ask it to test them against nemik's queue
+188. **W51** (done) mikemol-paths-forward: rank_reason is read (render.py) but never computed or written -- ordered()
    sorts only by status bucket + file order, no enables/blocked_on-based leverage (collapse/unblock/sweep per the
    skill's section 3); the queue always prints an em-dash rank_reason. substrate has 62 real-edge waypoints offered as a
    test bed.
-188. **W52** (done) pycodemod driver: wire `layout` (layout.layout, paths-only)
-189. **W53** (done) pycodemod driver: wire `collisions` (rivals.collisions, paths-only)
-190. **W54** (done) pycodemod driver: wire `reifies` (ordering.reifies, paths-only)
-191. **W55** (done) pycodemod driver: wire `escapes` (core.escapes, paths-only)
-192. **W56** (done) pycodemod driver: wire `catchers` (exit.catchers, paths-only)
-193. **W57** (done) pycodemod driver: wire `interlock` (exit.interlock, paths-only)
-194. **W58** (done) pycodemod driver: wire `ambient` = ambient.ambient(paths, root): add a --root Path flag
-195. **W59** (done) pycodemod driver: wire `callgraph` = graph.callgraph(scan(paths)): print each caller->callee edge
-196. **W60** (done) pycodemod driver: wire `reaches` = graph.reaches over callgraph(scan(paths)): --start, --target
+189. **W52** (done) pycodemod driver: wire `layout` (layout.layout, paths-only)
+190. **W53** (done) pycodemod driver: wire `collisions` (rivals.collisions, paths-only)
+191. **W54** (done) pycodemod driver: wire `reifies` (ordering.reifies, paths-only)
+192. **W55** (done) pycodemod driver: wire `escapes` (core.escapes, paths-only)
+193. **W56** (done) pycodemod driver: wire `catchers` (exit.catchers, paths-only)
+194. **W57** (done) pycodemod driver: wire `interlock` (exit.interlock, paths-only)
+195. **W58** (done) pycodemod driver: wire `ambient` = ambient.ambient(paths, root): add a --root Path flag
+196. **W59** (done) pycodemod driver: wire `callgraph` = graph.callgraph(scan(paths)): print each caller->callee edge
+197. **W60** (done) pycodemod driver: wire `reaches` = graph.reaches over callgraph(scan(paths)): --start, --target
    (repeatable), --depth
-197. **W61** (done) pycodemod driver: wire `guarded` = arguments.guarded(scan(paths))
-198. **W62** (done) pycodemod driver: wire `key-reads` = strings.key_reads(paths, key)
-199. **W63** (done) pycodemod driver: wire `bindings` = definitions.bindings(paths, name)
-200. **W64** (done) pycodemod driver: wire `aliases` = aliases.aliases(paths, local_only, extra_local): --all-modules
+198. **W61** (done) pycodemod driver: wire `guarded` = arguments.guarded(scan(paths))
+199. **W62** (done) pycodemod driver: wire `key-reads` = strings.key_reads(paths, key)
+200. **W63** (done) pycodemod driver: wire `bindings` = definitions.bindings(paths, name)
+201. **W64** (done) pycodemod driver: wire `aliases` = aliases.aliases(paths, local_only, extra_local): --all-modules
    flag
-201. **W65** (done) pycodemod driver: wire `funcnames` = funcnames.funcnames(paths), default generic registry
-202. **W66** (done) pycodemod driver: wire `size` = size.module_sizes(paths, base): --base N flag, no incidents map
-203. **W67** (done) pycodemod driver: wire `deps` = deps.import_census(paths, manifest): --manifest Path flag
-204. **W68** (done) pycodemod driver: wire `crossings` = crossings.crossings(paths, authorities): --authority
+202. **W65** (done) pycodemod driver: wire `funcnames` = funcnames.funcnames(paths), default generic registry
+203. **W66** (done) pycodemod driver: wire `size` = size.module_sizes(paths, base): --base N flag, no incidents map
+204. **W67** (done) pycodemod driver: wire `deps` = deps.import_census(paths, manifest): --manifest Path flag
+205. **W68** (done) pycodemod driver: wire `crossings` = crossings.crossings(paths, authorities): --authority
    (repeatable)
-205. **W69** (done) pycodemod driver: wire `shapes` = shapes.shape_sites(pattern, paths)
-206. **W70** (done) pycodemod driver: wire `commentary` = commentary.commentary_census(paths), default marks
-207. **W71** (done) pycodemod driver: wire `discards` = discards.discards(name, paths)
-208. **W72** (done) pycodemod driver: wire `owes-successor` (check the fix-owes-callers successor naming clash)
-209. **W73** (done) pycodemod driver: wire `forwards` = arguments.forwards(scan(paths), keyword)
-210. **W74** (done) pycodemod driver: wire `asserted` = arguments.asserted(scan(paths), keyword)
-211. **W75** (done) pycodemod driver: wire `values` = arguments.values(scan(paths, target), argument)
-212. **W76** (done) pycodemod driver: wire `literals` = strings.literal_sites(paths, text)
-213. **W77** (done) pycodemod driver: wire `source-of` = definitions.source_of(paths, name)
-214. **W78** (done) pycodemod driver: wire `alias-hint` = hints.alias_hint(name, def_paths, population)
-215. **W79** (done) pycodemod driver: wire `commentary-kinds` = commentary.commentary_kinds(paths)
-216. **W80** (done) pycodemod driver: wire `commentary-blocks` = commentary.commentary_blocks(paths)
-217. **W81** (done) pycodemod driver: commentary_lost's `show` adapter: a git-show callable over (rev, root), refusing
+206. **W69** (done) pycodemod driver: wire `shapes` = shapes.shape_sites(pattern, paths)
+207. **W70** (done) pycodemod driver: wire `commentary` = commentary.commentary_census(paths), default marks
+208. **W71** (done) pycodemod driver: wire `discards` = discards.discards(name, paths)
+209. **W72** (done) pycodemod driver: wire `owes-successor` (check the fix-owes-callers successor naming clash)
+210. **W73** (done) pycodemod driver: wire `forwards` = arguments.forwards(scan(paths), keyword)
+211. **W74** (done) pycodemod driver: wire `asserted` = arguments.asserted(scan(paths), keyword)
+212. **W75** (done) pycodemod driver: wire `values` = arguments.values(scan(paths, target), argument)
+213. **W76** (done) pycodemod driver: wire `literals` = strings.literal_sites(paths, text)
+214. **W77** (done) pycodemod driver: wire `source-of` = definitions.source_of(paths, name)
+215. **W78** (done) pycodemod driver: wire `alias-hint` = hints.alias_hint(name, def_paths, population)
+216. **W79** (done) pycodemod driver: wire `commentary-kinds` = commentary.commentary_kinds(paths)
+217. **W80** (done) pycodemod driver: wire `commentary-blocks` = commentary.commentary_blocks(paths)
+218. **W81** (done) pycodemod driver: commentary_lost's `show` adapter: a git-show callable over (rev, root), refusing
    like owes
-218. **W82** (done) pycodemod driver: wire `commentary-lost` = commentary.commentary_lost(paths, root, show) over the
+219. **W82** (done) pycodemod driver: wire `commentary-lost` = commentary.commentary_lost(paths, root, show) over the
    git-show adapter
-219. **W83** (done) pycodemod driver: wire `rivals` = rivals.rivals(name, paths)
-220. **W84** (done) pycodemod driver: wire `resorts` = ordering.resorts(paths, reifies(paths))
-221. **W85** (done) pycodemod driver: wire `writes` = writes.writes_by_default(paths): --fixture/--gate repeatable
-222. **W87** (done) pycodemod driver: pin row CONTENT in the deps, crossings and literals happy-path tests (verdict,
+220. **W83** (done) pycodemod driver: wire `rivals` = rivals.rivals(name, paths)
+221. **W84** (done) pycodemod driver: wire `resorts` = ordering.resorts(paths, reifies(paths))
+222. **W85** (done) pycodemod driver: wire `writes` = writes.writes_by_default(paths): --fixture/--gate repeatable
+223. **W87** (done) pycodemod driver: pin row CONTENT in the deps, crossings and literals happy-path tests (verdict,
    class, role), not just that a row appears
-223. **W89** (done) W88.1 measure: run all 10 distribution suites with -rs and list every skip whose reason is an empty
+224. **W89** (done) W88.1 measure: run all 10 distribution suites with -rs and list every skip whose reason is an empty
    parameter set (the RETIRED case, now fixed, is the positive control)
-224. **W90** (done) W88.2 decide: verify pytest's empty_parameter_set_mark = fail_at_collect by F-arm (a deliberately
+225. **W90** (done) W88.2 decide: verify pytest's empty_parameter_set_mark = fail_at_collect by F-arm (a deliberately
    empty parametrize must fail collection; the same test with one case must pass) in ONE distribution; record the arm
    output
-225. **W91** (done) W88.3 apply: add the W88.2 mechanism to every distribution whose W88.1 count is zero, in one commit
+226. **W91** (done) W88.3 apply: add the W88.2 mechanism to every distribution whose W88.1 count is zero, in one commit
    (a config line per pyproject; no test changes)
-226. **W93** (done) W86.2 Census.unread -> skipped: list[Skip]; cli commentary reports per reason instead of _UNREAD
-227. **W94** (done) W86.3 Lost.unread -> skipped: list[Skip]; cli commentary-lost reports per reason instead of _UNREAD
-228. **W97** (done) W86.6 core.escapes: Escapes.unread -> skipped: list[Skip] (unreadable / undecodable / uncompilable
+227. **W93** (done) W86.2 Census.unread -> skipped: list[Skip]; cli commentary reports per reason instead of _UNREAD
+228. **W94** (done) W86.3 Lost.unread -> skipped: list[Skip]; cli commentary-lost reports per reason instead of _UNREAD
+229. **W97** (done) W86.6 core.escapes: Escapes.unread -> skipped: list[Skip] (unreadable / undecodable / uncompilable
    apart); cli escapes reports per reason
-229. **W98** (done) W86.7 delete cli._UNREAD once nothing reads it
-230. **W99** (done) W50.1 read: pathsforward README Writes section and fence/admit.py claim_key/ClaimKey/Kind; write
+230. **W98** (done) W86.7 delete cli._UNREAD once nothing reads it
+231. **W99** (done) W50.1 read: pathsforward README Writes section and fence/admit.py claim_key/ClaimKey/Kind; write
    what the keyway already provides to .claude/design/W50-touches-lease.md (no design yet)
-231. **W100** (done) W50.2 measure: across the six named repos' paths-forward.json, count ready waypoint pairs sharing a
+232. **W100** (done) W50.2 measure: across the six named repos' paths-forward.json, count ready waypoint pairs sharing a
    touches[] tag, and how many tags are used at all; append to the design file
-232. **W102** (done) W50.4 review: send the W50.3 design to el-openglo-e8 (who offered to spec it) and nemik-bb (renders
+233. **W102** (done) W50.4 review: send the W50.3 design to el-openglo-e8 (who offered to spec it) and nemik-bb (renders
    touches); fold replies into the design file
-233. **W103** (done) W50.5 decompose the implementation of the reviewed design into one waypoint per landable commit
+234. **W103** (done) W50.5 decompose the implementation of the reviewed design into one waypoint per landable commit
    (cannot be split before W50.3 picks a shape)
-234. **W104** (done) W86.6a move sites.Skip into core (sites imports core at runtime, so core cannot import Skip from
+235. **W104** (done) W86.6a move sites.Skip into core (sites imports core at runtime, so core cannot import Skip from
    sites); every importer imports Skip from core -- no behaviour change
-235. **W105** (done) W36.1 locate: substrate's 407/408 pycodemod figure -- the file that states it, the command that
+236. **W105** (done) W36.1 locate: substrate's 407/408 pycodemod figure -- the file that states it, the command that
    produced it, and the tree it ran over; write them to .claude/design/W36-differential.md
-236. **W106** (done) W36.2 enumerate: run substrate's scratch/pycodemod.py --selftest, read its own tally line, and list
+237. **W106** (done) W36.2 enumerate: run substrate's scratch/pycodemod.py --selftest, read its own tally line, and list
    every case name (with its mode) into the design file
-237. **W107** (done) W36.3 letters: to substrate and summit, the console-script sha 4a4162e and the W36.2 count against
+238. **W107** (done) W36.3 letters: to substrate and summit, the console-script sha 4a4162e and the W36.2 count against
    407/408, pointing at the design file
-238. **W108** (done) W36.2b: map each origin selftest case to ported, DO-NOT-PORT or dropped, with the ported count, in
+239. **W108** (done) W36.2b: map each origin selftest case to ported, DO-NOT-PORT or dropped, with the ported count, in
    the design file
-239. **W109** (done) W108.1 re-trace: record (caller FILE, line) per check, not line alone; confirm fingerprint's 36
+240. **W109** (done) W108.1 re-trace: record (caller FILE, line) per check, not line alone; confirm fingerprint's 36
    cases all ran and re-cut W36-origin-cases.tsv by file
-240. **W111** (done) pathsforward ATOMIZE signal: when ordered()'s top ready symbol equals the symbol a prior
+241. **W111** (done) pathsforward ATOMIZE signal: when ordered()'s top ready symbol equals the symbol a prior
    tick/interrupt ledger entry advanced, --check and the payload print 'ATOMIZE W`<n>` (top for k ticks)' (grep-stable
    like NUDGE); optional: the --status blocked refusal names --blocked-on/--blocked-kind for the umbrella case
-241. **W112** (done) W111.1 library: pathsforward atomize(state, ledger entries) -> the ATOMIZE line or None; top =
+242. **W112** (done) W111.1 library: pathsforward atomize(state, ledger entries) -> the ATOMIZE line or None; top =
    first ready in ordered(); k = prior tick/interrupt entries that advanced that symbol (minted excluded); tests +
    warrants, one commit
-242. **W114** (done) W111.3 hint: the --update --status blocked refusal names --blocked-on/--blocked-kind for the
+243. **W114** (done) W111.3 hint: the --update --status blocked refusal names --blocked-on/--blocked-kind for the
    umbrella case (split children, parent blocked on them)
-243. **W115** (done) pathsforward stored weight: --update W`<n>` --weight N stores an integer weight; ordered() keys on
+244. **W115** (done) pathsforward stored weight: --update W`<n>` --weight N stores an integer weight; ordered() keys on
    (status, -weight, -leverage, file order); a missing weight is 0 so unweighted repos keep today's order byte-for-byte
    (test pins it); check refuses a non-integer weight
-244. **W116** (done) pathsforward bulk weights: --weights-from FILE.json taking [{symbol, weight}], all-or-nothing (an
+245. **W116** (done) pathsforward bulk weights: --weights-from FILE.json taking [{symbol, weight}], all-or-nothing (an
    unknown symbol or non-integer refuses the whole file), one call per tick
-245. **W118** (done) pathsforward: keep the W100 touches-overlap measure re-runnable (the instrument lives only in a
+246. **W118** (done) pathsforward: keep the W100 touches-overlap measure re-runnable (the instrument lives only in a
    session scratchpad); shape decided by W101 (a --overlaps read mode if the reader-side flag is chosen)
-246. **W119** (done) W50 lease precondition A: an owner for a touches claim that outlives one tick (fence leases die
+247. **W119** (done) W50 lease precondition A: an owner for a touches claim that outlives one tick (fence leases die
    with their pid:starttime owner; a working waypoint spans ticks and sessions) -- design the owner, e.g. a
    per-tick-renewed claim with a declared expiry
-247. **W120** (done) W50 lease precondition B: touches[] tags declare their grain (artifact vs topic, e.g. path:
+248. **W120** (done) W50 lease precondition B: touches[] tags declare their grain (artifact vs topic, e.g. path:
    prefix), so a lease excludes over artifacts without serialising topic-tagged queues (W100: cleanroom alone gave 91 of
    substrate's 101 pairs)
-248. **W122** (done) pathsforward --update --touches T...: replace a waypoint's touches[] (metadata-only: no last_worked
+249. **W122** (done) pathsforward --update --touches T...: replace a waypoint's touches[] (metadata-only: no last_worked
    stamp, per W117); nemik-45 needs it to split comma-joined tags on nemik W30-W33 (nemik:W50 blocked on it)
-249. **W125** (done) pathsforward --bump-blocked prunes blocked_on entries that are LOCAL symbols now done, and returns
+250. **W125** (done) pathsforward --bump-blocked prunes blocked_on entries that are LOCAL symbols now done, and returns
    the item to ready when the list empties; foreign repo:W`<n>` and bare agent names are kept (only local symbols can be
    checked). nemik:W55: parents atomized into children stayed 'blocked' on finished children
-250. **W126** (done) W108.3 mode map: assign each of the 414 origin cases (408 traced + 6 placement) its origin MODE
+251. **W126** (done) W108.3 mode map: assign each of the 414 origin cases (408 traced + 6 placement) its origin MODE
    from the W109 TSV (caller line -> the mode section it sits in); write per-mode counts to W36-differential.md
-251. **W127** (done) W108.4 disposition cut: from the mode map and the W37 DO-NOT-PORT letter, count do-not-port and
+252. **W127** (done) W108.4 disposition cut: from the mode map and the W37 DO-NOT-PORT letter, count do-not-port and
    unmeasured cases (fingerprint 36, postgres skip, the others W37 names) and state the W36 denominator 414 -
    do-not-port - unmeasured in the design file
-252. **W128** (done) W108.5 open (c) fixture capture: extend W36-trace.py to wrap the origin's mode entry points so each
+253. **W128** (done) W108.5 open (c) fixture capture: extend W36-trace.py to wrap the origin's mode entry points so each
    check records its fixture text and operands; measure how many of the 408 get captured, and name the ones that do not
-253. **W131** (done) pathsforward witness field: an optional 'witness' string (a single-line Rego query over
+254. **W131** (done) pathsforward witness field: an optional 'witness' string (a single-line Rego query over
    nemik-observed input; nothing executes it, nemik's observers + opa eval decide) set by --add/--update --witness
    QUERY; metadata-only on --update; shown in --show/payload (nemik:W59 rev 3)
-254. **W132** (done) pathsforward --check flags a witnessed waypoint whose status is ready or working (nemik:W64: its
+255. **W132** (done) pathsforward --check flags a witnessed waypoint whose status is ready or working (nemik:W64: its
    evaluator, not a mind, marks it done)
-255. **W133** (done) pathsforward ordered()/workable skip witnessed waypoints, so a witnessed item never tops the queue
+256. **W133** (done) pathsforward ordered()/workable skip witnessed waypoints, so a witnessed item never tops the queue
    or keeps a loop live (nemik:W64 option b)
-256. **W187** (done) W128c: widen the capture to checks made inside _pycodemod_fingerprint.py (36 blind) and keep full
+257. **W187** (done) W128c: widen the capture to checks made inside _pycodemod_fingerprint.py (36 blind) and keep full
    inline-string operands, then split the 120 fixture-less checks into truly-uncapturable vs instrument gaps
-257. **W189** (done) W187 residue: read the 30 unsampled fixture-less checks (commentary 10, --rivals 8, --binding 4,
+258. **W189** (done) W187 residue: read the 30 unsampled fixture-less checks (commentary 10, --rivals 8, --binding 4,
    values() 3, 5 singletons) into the rebuildable / dir-snapshot / other buckets, and snapshot tempdir operands
    (--projects, py_files) so those 11 carry their tree
-258. **W191** (done) W189a: bucket the 30 unsampled fixture-less checks (commentary 10, --rivals 8, --binding 4,
+259. **W191** (done) W189a: bucket the 30 unsampled fixture-less checks (commentary 10, --rivals 8, --binding 4,
    values() 3, 5 singletons) into rebuildable / dir-snapshot / other, from W187-captured.jsonl
-259. **W192** (done) W189b: capture tool snapshots tempdir operands (--projects, py_files) and keeps non-str operands
+260. **W192** (done) W189b: capture tool snapshots tempdir operands (--projects, py_files) and keeps non-str operands
    whole, so the 11 dir-snapshot checks carry their tree
-260. **W194** (done) W108a: mikemol-pytest-spec distribution skeleton -- pytest11 plugin whose pytest_collect_file
+261. **W194** (done) W108a: mikemol-pytest-spec distribution skeleton -- pytest11 plugin whose pytest_collect_file
    claims a Rego spec package + its case data, SpecItem hands {case,fixture,operands,result} to pinned opa eval and maps
    deny->fail, withheld->fail UNMEASURED, admitted->pass; absent opa FAILS, never skips
-261. **W195** (done) W108b: pytest-spec implementation adapters and dispositions -- pytest_spec_implementations
+262. **W195** (done) W108b: pytest-spec implementation adapters and dispositions -- pytest_spec_implementations
    hookspec, --impl subject|reference, do-not-port deselected-but-counted, unmeasured xfail(strict), port-fixes pinned
    both sides, terminal-summary differential line
-262. **W196** (done) W108c: generate the first Rego spec package from the capture -- one small origin mode (--guarded, 4
+263. **W196** (done) W108c: generate the first Rego spec package from the capture -- one small origin mode (--guarded, 4
    checks) from W189-captured.jsonl + W127 dispositions into package + case data + _test.rego, green under opa test
-263. **W197** (done) Decide guarded else-body: port 'not (c)' vs origin 'c' — port-fix (amend W196 spec) or port defect
-264. **W198** (done) W194a: pytest-spec/ landable shell -- pyproject (pytest11 entry point), empty plugin module, one
+264. **W197** (done) Decide guarded else-body: port 'not (c)' vs origin 'c' — port-fix (amend W196 spec) or port defect
+265. **W198** (done) W194a: pytest-spec/ landable shell -- pyproject (pytest11 entry point), empty plugin module, one
    smoke test + warrant/rubric, requirements*, uv.lock, ratchet-preview, BUILD.bazel with //pytest-spec:.venv,
    MODULE.bazel hub + lock; pre-commit green
-265. **W199** (done) W194b: SpecItem + verdict mapping over an injected evaluator -- deny->fail, withheld->fail
+266. **W199** (done) W194b: SpecItem + verdict mapping over an injected evaluator -- deny->fail, withheld->fail
    UNMEASURED, admitted->pass; pytest_collect_file claims a .rego spec + case data; tests per verdict
-266. **W200** (done) W194c: the real evaluator -- pinned opa eval (1.20.2, luthen's pin) over
+267. **W200** (done) W194c: the real evaluator -- pinned opa eval (1.20.2, luthen's pin) over
    {case,fixture,operands,result}; absent or wrong-version opa FAILS the item, never skips; run W196's guarded.rego
    through it as the first live spec
-267. **W201** (done) W195a: per-case dispositions in .cases.json -- do-not-port (deselected, counted), unmeasured (xfail
+268. **W201** (done) W195a: per-case dispositions in .cases.json -- do-not-port (deselected, counted), unmeasured (xfail
    strict), port-fix (pinned both sides: origin row + port row, each a named case)
-268. **W202** (done) W195b: implementation adapters -- pytest_spec_implementations hookspec returning {name:
+269. **W202** (done) W195b: implementation adapters -- pytest_spec_implementations hookspec returning {name:
    callable(fixture, operands) -> result}, --impl subject|reference selects which one fills a case's result (case data
    keeps fixture+operands, not a frozen result)
-269. **W203** (done) W195c: terminal-summary differential line -- one line per spec:
+270. **W203** (done) W195c: terminal-summary differential line -- one line per spec:
    admitted/denied/unmeasured/do-not-port/port-fix counts and the --impl in force, so a run's differential is a single
    greppable row
-270. **W205** (done) W108a: pycodemod --impl adapters conftest -- reference runs substrate's pycodemod, subject runs
+271. **W205** (done) W108a: pycodemod --impl adapters conftest -- reference runs substrate's pycodemod, subject runs
    mikemol-pycodemod, on a case's fixture+operands
-271. **W206** (done) W108b: generate per-mode .cases.json (fixture+operands) for all 35 origin modes from
+272. **W206** (done) W108b: generate per-mode .cases.json (fixture+operands) for all 35 origin modes from
    W187-captured.jsonl + W36-origin-modes.tsv; per-mode counts must equal the TSV's
-272. **W207** (done) W108c: per-mode Rego rules, one mode per tick, largest case count first; each mode's spec passes
+273. **W207** (done) W108c: per-mode Rego rules, one mode per tick, largest case count first; each mode's spec passes
    opa test and runs under --impl reference
-273. **W208** (done) W108d: write the per-mode differential table and the ported count to W36-differential.md
-274. **W210** (done) Probe the port's guarded on an elif chain: the else body of if a/elif b/else must report not (a),
+274. **W208** (done) W108d: write the per-mode differential table and the ported count to W36-differential.md
+275. **W210** (done) Probe the port's guarded on an elif chain: the else body of if a/elif b/else must report not (a),
    not (b); a nearest-test-only negation is the inversion the origin warns about
-275. **W211** (done) W207a: W207-smoke.py runs each case in a child with a per-case timeout, tallies
+276. **W211** (done) W207a: W207-smoke.py runs each case in a child with a per-case timeout, tallies
    ran/raised/empty/timeout per mode, and prints each raise as it happens; covers all 35 modes
-276. **W212** (done) W207b: bucket every raise and timeout from W211 into adapter-gap (fix conftest) vs
+277. **W212** (done) W207b: bucket every raise and timeout from W211 into adapter-gap (fix conftest) vs
    origin-needs-state (disposition unmeasured with reason); the count per bucket in W36-differential.md
-277. **W213** (done) W207c: first per-mode spec the-commentary-census.rego (38 cases): one deny rule per origin check,
+278. **W213** (done) W207c: first per-mode spec the-commentary-census.rego (38 cases): one deny rule per origin check,
    opa test two-armed, differential line under --impl reference recorded
-278. **W215** (done) W213b: commentary_census rules in the-commentary-census.rego (11 cases: 152-156, 168-170, 180-182),
+279. **W215** (done) W213b: commentary_census rules in the-commentary-census.rego (11 cases: 152-156, 168-170, 180-182),
    two-armed opa test, differential admitted rises by 11
-279. **W216** (done) W213c: modes-family rules (modes, _modes_ast, cst_modes, argopt_flags, declared_operand_flags; 9
+280. **W216** (done) W213c: modes-family rules (modes, _modes_ast, cst_modes, argopt_flags, declared_operand_flags; 9
    cases: 157-160, 175-179) in the-commentary-census.rego, two-armed
-280. **W217** (done) W213d: collision_apex rules (4 cases: 171-174); cwd-relative paths (../..`<root>`) need a
+281. **W217** (done) W213d: collision_apex rules (4 cases: 171-174); cwd-relative paths (../..`<root>`) need a
    strip-to-`<root>` helper or a fixed cwd first
-281. **W218** (done) W213e: commentary_lost rules (3 cases: 183-185), two-armed
-282. **W219** (done) W213f: py_files cases 165-167 walk the live repos; give them a disposition (unmeasured with reason)
+282. **W218** (done) W213e: commentary_lost rules (3 cases: 183-185), two-armed
+283. **W219** (done) W213f: py_files cases 165-167 walk the live repos; give them a disposition (unmeasured with reason)
    in W206-gen.py, or a fixture-scoped cwd so a rule can state them
-283. **W220** (done) W213g: shape_sites cases 186-189 return [[]] under reference; find whether the capture lost the
+284. **W220** (done) W213g: shape_sites cases 186-189 return [[]] under reference; find whether the capture lost the
    target (W212 class) before any rule admits an empty result
-284. **W222** (done) W187 capture: declare the 54 raising cases unmeasured in W206-gen by bucket (repr-string operand
+285. **W222** (done) W187 capture: declare the 54 raising cases unmeasured in W206-gen by bucket (repr-string operand
    26, callee is module() 10, callee not in module 16, other 2), reasons from the W212 table
-285. **W223** (done) Diagnose the 7 resorts timeouts (384-390) under the reference adapter: slow population walk or a
+286. **W223** (done) Diagnose the 7 resorts timeouts (384-390) under the reference adapter: slow population walk or a
    hang
-286. **W224** (done) Run resorts.cases.json under pytestspec --impl reference in one process and time it; if the memo
+287. **W224** (done) Run resorts.cases.json under pytestspec --impl reference in one process and time it; if the memo
    amortizes, the 7 cases are measurable, else declare them unmeasured (cold corpus walk)
-287. **W225** (done) conftest rehome(): deterministic root per fixture content (hash-named dir under one session base)
+288. **W225** (done) conftest rehome(): deterministic root per fixture content (hash-named dir under one session base)
    so a memo keyed by path survives across cases; then re-time resorts.rego expecting 1 cold walk + 6 warm
-288. **W226** (done) resorts.rego rules for 384-390 (redundant row, re-keyed separate, reverse is re-key, non-sorting
+289. **W226** (done) resorts.rego rules for 384-390 (redundant row, re-keyed separate, reverse is re-key, non-sorting
    callee absent, consumer population scoped to paths, producer population wider, clean file yields no rows); run with a
    15-min budget
-289. **W240** (done) Standing rule 15 in policy: deny git commit -m (message goes in a scratchpad file)
-290. **W243** (done) Standing rule 12 in policy: deny GIT_DIR/GIT_* pointed at the real repo
-291. **W244** (done) Standing rule 13 in policy: every direct pytest run is under timeout with faulthandler_timeout
+290. **W240** (done) Standing rule 15 in policy: deny git commit -m (message goes in a scratchpad file)
+291. **W243** (done) Standing rule 12 in policy: deny GIT_DIR/GIT_* pointed at the real repo
+292. **W244** (done) Standing rule 13 in policy: every direct pytest run is under timeout with faulthandler_timeout
    (operator ruling 2026-09-28)
-292. **W247** (done) icsstruct: a lossless structured calendar reader (life letter 2026-09-28, life:W13)
-293. **W248** (done) Waypoint vector field plus vector_source, validated by --check (luthen letter 2026-09-28,
+293. **W247** (done) icsstruct: a lossless structured calendar reader (life letter 2026-09-28, life:W13)
+294. **W248** (done) Waypoint vector field plus vector_source, validated by --check (luthen letter 2026-09-28,
    luthen:W190)
-294. **W253** (done) Ask life for icsstruct fixtures (weekly RRULE+EXDATE, RECURRENCE-ID override, all-day, TZID,
+295. **W253** (done) Ask life for icsstruct fixtures (weekly RRULE+EXDATE, RECURRENCE-ID override, all-day, TZID,
    floating, one malformed) and the window-overlap answer
-295. **W254** (done) icsstruct lexical layer: unfold, split NAME;PARAMS:VALUE, nest BEGIN/END; every physical line in
+296. **W254** (done) icsstruct lexical layer: unfold, split NAME;PARAMS:VALUE, nest BEGIN/END; every physical line in
    exactly one record, malformed lines as records with a reason
-296. **W255** (done) audiostruct: a stage-pipelined transcription and diarization reader, one record per segment,
+297. **W255** (done) audiostruct: a stage-pipelined transcription and diarization reader, one record per segment,
    absorbing life's WhisperX one-off (life letter 2026-09-28, life:W12)
-297. **W256** (done) Wire --update --vector and --vector-source: parse through vector.parse, store both as plain JSON
+298. **W256** (done) Wire --update --vector and --vector-source: parse through vector.parse, store both as plain JSON
    fields, --show exposes them (nemik's ask)
-298. **W257** (done) --check revalidates every stored vector and reports the count of unscored live waypoints
-299. **W258** (done) icsstruct deps: check icalendar and recurring-ical-events ship py.typed (else a stub per
+299. **W257** (done) --check revalidates every stored vector and reports the count of unscored live waypoints
+300. **W258** (done) icsstruct deps: check icalendar and recurring-ical-events ship py.typed (else a stub per
    mdstruct/stubs), then adopt them into icsstruct's shipping lock and hub
-300. **W259** (done) icsstruct expansion: well-formed VEVENTs with their VTIMEZONEs expand to one occurrence record per
+301. **W259** (done) icsstruct expansion: well-formed VEVENTs with their VTIMEZONEs expand to one occurrence record per
    instance in a window (overlap semantics, life's ruling); an event the expander raises on is one unexpandable record
-301. **W260** (done) icsstruct CLI: mikemol-ics --window 14d SOURCE..., one line per occurrence or --json; a URL source
+302. **W260** (done) icsstruct CLI: mikemol-ics --window 14d SOURCE..., one line per occurrence or --json; a URL source
    is redacted at the edge to X-WR-CALNAME or url:sha256[:12]
-302. **W261** (done) mikemol-ics CLI: --window 14d SOURCE... prints one line per occurrence, --json prints records
+303. **W261** (done) mikemol-ics CLI: --window 14d SOURCE... prints one line per occurrence, --json prints records
    (lexical Malformed + expand records); console script + BUILD py_binary
-303. **W262** (done) audiostruct pure layer: records.py + render.py over synthetic WhisperX dicts;
+304. **W262** (done) audiostruct pure layer: records.py + render.py over synthetic WhisperX dicts;
    Segment/Word/Unplaced, count invariant, distribution skeleton
-304. **W263** (done) audiostruct stages.py: three-stage runner behind per-stage Protocols, free between stages, HF token
+305. **W263** (done) audiostruct stages.py: three-stage runner behind per-stage Protocols, free between stages, HF token
    redacted from None
-305. **W264** (done) audiostruct whisperx/pyannote stubs + stubtest under a [gpu] extra; settle whether bazel can stage
+306. **W264** (done) audiostruct whisperx/pyannote stubs + stubtest under a [gpu] extra; settle whether bazel can stage
    torch (O2)
-306. **W266** (done) audiostruct render.py: the markdown transcript from records, Unplaced shown as a ! line, never as
+307. **W266** (done) audiostruct render.py: the markdown transcript from records, Unplaced shown as a ! line, never as
    [00:00]
-307. **W267** (done) audiostruct O2: measure whether uv/bazel can resolve and stage torch+whisperx for a [gpu] extra
-308. **W268** (done) audiostruct: whisperx/pyannote stubs for the called surface, stubtest witness that refuses when the
+308. **W267** (done) audiostruct O2: measure whether uv/bazel can resolve and stage torch+whisperx for a [gpu] extra
+309. **W268** (done) audiostruct: whisperx/pyannote stubs for the called surface, stubtest witness that refuses when the
    extra is absent
-309. **W269** (done) audiostruct: real Pipeline factories (whisperx load_model/load_align_model/DiarizationPipeline)
+310. **W269** (done) audiostruct: real Pipeline factories (whisperx load_model/load_align_model/DiarizationPipeline)
    with gc+empty_cache release
-310. **W271** (done) audiostruct: port the [gpu] extra forward to CUDA 13 (torch >= 2.9) without regressing to whisperx
+311. **W271** (done) audiostruct: port the [gpu] extra forward to CUDA 13 (torch >= 2.9) without regressing to whisperx
    3.7.2
-311. **W273** (done) audiostruct: correct the [gpu] extra marker to python_version < '3.14' (whisperx >= 3.7.0 requires
+312. **W273** (done) audiostruct: correct the [gpu] extra marker to python_version < '3.14' (whisperx >= 3.7.0 requires
    <3.14), and its stated reason
-312. **W274** (done) audiostruct: stubtest witness for stubs/whisperx against whisperx 3.8.6 in the audiostruct_gpu hub;
+313. **W274** (done) audiostruct: stubtest witness for stubs/whisperx against whisperx 3.8.6 in the audiostruct_gpu hub;
    refuses (not skips) when the hub is absent
-313. **W275** (done) audiostruct: keep the [gpu] extra out of the dev hub; since 204eae8, uv.lock carries it, so
+314. **W275** (done) audiostruct: keep the [gpu] extra out of the dev hub; since 204eae8, uv.lock carries it, so
    @audiostruct_dev and the mutants .venv stage torch+CUDA in every audiostruct build, both output bases
-314. **W277** (done) pathsforward: read-only --ics projection of a queue; VTODO per live waypoint (VEVENT when at is
+315. **W277** (done) pathsforward: read-only --ics projection of a queue; VTODO per live waypoint (VEVENT when at is
    set), round-tripped through mikemol-icsstruct
-315. **W280** (done) pathsforward: PERCENT-COMPLETE and PRIORITY in the projection, only where they map cleanly onto
+316. **W280** (done) pathsforward: PERCENT-COMPLETE and PRIORITY in the projection, only where they map cleanly onto
    status and weight
-316. **W283** (done) audiostruct: measure per-stage VRAM peaks on the real GPU, and decide from them whether contexts
+317. **W283** (done) audiostruct: measure per-stage VRAM peaks on the real GPU, and decide from them whether contexts
    alone suffice or amr-skills needs a MiB ledger beside the context ledger
-317. **W289** (done) mikemol-gmail CLI: search, show and raw over the record layer, with no telemetry, cache or logged
+318. **W289** (done) mikemol-gmail CLI: search, show and raw over the record layer, with no telemetry, cache or logged
    content
-318. **W290** (done) operator: act: create the Google Cloud OAuth desktop client (Testing status, operator as sole test
+319. **W290** (done) operator: act: create the Google Cloud OAuth desktop client (Testing status, operator as sole test
    user, scope gmail.readonly), run the first consent, and age-encrypt the refresh token to the YubiKey
-319. **W291** (done) ask amr-skills: a VRAM-in-MiB membudget ledger beside the gpu-contexts one, because contexts do not
+320. **W291** (done) ask amr-skills: a VRAM-in-MiB membudget ledger beside the gpu-contexts one, because contexts do not
    bound memory (mtools measured transcribe at about 6 GiB total on the 8 GiB 3070 Ti)
-320. **W292** (done) audiostruct: the orchestrator runs a bare 'mikemol-membudget', which is on no PATH here; mtools'
+321. **W292** (done) audiostruct: the orchestrator runs a bare 'mikemol-membudget', which is on no PATH here; mtools'
    own is bazel-bin/fence/.venv/bin/mikemol-membudget
-321. **W293** (done) audiostruct: a redacted stage error names no missing file; for OSError subclasses, report the
+322. **W293** (done) audiostruct: a redacted stage error names no missing file; for OSError subclasses, report the
    exception's own .filename, which is a path the library chose, never message text
-322. **W294** (done) send linux-sources the per-distribution test skeleton (BUILD per-module test target, pyproject
+323. **W294** (done) send linux-sources the per-distribution test skeleton (BUILD per-module test target, pyproject
    test-runner block, layout) for their in-file selftest to tests/ migration
-323. **W295** (done) audiostruct: the parent re-invokes children as a bare 'mikemol-audio', which is on no PATH;
+324. **W295** (done) audiostruct: the parent re-invokes children as a bare 'mikemol-audio', which is on no PATH;
    re-invoke by the running program's own resolved path
-324. **W297** (done) Test skeleton hazard: an absent tests/ lets the runner walk bazel-* and .claude/, so ship tests/
+325. **W297** (done) Test skeleton hazard: an absent tests/ lets the runner walk bazel-* and .claude/, so ship tests/
    and norecursedirs
-325. **W298** (done) mikemol-audio: pyannote's torchcodec/FFmpeg warning prints once per stage process, three times a
+326. **W298** (done) mikemol-audio: pyannote's torchcodec/FFmpeg warning prints once per stage process, three times a
    run, for a decode path audiostruct never uses
-326. **W301** (done) pathsforward: stamp COMPLETED, a UTC DATE-TIME, when a waypoint's status becomes done
-327. **W302** (done) Answer el-openglo's adoption of mtools' test-spec plugin for parallel selftests: consumer
+327. **W301** (done) pathsforward: stamp COMPLETED, a UTC DATE-TIME, when a waypoint's status becomes done
+328. **W302** (done) Answer el-openglo's adoption of mtools' test-spec plugin for parallel selftests: consumer
    readiness, pinned install, parallel model
-328. **W303** (done) gate_ledger reads one shared ledger path constant, the one the pre-commit hook writes, so its
+329. **W303** (done) gate_ledger reads one shared ledger path constant, the one the pre-commit hook writes, so its
    report sees real outcomes
-329. **W304** (done) Calendar reader for the operator's calendars as a nemik source: Akonadi collections on luthen, read
+330. **W304** (done) Calendar reader for the operator's calendars as a nemik source: Akonadi collections on luthen, read
    through icsstruct
-330. **W305** (done) pathsforward: --update SYMBOL --caused-by REF, validated exactly as --add validates it, so a
+331. **W305** (done) pathsforward: --update SYMBOL --caused-by REF, validated exactly as --add validates it, so a
    mis-cited cause is fixed in place
-331. **W306** (done) pycodemod: a header mode that writes and checks the SPDX and copyright lines, from the two
+332. **W306** (done) pycodemod: a header mode that writes and checks the SPDX and copyright lines, from the two
    implementations already in the fleet
-332. **W307** (done) pathsforward: --alarm -PT1H fails (argparse reads the leading - as an option); accept the natural
+333. **W307** (done) pathsforward: --alarm -PT1H fails (argparse reads the leading - as an option); accept the natural
    spelling
-333. **W308** (done) timevalue: resolve a TRIGGER to its UTC instant against DTSTART/DUE, so consumers stop re-deriving
+334. **W308** (done) timevalue: resolve a TRIGGER to its UTC instant against DTSTART/DUE, so consumers stop re-deriving
    duration arithmetic
-334. **W311** (done) Answer luthen-observability W229 GPU plan: GPU targets per commit, measured CUDA contexts and VRAM,
+335. **W311** (done) Answer luthen-observability W229 GPU plan: GPU targets per commit, measured CUDA contexts and VRAM,
    dedicated exec key, busy policy
-335. **W314** (done) pathsforward: --ics carries RRULE, EXDATE, VALARM and one COMPLETED override per completed
+336. **W314** (done) pathsforward: --ics carries RRULE, EXDATE, VALARM and one COMPLETED override per completed
    occurrence
-336. **W316** (done) pytestspec under pytest-xdist: the differential line is missing from a parallel run; print it from
+337. **W316** (done) pytestspec under pytest-xdist: the differential line is missing from a parallel run; print it from
    the controller
-337. **W318** (done) Atomize the three hooks tests that sweep every package (bar_fires, venv_artifact, routing_table)
+338. **W318** (done) Atomize the three hooks tests that sweep every package (bar_fires, venv_artifact, routing_table)
    into checks each package runs over itself
-338. **W320** (done) Measure one representative module gate for the runner design: peak RSS, wall and CPU time, cold
+339. **W320** (done) Measure one representative module gate for the runner design: peak RSS, wall and CPU time, cold
    (first fetch) and warm, and whether bazel accepts --experimental_remote_downloader
-339. **W321** (done) Decompose mtools' shared build and check machinery into atomic module repos, measured against every
+340. **W321** (done) Decompose mtools' shared build and check machinery into atomic module repos, measured against every
    call site, composed per module repo
-340. **W324** (done) Atom: the ruff check (ruff_check.sh) as a Bazel module a module repo composes into its gate
-341. **W325** (done) Atom: the mypy check (mypy_check.sh, mypy_runner.py) as a Bazel module a module repo composes into
+341. **W324** (done) Atom: the ruff check (ruff_check.sh) as a Bazel module a module repo composes into its gate
+342. **W325** (done) Atom: the mypy check (mypy_check.sh, mypy_runner.py) as a Bazel module a module repo composes into
    its gate
-342. **W326** (done) Atom: the mutation check (mutate_check.sh, mutate_runner.py) as a Bazel module a module repo
+343. **W326** (done) Atom: the mutation check (mutate_check.sh, mutate_runner.py) as a Bazel module a module repo
    composes into its gate
-343. **W327** (done) Atom: the ratchet check (ratchet_check.sh) beside mikemol-ratchet, composable into a module repo's
+344. **W327** (done) Atom: the ratchet check (ratchet_check.sh) beside mikemol-ratchet, composable into a module repo's
    gate
-344. **W332** (done) Put the reusable workflow (ci/module-gate.yml) under actionlint before anything calls it: a pinned
+345. **W332** (done) Put the reusable workflow (ci/module-gate.yml) under actionlint before anything calls it: a pinned
    actionlint as a check atom or a bazel test, F-armed
-345. **W333** (done) gmailstruct birth: the dist skeleton plus records.message, one users.messages.get JSON
+346. **W333** (done) gmailstruct birth: the dist skeleton plus records.message, one users.messages.get JSON
    (format=metadata) to Message or Unreadable
-346. **W334** (done) gmailstruct records.pages: messages.list pages to records, every listed id in exactly one record,
+347. **W334** (done) gmailstruct records.pages: messages.list pages to records, every listed id in exactly one record,
    with a count invariant across pages
-347. **W335** (done) gmailstruct records.full: format=full payload parts (text body, MIME tree), each part in exactly
+348. **W335** (done) gmailstruct records.full: format=full payload parts (text body, MIME tree), each part in exactly
    one record, base64url failures as Unreadable
-348. **W336** (done) W207d: per-mode spec fingerprint-own-module.rego (36 cases): one deny rule per origin check, opa
+349. **W336** (done) W207d: per-mode spec fingerprint-own-module.rego (36 cases): one deny rule per origin check, opa
    test two-armed, differential line under --impl reference
-349. **W337** (done) W318a: test_venv_artifact's 8 sweepers become per-dist venv checks, each dist's suite checking its
+350. **W337** (done) W318a: test_venv_artifact's 8 sweepers become per-dist venv checks, each dist's suite checking its
    own venv
-350. **W338** (done) W318b: test_bar_fires' population-negative sweeps become per-dist checks; its other gate checks
+351. **W338** (done) W318b: test_bar_fires' population-negative sweeps become per-dist checks; its other gate checks
    stay with mtools
-351. **W339** (done) W318c: record that test_routing_table (11) and test_no_verify (2) stay in mtools' own gate, with
+352. **W339** (done) W318c: record that test_routing_table (11) and test_no_verify (2) stay in mtools' own gate, with
    the reason, in the split plan
-352. **W340** (done) rivals.rego spec (35 cases), split W390-W392
-353. **W341** (done) W337a: venv_check in @mikemol_rules_py checks one dist's built .venv by label, with its own tests
-354. **W342** (done) W337b: venv_check.sh drives venv_check per dist under the sandbox; wired and F-armed on gmailstruct
-355. **W343** (done) W337c: retire hooks/tests/test_venv_artifact.py's per-dist sweepers once W337b is green; keep the
+353. **W340** (done) rivals.rego spec (35 cases), split W390-W392
+354. **W341** (done) W337a: venv_check in @mikemol_rules_py checks one dist's built .venv by label, with its own tests
+355. **W342** (done) W337b: venv_check.sh drives venv_check per dist under the sandbox; wired and F-armed on gmailstruct
+356. **W343** (done) W337c: retire hooks/tests/test_venv_artifact.py's per-dist sweepers once W337b is green; keep the
    closure F-arm as rules_py's own test, generalized off hooks/panflute
-356. **W344** (done) W338a: test_bar_fires' 4 suite-hygiene sweepers become one per-dist check atom
-357. **W345** (done) test_bar_fires' 5 ruff/ratchet config sweepers move into those atoms
-358. **W346** (done) Rewrite W317-split-plan's 'What mtools becomes' paragraph to match operator decision D3
-359. **W348** (done) Re-run commentary-census and resorts differentials with libcst present
-360. **W349** (done) W337c: the other 13 dist BUILDs gain the venv sh_test over their own :.venv (as //gmailstruct:venv)
-361. **W350** (done) venv_check's suite finding carries the tail of pytest's own output, so a collection failure names
+357. **W344** (done) W338a: test_bar_fires' 4 suite-hygiene sweepers become one per-dist check atom
+358. **W345** (done) test_bar_fires' 5 ruff/ratchet config sweepers move into those atoms
+359. **W346** (done) Rewrite W317-split-plan's 'What mtools becomes' paragraph to match operator decision D3
+360. **W348** (done) Re-run commentary-census and resorts differentials with libcst present
+361. **W349** (done) W337c: the other 13 dist BUILDs gain the venv sh_test over their own :.venv (as //gmailstruct:venv)
+362. **W350** (done) venv_check's suite finding carries the tail of pytest's own output, so a collection failure names
    its cause (W349: icsstruct said only rc=2)
-362. **W351** (done) gmailstruct auth.decrypt: the refresh token from its age file via age -d (age-plugin-yubikey) to a
+363. **W351** (done) gmailstruct auth.decrypt: the refresh token from its age file via age -d (age-plugin-yubikey) to a
    pipe, never a file; witness with a fake decryptor
-363. **W352** (done) gmailstruct auth.exchange: refresh token to an in-memory access token by an in-process POST; errors
+364. **W352** (done) gmailstruct auth.exchange: refresh token to an in-memory access token by an in-process POST; errors
    redacted so a planted token appears in no traceback
-364. **W355** (done) pathsforward: a recorded, raise-only counter repair for a counter lagging a claimed symbol, after
+365. **W355** (done) pathsforward: a recorded, raise-only counter repair for a counter lagging a claimed symbol, after
    D8 recovery; today the only fix is a hand edit
-365. **W357** (done) gmailstruct fetch: Gmail list pages and messages into records via an injected GET; a failed request
+366. **W357** (done) gmailstruct fetch: Gmail list pages and messages into records via an injected GET; a failed request
    is an error
-366. **W358** (done) mikemol-gmail raw: one message as RFC 822 .eml, round-trip-checked with life's eml_summary.py
-367. **W360** (done) mikemol-gmail search and show subcommands: age -d runner, exchange, https GET, records out as JSON
+367. **W358** (done) mikemol-gmail raw: one message as RFC 822 .eml, round-trip-checked with life's eml_summary.py
+368. **W360** (done) mikemol-gmail search and show subcommands: age -d runner, exchange, https GET, records out as JSON
    lines
-368. **W362** (done) suite_check per dist: py_tests use pytest_main; tests never resolve __file__
+369. **W362** (done) suite_check per dist: py_tests use pytest_main; tests never resolve __file__
    - next: landed 00c1b3b
-369. **W363** (done) per-dist vacuity guard: a population negative also asserts something truthy
-370. **W364** (done) fleet vacuity floor owner: ask nemik/summit
-371. **W365** (done) each dist's BUILD runs suite_check as a sh_test; then drop test_bar_fires' two sweeps it replaces
-372. **W366** (done) //hooks:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
-373. **W367** (done) //mdstruct:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
-374. **W368** (done) //ratchet:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
-375. **W369** (done) //fence:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
-376. **W370** (done) the remaining 9 dists run :suite (pathsforward, pytestspec, transcriptstruct, corpus, icsstruct,
+370. **W363** (done) per-dist vacuity guard: a population negative also asserts something truthy
+371. **W364** (done) fleet vacuity floor owner: ask nemik/summit
+372. **W365** (done) each dist's BUILD runs suite_check as a sh_test; then drop test_bar_fires' two sweeps it replaces
+373. **W366** (done) //hooks:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
+374. **W367** (done) //mdstruct:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
+375. **W368** (done) //ratchet:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
+376. **W369** (done) //fence:suite runs suite_check, as //gmailstruct:suite does (7f3632f)
+377. **W370** (done) the remaining 9 dists run :suite (pathsforward, pytestspec, transcriptstruct, corpus, icsstruct,
    witness, ledger, pycodemod, audiostruct)
-377. **W371** (done) drop test_bar_fires' pytest-main and __file__-resolve sweeps; :suite covers them
-378. **W372** (done) pytestspec: a case's expect {deny: [rule-id prefixes]} passes only when exactly those rules deny;
+378. **W371** (done) drop test_bar_fires' pytest-main and __file__-resolve sweeps; :suite covers them
+379. **W372** (done) pytestspec: a case's expect {deny: [rule-id prefixes]} passes only when exactly those rules deny;
    absent expect stays admitted-only
-379. **W373** (done) one macro binds :venv and :suite per dist
-380. **W375** (done) rules_py/dist.bzl dist_checks(name) emits :venv+:suite; gmailstruct switched
-381. **W376** (done) other 13 dists call dist_checks; hand-written :venv/:suite blocks gone
-382. **W378** (done) ruff atom: selector/comment + suppression checks per dist
-383. **W379** (done) ratchet atom: the three baseline-key checks run per dist
-384. **W380** (done) pytestspec: ini key pytestspec_data (linelist) adds declared --data paths; a missing path is a
+380. **W373** (done) one macro binds :venv and :suite per dist
+381. **W375** (done) rules_py/dist.bzl dist_checks(name) emits :venv+:suite; gmailstruct switched
+382. **W376** (done) other 13 dists call dist_checks; hand-written :venv/:suite blocks gone
+383. **W378** (done) ruff atom: selector/comment + suppression checks per dist
+384. **W379** (done) ratchet atom: the three baseline-key checks run per dist
+385. **W380** (done) pytestspec: ini key pytestspec_data (linelist) adds declared --data paths; a missing path is a
    collection error
-385. **W382** (done) gmailstruct: a decrypt failure names age's own error; the YubiKey plugin's PIN/touch prompt reaches
+386. **W382** (done) gmailstruct: a decrypt failure names age's own error; the YubiKey plugin's PIN/touch prompt reaches
    the terminal
-386. **W384** (done) check_ruff: selector_check.py, selector comments cite no renamed code
-387. **W385** (done) check_ruff: suppression_check.py, ruff: ignore directives are honoured
-388. **W386** (done) every dist runs both ruff checks; bar_fires drops its two
-389. **W388** (done) check_ratchet: emptied baseline refuses a planted finding, per dist
-390. **W389** (done) dist_checks runs the refusal check; bar_fires drops its 3 ratchet arms
-391. **W390** (done) rivals.rego deny rules from the reference's libcst rows (W340-peek), one per measurable check
-392. **W391** (done) rivals_test.rego two-armed per rule; opa test green
-393. **W392** (done) rivals differential line under --impl reference in w348-venv; record in W36-differential.md
-394. **W393** (done) rivals.rego batch A: 031-034, 041-055 (rivals, scan, dead)
-395. **W394** (done) rivals.rego batch B: 035-040, 050, 064-065 (calls, sqlname)
-396. **W395** (done) rivals.rego batch C: rules for 056-063 (framework exemption, argv operand split)
-397. **W396** (done) values.rego spec (33 cases): replay, rules, two-armed tests, differential
-398. **W397** (done) binding.rego spec (21 cases): replay, rules, two-armed tests, differential
-399. **W398** (done) reifies.rego spec (13 cases): replay, rules, two-armed tests, differential
-400. **W399** (done) _FN_ATTRS: declare 382/383, 397/398, 407/408
-401. **W400** (done) ambient.rego spec (10 cases)
-402. **W401** (done) shape.rego spec (9 cases)
-403. **W402** (done) asserted.rego spec (8 cases)
-404. **W403** (done) funcnames.rego spec (8 cases)
-405. **W404** (done) aliases.rego spec (7 cases)
-406. **W405** (done) capture: snapshot sibling .py files of a file operand in a check's temp tree
-407. **W406** (done) size.rego spec (7 cases)
-408. **W407** (done) state.rego spec (7 cases)
-409. **W409** (done) literal.rego spec (7 cases)
-410. **W410** (done) swallows.rego spec (6 cases)
-411. **W411** (done) crossings.rego spec (5 cases)
-412. **W412** (done) key.rego spec (5 cases)
-413. **W413** (done) scratchpad: promote W390-peek replay to .claude/design, delete promoted dup drafts
-414. **W414** (done) source.rego spec (4 cases)
-415. **W415** (done) importers.rego spec (4 cases)
-416. **W417** (done) py-files.rego spec (4 cases)
-417. **W418** (done) W206-gen: regenerate cases from W189-captured.jsonl
-418. **W419** (done) losslessness spec (4)
-419. **W420** (done) f5 spec (1 case)
-420. **W421** (done) conftest: splat captured varargs (W189 records *roots under its param name)
-421. **W422** (done) W189 capture: why values 092-094 (reaches) regress
-422. **W423** (done) py-files.rego: rule 107-110 under the W189 capture
-423. **W424** (done) conftest.rehome: old root must cover operand paths shallower than the fixtures (py-files 108)
-424. **W427** (done) mikemol-membudget: wire a peaks verb onto fence/peaks.py (16 substrate call sites)
-425. **W428** (done) output parity: the run/lease/status/peaks text substrate callers parse, bash vs mikemol-membudget
-426. **W431** (done) W206-gen on W405-captured.jsonl: regen, regression, rule aliases 141
-427. **W432** (done) W206-cases subject adapter: dispatch origin callee -> port + reshape; prove on shape
-428. **W433** (done) W208 key mode: register key_reads port counterpart in SUBJECT; key.rego --impl subject green
-429. **W434** (done) W208 literal mode: register literal_sites port counterpart in SUBJECT; literal.rego --impl subject
+387. **W384** (done) check_ruff: selector_check.py, selector comments cite no renamed code
+388. **W385** (done) check_ruff: suppression_check.py, ruff: ignore directives are honoured
+389. **W386** (done) every dist runs both ruff checks; bar_fires drops its two
+390. **W388** (done) check_ratchet: emptied baseline refuses a planted finding, per dist
+391. **W389** (done) dist_checks runs the refusal check; bar_fires drops its 3 ratchet arms
+392. **W390** (done) rivals.rego deny rules from the reference's libcst rows (W340-peek), one per measurable check
+393. **W391** (done) rivals_test.rego two-armed per rule; opa test green
+394. **W392** (done) rivals differential line under --impl reference in w348-venv; record in W36-differential.md
+395. **W393** (done) rivals.rego batch A: 031-034, 041-055 (rivals, scan, dead)
+396. **W394** (done) rivals.rego batch B: 035-040, 050, 064-065 (calls, sqlname)
+397. **W395** (done) rivals.rego batch C: rules for 056-063 (framework exemption, argv operand split)
+398. **W396** (done) values.rego spec (33 cases): replay, rules, two-armed tests, differential
+399. **W397** (done) binding.rego spec (21 cases): replay, rules, two-armed tests, differential
+400. **W398** (done) reifies.rego spec (13 cases): replay, rules, two-armed tests, differential
+401. **W399** (done) _FN_ATTRS: declare 382/383, 397/398, 407/408
+402. **W400** (done) ambient.rego spec (10 cases)
+403. **W401** (done) shape.rego spec (9 cases)
+404. **W402** (done) asserted.rego spec (8 cases)
+405. **W403** (done) funcnames.rego spec (8 cases)
+406. **W404** (done) aliases.rego spec (7 cases)
+407. **W405** (done) capture: snapshot sibling .py files of a file operand in a check's temp tree
+408. **W406** (done) size.rego spec (7 cases)
+409. **W407** (done) state.rego spec (7 cases)
+410. **W409** (done) literal.rego spec (7 cases)
+411. **W410** (done) swallows.rego spec (6 cases)
+412. **W411** (done) crossings.rego spec (5 cases)
+413. **W412** (done) key.rego spec (5 cases)
+414. **W413** (done) scratchpad: promote W390-peek replay to .claude/design, delete promoted dup drafts
+415. **W414** (done) source.rego spec (4 cases)
+416. **W415** (done) importers.rego spec (4 cases)
+417. **W417** (done) py-files.rego spec (4 cases)
+418. **W418** (done) W206-gen: regenerate cases from W189-captured.jsonl
+419. **W419** (done) losslessness spec (4)
+420. **W420** (done) f5 spec (1 case)
+421. **W421** (done) conftest: splat captured varargs (W189 records *roots under its param name)
+422. **W422** (done) W189 capture: why values 092-094 (reaches) regress
+423. **W423** (done) py-files.rego: rule 107-110 under the W189 capture
+424. **W424** (done) conftest.rehome: old root must cover operand paths shallower than the fixtures (py-files 108)
+425. **W427** (done) mikemol-membudget: wire a peaks verb onto fence/peaks.py (16 substrate call sites)
+426. **W428** (done) output parity: the run/lease/status/peaks text substrate callers parse, bash vs mikemol-membudget
+427. **W431** (done) W206-gen on W405-captured.jsonl: regen, regression, rule aliases 141
+428. **W432** (done) W206-cases subject adapter: dispatch origin callee -> port + reshape; prove on shape
+429. **W433** (done) W208 key mode: register key_reads port counterpart in SUBJECT; key.rego --impl subject green
+430. **W434** (done) W208 literal mode: register literal_sites port counterpart in SUBJECT; literal.rego --impl subject
    green
-430. **W435** (done) subject adapter: per-CALLEE not-ported declaration (pg_probe_status rides in literal captures);
+431. **W435** (done) subject adapter: per-CALLEE not-ported declaration (pg_probe_status rides in literal captures);
    pytestspec do-not-port is per-case, wrong grain
-431. **W436** (done) W208 gap census: run every W206-cases spec under --impl subject; list each unported callee
+432. **W436** (done) W208 gap census: run every W206-cases spec under --impl subject; list each unported callee
    (SubjectGapError) as its own translator waypoint
-432. **W437** (done) W208 rivals.rego: register the rivals CALLEE (case 031) in SUBJECT
-433. **W438** (done) W208 values.rego: register the values CALLEE (074-089) in SUBJECT
-434. **W439** (done) W208 swarm batch tq1: binding, funcnames, source into the tracked conftest + funcnames do-not-port
+433. **W437** (done) W208 rivals.rego: register the rivals CALLEE (case 031) in SUBJECT
+434. **W438** (done) W208 values.rego: register the values CALLEE (074-089) in SUBJECT
+435. **W439** (done) W208 swarm batch tq1: binding, funcnames, source into the tracked conftest + funcnames do-not-port
    396-398 (W439, W443, W448)
-435. **W440** (done) W208 swarm batch tq2: reifies and ambient into the tracked conftest (W440, W441)
-436. **W441** (done) W208 ambient mode: register ambient in SUBJECT; ambient.rego --impl subject green
-437. **W442** (done) W208 asserted mode: register asserted in SUBJECT; asserted.rego --impl subject green
-438. **W443** (done) W208 funcnames mode: register funcnames in SUBJECT; funcnames.rego --impl subject green
-439. **W444** (done) W208 swarm batch tq4: size, state, crossings, importers, aliases into the tracked conftest (W444,
+436. **W440** (done) W208 swarm batch tq2: reifies and ambient into the tracked conftest (W440, W441)
+437. **W441** (done) W208 ambient mode: register ambient in SUBJECT; ambient.rego --impl subject green
+438. **W442** (done) W208 asserted mode: register asserted in SUBJECT; asserted.rego --impl subject green
+439. **W443** (done) W208 funcnames mode: register funcnames in SUBJECT; funcnames.rego --impl subject green
+440. **W444** (done) W208 swarm batch tq4: size, state, crossings, importers, aliases into the tracked conftest (W444,
    W445, W447, W449, W451)
-440. **W445** (done) W208 state mode: register module_state in SUBJECT; state.rego --impl subject green
-441. **W446** (done) W208 swarm batch tq5: swallows, writes_by_default into the conftest; py-files 107-110 and f5
+441. **W445** (done) W208 state mode: register module_state in SUBJECT; state.rego --impl subject green
+442. **W446** (done) W208 swarm batch tq5: swallows, writes_by_default into the conftest; py-files 107-110 and f5
    do-not-port (W446, W463, W450, W452)
-442. **W447** (done) W208 crossings mode: register crossings in SUBJECT; crossings.rego --impl subject green
-443. **W448** (done) W208 source mode: register source_of in SUBJECT; source.rego --impl subject green
-444. **W449** (done) W208 importers mode: register importers in SUBJECT; importers.rego --impl subject green
-445. **W450** (done) W208 py-files mode: register py_files/_roots in SUBJECT; py-files.rego --impl subject green
-446. **W451** (done) W208 aliases mode: register census aliases in SUBJECT; aliases.rego --impl subject green
-447. **W452** (done) W208 preamble+f5 modes: run both under --impl subject; register their callees or close green
-448. **W453** (done) W208 rivals.rego: register the scan callee (case 033 onward) in SUBJECT
-449. **W454** (done) W208 rivals.rego: register the dead callee (15 cases, 034/041-049/051-057) in SUBJECT
-450. **W455** (done) W208 rivals.rego: declare sqlnames cases 036-040 do-not-port in W206-gen (port carries no sqlname)
-451. **W456** (done) W208 rivals.rego: register flagged_argv + operand_tail callees (058-063) in SUBJECT
-452. **W457** (done) W208 rivals.rego: register the framework_dispatch callee (056-057) in SUBJECT
-453. **W458** (done) Withheld cases FAIL instead of xfail under --impl subject (rivals 032, aliases 144): check
+443. **W447** (done) W208 crossings mode: register crossings in SUBJECT; crossings.rego --impl subject green
+444. **W448** (done) W208 source mode: register source_of in SUBJECT; source.rego --impl subject green
+445. **W449** (done) W208 importers mode: register importers in SUBJECT; importers.rego --impl subject green
+446. **W450** (done) W208 py-files mode: register py_files/_roots in SUBJECT; py-files.rego --impl subject green
+447. **W451** (done) W208 aliases mode: register census aliases in SUBJECT; aliases.rego --impl subject green
+448. **W452** (done) W208 preamble+f5 modes: run both under --impl subject; register their callees or close green
+449. **W453** (done) W208 rivals.rego: register the scan callee (case 033 onward) in SUBJECT
+450. **W454** (done) W208 rivals.rego: register the dead callee (15 cases, 034/041-049/051-057) in SUBJECT
+451. **W455** (done) W208 rivals.rego: declare sqlnames cases 036-040 do-not-port in W206-gen (port carries no sqlname)
+452. **W456** (done) W208 rivals.rego: register flagged_argv + operand_tail callees (058-063) in SUBJECT
+453. **W457** (done) W208 rivals.rego: register the framework_dispatch callee (056-057) in SUBJECT
+454. **W458** (done) Withheld cases FAIL instead of xfail under --impl subject (rivals 032, aliases 144): check
    reference behaviour and pytestspec's withheld disposition
-454. **W459** (done) pytestspec: do-not-port deselects under EVERY --impl, so the reference stops measuring the origin;
+455. **W459** (done) pytestspec: do-not-port deselects under EVERY --impl, so the reference stops measuring the origin;
    scope it to port impls (e.g. adapter declares itself the origin)
-455. **W460** (done) W208 swarm batch tq3: callgraph, reaches, forwards, asserted shims into the tracked conftest (W460,
+456. **W460** (done) W208 swarm batch tq3: callgraph, reaches, forwards, asserted shims into the tracked conftest (W460,
    W461, W462, W442)
-456. **W461** (done) W208 values.rego: register the reaches callee (092-094) in SUBJECT
-457. **W462** (done) W208 values.rego: register the forwards callee (096-097) in SUBJECT
-458. **W463** (done) W208 values.rego: register the writes_by_default callee (103-106) in SUBJECT
-459. **W467** (done) W465a: land the differential's Rego specs, _test.rego and case JSON (+ reference-requirements.txt)
+457. **W461** (done) W208 values.rego: register the reaches callee (092-094) in SUBJECT
+458. **W462** (done) W208 values.rego: register the forwards callee (096-097) in SUBJECT
+459. **W463** (done) W208 values.rego: register the writes_by_default callee (103-106) in SUBJECT
+460. **W467** (done) W465a: land the differential's Rego specs, _test.rego and case JSON (+ reference-requirements.txt)
    UNCHANGED in pycodemod/differential/; opa test green there
-460. **W468** (done) W465b: land the differential conftest.py (adapters) in pycodemod/differential/ clean under
+461. **W468** (done) W465b: land the differential conftest.py (adapters) in pycodemod/differential/ clean under
    pycodemod's ruff and mypy
-461. **W469** (done) W465c: land W206-gen.py, W128-capture.py and peek.py in pycodemod/differential/ clean (41 ruff
+462. **W469** (done) W465c: land W206-gen.py, W128-capture.py and peek.py in pycodemod/differential/ clean (41 ruff
    findings today), then retire the .claude/design copies
-462. **W470** (done) W469a: land the case generator as pycodemod/differential/gen_cases.py (N999 rename, EM101),
+463. **W470** (done) W469a: land the case generator as pycodemod/differential/gen_cases.py (N999 rename, EM101),
    regenerating byte-identical case files
-463. **W471** (done) W469b: land the replay probe peek.py in pycodemod/differential clean (CPY001, BLE001)
-464. **W472** (done) W469c: land the capture tracer as pycodemod/differential/capture.py clean (24 findings:
+464. **W471** (done) W469b: land the replay probe peek.py in pycodemod/differential clean (CPY001, BLE001)
+465. **W472** (done) W469c: land the capture tracer as pycodemod/differential/capture.py clean (24 findings:
    annotations, PTH, S108, C901, print)
-465. **W473** (done) Gate reach: pre-commit must run ruff check, ruff format --check, mypy and opa test over
+466. **W473** (done) Gate reach: pre-commit must run ruff check, ruff format --check, mypy and opa test over
    pycodemod/differential/ (2737143 landed an unformatted conftest unrefused); F-armed
-466. **W475** (done) Track the capture comparator (normalizes mkdtemp names, repr addresses; W472 used a scratchpad
+467. **W475** (done) Track the capture comparator (normalizes mkdtemp names, repr addresses; W472 used a scratchpad
    copy) in pycodemod/differential; also canonicalize set reprs, since frozenset order varies with hash randomization
-467. **W476** (done) W473a: pycodemod's ruff, ratchet and mypy targets glob only src/** and tests/** (mypy
+468. **W476** (done) W473a: pycodemod's ruff, ratchet and mypy targets glob only src/** and tests/** (mypy
    files=[src,tests]); add differential/ to all three domains, F-armed by a planted finding under differential/
-468. **W477** (done) W473b: ruff format --check is gated nowhere in bazel (check_ruff/ruff_check.sh runs only ruff
+469. **W477** (done) W473b: ruff format --check is gated nowhere in bazel (check_ruff/ruff_check.sh runs only ruff
    check; formatting rests on the edit-time pycheck hook alone): measure every dist under format --check, then gate it
    per dist, F-armed
-469. **W478** (done) W473c: opa test over pycodemod/differential specs as a bazel test (opa is not in the bazel graph;
+470. **W478** (done) W473c: opa test over pycodemod/differential specs as a bazel test (opa is not in the bazel graph;
    pytestspec's opa.py pins it host-side), F-armed
-470. **W480** (done) W208 binding.rego 209-219: _cached_defs (port has no cached_defs; 209-211 need a counterpart or a
+471. **W480** (done) W208 binding.rego 209-219: _cached_defs (port has no cached_defs; 209-211 need a counterpart or a
    declaration) and _roots (reads the live tree, W189; a NOT_PORTED or do-not-port candidate; 212-219 already withheld
    under reference)
-471. **W481** (done) size.rego 146 cannot deny on empty rows (rows[0][4] undefined, so not-contains never fires);
+472. **W481** (done) size.rego 146 cannot deny on empty rows (rows[0][4] undefined, so not-contains never fires);
    rewrite as some row / count(rows) == 0 and arm it in size_test.rego
-472. **W483** (done) W107b: letter to summit for summit:W95 with the differential count 155 of 168 and a pointer to the
+473. **W483** (done) W107b: letter to summit for summit:W95 with the differential count 155 of 168 and a pointer to the
    substrate letter
-473. **W485** (done) Gate hole: check_ruff/ruff_check.sh runs ruff over . in _main, so files staged from external repos
+474. **W485** (done) Gate hole: check_ruff/ruff_check.sh runs ruff over . in _main, so files staged from external repos
    (rules_py) are never linted; lint the files passed, then sweep rules_py's 14 findings
-474. **W503** (done) Fleet vacuity floor as a root check atom, //:vacuity_floor
-475. **W516** (done) Probe: capture one live Stop hook payload and the output shape that blocks a stop
-476. **W523** (done) Operator names the k8s namespace in-cluster audiostruct jobs run in, for luthen's hf-token Secret
-477. **W524** (done) pathsforward: --payload truncation never drops a live waypoint; titles shrink to symbols first, and
+475. **W503** (done) Fleet vacuity floor as a root check atom, //:vacuity_floor
+476. **W516** (done) Probe: capture one live Stop hook payload and the output shape that blocks a stop
+477. **W523** (done) Operator names the k8s namespace in-cluster audiostruct jobs run in, for luthen's hf-token Secret
+478. **W524** (done) pathsforward: --payload truncation never drops a live waypoint; titles shrink to symbols first, and
    any live drop is named
-478. **W526** (done) mikemol-hook-* commands refuse unknown argv instead of reading an empty event and allowing; offer
+479. **W526** (done) mikemol-hook-* commands refuse unknown argv instead of reading an empty event and allowing; offer
    --routes to list the routing table
-479. **W529** (done) Operator applies the drafted settings.json grant (.claude/design/W529-settings.proposed.json): Stop
+480. **W529** (done) Operator applies the drafted settings.json grant (.claude/design/W529-settings.proposed.json): Stop
    hook, mikemol-audio allow, two stale swarm rules removed
-480. **W531** (done) Adopt paperkit's tools/ as atomized mtools packages (claims paperkit:W142)
-481. **W532** (done) Plan the paperkit tools/ migration: package clusters, names and entry points
-482. **W533** (done) pathsforward: a queue may declare its ledger outcome sets; --ledger refuses a tick word outside
+481. **W531** (done) Adopt paperkit's tools/ as atomized mtools packages (claims paperkit:W142)
+482. **W532** (done) Plan the paperkit tools/ migration: package clusters, names and entry points
+483. **W533** (done) pathsforward: a queue may declare its ledger outcome sets; --ledger refuses a tick word outside
    them
-483. **W534** (done) pathsforward: --add appends a minted ledger line for the new symbol, as the atomize docstring says
-484. **W535** (done) pathsforward: --unlinked prints n of m live waypoints linked and names the rest, counting incoming
+484. **W534** (done) pathsforward: --add appends a minted ledger line for the new symbol, as the atomize docstring says
+485. **W535** (done) pathsforward: --unlinked prints n of m live waypoints linked and names the rest, counting incoming
    edges
-485. **W536** (done) pycodemod and mdstruct walks skip registered git worktrees by default, print the skipped count, and
+486. **W536** (done) pycodemod and mdstruct walks skip registered git worktrees by default, print the skipped count, and
    take --include-worktrees
-486. **W539** (done) pathsforward: atomize counts only the declared advance outcomes when a queue declares them
-487. **W542** (done) mikemol-pkgbuild: port wheel, pyc and pyinfo from paperkit tools/ as the layout pathfinder
+487. **W539** (done) pathsforward: atomize counts only the declared advance outcomes when a queue declares them
+488. **W542** (done) mikemol-pkgbuild: port wheel, pyc and pyinfo from paperkit tools/ as the layout pathfinder
    (paperkit:W142)
-488. **W543** (done) mikemol-buildtel: port bb_records, buildpulse, logs_push, coord_sample, project_endpoints,
+489. **W543** (done) mikemol-buildtel: port bb_records, buildpulse, logs_push, coord_sample, project_endpoints,
    image_digest, probe (paperkit:W142)
-489. **W544** (done) mikemol-gatecheck: port hook_index, indexdiverge, hook_grid, rungate, absence_audit, lint_bzl
+490. **W544** (done) mikemol-gatecheck: port hook_index, indexdiverge, hook_grid, rungate, absence_audit, lint_bzl
    (paperkit:W142)
-490. **W545** (done) mikemol-mutantcell: port eval, cellargs, cellcgroup, cellstage, sens, def_sites, decisions; sites
+491. **W545** (done) mikemol-mutantcell: port eval, cellargs, cellcgroup, cellstage, sens, def_sites, decisions; sites
    waits on the engine edge (paperkit:W142)
-491. **W546** (done) Measure the content overlap between paperkit's mem_*, cpuweight, zswap_probe, cellcgroup and
+492. **W546** (done) Measure the content overlap between paperkit's mem_*, cpuweight, zswap_probe, cellcgroup and
    mikemol-fence before memres is minted
-492. **W547** (done) mikemol-importdag: port dagderive, dagnames, dagbzl, imports, closure, closure_census once the
+493. **W547** (done) mikemol-importdag: port dagderive, dagnames, dagbzl, imports, closure, closure_census once the
    paperkit.durable edge is cut (paperkit:W142)
-493. **W548** (done) mikemol-gradekit: port verdict, grades_rec, read_grade, effective, report_refresh once the paperkit
+494. **W548** (done) mikemol-gradekit: port verdict, grades_rec, read_grade, effective, report_refresh once the paperkit
    grade/bib edge is cut (paperkit:W142)
-494. **W549** (done) mikemol-importaudit: port flatorder, sortaudit, pathaudit, or retire them with paperkit's sys.path
+495. **W549** (done) mikemol-importaudit: port flatorder, sortaudit, pathaudit, or retire them with paperkit's sys.path
    arc (paperkit:W142)
-495. **W550** (done) mikemol-treeio: decide and port edit_snapshot and vfs with or without bibstruct (paperkit:W142)
-496. **W552** (done) Survey paperkit's grade, bib, mutate and durable engine modules: what the tools use, size, owners,
+496. **W550** (done) mikemol-treeio: decide and port edit_snapshot and vfs with or without bibstruct (paperkit:W142)
+497. **W552** (done) Survey paperkit's grade, bib, mutate and durable engine modules: what the tools use, size, owners,
    and where each lands in mtools
-497. **W554** (done) mikemol-memres: port the mem_* store, sweep_budget, cpuweight and zswap_probe as one package, none
+498. **W554** (done) mikemol-memres: port the mem_* store, sweep_budget, cpuweight and zswap_probe as one package, none
    folds into fence (paperkit:W142)
-498. **W555** (done) Port paperkit's durable.write_atomic into mtools, as its own small dist or folded into an existing
+499. **W555** (done) Port paperkit's durable.write_atomic into mtools, as its own small dist or folded into an existing
    one by measurement (paperkit:W142)
-499. **W556** (done) mikemol-mutation: move paperkit's mutate whole and make its three private site functions public
+500. **W556** (done) mikemol-mutation: move paperkit's mutate whole and make its three private site functions public
    (paperkit:W142)
-500. **W557** (done) mikemol-grade: move paperkit's grade whole and move the bib scopes constant into it so grade is a
+501. **W557** (done) mikemol-grade: move paperkit's grade whole and move the bib scopes constant into it so grade is a
    leaf (paperkit:W142)
-501. **W558** (done) Measure whether mikemol-witness raw_bib already replaces paperkit's bibparse, then choose the bib
+502. **W558** (done) Measure whether mikemol-witness raw_bib already replaces paperkit's bibparse, then choose the bib
    cut for effective.py (paperkit:W142)
-502. **W560** (done) mikemol-bibparse: move bibparse alone with a project-to-bib-list resolver and a duplicate-key
+503. **W560** (done) mikemol-bibparse: move bibparse alone with a project-to-bib-list resolver and a duplicate-key
    refusal (paperkit:W142)
-503. **W561** (done) mdstruct takes a directory operand that skips registered worktrees, reusing pycodemod's expand
+504. **W561** (done) mdstruct takes a directory operand that skips registered worktrees, reusing pycodemod's expand
    logic
-504. **W563** (done) mikemol-importdag, first unit: port dagderive, dagnames and closure_census, the three modules with
+505. **W563** (done) mikemol-importdag, first unit: port dagderive, dagnames and closure_census, the three modules with
    no atomicwrite edge (paperkit:W142)
-505. **W565** (done) mikemol-gatecheck: port witness_reach now that importdag's dagnames and dagderive have landed
-506. **W566** (done) Spike W562 option A in a worktree: importdag imports mikemol.atomicwrite through a uv path source
+506. **W565** (done) mikemol-gatecheck: port witness_reach now that importdag's dagnames and dagderive have landed
+507. **W566** (done) Spike W562 option A in a worktree: importdag imports mikemol.atomicwrite through a uv path source
    and a hub, measured end to end under bazel, nothing committed
-507. **W568** (done) Spike W562 option C for importdag: imports and dagbzl take the atomic writer as injected data,
+508. **W568** (done) Spike W562 option C for importdag: imports and dagbzl take the atomic writer as injected data,
    measured against a real port, nothing committed
-508. **W569** (done) Spike W562 option C for gradekit: effective reads grade and claim edges as data files instead of
+509. **W569** (done) Spike W562 option C for gradekit: effective reads grade and claim edges as data files instead of
    importing mikemol.grade and mikemol.bibparse, measured, nothing committed
-509. **W570** (done) mikemol-importdag declares its sibling mikemol-atomicwrite (the first dist-to-dist edge, A+B):
+510. **W570** (done) mikemol-importdag declares its sibling mikemol-atomicwrite (the first dist-to-dist edge, A+B):
    pyproject path source, uv.lock, five BUILD edits, no code yet
-510. **W571** (done) mikemol-gatecheck declares its sibling mikemol-importdag (A+B edge prep for witness_reach):
+511. **W571** (done) mikemol-gatecheck declares its sibling mikemol-importdag (A+B edge prep for witness_reach):
    pyproject path source, uv.lock, five BUILD edits, an edge test
-511. **W572** (done) mdstruct declares its sibling mikemol-pathwalk (A+B edge prep for the directory operand)
-512. **W573** (done) Extract pycodemod's worktrees walk into its own stdlib-only dist mikemol-pathwalk, so mdstruct can
+512. **W572** (done) mdstruct declares its sibling mikemol-pathwalk (A+B edge prep for the directory operand)
+513. **W573** (done) Extract pycodemod's worktrees walk into its own stdlib-only dist mikemol-pathwalk, so mdstruct can
    reuse it without libcst; pycodemod then depends on it (A+B)
-513. **W574** (done) mikemol-mutantcell: port sites, with sibling edges on mikemol-mutation and mikemol-importdag (A+B),
+514. **W574** (done) mikemol-mutantcell: port sites, with sibling edges on mikemol-mutation and mikemol-importdag (A+B),
    the last unported module of the tools/ plan (paperkit:W142)
-514. **W575** (done) pathwalk: expand takes a suffix keyword (default .py) so mdstruct can walk markdown, backward
+515. **W575** (done) pathwalk: expand takes a suffix keyword (default .py) so mdstruct can walk markdown, backward
    compatible for pycodemod
-515. **W576** (done) Create the runner GitHub App on the existing org mikemol-tools, so luthen can apply the runner pool
+516. **W576** (done) Create the runner GitHub App on the existing org mikemol-tools, so luthen can apply the runner pool
    and the operator can run the key custody command
-516. **W678** (done) mtools typing: pathsforward/src/mikemol/pathsforward/overlap.py (17 findings)
-517. **W679** (done) mtools typing: pathsforward/src/mikemol/pathsforward/timevalue.py (11 findings)
-518. **W683** (done) mtools typing: hooks/src/mikemol/hooks/structural_query.py (43 findings)
-519. **W684** (done) mtools typing: pathsforward/src/mikemol/pathsforward/outcomes.py (12 findings)
-520. **W685** (done) mtools typing: pathsforward/src/mikemol/pathsforward/store.py (8 findings)
-521. **W686** (done) mtools typing: treeio/src/mikemol/treeio/ambient.py (3 findings)
-522. **W687** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/blocks.py (30 findings)
-523. **W688** (done) mtools typing: hooks/src/mikemol/hooks/verdict.py (2 findings)
-524. **W690** (done) mtools typing: pathsforward/src/mikemol/pathsforward/commitmsg.py (13 findings)
-525. **W691** (done) mtools typing: pathsforward/src/mikemol/pathsforward/embargo.py (26 findings)
-526. **W692** (done) mtools typing: pathsforward/src/mikemol/pathsforward/unlinked.py (20 findings)
-527. **W693** (done) mtools typing: pathsforward/src/mikemol/pathsforward/vtodo.py (104 findings)
-528. **W694** (done) mtools typing: audiostruct/src/mikemol/audiostruct/render.py (9 findings)
-529. **W695** (done) mtools typing: bibparse/src/mikemol/bibparse/edges.py (18 findings)
-530. **W696** (done) mtools typing: gmailstruct/src/mikemol/gmailstruct/consent.py (8 findings)
-531. **W697** (done) mtools typing: gmailstruct/src/mikemol/gmailstruct/fetch.py (6 findings)
-532. **W698** (done) mtools typing: hooks/src/mikemol/hooks/inbound_asks.py (8 findings)
-533. **W699** (done) mtools typing: hooks/src/mikemol/hooks/nemik_check.py (12 findings)
-534. **W700** (done) mtools typing: hooks/src/mikemol/hooks/no_chaining.py (10 findings)
-535. **W701** (done) mtools typing: hooks/src/mikemol/hooks/no_verify.py (4 findings)
-536. **W702** (done) mtools typing: icsstruct/src/mikemol/icsstruct/expand.py (77 findings)
-537. **W703** (done) mtools typing: icsstruct/src/mikemol/icsstruct/source.py (10 findings)
-538. **W704** (done) mtools typing: importdag/src/mikemol/importdag/dagbzl.py (17 findings)
-539. **W705** (done) mtools typing: mdstruct/src/mikemol/mdstruct/lint.py (27 findings)
-540. **W706** (done) mtools typing: mdstruct/src/mikemol/mdstruct/operands.py (12 findings)
-541. **W707** (done) mtools typing: pytestspec/src/mikemol/pytestspec/adapters.py (7 findings)
-542. **W708** (done) mtools typing: pytestspec/src/mikemol/pytestspec/cache.py (5 findings)
-543. **W709** (done) mtools typing: pytestspec/src/mikemol/pytestspec/opa.py (14 findings)
-544. **W710** (done) mtools typing: pytestspec/src/mikemol/pytestspec/outcomes.py (38 findings)
-545. **W711** (done) mtools typing: ratchet/src/mikemol/ratchet/core.py (25 findings)
-546. **W730** (done) mtools typing: treeio/src/mikemol/treeio/result.py (8 findings)
-547. **W731** (done) mtools typing: pathsforward/src/mikemol/pathsforward/recurrence.py (14 findings)
-548. **W733** (done) mtools typing: pathsforward/src/mikemol/pathsforward/foreign.py (31 findings)
-549. **W734** (done) mtools typing: pathsforward/src/mikemol/pathsforward/ledger.py (9 findings)
-550. **W735** (done) mtools typing: treeio/src/mikemol/treeio/context.py (8 findings)
-551. **W736** (done) mtools typing: audiostruct/src/mikemol/audiostruct/gpu.py (1 findings)
-552. **W737** (done) mtools typing: pathsforward/src/mikemol/pathsforward/lease.py (57 findings)
-553. **W738** (done) mtools typing: pathsforward/src/mikemol/pathsforward/render.py (33 findings)
-554. **W739** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/provenance.py (19 findings)
-555. **W741** (done) mtools typing: audiostruct/src/mikemol/audiostruct/cli.py (3 findings)
-556. **W742** (done) mtools typing: mdstruct/src/mikemol/mdstruct/roundtrip.py (12 findings)
-557. **W743** (done) mtools typing: treeio/src/mikemol/treeio/write.py (8 findings)
-558. **W753** (done) mtools typing: treeio/src/mikemol/treeio/read.py (28 findings)
-559. **W754** (done) mtools typing: pathsforward/src/mikemol/pathsforward/check.py (183 findings)
-560. **W755** (done) mtools typing: pathsforward/src/mikemol/pathsforward/atomize.py (17 findings)
-561. **W756** (done) mtools typing: audiostruct/src/mikemol/audiostruct/whisperx_site.py (22 findings)
-562. **W757** (done) mtools typing: mdstruct/src/mikemol/mdstruct/items.py (41 findings)
-563. **W758** (done) mtools typing: mdstruct/src/mikemol/mdstruct/tables.py (36 findings)
-564. **W759** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/query.py (63 findings)
-565. **W767** (done) mtools typing: treeio/src/mikemol/treeio/listing.py (23 findings)
-566. **W768** (done) mtools typing: treeio/src/mikemol/treeio/snapshot.py (46 findings)
-567. **W769** (done) mtools typing: mdstruct/src/mikemol/mdstruct/budget.py (17 findings)
-568. **W770** (done) mtools typing: mdstruct/src/mikemol/mdstruct/grep.py (10 findings)
-569. **W771** (done) mtools typing: mdstruct/src/mikemol/mdstruct/sections.py (19 findings)
-570. **W772** (done) mtools typing: mdstruct/src/mikemol/mdstruct/verify.py (4 findings)
-571. **W774** (done) mtools typing: pathsforward/src/mikemol/pathsforward/ops.py (222 findings)
-572. **W776** (done) mtools typing: treeio/src/mikemol/treeio/contract.py (27 findings)
-573. **W778** (done) mtools typing: pathsforward/src/mikemol/pathsforward/inbound.py (42 findings)
-574. **W779** (done) mtools typing: pathsforward/src/mikemol/pathsforward/redact.py (19 findings)
-575. **W780** (done) mtools typing: hooks/src/mikemol/hooks/pycheck.py (61 findings)
-576. **W783** (done) mtools typing: pathsforward/src/mikemol/pathsforward/selftest.py (18 findings)
-577. **W788** (done) mtools typing: pathsforward/src/mikemol/pathsforward/cli.py (249 findings)
-578. **W791** (done) Make debtplan's per-repo inputs durable: exclude directories and declared resolutions live in a
+517. **W678** (done) mtools typing: pathsforward/src/mikemol/pathsforward/overlap.py (17 findings)
+518. **W679** (done) mtools typing: pathsforward/src/mikemol/pathsforward/timevalue.py (11 findings)
+519. **W683** (done) mtools typing: hooks/src/mikemol/hooks/structural_query.py (43 findings)
+520. **W684** (done) mtools typing: pathsforward/src/mikemol/pathsforward/outcomes.py (12 findings)
+521. **W685** (done) mtools typing: pathsforward/src/mikemol/pathsforward/store.py (8 findings)
+522. **W686** (done) mtools typing: treeio/src/mikemol/treeio/ambient.py (3 findings)
+523. **W687** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/blocks.py (30 findings)
+524. **W688** (done) mtools typing: hooks/src/mikemol/hooks/verdict.py (2 findings)
+525. **W690** (done) mtools typing: pathsforward/src/mikemol/pathsforward/commitmsg.py (13 findings)
+526. **W691** (done) mtools typing: pathsforward/src/mikemol/pathsforward/embargo.py (26 findings)
+527. **W692** (done) mtools typing: pathsforward/src/mikemol/pathsforward/unlinked.py (20 findings)
+528. **W693** (done) mtools typing: pathsforward/src/mikemol/pathsforward/vtodo.py (104 findings)
+529. **W694** (done) mtools typing: audiostruct/src/mikemol/audiostruct/render.py (9 findings)
+530. **W695** (done) mtools typing: bibparse/src/mikemol/bibparse/edges.py (18 findings)
+531. **W696** (done) mtools typing: gmailstruct/src/mikemol/gmailstruct/consent.py (8 findings)
+532. **W697** (done) mtools typing: gmailstruct/src/mikemol/gmailstruct/fetch.py (6 findings)
+533. **W698** (done) mtools typing: hooks/src/mikemol/hooks/inbound_asks.py (8 findings)
+534. **W699** (done) mtools typing: hooks/src/mikemol/hooks/nemik_check.py (12 findings)
+535. **W700** (done) mtools typing: hooks/src/mikemol/hooks/no_chaining.py (10 findings)
+536. **W701** (done) mtools typing: hooks/src/mikemol/hooks/no_verify.py (4 findings)
+537. **W702** (done) mtools typing: icsstruct/src/mikemol/icsstruct/expand.py (77 findings)
+538. **W703** (done) mtools typing: icsstruct/src/mikemol/icsstruct/source.py (10 findings)
+539. **W704** (done) mtools typing: importdag/src/mikemol/importdag/dagbzl.py (17 findings)
+540. **W705** (done) mtools typing: mdstruct/src/mikemol/mdstruct/lint.py (27 findings)
+541. **W706** (done) mtools typing: mdstruct/src/mikemol/mdstruct/operands.py (12 findings)
+542. **W707** (done) mtools typing: pytestspec/src/mikemol/pytestspec/adapters.py (7 findings)
+543. **W708** (done) mtools typing: pytestspec/src/mikemol/pytestspec/cache.py (5 findings)
+544. **W709** (done) mtools typing: pytestspec/src/mikemol/pytestspec/opa.py (14 findings)
+545. **W710** (done) mtools typing: pytestspec/src/mikemol/pytestspec/outcomes.py (38 findings)
+546. **W711** (done) mtools typing: ratchet/src/mikemol/ratchet/core.py (25 findings)
+547. **W730** (done) mtools typing: treeio/src/mikemol/treeio/result.py (8 findings)
+548. **W731** (done) mtools typing: pathsforward/src/mikemol/pathsforward/recurrence.py (14 findings)
+549. **W733** (done) mtools typing: pathsforward/src/mikemol/pathsforward/foreign.py (31 findings)
+550. **W734** (done) mtools typing: pathsforward/src/mikemol/pathsforward/ledger.py (9 findings)
+551. **W735** (done) mtools typing: treeio/src/mikemol/treeio/context.py (8 findings)
+552. **W736** (done) mtools typing: audiostruct/src/mikemol/audiostruct/gpu.py (1 findings)
+553. **W737** (done) mtools typing: pathsforward/src/mikemol/pathsforward/lease.py (57 findings)
+554. **W738** (done) mtools typing: pathsforward/src/mikemol/pathsforward/render.py (33 findings)
+555. **W739** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/provenance.py (19 findings)
+556. **W741** (done) mtools typing: audiostruct/src/mikemol/audiostruct/cli.py (3 findings)
+557. **W742** (done) mtools typing: mdstruct/src/mikemol/mdstruct/roundtrip.py (12 findings)
+558. **W743** (done) mtools typing: treeio/src/mikemol/treeio/write.py (8 findings)
+559. **W753** (done) mtools typing: treeio/src/mikemol/treeio/read.py (28 findings)
+560. **W754** (done) mtools typing: pathsforward/src/mikemol/pathsforward/check.py (183 findings)
+561. **W755** (done) mtools typing: pathsforward/src/mikemol/pathsforward/atomize.py (17 findings)
+562. **W756** (done) mtools typing: audiostruct/src/mikemol/audiostruct/whisperx_site.py (22 findings)
+563. **W757** (done) mtools typing: mdstruct/src/mikemol/mdstruct/items.py (41 findings)
+564. **W758** (done) mtools typing: mdstruct/src/mikemol/mdstruct/tables.py (36 findings)
+565. **W759** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/query.py (63 findings)
+566. **W767** (done) mtools typing: treeio/src/mikemol/treeio/listing.py (23 findings)
+567. **W768** (done) mtools typing: treeio/src/mikemol/treeio/snapshot.py (46 findings)
+568. **W769** (done) mtools typing: mdstruct/src/mikemol/mdstruct/budget.py (17 findings)
+569. **W770** (done) mtools typing: mdstruct/src/mikemol/mdstruct/grep.py (10 findings)
+570. **W771** (done) mtools typing: mdstruct/src/mikemol/mdstruct/sections.py (19 findings)
+571. **W772** (done) mtools typing: mdstruct/src/mikemol/mdstruct/verify.py (4 findings)
+572. **W774** (done) mtools typing: pathsforward/src/mikemol/pathsforward/ops.py (222 findings)
+573. **W776** (done) mtools typing: treeio/src/mikemol/treeio/contract.py (27 findings)
+574. **W778** (done) mtools typing: pathsforward/src/mikemol/pathsforward/inbound.py (42 findings)
+575. **W779** (done) mtools typing: pathsforward/src/mikemol/pathsforward/redact.py (19 findings)
+576. **W780** (done) mtools typing: hooks/src/mikemol/hooks/pycheck.py (61 findings)
+577. **W783** (done) mtools typing: pathsforward/src/mikemol/pathsforward/selftest.py (18 findings)
+578. **W788** (done) mtools typing: pathsforward/src/mikemol/pathsforward/cli.py (249 findings)
+579. **W791** (done) Make debtplan's per-repo inputs durable: exclude directories and declared resolutions live in a
    file in each repo, not in host scratch flags
-579. **W792** (done) AL: model parent packages' __init__.py edges in importdag.resolve (importing a.b.c also imports
+580. **W792** (done) AL: model parent packages' __init__.py edges in importdag.resolve (importing a.b.c also imports
    a/__init__.py and a/b/__init__.py)
-580. **W794** (done) Debt ledgers should come from the edit gate's own whole-file verdict (ruff, ruff-format and mypy,
+581. **W794** (done) Debt ledgers should come from the edit gate's own whole-file verdict (ruff, ruff-format and mypy,
    per repo config), not mypy alone, so a card's finding count is what actually refuses the edit
-581. **W795** (done) Audit old-style tests across the fleet (untyped or unformatted functions, --selftest or main-style
+582. **W795** (done) Audit old-style tests across the fleet (untyped or unformatted functions, --selftest or main-style
    scripts, asserts run outside a test runner) and mint conversion-to-pytest cards through debtplan
    - next: none
-582. **W801** (done) bibparse: add the field reader citation_census and farm_roster need (a bib's per-entry field
+583. **W801** (done) bibparse: add the field reader citation_census and farm_roster need (a bib's per-entry field
    values), replacing paperkit's tools/bibstruct --field
    - next: Landed a10c6c4 (on origin): mikemol.bibparse.fields.field_values with six warrants and a rubric row. First
      consumer: gcalculus:W93 (pinned, installed; blocked on gcalculus:W94).
-583. **W802** (done) Audit mtools packages for a capability carried twice: one should depend on the other as a declared
+584. **W802** (done) Audit mtools packages for a capability carried twice: one should depend on the other as a declared
    mtools dependency
-584. **W808** (done) pycheck's refusal says to run mikemol-pycheck --check-file PATH, but mikemol-hooks installs only
+585. **W808** (done) pycheck's refusal says to run mikemol-pycheck --check-file PATH, but mikemol-hooks installs only
    mikemol-hook-pycheck (stdin payload)
-585. **W810** (done) hooks: host_facts module: zram headroom and the host tick lock as facts (absent, never empty),
+586. **W810** (done) hooks: host_facts module: zram headroom and the host tick lock as facts (absent, never empty),
    typed, tested, warranted
    - next: Landed 7af8979: mikemol.hooks.host_facts (zram_headroom, host_lock), nine tests and warrants, rubric row,
      CONSUMED BY declaration; standing_facts.queue_doc public.
-586. **W811** (done) Stop guard: a held host tick lock at Stop blocks once per turn, saying run tick end (standing-stop
+587. **W811** (done) Stop guard: a held host tick lock at Stop blocks once per turn, saying run tick end (standing-stop
    convention, stop_hook_active honored)
    - next: Landed d65789e: mikemol-hook-tick-stop (tick_stop.py, entry, launcher, console script in pyproject and BUILD,
      wired in mtools and the host Stop group), 11 tests and warrants. Fired through the real launcher on 7 cases.
-587. **W812** (done) UserPromptSubmit tick gate: block a tick prompt that cannot run (zram nearly full, lock held), else
+588. **W812** (done) UserPromptSubmit tick gate: block a tick prompt that cannot run (zram nearly full, lock held), else
    inject pulse as additionalContext
    - next: Landed 64af9e9: mikemol-hook-tick-gate (tick_gate.py, launcher failing open, console script in pyproject and
      BUILD, wired in mtools and the host UserPromptSubmit group), 14 tests and warrants; tick_stop gained fresh() and
      payload_lock(), host_facts REFUSE_FRACTION. The live-payload key check is the separate card minted from this one.
-588. **W813** (done) SessionStart(compact) hook re-injects the host's after-compaction notes file plus live host facts;
+589. **W813** (done) SessionStart(compact) hook re-injects the host's after-compaction notes file plus live host facts;
    no PreCompact needed
    - next: Landed 7cdbfa4: mikemol-hook-after-compaction (after_compaction.py, launcher failing open, console script,
      wired in mtools and the host SessionStart compact group), 11 tests and warrants; the host's
      .claude/after-compaction.md holds the pointers. First commit was refused by the gate's own ruff/ratchet/mypy; the
      routine now runs those targets directly first.
-589. **W814** (done) PreToolUse Read guard: deny an oversized log or task output with guidance to grep for verdict lines
+590. **W814** (done) PreToolUse Read guard: deny an oversized log or task output with guidance to grep for verdict lines
    or read the tail
    - next: Landed a4e6224: mikemol-hook-read-guard (read_guard.py, launcher failing open, console script, wired
      inline-armed in mtools and the host PreToolUse Read group), 11 tests and warrants; fired through the real launcher
      on six cases.
-590. **W815** (done) SessionEnd hook: release the host tick lock if this session still holds it (1.5 s budget)
+591. **W815** (done) SessionEnd hook: release the host tick lock if this session still holds it (1.5 s budget)
    - next: Landed 5098299: mikemol-hook-tick-release (tick_release.py, launcher failing open, console script, pyproject
      per-file subprocess declaration, wired in mtools and the host SessionEnd group with PATHS_FORWARD_BIN inline), 12
      tests and warrants; released a real lock through the real writer.
-591. **W818** (done) pycheck hook reports the edited file's unclean import closure on admit, as advisory context, from
+592. **W818** (done) pycheck hook reports the edited file's unclean import closure on admit, as advisory context, from
    the same library as the CLI
-592. **W863** (done) Measure old-style tests in mtools alone: count test modules with an unannotated def, a ruff-format
+593. **W863** (done) Measure old-style tests in mtools alone: count test modules with an unannotated def, a ruff-format
    diff, a --selftest/main-style script, or no warrant per test
    - next: none: W795 carries the cross-repo audit.
-593. **W864** (done) Write the old-style-tests audit as a tracked debtplan ledger source: per repo, count test files
+594. **W864** (done) Write the old-style-tests audit as a tracked debtplan ledger source: per repo, count test files
    that ruff format would change, defs without annotations, and probe_/bench_ or main-style scripts living under tests/
    - next: none
-594. **W865** (done) Inventory katas.py: list its subcommands, line count and what each reads and writes, as the plan
+595. **W865** (done) Inventory katas.py: list its subcommands, line count and what each reads and writes, as the plan
    for the distribution split
    - next: none: W796 carries the port.
-595. **W866** (done) Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts
+596. **W866** (done) Count the three old-style arms the census cannot see (main-style scripts under tests/, asserts
    outside a runner, no warrant per test) for the repos it judged
    - next: none
-596. **W869** (done) pathsforward --add refuses a title over 150 characters, as katas wp does, so a bundled title cannot
+597. **W869** (done) pathsforward --add refuses a title over 150 characters, as katas wp does, so a bundled title cannot
    be minted
    - next: none
-597. **W870** (done) pathsforward gate-card verbs: mint a repo's 'commit gate is red' card, block its open ledger on it,
+598. **W870** (done) pathsforward gate-card verbs: mint a repo's 'commit gate is red' card, block its open ledger on it,
    and lift on green (katas gate_red/gate_green)
    - next: none
-598. **W872** (done) katas distribution slice 1: the proc core and the detached commit (start_commit, wait) calling
+599. **W872** (done) katas distribution slice 1: the proc core and the detached commit (start_commit, wait) calling
    hooks/bin/mikemol-commit
    - next: none
-599. **W873** (done) Extract treeio.proc.capture into its own small leaf distribution so treeio, katas and commit_kata
+600. **W873** (done) Extract treeio.proc.capture into its own small leaf distribution so treeio, katas and commit_kata
    share one process seam without pulling pygit2
    - next: none
-600. **W874** (done) katas: the detached commit (start_commit and wait) on mikemol-procrun, writing the log and the rc
+601. **W874** (done) katas: the detached commit (start_commit and wait) on mikemol-procrun, writing the log and the rc
    line commit_state reads
    - next: none
-601. **W875** (done) katas: status, probe and flush over the workstreams, on the detached commit
+602. **W875** (done) katas: status, probe and flush over the workstreams, on the detached commit
    - next: none
-602. **W876** (done) katas: archive, precommit_survey and bazelize, the file-operation katas
+603. **W876** (done) katas: archive, precommit_survey and bazelize, the file-operation katas
    - next: none
-603. **W877** (done) katas: pulse and tick end, the katas that act on the host queue and the nemik tools
+604. **W877** (done) katas: pulse and tick end, the katas that act on the host queue and the nemik tools
    - next: none
-604. **W878** (done) katas: a command-line entry with the host katas' subcommand names, and where the host's policy
+605. **W878** (done) katas: a command-line entry with the host katas' subcommand names, and where the host's policy
    values live
    - next: none
-605. **W882** (done) Answer nemik:W224: a citation's repo part accepts /-separated segments, so a nested workstream can
+606. **W882** (done) Answer nemik:W224: a citation's repo part accepts /-separated segments, so a nested workstream can
    be cited by its path
-606. **W892** (done) Answer gcalculus:W222: mtools: gate_stages takes env and engine, so a stage can import the pinned
+607. **W892** (done) Answer gcalculus:W222: mtools: gate_stages takes env and engine, so a stage can import the pinned
    paper
-607. **W893** (done) Answer gcalculus:W223: mtools: say whether the adopted-hook-still-denies-when-fired probe is
+608. **W893** (done) Answer gcalculus:W223: mtools: say whether the adopted-hook-still-denies-when-fired probe is
    mtools' (/
-608. **W895** (done) rules_py: one engine_env(engine) function builds the pinned engine's environment, shared by
+609. **W895** (done) rules_py: one engine_env(engine) function builds the pinned engine's environment, shared by
    paperkit_gate_main and the new stage runner
-609. **W896** (done) rules_py: engine_stage_main.py runs one stage script as a subprocess under the pinned engine's
+610. **W896** (done) rules_py: engine_stage_main.py runs one stage script as a subprocess under the pinned engine's
    environment
-610. **W898** (done) hooks: mikemol-hooks-probe fires each gate hook with a canned deny payload from the root and a
+611. **W898** (done) hooks: mikemol-hooks-probe fires each gate hook with a canned deny payload from the root and a
    foreign cwd and fails unless it denies
-611. **W901** (done) Prove isolated commit on real git: hooks run in the snapshot under a private index, HEAD moves, the
+612. **W901** (done) Prove isolated commit on real git: hooks run in the snapshot under a private index, HEAD moves, the
    real index.lock never exists, a peer's unstaged file does not refuse
-612. **W902** (done) commit_kata: an isolated mode builds the commit's private index and runs git commit against the
+613. **W902** (done) commit_kata: an isolated mode builds the commit's private index and runs git commit against the
    snapshot of its tree
-613. **W903** (done) commit_kata isolated mode syncs the real index afterwards and handles a staged deletion
-614. **W904** (done) Adopt isolated commit in mtools after a soak, and tell luthen-observability and the peers
-615. **W905** (done) Scaffold the htmlstruct distribution and wire it as one new dist
-616. **W906** (done) htmlstruct: the HTML reader with outline, links, tables, meta and text by id, standard library only
-617. **W907** (done) htmlstruct: the MHTML reader with the parts list, the root part and Content-Location addressing
-618. **W908** (done) htmlstruct: the console script with its verbs and exit codes
-619. **W909** (done) Route html and mhtml to htmlstruct: a struct-tools row, the structural-query refusal, and a
+614. **W903** (done) commit_kata isolated mode syncs the real index afterwards and handles a staged deletion
+615. **W904** (done) Adopt isolated commit in mtools after a soak, and tell luthen-observability and the peers
+616. **W905** (done) Scaffold the htmlstruct distribution and wire it as one new dist
+617. **W906** (done) htmlstruct: the HTML reader with outline, links, tables, meta and text by id, standard library only
+618. **W907** (done) htmlstruct: the MHTML reader with the parts list, the root part and Content-Location addressing
+619. **W908** (done) htmlstruct: the console script with its verbs and exit codes
+620. **W909** (done) Route html and mhtml to htmlstruct: a struct-tools row, the structural-query refusal, and a
    hooks-probe row
-620. **W911** (done) fence: a claim verb whose lease is owned by a long-lived process, with release and a listing of
+621. **W911** (done) fence: a claim verb whose lease is owned by a long-lived process, with release and a listing of
    holders
-621. **W912** (done) A working card's touches are claimed by the session through the context hook, and a refusal names
+622. **W912** (done) A working card's touches are claimed by the session through the context hook, and a refusal names
    the holder
-622. **W913** (done) nemik-overlaps and the inbound context line print the live claim holders beside overlapping cards
-623. **W915** (done) Answer gcalculus:W233: publish the commit that carries mikemol-hooks-probe
-624. **W916** (done) Answer luthen-observability:W710: a run-time guard predicate for the fenced commit, from a declared
+623. **W913** (done) nemik-overlaps and the inbound context line print the live claim holders beside overlapping cards
+624. **W915** (done) Answer gcalculus:W233: publish the commit that carries mikemol-hooks-probe
+625. **W916** (done) Answer luthen-observability:W710: a run-time guard predicate for the fenced commit, from a declared
    reading
-625. **W917** (done) Answer luthen-observability:W715: pathsforward/.venv is the canonical writer venv, and the hooks
+626. **W917** (done) Answer luthen-observability:W715: pathsforward/.venv is the canonical writer venv, and the hooks
    venv gains it once W317 allows the dependency
-626. **W918** (done) fence guard: the pure trip rule (streak after each sample, first trip index), where an unreadable
+627. **W918** (done) fence guard: the pure trip rule (streak after each sample, first trip index), where an unreadable
    sample neither counts nor resets
-627. **W919** (done) fence guard: a reading source that asks a named endpoint a PromQL instant query
-628. **W920** (done) fence guard: a watcher that samples while the fenced command runs and interrupts the named process
+628. **W919** (done) fence guard: a reading source that asks a named endpoint a PromQL instant query
+629. **W920** (done) fence guard: a watcher that samples while the fenced command runs and interrupts the named process
    on a trip
-629. **W921** (done) mikemol-commit reads its guards from a policy row, so a limit is declared and not a literal
-630. **W929** (done) Answer nemik:W276: an attach mode that stores a repo-relative file reference and its hash in a
+630. **W921** (done) mikemol-commit reads its guards from a policy row, so a limit is declared and not a literal
+631. **W929** (done) Answer nemik:W276: an attach mode that stores a repo-relative file reference and its hash in a
    waypoint
-631. **W930** (done) pathsforward: a waypoint may carry attachments, each a repo-relative path and a sha256, validated
+632. **W930** (done) pathsforward: a waypoint may carry attachments, each a repo-relative path and a sha256, validated
    on load
-632. **W931** (done) pathsforward --update W`<n>` --attach PATH stores the file's reference and hash
-633. **W932** (done) pathsforward --check reports an attachment whose file is missing or whose hash no longer matches
-634. **W933** (done) Reply to nemik on W276 with the attach design and the card citations
-635. **W936** (done) Answer nemik:W292: fold mtools' inbox letters into waypoints (nemik-check --letters --fold --repo
+633. **W931** (done) pathsforward --update W`<n>` --attach PATH stores the file's reference and hash
+634. **W932** (done) pathsforward --check reports an attachment whose file is missing or whose hash no longer matches
+635. **W933** (done) Reply to nemik on W276 with the attach design and the card citations
+636. **W936** (done) Answer nemik:W292: fold mtools' inbox letters into waypoints (nemik-check --letters --fold --repo
    mtools)
-636. **W939** (done) Isolated commit: the pre-commit reads its tools (.venv, bazel-bin) from the real root, not the
+637. **W939** (done) Isolated commit: the pre-commit reads its tools (.venv, bazel-bin) from the real root, not the
    snapshot
-637. **W940** (done) pre-commit: one venv_bin function finds every tool under the real root when isolated, and an arm
+638. **W940** (done) pre-commit: one venv_bin function finds every tool under the real root when isolated, and an arm
    that no raw .venv/bin survives
-638. **W941** (done) Isolated commit end to end on a decoy repo whose pre-commit needs a tool only the real root has
-639. **W943** (done) mikemol-new-dist: a new distribution is a command (umbrella; design
+639. **W941** (done) Isolated commit end to end on a decoy repo whose pre-commit needs a tool only the real root has
+640. **W943** (done) mikemol-new-dist: a new distribution is a command (umbrella; design
    .claude/design/W943-new-dist.md)
-640. **W944** (done) new_dist pure core: skeleton, module_edit and install_edit as text-to-text functions, tested over
+641. **W944** (done) new_dist pure core: skeleton, module_edit and install_edit as text-to-text functions, tested over
    fixtures
-641. **W945** (done) mikemol-new-dist shell and console script, run against a throwaway copy of the repository's files
-642. **W949** (done) htmlstruct: a tolerant html.parser tree with typed nodes; unreadable input is a Skip
-643. **W950** (done) htmlstruct: outline, the heading hierarchy of a tree
-644. **W951** (done) htmlstruct: links, every anchor with href and text
-645. **W952** (done) htmlstruct: tables as rows of cell text, and meta as name to content
-646. **W953** (done) htmlstruct: text by element id
-647. **W957** (done) repin core: find git and vendored-wheel mtools pins in a pyproject text, and rewrite the sha of the
+642. **W945** (done) mikemol-new-dist shell and console script, run against a throwaway copy of the repository's files
+643. **W949** (done) htmlstruct: a tolerant html.parser tree with typed nodes; unreadable input is a Skip
+644. **W950** (done) htmlstruct: outline, the heading hierarchy of a tree
+645. **W951** (done) htmlstruct: links, every anchor with href and text
+646. **W952** (done) htmlstruct: tables as rows of cell text, and meta as name to content
+647. **W953** (done) htmlstruct: text by element id
+648. **W957** (done) repin core: find git and vendored-wheel mtools pins in a pyproject text, and rewrite the sha of the
    selected dists
-648. **W958** (done) repin shell: survey every repo's pins against a sha, and with --write rewrite them and run uv sync
+649. **W958** (done) repin shell: survey every repo's pins against a sha, and with --write rewrite them and run uv sync
    per repo
-649. **W959** (done) repin console script mikemol-repin, registered, with its INSTALL.md entry and an adoption doc line
-650. **W961** (done) bump-blocked prints a summary by default: rows only for external blockers (operator asks,
+650. **W959** (done) repin console script mikemol-repin, registered, with its INSTALL.md entry and an adoption doc line
+651. **W961** (done) bump-blocked prints a summary by default: rows only for external blockers (operator asks,
    repo:W`<n>`) with a card count, the per-card listing behind --verbose
-651. **W964** (done) mikemol-membudget describe: print default MB, ceiling MB and the verb roster as parseable rows
-652. **W970** (done) mutate_runner takes MUTATE_SHARD=i/N and runs only the def-sites and declared defects whose stable
+652. **W964** (done) mikemol-membudget describe: print default MB, ceiling MB and the verb roster as parseable rows
+653. **W970** (done) mutate_runner takes MUTATE_SHARD=i/N and runs only the def-sites and declared defects whose stable
    hash falls in shard i
-653. **W971** (done) mutants_sharded BUILD macro: N shard sh_tests plus a test_suite named mutants, so the label the
+654. **W971** (done) mutants_sharded BUILD macro: N shard sh_tests plus a test_suite named mutants, so the label the
    gate runs keeps working
-654. **W972** (done) shard pycodemod's mutants into six and run it under the gate load
-655. **W973** (done) payload caps a stanza's unblocks and enables lists and prints (+N more), so one card that unblocks
+655. **W972** (done) shard pycodemod's mutants into six and run it under the gate load
+656. **W973** (done) payload caps a stanza's unblocks and enables lists and prints (+N more), so one card that unblocks
    hundreds cannot break the budget
-656. **W975** (done) pycodemod untyped-defs mode: add -> None to a def whose returns carry no value, census by idiom,
+657. **W975** (done) pycodemod untyped-defs mode: add -> None to a def whose returns carry no value, census by idiom,
    residue stays residue
-657. **W981** (done) mutate_runner MUTATE_PLAN=1 prints a distribution's def-site and declared-defect counts and runs no
+658. **W981** (done) mutate_runner MUTATE_PLAN=1 prints a distribution's def-site and declared-defect counts and runs no
    suite
-658. **W983** (done) mutantcell: its mutation runner fails to import under MUTATE_PLAN (rc=1), so its grid cannot be
+659. **W983** (done) mutantcell: its mutation runner fails to import under MUTATE_PLAN (rc=1), so its grid cannot be
    counted or sharded
-659. **W989** (done) revendor core: hooks/revendor.py holds the pure parts of luthen's checks/revendor_mtools
+660. **W989** (done) revendor core: hooks/revendor.py holds the pure parts of luthen's checks/revendor_mtools
    (wheel_name, pinned_shorts, move_sources, with_local_version, plan_lines) with tests and mutants
-660. **W990** (done) revendor apply: build both wheels from git archive, check the new writer's --hash on a queue copy
+661. **W990** (done) revendor apply: build both wheels from git archive, check the new writer's --hash on a queue copy
    in a throwaway venv, then swap wheels and pins, behind a runner seam so tests run no uv
-661. **W991** (done) mikemol-repin --revendor SHA [--apply]: the CLI flag over revendor, plus the docs/repinning.md
+662. **W991** (done) mikemol-repin --revendor SHA [--apply]: the CLI flag over revendor, plus the docs/repinning.md
    section that replaces 'vendored wheels are yours to rebuild'
-662. **W993** (done) work_claims core: pure parts of the working-card claim hook (wanted labels from a queue, the
+663. **W993** (done) work_claims core: pure parts of the working-card claim hook (wanted labels from a queue, the
    session pid from the process ancestry, the owner string, the plan of claims to take and release)
-663. **W994** (done) work-claims hook: mikemol-hook-work-claims runs the claim verbs through a runner seam on
+664. **W994** (done) work-claims hook: mikemol-hook-work-claims runs the claim verbs through a runner seam on
    UserPromptSubmit and releases on SessionEnd, advisory context only, wired in .claude/settings.json
-664. **W997** (done) mutation: declare audiostruct's first defect classes from its modules' docstrings, and test what
+665. **W997** (done) mutation: declare audiostruct's first defect classes from its modules' docstrings, and test what
    survives
-665. **W998** (done) mutation: declare buildtel's first defect classes from its modules' docstrings, and test what
+666. **W998** (done) mutation: declare buildtel's first defect classes from its modules' docstrings, and test what
    survives
-666. **W999** (done) mutation: declare corpus's first defect classes from its modules' docstrings, and test what
+667. **W999** (done) mutation: declare corpus's first defect classes from its modules' docstrings, and test what
    survives
-667. **W1000** (done) mutation: declare debtplan's first defect classes from its modules' docstrings, and test what
+668. **W1000** (done) mutation: declare debtplan's first defect classes from its modules' docstrings, and test what
    survives
-668. **W1001** (done) mutation: declare gmailstruct's first defect classes from its modules' docstrings, and test what
+669. **W1001** (done) mutation: declare gmailstruct's first defect classes from its modules' docstrings, and test what
    survives
-669. **W1002** (done) mutation: declare gradekit's first defect classes from its modules' docstrings, and test what
+670. **W1002** (done) mutation: declare gradekit's first defect classes from its modules' docstrings, and test what
    survives
-670. **W1003** (done) mutation: declare icsstruct's first defect classes from its modules' docstrings, and test what
+671. **W1003** (done) mutation: declare icsstruct's first defect classes from its modules' docstrings, and test what
    survives
-671. **W1004** (done) mutation: declare pytestspec's first defect classes from its modules' docstrings, and test what
+672. **W1004** (done) mutation: declare pytestspec's first defect classes from its modules' docstrings, and test what
    survives
-672. **W1020** (done) mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on
+673. **W1020** (done) mikemol-snapshot refuses a tracked symlink and names it instead of crashing the isolated commit on
    it
-673. **W1021** (done) Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute
+674. **W1021** (done) Answer amr-skills:W305: mtools: pathsforward --check requires project_root to be an absolute
    existing di
-674. **W1023** (done) pathsforward --render prints the state file's path relative to its project, so a committed mirror
+675. **W1023** (done) pathsforward --render prints the state file's path relative to its project, so a committed mirror
    does not carry the host's home directory
-675. **W1024** (done) mikemol-sweep-budget sizes the mutation sweep from live headroom: its 0.4 of MemTotal default
+676. **W1024** (done) mikemol-sweep-budget sizes the mutation sweep from live headroom: its 0.4 of MemTotal default
    ignores swap pressure and the sandbox's own RAM (24 cells ran at once, 51482 MB, and filled swap)
-676. **W1033** (done) memres gains a pure rail model: level, slope and acceleration from a window of memory samples, and
+677. **W1033** (done) memres gains a pure rail model: level, slope and acceleration from a window of memory samples, and
    a next_allowance policy that shrinks parallelism when use accelerates and recovers when it decays
-677. **W1034** (done) A memory-rail sampler applies the allowance by resizing the fence ledger total (and held leases
+678. **W1034** (done) A memory-rail sampler applies the allowance by resizing the fence ledger total (and held leases
    once they can be resized) and writes its engagement counts as a textfile
-678. **W1036** (done) mikemol-wheel makes a relative --out, --mtools and --src absolute before its build steps run in a
+679. **W1036** (done) mikemol-wheel makes a relative --out, --mtools and --src absolute before its build steps run in a
    temp directory, so luthen's --out vendor/wheels builds
-679. **W1041** (done) pathsforward --payload caps a stanza's enables and unblocks list at a count and prints (+N more),
+680. **W1041** (done) pathsforward --payload caps a stanza's enables and unblocks list at a count and prints (+N more),
    so one card that unblocks hundreds does not exceed the payload budget
-680. **W1044** (done) pycodemod docshape.py: the pure planner that splits a docstring's multi-line first paragraph at
+681. **W1044** (done) pycodemod docshape.py: the pure planner that splits a docstring's multi-line first paragraph at
    its first sentence end (D205), text in and Plan out, refusing what it cannot split
-681. **W1048** (done) Host paperkit's render/checks/rulerseq.py as the new dist mikemol-rulerseq (module
+682. **W1048** (done) Host paperkit's render/checks/rulerseq.py as the new dist mikemol-rulerseq (module
    mikemol.rulerseq): public names unchanged, selftest kept, warrants and gate wired
-682. **W1050** (done) pycodemod:mutants is twelve shards, not six: shard 0 passes alone in 373 s at host load 100 and
+683. **W1050** (done) pycodemod:mutants is twelve shards, not six: shard 0 passes alone in 373 s at host load 100 and
    five of six time out inside the commit gate
-683. **W1053** (done) Design the waldo mode: a narrow tool holding one privilege, with a declared allowed set,
+684. **W1053** (done) Design the waldo mode: a narrow tool holding one privilege, with a declared allowed set,
    refuse-with-diff, same-plan apply and witnesses
-684. **W1054** (done) Scaffold the mikemol-waldo dist (module mikemol.waldo) with mikemol-new-dist, stdlib only
-685. **W1055** (done) waldo.compare: Change, compare(allowed, required, planned) and the -/+ diff render, lifted from
+685. **W1054** (done) Scaffold the mikemol-waldo dist (module mikemol.waldo) with mikemol-new-dist, stdlib only
+686. **W1055** (done) waldo.compare: Change, compare(allowed, required, planned) and the -/+ diff render, lifted from
    luthen's apply_set, pure
-686. **W1056** (done) waldo.contract: parse and validate a contract file, plus witness lint that refuses a witness
+687. **W1056** (done) waldo.contract: parse and validate a contract file, plus witness lint that refuses a witness
    passing on empty or default output
-687. **W1057** (done) waldo.witness: run the exit-code, json_empty, must_contain and must_match witnesses over an
+688. **W1057** (done) waldo.witness: run the exit-code, json_empty, must_contain and must_match witnesses over an
    injected runner
-688. **W1058** (done) waldo.custody: Secret type that prints only its fingerprint, atomic 0600-in-0700 store,
+689. **W1058** (done) waldo.custody: Secret type that prints only its fingerprint, atomic 0600-in-0700 store,
    identity-explicit refusal
-689. **W1059** (done) waldo.pipeline and CLI: plan, compare, apply the same artifact, witness, one JSON verdict line;
+690. **W1059** (done) waldo.pipeline and CLI: plan, compare, apply the same artifact, witness, one JSON verdict line;
    exits 0, 1 and 2
-690. **W1060** (done) waldo.recipe: an ordered list of waldo phases with before/after gates, halts and a durable phase
+691. **W1060** (done) waldo.recipe: an ordered list of waldo phases with before/after gates, halts and a durable phase
    marker, resumable
-691. **W1063** (done) waldo.witness gains an increases kind: a numeric group strictly greater than before, refusing a
+692. **W1063** (done) waldo.witness gains an increases kind: a numeric group strictly greater than before, refusing a
    non-numeric read
-692. **W1064** (done) waldo.marker: a durable phase marker file written atomically and read back, with per-phase
+693. **W1064** (done) waldo.marker: a durable phase marker file written atomically and read back, with per-phase
    assertions of standing flags
-693. **W1065** (done) waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the
+694. **W1065** (done) waldo.confirm: a point-of-no-return confirmation that must reproduce a named reading read off the
    thing destroyed
-694. **W1066** (done) waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry
+695. **W1066** (done) waldo.phases: an ordered phase runner, one phase per call, with status and guard verbs, entry
    re-assertion and a refused re-run of a done point of no return
-695. **W1067** (done) waldo.phases model: Phase and Recipe, status over the done-witnesses, and the pure eligibility of
+696. **W1067** (done) waldo.phases model: Phase and Recipe, status over the done-witnesses, and the pure eligibility of
    a phase
-696. **W1068** (done) waldo.run_phase: run one phase through marker, entry witnesses, confirmation and the pipeline,
+697. **W1068** (done) waldo.run_phase: run one phase through marker, entry witnesses, confirmation and the pipeline,
    then record the marker
-697. **W1106** (done) katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch
+698. **W1106** (done) katas flush passes each repo a wall-clock ceiling of its measured gate seconds times a stretch
    (floor and cap), via the waiter --timeout
-698. **W1107** (done) mikemol-commit prints COMMITTED only when the commit it made is in HEAD's ancestry, else RACED
+699. **W1107** (done) mikemol-commit prints COMMITTED only when the commit it made is in HEAD's ancestry, else RACED
    with HEAD's sha and subject (non-zero), with a test where a second committer lands during the gate
-699. **W1108** (done) mikemol-commit leaves the real index matching the new HEAD for the paths it committed (nemik
+700. **W1108** (done) mikemol-commit leaves the real index matching the new HEAD for the paths it committed (nemik
    measured it stale after a clean isolated commit), printing what it refreshed, with a test where another path stays
    staged
-700. **W1112** (done) --tick-close prunes local landed blockers before its check and prints what it pruned
-701. **W1119** (done) Gate ledger rows carry start_epoch, end_epoch (UTC integers) and host after the original four
+701. **W1112** (done) --tick-close prunes local landed blockers before its check and prints what it pruned
+702. **W1119** (done) Gate ledger rows carry start_epoch, end_epoch (UTC integers) and host after the original four
    columns
-702. **W3** (done) venv.bzl stated 13/7 .venv/bin call sites (pre-commit/preflight.sh); measured 12/6 at 35931c3
-703. **W4** (done) Nine arms failed on this host from dead venvs — all nine were one missing interpreter; zero survivors
-704. **W8** (done) MD056 ragged rows across the corpus — MEASURED: 12 rows in 9 files (the carried '12' was right, and
+703. **W3** (done) venv.bzl stated 13/7 .venv/bin call sites (pre-commit/preflight.sh); measured 12/6 at 35931c3
+704. **W4** (done) Nine arms failed on this host from dead venvs — all nine were one missing interpreter; zero survivors
+705. **W8** (done) MD056 ragged rows across the corpus — MEASURED: 12 rows in 9 files (the carried '12' was right, and
    unverifiable until lint could read more than one file)
-705. **W9** (done) mdstruct/cli.py hand-rolls argv parsing (_split_args, _flag) where fence and ratchet use argparse;
+706. **W9** (done) mdstruct/cli.py hand-rolls argv parsing (_split_args, _flag) where fence and ratchet use argparse;
    the WIP argues argparse on the merits, and the merit (`--`) is now hand-rolled correctly
-706. **W18** (done) registry-discovery census (dispatcher mtools-9f, this repo): freeze was never called and the apex is
+707. **W18** (done) registry-discovery census (dispatcher mtools-9f, this repo): freeze was never called and the apex is
    owed — gcalculus's eight-group re-split waits on it
-707. **W19** (done) blockers.sh read the apex as a census (4 of -1) and read the frozen registry-discovery index as NOT
+708. **W19** (done) blockers.sh read the apex as a census (4 of -1) and read the frozen registry-discovery index as NOT
    FROZEN (positional --col 2 vs a §V with a `by` column)
-708. **W21** (done) mdstruct items FILE — every list item (bullet/numbered, nesting depth) with the markdown link
+709. **W21** (done) mdstruct items FILE — every list item (bullet/numbered, nesting depth) with the markdown link
    targets it carries ([text](target) and [[wiki]]), so an index can be checked for dangling pointers
-709. **W22** (done) coherence PLAN WORKLIST → orphans / unwitnessed / dangling: judge whether it belongs IN mdstruct or
+710. **W22** (done) coherence PLAN WORKLIST → orphans / unwitnessed / dangling: judge whether it belongs IN mdstruct or
    BESIDE it (substrate's own gate-F59 caveat: one plan vs ONE worklist misreports when the tree has several ledgers)
-710. **W24** (done) pycodemod port into mtools (umbrella): library layer COMPLETE at f30ea89; closes when the
+711. **W24** (done) pycodemod port into mtools (umbrella): library layer COMPLETE at f30ea89; closes when the
    differential (W36) and the DO-NOT-PORT letter (W37) land
-711. **W11** (done) mdstruct's argv filter ate any dash-leading operand and `--` with it — a write could land on a
+712. **W11** (done) mdstruct's argv filter ate any dash-leading operand and `--` with it — a write could land on a
    target nobody typed
-712. **W14** (done) blockers.sh census arm: the VERDICT followed the prefix count even when the census's declared
+713. **W14** (done) blockers.sh census arm: the VERDICT followed the prefix count even when the census's declared
    vocabulary accounted for the gap
-713. **W15** (done) findings/known-work/mtools-known-work.md:101 — the one MD056 row this repository owns: a `\|` byte
+714. **W15** (done) findings/known-work/mtools-known-work.md:101 — the one MD056 row this repository owns: a `\|` byte
    in a cell (`ls \| grep -ci`) that a field-splitting reader splits on
-714. **W16** (done) mdstruct replace-section --apply drops the blank line before AND after the section body — the append
+715. **W16** (done) mdstruct replace-section --apply drops the blank line before AND after the section body — the append
    arm protects one blank line; replace has no arm
-715. **W25** (done) Register mikemol-fence (and the mikemol-membudget console script) as a capability in summit:
+716. **W25** (done) Register mikemol-fence (and the mikemol-membudget console script) as a capability in summit:
    luthen-observability-85 reported 2026-09-25 that summit capability fence misses, so nobody finds it
-716. **W26** (done) nemik's three asks on mikemol-pathsforward
+717. **W26** (done) nemik's three asks on mikemol-pathsforward
    (inbox/2026-09-25-nemik-pathsforward-provenance-and-ledger-reader.md): ledger reader, --add provenance, write-time
    refusals
-717. **W27** (done) pathsforward --update silently ignores --enables (exits 0, prints updated); cross-repo repo:W`<n>`
+718. **W27** (done) pathsforward --update silently ignores --enables (exits 0, prints updated); cross-repo repo:W`<n>`
    symbols (nemik)
-718. **W31** (done) inbox: read and answer the two linux-sources letters of 2026-09-26 (pycodemod literal silent skip;
+719. **W31** (done) inbox: read and answer the two linux-sources letters of 2026-09-26 (pycodemod literal silent skip;
    pathsforward payload frozen at arm)
-719. **W32** (done) preflight fails 40 test_venv_artifact cases after every reboot: the Bazel output root is on zram
+720. **W32** (done) preflight fails 40 test_venv_artifact cases after every reboot: the Bazel output root is on zram
    since 019119e, so bazel-bin's dist venvs vanish; preflight should build them (or the test should name the build)
    instead of reading a stale artifact
-720. **W45** (done) tell summit-21 the sha that removed the shellcheck waiver table, and that a wrong rule now goes to
+721. **W45** (done) tell summit-21 the sha that removed the shellcheck waiver table, and that a wrong rule now goes to
    mtools as a checker defect
-721. **W48** (done) letter to substrate: the bash membudget client ignores WAIT lines entirely (W38's measurement) and
+722. **W48** (done) letter to substrate: the bash membudget client ignores WAIT lines entirely (W38's measurement) and
    needs its own patch before FIFO holds across both clients -- attach the measurement and the landed Python design
    (W48)
-722. **W49** (done) tell summit and amr-skills the sha once fence's Python FIFO admission (W48) lands, closing summit's
+723. **W49** (done) tell summit and amr-skills the sha once fence's Python FIFO admission (W48) lands, closing summit's
    ask-membudget-hold-records-no-waiter
-723. **W50** (done) pathsforward: touches[] has no contention semantics -- --lock protects only the queue's own
+724. **W50** (done) pathsforward: touches[] has no contention semantics -- --lock protects only the queue's own
    control-plane file, not the artifacts touches[] names; two ready waypoints sharing a touches[] tag (or one agent
    crossing a lossy boundary between them) have zero mutual exclusion. Live today: swarm-kind ledger activity current in
    gabion, luthen-observability, mtools, paperkit, rosettapkg, substrate (nemik-metrics).
-724. **W86** (done) pycodemod core.escapes: carry a Skip (why, error) per unread file like every other census, so the
+725. **W86** (done) pycodemod core.escapes: carry a Skip (why, error) per unread file like every other census, so the
    escapes banner stops merging unreadable/undecodable/uncompilable into one reason
-725. **W88** (done) tree-wide gate: a parametrized test that collects ZERO cases fails instead of reading as a skip (the
+726. **W88** (done) tree-wide gate: a parametrized test that collects ZERO cases fails instead of reading as a skip (the
    RETIRED test hid this way until W72)
-726. **W121** (done) pathsforward --check: flag a touches[] tag containing a comma (nemik-45 reported three comma-joined
+727. **W121** (done) pathsforward --check: flag a touches[] tag containing a comma (nemik-45 reported three comma-joined
    tags accepted as one, e.g. 'adapter,cleanup'); advisory finding naming symbol and tag
-727. **W123** (done) pathsforward --payload carries the OVERLAP lines (advisory header lines beside ATOMIZE, via Request
+728. **W123** (done) pathsforward --payload carries the OVERLAP lines (advisory header lines beside ATOMIZE, via Request
    like atomize=)
-728. **W124** (done) Re-measure W100 with --overlaps over all SEVEN queues (el-openglo added, the roster gap from W102)
+729. **W124** (done) Re-measure W100 with --overlaps over all SEVEN queues (el-openglo added, the roster gap from W102)
    and append the per-repo OVERLAP counts to the design file
-729. **W134** (done) census .claude/swarm/: one waypoint per proposal dir and loose .md (about 26 dirs + 12 files,
+730. **W134** (done) census .claude/swarm/: one waypoint per proposal dir and loose .md (about 26 dirs + 12 files,
    2026-09-22..23); landed or superseded ones are minted done ('retired') with the landing sha or successor, live ones
    ready/blocked. Separately: .bazelignore .claude/ so bare 'bazel test //...' stops building proposal BUILDs
-730. **W135** (done) swarm admit-gaps-proposed: fence.admit closes five gaps with substrate bash (W1,W2,E1-E3 from
+731. **W135** (done) swarm admit-gaps-proposed: fence.admit closes five gaps with substrate bash (W1,W2,E1-E3 from
    cross-client.md)
-731. **W136** (done) swarm consumer-launcher-proposed: hooks/adopt/tools-hook adopter launcher with declared MTOOLS_ROOT
-732. **W137** (done) swarm git-scrub-proposed: runners scrub GIT_* before launching suites; later folded by b63b548 and
+732. **W136** (done) swarm consumer-launcher-proposed: hooks/adopt/tools-hook adopter launcher with declared MTOOLS_ROOT
+733. **W137** (done) swarm git-scrub-proposed: runners scrub GIT_* before launching suites; later folded by b63b548 and
    interned as 401c4b5
-733. **W138** (done) swarm label-lease-proposed: fence/src/mikemol/fence/label_lease.py plus autosize amendment
-734. **W139** (done) swarm md041-proposed: mdstruct MD041 skips the leading SPDX comment header
-735. **W140** (done) swarm mdstruct-proposed: AST_READER markdown-smart (show as typed) and fenced-heading anchor fix S1
-736. **W141** (done) swarm membudget-proposed: mikemol-membudget CLI (membudget_cli.py) over fence admission
-737. **W142** (done) swarm membudget-r1r2-proposed: membudget run caps what it runs; run auto sizes lease from label
+734. **W138** (done) swarm label-lease-proposed: fence/src/mikemol/fence/label_lease.py plus autosize amendment
+735. **W139** (done) swarm md041-proposed: mdstruct MD041 skips the leading SPDX comment header
+736. **W140** (done) swarm mdstruct-proposed: AST_READER markdown-smart (show as typed) and fenced-heading anchor fix S1
+737. **W141** (done) swarm membudget-proposed: mikemol-membudget CLI (membudget_cli.py) over fence admission
+738. **W142** (done) swarm membudget-r1r2-proposed: membudget run caps what it runs; run auto sizes lease from label
    history (R1,R2)
-738. **W143** (done) swarm membudget-r3r5-proposed: retry OOM-killed run at next bucket (R3) and per-module .agda key
+739. **W143** (done) swarm membudget-r3r5-proposed: retry OOM-killed run at next bucket (R3) and per-module .agda key
    (R5)
-739. **W144** (done) swarm mutate-qualname-proposed: mutate_runner addresses def-sites by qualified path; adds
+740. **W144** (done) swarm mutate-qualname-proposed: mutate_runner addresses def-sites by qualified path; adds
    test_mutate_runner.py
-740. **W145** (done) swarm n1-multiline-proposed: no_chaining refuses a multi-line command as a sequence
-741. **W146** (done) swarm pathsforward-proposed: mikemol-pathsforward distribution interning the six paths-forward
+741. **W145** (done) swarm n1-multiline-proposed: no_chaining refuses a multi-line command as a sequence
+742. **W146** (done) swarm pathsforward-proposed: mikemol-pathsforward distribution interning the six paths-forward
    tools
-742. **W147** (done) swarm pf-fixes-proposed: six pathsforward fixes plus standing-rules amendment
-743. **W148** (done) swarm pf-small-proposed: three 000785b leftovers: evidence punctuation trim, one queue order,
+743. **W147** (done) swarm pf-fixes-proposed: six pathsforward fixes plus standing-rules amendment
+744. **W148** (done) swarm pf-small-proposed: three 000785b leftovers: evidence punctuation trim, one queue order,
    --update title refusal
-744. **W149** (done) swarm pycheck-proposed: mikemol.hooks.pycheck port of substrate hook_pycheck; wired armed in
+745. **W149** (done) swarm pycheck-proposed: mikemol.hooks.pycheck port of substrate hook_pycheck; wired armed in
    e641c7e
-745. **W150** (done) swarm ratchet-keyparser-proposed: mikemol.ratchet.keys: baseline key parsed by declared schema
-746. **W151** (done) swarm ratchet-refuse-proposed: ratchet refuses by name when ruff cannot census
+746. **W150** (done) swarm ratchet-keyparser-proposed: mikemol.ratchet.keys: baseline key parsed by declared schema
+747. **W151** (done) swarm ratchet-refuse-proposed: ratchet refuses by name when ruff cannot census
    (test_cannot_census.py); d55dbd6 follows
-747. **W152** (done) swarm readmes-proposed: README.md for hooks, mdstruct and ratchet
-748. **W153** (done) swarm root-lint-proposed: root scripts meet the distributions' lint bar; gate refuses warrant with
+748. **W152** (done) swarm readmes-proposed: README.md for hooks, mdstruct and ratchet
+749. **W153** (done) swarm root-lint-proposed: root scripts meet the distributions' lint bar; gate refuses warrant with
    missing test
-749. **W154** (done) swarm scrub-fold-proposed: git_scrubbed defined once in git_env.sh and sourced by every launcher
-750. **W155** (done) swarm shebang-proposed: venv.bzl console scripts get a sh preamble re-running under the venv python
-751. **W156** (done) swarm sq-heredoc-proposed: structural-query reads a heredoc body as data, not shell
-752. **W157** (done) swarm sq-newline-proposed: cmdparse treats newline as bash does; no_chaining heredoc stripper
+750. **W154** (done) swarm scrub-fold-proposed: git_scrubbed defined once in git_env.sh and sourced by every launcher
+751. **W155** (done) swarm shebang-proposed: venv.bzl console scripts get a sh preamble re-running under the venv python
+752. **W156** (done) swarm sq-heredoc-proposed: structural-query reads a heredoc body as data, not shell
+753. **W157** (done) swarm sq-newline-proposed: cmdparse treats newline as bash does; no_chaining heredoc stripper
    removed
-753. **W158** (done) swarm transcriptstruct-r1-proposed: transcriptstruct stage 1 (records); stages 2-6 followed in
+754. **W158** (done) swarm transcriptstruct-r1-proposed: transcriptstruct stage 1 (records); stages 2-6 followed in
    9eeae60..e571b02
-754. **W159** (done) swarm apex-corrections.md: rosettapkg's five apex corrections verified; applied to the two apexes
+755. **W159** (done) swarm apex-corrections.md: rosettapkg's five apex corrections verified; applied to the two apexes
    in 9950f88 and 86ea628
-755. **W160** (done) swarm census-reconcile.md: substrate census vs mtools import graph; its section 5 key-schema
+756. **W160** (done) swarm census-reconcile.md: substrate census vs mtools import graph; its section 5 key-schema
    finding became ratchet-keyparser; rest fed census-reply.md
-756. **W161** (done) swarm census-reply.md: reply sent to substrate-de 2026-09-23 as pointer to this file (ledger L182);
+757. **W161** (done) swarm census-reply.md: reply sent to substrate-de 2026-09-23 as pointer to this file (ledger L182);
    batch landed 4f1afc2..f9f0789; still cited as evidence
-757. **W162** (done) swarm cross-client.md: bash membudget vs fence.admit ledger audit; gaps W1,W2,E1-E3 landed via
+758. **W162** (done) swarm cross-client.md: bash membudget vs fence.admit ledger audit; gaps W1,W2,E1-E3 landed via
    admit-gaps-proposed
-758. **W163** (done) swarm label-lease.md: port design for substrate label_lease (C1-C5, A1, A2); implemented via
+759. **W163** (done) swarm label-lease.md: port design for substrate label_lease (C1-C5, A1, A2); implemented via
    label-lease-proposed
-759. **W164** (done) swarm mdstruct-fixes.md: smart-punctuation false-miss and fenced-heading anchor analysis;
+760. **W164** (done) swarm mdstruct-fixes.md: smart-punctuation false-miss and fenced-heading anchor analysis;
    implemented via mdstruct-proposed
-760. **W165** (done) swarm paths-forward-merge.md: three-way paths-forward tool merge survey; extended by
+761. **W165** (done) swarm paths-forward-merge.md: three-way paths-forward tool merge survey; extended by
    paths-forward-merge-six.md, then interned
-761. **W166** (done) swarm paths-forward-merge-six.md: six-tool survey with D1-D4 rulings; fed pathsforward-proposed
+762. **W166** (done) swarm paths-forward-merge-six.md: six-tool survey with D1-D4 rulings; fed pathsforward-proposed
    which landed as 600745c
-762. **W167** (done) swarm pycheck-port.md: port design substrate hook_pycheck to mikemol-hook-pycheck; implemented in
+763. **W167** (done) swarm pycheck-port.md: port design substrate hook_pycheck to mikemol-hook-pycheck; implemented in
    fd6e629
-763. **W168** (done) swarm remap-guard-review.md: review of gabion W14_3 ratchet remap guard patch; landed with holes
+764. **W168** (done) swarm remap-guard-review.md: review of gabion W14_3 ratchet remap guard patch; landed with holes
    closed in 2e2b952
-764. **W169** (done) swarm remap-guard-rev2.md: rev-2 check of remap-guard patch (59 tests pass); landed as 2e2b952
-765. **W170** (done) swarm transcriptstruct-study.md: verdict decompose-and-replace; realised as transcriptstruct stages
+765. **W169** (done) swarm remap-guard-rev2.md: rev-2 check of remap-guard patch (59 tests pass); landed as 2e2b952
+766. **W170** (done) swarm transcriptstruct-study.md: verdict decompose-and-replace; realised as transcriptstruct stages
    1-6 (43b2615..e571b02)
-766. **W171** (done) swarm w17-recovery.md: W17 never minted (counter off-by-one); residue entry recorded in the
+767. **W171** (done) swarm w17-recovery.md: W17 never minted (counter off-by-one); residue entry recorded in the
    untracked state file (line 2516)
-767. **W172** (done) Drain retired .claude/swarm out of the tree (its untracked
+768. **W172** (done) Drain retired .claude/swarm out of the tree (its untracked
    pathsforward-proposed/pathsforward/BUILD.bazel turns bare bazel test //... red); replaces the .bazelignore proposal
    per operator 2026-09-27
-768. **W173** (done) Drain the rest of .claude/: every loose file gets a recognised home or a recorded retirement
-769. **W174** (done) W50.5a touches grammar: parse file:/mod:/party:/topic prefix and !w suffix into a Tag (model),
+769. **W173** (done) Drain the rest of .claude/: every loose file gets a recognised home or a recorded retirement
+770. **W174** (done) W50.5a touches grammar: parse file:/mod:/party:/topic prefix and !w suffix into a Tag (model),
    stored strings unchanged
-770. **W175** (done) W50.5b --check flags an unknown prefix, !w on a topic or party: tag, and a file: path with .. or a
+771. **W175** (done) W50.5b --check flags an unknown prefix, !w on a topic or party: tag, and a file: path with .. or a
    leading /
-771. **W176** (done) W50.5c OVERLAP lines honour grain: report-only by default, a cross-grain mod:~file: line, and mark
+772. **W176** (done) W50.5c OVERLAP lines honour grain: report-only by default, a cross-grain mod:~file: line, and mark
    which overlaps are leasable (artifact AND !w)
-772. **W177** (done) W50.5d leases[] in the state file: take on --status working for leasable tags, record
+773. **W177** (done) W50.5d leases[] in the state file: take on --status working for leasable tags, record
    holder/base_sha/ttl, release on leaving working
-773. **W178** (done) W50.5e renew and lapse in the tick: --lock renews the holder's leases, a lapsed lease writes a
+774. **W178** (done) W50.5e renew and lapse in the tick: --lock renews the holder's leases, a lapsed lease writes a
    ledger line and --check reports it
-774. **W179** (done) pre-commit: the hooks stage's test_the_venv_runs_the_distributions_own_suite reads
+775. **W179** (done) pre-commit: the hooks stage's test_the_venv_runs_the_distributions_own_suite reads
    bazel-bin/`<dist>`/.venv without building it, so a commit adding a module is refused until someone runs bazel build
    //`<dist>`:.venv by hand
-775. **W180** (done) Give gen_warrants.py, which every commit's warrant step runs, a tracked home with its own tests
-776. **W181** (done) Synthesize the commit message from nemik/ledger activity for the waypoint being landed; a thin
+776. **W180** (done) Give gen_warrants.py, which every commit's warrant step runs, a tracked home with its own tests
+777. **W181** (done) Synthesize the commit message from nemik/ledger activity for the waypoint being landed; a thin
    message is a finding that the ledger under-records
-777. **W182** (done) fence admit.py acquire: head-of-line admission over WAIT lines -- head_ticket(), enqueue a WAIT
+778. **W182** (done) fence admit.py acquire: head-of-line admission over WAIT lines -- head_ticket(), enqueue a WAIT
    line on first BLOCK, admit only the head ticket, remove own WAIT line on every give-up path and in the same locked
    section as the LEASE append; tests incl. later-smaller-request-waits and NOBLOCK/TIMEOUT cleanup
-778. **W183** (done) pre-commit prebuild: a BuildBuddy BES upload failure (bazel exit 38, 'Build completed successfully'
+779. **W183** (done) pre-commit prebuild: a BuildBuddy BES upload failure (bazel exit 38, 'Build completed successfully'
    in the log) refuses every commit though the build succeeded; the gate must not depend on an observability sidecar
    being up
-779. **W184** (done) Route pre-commit's zero-tests-executed bazel refusal through record_refusal, which it skips
-780. **W185** (done) pathsforward --update SYM --evidence-redact PATTERN [--replacement TEXT]: rewrite matches in
+780. **W184** (done) Route pre-commit's zero-tests-executed bazel refusal through record_refusal, which it skips
+781. **W185** (done) pathsforward --update SYM --evidence-redact PATTERN [--replacement TEXT]: rewrite matches in
    evidence/next/title, ledger the redaction by pattern HASH and count (never the pattern), refuse a zero-match pattern,
    --check stays OK; plus a scan over waypoints+residue+ledger for a pattern. luthen-observability cannot commit until
    it lands (letter inbox/2026-09-27-luthen-observability-evidence-redact.md)
-781. **W186** (done) W128b: read the background capture (W128-captured.jsonl), count fresh/sticky/none and
+782. **W186** (done) W128b: read the background capture (W128-captured.jsonl), count fresh/sticky/none and
    with-fixture-text over the 408, name the uncaptured checks, append the table to W36-differential.md
-782. **W188** (done) atomize signal miscounts: k = lifetime advances + 1 (not ticks on top), and an 'atomized' outcome
+783. **W188** (done) atomize signal miscounts: k = lifetime advances + 1 (not ticks on top), and an 'atomized' outcome
    counts as an advance so performing the split raises k; count advances since the last 'atomized' line and label it
    'advanced k times without landing'
-783. **W193** (done) Capture refuses symlinks (never reads or follows them) and py-files case 110 is withheld, under the
+784. **W193** (done) Capture refuses symlinks (never reads or follows them) and py-files case 110 is withheld, under the
    operator's no-symlinks ruling
-784. **W204** (done) Report W197 upstream: substrate's pycodemod --guarded reports an else body under the un-negated
+785. **W204** (done) Report W197 upstream: substrate's pycodemod --guarded reports an else body under the un-negated
    test, mtools' port reports its negation
-785. **W209** (done) --payload is over budget (6146 of 6000): relieved by moving hook-enforced standing rules out of the
+786. **W209** (done) --payload is over budget (6146 of 6000): relieved by moving hook-enforced standing rules out of the
    prompt
-786. **W227** (done) pytestspec: do not run --impl for a case whose disposition is declared (unmeasured/do-not-port);
+787. **W227** (done) pytestspec: do not run --impl for a case whose disposition is declared (unmeasured/do-not-port);
    resorts 390 spends ~290s on a verdict fixed in advance
-787. **W229** (done) W206 conftest: pytest_spec_cache_key keyed on fixture+operands+origin sources+corpus digest; None
+788. **W229** (done) W206 conftest: pytest_spec_cache_key keyed on fixture+operands+origin sources+corpus digest; None
    for commentary_lost
-788. **W230** (done) Re-time resorts.rego twice under --result-cache; second run should show cached>0 and seconds, not
+789. **W230** (done) Re-time resorts.rego twice under --result-cache; second run should show cached>0 and seconds, not
    585s
-789. **W233** (done) Gate: a test that refuses any requirements.txt pin disagreeing with uv.lock, so the two resolvers
+790. **W233** (done) Gate: a test that refuses any requirements.txt pin disagreeing with uv.lock, so the two resolvers
    cannot drift silently (operator 2026-09-28: must be kept in sync)
-790. **W234** (done) Re-pin hooks/requirements.txt so ast-serialize matches uv.lock (0.9.0 -> 0.11.1); the one delta
+791. **W234** (done) Re-pin hooks/requirements.txt so ast-serialize matches uv.lock (0.9.0 -> 0.11.1); the one delta
    W232 found
-791. **W235** (done) Commit the batch-1 standing hook: hooks/bin/mikemol-hook-standing, hooks/policy/standing.rego +
+792. **W235** (done) Commit the batch-1 standing hook: hooks/bin/mikemol-hook-standing, hooks/policy/standing.rego +
    _test.rego, settings.json entry
-792. **W236** (done) Standing hook: rules 3 and 11 refuse a command that only QUOTES the token; match it as an argument,
+793. **W236** (done) Standing hook: rules 3 and 11 refuse a command that only QUOTES the token; match it as an argument,
    not a substring
-793. **W237** (done) Standing hook batch 2: the remaining pure-(a) rules 2(path) 6(path) 12 13 14 15 17, wired and then
+794. **W237** (done) Standing hook batch 2: the remaining pure-(a) rules 2(path) 6(path) 12 13 14 15 17, wired and then
    dropped from standing
-794. **W238** (done) Standing hook batch 3: the (b) rules 4 5-slice 6-freeze 9 18 need facts gathered before opa; rule 8
+795. **W238** (done) Standing hook batch 3: the (b) rules 4 5-slice 6-freeze 9 18 need facts gathered before opa; rule 8
    as a Stop hook
-795. **W239** (done) Standing rule 14 in policy: deny Edit/Write to warrants.bib
-796. **W246** (done) --check flags a blocked_on naming a done symbol (stale blocker)
-797. **W249** (done) Inbox triage 2026-09-28: letters answered by earlier work (substrate noqa, luthen --ledger --, life
+796. **W239** (done) Standing rule 14 in policy: deny Edit/Write to warrants.bib
+797. **W246** (done) --check flags a blocked_on naming a done symbol (stale blocker)
+798. **W249** (done) Inbox triage 2026-09-28: letters answered by earlier work (substrate noqa, luthen --ledger --, life
    adopter)
-798. **W250** (done) --update --next with an empty string writes an empty string, not null (linux-sources letter
+799. **W250** (done) --update --next with an empty string writes an empty string, not null (linux-sources letter
    2026-09-26)
-799. **W251** (done) Does nemik or pathsforward flag unclaimed asks? (operator question 2026-09-28)
-800. **W252** (done) Answer linux-sources' --next empty-string letter: fixed in b770e4b, writer-side; archive the inbox
+800. **W251** (done) Does nemik or pathsforward flag unclaimed asks? (operator question 2026-09-28)
+801. **W252** (done) Answer linux-sources' --next empty-string letter: fixed in b770e4b, writer-side; archive the inbox
    letter
-801. **W272** (done) operator: free /var/tmp zram (44.9G of 48G) by expunging the pre-commit staged output base, 21G
-802. **W329** (done) hooks test_grade timed out at its 60 s limit under a full bazel test run (passes alone): measure
+802. **W272** (done) operator: free /var/tmp zram (44.9G of 48G) by expunging the pre-commit staged output base, 21G
+803. **W329** (done) hooks test_grade timed out at its 60 s limit under a full bazel test run (passes alone): measure
    its wall time under load and size the timeout, before the Actions runner makes it a CI flake
-803. **W354** (done) pathsforward --vectors-from FILE: set many waypoints' WV:1 vectors in one all-or-nothing write, as
+804. **W354** (done) pathsforward --vectors-from FILE: set many waypoints' WV:1 vectors in one all-or-nothing write, as
    --weights-from does for weights
-804. **W359** (done) check_mutants: a per-mutant time limit, so a mutant that makes a wait unbounded is recorded (as
+805. **W359** (done) check_mutants: a per-mutant time limit, so a mutant that makes a wait unbounded is recorded (as
    errored or killed by timeout) instead of hanging the whole grid (W356: //gmailstruct:mutants TIMEOUT 300s)
-805. **W361** (done) pre-commit gate clears __pycache__ before its host pytest, so a same-length F-arm restore cannot
+806. **W361** (done) pre-commit gate clears __pycache__ before its host pytest, so a same-length F-arm restore cannot
    leave stale bytecode under test (W358)
-806. **W374** (done) pytestspec: the outcome->column map is declared total (every verdict x expect x disposition lands
+807. **W374** (done) pytestspec: the outcome->column map is declared total (every verdict x expect x disposition lands
    in exactly one column) and checked, not probed
-807. **W377** (done) payload headroom: move class-(a) standing lines into standing.rego so the payload stops hitting
+808. **W377** (done) payload headroom: move class-(a) standing lines into standing.rego so the payload stops hitting
    6000 every tick
-808. **W383** (done) gmailstruct consent: the .age token is created 0600 (measured 644 from age -o under the umask)
-809. **W425** (done) parity census: every substrate membudget call site vs mikemol-membudget (run, shrc, ledger gc,
+809. **W383** (done) gmailstruct consent: the .age token is created 0600 (measured 644 from age -o under the umask)
+810. **W425** (done) parity census: every substrate membudget call site vs mikemol-membudget (run, shrc, ledger gc,
    otlp)
-810. **W426** (done) letter substrate: operator ruling retires bash membudget; switch callers to mikemol-membudget
-811. **W429** (done) letter substrate: parity reached; repoint callers and build_census, then git rm the bash client
-812. **W430** (done) shellcheck checker-defect candidates from substrate: SC2329, SC2016, SC1091 (reproduce each on
+811. **W426** (done) letter substrate: operator ruling retires bash membudget; switch callers to mikemol-membudget
+812. **W429** (done) letter substrate: parity reached; repoint callers and build_census, then git rm the bash client
+813. **W430** (done) shellcheck checker-defect candidates from substrate: SC2329, SC2016, SC1091 (reproduce each on
    substrate's bash; fix the hook or the shell)
-813. **W464** (done) Gate: refuse untracked executable code under .claude/
-814. **W465** (done) Rehome the W206 differential harness (specs, _test.rego, conftest adapters, W206-gen, W128-capture,
+814. **W464** (done) Gate: refuse untracked executable code under .claude/
+815. **W465** (done) Rehome the W206 differential harness (specs, _test.rego, conftest adapters, W206-gen, W128-capture,
    peek) into a tracked home under the bar (ruff, mypy, warrants, opa test), history-preserving first commit of the
    current files
-815. **W466** (done) Census the ~25 one-shot .claude/design/W*.py probes and paths_forward_render.py: each rehomed (if
+816. **W466** (done) Census the ~25 one-shot .claude/design/W*.py probes and paths_forward_render.py: each rehomed (if
    evidence still cites it) or retired with a recorded reason
-816. **W474** (done) pre-commit ratchet loop (line 991) runs mikemol-ratchet as a bare command under set -e: a refusal
+817. **W474** (done) pre-commit ratchet loop (line 991) runs mikemol-ratchet as a bare command under set -e: a refusal
    kills the gate before _rc=$? with no note_failure and no REFUSED verdict (measured on W470: exit 1, silent). Add ||
    _rc=$? as at line 1047; F-arm with a planted key
-817. **W479** (done) Census nemik-check shapes; move single-queue ones into pathsforward --check
-818. **W482** (done) pycheck lints rules_py/*.py under a config the gate does not use: it refuses an Edit to
+818. **W479** (done) Census nemik-check shapes; move single-queue ones into pathsforward --check
+819. **W482** (done) pycheck lints rules_py/*.py under a config the gate does not use: it refuses an Edit to
    rules_py/test_venv_check.py with findings (I001, PLR2004 ...) that //:ruff and //:mypy_rules_py pass; make pycheck
    resolve the same governing config the gate's target uses, F-armed both ways
-819. **W484** (done) Second swarm over the skipped local cards (W173 W180 W181 W124 W230 W193 W332 W359 W478 W480 W481
+820. **W484** (done) Second swarm over the skipped local cards (W173 W180 W181 W124 W230 W193 W332 W359 W478 W480 W481
    W482): draft or fix in isolation, then integrate one commit per card
-820. **W487** (done) operator: decide ci/module-gate.yml cache-write scope: every non-PR event (any branch,
+821. **W487** (done) operator: decide ci/module-gate.yml cache-write scope: every non-PR event (any branch,
    workflow_dispatch) writes the remote cache under REF_NAME, while the header says only stage and main write. Options:
    restrict uploads to refs/heads/stage and main, or amend the header
-821. **W488** (done) One opa pin: pytestspec opa.PINNED, the MODULE.bazel @opa url and the opa_test BUILD arg all say
+822. **W488** (done) One opa pin: pytestspec opa.PINNED, the MODULE.bazel @opa url and the opa_test BUILD arg all say
    1.20.2 with nothing checking they agree; derive two from one or test their agreement
-822. **W489** (done) ci/module-gate.yml pins actions/checkout to a tag (v4), not a commit SHA; pin it by SHA so a moved
+823. **W489** (done) ci/module-gate.yml pins actions/checkout to a tag (v4), not a commit SHA; pin it by SHA so a moved
    tag cannot change what the gate runs
-823. **W490** (done) Confirm W356 cleared: re-run //gmailstruct:mutants after W359's per-mutant limit lands; record
+824. **W490** (done) Confirm W356 cleared: re-run //gmailstruct:mutants after W359's per-mutant limit lands; record
    whether the grid now finishes under 300s and which mutants are killed-by-timeout
-824. **W491** (done) W181-L1: commit-msg hook requires a 'Waypoint: W`<n>`' or 'Waypoint: none' trailer, so a commit
+825. **W491** (done) W181-L1: commit-msg hook requires a 'Waypoint: W`<n>`' or 'Waypoint: none' trailer, so a commit
    links back to its waypoint
-825. **W492** (done) W181-L2: --update gains typed --unchanged, --rejected and --consumers list fields, shown by --show;
+826. **W492** (done) W181-L2: --update gains typed --unchanged, --rejected and --consumers list fields, shown by --show;
    evidence stays free text
-826. **W493** (done) W181-L3: --commit-message SYMBOL drafts a message from title, caused_by, latest evidence and the L2
+827. **W493** (done) W181-L3: --commit-message SYMBOL drafts a message from title, caused_by, latest evidence and the L2
    fields, with the Waypoint trailer; a missing field prints '# thin: no `<field>`'
-827. **W494** (done) W173-b: retire the untracked .claude/msg*.txt files whose message is a landed commit (git log -F
+828. **W494** (done) W173-b: retire the untracked .claude/msg*.txt files whose message is a landed commit (git log -F
    --grep on the first line); record count and HEAD; keep any unmatched one
-828. **W495** (done) W173-d: msgGE.txt is an unsent peer letter to substrate; check substrate's inbox and summit for it,
+829. **W495** (done) W173-d: msgGE.txt is an unsent peer letter to substrate; check substrate's inbox and summit for it,
    send it if undelivered, then retire it
-829. **W496** (done) W173-r: retire paths_forward_render.py (superseded 600745c, re-verify no caller), preamble.txt
+830. **W496** (done) W173-r: retire paths_forward_render.py (superseded 600745c, re-verify no caller), preamble.txt
    (carried by --preamble-set), design/__pycache__, and swarm/ tq1-5 drafts (batches landed)
-830. **W497** (done) Third swarm: fixers for W180 W485 W487+W489 W488 W491 W492+W493, drafters for W490 W494+W496 W495;
+831. **W497** (done) Third swarm: fixers for W180 W485 W487+W489 W488 W491 W492+W493, drafters for W490 W494+W496 W495;
    integrate every ready card in one batch when it lands
-831. **W498** (done) Move the guarded spec into pycodemod/differential
-832. **W499** (done) Test module-gate.yml's cache-scope case over sample refs
-833. **W500** (done) Keep swarm worktrees out of bazel's package tree
-834. **W501** (done) Retire .claude/gen_warrants.py and standing_test.rego's legacy test_14_legacy_append_control
+832. **W498** (done) Move the guarded spec into pycodemod/differential
+833. **W499** (done) Test module-gate.yml's cache-scope case over sample refs
+834. **W500** (done) Keep swarm worktrees out of bazel's package tree
+835. **W501** (done) Retire .claude/gen_warrants.py and standing_test.rego's legacy test_14_legacy_append_control
    together, once every caller (the queue's standing warrants line, this session's workflow) uses mikemol-gen-warrants
-835. **W502** (done) pre-commit's host pytest must not run untracked test files
-836. **W505** (done) BundledTitleShape into pathsforward --check as a refusal
-837. **W506** (done) Retire .claude/msgGE.txt once the guarded spec is tracked
-838. **W507** (done) Gate names the target behind a bazel ERROR line, and flags an input-modified failure as retryable
-839. **W508** (done) pytestspec: an expect scoped to one implementation, so a reference-only known defect is refused,
+836. **W502** (done) pre-commit's host pytest must not run untracked test files
+837. **W505** (done) BundledTitleShape into pathsforward --check as a refusal
+838. **W506** (done) Retire .claude/msgGE.txt once the guarded spec is tracked
+839. **W507** (done) Gate names the target behind a bazel ERROR line, and flags an input-modified failure as retryable
+840. **W508** (done) pytestspec: an expect scoped to one implementation, so a reference-only known defect is refused,
    not failed
-840. **W509** (done) pre-commit runs tracked tests with unstaged edits as the working tree has them; gate them as staged
-841. **W510** (done) Fifth swarm: W464 W503 W505 W507 W508 W500 fixed in isolation, integrated one commit each
-842. **W511** (done) Standing rule 6-freeze reads the paperkit freeze record from a queue field
-843. **W513** (done) Standing rule 8 as a Stop hook: launcher mikemol-hook-standing-stop and its policy
-844. **W514** (done) Letter to substrate: W430 shellcheck findings, with the cgroup-scope:218 rewrite
-845. **W515** (done) File the SC2329 trap-handler false positive upstream with koalaman/shellcheck
-846. **W517** (done) Wire the rule-8 Stop hook into settings.json
-847. **W518** (done) Gate: CUDA 13 audiostruct sandboxes exceed the sandbox quota when run concurrently
-848. **W519** (done) audiostruct: a check that gpu_set's hand-listed CUDA extras match torch's metadata
-849. **W520** (done) audiostruct: verify diarization on a real two-speaker recording under torch 2.14
-850. **W521** (done) Ask luthen-observability to hold the Hugging Face token in OpenBao and expose it as a k8s secret
-851. **W522** (done) audiostruct: mikemol-audio refuses up front, or creates, a missing --workdir instead of dying after
+841. **W509** (done) pre-commit runs tracked tests with unstaged edits as the working tree has them; gate them as staged
+842. **W510** (done) Fifth swarm: W464 W503 W505 W507 W508 W500 fixed in isolation, integrated one commit each
+843. **W511** (done) Standing rule 6-freeze reads the paperkit freeze record from a queue field
+844. **W513** (done) Standing rule 8 as a Stop hook: launcher mikemol-hook-standing-stop and its policy
+845. **W514** (done) Letter to substrate: W430 shellcheck findings, with the cgroup-scope:218 rewrite
+846. **W515** (done) File the SC2329 trap-handler false positive upstream with koalaman/shellcheck
+847. **W517** (done) Wire the rule-8 Stop hook into settings.json
+848. **W518** (done) Gate: CUDA 13 audiostruct sandboxes exceed the sandbox quota when run concurrently
+849. **W519** (done) audiostruct: a check that gpu_set's hand-listed CUDA extras match torch's metadata
+850. **W520** (done) audiostruct: verify diarization on a real two-speaker recording under torch 2.14
+851. **W521** (done) Ask luthen-observability to hold the Hugging Face token in OpenBao and expose it as a k8s secret
+852. **W522** (done) audiostruct: mikemol-audio refuses up front, or creates, a missing --workdir instead of dying after
    transcription
-852. **W525** (done) Redact the address literals luthen's egress gate found in W23 and W24 evidence, citing endpoints by
+853. **W525** (done) Redact the address literals luthen's egress gate found in W23 and W24 evidence, citing endpoints by
    name
-853. **W527** (done) Decline substrate's cross-client WAIT harness ask: the bash client is retired (operator 2026-10-02,
+854. **W527** (done) Decline substrate's cross-client WAIT harness ask: the bash client is retired (operator 2026-10-02,
    W429), so there is no second client to race
-854. **W528** (done) pre-commit domain_witness plants its transient probe in the main working tree, not the staged copy,
+855. **W528** (done) pre-commit domain_witness plants its transient probe in the main working tree, not the staged copy,
    so concurrent bazel reads it
-855. **W537** (done) pathsforward: --prune-landed drops landed local blockers with no counter bump, split from
+856. **W537** (done) pathsforward: --prune-landed drops landed local blockers with no counter bump, split from
    --bump-blocked
-856. **W538** (done) pathsforward: --prune-landed resolves foreign repo:W`<n>` blockers by reading that repo's queue,
+857. **W538** (done) pathsforward: --prune-landed resolves foreign repo:W`<n>` blockers by reading that repo's queue,
    read-only
-857. **W540** (done) hooks: the arming arm requires inline arming only of hooks that read an arming variable (the Stop
+858. **W540** (done) hooks: the arming arm requires inline arming only of hooks that read an arming variable (the Stop
    hook reads none)
-858. **W541** (done) ledger.line refuses any line-breaking character in a note or evidence, not only newline
-859. **W551** (done) Operator decides the paperkit tools/ migration questions: engine edge, treeio, importaudit (plan
+859. **W541** (done) ledger.line refuses any line-breaking character in a note or evidence, not only newline
+860. **W551** (done) Operator decides the paperkit tools/ migration questions: engine edge, treeio, importaudit (plan
    sections 5.1, 5.2, 5.4)
-860. **W553** (done) pycheck and the other edit hooks find the main checkout's venv when the edited file is in a git
+861. **W553** (done) pycheck and the other edit hooks find the main checkout's venv when the edited file is in a git
    worktree
-861. **W559** (done) pycodemod directory operand prunes virtualenvs (a directory holding pyvenv.cfg) and counts them in
+862. **W559** (done) pycodemod directory operand prunes virtualenvs (a directory holding pyvenv.cfg) and counts them in
    its skipped line
-862. **W567** (done) Audit and remove the integrated agent worktrees under .claude/worktrees
-863. **W577** (done) paths-forward --payload carries the unclaimed inbound asks (peers' cards blocked on this repo with
+863. **W567** (done) Audit and remove the integrated agent worktrees under .claude/worktrees
+864. **W577** (done) paths-forward --payload carries the unclaimed inbound asks (peers' cards blocked on this repo with
    no card here enabling them), so a loop tick sees them without a nudge
-864. **W578** (done) mikemol-hooks ships an inbound-asks hook that surfaces a repo's UNCLAIMED inbound asks at session
+865. **W578** (done) mikemol-hooks ships an inbound-asks hook that surfaces a repo's UNCLAIMED inbound asks at session
    start and on each prompt, armed per repo in settings.json
-865. **W579** (done) Write a current INSTALL.md and one adoption page for the mikemol-hooks context hooks, so a repo
+866. **W579** (done) Write a current INSTALL.md and one adoption page for the mikemol-hooks context hooks, so a repo
    adopts them without guessing
-866. **W580** (done) Decide whether the inbound-asks hook is wired once in the operator's user-level settings (one
+867. **W580** (done) Decide whether the inbound-asks hook is wired once in the operator's user-level settings (one
    install via MTOOLS_ROOT, every repo covered) or per repo
-867. **W582** (done) Commit the MODULE.bazel.lock refresh that treeio's pygit2 hub (cffi and pygit2 wheel pins) left
+868. **W582** (done) Commit the MODULE.bazel.lock refresh that treeio's pygit2 hub (cffi and pygit2 wheel pins) left
    uncommitted
-868. **W583** (done) Measure whether every distribution's dev deps include mikemol-fence, since mutate_runner keeps a
+869. **W583** (done) Measure whether every distribution's dev deps include mikemol-fence, since mutate_runner keeps a
    local git filter only because fence imports only in fence's venv
-869. **W584** (done) Delete rules_py/venv.bzl _relative_path, which has no callers
-870. **W585** (done) venv.bzl console-script preamble calls readlink -f, which is GNU-only: choose a portable form or
+870. **W584** (done) Delete rules_py/venv.bzl _relative_path, which has no callers
+871. **W585** (done) venv.bzl console-script preamble calls readlink -f, which is GNU-only: choose a portable form or
    record the repo as Linux-only
-871. **W586** (done) venv.bzl console-script test arm skips under bazel: measure why and either arm it there or record
+872. **W586** (done) venv.bzl console-script test arm skips under bazel: measure why and either arm it there or record
    the reason
-872. **W587** (done) Move no_verify's own shlex split onto cmdparse so every hook shares one command parser
-873. **W588** (done) Install mikemol-githook-pre-push in mtools' own .githooks and measure its interaction with the
+873. **W587** (done) Move no_verify's own shlex split onto cmdparse so every hook shares one command parser
+874. **W588** (done) Install mikemol-githook-pre-push in mtools' own .githooks and measure its interaction with the
    post-commit auto-push
-874. **W589** (done) Port substrate's post-commit git hook to mikemol-hooks as a console script
-875. **W590** (done) Port substrate's prepare-commit-msg git hook to mikemol-hooks as a console script
-876. **W591** (done) transcriptstruct: decode the 80 tool_result tool_reference blocks measured undecoded on the
+875. **W589** (done) Port substrate's post-commit git hook to mikemol-hooks as a console script
+876. **W590** (done) Port substrate's prepare-commit-msg git hook to mikemol-hooks as a console script
+877. **W591** (done) transcriptstruct: decode the 80 tool_result tool_reference blocks measured undecoded on the
    reference transcript
-877. **W593** (done) Ask amr-skills whether the CUDA context limit also counts desktop compute apps (kwin, VS Code),
+878. **W593** (done) Ask amr-skills whether the CUDA context limit also counts desktop compute apps (kwin, VS Code),
    which would make the contexts ledger TOTAL vary
-878. **W594** (done) pycodemod: port the SQL-string relation reader (sql_rel_roles, sql_relnames, sql_kind, sql_rw,
+879. **W594** (done) pycodemod: port the SQL-string relation reader (sql_rel_roles, sql_relnames, sql_kind, sql_rw,
    relname_sites) from substrate
-879. **W595** (done) pycodemod: port --split, the file-splitting codemod writer behind --apply, from substrate's
+880. **W595** (done) pycodemod: port --split, the file-splitting codemod writer behind --apply, from substrate's
    scratch/pycodemod.py
-880. **W596** (done) pycodemod placement: add a flag overriding ENTRY_FORMS and FIRST_WRITE_FORMS, after verifying the
+881. **W596** (done) pycodemod placement: add a flag overriding ENTRY_FORMS and FIRST_WRITE_FORMS, after verifying the
    origin's spelling at substrate
-881. **W597** (done) pycodemod placement: measure whether an unparseable store-write-only file reaches the disagreement
+882. **W597** (done) pycodemod placement: measure whether an unparseable store-write-only file reaches the disagreement
    banner, since writes_store reports no skips
-882. **W598** (done) pycodemod cli: exercise the real missing-sqlalchemy-extra ImportError path rather than a
+883. **W598** (done) pycodemod cli: exercise the real missing-sqlalchemy-extra ImportError path rather than a
    monkeypatched _run_funcnames
-883. **W599** (done) pycodemod cli: give python -m mikemol.pycodemod.cli an entry, or refuse naming the console script,
+884. **W599** (done) pycodemod cli: give python -m mikemol.pycodemod.cli an entry, or refuse naming the console script,
    since it prints nothing today
-884. **W600** (done) pycodemod calls: re-measure the dotted-target zero (sys.path.insert) at the CLI layer and arm it if
+885. **W600** (done) pycodemod calls: re-measure the dotted-target zero (sys.path.insert) at the CLI layer and arm it if
    it still reads zero
-885. **W601** (done) ledger bibkeys: call mikemol.witness raw_bib directly instead of a caller-supplied entries argv,
+886. **W601** (done) ledger bibkeys: call mikemol.witness raw_bib directly instead of a caller-supplied entries argv,
    depending on witness
-886. **W602** (done) Retire .claude/queue.md: its open items are waypoints W583-W601, and the loop state, design notes
+887. **W602** (done) Retire .claude/queue.md: its open items are waypoints W583-W601, and the loop state, design notes
    and archived letters are committed
-887. **W603** (done) Commit the operator's .claude/settings.json: the permission grants and the rule-8 Stop hook wiring
+888. **W603** (done) Commit the operator's .claude/settings.json: the permission grants and the rule-8 Stop hook wiring
    that HEAD lacks
-888. **W604** (done) Make --render emit a mirror that passes the markdown bar (ragged table rows, MD013 line length,
+889. **W604** (done) Make --render emit a mirror that passes the markdown bar (ragged table rows, MD013 line length,
    inline HTML), then track .claude/paths-forward.md
-889. **W605** (done) Bring .claude/design/W36-differential.md to the markdown bar (68 findings, one ragged table row),
+890. **W605** (done) Bring .claude/design/W36-differential.md to the markdown bar (68 findings, one ragged table row),
    then track it
-890. **W606** (done) pycodemod: control_roster.py, the control-flow construct roster, SQL_FORM table and Boundary
+891. **W606** (done) pycodemod: control_roster.py, the control-flow construct roster, SQL_FORM table and Boundary
    operand, tested
-891. **W607** (done) pycodemod: port the census-free prime-fingerprint algebra (registry, decode, gcd lattice) with its
+892. **W607** (done) pycodemod: port the census-free prime-fingerprint algebra (registry, decode, gcd lattice) with its
    cases
-892. **W608** (done) pycodemod portable.py: portable_sites judges SQL literals via an injected Probe protocol, no
+893. **W608** (done) pycodemod portable.py: portable_sites judges SQL literals via an injected Probe protocol, no
    database in tests
-893. **W609** (done) pycodemod storeflow.py: StoreVocab operand plus is_store_read, store_reader_fns, row_names,
+894. **W609** (done) pycodemod storeflow.py: StoreVocab operand plus is_store_read, store_reader_fns, row_names,
    derived_names
-894. **W610** (done) pycodemod sql.py: sql_sites reads SQL literals and grades raw vs literal by a caller-supplied
+895. **W610** (done) pycodemod sql.py: sql_sites reads SQL literals and grades raw vs literal by a caller-supplied
    executor roster
-895. **W611** (done) pycodemod: reconsider porting the census type_errors mode (mypy run, ratchet-keyed), weighing it
+896. **W611** (done) pycodemod: reconsider porting the census type_errors mode (mypy run, ratchet-keyed), weighing it
    against the pycheck hook and mikemol-ratchet
-896. **W612** (done) pycodemod: artifacts.py, which tools read a failure-bearing build artifact, vocabulary supplied by
+897. **W612** (done) pycodemod: artifacts.py, which tools read a failure-bearing build artifact, vocabulary supplied by
    the caller
-897. **W613** (done) pycodemod: reads.py, the files and flags one named function reads, binding-followed, unresolved
+898. **W613** (done) pycodemod: reads.py, the files and flags one named function reads, binding-followed, unresolved
    paths reported
-898. **W614** (done) Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port
+899. **W614** (done) Ask paperkit via summit whether it will expose project enumeration plus foreign bibs, else port
    paperkit_projects with its resolver as an operand
-899. **W615** (done) mutation: add an open regex-operator spec so a suite can be asked whether it notices one named
+900. **W615** (done) mutation: add an open regex-operator spec so a suite can be asked whether it notices one named
    defect, not only a body-to-raise
-900. **W616** (done) Add a nemik-check context hook to mikemol-hooks that surfaces the current repo's Warning and
+901. **W616** (done) Add a nemik-check context hook to mikemol-hooks that surfaces the current repo's Warning and
    VIOLATES rows at SessionStart and UserPromptSubmit, built as inbound-asks was
-901. **W617** (done) Draft the settings.json patch wiring the nemik-check hook into SessionStart and UserPromptSubmit,
+902. **W617** (done) Draft the settings.json patch wiring the nemik-check hook into SessionStart and UserPromptSubmit,
    and give the operator the command to apply it
-902. **W618** (done) nemik-check hook: skip the 12 s fleet reader on a prompt when this repo's paths-forward.json is
+903. **W618** (done) nemik-check hook: skip the 12 s fleet reader on a prompt when this repo's paths-forward.json is
    unchanged since the last run, and always run it at SessionStart
-903. **W619** (done) mutate_runner: import mikemol-fence through the dist-to-dist edge (A+B) and delete its local
+904. **W619** (done) mutate_runner: import mikemol-fence through the dist-to-dist edge (A+B) and delete its local
    git-env filter, now that sibling edges exist
-904. **W620** (done) transcriptstruct: pin the malformed tool_reference case, a missing or non-string tool_name, as
+905. **W620** (done) transcriptstruct: pin the malformed tool_reference case, a missing or non-string tool_name, as
    reported undecoded and never guessed
-905. **W621** (done) Add a --check mode to mikemol-hook-inbound-asks that says which piece a repo lacks: reader absent
+906. **W621** (done) Add a --check mode to mikemol-hook-inbound-asks that says which piece a repo lacks: reader absent
    or too old, no queue, or hook not in settings
-906. **W623** (done) pycodemod: referents.py, token_parts, referents and MAX_TOKEN for the fingerprint, with a tiny
+907. **W623** (done) pycodemod: referents.py, token_parts, referents and MAX_TOKEN for the fingerprint, with a tiny
    inlined as_list and no import of control
-907. **W624** (done) pycodemod: the fingerprint Census arithmetic over sites plus an explicit modelled set, with
+908. **W624** (done) pycodemod: the fingerprint Census arithmetic over sites plus an explicit modelled set, with
    modelled_keys(paths) taking no default seed
-908. **W625** (done) Document the inbound-asks hook's --check mode in hooks/README.md and docs/adopting-a-hook.md, which
+909. **W625** (done) Document the inbound-asks hook's --check mode in hooks/README.md and docs/adopting-a-hook.md, which
    still say it is not built
-909. **W626** (done) pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab
+910. **W626** (done) pycodemod: snapshots.py, snapshot_sites with _read_trips and _iterated_read, over the StoreVocab
    operand
-910. **W627** (done) pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand
-911. **W628** (done) mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim
+911. **W627** (done) pycodemod: relalg.py, relalg_sites and RELALG_KINDS, over the StoreVocab operand
+912. **W628** (done) mutation: a regex: grammar entry for emit_mutant so mutantcell can name a RegexSpec in its claim
    data, without a JSON load under disallow_any_expr
-912. **W629** (done) mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs,
+913. **W629** (done) mutation: a per-dist :mutants operator-file knob so a dist can declare its defect-class RegexSpecs,
    and declare them for the drained families
-913. **W630** (done) pycodemod cli: wire the --relname mode over relations.relname_sites
-914. **W631** (done) pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as
+914. **W630** (done) pycodemod cli: wire the --relname mode over relations.relname_sites
+915. **W631** (done) pycodemod cli: wire the --sql mode over sql.sql_sites, with the executor and builder rosters as
    flags
-915. **W632** (done) pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and
+916. **W632** (done) pycodemod cli: wire the --artifacts, --reads and --portable modes over artifacts, reads and
    portable, each vocabulary a required flag
-916. **W633** (done) pycodemod: one public parse_file in core, adopted by snapshots.py and relalg.py (storeflow and the
+917. **W633** (done) pycodemod: one public parse_file in core, adopted by snapshots.py and relalg.py (storeflow and the
    other copies are W636)
-917. **W634** (done) pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the
+918. **W634** (done) pycodemod cli: wire --rawreads, --snapshots and --relalg over storeflow, snapshots and relalg, the
    StoreVocab and kinds from required flags
-918. **W635** (done) hooks/bin launchers drop their arguments: pass "$@" through in mikemol-hook-inbound-asks (and check
+919. **W635** (done) hooks/bin launchers drop their arguments: pass "$@" through in mikemol-hook-inbound-asks (and check
    its siblings) so --check can run through the launcher
-919. **W636** (done) pycodemod: finish the shared parse: switch storeflow.py to core.parse_file, then check the ten
+920. **W636** (done) pycodemod: finish the shared parse: switch storeflow.py to core.parse_file, then check the ten
    same-signature _parse copies for byte-identity
    - next: none
-920. **W637** (done) pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk,
+921. **W637** (done) pycodemod: control provenance helpers (ext_names, external_expr, mode_expr, scopes, own_walk,
    module_consts, params) taking the Boundary as an operand
-921. **W638** (done) pycodemod: the control census class and control_sites, returning Skip for files it cannot read,
+922. **W638** (done) pycodemod: the control census class and control_sites, returning Skip for files it cannot read,
    over a StoreVocab and a Boundary
-922. **W639** (done) pycodemod: the control report printers and the --control and --constructs CLI modes, the construct
+923. **W639** (done) pycodemod: the control report printers and the --control and --constructs CLI modes, the construct
    count stated as 36
-923. **W640** (done) pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite
+924. **W640** (done) pycodemod: the fingerprint site walk (site_referents and the census subclass) emitting FpSite
    objects over the control census, keeping the desync AssertionError
-924. **W641** (done) pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the
+925. **W641** (done) pycodemod cli: the --fingerprint mode with --seed, --groups, --keys and --monotone, printing the
    skipped seed files
-925. **W642** (done) Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a
+926. **W642** (done) Tell substrate and el-openglo that mikemol-githook-prepare-commit-msg now aborts the commit on a
    failure the shell original swallowed
-926. **W643** (done) pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never
+927. **W643** (done) pycodemod census modes: state 'searched N files, found none' on an empty result, so a zero is never
    read as an absence
-927. **W644** (done) pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an
+928. **W644** (done) pycodemod cli: wire the --split mode with --max, --max-defs, --prefix, --keep and --export, and an
    explicit --apply or --dry-run, neither given refused
-928. **W645** (done) pycodemod split: run the existing differential/split.cases.json against plan(), and scan
+929. **W645** (done) pycodemod split: run the existing differential/split.cases.json against plan(), and scan
    attribute-style callers (import stem, then stem.name) for owed
-929. **W646** (done) pycheck: treat a file as Python when its first line is a Python shebang as well as when it ends in
+930. **W646** (done) pycheck: treat a file as Python when its first line is a Python shebang as well as when it ends in
    .py, read from the post-edit content
-930. **W647** (done) no_verify: judge core.hooksPath by its value and only where git reads config, not by the key in any
+931. **W647** (done) no_verify: judge core.hooksPath by its value and only where git reads config, not by the key in any
    argument including the text of -m
-931. **W648** (done) pycodemod importers: a flag that exits non-zero when nothing imports the module, so a capability
+932. **W648** (done) pycodemod importers: a flag that exits non-zero when nothing imports the module, so a capability
    check can fail on an empty result
-932. **W649** (done) pycodemod: reconsider the remaining DO-NOT-PORT driver modes (sqlname, last, collision-apex,
+933. **W649** (done) pycodemod: reconsider the remaining DO-NOT-PORT driver modes (sqlname, last, collision-apex,
    py-files) now that substrate drains wholesale, and say which summit touches
-933. **W650** (done) pycodemod: registered.py, a prefixed def joined to the string literal that invokes it, prefix
+934. **W650** (done) pycodemod: registered.py, a prefixed def joined to the string literal that invokes it, prefix
    supplied by the caller, skipped files reported
-934. **W651** (done) pathwalk: an --exclude operand so a walk can prune generated trees (bazel-*, dist, build) that it
+935. **W651** (done) pathwalk: an --exclude operand so a walk can prune generated trees (bazel-*, dist, build) that it
    keeps today
-935. **W652** (done) pycodemod cli: drop each DO_NOT_PORT redirect whose library is ported (control, fingerprint, sql,
+936. **W652** (done) pycodemod cli: drop each DO_NOT_PORT redirect whose library is ported (control, fingerprint, sql,
    portable and others) as its mode wires, and update the test that pins the redirects
-936. **W653** (done) pycodemod split: owed callers miss alias rebinding, a bare import of a dotted stem without as, and
+937. **W653** (done) pycodemod split: owed callers miss alias rebinding, a bare import of a dotted stem without as, and
    a star-import followed by a bare name
-937. **W654** (done) pycodemod control: --connections is required for the StoreVocab but control_census never reads it,
+938. **W654** (done) pycodemod control: --connections is required for the StoreVocab but control_census never reads it,
    so either use it or stop requiring it for these modes
-938. **W655** (done) pycodemod: compare the control census and fp_sites against substrate's originals over one corpus
+939. **W655** (done) pycodemod: compare the control census and fp_sites against substrate's originals over one corpus
    slice, naming each difference as declared or undeclared
-939. **W656** (done) pycodemod dead: an optional --registered-prefix operand so a def registered by a string literal is
+940. **W656** (done) pycodemod dead: an optional --registered-prefix operand so a def registered by a string literal is
    not reported dead, built on registered_defs
-940. **W657** (done) pycodemod cli: wire the registered mode over registered_defs with the prefix a required operand
-941. **W658** (done) pycodemod: pass a caller-named exclude list to pathwalk.expand and print skipped N excluded
+941. **W657** (done) pycodemod cli: wire the registered mode over registered_defs with the prefix a required operand
+942. **W658** (done) pycodemod: pass a caller-named exclude list to pathwalk.expand and print skipped N excluded
    directories
-942. **W659** (done) mdstruct: pass a caller-named exclude list to pathwalk.expand, and document exclude and the
+943. **W659** (done) mdstruct: pass a caller-named exclude list to pathwalk.expand, and document exclude and the
    virtualenv count in pathwalk's README
-943. **W660** (done) pycodemod: test --require-hits over a partial scan with zero rows, over control with zero sites,
+944. **W660** (done) pycodemod: test --require-hits over a partial scan with zero rows, over control with zero sites,
    and through directory expansion
-944. **W661** (done) mtools' .githooks/post-commit reports 'remote has moved' when the push was abandoned by a failing
+945. **W661** (done) mtools' .githooks/post-commit reports 'remote has moved' when the push was abandoned by a failing
    pre-push; name the real cause
-945. **W662** (done) mtools' .githooks/post-commit needs an amend guard before it calls mikemol-githook-post-commit,
+946. **W662** (done) mtools' .githooks/post-commit needs an amend guard before it calls mikemol-githook-post-commit,
    since the amend re-fires post-commit and the nested push sends the amended sha
-946. **W663** (done) Control and fingerprint ports: the for-else and case snippets use ASCII ... where the origin used
+947. **W663** (done) Control and fingerprint ports: the for-else and case snippets use ASCII ... where the origin used
    the unicode ellipsis, and no commit declares it
-947. **W664** (done) Fingerprint and control ports: five small differences found by reading only (omega(n) dropped,
+948. **W664** (done) Fingerprint and control ports: five small differences found by reading only (omega(n) dropped,
    three Census attributes dropped, referents(None) raises, getattr lineno fallbacks removed) need a
    declared-or-restored decision each
-948. **W665** (done) pycodemod --require-hits: a partial scan with zero rows prints 'searched N' counting the skipped
+949. **W665** (done) pycodemod --require-hits: a partial scan with zero rows prints 'searched N' counting the skipped
    file, though the banner above says fewer were read
-949. **W666** (done) pycodemod: review the sqlname spelling now refused as RETIRED naming registered, and retitle the
+950. **W666** (done) pycodemod: review the sqlname spelling now refused as RETIRED naming registered, and retitle the
    githook-post-commit rubric row that still ends 'and No Push'
-950. **W667** (done) pycodemod cli: wire the artifacts mode over artifact_readers, both vocabularies required flags, and
+951. **W667** (done) pycodemod cli: wire the artifacts mode over artifact_readers, both vocabularies required flags, and
    drop its DO_NOT_PORT spelling
-951. **W668** (done) pycodemod cli: wire the touches mode over reads.function_reads with root names and module dirs as
+952. **W668** (done) pycodemod cli: wire the touches mode over reads.function_reads with root names and module dirs as
    required flags, and drop its DO_NOT_PORT spelling
-952. **W669** (done) hooks gen-warrants: support the root layout so check_mutants' runner tests can take generated
+953. **W669** (done) hooks gen-warrants: support the root layout so check_mutants' runner tests can take generated
    warrants, then test run_declared's four outcomes
-953. **W670** (done) mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their
+954. **W670** (done) mutation: declare defect classes (mutants.regex) for the remaining drained distributions from their
    recorded F-arm history
-954. **W671** (done) tests: find negated substring assertions whose text appears nowhere in what the code under test can
+955. **W671** (done) tests: find negated substring assertions whose text appears nowhere in what the code under test can
    print, because they cannot fail
-955. **W672** (done) Draft, as a patch in substrate's inbox, the repoint of Selftest.mk and its seven tmi_* tools to
+956. **W672** (done) Draft, as a patch in substrate's inbox, the repoint of Selftest.mk and its seven tmi_* tools to
    mikemol-transcriptstruct and the deletion of scratch/transcriptstruct.py
-956. **W712** (done) mtools typing: buildtel/src/mikemol/buildtel/buildpulse.py (5 findings)
-957. **W713** (done) mtools typing: buildtel/src/mikemol/buildtel/image_digest.py (6 findings)
-958. **W714** (done) mtools typing: buildtel/src/mikemol/buildtel/probe.py (5 findings)
-959. **W715** (done) mtools typing: gatecheck/src/mikemol/gatecheck/hook_index.py (9 findings)
-960. **W716** (done) mtools typing: gatecheck/src/mikemol/gatecheck/witness_reach.py (17 findings)
-961. **W717** (done) mtools typing: hooks/src/mikemol/hooks/flag_contract.py (4 findings)
-962. **W718** (done) mtools typing: hooks/src/mikemol/hooks/standing_facts.py (21 findings)
-963. **W719** (done) mtools typing: ledger/src/mikemol/ledger/finding_bibkeys.py (4 findings)
-964. **W720** (done) mtools typing: ledger/src/mikemol/ledger/finding_cli.py (13 findings)
-965. **W721** (done) mtools typing: ledger/src/mikemol/ledger/finding_entry.py (7 findings)
-966. **W722** (done) mtools typing: ledger/src/mikemol/ledger/finding_keys_show.py (15 findings)
-967. **W723** (done) mtools typing: ledger/src/mikemol/ledger/finding_mode.py (18 findings)
-968. **W724** (done) mtools typing: ledger/src/mikemol/ledger/finding_polarity.py (16 findings)
-969. **W725** (done) mtools typing: mutantcell/src/mikemol/mutantcell/eval.py (25 findings)
-970. **W726** (done) mtools typing: mutantcell/src/mikemol/mutantcell/sites.py (7 findings)
-971. **W727** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/standing_stop.py (19 findings)
-972. **W728** (done) mtools typing: witness/src/mikemol/witness/warrant_integrity.py (28 findings)
-973. **W744** (done) mtools typing: gradekit/src/mikemol/gradekit/grades_rec.py (67 findings)
-974. **W745** (done) mtools typing: gradekit/src/mikemol/gradekit/read_grade.py (31 findings)
-975. **W746** (done) mtools typing: gradekit/src/mikemol/gradekit/verdict.py (30 findings)
-976. **W747** (done) mtools typing: importdag/src/mikemol/importdag/imports.py (16 findings)
-977. **W748** (done) mtools typing: memres/src/mikemol/memres/mem_harvest.py (15 findings)
-978. **W749** (done) mtools typing: memres/src/mikemol/memres/mem_project.py (6 findings)
-979. **W750** (done) mtools typing: ratchet/src/mikemol/ratchet/cli.py (29 findings)
-980. **W760** (done) mtools typing: gmailstruct/src/mikemol/gmailstruct/cli.py (58 findings)
-981. **W761** (done) mtools typing: gradekit/src/mikemol/gradekit/effective.py (67 findings)
-982. **W762** (done) mtools typing: hooks/src/mikemol/hooks/shellcheck_cli.py (21 findings)
-983. **W763** (done) mtools typing: icsstruct/src/mikemol/icsstruct/cli.py (42 findings)
-984. **W764** (done) mtools typing: importdag/src/mikemol/importdag/closure.py (10 findings)
-985. **W765** (done) mtools typing: importdag/src/mikemol/importdag/closure_census.py (9 findings)
-986. **W766** (done) mtools typing: treeio/src/mikemol/treeio/snapshot_cli.py (14 findings)
-987. **W773** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/cli.py (50 findings)
-988. **W777** (done) mtools typing: pytestspec/src/mikemol/pytestspec/plugin.py (113 findings)
-989. **W781** (done) mtools typing: audiostruct/src/mikemol/audiostruct/main.py (20 findings)
-990. **W782** (done) mtools typing: treeio/src/mikemol/treeio/vfs_cli.py (48 findings)
-991. **W784** (done) mtools typing: treeio/src/mikemol/treeio/edit_snapshot.py (6 findings)
-992. **W785** (done) mtools typing: treeio/src/mikemol/treeio/vfs.py (7 findings)
-993. **W786** (done) mtools typing: hooks/src/mikemol/hooks/entry.py (25 findings)
-994. **W787** (done) mtools typing: mdstruct/src/mikemol/mdstruct/cli.py (103 findings)
-995. **W789** (done) mtools typing: pathsforward/src/mikemol/pathsforward/__main__.py (2 findings)
-996. **W790** (done) Drain luthen-observability's mypy_plan into mtools: the import resolver in importdag (resolve.py),
+957. **W712** (done) mtools typing: buildtel/src/mikemol/buildtel/buildpulse.py (5 findings)
+958. **W713** (done) mtools typing: buildtel/src/mikemol/buildtel/image_digest.py (6 findings)
+959. **W714** (done) mtools typing: buildtel/src/mikemol/buildtel/probe.py (5 findings)
+960. **W715** (done) mtools typing: gatecheck/src/mikemol/gatecheck/hook_index.py (9 findings)
+961. **W716** (done) mtools typing: gatecheck/src/mikemol/gatecheck/witness_reach.py (17 findings)
+962. **W717** (done) mtools typing: hooks/src/mikemol/hooks/flag_contract.py (4 findings)
+963. **W718** (done) mtools typing: hooks/src/mikemol/hooks/standing_facts.py (21 findings)
+964. **W719** (done) mtools typing: ledger/src/mikemol/ledger/finding_bibkeys.py (4 findings)
+965. **W720** (done) mtools typing: ledger/src/mikemol/ledger/finding_cli.py (13 findings)
+966. **W721** (done) mtools typing: ledger/src/mikemol/ledger/finding_entry.py (7 findings)
+967. **W722** (done) mtools typing: ledger/src/mikemol/ledger/finding_keys_show.py (15 findings)
+968. **W723** (done) mtools typing: ledger/src/mikemol/ledger/finding_mode.py (18 findings)
+969. **W724** (done) mtools typing: ledger/src/mikemol/ledger/finding_polarity.py (16 findings)
+970. **W725** (done) mtools typing: mutantcell/src/mikemol/mutantcell/eval.py (25 findings)
+971. **W726** (done) mtools typing: mutantcell/src/mikemol/mutantcell/sites.py (7 findings)
+972. **W727** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/standing_stop.py (19 findings)
+973. **W728** (done) mtools typing: witness/src/mikemol/witness/warrant_integrity.py (28 findings)
+974. **W744** (done) mtools typing: gradekit/src/mikemol/gradekit/grades_rec.py (67 findings)
+975. **W745** (done) mtools typing: gradekit/src/mikemol/gradekit/read_grade.py (31 findings)
+976. **W746** (done) mtools typing: gradekit/src/mikemol/gradekit/verdict.py (30 findings)
+977. **W747** (done) mtools typing: importdag/src/mikemol/importdag/imports.py (16 findings)
+978. **W748** (done) mtools typing: memres/src/mikemol/memres/mem_harvest.py (15 findings)
+979. **W749** (done) mtools typing: memres/src/mikemol/memres/mem_project.py (6 findings)
+980. **W750** (done) mtools typing: ratchet/src/mikemol/ratchet/cli.py (29 findings)
+981. **W760** (done) mtools typing: gmailstruct/src/mikemol/gmailstruct/cli.py (58 findings)
+982. **W761** (done) mtools typing: gradekit/src/mikemol/gradekit/effective.py (67 findings)
+983. **W762** (done) mtools typing: hooks/src/mikemol/hooks/shellcheck_cli.py (21 findings)
+984. **W763** (done) mtools typing: icsstruct/src/mikemol/icsstruct/cli.py (42 findings)
+985. **W764** (done) mtools typing: importdag/src/mikemol/importdag/closure.py (10 findings)
+986. **W765** (done) mtools typing: importdag/src/mikemol/importdag/closure_census.py (9 findings)
+987. **W766** (done) mtools typing: treeio/src/mikemol/treeio/snapshot_cli.py (14 findings)
+988. **W773** (done) mtools typing: transcriptstruct/src/mikemol/transcriptstruct/cli.py (50 findings)
+989. **W777** (done) mtools typing: pytestspec/src/mikemol/pytestspec/plugin.py (113 findings)
+990. **W781** (done) mtools typing: audiostruct/src/mikemol/audiostruct/main.py (20 findings)
+991. **W782** (done) mtools typing: treeio/src/mikemol/treeio/vfs_cli.py (48 findings)
+992. **W784** (done) mtools typing: treeio/src/mikemol/treeio/edit_snapshot.py (6 findings)
+993. **W785** (done) mtools typing: treeio/src/mikemol/treeio/vfs.py (7 findings)
+994. **W786** (done) mtools typing: hooks/src/mikemol/hooks/entry.py (25 findings)
+995. **W787** (done) mtools typing: mdstruct/src/mikemol/mdstruct/cli.py (103 findings)
+996. **W789** (done) mtools typing: pathsforward/src/mikemol/pathsforward/__main__.py (2 findings)
+997. **W790** (done) Drain luthen-observability's mypy_plan into mtools: the import resolver in importdag (resolve.py),
    then the planner as its own distribution over importdag.cone, with direct-waits reduction, cycle guard and mint
-997. **W797** (done) Audit commit gates that read a sibling repo's live working tree and pin each to a recorded commit
-998. **W800** (done) Script the bazel-conversion katas: katas.py bazelize scaffolds .bazelversion, .bazelrc,
+998. **W797** (done) Audit commit gates that read a sibling repo's live working tree and pin each to a recorded commit
+999. **W800** (done) Script the bazel-conversion katas: katas.py bazelize scaffolds .bazelversion, .bazelrc,
    MODULE.bazel and the one-line hook
-999. **W805** (done) fence test_admit timeout arm was wallclock-sensitive and refused a commit under load: run it on
+1000. **W805** (done) fence test_admit timeout arm was wallclock-sensitive and refused a commit under load: run it on
    virtual time
-1000. **W807** (done) Hook the host katas into Claude hook entrypoints: tick gate, tick-end stop guard, compaction pair,
+1001. **W807** (done) Hook the host katas into Claude hook entrypoints: tick gate, tick-end stop guard, compaction pair,
    big-read guard, session-end unlock
-1001. **W809** (done) Typing ledgers measured only package directories: loose tracked .py files (scripts/, root modules)
+1002. **W809** (done) Typing ledgers measured only package directories: loose tracked .py files (scripts/, root modules)
    were never counted in any repo
-1002. **W820** (done) Verify the live UserPromptSubmit payload key the tick gate reads for the prompt text (prompt, else
+1003. **W820** (done) Verify the live UserPromptSubmit payload key the tick gate reads for the prompt text (prompt, else
    user_message)
-1003. **W821** (done) keep each repo's .claude/debt-ledger.json fresh: the closure advisory (mtools:W818) reads it, and
+1004. **W821** (done) keep each repo's .claude/debt-ledger.json fresh: the closure advisory (mtools:W818) reads it, and
    nothing writes it yet
-1004. **W823** (done) mikemol-pycheck --changed ROOT gives the gate's verdict on every modified or untracked Python file
-1005. **W824** (done) compound kata in mtools: rebuild the hooks venv, then run mikemol-pycheck --changed
-1006. **W825** (done) something calls mikemol-pycheck --refresh-ledger so the closure advisory has a ledger to read
-1007. **W826** (done) mikemol-hooks-preflight also runs the hermetic //hooks:suite, which caught a runfiles-resolve
+1005. **W823** (done) mikemol-pycheck --changed ROOT gives the gate's verdict on every modified or untracked Python file
+1006. **W824** (done) compound kata in mtools: rebuild the hooks venv, then run mikemol-pycheck --changed
+1007. **W825** (done) something calls mikemol-pycheck --refresh-ledger so the closure advisory has a ledger to read
+1008. **W826** (done) mikemol-hooks-preflight also runs the hermetic //hooks:suite, which caught a runfiles-resolve
    refusal local pytest passed
-1008. **W827** (done) mikemol-buildlog reads an invocation's build log back out of BuildBuddy by id, up to the point of
+1009. **W827** (done) mikemol-buildlog reads an invocation's build log back out of BuildBuddy by id, up to the point of
    failure
-1009. **W828** (done) the preflight covers every distribution a change touches, not only //hooks (the buildtel mutation
+1010. **W828** (done) the preflight covers every distribution a change touches, not only //hooks (the buildtel mutation
    grid refused W827 and the hooks-only preflight could not have caught it)
-1010. **W829** (done) mikemol-hook-build-failure: PostToolUseFailure puts a failed build's cause (from BuildBuddy by
+1011. **W829** (done) mikemol-hook-build-failure: PostToolUseFailure puts a failed build's cause (from BuildBuddy by
    invocation id) into context on exit 2
-1011. **W830** (done) the failure hook also appends the pulled evidence to the repo's gate-failed card
-1012. **W832** (done) the commit kata ends with one verdict line: COMMITTED `<sha>`, REFUSED `<cause>`, or NOT
+1012. **W830** (done) the failure hook also appends the pulled evidence to the repo's gate-failed card
+1013. **W832** (done) the commit kata ends with one verdict line: COMMITTED `<sha>`, REFUSED `<cause>`, or NOT
    COMMITTED, verified against HEAD, never the last gate stage
-1013. **W834** (done) the warrant-sections-versus-rubric-sections agreement is a test under //`<dist>`:all, so the
+1014. **W834** (done) the warrant-sections-versus-rubric-sections agreement is a test under //`<dist>`:all, so the
    preflight catches a lost tab in a minute and not at commit
-1014. **W835** (done) mikemol-gen-warrants adds the missing rubric row itself, so no one edits the rubric by hand
-1015. **W836** (done) bazel admits or waits on host resources itself: a tools/bazel wrapper waits on zram headroom and
+1015. **W835** (done) mikemol-gen-warrants adds the missing rubric row itself, so no one edits the rubric by hand
+1016. **W836** (done) bazel admits or waits on host resources itself: a tools/bazel wrapper waits on zram headroom and
    takes a membudget lease before every heavy command
-1016. **W837** (done) zram headroom becomes a membudget admission condition, so waiting on it is membudget's wait, not a
+1017. **W837** (done) zram headroom becomes a membudget admission condition, so waiting on it is membudget's wait, not a
    poll loop in bazel_admit
-1017. **W838** (done) dist_checks' :venv check has a generous timeout, not the 60 s a small test gets
-1018. **W839** (done) the warrant check is set equality (A symmetric-difference B = empty), not a comparison of counts
-1019. **W840** (done) mikemol-gen-warrants --dry-run lists the warrants --prune would drop, and checks them against the
+1018. **W838** (done) dist_checks' :venv check has a generous timeout, not the 60 s a small test gets
+1019. **W839** (done) the warrant check is set equality (A symmetric-difference B = empty), not a comparison of counts
+1020. **W840** (done) mikemol-gen-warrants --dry-run lists the warrants --prune would drop, and checks them against the
    pairing check's orphan set (A symmetric-difference B = empty)
-1020. **W842** (done) pycodemod rewrites imports: atomize-imports turns a flat sibling import into a package import, and
+1021. **W842** (done) pycodemod rewrites imports: atomize-imports turns a flat sibling import into a package import, and
    verifies none remains
-1021. **W844** (done) mikemol-commit prints no verdict when git commit times out: it crashes with
+1022. **W844** (done) mikemol-commit prints no verdict when git commit times out: it crashes with
    subprocess.TimeoutExpired after 3000 s, so the caller reads a traceback instead of NOT COMMITTED repo: timed out
-1022. **W845** (done) A repo's gate reads an immutable snapshot of what it gates, never the live working tree: a tree
+1023. **W845** (done) A repo's gate reads an immutable snapshot of what it gates, never the live working tree: a tree
    object from a temporary index (git write-tree), materialized by git archive and gated there, so an edit mid-run
    cannot invalidate or poison a run
-1023. **W846** (done) atomize-imports hoists function-level and re-export imports to module level; put them at the top
+1024. **W846** (done) atomize-imports hoists function-level and re-export imports to module level; put them at the top
    of the function that reads them
-1024. **W847** (done) mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check
+1025. **W847** (done) mikemol-paths-forward has no verb to record a skipped symbol: a numbering gap fails --check
    forever (gcalculus W30)
-1025. **W848** (done) The paths-forward writer admits each waypoint transition through a Rego realizability policy: a
+1026. **W848** (done) The paths-forward writer admits each waypoint transition through a Rego realizability policy: a
    coordinate and residue ledger, never a bare reject
-1026. **W849** (done) W848 unit: the model carries optional reference_arm, population and command, validated on --update
-1027. **W850** (done) W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa
+1027. **W849** (done) W848 unit: the model carries optional reference_arm, population and command, validated on --update
+1028. **W850** (done) W848 unit: a Rego policy over the input envelope emits level, reference_arm and residue, with opa
    tests per gate
-1028. **W851** (done) W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing
+1029. **W851** (done) W848 unit: the writer evaluates the policy on --add, --update and --drop behind a flag, refusing
    only a drop missing gate, arm or reason
-1029. **W852** (done) W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable
+1030. **W852** (done) W848 unit: each admitted transition appends its verdict, as_of and input digest to a readable
    marks ledger beside the queue
-1030. **W853** (done) W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once
+1031. **W853** (done) W848 unit: a residue entry's closes_by mints one claimable waypoint caused_by its waypoint, once
    per waypoint and gate
-1031. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
+1032. **W854** (done) W848 unit: --certify takes --facts FILE, a JSON object of named facts each bearing on named
    waypoints and a gate
-1032. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a
+1033. **W855** (done) mikemol-commit refuses every commit that deletes a tracked file: commit_kata.prepare drops a
    staged deletion from the pathspec
-1033. **W856** (done) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
+1034. **W856** (done) Remove the redundant grep|cut section check from .githooks/pre-commit now that the pairing check
    reads sections
-1034. **W862** (done) The queue's standing 'warrants' line is stale and no verb edits the standing list
-1035. **W867** (done) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
+1035. **W862** (done) The queue's standing 'warrants' line is stale and no verb edits the standing list
+1036. **W867** (done) Ten repos the pycheck census cannot judge (asn1, cstz, lg_kernel, earley, restsync, cvm2, memmesh,
    ologpad, amr-skills, linux-sources) have no governing project bar: ask each owner whether they want one, or record
    them as outside the fleet standard
    - next: none
-1036. **W868** (done) pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent
+1037. **W868** (done) pycheck runs mypy on one temp file, so a file with a relative import cannot be judged (No parent
    module); make the run package-aware
    - next: none; a new-file relative import remains unjudged (stage beside the siblings, option A, is the follow-up if
      it matters).
-1037. **W871** (done) Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger
+1038. **W871** (done) Operator: apply or delegate the host katas.py shrink, and choose the typing measurement and ledger
    location
    - next: none
-1038. **W880** (done) pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase
+1039. **W880** (done) pathsforward --update: an additive --add-enables, so extending a waypoint's edges cannot erase
    them
-1039. **W881** (done) Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for
+1040. **W881** (done) Wire the inbound-asks hook at user level: an MTOOLS_ROOT launcher and a drafted settings patch for
    the operator to apply
-1040. **W884** (done) mikemol-commit holds a blocking per-repo mutex (fence.admit lease, total 1) across stage, gate and
+1041. **W884** (done) mikemol-commit holds a blocking per-repo mutex (fence.admit lease, total 1) across stage, gate and
    commit
-1041. **W885** (done) A blocked claim names its holder: fence.admit's wait announcement says who holds the claim and
+1042. **W885** (done) A blocked claim names its holder: fence.admit's wait announcement says who holds the claim and
    since when
-1042. **W886** (done) mikemol-commit runs under a per-repo membudget hold on claim:path:`<repo>`/.git/mtools/commit, so
+1043. **W886** (done) mikemol-commit runs under a per-repo membudget hold on claim:path:`<repo>`/.git/mtools/commit, so
    two committers serialise instead of colliding on index.lock
-1043. **W888** (done) Remove the sixteen tracked .draft scratch copies that 36b8621 committed beside their live files
-1044. **W889** (done) A session working a card holds a fence claim on its touches tags, so an overlapping session sees
+1044. **W888** (done) Remove the sixteen tracked .draft scratch copies that 36b8621 committed beside their live files
+1045. **W889** (done) A session working a card holds a fence claim on its touches tags, so an overlapping session sees
    the holder and the files instead of deferring by judgment
-1045. **W891** (done) mikemol-commit: judge the commit's own paths in a private index or snapshot, so the gate neither
+1046. **W891** (done) mikemol-commit: judge the commit's own paths in a private index or snapshot, so the gate neither
    holds .git/index.lock for its whole run nor refuses on another session's unstaged files
-1046. **W894** (done) htmlstruct: a structure tool for html and mhtml files, routed from the structural-query hook
-1047. **W910** (done) mikemol-commit's repo claim is keyed on the launcher's checkout, so one repo's gate holds every
+1047. **W894** (done) htmlstruct: a structure tool for html and mhtml files, routed from the structural-query hook
+1048. **W910** (done) mikemol-commit's repo claim is keyed on the launcher's checkout, so one repo's gate holds every
    repo's commits
-1048. **W924** (done) mikemol-commit's last line says whether the sha is published, not only that it committed
-1049. **W925** (done) gen-warrants --prune also drops a rubric row whose section has no warrant left
-1050. **W926** (done) No hook script pipes into a quiet grep under pipefail, and a test keeps it so
-1051. **W927** (done) mikemol-hooks-probe resolves a relative launcher against the project
-1052. **W928** (done) mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes
+1049. **W924** (done) mikemol-commit's last line says whether the sha is published, not only that it committed
+1050. **W925** (done) gen-warrants --prune also drops a rubric row whose section has no warrant left
+1051. **W926** (done) No hook script pipes into a quiet grep under pipefail, and a test keeps it so
+1052. **W927** (done) mikemol-hooks-probe resolves a relative launcher against the project
+1053. **W928** (done) mikemol-commit waits on its git child and releases the claim on any exit, even when output pipes
    are held by orphans
-1053. **W934** (done) pathsforward test_inbound timed out at 60s inside the full pre-commit gate (passes alone): find
+1054. **W934** (done) pathsforward test_inbound timed out at 60s inside the full pre-commit gate (passes alone): find
    what it waits on and make its cost load-independent
-1054. **W935** (done) pathsforward: a check that no single test's own duration approaches its bazel timeout (pytest
+1055. **W935** (done) pathsforward: a check that no single test's own duration approaches its bazel timeout (pytest
    --durations in the suite), so a slow sweep is found before the full gate times it out
-1055. **W937** (done) shellcheck hook: judge only the findings an edit ADDS, so an edit to a shell file carrying an old
+1056. **W937** (done) shellcheck hook: judge only the findings an edit ADDS, so an edit to a shell file carrying an old
    finding is not refused
-1056. **W938** (done) pycheck edit gate: stage the temporary copy beside the real file, so a relative import in a
+1057. **W938** (done) pycheck edit gate: stage the temporary copy beside the real file, so a relative import in a
    package __init__.py type-checks
-1057. **W946** (done) mikemol-commit honours MIKEMOL_COMMIT_TIMEOUT_S
-1058. **W947** (done) paths-forward bulk block: --block-matching blocks every open card with a given touches tag on one
+1058. **W946** (done) mikemol-commit honours MIKEMOL_COMMIT_TIMEOUT_S
+1059. **W947** (done) paths-forward bulk block: --block-matching blocks every open card with a given touches tag on one
    card, dry-run first
-1059. **W948** (done) snapshot materialize repairs a snapshot that lost tracked files: verify the tree, not only the
+1060. **W948** (done) snapshot materialize repairs a snapshot that lost tracked files: verify the tree, not only the
    stamp
-1060. **W955** (done) paths-forward writer preserves the owner group and mode of every file it replaces, whoever runs it
-1061. **W956** (done) mikemol-repin: survey every repo's pinned mikemol dist against a sha (dry run), then write one sha
+1061. **W955** (done) paths-forward writer preserves the owner group and mode of every file it replaces, whoever runs it
+1062. **W956** (done) mikemol-repin: survey every repo's pinned mikemol dist against a sha (dry run), then write one sha
    to every spec and run uv sync
-1062. **W962** (done) repin scans a repo it is pointed at, and never reads through symlinks or bazel-* directories
-1063. **W967** (done) Measure where the mutants targets spend their time: seconds per module for pycodemod, hooks and
+1063. **W962** (done) repin scans a repo it is pointed at, and never reads through symlinks or bazel-* directories
+1064. **W967** (done) Measure where the mutants targets spend their time: seconds per module for pycodemod, hooks and
    pathsforward
-1064. **W968** (done) Shard a dist's mutants target by module so no one target is long enough to time out under load
-1065. **W969** (done) Apply the mutants sharding to hooks and pathsforward after pycodemod proves it
-1066. **W974** (done) paths-forward bulk update: --update takes a symbol list or --where unscored, so one pass scores or
+1065. **W968** (done) Shard a dist's mutants target by module so no one target is long enough to time out under load
+1066. **W969** (done) Apply the mutants sharding to hooks and pathsforward after pycodemod proves it
+1067. **W974** (done) paths-forward bulk update: --update takes a symbol list or --where unscored, so one pass scores or
    edits many cards
-1067. **W976** (done) pycodemod judged-fix: apply ruff fixes per file and keep a file only if it parses and mypy reports
+1068. **W976** (done) pycodemod judged-fix: apply ruff fixes per file and keep a file only if it parses and mypy reports
    fewer errors
-1068. **W977** (done) describe_rank scans the whole queue per row: the mirror render is quadratic like ordered() was
-1069. **W978** (done) judged-fix per-file selftest command as a second judge, so a fix that passes mypy but breaks the
+1069. **W977** (done) describe_rank scans the whole queue per row: the mirror render is quadratic like ordered() was
+1070. **W978** (done) judged-fix per-file selftest command as a second judge, so a fix that passes mypy but breaks the
    file's own selftest is refused
-1070. **W979** (done) repin survey publishes a pin census as metrics so fleet pin drift against the par sha is a series,
+1071. **W979** (done) repin survey publishes a pin census as metrics so fleet pin drift against the par sha is a series,
    not a one-off survey
-1071. **W980** (done) Reserve CPUs for a mutants target through bazel (tags cpu:K plus MUTATE_JOBS=K in the macro) and
+1072. **W980** (done) Reserve CPUs for a mutants target through bazel (tags cpu:K plus MUTATE_JOBS=K in the macro) and
    move every dist's mutants onto mutants_sharded
-1072. **W982** (done) mikemol-commit waits for the host load to fall below a limit before it starts a gate, so a gate
+1073. **W982** (done) mikemol-commit waits for the host load to fall below a limit before it starts a gate, so a gate
    does not time out its own targets on a saturated host
-1073. **W984** (done) Shard the mid-size mutation grids onto mutants_sharded with cpus: treeio (95), mdstruct (90),
+1074. **W984** (done) Shard the mid-size mutation grids onto mutants_sharded with cpus: treeio (95), mdstruct (90),
    importdag (76), pytestspec (59), transcriptstruct (55), mutation (54)
-1074. **W985** (done) Shard the small mutation grids onto mutants_sharded with cpus: ledger, memres, katas, buildtel,
+1075. **W985** (done) Shard the small mutation grids onto mutants_sharded with cpus: ledger, memres, katas, buildtel,
    ratchet, audiostruct, gmailstruct, debtplan, htmlstruct, gradekit, witness, gatecheck
-1075. **W987** (done) repin_metrics: a scan_time gauge (unix seconds of the census) so a dead census alerts off a
+1076. **W987** (done) repin_metrics: a scan_time gauge (unix seconds of the census) so a dead census alerts off a
    series, not the textfile mtime
-1076. **W988** (done) Lift luthen-observability's checks/revendor_mtools (plan, then --apply: re-vendor hooks and
+1077. **W988** (done) Lift luthen-observability's checks/revendor_mtools (plan, then --apply: re-vendor hooks and
    pathsforward wheels at one sha) into mikemol-repin, so vendored pins move by tool
-1077. **W992** (done) mikemol-wheel: build any mtools dist's wheel at a commit (archive, +g local version, uv build,
+1078. **W992** (done) mikemol-wheel: build any mtools dist's wheel at a commit (archive, +g local version, uv build,
    sha256), generalizing revendor.build
-1078. **W995** (done) paths-forward --add/--update: a repeated --touches (or --enables) flag keeps only the last value
+1079. **W995** (done) paths-forward --add/--update: a repeated --touches (or --enables) flag keeps only the last value
    without saying so; append, or refuse
-1079. **W1006** (done) mutation: declare pytestspec's opa module (the pinned evaluator and its failures)
-1080. **W1009** (done) mutation: declare buildtel's bb_log and buildpulse modules
-1081. **W1010** (done) mutation: declare audiostruct's stages module
-1082. **W1011** (done) mutation: declare gmailstruct's fetch and auth modules
-1083. **W1012** (done) mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist
+1080. **W1006** (done) mutation: declare pytestspec's opa module (the pinned evaluator and its failures)
+1081. **W1009** (done) mutation: declare buildtel's bb_log and buildpulse modules
+1082. **W1010** (done) mutation: declare audiostruct's stages module
+1083. **W1011** (done) mutation: declare gmailstruct's fetch and auth modules
+1084. **W1012** (done) mutation: declare pytestspec's plugin module (claims, data_paths, outcome classification, xdist
    merge)
-1084. **W1013** (done) mutation: declare pytestspec's spec module (judge, load_cases, disposition_of, expectation)
-1085. **W1014** (done) mutation: declare pytestspec plugin's SpecItem and SpecFile machinery (_skips, _cache_root,
+1085. **W1013** (done) mutation: declare pytestspec's spec module (judge, load_cases, disposition_of, expectation)
+1086. **W1014** (done) mutation: declare pytestspec plugin's SpecItem and SpecFile machinery (_skips, _cache_root,
    _not_ported, runtest), reached today only through pytester
-1086. **W1015** (done) mikemol-commit prints which path it took, isolated or plain, and why, so a hook that does not
+1087. **W1015** (done) mikemol-commit prints which path it took, isolated or plain, and why, so a hook that does not
    name MIKEMOL_REAL_ROOT is visible from its output
-1087. **W1016** (done) mikemol-commit finds the fence beside its own interpreter when MIKEMOL_FENCE_BIN is unset, so a
+1088. **W1016** (done) mikemol-commit finds the fence beside its own interpreter when MIKEMOL_FENCE_BIN is unset, so a
    repo with the hooks and fence wheels in one venv gets the commit lock without the launcher
-1088. **W1022** (done) fence_of also finds the fence venv that sits beside the hooks venv in a bazel-bin layout, so
+1089. **W1022** (done) fence_of also finds the fence venv that sits beside the hooks venv in a bazel-bin layout, so
    mikemol-commit run from mtools' own bazel build takes the commit lock
-1089. **W1031** (done) mikemol-repin --revendor also vendors the fence wheel when a repo vendors the hooks wheel, so the
+1090. **W1031** (done) mikemol-repin --revendor also vendors the fence wheel when a repo vendors the hooks wheel, so the
    commit lock works there with no path into another repo's build
-1090. **W1032** (done) A tool run from the bazel-bin hooks venv does not write bytecode into it: a stale .pyc rewritten
+1091. **W1032** (done) A tool run from the bazel-bin hooks venv does not write bytecode into it: a stale .pyc rewritten
    there by mikemol-commit (ours or a peer's) voids any bazel test reading that venv with 'modified during execution'
-1091. **W1035** (done) Send paperkit the letter asking its pre-commit to call the mtools memres budget and rail, and its
+1092. **W1035** (done) Send paperkit the letter asking its pre-commit to call the mtools memres budget and rail, and its
    sweep cells to hold fence leases
-1092. **W1037** (done) hooks:mutants is twelve shards, not three, so each fits its 300 s limit at host load 90 to 120
+1093. **W1037** (done) hooks:mutants is twelve shards, not three, so each fits its 300 s limit at host load 90 to 120
    (the operator's split-not-lengthen rule)
-1093. **W1038** (done) mikemol-commit's no-lock note says what to do (add the mikemol-fence dist to this repo's pins)
+1094. **W1038** (done) mikemol-commit's no-lock note says what to do (add the mikemol-fence dist to this repo's pins)
    instead of naming a bazel target that exists only in mtools
-1094. **W1039** (done) mikemol-commit adds a path the caller named exactly even when it is gitignored, so a re-vendor of
+1095. **W1039** (done) mikemol-commit adds a path the caller named exactly even when it is gitignored, so a re-vendor of
    wheels under an ignore-everything vendor directory is not refused
-1095. **W1042** (done) mikemol-wheel builds into its own temp directory and copies the wheels out, so uv build's
+1096. **W1042** (done) mikemol-wheel builds into its own temp directory and copies the wheels out, so uv build's
    .gitignore of * is never left in the caller's vendor/wheels
-1096. **W1051** (done) mikemol-cpu-census in memres: cores used per cgroup over a window, so what is using the host is
+1097. **W1051** (done) mikemol-cpu-census in memres: cores used per cgroup over a window, so what is using the host is
    one command
-1097. **W1078** (done) mikemol-paths-forward --tick-open HOLDER: take the lock as HOLDER, then bump-blocked, inbound and
+1098. **W1078** (done) mikemol-paths-forward --tick-open HOLDER: take the lock as HOLDER, then bump-blocked, inbound and
    check; prints the matching close
-1098. **W1079** (done) mikemol-paths-forward --tick-close W: ledger, render, commit the state files through
+1099. **W1079** (done) mikemol-paths-forward --tick-close W: ledger, render, commit the state files through
    mikemol-commit, close only on COMMITTED, release the held lock
-1099. **W1082** (done) mikemol-commit prints PUSHED only after git ls-remote shows the remote main at or above the
+1100. **W1082** (done) mikemol-commit prints PUSHED only after git ls-remote shows the remote main at or above the
    commit, else REMOTE-MISMATCH with the remote sha
-1100. **W1085** (done) pycheck --clear PATH: format, safe lint fix, then the full check, in one command
-1101. **W1087** (done) mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only
+1101. **W1085** (done) pycheck --clear PATH: format, safe lint fix, then the full check, in one command
+1102. **W1087** (done) mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only
    if clean
-1102. **W1092** (done) mikemol-commit intent-adds each NEW path it is named before the gate, and refuses a new file that
+1103. **W1092** (done) mikemol-commit intent-adds each NEW path it is named before the gate, and refuses a new file that
    is not named
-1103. **W1097** (done) mikemol-commit takes the repo-mutation lease for the whole commit, reset and push, and prints the
+1104. **W1097** (done) mikemol-commit takes the repo-mutation lease for the whole commit, reset and push, and prints the
    repair when it cannot proceed
-1104. **W1098** (done) katas flush skips repos with a live session and takes the repo-mutation lease for the others
-1105. **W1099** (done) Point the host katas.py flush at the ported mikemol.katas flush so no second implementation of
+1105. **W1098** (done) katas flush skips repos with a live session and takes the repo-mutation lease for the others
+1106. **W1099** (done) Point the host katas.py flush at the ported mikemol.katas flush so no second implementation of
    the queue sync remains
-1106. **W1101** (done) Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the
+1107. **W1101** (done) Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the
    W1087 commit, attempt 15)
-1107. **W1110** (done) mikemol-pycheck --clear-ledger ROOT: --clear over every file in the root's debt ledger, one
+1108. **W1110** (done) mikemol-pycheck --clear-ledger ROOT: --clear over every file in the root's debt ledger, one
    summary, the strictest status
-1108. **W1120** (done) mikemol-repin --revendor takes --no-sync, as the plain --write mode does, so it never runs uv
+1109. **W1120** (done) mikemol-repin --revendor takes --no-sync, as the plain --write mode does, so it never runs uv
    sync --frozen in a checkout with undeclared packages
-1109. **W1121** (done) The --revendor plan's last line says uv sync --frozen REMOVES packages not in uv.lock
-1110. **W1123** (done) Shard test_commit_isolated again: its staged-index cases move to test_commit_isolated_staged
+1110. **W1121** (done) The --revendor plan's last line says uv sync --frozen REMOVES packages not in uv.lock
+1111. **W1123** (done) Shard test_commit_isolated again: its staged-index cases move to test_commit_isolated_staged
    after a 61 s timeout under load
 
 ## residue

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1129,
+  "counter": 1130,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-11T01:01:56Z",
   "job_id": "3e42fddc",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 172,
+      "ticks_blocked": 173,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 171,
+      "ticks_blocked": 172,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 176,
+      "ticks_blocked": 177,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 110,
+      "ticks_blocked": 111,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 75,
+      "ticks_blocked": 76,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 75,
+      "ticks_blocked": 76,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 75,
+      "ticks_blocked": 76,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 75,
+      "ticks_blocked": 76,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 75,
+      "ticks_blocked": 76,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 76,
+      "ticks_blocked": 77,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 74,
+      "ticks_blocked": 75,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 73,
+      "ticks_blocked": 74,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -22058,7 +22058,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 19,
       "completed": null
     },
     {
@@ -22388,7 +22388,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 17,
+      "ticks_blocked": 18,
       "completed": null
     },
     {
@@ -22410,7 +22410,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 17,
+      "ticks_blocked": 18,
       "completed": null
     },
     {
@@ -22944,7 +22944,7 @@
     {
       "symbol": "W1125",
       "title": "katas waiter streams the child's output into its log as it runs, so progress is observable, and still ends the log with rc=N",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1114",
         "W1126"
@@ -22952,32 +22952,34 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Rewrite waiter.run to Popen the child with stdout/stderr into the log file as it runs, then append the blank line and rc=N; keep commit_state reading the last rc line",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T17:41:27Z",
       "minted_during": "tick",
       "caused_by": "W1114",
-      "last_worked": "2026-10-13T17:56:53Z",
+      "last_worked": "2026-10-13T19:08:31Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T190831Z"
     },
     {
       "symbol": "W1126",
-      "title": "katas waiter declares a child hung only when its log has stopped growing and its tree's CPU has stopped advancing, then ends it; no wall-clock timeout",
-      "status": "ready",
+      "title": "katas hangwatch: a pure decision that a child is hung only after K polls in which neither its log size nor its tree CPU changed",
+      "status": "working",
       "enables": [
-        "W1114"
+        "W1114",
+        "W1130"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "waiter polls the child's log size and its tree CPU (proctree.cpu_seconds); a hang is both unchanged for K consecutive polls; then end the child's group and record rc 125. Pure decision function first (injected readings), loop second.",
       "evidence": "",
       "issued_at": "2026-10-13T17:41:28Z",
       "minted_during": "tick",
       "caused_by": "W1114",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T19:08:32Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1127",
@@ -23027,6 +23029,24 @@
       "issued_at": "2026-10-13T18:03:52Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W943",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1130",
+      "title": "katas waiter polls its child with hangwatch and proctree and ends a hung child's group with status 125, in place of the wall-clock --timeout",
+      "status": "ready",
+      "enables": [
+        "W1114"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-13T19:09:43Z",
+      "minted_during": "tick",
+      "caused_by": "W1114",
       "last_worked": null,
       "ticks_blocked": 0
     }

@@ -834,3 +834,46 @@
   claim  = {The grandchild a timed-out child started is gone afterwards: its group was ended.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_waiter_stream.py -k test_a_timeout_ends_the_childs_whole_tree_not_just_the_child},
 }
+
+@misc{katas-hangwatch-child-that-advances-its-cpu-every-poll-is-never-hung,
+  section = {hangwatch},
+  title  = {The control: one hundred polls, each with a little more CPU, and still not hung},
+  claim  = {The control: one hundred polls, each with a little more CPU, and still not hung.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_a_child_that_advances_its_cpu_every_poll_is_never_hung},
+}
+
+@misc{katas-hangwatch-child-with-nothing-new-for-the-patience-is-hung-and-one-poll-earlier-is-not,
+  section = {hangwatch},
+  title  = {The first reading is remembered; K further identical polls make it hung, K-1 do not},
+  claim  = {The first reading is remembered; K further identical polls make it hung, K-1 do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_a_child_with_nothing_new_for_the_patience_is_hung_and_one_poll_earlier_is_not},
+}
+
+@misc{katas-hangwatch-any-progress-resets-the-count,
+  section = {hangwatch},
+  title  = {Log growth alone resets it, and CPU alone resets it},
+  claim  = {Log growth alone resets it, and CPU alone resets it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_any_progress_resets_the_count},
+}
+
+@misc{katas-hangwatch-fall-in-the-trees-cpu-is-progress-because-a-descendant-ended,
+  section = {hangwatch},
+  title  = {The sum falls when a process ends; that is activity, not stillness},
+  claim  = {The sum falls when a process ends; that is activity, not stillness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_a_fall_in_the_trees_cpu_is_progress_because_a_descendant_ended},
+}
+
+@misc{katas-hangwatch-gone-tree-is-never-hung,
+  section = {hangwatch},
+  title  = {Cpu None means the child ended; the waiter's own poll says so, this does not call it hung},
+  claim  = {Cpu None means the child ended; the waiter's own poll says so, this does not call it
+            hung.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_a_gone_tree_is_never_hung},
+}
+
+@misc{katas-hangwatch-default-patience-is-many-polls-not-a-few,
+  section = {hangwatch},
+  title  = {A guard on the constant: a handful of silent polls is a pause, not a hang},
+  claim  = {A guard on the constant: a handful of silent polls is a pause, not a hang.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hangwatch.py -k test_the_default_patience_is_many_polls_not_a_few},
+}

@@ -129,3 +129,9 @@ src/mikemol/katas/waiter.py|stderr-dropped|stderr=subprocess\.STDOUT|stderr=subp
 src/mikemol/katas/waiter.py|child-shares-the-waiters-group|start_new_session=True|start_new_session=False|def=_stream
 src/mikemol/katas/waiter.py|unstartable-child-reads-ok|return NOT_STARTED|return 0|def=_stream
 src/mikemol/katas/waiter.py|timeout-leaves-the-tree|os\.killpg\(child\.pid, signal\.SIGKILL\)|pass|def=_end
+
+# W1126: a child is hung only after K polls with neither log nor tree CPU changing; any change, a fall included, resets.
+src/mikemol/katas/hangwatch.py|gone-tree-counts-as-still|seen\.cpu is None or |False or |def=step
+src/mikemol/katas/hangwatch.py|progress-never-resets|seen != state\.last|False|def=step
+src/mikemol/katas/hangwatch.py|count-never-advances|state\.still \+ 1|state.still|def=step
+src/mikemol/katas/hangwatch.py|hung-one-poll-early|state\.still >= patience|state.still >= patience - 1|def=hung
