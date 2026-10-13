@@ -82,3 +82,4 @@ index_refresh	An isolated commit leaves the real index at HEAD for the paths it 
 commit_isolated_hooks	Isolated commit finds a host tool only the real root has, and the repository's hook decides whether isolation is on
 commit_isolated_routing	Isolated commit routing: a path nowhere is not a commit, the reason names what decided, the lock state and the routing line
 commit_isolated_ignored	Isolated commit and ignored files: a file named exactly is taken, a directory's ignored files are not, only regular files are forced
+commit_unpushed	A commit whose push did not complete prints the exact push to run before its verdict, and a pushed commit prints none

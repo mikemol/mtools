@@ -63,6 +63,7 @@ TRAILER_ENV = "COMMIT_TRAILER"
 DEFAULT_TRAILER = "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 COMMIT_TIMEOUT_S = 10800  # a cold-cache paperkit gate outlasted 3000 s twice (2026-10-07)
 SHORT = 7
+LOCAL_MARK = "[LOCAL:"  # what a COMMITTED line carries when the push did not complete (W1097)
 EXIT_NOT_COMMITTED = 1
 TIMED_OUT = 124
 EXIT_USAGE = 2
@@ -406,7 +407,10 @@ def commit(
     span = f"{before}..{after}" if before else after
     mine = made_by(root, request, span, run) if moved else True
     if mine:
-        out.write(f"{verdict(root, before, after, done.returncode, run)}\n")
+        line = verdict(root, before, after, done.returncode, run)
+        if LOCAL_MARK in line:
+            out.write(f"push not completed: run  git -C {root} push origin HEAD:main\n")
+        out.write(f"{line}\n")
     else:
         out.write(f"{raced(root, before, after, run)}\n")
     if moved:

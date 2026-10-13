@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 162,
+      "ticks_blocked": 163,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 166,
+      "ticks_blocked": 167,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 100,
+      "ticks_blocked": 101,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 67,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -22058,7 +22058,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -22100,7 +22100,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:52Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -22122,7 +22122,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 9,
       "completed": null
     },
     {
@@ -22390,7 +22390,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22412,7 +22412,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22439,7 +22439,7 @@
     {
       "symbol": "W1097",
       "title": "mikemol-commit takes the repo-mutation lease for the whole commit, reset and push, and prints the repair when it cannot proceed",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "commit",
@@ -22452,8 +22452,9 @@
       "issued_at": "2026-10-13T02:40:20Z",
       "minted_during": "interrupt",
       "caused_by": "W1068",
-      "last_worked": "2026-10-13T02:42:20Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T08:49:42Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1098",
@@ -22474,7 +22475,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T07:19:01Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -22496,7 +22497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T02:51:25Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22524,19 +22525,19 @@
     {
       "symbol": "W1101",
       "title": "Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the W1087 commit, attempt 15)",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Split test_commit_isolated.py by theme into modules each well under the timeout; no longer timeout",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T06:26:16Z",
       "minted_during": "interrupt",
       "caused_by": "W1087",
-      "last_worked": "2026-10-13T08:39:02Z",
+      "last_worked": "2026-10-13T08:48:50Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T084850Z"
     },
     {
       "symbol": "W1102",
@@ -22649,21 +22650,21 @@
     {
       "symbol": "W1108",
       "title": "mikemol-commit leaves the real index matching the new HEAD for the paths it committed (nemik measured it stale after a clean isolated commit), printing what it refreshed, with a test where another path stays staged",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1107"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Reproduce on a throwaway repo: index vs HEAD after an isolated commit, with another path staged; then refresh the committed paths in the real index",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T07:28:01Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W428",
-      "last_worked": "2026-10-13T08:39:02Z",
+      "last_worked": "2026-10-13T08:48:50Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T084850Z"
     }
   ],
   "residue": [

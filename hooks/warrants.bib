@@ -8682,3 +8682,17 @@
   claim  = {A directory and a missing path go to the plain add; no link is created to test the rest.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_ignored.py -k test_only_a_regular_file_is_forced},
 }
+
+@misc{hooks-commit-unpushed-unpushed-commit-prints-the-repair-before-the-verdict,
+  section = {commit_unpushed},
+  title  = {No hook pushes: the line before the verdict is the exact push to run},
+  claim  = {No hook pushes: the line before the verdict is the exact push to run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_unpushed.py -k test_an_unpushed_commit_prints_the_repair_before_the_verdict},
+}
+
+@misc{hooks-commit-unpushed-commit-whose-hook-pushes-is-published-and-prints-no-repair,
+  section = {commit_unpushed},
+  title  = {The positive control: PUSHED, and no line asks for a push},
+  claim  = {The positive control: PUSHED, and no line asks for a push.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_unpushed.py -k test_a_commit_whose_hook_pushes_is_published_and_prints_no_repair},
+}

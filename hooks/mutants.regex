@@ -179,3 +179,7 @@ src/mikemol/hooks/commit_kata.py|any-moved-head-is-ours|return False|return True
 src/mikemol/hooks/isolated.py|stale-index-reported-fine|if _failed\(done\) or _failed\(left\) or stale:|if False:|def=refresh_index
 src/mikemol/hooks/isolated.py|reset-not-retried|range\(REFRESH_ATTEMPTS - 1\)|range(0)|def=refresh_index
 src/mikemol/hooks/isolated.py|refresh-not-run|note = refresh_index\(root, paths, run\)|note = ""|def=commit_isolated
+
+# W1097: a commit whose push did not complete prints the repair, and only then.
+src/mikemol/hooks/commit_kata.py|unpushed-repair-never-printed|if LOCAL_MARK in line:|if False:|def=commit
+src/mikemol/hooks/commit_kata.py|repair-printed-always|if LOCAL_MARK in line:|if True:|def=commit
