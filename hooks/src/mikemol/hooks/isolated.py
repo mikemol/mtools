@@ -24,6 +24,7 @@ CONSUMED BY: `commit_kata.isolated_commit`, the `mikemol-commit` mode `MIKEMOL_C
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Protocol
@@ -41,6 +42,13 @@ class Done(Protocol):
 
 EnvRunner = Callable[[Sequence[str], Mapping[str, str], Path], Done]
 """Run one git command: its arguments, the environment to add, and the directory to run in."""
+
+
+REFRESH_ATTEMPTS = 4
+"""How many times the real index's reset is tried before the verdict says it was not refreshed."""
+
+REFRESH_PAUSE_S = 2.0
+"""The wait between attempts: long enough for a peer's momentary index lock to clear."""
 
 
 def _failed(done: Done) -> bool:
@@ -75,6 +83,38 @@ def add_argv_list(root: Path, paths: Sequence[str]) -> list[list[str]]:
     if rest:
         plan.append(["add", "-A", "--", *rest])
     return plan
+
+
+def refresh_index(root: Path, paths: Sequence[str], run: EnvRunner) -> str:
+    """Bring the real index to HEAD for the committed `paths`, and say whether it worked (W1108).
+
+    ⚑ A FAILED REFRESH WAS SILENT. The `reset` takes the index lock for a moment, and a peer's raw
+    commit or `git add` holding it made the reset fail with nothing said: the real index stayed at
+    the old HEAD, the committed paths read as staged reversals, and a plain `git commit` after it
+    would have committed them (nemik:W428 measured a stale index; a host flush staged deletions of
+    tracked files). So it retries, then CHECKS that no committed path differs from HEAD in the
+    index, and the verdict says which. Only the committed paths are touched; other staged work is
+    left as it was.
+
+    Returns:
+        one line: what was refreshed, or that it was not and the command to run.
+
+    """
+    done = run(["reset", "-q", "--", *paths], {}, root)
+    for _attempt in range(REFRESH_ATTEMPTS - 1):
+        if not _failed(done):
+            break
+        time.sleep(REFRESH_PAUSE_S)
+        done = run(["reset", "-q", "--", *paths], {}, root)
+    left = run(["diff", "--cached", "--name-only", "--", *paths], {}, root)
+    stale = left.stdout.split()
+    if _failed(done) or _failed(left) or stale:
+        why = done.stderr.strip() or left.stderr.strip() or "paths still differ from HEAD"
+        return (
+            f"real index NOT refreshed for {', '.join(stale) or 'the committed paths'} ({why}); "
+            f"run: git reset -q -- {' '.join(paths)}"
+        )
+    return f"real index refreshed to HEAD for {len(paths)} committed path(s)"
 
 
 def commit_isolated(
@@ -117,5 +157,6 @@ def commit_isolated(
             return refreshed
         done = run(["commit", "-m", message], work, snap.path)
     if not _failed(done):
-        run(["reset", "-q", "--", *paths], {}, root)
+        note = refresh_index(root, paths, run)
+        done.stdout = f"{done.stdout}{note}\n"
     return done

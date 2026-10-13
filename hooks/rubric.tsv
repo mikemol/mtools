@@ -78,3 +78,7 @@ work_claims	A session claiming the touches of its working card
 work_claims_hook	The work-claims context hook
 pycheck-install	install a draft only if the edit gate admits it
 commit_raced	A moved HEAD is COMMITTED only when this run's own commit is in the range; a sweep's commit landing during the gate is RACED
+index_refresh	An isolated commit leaves the real index at HEAD for the paths it committed, retries a refused reset, and says when it could not
+commit_isolated_hooks	Isolated commit finds a host tool only the real root has, and the repository's hook decides whether isolation is on
+commit_isolated_routing	Isolated commit routing: a path nowhere is not a commit, the reason names what decided, the lock state and the routing line
+commit_isolated_ignored	Isolated commit and ignored files: a file named exactly is taken, a directory's ignored files are not, only regular files are forced

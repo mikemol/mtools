@@ -174,3 +174,8 @@ src/mikemol/hooks/commit_kata.py|subject-alone-identifies|\[request\.subject\] a
 src/mikemol/hooks/commit_kata.py|waypoint-alone-identifies|lines\[:1\] == \[request\.subject\] and |True and |def=made_by
 src/mikemol/hooks/commit_kata.py|own-commit-never-found|return True|return False|def=made_by
 src/mikemol/hooks/commit_kata.py|any-moved-head-is-ours|return False|return True|def=made_by
+
+# W1108 (nemik:W428): the real index is refreshed for the committed paths, retried, and checked.
+src/mikemol/hooks/isolated.py|stale-index-reported-fine|if _failed\(done\) or _failed\(left\) or stale:|if False:|def=refresh_index
+src/mikemol/hooks/isolated.py|reset-not-retried|range\(REFRESH_ATTEMPTS - 1\)|range(0)|def=refresh_index
+src/mikemol/hooks/isolated.py|refresh-not-run|note = refresh_index\(root, paths, run\)|note = ""|def=commit_isolated

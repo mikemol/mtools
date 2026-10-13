@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 160,
+      "ticks_blocked": 161,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 165,
+      "ticks_blocked": 166,
       "completed": null
     },
     {
@@ -11800,7 +11800,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 99,
+      "ticks_blocked": 100,
       "completed": null
     },
     {
@@ -16152,7 +16152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16688,7 +16688,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17491,7 +17491,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -17532,7 +17532,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -17555,7 +17555,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 65,
       "completed": null
     },
     {
@@ -17978,7 +17978,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -18152,7 +18152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -18931,7 +18931,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -21362,7 +21362,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -21497,7 +21497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 22,
+      "ticks_blocked": 23,
       "completed": null
     },
     {
@@ -21952,7 +21952,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:21Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -21975,7 +21975,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -21996,7 +21996,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22036,7 +22036,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:04Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22058,7 +22058,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:23:06Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22100,7 +22100,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:52Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22122,7 +22122,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -22240,21 +22240,21 @@
     {
       "symbol": "W1087",
       "title": "mikemol-pycheck --install SRC DEST: format, run the edit gate on the content, and write DEST only if clean",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pycheck"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Re-attempt the commit (one attempt) once W1101 shards test_commit_isolated; hooks mutants grid not yet run",
+      "next_bounded_step": null,
       "evidence": "2026-10-13: 2026-10-13 seed: nemik's tools/pyfmt.sh SCRATCH DEST (20 lines of POSIX sh: ruff format --stdin-filename DEST < draft > DEST.new then mv, ruff check, mypy; repo .venv python). Gaps the mode must close: (1) it writes DEST before checking, so a dirty draft leaves a dirty file: --install refuses and leaves DEST untouched; (2) mypy needs a built venv for a brand-new module; (3) it cannot place non-.py files. This is also a rail: the hand cp skips the edit gate. Used by paperkit, mtools (my scratch-lint-then-cp routine, ~10 times today), nemik, gcalculus.",
       "issued_at": "2026-10-13T01:42:33Z",
       "minted_during": "tick",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-13T06:29:44Z",
+      "last_worked": "2026-10-13T07:53:44Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T075344Z"
     },
     {
       "symbol": "W1088",
@@ -22390,7 +22390,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22412,7 +22412,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22474,7 +22474,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T07:19:01Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -22496,7 +22496,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T02:51:25Z",
-      "ticks_blocked": 5,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -22524,18 +22524,19 @@
     {
       "symbol": "W1101",
       "title": "Shard hooks:test_commit_isolated into shorter targets (60 s timeout under host load refused the W1087 commit, attempt 15)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "Split test_commit_isolated.py by theme into modules each well under the timeout; no longer timeout",
       "evidence": "",
       "issued_at": "2026-10-13T06:26:16Z",
       "minted_during": "interrupt",
       "caused_by": "W1087",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T08:39:02Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1102",
@@ -22629,21 +22630,21 @@
     {
       "symbol": "W1107",
       "title": "mikemol-commit prints COMMITTED only when the commit it made is in HEAD's ancestry, else RACED with HEAD's sha and subject (non-zero), with a test where a second committer lands during the gate",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1082"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read commit_kata verdict path: compare the sha mikemol-commit created against HEAD ancestry; RACED branch; test with a second committer",
+      "next_bounded_step": null,
       "evidence": "",
       "issued_at": "2026-10-13T07:15:15Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W428",
-      "last_worked": "2026-10-13T07:15:25Z",
+      "last_worked": "2026-10-13T07:53:44Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261013T075344Z"
     },
     {
       "symbol": "W1108",
@@ -22655,13 +22656,14 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "Reproduce on a throwaway repo: index vs HEAD after an isolated commit, with another path staged; then refresh the committed paths in the real index",
       "evidence": "",
       "issued_at": "2026-10-13T07:28:01Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W428",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-13T08:39:02Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

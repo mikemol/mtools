@@ -7556,13 +7556,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_new_file_is_taken_though_git_does_not_track_it_yet},
 }
 
-@misc{hooks-commit-isolated-path-that-is-neither-on-disk-nor-tracked-is-not-a-commit,
-  section = {commit_isolated},
-  title  = {Nothing to take reads NOT COMMITTED and HEAD does not move},
-  claim  = {Nothing to take reads NOT COMMITTED and HEAD does not move.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit},
-}
-
 @misc{hooks-commit-isolated-peers-staged-file-at-another-path-stays-staged,
   section = {commit_isolated},
   title  = {The peer's `git add b.txt` survives our commit of a.txt: staged, uncommitted, intact},
@@ -7658,42 +7651,6 @@
             `.venv/bin/` outside `$tools/` and outside prose is a regression to
             snapshot-blind lookups.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_every_gate_tool_lookup_goes_through_the_tools_root},
-}
-
-@misc{hooks-commit-isolated-isolated-commit-finds-a-tool-only-the-real-root-has,
-  section = {commit_isolated},
-  title  = {W941: the hook runs in a snapshot with no .venv and reads its tool from MIKEMOL_REAL_ROOT},
-  claim  = {W941: the hook runs in a snapshot with no .venv and reads its tool from
-            MIKEMOL_REAL_ROOT.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_isolated_commit_finds_a_tool_only_the_real_root_has},
-}
-
-@misc{hooks-commit-isolated-same-hook-refuses-a-normal-commit-which-is-the-control,
-  section = {commit_isolated},
-  title  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate},
-  claim  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_same_hook_refuses_a_normal_commit_which_is_the_control},
-}
-
-@misc{hooks-commit-isolated-isolation-is-on-where-the-repos-hook-reads-the-real-root,
-  section = {commit_isolated},
-  title  = {W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in},
-  claim  = {W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_isolation_is_on_where_the_repos_hook_reads_the_real_root},
-}
-
-@misc{hooks-commit-isolated-isolation-is-off-where-the-hook-does-not-know-the-real-root,
-  section = {commit_isolated},
-  title  = {A peer repository's gate that finds its tools beside the checkout keeps today's mode},
-  claim  = {A peer repository's gate that finds its tools beside the checkout keeps today's mode.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_isolation_is_off_where_the_hook_does_not_know_the_real_root},
-}
-
-@misc{hooks-commit-isolated-environment-opts-out-and-forces,
-  section = {commit_isolated},
-  title  = {=0 turns isolation off even where supported; =1 turns it on even where it is not},
-  claim  = {=0 turns isolation off even where supported; =1 turns it on even where it is not.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_environment_opts_out_and_forces},
 }
 
 @misc{hooks-commit-claim-guard-launcher-sits-between-the-claim-and-the-commit,
@@ -8424,28 +8381,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_fence_installed_beside_the_interpreter_takes_the_claim},
 }
 
-@misc{hooks-commit-isolated-reason-names-what-decided-the-path,
-  section = {commit_isolated},
-  title  = {W1015: forced, opted out, or what the repository's pre-commit says, each in its own words},
-  claim  = {W1015: forced, opted out, or what the repository's pre-commit says, each in its own
-            words.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_reason_names_what_decided_the_path},
-}
-
-@misc{hooks-commit-isolated-lock-state-is-held-or-none-with-its-reason,
-  section = {commit_isolated},
-  title  = {An empty claim reason means the claim is held above; any other is why there is none},
-  claim  = {An empty claim reason means the claim is held above; any other is why there is none.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_lock_state_is_held_or_none_with_its_reason},
-}
-
-@misc{hooks-commit-isolated-routing-line-names-the-path-its-reason-and-the-lock,
-  section = {commit_isolated},
-  title  = {One line, before the verdict: which path ran, why, and the lock},
-  claim  = {One line, before the verdict: which path ran, why, and the lock.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_the_routing_line_names_the_path_its_reason_and_the_lock},
-}
-
 @misc{hooks-snapshot-tracked-symlink-is-refused-and-named-not-followed-or-crashed-on,
   section = {snapshot},
   title  = {⚑ A tracked link to a sibling directory is not carried and not followed; the rest lands},
@@ -8534,27 +8469,6 @@
             execution". The population is every `mikemol-*` launcher that calls the
             venv's python3, found by glob so a new one cannot escape the rule.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_argv.py -k test_every_launcher_that_runs_the_bazel_venv_forbids_bytecode_before_it_does},
-}
-
-@misc{hooks-commit-isolated-ignored-file-named-exactly-is-committed-on-both-paths,
-  section = {commit_isolated},
-  title  = {W1039: a new, ignored file the caller names is theirs to add, isolated or plain},
-  claim  = {W1039: a new, ignored file the caller names is theirs to add, isolated or plain.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_ignored_file_named_exactly_is_committed_on_both_paths},
-}
-
-@misc{hooks-commit-isolated-ignored-file-under-a-named-directory-is-not-taken,
-  section = {commit_isolated},
-  title  = {A directory expands to what is not ignored, so a scratch file cannot ride in},
-  claim  = {A directory expands to what is not ignored, so a scratch file cannot ride in.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_an_ignored_file_under_a_named_directory_is_not_taken},
-}
-
-@misc{hooks-commit-isolated-only-a-regular-file-is-forced,
-  section = {commit_isolated},
-  title  = {A directory and a missing path go to the plain add; no link is created to test the rest},
-  claim  = {A directory and a missing path go to the plain add; no link is created to test the rest.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_only_a_regular_file_is_forced},
 }
 
 @misc{hooks-wheel-caller-gets-the-wheels-and-never-uvs-gitignore,
@@ -8660,4 +8574,111 @@
   title  = {A commit this run made, with a sweep then sitting on top of it, is found in the range},
   claim  = {A commit this run made, with a sweep then sitting on top of it, is found in the range.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_our_commit_beneath_a_later_one_is_still_committed},
+}
+
+@misc{hooks-index-refresh-committed-path-reads-as-committed-and-only-the-other-staged-path-remains,
+  section = {index_refresh},
+  title  = {Another path staged beforehand stays staged; a plain commit after lands only that path},
+  claim  = {Another path staged beforehand stays staged; a plain commit after lands only that path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_index_refresh.py -k test_the_committed_path_reads_as_committed_and_only_the_other_staged_path_remains},
+}
+
+@misc{hooks-index-refresh-refused-reset-is-retried-and-a-lock-that-clears-is-refreshed,
+  section = {index_refresh},
+  title  = {Two refusals then success: three resets, and the note says refreshed},
+  claim  = {Two refusals then success: three resets, and the note says refreshed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_index_refresh.py -k test_a_refused_reset_is_retried_and_a_lock_that_clears_is_refreshed},
+}
+
+@misc{hooks-index-refresh-reset-that-stays-refused-says-the-index-was-not-refreshed,
+  section = {index_refresh},
+  title  = {Every attempt refused: the note names the command to run, and the attempts are bounded},
+  claim  = {Every attempt refused: the note names the command to run, and the attempts are bounded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_index_refresh.py -k test_a_reset_that_stays_refused_says_the_index_was_not_refreshed},
+}
+
+@misc{hooks-commit-isolated-hooks-isolated-commit-finds-a-tool-only-the-real-root-has,
+  section = {commit_isolated_hooks},
+  title  = {W941: the hook runs in a snapshot with no .venv and reads its tool from MIKEMOL_REAL_ROOT},
+  claim  = {W941: the hook runs in a snapshot with no .venv and reads its tool from
+            MIKEMOL_REAL_ROOT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_hooks.py -k test_an_isolated_commit_finds_a_tool_only_the_real_root_has},
+}
+
+@misc{hooks-commit-isolated-hooks-same-hook-refuses-a-normal-commit-which-is-the-control,
+  section = {commit_isolated_hooks},
+  title  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate},
+  claim  = {Without isolation MIKEMOL_REAL_ROOT is unset, so the hook refuses: it does discriminate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_hooks.py -k test_the_same_hook_refuses_a_normal_commit_which_is_the_control},
+}
+
+@misc{hooks-commit-isolated-hooks-isolation-is-on-where-the-repos-hook-reads-the-real-root,
+  section = {commit_isolated_hooks},
+  title  = {W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in},
+  claim  = {W904: unset, the pre-commit's own text decides; naming MIKEMOL_REAL_ROOT opts in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_hooks.py -k test_isolation_is_on_where_the_repos_hook_reads_the_real_root},
+}
+
+@misc{hooks-commit-isolated-hooks-isolation-is-off-where-the-hook-does-not-know-the-real-root,
+  section = {commit_isolated_hooks},
+  title  = {A peer repository's gate that finds its tools beside the checkout keeps today's mode},
+  claim  = {A peer repository's gate that finds its tools beside the checkout keeps today's mode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_hooks.py -k test_isolation_is_off_where_the_hook_does_not_know_the_real_root},
+}
+
+@misc{hooks-commit-isolated-hooks-environment-opts-out-and-forces,
+  section = {commit_isolated_hooks},
+  title  = {=0 turns isolation off even where supported; =1 turns it on even where it is not},
+  claim  = {=0 turns isolation off even where supported; =1 turns it on even where it is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_hooks.py -k test_the_environment_opts_out_and_forces},
+}
+
+@misc{hooks-commit-isolated-routing-path-that-is-neither-on-disk-nor-tracked-is-not-a-commit,
+  section = {commit_isolated_routing},
+  title  = {Nothing to take reads NOT COMMITTED and HEAD does not move},
+  claim  = {Nothing to take reads NOT COMMITTED and HEAD does not move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_routing.py -k test_a_path_that_is_neither_on_disk_nor_tracked_is_not_a_commit},
+}
+
+@misc{hooks-commit-isolated-routing-reason-names-what-decided-the-path,
+  section = {commit_isolated_routing},
+  title  = {W1015: forced, opted out, or what the repository's pre-commit says, each in its own words},
+  claim  = {W1015: forced, opted out, or what the repository's pre-commit says, each in its own
+            words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_routing.py -k test_the_reason_names_what_decided_the_path},
+}
+
+@misc{hooks-commit-isolated-routing-lock-state-is-held-or-none-with-its-reason,
+  section = {commit_isolated_routing},
+  title  = {An empty claim reason means the claim is held above; any other is why there is none},
+  claim  = {An empty claim reason means the claim is held above; any other is why there is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_routing.py -k test_the_lock_state_is_held_or_none_with_its_reason},
+}
+
+@misc{hooks-commit-isolated-routing-routing-line-names-the-path-its-reason-and-the-lock,
+  section = {commit_isolated_routing},
+  title  = {One line, before the verdict: which path ran, why, and the lock},
+  claim  = {One line, before the verdict: which path ran, why, and the lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_routing.py -k test_the_routing_line_names_the_path_its_reason_and_the_lock},
+}
+
+@misc{hooks-commit-isolated-ignored-ignored-file-named-exactly-is-committed-on-both-paths,
+  section = {commit_isolated_ignored},
+  title  = {W1039: a new, ignored file the caller names is theirs to add, isolated or plain},
+  claim  = {W1039: a new, ignored file the caller names is theirs to add, isolated or plain.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_ignored.py -k test_an_ignored_file_named_exactly_is_committed_on_both_paths},
+}
+
+@misc{hooks-commit-isolated-ignored-ignored-file-under-a-named-directory-is-not-taken,
+  section = {commit_isolated_ignored},
+  title  = {A directory expands to what is not ignored, so a scratch file cannot ride in},
+  claim  = {A directory expands to what is not ignored, so a scratch file cannot ride in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_ignored.py -k test_an_ignored_file_under_a_named_directory_is_not_taken},
+}
+
+@misc{hooks-commit-isolated-ignored-only-a-regular-file-is-forced,
+  section = {commit_isolated_ignored},
+  title  = {A directory and a missing path go to the plain add; no link is created to test the rest},
+  claim  = {A directory and a missing path go to the plain add; no link is created to test the rest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_ignored.py -k test_only_a_regular_file_is_forced},
 }
