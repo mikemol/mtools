@@ -1156,7 +1156,11 @@ def _tick_open(ctx: Ctx) -> int:
 
 
 def _tick_close(ctx: Ctx) -> int:
-    """Close a tick in one verb: the ledger line, the render, the check, then the unlock (W1079).
+    """Close a tick in one verb: ledger line, prune landed blockers, render, check, unlock (W1079).
+
+    ⚑ THE CHECK COMES AFTER THE PRUNE (W1112, gabion:W1079). A tick that completes a card other
+    cards wait on closed with `check: REFUSED: Wn blocked on Wm, which is done`, because only the
+    open pruned. The close now does the same idempotent prune first and prints what it freed.
 
     ⚑ THE UNLOCK IS NOT CONDITIONAL ON THE REST. A ledger line refused for an unlisted outcome, or
     a check that fails, still ends the tick, and a lock nobody releases makes the next tick wait
@@ -1175,7 +1179,7 @@ def _tick_close(ctx: Ctx) -> int:
     except ops.RefusedError as exc:
         _warn(f"not ledgered: {exc}")
         code = EXIT_REFUSED
-    for step in (_render, _check, _unlock):
+    for step in (_prune_landed, _render, _check, _unlock):
         result = step(closing)
         code = code or result
     return code

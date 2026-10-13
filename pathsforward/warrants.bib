@@ -4472,3 +4472,17 @@
             anyway.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close.py -k test_a_refused_ledger_line_still_releases_the_lock},
 }
+
+@misc{pathsforward-tick-close-prune-plain-check-refuses-the-stale-blocker,
+  section = {tick_close_prune},
+  title  = {The control: W2 waits on a done W1, and the check says so},
+  claim  = {The control: W2 waits on a done W1, and the check says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_prune.py -k test_the_plain_check_refuses_the_stale_blocker},
+}
+
+@misc{pathsforward-tick-close-prune-close-frees-the-dependent-and-the-check-is-clean,
+  section = {tick_close_prune},
+  title  = {Closing after W1 is done frees W2, says so, and the same close ends clean},
+  claim  = {Closing after W1 is done frees W2, says so, and the same close ends clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_prune.py -k test_the_close_frees_the_dependent_and_the_check_is_clean},
+}

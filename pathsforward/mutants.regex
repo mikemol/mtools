@@ -103,6 +103,9 @@ src/mikemol/pathsforward/cli.py|tick-open-skips-bump|\(_bump_blocked, _inbound, 
 src/mikemol/pathsforward/cli.py|tick-open-close-names-no-holder|--unlock \{holder\}"|--unlock"|def=_tick_open
 
 # W1079: --tick-close ledgers, renders, checks and unlocks; the first failure is the status, and the unlock always runs.
-src/mikemol/pathsforward/cli.py|tick-close-leaves-the-lock|\(_render, _check, _unlock\)|(_render, _check)|def=_tick_close
+src/mikemol/pathsforward/cli.py|tick-close-leaves-the-lock|\(_prune_landed, _render, _check, _unlock\)|(_prune_landed, _render, _check)|def=_tick_close
 src/mikemol/pathsforward/cli.py|tick-close-forgets-a-refusal|code = code or result|code = result|def=_tick_close
 src/mikemol/pathsforward/cli.py|tick-close-unlocks-nobody|"unlock": holder\}|"unlock": ""}|def=_tick_close
+
+# W1112: --tick-close prunes landed local blockers before it checks.
+src/mikemol/pathsforward/cli.py|tick-close-skips-the-prune|\(_prune_landed, _render, _check, _unlock\)|(_render, _check, _unlock)|def=_tick_close
