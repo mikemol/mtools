@@ -33,6 +33,8 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Self
 
+from mikemol.hooks import snaplinks
+
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
     from types import TracebackType
@@ -43,6 +45,8 @@ STAMP = ".tree"
 LOCK = ".lock"
 EXIT_USAGE = 2
 EXIT_NOT_TAKEN = 3
+link_files = snaplinks.links
+write_link = snaplinks.write
 
 
 def _git_bin() -> str:
@@ -156,15 +160,21 @@ class Snapshot:
         incremental diff never rewrote them, so two commits were refused until the stamp was
         removed by hand.
 
-        ⚑ A TRACKED LINK IS NEVER "LOST": it is not carried (see `_extract`), so counting it missing
-        would re-extract, and re-name, it on every commit. Mode 120000 is git's symlink.
+        ⚑ A REFUSED LINK IS NEVER "LOST": it is not carried (see `_extract`), so counting it missing
+        would re-extract, and re-name, it on every commit. Mode 120000 is git's symlink. A link
+        that IS carried as a regular file (W1174) is lost when that file is gone, like any other.
 
         Returns:
             the missing paths, in tree order.
 
         """
         entries = _git(root, ["ls-tree", "-r", "-z", tree]).split("\0")
-        names = [e.partition("\t")[2] for e in entries if e and not e.startswith("120000")]
+        carried, _refused = link_files(root, tree)
+        names = [
+            e.partition("\t")[2]
+            for e in entries
+            if e and (not e.startswith("120000") or e.partition("\t")[2] in carried)
+        ]
         return [n for n in names if not (self.path / n).is_file()]
 
     def _changes(self, root: Path, before: str, tree: str) -> dict[str, list[str]]:
@@ -182,13 +192,19 @@ class Snapshot:
 
 
 def _extract(root: Path, tree: str, names: Sequence[str], dest: Path) -> None:
-    """Write `names` of `tree` under `dest`, refusing every tracked link.
+    """Write `names` of `tree` under `dest`; a link becomes a regular file or is refused.
 
-    ⚑ A TRACKED SYMLINK IS REFUSED, NAMED AND NEVER FOLLOWED OR RECREATED (operator ruling
-    2026-10-02: a link reads whatever it points at). The `data` filter alone raised
-    LinkOutsideDestinationError on luthen-observability's `images/paperkit-executor`, a tracked link
-    to a sibling repo, and every isolated commit there traced back (luthen-observability:W832).
+    ⚑ A TRACKED SYMLINK IS NEVER FOLLOWED OR RECREATED (operator ruling 2026-10-02: a link reads
+    whatever it points at). The `data` filter alone raised LinkOutsideDestinationError on
+    luthen-observability's `images/paperkit-executor`, a tracked link to a sibling repo, and every
+    isolated commit there traced back (luthen-observability:W832).
+
+    ⚑ A LINK WHOSE TARGET IS A REGULAR FILE OF THE SAME TREE IS WRITTEN AS THAT FILE (W1174): the
+    target's bytes and mode, read from the git object (see `snaplinks`). Refusing every link meant
+    a fresh gate tree never held the four launchers `hooks/bin` tracks as links, and the commit
+    gate refused every commit. Any other link is still refused and named.
     """
+    carried, _unused = link_files(root, tree)
     done = subprocess.run(
         [_git_bin(), "-C", str(root), "archive", "--format=tar", tree, "--", *names],
         capture_output=True,
@@ -200,7 +216,9 @@ def _extract(root: Path, tree: str, names: Sequence[str], dest: Path) -> None:
         spool.seek(0)
         with tarfile.open(fileobj=spool) as archive:
             for member in archive:
-                if member.issym() or member.islnk():
+                if member.issym() and member.name in carried:
+                    write_link(root, carried[member.name], dest)
+                elif member.issym() or member.islnk():
                     refused.append(member.name)
                 else:
                     archive.extract(member, dest, filter="data")

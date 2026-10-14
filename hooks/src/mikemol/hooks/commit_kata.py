@@ -41,9 +41,17 @@ from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.isolated import commit_isolated
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
+from mikemol.hooks.stackrun import Item as _Item
+from mikemol.hooks.stackrun import Seams as _Seams
+from mikemol.hooks.stackrun import items_of as _items_of
+from mikemol.hooks.stackrun import run_stack as _run_stack
 
 wait_for_load = _wait_for_load
 add_argv_list = _add_argv_list
+StackItem = _Item
+StackSeams = _Seams
+stack_items = _items_of
+stack_run = _run_stack
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -84,6 +92,9 @@ BUDGET = (
 )
 USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
+    "       mikemol-commit REPO --stack FILE\n"
+    "  FILE is a JSON list of waypoint, subject, body, paths: several commits, ONE gate run on\n"
+    "  the tip, one verdict each; a refusal lands nothing\n"
     "  REPO is a path, or a directory name under the host root; PATH defaults to the queue files\n"
     "  commits go through a private index over a snapshot where the repo's pre-commit reads\n"
     f"  MIKEMOL_REAL_ROOT (mtools:W891); {ISOLATED_ENV}=0 opts out, =1 forces\n"
@@ -656,6 +667,52 @@ def routing_line(*, isolated: bool, reason: str, lock: str) -> str:
     return f"mikemol-commit: path: {path} ({reason}); lock: {lock}"
 
 
+def stack_target(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Path] | None:
+    """Read `REPO --stack FILE`, the form that lands several commits under one gate (W1164).
+
+    Returns:
+        the repository and the stack file, or None when the arguments are not exactly that form.
+
+    """
+    if len(args) == len(("REPO", "--stack", "FILE")) and args[1] == "--stack":
+        return resolve_root(args[0], env), Path(args[2])
+    return None
+
+
+def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], *, isolated: bool) -> int:
+    """Land the stack in `stack_file`: build, gate the tip once, move HEAD, one verdict each.
+
+    ⚑ A STACK NEEDS THE ISOLATED PATH: the gate runs on a snapshot of the tip, which only a
+    repository whose pre-commit knows `MIKEMOL_REAL_ROOT` can do. A plain-path repository is
+    refused, not run some other way.
+
+    Returns:
+        the stack's exit code; EXIT_USAGE for an unreadable file; EXIT_NOT_COMMITTED when the
+        repository cannot isolate.
+
+    """
+    if not isolated:
+        sys.stdout.write(
+            f"NOT COMMITTED {root.name}: a stack needs the isolated commit path "
+            f"({isolation_reason(root, env)})\n"
+        )
+        return EXIT_NOT_COMMITTED
+    items = stack_items(stack_file)
+    if isinstance(items, str):
+        sys.stderr.write(f"mikemol-commit: {items}\n")
+        return EXIT_USAGE
+    trailer = env.get(TRAILER_ENV) or DEFAULT_TRAILER
+    seams = StackSeams(
+        run=run_git_in,
+        namespace=Path(env.get(NAMESPACE_ENV, DEFAULT_NAMESPACE)),
+        message_of=lambda item: message_of(
+            Request(item.waypoint, item.subject, item.body, (), trailer)
+        ),
+        published=lambda sha: published(root, sha),
+    )
+    return stack_run(root, items, sys.stdout, seams)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -666,11 +723,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     env = dict(os.environ)
     args = list(sys.argv[1:] if argv is None else argv)
-    parsed = parse(args, env)
-    if parsed is None:
+    stacked = stack_target(args, env)
+    parsed = parse(args, env) if stacked is None else None
+    if stacked is not None:
+        root = stacked[0]
+    elif parsed is not None:
+        root = parsed[0]
+    else:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
-    root, request = parsed
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
     if isinstance(claim, Claim):
         os.execve(claim.argv[0], claim.argv, claim.env)
@@ -682,4 +743,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     isolated = isolation_wanted(root, env)
     reason = isolation_reason(root, env)
     sys.stdout.write(routing_line(isolated=isolated, reason=reason, lock=lock_state(claim)) + "\n")
-    return commit(root, request, sys.stdout, isolated=isolated)
+    if stacked is not None:
+        return run_stack_mode(root, stacked[1], env, isolated=isolated)
+    if parsed is None:
+        return EXIT_USAGE
+    return commit(root, parsed[1], sys.stdout, isolated=isolated)

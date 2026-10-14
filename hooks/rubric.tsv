@@ -91,3 +91,4 @@ pycheck_clear_ledger	pycheck --clear-ledger ROOT clears every file the debt ledg
 gate_ledger_stamp	A gate-ledger row carries UTC start and end epochs and the host after the original four columns, and a four-column row still reads
 commit_isolated_staged	Isolated commit and the staged index: a staged deletion lands as a deletion, a new file is taken, a peer's staged path stays staged, and a refusal leaves HEAD and the index as they were
 stackland	Stack of commits built without a hook
+snaplinks	Snapshot carries an in-tree link as a regular file

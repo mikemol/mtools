@@ -8998,3 +8998,52 @@
             wrong.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_stack_file_is_read_and_a_malformed_one_is_named},
 }
+
+@misc{hooks-commit-stack-main-lands-a-stack-with-the-routing-line-and-a-verdict-per-commit,
+  section = {commit-kata},
+  title  = {Exit 0, the routing line names the isolated path, two COMMITTED lines, trailers on both},
+  claim  = {Exit 0, the routing line names the isolated path, two COMMITTED lines, trailers on both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_stack.py -k test_main_lands_a_stack_with_the_routing_line_and_a_verdict_per_commit},
+}
+
+@misc{hooks-commit-stack-repository-that-cannot-isolate-lands-nothing-and-says-why,
+  section = {commit-kata},
+  title  = {The control: isolation opted out, so no commit is made and the line names the reason},
+  claim  = {The control: isolation opted out, so no commit is made and the line names the reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_stack.py -k test_a_repository_that_cannot_isolate_lands_nothing_and_says_why},
+}
+
+@misc{hooks-commit-stack-unreadable-stack-file-is-a-usage-error,
+  section = {commit-kata},
+  title  = {A missing file exits 2 and names it; nothing is committed},
+  claim  = {A missing file exits 2 and names it; nothing is committed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_stack.py -k test_an_unreadable_stack_file_is_a_usage_error},
+}
+
+@misc{hooks-snaplinks-links-are-sorted-into-carried-and-refused,
+  section = {snaplinks},
+  title  = {The two links to the launcher are carried; the five that cannot be are refused by name},
+  claim  = {The two links to the launcher are carried; the five that cannot be are refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snaplinks.py -k test_links_are_sorted_into_carried_and_refused},
+}
+
+@misc{hooks-snaplinks-snapshot-writes-a-carried-link-as-a-regular-file-with-the-targets-bytes-and-mode,
+  section = {snaplinks},
+  title  = {Not a link, the launcher's bytes, mode 755; every refused link is absent from the tree},
+  claim  = {Not a link, the launcher's bytes, mode 755; every refused link is absent from the tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snaplinks.py -k test_a_snapshot_writes_a_carried_link_as_a_regular_file_with_the_targets_bytes_and_mode},
+}
+
+@misc{hooks-snaplinks-carried-file-that-went-missing-is-restored-on-the-next-materialize,
+  section = {snaplinks},
+  title  = {The stamp matches but the file is gone: `_lost` must count a carried link as lost},
+  claim  = {The stamp matches but the file is gone: `_lost` must count a carried link as lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snaplinks.py -k test_a_carried_file_that_went_missing_is_restored_on_the_next_materialize},
+}
+
+@misc{hooks-snaplinks-link-added-by-a-later-tree-arrives-through-the-incremental-diff,
+  section = {snaplinks},
+  title  = {Materialize the tree without the link, then the tree with it: the file appears, once},
+  claim  = {Materialize the tree without the link, then the tree with it: the file appears, once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_snaplinks.py -k test_a_link_added_by_a_later_tree_arrives_through_the_incremental_diff},
+}

@@ -86,6 +86,11 @@ src/mikemol/hooks/commit_kata.py|override-ignored|if raw\.isdecimal\(\) and int\
 src/mikemol/hooks/commit_kata.py|zero-means-no-limit|int\(raw\) > 0|int(raw) >= 0|def=commit_limit
 src/mikemol/hooks/snapshot.py|lost-files-not-checked|if before == tree and not lost:|if before == tree:|def=Snapshot.materialize
 src/mikemol/hooks/snapshot.py|present-file-reported-lost|not \(self\.path / n\)\.is_file\(\)|(self.path / n).is_file()|def=Snapshot._lost
+src/mikemol/hooks/snapshot.py|carried-link-never-lost|or e\.partition\("\\t"\)\[2\] in carried|or False|def=Snapshot._lost
+src/mikemol/hooks/snapshot.py|carried-link-not-written|member\.issym\(\) and member\.name in carried|False|def=_extract
+src/mikemol/hooks/snaplinks.py|link-chain-chased|hit\[0\] not in REGULAR|False|def=links
+src/mikemol/hooks/snaplinks.py|every-entry-a-link|if mode != SYMLINK:|if False:|def=links
+src/mikemol/hooks/snaplinks.py|carried-file-loses-its-mode|out\.chmod\(link\.mode\)|pass|def=write
 src/mikemol/hooks/new_dist_cli.py|existing-directory-admitted|if target.exists\(\):|if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|wrong-operand-count-admitted|if len\(rest\) != _OPERANDS:|if False:|def=main
 src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated
@@ -195,6 +200,8 @@ src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=build
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
+src/mikemol/hooks/commit_kata.py|stack-flag-never-recognised|args\[1\] == "--stack"|args[1] == "--no-stack"|def=stack_target
+src/mikemol/hooks/commit_kata.py|stack-without-isolation|if not isolated:|if False:|def=run_stack_mode
 src/mikemol/hooks/stackrun.py|stack-gate-verdict-ignored|if gate\.returncode != 0:|if False:|def=run_stack
 src/mikemol/hooks/stackrun.py|stack-file-any-shape|if not isinstance\(raw, list\) or not raw:|if False:|def=items_of
 src/mikemol/hooks/stacklanding.py|land-without-the-old-value|"HEAD", tip, start\]|"HEAD", tip]|def=land
