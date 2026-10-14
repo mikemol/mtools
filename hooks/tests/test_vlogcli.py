@@ -121,11 +121,25 @@ def test_a_stream_without_an_equals_sign_is_a_usage_error_and_spools_nothing(
 
 
 def test_drain_in_front_with_no_service_says_there_is_no_destination(tmp_path: Path) -> None:
-    """Spool a line, then --drain: nothing sent, one left, exit 1."""
+    """Spool a line, then --drain: nothing sent, one left, exit 3 and the reason on stderr."""
     _run(tmp_path, "--no-drain", stdin="x\n")
-    code, _spawned = _run(tmp_path, "--drain")
-    assert code == 1
+    kept, sys.stderr = sys.stderr, io.StringIO()
+    try:
+        code, _spawned = _run(tmp_path, "--drain")
+        said = sys.stderr.getvalue()
+    finally:
+        sys.stderr = kept
+    assert code == vlogcli.EXIT_NO_DESTINATION
+    assert "no destination" in said
     assert len(_spooled(tmp_path / "spool")) == 1
+
+
+def test_a_drain_that_left_lines_names_its_class_as_the_exit_status() -> None:
+    """W1214: no destination 3, an answered refusal 4, a busy spool 5, no reason at all 1."""
+    assert vlogcli.drain_class("no destination: no service named") == vlogcli.EXIT_NO_DESTINATION
+    assert vlogcli.drain_class("503 Service Unavailable") == vlogcli.EXIT_REFUSED
+    assert vlogcli.drain_class("busy: another drainer holds it (moving)") == vlogcli.EXIT_BUSY
+    assert vlogcli.drain_class("") == 1
 
 
 def test_a_flag_overrides_the_config_file_and_the_file_overrides_the_default() -> None:
@@ -267,6 +281,26 @@ def test_hold_reads_only_what_fits_and_the_tail_comes_back_on_the_next_runs(
         assert _sourced(tmp_path, "app", *args) == 0
         delivered += _forget_the_spool(tmp_path)
     assert delivered == ["1", "2", "3", "4", "5"]
+
+
+def test_exit_classes_make_a_held_tail_exit_six_and_the_default_stays_zero(tmp_path: Path) -> None:
+    """W1214: five lines, room for two. Without the flag the run is 0 as ever; with it, 6."""
+    log = tmp_path / "app.log"
+    log.write_text("1\n2\n3\n4\n5\n", encoding="utf-8")
+    args = ("--from-file", str(log), "--state", str(tmp_path / "app.state"))
+    assert _sourced(tmp_path, "app", *args) == 0
+    _forget_the_spool(tmp_path)
+    kept, sys.stderr = sys.stderr, io.StringIO()
+    try:
+        status = _sourced(tmp_path, "app", *args, "--exit-classes")
+        said = sys.stderr.getvalue()
+    finally:
+        sys.stderr = kept
+    assert status == vlogcli.EXIT_HELD
+    assert "ceiling" in said
+    _forget_the_spool(tmp_path)
+    log.write_text("6\n", encoding="utf-8")
+    assert _sourced(tmp_path, "loose", *args, "--exit-classes") == 0
 
 
 def test_hold_into_a_spool_that_is_still_full_consumes_nothing(tmp_path: Path) -> None:

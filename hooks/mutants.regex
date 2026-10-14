@@ -326,4 +326,9 @@ src/mikemol/hooks/vlogship.py|source-not-in-the-spool-name|tail = f"@\{urllib\.p
 src/mikemol/hooks/vlogship.py|keys-read-from-the-source-part|\.partition\("@"\)\[0\]|.partition("@")[2]|def=keys_of
 src/mikemol/hooks/vlogconfig.py|oversubscription-allowed|if sum\(shares\.values\(\)\) > total:|if False:|def=oversubscribed
 src/mikemol/hooks/vlogconfig.py|source-not-carried-to-the-config|        flags\.source,|        None,|def=build
+src/mikemol/hooks/vlogcli.py|drain-class-no-destination-lost|if reason\.startswith\("no destination"\):|if False:|def=drain_class
+src/mikemol/hooks/vlogcli.py|drain-class-busy-lost|if reason\.startswith\("busy"\):|if False:|def=drain_class
+src/mikemol/hooks/vlogcli.py|drain-class-refused-lost|return EXIT_REFUSED if reason else 1|return 1|def=drain_class
+src/mikemol/hooks/vlogcli.py|drain-exit-forgets-the-class|return drain_class\(done\.reason\)|return 1|def=_drain_now
+src/mikemol/hooks/vlogcli.py|held-tail-exits-clean|if args\.exit_classes and batcher\.blocked and code == 0:|if False:|def=main
 src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run

@@ -44,6 +44,10 @@ from mikemol.hooks import (
 )
 
 EXIT_USAGE = 2
+EXIT_NO_DESTINATION = 3
+EXIT_REFUSED = 4
+EXIT_BUSY = 5
+EXIT_HELD = 6
 UNITS = ("s", "ms", "us", "ns")
 HOLD_NEEDS_A_FILE = (
     "on_full = hold needs --from-file: stdin and a wrapped command cannot be re-read"
@@ -69,6 +73,7 @@ class Args(argparse.Namespace):
     state: Path | None
     drain: bool
     no_drain: bool
+    exit_classes: bool
     config: Path
     command: list[str]
 
@@ -94,6 +99,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--state", type=Path)
     parser.add_argument("--drain", action="store_true", help="send the spool now, in front")
     parser.add_argument("--no-drain", action="store_true", help="spool only; start no drainer")
+    parser.add_argument(
+        "--exit-classes",
+        action="store_true",
+        help="exit 6 when the hold policy left lines in the file (a transient condition)",
+    )
     parser.add_argument("--config", type=Path, default=vlogconfig.CONFIG_PATH)
     parser.add_argument("command", nargs="*", help="after --: a command to run and ship")
     return parser
@@ -137,17 +147,43 @@ def _produce(
     return 0, None
 
 
+def drain_class(reason: str) -> int:
+    """Name the class of a drain that left lines behind, as an exit status (W1214).
+
+    ⚑ THE CLASS TELLS A UNIT WHAT TO DO ABOUT IT: no destination (the service or its resolver is
+    not configured or not answering: 3), refused (the endpoint answered and said no: 4), busy
+    (another drainer holds the spool, which is transient and not a fault: 5). Lines left with no
+    reason at all stay 1.
+
+    Returns:
+        the exit status for the class.
+
+    """
+    if reason.startswith("no destination"):
+        return EXIT_NO_DESTINATION
+    if reason.startswith("busy"):
+        return EXIT_BUSY
+    return EXIT_REFUSED if reason else 1
+
+
 def _drain_now(config: vlogship.Config) -> int:
     """Send the spool in front and print what happened.
 
+    ⚑ THE REASON GOES TO STANDARD ERROR TOO: a unit that keeps only the exit status and the error
+    stream (luthen's journal said only "exit 1" until it let the output through) now has the drain's
+    own words beside a status that names the class.
+
     Returns:
-        0 when nothing is left, else 1.
+        0 when nothing is left, else the class of why (`drain_class`).
 
     """
     done = vlogship.drain_all(config)
     report: dict[str, object] = {"sent": done.sent, "left": done.left, "reason": done.reason}
     sys.stdout.write(json.dumps(report) + "\n")
-    return 0 if done.left == 0 else 1
+    if done.left == 0:
+        return 0
+    sys.stderr.write(f"mikemol-vlog: {done.left} lines left: {done.reason or 'no reason given'}\n")
+    return drain_class(done.reason)
 
 
 def _config_of(args: Args) -> vlogship.Config | str:
@@ -226,4 +262,7 @@ def main(
         vlogforms.commit(state, vlogforms.prefix_of(chunk, batcher.consumed))
     if not args.no_drain:
         spawn(vlogdetach.drain_argv(config))
+    if args.exit_classes and batcher.blocked and code == 0:
+        sys.stderr.write("mikemol-vlog: the spool is at its ceiling; the rest stays in the file\n")
+        return EXIT_HELD
     return code

@@ -9850,3 +9850,17 @@
   claim  = {`--source a` names the spool; `c` declares nothing, so its bound is the top-level pair.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_the_chosen_source_reaches_the_shipper_config_and_an_uncapped_one_keeps_the_total},
 }
+
+@misc{hooks-vlogcli-drain-that-left-lines-names-its-class-as-the-exit-status,
+  section = {vlogcli},
+  title  = {W1214: no destination 3, an answered refusal 4, a busy spool 5, no reason at all 1},
+  claim  = {W1214: no destination 3, an answered refusal 4, a busy spool 5, no reason at all 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_drain_that_left_lines_names_its_class_as_the_exit_status},
+}
+
+@misc{hooks-vlogcli-exit-classes-make-a-held-tail-exit-six-and-the-default-stays-zero,
+  section = {vlogcli},
+  title  = {W1214: five lines, room for two. Without the flag the run is 0 as ever; with it, 6},
+  claim  = {W1214: five lines, room for two. Without the flag the run is 0 as ever; with it, 6.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_exit_classes_make_a_held_tail_exit_six_and_the_default_stays_zero},
+}
