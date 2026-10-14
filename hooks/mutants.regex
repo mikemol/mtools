@@ -193,6 +193,8 @@ src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|d
 src/mikemol/hooks/gatejobs.py|explain-never-notes-the-floor|cores - load1 < MIN_JOBS|False|def=explain
 src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\(\)|parent = head|def=build
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=build
+src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
+src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
 
 # W1082 (nemik:W426): PUSHED is what the remote holds, not what the tracking ref claims.
 src/mikemol/hooks/commit_kata.py|tracking-ref-trusted|if remote == sha or on_remote\(root, sha, remote, run\):|if tracked:|def=published

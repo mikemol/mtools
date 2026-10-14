@@ -8946,3 +8946,17 @@
             fails.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_path_git_cannot_add_stops_the_chain_and_returns_what_was_built},
 }
+
+@misc{hooks-stackgate-one-hook-run-sees-the-whole-tip-in-a-worktree-equal-to-the-index,
+  section = {stackland},
+  title  = {Both stacked edits present, the peer's absent, the index equal, exactly one run},
+  claim  = {Both stacked edits present, the peer's absent, the index equal, exactly one run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_one_hook_run_sees_the_whole_tip_in_a_worktree_equal_to_the_index},
+}
+
+@misc{hooks-stackgate-refusing-hook-is-returned-as-the-gate-verdict,
+  section = {stackland},
+  title  = {The control: the same call with a hook that refuses returns its status and its output},
+  claim  = {The control: the same call with a hook that refuses returns its status and its output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_refusing_hook_is_returned_as_the_gate_verdict},
+}
