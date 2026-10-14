@@ -97,3 +97,4 @@ vlogspool	VictoriaLogs bounded spool
 vlogsink	VictoriaLogs ingest sink and endpoint resolution
 vlogforms	mikemol-vlog input forms
 vlogship	mikemol-vlog shipper core
+vlogcli	mikemol-vlog command

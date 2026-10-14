@@ -9331,3 +9331,59 @@
   claim  = {Four lines into a spool of two: two are dropped and one record says how many, once.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_a_ceiling_that_dropped_lines_is_itself_recorded},
 }
+
+@misc{hooks-vlogcli-stdin-lines-are-spooled-with-the-stream-fields-and-a-drainer-is-started,
+  section = {vlogcli},
+  title  = {Two lines become two records; exit 0; exactly one detached drain argv, naming the spool},
+  claim  = {Two lines become two records; exit 0; exactly one detached drain argv, naming the spool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_stdin_lines_are_spooled_with_the_stream_fields_and_a_drainer_is_started},
+}
+
+@misc{hooks-vlogcli-no-drain-spools-and-starts-nothing,
+  section = {vlogcli},
+  title  = {The control for the spawn above: with --no-drain the seam is never called},
+  claim  = {The control for the spawn above: with --no-drain the seam is never called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_no_drain_spools_and_starts_nothing},
+}
+
+@misc{hooks-vlogcli-wrapper-returns-the-commands-own-status-and-spools-its-lines,
+  section = {vlogcli},
+  title  = {The command prints a record and exits 5: 5 comes back, the record is in the spool},
+  claim  = {The command prints a record and exits 5: 5 comes back, the record is in the spool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_the_wrapper_returns_the_commands_own_status_and_spools_its_lines},
+}
+
+@misc{hooks-vlogcli-file-form-spools-each-line-once-across-three-runs,
+  section = {vlogcli},
+  title  = {All lines, then none, then only the one appended; the state file is the only memory},
+  claim  = {All lines, then none, then only the one appended; the state file is the only memory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_the_file_form_spools_each_line_once_across_three_runs},
+}
+
+@misc{hooks-vlogcli-stream-without-an-equals-sign-is-a-usage-error-and-spools-nothing,
+  section = {vlogcli},
+  title  = {`--stream bad` exits 2 and creates no spool},
+  claim  = {`--stream bad` exits 2 and creates no spool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_stream_without_an_equals_sign_is_a_usage_error_and_spools_nothing},
+}
+
+@misc{hooks-vlogcli-drain-in-front-with-no-service-says-there-is-no-destination,
+  section = {vlogcli},
+  title  = {Spool a line, then --drain: nothing sent, one left, exit 1},
+  claim  = {Spool a line, then --drain: nothing sent, one left, exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_drain_in_front_with_no_service_says_there_is_no_destination},
+}
+
+@misc{hooks-vlogcli-flag-overrides-the-config-file-and-the-file-overrides-the-default,
+  section = {vlogcli},
+  title  = {The file sets service and max_lines; a flag changes max_lines; the service stays},
+  claim  = {The file sets service and max_lines; a flag changes max_lines; the service stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_flag_overrides_the_config_file_and_the_file_overrides_the_default},
+}
+
+@misc{hooks-vlogcli-drainer-argv-carries-the-same-settings,
+  section = {vlogcli},
+  title  = {Spool directory, bounds, service and every resolver argument reach the detached process},
+  claim  = {Spool directory, bounds, service and every resolver argument reach the detached process.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_the_drainer_argv_carries_the_same_settings},
+}

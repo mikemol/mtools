@@ -206,6 +206,13 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/vlogcli.py|cli-drain-flag-ignored|if args\.drain:|if False:|def=main
+src/mikemol/hooks/vlogcli.py|cli-always-starts-a-drainer|if not args\.no_drain:|if True:|def=main
+src/mikemol/hooks/vlogcli.py|cli-wrapper-never-runs|return vlogforms\.run_wrapped\(args\.command, take\), None|return 0, None|def=_produce
+src/mikemol/hooks/vlogcli.py|cli-offset-never-saved|if chunk is not None and state is not None:|if False:|def=main
+src/mikemol/hooks/vlogconfig.py|config-flag-never-wins|return flag or from_file or default|return default|def=_number
+src/mikemol/hooks/vlogconfig.py|config-accepts-a-bare-stream|if not sep or not key:|if False:|def=streams_of
+src/mikemol/hooks/vlogdetach.py|drainer-loses-the-service|if config\.service:|if False:|def=drain_argv
 src/mikemol/hooks/vlogship.py|spool-name-order-dependent|sorted\(keys\)|keys|def=spool_name
 src/mikemol/hooks/vlogship.py|ship-keeps-blank-lines|if line\.strip\(\)|if True|def=ship
 src/mikemol/hooks/vlogship.py|ship-silent-about-drops|if dropped:|if False:|def=ship
