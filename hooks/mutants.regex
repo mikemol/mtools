@@ -261,6 +261,8 @@ src/mikemol/hooks/vlogspool.py|spool-removes-one-too-many|\[len\(front\) :\]|[le
 src/mikemol/hooks/vlogspool.py|spool-drain-never-busy|if not taken:|if False:|def=Spool.drain
 src/mikemol/hooks/vlogspool.py|spool-drops-not-accumulated|total = self\._dropped_so_far\(\) \+ dropped|total = dropped|def=Spool.append
 src/mikemol/hooks/vlogspool.py|spool-accepts-a-newline|if any\("|if not any("|def=Spool.append
+src/mikemol/hooks/vlogrecord.py|stream-clash-never-flagged|if clash:|if False:|def=record_of
+src/mikemol/hooks/vlogrecord.py|every-stream-counts-as-a-clash|if key in record\)|if True)|def=record_of
 src/mikemol/hooks/vlogrecord.py|stamp-always-absent|if stamp_kind is None:|if False:|def=from_text
 src/mikemol/hooks/vlogrecord.py|stamp-miss-unhandled|if found is None:|if False:|def=from_text
 src/mikemol/hooks/vlogrecord.py|stamp-epoch-read-as-iso|if stamp_kind\.form == "epoch":|if False:|def=from_text

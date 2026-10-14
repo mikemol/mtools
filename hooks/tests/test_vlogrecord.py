@@ -82,6 +82,20 @@ def test_the_named_keys_override_the_defaults() -> None:
     assert got["_time"] == "2026-01-02T03:04:05.000000Z"
 
 
+def test_a_stream_field_that_replaces_a_lines_own_key_is_flagged_with_the_keys() -> None:
+    """The stream wins, as it must, but the loss is visible: both clashing keys, sorted."""
+    got = _record('{"message": "m", "tool": "from-the-line", "repo": "r", "other": 1}')
+    assert got["tool"] == "commit"
+    assert got["repo"] == "mtools"
+    assert got["stream_overrode"] == "repo,tool"
+    assert got["other"] == 1
+
+
+def test_no_flag_is_set_when_no_line_key_collides_with_a_stream_field() -> None:
+    """The control: a line with only its own keys has no `stream_overrode`."""
+    assert "stream_overrode" not in _record('{"message": "m", "sha": "1"}')
+
+
 def test_a_line_without_the_message_key_keeps_its_whole_text_as_the_message() -> None:
     """No `message` field: the line itself is `_msg`, so the record is never message-less."""
     got = _record('{"sha": "abc"}')

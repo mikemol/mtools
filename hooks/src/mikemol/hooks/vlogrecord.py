@@ -179,4 +179,7 @@ def record_of(
     if not understood:
         record["time_unparsed"] = "true"
     record["_msg"] = _text(fields.get(mapping.message_key, text))[: mapping.max_line]
+    clash = sorted(key for key in streams if key in record)
+    if clash:
+        record["stream_overrode"] = ",".join(clash)
     return {**record, **streams}

@@ -18,6 +18,9 @@ producer's exit status; luthen's `checks/log_ship.py` tails files by offset and 
   epoch numbers). A line that is not JSON, or is JSON but not an object, becomes a record whose
   message is the line and which carries `parse_failure`. Nothing is dropped; an over-long line is
   cut and says `truncated`.
+- A stream field always wins over a line's own key of the same name (`--stream tool=x` beats a
+  line's `tool`); when that replaces a value the record carries `stream_overrode` naming the keys,
+  so the loss is visible (luthen's note, W1190).
 - The caller only appends to a spool (one file per sorted set of stream keys) and starts a detached
   drainer; it never waits for the endpoint. No wall-clock timeout exists in the path. A stalled
   drainer is ended by a no-progress count over later runs (W1180), not a timer.

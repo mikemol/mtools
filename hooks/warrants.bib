@@ -9688,3 +9688,17 @@
   claim  = {`app` sets max_lines 2 and hold; the top-level 100 stays for a source that sets none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_source_table_overrides_the_top_level_and_the_top_level_is_the_default},
 }
+
+@misc{hooks-vlogrecord-stream-field-that-replaces-a-lines-own-key-is-flagged-with-the-keys,
+  section = {vlogrecord},
+  title  = {The stream wins, as it must, but the loss is visible: both clashing keys, sorted},
+  claim  = {The stream wins, as it must, but the loss is visible: both clashing keys, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_a_stream_field_that_replaces_a_lines_own_key_is_flagged_with_the_keys},
+}
+
+@misc{hooks-vlogrecord-no-flag-is-set-when-no-line-key-collides-with-a-stream-field,
+  section = {vlogrecord},
+  title  = {The control: a line with only its own keys has no `stream_overrode`},
+  claim  = {The control: a line with only its own keys has no `stream_overrode`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_no_flag_is_set_when_no_line_key_collides_with_a_stream_field},
+}
