@@ -13,6 +13,7 @@ name atomically; it needs nothing but the standard library.
 
 Usage:  mikemol-wheel build <out.whl> <pyproject.toml>   (needs the DECLARED setuptools backend)
         mikemol-wheel install <venv-dir> <wheel> [dep-path ...]   (cell side; stdlib only)
+        mikemol-wheel check <wheel-or-sdist> ...   (a JSON line each; exit 1 on a refusal)
 """
 
 from __future__ import annotations
@@ -27,12 +28,15 @@ import venv
 import zipfile
 from typing import TYPE_CHECKING, cast
 
+from mikemol.pkgbuild import metacli
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
 _ARGC_BUILD = 3
 _ARGC_INSTALL_MIN = 3
 _SITE_MARKER = "/site-packages/"
+run_check = metacli.run
 
 
 def _only(matches: list[pathlib.Path], what: str) -> pathlib.Path:
@@ -152,6 +156,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args[:1] == ["install"] and len(args) >= _ARGC_INSTALL_MIN:
         sys.stdout.write(install(args[1], args[2], *args[3:]) + "\n")
         return 0
+    if args[:1] == ["check"] and len(args) > 1:
+        return run_check(args[1:])
     raise SystemExit(__doc__)
 
 

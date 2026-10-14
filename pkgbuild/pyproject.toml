@@ -96,5 +96,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ `_only` IS TESTED BY NAME: its cardinality refusal (zero and many) is reachable from no public
 # call without building a venv with two site-packages, and testing a boundary needs crossing it.
 "tests/test_wheel.py" = ["assert", "private-member-access"]
+"tests/test_metacheck.py" = ["assert"]
 "tests/test_pyc.py" = ["assert"]
 "tests/test_pyinfo.py" = ["assert"]

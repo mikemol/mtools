@@ -110,3 +110,45 @@
   claim  = {`--copies` loses libpython, so the venv's python is a link; no deps means no .pth.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_wheel.py -k test_install_links_the_interpreter_and_writes_no_pth_without_dependencies},
 }
+
+@misc{pkgbuild-metacheck-clean-wheel-and-a-clean-sdist-both-pass,
+  section = {metacheck},
+  title  = {The positive control: the same good metadata in each container has no problems},
+  claim  = {The positive control: the same good metadata in each container has no problems.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_clean_wheel_and_a_clean_sdist_both_pass},
+}
+
+@misc{pkgbuild-metacheck-each-single-change-is-refused-for-that-property-alone,
+  section = {metacheck},
+  title  = {One property changed per row: exactly one problem, and it names the property},
+  claim  = {One property changed per row: exactly one problem, and it names the property.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_each_single_change_is_refused_for_that_property_alone},
+}
+
+@misc{pkgbuild-metacheck-missing-long-description-is-refused,
+  section = {metacheck},
+  title  = {Headers only, no body: the description is missing even though the type is declared},
+  claim  = {Headers only, no body: the description is missing even though the type is declared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_missing_long_description_is_refused},
+}
+
+@misc{pkgbuild-metacheck-license-file-alone-satisfies-the-license-check,
+  section = {metacheck},
+  title  = {`License-File` stands in for the expression: the license rule is any of the three},
+  claim  = {`License-File` stands in for the expression: the license rule is any of the three.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_license_file_alone_satisfies_the_license_check},
+}
+
+@misc{pkgbuild-metacheck-unreadable-artifact-is-one-problem-not-an-exception,
+  section = {metacheck},
+  title  = {A truncated zip, a wrong extension and a missing file each say why, and none raises},
+  claim  = {A truncated zip, a wrong extension and a missing file each say why, and none raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_an_unreadable_artifact_is_one_problem_not_an_exception},
+}
+
+@misc{pkgbuild-metacheck-command-prints-one-json-line-per-artifact-and-exits-by-the-worst,
+  section = {metacheck},
+  title  = {Two artifacts, one bad: two JSON lines in order and exit 1; the good one alone is 0},
+  claim  = {Two artifacts, one bad: two JSON lines in order and exit 1; the good one alone is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_the_command_prints_one_json_line_per_artifact_and_exits_by_the_worst},
+}
