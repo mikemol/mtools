@@ -210,29 +210,36 @@ def run(args: Sequence[str]) -> int:
     opa = os.environ.get("OPA_BIN", "")
     history = HISTORY_FLAG in args
     words = [a for a in args if a != HISTORY_FLAG]
-    if len(words) != ARGC or not opa:
-        sys.stderr.write("usage: OPA_BIN=<opa> mikemol-privacy-audit [--history] REPO DIST\n")
+    if len(words) < ARGC or not opa:
+        sys.stderr.write("usage: OPA_BIN=<opa> mikemol-privacy-audit [--history] REPO DIST...\n")
         return 2
     root = Path(words[0])
-    if history:
-        files, skipped = history_of(root, words[1]), 0
-    else:
-        files, skipped = files_of(root, tracked(root, words[1]))
-    findings = judge(opa, POLICY, files)
-    sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)
-    denies = sum(1 for f in findings if f["kind"] == "deny")
-    summary: Finding = {
-        "dist": words[1],
-        "mode": "history" if history else "tree",
-        "files": len(files),
-        "skipped": skipped,
-        "deny": denies,
-        "withheld": len(findings) - denies,
-    }
-    sys.stdout.write(json.dumps(summary, sort_keys=True) + "\n")
-    return 1 if denies else 0
+    total = 0
+    for dist in words[1:]:
+        if history:
+            files, skipped = history_of(root, dist), 0
+        else:
+            files, skipped = files_of(root, tracked(root, dist))
+        findings = judge(opa, POLICY, files)
+        sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)
+        denies = sum(1 for f in findings if f["kind"] == "deny")
+        summary: Finding = {
+            "dist": dist,
+            "mode": "history" if history else "tree",
+            "files": len(files),
+            "skipped": skipped,
+            "deny": denies,
+            "withheld": len(findings) - denies,
+        }
+        sys.stdout.write(json.dumps(summary, sort_keys=True) + "\n")
+        total += denies
+    return 1 if total else 0
 
 
 def main() -> None:
     """Console entry: exit with `run`'s status."""
     sys.exit(run(sys.argv[1:]))
+
+
+if __name__ == "__main__":
+    main()

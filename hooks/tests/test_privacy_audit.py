@@ -117,6 +117,19 @@ def test_a_clean_dist_has_no_findings_and_exits_zero(
     ]
 
 
+def test_several_dists_are_each_audited_with_a_summary_and_one_deny_fails_the_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`other` is clean and listed after the dirty `demo`: both get a summary, the exit is 1."""
+    root = _repo(tmp_path)
+    monkeypatch.setenv("OPA_BIN", _OPA)
+    status = privacy_audit.run([str(root), "demo", "other"])
+    rows = [cast("Row", json.loads(x)) for x in capsys.readouterr().out.splitlines()]
+    summaries = [r for r in rows if "mode" in r]
+    assert [(s["dist"], s["deny"]) for s in summaries] == [("demo", _TWO), ("other", 0)]
+    assert status == 1
+
+
 def _history_repo(tmp_path: Path) -> tuple[Path, str]:
     """Build a repo whose only secret was added in one commit and deleted in the next.
 
