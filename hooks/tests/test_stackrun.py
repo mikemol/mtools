@@ -1,0 +1,162 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""Witnesses of a whole stack run: one gate, every commit pushed, a verdict each, or nothing lands.
+
+W1162. ⚑ THE HOOK COUNTS ITS OWN RUNS into the real checkout, so "one gate for N commits" is read
+from a file the gate wrote, not from the module. ⚑ THE REMOTE IS READ BACK from a bare repository.
+The refusing hook is the control: a stack that landed anyway shows as a moved HEAD or remote.
+"""
+
+from __future__ import annotations
+
+import io
+import json
+import os
+import shutil
+import subprocess
+from typing import TYPE_CHECKING
+
+from mikemol.hooks import commit_kata as ck
+from mikemol.hooks import stackrun
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pytest
+
+_EXECUTABLE = 0o755
+_PASSING = '#!/bin/sh\necho run >> "$MIKEMOL_REAL_ROOT/runs"\n'
+_REFUSING = '#!/bin/sh\necho run >> "$MIKEMOL_REAL_ROOT/runs"\necho "gate says no" >&2\nexit 1\n'
+_PUSH = "#!/bin/sh\ngit push origin HEAD:main\n"
+
+
+def _git(root: Path, *args: str) -> str:
+    """Run the real git and fail loudly.
+
+    Returns:
+        git's stdout.
+
+    """
+    git = shutil.which("git")
+    assert git is not None
+    done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
+    return done.stdout
+
+
+def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pre_commit: str) -> tuple[Path, Path]:
+    """Build a pushed repository with the given pre-commit, a pushing post-commit, edits to a, b.
+
+    Returns:
+        the working repository's root and the bare remote's path.
+
+    """
+    for name in [name for name in os.environ if name.startswith("GIT_")]:
+        monkeypatch.delenv(name)
+    for key, value in {
+        "GIT_CEILING_DIRECTORIES": str(tmp_path),
+        "GIT_AUTHOR_NAME": "t",
+        "GIT_AUTHOR_EMAIL": "t@example.invalid",
+        "GIT_COMMITTER_NAME": "t",
+        "GIT_COMMITTER_EMAIL": "t@example.invalid",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "HOME": str(tmp_path),
+    }.items():
+        monkeypatch.setenv(key, value)
+    remote = tmp_path / "origin.git"
+    remote.mkdir()
+    _git(remote, "init", "--quiet", "--bare", "-b", "main")
+    root = tmp_path / "repo"
+    root.mkdir()
+    _git(root, "init", "--quiet", "-b", "main")
+    for name in ("a.txt", "b.txt"):
+        (root / name).write_text("original\n", encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "first")
+    _git(root, "remote", "add", "origin", str(remote))
+    _git(root, "push", "--quiet", "origin", "HEAD:main")
+    for hook_name, text in (("pre-commit", pre_commit), ("post-commit", _PUSH)):
+        hook = root / ".git" / "hooks" / hook_name
+        hook.write_text(text, encoding="utf-8")
+        hook.chmod(_EXECUTABLE)
+    (root / "a.txt").write_text("edited a\n", encoding="utf-8")
+    (root / "b.txt").write_text("edited b\n", encoding="utf-8")
+    return root, remote
+
+
+def _items() -> list[stackrun.Item]:
+    """Name the two commits asked for.
+
+    Returns:
+        the items: a.txt under W1, then b.txt under W2.
+
+    """
+    return [
+        stackrun.Item("W1", "first card", "", ("a.txt",)),
+        stackrun.Item("W2", "second card", "", ("b.txt",)),
+    ]
+
+
+def _run(root: Path, tmp_path: Path) -> tuple[int, list[str]]:
+    """Run the stack with the real git.
+
+    Returns:
+        the exit code and the lines written.
+
+    """
+    out = io.StringIO()
+    seams = stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path / "gate",
+        message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
+        published=lambda _sha: "PUSHED",
+    )
+    code = stackrun.run_stack(root, _items(), out, seams)
+    return code, out.getvalue().splitlines()
+
+
+def test_a_stack_lands_with_one_gate_run_one_verdict_per_commit_and_the_remote_at_the_tip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two COMMITTED lines in order, the hook ran once, HEAD and origin both read the second sha."""
+    root, remote = _repo(tmp_path, monkeypatch, _PASSING)
+    code, lines = _run(root, tmp_path)
+    assert code == 0
+    tip = _git(root, "rev-parse", "HEAD").strip()
+    first = _git(root, "rev-parse", "HEAD^").strip()
+    verdicts = [line for line in lines if line.startswith("COMMITTED")]
+    assert verdicts == [
+        f"COMMITTED repo {first[:7]} first card [PUSHED]",
+        f"COMMITTED repo {tip[:7]} second card [PUSHED]",
+    ]
+    assert (root / "runs").read_text(encoding="utf-8") == "run\n"
+    assert _git(remote, "rev-parse", "main").strip() == tip
+
+
+def test_a_refused_tip_lands_nothing_and_says_so(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The control: the gate refuses, HEAD and the remote are where they were, the line says why."""
+    root, remote = _repo(tmp_path, monkeypatch, _REFUSING)
+    start = _git(root, "rev-parse", "HEAD").strip()
+    code, lines = _run(root, tmp_path)
+    assert code == 1
+    assert any(
+        line.startswith("REFUSED repo (rc=1)") and "nothing landed" in line for line in lines
+    )
+    assert "gate says no" in lines
+    assert _git(root, "rev-parse", "HEAD").strip() == start
+    assert _git(remote, "rev-parse", "main").strip() == start
+    assert not [line for line in lines if line.startswith("COMMITTED")]
+
+
+def test_a_stack_file_is_read_and_a_malformed_one_is_named(tmp_path: Path) -> None:
+    """A good file gives its items; a non-list and an entry without paths each say what is wrong."""
+    good = tmp_path / "good.json"
+    entries = [{"waypoint": "W1", "subject": "s", "body": "b", "paths": ["a"]}]
+    good.write_text(json.dumps(entries), encoding="utf-8")
+    assert stackrun.items_of(good) == [stackrun.Item("W1", "s", "b", ("a",))]
+    bad = tmp_path / "bad.json"
+    bad.write_text('{"waypoint": "W1"}', encoding="utf-8")
+    assert "non-empty JSON list" in str(stackrun.items_of(bad))
+    bad.write_text('[{"waypoint": "W1", "subject": "s", "paths": []}]', encoding="utf-8")
+    assert "entry 1 needs" in str(stackrun.items_of(bad))

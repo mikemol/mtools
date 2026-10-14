@@ -195,6 +195,8 @@ src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=build
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
+src/mikemol/hooks/stackrun.py|stack-gate-verdict-ignored|if gate\.returncode != 0:|if False:|def=run_stack
+src/mikemol/hooks/stackrun.py|stack-file-any-shape|if not isinstance\(raw, list\) or not raw:|if False:|def=items_of
 src/mikemol/hooks/stacklanding.py|land-without-the-old-value|"HEAD", tip, start\]|"HEAD", tip]|def=land
 src/mikemol/hooks/stacklanding.py|land-never-pushes|"--ignore-missing", "post-commit"|"--ignore-missing", "post-merge"|def=land
 

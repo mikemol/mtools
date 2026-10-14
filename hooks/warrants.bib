@@ -8974,3 +8974,27 @@
   claim  = {A peer commits after the build: the landing is refused and their commit stays at HEAD.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_head_that_moved_during_the_gate_is_a_race_and_nothing_changes},
 }
+
+@misc{hooks-stackrun-stack-lands-with-one-gate-run-one-verdict-per-commit-and-the-remote-at-the-tip,
+  section = {stackland},
+  title  = {Two COMMITTED lines in order, the hook ran once, HEAD and origin both read the second sha},
+  claim  = {Two COMMITTED lines in order, the hook ran once, HEAD and origin both read the second
+            sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_stack_lands_with_one_gate_run_one_verdict_per_commit_and_the_remote_at_the_tip},
+}
+
+@misc{hooks-stackrun-refused-tip-lands-nothing-and-says-so,
+  section = {stackland},
+  title  = {The control: the gate refuses, HEAD and the remote are where they were, the line says why},
+  claim  = {The control: the gate refuses, HEAD and the remote are where they were, the line says
+            why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_refused_tip_lands_nothing_and_says_so},
+}
+
+@misc{hooks-stackrun-stack-file-is-read-and-a-malformed-one-is-named,
+  section = {stackland},
+  title  = {A good file gives its items; a non-list and an entry without paths each say what is wrong},
+  claim  = {A good file gives its items; a non-list and an entry without paths each say what is
+            wrong.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_stack_file_is_read_and_a_malformed_one_is_named},
+}
