@@ -462,6 +462,7 @@ venv_from_hub(
         "mikemol-gate-jobs": "mikemol.hooks.gatejobs:main",
         "mikemol-vlog": "mikemol.hooks.vlogcli:main",
         "mikemol-privacy-audit": "mikemol.hooks.privacy_audit:main",
+        "mikemol-privacy-shipped": "mikemol.hooks.privacy_shipped:main",
         "mikemol-commit": "mikemol.hooks.commit_kata:main",
         "mikemol-hooks-probe": "mikemol.hooks.probe:main",
         "mikemol-snapshot": "mikemol.hooks.snapshot:main",

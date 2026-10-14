@@ -9760,3 +9760,31 @@
   claim  = {`other` is clean and listed after the dirty `demo`: both get a summary, the exit is 1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_several_dists_are_each_audited_with_a_summary_and_one_deny_fails_the_run},
 }
+
+@misc{hooks-privacy-shipped-findings-in-an-sdist-and-a-wheel-are-named-by-artifact-member-and-line,
+  section = {privacy_shipped},
+  title  = {A key in the sdist and a home path in the wheel; the deny makes the exit 1},
+  claim  = {A key in the sdist and a home path in the wheel; the deny makes the exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_findings_in_an_sdist_and_a_wheel_are_named_by_artifact_member_and_line},
+}
+
+@misc{hooks-privacy-shipped-clean-artifact-exits-zero-and-a-tar-link-is-skipped-not-followed,
+  section = {privacy_shipped},
+  title  = {The control: one clean member and a link, so one file is judged and one is skipped},
+  claim  = {The control: one clean member and a link, so one file is judged and one is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_a_clean_artifact_exits_zero_and_a_tar_link_is_skipped_not_followed},
+}
+
+@misc{hooks-privacy-shipped-output-never-carries-the-matched-text,
+  section = {privacy_shipped},
+  title  = {Neither the key nor the home directory name reaches standard output},
+  claim  = {Neither the key nor the home directory name reaches standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_the_output_never_carries_the_matched_text},
+}
+
+@misc{hooks-privacy-shipped-no-artifacts-or-no-judge-is-a-usage-error,
+  section = {privacy_shipped},
+  title  = {No arguments and no `OPA_BIN` each exit 2},
+  claim  = {No arguments and no `OPA_BIN` each exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_no_artifacts_or_no_judge_is_a_usage_error},
+}

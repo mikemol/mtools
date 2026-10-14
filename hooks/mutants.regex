@@ -314,4 +314,8 @@ src/mikemol/hooks/privacy_audit.py|audit-stops-at-the-first-dist|for dist in wor
 src/mikemol/hooks/privacy_audit.py|audit-needs-no-judge|if len\(words\) < ARGC or not opa:|if len(words) < ARGC:|def=run
 src/mikemol/hooks/privacy_audit.py|history-line-off-by-one|at = int\(hunk\.group\(1\)\) - 1|at = int(hunk.group(1))|def=added_lines
 src/mikemol/hooks/privacy_audit.py|history-lines-not-placed|lines\.extend\(\[""\] \* \(at - len\(lines\)\)\)|lines.extend([])|def=added_lines
+src/mikemol/hooks/privacy_shipped.py|shipped-follows-a-tar-link|handle = archive\.extractfile\(member\) if member\.isfile\(\) else None|handle = archive.extractfile(member)|def=members_of
+src/mikemol/hooks/privacy_shipped.py|shipped-decodes-a-binary|if b"\\0" in raw\[: privacy_audit\.SNIFF\]:|if False:|def=entry_of
+src/mikemol/hooks/privacy_shipped.py|shipped-exits-clean-on-a-deny|return 1 if total else 0|return 0|def=run
+src/mikemol/hooks/privacy_shipped.py|shipped-needs-no-judge|if not args or not opa:|if not args:|def=run
 src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run

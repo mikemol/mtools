@@ -83,6 +83,7 @@ mikemol-build-failure = "mikemol.hooks.build_failure:report_main"
 mikemol-gate-jobs = "mikemol.hooks.gatejobs:main"
 mikemol-vlog = "mikemol.hooks.vlogcli:main"
 mikemol-privacy-audit = "mikemol.hooks.privacy_audit:main"
+mikemol-privacy-shipped = "mikemol.hooks.privacy_shipped:main"
 mikemol-hook-inbound-asks ="mikemol.hooks.entry:inbound_asks_main"
 # W616: SessionStart and UserPromptSubmit context (nemik's rows for this repo), never a refusal.
 mikemol-hook-nemik-check = "mikemol.hooks.entry:nemik_check_main"
@@ -477,6 +478,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/vlogsink.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/snaplinks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/privacy_audit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_privacy_shipped.py" = ["assert"]
 "tests/test_privacy_audit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
