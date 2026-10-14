@@ -69,6 +69,12 @@ test_a_placeholder_home_name_is_exempt if not line_withholds(concat("", ["/ho", 
 
 test_a_placeholder_name_inside_a_longer_name_still_counts if line_withholds(concat("", ["/ho", "me/someonelse/project"]), "home-path")
 
+test_a_decorator_after_an_escaped_newline_is_not_an_address if not line_withholds(concat("", ["x = 'import pytest", "\\n", "\\n@pytest.mark.some_marker_probe.more'"]), "mail-address")
+
+test_an_address_at_the_start_of_a_line_still_counts if line_withholds(concat("", ["ada", "@mailhost.net wrote"]), "mail-address")
+
+test_an_address_after_a_space_still_counts if line_withholds(concat("", ["from ada", "@mailhost.net"]), "mail-address")
+
 test_a_dot_invalid_address_is_exempt if not line_withholds(concat("", ["ada", "@life.invalid"]), "mail-address")
 
 test_a_real_address_beside_a_reserved_one_still_counts if line_withholds(concat("", ["a", "@example.org and b", "@mailhost.net"]), "mail-address")
@@ -109,6 +115,16 @@ accepted_input := {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lin
 test_an_accepted_suffix_and_rule_marks_the_finding if {
 	got := publish_privacy.findings with input as accepted_input
 	got == {{"kind": "withheld", "rule": "mail-address", "path": "w.whl/mikemol/hooks/commit_kata.py", "line": 1, "accepted": true}}
+}
+
+test_a_host_path_in_an_accepted_test_file_is_accepted if {
+	got := publish_privacy.findings with input as {"files": [{"path": "s.tar.gz/s/tests/test_tick_gate.py", "lines": [concat("", ["/ho", "me/realname/x"])]}]}
+	got == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/tests/test_tick_gate.py", "line": 1, "accepted": true}}
+}
+
+test_the_same_host_path_in_another_test_file_is_not_accepted if {
+	got := publish_privacy.findings with input as {"files": [{"path": "s.tar.gz/s/tests/test_other.py", "lines": [concat("", ["/ho", "me/realname/x"])]}]}
+	got == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/tests/test_other.py", "line": 1}}
 }
 
 test_the_same_line_in_another_file_is_not_accepted if {

@@ -30,7 +30,10 @@ line_deny := {
 
 line_withheld := {
 	"home-path": `/home/[a-z_][a-z0-9_-]*/`,
-	"mail-address": `\b[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}\b`,
+	# ⚑ NOT PRECEDED BY A BACKSLASH (W1209): source text spells a newline `\n`, so a decorator on the
+	# next line read `n@pytest.mark.x` as an address; the local part must start at a line start or
+	# after something that is neither a backslash nor part of an address.
+	"mail-address": `(^|[^\\A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}\b`,
 }
 
 deny contains sprintf("deny %s", [name]) if {
@@ -95,6 +98,31 @@ accepted := [
 		"path_suffix": "mikemol/pathsforward/cli.py",
 		"rule": "home-path",
 		"reason": "a placeholder path in a docstring",
+	},
+	{
+		"path_suffix": "/tests/test_adoption.py",
+		"rule": "home-path",
+		"reason": "a test of the author's own host layout; it skips when that checkout is absent",
+	},
+	{
+		"path_suffix": "/tests/test_bar_fires.py",
+		"rule": "home-path",
+		"reason": "comments that describe a path the host once resolved to, as the defect",
+	},
+	{
+		"path_suffix": "/tests/test_no_verify.py",
+		"rule": "home-path",
+		"reason": "a command line under test that names a host path",
+	},
+	{
+		"path_suffix": "/tests/test_structural_query.py",
+		"rule": "home-path",
+		"reason": "command lines under test that name a host path",
+	},
+	{
+		"path_suffix": "/tests/test_tick_gate.py",
+		"rule": "home-path",
+		"reason": "the host's tick prompts, quoted as the input under test",
 	},
 ]
 
