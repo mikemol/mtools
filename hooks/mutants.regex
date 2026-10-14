@@ -206,6 +206,12 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/vlogwatch.py|watch-never-counts-a-stall|before\.get\("stalls", 0\) \+ 1|before.get("stalls", 0) + 0|def=observe
+src/mikemol/hooks/vlogwatch.py|watch-never-kills|if stalls >= patience:|if False:|def=observe
+src/mikemol/hooks/vlogwatch.py|watch-kills-the-dead|if not alive\(pid\):|if False:|def=observe
+src/mikemol/hooks/vlogwatch.py|watch-judges-no-holder|if pid is None:|if False:|def=observe
+src/mikemol/hooks/vlogwatch.py|watch-ignores-batches|\("pid", "sent", "batches"\)|("pid",)|def=observe
+src/mikemol/hooks/vlogship.py|drain-busy-not-observed|if result\.busy:|if False:|def=drain_all
 src/mikemol/hooks/vlogcli.py|cli-drain-flag-ignored|if args\.drain:|if False:|def=main
 src/mikemol/hooks/vlogcli.py|cli-always-starts-a-drainer|if not args\.no_drain:|if True:|def=main
 src/mikemol/hooks/vlogcli.py|cli-wrapper-never-runs|return vlogforms\.run_wrapped\(args\.command, take\), None|return 0, None|def=_produce

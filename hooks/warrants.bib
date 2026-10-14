@@ -9387,3 +9387,52 @@
   claim  = {Spool directory, bounds, service and every resolver argument reach the detached process.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_the_drainer_argv_carries_the_same_settings},
 }
+
+@misc{hooks-vlogwatch-no-progress-file-means-no-holder-to-judge-and-nothing-is-killed,
+  section = {vlogwatch},
+  title  = {A lock held with no progress record is `none`: the watcher has nothing to compare},
+  claim  = {A lock held with no progress record is `none`: the watcher has nothing to compare.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_no_progress_file_means_no_holder_to_judge_and_nothing_is_killed},
+}
+
+@misc{hooks-vlogwatch-drainer-that-is-gone-is-not-killed-and-the-watch-is-cleared,
+  section = {vlogwatch},
+  title  = {A dead pid released its lock by dying: nothing to end, and no stale count is kept},
+  claim  = {A dead pid released its lock by dying: nothing to end, and no stale count is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_a_drainer_that_is_gone_is_not_killed_and_the_watch_is_cleared},
+}
+
+@misc{hooks-vlogwatch-progress-that-never-changes-is-killed-on-the-run-that-counts-the-third-stall,
+  section = {vlogwatch},
+  title  = {The first run sets the baseline; the next three each see no movement; the third kills},
+  claim  = {The first run sets the baseline; the next three each see no movement; the third kills.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_progress_that_never_changes_is_killed_on_the_run_that_counts_the_third_stall},
+}
+
+@misc{hooks-vlogwatch-drainer-that-keeps-moving-is-never-killed-however-many-runs-pass,
+  section = {vlogwatch},
+  title  = {The control: progress changes between every observation, so the count resets each time},
+  claim  = {The control: progress changes between every observation, so the count resets each time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_a_drainer_that_keeps_moving_is_never_killed_however_many_runs_pass},
+}
+
+@misc{hooks-vlogwatch-one-movement-resets-a-count-that-was-building,
+  section = {vlogwatch},
+  title  = {Two stalls, then a batch lands: the next unchanged run starts over at one, not three},
+  claim  = {Two stalls, then a batch lands: the next unchanged run starts over at one, not three.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_one_movement_resets_a_count_that_was_building},
+}
+
+@misc{hooks-vlogwatch-after-a-kill-the-next-observation-starts-a-fresh-count,
+  section = {vlogwatch},
+  title  = {The watch record is cleared by the kill, so a replacement holder is judged on its own},
+  claim  = {The watch record is cleared by the kill, so a replacement holder is judged on its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_after_a_kill_the_next_observation_starts_a_fresh_count},
+}
+
+@misc{hooks-vlogwatch-busy-spool-in-drain-all-is-an-observation-and-a-stalled-holder-is-ended,
+  section = {vlogwatch},
+  title  = {Hold the drain lock like a hung drainer; four drain_all runs end it, reason names busy},
+  claim  = {Hold the drain lock like a hung drainer; four drain_all runs end it, reason names busy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_a_busy_spool_in_drain_all_is_an_observation_and_a_stalled_holder_is_ended},
+}

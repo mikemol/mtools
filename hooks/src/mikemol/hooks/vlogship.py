@@ -30,7 +30,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import vlogrecord, vlogsink, vlogspool
+from mikemol.hooks import vlogrecord, vlogsink, vlogspool, vlogwatch
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping, Sequence
@@ -38,6 +38,10 @@ if TYPE_CHECKING:
 NO_STREAMS = "_none"
 PREFIX = "vlog-"
 SUFFIX = ".spool"
+PROGRESS = ".vlog.progress"
+WATCH = ".vlog.watch"
+note_progress = vlogwatch.record_progress_here
+watch_holder = vlogwatch.observe
 
 
 @dataclass(frozen=True)
@@ -147,8 +151,14 @@ def drain_all(
     config: Config,
     opener: vlogsink.Opener = vlogsink.http_opener,
     resolver: vlogsink.Resolver = vlogsink.run_resolver,
+    kill: Callable[[int], None] = vlogwatch.kill_group,
+    alive: Callable[[int], bool] = vlogwatch.pid_alive,
 ) -> Drain:
     """Resolve the endpoint by name and post every spool, leaving what is refused.
+
+    ⚑ A BUSY SPOOL IS AN OBSERVATION (W1180): another drainer holds it, and `vlogwatch.observe`
+    compares that drainer's progress file with what the previous run saw; one that has not moved
+    for several runs in a row is ended. Every batch taken updates the progress file.
 
     Returns:
         lines sent, lines left, and the first reason anything was left.
@@ -159,18 +169,26 @@ def drain_all(
     if base is None:
         left = sum(s.count() for s in spools)
         return Drain(0, left, "no destination: no service named, or the resolver gave no endpoint")
-    sent, reason = 0, ""
+    progress, watch = Path(config.spool_dir) / PROGRESS, Path(config.spool_dir) / WATCH
+    reason = ""
+    totals = [0, 0]
     for spool in spools:
         url = vlogsink.ingest_url(base, keys_of(spool.path.name))
         refusal: list[str] = []
 
         def take(lines: list[str], url: str = url, refusal: list[str] = refusal) -> bool:
             posted = vlogsink.post(url, lines, opener)
-            if not posted.ok:
+            if posted.ok:
+                totals[0] += len(lines)
+                totals[1] += 1
+                note_progress(progress, totals[0], totals[1])
+            else:
                 refusal.append(f"{posted.status} {posted.reason}".strip())
             return posted.ok
 
         result = spool.drain(take)
-        sent += result.sent
+        if result.busy:
+            seen = watch_holder(progress, watch, kill=kill, alive=alive)
+            reason = reason or f"busy: another drainer holds it ({seen.state})"
         reason = reason or (refusal[0] if refusal else "")
-    return Drain(sent, sum(s.count() for s in spools), reason)
+    return Drain(totals[0], sum(s.count() for s in spools), reason)
