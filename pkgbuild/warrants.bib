@@ -188,3 +188,14 @@
   claim  = {`release-check ROOT` alone exits 2 and builds nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_the_wrong_number_of_arguments_is_a_usage_error},
 }
+
+@misc{pkgbuild-relcheck-commands-stdout-is-json-only-and-the-build-noise-goes-to-stderr,
+  section = {relcheck},
+  title  = {Run as a real process: every stdout line parses, and the backend's progress is on stderr},
+  claim  = {Run as a real process: every stdout line parses, and the backend's progress is on
+            stderr. A REAL PROCESS, NOT `main` IN THIS ONE: pytest swaps the logging
+            handlers setuptools prints through, so an in-process run never showed the
+            noise. The first real run over 34 dists buried 34 result lines in 280 KB of
+            `copying ...` on standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_the_commands_stdout_is_json_only_and_the_build_noise_goes_to_stderr},
+}

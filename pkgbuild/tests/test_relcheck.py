@@ -16,6 +16,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pkgbuild import relcheck, wheel
@@ -25,6 +26,8 @@ if TYPE_CHECKING:
 
     import pytest
 
+PYTHON = sys.executable
+PATHS = os.pathsep.join(sys.path)
 _PYPROJECT = (
     '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n'
     '[project]\nname = "{name}"\nversion = "{version}"\ndescription = "a demonstration"\n'
@@ -142,6 +145,28 @@ def test_a_dist_that_cannot_be_built_is_a_row_with_the_reason_beside_the_good_on
     assert by_name["demo-a"]["ok"] is True
     assert by_name["demo-broken"]["ok"] is False
     assert by_name["demo-broken"]["build"] != "ok"
+
+
+def test_the_commands_stdout_is_json_only_and_the_build_noise_goes_to_stderr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Run as a real process: every stdout line parses, and the backend's progress is on stderr.
+
+    ⚑ A REAL PROCESS, NOT `main` IN THIS ONE: pytest swaps the logging handlers setuptools prints
+    through, so an in-process run never showed the noise. The first real run over 34 dists buried
+    34 result lines in 280 KB of `copying ...` on standard output.
+    """
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1"})
+    sha = _git(root, "rev-parse", "HEAD")
+    env = {**os.environ, "PYTHONPATH": PATHS}
+    command = [PYTHON, "-m", "mikemol.pkgbuild.wheel", "release-check", str(root), sha]
+    done = subprocess.run(
+        [*command, str(tmp_path / "out")], capture_output=True, text=True, env=env, check=False
+    )
+    assert done.returncode == 0, done.stderr
+    rows = [cast("dict[str, object]", json.loads(line)) for line in done.stdout.splitlines()]
+    assert [r["dist"] for r in rows] == ["demo-a"]
+    assert "running sdist" in done.stderr
 
 
 def test_the_wrong_number_of_arguments_is_a_usage_error(tmp_path: Path) -> None:

@@ -23,6 +23,7 @@ CONSUMED BY: `mikemol-wheel release-check` and the publish preflight (W1151).
 
 from __future__ import annotations
 
+import contextlib
 import importlib
 import io
 import json
@@ -45,6 +46,7 @@ DEFAULT_BACKEND = "setuptools.build_meta"
 ARGC = 3
 BUILD_ERRORS = (OSError, ValueError, RuntimeError, ImportError, KeyError, TypeError, SystemExit)
 Row = dict[str, object]
+to_stderr = contextlib.redirect_stdout
 
 
 def checkout(root: Path, sha: str, dest: Path) -> None:
@@ -105,8 +107,12 @@ def build_dist(dist: Path, out: Path) -> tuple[Path, Path]:
     cwd = Path.cwd()
     try:
         os.chdir(dist)  # PEP 517 builds the project rooted at the CWD
-        sdist = out / build_sdist(str(out))
-        wheel = out / build_wheel(str(out))
+        # ⚑ A BACKEND PRINTS ITS PROGRESS TO STANDARD OUTPUT, which is this command's machine
+        # channel (one JSON line per dist): the noise goes to standard error, or the first real
+        # run of this over 34 dists buried 34 result lines in 280 KB of `copying ...`.
+        with to_stderr(sys.stderr):
+            sdist = out / build_sdist(str(out))
+            wheel = out / build_wheel(str(out))
     finally:
         os.chdir(cwd)
         shutil.rmtree(dist / "build", ignore_errors=True)

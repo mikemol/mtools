@@ -8,6 +8,7 @@
 # A pattern cannot hold a literal pipe: use \S.
 
 # wheel.py: a glob's CARDINALITY is part of its answer (zero and many both refused).
+src/mikemol/pkgbuild/relcheck.py|build-noise-on-stdout|with to_stderr\(sys\.stderr\):|with to_stderr(sys.stdout):|def=build_dist
 src/mikemol/pkgbuild/relcheck.py|no-dist-found|sorted\(p\.parent for p in tree\.glob\("\*/pyproject\.toml"\)\)|[]|def=dists_in
 src/mikemol/pkgbuild/relcheck.py|build-failure-escapes|except BUILD_ERRORS as exc:|except ZeroDivisionError as exc:|def=row_of
 src/mikemol/pkgbuild/relcheck.py|row-always-ok|"ok": all\(v\["ok"\] for v in verdicts\),|"ok": True,|def=row_of
