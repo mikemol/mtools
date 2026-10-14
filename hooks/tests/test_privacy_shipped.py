@@ -87,8 +87,35 @@ def test_a_clean_artifact_exits_zero_and_a_tar_link_is_skipped_not_followed(
     status, rows = _run([sdist], capsys, monkeypatch)
     assert status == 0
     assert rows == [
-        {"artifact": "demo-0.1.tar.gz", "deny": 0, "files": 1, "skipped": 1, "withheld": 0}
+        {
+            "artifact": "demo-0.1.tar.gz",
+            "deny": 0,
+            "files": 1,
+            "skipped": 1,
+            "unaccepted": 0,
+            "withheld": 0,
+        }
     ]
+
+
+def test_an_accepted_withheld_line_passes_and_the_same_line_elsewhere_fails(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The policy accepts the trailer address in commit_kata.py only; elsewhere it fails."""
+    line = "by a" + "@example.org\n"
+    kept = _wheel(tmp_path, {"mikemol/hooks/commit_kata.py": line})
+    status, rows = _run([kept], capsys, monkeypatch)
+    assert status == 0
+    assert rows[0]["accepted"] is True
+    assert rows[-1]["unaccepted"] == 0
+    assert rows[-1]["withheld"] == 1
+    other = tmp_path / "other"
+    other.mkdir()
+    elsewhere = _wheel(other, {"mikemol/hooks/other.py": line})
+    status, rows = _run([elsewhere], capsys, monkeypatch)
+    assert status == 1
+    assert "accepted" not in rows[0]
+    assert rows[-1]["unaccepted"] == 1
 
 
 def test_the_output_never_carries_the_matched_text(

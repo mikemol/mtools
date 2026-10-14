@@ -9,7 +9,9 @@ never leaves the repository: tests, fixtures and notes. What PyPI publishes is w
 the wheel CARRY, so this reads each artifact's member files and judges them with the same
 `publish_privacy.findings` rule, one evaluation per artifact. A finding is `{"kind", "rule",
 "path", "line"}` with `path` as `ARTIFACT/MEMBER`, never the matched text; a summary line follows
-each artifact and the exit is 1 if any artifact has a deny.
+each artifact. The exit is 1 if any artifact has a deny OR a withheld finding the policy has not
+accepted (W1198): a placeholder a person has read is listed in `publish_privacy.rego` with its
+reason and marked `"accepted": true`, and the rest must be fixed.
 
 ⚑ THE ARTIFACTS ARE THE ONES `mikemol-wheel release-check` BUILDS from a pinned sha, so this judges
 the bytes that would be uploaded and not a working tree that may differ from them.
@@ -97,15 +99,17 @@ def run(args: Sequence[str]) -> int:
         findings = privacy_audit.judge(opa, privacy_audit.POLICY, files)
         sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)
         denies = sum(1 for f in findings if f["kind"] == "deny")
+        unaccepted = sum(1 for f in findings if f["kind"] == "withheld" and "accepted" not in f)
         summary: Finding = {
             "artifact": Path(name).name,
             "files": len(files),
             "skipped": skipped,
             "deny": denies,
             "withheld": len(findings) - denies,
+            "unaccepted": unaccepted,
         }
         sys.stdout.write(json.dumps(summary, sort_keys=True) + "\n")
-        total += denies
+        total += denies + unaccepted
     return 1 if total else 0
 
 

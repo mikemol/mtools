@@ -9788,3 +9788,10 @@
   claim  = {No arguments and no `OPA_BIN` each exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_no_artifacts_or_no_judge_is_a_usage_error},
 }
+
+@misc{hooks-privacy-shipped-accepted-withheld-line-passes-and-the-same-line-elsewhere-fails,
+  section = {privacy_shipped},
+  title  = {The policy accepts the trailer address in commit_kata.py only; elsewhere it fails},
+  claim  = {The policy accepts the trailer address in commit_kata.py only; elsewhere it fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_an_accepted_withheld_line_passes_and_the_same_line_elsewhere_fails},
+}

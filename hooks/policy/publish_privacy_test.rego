@@ -90,6 +90,30 @@ test_history_entries_repeat_their_commit_in_each_finding if {
 	publish_privacy.findings == {{"kind": "deny", "rule": "env-file", "path": "a/.env", "line": 0, "commit": "abc"}} with input as {"files": [{"commit": "abc", "path": "a/.env", "lines": []}]}
 }
 
+mail_line := concat("", ["by a", "@example.org"])
+
+accepted_input := {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lines": [mail_line]}]}
+
+test_an_accepted_suffix_and_rule_marks_the_finding if {
+	got := publish_privacy.findings with input as accepted_input
+	got == {{"kind": "withheld", "rule": "mail-address", "path": "w.whl/mikemol/hooks/commit_kata.py", "line": 1, "accepted": true}}
+}
+
+test_the_same_line_in_another_file_is_not_accepted if {
+	got := publish_privacy.findings with input as {"files": [{"path": "w.whl/mikemol/hooks/other.py", "lines": [mail_line]}]}
+	got == {{"kind": "withheld", "rule": "mail-address", "path": "w.whl/mikemol/hooks/other.py", "line": 1}}
+}
+
+test_the_same_file_with_another_rule_is_not_accepted if {
+	got := publish_privacy.findings with input as {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lines": [concat("", ["/ho", "me/someone/x"])]}]}
+	got == {{"kind": "withheld", "rule": "home-path", "path": "w.whl/mikemol/hooks/commit_kata.py", "line": 1}}
+}
+
+test_a_deny_is_never_accepted_even_in_an_accepted_file if {
+	got := publish_privacy.findings with input as {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lines": [concat("", ["id AKIA", "ABCDEFGHIJKLMNOP"])]}]}
+	got == {{"kind": "deny", "rule": "aws-access-key", "path": "w.whl/mikemol/hooks/commit_kata.py", "line": 1}}
+}
+
 test_bulk_clean_input_has_no_findings if {
 	count(publish_privacy.findings) == 0 with input as {"files": [{"path": "a/mod.py", "lines": ["x"]}]}
 }

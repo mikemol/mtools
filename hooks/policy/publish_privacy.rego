@@ -56,13 +56,46 @@ tag(file, base) := object.union(base, {"commit": file.commit}) if file.commit
 
 tag(file, base) := base if not file.commit
 
-findings contains tag(file, {"kind": "deny", "rule": name, "path": file.path, "line": 0}) if {
+# ACCEPTED (W1198): a withheld hit a person has read and kept, one entry per file and rule with the
+# reason. ⚑ A SUFFIX, so one entry covers the wheel's member and the sdist's (they differ only in the
+# prefix). ⚑ NEVER A DENY: only a withheld finding can be accepted, so a secret cannot be waved off
+# by adding a line here. A finding that matches carries "accepted": true; the rest do not.
+accepted := [
+	{
+		"path_suffix": "mikemol/hooks/commit_kata.py",
+		"rule": "mail-address",
+		"reason": "the public no-reply address of the commit trailer",
+	},
+	{
+		"path_suffix": "mikemol/pathsforward/check.py",
+		"rule": "home-path",
+		"reason": "a placeholder path in a comment",
+	},
+	{
+		"path_suffix": "mikemol/pathsforward/cli.py",
+		"rule": "home-path",
+		"reason": "a placeholder path in a docstring",
+	},
+]
+
+is_accepted(f) if {
+	f.kind == "withheld"
+	some entry in accepted
+	entry.rule == f.rule
+	endswith(f.path, entry.path_suffix)
+}
+
+mark(f) := object.union(f, {"accepted": true}) if is_accepted(f)
+
+mark(f) := f if not is_accepted(f)
+
+findings contains mark(tag(file, {"kind": "deny", "rule": name, "path": file.path, "line": 0})) if {
 	some file in input.files
 	some name, pattern in path_deny
 	regex.match(pattern, file.path)
 }
 
-findings contains tag(file, {"kind": "deny", "rule": name, "path": file.path, "line": n}) if {
+findings contains mark(tag(file, {"kind": "deny", "rule": name, "path": file.path, "line": n})) if {
 	some file in input.files
 	some i, text in file.lines
 	some name, pattern in line_deny
@@ -70,7 +103,7 @@ findings contains tag(file, {"kind": "deny", "rule": name, "path": file.path, "l
 	n := i + 1
 }
 
-findings contains tag(file, {"kind": "withheld", "rule": name, "path": file.path, "line": n}) if {
+findings contains mark(tag(file, {"kind": "withheld", "rule": name, "path": file.path, "line": n})) if {
 	some file in input.files
 	some i, text in file.lines
 	some name, pattern in line_withheld
