@@ -9436,3 +9436,66 @@
   claim  = {Hold the drain lock like a hung drainer; four drain_all runs end it, reason names busy.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogwatch.py -k test_a_busy_spool_in_drain_all_is_an_observation_and_a_stalled_holder_is_ended},
 }
+
+@misc{hooks-verdictlog-committed-line-becomes-fields-and-keeps-the-whole-line,
+  section = {verdictlog},
+  title  = {The sha, the subject (with its own brackets) and the push state are fields},
+  claim  = {The sha, the subject (with its own brackets) and the push state are fields.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_committed_line_becomes_fields_and_keeps_the_whole_line},
+}
+
+@misc{hooks-verdictlog-push-state-with-a-semicolon-is-kept-whole,
+  section = {verdictlog},
+  title  = {`PUSHED; UNVERIFIED ...` is one field, as the tool prints it},
+  claim  = {`PUSHED; UNVERIFIED ...` is one field, as the tool prints it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_push_state_with_a_semicolon_is_kept_whole},
+}
+
+@misc{hooks-verdictlog-other-three-verdicts-each-give-their-own-fields,
+  section = {verdictlog},
+  title  = {REFUSED carries rc; NOT COMMITTED and RACED carry the reason; each names its repo},
+  claim  = {REFUSED carries rc; NOT COMMITTED and RACED carry the reason; each names its repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_the_other_three_verdicts_each_give_their_own_fields},
+}
+
+@misc{hooks-verdictlog-lines-that-are-not-verdicts-give-no-event,
+  section = {verdictlog},
+  title  = {The control: the routing line, git's own line and a sentence that merely says COMMITTED},
+  claim  = {The control: the routing line, git's own line and a sentence that merely says COMMITTED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_lines_that_are_not_verdicts_give_no_event},
+}
+
+@misc{hooks-verdictlog-block-yields-its-verdicts-in-order-and-skips-the-rest,
+  section = {verdictlog},
+  title  = {Two verdicts around noise: both come back, in order},
+  claim  = {Two verdicts around noise: both come back, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_block_yields_its_verdicts_in_order_and_skips_the_rest},
+}
+
+@misc{hooks-verdictlog-ship-text-spools-the-events-with-the-tool-stream-and-starts-one-drainer,
+  section = {verdictlog},
+  title  = {One verdict line: one record with its fields and `tool`, one detached drain argv},
+  claim  = {One verdict line: one record with its fields and `tool`, one detached drain argv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_ship_text_spools_the_events_with_the_tool_stream_and_starts_one_drainer},
+}
+
+@misc{hooks-verdictlog-ship-text-with-no-verdict-spools-nothing-and-starts-nothing,
+  section = {verdictlog},
+  title  = {The control: output with no verdict leaves no spool and no drainer},
+  claim  = {The control: output with no verdict leaves no spool and no drainer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_ship_text_with_no_verdict_spools_nothing_and_starts_nothing},
+}
+
+@misc{hooks-verdictlog-unwritable-spool-ships-nothing-and-never-raises,
+  section = {verdictlog},
+  title  = {The spool directory is a regular file: the OSError is swallowed, no drainer starts},
+  claim  = {The spool directory is a regular file: the OSError is swallowed, no drainer starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_an_unwritable_spool_ships_nothing_and_never_raises},
+}
+
+@misc{hooks-verdictlog-main-with-ship-prints-the-same-output-and-ships-the-text-it-printed,
+  section = {verdictlog},
+  title  = {A plain commit with --ship: exit 0, the verdict on stdout, and the recorder got it too},
+  claim  = {A plain commit with --ship: exit 0, the verdict on stdout, and the recorder got it too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_main_with_ship_prints_the_same_output_and_ships_the_text_it_printed},
+}

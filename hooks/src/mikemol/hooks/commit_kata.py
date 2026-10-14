@@ -27,6 +27,7 @@ CONSUMED BY: the `mikemol-commit` console script.
 
 from __future__ import annotations
 
+import io
 import os
 import shutil
 import subprocess
@@ -45,6 +46,7 @@ from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
+from mikemol.hooks.verdictlog import ship_text as _ship_text
 
 wait_for_load = _wait_for_load
 add_argv_list = _add_argv_list
@@ -52,6 +54,9 @@ StackItem = _Item
 StackSeams = _Seams
 stack_items = _items_of
 stack_run = _run_stack
+ship_text = _ship_text
+new_buffer = io.StringIO
+SHIP_FLAG = "--ship"
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -92,6 +97,7 @@ BUDGET = (
 )
 USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
+    "       mikemol-commit REPO --waypoint W --subject S --ship [PATH ...]   (verdicts to vlog)\n"
     "       mikemol-commit REPO --stack FILE\n"
     "  FILE is a JSON list of waypoint, subject, body, paths: several commits, ONE gate run on\n"
     "  the tip, one verdict each; a refusal lands nothing\n"
@@ -713,6 +719,24 @@ def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], *, isol
     return stack_run(root, items, sys.stdout, seams)
 
 
+def commit_shipping(root: Path, request: Request, *, isolated: bool) -> int:
+    """Commit, print the output as ever, then ship its verdict lines as structured fields (W1168).
+
+    ⚑ THE OUTPUT IS NOT CHANGED: `commit` already writes after the commit has finished, so holding
+    it in a buffer and printing it at once is the same bytes at the same moment. Shipping comes
+    AFTER the print and can fail only silently, so a logging fault never alters a verdict.
+
+    Returns:
+        the same exit code `commit` returned.
+
+    """
+    out = new_buffer()
+    code = commit(root, request, out, isolated=isolated)
+    sys.stdout.write(out.getvalue())
+    ship_text(out.getvalue())
+    return code
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -723,8 +747,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     env = dict(os.environ)
     args = list(sys.argv[1:] if argv is None else argv)
-    stacked = stack_target(args, env)
-    parsed = parse(args, env) if stacked is None else None
+    shipping = SHIP_FLAG in args
+    bare = [a for a in args if a != SHIP_FLAG]
+    stacked = stack_target(bare, env)
+    parsed = parse(bare, env) if stacked is None else None
     if stacked is not None:
         root = stacked[0]
     elif parsed is not None:
@@ -747,4 +773,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_stack_mode(root, stacked[1], env, isolated=isolated)
     if parsed is None:
         return EXIT_USAGE
+    if shipping:
+        return commit_shipping(root, parsed[1], isolated=isolated)
     return commit(root, parsed[1], sys.stdout, isolated=isolated)

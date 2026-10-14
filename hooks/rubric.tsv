@@ -99,3 +99,4 @@ vlogforms	mikemol-vlog input forms
 vlogship	mikemol-vlog shipper core
 vlogcli	mikemol-vlog command
 vlogwatch	mikemol-vlog stalled-drainer witness
+verdictlog	mikemol-commit verdict events and --ship

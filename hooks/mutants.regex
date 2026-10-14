@@ -206,6 +206,11 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/verdictlog.py|verdict-never-matched|if found:|if False:|def=event_of
+src/mikemol/hooks/verdictlog.py|ship-text-always-drains|if not events:|if False:|def=ship_text
+src/mikemol/hooks/verdictlog.py|ship-text-starts-no-drainer|spawn\(vlogdetach\.drain_argv\(config\)\)|pass|def=ship_text
+src/mikemol/hooks/commit_kata.py|ship-flag-ignored|if shipping:|if False:|def=main
+src/mikemol/hooks/commit_kata.py|ship-flag-reaches-parse|bare = \[a for a in args if a != SHIP_FLAG\]|bare = args|def=main
 src/mikemol/hooks/vlogwatch.py|watch-never-counts-a-stall|before\.get\("stalls", 0\) \+ 1|before.get("stalls", 0) + 0|def=observe
 src/mikemol/hooks/vlogwatch.py|watch-never-kills|if stalls >= patience:|if False:|def=observe
 src/mikemol/hooks/vlogwatch.py|watch-kills-the-dead|if not alive\(pid\):|if False:|def=observe
