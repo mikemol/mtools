@@ -117,6 +117,17 @@ def test_each_single_change_is_refused_for_that_property_alone(tmp_path: Path) -
         assert wanted in problems[0], (label, problems)
 
 
+def test_a_direct_url_dependency_is_refused_and_a_named_one_is_not(tmp_path: Path) -> None:
+    """W1216: `paperkit @ git+https://...` fails the check; a version range passes."""
+    head, _, rest = _metadata().partition("\n\n")
+    bad = f"{head}\nRequires-Dist: paperkit @ git+https://example.invalid/paperkit\n\n{rest}"
+    ok = f"{head}\nRequires-Dist: paperkit>=1; python_version >= '3'\n\n{rest}"
+    problems = _problems(metacheck.verdict(_wheel(tmp_path, bad)))
+    assert len(problems) == 1
+    assert "direct URL" in problems[0]
+    assert _problems(metacheck.verdict(_wheel(tmp_path, ok))) == []
+
+
 def test_a_missing_long_description_is_refused(tmp_path: Path) -> None:
     """Headers only, no body: the description is missing even though the type is declared."""
     head = "".join(f"{k}: {v}\n" for k, v in _GOOD.items())

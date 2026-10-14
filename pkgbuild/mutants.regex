@@ -32,6 +32,7 @@ src/mikemol/pkgbuild/metacheck.py|old-metadata-passes|< MIN_METADATA|> MIN_METAD
 src/mikemol/pkgbuild/metacheck.py|license-text-not-required|return \["no License-File: the license text is not shipped in the artifact"\]|return []|def=license_files
 src/mikemol/pkgbuild/metacheck.py|license-file-presence-unchecked|if not any\(member == name or member\.endswith\("/" \+ name\) for member in names\)|if False|def=license_files
 src/mikemol/pkgbuild/metacheck.py|verdict-drops-the-license-text|problems = \[\*check\(fields, body\), \*shipped\]|problems = check(fields, body)|def=verdict
+src/mikemol/pkgbuild/metacheck.py|direct-url-dependency-passes|if " @ " in dep or dep\.strip\(\)\.startswith\("@"\)|if False|def=check
 src/mikemol/pkgbuild/metacheck.py|sdist-never-read|if path\.name\.endswith\("\.tar\.gz"\):|if False:|def=read_metadata
 src/mikemol/pkgbuild/metacli.py|check-always-exits-clean|return 0 if all\(v\["ok"\] for v in verdicts\) else 1|return 0|def=run
 src/mikemol/pkgbuild/wheel.py|many-matches-accepted|if len\(matches\) != 1:|if len(matches) < 1:|def=_only

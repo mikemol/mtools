@@ -394,3 +394,10 @@
   claim  = {No root, a root that is no directory, and `--index` with nothing after it exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_a_missing_root_or_a_dangling_index_flag_is_a_usage_error},
 }
+
+@misc{pkgbuild-metacheck-direct-url-dependency-is-refused-and-a-named-one-is-not,
+  section = {metacheck},
+  title  = {W1216: `paperkit @ git+https://...` fails the check; a version range passes},
+  claim  = {W1216: `paperkit @ git+https://...` fails the check; a version range passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_direct_url_dependency_is_refused_and_a_named_one_is_not},
+}

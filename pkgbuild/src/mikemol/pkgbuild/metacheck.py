@@ -178,6 +178,13 @@ def check(fields: Mapping[str, Sequence[str]], body: str) -> list[str]:
     problems = [*_metadata_version(fields), *_identity(fields), *_description(fields, body)]
     if not _first(fields, "Requires-Python"):
         problems.append("Requires-Python is missing")
+    # ⚑ PyPI REJECTS A DIRECT-URL DEPENDENCY (W1216): `name @ https://...` is a PEP 508 form an
+    # index cannot serve, and the upload fails after every other check passed.
+    problems.extend(
+        f"Requires-Dist {dep.strip()!r} is a direct URL, which PyPI rejects"
+        for dep in fields.get("Requires-Dist", [])
+        if " @ " in dep or dep.strip().startswith("@")
+    )
     if not any(_first(fields, key) for key in LICENSE_FIELDS):
         problems.append("no license: none of License-Expression, License or License-File")
     return problems
