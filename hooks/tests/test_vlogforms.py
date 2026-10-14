@@ -95,6 +95,31 @@ def test_a_rotated_file_with_a_new_inode_restarts_even_if_it_is_longer(tmp_path:
     assert got.restarted
 
 
+def test_a_prefix_commit_leaves_the_tail_in_the_file_for_the_next_read(tmp_path: Path) -> None:
+    """CRLF and LF lines: commit the first two of three, and the third is read next time."""
+    log = tmp_path / "app.log"
+    state = tmp_path / "state.json"
+    log.write_bytes(b"one\r\ntwo\nthree\n")
+    chunk = vf.read_from_offset(log, state)
+    assert chunk.lines == ["one", "two", "three"]
+    vf.commit(state, vf.prefix_of(chunk, 2))
+    assert vf.read_from_offset(log, state).lines == ["three"]
+
+
+def test_a_prefix_of_zero_commits_nothing_and_a_prefix_beyond_the_end_commits_all(
+    tmp_path: Path,
+) -> None:
+    """The edges: zero consumed re-reads everything; more than there is consumes everything."""
+    log = tmp_path / "app.log"
+    state = tmp_path / "state.json"
+    log.write_bytes(b"a\nb\n")
+    chunk = vf.read_from_offset(log, state)
+    vf.commit(state, vf.prefix_of(chunk, 0))
+    assert vf.read_from_offset(log, state).lines == ["a", "b"]
+    vf.commit(state, vf.prefix_of(chunk, 99))
+    assert vf.read_from_offset(log, state).lines == []
+
+
 def test_a_missing_file_is_no_lines_and_keeps_the_saved_position(tmp_path: Path) -> None:
     """Nothing to read is not an error and not a restart."""
     log = tmp_path / "app.log"

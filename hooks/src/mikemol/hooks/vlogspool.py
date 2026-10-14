@@ -141,6 +141,36 @@ class Spool:
                 self._dropped.write_text(f"{total}\n", encoding="utf-8")
             return dropped
 
+    def append_up_to(self, new: Sequence[str]) -> int:
+        """Add lines at the end only while they FIT, in order, and drop nothing (W1184).
+
+        ⚑ THE `hold` POLICY: when the spool is at its ceiling the rest is not accepted, and the
+        caller keeps it (a file form leaves it in the file for the next run). The first line that
+        does not fit ends the batch, so what is held is always a suffix and order is kept.
+
+        Returns:
+            how many of `new`, from the front, were appended.
+
+        Raises:
+            ValueError: when a line holds a newline, which would split it in two.
+
+        """
+        if any("\n" in line for line in new):
+            msg = "a spooled line is one line; it holds a newline"
+            raise ValueError(msg)
+        with _held(self._lock):
+            kept = self._read()
+            size = sum(len(line.encode("utf-8")) + 1 for line in kept)
+            taken = 0
+            for line in new:
+                cost = len(line.encode("utf-8")) + 1
+                if len(kept) + taken >= self.max_lines or size + cost > self.max_bytes:
+                    break
+                size += cost
+                taken += 1
+            self._write([*kept, *new[:taken]])
+            return taken
+
     def take_dropped(self) -> int:
         """Hand back how many lines the ceiling has dropped since the last call, and reset it.
 

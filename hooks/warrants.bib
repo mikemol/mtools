@@ -9566,3 +9566,60 @@
   claim  = {Two groups, an uncompilable pattern and an unknown form each say which they are.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_stamp_that_cannot_be_used_is_refused_with_its_reason},
 }
+
+@misc{hooks-vlogspool-append-up-to-takes-only-what-fits-in-order-and-drops-nothing,
+  section = {vlogspool},
+  title  = {One line waits, the ceiling is three: two of five fit, the rest are the caller's again},
+  claim  = {One line waits, the ceiling is three: two of five fit, the rest are the caller's again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_append_up_to_takes_only_what_fits_in_order_and_drops_nothing},
+}
+
+@misc{hooks-vlogspool-append-up-to-honours-the-byte-ceiling,
+  section = {vlogspool},
+  title  = {Each line is 5 bytes with its newline; 12 bytes holds two of three},
+  claim  = {Each line is 5 bytes with its newline; 12 bytes holds two of three.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_append_up_to_honours_the_byte_ceiling},
+}
+
+@misc{hooks-vlogspool-append-up-to-into-a-full-spool-takes-nothing,
+  section = {vlogspool},
+  title  = {The control: at the ceiling none are taken and the spool is unchanged},
+  claim  = {The control: at the ceiling none are taken and the spool is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_append_up_to_into_a_full_spool_takes_nothing},
+}
+
+@misc{hooks-vlogship-hold-spools-what-fits-reports-the-rest-and-counts-input-lines-consumed,
+  section = {vlogship},
+  title  = {Five lines with a blank, room for two: a and b go, c and d are held, three were consumed},
+  claim  = {Five lines with a blank, room for two: a and b go, c and d are held, three were
+            consumed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_hold_spools_what_fits_reports_the_rest_and_counts_input_lines_consumed},
+}
+
+@misc{hooks-vlogship-hold-with-room-for-everything-consumes-every-input-line,
+  section = {vlogship},
+  title  = {The control: nothing is held, and a trailing blank line counts as consumed},
+  claim  = {The control: nothing is held, and a trailing blank line counts as consumed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_hold_with_room_for_everything_consumes_every_input_line},
+}
+
+@misc{hooks-vlogship-hold-into-a-full-spool-consumes-nothing,
+  section = {vlogship},
+  title  = {No room at all: nothing spooled, everything held, zero lines consumed, no gap record},
+  claim  = {No room at all: nothing spooled, everything held, zero lines consumed, no gap record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_hold_into_a_full_spool_consumes_nothing},
+}
+
+@misc{hooks-vlogforms-prefix-commit-leaves-the-tail-in-the-file-for-the-next-read,
+  section = {vlogforms},
+  title  = {CRLF and LF lines: commit the first two of three, and the third is read next time},
+  claim  = {CRLF and LF lines: commit the first two of three, and the third is read next time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_prefix_commit_leaves_the_tail_in_the_file_for_the_next_read},
+}
+
+@misc{hooks-vlogforms-prefix-of-zero-commits-nothing-and-a-prefix-beyond-the-end-commits-all,
+  section = {vlogforms},
+  title  = {The edges: zero consumed re-reads everything; more than there is consumes everything},
+  claim  = {The edges: zero consumed re-reads everything; more than there is consumes everything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_prefix_of_zero_commits_nothing_and_a_prefix_beyond_the_end_commits_all},
+}

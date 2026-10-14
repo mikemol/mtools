@@ -40,6 +40,8 @@ class Chunk:
     inode: int
     offset: int
     restarted: bool = False
+    start: int = 0
+    ends: tuple[int, ...] = ()
 
 
 def run_wrapped(argv: Sequence[str], on_line: Callable[[str], None]) -> int:
@@ -99,8 +101,31 @@ def read_from_offset(path: Path, state: Path) -> Chunk:
         handle.seek(start)
         data = handle.read()
     whole = data[: data.rfind(b"\n") + 1]
-    lines = whole.decode("utf-8", errors="replace").splitlines()
-    return Chunk(lines, stat.st_ino, start + len(whole), restarted)
+    pieces = whole.splitlines(keepends=True)
+    lines = [piece.rstrip(b"\r\n").decode("utf-8", errors="replace") for piece in pieces]
+    ends: list[int] = []
+    place = start
+    for piece in pieces:
+        place += len(piece)
+        ends.append(place)
+    return Chunk(lines, stat.st_ino, start + len(whole), restarted, start, tuple(ends))
+
+
+def prefix_of(chunk: Chunk, consumed: int) -> Chunk:
+    """Cut a chunk to its first `consumed` lines, so only those are committed (W1184).
+
+    ⚑ THE TAIL STAYS IN THE FILE: the offset is the end of the last consumed line, so a spool at
+    its ceiling under `hold` takes what fits and the rest is read again by the next run.
+
+    Returns:
+        the chunk of the first `consumed` lines, with the offset after the last of them.
+
+    """
+    taken = max(0, min(consumed, len(chunk.lines)))
+    offset = chunk.ends[taken - 1] if taken else chunk.start
+    return Chunk(
+        chunk.lines[:taken], chunk.inode, offset, chunk.restarted, chunk.start, chunk.ends[:taken]
+    )
 
 
 def commit(state: Path, chunk: Chunk) -> None:

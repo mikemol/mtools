@@ -38,6 +38,7 @@ if TYPE_CHECKING:
 NO_STREAMS = "_none"
 PREFIX = "vlog-"
 SUFFIX = ".spool"
+HOLD = "hold"
 PROGRESS = ".vlog.progress"
 WATCH = ".vlog.watch"
 note_progress = vlogwatch.record_progress_here
@@ -53,14 +54,21 @@ class Config:
     resolver: tuple[str, ...]
     max_lines: int
     max_bytes: int
+    on_full: str = "drop-oldest"
 
 
 @dataclass(frozen=True)
 class Shipped:
-    """What `ship` did: records spooled, and lines the ceiling dropped doing it."""
+    """What `ship` did: records spooled, lines the ceiling dropped, and under `hold` the rest.
+
+    `consumed` counts INPUT lines taken (blank ones included, up to the last record spooled), so a
+    file form can commit exactly that prefix and leave the held tail in the file.
+    """
 
     spooled: int
     dropped: int
+    held: int = 0
+    consumed: int = 0
 
 
 @dataclass(frozen=True)
@@ -113,16 +121,23 @@ def ship(
 ) -> Shipped:
     """Turn lines into records and spool them; blank lines are skipped.
 
+    ⚑ THE CEILING POLICY IS THE CONFIG'S (W1184): `drop-oldest` (the default) makes room by
+    dropping the oldest and recording how many; `hold` appends only what fits and reports the rest
+    as `held` with `consumed` input lines, so a file form can leave the tail in the file.
+
     Returns:
-        the number spooled and the number the ceiling dropped (also recorded in the spool).
+        the number spooled, dropped (also recorded in the spool), held and consumed.
 
     """
+    every = list(lines)
+    kept = [(place, line) for place, line in enumerate(every) if line.strip()]
     records = [
         json.dumps(vlogrecord.record_of(line, streams, now(), how), sort_keys=True)
-        for line in lines
-        if line.strip()
+        for _, line in kept
     ]
     spool = spool_for(config, list(streams))
+    if config.on_full == HOLD:
+        return _hold(spool, records, [place for place, _ in kept], len(every))
     spool.append(records)
     dropped = spool.take_dropped()
     if dropped:
@@ -133,7 +148,22 @@ def ship(
             **streams,
         }
         spool.append([json.dumps(gap, sort_keys=True)])
-    return Shipped(len(records), dropped)
+    return Shipped(len(records), dropped, 0, len(every))
+
+
+def _hold(spool: vlogspool.Spool, records: list[str], places: list[int], total: int) -> Shipped:
+    """Append what fits and say how many input lines that consumed.
+
+    Returns:
+        the shipped count: spooled, no drops, the held records, and the input lines consumed
+        (all of them when everything fit, else up to the last record that did).
+
+    """
+    taken = spool.append_up_to(records)
+    if taken == len(records):
+        return Shipped(taken, 0, 0, total)
+    consumed = places[taken - 1] + 1 if taken else 0
+    return Shipped(taken, 0, len(records) - taken, consumed)
 
 
 def spools_in(config: Config) -> list[vlogspool.Spool]:

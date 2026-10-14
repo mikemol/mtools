@@ -163,6 +163,51 @@ def test_no_service_or_an_unresolved_name_leaves_the_spool_and_says_no_destinati
     assert "no destination" in second.reason
 
 
+def _holding(tmp_path: Path, max_lines: int) -> vlogship.Config:
+    """Build a config whose spool holds at most `max_lines` and whose policy is `hold`.
+
+    Returns:
+        the config.
+
+    """
+    return vlogship.Config(tmp_path / "spool", None, (), max_lines, 1 << 20, "hold")
+
+
+def _held(config: vlogship.Config, lines: list[str]) -> vlogship.Shipped:
+    return vlogship.ship(lines, _STREAMS, vlogrecord.FieldMap(), config, lambda: _NOW)
+
+
+def test_hold_spools_what_fits_reports_the_rest_and_counts_input_lines_consumed(
+    tmp_path: Path,
+) -> None:
+    """Five lines with a blank, room for two: a and b go, c and d are held, three were consumed."""
+    got = _held(_holding(tmp_path, _TWO), ["a", "", "b", "c", "d"])
+    assert (got.spooled, got.dropped, got.held, got.consumed) == (_TWO, 0, _TWO, 3)
+    spool = vlogship.spool_for(_holding(tmp_path, _TWO), list(_STREAMS))
+    kept: list[str] = []
+
+    def take(lines: list[str]) -> bool:
+        kept.extend(lines)
+        return True
+
+    spool.drain(take)
+    assert [_doc(line)["_msg"] for line in kept] == ["a", "b"]
+
+
+def test_hold_with_room_for_everything_consumes_every_input_line(tmp_path: Path) -> None:
+    """The control: nothing is held, and a trailing blank line counts as consumed."""
+    got = _held(_holding(tmp_path, 10), ["a", "b", ""])
+    assert (got.spooled, got.held, got.consumed) == (_TWO, 0, _TWO + 1)
+
+
+def test_hold_into_a_full_spool_consumes_nothing(tmp_path: Path) -> None:
+    """No room at all: nothing spooled, everything held, zero lines consumed, no gap record."""
+    config = _holding(tmp_path, 1)
+    _held(config, ["first"])
+    got = _held(config, ["x", "y"])
+    assert (got.spooled, got.held, got.consumed, got.dropped) == (0, _TWO, 0, 0)
+
+
 def test_a_ceiling_that_dropped_lines_is_itself_recorded(tmp_path: Path) -> None:
     """Four lines into a spool of two: two are dropped and one record says how many, once."""
     config = _config(tmp_path, max_lines=_TWO + 1)

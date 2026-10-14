@@ -160,6 +160,31 @@ def test_a_second_drain_while_one_is_running_reports_busy_and_touches_nothing(
     assert spool.count() == _TWO
 
 
+def test_append_up_to_takes_only_what_fits_in_order_and_drops_nothing(tmp_path: Path) -> None:
+    """One line waits, the ceiling is three: two of five fit, the rest are the caller's again."""
+    spool = _spool(tmp_path, max_lines=_THREE)
+    spool.append(["old"])
+    assert spool.append_up_to(["1", "2", "3", "4", "5"]) == _TWO
+    kept: list[str] = []
+    spool.drain(_taking(kept))
+    assert kept == ["old", "1", "2"]
+    assert spool.take_dropped() == 0
+
+
+def test_append_up_to_honours_the_byte_ceiling(tmp_path: Path) -> None:
+    """Each line is 5 bytes with its newline; 12 bytes holds two of three."""
+    spool = _spool(tmp_path, max_bytes=12)
+    assert spool.append_up_to(["aaaa", "bbbb", "cccc"]) == _TWO
+
+
+def test_append_up_to_into_a_full_spool_takes_nothing(tmp_path: Path) -> None:
+    """The control: at the ceiling none are taken and the spool is unchanged."""
+    spool = _spool(tmp_path, max_lines=1)
+    spool.append(["only"])
+    assert spool.append_up_to(["x", "y"]) == 0
+    assert spool.count() == 1
+
+
 def test_a_line_holding_a_newline_is_refused_not_split(tmp_path: Path) -> None:
     """One line is one record; a newline would make two."""
     spool = _spool(tmp_path)
