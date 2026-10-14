@@ -80,6 +80,48 @@ def test_lines_that_are_not_verdicts_give_no_event() -> None:
         assert verdictlog.event_of(line) is None
 
 
+_GATE = "pre-commit: gate jobs=2 cores=24 load1=97.33 floor=2 (held at the floor)"
+_REFUSAL = (
+    "pre-commit: REFUSED — the following check(s) failed:\n"
+    "  - hooks: pytest — every case passes\n"
+    "  - the hermetic suite: //hooks:mutants_0 //hooks:mutants_1\n"
+    "pre-commit: the failing check(s) said:\n"
+    "  --- ruff ---\n"
+    "  - not a check, it is a line of a check's own output\n"
+)
+
+
+def test_the_gates_job_line_becomes_a_gate_event_with_its_readings() -> None:
+    """Jobs, cores, load and floor are fields; `held` says the floor held the cap up."""
+    held = verdictlog.events_of(_GATE)
+    assert held == [
+        {
+            "verdict": "GATE",
+            "jobs": "2",
+            "cores": "24",
+            "load1": "97.33",
+            "floor": "2",
+            "held": "true",
+            "_msg": _GATE,
+        }
+    ]
+    free = verdictlog.events_of("pre-commit: gate jobs=14 cores=24 load1=9.89 floor=2")
+    assert free[0]["held"] == "false"
+
+
+def test_each_check_a_refusal_names_is_an_event_and_nothing_after_the_refusal_is() -> None:
+    """Two bullets under the header: two CHECK_FAILED events; the later `- ` line is not one."""
+    events = verdictlog.events_of(_REFUSAL)
+    assert [e["verdict"] for e in events] == ["CHECK_FAILED", "CHECK_FAILED"]
+    assert events[0]["check"] == "hooks: pytest — every case passes"
+    assert events[1]["check"].startswith("the hermetic suite:")
+
+
+def test_a_bullet_with_no_refusal_header_is_not_a_failed_check() -> None:
+    """The control: a stray `  - x` line outside a refusal blames no check."""
+    assert verdictlog.events_of("  - hooks: pytest — every case passes\n") == []
+
+
 def test_a_block_yields_its_verdicts_in_order_and_skips_the_rest() -> None:
     """Two verdicts around noise: both come back, in order."""
     text = f"noise\n{_COMMITTED}\nmore noise\nNOT COMMITTED r: why\n"

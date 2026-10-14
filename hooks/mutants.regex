@@ -206,6 +206,11 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/verdictlog.py|gate-job-line-never-read|if jobs:|if False:|def=gate_event_of
+src/mikemol/hooks/verdictlog.py|bullet-read-outside-a-refusal|if in_refusal else None|if True else None|def=gate_event_of
+src/mikemol/hooks/verdictlog.py|gate-held-always-true|str\(bool\(jobs\["held"\]\)\)\.lower\(\)|"true"|def=gate_event_of
+src/mikemol/hooks/verdictlog.py|refusal-never-opens|in_refusal = True|in_refusal = False|def=events_of
+src/mikemol/hooks/verdictlog.py|refusal-never-closes|elif not line\.startswith\("  - "\):|elif False:|def=events_of
 src/mikemol/hooks/verdictlog.py|verdict-never-matched|if found:|if False:|def=event_of
 src/mikemol/hooks/verdictlog.py|ship-text-always-drains|if not events:|if False:|def=ship_text
 src/mikemol/hooks/verdictlog.py|ship-text-starts-no-drainer|spawn\(vlogdetach\.drain_argv\(config\)\)|pass|def=ship_text

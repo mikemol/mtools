@@ -64,15 +64,55 @@ def event_of(line: str) -> dict[str, str] | None:
     return None
 
 
+GATE_JOBS = re.compile(
+    r"^pre-commit: gate jobs=(?P<jobs>\d+) cores=(?P<cores>\d+) load1=(?P<load1>\S+) "
+    r"floor=(?P<floor>\d+)(?P<held> \(held at the floor\))?$"
+)
+GATE_REFUSED = "pre-commit: REFUSED — the following check(s) failed:"
+CHECK_BULLET = re.compile(r"^  - (?P<check>\S.*)$")
+
+
+def gate_event_of(line: str, *, in_refusal: bool) -> dict[str, str] | None:
+    """Read one output line as an event of the commit gate (W1181).
+
+    ⚑ THE GATE'S OWN LINES RIDE IN THE COMMIT'S OUTPUT, so no hook is touched: the job cap it was
+    sized to (`GATE`, with the cores, load and floor, and `held` when the floor held it up), and
+    each check the refusal named (`CHECK_FAILED`, only after the refusal header).
+
+    Returns:
+        the event, or None when the line is neither.
+
+    """
+    text = line.rstrip("\n")
+    jobs = GATE_JOBS.match(text)
+    if jobs:
+        parts = {k: v for k, v in jobs.groupdict().items() if v is not None}
+        return {"verdict": "GATE", **parts, "held": str(bool(jobs["held"])).lower(), "_msg": text}
+    bullet = CHECK_BULLET.match(text) if in_refusal else None
+    if bullet:
+        return {"verdict": "CHECK_FAILED", "check": bullet["check"], "_msg": text}
+    return None
+
+
 def events_of(text: str) -> list[dict[str, str]]:
-    """Read every verdict line out of a block of output.
+    """Read every verdict and gate line out of a block of output.
 
     Returns:
         the events, in order.
 
     """
-    found = (event_of(line) for line in text.splitlines())
-    return [event for event in found if event is not None]
+    found: list[dict[str, str]] = []
+    in_refusal = False
+    for line in text.splitlines():
+        if line.rstrip() == GATE_REFUSED:
+            in_refusal = True
+            continue
+        event = event_of(line) or gate_event_of(line, in_refusal=in_refusal)
+        if event is not None:
+            found.append(event)
+        elif not line.startswith("  - "):
+            in_refusal = False
+    return found
 
 
 def ship_events(

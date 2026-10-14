@@ -9510,3 +9510,24 @@
             exit 0 here and this arm fails.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_a_venv_that_cannot_import_the_entry_module_refuses_and_names_the_module},
 }
+
+@misc{hooks-verdictlog-gates-job-line-becomes-a-gate-event-with-its-readings,
+  section = {verdictlog},
+  title  = {Jobs, cores, load and floor are fields; `held` says the floor held the cap up},
+  claim  = {Jobs, cores, load and floor are fields; `held` says the floor held the cap up.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_the_gates_job_line_becomes_a_gate_event_with_its_readings},
+}
+
+@misc{hooks-verdictlog-each-check-a-refusal-names-is-an-event-and-nothing-after-the-refusal-is,
+  section = {verdictlog},
+  title  = {Two bullets under the header: two CHECK_FAILED events; the later `- ` line is not one},
+  claim  = {Two bullets under the header: two CHECK_FAILED events; the later `- ` line is not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_each_check_a_refusal_names_is_an_event_and_nothing_after_the_refusal_is},
+}
+
+@misc{hooks-verdictlog-bullet-with-no-refusal-header-is-not-a-failed-check,
+  section = {verdictlog},
+  title  = {The control: a stray `  - x` line outside a refusal blames no check},
+  claim  = {The control: a stray ` - x` line outside a refusal blames no check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_bullet_with_no_refusal_header_is_not_a_failed_check},
+}
