@@ -206,6 +206,10 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/vlogforms.py|wrapper-hides-the-status|return child\.wait\(\)|return 0|def=run_wrapped
+src/mikemol/hooks/vlogforms.py|offset-ignores-truncation|stat\.st_size < offset|False|def=read_from_offset
+src/mikemol/hooks/vlogforms.py|offset-ignores-rotation|inode != stat\.st_ino or|False or|def=read_from_offset
+src/mikemol/hooks/vlogforms.py|offset-reads-a-partial-line|whole = data\[: data\.rfind\(b"\\n"\) \+ 1\]|whole = data|def=read_from_offset
 src/mikemol/hooks/vlogsink.py|sink-takes-every-status|taken = status in range\(200, 300\)|taken = status in range(100, 600)|def=post
 src/mikemol/hooks/vlogsink.py|sink-no-template-still-runs|if not template:|if False:|def=resolve
 src/mikemol/hooks/vlogsink.py|sink-failed-resolver-trusted|status == 0 and first|first|def=resolve

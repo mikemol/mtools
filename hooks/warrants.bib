@@ -9239,3 +9239,60 @@
   claim  = {Each way of not knowing the endpoint says None, so the lines stay in the spool.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_resolve_is_none_for_no_template_a_failing_resolver_or_an_empty_answer},
 }
+
+@misc{hooks-vlogforms-wrapper-delivers-every-line-and-returns-the-commands-own-status,
+  section = {vlogforms},
+  title  = {The command prints two lines and exits 3: both arrive in order, and 3 comes back},
+  claim  = {The command prints two lines and exits 3: both arrive in order, and 3 comes back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_the_wrapper_delivers_every_line_and_returns_the_commands_own_status},
+}
+
+@misc{hooks-vlogforms-wrapper-returns-zero-for-a-command-that-succeeds,
+  section = {vlogforms},
+  title  = {The control: a clean exit is 0, so 3 above was the command's doing, not the wrapper's},
+  claim  = {The control: a clean exit is 0, so 3 above was the command's doing, not the wrapper's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_the_wrapper_returns_zero_for_a_command_that_succeeds},
+}
+
+@misc{hooks-vlogforms-command-that-cannot-start-is-127-and-delivers-nothing,
+  section = {vlogforms},
+  title  = {No such program: 127, the shell's own number, and no lines},
+  claim  = {No such program: 127, the shell's own number, and no lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_command_that_cannot_start_is_127_and_delivers_nothing},
+}
+
+@misc{hooks-vlogforms-file-is-read-whole-lines-only-and-the-rest-is-read-next-time,
+  section = {vlogforms},
+  title  = {`partial` has no newline yet: it is held back, then returned complete once finished},
+  claim  = {`partial` has no newline yet: it is held back, then returned complete once finished.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_file_is_read_whole_lines_only_and_the_rest_is_read_next_time},
+}
+
+@misc{hooks-vlogforms-uncommitted-read-is-repeated-not-lost,
+  section = {vlogforms},
+  title  = {The state is saved only by commit, so a crash before it re-sends the same lines},
+  claim  = {The state is saved only by commit, so a crash before it re-sends the same lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_an_uncommitted_read_is_repeated_not_lost},
+}
+
+@misc{hooks-vlogforms-truncated-file-restarts-at-the-beginning,
+  section = {vlogforms},
+  title  = {The file became shorter than the offset: read it from 0 and say it restarted},
+  claim  = {The file became shorter than the offset: read it from 0 and say it restarted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_truncated_file_restarts_at_the_beginning},
+}
+
+@misc{hooks-vlogforms-rotated-file-with-a-new-inode-restarts-even-if-it-is-longer,
+  section = {vlogforms},
+  title  = {A different file at the same path: its first line is not skipped because the offset fits},
+  claim  = {A different file at the same path: its first line is not skipped because the offset
+            fits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_rotated_file_with_a_new_inode_restarts_even_if_it_is_longer},
+}
+
+@misc{hooks-vlogforms-missing-file-is-no-lines-and-keeps-the-saved-position,
+  section = {vlogforms},
+  title  = {Nothing to read is not an error and not a restart},
+  claim  = {Nothing to read is not an error and not a restart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_missing_file_is_no_lines_and_keeps_the_saved_position},
+}
