@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 authors = [{name = "Mike Mol"}]
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 keywords = ["ratchet", "baseline", "gate", "paydown", "technical-debt"]
 classifiers = [
     "Programming Language :: Python :: 3.13",
