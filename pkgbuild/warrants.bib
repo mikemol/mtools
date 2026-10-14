@@ -199,3 +199,41 @@
             `copying ...` on standard output.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_the_commands_stdout_is_json_only_and_the_build_noise_goes_to_stderr},
 }
+
+@misc{pkgbuild-twinecheck-interpreter-that-passes-is-ok-and-gets-the-strict-check-over-every-path,
+  section = {twinecheck},
+  title  = {Exit 0 is `ok`, and the command is `-m twine check --strict` then the paths in order},
+  claim  = {Exit 0 is `ok`, and the command is `-m twine check --strict` then the paths in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_twinecheck.py -k test_an_interpreter_that_passes_is_ok_and_gets_the_strict_check_over_every_path},
+}
+
+@misc{pkgbuild-twinecheck-interpreter-that-refuses-is-failed-with-its-output,
+  section = {twinecheck},
+  title  = {Exit 1 is `failed`, and both streams are in the detail so the reason reaches the row},
+  claim  = {Exit 1 is `failed`, and both streams are in the detail so the reason reaches the row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_twinecheck.py -k test_an_interpreter_that_refuses_is_failed_with_its_output},
+}
+
+@misc{pkgbuild-twinecheck-interpreter-without-twine-is-unavailable-not-failed-and-not-ok,
+  section = {twinecheck},
+  title  = {The control: absence is its own state, so the caller cannot read it as a pass},
+  claim  = {The control: absence is its own state, so the caller cannot read it as a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_twinecheck.py -k test_an_interpreter_without_twine_is_unavailable_not_failed_and_not_ok},
+}
+
+@misc{pkgbuild-twinecheck-missing-interpreter-is-unavailable,
+  section = {twinecheck},
+  title  = {A path that is no program is an OSError, and also `unavailable`},
+  claim  = {A path that is no program is an OSError, and also `unavailable`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_twinecheck.py -k test_a_missing_interpreter_is_unavailable},
+}
+
+@misc{pkgbuild-relcheck-readme-the-renderer-refuses-fails-the-row-though-the-metadata-is-clean,
+  section = {relcheck},
+  title  = {The stdlib check passes both artifacts, twine's rendering refuses, so the row is not ok},
+  claim  = {The stdlib check passes both artifacts, twine's rendering refuses, so the row is not ok.
+            THIS IS WHAT W1189 ADDS: before it, `ok` came from the metadata alone, and a
+            README that is valid text to a person and invalid to `readme_renderer`
+            reached the upload before it failed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clean},
+}

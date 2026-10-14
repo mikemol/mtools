@@ -2,27 +2,91 @@
 #    uv pip compile --group dev pyproject.toml --output-file requirements-dev.txt
 ast-serialize==0.11.2
     # via mypy
+certifi==2026.7.22
+    # via requests
+cffi==2.1.1
+    # via cryptography
+charset-normalizer==3.5.2
+    # via requests
+cryptography==50.0.2
+    # via secretstorage
+docutils==0.23
+    # via readme-renderer
+id==1.6.1
+    # via twine
+idna==3.20
+    # via requests
 iniconfig==2.3.0
     # via pytest
+jaraco-classes==3.4.0
+    # via keyring
+jaraco-context==6.1.2
+    # via keyring
+jaraco-functools==4.6.0
+    # via keyring
+jeepney==0.9.0
+    # via
+    #   keyring
+    #   secretstorage
+keyring==25.7.0
+    # via twine
 librt==0.16.0
     # via mypy
+markdown-it-py==4.2.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
+more-itertools==11.2.0
+    # via
+    #   jaraco-classes
+    #   jaraco-functools
 mypy==2.3.1
     # via mikemol-pkgbuild (pyproject.toml:dev)
 mypy-extensions==1.1.0
     # via mypy
+nh3==0.3.7
+    # via readme-renderer
 packaging==26.3
-    # via pytest
+    # via
+    #   pytest
+    #   twine
 pathspec==1.1.1
     # via mypy
 pluggy==1.6.0
     # via pytest
+pycparser==3.11
+    # via cffi
 pygments==2.21.0
-    # via pytest
+    # via
+    #   pytest
+    #   readme-renderer
+    #   rich
 pytest==9.1.1
     # via mikemol-pkgbuild (pyproject.toml:dev)
+readme-renderer==46.0
+    # via twine
+requests==2.34.2
+    # via
+    #   requests-toolbelt
+    #   twine
+requests-toolbelt==1.0.0
+    # via twine
+rfc3986==2.0.0
+    # via twine
+rich==15.0.0
+    # via twine
 ruff==0.16.6
     # via mikemol-pkgbuild (pyproject.toml:dev)
+secretstorage==3.5.0
+    # via keyring
 setuptools==84.0.0
+    # via mikemol-pkgbuild (pyproject.toml:dev)
+twine==7.0.0
     # via mikemol-pkgbuild (pyproject.toml:dev)
 typing-extensions==4.16.0
     # via mypy
+urllib3==2.8.0
+    # via
+    #   id
+    #   requests
+    #   twine

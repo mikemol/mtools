@@ -36,7 +36,7 @@ Homepage = "https://github.com/mikemol/mtools"
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml), plus setuptools: the wheel
 # tests drive the real backend.
-dev = ["pytest", "mypy", "ruff==0.16.6", "setuptools>=68"]
+dev = ["pytest", "mypy", "ruff==0.16.6", "setuptools>=68", "twine"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -97,7 +97,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # call without building a venv with two site-packages, and testing a boundary needs crossing it.
 "tests/test_wheel.py" = ["assert", "private-member-access"]
 "tests/test_metacheck.py" = ["assert"]
+"tests/test_twinecheck.py" = ["assert"]
 "tests/test_relcheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"src/mikemol/pkgbuild/twinecheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/pkgbuild/relcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pyc.py" = ["assert"]
 "tests/test_pyinfo.py" = ["assert"]

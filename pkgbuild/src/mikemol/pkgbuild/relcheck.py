@@ -37,7 +37,7 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import metacheck
+from mikemol.pkgbuild import metacheck, twinecheck
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -47,6 +47,7 @@ ARGC = 3
 BUILD_ERRORS = (OSError, ValueError, RuntimeError, ImportError, KeyError, TypeError, SystemExit)
 Row = dict[str, object]
 to_stderr = contextlib.redirect_stdout
+run_twine = twinecheck.check
 
 
 def checkout(root: Path, sha: str, dest: Path) -> None:
@@ -130,15 +131,27 @@ def row_of(dist: Path, out: Path, sha: str) -> Row:
         sdist, wheel = build_dist(dist, out / dist.name)
     except BUILD_ERRORS as exc:
         reason = f"{type(exc).__name__}: {exc}"
-        return {"dist": dist.name, "sha": sha, "ok": False, "build": reason, "artifacts": []}
+        return {
+            "dist": dist.name,
+            "sha": sha,
+            "ok": False,
+            "build": reason,
+            "twine": "not run",
+            "artifacts": [],
+        }
     verdicts = [metacheck.verdict(sdist), metacheck.verdict(wheel)]
-    return {
+    twine, detail = run_twine([sdist, wheel])
+    row: Row = {
         "dist": dist.name,
         "sha": sha,
-        "ok": all(v["ok"] for v in verdicts),
+        "ok": all(v["ok"] for v in verdicts) and twine == "ok",
         "build": "ok",
+        "twine": twine,
         "artifacts": verdicts,
     }
+    if twine != "ok":
+        row["twine_detail"] = detail
+    return row
 
 
 def release_check(root: Path, sha: str, out: Path) -> list[Row]:

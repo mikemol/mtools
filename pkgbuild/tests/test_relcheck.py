@@ -54,8 +54,13 @@ def _dist(root: Path, name: str, version: str) -> None:
     package = root / name / name.replace("-", "_")
     package.mkdir(parents=True)
     (package / "__init__.py").write_text("", encoding="utf-8")
-    (root / name / "README.md").write_text(f"# {name}\n\nreads well\n", encoding="utf-8")
     text = _PYPROJECT.format(name=name, version=version)
+    if name.endswith("-rst"):
+        # An unclosed inline literal: valid enough to build, refused by the README renderer.
+        (root / name / "README.rst").write_text(f"{name}\n====\n\nUnclosed ``literal\n", "utf-8")
+        text = text.replace('readme = "README.md"', 'readme = "README.rst"')
+    else:
+        (root / name / "README.md").write_text(f"# {name}\n\nreads well\n", encoding="utf-8")
     (root / name / "pyproject.toml").write_text(text, encoding="utf-8")
 
 
@@ -167,6 +172,26 @@ def test_the_commands_stdout_is_json_only_and_the_build_noise_goes_to_stderr(
     rows = [cast("dict[str, object]", json.loads(line)) for line in done.stdout.splitlines()]
     assert [r["dist"] for r in rows] == ["demo-a"]
     assert "running sdist" in done.stderr
+
+
+def test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clean(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The stdlib check passes both artifacts, twine's rendering refuses, so the row is not ok.
+
+    ⚑ THIS IS WHAT W1189 ADDS: before it, `ok` came from the metadata alone, and a README that is
+    valid text to a person and invalid to `readme_renderer` reached the upload before it failed.
+    """
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1", "demo-rst": "0.0.1"})
+    sha = _git(root, "rev-parse", "HEAD")
+    by_name = {str(r["dist"]): r for r in relcheck.release_check(root, sha, tmp_path / "out")}
+    assert by_name["demo-a"]["ok"] is True
+    assert by_name["demo-a"]["twine"] == "ok"
+    bad = by_name["demo-rst"]
+    assert all(v["ok"] for v in cast("list[dict[str, object]]", bad["artifacts"]))
+    assert bad["twine"] == "failed"
+    assert bad["ok"] is False
+    assert "render" in str(bad["twine_detail"]).lower()
 
 
 def test_the_wrong_number_of_arguments_is_a_usage_error(tmp_path: Path) -> None:

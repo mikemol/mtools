@@ -51,6 +51,9 @@ py_library(
             dev_requirement("pytest"),
             dev_requirement("mypy"),
             dev_requirement("setuptools"),
+            # W1189: `twine check --strict` renders the long description, so the release check runs
+            # it; twine and its own requirements are in uv.lock, hash-pinned, not the host's.
+            dev_requirement("twine"),
         ],
         imports = ["src"],
     )
