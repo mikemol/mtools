@@ -352,3 +352,45 @@
   claim  = {Bazel's `bazel-<repo>` link holds a pyproject.toml and must not be listed or written.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_a_symlinked_directory_is_not_a_dist},
 }
+
+@misc{pkgbuild-names-name-is-normalized-like-an-index-before-it-is-asked,
+  section = {names},
+  title  = {Runs of `-`, `_` and `.` become one dash and case is dropped (PEP 503)},
+  claim  = {Runs of `-`, `_` and `.` become one dash and case is dropped (PEP 503).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_a_name_is_normalized_like_an_index_before_it_is_asked},
+}
+
+@misc{pkgbuild-names-each-dist-is-asked-by-its-normalized-name-and-the-worst-state-sets-the-exit,
+  section = {names},
+  title  = {free, taken and an error row; one 404-free dist alone exits 0},
+  claim  = {free, taken and an error row; one 404-free dist alone exits 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_each_dist_is_asked_by_its_normalized_name_and_the_worst_state_sets_the_exit},
+}
+
+@misc{pkgbuild-names-unexpected-status-is-an-error-not-a-pass,
+  section = {names},
+  title  = {A 503 is neither free nor taken: it is reported with its status and fails the run},
+  claim  = {A 503 is neither free nor taken: it is reported with its status and fails the run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_an_unexpected_status_is_an_error_not_a_pass},
+}
+
+@misc{pkgbuild-names-symlinked-directory-is-not-a-dist-and-a-nameless-pyproject-is-an-error-row,
+  section = {names},
+  title  = {The controls: `link` is never asked, and `bare` has no name to ask for},
+  claim  = {The controls: `link` is never asked, and `bare` has no name to ask for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_a_symlinked_directory_is_not_a_dist_and_a_nameless_pyproject_is_an_error_row},
+}
+
+@misc{pkgbuild-names-request-function-reads-the-status-from-a-real-server,
+  section = {names},
+  title  = {`http_status` returns 404 and 200 as served, and a plain `http` index needs no TLS},
+  claim  = {`http_status` returns 404 and 200 as served, and a plain `http` index needs no TLS.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_the_request_function_reads_the_status_from_a_real_server},
+}
+
+@misc{pkgbuild-names-missing-root-or-a-dangling-index-flag-is-a-usage-error,
+  section = {names},
+  title  = {No root, a root that is no directory, and `--index` with nothing after it exit 2},
+  claim  = {No root, a root that is no directory, and `--index` with nothing after it exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_names.py -k test_a_missing_root_or_a_dangling_index_flag_is_a_usage_error},
+}

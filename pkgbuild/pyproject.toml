@@ -101,6 +101,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_twinecheck.py" = ["assert"]
 "tests/test_privacycheck.py" = ["assert"]
 "tests/test_licenses.py" = ["assert"]
+"tests/test_names.py" = ["assert", "invalid-function-name", "builtin-argument-shadowing"]
 "src/mikemol/pkgbuild/privacycheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_relcheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/pkgbuild/twinecheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

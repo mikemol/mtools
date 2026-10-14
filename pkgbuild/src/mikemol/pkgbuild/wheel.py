@@ -16,6 +16,7 @@ Usage:  mikemol-wheel build <out.whl> <pyproject.toml>   (needs the DECLARED set
         mikemol-wheel check <wheel-or-sdist> ...   (a JSON line each; exit 1 on a refusal)
         mikemol-wheel release-check <root> <sha> <out>   (build every dist at the sha, check each)
         mikemol-wheel licenses <root> [--write]   (list, and fix, dists that ship no license text)
+        mikemol-wheel names <root> [--index URL]   (is each dist's project name free on the index)
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ import venv
 import zipfile
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import licenses, metacli, relcheck
+from mikemol.pkgbuild import licenses, metacli, names, relcheck
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -41,6 +42,7 @@ _SITE_MARKER = "/site-packages/"
 run_check = metacli.run
 run_release = relcheck.run
 run_licenses = licenses.run
+run_names = names.run
 
 
 def _only(matches: list[pathlib.Path], what: str) -> pathlib.Path:
@@ -166,6 +168,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_release(args[1:])
     if args[:1] == ["licenses"]:
         return run_licenses(args[1:])
+    if args[:1] == ["names"]:
+        return run_names(args[1:])
     raise SystemExit(__doc__)
 
 

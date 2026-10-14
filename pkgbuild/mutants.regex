@@ -68,3 +68,11 @@ src/mikemol/pkgbuild/licenses.py|written-flag-lost|after = states_of\(dist, want
 src/mikemol/pkgbuild/licenses.py|old-backend-passes|return "old" if any\(_older\(m\) for m in SETUPTOOLS\.finditer\(text\)\) else "ok"|return "ok"|def=backend_state
 src/mikemol/pkgbuild/licenses.py|every-backend-lowered-to-the-floor|return FLOOR if _older\(found\) else found\.group\(0\)|return FLOOR|def=_raised
 src/mikemol/pkgbuild/licenses.py|exit-clean-with-pending|return 1 if pending else 0|return 0|def=run
+src/mikemol/pkgbuild/names.py|case-kept-in-the-name|RUNS\.sub\("-", name\)\.lower\(\)|RUNS.sub("-", name)|def=normalized
+src/mikemol/pkgbuild/names.py|every-status-is-free|if status == FREE:|if True:|def=state_of
+src/mikemol/pkgbuild/names.py|every-answer-is-taken|return "taken" if status == TAKEN else f"error: HTTP \{status\}"|return "taken"|def=state_of
+src/mikemol/pkgbuild/names.py|unreachable-index-escapes|except OSError as exc:|except ZeroDivisionError as exc:|def=state_of
+src/mikemol/pkgbuild/names.py|trailing-slash-kept|\{index\.rstrip\('/'\)\}|{index}|def=state_of
+src/mikemol/pkgbuild/names.py|symlinked-directory-asked|if dist\.is_symlink\(\):|if False:|def=run
+src/mikemol/pkgbuild/names.py|exit-clean-with-a-taken-name|pending \+= int\(state != "free"\)|pending += 0|def=run
+src/mikemol/pkgbuild/names.py|plain-http-index-uses-tls|secure = parts\.scheme == "https"|secure = True|def=http_status
