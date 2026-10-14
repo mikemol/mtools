@@ -9499,3 +9499,14 @@
   claim  = {A plain commit with --ship: exit 0, the verdict on stdout, and the recorder got it too.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_main_with_ship_prints_the_same_output_and_ships_the_text_it_printed},
 }
+
+@misc{hooks-commit-launcher-venv-that-cannot-import-the-entry-module-refuses-and-names-the-module,
+  section = {commit-launcher},
+  title  = {A stale venv (a module the entry imports is missing): one refusal, the repair, the cause},
+  claim  = {A stale venv (a module the entry imports is missing): one refusal, the repair, the
+            cause. THE STUB FAILS ONLY WHEN IT IS ASKED TO IMPORT (`-c`), like a venv
+            whose entry module needs a file it lacks; the same stub run as the entry
+            would have echoed its arguments, so a launcher that skipped the probe would
+            exit 0 here and this arm fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_a_venv_that_cannot_import_the_entry_module_refuses_and_names_the_module},
+}

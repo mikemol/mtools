@@ -83,3 +83,28 @@ def test_a_venv_without_the_console_script_refuses(tmp_path: Path) -> None:
     proc = _run(root, *_ARGS)
     assert proc.returncode == _REFUSED
     assert "NOT COMMITTED" in proc.stderr
+
+
+def test_a_venv_that_cannot_import_the_entry_module_refuses_and_names_the_module(
+    tmp_path: Path,
+) -> None:
+    """A stale venv (a module the entry imports is missing): one refusal, the repair, the cause.
+
+    ⚑ THE STUB FAILS ONLY WHEN IT IS ASKED TO IMPORT (`-c`), like a venv whose entry module needs a
+    file it lacks; the same stub run as the entry would have echoed its arguments, so a launcher
+    that skipped the probe would exit 0 here and this arm fails.
+    """
+    root = _project(tmp_path, venv=True)
+    python = root / "bazel-bin" / "hooks" / ".venv" / "bin" / "python3"
+    failing = (
+        '#!/bin/sh\nif [ "$1" = "-c" ]; then\n'
+        "  echo \"ModuleNotFoundError: No module named 'mikemol.hooks.verdictlog'\" >&2\n"
+        "  exit 1\nfi\n"
+    )
+    python.write_text(failing + _STUB.split("\n", 1)[1], encoding="utf-8")
+    proc = _run(root, *_ARGS)
+    assert proc.returncode == _REFUSED
+    assert not proc.stdout
+    assert "NOT COMMITTED" in proc.stderr
+    assert "bazel build //hooks:.venv" in proc.stderr
+    assert "mikemol.hooks.verdictlog" in proc.stderr

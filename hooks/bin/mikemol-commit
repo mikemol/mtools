@@ -40,4 +40,17 @@ if [ -x "$fence" ]; then
 fi
 
 real="$(realpath "$venv")"
+
+# ⚑⚑ A STALE VENV FAILS AT IMPORT, AND A BARE TRACEBACK DOES NOT SAY WHAT TO DO (W1183). The venv's
+# `commit_kata.py` is the working tree's file while its module list is whatever the last
+# `bazel build //hooks:.venv` staged, so an edit that imports a NEW module kills the next commit
+# before any gate runs (W1164 and W1168, twice). Importing the entry module here turns that into
+# the same refusal as an absent venv: one NOT COMMITTED line, the last line of the failure, and the
+# repair. It costs one import and changes nothing when the venv is whole.
+if ! _probe="$("$real/bin/python3" -c 'import mikemol.hooks.commit_kata' 2>&1)"; then
+    echo "NOT COMMITTED: the hooks venv cannot start mikemol-commit; run 'bazel build //hooks:.venv' in $root" >&2
+    printf '%s\n' "$_probe" | tail -n 1 >&2
+    exit 1
+fi
+
 exec "$real/bin/python3" "$real/bin/mikemol-commit" "$@"
