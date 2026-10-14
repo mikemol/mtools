@@ -320,4 +320,6 @@ src/mikemol/hooks/privacy_shipped.py|shipped-exits-clean-on-a-deny|return 1 if t
 src/mikemol/hooks/privacy_shipped.py|shipped-needs-no-judge|if not args or not opa:|if not args:|def=run
 src/mikemol/hooks/privacy_shipped.py|shipped-passes-an-unaccepted-hit|total \+= denies \+ unaccepted|total += denies|def=run
 src/mikemol/hooks/privacy_shipped.py|shipped-counts-an-accepted-hit-as-unaccepted|and "accepted" not in f\)|and True)|def=run
+src/mikemol/hooks/privacy_audit.py|policy-env-ignored|return Path\(named\) if named else POLICY|return POLICY|def=policy_path
+src/mikemol/hooks/privacy_shipped.py|cannot-judge-reads-as-a-finding|return privacy_audit\.NO_JUDGE|return 1|def=run
 src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run

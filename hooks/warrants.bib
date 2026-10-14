@@ -9795,3 +9795,20 @@
   claim  = {The policy accepts the trailer address in commit_kata.py only; elsewhere it fails.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_an_accepted_withheld_line_passes_and_the_same_line_elsewhere_fails},
 }
+
+@misc{hooks-privacy-shipped-judge-that-cannot-judge-exits-two-and-is-never-a-finding,
+  section = {privacy_shipped},
+  title  = {A dead opa and a missing policy file are exit 2 with a message, not a traceback (W1211)},
+  claim  = {A dead opa and a missing policy file are exit 2 with a message, not a traceback (W1211).
+            A TRACEBACK EXITS 1, WHICH IS ALSO "A FINDING": the first real release-check
+            read 34 crashes as 34 privacy failures. Exit 2 is what the caller reads as
+            `unavailable`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_a_judge_that_cannot_judge_exits_two_and_is_never_a_finding},
+}
+
+@misc{hooks-privacy-shipped-policy-is-read-from-the-environment-when-it-is-named,
+  section = {privacy_shipped},
+  title  = {A copy of the policy elsewhere, named by the variable, judges the same way},
+  claim  = {A copy of the policy elsewhere, named by the variable, judges the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_the_policy_is_read_from_the_environment_when_it_is_named},
+}

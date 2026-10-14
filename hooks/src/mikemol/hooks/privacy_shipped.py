@@ -95,8 +95,12 @@ def run(args: Sequence[str]) -> int:
         return 2
     total = 0
     for name in args:
-        files, skipped = members_of(Path(name))
-        findings = privacy_audit.judge(opa, privacy_audit.POLICY, files)
+        try:
+            files, skipped = members_of(Path(name))
+            findings = privacy_audit.judge(opa, privacy_audit.policy_path(), files)
+        except (OSError, RuntimeError, zipfile.BadZipFile, tarfile.TarError) as exc:
+            sys.stderr.write(f"mikemol-privacy-shipped: cannot judge {name}: {exc}\n")
+            return privacy_audit.NO_JUDGE
         sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)
         denies = sum(1 for f in findings if f["kind"] == "deny")
         unaccepted = sum(1 for f in findings if f["kind"] == "withheld" and "accepted" not in f)

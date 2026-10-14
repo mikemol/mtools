@@ -48,7 +48,24 @@ HISTORY_FLAG = "--history"
 COMMIT_MARK = "commit\t"
 HUNK = re.compile(r"^@@ -\d+(?:,\d+)? \+(\d+)")
 POLICY = Path(__file__).parents[3] / "policy" / "publish_privacy.rego"
+POLICY_ENV = "MIKEMOL_PRIVACY_POLICY"
+NO_JUDGE = 2
 Finding = dict[str, object]
+
+
+def policy_path() -> Path:
+    """Find the Rego policy: the one the environment names, else the one beside this checkout.
+
+    ⚑ AN INSTALLED COPY HAS NO `policy/` BESIDE IT (W1211): the wheel carries the module, not the
+    repository's policy directory, so the first real run through the installed script died on a
+    missing file. `MIKEMOL_PRIVACY_POLICY` names it until the policy ships as package data (W1212).
+
+    Returns:
+        the policy file's path.
+
+    """
+    named = os.environ.get(POLICY_ENV, "")
+    return Path(named) if named else POLICY
 
 
 def run_command(argv: Sequence[str]) -> tuple[int, str, str]:
@@ -216,11 +233,15 @@ def run(args: Sequence[str]) -> int:
     root = Path(words[0])
     total = 0
     for dist in words[1:]:
-        if history:
-            files, skipped = history_of(root, dist), 0
-        else:
-            files, skipped = files_of(root, tracked(root, dist))
-        findings = judge(opa, POLICY, files)
+        try:
+            if history:
+                files, skipped = history_of(root, dist), 0
+            else:
+                files, skipped = files_of(root, tracked(root, dist))
+            findings = judge(opa, policy_path(), files)
+        except (OSError, RuntimeError) as exc:
+            sys.stderr.write(f"mikemol-privacy-audit: cannot judge {dist}: {exc}\n")
+            return NO_JUDGE
         sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)
         denies = sum(1 for f in findings if f["kind"] == "deny")
         summary: Finding = {

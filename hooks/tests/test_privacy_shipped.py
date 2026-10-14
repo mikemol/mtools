@@ -19,11 +19,12 @@ from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from mikemol.hooks import privacy_shipped
+from mikemol.hooks import privacy_audit, privacy_shipped
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+_POLICY = privacy_audit.POLICY
 _OPA = os.environ.get("OPA_BIN") or shutil.which("opa") or ""
 pytestmark = pytest.mark.skipif(not _OPA, reason="no opa to judge with")
 Row = dict[str, object]
@@ -128,6 +129,36 @@ def test_the_output_never_carries_the_matched_text(
     out = capsys.readouterr().out
     assert "ABCDEFGHIJKLMNOP" not in out
     assert "realname" not in out
+
+
+def test_a_judge_that_cannot_judge_exits_two_and_is_never_a_finding(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A dead opa and a missing policy file are exit 2 with a message, not a traceback (W1211).
+
+    ⚑ A TRACEBACK EXITS 1, WHICH IS ALSO "A FINDING": the first real release-check read 34 crashes
+    as 34 privacy failures. Exit 2 is what the caller reads as `unavailable`.
+    """
+    wheel = _wheel(tmp_path, {"pkg/a.py": "x = 1\n"})
+    monkeypatch.setenv("OPA_BIN", "false")
+    assert privacy_shipped.run([str(wheel)]) == _USAGE
+    assert "cannot judge" in capsys.readouterr().err
+    monkeypatch.setenv("OPA_BIN", _OPA)
+    monkeypatch.setenv("MIKEMOL_PRIVACY_POLICY", str(tmp_path / "absent.rego"))
+    assert privacy_shipped.run([str(wheel)]) == _USAGE
+    assert "cannot judge" in capsys.readouterr().err
+
+
+def test_the_policy_is_read_from_the_environment_when_it_is_named(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A copy of the policy elsewhere, named by the variable, judges the same way."""
+    copy = tmp_path / "copy.rego"
+    copy.write_text(_POLICY.read_text(encoding="utf-8"), encoding="utf-8")
+    monkeypatch.setenv("MIKEMOL_PRIVACY_POLICY", str(copy))
+    status, rows = _run([_wheel(tmp_path, {"pkg/.env": "A=1\n"})], capsys, monkeypatch)
+    assert status == 1
+    assert rows[0]["rule"] == "env-file"
 
 
 def test_no_artifacts_or_no_judge_is_a_usage_error(monkeypatch: pytest.MonkeyPatch) -> None:
