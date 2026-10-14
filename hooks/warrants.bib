@@ -8930,3 +8930,19 @@
   claim  = {The control: at load 0.5 the cap is every core and the line carries no floor note.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_explain_does_not_claim_the_floor_on_an_idle_host},
 }
+
+@misc{hooks-stackland-each-commit-holds-only-its-own-paths-in-order-and-no-hook-runs,
+  section = {stackland},
+  title  = {Two entries make two commits: a.txt then b.txt; c.txt is never in either; HEAD is unmoved},
+  claim  = {Two entries make two commits: a.txt then b.txt; c.txt is never in either; HEAD is
+            unmoved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_each_commit_holds_only_its_own_paths_in_order_and_no_hook_runs},
+}
+
+@misc{hooks-stackland-path-git-cannot-add-stops-the-chain-and-returns-what-was-built,
+  section = {stackland},
+  title  = {The second entry names a file that is not there: the first commit is built, then it fails},
+  claim  = {The second entry names a file that is not there: the first commit is built, then it
+            fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_path_git_cannot_add_stops_the_chain_and_returns_what_was_built},
+}
