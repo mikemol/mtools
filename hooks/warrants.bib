@@ -9189,3 +9189,53 @@
   claim  = {One line is one record; a newline would make two.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_a_line_holding_a_newline_is_refused_not_split},
 }
+
+@misc{hooks-vlogsink-ingest-url-names-the-message-time-and-stream-fields,
+  section = {vlogsink},
+  title  = {The query tells the endpoint which fields are which; a trailing slash is not doubled},
+  claim  = {The query tells the endpoint which fields are which; a trailing slash is not doubled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_ingest_url_names_the_message_time_and_stream_fields},
+}
+
+@misc{hooks-vlogsink-accepting-ingest-receives-the-lines-as-the-server-saw-them,
+  section = {vlogsink},
+  title  = {The path and query, the content type and the body: one JSON line each, newline-ended},
+  claim  = {The path and query, the content type and the body: one JSON line each, newline-ended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_an_accepting_ingest_receives_the_lines_as_the_server_saw_them},
+}
+
+@misc{hooks-vlogsink-refusing-ingest-is-not-taken-and-says-why,
+  section = {vlogsink},
+  title  = {The control: a 503 is a Posted with ok False, the status, and a reason; nothing raises},
+  claim  = {The control: a 503 is a Posted with ok False, the status, and a reason; nothing raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_a_refusing_ingest_is_not_taken_and_says_why},
+}
+
+@misc{hooks-vlogsink-connection-nobody-answers-is-status-zero-with-a-reason,
+  section = {vlogsink},
+  title  = {Take a port from the kernel, close it unserved, post to it: refused by the OS},
+  claim  = {Take a port from the kernel, close it unserved, post to it: refused by the OS.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_a_connection_nobody_answers_is_status_zero_with_a_reason},
+}
+
+@misc{hooks-vlogsink-scheme-that-is-not-http-is-refused-without-opening-anything,
+  section = {vlogsink},
+  title  = {A `file:` URL must never be opened by an ingest client},
+  claim  = {A `file:` URL must never be opened by an ingest client.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_a_scheme_that_is_not_http_is_refused_without_opening_anything},
+}
+
+@misc{hooks-vlogsink-resolve-substitutes-the-name-into-one-argv-element-and-takes-the-first-line,
+  section = {vlogsink},
+  title  = {A name with spaces and a semicolon stays ONE argument; only the first output line counts},
+  claim  = {A name with spaces and a semicolon stays ONE argument; only the first output line
+            counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_resolve_substitutes_the_name_into_one_argv_element_and_takes_the_first_line},
+}
+
+@misc{hooks-vlogsink-resolve-is-none-for-no-template-a-failing-resolver-or-an-empty-answer,
+  section = {vlogsink},
+  title  = {Each way of not knowing the endpoint says None, so the lines stay in the spool},
+  claim  = {Each way of not knowing the endpoint says None, so the lines stay in the spool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_resolve_is_none_for_no_template_a_failing_resolver_or_an_empty_answer},
+}

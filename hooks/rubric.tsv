@@ -94,3 +94,4 @@ stackland	Stack of commits built without a hook
 snaplinks	Snapshot carries an in-tree link as a regular file
 vlogrecord	VictoriaLogs record from one input line
 vlogspool	VictoriaLogs bounded spool
+vlogsink	VictoriaLogs ingest sink and endpoint resolution
