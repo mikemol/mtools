@@ -104,6 +104,43 @@ def items_of(path: Path) -> list[Item] | str:
     return found
 
 
+def culprits(output: str, items: Sequence[Item]) -> list[int]:
+    """Name the entries whose paths the gate's output mentions (W1156).
+
+    ⚑ A TOKEN MATCHES AN ENTRY'S PATH WHEN IT IS THAT PATH, ENDS WITH IT AS A TRAILING PATH, OR LIES
+    INSIDE IT AS A DIRECTORY. Nothing else is read as blame: a check that names no path in the
+    stack (a whole-suite pytest) blames no entry, and the caller says so rather than guessing.
+
+    Returns:
+        the zero-based places of the entries mentioned, in stack order.
+
+    """
+    words = {word.strip("\"'`:,;()[]") for word in output.split()}
+    tokens = words | {word.partition(":")[0] for word in words}
+    hits: list[int] = []
+    for place, item in enumerate(items):
+        for path in item.paths:
+            base = path.rstrip("/")
+            if any(t == base or t.endswith(f"/{base}") or t.startswith(f"{base}/") for t in tokens):
+                hits.append(place)
+                break
+    return hits
+
+
+def culprit_note(output: str, items: Sequence[Item]) -> str:
+    """Say which entries the refused gate's output names, or that it names none.
+
+    Returns:
+        a clause for the REFUSED line.
+
+    """
+    hits = culprits(output, items)
+    if not hits:
+        return "culprit: unattributed (the failing check names no path in this stack)"
+    named = ", ".join(f"entry {p + 1}/{len(items)} ({items[p].waypoint})" for p in hits)
+    return f"culprit: {named}"
+
+
 def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> int:
     """Build, gate once, land, and report.
 
@@ -131,7 +168,8 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
     if gate.returncode != 0:
         out.write(
             f"REFUSED {name} (rc={gate.returncode}): the tip of a {len(items)}-commit stack was "
-            f"gated once and refused; nothing landed, HEAD is still {before[:SHORT]}\n"
+            f"gated once and refused; nothing landed, HEAD is still {before[:SHORT]}; "
+            f"{culprit_note(shown, items)}\n"
         )
         return gate.returncode
     paths = [p for item in items for p in item.paths]

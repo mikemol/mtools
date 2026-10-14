@@ -202,6 +202,14 @@ src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, t
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
 src/mikemol/hooks/commit_kata.py|stack-flag-never-recognised|args\[1\] == "--stack"|args[1] == "--no-stack"|def=stack_target
 src/mikemol/hooks/commit_kata.py|stack-without-isolation|if not isolated:|if False:|def=run_stack_mode
+src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{base\}"\)|False|def=culprits
+src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
+src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
+src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/vlogrecord.py|long-line-never-truncated|if len\(line\) > how\.max_line:|if False:|def=_wrapped
+src/mikemol/hooks/vlogrecord.py|time-never-understood|if moment is not None else|if moment is None else|def=time_of
+src/mikemol/hooks/vlogrecord.py|unreadable-time-unflagged|if not understood:|if False:|def=record_of
+src/mikemol/hooks/vlogrecord.py|non-object-read-as-object|if not isinstance\(parsed, dict\):|if False:|def=record_of
 src/mikemol/hooks/stackrun.py|stack-gate-verdict-ignored|if gate\.returncode != 0:|if False:|def=run_stack
 src/mikemol/hooks/stackrun.py|stack-file-any-shape|if not isinstance\(raw, list\) or not raw:|if False:|def=items_of
 src/mikemol/hooks/stacklanding.py|land-without-the-old-value|"HEAD", tip, start\]|"HEAD", tip]|def=land

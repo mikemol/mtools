@@ -160,3 +160,44 @@ def test_a_stack_file_is_read_and_a_malformed_one_is_named(tmp_path: Path) -> No
     assert "non-empty JSON list" in str(stackrun.items_of(bad))
     bad.write_text('[{"waypoint": "W1", "subject": "s", "paths": []}]', encoding="utf-8")
     assert "entry 1 needs" in str(stackrun.items_of(bad))
+
+
+_NAMING = '#!/bin/sh\necho "lint: b.txt line 3 is wrong" >&2\nexit 1\n'
+
+
+def test_the_refused_line_names_the_entry_whose_path_the_gate_printed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The gate names b.txt, so the second entry is blamed and the first is not."""
+    root, _remote = _repo(tmp_path, monkeypatch, _NAMING)
+    code, lines = _run(root, tmp_path)
+    assert code == 1
+    refused = [line for line in lines if line.startswith("REFUSED")]
+    assert len(refused) == 1
+    assert refused[0].endswith("culprit: entry 2/2 (W2)")
+
+
+def test_a_gate_that_names_no_path_of_the_stack_is_unattributed_not_guessed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The control: a refusal with no path in it blames nobody, and says so."""
+    root, _remote = _repo(tmp_path, monkeypatch, _REFUSING)
+    _code, lines = _run(root, tmp_path)
+    refused = [line for line in lines if line.startswith("REFUSED")]
+    assert refused[0].endswith(
+        "culprit: unattributed (the failing check names no path in this stack)"
+    )
+
+
+def test_a_path_matches_exactly_as_a_trailing_path_or_inside_a_directory() -> None:
+    """The three shapes count; a longer name that merely contains the path does not."""
+    items = [
+        stackrun.Item("W1", "s", "", ("src/a.py",)),
+        stackrun.Item("W2", "s", "", ("docs/",)),
+        stackrun.Item("W3", "s", "", ("c.txt",)),
+    ]
+    assert stackrun.culprits("error in src/a.py:3", items) == [0]
+    assert stackrun.culprits("/gate/tree/src/a.py:9: failed", items) == [0]
+    assert stackrun.culprits("docs/guide.md is empty", items) == [1]
+    assert stackrun.culprits("see abc.txt and xc.txt", items) == []
+    assert stackrun.culprits("c.txt and src/a.py", items) == [0, 2]

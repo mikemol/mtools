@@ -9047,3 +9047,81 @@
   claim  = {Materialize the tree without the link, then the tree with it: the file appears, once.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_snaplinks.py -k test_a_link_added_by_a_later_tree_arrives_through_the_incremental_diff},
 }
+
+@misc{hooks-stackrun-refused-line-names-the-entry-whose-path-the-gate-printed,
+  section = {stackland},
+  title  = {The gate names b.txt, so the second entry is blamed and the first is not},
+  claim  = {The gate names b.txt, so the second entry is blamed and the first is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_the_refused_line_names_the_entry_whose_path_the_gate_printed},
+}
+
+@misc{hooks-stackrun-gate-that-names-no-path-of-the-stack-is-unattributed-not-guessed,
+  section = {stackland},
+  title  = {The control: a refusal with no path in it blames nobody, and says so},
+  claim  = {The control: a refusal with no path in it blames nobody, and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_gate_that_names_no_path_of_the_stack_is_unattributed_not_guessed},
+}
+
+@misc{hooks-stackrun-path-matches-exactly-as-a-trailing-path-or-inside-a-directory,
+  section = {stackland},
+  title  = {The three shapes count; a longer name that merely contains the path does not},
+  claim  = {The three shapes count; a longer name that merely contains the path does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_path_matches_exactly_as_a_trailing_path_or_inside_a_directory},
+}
+
+@misc{hooks-vlogrecord-json-object-keeps-its-fields-and-gains-the-stream-fields,
+  section = {vlogrecord},
+  title  = {Fields survive as fields, `message` becomes `_msg`, the time is RFC3339 microseconds},
+  claim  = {Fields survive as fields, `message` becomes `_msg`, the time is RFC3339 microseconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_a_json_object_keeps_its_fields_and_gains_the_stream_fields},
+}
+
+@misc{hooks-vlogrecord-number-is-epoch-seconds-or-the-unit-named-and-never-left-an-integer,
+  section = {vlogrecord},
+  title  = {1 is one second after the epoch; 1500 ms is 1.5 s; both come back as strings},
+  claim  = {1 is one second after the epoch; 1500 ms is 1.5 s; both come back as strings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_a_number_is_epoch_seconds_or_the_unit_named_and_never_left_an_integer},
+}
+
+@misc{hooks-vlogrecord-line-that-is-not-json-is-wrapped-with-a-parse-failure-and-kept,
+  section = {vlogrecord},
+  title  = {The text is the message, the time is now, the flag says why, the streams are still there},
+  claim  = {The text is the message, the time is now, the flag says why, the streams are still
+            there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_a_line_that_is_not_json_is_wrapped_with_a_parse_failure_and_kept},
+}
+
+@misc{hooks-vlogrecord-json-that-is-not-an-object-is-wrapped-not-dropped,
+  section = {vlogrecord},
+  title  = {A list parses as JSON but has no fields to keep: it is a message with its own flag},
+  claim  = {A list parses as JSON but has no fields to keep: it is a message with its own flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_json_that_is_not_an_object_is_wrapped_not_dropped},
+}
+
+@misc{hooks-vlogrecord-over-long-line-is-cut-and-says-so,
+  section = {vlogrecord},
+  title  = {Truncated at `max_line`, flagged, and still a record},
+  claim  = {Truncated at `max_line`, flagged, and still a record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_an_over_long_line_is_cut_and_says_so},
+}
+
+@misc{hooks-vlogrecord-unreadable-time-falls-back-to-now-and-says-so-but-a-missing-one-does-not,
+  section = {vlogrecord},
+  title  = {The control: no time field is not an error, so no `time_unparsed`},
+  claim  = {The control: no time field is not an error, so no `time_unparsed`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_an_unreadable_time_falls_back_to_now_and_says_so_but_a_missing_one_does_not},
+}
+
+@misc{hooks-vlogrecord-named-keys-override-the-defaults,
+  section = {vlogrecord},
+  title  = {`when` is the time and `verdict` the message when the caller says so},
+  claim  = {`when` is the time and `verdict` the message when the caller says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_the_named_keys_override_the_defaults},
+}
+
+@misc{hooks-vlogrecord-line-without-the-message-key-keeps-its-whole-text-as-the-message,
+  section = {vlogrecord},
+  title  = {No `message` field: the line itself is `_msg`, so the record is never message-less},
+  claim  = {No `message` field: the line itself is `_msg`, so the record is never message-less.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_a_line_without_the_message_key_keeps_its_whole_text_as_the_message},
+}
