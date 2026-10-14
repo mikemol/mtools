@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -15,6 +15,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 authors = [{name = "Mike Mol"}]
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 keywords = ["codemod", "libcst", "structural-query", "census"]
 classifiers = [
     "Programming Language :: Python :: 3.13",
@@ -128,6 +129,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_cli_judgedfix.py" = ["assert"]
 "tests/test_nonereturns.py" = ["assert"]
 "tests/test_docshape.py" = ["assert"]
+"tests/test_measure.py" = ["assert"]
+"tests/test_cli_docshape.py" = ["assert"]
 "tests/test_cli_nonereturns.py" = ["assert"]
 "tests/test_scriptruns.py" = ["assert"]
 "tests/test_capture.py" = ["assert"]
