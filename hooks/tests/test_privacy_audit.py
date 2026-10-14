@@ -41,7 +41,7 @@ def _repo(tmp_path: Path) -> Path:
     root = tmp_path / "repo"
     (root / "demo").mkdir(parents=True)
     (root / "demo" / "mod.py").write_text("x = 1\n", encoding="utf-8")
-    home = "see /ho" + "me/someone/work for more\n"
+    home = "see /ho" + "me/realname/work for more\n"
     (root / "demo" / "notes.md").write_text("fine\n" + home, encoding="utf-8")
     key = "KEY = 'AKIA" + "ABCDEFGHIJKLMNOP'\n"
     (root / "demo" / "settings.py").write_text(key, encoding="utf-8")
@@ -90,7 +90,7 @@ def test_the_output_never_carries_the_matched_text(
     """The control for the whole mode: neither the key nor the home directory name is printed."""
     _, _, out = _audit(_repo(tmp_path), "demo", capsys, monkeypatch)
     assert "ABCDEFGHIJKLMNOP" not in out
-    assert "someone" not in out
+    assert "realname" not in out
 
 
 def test_an_untracked_secret_a_link_and_a_binary_are_not_findings_and_are_counted(

@@ -57,16 +57,28 @@ test_slack_token_witness if line_denies(concat("", ["xo", "xb-1234567890-abcdef"
 
 test_slack_token_control if not line_denies("xoxo friends", "slack-token")
 
-test_home_path_witness if line_withholds(concat("", ["/ho", "me/someone/project"]), "home-path")
+test_home_path_witness if line_withholds(concat("", ["/ho", "me/realname/project"]), "home-path")
 
 test_home_path_control if not line_withholds("/usr/home-like/x and ~/project", "home-path")
 
-test_mail_address_witness if line_withholds(concat("", ["write to a", "@example.org"]), "mail-address")
+test_mail_address_witness if line_withholds(concat("", ["write to a", "@mailhost.net"]), "mail-address")
+
+test_a_reserved_domain_address_is_exempt if not line_withholds(concat("", ["write to a", "@example.org"]), "mail-address")
+
+test_a_placeholder_home_name_is_exempt if not line_withholds(concat("", ["/ho", "me/someone/project"]), "home-path")
+
+test_a_placeholder_name_inside_a_longer_name_still_counts if line_withholds(concat("", ["/ho", "me/someonelse/project"]), "home-path")
+
+test_a_dot_invalid_address_is_exempt if not line_withholds(concat("", ["ada", "@life.invalid"]), "mail-address")
+
+test_a_real_address_beside_a_reserved_one_still_counts if line_withholds(concat("", ["a", "@example.org and b", "@mailhost.net"]), "mail-address")
+
+test_a_lookalike_of_a_reserved_domain_still_counts if line_withholds(concat("", ["a", "@example.org.evil.net"]), "mail-address")
 
 test_mail_address_control if not line_withholds("decorator @property and a@b", "mail-address")
 
 # a withheld line is not a deny, and a deny line is not withheld by the deny rules
-test_withheld_is_not_deny if not line_denies(concat("", ["/ho", "me/someone/x"]), "home-path")
+test_withheld_is_not_deny if not line_denies(concat("", ["/ho", "me/realname/x"]), "home-path")
 
 test_clean_line_fires_nothing if {
 	count(publish_privacy.deny) == 0 with input as {"path": "src/mod.py", "line": "x = 1"}
@@ -75,7 +87,7 @@ test_clean_line_fires_nothing if {
 
 bulk := {"files": [
 	{"path": "a/.env", "lines": ["x = 1"]},
-	{"path": "a/mod.py", "lines": ["ok", concat("", ["/ho", "me/someone/x"]), concat("", ["id AKIA", "ABCDEFGHIJKLMNOP"])]},
+	{"path": "a/mod.py", "lines": ["ok", concat("", ["/ho", "me/realname/x"]), concat("", ["id AKIA", "ABCDEFGHIJKLMNOP"])]},
 ]}
 
 test_bulk_findings_carry_rule_path_and_line if {
@@ -90,7 +102,7 @@ test_history_entries_repeat_their_commit_in_each_finding if {
 	publish_privacy.findings == {{"kind": "deny", "rule": "env-file", "path": "a/.env", "line": 0, "commit": "abc"}} with input as {"files": [{"commit": "abc", "path": "a/.env", "lines": []}]}
 }
 
-mail_line := concat("", ["by a", "@example.org"])
+mail_line := concat("", ["by a", "@mailhost.net"])
 
 accepted_input := {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lines": [mail_line]}]}
 
@@ -105,7 +117,7 @@ test_the_same_line_in_another_file_is_not_accepted if {
 }
 
 test_the_same_file_with_another_rule_is_not_accepted if {
-	got := publish_privacy.findings with input as {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lines": [concat("", ["/ho", "me/someone/x"])]}]}
+	got := publish_privacy.findings with input as {"files": [{"path": "w.whl/mikemol/hooks/commit_kata.py", "lines": [concat("", ["/ho", "me/realname/x"])]}]}
 	got == {{"kind": "withheld", "rule": "home-path", "path": "w.whl/mikemol/hooks/commit_kata.py", "line": 1}}
 }
 
@@ -120,8 +132,8 @@ test_bulk_clean_input_has_no_findings if {
 
 # the message carries the rule name and never the text that matched
 test_message_does_not_echo_the_match if {
-	msgs := publish_privacy.withheld with input as {"line": concat("", ["/ho", "me/someone/x"])}
+	msgs := publish_privacy.withheld with input as {"line": concat("", ["/ho", "me/realname/x"])}
 	every msg in msgs {
-		not contains(msg, "someone")
+		not contains(msg, "realname")
 	}
 }

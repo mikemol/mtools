@@ -28,7 +28,7 @@ _OPA = os.environ.get("OPA_BIN") or shutil.which("opa") or ""
 pytestmark = pytest.mark.skipif(not _OPA, reason="no opa to judge with")
 Row = dict[str, object]
 _USAGE = 2
-_HOME = "see /ho" + "me/someone/x\n"
+_HOME = "see /ho" + "me/realname/x\n"
 _KEY = "KEY = 'AKIA" + "ABCDEFGHIJKLMNOP'\n"
 
 
@@ -102,7 +102,7 @@ def test_an_accepted_withheld_line_passes_and_the_same_line_elsewhere_fails(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """The policy accepts the trailer address in commit_kata.py only; elsewhere it fails."""
-    line = "by a" + "@example.org\n"
+    line = "by a" + "@mailhost.net\n"
     kept = _wheel(tmp_path, {"mikemol/hooks/commit_kata.py": line})
     status, rows = _run([kept], capsys, monkeypatch)
     assert status == 0
@@ -127,7 +127,7 @@ def test_the_output_never_carries_the_matched_text(
     privacy_shipped.run([str(wheel)])
     out = capsys.readouterr().out
     assert "ABCDEFGHIJKLMNOP" not in out
-    assert "someone" not in out
+    assert "realname" not in out
 
 
 def test_no_artifacts_or_no_judge_is_a_usage_error(monkeypatch: pytest.MonkeyPatch) -> None:

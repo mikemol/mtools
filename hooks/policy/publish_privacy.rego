@@ -43,9 +43,29 @@ deny contains sprintf("deny %s", [name]) if {
 	regex.match(pattern, input.line)
 }
 
+# EXEMPT (W1148): a match a rule's own exemption recognises is not a finding. ⚑ A mail address at a
+# domain reserved for examples and tests (RFC 2606 and 6761) names no one, so a fixture's
+# `ada@example.invalid` is not a leak; a real-looking address still is. The exemption is by RULE and
+# DATA, never by file, so it cannot hide a real address in a file that also holds placeholders.
+#
+# A home directory named for nobody (`/home/someone/`, `/home/user/`) is the same case: a placeholder
+# a test or a doc uses so as not to name the author. ⚑ THE WHOLE NAME MUST BE ONE OF THEM: the
+# pattern is anchored both ends, so `/home/someonelse/` still counts.
+exemptions := {
+	"mail-address": `@(example\.(com|org|net)|([A-Za-z0-9-]+\.)*invalid|localhost)$`,
+	"home-path": `^/home/(someone|user|you|name|me|x|example|username|alice|bob|foo)/$`,
+}
+
+exempt(name, found) if regex.match(exemptions[name], found)
+
+hit(name, pattern, line) if {
+	some found in regex.find_n(pattern, line, -1)
+	not exempt(name, found)
+}
+
 withheld contains sprintf("withheld %s", [name]) if {
 	some name, pattern in line_withheld
-	regex.match(pattern, input.line)
+	hit(name, pattern, input.line)
 }
 
 # BULK FORM (W1192): input {"files": [{"path": p, "lines": [text, ...]}]}, one evaluation for a
@@ -107,6 +127,6 @@ findings contains mark(tag(file, {"kind": "withheld", "rule": name, "path": file
 	some file in input.files
 	some i, text in file.lines
 	some name, pattern in line_withheld
-	regex.match(pattern, text)
+	hit(name, pattern, text)
 	n := i + 1
 }
