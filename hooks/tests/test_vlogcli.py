@@ -320,6 +320,37 @@ def test_a_source_table_overrides_the_top_level_and_the_top_level_is_the_default
     assert "not declared" in str(vlogconfig.merged_table(table, "nope"))
 
 
+def test_per_source_caps_that_add_up_to_more_than_the_total_are_refused_by_name() -> None:
+    """W1213: `a` 6 and `b` 6 against a total of 10 is refused, naming the caps and the total."""
+    table: Doc = {"max_lines": 10, "source": {"a": {"max_lines": 6}, "b": {"max_lines": 6}}}
+    reason = vlogconfig.merged_table(table, "a")
+    assert isinstance(reason, str)
+    assert "max_lines" in reason
+    assert "a=6, b=6" in reason
+    assert "total 10" in reason
+
+
+def test_caps_that_fit_an_uncapped_source_and_a_bytes_overrun_are_judged_apart() -> None:
+    """The controls: 4 + 6 fits 10; a source with no cap is not counted; bytes are checked too."""
+    fits: Doc = {"max_lines": 10, "source": {"a": {"max_lines": 4}, "b": {"max_lines": 6}, "c": {}}}
+    assert isinstance(vlogconfig.merged_table(fits, "c"), dict)
+    over: Doc = {"max_bytes": 100, "source": {"a": {"max_bytes": 60}, "b": {"max_bytes": 60}}}
+    assert "max_bytes" in str(vlogconfig.merged_table(over, None))
+
+
+def test_the_chosen_source_reaches_the_shipper_config_and_an_uncapped_one_keeps_the_total() -> None:
+    """`--source a` names the spool; `c` declares nothing, so its bound is the top-level pair."""
+    table: Doc = {"max_lines": 10, "source": {"a": {"max_lines": 4}, "c": {}}}
+    capped = vlogconfig.merged_table(table, "a")
+    free = vlogconfig.merged_table(table, "c")
+    assert isinstance(capped, dict)
+    assert isinstance(free, dict)
+    one = vlogconfig.build(capped, vlogconfig.Flags(source="a"))
+    two = vlogconfig.build(free, vlogconfig.Flags(source="c"))
+    assert (one.source, one.max_lines) == ("a", 4)
+    assert (two.source, two.max_lines) == ("c", 10)
+
+
 def test_the_drainer_argv_carries_the_same_settings(tmp_path: Path) -> None:
     """Spool directory, bounds, service and every resolver argument reach the detached process."""
     config = vlogship.Config(tmp_path, "logs", ("q", "{name}"), 11, 22)

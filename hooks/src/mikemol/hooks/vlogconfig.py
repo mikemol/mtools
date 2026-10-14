@@ -45,6 +45,7 @@ class Flags:
     spool_dir: Path | None = None
     max_lines: int | None = None
     max_bytes: int | None = None
+    source: str | None = None
 
 
 def state_home() -> Path:
@@ -82,18 +83,63 @@ def _number(table: Mapping[str, object], key: str, flag: int | None, default: in
     return flag or from_file or default
 
 
+def _share(entry: object, key: str) -> int | None:
+    """Read one source's integer cap for `key`.
+
+    Returns:
+        the cap, or None when the entry is not a table or declares no integer for the key.
+
+    """
+    if not isinstance(entry, dict):
+        return None
+    value = cast("dict[str, object]", entry).get(key)
+    return value if isinstance(value, int) else None
+
+
+def oversubscribed(table: Mapping[str, object]) -> str | None:
+    """Say whether the per-source caps add up to more than the spool total.
+
+    ⚑ A CAP IS THAT SOURCE'S SHARE OF THE TOTAL (W1213, luthen's shape): `max_lines` and
+    `max_bytes` in `[source.NAME]` are carved out of the top-level pair, each source in its own
+    spool file. Caps that sum above the total could not all be honoured, so a typo that
+    oversubscribes is refused BY NAME instead of silently exceeding the ceiling. A source with no
+    cap of its own is not counted and keeps the whole total as its bound.
+
+    Returns:
+        the reason, or None when the caps fit.
+
+    """
+    group = table.get("source")
+    declared = cast("dict[str, object]", group) if isinstance(group, dict) else {}
+    for key, default in (("max_lines", DEFAULT_MAX_LINES), ("max_bytes", DEFAULT_MAX_BYTES)):
+        total = _number(table, key, None, default)
+        shares: dict[str, int] = {}
+        for name, entry in declared.items():
+            share = _share(entry, key)
+            if share is not None:
+                shares[name] = share
+        if sum(shares.values()) > total:
+            names = ", ".join(f"{name}={shares[name]}" for name in sorted(shares))
+            return f"the {key} caps of [source.*] ({names}) add up to more than the total {total}"
+    return None
+
+
 def merged_table(table: Mapping[str, object], source: str | None) -> dict[str, object] | str:
     """Lay `[source.NAME]` over the top-level settings, so the ceiling is declared per source.
 
     ⚑ THE POLICY IS DATA, NOT A CODE DEFAULT (W1186, luthen's ask): a source names its own
     `max_lines`, `max_bytes` and `on_full` (`drop-oldest` or `hold`), the top level supplies the
     default for the rest, and a typo in any `on_full` is refused by name rather than read as the
-    default. An undeclared source is refused with the declared ones listed.
+    default. An undeclared source is refused with the declared ones listed, and caps that add up
+    to more than the total are refused (`oversubscribed`).
 
     Returns:
         the merged table, or the reason the source or a policy cannot be used.
 
     """
+    over = oversubscribed(table)
+    if over is not None:
+        return over
     merged = {k: v for k, v in table.items() if k != "source"}
     group = table.get("source")
     declared = cast("dict[str, object]", group) if isinstance(group, dict) else {}
@@ -129,6 +175,7 @@ def build(table: Mapping[str, object], flags: Flags) -> vlogship.Config:
         _number(table, "max_lines", flags.max_lines, DEFAULT_MAX_LINES),
         _number(table, "max_bytes", flags.max_bytes, DEFAULT_MAX_BYTES),
         policy if isinstance(policy, str) and policy in ON_FULL else DEFAULT_ON_FULL,
+        flags.source,
     )
 
 

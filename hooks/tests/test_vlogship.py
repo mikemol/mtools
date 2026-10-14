@@ -194,6 +194,56 @@ def test_hold_spools_what_fits_reports_the_rest_and_counts_input_lines_consumed(
     assert [_doc(line)["_msg"] for line in kept] == ["a", "b"]
 
 
+def _source_config(tmp_path: Path, source: str, cap: int) -> vlogship.Config:
+    """Build a hold-policy config for one source whose own cap is `cap` lines.
+
+    Returns:
+        the config.
+
+    """
+    return vlogship.Config(tmp_path / "spool", None, (), cap, 1 << 20, "hold", source)
+
+
+def _ship_source(
+    config: vlogship.Config, lines: list[str], streams: dict[str, str]
+) -> vlogship.Shipped:
+    return vlogship.ship(lines, streams, vlogrecord.FieldMap(), config, lambda: _NOW)
+
+
+def test_a_volume_source_at_its_cap_does_not_starve_a_small_one(tmp_path: Path) -> None:
+    """W1213: each source has its own spool file, so one filling its cap leaves the other room.
+
+    ⚑ BEFORE: the file was named for the stream KEYS only, so two sources that stream the same keys
+    (a `stream` and a `file` field) shared one file and one ceiling; the volume source filled it.
+    """
+    cap, flood_lines = _TWO + 1, _TWO * 5
+    streams = {"stream": "volume", "file": "/x"}
+    big = _source_config(tmp_path, "volume", cap)
+    small = _source_config(tmp_path, "small", cap)
+    flood = _ship_source(big, [f"l{n}" for n in range(flood_lines)], streams)
+    few = _ship_source(small, ["a", "b"], {**streams, "stream": "small"})
+    assert (flood.spooled, flood.held) == (cap, flood_lines - cap)
+    assert (few.spooled, few.held) == (_TWO, 0)
+    names = sorted(p.name for p in (tmp_path / "spool").glob("vlog-*.spool"))
+    assert names == sorted(
+        [
+            vlogship.spool_name(list(streams), "volume"),
+            vlogship.spool_name(list(streams), "small"),
+        ]
+    )
+
+
+def test_the_source_is_in_the_name_but_not_in_the_keys(tmp_path: Path) -> None:
+    """`keys_of` reads the keys back whatever the source, and an `@` in a name stays a name."""
+    plain = vlogship.spool_name(["tool", "repo"])
+    named = vlogship.spool_name(["tool", "repo"], "a@b,c")
+    assert plain != named
+    assert vlogship.keys_of(named) == ["repo", "tool"] == vlogship.keys_of(plain)
+    assert named.count("@") == 1
+    opened = vlogship.spool_for(_source_config(tmp_path, "a@b,c", 1), ["repo"])
+    assert opened.path.name.count("@") == 1
+
+
 def test_hold_with_room_for_everything_consumes_every_input_line(tmp_path: Path) -> None:
     """The control: nothing is held, and a trailing blank line counts as consumed."""
     got = _held(_holding(tmp_path, 10), ["a", "b", ""])

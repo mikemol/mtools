@@ -161,7 +161,12 @@ def _config_of(args: Args) -> vlogship.Config | str:
     if isinstance(table, str):
         return table
     flags = vlogconfig.Flags(
-        args.service, args.resolver_arg, args.spool_dir, args.max_lines, args.max_bytes
+        args.service,
+        args.resolver_arg,
+        args.spool_dir,
+        args.max_lines,
+        args.max_bytes,
+        args.source,
     )
     return vlogconfig.build(table, flags)
 

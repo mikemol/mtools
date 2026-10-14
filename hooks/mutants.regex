@@ -322,4 +322,8 @@ src/mikemol/hooks/privacy_shipped.py|shipped-passes-an-unaccepted-hit|total \+= 
 src/mikemol/hooks/privacy_shipped.py|shipped-counts-an-accepted-hit-as-unaccepted|and "accepted" not in f\)|and True)|def=run
 src/mikemol/hooks/privacy_audit.py|policy-env-ignored|return Path\(named\) if named else POLICY|return POLICY|def=policy_path
 src/mikemol/hooks/privacy_shipped.py|cannot-judge-reads-as-a-finding|return privacy_audit\.NO_JUDGE|return 1|def=run
+src/mikemol/hooks/vlogship.py|source-not-in-the-spool-name|tail = f"@\{urllib\.parse\.quote\(source, safe=''\)\}" if source else ""|tail = ""|def=spool_name
+src/mikemol/hooks/vlogship.py|keys-read-from-the-source-part|\.partition\("@"\)\[0\]|.partition("@")[2]|def=keys_of
+src/mikemol/hooks/vlogconfig.py|oversubscription-allowed|if sum\(shares\.values\(\)\) > total:|if False:|def=oversubscribed
+src/mikemol/hooks/vlogconfig.py|source-not-carried-to-the-config|        flags\.source,|        None,|def=build
 src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run

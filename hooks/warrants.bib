@@ -9812,3 +9812,41 @@
   claim  = {A copy of the policy elsewhere, named by the variable, judges the same way.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_shipped.py -k test_the_policy_is_read_from_the_environment_when_it_is_named},
 }
+
+@misc{hooks-vlogship-volume-source-at-its-cap-does-not-starve-a-small-one,
+  section = {vlogship},
+  title  = {W1213: each source has its own spool file, so one filling its cap leaves the other room},
+  claim  = {W1213: each source has its own spool file, so one filling its cap leaves the other room.
+            BEFORE: the file was named for the stream KEYS only, so two sources that
+            stream the same keys (a `stream` and a `file` field) shared one file and one
+            ceiling; the volume source filled it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_a_volume_source_at_its_cap_does_not_starve_a_small_one},
+}
+
+@misc{hooks-vlogship-source-is-in-the-name-but-not-in-the-keys,
+  section = {vlogship},
+  title  = {`keys_of` reads the keys back whatever the source, and an `@` in a name stays a name},
+  claim  = {`keys_of` reads the keys back whatever the source, and an `@` in a name stays a name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_the_source_is_in_the_name_but_not_in_the_keys},
+}
+
+@misc{hooks-vlogcli-per-source-caps-that-add-up-to-more-than-the-total-are-refused-by-name,
+  section = {vlogcli},
+  title  = {W1213: `a` 6 and `b` 6 against a total of 10 is refused, naming the caps and the total},
+  claim  = {W1213: `a` 6 and `b` 6 against a total of 10 is refused, naming the caps and the total.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_per_source_caps_that_add_up_to_more_than_the_total_are_refused_by_name},
+}
+
+@misc{hooks-vlogcli-caps-that-fit-an-uncapped-source-and-a-bytes-overrun-are-judged-apart,
+  section = {vlogcli},
+  title  = {The controls: 4 + 6 fits 10; a source with no cap is not counted; bytes are checked too},
+  claim  = {The controls: 4 + 6 fits 10; a source with no cap is not counted; bytes are checked too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_caps_that_fit_an_uncapped_source_and_a_bytes_overrun_are_judged_apart},
+}
+
+@misc{hooks-vlogcli-chosen-source-reaches-the-shipper-config-and-an-uncapped-one-keeps-the-total,
+  section = {vlogcli},
+  title  = {`--source a` names the spool; `c` declares nothing, so its bound is the top-level pair},
+  claim  = {`--source a` names the spool; `c` declares nothing, so its bound is the top-level pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_the_chosen_source_reaches_the_shipper_config_and_an_uncapped_one_keeps_the_total},
+}

@@ -55,6 +55,7 @@ class Config:
     max_lines: int
     max_bytes: int
     on_full: str = "drop-oldest"
+    source: str | None = None
 
 
 @dataclass(frozen=True)
@@ -80,36 +81,45 @@ class Drain:
     reason: str = ""
 
 
-def spool_name(keys: Sequence[str]) -> str:
-    """Name the spool file for a set of stream keys, order-independent.
+def spool_name(keys: Sequence[str], source: str | None = None) -> str:
+    """Name the spool file for a set of stream keys and, optionally, a source, order-independent.
+
+    ⚑ A SOURCE HAS ITS OWN SPOOL (W1213): the file name is the sorted KEYS, so every source that
+    streams the same keys (a `stream` and a `file` field, say) shared one file and one ceiling, and
+    a volume source filled it and starved the rest. A source adds `@NAME` after the keys; the `@`
+    is percent-encoded inside both parts, so it can only be the separator. The ceiling that
+    `[source.NAME]` declares is then that file's.
 
     Returns:
-        for example `vlog-repo%2Ctool.spool`.
+        for example `vlog-repo%2Ctool.spool`, or `vlog-repo%2Ctool@containerd.spool`.
 
     """
     joined = ",".join(sorted(keys)) or NO_STREAMS
-    return f"{PREFIX}{urllib.parse.quote(joined, safe='')}{SUFFIX}"
+    tail = f"@{urllib.parse.quote(source, safe='')}" if source else ""
+    return f"{PREFIX}{urllib.parse.quote(joined, safe='')}{tail}{SUFFIX}"
 
 
 def keys_of(name: str) -> list[str]:
-    """Read the stream keys back out of a spool file's name.
+    """Read the stream keys back out of a spool file's name, ignoring the source.
 
     Returns:
         the keys, empty for the no-streams spool.
 
     """
-    body = urllib.parse.unquote(name.removeprefix(PREFIX).removesuffix(SUFFIX))
+    keyed = name.removeprefix(PREFIX).removesuffix(SUFFIX).partition("@")[0]
+    body = urllib.parse.unquote(keyed)
     return [] if body == NO_STREAMS else body.split(",")
 
 
 def spool_for(config: Config, keys: Sequence[str]) -> vlogspool.Spool:
-    """Open the spool for `keys` under the configured directory.
+    """Open the spool for `keys` (and the config's source) under the configured directory.
 
     Returns:
         the spool, created on first append.
 
     """
-    return vlogspool.Spool(config.spool_dir / spool_name(keys), config.max_lines, config.max_bytes)
+    path = config.spool_dir / spool_name(keys, config.source)
+    return vlogspool.Spool(path, config.max_lines, config.max_bytes)
 
 
 def ship(
