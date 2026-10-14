@@ -2671,10 +2671,10 @@ def test_every_threshold_states_its_historical_exposure() -> None:
 def test_the_refusal_record_names_the_party_not_the_committer() -> None:
     """⚑⚑⚑ EVERY PARTY IN THIS SHARED TREE COMMITS AS THE SAME `user.email`.
 
-    MEASURED: `mikemol@gmail.com` for all of them. The refusal record was built to answer *how many
-    peer refusals has this gate caused* — the row this repository's own leg lists as **unbuildable,
-    a lower bound with an unknown denominator** — and it recorded a **constant**. ⚑ *A column that
-    is the same for every row is a column that was never asked.*
+    MEASURED: the author's own address for all of them. The refusal record was built to answer *how
+    many peer refusals has this gate caused* — the row this repository's own leg lists as
+    **unbuildable, a lower bound with an unknown denominator** — and it recorded a **constant**. ⚑
+    *A column that is the same for every row is a column that was never asked.*
 
     ⚑⚑ `CLAUDE_CODE_SESSION_ID` IS IN THE HOOK'S ENVIRONMENT AND DISTINGUISHES. Both arms run
     before the change: the committer email is **identical** across two simulated parties, the
@@ -2769,7 +2769,7 @@ def test_the_refusal_record_names_its_own_columns() -> None:
 
     The session column was added at `6963eaa` because `git config user.email` is the same for
     every party in this shared tree. ⚑ MEASURED in the live record: rows 1-2 carry three fields
-    and row 3 carries four, so a reader splitting on tab reads `$2` as `mikemol@gmail.com` — the
+    and row 3 carries four, so a reader splitting on tab reads `$2` as the author's address — the
     session id, for two of three rows. **Not a parse error. A plausible wrong value**, in exactly
     the column that exists because that value cannot tell two parties apart.
 

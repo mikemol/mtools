@@ -143,9 +143,9 @@ def test_no_module_hardcodes_a_home_path() -> None:
         for mod in sorted(package.glob("*.py"))
         for lit in _home_literals(mod.read_text(encoding="utf-8"))
     ]
-    assert (found, _home_literals('ROOT = "/home/mikemol/github/x"')) == (
+    assert (found, _home_literals('ROOT = "/home/someone/github/x"')) == (
         [],
-        ['"/home/mikemol/github/x"'],
+        ['"/home/someone/github/x"'],
     )
 
 
