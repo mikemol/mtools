@@ -4636,3 +4636,10 @@
   claim  = {The control for the escape hatch: prose, a missing card and a done one all stay refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_a_reason_or_blocker_that_names_no_card_of_the_queue_is_refused},
 }
+
+@misc{pathsforward-tick-close-gate-close-gate-says-the-verdict-and-writes-nothing,
+  section = {tick_close_gate},
+  title  = {`--close-gate` is the read half (W1202): refused with ready cards, ok when named},
+  claim  = {`--close-gate` is the read half (W1202): refused with ready cards, ok when named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_close_gate_says_the_verdict_and_writes_nothing},
+}

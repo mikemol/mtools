@@ -170,6 +170,7 @@ _FLAGS = (
     "ics",
     "unlinked",
     "delivered",
+    "close_gate",
 )
 _VALUED = (
     "verify",
@@ -331,6 +332,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
     "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason"}),
+    "close_gate": frozenset({"blocked_by", "reason"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
     "certify": frozenset({"root", "facts"}),
@@ -1244,6 +1246,23 @@ def _tick_close(ctx: Ctx) -> int:
     return code
 
 
+def _close_gate(ctx: Ctx) -> int:
+    """Say whether a tick may close, without closing it (W1202).
+
+    ⚑ THE READ HALF OF `--tick-close`, for a caller that closes the tick itself (the katas `tick
+    end` writes its own note and flushes its own commits) and must still refuse while a ready,
+    unblocked card exists. Same verdict, same lines, nothing written.
+
+    Returns:
+        EXIT_OK when the tick may close, EXIT_REFUSED when it may not.
+
+    """
+    verdict = CLOSE_JUDGE(store.load(ctx.path), ctx.get("blocked_by"), ctx.get("reason"))
+    for said in verdict.lines:
+        _say(said)
+    return EXIT_REFUSED if verdict.refused else EXIT_OK
+
+
 def _armed(ctx: Ctx) -> int:
     """Record the job id and heartbeat.
 
@@ -2064,6 +2083,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "gate_green": _gate_green,
     "gate_note": _gate_note,
     "delivered": _delivered,
+    "close_gate": _close_gate,
 }
 
 

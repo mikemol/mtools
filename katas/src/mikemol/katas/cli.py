@@ -223,12 +223,20 @@ def _tick(ctx: Context) -> int:
         ctx.say(hosttick.begin(_queue(ctx)))
         return 0
     if word != ["end"]:
-        ctx.say("usage: tick begin | tick end [--note N] [--next S]")
+        ctx.say("usage: tick begin | tick end [--note N] [--next S] [--blocked-by W | --reason T]")
         return EXIT_USAGE
-    given = _flag_values(ctx.args[1:], ("--note", "--next"))
-    closing = hosttick.Closing(
-        ctx.today, given.get("--note", ""), given.get("--next", ""), ctx.policy.job_file
+    given = _flag_values(ctx.args[1:], ("--note", "--next", "--blocked-by", "--reason"))
+    status, said = hosttick.gate(
+        _queue(ctx), given.get("--blocked-by", ""), given.get("--reason", "")
     )
+    ctx.say(said)
+    if status != 0:
+        return EXIT_USAGE
+    named = given.get("--blocked-by") or given.get("--reason")
+    note = given.get("--note", "")
+    if named and note:
+        note = f"{note} [closed on a named block: {named}]"
+    closing = hosttick.Closing(ctx.today, note, given.get("--next", ""), ctx.policy.job_file)
     host = ctx.fleet()
     for line in hosttick.end(
         _queue(ctx), closing, lambda: fleet.flush(host, ctx.policy.commit_tool)

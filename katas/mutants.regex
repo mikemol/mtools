@@ -142,3 +142,7 @@ src/mikemol/katas/waiter.py|tree-cpu-never-read|watch\.cpu\(child\.pid\)|None|de
 src/mikemol/katas/waiter.py|log-size-never-read|os\.fstat\(sink\.fileno\(\)\)\.st_size|0|def=_watch
 src/mikemol/katas/waiter.py|hung-recorded-as-one|return HUNG|return 1|def=_watch
 src/mikemol/katas/waiter.py|backstop-never-fires|if time\.monotonic\(\) >= deadline:|if False:|def=_watch
+src/mikemol/katas/hosttick.py|gate-drops-the-blocker|args \+= \["--blocked-by", blocked_by\]|pass|def=gate
+src/mikemol/katas/hosttick.py|gate-drops-the-reason|args \+= \["--reason", reason\]|pass|def=gate
+src/mikemol/katas/cli.py|tick-end-closes-through-a-refusal|if status != 0:|if False:|def=_tick
+src/mikemol/katas/cli.py|tick-end-forgets-the-named-block|if named and note:|if False:|def=_tick

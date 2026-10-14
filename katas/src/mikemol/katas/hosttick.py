@@ -69,6 +69,27 @@ def begin(queue: HostQueue) -> str:
     return _call(queue, "--lock", queue.holder)
 
 
+def gate(queue: HostQueue, blocked_by: str = "", reason: str = "") -> tuple[int, str]:
+    """Ask the queue whether the tick may close (W1202), writing nothing.
+
+    ⚑ A TICK IS A LOOP CYCLE, NOT A CARD. The queue's own `--close-gate` reads it: with a ready,
+    unblocked card and no named block it REFUSES (status 2). The caller must then NOT run `end`,
+    which would release the lock and flush the commits of a session that has not stopped being able
+    to work. The ready count and the top three come back in the text.
+
+    Returns:
+        the tool's exit status and what it printed.
+
+    """
+    args = ["--close-gate"]
+    if blocked_by:
+        args += ["--blocked-by", blocked_by]
+    if reason:
+        args += ["--reason", reason]
+    done = capture((str(queue.tool), "--state", str(queue.state), *args))
+    return done.returncode, (done.stdout + done.stderr).strip()
+
+
 def end(queue: HostQueue, closing: Closing, flush: Callable[[], object]) -> list[str]:
     """Close a tick: record the cron job, ledger and evidence the note, flush, release the lock.
 

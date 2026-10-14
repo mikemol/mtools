@@ -125,6 +125,21 @@ def test_a_reason_citing_a_card_of_the_queue_closes_and_is_ledgered(tmp_path: Pa
     assert "waiting on W2 to land" in _ledger(tmp_path)
 
 
+def test_close_gate_says_the_verdict_and_writes_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--close-gate` is the read half (W1202): refused with ready cards, ok when named."""
+    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "ready")])
+    before = path.read_text(encoding="utf-8")
+    gate = ["--state", str(path), "--close-gate"]
+    assert cli.main(gate) == _REFUSED
+    assert "ready and unblocked: 1; top: W2" in capsys.readouterr().out
+    assert cli.main([*gate, "--reason", "waiting on W2"]) == _OK
+    assert cli.main([*gate, "--blocked-by", "W1"]) == _OK
+    assert path.read_text(encoding="utf-8") == before
+    assert not (tmp_path / "paths-forward.ledger").exists()
+
+
 def test_a_reason_or_blocker_that_names_no_card_of_the_queue_is_refused(tmp_path: Path) -> None:
     """The control for the escape hatch: prose, a missing card and a done one all stay refused."""
     path = _state(tmp_path, [_card("W1", "done"), _card("W2", "ready")])

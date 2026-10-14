@@ -51,6 +51,17 @@ def test_begin_takes_the_lock_under_the_holders_name(tmp_path: Path) -> None:
     assert _calls(record) == [f"--state {queue.state} --lock github-b3"]
 
 
+def test_gate_asks_the_queue_with_only_the_flags_it_was_given(tmp_path: Path) -> None:
+    """A bare gate is `--close-gate`; a named block adds `--blocked-by` and `--reason` (W1202)."""
+    queue, record = _queue(tmp_path)
+    status, said = hosttick.gate(queue)
+    assert status == 0
+    assert said.startswith("ok:")
+    hosttick.gate(queue, "W5", "waiting")
+    steps = [call.replace(f"--state {queue.state} ", "") for call in _calls(record)]
+    assert steps == ["--close-gate", "--close-gate --blocked-by W5 --reason waiting"]
+
+
 def test_end_runs_arm_ledger_evidence_flush_and_unlock_in_that_order(tmp_path: Path) -> None:
     """The flush callback sits between the evidence and the unlock, observed in one record."""
     queue, record = _queue(tmp_path)

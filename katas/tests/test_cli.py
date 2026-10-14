@@ -232,6 +232,32 @@ def test_tick_end_records_the_note_and_unlocks(tmp_path: Path) -> None:
     assert "--unlock github-b3" in calls
 
 
+def test_tick_end_is_refused_while_the_queue_says_ready_cards_remain(tmp_path: Path) -> None:
+    """A queue that refuses `--close-gate` leaves the lock held and writes nothing (W1202)."""
+    policy_file, record = _setup(tmp_path)
+    refusing = f'echo "$*" >> {record}\ncase "$*" in *--close-gate*) echo REFUSED; exit 2;; esac\n'
+    _script(tmp_path / "pf-tool", refusing)
+    status, text = _run(policy_file, "tick", "end", "--note", "did it")
+    calls = record.read_text(encoding="utf-8")
+    assert status == _USAGE
+    assert "REFUSED" in text
+    assert "--unlock" not in calls
+    assert "--ledger" not in calls
+
+
+def test_tick_end_with_a_named_block_closes_and_the_note_carries_it(tmp_path: Path) -> None:
+    """`--reason` is passed to the gate and recorded with the note when the gate lets it close."""
+    policy_file, record = _setup(tmp_path)
+    status, _text = _run(
+        policy_file, "tick", "end", "--note", "did it", "--reason", "waiting on W5"
+    )
+    calls = record.read_text(encoding="utf-8")
+    assert status == 0
+    assert "--close-gate --reason waiting on W5" in calls
+    assert "did it [closed on a named block: waiting on W5]" in calls
+    assert "--unlock github-b3" in calls
+
+
 def test_tick_without_begin_or_end_is_a_usage_error(tmp_path: Path) -> None:
     """Neither word is not a default."""
     policy_file, _ = _setup(tmp_path)
