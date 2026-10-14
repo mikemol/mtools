@@ -72,7 +72,9 @@ sh_test(
 
 # W332: the reusable gate workflow under the pinned actionlint, its `run:` scripts shellchecked by
 # the declared shellcheck. Globbed like the shell above, so a workflow added to ci/ is covered.
-_CI_WORKFLOWS = glob(["ci/*.yml"], allow_empty = False)
+# ⚑ THE PUBLISH WORKFLOW (W1195) LIVES WHERE GITHUB ACTS ON IT, .github/workflows/: trusted publishing
+# names the workflow file, so it cannot sit under ci/ the way the draft gate does.
+_CI_WORKFLOWS = glob(["ci/*.yml", ".github/workflows/*.yml"], allow_empty = False)
 
 sh_test(
     name = "actionlint_ci",
