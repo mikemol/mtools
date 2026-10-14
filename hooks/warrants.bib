@@ -8960,3 +8960,17 @@
   claim  = {The control: the same call with a hook that refuses returns its status and its output.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_refusing_hook_is_returned_as_the_gate_verdict},
 }
+
+@misc{hooks-stacklanding-landing-moves-head-to-the-tip-refreshes-the-index-and-pushes,
+  section = {stackland},
+  title  = {HEAD and the remote's main both read the tip; the committed paths show no staged change},
+  claim  = {HEAD and the remote's main both read the tip; the committed paths show no staged change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_landing_moves_head_to_the_tip_refreshes_the_index_and_pushes},
+}
+
+@misc{hooks-stacklanding-head-that-moved-during-the-gate-is-a-race-and-nothing-changes,
+  section = {stackland},
+  title  = {A peer commits after the build: the landing is refused and their commit stays at HEAD},
+  claim  = {A peer commits after the build: the landing is refused and their commit stays at HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_head_that_moved_during_the_gate_is_a_race_and_nothing_changes},
+}

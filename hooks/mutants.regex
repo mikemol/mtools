@@ -195,6 +195,8 @@ src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=build
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
+src/mikemol/hooks/stacklanding.py|land-without-the-old-value|"HEAD", tip, start\]|"HEAD", tip]|def=land
+src/mikemol/hooks/stacklanding.py|land-never-pushes|"--ignore-missing", "post-commit"|"--ignore-missing", "post-merge"|def=land
 
 # W1082 (nemik:W426): PUSHED is what the remote holds, not what the tracking ref claims.
 src/mikemol/hooks/commit_kata.py|tracking-ref-trusted|if remote == sha or on_remote\(root, sha, remote, run\):|if tracked:|def=published
