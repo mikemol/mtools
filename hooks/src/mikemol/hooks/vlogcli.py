@@ -15,9 +15,11 @@ timeout exists anywhere in this path; the bounds are lines and bytes.
 ⚑ THE EXIT STATUS IS THE PRODUCER'S. A pipe cannot see it, so the wrapper form runs the command and
 returns its status; the stdin and file forms return 0 once the lines are spooled (2: usage).
 
-⚑ THE FILE FORM SAVES EXACTLY THE CHUNK IT SPOOLED. Re-reading the file to find the offset would
-commit past a line appended in between, and that line would be lost; the chunk read is the chunk
-committed, after its lines are in the spool.
+⚑ THE FILE FORM SAVES EXACTLY THE PREFIX IT SPOOLED. Re-reading the file to find the offset would
+commit past a line appended in between, and under `on_full = hold` a spool at its ceiling takes only
+part of a chunk: the offset saved is the end of the last consumed line, so the held tail is read
+again by the next run. `hold` needs the file form (stdin and a command cannot be re-read), so it is
+refused as a usage error with anything else.
 
 CONSUMED BY: the `mikemol-vlog` console script.
 """
@@ -32,11 +34,20 @@ from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import vlogconfig, vlogdetach, vlogforms, vlogrecord, vlogship
+from mikemol.hooks import (
+    vlogbatch,
+    vlogconfig,
+    vlogdetach,
+    vlogforms,
+    vlogrecord,
+    vlogship,
+)
 
 EXIT_USAGE = 2
-BATCH = 200
 UNITS = ("s", "ms", "us", "ns")
+HOLD_NEEDS_A_FILE = (
+    "on_full = hold needs --from-file: stdin and a wrapped command cannot be re-read"
+)
 Spawn = Callable[[Sequence[str]], None]
 
 
@@ -45,6 +56,7 @@ class Args(argparse.Namespace):
 
     stream: list[str] | None
     service: str | None
+    source: str | None
     resolver_arg: list[str] | None
     spool_dir: Path | None
     max_lines: int | None
@@ -69,6 +81,7 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mikemol-vlog")
     parser.add_argument("--stream", action="append", metavar="KEY=VALUE")
     parser.add_argument("--service", help="the service NAME the host's resolver is asked for")
+    parser.add_argument("--source", help="a [source.NAME] table: this source's ceiling and policy")
     parser.add_argument("--resolver-arg", action="append", metavar="ARG")
     parser.add_argument("--spool-dir", type=Path)
     parser.add_argument("--max-lines", type=int)
@@ -84,13 +97,6 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--config", type=Path, default=vlogconfig.CONFIG_PATH)
     parser.add_argument("command", nargs="*", help="after --: a command to run and ship")
     return parser
-
-
-def _config_of(args: Args) -> vlogship.Config:
-    flags = vlogconfig.Flags(
-        args.service, args.resolver_arg, args.spool_dir, args.max_lines, args.max_bytes
-    )
-    return vlogconfig.build(vlogconfig.read_toml(args.config), flags)
 
 
 def _state_of(args: Args) -> Path | None:
@@ -144,6 +150,22 @@ def _drain_now(config: vlogship.Config) -> int:
     return 0 if done.left == 0 else 1
 
 
+def _config_of(args: Args) -> vlogship.Config | str:
+    """Merge the flags over the config file, with the chosen source's table laid over the top.
+
+    Returns:
+        the shipper config, or the reason the source or its policy cannot be used.
+
+    """
+    table = vlogconfig.merged_table(vlogconfig.read_toml(args.config), args.source)
+    if isinstance(table, str):
+        return table
+    flags = vlogconfig.Flags(
+        args.service, args.resolver_arg, args.spool_dir, args.max_lines, args.max_bytes
+    )
+    return vlogconfig.build(table, flags)
+
+
 def _prepare(
     args: Args,
 ) -> tuple[dict[str, str], vlogrecord.FieldMap, vlogship.Config] | str:
@@ -162,8 +184,13 @@ def _prepare(
         if isinstance(found, str):
             return found
         line_stamp = found
+    config = _config_of(args)
+    if isinstance(config, str):
+        return config
+    if config.on_full == vlogship.HOLD and args.from_file is None and not args.drain:
+        return HOLD_NEEDS_A_FILE
     how = vlogrecord.FieldMap(args.message_key, args.time_key, args.unit, line_stamp=line_stamp)
-    return streams, how, _config_of(args)
+    return streams, how, config
 
 
 def main(
@@ -186,23 +213,12 @@ def main(
     streams, how, config = ready
     if args.drain:
         return _drain_now(config)
-    pending: list[str] = []
-
-    def flush() -> None:
-        if pending:
-            vlogship.ship(pending, streams, how, config, _now)
-            pending.clear()
-
-    def take(line: str) -> None:
-        pending.append(line)
-        if len(pending) >= BATCH:
-            flush()
-
-    code, chunk = _produce(args, stdin, take)
-    flush()
+    batcher = vlogbatch.Batcher(streams, how, config, _now)
+    code, chunk = _produce(args, stdin, batcher.take)
+    batcher.flush()
     state = _state_of(args)
     if chunk is not None and state is not None:
-        vlogforms.commit(state, chunk)
+        vlogforms.commit(state, vlogforms.prefix_of(chunk, batcher.consumed))
     if not args.no_drain:
         spawn(vlogdetach.drain_argv(config))
     return code

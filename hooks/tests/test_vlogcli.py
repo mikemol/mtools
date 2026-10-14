@@ -213,6 +213,113 @@ def test_a_stamp_that_cannot_be_used_is_refused_with_its_reason() -> None:
     assert "form of iso or epoch" in str(vlogconfig.stamp_named(bad, "odd"))
 
 
+_THREE = 3
+_HUNDRED = 100
+_SOURCES = (
+    "max_lines = 100\n"
+    "[source.app]\n"
+    "max_lines = 2\n"
+    'on_full = "hold"\n'
+    "[source.loose]\n"
+    "max_lines = 2\n"
+    'on_full = "drop-oldest"\n'
+    "[source.typo]\n"
+    'on_full = "hodl"\n'
+)
+
+
+def _sourced(tmp_path: Path, source: str, *extra: str, stdin: str = "") -> int:
+    """Run main against a config whose [source.NAME] tables declare three policies.
+
+    Returns:
+        the exit code.
+
+    """
+    config = tmp_path / "sources.toml"
+    config.write_text(_SOURCES, encoding="utf-8")
+    base = ["--spool-dir", str(tmp_path / "spool"), "--no-drain", "--config", str(config)]
+    argv = [*base, "--source", source, "--stream", "k=v", *extra]
+    return vlogcli.main(argv, io.StringIO(stdin), print)
+
+
+def _forget_the_spool(tmp_path: Path) -> list[str]:
+    """Take what the spool holds and empty it, as a successful drain would.
+
+    Returns:
+        the `_msg` of each record that was in it.
+
+    """
+    taken = [str(r["_msg"]) for r in _spooled(tmp_path / "spool")]
+    for path in (tmp_path / "spool").glob("vlog-*.spool"):
+        path.write_text("", encoding="utf-8")
+    return taken
+
+
+def test_hold_reads_only_what_fits_and_the_tail_comes_back_on_the_next_runs(
+    tmp_path: Path,
+) -> None:
+    """Five lines, room for two: each run spools two, the rest stays in the file, none is lost."""
+    log = tmp_path / "app.log"
+    log.write_text("1\n2\n3\n4\n5\n", encoding="utf-8")
+    args = ("--from-file", str(log), "--state", str(tmp_path / "app.state"))
+    delivered: list[str] = []
+    for _ in range(_THREE):
+        assert _sourced(tmp_path, "app", *args) == 0
+        delivered += _forget_the_spool(tmp_path)
+    assert delivered == ["1", "2", "3", "4", "5"]
+
+
+def test_hold_into_a_spool_that_is_still_full_consumes_nothing(tmp_path: Path) -> None:
+    """Nobody drained: the second run spools nothing and the offset has not moved past the held."""
+    log = tmp_path / "app.log"
+    log.write_text("1\n2\n3\n4\n", encoding="utf-8")
+    args = ("--from-file", str(log), "--state", str(tmp_path / "app.state"))
+    assert _sourced(tmp_path, "app", *args) == 0
+    assert [r["_msg"] for r in _spooled(tmp_path / "spool")] == ["1", "2"]
+    assert _sourced(tmp_path, "app", *args) == 0
+    assert [r["_msg"] for r in _spooled(tmp_path / "spool")] == ["1", "2"]
+
+
+def test_drop_oldest_with_the_same_ceiling_takes_every_line_and_drops_the_oldest(
+    tmp_path: Path,
+) -> None:
+    """The control: the other policy consumes all five lines at once and keeps the newest two."""
+    log = tmp_path / "app.log"
+    log.write_text("1\n2\n3\n4\n5\n", encoding="utf-8")
+    args = ("--from-file", str(log), "--state", str(tmp_path / "app.state"))
+    assert _sourced(tmp_path, "loose", *args) == 0
+    messages = [str(r["_msg"]) for r in _spooled(tmp_path / "spool")]
+    assert "5" in messages
+    assert "1" not in messages
+    assert _sourced(tmp_path, "loose", *args) == 0
+
+
+def test_hold_with_stdin_is_refused_because_stdin_cannot_be_read_again(tmp_path: Path) -> None:
+    """Exit 2 and nothing spooled: a stream that is consumed has no tail to leave."""
+    assert _sourced(tmp_path, "app", stdin="x\n") == _USAGE
+    assert not (tmp_path / "spool").exists()
+
+
+def test_an_undeclared_source_and_a_mistyped_policy_are_usage_errors(tmp_path: Path) -> None:
+    """Neither falls back to a default: exit 2 for `nope` and for `on_full = "hodl"`."""
+    assert _sourced(tmp_path, "nope", stdin="x\n") == _USAGE
+    assert _sourced(tmp_path, "typo", stdin="x\n") == _USAGE
+
+
+def test_a_source_table_overrides_the_top_level_and_the_top_level_is_the_default() -> None:
+    """`app` sets max_lines 2 and hold; the top-level 100 stays for a source that sets none."""
+    table: Doc = {"max_lines": 100, "source": {"app": {"max_lines": 2, "on_full": "hold"}}}
+    app = vlogconfig.merged_table(table, "app")
+    assert isinstance(app, dict)
+    assert (app["max_lines"], app["on_full"]) == (2, "hold")
+    assert vlogconfig.build(app, vlogconfig.Flags()).on_full == "hold"
+    plain = vlogconfig.merged_table(table, None)
+    assert isinstance(plain, dict)
+    assert plain["max_lines"] == _HUNDRED
+    assert vlogconfig.build(plain, vlogconfig.Flags()).on_full == "drop-oldest"
+    assert "not declared" in str(vlogconfig.merged_table(table, "nope"))
+
+
 def test_the_drainer_argv_carries_the_same_settings(tmp_path: Path) -> None:
     """Spool directory, bounds, service and every resolver argument reach the detached process."""
     config = vlogship.Config(tmp_path, "logs", ("q", "{name}"), 11, 22)

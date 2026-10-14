@@ -32,6 +32,8 @@ DEFAULT_MAX_LINES = 100_000
 DEFAULT_MAX_BYTES = 64 << 20
 CONFIG_PATH = Path("~/.config/mikemol/vlog.toml")
 FORMS = ("iso", "epoch")
+ON_FULL = ("drop-oldest", "hold")
+DEFAULT_ON_FULL = "drop-oldest"
 
 
 @dataclass(frozen=True)
@@ -80,6 +82,33 @@ def _number(table: Mapping[str, object], key: str, flag: int | None, default: in
     return flag or from_file or default
 
 
+def merged_table(table: Mapping[str, object], source: str | None) -> dict[str, object] | str:
+    """Lay `[source.NAME]` over the top-level settings, so the ceiling is declared per source.
+
+    ⚑ THE POLICY IS DATA, NOT A CODE DEFAULT (W1186, luthen's ask): a source names its own
+    `max_lines`, `max_bytes` and `on_full` (`drop-oldest` or `hold`), the top level supplies the
+    default for the rest, and a typo in any `on_full` is refused by name rather than read as the
+    default. An undeclared source is refused with the declared ones listed.
+
+    Returns:
+        the merged table, or the reason the source or a policy cannot be used.
+
+    """
+    merged = {k: v for k, v in table.items() if k != "source"}
+    group = table.get("source")
+    declared = cast("dict[str, object]", group) if isinstance(group, dict) else {}
+    if source is not None:
+        entry = declared.get(source)
+        if not isinstance(entry, dict):
+            known = ", ".join(sorted(declared)) or "none declared"
+            return f"source {source!r} is not declared in [source] ({known})"
+        merged.update(cast("dict[str, object]", entry))
+    policy = merged.get("on_full", DEFAULT_ON_FULL)
+    if policy not in ON_FULL:
+        return f"on_full {policy!r} is not one of {' or '.join(ON_FULL)}"
+    return merged
+
+
 def build(table: Mapping[str, object], flags: Flags) -> vlogship.Config:
     """Merge the flags over the config table.
 
@@ -92,12 +121,14 @@ def build(table: Mapping[str, object], flags: Flags) -> vlogship.Config:
     named = table.get("service")
     where = table.get("spool_dir")
     spool = flags.spool_dir or Path(str(where) if where else state_home() / "mikemol" / "vlog")
+    policy = table.get("on_full")
     return vlogship.Config(
         spool.expanduser(),
         flags.service or (named if isinstance(named, str) else None),
         tuple(from_file if flags.resolver is None else flags.resolver),
         _number(table, "max_lines", flags.max_lines, DEFAULT_MAX_LINES),
         _number(table, "max_bytes", flags.max_bytes, DEFAULT_MAX_BYTES),
+        policy if isinstance(policy, str) and policy in ON_FULL else DEFAULT_ON_FULL,
     )
 
 

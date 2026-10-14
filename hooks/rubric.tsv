@@ -100,3 +100,4 @@ vlogship	mikemol-vlog shipper core
 vlogcli	mikemol-vlog command
 vlogwatch	mikemol-vlog stalled-drainer witness
 verdictlog	mikemol-commit verdict events and --ship
+vlogbatch	mikemol-vlog batching and the consumed prefix
