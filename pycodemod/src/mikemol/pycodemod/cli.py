@@ -68,6 +68,7 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
+from mikemol.pycodemod.cli_docshape import print_docshape
 from mikemol.pycodemod.cli_judgedfix import JudgedFixFlags, check_select, print_judged_fix
 from mikemol.pycodemod.cli_nonereturns import print_none_returns
 from mikemol.pycodemod.cli_orempty import OrEmptyFlags, print_orempty
@@ -130,6 +131,13 @@ if TYPE_CHECKING:
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
 _ABSENT = "-"
+
+
+def _handle_docshape(ns: argparse.Namespace) -> int:
+    flags = TypedArgsFlags(
+        root=_str(ns, "root"), write=_flag(ns, "write"), selftest=_str(ns, "selftest")
+    )
+    return print_docshape(_str_list(ns, "paths"), flags)
 
 
 def _handle_nonereturns(ns: argparse.Namespace) -> int:
@@ -1163,6 +1171,7 @@ MODES = {
     "typed-args": _handle_typedargs,
     "or-empty": _handle_orempty,
     "judged-fix": _handle_judgedfix,
+    "docshape": _handle_docshape,
     "none-returns": _handle_nonereturns,
     "by-path-runs": _handle_by_path_runs,
 }
@@ -1469,6 +1478,18 @@ def _add_judgedfix_mode(make: _Make) -> None:
     fix.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
+def _add_docshape_mode(make: _Make) -> None:
+    doc = make("docshape", "split a docstring's multi-line first paragraph (D205), judged by ruff")
+    doc.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    doc.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    doc.add_argument(
+        "--selftest",
+        default="",
+        help="a command run in --root with the candidate in place; a nonzero exit refuses the file",
+    )
+    doc.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
 def _add_runs_mode(make: _Make) -> None:
     run = make("by-path-runs", "scripts run by path (python3 pkg/x.py) instead of by package")
     run.add_argument(
@@ -1492,6 +1513,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_typedargs_mode,
     _add_orempty_mode,
     _add_judgedfix_mode,
+    _add_docshape_mode,
     _add_nonereturns_mode,
     _add_runs_mode,
 )

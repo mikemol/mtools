@@ -6239,3 +6239,108 @@
   claim  = {With no sentence end that leaves a remainder, ': ' splits; ' - ' would drop the dash.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_docshape.py -k test_a_colon_is_the_fallback_split_point_and_a_dash_is_not},
 }
+
+@misc{pycodemod-measure-ruff-measure-counts-code-and-message-per-finding,
+  section = {measure},
+  title  = {Two findings of one rule are a count of two under one key},
+  claim  = {Two findings of one rule are a count of two under one key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_the_ruff_measure_counts_code_and_message_per_finding},
+}
+
+@misc{pycodemod-measure-ruff-measure-asks-the-selected-rules-in-isolation,
+  section = {measure},
+  title  = {The project's own configuration cannot exempt the rule being counted},
+  claim  = {The project's own configuration cannot exempt the rule being counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_the_ruff_measure_asks_the_selected_rules_in_isolation},
+}
+
+@misc{pycodemod-measure-ruff-that-cannot-run-is-a-reason-not-an-empty-count,
+  section = {measure},
+  title  = {Exit 2 comes back as text naming the exit and ruff's complaint},
+  claim  = {Exit 2 comes back as text naming the exit and ruff's complaint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_a_ruff_that_cannot_run_is_a_reason_not_an_empty_count},
+}
+
+@misc{pycodemod-measure-clean-file-counts-as-nothing,
+  section = {measure},
+  title  = {No findings is an empty count, which is not the same thing as a failure},
+  claim  = {No findings is an empty count, which is not the same thing as a failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_a_clean_file_counts_as_nothing},
+}
+
+@misc{pycodemod-measure-judge-accepts-a-candidate-with-strictly-fewer-findings,
+  section = {measure},
+  title  = {Two D205 findings down to one is accepted under the ruff measure},
+  claim  = {Two D205 findings down to one is accepted under the ruff measure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_the_judge_accepts_a_candidate_with_strictly_fewer_findings},
+}
+
+@misc{pycodemod-measure-judge-rejects-a-fix-that-trades-for-a-new-finding,
+  section = {measure},
+  title  = {The same count of D205 plus a new E501 is refused and the new message named},
+  claim  = {The same count of D205 plus a new E501 is refused and the new message named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_the_judge_rejects_a_fix_that_trades_for_a_new_finding},
+}
+
+@misc{pycodemod-measure-probe-is-removed-whatever-the-verdict,
+  section = {measure},
+  title  = {Nothing the judge wrote stays in the project},
+  claim  = {Nothing the judge wrote stays in the project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_the_probe_is_removed_whatever_the_verdict},
+}
+
+@misc{pycodemod-measure-no-measure-still-asks-mypy,
+  section = {measure},
+  title  = {The default: the seam is a parameter, so typed-args and its kin are unchanged},
+  claim  = {The default: the seam is a parameter, so typed-args and its kin are unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_measure.py -k test_no_measure_still_asks_mypy},
+}
+
+@misc{pycodemod-cli-docshape-accepted-split-is-written-when-asked,
+  section = {cli_docshape},
+  title  = {The positive control: D205 drops from one to none, so the file is rewritten},
+  claim  = {The positive control: D205 drops from one to none, so the file is rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_an_accepted_split_is_written_when_asked},
+}
+
+@misc{pycodemod-cli-docshape-dry-run-reports-and-leaves-the-file,
+  section = {cli_docshape},
+  title  = {Without --write the judge still runs and the file is untouched},
+  claim  = {Without --write the judge still runs and the file is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_a_dry_run_reports_and_leaves_the_file},
+}
+
+@misc{pycodemod-cli-docshape-judge-counts-the-docstring-rules-in-isolation-not-mypy,
+  section = {cli_docshape},
+  title  = {The measurement is ruff's D205,D209 under --isolated; mypy is never started},
+  claim  = {The measurement is ruff's D205,D209 under --isolated; mypy is never started.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_the_judge_counts_the_docstring_rules_in_isolation_not_mypy},
+}
+
+@misc{pycodemod-cli-docshape-paragraph-the-planner-refuses-is-a-worklist-row-and-no-write,
+  section = {cli_docshape},
+  title  = {A backslash cannot be joined: exit 1, the file is unchanged, ruff is never asked},
+  claim  = {A backslash cannot be joined: exit 1, the file is unchanged, ruff is never asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_a_paragraph_the_planner_refuses_is_a_worklist_row_and_no_write},
+}
+
+@misc{pycodemod-cli-docshape-ruff-that-cannot-run-is-exit-two-and-no-write,
+  section = {cli_docshape},
+  title  = {A tool that cannot judge is not a clean bill: exit 2, the file is unchanged},
+  claim  = {A tool that cannot judge is not a clean bill: exit 2, the file is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_a_ruff_that_cannot_run_is_exit_two_and_no_write},
+}
+
+@misc{pycodemod-cli-docshape-failing-selftest-rejects-an-accepted-split,
+  section = {cli_docshape},
+  title  = {The second judge: the ruff count fell, the file's selftest crashed, nothing is written},
+  claim  = {The second judge: the ruff count fell, the file's selftest crashed, nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_a_failing_selftest_rejects_an_accepted_split},
+}
+
+@misc{pycodemod-cli-docshape-file-with-nothing-to-split-is-left-alone,
+  section = {cli_docshape},
+  title  = {A file whose docstrings are already shaped plans no change and asks ruff nothing},
+  claim  = {A file whose docstrings are already shaped plans no change and asks ruff nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_a_file_with_nothing_to_split_is_left_alone},
+}

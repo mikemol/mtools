@@ -15,6 +15,10 @@ goes to the worklist, printed with its reason; nothing is written.
 in how a file's text becomes a candidate (a `Plan`); both are measured, written and reported here
 by the same code, so a second codemod adds a planner, never a second judge.
 
+⚑ THE MEASUREMENT IS A PARAMETER TOO (mtools:W1045). mypy cannot see a change in a docstring's
+shape, so a codemod of that kind sets `TypedArgsFlags.measure` to a function that counts what its
+own rule sees (a ruff measure); the acceptance rule above is unchanged, and unset means mypy.
+
 ⚑ THE PROBE EXISTS FOR SECONDS AND IS REMOVED ON EVERY EXIT. It must sit inside the project so mypy
 and ruff resolve its imports and read its configuration (a temp file elsewhere is judged under
 other rules than the file it stands for), and a codemod run beside other sessions leaves nothing
@@ -43,6 +47,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
 type Runner = Callable[[Sequence[str], Path], tuple[int, str, str]]
+type Measure = Callable[[Path, Path, Runner], Counter[str] | str]
 
 TIMEOUT_S = 300.0
 PROBE_PREFIX = "_typedargs_probe_"
@@ -56,12 +61,15 @@ class TypedArgsFlags:
     """What a judged codemod was asked: the project to judge in, write or not, a second judge.
 
     `selftest` is a command (split on whitespace, no shell) run in the root with the accepted
-    candidate in the file's place; empty means no second judge.
+    candidate in the file's place; empty means no second judge. `measure` counts a file's findings
+    (project root, file under it, runner; a multiset of messages, or why the tool could not run);
+    None means mypy's.
     """
 
     root: str
     write: bool
     selftest: str = ""
+    measure: Measure | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -144,22 +152,32 @@ def _verdict(before: Counter[str], after: Counter[str], text: str) -> Verdict:
     return Verdict(ok=ok, before=total_before, after=total_after, new=new, text=text)
 
 
-def judge(root: Path, rel: Path, original: str, candidate: str, run: Runner) -> Verdict:
-    """Judge a candidate against its original under the project's own mypy and ruff.
+def judge(
+    root: Path,
+    rel: Path,
+    texts: tuple[str, str],
+    run: Runner,
+    measure: Measure | None = None,
+) -> Verdict:
+    """Judge a candidate against its original, measured by `measure` (mypy unless told otherwise).
+
+    `texts` is (original, candidate).
 
     Returns:
         the Verdict; `error` is set (and nothing is accepted) when a tool could not run.
 
     """
+    original, candidate = texts
+    count = _mypy if measure is None else measure
     probe_rel = rel.with_name(PROBE_PREFIX + rel.name)
     probe = root / probe_rel
     try:
         probe.write_text(original, encoding="utf-8")
-        before = _mypy(root, probe_rel, run)
+        before = count(root, probe_rel, run)
         probe.write_text(candidate, encoding="utf-8")
         failed = _format(root, probe_rel, run)
         text = probe.read_text(encoding="utf-8")
-        after = _mypy(root, probe_rel, run)
+        after = count(root, probe_rel, run)
     finally:
         probe.unlink(missing_ok=True)
     for problem in (before, after, failed):
@@ -227,7 +245,7 @@ def _check_file(
     worklist = 1 if planned.worklist else 0
     if not planned.changes:
         return worklist
-    verdict = judge(root, rel, original, planned.text, run)
+    verdict = judge(root, rel, (original, planned.text), run, flags.measure)
     if verdict.ok and flags.selftest:
         broke = _selftest(root, path, (original, verdict.text), flags.selftest, run)
         if broke is not None:
