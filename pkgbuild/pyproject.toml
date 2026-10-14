@@ -97,5 +97,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # call without building a venv with two site-packages, and testing a boundary needs crossing it.
 "tests/test_wheel.py" = ["assert", "private-member-access"]
 "tests/test_metacheck.py" = ["assert"]
+"tests/test_relcheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"src/mikemol/pkgbuild/relcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pyc.py" = ["assert"]
 "tests/test_pyinfo.py" = ["assert"]

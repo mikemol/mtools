@@ -4,3 +4,4 @@ wheel	The Wheel: Built From a Planted Tree Naming Exactly Its Files, Installed b
 pyc	The Bytecode: One Source Compiled to a Hash-Checked-Never Artifact That Loads
 pyinfo	The Interpreter Probe: It Names the Python That Runs It
 metacheck	mikemol-wheel check: metadata PyPI would refuse
+relcheck	mikemol-wheel release-check: every dist built at a sha

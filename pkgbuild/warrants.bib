@@ -152,3 +152,39 @@
   claim  = {Two artifacts, one bad: two JSON lines in order and exit 1; the good one alone is 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_the_command_prints_one_json_line_per_artifact_and_exits_by_the_worst},
 }
+
+@misc{pkgbuild-relcheck-every-dist-at-the-sha-is-built-and-both-artifacts-pass,
+  section = {relcheck},
+  title  = {Two clean dists: two rows, ok, built, an sdist and a wheel verdict each, in name order},
+  claim  = {Two clean dists: two rows, ok, built, an sdist and a wheel verdict each, in name order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_every_dist_at_the_sha_is_built_and_both_artifacts_pass},
+}
+
+@misc{pkgbuild-relcheck-uncommitted-edit-does-not-change-what-the-sha-builds,
+  section = {relcheck},
+  title  = {The control: a local version in the working tree is not in the commit, so it is not seen},
+  claim  = {The control: a local version in the working tree is not in the commit, so it is not
+            seen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_an_uncommitted_edit_does_not_change_what_the_sha_builds},
+}
+
+@misc{pkgbuild-relcheck-committed-local-version-is-refused-and-the-command-exits-one,
+  section = {relcheck},
+  title  = {The bad dist is `ok` false with the reason in its artifacts, the good one still passes},
+  claim  = {The bad dist is `ok` false with the reason in its artifacts, the good one still passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_committed_local_version_is_refused_and_the_command_exits_one},
+}
+
+@misc{pkgbuild-relcheck-dist-that-cannot-be-built-is-a-row-with-the-reason-beside-the-good-one,
+  section = {relcheck},
+  title  = {An unparseable pyproject: `ok` false and a build error, while demo-a is still reported},
+  claim  = {An unparseable pyproject: `ok` false and a build error, while demo-a is still reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_dist_that_cannot_be_built_is_a_row_with_the_reason_beside_the_good_one},
+}
+
+@misc{pkgbuild-relcheck-wrong-number-of-arguments-is-a-usage-error,
+  section = {relcheck},
+  title  = {`release-check ROOT` alone exits 2 and builds nothing},
+  claim  = {`release-check ROOT` alone exits 2 and builds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_the_wrong_number_of_arguments_is_a_usage_error},
+}
