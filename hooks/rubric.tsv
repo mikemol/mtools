@@ -101,3 +101,4 @@ vlogcli	mikemol-vlog command
 vlogwatch	mikemol-vlog stalled-drainer witness
 verdictlog	mikemol-commit verdict events and --ship
 vlogbatch	mikemol-vlog batching and the consumed prefix
+privacy_audit	mikemol-privacy-audit: dry-run audit of a dist's tracked tree

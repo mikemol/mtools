@@ -306,3 +306,8 @@ src/mikemol/hooks/gate_ledger.py|start-not-derived|start = end - int\(float\(sec
 src/mikemol/hooks/gate_ledger.py|measured-start-ignored|if start is None:|if True:|def=stamp_of
 src/mikemol/hooks/gate_ledger.py|row-loses-the-stamp|\\t\{when\.start\}\\t\{when\.end\}\\t\{when\.host\}|\\t|def=record
 src/mikemol/hooks/gate_ledger.py|cli-ignores-the-start|stamp_of\(seconds, start\)|stamp_of(seconds)|def=main
+src/mikemol/hooks/privacy_audit.py|audit-reads-through-a-link|if full\.is_symlink\(\) or not full\.is_file\(\):|if not full.is_file():|def=files_of
+src/mikemol/hooks/privacy_audit.py|audit-decodes-a-binary|if b"\\0" in raw\[:SNIFF\]:|if False:|def=files_of
+src/mikemol/hooks/privacy_audit.py|audit-reads-a-dead-judge-as-clean|if status != 0:|if False:|def=judge
+src/mikemol/hooks/privacy_audit.py|audit-exits-clean-on-a-deny|return 1 if denies else 0|return 0|def=run
+src/mikemol/hooks/privacy_audit.py|audit-needs-no-judge|if len\(args\) != ARGC or not opa:|if len(args) != ARGC:|def=run

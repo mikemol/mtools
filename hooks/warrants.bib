@@ -9702,3 +9702,46 @@
   claim  = {The control: a line with only its own keys has no `stream_overrode`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_no_flag_is_set_when_no_line_key_collides_with_a_stream_field},
 }
+
+@misc{hooks-privacy-audit-planted-secrets-are-found-by-rule-path-and-line-and-the-exit-is-one,
+  section = {privacy_audit},
+  title  = {The env file, the key line and the home path are findings; a deny makes the exit 1},
+  claim  = {The env file, the key line and the home path are findings; a deny makes the exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_planted_secrets_are_found_by_rule_path_and_line_and_the_exit_is_one},
+}
+
+@misc{hooks-privacy-audit-output-never-carries-the-matched-text,
+  section = {privacy_audit},
+  title  = {The control for the whole mode: neither the key nor the home directory name is printed},
+  claim  = {The control for the whole mode: neither the key nor the home directory name is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_the_output_never_carries_the_matched_text},
+}
+
+@misc{hooks-privacy-audit-untracked-secret-a-link-and-a-binary-are-not-findings-and-are-counted,
+  section = {privacy_audit},
+  title  = {`untracked.pem` is unpublished, the link is not read through, the NUL file is not decoded},
+  claim  = {`untracked.pem` is unpublished, the link is not read through, the NUL file is not
+            decoded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_an_untracked_secret_a_link_and_a_binary_are_not_findings_and_are_counted},
+}
+
+@misc{hooks-privacy-audit-clean-dist-has-no-findings-and-exits-zero,
+  section = {privacy_audit},
+  title  = {The other dist holds one clean file: the summary only, and the exit is 0},
+  claim  = {The other dist holds one clean file: the summary only, and the exit is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_a_clean_dist_has_no_findings_and_exits_zero},
+}
+
+@misc{hooks-privacy-audit-failing-judge-is-an-error-and-never-a-clean-tree,
+  section = {privacy_audit},
+  title  = {A broken opa raises, so no reader mistakes a dead judge for an empty finding list},
+  claim  = {A broken opa raises, so no reader mistakes a dead judge for an empty finding list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_a_failing_judge_is_an_error_and_never_a_clean_tree},
+}
+
+@misc{hooks-privacy-audit-wrong-arguments-or-no-judge-is-a-usage-error,
+  section = {privacy_audit},
+  title  = {No `OPA_BIN` and a missing DIST each exit 2, and nothing is read},
+  claim  = {No `OPA_BIN` and a missing DIST each exit 2, and nothing is read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_the_wrong_arguments_or_no_judge_is_a_usage_error},
+}

@@ -47,3 +47,27 @@ withheld contains sprintf("withheld %s", [name]) if {
 	some name, pattern in line_withheld
 	regex.match(pattern, input.line)
 }
+
+# BULK FORM (W1192): input {"files": [{"path": p, "lines": [text, ...]}]}, one evaluation for a
+# whole dist. A finding is {kind, rule, path, line}, line 0 for a path rule, and never the text.
+findings contains {"kind": "deny", "rule": name, "path": file.path, "line": 0} if {
+	some file in input.files
+	some name, pattern in path_deny
+	regex.match(pattern, file.path)
+}
+
+findings contains {"kind": "deny", "rule": name, "path": file.path, "line": n} if {
+	some file in input.files
+	some i, text in file.lines
+	some name, pattern in line_deny
+	regex.match(pattern, text)
+	n := i + 1
+}
+
+findings contains {"kind": "withheld", "rule": name, "path": file.path, "line": n} if {
+	some file in input.files
+	some i, text in file.lines
+	some name, pattern in line_withheld
+	regex.match(pattern, text)
+	n := i + 1
+}

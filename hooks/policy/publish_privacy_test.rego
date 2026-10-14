@@ -73,6 +73,23 @@ test_clean_line_fires_nothing if {
 	count(publish_privacy.withheld) == 0 with input as {"path": "src/mod.py", "line": "x = 1"}
 }
 
+bulk := {"files": [
+	{"path": "a/.env", "lines": ["x = 1"]},
+	{"path": "a/mod.py", "lines": ["ok", concat("", ["/ho", "me/someone/x"]), concat("", ["id AKIA", "ABCDEFGHIJKLMNOP"])]},
+]}
+
+test_bulk_findings_carry_rule_path_and_line if {
+	publish_privacy.findings == {
+		{"kind": "deny", "rule": "env-file", "path": "a/.env", "line": 0},
+		{"kind": "withheld", "rule": "home-path", "path": "a/mod.py", "line": 2},
+		{"kind": "deny", "rule": "aws-access-key", "path": "a/mod.py", "line": 3},
+	} with input as bulk
+}
+
+test_bulk_clean_input_has_no_findings if {
+	count(publish_privacy.findings) == 0 with input as {"files": [{"path": "a/mod.py", "lines": ["x"]}]}
+}
+
 # the message carries the rule name and never the text that matched
 test_message_does_not_echo_the_match if {
 	msgs := publish_privacy.withheld with input as {"line": concat("", ["/ho", "me/someone/x"])}

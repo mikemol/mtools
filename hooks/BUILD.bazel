@@ -125,6 +125,8 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
             "bin/mikemol-hook-standing",
             "policy/standing.rego",
+            # W1192: the privacy audit's judge, READ by opa in test_privacy_audit.
+            "policy/publish_privacy.rego",
             # W513: the rule-8 Stop launcher, EXECUTED by test_standing_stop_launcher, and the
             # transcript reader it runs (as a subprocess on PYTHONPATH, never imported here).
             "bin/mikemol-hook-standing-stop",
@@ -459,6 +461,7 @@ venv_from_hub(
         # W1100: the commit gate's bazel job count from the host's free cores.
         "mikemol-gate-jobs": "mikemol.hooks.gatejobs:main",
         "mikemol-vlog": "mikemol.hooks.vlogcli:main",
+        "mikemol-privacy-audit": "mikemol.hooks.privacy_audit:main",
         "mikemol-commit": "mikemol.hooks.commit_kata:main",
         "mikemol-hooks-probe": "mikemol.hooks.probe:main",
         "mikemol-snapshot": "mikemol.hooks.snapshot:main",
