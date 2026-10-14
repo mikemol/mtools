@@ -5,7 +5,8 @@
 W1187. ⚑ THE CLEAN ARTIFACT IS THE POSITIVE CONTROL: every refusal below is the same metadata with
 ONE property changed, so each problem is shown to come from that property and not from the fixture.
 ⚑ THE ARTIFACTS ARE REAL ZIP AND TAR FILES written to `tmp_path`, so the reader that finds
-`.dist-info/METADATA` and `PKG-INFO` is the one under test, not a stub of it.
+`.dist-info/METADATA` and `PKG-INFO` is the one under test, not a stub of it. ⚑ W1205: THE CLEAN
+ARTIFACT ALSO CARRIES ITS LICENSE FILE, so the license-text rows are one property each too.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ _GOOD = {
     "Description-Content-Type": "text/markdown",
     "Requires-Python": ">=3.13",
     "License-Expression": "Apache-2.0",
+    "License-File": "LICENSE",
 }
 _BODY = "# demo\n\nreads well\n"
 _TWO = 2
@@ -48,20 +50,26 @@ def _metadata(**changes: str | None) -> str:
     return f"{head}\n{_BODY}"
 
 
-def _wheel(tmp_path: Path, text: str) -> Path:
+def _wheel(tmp_path: Path, text: str, *, licensed: bool = True) -> Path:
     path = tmp_path / "mikemol_demo-0.0.1187-py3-none-any.whl"
     with zipfile.ZipFile(path, "w") as archive:
         archive.writestr("mikemol_demo-0.0.1187.dist-info/METADATA", text)
+        if licensed:
+            archive.writestr("mikemol_demo-0.0.1187.dist-info/licenses/LICENSE", "Apache-2.0 text")
     return path
 
 
-def _sdist(tmp_path: Path, text: str) -> Path:
+def _sdist(tmp_path: Path, text: str, *, licensed: bool = True) -> Path:
     path = tmp_path / "mikemol_demo-0.0.1187.tar.gz"
-    data = text.encode("utf-8")
+    members = {"mikemol_demo-0.0.1187/PKG-INFO": text}
+    if licensed:
+        members["mikemol_demo-0.0.1187/LICENSE"] = "Apache-2.0 text"
     with tarfile.open(path, "w:gz") as archive:
-        info = tarfile.TarInfo("mikemol_demo-0.0.1187/PKG-INFO")
-        info.size = len(data)
-        archive.addfile(info, io.BytesIO(data))
+        for name, content in members.items():
+            data = content.encode("utf-8")
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            archive.addfile(info, io.BytesIO(data))
     return path
 
 
@@ -98,7 +106,7 @@ def test_each_single_change_is_refused_for_that_property_alone(tmp_path: Path) -
             "Content-Type",
         ),
         "no python": (_metadata(**{"Requires-Python": None}), "Requires-Python is missing"),
-        "no license": (_metadata(**{"License-Expression": None}), "no license"),
+        "no license text declared": (_metadata(**{"License-File": None}), "no License-File"),
         "old metadata": (_metadata(**{"Metadata-Version": "2.0"}), "older than 2.1"),
     }
     for label, (text, wanted) in rows.items():
@@ -117,9 +125,29 @@ def test_a_missing_long_description_is_refused(tmp_path: Path) -> None:
     assert "long description is missing" in " ".join(_problems(result))
 
 
+def test_no_license_at_all_is_two_problems_the_name_and_the_text(tmp_path: Path) -> None:
+    """Neither an expression nor a file: the license is missing AND its text is not shipped."""
+    text = _metadata(**{"License-Expression": None, "License-File": None})
+    problems = _problems(metacheck.verdict(_wheel(tmp_path, text)))
+    assert len(problems) == _TWO
+    assert any("no license:" in p for p in problems)
+    assert any("no License-File" in p for p in problems)
+
+
+def test_a_declared_license_file_the_artifact_does_not_carry_is_refused(tmp_path: Path) -> None:
+    """The header names LICENSE but the wheel and the sdist hold no such file: one problem each."""
+    for made in (
+        _wheel(tmp_path, _metadata(), licensed=False),
+        _sdist(tmp_path, _metadata(), licensed=False),
+    ):
+        problems = _problems(metacheck.verdict(made))
+        assert len(problems) == 1, (made.name, problems)
+        assert "does not carry it" in problems[0]
+
+
 def test_a_license_file_alone_satisfies_the_license_check(tmp_path: Path) -> None:
     """`License-File` stands in for the expression: the license rule is any of the three."""
-    text = _metadata(**{"License-Expression": None, "License-File": "LICENSE"})
+    text = _metadata(**{"License-Expression": None})
     assert metacheck.verdict(_wheel(tmp_path, text))["ok"] is True
 
 

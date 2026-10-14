@@ -288,3 +288,18 @@
   claim  = {No tool named, and a judge that exits 2 (no opa), are both `unavailable` and not ok.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_missing_or_failing_judge_is_unavailable_and_never_a_pass},
 }
+
+@misc{pkgbuild-metacheck-no-license-at-all-is-two-problems-the-name-and-the-text,
+  section = {metacheck},
+  title  = {Neither an expression nor a file: the license is missing AND its text is not shipped},
+  claim  = {Neither an expression nor a file: the license is missing AND its text is not shipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_no_license_at_all_is_two_problems_the_name_and_the_text},
+}
+
+@misc{pkgbuild-metacheck-declared-license-file-the-artifact-does-not-carry-is-refused,
+  section = {metacheck},
+  title  = {The header names LICENSE but the wheel and the sdist hold no such file: one problem each},
+  claim  = {The header names LICENSE but the wheel and the sdist hold no such file: one problem
+            each.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_declared_license_file_the_artifact_does_not_carry_is_refused},
+}

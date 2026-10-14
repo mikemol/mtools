@@ -17,7 +17,8 @@ What is tested, each by name:
 - the long description is present and its `Description-Content-Type` is one PyPI renders
   (`text/markdown`, `text/x-rst`, `text/plain`);
 - `Requires-Python` is declared;
-- a license is declared (`License-Expression`, `License` or a `License-File`).
+- a license is declared (`License-Expression`, `License` or a `License-File`);
+- the license TEXT is shipped (W1205): a `License-File` header, and that file in the artifact.
 
 CONSUMED BY: `mikemol-wheel check` and the publish preflight (W1151).
 """
@@ -182,6 +183,42 @@ def check(fields: Mapping[str, Sequence[str]], body: str) -> list[str]:
     return problems
 
 
+def _member_names(path: Path) -> list[str]:
+    """List the names of the files a wheel or an sdist carries.
+
+    Returns:
+        the member names.
+
+    """
+    if path.name.endswith(".whl"):
+        with zipfile.ZipFile(path) as wheel:
+            return wheel.namelist()
+    with tarfile.open(path) as sdist:
+        return sdist.getnames()
+
+
+def license_files(path: Path, fields: Mapping[str, Sequence[str]]) -> list[str]:
+    """Check that the artifact SHIPS its license text, not only a license name (W1205).
+
+    ⚑ A `License-Expression` says which license; the text is what a redistributor must keep. PEP
+    639 names each shipped file in a `License-File` header, and the file must be in the artifact
+    (a wheel puts it under `.dist-info/licenses/`, an sdist at its top level).
+
+    Returns:
+        the problems: no `License-File` header, or a declared file the artifact does not carry.
+
+    """
+    declared = [value.strip() for value in fields.get("License-File", [])]
+    if not declared:
+        return ["no License-File: the license text is not shipped in the artifact"]
+    names = _member_names(path)
+    return [
+        f"License-File {name!r} is declared but the artifact does not carry it"
+        for name in declared
+        if not any(member == name or member.endswith("/" + name) for member in names)
+    ]
+
+
 def verdict(path: Path) -> dict[str, object]:
     """Check one artifact.
 
@@ -192,10 +229,11 @@ def verdict(path: Path) -> dict[str, object]:
     """
     try:
         fields, body = parse(read_metadata(path))
+        shipped = license_files(path, fields)
     except (OSError, ValueError, zipfile.BadZipFile, tarfile.TarError) as exc:
         reason = [str(exc)]
         return {"artifact": path.name, "name": "", "version": "", "ok": False, "problems": reason}
-    problems = check(fields, body)
+    problems = [*check(fields, body), *shipped]
     return {
         "artifact": path.name,
         "name": _first(fields, "Name"),

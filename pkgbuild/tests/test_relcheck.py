@@ -77,6 +77,8 @@ def _dist(root: Path, name: str, version: str) -> None:
     package = root / name / name.replace("-", "_")
     package.mkdir(parents=True)
     (package / "__init__.py").write_text("", encoding="utf-8")
+    # setuptools ships any LICEN[CS]E* in the dist directory and names it in `License-File` (W1205).
+    (root / name / "LICENSE").write_text("Apache-2.0 text\n", encoding="utf-8")
     text = _PYPROJECT.format(name=name, version=version)
     if name.endswith("-rst"):
         # An unclosed inline literal: valid enough to build, refused by the README renderer.
