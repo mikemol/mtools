@@ -51,6 +51,7 @@ class Args(argparse.Namespace):
     max_bytes: int | None
     message_key: str
     time_key: str | None
+    stamp: str | None
     unit: str
     from_file: Path | None
     state: Path | None
@@ -74,6 +75,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-bytes", type=int)
     parser.add_argument("--message-key", default=vlogrecord.DEFAULT_MESSAGE_KEY)
     parser.add_argument("--time-key")
+    parser.add_argument("--stamp", help="a [stamps.NAME] kind that reads the time out of a line")
     parser.add_argument("--unit", default="s", choices=UNITS)
     parser.add_argument("--from-file", type=Path)
     parser.add_argument("--state", type=Path)
@@ -142,6 +144,28 @@ def _drain_now(config: vlogship.Config) -> int:
     return 0 if done.left == 0 else 1
 
 
+def _prepare(
+    args: Args,
+) -> tuple[dict[str, str], vlogrecord.FieldMap, vlogship.Config] | str:
+    """Read the stream pairs, the line stamp and the config, or say what is wrong with them.
+
+    Returns:
+        the streams, the field map and the shipper config; or the usage message.
+
+    """
+    streams = vlogconfig.streams_of(args.stream or [])
+    if streams is None:
+        return "--stream wants KEY=VALUE"
+    line_stamp = None
+    if args.stamp:
+        found = vlogconfig.stamp_named(vlogconfig.read_toml(args.config), args.stamp)
+        if isinstance(found, str):
+            return found
+        line_stamp = found
+    how = vlogrecord.FieldMap(args.message_key, args.time_key, args.unit, line_stamp=line_stamp)
+    return streams, how, _config_of(args)
+
+
 def main(
     argv: Sequence[str] | None = None,
     stdin: TextIO | None = None,
@@ -155,14 +179,13 @@ def main(
 
     """
     args = _parser().parse_args(list(sys.argv[1:] if argv is None else argv), namespace=Args())
-    streams = vlogconfig.streams_of(args.stream or [])
-    if streams is None:
-        sys.stderr.write("mikemol-vlog: --stream wants KEY=VALUE\n")
+    ready = _prepare(args)
+    if isinstance(ready, str):
+        sys.stderr.write(f"mikemol-vlog: {ready}\n")
         return EXIT_USAGE
-    config = _config_of(args)
+    streams, how, config = ready
     if args.drain:
         return _drain_now(config)
-    how = vlogrecord.FieldMap(args.message_key, args.time_key, args.unit)
     pending: list[str] = []
 
     def flush() -> None:

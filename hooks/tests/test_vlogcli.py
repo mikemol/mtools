@@ -139,6 +139,80 @@ def test_a_flag_overrides_the_config_file_and_the_file_overrides_the_default() -
     assert vlogconfig.build({}, vlogconfig.Flags()).max_lines == vlogconfig.DEFAULT_MAX_LINES
 
 
+_STAMPS = (
+    "[stamps.logfmt]\n"
+    "pattern = '^time=\"([0-9T:.+\\-Z]+)\"'\n"
+    'form = "iso"\n'
+    "[stamps.epoch]\n"
+    "pattern = '^(\\d{9,11}):'\n"
+    'form = "epoch"\n'
+)
+
+
+def _stamped(tmp_path: Path, name: str, stdin: str) -> tuple[int, list[Doc]]:
+    """Run main with a stamp kind from a config file declaring both of luthen's shapes.
+
+    Returns:
+        the exit code and the spooled records.
+
+    """
+    config = tmp_path / "stamps.toml"
+    config.write_text(_STAMPS, encoding="utf-8")
+    spool = ["--spool-dir", str(tmp_path / "spool"), "--no-drain", "--config", str(config)]
+    code = vlogcli.main([*spool, "--stamp", name, "--stream", "k=v"], io.StringIO(stdin), print)
+    return code, _spooled(tmp_path / "spool")
+
+
+def test_a_logfmt_stamp_gives_old_lines_their_own_time_and_a_miss_says_so(tmp_path: Path) -> None:
+    """The matched line keeps its time; the unmatched one is stamped now AND flagged."""
+    code, records = _stamped(
+        tmp_path, "logfmt", 'time="2026-10-13T20:11:40Z" level=info msg=x\nno stamp here\n'
+    )
+    assert code == 0
+    assert records[0]["_time"] == "2026-10-13T20:11:40.000000Z"
+    assert records[0]["parse_failure"] == "not-json"
+    assert "time_unparsed" not in records[0]
+    assert records[1]["time_unparsed"] == "true"
+    assert records[1]["_time"] != records[0]["_time"]
+
+
+def test_an_epoch_prefixed_stamp_reads_seconds(tmp_path: Path) -> None:
+    """`1760400000:` is 2025-10-14T00:00:00Z; the rest of the line stays the message."""
+    code, records = _stamped(tmp_path, "epoch", "1760400000: hello\n")
+    assert code == 0
+    assert records[0]["_time"] == "2025-10-14T00:00:00.000000Z"
+    assert records[0]["_msg"] == "1760400000: hello"
+
+
+def test_an_undeclared_stamp_is_a_usage_error_and_spools_nothing(tmp_path: Path) -> None:
+    """A typo must not silently fall back to the ship time: exit 2, nothing spooled."""
+    code, _records = _stamped(tmp_path, "logfnt", "x\n")
+    assert code == _USAGE
+    assert not (tmp_path / "spool").exists()
+
+
+def test_an_undeclared_stamp_names_what_is_declared() -> None:
+    """The refusal lists the kinds that are declared, so the typo is findable."""
+    table: Doc = {"stamps": {"logfmt": {"pattern": "(a)"}, "epoch": {"pattern": "(b)"}}}
+    reason = str(vlogconfig.stamp_named(table, "logfnt"))
+    assert "logfnt" in reason
+    assert "epoch, logfmt" in reason
+
+
+def test_a_stamp_that_cannot_be_used_is_refused_with_its_reason() -> None:
+    """Two groups, an uncompilable pattern and an unknown form each say which they are."""
+    bad: Doc = {
+        "stamps": {
+            "two": {"pattern": "(a)(b)"},
+            "broken": {"pattern": "("},
+            "odd": {"pattern": "(a)", "form": "julian"},
+        }
+    }
+    assert "exactly one capture group" in str(vlogconfig.stamp_named(bad, "two"))
+    assert "does not compile" in str(vlogconfig.stamp_named(bad, "broken"))
+    assert "form of iso or epoch" in str(vlogconfig.stamp_named(bad, "odd"))
+
+
 def test_the_drainer_argv_carries_the_same_settings(tmp_path: Path) -> None:
     """Spool directory, bounds, service and every resolver argument reach the detached process."""
     config = vlogship.Config(tmp_path, "logs", ("q", "{name}"), 11, 22)

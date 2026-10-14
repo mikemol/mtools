@@ -6,18 +6,24 @@
 `service`, `resolver` (an argv list with `{name}`), `spool_dir`, `max_lines` and `max_bytes`; a flag
 overrides the file; with no service the lines are spooled and kept (`vlogship.drain_all`).
 
+⚑ A SOURCE'S LINE TIME IS DECLARED IN DATA (W1185): `[stamps.NAME]` holds a `pattern` with exactly
+one capture group and a `form` (`iso` or `epoch`), and `--stamp NAME` picks it. A name that is not
+declared, a pattern that does not compile, or one without exactly one group is refused by name, so
+a typo cannot silently fall back to the ship time.
+
 CONSUMED BY: `vlogcli`.
 """
 
 from __future__ import annotations
 
 import os
+import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.hooks import vlogship
+from mikemol.hooks import vlogrecord, vlogship
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -25,6 +31,7 @@ if TYPE_CHECKING:
 DEFAULT_MAX_LINES = 100_000
 DEFAULT_MAX_BYTES = 64 << 20
 CONFIG_PATH = Path("~/.config/mikemol/vlog.toml")
+FORMS = ("iso", "epoch")
 
 
 @dataclass(frozen=True)
@@ -92,6 +99,33 @@ def build(table: Mapping[str, object], flags: Flags) -> vlogship.Config:
         _number(table, "max_lines", flags.max_lines, DEFAULT_MAX_LINES),
         _number(table, "max_bytes", flags.max_bytes, DEFAULT_MAX_BYTES),
     )
+
+
+def stamp_named(table: Mapping[str, object], name: str) -> vlogrecord.LineStamp | str:
+    """Read the stamp kind called `name` from `[stamps.NAME]`.
+
+    Returns:
+        the stamp, or the reason it cannot be used (undeclared, a bad pattern, not exactly one
+        capture group, an unknown form).
+
+    """
+    group = table.get("stamps")
+    declared = cast("dict[str, object]", group) if isinstance(group, dict) else {}
+    entry = declared.get(name)
+    if not isinstance(entry, dict):
+        known = ", ".join(sorted(declared)) or "none declared"
+        return f"stamp {name!r} is not declared in [stamps] ({known})"
+    fields = cast("dict[str, object]", entry)
+    pattern, form = fields.get("pattern"), fields.get("form", "iso")
+    if not isinstance(pattern, str) or form not in FORMS:
+        return f"stamp {name!r} needs a string pattern and a form of {' or '.join(FORMS)}"
+    try:
+        compiled = re.compile(pattern)
+    except re.error as exc:
+        return f"stamp {name!r} pattern does not compile: {exc}"
+    if compiled.groups != 1:
+        return f"stamp {name!r} pattern needs exactly one capture group, has {compiled.groups}"
+    return vlogrecord.LineStamp(compiled, str(form))
 
 
 def streams_of(pairs: Sequence[str]) -> dict[str, str] | None:

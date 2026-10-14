@@ -248,6 +248,12 @@ src/mikemol/hooks/vlogspool.py|spool-removes-one-too-many|\[len\(front\) :\]|[le
 src/mikemol/hooks/vlogspool.py|spool-drain-never-busy|if not taken:|if False:|def=Spool.drain
 src/mikemol/hooks/vlogspool.py|spool-drops-not-accumulated|total = self\._dropped_so_far\(\) \+ dropped|total = dropped|def=Spool.append
 src/mikemol/hooks/vlogspool.py|spool-accepts-a-newline|if any\("|if not any("|def=Spool.append
+src/mikemol/hooks/vlogrecord.py|stamp-always-absent|if stamp_kind is None:|if False:|def=from_text
+src/mikemol/hooks/vlogrecord.py|stamp-miss-unhandled|if found is None:|if False:|def=from_text
+src/mikemol/hooks/vlogrecord.py|stamp-epoch-read-as-iso|if stamp_kind\.form == "epoch":|if False:|def=from_text
+src/mikemol/hooks/vlogconfig.py|stamp-many-groups-accepted|if compiled\.groups != 1:|if False:|def=stamp_named
+src/mikemol/hooks/vlogconfig.py|stamp-any-form-accepted|form not in FORMS|False|def=stamp_named
+src/mikemol/hooks/vlogcli.py|stamp-error-used-as-a-stamp|if isinstance\(found, str\):|if False:|def=_prepare
 src/mikemol/hooks/vlogrecord.py|long-line-never-truncated|if len\(line\) > how\.max_line:|if False:|def=_wrapped
 src/mikemol/hooks/vlogrecord.py|time-never-understood|if moment is not None else|if moment is None else|def=time_of
 src/mikemol/hooks/vlogrecord.py|unreadable-time-unflagged|if not understood:|if False:|def=record_of

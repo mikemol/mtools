@@ -9531,3 +9531,38 @@
   claim  = {The control: a stray ` - x` line outside a refusal blames no check.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_bullet_with_no_refusal_header_is_not_a_failed_check},
 }
+
+@misc{hooks-vlogcli-logfmt-stamp-gives-old-lines-their-own-time-and-a-miss-says-so,
+  section = {vlogcli},
+  title  = {The matched line keeps its time; the unmatched one is stamped now AND flagged},
+  claim  = {The matched line keeps its time; the unmatched one is stamped now AND flagged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_logfmt_stamp_gives_old_lines_their_own_time_and_a_miss_says_so},
+}
+
+@misc{hooks-vlogcli-epoch-prefixed-stamp-reads-seconds,
+  section = {vlogcli},
+  title  = {`1760400000:` is 2025-10-14T00:00:00Z; the rest of the line stays the message},
+  claim  = {`1760400000:` is 2025-10-14T00:00:00Z; the rest of the line stays the message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_an_epoch_prefixed_stamp_reads_seconds},
+}
+
+@misc{hooks-vlogcli-undeclared-stamp-is-a-usage-error-and-spools-nothing,
+  section = {vlogcli},
+  title  = {A typo must not silently fall back to the ship time: exit 2, nothing spooled},
+  claim  = {A typo must not silently fall back to the ship time: exit 2, nothing spooled.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_an_undeclared_stamp_is_a_usage_error_and_spools_nothing},
+}
+
+@misc{hooks-vlogcli-undeclared-stamp-names-what-is-declared,
+  section = {vlogcli},
+  title  = {The refusal lists the kinds that are declared, so the typo is findable},
+  claim  = {The refusal lists the kinds that are declared, so the typo is findable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_an_undeclared_stamp_names_what_is_declared},
+}
+
+@misc{hooks-vlogcli-stamp-that-cannot-be-used-is-refused-with-its-reason,
+  section = {vlogcli},
+  title  = {Two groups, an uncompilable pattern and an unknown form each say which they are},
+  claim  = {Two groups, an uncompilable pattern and an unknown form each say which they are.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_a_stamp_that_cannot_be_used_is_refused_with_its_reason},
+}

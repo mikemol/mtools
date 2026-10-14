@@ -32,6 +32,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
+    import re
     from collections.abc import Mapping
 
 TIME_KEYS = ("_time", "time", "timestamp", "ts")
@@ -42,6 +43,18 @@ Record = dict[str, object]
 
 
 @dataclass(frozen=True)
+class LineStamp:
+    """A time embedded in a line's TEXT (W1185): a pattern with one capture group, and its form.
+
+    `form` is `iso` (an ISO-8601 string) or `epoch` (seconds since the epoch). It is applied to a
+    line that is not JSON, and to a JSON line that has none of the time keys.
+    """
+
+    pattern: re.Pattern[str]
+    form: str = "iso"
+
+
+@dataclass(frozen=True)
 class FieldMap:
     """How a line's fields map onto the record: which is the message, which is the time."""
 
@@ -49,6 +62,7 @@ class FieldMap:
     time_key: str | None = None
     unit: str = "s"
     max_line: int = DEFAULT_MAX_LINE
+    line_stamp: LineStamp | None = None
 
 
 def stamp(moment: dt.datetime) -> str:
@@ -93,14 +107,44 @@ def _text(value: object) -> str:
     return value if isinstance(value, str) else json.dumps(value, sort_keys=True)
 
 
-def _wrapped(line: str, why: str, now: str, how: FieldMap) -> Record:
-    """Wrap a line that is not a JSON object, keeping its text.
+def from_text(text: str, how: FieldMap, now: str) -> tuple[str, bool]:
+    """Read the time embedded in a line's text with the configured stamp (W1185).
+
+    ⚑ WITH NO STAMP CONFIGURED THIS IS `now` AND UNFLAGGED: only a source that declared a stamp can
+    fail to match it, so `time_unparsed` keeps meaning "a time was expected and was not read".
 
     Returns:
-        a record whose message is the line (cut to `max_line`), flagged `parse_failure`.
+        the RFC3339 time and whether it was read; `now` and False when the stamp did not match.
 
     """
-    record: Record = {"_msg": line[: how.max_line], "_time": now, "parse_failure": why}
+    stamp_kind = how.line_stamp
+    if stamp_kind is None:
+        return now, True
+    found = stamp_kind.pattern.match(text)
+    if found is None:
+        return now, False
+    raw: object = found.group(1)
+    if stamp_kind.form == "epoch":
+        try:
+            raw = float(found.group(1))
+        except ValueError:
+            return now, False
+        return time_of(raw, "s", now)
+    return time_of(raw, how.unit, now)
+
+
+def _wrapped(line: str, why: str, now: str, how: FieldMap) -> Record:
+    """Wrap a line that is not a JSON object, keeping its text and any time it carries.
+
+    Returns:
+        a record whose message is the line (cut to `max_line`), flagged `parse_failure`, with the
+        stamped time when the source declared a stamp that matched.
+
+    """
+    when, understood = from_text(line, how, now)
+    record: Record = {"_msg": line[: how.max_line], "_time": when, "parse_failure": why}
+    if not understood:
+        record["time_unparsed"] = "true"
     if len(line) > how.max_line:
         record["truncated"] = "true"
     return record
@@ -127,7 +171,10 @@ def record_of(
     record: Record = {k: v for k, v in fields.items() if k not in {"_msg", "_time"}}
     keys = (mapping.time_key,) if mapping.time_key else TIME_KEYS
     named = next((k for k in keys if k in fields), None)
-    when, understood = (now, True) if named is None else time_of(fields[named], mapping.unit, now)
+    if named is None:
+        when, understood = from_text(text, mapping, now)
+    else:
+        when, understood = time_of(fields[named], mapping.unit, now)
     record["_time"] = when
     if not understood:
         record["time_unparsed"] = "true"
