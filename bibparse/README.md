@@ -51,8 +51,8 @@ then, from the root of the paperkit checkout (the paths are its projects, add `p
 `library` for the 12-bib and `concept:` cases):
 
 ```
-cd /home/mikemol/github/paperkit
-PYTHONPATH=paperkit:/home/mikemol/github/mtools/bibparse/src python3 /tmp/equiv.py arch talk report boundaries setup render
+cd path/to/paperkit
+PYTHONPATH=paperkit:path/to/mtools/bibparse/src python3 /tmp/equiv.py arch talk report boundaries setup render
 ```
 
 Every line must print `N claims equal`; an `AssertionError` or a `BibSyntaxError` is a divergence to

@@ -34,6 +34,7 @@ verdict is ever produced under it to be mis-cached.  Read by tools/toolchain_sta
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -43,17 +44,31 @@ from mikemol.buildtel import proc
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-DIRECTORY = Path("/home/mikemol/github/luthen-observability")
+DIRECTORY_ENV = "LUTHEN_OBSERVABILITY_DIR"
 IMAGES = ("paperkit-executor", "buildbuddy-executor")
 ABSENT = "absent"
 
 
-def digest(image: str, run: proc.Runner = proc.capture, directory: Path = DIRECTORY) -> str:
+def default_directory() -> Path | None:
+    """Name the luthen-observability checkout the host declares.
+
+    ⚑ THERE IS NO BUILT-IN PATH: a published package must not carry the author's home directory,
+    so the checkout is named by `LUTHEN_OBSERVABILITY_DIR` and, unnamed, the digest is `absent`.
+
+    Returns:
+        the directory named by the environment, or None when it names none.
+
+    """
+    named = os.environ.get(DIRECTORY_ENV, "")
+    return Path(named) if named else None
+
+
+def digest(image: str, run: proc.Runner = proc.capture, directory: Path | None = None) -> str:
     """Ask luthen-observability's image query for `image`'s digest.
 
     Returns:
-        the digest, or `absent` when the query is not installed, fails, prints nothing, or
-        does not answer.
+        the digest, or `absent` when no checkout is named, the query is not installed, fails,
+        prints nothing, or does not answer.
 
     Raises:
         SystemExit: when `image` is not one of `IMAGES`.
@@ -62,6 +77,9 @@ def digest(image: str, run: proc.Runner = proc.capture, directory: Path = DIRECT
     if image not in IMAGES:
         msg = f"image_digest: unknown image {image!r}; known: {', '.join(IMAGES)}"
         raise SystemExit(msg)
+    directory = directory or default_directory()
+    if directory is None:
+        return ABSENT
     query = directory / "checks" / "images_query.py"
     python = directory / ".venv" / "bin" / "python"
     if not query.is_file() or not python.is_file():

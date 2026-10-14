@@ -110,6 +110,31 @@ def test_digest_is_absent_unless_the_query_succeeds_and_answers(
     assert image_digest.digest("paperkit-executor", run, root) == "absent"
 
 
+def test_the_checkout_is_the_one_the_environment_names(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With no directory argument the query runs from `LUTHEN_OBSERVABILITY_DIR`."""
+    root = _directory(tmp_path)
+    monkeypatch.setenv(image_digest.DIRECTORY_ENV, str(root))
+    calls: list[Sequence[str]] = []
+    reply = _reply(state="answered", digest=_DIGEST)
+    assert image_digest.digest("paperkit-executor", _answering(0, reply, calls)) == _DIGEST
+    assert calls[0][1] == str(root / "checks" / "images_query.py")
+
+
+def test_with_no_checkout_named_the_digest_is_absent_and_nothing_runs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The control for the removed host default: an unset or empty variable names no directory."""
+    calls: list[Sequence[str]] = []
+    run = _answering(0, "{}", calls)
+    monkeypatch.delenv(image_digest.DIRECTORY_ENV, raising=False)
+    assert image_digest.digest("paperkit-executor", run) == "absent"
+    monkeypatch.setenv(image_digest.DIRECTORY_ENV, "")
+    assert image_digest.digest("paperkit-executor", run) == "absent"
+    assert calls == []
+
+
 def test_digest_refuses_an_image_it_does_not_know(tmp_path: Path) -> None:
     """An unknown name exits with a message naming it and the known ones, before any lookup."""
     calls: list[Sequence[str]] = []

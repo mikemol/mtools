@@ -867,3 +867,17 @@
   claim  = {Sixty minutes left is `1.0h`, not `60m`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_buildpulse.py -k test_an_estimate_of_exactly_an_hour_reads_in_hours},
 }
+
+@misc{buildtel-image-digest-checkout-is-the-one-the-environment-names,
+  section = {image_digest},
+  title  = {With no directory argument the query runs from `LUTHEN_OBSERVABILITY_DIR`},
+  claim  = {With no directory argument the query runs from `LUTHEN_OBSERVABILITY_DIR`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_the_checkout_is_the_one_the_environment_names},
+}
+
+@misc{buildtel-image-digest-with-no-checkout-named-the-digest-is-absent-and-nothing-runs,
+  section = {image_digest},
+  title  = {The control for the removed host default: an unset or empty variable names no directory},
+  claim  = {The control for the removed host default: an unset or empty variable names no directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_with_no_checkout_named_the_digest_is_absent_and_nothing_runs},
+}
