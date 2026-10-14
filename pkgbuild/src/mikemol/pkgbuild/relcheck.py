@@ -16,7 +16,10 @@ with no network and nothing installed.
 ⚑ A DIST THAT FAILS TO BUILD IS A ROW, NOT A CRASH: its `ok` is false and its `build` field says
 why, so one broken dist is reported beside the others instead of hiding them.
 
-⚑ THIS IS THE METADATA CHECK, NOT `twine check` (W1189): the README is not rendered here.
+⚑ THREE CHECKS, ALL REQUIRED FOR `ok`: the metadata check (`metacheck`, standard library), the
+README rendering (`twinecheck`, W1189: `twine check --strict`) and the shipped-file privacy judge
+(`privacycheck`, W1199: no deny and no unaccepted withheld finding in any file the artifacts carry).
+Each of the last two reports `ok`, `failed` or `unavailable`, and `unavailable` is a failure.
 
 CONSUMED BY: `mikemol-wheel release-check` and the publish preflight (W1151).
 """
@@ -37,7 +40,7 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import metacheck, twinecheck
+from mikemol.pkgbuild import metacheck, privacycheck, twinecheck
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -48,6 +51,7 @@ BUILD_ERRORS = (OSError, ValueError, RuntimeError, ImportError, KeyError, TypeEr
 Row = dict[str, object]
 to_stderr = contextlib.redirect_stdout
 run_twine = twinecheck.check
+run_privacy = privacycheck.check
 
 
 def checkout(root: Path, sha: str, dest: Path) -> None:
@@ -124,7 +128,8 @@ def row_of(dist: Path, out: Path, sha: str) -> Row:
     """Build one dist and check both artifacts.
 
     Returns:
-        the dist's row: `dist`, `sha`, `ok`, `build` ("ok" or the reason) and the two verdicts.
+        the dist's row: `dist`, `sha`, `ok`, `build` ("ok" or the reason), the `twine` and `privacy`
+        states and the two metadata verdicts.
 
     """
     try:
@@ -137,20 +142,25 @@ def row_of(dist: Path, out: Path, sha: str) -> Row:
             "ok": False,
             "build": reason,
             "twine": "not run",
+            "privacy": "not run",
             "artifacts": [],
         }
     verdicts = [metacheck.verdict(sdist), metacheck.verdict(wheel)]
     twine, detail = run_twine([sdist, wheel])
+    privacy, scan = run_privacy([sdist, wheel])
     row: Row = {
         "dist": dist.name,
         "sha": sha,
-        "ok": all(v["ok"] for v in verdicts) and twine == "ok",
+        "ok": all(v["ok"] for v in verdicts) and twine == "ok" and privacy == "ok",
         "build": "ok",
         "twine": twine,
+        "privacy": privacy,
         "artifacts": verdicts,
     }
     if twine != "ok":
         row["twine_detail"] = detail
+    if privacy != "ok":
+        row["privacy_detail"] = scan
     return row
 
 

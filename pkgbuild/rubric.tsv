@@ -6,3 +6,4 @@ pyinfo	The Interpreter Probe: It Names the Python That Runs It
 metacheck	mikemol-wheel check: metadata PyPI would refuse
 relcheck	mikemol-wheel release-check: every dist built at a sha
 twinecheck	mikemol-wheel release-check: twine check --strict
+privacycheck	mikemol-wheel release-check: shipped-file privacy judge

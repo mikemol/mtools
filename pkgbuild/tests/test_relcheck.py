@@ -19,7 +19,7 @@ import subprocess
 import sys
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import relcheck, wheel
+from mikemol.pkgbuild import privacycheck, relcheck, wheel
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -28,12 +28,35 @@ if TYPE_CHECKING:
 
 PYTHON = sys.executable
 PATHS = os.pathsep.join(sys.path)
+_OWNER_ONLY = 0o700
 _PYPROJECT = (
     '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n'
     '[project]\nname = "{name}"\nversion = "{version}"\ndescription = "a demonstration"\n'
     'readme = "README.md"\nrequires-python = ">=3.13"\nlicense = {{text = "Apache-2.0"}}\n'
 )
 _TWO = 2
+
+
+def _tool(directory: Path, name: str, status: int, text: str) -> Path:
+    """Write an executable stub that prints `text` and exits `status`.
+
+    Returns:
+        its path.
+
+    """
+    directory.mkdir(parents=True, exist_ok=True)
+    script = directory / name
+    script.write_text(
+        f"#!{sys.executable}\nimport sys\nsys.stdout.write({text!r})\nsys.exit({status})\n",
+        encoding="utf-8",
+    )
+    script.chmod(_OWNER_ONLY)
+    return script
+
+
+def _judge(tool: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Name `tool` as the shipped-file privacy judge for the rest of the test (W1199)."""
+    monkeypatch.setenv(privacycheck.TOOL_ENV, str(tool))
 
 
 def _git(root: Path, *args: str) -> str:
@@ -67,10 +90,14 @@ def _dist(root: Path, name: str, version: str) -> None:
 def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, versions: dict[str, str]) -> Path:
     """Build a committed repository with one dist per entry of `versions`.
 
+    A judge that passes is named first, so the build tests are about the build: without a named
+    tool the privacy state is `unavailable`, a failure by design, which would fail every row.
+
     Returns:
         the repository's root.
 
     """
+    _judge(_tool(tmp_path / "stubs", "privacy-ok", 0, ""), monkeypatch)
     for name in [name for name in os.environ if name.startswith("GIT_")]:
         monkeypatch.delenv(name)
     for key, value in {
@@ -192,6 +219,41 @@ def test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clea
     assert bad["twine"] == "failed"
     assert bad["ok"] is False
     assert "render" in str(bad["twine_detail"]).lower()
+
+
+def test_a_privacy_finding_fails_the_row_with_the_judge_output_beside_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The judge exits 1 with a finding: privacy `failed`, `ok` false, the output in the row.
+
+    ⚑ THIS IS WHAT W1199 ADDS: metadata and rendering can both pass while a shipped file carries a
+    secret or a home path nobody accepted.
+    """
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1"})
+    finding = '{"kind": "deny", "rule": "env-file"}\n'
+    _judge(_tool(tmp_path / "stubs", "privacy-found", 1, finding), monkeypatch)
+    sha = _git(root, "rev-parse", "HEAD")
+    row = relcheck.release_check(root, sha, tmp_path / "out")[0]
+    assert row["twine"] == "ok"
+    assert row["privacy"] == "failed"
+    assert row["ok"] is False
+    assert "env-file" in str(row["privacy_detail"])
+
+
+def test_a_missing_or_failing_judge_is_unavailable_and_never_a_pass(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No tool named, and a judge that exits 2 (no opa), are both `unavailable` and not ok."""
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1"})
+    sha = _git(root, "rev-parse", "HEAD")
+    monkeypatch.delenv(privacycheck.TOOL_ENV)
+    row = relcheck.release_check(root, sha, tmp_path / "out")[0]
+    assert row["privacy"] == "unavailable"
+    assert row["ok"] is False
+    _judge(_tool(tmp_path / "stubs", "privacy-nojudge", 2, "usage\n"), monkeypatch)
+    row = relcheck.release_check(root, sha, tmp_path / "out2")[0]
+    assert row["privacy"] == "unavailable"
+    assert row["ok"] is False
 
 
 def test_the_wrong_number_of_arguments_is_a_usage_error(tmp_path: Path) -> None:

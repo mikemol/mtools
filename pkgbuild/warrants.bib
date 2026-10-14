@@ -237,3 +237,54 @@
             reached the upload before it failed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clean},
 }
+
+@misc{pkgbuild-privacycheck-judge-that-passes-is-ok-and-is-given-every-artifact-in-order,
+  section = {privacycheck},
+  title  = {Exit 0 is `ok`, and the arguments are the artifact paths, sdist first},
+  claim  = {Exit 0 is `ok`, and the arguments are the artifact paths, sdist first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacycheck.py -k test_a_judge_that_passes_is_ok_and_is_given_every_artifact_in_order},
+}
+
+@misc{pkgbuild-privacycheck-judge-that-finds-something-is-failed-with-its-output,
+  section = {privacycheck},
+  title  = {Exit 1 is `failed` and the finding lines reach the row},
+  claim  = {Exit 1 is `failed` and the finding lines reach the row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacycheck.py -k test_a_judge_that_finds_something_is_failed_with_its_output},
+}
+
+@misc{pkgbuild-privacycheck-judge-that-has-no-opa-is-unavailable-not-failed-and-not-ok,
+  section = {privacycheck},
+  title  = {The control: exit 2 is the judge saying it could not judge, which is not a verdict},
+  claim  = {The control: exit 2 is the judge saying it could not judge, which is not a verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacycheck.py -k test_a_judge_that_has_no_opa_is_unavailable_not_failed_and_not_ok},
+}
+
+@misc{pkgbuild-privacycheck-no-tool-named-and-a-missing-tool-are-unavailable,
+  section = {privacycheck},
+  title  = {The environment names nothing, or names a path that is no program},
+  claim  = {The environment names nothing, or names a path that is no program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacycheck.py -k test_no_tool_named_and_a_missing_tool_are_unavailable},
+}
+
+@misc{pkgbuild-privacycheck-tool-is-read-from-the-environment-when-not-passed,
+  section = {privacycheck},
+  title  = {`MIKEMOL_PRIVACY_SHIPPED` is the tool when no parameter is given},
+  claim  = {`MIKEMOL_PRIVACY_SHIPPED` is the tool when no parameter is given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacycheck.py -k test_the_tool_is_read_from_the_environment_when_not_passed},
+}
+
+@misc{pkgbuild-relcheck-privacy-finding-fails-the-row-with-the-judge-output-beside-it,
+  section = {relcheck},
+  title  = {The judge exits 1 with a finding: privacy `failed`, `ok` false, the output in the row},
+  claim  = {The judge exits 1 with a finding: privacy `failed`, `ok` false, the output in the row.
+            THIS IS WHAT W1199 ADDS: metadata and rendering can both pass while a
+            shipped file carries a secret or a home path nobody accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_privacy_finding_fails_the_row_with_the_judge_output_beside_it},
+}
+
+@misc{pkgbuild-relcheck-missing-or-failing-judge-is-unavailable-and-never-a-pass,
+  section = {relcheck},
+  title  = {No tool named, and a judge that exits 2 (no opa), are both `unavailable` and not ok},
+  claim  = {No tool named, and a judge that exits 2 (no opa), are both `unavailable` and not ok.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_missing_or_failing_judge_is_unavailable_and_never_a_pass},
+}

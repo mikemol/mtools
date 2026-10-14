@@ -11,9 +11,14 @@
 src/mikemol/pkgbuild/relcheck.py|build-noise-on-stdout|with to_stderr\(sys\.stderr\):|with to_stderr(sys.stdout):|def=build_dist
 src/mikemol/pkgbuild/relcheck.py|no-dist-found|sorted\(p\.parent for p in tree\.glob\("\*/pyproject\.toml"\)\)|[]|def=dists_in
 src/mikemol/pkgbuild/relcheck.py|build-failure-escapes|except BUILD_ERRORS as exc:|except ZeroDivisionError as exc:|def=row_of
-src/mikemol/pkgbuild/relcheck.py|row-always-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok",|"ok": True,|def=row_of
-src/mikemol/pkgbuild/relcheck.py|metadata-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok",|"ok": twine == "ok",|def=row_of
-src/mikemol/pkgbuild/relcheck.py|twine-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok",|"ok": all(v["ok"] for v in verdicts),|def=row_of
+src/mikemol/pkgbuild/relcheck.py|row-always-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": True,|def=row_of
+src/mikemol/pkgbuild/relcheck.py|metadata-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": twine == "ok" and privacy == "ok",|def=row_of
+src/mikemol/pkgbuild/relcheck.py|twine-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": all(v["ok"] for v in verdicts) and privacy == "ok",|def=row_of
+src/mikemol/pkgbuild/relcheck.py|privacy-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": all(v["ok"] for v in verdicts) and twine == "ok",|def=row_of
+src/mikemol/pkgbuild/relcheck.py|privacy-detail-dropped|if privacy != "ok":|if False:|def=row_of
+src/mikemol/pkgbuild/privacycheck.py|privacy-no-tool-passes|if not named:|if False:|def=check
+src/mikemol/pkgbuild/privacycheck.py|privacy-exit-two-is-failed|"failed" if done\.returncode == FOUND else "unavailable"|"failed"|def=check
+src/mikemol/pkgbuild/privacycheck.py|privacy-missing-tool-escapes|except OSError as exc:|except ZeroDivisionError as exc:|def=check
 src/mikemol/pkgbuild/twinecheck.py|twine-absent-passes|if NOT_INSTALLED in text:|if False:|def=check
 src/mikemol/pkgbuild/twinecheck.py|twine-refusal-passes|\("ok" if done\.returncode == 0 else "failed"\)|"ok"|def=check
 src/mikemol/pkgbuild/twinecheck.py|twine-not-strict|"check", "--strict", |"check", |def=check
