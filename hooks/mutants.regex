@@ -206,6 +206,11 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/vlogship.py|spool-name-order-dependent|sorted\(keys\)|keys|def=spool_name
+src/mikemol/hooks/vlogship.py|ship-keeps-blank-lines|if line\.strip\(\)|if True|def=ship
+src/mikemol/hooks/vlogship.py|ship-silent-about-drops|if dropped:|if False:|def=ship
+src/mikemol/hooks/vlogship.py|drain-without-destination|if base is None:|if False:|def=drain_all
+src/mikemol/hooks/vlogship.py|drain-hides-the-refusal|reason = reason or \(refusal\[0\] if refusal else ""\)|reason = ""|def=drain_all
 src/mikemol/hooks/vlogforms.py|wrapper-hides-the-status|return child\.wait\(\)|return 0|def=run_wrapped
 src/mikemol/hooks/vlogforms.py|offset-ignores-truncation|stat\.st_size < offset|False|def=read_from_offset
 src/mikemol/hooks/vlogforms.py|offset-ignores-rotation|inode != stat\.st_ino or|False or|def=read_from_offset

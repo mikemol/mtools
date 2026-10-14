@@ -9296,3 +9296,38 @@
   claim  = {Nothing to read is not an error and not a restart.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogforms.py -k test_a_missing_file_is_no_lines_and_keeps_the_saved_position},
 }
+
+@misc{hooks-vlogship-lines-are-spooled-to-a-file-named-for-the-sorted-stream-keys,
+  section = {vlogship},
+  title  = {Two key sets make two spools; blank lines are skipped; fields and streams are kept},
+  claim  = {Two key sets make two spools; blank lines are skipped; fields and streams are kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_lines_are_spooled_to_a_file_named_for_the_sorted_stream_keys},
+}
+
+@misc{hooks-vlogship-drain-posts-each-spool-with-its-own-stream-fields-and-empties-it,
+  section = {vlogship},
+  title  = {The query carries the keys read back from the file name; nothing is left},
+  claim  = {The query carries the keys read back from the file name; nothing is left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_a_drain_posts_each_spool_with_its_own_stream_fields_and_empties_it},
+}
+
+@misc{hooks-vlogship-refusing-ingest-leaves-the-spool-and-a-restart-replays-it-in-order,
+  section = {vlogship},
+  title  = {503: nothing is lost and the reason names the status; the next drain sends it all},
+  claim  = {503: nothing is lost and the reason names the status; the next drain sends it all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_a_refusing_ingest_leaves_the_spool_and_a_restart_replays_it_in_order},
+}
+
+@misc{hooks-vlogship-no-service-or-an-unresolved-name-leaves-the-spool-and-says-no-destination,
+  section = {vlogship},
+  title  = {The caller named nothing, then the resolver gave nothing: both keep every line},
+  claim  = {The caller named nothing, then the resolver gave nothing: both keep every line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_no_service_or_an_unresolved_name_leaves_the_spool_and_says_no_destination},
+}
+
+@misc{hooks-vlogship-ceiling-that-dropped-lines-is-itself-recorded,
+  section = {vlogship},
+  title  = {Four lines into a spool of two: two are dropped and one record says how many, once},
+  claim  = {Four lines into a spool of two: two are dropped and one record says how many, once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogship.py -k test_a_ceiling_that_dropped_lines_is_itself_recorded},
+}
