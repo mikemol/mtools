@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 _OPA = os.environ.get("OPA_BIN") or shutil.which("opa") or ""
 pytestmark = pytest.mark.skipif(not _OPA, reason="no opa to judge with")
 _TWO = 2
+_THREE = 3
 Row = dict[str, object]
 
 
@@ -111,7 +112,59 @@ def test_a_clean_dist_has_no_findings_and_exits_zero(
     """The other dist holds one clean file: the summary only, and the exit is 0."""
     status, lines, _ = _audit(_repo(tmp_path), "other", capsys, monkeypatch)
     assert status == 0
-    assert lines == [{"deny": 0, "dist": "other", "files": 1, "skipped": 0, "withheld": 0}]
+    assert lines == [
+        {"deny": 0, "dist": "other", "files": 1, "mode": "tree", "skipped": 0, "withheld": 0}
+    ]
+
+
+def _history_repo(tmp_path: Path) -> tuple[Path, str]:
+    """Build a repo whose only secret was added in one commit and deleted in the next.
+
+    Returns:
+        the repository's root and the sha of the commit that added the secret.
+
+    """
+    root = tmp_path / "hist"
+    (root / "demo").mkdir(parents=True)
+    _git(root, "init", "--quiet", "-b", "main")
+    (root / "demo" / "mod.py").write_text("a = 1\nb = 2\n", encoding="utf-8")
+    _git(root, "add", "demo/mod.py")
+    _git(root, "commit", "--quiet", "-m", "one")
+    key = "a = 1\nb = 2\nKEY = 'AKIA" + "ABCDEFGHIJKLMNOP'\n"
+    (root / "demo" / "mod.py").write_text(key, encoding="utf-8")
+    _git(root, "commit", "--quiet", "-am", "two")
+    added = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, check=True
+    ).stdout.strip()
+    (root / "demo" / "mod.py").write_text("a = 1\nb = 2\n", encoding="utf-8")
+    _git(root, "commit", "--quiet", "-am", "three")
+    return root, added
+
+
+def test_a_secret_added_and_later_deleted_is_in_history_and_not_in_the_tree(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The case the tree cannot see: the tree audit is clean, the history audit names the commit."""
+    root, added = _history_repo(tmp_path)
+    tree_status, tree, _ = _audit(root, "demo", capsys, monkeypatch)
+    assert tree_status == 0
+    assert tree[-1]["deny"] == 0
+    monkeypatch.setenv("OPA_BIN", _OPA)
+    status = privacy_audit.run(["--history", str(root), "demo"])
+    out = capsys.readouterr().out
+    rows = [cast("Row", json.loads(line)) for line in out.splitlines()]
+    assert rows[:-1] == [
+        {
+            "commit": added,
+            "kind": "deny",
+            "line": _THREE,
+            "path": "demo/mod.py",
+            "rule": "aws-access-key",
+        }
+    ]
+    assert rows[-1]["mode"] == "history"
+    assert status == 1
+    assert "ABCDEFGHIJKLMNOP" not in out
 
 
 def test_a_failing_judge_is_an_error_and_never_a_clean_tree() -> None:

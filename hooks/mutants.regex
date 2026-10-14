@@ -310,4 +310,7 @@ src/mikemol/hooks/privacy_audit.py|audit-reads-through-a-link|if full\.is_symlin
 src/mikemol/hooks/privacy_audit.py|audit-decodes-a-binary|if b"\\0" in raw\[:SNIFF\]:|if False:|def=files_of
 src/mikemol/hooks/privacy_audit.py|audit-reads-a-dead-judge-as-clean|if status != 0:|if False:|def=judge
 src/mikemol/hooks/privacy_audit.py|audit-exits-clean-on-a-deny|return 1 if denies else 0|return 0|def=run
-src/mikemol/hooks/privacy_audit.py|audit-needs-no-judge|if len\(args\) != ARGC or not opa:|if len(args) != ARGC:|def=run
+src/mikemol/hooks/privacy_audit.py|audit-needs-no-judge|if len\(words\) != ARGC or not opa:|if len(words) != ARGC:|def=run
+src/mikemol/hooks/privacy_audit.py|history-line-off-by-one|at = int\(hunk\.group\(1\)\) - 1|at = int(hunk.group(1))|def=added_lines
+src/mikemol/hooks/privacy_audit.py|history-lines-not-placed|lines\.extend\(\[""\] \* \(at - len\(lines\)\)\)|lines.extend([])|def=added_lines
+src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run

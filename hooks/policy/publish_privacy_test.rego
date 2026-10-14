@@ -86,6 +86,10 @@ test_bulk_findings_carry_rule_path_and_line if {
 	} with input as bulk
 }
 
+test_history_entries_repeat_their_commit_in_each_finding if {
+	publish_privacy.findings == {{"kind": "deny", "rule": "env-file", "path": "a/.env", "line": 0, "commit": "abc"}} with input as {"files": [{"commit": "abc", "path": "a/.env", "lines": []}]}
+}
+
 test_bulk_clean_input_has_no_findings if {
 	count(publish_privacy.findings) == 0 with input as {"files": [{"path": "a/mod.py", "lines": ["x"]}]}
 }

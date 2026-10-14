@@ -9745,3 +9745,11 @@
   claim  = {No `OPA_BIN` and a missing DIST each exit 2, and nothing is read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_the_wrong_arguments_or_no_judge_is_a_usage_error},
 }
+
+@misc{hooks-privacy-audit-secret-added-and-later-deleted-is-in-history-and-not-in-the-tree,
+  section = {privacy_audit},
+  title  = {The case the tree cannot see: the tree audit is clean, the history audit names the commit},
+  claim  = {The case the tree cannot see: the tree audit is clean, the history audit names the
+            commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_a_secret_added_and_later_deleted_is_in_history_and_not_in_the_tree},
+}

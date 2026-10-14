@@ -50,13 +50,19 @@ withheld contains sprintf("withheld %s", [name]) if {
 
 # BULK FORM (W1192): input {"files": [{"path": p, "lines": [text, ...]}]}, one evaluation for a
 # whole dist. A finding is {kind, rule, path, line}, line 0 for a path rule, and never the text.
-findings contains {"kind": "deny", "rule": name, "path": file.path, "line": 0} if {
+# HISTORY FORM (W1193): an entry may also carry "commit", which a finding repeats, so a secret
+# that was added and later deleted is still reported with the commit that added it.
+tag(file, base) := object.union(base, {"commit": file.commit}) if file.commit
+
+tag(file, base) := base if not file.commit
+
+findings contains tag(file, {"kind": "deny", "rule": name, "path": file.path, "line": 0}) if {
 	some file in input.files
 	some name, pattern in path_deny
 	regex.match(pattern, file.path)
 }
 
-findings contains {"kind": "deny", "rule": name, "path": file.path, "line": n} if {
+findings contains tag(file, {"kind": "deny", "rule": name, "path": file.path, "line": n}) if {
 	some file in input.files
 	some i, text in file.lines
 	some name, pattern in line_deny
@@ -64,7 +70,7 @@ findings contains {"kind": "deny", "rule": name, "path": file.path, "line": n} i
 	n := i + 1
 }
 
-findings contains {"kind": "withheld", "rule": name, "path": file.path, "line": n} if {
+findings contains tag(file, {"kind": "withheld", "rule": name, "path": file.path, "line": n}) if {
 	some file in input.files
 	some i, text in file.lines
 	some name, pattern in line_withheld
