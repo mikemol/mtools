@@ -93,3 +93,4 @@ commit_isolated_staged	Isolated commit and the staged index: a staged deletion l
 stackland	Stack of commits built without a hook
 snaplinks	Snapshot carries an in-tree link as a regular file
 vlogrecord	VictoriaLogs record from one input line
+vlogspool	VictoriaLogs bounded spool

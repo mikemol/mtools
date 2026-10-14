@@ -430,6 +430,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_stackgate.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacklanding.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_vlogrecord.py" = ["assert"]
+"tests/test_vlogspool.py" = ["assert"]
 "tests/test_snaplinks.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_stackrun.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_stack.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

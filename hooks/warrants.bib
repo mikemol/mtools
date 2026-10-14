@@ -9125,3 +9125,67 @@
   claim  = {No `message` field: the line itself is `_msg`, so the record is never message-less.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogrecord.py -k test_a_line_without_the_message_key_keeps_its_whole_text_as_the_message},
 }
+
+@misc{hooks-vlogspool-accepting-send-empties-the-spool-in-order-and-in-batches,
+  section = {vlogspool},
+  title  = {Five lines, batches of two: sent as 2, 2, 1, in the order appended, and none left},
+  claim  = {Five lines, batches of two: sent as 2, 2, 1, in the order appended, and none left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_an_accepting_send_empties_the_spool_in_order_and_in_batches},
+}
+
+@misc{hooks-vlogspool-refused-batch-stays-and-a-restart-replays-it-first-and-in-order,
+  section = {vlogspool},
+  title  = {The refusing endpoint leaves everything; a NEW spool object on the path sends it all},
+  claim  = {The refusing endpoint leaves everything; a NEW spool object on the path sends it all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_a_refused_batch_stays_and_a_restart_replays_it_first_and_in_order},
+}
+
+@misc{hooks-vlogspool-refusal-partway-keeps-only-what-was-not-sent,
+  section = {vlogspool},
+  title  = {Batch one is taken, batch two refused: two lines gone, two left, in order},
+  claim  = {Batch one is taken, batch two refused: two lines gone, two left, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_a_refusal_partway_keeps_only_what_was_not_sent},
+}
+
+@misc{hooks-vlogspool-line-ceiling-drops-the-oldest-and-counts-what-it-dropped,
+  section = {vlogspool},
+  title  = {Five lines into a spool of three: the newest three stay, two are counted once, then reset},
+  claim  = {Five lines into a spool of three: the newest three stay, two are counted once, then
+            reset.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_the_line_ceiling_drops_the_oldest_and_counts_what_it_dropped},
+}
+
+@misc{hooks-vlogspool-byte-ceiling-drops-the-oldest-too,
+  section = {vlogspool},
+  title  = {Each line is 5 bytes with its newline; 12 bytes holds two, so the oldest of three goes},
+  claim  = {Each line is 5 bytes with its newline; 12 bytes holds two, so the oldest of three goes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_the_byte_ceiling_drops_the_oldest_too},
+}
+
+@misc{hooks-vlogspool-drops-accumulate-across-appends-until-taken,
+  section = {vlogspool},
+  title  = {Two overflowing appends add their drops; one take returns the sum},
+  claim  = {Two overflowing appends add their drops; one take returns the sum.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_drops_accumulate_across_appends_until_taken},
+}
+
+@misc{hooks-vlogspool-producer-can-append-while-a-send-is-in-flight-and-nothing-is-lost,
+  section = {vlogspool},
+  title  = {A late line appended from inside `send` survives the removal of the sent front},
+  claim  = {A late line appended from inside `send` survives the removal of the sent front.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_a_producer_can_append_while_a_send_is_in_flight_and_nothing_is_lost},
+}
+
+@misc{hooks-vlogspool-second-drain-while-one-is-running-reports-busy-and-touches-nothing,
+  section = {vlogspool},
+  title  = {Called from inside `send`, the inner drain is refused and the spool is intact},
+  claim  = {Called from inside `send`, the inner drain is refused and the spool is intact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_a_second_drain_while_one_is_running_reports_busy_and_touches_nothing},
+}
+
+@misc{hooks-vlogspool-line-holding-a-newline-is-refused-not-split,
+  section = {vlogspool},
+  title  = {One line is one record; a newline would make two},
+  claim  = {One line is one record; a newline would make two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogspool.py -k test_a_line_holding_a_newline_is_refused_not_split},
+}

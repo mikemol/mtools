@@ -206,6 +206,12 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/vlogspool.py|spool-no-line-ceiling|drop = max\(0, len\(lines\) - self\.max_lines\)|drop = 0|def=Spool._fit
+src/mikemol/hooks/vlogspool.py|spool-no-byte-ceiling|while kept and size > self\.max_bytes:|while False:|def=Spool._fit
+src/mikemol/hooks/vlogspool.py|spool-removes-one-too-many|\[len\(front\) :\]|[len(front) + 1 :]|def=Spool.drain
+src/mikemol/hooks/vlogspool.py|spool-drain-never-busy|if not taken:|if False:|def=Spool.drain
+src/mikemol/hooks/vlogspool.py|spool-drops-not-accumulated|total = self\._dropped_so_far\(\) \+ dropped|total = dropped|def=Spool.append
+src/mikemol/hooks/vlogspool.py|spool-accepts-a-newline|if any\("|if not any("|def=Spool.append
 src/mikemol/hooks/vlogrecord.py|long-line-never-truncated|if len\(line\) > how\.max_line:|if False:|def=_wrapped
 src/mikemol/hooks/vlogrecord.py|time-never-understood|if moment is not None else|if moment is None else|def=time_of
 src/mikemol/hooks/vlogrecord.py|unreadable-time-unflagged|if not understood:|if False:|def=record_of
