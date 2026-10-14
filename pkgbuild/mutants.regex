@@ -60,3 +60,11 @@ src/mikemol/pkgbuild/pyc.py|compile-error-swallowed|doraise=True|doraise=False|d
 # pyinfo.py: the two lines are `executable: <repr>` and `version: <number only>`.
 src/mikemol/pkgbuild/pyinfo.py|version-is-the-whole-banner|sys\.version\.split\(\)\[0\]|sys.version|def=main
 src/mikemol/pkgbuild/pyinfo.py|executable-unquoted|\{sys\.executable!r\}|{sys.executable}|def=main
+src/mikemol/pkgbuild/licenses.py|license-written-through-a-link|if target\.is_symlink\(\):|if False:|def=license_state
+src/mikemol/pkgbuild/licenses.py|stale-license-kept|if states\[0\] in \{"missing", "differs"\}:|if states[0] == "missing":|def=fix
+src/mikemol/pkgbuild/licenses.py|files-line-not-after-license|lines\.insert\(place \+ 1, FILES_LINE\)|lines.insert(0, FILES_LINE)|def=write_files_line
+src/mikemol/pkgbuild/licenses.py|dry-run-writes|write = WRITE_FLAG in args|write = True|def=run
+src/mikemol/pkgbuild/licenses.py|written-flag-lost|after = states_of\(dist, wanted\) if write else before|after = before|def=run
+src/mikemol/pkgbuild/licenses.py|old-backend-passes|return "old" if any\(_older\(m\) for m in SETUPTOOLS\.finditer\(text\)\) else "ok"|return "ok"|def=backend_state
+src/mikemol/pkgbuild/licenses.py|every-backend-lowered-to-the-floor|return FLOOR if _older\(found\) else found\.group\(0\)|return FLOOR|def=_raised
+src/mikemol/pkgbuild/licenses.py|exit-clean-with-pending|return 1 if pending else 0|return 0|def=run

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,6 +13,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 authors = [{name = "Mike Mol"}]
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 keywords = ["bazel", "wheel", "pyc", "packaging"]
 classifiers = [
     "Programming Language :: Python :: 3.13",
@@ -36,7 +37,7 @@ Homepage = "https://github.com/mikemol/mtools"
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml), plus setuptools: the wheel
 # tests drive the real backend.
-dev = ["pytest", "mypy", "ruff==0.16.6", "setuptools>=68", "twine"]
+dev = ["pytest", "mypy", "ruff==0.16.6", "setuptools>=77", "twine"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -99,6 +100,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_metacheck.py" = ["assert"]
 "tests/test_twinecheck.py" = ["assert"]
 "tests/test_privacycheck.py" = ["assert"]
+"tests/test_licenses.py" = ["assert"]
 "src/mikemol/pkgbuild/privacycheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_relcheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/pkgbuild/twinecheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

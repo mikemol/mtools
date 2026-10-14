@@ -303,3 +303,52 @@
             each.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_declared_license_file_the_artifact_does_not_carry_is_refused},
 }
+
+@misc{pkgbuild-licenses-dry-run-names-what-is-missing-changes-nothing-and-exits-one,
+  section = {licenses},
+  title  = {A bare dist and a stale copy are listed; the files on disk are as they were},
+  claim  = {A bare dist and a stale copy are listed; the files on disk are as they were.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_a_dry_run_names_what_is_missing_changes_nothing_and_exits_one},
+}
+
+@misc{pkgbuild-licenses-already-right-dist-is-ok-and-not-rewritten,
+  section = {licenses},
+  title  = {The control: the file and the line are there, so `--write` says nothing was written},
+  claim  = {The control: the file and the line are there, so `--write` says nothing was written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_an_already_right_dist_is_ok_and_not_rewritten},
+}
+
+@misc{pkgbuild-licenses-symlinked-license-is-reported-and-never-written-through,
+  section = {licenses},
+  title  = {No symlinks: a link is `link`, the target is untouched, and the run still exits 1},
+  claim  = {No symlinks: a link is `link`, the target is untouched, and the run still exits 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_a_symlinked_license_is_reported_and_never_written_through},
+}
+
+@misc{pkgbuild-licenses-root-without-a-license-or-the-wrong-arguments-is-a-usage-error,
+  section = {licenses},
+  title  = {Nothing to copy from, and no root at all, each exit 2},
+  claim  = {Nothing to copy from, and no root at all, each exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_a_root_without_a_license_or_the_wrong_arguments_is_a_usage_error},
+}
+
+@misc{pkgbuild-licenses-write-copies-the-license-adds-the-line-and-raises-the-backend,
+  section = {licenses},
+  title  = {After `--write` the bare dist is right, the line sits right after `license =`, exit 0},
+  claim  = {After `--write` the bare dist is right, the line sits right after `license =`, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_write_copies_the_license_adds_the_line_and_raises_the_backend},
+}
+
+@misc{pkgbuild-licenses-backend-at-or-above-the-floor-is-left-alone,
+  section = {licenses},
+  title  = {The control for the raise: `setuptools>=82` is not lowered to 77},
+  claim  = {The control for the raise: `setuptools>=82` is not lowered to 77.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_a_backend_at_or_above_the_floor_is_left_alone},
+}
+
+@misc{pkgbuild-licenses-symlinked-directory-is-not-a-dist,
+  section = {licenses},
+  title  = {Bazel's `bazel-<repo>` link holds a pyproject.toml and must not be listed or written},
+  claim  = {Bazel's `bazel-<repo>` link holds a pyproject.toml and must not be listed or written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_licenses.py -k test_a_symlinked_directory_is_not_a_dist},
+}
