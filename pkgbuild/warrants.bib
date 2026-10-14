@@ -401,3 +401,38 @@
   claim  = {W1216: `paperkit @ git+https://...` fails the check; a version range passes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metacheck.py -k test_a_direct_url_dependency_is_refused_and_a_named_one_is_not},
 }
+
+@misc{pkgbuild-publishers-each-dist-gets-the-five-form-values-with-a-normalized-name,
+  section = {publishers},
+  title  = {Name normalized, owner and repository fixed, the workflow file, the index's environment},
+  claim  = {Name normalized, owner and repository fixed, the workflow file, the index's environment.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_each_dist_gets_the_five_form_values_with_a_normalized_name},
+}
+
+@misc{pkgbuild-publishers-testpypi-index-changes-only-the-environment,
+  section = {publishers},
+  title  = {The control: the same dists on `--index testpypi` differ in the environment alone},
+  claim  = {The control: the same dists on `--index testpypi` differ in the environment alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_the_testpypi_index_changes_only_the_environment},
+}
+
+@misc{pkgbuild-publishers-worksheet-has-a-copy-button-per-value-and-a-remembered-box-per-row,
+  section = {publishers},
+  title  = {Five copy buttons and one checkbox per dist, the index's form link, and a done count},
+  claim  = {Five copy buttons and one checkbox per dist, the index's form link, and a done count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_the_worksheet_has_a_copy_button_per_value_and_a_remembered_box_per_row},
+}
+
+@misc{pkgbuild-publishers-value-is-escaped-in-the-page,
+  section = {publishers},
+  title  = {A name with markup in it cannot break out of the attribute or the cell},
+  claim  = {A name with markup in it cannot break out of the attribute or the cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_a_value_is_escaped_in_the_page},
+}
+
+@misc{pkgbuild-publishers-missing-workflow-an-unknown-index-no-dist-and-a-dangling-flag-exit-two,
+  section = {publishers},
+  title  = {Each refusal exits 2 and writes no worksheet},
+  claim  = {Each refusal exits 2 and writes no worksheet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_a_missing_workflow_an_unknown_index_no_dist_and_a_dangling_flag_exit_two},
+}

@@ -17,6 +17,7 @@ Usage:  mikemol-wheel build <out.whl> <pyproject.toml>   (needs the DECLARED set
         mikemol-wheel release-check <root> <sha> <out>   (build every dist at the sha, check each)
         mikemol-wheel licenses <root> [--write]   (list, and fix, dists that ship no license text)
         mikemol-wheel names <root> [--index URL]   (is each dist's project name free on the index)
+        mikemol-wheel publishers <root> [--index NAME] [--html F]   (registration worksheet)
 """
 
 from __future__ import annotations
@@ -31,7 +32,7 @@ import venv
 import zipfile
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import licenses, metacli, names, relcheck
+from mikemol.pkgbuild import licenses, metacli, names, publishers, relcheck
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -40,9 +41,14 @@ _ARGC_BUILD = 3
 _ARGC_INSTALL_MIN = 3
 _SITE_MARKER = "/site-packages/"
 run_check = metacli.run
-run_release = relcheck.run
-run_licenses = licenses.run
-run_names = names.run
+# ⚑ ONE TABLE FOR THE SUBCOMMANDS THAT TAKE THE REST OF THE ARGUMENTS, so a new one is a row and
+# `main` does not grow a return per command (ruff's limit of six is room made here, not a waiver).
+SUBCOMMANDS: dict[str, Callable[[Sequence[str]], int]] = {
+    "release-check": relcheck.run,
+    "licenses": licenses.run,
+    "names": names.run,
+    "publishers": publishers.run,
+}
 
 
 def _only(matches: list[pathlib.Path], what: str) -> pathlib.Path:
@@ -164,12 +170,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args[:1] == ["check"] and len(args) > 1:
         return run_check(args[1:])
-    if args[:1] == ["release-check"]:
-        return run_release(args[1:])
-    if args[:1] == ["licenses"]:
-        return run_licenses(args[1:])
-    if args[:1] == ["names"]:
-        return run_names(args[1:])
+    if args and args[0] in SUBCOMMANDS:
+        return SUBCOMMANDS[args[0]](args[1:])
     raise SystemExit(__doc__)
 
 

@@ -69,6 +69,12 @@ src/mikemol/pkgbuild/licenses.py|written-flag-lost|after = states_of\(dist, want
 src/mikemol/pkgbuild/licenses.py|old-backend-passes|return "old" if any\(_older\(m\) for m in SETUPTOOLS\.finditer\(text\)\) else "ok"|return "ok"|def=backend_state
 src/mikemol/pkgbuild/licenses.py|every-backend-lowered-to-the-floor|return FLOOR if _older\(found\) else found\.group\(0\)|return FLOOR|def=_raised
 src/mikemol/pkgbuild/licenses.py|exit-clean-with-pending|return 1 if pending else 0|return 0|def=run
+src/mikemol/pkgbuild/publishers.py|name-not-normalized|names\.normalized\(declared\)|declared|def=rows_of
+src/mikemol/pkgbuild/publishers.py|workflow-file-not-required|if not \(root / "\.github" / "workflows" / WORKFLOW\)\.is_file\(\):|if False:|def=run
+src/mikemol/pkgbuild/publishers.py|empty-root-accepted|if not rows:|if False:|def=run
+src/mikemol/pkgbuild/publishers.py|worksheet-never-written|if "--html" in options:|if False:|def=run
+src/mikemol/pkgbuild/publishers.py|value-not-escaped|safe = html\.escape\(value, quote=True\)|safe = value|def=_cell
+src/mikemol/pkgbuild/publishers.py|dangling-flag-read|if place \+ 1 >= len\(words\):|if False:|def=_options
 src/mikemol/pkgbuild/names.py|case-kept-in-the-name|RUNS\.sub\("-", name\)\.lower\(\)|RUNS.sub("-", name)|def=normalized
 src/mikemol/pkgbuild/names.py|every-status-is-free|if status == FREE:|if True:|def=state_of
 src/mikemol/pkgbuild/names.py|every-answer-is-taken|return "taken" if status == TAKEN else f"error: HTTP \{status\}"|return "taken"|def=state_of
