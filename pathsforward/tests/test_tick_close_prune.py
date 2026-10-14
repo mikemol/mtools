@@ -63,6 +63,26 @@ def test_the_plain_check_refuses_the_stale_blocker(tmp_path: Path) -> None:
     assert cli.main(["--state", str(path), "--check"]) != _OK
 
 
+def test_marking_a_card_done_frees_its_dependent_in_the_same_write(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1215: `--update W1 --status done` leaves W2 ready at once, with no tick between.
+
+    ⚑ THE CONTROL IS THE SAME STATE WITH A NON-DONE UPDATE: a title change prunes nothing.
+    """
+    path = _state(tmp_path)
+    doc = cast("Rec", json.loads(path.read_text(encoding="utf-8")))
+    cards = cast("list[Rec]", doc["waypoints"])
+    cards[0]["status"] = "ready"
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert cli.main(["--state", str(path), "--update", "W1", "--title", "renamed"]) == _OK
+    assert _status_of(path, "W2") == "blocked"
+    capsys.readouterr()
+    assert cli.main(["--state", str(path), "--update", "W1", "--status", "done"]) == _OK
+    assert _status_of(path, "W2") == "ready"
+    assert "UNBLOCKED W2" in capsys.readouterr().out
+
+
 def test_the_close_frees_the_dependent_and_the_check_is_clean(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

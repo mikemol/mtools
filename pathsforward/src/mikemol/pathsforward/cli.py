@@ -1369,6 +1369,12 @@ def _update(ctx: Ctx) -> int:
         pinned = _pinned(upd, root, ctx.get("attach"))
         ops.update(state, sym, pinned, ctx.stamp())
         code = _lease_for_status(ctx, state, sym, upd.status)
+        if code == EXIT_OK and upd.status == "done":
+            # ⚑ A DONE CARD LEAVES NO STALE BLOCKER (W1215): marking it done prunes it from its
+            # dependents in the same write, so a reader between ticks never finds a card blocked
+            # on one that has landed.
+            for freed in ops.prune_done(state):
+                _say(f"UNBLOCKED {freed} (every local blocker is done)")
         if code == EXIT_OK:
             _say(f"{sym} updated; state_hash={v2(state.waypoints)}")
         return code

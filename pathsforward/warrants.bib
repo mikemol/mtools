@@ -4643,3 +4643,12 @@
   claim  = {`--close-gate` is the read half (W1202): refused with ready cards, ok when named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_close_gate_says_the_verdict_and_writes_nothing},
 }
+
+@misc{pathsforward-tick-close-prune-marking-a-card-done-frees-its-dependent-in-the-same-write,
+  section = {tick_close_prune},
+  title  = {W1215: `--update W1 --status done` leaves W2 ready at once, with no tick between},
+  claim  = {W1215: `--update W1 --status done` leaves W2 ready at once, with no tick between. THE
+            CONTROL IS THE SAME STATE WITH A NON-DONE UPDATE: a title change prunes
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_prune.py -k test_marking_a_card_done_frees_its_dependent_in_the_same_write},
+}
