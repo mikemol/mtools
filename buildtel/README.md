@@ -41,5 +41,5 @@ installed module. Which `.bazelrc` it edits is a decision for paperkit, not a gu
 - `bb_records` and `logs_push` print their module's own name in usage and messages instead of the
   script path.
 
-`image_digest` still names luthen-observability's checkout by absolute path
-(`/home/mikemol/github/luthen-observability`), as paperkit's did; `directory` is a parameter.
+`image_digest` finds luthen-observability's checkout through the `LUTHEN_OBSERVABILITY_DIR`
+environment variable (or its `directory` parameter); with neither, the digest is `absent`.
