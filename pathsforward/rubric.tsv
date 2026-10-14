@@ -55,3 +55,4 @@ tick_close	The one-verb tick closer (W1079)
 tick_close_prune	The tick closer prunes landed local blockers before its check (W1112)
 behindopen	Blocking a ready card behind the open cards that enable it (W1131)
 frontier_copy	Frontier walk copy
+tick_close_gate	The tick closer refuses while a ready unblocked card exists (W1203)

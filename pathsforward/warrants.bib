@@ -4587,3 +4587,52 @@
   claim  = {A typo in --except must not silently exclude nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_an_excluded_symbol_that_is_no_card_refuses_and_changes_nothing},
 }
+
+@misc{pathsforward-tick-close-gate-ready-unblocked-card-refuses-the-close-and-the-lock-stays-held,
+  section = {tick_close_gate},
+  title  = {Two ready cards and a bare close: refused, nothing ledgered, the lock kept, count shown},
+  claim  = {Two ready cards and a bare close: refused, nothing ledgered, the lock kept, count shown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_a_ready_unblocked_card_refuses_the_close_and_the_lock_stays_held},
+}
+
+@misc{pathsforward-tick-close-gate-top-three-are-shown-of-many,
+  section = {tick_close_gate},
+  title  = {Five ready cards: the count is five and only the first three are named},
+  claim  = {Five ready cards: the count is five and only the first three are named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_the_top_three_are_shown_of_many},
+}
+
+@misc{pathsforward-tick-close-gate-all-blocked-queue-closes-as-before,
+  section = {tick_close_gate},
+  title  = {The control: nothing ready, so the close is unchanged and the lock is released},
+  claim  = {The control: nothing ready, so the close is unchanged and the lock is released.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_an_all_blocked_queue_closes_as_before},
+}
+
+@misc{pathsforward-tick-close-gate-ready-card-behind-an-open-enabler-is-not-counted,
+  section = {tick_close_gate},
+  title  = {The control: W2 is ready but W1 (open) enables it, so no tick can work it yet},
+  claim  = {The control: W2 is ready but W1 (open) enables it, so no tick can work it yet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_a_ready_card_behind_an_open_enabler_is_not_counted},
+}
+
+@misc{pathsforward-tick-close-gate-blocked-by-a-live-card-closes-and-is-ledgered,
+  section = {tick_close_gate},
+  title  = {`--blocked-by W2` (not done) lets the close through, and the ledger carries it},
+  claim  = {`--blocked-by W2` (not done) lets the close through, and the ledger carries it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_blocked_by_a_live_card_closes_and_is_ledgered},
+}
+
+@misc{pathsforward-tick-close-gate-reason-citing-a-card-of-the-queue-closes-and-is-ledgered,
+  section = {tick_close_gate},
+  title  = {`--reason` that names W2 lets it through, and the reason is in the ledger line},
+  claim  = {`--reason` that names W2 lets it through, and the reason is in the ledger line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_a_reason_citing_a_card_of_the_queue_closes_and_is_ledgered},
+}
+
+@misc{pathsforward-tick-close-gate-reason-or-blocker-that-names-no-card-of-the-queue-is-refused,
+  section = {tick_close_gate},
+  title  = {The control for the escape hatch: prose, a missing card and a done one all stay refused},
+  claim  = {The control for the escape hatch: prose, a missing card and a done one all stay refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_a_reason_or_blocker_that_names_no_card_of_the_queue_is_refused},
+}

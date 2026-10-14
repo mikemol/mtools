@@ -117,3 +117,11 @@ src/mikemol/pathsforward/behindopen.py|own-blocker-dropped|\[\*kept, \*\(b for b
 src/mikemol/pathsforward/behindopen.py|block-kind-unset|w\["blocked_kind"\], w\["ticks_blocked"\] = _AGENT, 0|w["blocked_kind"], w["ticks_blocked"] = None, 0|def=apply
 src/mikemol/pathsforward/behindopen.py|ring-of-three-missed|if node == sym:|if False:|def=_cycle_through
 src/mikemol/pathsforward/behindopen.py|ring-walk-never-extends|pending\.extend\(enablers\.get\(node, \[\]\)\)|pass|def=_cycle_through
+src/mikemol/pathsforward/closegate.py|ready-counts-working|if text\(w, "status"\) == "ready" and workable\(w\)|if workable(w)|def=ready_cards
+src/mikemol/pathsforward/closegate.py|ready-counts-the-blocked-behind-open|and text\(w, "symbol"\) not in behind|and True|def=ready_cards
+src/mikemol/pathsforward/closegate.py|close-ignores-an-empty-ready-set|if not ready:|if False:|def=judge
+src/mikemol/pathsforward/closegate.py|close-ignores-a-named-block|if note:|if False:|def=judge
+src/mikemol/pathsforward/closegate.py|blocked-by-need-not-exist|if blocked_by is not None and blocked_by in live:|if blocked_by is not None:|def=_named
+src/mikemol/pathsforward/closegate.py|blocked-by-may-be-done|if text\(w, "status"\) != "done"\}|}|def=_named
+src/mikemol/pathsforward/closegate.py|reason-need-not-cite-a-card|cited = \[s for s in mentioned if s in held\]|cited = list(mentioned)|def=_named
+src/mikemol/pathsforward/cli.py|close-writes-through-a-refusal|if verdict\.refused:|if False:|def=_tick_close

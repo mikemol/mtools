@@ -48,6 +48,7 @@ from mikemol.pathsforward import (
 )
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
+from mikemol.pathsforward.closegate import judge as judge_close
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
@@ -63,6 +64,7 @@ if TYPE_CHECKING:
 
     from mikemol.pathsforward.model import Json, State
 
+CLOSE_JUDGE = judge_close
 EXIT_OK = 0
 EXIT_FAILED = 1
 EXIT_REFUSED = 2
@@ -230,6 +232,8 @@ _FIELDS = (
     "exclude",
     "kind",
     "evidence",
+    "blocked_by",
+    "reason",
     "weight",
     "witness",
     "vector",
@@ -326,7 +330,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "block_behind_open": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
-    "tick_close": frozenset({"kind", "evidence"}),
+    "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
     "certify": frozenset({"root", "facts"}),
@@ -444,6 +448,16 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
     )
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
+    ap.add_argument(
+        "--blocked-by",
+        metavar="SYMBOL",
+        help="W1203: --tick-close with ready cards left: the card that is the real block",
+    )
+    ap.add_argument(
+        "--reason",
+        metavar="TEXT",
+        help="W1203: --tick-close with ready cards left: why, citing a card of this queue",
+    )
     _add_realizable_fields(ap)
 
 
@@ -1208,6 +1222,15 @@ def _tick_close(ctx: Ctx) -> int:
 
     """
     holder, *entry = ctx.many("tick_close") or ("", "", "", "", "")
+    # ⚑ W1203: A TICK IS A LOOP CYCLE, NOT A CARD. Read the queue before anything is written; with a
+    # ready, unblocked card and no named block the close is REFUSED and the lock stays held.
+    verdict = CLOSE_JUDGE(store.load(ctx.path), ctx.get("blocked_by"), ctx.get("reason"))
+    for said in verdict.lines:
+        _say(said)
+    if verdict.refused:
+        return EXIT_REFUSED
+    if verdict.note:
+        entry[-1] = f"{entry[-1]} [{verdict.note}]"
     closing = replace(ctx, opts={**ctx.opts, "ledger": tuple(entry), "unlock": holder})
     code = EXIT_OK
     try:
