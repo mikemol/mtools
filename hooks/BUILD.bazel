@@ -478,6 +478,7 @@ venv_from_hub(
         "mikemol-gen-warrants": "mikemol.hooks.gen_warrants:main",
         "mikemol-new-dist": "mikemol.hooks.new_dist_cli:main",
         "mikemol-repin": "mikemol.hooks.repin_cli:main",
+        "mikemol-websubset": "mikemol.hooks.websubset_cli:main",
         "mikemol-wheel": "mikemol.hooks.wheel:main",
     },
     hub_requirements = dev_all_requirements,

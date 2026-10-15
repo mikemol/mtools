@@ -107,3 +107,4 @@ hosttied	Host-tied tests skipped off the checkout
 musthave	Must-have fixes list and its verb
 websubset	The web-subset allowlist refuses what a transpiler cannot translate
 websubset_list	The portable-module list is read whole or refused
+websubset_cli	mikemol-websubset checks one file or the declared portable list

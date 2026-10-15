@@ -10093,3 +10093,45 @@
   claim  = {Absolute, parent-escaping, non-Python and repeated entries each raise with the line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_list.py -k test_each_malformed_entry_raises_naming_its_line},
 }
+
+@misc{hooks-websubset-cli-check-file-reports-every-finding-with-its-line-and-exits-one,
+  section = {websubset_cli},
+  title  = {The dirty file has an eval and two missing annotations; the clean file exits 0 silently},
+  claim  = {The dirty file has an eval and two missing annotations; the clean file exits 0 silently.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_check_file_reports_every_finding_with_its_line_and_exits_one},
+}
+
+@misc{hooks-websubset-cli-check-file-on-an-unreadable-path-is-a-usage-error-not-a-clean-run,
+  section = {websubset_cli},
+  title  = {An absent file exits 2 and says so on standard error},
+  claim  = {An absent file exits 2 and says so on standard error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_check_file_on_an_unreadable_path_is_a_usage_error_not_a_clean_run},
+}
+
+@misc{hooks-websubset-cli-census-checks-each-listed-module-and-counts-the-findings,
+  section = {websubset_cli},
+  title  = {A clean list exits 0; adding the dirty module exits 1 with the summary line},
+  claim  = {A clean list exits 0; adding the dirty module exits 1 with the summary line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_census_checks_each_listed_module_and_counts_the_findings},
+}
+
+@misc{hooks-websubset-cli-empty-list-is-a-clean-census-and-an-unreadable-one-is-not,
+  section = {websubset_cli},
+  title  = {Nothing listed exits 0; a missing list exits 2 and a bad entry exits 2},
+  claim  = {Nothing listed exits 0; a missing list exits 2 and a bad entry exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_an_empty_list_is_a_clean_census_and_an_unreadable_one_is_not},
+}
+
+@misc{hooks-websubset-cli-listed-file-that-is-absent-exits-two,
+  section = {websubset_cli},
+  title  = {A module on the list that does not exist is a refusal, never a clean count},
+  claim  = {A module on the list that does not exist is a refusal, never a clean count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_a_listed_file_that_is_absent_exits_two},
+}
+
+@misc{hooks-websubset-cli-any-other-argument-shape-prints-the-usage-and-exits-two,
+  section = {websubset_cli},
+  title  = {No arguments, a lone flag and an unknown flag are each a usage error},
+  claim  = {No arguments, a lone flag and an unknown flag are each a usage error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_any_other_argument_shape_prints_the_usage_and_exits_two},
+}
