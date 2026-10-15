@@ -50,11 +50,29 @@ letters, not by a type.
 ## CLI contract (which executable one tool runs)
 
 Only literal argv lists are read. The result is the honest-empty case: nemik shows `git` (13) and
-`kubectl` (1); pathsforward shows `opa` (1). NO row connects the two lineages. That is a blind spot
-of the reader, not an absence: nemik's reads of `mikemol-paths-forward` and mtools' calls of
-`nemik-*` go through shell hooks, runners that take an argv variable, and settings files, none of
-which a literal-list reader can see. Closing it needs a second reader over `.claude/settings.json`,
-`hooks/bin/*` and the shell wrappers (a mode to add, not run here).
+`kubectl` (1); pathsforward shows `opa` (1). NO row connects the two lineages. That was a blind
+spot of the reader, not an absence, and the next section closes it (W1252).
+
+## CLI contract, second reader (mtools:W1252)
+
+`depmap` now also reads `tool` (a string constant that is exactly `mikemol-*`/`nemik-*`), `hook`
+(commands in `.claude/settings.json`, by event and matcher) and `shell` (names on non-comment
+lines of `*.sh` and `bin/` files). Over nemik and mtools:
+
+- nemik -> mtools: 6 constants naming `mikemol-paths-forward` in src (12 more in tests),
+  `mikemol-ics` once, and a settings.json that wires 7 `mikemol-hook-*` commands.
+- mtools -> nemik: hooks names `nemik-check` (2 shell lines, 1 constant), katas names `nemik-check`
+  and `nemik-rank`, pathsforward's tests name `nemik-witnesses`.
+- So the CLI contract exists and runs BOTH ways, through constants and hook wiring, never through
+  the literal argv the first reader could see. Noise: `nemik-45` (a session name), `nemik-cal-` and
+  `nemik-never-writes-a-queue` (fragments) are not tools.
+
+## Reader independence (input to W517's contract question)
+
+Of the readers of `paths-forward.json`, only nemik (11 modules) and debtplan import
+`mikemol.pathsforward`. The eight hooks modules and katas do not: they parse the file with their
+own code. Those are the independent readers, so they are where a schema both sides test pays first;
+nemik and debtplan share the model and break together with it, loudly, at a pin bump.
 
 ## Where pathsforward assumes nemik is not its concern
 
