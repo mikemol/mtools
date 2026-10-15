@@ -106,3 +106,4 @@ privacy_shipped	mikemol-privacy-shipped: judge the files an sdist and wheel ship
 hosttied	Host-tied tests skipped off the checkout
 musthave	Must-have fixes list and its verb
 websubset	The web-subset allowlist refuses what a transpiler cannot translate
+websubset_list	The portable-module list is read whole or refused

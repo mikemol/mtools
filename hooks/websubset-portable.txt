@@ -1,0 +1,6 @@
+# The modules marked web-portable (mtools:W1070, W1256): one repo-relative .py path per line.
+#
+# A module listed here must pass `mikemol.hooks.websubset` (the allowlist) and `unannotated` (full
+# annotations) with no waiver. Opting a module in or out is a change to THIS file, reviewed as a
+# diff; a module cannot opt itself in. The list starts empty: the gate is declared before anything
+# is put under it.

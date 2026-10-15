@@ -10065,3 +10065,31 @@
             raise.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_an_async_def_is_checked_and_unparsable_source_is_one_syntax_finding},
 }
+
+@misc{hooks-websubset-list-entries-are-read-in-order-and-comments-and-blanks-are-ignored,
+  section = {websubset_list},
+  title  = {Paths come back as written; `#` starts a comment, also after a path; blanks vanish},
+  claim  = {Paths come back as written; `#` starts a comment, also after a path; blanks vanish.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_list.py -k test_entries_are_read_in_order_and_comments_and_blanks_are_ignored},
+}
+
+@misc{hooks-websubset-list-list-of-only-comments-is-an-honest-empty-list,
+  section = {websubset_list},
+  title  = {Nothing opted in yet is a valid state: the gate is declared before anything is in it},
+  claim  = {Nothing opted in yet is a valid state: the gate is declared before anything is in it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_list.py -k test_a_list_of_only_comments_is_an_honest_empty_list},
+}
+
+@misc{hooks-websubset-list-missing-file-raises-and-is-never-an-empty-list,
+  section = {websubset_list},
+  title  = {A vanished list must not read as nothing-is-portable},
+  claim  = {A vanished list must not read as nothing-is-portable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_list.py -k test_a_missing_file_raises_and_is_never_an_empty_list},
+}
+
+@misc{hooks-websubset-list-each-malformed-entry-raises-naming-its-line,
+  section = {websubset_list},
+  title  = {Absolute, parent-escaping, non-Python and repeated entries each raise with the line},
+  claim  = {Absolute, parent-escaping, non-Python and repeated entries each raise with the line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_list.py -k test_each_malformed_entry_raises_naming_its_line},
+}
