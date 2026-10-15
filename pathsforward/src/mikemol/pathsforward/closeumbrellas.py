@@ -65,8 +65,12 @@ def _status_of(state: State) -> dict[str, str]:
     return status
 
 
-def _refusal(card: Json, local: set[str]) -> str | None:
+def _refusal(card: Json, status: dict[str, str]) -> str | None:
     """Say why a card whose children are all done is still not closed, if it is not.
+
+    ⚑ A CARD STILL WAITING ON AN OPEN CARD OF THIS QUEUE IS NOT DONE: a child spun off to unblock
+    the umbrella (W1050 enabled W1045 and was caused by it) finishing does not finish the umbrella
+    while its own blocker W1052 is open. Measured on the live queue by the first dry run.
 
     Returns:
         the reason, or None when the card may be closed.
@@ -76,9 +80,13 @@ def _refusal(card: Json, local: set[str]) -> str | None:
         return "working"
     if text(card, "next_bounded_step").strip():
         return "has its own next step"
-    outside = [who for who in strlist(card, "blocked_on") if who not in local]
+    waits = strlist(card, "blocked_on")
+    outside = [who for who in waits if who not in status]
     if outside:
         return f"blocked on {', '.join(outside)}, outside this queue"
+    open_ones = [who for who in waits if status[who] not in _CLOSED]
+    if open_ones:
+        return f"still blocked on open {', '.join(open_ones)}"
     return None
 
 
@@ -91,7 +99,6 @@ def plan(state: State) -> Plan:
     """
     children = _children(state)
     status = _status_of(state)
-    local = {text(w, "symbol") for w in state.waypoints}
     closed: list[tuple[str, tuple[str, ...]]] = []
     kept: list[tuple[str, str]] = []
     for card in state.waypoints:
@@ -102,7 +109,7 @@ def plan(state: State) -> Plan:
         if any(status[kid] not in _CLOSED for kid in kids):
             continue
         dropped = [kid for kid in kids if status[kid] == _DROPPED]
-        reason = f"child {dropped[0]} was dropped, not done" if dropped else _refusal(card, local)
+        reason = f"child {dropped[0]} was dropped, not done" if dropped else _refusal(card, status)
         if reason is None:
             closed.append((sym, tuple(kids)))
         else:

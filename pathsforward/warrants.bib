@@ -4811,3 +4811,10 @@
   claim  = {An umbrella needs at least one child; W1 enables nothing and stays ready.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_a_card_with_no_children_is_left_alone},
 }
+
+@misc{pathsforward-closeumbrellas-umbrella-still-blocked-on-an-open-local-card-is-kept,
+  section = {closeumbrellas},
+  title  = {W1's spun-off child W2 is done, but W1 still waits on open W3 (the W1045/W1052 shape)},
+  claim  = {W1's spun-off child W2 is done, but W1 still waits on open W3 (the W1045/W1052 shape).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_an_umbrella_still_blocked_on_an_open_local_card_is_kept},
+}

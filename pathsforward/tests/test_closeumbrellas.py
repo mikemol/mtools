@@ -140,6 +140,21 @@ def test_a_working_umbrella_and_one_blocked_outside_the_queue_are_kept(
     assert _card_of(path, "W4")["status"] == "done"
 
 
+def test_an_umbrella_still_blocked_on_an_open_local_card_is_kept(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1's spun-off child W2 is done, but W1 still waits on open W3 (the W1045/W1052 shape)."""
+    cards = [
+        _card("W1", "blocked", blocked_on=["W3"]),
+        _card("W2", "done", ["W1"]),
+        _card("W3"),
+    ]
+    path = _state(tmp_path, cards)
+    assert _run(path, "--write") == _OK
+    assert "KEPT W1 (still blocked on open W3)" in capsys.readouterr().out
+    assert _card_of(path, "W1")["status"] == "blocked"
+
+
 def test_a_card_with_no_children_is_left_alone(tmp_path: Path) -> None:
     """An umbrella needs at least one child; W1 enables nothing and stays ready."""
     path = _state(tmp_path, [_card("W1")])
