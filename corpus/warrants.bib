@@ -519,3 +519,17 @@
   claim  = {Write the baseline, check it passes; fix the code, it fails until the baseline shrinks.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_baseline_run_fails_on_new_and_on_fixed_and_passes_on_equal},
 }
+
+@misc{corpus-exit-gate-runfiles-hold-enough-constants-to-make-a-pass-mean-something,
+  section = {exitcensus},
+  title  = {The positive control: the census sees dozens of constants, so a pass is not empty},
+  claim  = {The positive control: the census sees dozens of constants, so a pass is not empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit_gate.py -k test_the_runfiles_hold_enough_constants_to_make_a_pass_mean_something},
+}
+
+@misc{corpus-exit-gate-no-new-disagreement-with-the-exit-table-and-no-fixed-one-left-listed,
+  section = {exitcensus},
+  title  = {The gate: the baseline equals today's violations, so it can only shrink},
+  claim  = {The gate: the baseline equals today's violations, so it can only shrink.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit_gate.py -k test_no_new_disagreement_with_the_exit_table_and_no_fixed_one_left_listed},
+}
