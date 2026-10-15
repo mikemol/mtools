@@ -76,6 +76,44 @@ def test_findings_come_back_in_line_order_and_render_as_one_line() -> None:
     assert found[1].render() == "3: eval-exec: `eval` runs code built at run time"
 
 
+def test_a_missing_return_or_parameter_type_is_unannotated_and_a_full_signature_is_not() -> None:
+    """Each missing annotation is its own finding; a fully annotated def and a lambda are clean."""
+    both = websubset.unannotated("def f(a, b: int):\n    pass\n")
+    assert [(f.line, f.rule) for f in both] == [(1, "unannotated"), (1, "unannotated")]
+    assert [f.message for f in both] == [
+        "`f` has no return type",
+        "parameter `a` of `f` has no type",
+    ]
+    assert websubset.unannotated("def f(a: int, *, b: str) -> None:\n    pass\n") == []
+    assert websubset.unannotated("g = lambda x: x\n") == []
+
+
+def test_keyword_only_and_positional_only_parameters_are_checked_and_receivers_are_not() -> None:
+    """`self` and `cls` are exempt; a bare keyword-only or positional-only parameter is not."""
+    source = (
+        "class A:\n"
+        "    def m(self, x: int, /, y, *, z) -> None:\n"
+        "        pass\n"
+        "    @classmethod\n"
+        "    def c(cls, w: int) -> None:\n"
+        "        pass\n"
+    )
+    found = websubset.unannotated(source)
+    assert [f.message for f in found] == [
+        "parameter `y` of `m` has no type",
+        "parameter `z` of `m` has no type",
+    ]
+
+
+def test_an_async_def_is_checked_and_unparsable_source_is_one_syntax_finding() -> None:
+    """The same rule applies to `async def`; a module that does not parse is a row, not a raise."""
+    assert [f.rule for f in websubset.unannotated("async def f(a):\n    pass\n")] == [
+        "unannotated",
+        "unannotated",
+    ]
+    assert [(f.rule, f.line) for f in websubset.unannotated("def broken(:\n")] == [("syntax", 1)]
+
+
 def test_a_clean_module_has_no_findings() -> None:
     """The overall control: annotated, static, integer-comparing code passes untouched."""
     source = "def add(a: int, b: int) -> int:\n    return a + b if a == b else a - b\n"

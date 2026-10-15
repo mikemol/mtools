@@ -10042,3 +10042,26 @@
   claim  = {The overall control: annotated, static, integer-comparing code passes untouched.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_a_clean_module_has_no_findings},
 }
+
+@misc{hooks-websubset-missing-return-or-parameter-type-is-unannotated-and-a-full-signature-is-not,
+  section = {websubset},
+  title  = {Each missing annotation is its own finding; a fully annotated def and a lambda are clean},
+  claim  = {Each missing annotation is its own finding; a fully annotated def and a lambda are
+            clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_a_missing_return_or_parameter_type_is_unannotated_and_a_full_signature_is_not},
+}
+
+@misc{hooks-websubset-keyword-only-and-positional-only-parameters-are-checked-and-receivers-are-not,
+  section = {websubset},
+  title  = {`self` and `cls` are exempt; a bare keyword-only or positional-only parameter is not},
+  claim  = {`self` and `cls` are exempt; a bare keyword-only or positional-only parameter is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_keyword_only_and_positional_only_parameters_are_checked_and_receivers_are_not},
+}
+
+@misc{hooks-websubset-async-def-is-checked-and-unparsable-source-is-one-syntax-finding,
+  section = {websubset},
+  title  = {The same rule applies to `async def`; a module that does not parse is a row, not a raise},
+  claim  = {The same rule applies to `async def`; a module that does not parse is a row, not a
+            raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_an_async_def_is_checked_and_unparsable_source_is_one_syntax_finding},
+}

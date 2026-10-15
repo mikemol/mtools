@@ -124,3 +124,46 @@ def check(source: str) -> list[Finding]:
         elif isinstance(node, ast.Attribute) and node.attr == "__dict__":
             found.append(Finding(node.lineno, "dynamic-attribute", "`__dict__` is a dynamic view"))
     return sorted(found, key=_order)
+
+
+def _missing(node: ast.FunctionDef | ast.AsyncFunctionDef) -> list[Finding]:
+    """Name the missing annotations of one definition.
+
+    ⚑ `self` AND `cls` ARE THE ONE EXEMPTION, as a type checker treats them: their type is the
+    class they sit in. Every other parameter, positional or keyword-only, and the return, is named.
+
+    Returns:
+        one finding for a missing return and one per unannotated parameter.
+
+    """
+    found: list[Finding] = []
+    if node.returns is None:
+        found.append(Finding(node.lineno, "unannotated", f"`{node.name}` has no return type"))
+    args = node.args
+    for param in [*args.posonlyargs, *args.args, *args.kwonlyargs]:
+        if param.annotation is None and param.arg not in {"self", "cls"}:
+            text = f"parameter `{param.arg}` of `{node.name}` has no type"
+            found.append(Finding(param.lineno, "unannotated", text))
+    return found
+
+
+def unannotated(source: str) -> list[Finding]:
+    """List every definition of one module that lacks a type annotation.
+
+    ⚑ A TRANSPILER TYPES FROM THE ANNOTATIONS, so an unannotated parameter has no target type. A
+    lambda has no annotation syntax and is not a definition here: its parameters are the dynamic
+    kind this module's allowlist is about, not this rule.
+
+    Returns:
+        the findings in line order; a single `syntax` finding when the source does not parse.
+
+    """
+    try:
+        tree = ast.parse(source)
+    except SyntaxError as fault:
+        return [Finding(fault.lineno or 0, "syntax", "the module does not parse")]
+    found: list[Finding] = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            found += _missing(node)
+    return sorted(found, key=_order)
