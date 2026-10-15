@@ -40,7 +40,7 @@ _USAGE = (
 _BLIND = "# cannot see: a constant computed at run time, or a status that is not a named EXIT_\n"
 _SKIP = frozenset({".git", ".venv", "node_modules", "build", "__pycache__"})
 
-type Table = dict[str, tuple[int, str]]
+type Table = dict[str, tuple[int, str, tuple[str, ...]]]
 
 
 @dataclass(frozen=True)
@@ -94,18 +94,22 @@ def constants(source: str, path: str) -> list[Constant]:
 def table_of(doc: object) -> Table:
     """Turn the table's JSON into each allowed name's value and verdict.
 
-    The JSON is `{"<VERDICT>": {"value": int, "names": [str, ...]}}`.
+    The JSON is `{"<VERDICT>": {"value": int, "names": [str, ...], "modules": [str, ...]}}`,
+    `modules` optional. ⚑ A VERDICT WITH `modules` IS SCOPED: the harness fixes hook entry points'
+    exit 2 as BLOCK (Claude Code's hook protocol), so that name is allowed at that value only in
+    the listed files (`<dist>/src/...py`, as the baseline keys them), and a violation anywhere else.
 
     Returns:
-        for each allowed name (without the prefix), its verdict's value and the verdict's word.
+        for each allowed name (without the prefix), its verdict's value, word and scope.
 
     """
     out: Table = {}
     raw = cast("dict[str, dict[str, object]]", doc)
     for verdict, entry in raw.items():
         value = cast("int", entry["value"])
+        scope = tuple(cast("list[str]", entry.get("modules", [])))
         for name in cast("list[str]", entry["names"]):
-            out[name] = (value, verdict)
+            out[name] = (value, verdict, scope)
     return out
 
 
@@ -120,7 +124,9 @@ def judge(constant: Constant, table: Table) -> Row:
     entry = table.get(constant.name.removeprefix(PREFIX))
     if entry is None:
         return Row(constant, "UNKNOWN", "the table does not list this name")
-    value, word = entry
+    value, word, scope = entry
+    if scope and path_of(constant) not in scope:
+        return Row(constant, "VIOLATION", f"{word} is only for {', '.join(scope)}")
     if constant.value == value:
         return Row(constant, "OK", word)
     return Row(constant, "VIOLATION", f"{word} is {value}")
@@ -157,8 +163,20 @@ def render(rows: Sequence[Row]) -> str:
     return "".join(lines)
 
 
+def path_of(constant: Constant) -> str:
+    """Name a constant's file from the directory above `src`, so no checkout root is in it.
+
+    Returns:
+        `<dist>/src/...py`.
+
+    """
+    parts = Path(constant.path).parts
+    at = parts.index("src") - 1 if "src" in parts and parts.index("src") > 0 else 0
+    return "/".join(parts[at:])
+
+
 def key_of(constant: Constant) -> str:
-    """Name a constant for the baseline: its path from the directory above `src`, name and value.
+    """Name a constant for the baseline: its file, name and value.
 
     ⚑ THE ROOT IS NOT PART OF THE KEY, so a baseline written from one checkout holds in another.
 
@@ -166,9 +184,7 @@ def key_of(constant: Constant) -> str:
         `<dist>/src/...py NAME value`.
 
     """
-    parts = Path(constant.path).parts
-    at = parts.index("src") - 1 if "src" in parts and parts.index("src") > 0 else 0
-    return f"{'/'.join(parts[at:])} {constant.name} {constant.value}"
+    return f"{path_of(constant)} {constant.name} {constant.value}"
 
 
 def keys_of(rows: Sequence[Row]) -> list[str]:

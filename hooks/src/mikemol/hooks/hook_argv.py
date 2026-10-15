@@ -22,7 +22,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-EXIT_REFUSED = 2
+EXIT_BLOCK = 2
+# ⚑ THE HARNESS FIXES THIS VALUE: Claude Code reads a hook's exit 2 as BLOCK, so a hook entry point
+# cannot move it to the fleet's REFUSE (W1300, corpus/exit-table.json). The old name stays as an
+# alias for the callers and tests that read it, and is judged as no constant by the census.
+EXIT_REFUSED = EXIT_BLOCK
 
 
 def mode(prog: str, argv: Sequence[str], modes: Sequence[str] = ()) -> str | int | None:

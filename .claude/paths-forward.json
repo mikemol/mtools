@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1301,
+  "counter": 1305,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 248,
+      "ticks_blocked": 249,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 247,
+      "ticks_blocked": 248,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 252,
+      "ticks_blocked": 253,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 186,
+      "ticks_blocked": 187,
       "completed": null
     },
     {
@@ -16156,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16697,7 +16697,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17506,7 +17506,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "completed": null
     },
     {
@@ -17549,7 +17549,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "completed": null
     },
     {
@@ -17572,7 +17572,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 151,
+      "ticks_blocked": 152,
       "completed": null
     },
     {
@@ -17997,7 +17997,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 152,
+      "ticks_blocked": 153,
       "completed": null
     },
     {
@@ -18173,7 +18173,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 150,
+      "ticks_blocked": 151,
       "completed": null
     },
     {
@@ -18956,7 +18956,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -20678,7 +20678,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -21417,7 +21417,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 42,
       "completed": null
     },
     {
@@ -21463,7 +21463,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 109,
+      "ticks_blocked": 110,
       "completed": null
     },
     {
@@ -21555,7 +21555,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 109,
+      "ticks_blocked": 110,
       "completed": null
     },
     {
@@ -21621,7 +21621,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 29,
+      "ticks_blocked": 30,
       "completed": null
     },
     {
@@ -22022,7 +22022,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22043,7 +22043,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -22064,7 +22064,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 94,
+      "ticks_blocked": 95,
       "completed": null
     },
     {
@@ -22473,7 +22473,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 93,
+      "ticks_blocked": 94,
       "completed": null
     },
     {
@@ -22495,7 +22495,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 93,
+      "ticks_blocked": 94,
       "completed": null
     },
     {
@@ -22601,7 +22601,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 73,
+      "ticks_blocked": 74,
       "completed": null
     },
     {
@@ -22882,7 +22882,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 73
+      "ticks_blocked": 74
     },
     {
       "symbol": "W1116",
@@ -22903,7 +22903,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 73
+      "ticks_blocked": 74
     },
     {
       "symbol": "W1117",
@@ -22921,7 +22921,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 73
+      "ticks_blocked": 74
     },
     {
       "symbol": "W1118",
@@ -22939,7 +22939,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 73
+      "ticks_blocked": 74
     },
     {
       "symbol": "W1119",
@@ -23445,7 +23445,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 6
+      "ticks_blocked": 7
     },
     {
       "symbol": "W1144",
@@ -23603,7 +23603,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 42
+      "ticks_blocked": 43
     },
     {
       "symbol": "W1151",
@@ -23649,7 +23649,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 61
+      "ticks_blocked": 62
     },
     {
       "symbol": "W1153",
@@ -23673,7 +23673,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 39,
+      "ticks_blocked": 40,
       "completed": null
     },
     {
@@ -24107,7 +24107,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -24569,7 +24569,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -26335,7 +26335,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -26698,6 +26698,48 @@
     {
       "symbol": "W1300",
       "title": "Find every reader of the pycheck family's exit values (pycheck_cli, pycheck_install, pycheck_clear, pycheck_format) in code, hooks and prose, then move REFUSED 1 to 4 and NOT_CHECKED, NOT_RUN to 3 with those readers in one commit, shrinking the baseline",
+      "status": "working",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Independent of the answer: add a BLOCK verdict at 2 for hook entry points to corpus/exit-table.json, rename hook_argv, flag_contract and build_failure's constants to EXIT_BLOCK and EXIT_FEEDBACK under it, shrinking the baseline; the pycheck REFUSED 1 move waits on github-8f's answer on linter findings",
+      "evidence": "2026-10-15: 2026-10-15 readers measured (hooks/src, hooks/tests, katas/src, .claude/settings via grep): every in-tree reader of the pycheck family's codes uses the constants by name (pycheck_cli.EXIT_*, pycheck_install and pycheck_clear compare their own constants; katas only PRINTS the pycheck commands and tests passed.returncode == 0); no literal 1 or 3 compared. Under the relayed table NOT_CHECKED and NOT_RUN are already 3 (DEFER); only REFUSED 1 would move. TWO QUESTIONS THE TABLE DOES NOT ANSWER: (a) the relayed text says 1 FAILED includes 'linter findings' and also that REFUSE absorbs 'pycheck's 1', and pycheck's refusal IS linter findings, so one of the two lines must give; (b) hook_argv.EXIT_REFUSED, flag_contract.EXIT_REFUSED and build_failure's EXIT_FEEDBACK are 2 because Claude Code's hook protocol treats exit 2 as BLOCK, which the harness fixes; 'nothing else may use 2' cannot hold for hook entry points, so the table needs a BLOCK verdict at 2 limited to hook entry points. Blind spots: prose in design notes, peers' scripts.",
+      "issued_at": "2026-10-15T20:39:42Z",
+      "minted_during": "tick",
+      "caused_by": "W1266",
+      "last_worked": "2026-10-15T21:09:14Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1301",
+      "title": "The tick start ignores minted ledger lines: a card minted in the tick is a kind tick line and reset the start to the close, so this tick's tally printed 0",
+      "status": "done",
+      "enables": [
+        "W1203"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools 5e216c2 (pushed): tick_start skips minted lines; fixture and mutant.",
+      "issued_at": "2026-10-15T20:40:04Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1292",
+      "last_worked": "2026-10-15T21:00:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T210016Z"
+    },
+    {
+      "symbol": "W1302",
+      "title": "Move pycheck_cli, pycheck_install, pycheck_clear EXIT_REFUSED and websubset_cli EXIT_FINDINGS from 1 to 4, readers already by name, and drop their baseline rows",
       "status": "ready",
       "enables": [
         "W1266"
@@ -26707,34 +26749,73 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Search hooks, katas, .claude settings and design notes for the pycheck verbs next to returncode or exit words, list readers with file and line, record on this card, then write the move",
+      "next_bounded_step": "Change the four constants to 4, update docstrings that say exit 1, run the pycheck and websubset tests, regenerate the baseline with --write-baseline and confirm it only shrank",
       "evidence": "",
-      "issued_at": "2026-10-15T20:39:42Z",
+      "issued_at": "2026-10-15T21:11:51Z",
       "minted_during": "tick",
-      "caused_by": "W1266",
+      "caused_by": "W1300",
       "last_worked": null,
       "ticks_blocked": 0
     },
     {
-      "symbol": "W1301",
-      "title": "The tick start ignores minted ledger lines: a card minted in the tick is a kind tick line and reset the start to the close, so this tick's tally printed 0",
-      "status": "working",
+      "symbol": "W1303",
+      "title": "Move RACED 4 to 5 in commit_kata and stackrun and REFUSED 3 to 4 in bazel_admit, work_claims_hook and fence admit, each with the callers that branch on it in the same commit",
+      "status": "ready",
       "enables": [
-        "W1203"
+        "W1266"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "work_claims_hook.py:173 branches on EXIT_REFUSED by name; find the readers of commit_kata's RACED 4 and fence admit's 3 (luthen's apply path is unread), then move per tool, one commit each",
+      "evidence": "",
+      "issued_at": "2026-10-15T21:11:52Z",
+      "minted_during": "tick",
+      "caused_by": "W1300",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1304",
+      "title": "Rename usage-style refusals to EXIT_USAGE (flag_contract, new_dist_cli) and move pathsforward cli EXIT_REFUSED 2 to 4, DEFER and BUSY names to match the table, with pathsforward's tests and prose readers updated together",
+      "status": "ready",
+      "enables": [
+        "W1266"
       ],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In closegate.tick_start skip entries whose outcome is minted; add to the fixture a minted line after the last close and expect the same count",
+      "next_bounded_step": "pathsforward last: its help text and tests pin 2 and 3 (W1296 list); update them with the value, then regenerate the baseline",
       "evidence": "",
-      "issued_at": "2026-10-15T20:40:04Z",
+      "issued_at": "2026-10-15T21:11:52Z",
+      "minted_during": "tick",
+      "caused_by": "W1300",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1305",
+      "title": "Pin a git for hermetic test rungs, as opa and shellcheck are pinned, so a test that makes real commits runs in a repo whose sandbox has no git (luthen-observability:W1086)",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1086"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure first: which git features mtools tests need (worktree, update-index, cat-file), what a sandbox run resolves as git today (host /usr/bin or none), and which static or relocatable git build exists to pin by url and sha256; record the three on this card, then declare it in MODULE.bazel beside opa",
+      "evidence": "",
+      "issued_at": "2026-10-15T21:19:38Z",
       "minted_during": "interrupt",
-      "caused_by": "W1292",
-      "last_worked": "2026-10-15T20:40:07Z",
-      "ticks_blocked": 0,
-      "completed": null
+      "caused_by": "luthen-observability:W1086",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

@@ -1,12 +1,21 @@
 {
   "DONE": {"value": 0, "names": ["OK", "ADMITTED", "FORMATTED", "INSTALLED"]},
-  "FAILED": {"value": 1, "names": ["FAILED", "FINDINGS", "NOT_COMMITTED", "LOCK"]},
+  "FAILED": {"value": 1, "names": ["FAILED", "NOT_COMMITTED", "LOCK"]},
   "USAGE": {"value": 2, "names": ["USAGE"]},
+  "BLOCK": {
+    "value": 2,
+    "names": ["BLOCK", "FEEDBACK"],
+    "why": "Claude Code's hook protocol defines exit 2 as block, so every refusal in a hook entry point is a block and it has no separate usage code: a hook that cannot parse its input fails closed (host ruling relayed by github-8f, 2026-10-15)",
+    "modules": [
+      "hooks/src/mikemol/hooks/hook_argv.py",
+      "hooks/src/mikemol/hooks/build_failure.py"
+    ]
+  },
   "DEFER": {
     "value": 3,
     "names": ["LOCKED", "NOT_CHECKED", "NOT_RUN", "NOT_TAKEN", "NO_CAP", "NO_DESTINATION", "BUSY"]
   },
-  "REFUSE": {"value": 4, "names": ["REFUSED", "DIVERGED", "LEDGER"]},
+  "REFUSE": {"value": 4, "names": ["REFUSED", "FINDINGS", "DIVERGED", "LEDGER"]},
   "RACE": {"value": 5, "names": ["RACED"]},
   "WITHHELD": {"value": 6, "names": ["HELD"]},
   "HARNESS": {"value": 125, "names": ["HARNESS"]},

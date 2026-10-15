@@ -129,10 +129,23 @@ def test_a_baseline_run_fails_on_new_and_on_fixed_and_passes_on_equal(tmp_path: 
     assert exitcensus.main(["--baseline", str(base), str(table), root]) == 1
 
 
+def test_a_scoped_verdict_is_allowed_only_in_its_listed_modules() -> None:
+    """BLOCK at 2 is the harness's, so it holds in a listed hook module and violates elsewhere."""
+    doc = {
+        "USAGE": {"value": 2, "names": ["USAGE"]},
+        "BLOCK": {"value": 2, "names": ["BLOCK"], "modules": ["h/src/hook.py"]},
+    }
+    table = exitcensus.table_of(doc)
+    inside = exitcensus.judge(exitcensus.Constant("/r/h/src/hook.py", 1, "EXIT_BLOCK", 2), table)
+    outside = exitcensus.judge(exitcensus.Constant("/r/h/src/cli.py", 1, "EXIT_BLOCK", 2), table)
+    assert (inside.status, outside.status) == ("OK", "VIOLATION")
+    assert "only for h/src/hook.py" in outside.detail
+
+
 def test_the_tracked_table_gives_each_value_one_verdict_and_each_name_one_value() -> None:
     """The real table: no value belongs to two verdicts and no name is listed under two."""
     doc = _real()
-    values = [cast("int", entry["value"]) for entry in doc.values()]
+    values = [cast("int", e["value"]) for e in doc.values() if "modules" not in e]
     names = [name for entry in doc.values() for name in cast("list[str]", entry["names"])]
     assert len(values) == len(set(values))
     assert len(names) == len(set(names))

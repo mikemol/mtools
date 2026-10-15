@@ -533,3 +533,10 @@
   claim  = {The gate: the baseline equals today's violations, so it can only shrink.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exit_gate.py -k test_no_new_disagreement_with_the_exit_table_and_no_fixed_one_left_listed},
 }
+
+@misc{corpus-exitcensus-scoped-verdict-is-allowed-only-in-its-listed-modules,
+  section = {exitcensus},
+  title  = {BLOCK at 2 is the harness's, so it holds in a listed hook module and violates elsewhere},
+  claim  = {BLOCK at 2 is the harness's, so it holds in a listed hook module and violates elsewhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_scoped_verdict_is_allowed_only_in_its_listed_modules},
+}
