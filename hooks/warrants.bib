@@ -9985,3 +9985,60 @@
   claim  = {`git show PAR:file` supplies the entries; a failing show is a reason, not an empty list.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_the_fixes_are_read_at_the_par_commit_and_no_list_there_means_no_measurement},
 }
+
+@misc{hooks-websubset-metaclass-keyword-is-refused-and-another-class-keyword-is-not,
+  section = {websubset},
+  title  = {`metaclass=` is refused; `flag=1` on a class is an ordinary keyword},
+  claim  = {`metaclass=` is refused; `flag=1` on a class is an ordinary keyword.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_a_metaclass_keyword_is_refused_and_another_class_keyword_is_not},
+}
+
+@misc{hooks-websubset-eval-exec-and-compile-calls-are-refused-and-a-method-of-that-name-is-not,
+  section = {websubset},
+  title  = {The bare builtin is run-time code; `obj.eval()` is a method and says nothing},
+  claim  = {The bare builtin is run-time code; `obj.eval()` is a method and says nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_eval_exec_and_compile_calls_are_refused_and_a_method_of_that_name_is_not},
+}
+
+@misc{hooks-websubset-dynamic-attribute-calls-and-dunder-dict-are-refused-and-plain-access-is-not,
+  section = {websubset},
+  title  = {The getattr family and `__dict__` are refused; `obj.name` is static},
+  claim  = {The getattr family and `__dict__` are refused; `obj.name` is static.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_dynamic_attribute_calls_and_dunder_dict_are_refused_and_plain_access_is_not},
+}
+
+@misc{hooks-websubset-float-equality-is-refused-on-either-side-and-ordering-is-not,
+  section = {websubset},
+  title  = {`x == 1.5`, `1.5 != x` and a chained equality are refused; `<`, `>=` and int `==` pass},
+  claim  = {`x == 1.5`, `1.5 != x` and a chained equality are refused; `<`, `>=` and int `==` pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_float_equality_is_refused_on_either_side_and_ordering_is_not},
+}
+
+@misc{hooks-websubset-star-args-in-a-definition-or-a-call-are-refused-and-ordinary-ones-are-not,
+  section = {websubset},
+  title  = {`*args`, `**kwargs`, `f(*xs)`, `f(**kw)` and an async def are refused; fixed shapes pass},
+  claim  = {`*args`, `**kwargs`, `f(*xs)`, `f(**kw)` and an async def are refused; fixed shapes
+            pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_star_args_in_a_definition_or_a_call_are_refused_and_ordinary_ones_are_not},
+}
+
+@misc{hooks-websubset-source-that-does-not-parse-is-one-syntax-finding-not-an-exception,
+  section = {websubset},
+  title  = {The caller gets a row with a line, never a traceback},
+  claim  = {The caller gets a row with a line, never a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_source_that_does_not_parse_is_one_syntax_finding_not_an_exception},
+}
+
+@misc{hooks-websubset-findings-come-back-in-line-order-and-render-as-one-line,
+  section = {websubset},
+  title  = {Two refusals on different lines sort by line; `render` is `line: rule: message`},
+  claim  = {Two refusals on different lines sort by line; `render` is `line: rule: message`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_findings_come_back_in_line_order_and_render_as_one_line},
+}
+
+@misc{hooks-websubset-clean-module-has-no-findings,
+  section = {websubset},
+  title  = {The overall control: annotated, static, integer-comparing code passes untouched},
+  claim  = {The overall control: annotated, static, integer-comparing code passes untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset.py -k test_a_clean_module_has_no_findings},
+}

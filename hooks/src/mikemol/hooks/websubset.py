@@ -1,0 +1,126 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""The web-subset allowlist: what a module marked web-portable may not contain (mtools:W1254).
+
+⚑ A MODULE THAT WILL BE TRANSPILED CANNOT USE WHAT THE TRANSPILER CANNOT TRANSLATE. This is the
+pure half of the gate: it reads one module's source and returns every construct on the refusal list,
+with its line. No file, no policy, no waiver: a finding is fixed by changing the module, never by
+marking the finding. (The list of which modules are portable is W1256, the annotation rule W1255,
+the command line W1257.) The name avoids pycodemod's `portable` mode, which is about SQL literals.
+
+The refusal list, each a rule id that a test plants beside a clean control:
+
+    metaclass          a `metaclass=` keyword on a class
+    eval-exec          a call to `eval`, `exec` or `compile`
+    dynamic-attribute  a call to `getattr`, `setattr`, `delattr`, `vars`, `globals` or `locals`,
+                       or a use of `__dict__`
+    float-equality     `==` or `!=` with a float literal on either side
+    star-args          `*args` or `**kwargs` in a definition, or `*x` / `**x` at a call
+
+⚑ SYNTAX THAT DOES NOT PARSE IS A FINDING, NOT AN EXCEPTION: a module the gate cannot read is not
+portable, and the caller should see a row, not a traceback.
+"""
+
+from __future__ import annotations
+
+import ast
+from dataclasses import dataclass
+
+_EVAL = frozenset({"eval", "exec", "compile"})
+_DYNAMIC = frozenset({"getattr", "setattr", "delattr", "vars", "globals", "locals"})
+
+
+@dataclass(frozen=True)
+class Finding:
+    """One refused construct: where, which rule, and what to do about it."""
+
+    line: int
+    rule: str
+    message: str
+
+    def render(self) -> str:
+        """Render the finding as one line.
+
+        Returns:
+            `line: rule: message`.
+
+        """
+        return f"{self.line}: {self.rule}: {self.message}"
+
+
+def _name(node: ast.expr) -> str | None:
+    return node.id if isinstance(node, ast.Name) else None
+
+
+def _float(node: ast.expr) -> bool:
+    return isinstance(node, ast.Constant) and isinstance(node.value, float)
+
+
+def _call(node: ast.Call) -> list[Finding]:
+    """Name the refusals a call carries.
+
+    Returns:
+        the findings for an eval-family or dynamic-attribute call and for starred arguments.
+
+    """
+    found: list[Finding] = []
+    name = _name(node.func)
+    if name in _EVAL:
+        found.append(Finding(node.lineno, "eval-exec", f"`{name}` runs code built at run time"))
+    if name in _DYNAMIC:
+        text = f"`{name}` names members at run time"
+        found.append(Finding(node.lineno, "dynamic-attribute", text))
+    starred = any(isinstance(arg, ast.Starred) for arg in node.args)
+    if starred or any(kw.arg is None for kw in node.keywords):
+        found.append(Finding(node.lineno, "star-args", "a starred argument has no static shape"))
+    return found
+
+
+def _definition(node: ast.FunctionDef | ast.AsyncFunctionDef) -> list[Finding]:
+    """Name the refusals a function definition carries.
+
+    Returns:
+        a star-args finding for `*args` or `**kwargs`.
+
+    """
+    if node.args.vararg is not None or node.args.kwarg is not None:
+        return [Finding(node.lineno, "star-args", f"`{node.name}` takes *args or **kwargs")]
+    return []
+
+
+def _compare(node: ast.Compare) -> list[Finding]:
+    operands = [node.left, *node.comparators]
+    equality = any(isinstance(op, (ast.Eq, ast.NotEq)) for op in node.ops)
+    if equality and any(_float(operand) for operand in operands):
+        return [Finding(node.lineno, "float-equality", "equality against a float literal")]
+    return []
+
+
+def _order(finding: Finding) -> tuple[int, str]:
+    return finding.line, finding.rule
+
+
+def check(source: str) -> list[Finding]:
+    """List every construct of one module's source that the web subset refuses.
+
+    Returns:
+        the findings in line order; a single `syntax` finding when the source does not parse.
+
+    """
+    try:
+        tree = ast.parse(source)
+    except SyntaxError as fault:
+        return [Finding(fault.lineno or 0, "syntax", "the module does not parse")]
+    found: list[Finding] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef) and any(kw.arg == "metaclass" for kw in node.keywords):
+            found.append(Finding(node.lineno, "metaclass", f"`{node.name}` names a metaclass"))
+        elif isinstance(node, ast.Call):
+            found += _call(node)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            found += _definition(node)
+        elif isinstance(node, ast.Compare):
+            found += _compare(node)
+        elif isinstance(node, ast.Attribute) and node.attr == "__dict__":
+            found.append(Finding(node.lineno, "dynamic-attribute", "`__dict__` is a dynamic view"))
+    return sorted(found, key=_order)
