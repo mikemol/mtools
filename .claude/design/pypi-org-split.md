@@ -6,6 +6,24 @@ W1224 (pin inventory), W1225 (history rehearsal), W1226 (gate and release workfl
 Parent goal: W1143. Held: W1153 (the 68 pending-publisher forms are not filed against
 `mikemol/mtools`; the values change per dist when each moves).
 
+## This note is an ADDENDUM to an existing, operator-ruled plan (read 2026-10-15)
+
+W317 ("Plan splitting mtools into a GitHub org with one repo per distribution") and
+`.claude/design/W317-split-plan.md` already exist, with the operator's 2026-10-01 rulings, read
+from W317's evidence: org `mikemol-tools` (created 2026-10-01, free plan, 0 public repos); each repo
+keeps its history (`git filter-repo` per subdirectory); mtools stays as the workstream repo; shared
+machinery becomes its own atomic modules (W321, the five check atoms W323-W327 are done); per-repo
+gates on GitHub Actions ("free for public repos", consistent with the billing facts below); a
+reusable workflow `mikemol-tools/workflows/.github/workflows/module-gate.yml` (a draft at
+`ci/module-gate.yml`, not wired) on a self-hosted runner luthen-observability maintains (W319,
+luthen W257); PyPI with TestPyPI staging via Trusted Publishing (decision D5); the first push is
+the icsstruct pilot and "needs the operator's go to push". W317, W319, W504 are operator-held or
+blocked on luthen-observability:W257 and are not to be lifted from here.
+
+So this note does not re-plan the split. It adds what the PyPI goal (W1143) needs from it:
+the per-repo pending-publisher values (W1220-W1222, done), the pin inventory (below), the history
+rehearsal (below), and the billing facts. Nothing here moves anything.
+
 ## What the operator asked (relayed by github-8f, 2026-10-14)
 
 Convert mtools into a GitHub organization with each distribution its own repository, to cut the
@@ -93,6 +111,55 @@ by name.
   consumer breaks on first. A pin by sha keeps resolving while `mikemol/mtools` exists with
   those commits reachable, so the old repository must stay, with history intact, until the last
   consumer has re-pinned to the index release or the new repository.
+
+## History rehearsal (W1225, atomicwrite, scratch only)
+
+Done 2026-10-15 in the session scratchpad, pushing nothing: `git clone --no-local` of
+`/home/mikemol/github/mtools`, then `git filter-repo --subdirectory-filter atomicwrite --force`.
+Readings: the clone parsed 1,261 commits and the filtered history kept 9 commits (those that touched
+`atomicwrite/`); the `.git` is 348 KB; the repo's HEAD is the last commit that touched the dist
+(`W1207`, the LICENSE one). `mikemol-privacy-audit --history REPO .` over the filtered repo:
+`{"deny": 0, "files": 33, "withheld": 0}`, so for this dist the history carries no finding.
+
+What this does NOT show: other dists (the ones with home paths in tests or policy files, W1231,
+W1232, would show findings in their history); tags (the monorepo has no per-dist tags, so there is
+nothing to carry and the first release tags are new in each repo); commit messages, which keep their
+`W<n>` waypoint trailers and so name cards of the monorepo's queue; and the cross-dist commits (a
+commit touching several dists is rewritten once per filtered repo, with the other dists' paths
+dropped, so its message describes work partly not in that repo).
+
+## Gate and release workflow shape (W1226; options inside the ruled plan)
+
+Facts read from the tree, 2026-10-15: today's gate is local (`hooks/bin/mikemol-commit`, bazel,
+pre-commit hooks), not Actions; `.github/workflows/` holds one file, `publish.yml`
+(dispatch-only); `ci/module-gate.yml` is the unwired draft of the per-module gate. So the
+monorepo's Actions spend today is the publish workflow only, near zero (billing facts above).
+
+Options for the release workflow after a split, each with its cost:
+
+1. A copy of `publish.yml` in every one of the 34 repos. Cost: 34 files to keep in step; a change
+   to the SHA-pinned actions or the opa fetch is 34 edits (a bot or `mikemol-repin`-style verb would
+   be needed). Benefit: each repo's pending publisher names its own `publish.yml`, no indirection.
+2. One reusable workflow in `mikemol-tools/workflows` that each repo's small `publish.yml` calls.
+   Cost: the callers still exist (34 tiny files), and the registration interaction below is
+   UNVERIFIED. Benefit: one place for the pinned actions and the preflight steps.
+3. Keep publishing from one place (a `mikemol-tools/release` repo that checks out each dist repo at
+   a tag). Cost: the pending publisher then names that one repository for all 34 projects, which
+   defeats per-repo provenance, and the build is no longer from the dist's own repo.
+
+READ 2026-10-15 (W1235), docs.pypi.org/trusted-publishers/troubleshooting/, as the fetch tool
+rendered the page: "Reusable workflows cannot currently be used as the workflow in a Trusted
+Publisher." and that this "is a practical limitation, and is being tracked in warehouse#11096."
+The page does not say which file a call is matched against, so the consequence is the conservative
+one: the job that holds `id-token: write` and runs the upload must live in the repository's OWN
+`publish.yml`, so that file is what each pending publisher names. Option 2 is therefore safe only
+for the steps before the upload (build, `release-check`, preflight), not for the publishing job;
+option 1 (a copy per repo) is what registration allows today. Not verified by observation; the
+TestPyPI dry run of one dist (W1152) would confirm it.
+
+The gate side (one monorepo gate versus 34 per-repo gates) is already ruled: per-repo gates on the
+reusable `module-gate.yml` and the self-hosted runner (W319), with the cross-package tests
+atomized (W318). What remains open for the operator is the order and the go to push.
 
 ## What already works for it
 
