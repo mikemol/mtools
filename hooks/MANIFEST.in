@@ -1,6 +1,4 @@
-# The sdist carries every file under tests/, conftest.py included (its fixtures are not test_*.py),
-# and the launchers, policies and adopt templates those tests execute and read (W1228).
+# The sdist carries every file under tests/, conftest.py included (its fixtures are not test_*.py).
+# bin/, policy/ and adopt/ are NOT grafted: the release privacy judge withholds home paths and a
+# mail address in policy/*.rego (W1231), so those tests stay host-tied until that is decided.
 graft tests
-graft bin
-graft policy
-graft adopt

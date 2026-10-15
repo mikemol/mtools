@@ -1,4 +1,4 @@
-# The sdist carries every file under tests/ (conftest.py included) and the differential/ tree the
-# tests import and read (W1228).
+# The sdist carries every file under tests/ (conftest.py included). differential/ is NOT grafted:
+# its captured cases hold home paths the release privacy judge withholds (W1232), so the tests that
+# import it stay host-tied until that is decided.
 graft tests
-recursive-include differential *.py *.rego *.json *.jsonl *.tsv *.txt
