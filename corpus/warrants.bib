@@ -343,3 +343,74 @@
   claim  = {`from .sibling import thing` names `sibling` only relative to a package: no edge at all.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_edges.py -k test_a_relative_import_with_a_module_name_is_no_edge_in_either_spelling},
 }
+
+@misc{corpus-depmap-owner-names-the-distribution-and-leaves-other-names-whole,
+  section = {depmap},
+  title  = {The shared namespace collapses to `mikemol.<dist>`; anything else to its top-level name},
+  claim  = {The shared namespace collapses to `mikemol.<dist>`; anything else to its top-level name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_owner_names_the_distribution_and_leaves_other_names_whole},
+}
+
+@misc{corpus-depmap-imports-are-split-into-module-level-and-deferred-and-drop-the-standard-library,
+  section = {depmap},
+  title  = {`os` is dropped; `dateutil` is inside a function, so deferred; the rest are eager},
+  claim  = {`os` is dropped; `dateutil` is inside a function, so deferred; the rest are eager.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_imports_are_split_into_module_level_and_deferred_and_drop_the_standard_library},
+}
+
+@misc{corpus-depmap-file-directly-under-the-repo-is-labelled-by-the-repo-alone,
+  section = {depmap},
+  title  = {`loose.py` is in no dist, so its source is `fleet`, and a tests directory adds `:tests`},
+  claim  = {`loose.py` is in no dist, so its source is `fleet`, and a tests directory adds `:tests`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_file_directly_under_the_repo_is_labelled_by_the_repo_alone},
+}
+
+@misc{corpus-depmap-literal-argv-names-its-executable-and-a-variable-argv-names-nothing,
+  section = {depmap},
+  title  = {`git` comes from the literal list by basename and `opa` from `which`; `argv` is blind},
+  claim  = {`git` comes from the literal list by basename and `opa` from `which`; `argv` is blind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_literal_argv_names_its_executable_and_a_variable_argv_names_nothing},
+}
+
+@misc{corpus-depmap-path-constant-is-an-edge-and-a-docstring-or-prose-is-not,
+  section = {depmap},
+  title  = {`paths-forward.json` is named by a constant; the docstring's guide.md and prose are not},
+  claim  = {`paths-forward.json` is named by a constant; the docstring's guide.md and prose are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_path_constant_is_an_edge_and_a_docstring_or_prose_is_not},
+}
+
+@misc{corpus-depmap-mention-is-a-comment-or-string-token-and-not-a-name-in-code,
+  section = {depmap},
+  title  = {The docstring and the comment name nemik; the variable `nemik = 1` is not a mention},
+  claim  = {The docstring and the comment name nemik; the variable `nemik = 1` is not a mention.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_mention_is_a_comment_or_string_token_and_not_a_name_in_code},
+}
+
+@misc{corpus-depmap-aggregate-counts-each-edge-and-marks-a-purely-deferred-import,
+  section = {depmap},
+  title  = {Two occurrences count two; an import seen only inside a definition ends in `deferred`},
+  claim  = {Two occurrences count two; an import seen only inside a definition ends in `deferred`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_aggregate_counts_each_edge_and_marks_a_purely_deferred_import},
+}
+
+@misc{corpus-depmap-occurrences-carry-file-line-and-the-deferred-mark,
+  section = {depmap},
+  title  = {One row per occurrence, `file:line`, with `deferred` only on a deferred edge},
+  claim  = {One row per occurrence, `file:line`, with `deferred` only on a deferred edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_occurrences_carry_file_line_and_the_deferred_mark},
+}
+
+@misc{corpus-depmap-main-prints-the-blind-spot-first-and-the-aggregate-by-default,
+  section = {depmap},
+  title  = {The first lines say what the reader cannot see; `--rows` switches to per-occurrence rows},
+  claim  = {The first lines say what the reader cannot see; `--rows` switches to per-occurrence
+            rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_main_prints_the_blind_spot_first_and_the_aggregate_by_default},
+}
+
+@misc{corpus-depmap-main-refuses-a-missing-root-a-dangling-mention-and-a-non-directory,
+  section = {depmap},
+  title  = {Each usage error exits 2 and prints the usage line, and prints no map},
+  claim  = {Each usage error exits 2 and prints the usage line, and prints no map.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_main_refuses_a_missing_root_a_dangling_mention_and_a_non_directory},
+}
