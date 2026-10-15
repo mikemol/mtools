@@ -4173,13 +4173,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_attach_drift.py -k test_a_link_is_reported_and_never_read},
 }
 
-@misc{pathsforward-block-matching-dry-run-lists-and-saves-nothing,
-  section = {block_matching},
-  title  = {The matches are WOULD BLOCK, the others KEPT with a reason, and the file is unchanged},
-  claim  = {The matches are WOULD BLOCK, the others KEPT with a reason, and the file is unchanged.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_dry_run_lists_and_saves_nothing},
-}
-
 @misc{pathsforward-block-matching-write-blocks-the-ready-matches-and-only-those,
   section = {block_matching},
   title  = {Ready matches wait on the target; a blocked, working, done or unrelated card is untouched},
@@ -4721,4 +4714,33 @@
   title  = {Rejecting twice is refused the second time: the rows are already rejected, not open},
   claim  = {Rejecting twice is refused the second time: the rows are already rejected, not open.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_reject_advice.py -k test_a_second_rejection_of_the_same_selector_finds_nothing_open},
+}
+
+@misc{pathsforward-block-matching-dry-run-lists-and-records-advice-but-changes-no-card,
+  section = {block_matching},
+  title  = {WOULD BLOCK lines and KEPT reasons print; the waypoints are untouched; two advice rows},
+  claim  = {WOULD BLOCK lines and KEPT reasons print; the waypoints are untouched; two advice rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_dry_run_lists_and_records_advice_but_changes_no_card},
+}
+
+@misc{pathsforward-block-matching-second-dry-run-is-seen-and-a-rejection-replaces-the-line,
+  section = {block_matching},
+  title  = {The same advice twice is 0 new; after --reject-advice it is not proposed again},
+  claim  = {The same advice twice is 0 new; after --reject-advice it is not proposed again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_a_second_dry_run_is_seen_and_a_rejection_replaces_the_line},
+}
+
+@misc{pathsforward-block-matching-write-marks-the-applied-advice-closed,
+  section = {block_matching},
+  title  = {A dry run opens the rows; the write that applies them closes them as applied},
+  claim  = {A dry run opens the rows; the write that applies them closes them as applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_block_matching.py -k test_write_marks_the_applied_advice_closed},
+}
+
+@misc{pathsforward-advice-subjects-a-write-applied-are-marked-applied-and-the-rest-stay-open,
+  section = {advice},
+  title  = {W10 is applied by a write; W11 is not named and stays open; a rejected row is not touched},
+  claim  = {W10 is applied by a write; W11 is not named and stays open; a rejected row is not
+            touched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_the_subjects_a_write_applied_are_marked_applied_and_the_rest_stay_open},
 }

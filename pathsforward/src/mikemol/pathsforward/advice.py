@@ -138,6 +138,22 @@ def close_applied(doc: Json, tool: str, rule: str, still_indicated: set[str]) ->
     return closed
 
 
+def mark_applied(doc: Json, tool: str, rule: str, subjects: set[str]) -> int:
+    """Mark the open rows of a tool and rule for these subjects as applied: the change was made.
+
+    Returns:
+        the number of rows closed.
+
+    """
+    closed = 0
+    for row in rows(doc):
+        mine = row.get("tool") == tool and row.get("rule") == rule and row.get("status") == OPEN
+        if mine and row.get("subject") in subjects:
+            row["status"] = APPLIED
+            closed += 1
+    return closed
+
+
 def counts(outcomes: list[str]) -> tuple[int, int, int]:
     """Count a run's advice by what `upsert` returned for each piece.
 

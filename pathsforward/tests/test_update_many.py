@@ -72,13 +72,19 @@ def test_write_applies_the_flags_to_every_named_symbol(tmp_path: Path) -> None:
 def test_a_dry_run_names_what_would_change_and_saves_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """Without --write the lines say WOULD UPDATE and the file is byte-identical."""
+    """Without --write the lines say WOULD UPDATE, no card changes, and the advice is recorded."""
     path = _state(tmp_path)
-    before = path.read_bytes()
+    before = _vectors(path)
     argv = ["--update-many", "W1", "W5", "--vector", _VEC, "--vector-source", "signal"]
     assert _run(path, *argv) == 0
-    assert capsys.readouterr().out.splitlines() == ["WOULD UPDATE W1", "WOULD UPDATE W5"]
-    assert path.read_bytes() == before
+    assert capsys.readouterr().out.splitlines() == [
+        "WOULD UPDATE W1",
+        "WOULD UPDATE W5",
+        "advice: 2 proposed, 0 rejected, 2 new",
+    ]
+    assert _vectors(path) == before
+    doc: dict[str, list[Rec]] = json.loads(path.read_text(encoding="utf-8"))
+    assert [r["subject"] for r in doc["advice"]] == ["W1", "W5"]
 
 
 def test_the_unscored_selector_takes_every_live_card_without_a_vector(
@@ -95,14 +101,17 @@ def test_the_unscored_selector_takes_every_live_card_without_a_vector(
 def test_an_unknown_operand_refuses_the_whole_call_and_changes_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """W1 is valid but comes before the unknown W99: neither is changed, and W1 is not reported.
+    """W1 is valid but comes before the unknown W99: neither is changed, and nothing is reported.
 
-    ⚑ The empty output is what tells a refusal made BEFORE any update from one made partway: a
-    selector that let W99 through would still fail, in `ops.update`, but only after printing W1.
+    ⚑ The empty output is what tells a refusal made BEFORE the plan from one made partway: a
+    selector that let W99 through would still fail, in `ops.update`, but only after printing the
+    EXCLUDED line for W5. (Update lines now print once the whole plan holds, so the exclusion is
+    what separates the two.)
     """
     path = _state(tmp_path)
     before = path.read_bytes()
     argv = ["--update-many", "W1", "W99", "--vector", _VEC, "--vector-source", "agent", "--write"]
+    argv += ["--except", "W5=later"]
     assert _run(path, *argv) == cli.EXIT_REFUSED
     assert path.read_bytes() == before
     assert not capsys.readouterr().out

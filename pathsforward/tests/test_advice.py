@@ -79,6 +79,17 @@ def test_an_open_row_closes_as_applied_when_its_subject_is_no_longer_indicated()
     assert status == {"W10": advice.APPLIED, "W11": advice.REJECTED}
 
 
+def test_the_subjects_a_write_applied_are_marked_applied_and_the_rest_stay_open() -> None:
+    """W10 is applied by a write; W11 is not named and stays open; a rejected row is not touched."""
+    doc = _doc()
+    for item in (_A, _B):
+        advice.upsert(doc, item, "r")
+    assert advice.mark_applied(doc, "--block-matching", "blocks-on", {"W10"}) == 1
+    status = {r["subject"]: r["status"] for r in advice.rows(doc)}
+    assert status == {"W10": advice.APPLIED, "W11": advice.OPEN}
+    assert advice.mark_applied(doc, "--block-matching", "blocks-on", {"W10"}) == 0
+
+
 def test_the_counts_split_proposed_rejected_and_new() -> None:
     """Proposed is new plus seen; rejected is suppressed; new is first-time."""
     outcomes = [advice.NEW, advice.NEW, advice.SEEN, advice.REJECTED]

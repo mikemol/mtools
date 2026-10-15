@@ -46,7 +46,12 @@ from mikemol.pathsforward import (
     store,
     vtodo,
 )
+from mikemol.pathsforward.advice import close_applied as close_advice
+from mikemol.pathsforward.advice import counts as count_advice
+from mikemol.pathsforward.advice import mark_applied as apply_advice
+from mikemol.pathsforward.advice import reason_for as advice_reason
 from mikemol.pathsforward.advice import reject as reject_advice
+from mikemol.pathsforward.advice import upsert as upsert_advice
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
@@ -61,7 +66,7 @@ from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Sequence
 
     from mikemol.pathsforward.model import Json, State
 
@@ -72,6 +77,37 @@ EXIT_FAILED = 1
 EXIT_REFUSED = 2
 EXIT_LOCKED = 3
 EXIT_DIVERGED = 4
+Planned = tuple[str, str, str]
+
+
+def _advise(ctx: Ctx, state: State, spec: tuple[str, str], planned: Sequence[Planned]) -> None:
+    """Say a dry run's plan through the advice store, or close the advice a write applied (W1244).
+
+    `spec` is (tool, rule) and each planned item is (subject, action, the WOULD line). On a dry
+    run every item is upserted once: a rejected one prints its stated reason in place of the line,
+    the rest print as before, rows no longer indicated close as applied, and the output ends with
+    the counts of proposed, rejected and new. On `--write` the change is made by the caller, so
+    the lines print as they did and the matching open rows are marked applied. ⚑ A rejection
+    governs what a dry run PROPOSES; an explicit `--write` is the operator's own word and is not
+    blocked by it.
+    """
+    tool, rule = spec
+    subjects = {subject for subject, _, _ in planned}
+    if ctx.opts.get("write"):
+        for _, _, said in planned:
+            _say(said)
+        apply_advice(state.doc, tool, rule, subjects)
+        return
+    outcomes: list[str] = []
+    for subject, action, said in planned:
+        item = (tool, rule, subject, action)
+        outcome = upsert_advice(state.doc, item, ctx.stamp())
+        outcomes.append(outcome)
+        rejected_line = f"REJECTED {subject}: {advice_reason(state.doc, item)}"
+        _say(rejected_line if outcome == "rejected" else said)
+    close_advice(state.doc, tool, rule, subjects)
+    proposed, rejected, new = count_advice(outcomes)
+    _say(f"advice: {proposed} proposed, {rejected} rejected, {new} new")
 
 
 def _block_matching(ctx: Ctx) -> int:
@@ -97,18 +133,17 @@ def _block_matching(ctx: Ctx) -> int:
     def edit(state: State) -> int:
         found = bulkblock.plan(state, tag, target)
         verb = "BLOCKED" if write else "WOULD BLOCK"
-        for sym in found.moved:
-            _say(f"{verb} {sym} on {target}")
+        planned = [
+            (sym, f"block {sym} on {target}", f"{verb} {sym} on {target}") for sym in found.moved
+        ]
+        _advise(ctx, state, ("block-matching", f"touches:{tag}"), planned)
         for sym, why in found.kept:
             _say(f"KEPT {sym} ({why})")
         if write:
             bulkblock.apply(state, found, target)
-        return EXIT_OK if write else EXIT_FAILED
+        return EXIT_OK
 
-    if write:
-        return _mutate(ctx, edit)
-    edit(store.load(ctx.path))
-    return EXIT_OK
+    return _mutate(ctx, edit)
 
 
 def _block_behind_open(ctx: Ctx) -> int:
@@ -127,8 +162,11 @@ def _block_behind_open(ctx: Ctx) -> int:
     def edit(state: State) -> int:
         found = behindopen.plan(state)
         verb = "BLOCKED" if write else "WOULD BLOCK"
-        for sym, behind in found.moved:
-            _say(f"{verb} {sym} on {', '.join(behind)}")
+        planned = [
+            (sym, f"block {sym} on {', '.join(behind)}", f"{verb} {sym} on {', '.join(behind)}")
+            for sym, behind in found.moved
+        ]
+        _advise(ctx, state, ("block-behind-open", "behind-open"), planned)
         for sym, behind in found.working:
             _say(f"KEPT {sym} (working, behind {', '.join(behind)})")
         for sym, other in found.mutual:
@@ -137,9 +175,7 @@ def _block_behind_open(ctx: Ctx) -> int:
             behindopen.apply(state, found)
         return EXIT_OK
 
-    if write:
-        return _mutate(ctx, edit)
-    return edit(store.load(ctx.path))
+    return _mutate(ctx, edit)
 
 
 def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
@@ -1350,18 +1386,32 @@ def _update_many(ctx: Ctx) -> int:
         name, _, reason = item.partition("=")
         skipped[name] = reason
 
-    def edit(state: State) -> int:
+    def plan(state: State) -> list[Planned]:
         chosen = bulkblock.select_symbols(state, list(ctx.many("update_many") or ()), skipped)
         for sym, reason in skipped.items():
             _say(f"EXCLUDED {sym}" + (f" ({reason})" if reason else ""))
         for sym in chosen:
             ops.update(state, sym, upd, ctx.stamp())
-            _say(f"{'UPDATED' if write else 'WOULD UPDATE'} {sym}")
+        verb = "UPDATED" if write else "WOULD UPDATE"
+        return [(sym, f"update {sym}", f"{verb} {sym}") for sym in chosen]
+
+    spec = ("update-many", "update-many")
+    if write:
+
+        def edit(state: State) -> int:
+            _advise(ctx, state, spec, plan(state))
+            return EXIT_OK
+
+        return _mutate(ctx, edit)
+    # ⚑ A DRY RUN APPLIES THE UPDATES TO A THROWAWAY LOAD, then records only the advice: the queue
+    # it saves is a second load that has had no update applied to it.
+    planned = plan(store.load(ctx.path))
+
+    def record(state: State) -> int:
+        _advise(ctx, state, spec, planned)
         return EXIT_OK
 
-    if write:
-        return _mutate(ctx, edit)
-    return edit(store.load(ctx.path))
+    return _mutate(ctx, record)
 
 
 def _update(ctx: Ctx) -> int:

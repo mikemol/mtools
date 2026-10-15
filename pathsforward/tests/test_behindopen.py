@@ -161,12 +161,16 @@ def test_a_blocker_the_card_already_had_is_kept_and_the_enabler_is_added(tmp_pat
 def test_without_write_it_says_would_block_and_saves_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """The dry run prints WOULD BLOCK and the state file is unchanged."""
+    """The dry run prints WOULD BLOCK, changes no card, and records the advice once."""
     path = _state(tmp_path, [_card("W1", enables=["W2"]), _card("W2")])
-    before = path.read_text(encoding="utf-8")
+    before = cast("Rec", json.loads(path.read_text(encoding="utf-8")))["waypoints"]
     assert _run(path) == _OK
-    assert "WOULD BLOCK W2 on W1" in capsys.readouterr().out
-    assert path.read_text(encoding="utf-8") == before
+    out = capsys.readouterr().out
+    assert "WOULD BLOCK W2 on W1" in out
+    assert "advice: 1 proposed, 0 rejected, 1 new" in out
+    after = cast("Rec", json.loads(path.read_text(encoding="utf-8")))
+    assert after["waypoints"] == before
+    assert [r["subject"] for r in cast("list[Rec]", after["advice"])] == ["W2"]
 
 
 def test_the_prune_returns_the_card_to_ready_when_the_enabler_lands(tmp_path: Path) -> None:

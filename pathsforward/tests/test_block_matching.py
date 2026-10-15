@@ -63,21 +63,59 @@ def _status(path: Path, sym: str) -> tuple[object, object, object]:
     return found["status"], found["blocked_on"], found["ticks_blocked"]
 
 
-def test_a_dry_run_lists_and_saves_nothing(
+def _doc(path: Path) -> dict[str, list[Rec]]:
+    doc: dict[str, list[Rec]] = json.loads(path.read_text(encoding="utf-8"))
+    return doc
+
+
+def test_a_dry_run_lists_and_records_advice_but_changes_no_card(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """The matches are WOULD BLOCK, the others KEPT with a reason, and the file is unchanged."""
+    """WOULD BLOCK lines and KEPT reasons print; the waypoints are untouched; two advice rows."""
     path = _queue(tmp_path)
-    before = path.read_bytes()
+    before = _doc(path)["waypoints"]
     assert _run(path, "--on", "W7") == 0
     out = capsys.readouterr().out
     assert "WOULD BLOCK W1 on W7" in out
     assert "WOULD BLOCK W2 on W7" in out
     assert "KEPT W3 (blocked on W9)" in out
     assert "KEPT W4 (working)" in out
+    assert "advice: 2 proposed, 0 rejected, 2 new" in out
     assert "W5" not in out
     assert "W6" not in out
-    assert path.read_bytes() == before
+    after = _doc(path)
+    assert after["waypoints"] == before
+    assert [(r["subject"], r["status"]) for r in after["advice"]] == [
+        ("W1", "open"),
+        ("W2", "open"),
+    ]
+
+
+def test_a_second_dry_run_is_seen_and_a_rejection_replaces_the_line(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The same advice twice is 0 new; after --reject-advice it is not proposed again."""
+    path = _queue(tmp_path)
+    assert _run(path, "--on", "W7") == 0
+    capsys.readouterr()
+    assert _run(path, "--on", "W7") == 0
+    assert "advice: 2 proposed, 0 rejected, 0 new" in capsys.readouterr().out
+    rule = f"touches:{_TAG}"
+    assert cli.main(["--state", str(path), "--reject-advice", "block-matching", rule, "later"]) == 0
+    capsys.readouterr()
+    assert _run(path, "--on", "W7") == 0
+    out = capsys.readouterr().out
+    assert "WOULD BLOCK" not in out
+    assert "REJECTED W1: later" in out
+    assert "advice: 0 proposed, 2 rejected, 0 new" in out
+
+
+def test_write_marks_the_applied_advice_closed(tmp_path: Path) -> None:
+    """A dry run opens the rows; the write that applies them closes them as applied."""
+    path = _queue(tmp_path)
+    assert _run(path, "--on", "W7") == 0
+    assert _run(path, "--on", "W7", "--write") == 0
+    assert {r["status"] for r in _doc(path)["advice"]} == {"applied"}
 
 
 def test_write_blocks_the_ready_matches_and_only_those(tmp_path: Path) -> None:
