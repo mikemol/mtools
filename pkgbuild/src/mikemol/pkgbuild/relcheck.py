@@ -42,12 +42,13 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import metacheck, privacycheck, sdistcomplete, twinecheck
+from mikemol.pkgbuild import installguide, metacheck, privacycheck, sdistcomplete, twinecheck
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
 DEFAULT_BACKEND = "setuptools.build_meta"
+GUIDE = "INSTALL.md"
 ARGC = 3
 BUILD_ERRORS = (OSError, ValueError, RuntimeError, ImportError, KeyError, TypeError, SystemExit)
 Row = dict[str, object]
@@ -55,6 +56,7 @@ to_stderr = contextlib.redirect_stdout
 run_twine = twinecheck.check
 run_privacy = privacycheck.check
 run_tests_carried = sdistcomplete.verdict
+run_guide = installguide.findings
 
 
 def checkout(root: Path, sha: str, dest: Path) -> None:
@@ -172,17 +174,35 @@ def row_of(dist: Path, out: Path, sha: str) -> Row:
     return row
 
 
-def release_check(root: Path, sha: str, out: Path) -> list[Row]:
-    """Build and check every dist of `sha`.
+def guide_rows(tree: Path, sha: str) -> list[Row]:
+    """Check the install guide of the tree, when the tree has one.
+
+    ⚑ THE GUIDE IS A ROW BESIDE THE DISTS (W1236): a release cannot go out while INSTALL.md names
+    a different set of dists, names or scripts than the tree it is built from. A tree with no
+    INSTALL.md has no guide to be wrong, so it adds no row.
 
     Returns:
-        one row per dist, in name order.
+        one row named INSTALL.md with its findings, or none.
+
+    """
+    guide = tree / GUIDE
+    if not guide.is_file():
+        return []
+    found = run_guide(guide.read_text(encoding="utf-8"), tree)
+    return [{"dist": GUIDE, "sha": sha, "ok": not found, "build": "n/a", "guide": found}]
+
+
+def release_check(root: Path, sha: str, out: Path) -> list[Row]:
+    """Build and check every dist of `sha`, and the install guide.
+
+    Returns:
+        one row per dist, in name order, then the install guide's row when there is a guide.
 
     """
     with tempfile.TemporaryDirectory() as scratch:
         tree = Path(scratch)
         checkout(root, sha, tree)
-        return [row_of(dist, out, sha) for dist in dists_in(tree)]
+        return [*(row_of(dist, out, sha) for dist in dists_in(tree)), *guide_rows(tree, sha)]
 
 
 def run(args: Sequence[str]) -> int:

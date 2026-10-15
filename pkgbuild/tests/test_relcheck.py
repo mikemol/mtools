@@ -226,6 +226,32 @@ def test_a_tracked_test_file_the_sdist_drops_fails_the_row_until_the_manifest_gr
     assert fixed["tests"] == "ok"
 
 
+def test_a_stale_install_guide_fails_the_release_beside_good_dists(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1236: a guide with the wrong count is its own failing row; a right one is a passing row."""
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1"})
+    guide = root / "INSTALL.md"
+    guide.write_text(
+        "There are 5 of them.\n- `demo-a` (`demo-a`): x. A library, no scripts.\n", "utf-8"
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "stale guide")
+    rows = relcheck.release_check(root, _git(root, "rev-parse", "HEAD"), tmp_path / "o1")
+    assert [r["dist"] for r in rows] == ["demo-a", "INSTALL.md"]
+    assert rows[0]["ok"] is True
+    assert rows[1]["ok"] is False
+    assert "count" in str(rows[1]["guide"])
+    guide.write_text(
+        "There are 1 of them.\n- `demo-a` (`demo-a`): x. A library, no scripts.\n", "utf-8"
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "fixed guide")
+    rows = relcheck.release_check(root, _git(root, "rev-parse", "HEAD"), tmp_path / "o2")
+    assert rows[1]["ok"] is True
+    assert rows[1]["guide"] == []
+
+
 def test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clean(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

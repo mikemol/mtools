@@ -714,3 +714,11 @@
             read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_installguide.py -k test_a_missing_root_or_guide_is_a_usage_error},
 }
+
+@misc{pkgbuild-relcheck-stale-install-guide-fails-the-release-beside-good-dists,
+  section = {relcheck},
+  title  = {W1236: a guide with the wrong count is its own failing row; a right one is a passing row},
+  claim  = {W1236: a guide with the wrong count is its own failing row; a right one is a passing
+            row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_stale_install_guide_fails_the_release_beside_good_dists},
+}
