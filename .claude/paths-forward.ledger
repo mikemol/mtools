@@ -2018,3 +2018,5 @@
 2026-10-15T19:10:46Z  tick  W1291 minted    -         "Decide the fleet exit table from the census: one value per verdict (DONE NOOP DEFER REFUSE WITHHELD RACE), whether usage keeps 2, and the migration order that never changes a value a live caller reads"  evidence=W1266
 2026-10-15T19:10:52Z  tick  W1290 advanced  collapse  "W1265 wired (lock records session pid+start, commit in the gate); W1266 atomized to W1290 (census done, design/exit-code-census.md) and W1291 (the table decision) [blocked by W1194]"
 2026-10-15T19:13:35Z  interrupt W1292 minted    -         "The close tally counts from the previous tick's ledger line and counts dropped cards, so a host tick end that locks at the close still shows the work"  evidence=W1285
+2026-10-15T19:38:53Z  tick  W1293 minted    -         "Measure which files across ~/github read mikemol-paths-forward's exit values 2, 3 or 4 (skill text, stop hook, katas, peer prompts), as a list with file and line"  evidence=W1291
+2026-10-15T19:38:54Z  tick  W1294 minted    -         "A shared exitcodes leaf holds the fleet table as constants and verdict_of, imported by nothing yet"  evidence=W1291
