@@ -17,3 +17,4 @@ sdistcomplete	Tests carried by the sdist
 installguide	Install guide against the tree
 checklist	Adopter checklist for a wheel
 versionstamp	Release version stamped into the build
+publishplan	Release plan for a publish card

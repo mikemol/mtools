@@ -42,6 +42,7 @@ from mikemol.pkgbuild import (
     metacli,
     names,
     publishers,
+    publishplan,
     relcheck,
     sdisttests,
 )
@@ -64,6 +65,7 @@ SUBCOMMANDS: dict[str, Callable[[Sequence[str]], int]] = {
     "sdist-tests": sdisttests.run,
     "install-guide": installguide.run,
     "checklist": checklist.run,
+    "publish-plan": publishplan.run,
 }
 
 

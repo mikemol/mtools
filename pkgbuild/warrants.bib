@@ -800,3 +800,31 @@
   claim  = {The control: a dynamic version cannot take the stamp, so it fails by name, unguessed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_dist_with_no_static_version_is_a_failing_row_beside_the_stamped_one},
 }
+
+@misc{pkgbuild-publishplan-without-a-card-the-next-number-is-planned-and-minting-comes-first,
+  section = {publishplan},
+  title  = {Counter 1238 gives version 0.0.1239 and a first step that mints the card},
+  claim  = {Counter 1238 gives version 0.0.1239 and a first step that mints the card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishplan.py -k test_without_a_card_the_next_number_is_planned_and_minting_comes_first},
+}
+
+@misc{pkgbuild-publishplan-with-an-issued-card-its-number-is-the-version-and-nothing-is-minted,
+  section = {publishplan},
+  title  = {W1240 under a counter of 1240 gives 0.0.1240 and no mint step},
+  claim  = {W1240 under a counter of 1240 gives 0.0.1240 and no mint step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishplan.py -k test_with_an_issued_card_its_number_is_the_version_and_nothing_is_minted},
+}
+
+@misc{pkgbuild-publishplan-card-the-queue-has-not-issued-is-refused,
+  section = {publishplan},
+  title  = {W1500 is above the counter, so no plan is printed},
+  claim  = {W1500 is above the counter, so no plan is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishplan.py -k test_a_card_the_queue_has_not_issued_is_refused},
+}
+
+@misc{pkgbuild-publishplan-bad-sha-index-state-or-card-flag-is-a-usage-error,
+  section = {publishplan},
+  title  = {The controls: nothing reaches standard output},
+  claim  = {The controls: nothing reaches standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishplan.py -k test_a_bad_sha_index_state_or_card_flag_is_a_usage_error},
+}
