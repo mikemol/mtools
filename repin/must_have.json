@@ -35,10 +35,26 @@
   },
   {
     "dists": [
+      "hooks"
+    ],
+    "reason": "W1280: importing mikemol.hooks.revendor_cli first failed with a circular import through wheel and repin_cli; every consumer that imports every hooks module (summit's witness) hit it at ca6702b",
+    "requires": [],
+    "sha": "b0ba49296aa736b659fa27321aa4c70c015bf467"
+  },
+  {
+    "dists": [
       "pathsforward"
     ],
     "reason": "--tick-close prunes landed local blockers before its check",
     "requires": [],
     "sha": "c47d50b0d54cd66fc5d1cdf8e03a319999b3d8a8"
+  },
+  {
+    "dists": [
+      "pathsforward"
+    ],
+    "reason": "W1278: --check-evidence reported URL paths, examples and placeholders as missing files; 15 false findings on one queue",
+    "requires": [],
+    "sha": "c7fb19159aa2d0ecf022c7059f8fad8956b9319e"
   }
 ]
