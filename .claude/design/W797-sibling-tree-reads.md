@@ -48,6 +48,27 @@ nemik (`check.py`, `overlaps.py`, `vtodo.py`), gcalculus `scripts/inbox_fold.py`
 `checks/hookcensus.py` and `sent_census.py`, summit `scripts/*`, gabion `paths_forward_state.py` (its
 own tree). A live read is their job; what they owe is naming the root they read (a `--root`).
 
+## mtools' own hits, read 2026-10-15 (W1241)
+
+The table's last row named mtools' hits without opening them. Read now (the greps below are the
+evidence arm; `blockers.sh` was read in its first 638 of 1532 lines, which include every line that
+touches the substrate path):
+
+- `.githooks/pre-commit:553`: a COMMENT quoting a measured transcript. Not a read.
+- `rules_py/engine_env.py:15`, `rules_py/venv.bzl:78`: a docstring and a comment. Not reads.
+- `rules_py/pinned.bzl:5,10`: the documentation and the example of the PINNING mechanism itself
+  (`pinned(name = "paperkit_engine", remote = ..., commit = ...)`). It is the fix, not a case.
+- `blockers.sh:24` `sub=/home/mikemol/github/substrate`: a live read, but of a different kind. It is
+  a POLL that REPORTS what substrate's git index and working tree hold (`git ls-files`, `git log`,
+  `find`) so a reader can see whether a peer's modules are fetchable; it certifies nothing, gates no
+  commit, and says so in its own headings ("reported, not a blocker here"). It is a TOOL, tier C in
+  spirit: a live read is its job. What it owes is naming the root it reads: the path is a literal
+  on line 24 and not a `--root`, which is a small honest debt, not a certification defect.
+
+Verdict for mtools: no gate of mtools certifies from a sibling's live tree among these hits. The one
+live read (`blockers.sh`) is a reporting poll. The unread residue is what the audit's method could
+not see (paths built from a variable, `.rego` and `.md` sources).
+
 ## What a fix is, mechanically
 
 A reader in B has two honest forms: (1) read a recorded commit (a `git_override`, a vendored wheel, or
