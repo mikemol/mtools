@@ -140,6 +140,37 @@ def test_close_gate_says_the_verdict_and_writes_nothing(
     assert not (tmp_path / "paths-forward.ledger").exists()
 
 
+def test_a_reason_citing_the_card_just_worked_is_refused_and_a_peers_card_is_not(
+    tmp_path: Path,
+) -> None:
+    """W1247: W1 is the card the tick worked, so a suite running for W1 is no block on W2.
+
+    The control is the same close naming W3 (open, not worked) or a peer's `luthen:W9`, which a
+    gate-running prose reason does not do.
+    """
+    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "ready"), _card("W3", "blocked")])
+    assert _close(path, "--reason", "the suite is running and the W1 commit follows it") == _REFUSED
+    assert _close(path, "--blocked-by", "W1") == _REFUSED
+    assert _locked(path)
+    assert _close(path, "--reason", "waiting on luthen:W9 to land") == _OK
+    assert not _locked(path)
+
+
+def test_a_done_card_is_no_block_even_when_it_is_not_the_one_worked(tmp_path: Path) -> None:
+    """The worked card is W1; W2 is done, so `--blocked-by W2` names nothing that is waiting."""
+    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "done"), _card("W3", "ready")])
+    assert _close(path, "--blocked-by", "W2") == _REFUSED
+    assert _locked(path)
+
+
+def test_a_reason_naming_an_open_card_other_than_the_one_worked_still_closes(
+    tmp_path: Path,
+) -> None:
+    """The control: W3 is open and not the card worked, so citing it alongside W1 is accepted."""
+    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "ready"), _card("W3", "blocked")])
+    assert _close(path, "--reason", "W1 gate runs; the rest waits on W3") == _OK
+
+
 def test_a_reason_or_blocker_that_names_no_card_of_the_queue_is_refused(tmp_path: Path) -> None:
     """The control for the escape hatch: prose, a missing card and a done one all stay refused."""
     path = _state(tmp_path, [_card("W1", "done"), _card("W2", "ready")])

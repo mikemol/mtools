@@ -1321,7 +1321,8 @@ def _tick_close(ctx: Ctx) -> int:
     holder, *entry = ctx.many("tick_close") or ("", "", "", "", "")
     # ⚑ W1203: A TICK IS A LOOP CYCLE, NOT A CARD. Read the queue before anything is written; with a
     # ready, unblocked card and no named block the close is REFUSED and the lock stays held.
-    verdict = CLOSE_JUDGE(store.load(ctx.path), ctx.get("blocked_by"), ctx.get("reason"))
+    worked = entry[0] if entry else None
+    verdict = CLOSE_JUDGE(store.load(ctx.path), ctx.get("blocked_by"), ctx.get("reason"), worked)
     for said in verdict.lines:
         _say(said)
     if verdict.refused:

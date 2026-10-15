@@ -8,12 +8,15 @@ layer, so the closing verb reads the queue itself: while any card is READY and n
 an open enabler, `--tick-close` REFUSES (the lock stays held, so the stop hook keeps asking) unless
 the close says what the real block is:
 
-    --blocked-by W<n>   a card that exists and is not done: the thing the rest is waiting on
-    --reason TEXT       free text that names a card of this queue (a symbol the queue holds)
+    --blocked-by W<n>   a card that exists, is not done and is not the card the tick worked
+    --reason TEXT       free text that names such a card, or a peer's `repo:W<n>`
 
 Either is ledgered with the close. A bare close with ready cards is refused; a close with none is
 unchanged. Every close prints the ready count and the top three, so the figure is always in front
 of the session that is about to stop.
+
+⚑ A SELF-CITATION IS NOT A BLOCK (github-8f, 2026-10-15, W1247): a gate or suite running for the
+card just worked does not stop the other ready cards; it is when to start the next one.
 
 ⚑ READY MEANS WORKABLE: a witnessed card (its evaluator, not a mind, marks it done) and a card
 behind an open enabler are not counted, the same sets `--block-behind-open` and the ranker use.
@@ -34,6 +37,7 @@ if TYPE_CHECKING:
     from mikemol.pathsforward.model import State
 
 SYMBOL = re.compile(r"\bW\d+\b")
+FOREIGN = re.compile(r"[\w-]+:W\d+")
 TOP = 3
 
 
@@ -62,23 +66,37 @@ def ready_cards(state: State) -> list[str]:
     ]
 
 
-def _named(state: State, blocked_by: str | None, reason: str | None) -> str:
+def _named(state: State, blocked_by: str | None, reason: str | None, worked: str | None) -> str:
     """Say what block the close names, or why it names none.
+
+    ⚑ EIGHT TICKS CLOSED "the suite is running and the <card> commit follows it", citing the card
+    they had just worked. The accepted blocks are an open card that is NOT the one worked, or a
+    foreign `repo:W<n>` (a peer's card, a named external wait). A done card is no block either.
 
     Returns:
         the note to ledger, or "" when the close names no real block.
 
     """
-    live = {text(w, "symbol") for w in state.waypoints if text(w, "status") != "done"}
+    live = {
+        text(w, "symbol")
+        for w in state.waypoints
+        if text(w, "status") != "done" and text(w, "symbol") != worked
+    }
     if blocked_by is not None and blocked_by in live:
         return f"blocked by {blocked_by}"
-    held = {text(w, "symbol") for w in state.waypoints}
-    mentioned = cast("list[str]", SYMBOL.findall(reason or ""))
-    cited = [s for s in mentioned if s in held]
-    return f"reason: {reason} (cites {', '.join(cited)})" if cited else ""
+    said = reason or ""
+    foreign = cast("list[str]", FOREIGN.findall(said))
+    cited = [s for s in cast("list[str]", SYMBOL.findall(FOREIGN.sub("", said))) if s in live]
+    named = [*foreign, *cited]
+    return f"reason: {reason} (cites {', '.join(named)})" if named else ""
 
 
-def judge(state: State, blocked_by: str | None = None, reason: str | None = None) -> Verdict:
+def judge(
+    state: State,
+    blocked_by: str | None = None,
+    reason: str | None = None,
+    worked: str | None = None,
+) -> Verdict:
     """Decide whether a tick may close.
 
     Returns:
@@ -90,13 +108,14 @@ def judge(state: State, blocked_by: str | None = None, reason: str | None = None
     count = f"ready and unblocked: {len(ready)}; top: {', '.join(ready[:TOP]) or 'none'}"
     if not ready:
         return Verdict(refused=False, lines=(count,), note="")
-    note = _named(state, blocked_by, reason)
+    note = _named(state, blocked_by, reason, worked)
     if note:
         named = f"closing on a named block ({note})"
         return Verdict(refused=False, lines=(count, named), note=note)
     why = (
         "REFUSED: a tick is a loop cycle, not a card. "
         f"{len(ready)} ready card(s) can be worked; name the real block with "
-        "--blocked-by W<n> (a card that is not done) or --reason TEXT citing a card of this queue"
+        "--blocked-by W<n> (an open card other than the one just worked) or --reason TEXT "
+        "citing one, or a peer's repo:W<n>; a gate running for the card worked is not a block"
     )
     return Verdict(refused=True, lines=(count, why), note="")
