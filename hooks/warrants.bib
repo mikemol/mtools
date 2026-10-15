@@ -10192,3 +10192,17 @@
   claim  = {W1273: entry 2's body has a Waypoint: line, so the whole file is refused naming entry 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_an_entry_whose_body_carries_a_tool_trailer_is_named_with_its_place},
 }
+
+@misc{hooks-import-cycles-every-module-of-the-package-imports-first-in-a-fresh-interpreter,
+  section = {import_cycles},
+  title  = {No module fails to import when it is the first one entered},
+  claim  = {No module fails to import when it is the first one entered.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_cycles.py -k test_every_module_of_the_package_imports_first_in_a_fresh_interpreter},
+}
+
+@misc{hooks-import-cycles-planted-import-cycle-fails-the-same-check,
+  section = {import_cycles},
+  title  = {The control: a imports a name from b and b one from a; entering either first fails},
+  claim  = {The control: a imports a name from b and b one from a; entering either first fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_import_cycles.py -k test_a_planted_import_cycle_fails_the_same_check},
+}

@@ -109,3 +109,4 @@ websubset	The web-subset allowlist refuses what a transpiler cannot translate
 websubset_list	The portable-module list is read whole or refused
 websubset_cli	mikemol-websubset checks one file or the declared portable list
 commit_body	A commit body never carries the trailers the commit tool adds
+import_cycles	Every module of the hooks package imports first, alone, in a fresh interpreter

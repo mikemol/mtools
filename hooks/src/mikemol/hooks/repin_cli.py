@@ -19,7 +19,6 @@ The exit is 1 when any sync failed, else 0; 2 for a usage refusal.
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 import time
 from dataclasses import dataclass
@@ -30,6 +29,7 @@ from mikemol.hooks import musthave, repin
 from mikemol.hooks.musthave_cli import run as run_must_have
 from mikemol.hooks.repin_metrics import publish, render
 from mikemol.hooks.revendor_cli import run_revendor
+from mikemol.hooks.runproc import run_process
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -95,20 +95,6 @@ class Row:
 
         """
         return f"{self.repo}\t{self.dist}\t{self.form}\t{self.pinned}\t{self.status}"
-
-
-def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
-    """Run a command in a directory.
-
-    Returns:
-        its exit code and standard output; 127 and empty when the program is missing.
-
-    """
-    try:
-        done = subprocess.run(list(argv), cwd=cwd, capture_output=True, text=True, check=False)
-    except FileNotFoundError:
-        return 127, ""
-    return done.returncode, done.stdout
 
 
 def _scannable(directory: Path) -> bool:

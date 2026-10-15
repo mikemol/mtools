@@ -22,8 +22,10 @@ entries by the build clock), so the bytes now depend on neither when nor from wh
 ⚑ ONE JSON OBJECT PER WHEEL ON STDOUT, `{"dist","wheel","sha256"}`, in the order the dists were
 named; a failure is one line on stderr and exit 1, and exit 2 is a usage refusal.
 
-⚑ THE DEFAULT RUNNER IS REPIN'S, RESOLVED AT CALL TIME: `repin_cli` imports the re-vendor chain that
-imports this module, so a name taken from it at import time would find it half built.
+⚑ THE DEFAULT RUNNER IS A LEAF'S (W1280): `run_process` lives in `runproc`, which imports nothing of
+this package. It used to be repin's, and `repin_cli` imports the re-vendor chain that imports this
+module, so importing `revendor_cli` first walked a cycle and failed (`cannot import name
+'run_revendor'`).
 """
 
 from __future__ import annotations
@@ -39,7 +41,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import repin_cli, revendor
+from mikemol.hooks import revendor, runproc
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -202,7 +204,7 @@ def main(argv: Sequence[str] | None = None, runner: Runner | None = None) -> int
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         staged = Path(tmp) / "wheels"
-        failure = build_into(runner or repin_cli.run_process, source, dists, Path(tmp), staged)
+        failure = build_into(runner or runproc.run_process, source, dists, Path(tmp), staged)
         if failure is None:
             publish(staged, out)
     records = describe(out, dists, revendor.short_of(source.sha))
