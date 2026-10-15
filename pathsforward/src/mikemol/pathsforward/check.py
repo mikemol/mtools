@@ -580,7 +580,30 @@ def _absolute_paths(rec: Json) -> list[str]:
 
     """
     tokens = (token.strip(_PATH_TRIM) for token in text(rec, "evidence").split())
-    return [token for token in tokens if token.startswith("/") and not _LABEL.match(token)]
+    return [
+        token
+        for token in tokens
+        if token.startswith("/") and not _LABEL.match(token) and _could_be_a_file(token)
+    ]
+
+
+def _could_be_a_file(token: str) -> bool:
+    """Say whether an absolute-looking token could name a file on this host.
+
+    ⚑ A SLASH IS NOT A PATH (W1278). The first run of `--check-evidence` on this queue reported 15
+    findings and every one was a string that is not a file: a URL path (`/danger-api/echo`), an
+    example (`/nonexistent.py`), a placeholder (`/var/tmp/x/<repo>/tree`, `/projects/{name}/x`).
+    A real path starts in a directory of `/`, and carries no placeholder character, so a token
+    whose first component is not an entry of `/`, or that holds `<`, `>`, `{`, `}` or `*`, is
+    prose and is left alone. A token under an existing top directory that does not exist stays a
+    finding: that is the case the check is for.
+
+    Returns:
+        True when the token starts in an existing top-level entry and has no placeholder.
+
+    """
+    top = token.split("/")[1]
+    return bool(top) and not set(token) & set("<>{}*") and Path("/", top).exists()
 
 
 def _readings(token: str) -> list[str]:

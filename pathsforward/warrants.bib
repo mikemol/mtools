@@ -5027,3 +5027,13 @@
   claim  = {`--lift` takes only --jwk: a field flag beside it is refused by name.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_jwk_without_lift_and_lift_with_a_stray_flag_are_refused},
 }
+
+@misc{pathsforward-check-slash-that-is-not-a-path-is-not-an-evidence-finding,
+  section = {check},
+  title  = {W1278: URL paths, examples and placeholders are prose; a real missing path still is found},
+  claim  = {W1278: URL paths, examples and placeholders are prose; a real missing path still is
+            found. `/danger-api/echo` and `/nonexistent.py` start in no directory of
+            `/`; the other two carry a placeholder character. The control is a path
+            under an existing top directory that is absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_slash_that_is_not_a_path_is_not_an_evidence_finding},
+}

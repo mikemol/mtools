@@ -25,7 +25,7 @@ _ABOVE = 999
 _BAD = "Wx"
 _HISTORICAL = "W50b"
 _HISTORICAL_REASON = "issued by a tick that broke the integer rule; kept as a historical name"
-_MISSING = "/nonexistent/x"
+_MISSING = "/usr/nonexistent/x"
 _NOTE = "file.md"
 _GONE = "gone.md"
 _DOTTED = "v1."
@@ -290,6 +290,18 @@ def test_a_dot_that_is_part_of_a_real_name_is_kept(tmp_path: Path) -> None:
         tmp_path, waypoints=[_wp("W1", evidence=f"kept {tmp_path}/{_DOTTED}."), _wp("W2")]
     )
     assert chk.evidence_findings(state) == []
+
+
+def test_a_slash_that_is_not_a_path_is_not_an_evidence_finding(tmp_path: Path) -> None:
+    """W1278: URL paths, examples and placeholders are prose; a real missing path still is found.
+
+    `/danger-api/echo` and `/nonexistent.py` start in no directory of `/`; the other two carry a
+    placeholder character. The control is a path under an existing top directory that is absent.
+    """
+    prose = "/danger-api/echo /nonexistent.py /var/tmp/x/<repo>/tree /projects/{name}/obs /a/*"
+    absent = f"{tmp_path}/{_GONE}"
+    state = _state(tmp_path, waypoints=[_wp("W1", evidence=f"{prose} {absent}"), _wp("W2")])
+    assert chk.evidence_findings(state) == [f"W1: evidence names {absent}, which does not exist"]
 
 
 def test_the_bare_check_does_not_read_evidence(tmp_path: Path) -> None:
