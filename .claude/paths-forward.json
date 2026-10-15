@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1285,
+  "counter": 1287,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,7 +15,10 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-15T18:14:02Z"
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 242,
+      "ticks_blocked": 243,
       "completed": null
     },
     {
@@ -6171,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 241,
+      "ticks_blocked": 242,
       "completed": null
     },
     {
@@ -10054,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 246,
+      "ticks_blocked": 247,
       "completed": null
     },
     {
@@ -11802,7 +11805,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 180,
+      "ticks_blocked": 181,
       "completed": null
     },
     {
@@ -16156,7 +16159,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16697,7 +16700,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17506,7 +17509,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "completed": null
     },
     {
@@ -17549,7 +17552,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "completed": null
     },
     {
@@ -17572,7 +17575,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "completed": null
     },
     {
@@ -17997,7 +18000,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "completed": null
     },
     {
@@ -18173,7 +18176,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 144,
+      "ticks_blocked": 145,
       "completed": null
     },
     {
@@ -18956,7 +18959,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 143,
+      "ticks_blocked": 144,
       "completed": null
     },
     {
@@ -20678,7 +20681,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -21417,7 +21420,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -21463,7 +21466,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 103,
+      "ticks_blocked": 104,
       "completed": null
     },
     {
@@ -21555,7 +21558,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 103,
+      "ticks_blocked": 104,
       "completed": null
     },
     {
@@ -21621,7 +21624,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -22022,7 +22025,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -22043,7 +22046,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -22064,7 +22067,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 88,
+      "ticks_blocked": 89,
       "completed": null
     },
     {
@@ -22473,7 +22476,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 87,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -22495,7 +22498,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 87,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -22601,7 +22604,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -22882,7 +22885,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 67
+      "ticks_blocked": 68
     },
     {
       "symbol": "W1116",
@@ -22903,7 +22906,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 67
+      "ticks_blocked": 68
     },
     {
       "symbol": "W1117",
@@ -22921,7 +22924,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 67
+      "ticks_blocked": 68
     },
     {
       "symbol": "W1118",
@@ -22939,7 +22942,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 67
+      "ticks_blocked": 68
     },
     {
       "symbol": "W1119",
@@ -23445,7 +23448,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1144",
@@ -23603,7 +23606,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 36
+      "ticks_blocked": 37
     },
     {
       "symbol": "W1151",
@@ -23649,7 +23652,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 55
+      "ticks_blocked": 56
     },
     {
       "symbol": "W1153",
@@ -23673,7 +23676,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 33,
+      "ticks_blocked": 34,
       "completed": null
     },
     {
@@ -24107,7 +24110,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 57,
       "completed": null
     },
     {
@@ -24564,12 +24567,12 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "W1270 and W1271 first; then the signing call once luthen-observability:W1075 exists",
-      "evidence": "2026-10-15: 2026-10-15 DESIGN QUESTION before building (github-8f asked for W1194's distance): the mode takes ruling text from its caller and cannot verify the operator wrote it; an agent can type the same text, so a mode that lifts on recorded text moves rule 5's guard to whoever supplies the text. Options that hold against agents: (a) the operator runs the lift themselves in their own shell (the tool refuses when run by an agent session, by the env the harness sets); (b) the ruling is read from a file only the operator's side can write (a path outside the agent's write permission); (c) the lift needs a token the operator mints. Which is for the operator to choose; I have not picked one. Distance: not near until that is chosen; the code itself is one mode with a refuse-everything-else test. | 2026-10-15: 2026-10-15 OPERATOR DECISION, relayed by github-8f (not verified by this session): the lift is authorised by the operator's TOTP from their phone; the code does not lift the row itself but authorises OpenBao to SIGN the ruling payload (card, ruling text, time) with a non-exportable transit key (luthen-observability:W1075, read: it currently describes a TOTP validate-only policy, so its text predates the signing step and luthen has to carry it). The lift mode: builds the canonical payload, submits it with the code for signing, records payload plus signature, and changes exactly the named held row only when the signature verifies against the transit public key checked into the repo. Tests: a valid signature lifts that row only; a signature over a different card or ruling text refuses; no signature refuses; wrong or reused code is OpenBao's to refuse. Split here: W1270 the pure core with an injected verifier (buildable now); W1271 how signatures are verified inside a dependency-free package (stdlib has no ed25519/ecdsa verify: options are an external openssl, a dependency, or opa); the OpenBao signing call is blocked on luthen-observability:W1075. | 2026-10-15: mtools half BUILT: lift core 20f7106 and the command line 078a057 (--lift JWS --jwk FILE). Left: luthen-observability:W1075 (the OpenBao transit key, its public JWK to check in, the signing request path); nudged them with the three concrete needs. Once the JWK exists, the repo checks it in and the operator runs the signing request, then --lift.",
+      "evidence": "2026-10-15: 2026-10-15 DESIGN QUESTION before building (github-8f asked for W1194's distance): the mode takes ruling text from its caller and cannot verify the operator wrote it; an agent can type the same text, so a mode that lifts on recorded text moves rule 5's guard to whoever supplies the text. Options that hold against agents: (a) the operator runs the lift themselves in their own shell (the tool refuses when run by an agent session, by the env the harness sets); (b) the ruling is read from a file only the operator's side can write (a path outside the agent's write permission); (c) the lift needs a token the operator mints. Which is for the operator to choose; I have not picked one. Distance: not near until that is chosen; the code itself is one mode with a refuse-everything-else test. | 2026-10-15: 2026-10-15 OPERATOR DECISION, relayed by github-8f (not verified by this session): the lift is authorised by the operator's TOTP from their phone; the code does not lift the row itself but authorises OpenBao to SIGN the ruling payload (card, ruling text, time) with a non-exportable transit key (luthen-observability:W1075, read: it currently describes a TOTP validate-only policy, so its text predates the signing step and luthen has to carry it). The lift mode: builds the canonical payload, submits it with the code for signing, records payload plus signature, and changes exactly the named held row only when the signature verifies against the transit public key checked into the repo. Tests: a valid signature lifts that row only; a signature over a different card or ruling text refuses; no signature refuses; wrong or reused code is OpenBao's to refuse. Split here: W1270 the pure core with an injected verifier (buildable now); W1271 how signatures are verified inside a dependency-free package (stdlib has no ed25519/ecdsa verify: options are an external openssl, a dependency, or opa); the OpenBao signing call is blocked on luthen-observability:W1075. | 2026-10-15: mtools half BUILT: lift core 20f7106 and the command line 078a057 (--lift JWS --jwk FILE). Left: luthen-observability:W1075 (the OpenBao transit key, its public JWK to check in, the signing request path); nudged them with the three concrete needs. Once the JWK exists, the repo checks it in and the operator runs the signing request, then --lift. | 2026-10-15: 2026-10-15 luthen-observability-d9 (testimony): W1075 items 1-2 (transit ed25519 key exportable=false in terraform+Rego, public JWK from its public part, one-time raw-signature demonstration) are ready on luthen's side and do not wait on the operator; item 3, the request path, waits on the operator choosing (A) login MFA in front of a one-use sign-only token or (B) a broker. OpenBao has login MFA only; step-up MFA on transit/sign is openbao#4095. The question went to the operator via github-8f; no answer yet.",
       "issued_at": "2026-10-14T18:02:25Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T16:05:23Z",
-      "ticks_blocked": 3,
+      "last_worked": "2026-10-15T18:15:10Z",
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -26332,7 +26335,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 0,
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -26380,7 +26383,7 @@
     {
       "symbol": "W1284",
       "title": "--tick-close refuses a --reason that says a card needs a fresh session or more context and prints 'atomize <card>' instead",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1203"
       ],
@@ -26389,19 +26392,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read closegate.judge and its tests; add a reason-pattern refusal naming the worked card; test with a reason that says fresh session and one that does not",
-      "evidence": "2026-10-15: closegate.FRESH refuses a --reason with fresh session/more context and prints atomize <worked card>; test added in test_tick_close_gate; commit in the gate.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: closegate.FRESH refuses a --reason with fresh session/more context and prints atomize <worked card>; test added in test_tick_close_gate; commit in the gate. | 2026-10-15: Landed in mtools 2be8f05 (pushed).",
       "issued_at": "2026-10-15T17:56:03Z",
       "minted_during": "interrupt",
       "caused_by": "W1203",
-      "last_worked": "2026-10-15T17:59:07Z",
+      "last_worked": "2026-10-15T18:13:16Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T181316Z"
     },
     {
       "symbol": "W1285",
       "title": "--tick-close prints how many cards the tick advanced against how many were ready, so a one-card tick shows in its own output",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1203"
       ],
@@ -26410,14 +26413,55 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Count cards whose last_worked or status moved since tick-open versus the ready count at open; print one line in the close output; test both counts",
-      "evidence": "2026-10-15: closegate.advanced counts cards with last_worked at or after the lock's taken_at; the close/gate line prints 'this tick advanced N'; test added; commit in the gate with W1284.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: closegate.advanced counts cards with last_worked at or after the lock's taken_at; the close/gate line prints 'this tick advanced N'; test added; commit in the gate with W1284. | 2026-10-15: Landed in mtools 2be8f05 (pushed) with W1284.",
       "issued_at": "2026-10-15T17:56:04Z",
       "minted_during": "interrupt",
       "caused_by": "W1203",
-      "last_worked": "2026-10-15T18:08:38Z",
+      "last_worked": "2026-10-15T18:13:17Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T181317Z"
+    },
+    {
+      "symbol": "W1286",
+      "title": "atomicwrite gains a flock context manager: blocking exclusive lock on a path, released on exit, with tests including a contended-lock case",
+      "status": "working",
+      "enables": [
+        "W1264"
+      ],
+      "touches": [
+        "atomicwrite"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read atomicwrite's modules and BUILD; add flock_exclusive(path) beside the atomic writer, test two holders in sequence and one contending holder via a subprocess",
+      "evidence": "",
+      "issued_at": "2026-10-15T18:14:21Z",
+      "minted_during": "tick",
+      "caused_by": "W1264",
+      "last_worked": "2026-10-15T18:14:27Z",
       "ticks_blocked": 0,
       "completed": null
+    },
+    {
+      "symbol": "W1287",
+      "title": "pathsforward store.py takes the flock from atomicwrite instead of its raw fcntl.flock pair",
+      "status": "ready",
+      "enables": [
+        "W1264"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After W1286: add the atomicwrite dependency to pathsforward pyproject and BUILD, replace the flock/unlock pair in store.py, run the store and lock tests",
+      "evidence": "",
+      "issued_at": "2026-10-15T18:14:27Z",
+      "minted_during": "tick",
+      "caused_by": "W1264",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

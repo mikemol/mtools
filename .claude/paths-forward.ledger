@@ -2008,3 +2008,5 @@
 2026-10-15T17:56:03Z  interrupt W1283 minted    -         "A test runs mikemol-hook-inbound-asks with a SessionStart event over a fixture queue holding an UNCLAIMED row and asserts the emitted hookSpecificOutput carries hookEventName SessionStart and that row"  evidence=W581
 2026-10-15T17:56:03Z  interrupt W1284 minted    -         "--tick-close refuses a --reason that says a card needs a fresh session or more context and prints 'atomize <card>' instead"  evidence=github-8f:W1
 2026-10-15T17:56:04Z  interrupt W1285 minted    -         "--tick-close prints how many cards the tick advanced against how many were ready, so a one-card tick shows in its own output"  evidence=github-8f:W1
+2026-10-15T18:14:21Z  tick  W1286 minted    -         "atomicwrite gains a flock context manager: blocking exclusive lock on a path, released on exit, with tests including a contended-lock case"  evidence=W1264
+2026-10-15T18:14:27Z  tick  W1287 minted    -         "pathsforward store.py takes the flock from atomicwrite instead of its raw fcntl.flock pair"  evidence=W1264

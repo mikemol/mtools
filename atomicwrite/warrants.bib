@@ -105,3 +105,24 @@
             bytes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_durable.py -k test_text_is_opened_as_utf8_whatever_the_process_locale},
 }
+
+@misc{atomicwrite-flock-lock-is-held-inside-the-body-and-released-after,
+  section = {flock},
+  title  = {A second descriptor is refused inside the body and succeeds once the body ends},
+  claim  = {A second descriptor is refused inside the body and succeeds once the body ends.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flock.py -k test_the_lock_is_held_inside_the_body_and_released_after},
+}
+
+@misc{atomicwrite-flock-lock-is-released-when-the-body-raises,
+  section = {flock},
+  title  = {The control for the release path: an error in the body still frees the lock},
+  claim  = {The control for the release path: an error in the body still frees the lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flock.py -k test_the_lock_is_released_when_the_body_raises},
+}
+
+@misc{atomicwrite-flock-file-is-created-when-absent,
+  section = {flock},
+  title  = {A path that does not exist is created, so a caller needs no setup},
+  claim  = {A path that does not exist is created, so a caller needs no setup.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flock.py -k test_the_file_is_created_when_absent},
+}

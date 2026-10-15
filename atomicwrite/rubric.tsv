@@ -1,3 +1,4 @@
 # rubric.tsv — the sections of the atomicwrite warrant set, one per test module, in document order.
 # key <TAB> heading title
 durable	The Durable Write: The Path Is Replaced, Permissions Survive, and a Failure Leaves No Temp
+flock	The exclusive-lock primitive

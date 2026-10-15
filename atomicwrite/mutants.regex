@@ -60,3 +60,6 @@ src/mikemol/atomicwrite/durable.py|text-not-flushed-before-rename|os\.fsync\(ft\
 
 # Text is UTF-8 by name: the locale's default encoding would write another file's bytes elsewhere.
 src/mikemol/atomicwrite/durable.py|text-encoded-by-locale|os\.fdopen\(fd, "w", encoding="utf-8"\)|os.fdopen(fd, "w")|def=_fill
+
+# The lock is a real kernel lock: a body that took none would let a second holder in.
+src/mikemol/atomicwrite/flock.py|lock-never-taken|fcntl\.flock\(handle\.fileno\(\), fcntl\.LOCK_EX\)|pass|def=exclusive
