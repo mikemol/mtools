@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""Witnesses for the dependency map (mtools:W1251): four edge kinds read from the tree.
+"""Witnesses for the dependency map (mtools:W1251, W1252): seven edge kinds read from the tree.
 
 ⚑ THE CONTROLS ARE WHAT MUST NOT BECOME AN EDGE: a standard-library import, a path-like word in a
-docstring, prose that merely contains `.md`, a name in code that is not a comment or string, and
-a call whose argv is a variable. Each is planted beside the edge it must not be confused with.
+docstring, prose that merely contains `.md`, a name in code that is not a comment or string, a
+call whose argv is a variable, a tool name in a docstring or a shell comment, and a wrapper's own
+name. Each is planted beside the edge it must not be confused with.
 """
 
 from __future__ import annotations
@@ -36,15 +37,27 @@ def run(argv):
     shutil.which("opa")
     return "x/paths-forward.json", "hello.md world", os, cli, rdflib, dateutil
 '''
+_TOOLS = '"""Calls mikemol-skipped."""\nX = "mikemol-fence"\n'
+_WRAPPER = "#!/usr/bin/env bash\n# nemik-comment-only\nexec nemik-check mikemol-hook-w\n"
+_SETTINGS = (
+    '{"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": '
+    '[{"command": "A=1 mikemol-hook-x nemik-check"}]}], '
+    '"SessionStart": [{"hooks": [{"command": "mikemol-hook-s"}]}]}}'
+)
 
 
 def _repo(tmp_path: Path) -> Path:
     root = tmp_path / "fleet"
     (root / "pkg" / "src").mkdir(parents=True)
     (root / "pkg" / "tests").mkdir()
+    (root / "pkg" / "bin").mkdir()
+    (root / ".claude").mkdir()
     (root / "pkg" / "pyproject.toml").write_text("", encoding="utf-8")
     (root / "pkg" / "src" / "a.py").write_text(_MODULE, encoding="utf-8")
+    (root / "pkg" / "src" / "b.py").write_text(_TOOLS, encoding="utf-8")
     (root / "pkg" / "tests" / "test_a.py").write_text("import pytest\n", encoding="utf-8")
+    (root / "pkg" / "bin" / "mikemol-hook-w").write_text(_WRAPPER, encoding="utf-8")
+    (root / ".claude" / "settings.json").write_text(_SETTINGS, encoding="utf-8")
     (root / "loose.py").write_text("# nemik in a comment\nnemik = 1\n", encoding="utf-8")
     return root
 
@@ -94,6 +107,44 @@ def test_a_path_constant_is_an_edge_and_a_docstring_or_prose_is_not(tmp_path: Pa
     """`paths-forward.json` is named by a constant; the docstring's guide.md and prose are not."""
     paths = {e.target for e in depmap.derive([_repo(tmp_path)]) if e.kind == "path"}
     assert paths == {"x/paths-forward.json"}
+
+
+def test_a_tool_constant_is_an_edge_and_the_same_name_in_a_docstring_is_not(
+    tmp_path: Path,
+) -> None:
+    """`mikemol-fence` is a string constant in b.py; `mikemol-skipped` is its docstring."""
+    tools = {e.target for e in depmap.derive([_repo(tmp_path)]) if e.kind == "tool"}
+    assert tools == {"mikemol-fence"}
+
+
+def test_a_hook_command_is_read_with_its_event_and_matcher(tmp_path: Path) -> None:
+    """Both names in the Bash command belong to `PreToolUse[Bash]`; the other has no matcher."""
+    got = {(e.source, e.target) for e in depmap.derive([_repo(tmp_path)]) if e.kind == "hook"}
+    assert got == {
+        ("fleet:PreToolUse[Bash]", "mikemol-hook-x"),
+        ("fleet:PreToolUse[Bash]", "nemik-check"),
+        ("fleet:SessionStart", "mikemol-hook-s"),
+    }
+
+
+def test_settings_that_are_absent_or_not_json_name_no_hook(tmp_path: Path) -> None:
+    """The control for the hook reader: no file, and a file that is not JSON, give no edge."""
+    bare = tmp_path / "bare"
+    bare.mkdir()
+    assert depmap.hook_edges(bare) == []
+    (bare / ".claude").mkdir()
+    (bare / ".claude" / "settings.json").write_text("{not json", encoding="utf-8")
+    assert depmap.hook_edges(bare) == []
+
+
+def test_a_shell_wrapper_names_what_it_runs_and_not_a_comment_or_itself(tmp_path: Path) -> None:
+    """`nemik-check` is run on line 3; the comment's name and the wrapper's own name are not."""
+    got = {
+        (e.source, e.file, e.line, e.target)
+        for e in depmap.derive([_repo(tmp_path)])
+        if e.kind == "shell"
+    }
+    assert got == {("fleet/pkg", "pkg/bin/mikemol-hook-w", 3, "nemik-check")}
 
 
 def test_a_mention_is_a_comment_or_string_token_and_not_a_name_in_code(tmp_path: Path) -> None:

@@ -4,7 +4,8 @@
 
     python3 -m mikemol.corpus.depmap [--rows] [--mention WORD] ROOT [ROOT ...]
 
-⚑ FOUR EDGE KINDS, ONE WALK PER FILE, EACH READ FROM THE TREE, NEVER FROM A TEXT SEARCH OF CODE:
+⚑ SEVEN EDGE KINDS, EACH READ FROM A PARSED TREE OR A KNOWN CONFIG SHAPE, NEVER FROM A TEXT SEARCH
+OF CODE (the last three are mtools:W1252, the CLI contract the first four could not see):
 
     import       a module-level or deferred import, collapsed to its owner (`mikemol.<dist>`
                  for the shared namespace, else the top-level name); the standard library is
@@ -15,6 +16,12 @@
                  file-format contract: which file one tool reads or writes)
     mention      a comment or string token that names WORD, so the places one lineage speaks
                  of another are listed rather than remembered (`--mention nemik`)
+    tool         a string constant, docstrings excluded, that is exactly a `mikemol-*` or
+                 `nemik-*` name: an executable named outside a spawn call's first list
+    hook         a `mikemol-*` or `nemik-*` name in a command of `.claude/settings.json`,
+                 sourced as `<repo>:<Event>[<matcher>]`
+    shell        a `mikemol-*` or `nemik-*` name on a non-comment line of a `*.sh` file or of a
+                 file in a `bin` directory, other than the file's own name
 
 ⚑ A SOURCE IS `<repo>/<dist>`, the dist being the first directory of the path when that directory
 holds a pyproject.toml, else the repo alone; one repo with many dists reads as many sources. A
@@ -25,22 +32,23 @@ dist's own contract.
 when no occurrence is module-level. `--rows` prints one row per occurrence instead, with file and
 line (import rows carry line 0: the import census is per file, not per statement).
 
-⚑ WHAT IT CANNOT SEE, said in the output's first line too: a tool reached through a variable argv,
-a file named by a computed path, an executable named outside a call's first list, and anything a
-build file or a container image wires. Those are not absent edges; they are edges this reader
-returns empty for.
+⚑ WHAT IT CANNOT SEE, said in the output's first line too: a tool reached through a variable argv
+or a name built at run time, a file named by a computed path, and anything a build file or a
+container image wires. Those are not absent edges; they are edges this reader returns empty for.
 """
 
 from __future__ import annotations
 
 import ast
 import io
+import json
+import os
 import re
 import sys
 import tokenize
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from mikemol.corpus import corpus, import_edges
 
@@ -49,13 +57,16 @@ if TYPE_CHECKING:
 
 NAMESPACE = "mikemol"
 EXIT_USAGE = 2
+SETTINGS = Path(".claude") / "settings.json"
 _SPAWN = frozenset({"run", "Popen", "check_output", "check_call", "call", "create_subprocess_exec"})
 _SUFFIXES = "json|jsonl|ledger|md|toml|tsv|bib|rego|txt|yaml|yml"
 _PATH = re.compile(rf"^[\w./-]+\.({_SUFFIXES})$")
+_TOOL = re.compile(r"^(?:mikemol|nemik)-[\w-]+$")
+_TOOLS_IN = re.compile(r"\b(?:mikemol|nemik)-[\w-]+")
 _USAGE = "usage: python3 -m mikemol.corpus.depmap [--rows] [--mention WORD] ROOT [ROOT ...]\n"
 _BLIND = (
-    "# cannot see: a variable argv, a computed path, an executable named outside a call's first\n"
-    "# list, build-file and image wiring\n"
+    "# cannot see: a variable argv or a name built at run time, a computed path, build-file and\n"
+    "# image wiring\n"
 )
 _DEFS = (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)
 _DEFERRED = "\tdeferred"
@@ -184,7 +195,7 @@ def _order(edge: Edge) -> tuple[int, str, str]:
 
 
 def _literals(tree: ast.Module, source: str, rel: str) -> list[Edge]:
-    """List the subprocess and path edges a file declares.
+    """List the subprocess, path and tool edges a file declares.
 
     Returns:
         the edges, in line order.
@@ -201,6 +212,8 @@ def _literals(tree: ast.Module, source: str, rel: str) -> list[Edge]:
             text = _text(node)
             if text is not None and _PATH.match(text):
                 found.append(Edge("path", source, rel, node.lineno, text))
+            elif text is not None and _TOOL.match(text):
+                found.append(Edge("tool", source, rel, node.lineno, text))
     return sorted(found, key=_order)
 
 
@@ -224,8 +237,99 @@ def _mentions(path: Path, word: str, source: str, rel: str) -> list[Edge]:
     ]
 
 
+def _names(text: str) -> list[str]:
+    return cast("list[str]", _TOOLS_IN.findall(text))
+
+
+def _dict(value: object) -> dict[str, object]:
+    ok = isinstance(value, dict)
+    return cast("dict[str, object]", value) if ok else {}
+
+
+def _list(value: object) -> list[object]:
+    ok = isinstance(value, list)
+    return cast("list[object]", value) if ok else []
+
+
+def hook_edges(root: Path) -> list[Edge]:
+    """List the `mikemol-*` and `nemik-*` commands the repo's Claude Code settings run.
+
+    ⚑ THE SETTINGS FILE IS PARSED, NOT SEARCHED: each command belongs to an event and a matcher,
+    so a reader can say which tool a hook runs on which tool call, not only that the name occurs.
+
+    Returns:
+        one edge per command and name; none when the file is absent, a link or not JSON.
+
+    """
+    path = root / SETTINGS
+    if not path.is_file() or path.is_symlink():
+        return []
+    try:
+        events = _dict(cast("object", json.loads(path.read_text(encoding="utf-8")))).get("hooks")
+    except (OSError, ValueError):
+        return []
+    found: list[Edge] = []
+    for event, groups in _dict(events).items():
+        for group in map(_dict, _list(groups)):
+            matcher = group.get("matcher")
+            tag = f"[{matcher}]" if isinstance(matcher, str) else ""
+            for hook in map(_dict, _list(group.get("hooks"))):
+                command = hook.get("command")
+                names = _names(command) if isinstance(command, str) else []
+                found += [
+                    Edge("hook", f"{root.name}:{event}{tag}", str(SETTINGS), 0, name)
+                    for name in sorted(set(names))
+                ]
+    return found
+
+
+def _shell_files(root: Path) -> list[Path]:
+    """List the shell files of a repo: `*.sh`, and every file in a directory named `bin`.
+
+    Returns:
+        the paths, sorted; a link is left out and the corpus walk's exclusions apply.
+
+    """
+    found: list[Path] = []
+    for directory, _dirs, files in os.walk(root):
+        here = Path(directory)
+        if corpus.excluded(here.relative_to(root)):
+            continue
+        found += [
+            here / name
+            for name in files
+            if (name.endswith(".sh") or here.name == "bin") and not (here / name).is_symlink()
+        ]
+    return sorted(found)
+
+
+def shell_edges(root: Path) -> list[Edge]:
+    """List the `mikemol-*` and `nemik-*` names on the non-comment lines of the shell files.
+
+    Returns:
+        one edge per name and line, a file's own name left out.
+
+    """
+    found: list[Edge] = []
+    for path in _shell_files(root):
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError):
+            continue
+        source, rel = source_of(root, path), str(path.relative_to(root))
+        for number, line in enumerate(lines, start=1):
+            if line.lstrip().startswith("#"):
+                continue
+            found += [
+                Edge("shell", source, rel, number, name)
+                for name in _names(line)
+                if name != path.name
+            ]
+    return found
+
+
 def derive(roots: Sequence[Path], mention: str | None = None) -> list[Edge]:
-    """Derive every edge of every Python file under each repo root.
+    """Derive every edge of every Python and shell file under each repo root.
 
     ⚑ NO LINK IS READ: a symlinked file is skipped (operator 2026-10-02).
 
@@ -246,6 +350,7 @@ def derive(roots: Sequence[Path], mention: str | None = None) -> list[Edge]:
                 found += _literals(tree, source, rel)
             if mention is not None:
                 found += _mentions(path, mention, source, rel)
+        found += hook_edges(root) + shell_edges(root)
     return found
 
 

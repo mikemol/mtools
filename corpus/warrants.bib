@@ -414,3 +414,31 @@
   claim  = {Each usage error exits 2 and prints the usage line, and prints no map.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_main_refuses_a_missing_root_a_dangling_mention_and_a_non_directory},
 }
+
+@misc{corpus-depmap-tool-constant-is-an-edge-and-the-same-name-in-a-docstring-is-not,
+  section = {depmap},
+  title  = {`mikemol-fence` is a string constant in b.py; `mikemol-skipped` is its docstring},
+  claim  = {`mikemol-fence` is a string constant in b.py; `mikemol-skipped` is its docstring.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_tool_constant_is_an_edge_and_the_same_name_in_a_docstring_is_not},
+}
+
+@misc{corpus-depmap-hook-command-is-read-with-its-event-and-matcher,
+  section = {depmap},
+  title  = {Both names in the Bash command belong to `PreToolUse[Bash]`; the other has no matcher},
+  claim  = {Both names in the Bash command belong to `PreToolUse[Bash]`; the other has no matcher.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_hook_command_is_read_with_its_event_and_matcher},
+}
+
+@misc{corpus-depmap-settings-that-are-absent-or-not-json-name-no-hook,
+  section = {depmap},
+  title  = {The control for the hook reader: no file, and a file that is not JSON, give no edge},
+  claim  = {The control for the hook reader: no file, and a file that is not JSON, give no edge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_settings_that_are_absent_or_not_json_name_no_hook},
+}
+
+@misc{corpus-depmap-shell-wrapper-names-what-it-runs-and-not-a-comment-or-itself,
+  section = {depmap},
+  title  = {`nemik-check` is run on line 3; the comment's name and the wrapper's own name are not},
+  claim  = {`nemik-check` is run on line 3; the comment's name and the wrapper's own name are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_shell_wrapper_names_what_it_runs_and_not_a_comment_or_itself},
+}
