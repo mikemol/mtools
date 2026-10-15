@@ -91,7 +91,15 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--spool-dir", type=Path)
     parser.add_argument("--max-lines", type=int)
     parser.add_argument("--max-bytes", type=int)
-    parser.add_argument("--message-key", default=vlogrecord.DEFAULT_MESSAGE_KEY)
+    parser.add_argument(
+        "--message-key",
+        default=vlogrecord.DEFAULT_MESSAGE_KEY,
+        help=(
+            "the JSON key that holds the log message (default 'message'); a line whose message "
+            "is under another key is shipped whole as _msg, so a caller whose records are already "
+            "VictoriaLogs-shaped passes --message-key _msg"
+        ),
+    )
     parser.add_argument("--time-key")
     parser.add_argument("--stamp", help="a [stamps.NAME] kind that reads the time out of a line")
     parser.add_argument("--unit", default="s", choices=UNITS)
