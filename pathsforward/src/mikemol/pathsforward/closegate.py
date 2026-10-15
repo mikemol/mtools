@@ -89,7 +89,9 @@ def tick_start(state: State, ledger: Path | None) -> str:
     stamps = [
         found.stamp
         for found in (read(ledger) if ledger is not None and ledger.is_file() else [])
-        if isinstance(found, Parsed) and found.entry.kind == "tick"
+        if isinstance(found, Parsed)
+        and found.entry.kind == "tick"
+        and found.entry.outcome != "minted"
     ]
     if stamps:
         return stamps[-1]

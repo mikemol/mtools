@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1299,
+  "counter": 1301,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-15T20:38:30Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -26661,7 +26656,7 @@
     {
       "symbol": "W1298",
       "title": "A bazel test target runs exitcensus --baseline over the sibling dists' src trees, which needs each dist to export its src files to corpus",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1295"
       ],
@@ -26670,14 +26665,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After W1295 step 1: find how another cross-dist test reads sibling sources (hooks test_bar_fires exports pyproject), export each dist's src py files, add the corpus target with the baseline as data",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools 096bdac (pushed): //corpus:test_exit_gate over fence, pathsforward, hooks, katas runfiles; positive control and baseline arms; green under bazel.",
       "issued_at": "2026-10-15T20:17:38Z",
       "minted_during": "tick",
       "caused_by": "W1295",
-      "last_worked": "2026-10-15T20:38:36Z",
+      "last_worked": "2026-10-15T20:48:06Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T204806Z"
     },
     {
       "symbol": "W1299",
@@ -26699,6 +26694,47 @@
       "last_worked": "2026-10-15T20:37:45Z",
       "ticks_blocked": 0,
       "completed": "20261015T203745Z"
+    },
+    {
+      "symbol": "W1300",
+      "title": "Find every reader of the pycheck family's exit values (pycheck_cli, pycheck_install, pycheck_clear, pycheck_format) in code, hooks and prose, then move REFUSED 1 to 4 and NOT_CHECKED, NOT_RUN to 3 with those readers in one commit, shrinking the baseline",
+      "status": "ready",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Search hooks, katas, .claude settings and design notes for the pycheck verbs next to returncode or exit words, list readers with file and line, record on this card, then write the move",
+      "evidence": "",
+      "issued_at": "2026-10-15T20:39:42Z",
+      "minted_during": "tick",
+      "caused_by": "W1266",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1301",
+      "title": "The tick start ignores minted ledger lines: a card minted in the tick is a kind tick line and reset the start to the close, so this tick's tally printed 0",
+      "status": "working",
+      "enables": [
+        "W1203"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In closegate.tick_start skip entries whose outcome is minted; add to the fixture a minted line after the last close and expect the same count",
+      "evidence": "",
+      "issued_at": "2026-10-15T20:40:04Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1292",
+      "last_worked": "2026-10-15T20:40:07Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

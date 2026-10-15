@@ -243,6 +243,7 @@ def test_cards_worked_before_a_close_time_lock_count_from_the_last_tick_line(
     ledger = tmp_path / "paths-forward.ledger"
     older = '2026-10-15T08:00:00Z  tick  W8  advanced  unblock  "older"\n'
     previous = '2026-10-15T10:00:00Z  tick  W9  advanced  unblock  "before"\n'
-    ledger.write_text(older + previous, encoding="utf-8")
+    minted = '2026-10-15T11:59:00Z  tick  W7  minted  -  "a card minted late in this tick"\n'
+    ledger.write_text(older + previous + minted, encoding="utf-8")
     assert cli.main(["--state", str(path), "--close-gate"]) == _REFUSED
     assert "this tick advanced 2" in capsys.readouterr().out
