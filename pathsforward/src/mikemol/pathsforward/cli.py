@@ -61,6 +61,7 @@ from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
+from mikemol.pathsforward.lift import lift as lift_row
 from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, RefusedError, text
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
@@ -73,6 +74,7 @@ if TYPE_CHECKING:
 
     from mikemol.pathsforward.model import Json, State
 
+LIFT_ROW = lift_row
 CLOSE_JUDGE = judge_close
 REJECT_ADVICE = reject_advice
 EXIT_OK = 0
@@ -223,6 +225,51 @@ def _close_umbrellas(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _lift(ctx: Ctx) -> int:
+    """Lift the one held row a signed operator ruling names (W1277, W1194).
+
+    ⚑ THE SIGNATURE IS THE ONLY AUTHORITY: `--lift JWS --jwk FILE` verifies the compact JWS against
+    the operator's public key through the pinned opa and changes exactly the row its signed payload
+    names, and only when that row is held on the operator (see `lift`). Anything else, including a
+    missing or unreadable key, an absent opa, a bad signature or a row that is not held, is refused
+    with nothing saved; an opa that cannot run is a refusal, never a pass.
+
+    Returns:
+        EXIT_OK after the lift.
+
+    Raises:
+        RefusedError: on a missing or non-regular key file, no usable opa, or any refusal of
+            `lift`.
+
+    """
+    named = ctx.get("jwk")
+    if named is None:
+        msg = "--lift needs --jwk FILE, the operator's public key"
+        raise RefusedError(msg)
+    key = Path(named)
+    if key.is_symlink() or not key.is_file():
+        msg = f"--jwk {named} is not a regular file"
+        raise RefusedError(msg)
+    jwk = key.read_text(encoding="utf-8")
+    try:
+        opa = opa_eval.resolve()
+    except opa_eval.OpaUnavailableError as exc:
+        raise RefusedError(str(exc)) from exc
+
+    def verify(token: str, public: str) -> bool:
+        try:
+            return opa_eval.verify_eddsa(token, public, opa)
+        except opa_eval.OpaUnavailableError as exc:
+            raise RefusedError(str(exc)) from exc
+
+    def edit(state: State) -> int:
+        sym = LIFT_ROW(state, ctx.get("lift") or "", jwk, verify, ctx.stamp())
+        _say(f"LIFTED {sym}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
     """Give an update the (path, sha256) of the file `--attach` names, resolved under the root.
 
@@ -287,6 +334,7 @@ _VALUED = (
     "gate_note",
     "block_matching",
     "update_many",
+    "lift",
 )
 _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # ⚑⚑ `-`, NOT A BARE `--`: NO_SYMBOL (model.py) is literally "--", and argparse consumes a bare
@@ -324,6 +372,7 @@ _FIELDS = (
     "weight",
     "witness",
     "witness_lang",
+    "jwk",
     "vector",
     "vector_source",
     "dtstart",
@@ -425,6 +474,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "tick_open": frozenset({"root", "exclude", "verbose"}),
     "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote"}),
     "close_gate": frozenset({"blocked_by", "reason"}),
+    "lift": frozenset({"jwk"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
     "certify": frozenset({"root", "facts"}),
@@ -558,6 +608,21 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         help="W1245: --tick-close: set this ready card working, refused while another is",
     )
     _add_realizable_fields(ap)
+    _add_signoff_fields(ap)
+
+
+def _add_signoff_fields(ap: argparse.ArgumentParser) -> None:
+    """Add the flags that declare a witness's language and name the operator's public key."""
+    ap.add_argument(
+        "--witness-lang",
+        metavar="LANG",
+        help="--add/--update: the witness's language, declared: rego or promql (W1260)",
+    )
+    ap.add_argument(
+        "--jwk",
+        metavar="FILE",
+        help="W1277: --lift: the operator's public key as a JWK file (OKP, Ed25519)",
+    )
 
 
 def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
@@ -733,6 +798,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     mode.add_argument("--show", metavar="SYMBOL", help="what is W<n>")
     mode.add_argument(
+        "--lift",
+        metavar="JWS",
+        help="W1277: lift the one held row a signed operator ruling names; needs --jwk FILE",
+    )
+    mode.add_argument(
         "--commit-message",
         metavar="SYMBOL",
         help="print a draft commit message for a live waypoint (W493); writes nothing",
@@ -804,11 +874,6 @@ def _parser() -> argparse.ArgumentParser:
     ap.add_argument("--touches", action="extend", nargs="+", metavar="TAG")
     ap.add_argument(
         "--witness", metavar="QUERY", help="--add/--update: a one-line query, stored unread"
-    )
-    ap.add_argument(
-        "--witness-lang",
-        metavar="LANG",
-        help="--add/--update: the witness's language, declared: rego or promql (W1260)",
     )
     ap.add_argument(
         "--vector", metavar="WV", help="--update: a WV:1 vector (W248); with --vector-source"
@@ -2266,6 +2331,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
     "close_umbrellas": _close_umbrellas,
+    "lift": _lift,
     "inbound": _inbound,
     "ledger": _ledger_mode,
     "show": _show,

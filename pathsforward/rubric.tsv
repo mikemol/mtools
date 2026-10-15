@@ -62,3 +62,4 @@ tick_close_promote	The tick closer promotes the next card to working (W1245)
 vtodo_golden	The iCalendar writer's output is pinned to a tracked golden file
 witness_lang	A witness declares its language, Rego or PromQL, with the query
 lift	A signed operator ruling lifts exactly one held row
+lift_cli	--lift takes a signed ruling and the operator's public key

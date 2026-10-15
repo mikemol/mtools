@@ -4992,3 +4992,38 @@
   claim  = {Sorted keys, no spaces: one ruling, one byte string; and payload_of reads it back.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_the_signing_input_is_canonical_and_reads_back_as_the_same_payload},
 }
+
+@misc{pathsforward-lift-cli-valid-ruling-lifts-the-held-row-from-the-command-line,
+  section = {lift_cli},
+  title  = {W1 goes done under the operator's key and says LIFTED; W2 is untouched},
+  claim  = {W1 goes done under the operator's key and says LIFTED; W2 is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_a_valid_ruling_lifts_the_held_row_from_the_command_line},
+}
+
+@misc{pathsforward-lift-cli-ruling-signed-by-another-key-is-refused-and-the-queue-is-unchanged,
+  section = {lift_cli},
+  title  = {The stranger's signature does not verify under the operator's key: exit 2, same bytes},
+  claim  = {The stranger's signature does not verify under the operator's key: exit 2, same bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_a_ruling_signed_by_another_key_is_refused_and_the_queue_is_unchanged},
+}
+
+@misc{pathsforward-lift-cli-row-that-is-not-held-is-refused-even-under-a-valid-signature,
+  section = {lift_cli},
+  title  = {W2 is ready: the operator's own key cannot lift what was never held},
+  claim  = {W2 is ready: the operator's own key cannot lift what was never held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_a_row_that_is_not_held_is_refused_even_under_a_valid_signature},
+}
+
+@misc{pathsforward-lift-cli-missing-key-a-key-that-is-not-a-file-and-an-opa-that-cannot-run-are-refusals,
+  section = {lift_cli},
+  title  = {No --jwk, a directory for --jwk, and no usable opa each exit 2 with nothing saved},
+  claim  = {No --jwk, a directory for --jwk, and no usable opa each exit 2 with nothing saved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_a_missing_key_a_key_that_is_not_a_file_and_an_opa_that_cannot_run_are_refusals},
+}
+
+@misc{pathsforward-lift-cli-jwk-without-lift-and-lift-with-a-stray-flag-are-refused,
+  section = {lift_cli},
+  title  = {`--lift` takes only --jwk: a field flag beside it is refused by name},
+  claim  = {`--lift` takes only --jwk: a field flag beside it is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_jwk_without_lift_and_lift_with_a_stray_flag_are_refused},
+}
