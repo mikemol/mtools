@@ -10135,3 +10135,25 @@
   claim  = {No arguments, a lone flag and an unknown flag are each a usage error.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_any_other_argument_shape_prints_the_usage_and_exits_two},
 }
+
+@misc{hooks-websubset-cli-census-writes-the-jsonl-and-counts-ledgers-with-named-fields,
+  section = {websubset_cli},
+  title  = {One JSON row per refused construct, and a module-to-count object for those with findings},
+  claim  = {One JSON row per refused construct, and a module-to-count object for those with
+            findings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_census_writes_the_jsonl_and_counts_ledgers_with_named_fields},
+}
+
+@misc{hooks-websubset-cli-clean-census-still-writes-empty-ledgers,
+  section = {websubset_cli},
+  title  = {An empty jsonl and an empty object: the ledger says the census ran and found nothing},
+  claim  = {An empty jsonl and an empty object: the ledger says the census ran and found nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_a_clean_census_still_writes_empty_ledgers},
+}
+
+@misc{hooks-websubset-cli-ledger-flag-without-census-or-repeated-is-a-usage-error,
+  section = {websubset_cli},
+  title  = {`--jsonl` has no meaning beside `--check-file`, and a repeated flag is ambiguous},
+  claim  = {`--jsonl` has no meaning beside `--check-file`, and a repeated flag is ambiguous.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_a_ledger_flag_without_census_or_repeated_is_a_usage_error},
+}

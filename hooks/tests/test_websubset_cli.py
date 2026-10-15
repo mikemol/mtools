@@ -93,6 +93,46 @@ def test_a_listed_file_that_is_absent_exits_two(
     assert "ghost.py is listed but cannot be read" in capsys.readouterr().err
 
 
+def test_census_writes_the_jsonl_and_counts_ledgers_with_named_fields(tmp_path: Path) -> None:
+    """One JSON row per refused construct, and a module-to-count object for those with findings."""
+    root = _root(tmp_path, "clean.py\ndirty.py\n")
+    rows, counts = tmp_path / "rows.jsonl", tmp_path / "counts.json"
+    argv = ["--census", str(root), "--jsonl", str(rows), "--counts", str(counts)]
+    assert websubset_cli.main(argv) == websubset_cli.EXIT_FINDINGS
+    lines = rows.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == len(("eval-exec", "unannotated", "unannotated"))
+    assert (
+        '{"module": "dirty.py", "line": 2, "rule": "eval-exec", '
+        '"message": "`eval` runs code built at run time"}'
+    ) in lines
+    assert not any("clean.py" in line for line in lines)
+    assert counts.read_text(encoding="utf-8") == '{"dirty.py": 3}\n'
+    assert not (tmp_path / ".rows.jsonl.tmp").exists()
+
+
+def test_a_clean_census_still_writes_empty_ledgers(tmp_path: Path) -> None:
+    """An empty jsonl and an empty object: the ledger says the census ran and found nothing."""
+    root = _root(tmp_path, "clean.py\n")
+    rows, counts = tmp_path / "rows.jsonl", tmp_path / "counts.json"
+    argv = ["--census", str(root), "--jsonl", str(rows), "--counts", str(counts)]
+    assert websubset_cli.main(argv) == _OK
+    assert not rows.read_text(encoding="utf-8")
+    assert counts.read_text(encoding="utf-8") == "{}\n"
+
+
+def test_a_ledger_flag_without_census_or_repeated_is_a_usage_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--jsonl` has no meaning beside `--check-file`, and a repeated flag is ambiguous."""
+    target = str(tmp_path / "x.jsonl")
+    beside = websubset_cli.main(["--check-file", "a.py", "--jsonl", target])
+    assert beside == websubset_cli.EXIT_USAGE
+    again = ["--census", str(tmp_path), "--jsonl", target, "--jsonl", target]
+    assert websubset_cli.main(again) == websubset_cli.EXIT_USAGE
+    assert capsys.readouterr().err.count("usage:") == len(("check-file", "repeated"))
+    assert not (tmp_path / "x.jsonl").exists()
+
+
 def test_any_other_argument_shape_prints_the_usage_and_exits_two(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
