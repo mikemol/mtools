@@ -58,3 +58,4 @@ frontier_copy	Frontier walk copy
 tick_close_gate	The tick closer refuses while a ready unblocked card exists (W1203)
 advice	Dry-run advice recorded once
 closeumbrellas	Closing umbrellas whose children are done
+tick_close_promote	The tick closer promotes the next card to working (W1245)

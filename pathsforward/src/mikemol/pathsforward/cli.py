@@ -320,6 +320,7 @@ _FIELDS = (
     "evidence",
     "blocked_by",
     "reason",
+    "promote",
     "weight",
     "witness",
     "vector",
@@ -417,7 +418,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "close_umbrellas": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
-    "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason"}),
+    "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote"}),
     "close_gate": frozenset({"blocked_by", "reason"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
@@ -545,6 +546,11 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         "--reason",
         metavar="TEXT",
         help="W1203: --tick-close with ready cards left: why, citing a card of this queue",
+    )
+    ap.add_argument(
+        "--promote",
+        metavar="SYMBOL",
+        help="W1245: --tick-close: set this ready card working, refused while another is",
     )
     _add_realizable_fields(ap)
 
@@ -1336,10 +1342,49 @@ def _tick_close(ctx: Ctx) -> int:
     except ops.RefusedError as exc:
         _warn(f"not ledgered: {exc}")
         code = EXIT_REFUSED
-    for step in (_prune_landed, _render, _check, _unlock):
+    for step in (_promote, _prune_landed, _render, _check, _unlock):
         result = step(closing)
         code = code or result
     return code
+
+
+def _promote(ctx: Ctx) -> int:
+    """Set the card `--promote` names working, as part of the close (W1245, W1080).
+
+    ⚑ ONE WORKING CARD: nemik warns on none and on two, so the close that frees the lock also names
+    the next card. It is refused while another card is working (finish or mark that one first), and
+    for a card that is not ready: promoting a blocked card would work what cannot be worked.
+
+    Returns:
+        EXIT_OK (also when `--promote` is not given), or EXIT_REFUSED.
+
+    """
+    sym = ctx.get("promote")
+    if sym is None:
+        return EXIT_OK
+
+    def edit(state: State) -> int:
+        busy = [
+            text(w, "symbol")
+            for w in state.waypoints
+            if text(w, "status") == _WORKING and text(w, "symbol") != sym
+        ]
+        if busy:
+            msg = f"--promote {sym}: {', '.join(busy)} is already working"
+            raise RefusedError(msg)
+        status = text(ops.find(state, sym), "status")
+        if status not in {"ready", _WORKING}:
+            msg = f"--promote {sym}: it is {status}, not ready"
+            raise RefusedError(msg)
+        ops.update(state, sym, ops.Update(status=_WORKING), ctx.stamp())
+        _say(f"PROMOTED {sym} to working")
+        return EXIT_OK
+
+    try:
+        return _mutate(ctx, edit)
+    except RefusedError as exc:
+        _warn(f"not promoted: {exc}")
+        return EXIT_REFUSED
 
 
 def _close_gate(ctx: Ctx) -> int:
