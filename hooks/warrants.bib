@@ -9943,3 +9943,45 @@
   claim  = {The shell hands `--must-have` and `--check-must-have` over with the --mtools directory.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_repin_main_routes_the_must_have_modes_to_the_verb},
 }
+
+@misc{hooks-repin-measure-wheel-lacking-a-fix-that-names-its-dist-is-behind-and-another-dists-fix-is-not,
+  section = {musthave},
+  title  = {The hooks fix is missing, so hooks is behind by it; the fence fix is not hooks' concern},
+  claim  = {The hooks fix is missing, so hooks is behind by it; the fence fix is not hooks' concern.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_a_wheel_lacking_a_fix_that_names_its_dist_is_behind_and_another_dists_fix_is_not},
+}
+
+@misc{hooks-repin-measure-pin-git-cannot-resolve-is-not-measured,
+  section = {musthave},
+  title  = {An unknown commit gives None, so no claim is made that it is current or behind},
+  claim  = {An unknown commit gives None, so no claim is made that it is current or behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_a_pin_git_cannot_resolve_is_not_measured},
+}
+
+@misc{hooks-repin-measure-survey-measures-only-the-vendored-wheel,
+  section = {musthave},
+  title  = {The wheel row carries its missing fixes; the git row keeps its status and has none},
+  claim  = {The wheel row carries its missing fixes; the git row keeps its status and has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_survey_measures_only_the_vendored_wheel},
+}
+
+@misc{hooks-repin-measure-metrics-say-behind-for-a-lacking-wheel-and-nothing-when-not-measured,
+  section = {musthave},
+  title  = {1 plus a missing_fix series for the lacking wheel; 0 when whole; absent when unmeasured},
+  claim  = {1 plus a missing_fix series for the lacking wheel; 0 when whole; absent when unmeasured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_the_metrics_say_behind_for_a_lacking_wheel_and_nothing_when_not_measured},
+}
+
+@misc{hooks-repin-measure-main-reads-the-list-at-par-and-publishes-the-measurement,
+  section = {musthave},
+  title  = {With a par sha and a metrics file the wheel is measured and its fix is a series},
+  claim  = {With a par sha and a metrics file the wheel is measured and its fix is a series.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_main_reads_the_list_at_par_and_publishes_the_measurement},
+}
+
+@misc{hooks-repin-measure-fixes-are-read-at-the-par-commit-and-no-list-there-means-no-measurement,
+  section = {musthave},
+  title  = {`git show PAR:file` supplies the entries; a failing show is a reason, not an empty list},
+  claim  = {`git show PAR:file` supplies the entries; a failing show is a reason, not an empty list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_measure.py -k test_the_fixes_are_read_at_the_par_commit_and_no_list_there_means_no_measurement},
+}

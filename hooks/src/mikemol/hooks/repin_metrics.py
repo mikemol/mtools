@@ -90,13 +90,40 @@ def render(rows: Iterable[Row], root: str, par: str | None, scanned: int | None 
         for r in census
     ]
     if par is not None:
-        out += _header("behind_par", "1 when a git pin differs from the par sha, else 0")
+        out += _header(
+            "behind_par",
+            "1 when a git pin differs from the par sha or a vendored wheel lacks a must-have fix, "
+            "else 0",
+        )
         out += [
-            _series("behind_par", {"repo": r.repo, "dist": r.dist}, int(r.status == _DIFFERS))
+            _series("behind_par", {"repo": r.repo, "dist": r.dist}, value)
             for r in census
-            if r.status not in {_VENDORED, _UNKNOWN}
+            if (value := _behind(r)) is not None
+        ]
+        out += _header("missing_fix", "1 for each must-have fix a vendored wheel's commit lacks")
+        out += [
+            _series("missing_fix", {"repo": r.repo, "dist": r.dist, "fix": fix[:12]}, 1)
+            for r in census
+            for fix in r.missing or ()
         ]
     return "\n".join(out) + "\n"
+
+
+def _behind(row: Row) -> int | None:
+    """Say whether a pin is behind: by ancestry for a measured wheel, by sha for a git pin.
+
+    ⚑ A WHEEL NOT MEASURED, AND A PIN WITH NO TARGET, ARE NOT CLAIMED CURRENT: both are None, so no
+    series says 0 about a commit nothing was compared with.
+
+    Returns:
+        1 or 0, or None when there is no measurement to report.
+
+    """
+    if row.missing is not None:
+        return int(bool(row.missing))
+    if row.status in {_VENDORED, _UNKNOWN}:
+        return None
+    return int(row.status == _DIFFERS)
 
 
 def publish(path: Path, text: str) -> None:

@@ -41,7 +41,11 @@ def _tree(tmp_path: Path) -> Path:
 
 
 def _run(root: Path, out: Path, *extra: str) -> list[str]:
-    assert repin_cli.main(["--root", str(root), "--metrics", str(out), *extra]) == 0
+    # ⚑ --mtools NAMES A DIRECTORY THAT IS NOT A CHECKOUT, so a run never reads the host's real
+    # ~/github/mtools: there c3ca6d2 was measured and a 0 written where this expects none.
+    nowhere = str(out.parent / "no-mtools")
+    argv = ["--root", str(root), "--metrics", str(out), "--mtools", nowhere, *extra]
+    assert repin_cli.main(argv) == 0
     return out.read_text(encoding="utf-8").splitlines()
 
 

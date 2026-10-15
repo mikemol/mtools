@@ -123,8 +123,10 @@ src/mikemol/hooks/loadwait.py|wait-ignores-limit|while load >= limit and waited 
 src/mikemol/hooks/loadwait.py|gave-up-unsaid|ending = "going ahead anyway" if load >= limit else "load fell"|ending = "load fell"|def=wait_for_load
 src/mikemol/hooks/loadwait.py|quiet-host-prints|if waited == 0:|if waited == -1:|def=wait_for_load
 src/mikemol/hooks/loadwait.py|off-by-default|if limit <= 0:|if limit < 0:|def=wait_for_load
-src/mikemol/hooks/repin_metrics.py|differs-not-behind|int\(r\.status == _DIFFERS\)|int(r.status != _DIFFERS)|def=render
-src/mikemol/hooks/repin_metrics.py|vendored-counted-behind|if r\.status not in \{_VENDORED, _UNKNOWN\}|if True|def=render
+src/mikemol/hooks/repin_metrics.py|differs-not-behind|return int\(row\.status == _DIFFERS\)|return int(row.status != _DIFFERS)|def=_behind
+src/mikemol/hooks/repin_metrics.py|vendored-counted-behind|if row\.status in \{_VENDORED, _UNKNOWN\}:|if False:|def=_behind
+src/mikemol/hooks/repin_metrics.py|wheel-lacking-a-fix-not-behind|return int\(bool\(row\.missing\)\)|return 0|def=_behind
+src/mikemol/hooks/musthave.py|another-dists-fix-counted|if dist not in \(_strings\(entry\.get\("dists"\)\) or \[\]\):|if False:|def=missing_for
 src/mikemol/hooks/repin_metrics.py|label-unescaped|value = value\.replace\(raw, escaped\)|value = value|def=_label
 src/mikemol/hooks/repin_metrics.py|publish-not-atomic|scratch\.replace\(path\)|path.write_text(text, encoding="utf-8")|def=publish
 src/mikemol/hooks/repin_metrics.py|scan-time-dropped|if scanned is not None:|if False:|def=render

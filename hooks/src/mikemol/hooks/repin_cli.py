@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import repin
+from mikemol.hooks import musthave, repin
 from mikemol.hooks.musthave_cli import run as run_must_have
 from mikemol.hooks.repin_metrics import publish, render
 from mikemol.hooks.revendor_cli import run_revendor
@@ -46,6 +46,8 @@ _PUBLISH = publish
 _RENDER = render
 _REVENDOR = run_revendor
 _MUST_HAVE = run_must_have
+_FIXES_AT = musthave.at_commit
+_MISSING = musthave.missing_for
 _USAGE = (
     "usage: mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--metrics FILE] [--write]"
     " [--no-sync]\n"
@@ -71,13 +73,19 @@ _FLAGS = frozenset({"--write", "--no-sync", "--revendor", "--check-must-have"})
 
 @dataclass(frozen=True)
 class Row:
-    """One pin in one repo and how it stands against the target."""
+    """One pin in one repo and how it stands against the target.
+
+    `missing` is the must-have fixes a vendored pin lacks by commit ancestry (W1138): None when it
+    was not measured (no par, or the pin is not a commit in the mtools history), an empty tuple
+    when it has them all.
+    """
 
     repo: str
     dist: str
     form: str
     pinned: str
     status: str
+    missing: tuple[str, ...] | None = None
 
     def line(self) -> str:
         """Render the row as one tab-separated line.
@@ -142,8 +150,17 @@ def _status(pin: repin.Pin, target: str | None) -> str:
     return "SAME" if repin.same(pin.sha, target) else "DIFFERS"
 
 
-def survey(root: Path, target: str | None, dists: frozenset[str] | None) -> list[Row]:
+def survey(
+    root: Path,
+    target: str | None,
+    dists: frozenset[str] | None,
+    measure: Callable[[repin.Pin], tuple[str, ...] | None] | None = None,
+) -> list[Row]:
     """Read every repo's pins.
+
+    ⚑ `measure` JUDGES A VENDORED WHEEL BY ANCESTRY (W1138): a wheel's sha is not a git pin to
+    compare with the par sha, but it is a commit, so it is measured against the must-have fixes.
+    Git pins keep their SAME or DIFFERS status and carry no measurement.
 
     Returns:
         one Row per pin of a selected dist, repos in name order and pins in file order.
@@ -153,7 +170,14 @@ def survey(root: Path, target: str | None, dists: frozenset[str] | None) -> list
     for repo in repos(root):
         text = (repo / "pyproject.toml").read_text(encoding="utf-8")
         rows.extend(
-            Row(repo.name, pin.dist, pin.form, pin.sha, _status(pin, target))
+            Row(
+                repo.name,
+                pin.dist,
+                pin.form,
+                pin.sha,
+                _status(pin, target),
+                measure(pin) if measure is not None and pin.form == repin.WHEEL else None,
+            )
             for pin in repin.find(text)
             if dists is None or pin.dist in dists
         )
@@ -240,6 +264,32 @@ def _refusal(target: str | None, *, write: bool) -> str | None:
     return None
 
 
+def _measure(
+    par: str | None, mtools: Path, runner: Runner
+) -> Callable[[repin.Pin], tuple[str, ...] | None] | None:
+    """Build the ancestry measurement of a vendored pin against the par commit's must-have list.
+
+    ⚑ NO PAR, NO MEASUREMENT: the list is read at a commit, so without one nothing is claimed. A
+    list that cannot be read is said on standard error and the census goes on unmeasured.
+
+    Returns:
+        a function from a pin to the fixes it lacks (None when the pin is not a commit in the
+        history), or None when there is nothing to measure against.
+
+    """
+    if par is None:
+        return None
+    fixes = _FIXES_AT(par, mtools, runner)
+    if isinstance(fixes, str):
+        sys.stderr.write(f"mikemol-repin: {fixes}\n")
+        return None
+
+    def measure(pin: repin.Pin) -> tuple[str, ...] | None:
+        return _MISSING(pin.sha, pin.dist, fixes, mtools, runner)
+
+    return measure
+
+
 def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int:
     """Survey, or with `--write` repin, every repo under the root.
 
@@ -269,7 +319,8 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
     if refusal is not None:
         sys.stderr.write(f"mikemol-repin: {refusal}\n")
         return EXIT_USAGE
-    rows = survey(root, par, dists)
+    mtools_dir = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])
+    rows = survey(root, par, dists, _measure(par, mtools_dir, runner))
     sys.stdout.write("".join(f"{row.line()}\n" for row in rows))
     if metrics is not None:
         _PUBLISH(Path(metrics), _RENDER(rows, str(root), par, int(_NOW())))

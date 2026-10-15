@@ -154,6 +154,61 @@ def add(
     return [*merged, fresh], "added"
 
 
+def at_commit(commit: str, mtools: Path, runner: Runner) -> list[Entry] | str:
+    """Read the fixes list as it stood at a commit, never from the working tree (W1138).
+
+    ⚑ AN UNCOMMITTED ENTRY NEVER COUNTS: the list is read with `git show COMMIT:<file>`, so a pin
+    is measured against fixes a consumer can actually fetch.
+
+    ⚑ NO LIST AT THE COMMIT IS NOT AN EMPTY LIST: a par older than the file, or a checkout
+    that cannot show it, gives a reason and so no measurement. Reading it as "no fixes
+    required" would write a 0 (current) for every wheel against a list nobody could read.
+
+    Returns:
+        the entries, or the reason they cannot be read.
+
+    """
+    status, said = runner(["git", "show", f"{commit}:{FILE.as_posix()}"], mtools)
+    if status != 0:
+        return f"{FILE} cannot be read at {commit[:12]}: wheels are not measured"
+    try:
+        raw = cast("object", json.loads(said))
+    except ValueError as exc:
+        return f"{FILE} at {commit[:12]} is not JSON: {exc}"
+    if not isinstance(raw, list) or not all(isinstance(e, dict) for e in cast("list[object]", raw)):
+        return f"{FILE} at {commit[:12]} is not a JSON list of objects"
+    return cast("list[Entry]", raw)
+
+
+def missing_for(
+    pin: str, dist: str, entries: Sequence[Entry], mtools: Path, runner: Runner
+) -> tuple[str, ...] | None:
+    """List the fixes a pin of a distribution does not contain, by commit ancestry.
+
+    ⚑ ONLY FIXES THAT NAME THE DIST COUNT: a fence fix does not make a hooks-only pin behind.
+    ⚑ A PIN GIT CANNOT RESOLVE IS NOT MEASURED, which is None and never "current": no claim is made
+    about a commit that is not in this history.
+
+    Returns:
+        the shas of the fixes that are not ancestors of the pin (empty when it has them all), or
+        None when the pin is not a commit in the mtools history.
+
+    """
+    if runner(["git", "cat-file", "-e", f"{pin}^{{commit}}"], mtools)[0] != 0:
+        return None
+    absent: list[str] = []
+    for entry in entries:
+        if dist not in (_strings(entry.get("dists")) or []):
+            continue
+        fix = _sha_of(entry)
+        status, _said = runner(["git", "merge-base", "--is-ancestor", fix, pin], mtools)
+        if status == 1:
+            absent.append(fix)
+        elif status != 0:
+            return None
+    return tuple(absent)
+
+
 def history_problems(entries: Sequence[Entry], repo: Path, runner: Runner) -> list[str]:
     """Say which shas are not commits in the repository's history.
 
