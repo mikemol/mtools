@@ -28,13 +28,12 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.pkgbuild import names
+from mikemol.pkgbuild import names, repos
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-OWNER = "mikemol"
-REPOSITORY = "mtools"
+CURRENT = repos.Layout(repos.DEFAULT, {})
 WORKFLOW = "publish.yml"
 INDEXES = {
     "pypi": ("pypi", "https://pypi.org/manage/account/publishing/"),
@@ -42,7 +41,9 @@ INDEXES = {
 }
 FIELDS = ("PyPI Project Name", "Owner", "Repository name", "Workflow name", "Environment name")
 USAGE = 2
-SYNOPSIS = "usage: mikemol-wheel publishers ROOT [--index pypi|testpypi] [--html FILE]\n"
+SYNOPSIS = (
+    "usage: mikemol-wheel publishers ROOT [--index pypi|testpypi] [--html FILE] [--repos FILE]\n"
+)
 STYLE = (
     "body{font:15px system-ui;margin:1.5rem}table{border-collapse:collapse}"
     "td,th{border:1px solid #888;padding:.3rem .5rem;text-align:left}button{margin-left:.4rem}"
@@ -60,8 +61,11 @@ SCRIPT = (
 Row = dict[str, str]
 
 
-def rows_of(root: Path, index: str) -> list[Row]:
+def rows_of(root: Path, index: str, layout: repos.Layout = CURRENT) -> list[Row]:
     """Read one row of field values per dist.
+
+    ⚑ OWNER AND REPOSITORY COME FROM THE LAYOUT (W1220), by the dist's folder name: the default is
+    the current layout, so the rows are unchanged until a layout file says a dist has moved.
 
     Returns:
         the rows, in dist order, each mapping the form's field labels to their values.
@@ -74,7 +78,8 @@ def rows_of(root: Path, index: str) -> list[Row]:
         declared = names.project_name(dist)
         if dist.is_symlink() or declared is None:
             continue
-        values = (names.normalized(declared), OWNER, REPOSITORY, WORKFLOW, environment)
+        place = layout.place(dist.name)
+        values = (names.normalized(declared), place.owner, place.repo, WORKFLOW, environment)
         found.append(dict(zip(FIELDS, values, strict=True)))
     return found
 
@@ -126,7 +131,7 @@ def _options(words: list[str]) -> dict[str, str] | None:
 
     """
     found: dict[str, str] = {}
-    for flag in ("--index", "--html"):
+    for flag in ("--index", "--html", "--repos"):
         if flag in words:
             place = words.index(flag)
             if place + 1 >= len(words):
@@ -153,7 +158,11 @@ def run(args: Sequence[str]) -> int:
     if not (root / ".github" / "workflows" / WORKFLOW).is_file():
         sys.stderr.write(f"publishers: {root}/.github/workflows/{WORKFLOW} does not exist\n")
         return USAGE
-    rows = rows_of(root, index)
+    layout = repos.load(Path(options["--repos"]) if "--repos" in options else None)
+    if isinstance(layout, str):
+        sys.stderr.write(f"publishers: {layout}\n")
+        return USAGE
+    rows = rows_of(root, index, layout)
     if not rows:
         sys.stderr.write("publishers: no dist found\n")
         return USAGE

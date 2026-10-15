@@ -60,6 +60,29 @@ def test_each_dist_gets_the_five_form_values_with_a_normalized_name(
     }
 
 
+def test_a_layout_file_gives_each_dist_its_own_owner_and_repository(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1221: two orgs in one file; the dist it names moves, the other keeps the default."""
+    layout = tmp_path / "repos.toml"
+    layout.write_text('[dist.alpha]\nowner = "mikemol-tools"\nrepo = "alpha"\n', encoding="utf-8")
+    assert publishers.run([str(_root(tmp_path)), "--repos", str(layout)]) == 0
+    first, second = _rows(capsys)
+    assert (first["Owner"], first["Repository name"]) == ("mikemol-tools", "alpha")
+    assert (second["Owner"], second["Repository name"]) == ("mikemol", "mtools")
+
+
+def test_a_malformed_or_missing_layout_file_exits_two_and_names_the_reason(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The control: a bad layout is never read as the default, which would aim a form wrongly."""
+    bad = tmp_path / "repos.toml"
+    bad.write_text("[default]\nowner = 'x'\n", encoding="utf-8")
+    assert publishers.run([str(_root(tmp_path)), "--repos", str(bad)]) == _USAGE
+    assert publishers.run([str(_root(tmp_path / "b")), "--repos", str(tmp_path / "no")]) == _USAGE
+    assert "needs a non-empty owner and repo" in capsys.readouterr().err
+
+
 def test_the_testpypi_index_changes_only_the_environment(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
