@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1298,
+  "counter": 1299,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-15T20:17:27Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -26598,7 +26593,7 @@
     {
       "symbol": "W1295",
       "title": "A gate test runs exitcensus over the fleet's dists and fails on any VIOLATION not in a ratchet baseline of today's, so disagreement with corpus/exit-table.json can only shrink",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1266"
       ],
@@ -26607,14 +26602,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Step 1 (this card): exitcensus --baseline FILE and --write-baseline FILE; new violation or a fixed one still listed exits 1; then W1298 wires a bazel test over the sibling dists' src trees",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools ad31386 (pushed): exitcensus --baseline/--write-baseline, corpus/exit-baseline.txt (13 rows), 3 tests, 3 mutants. The bazel gate over sibling trees is W1298.",
       "issued_at": "2026-10-15T19:50:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1294",
-      "last_worked": "2026-10-15T20:17:38Z",
+      "last_worked": "2026-10-15T20:24:32Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T202432Z"
     },
     {
       "symbol": "W1296",
@@ -26677,6 +26672,27 @@
       "caused_by": "W1295",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1299",
+      "title": "hooks gains rewake.py: age_seconds, should_nudge and REWAKE_S from nemik wake.py lines 64-94, with tests, so luthen imports it and nemik re-exports it",
+      "status": "working",
+      "enables": [
+        "nemik:W549"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Port the pair as a pure module with the clock injected, tests for None, naive and aware stamps, the never-nudged case and the boundary at REWAKE_S, warrants and mutants; then tell nemik-84 the sha",
+      "evidence": "",
+      "issued_at": "2026-10-15T20:22:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W549",
+      "last_worked": "2026-10-15T20:24:32Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

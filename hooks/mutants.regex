@@ -334,3 +334,7 @@ src/mikemol/hooks/vlogcli.py|drain-class-refused-lost|return EXIT_REFUSED if rea
 src/mikemol/hooks/vlogcli.py|drain-exit-forgets-the-class|return drain_class\(done\.reason\)|return 1|def=_drain_now
 src/mikemol/hooks/vlogcli.py|held-tail-exits-clean|if args\.exit_classes and batcher\.blocked and code == 0:|if False:|def=main
 src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run
+
+# The wake-up decision: the boundary is inclusive, a zoneless stamp is UTC, never-nudged is due.
+src/mikemol/hooks/rewake.py|boundary-is-exclusive|now\.timestamp\(\) - last_nudged >= rewake_s|now.timestamp() - last_nudged > rewake_s|def=should_nudge
+src/mikemol/hooks/rewake.py|never-nudged-is-not-due|if last_nudged is None:|if False:|def=should_nudge
