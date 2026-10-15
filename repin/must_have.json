@@ -20,7 +20,9 @@
       "pathsforward"
     ],
     "reason": "--block-behind-open blocks a ready card behind the open cards that enable it",
-    "requires": [],
+    "requires": [
+      "ca6702baac20fabab6d86856d45e27b931b55919"
+    ],
     "sha": "3ded8d155c6fcee635c04e7ed2bd29743d45469b"
   },
   {
