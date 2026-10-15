@@ -536,3 +536,52 @@
             program.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_the_real_runner_returns_status_and_output_and_a_status_when_it_cannot_start},
 }
+
+@misc{pkgbuild-repos-no-file-is-the-current-layout,
+  section = {repos},
+  title  = {With no path every dist is in mikemol/mtools},
+  claim  = {With no path every dist is in mikemol/mtools.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_no_file_is_the_current_layout},
+}
+
+@misc{pkgbuild-repos-dist-is-found-by-name-and-an-unnamed-one-gets-the-default,
+  section = {repos},
+  title  = {Two orgs in one file: each named dist has its own place, the rest the default},
+  claim  = {Two orgs in one file: each named dist has its own place, the rest the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_a_dist_is_found_by_name_and_an_unnamed_one_gets_the_default},
+}
+
+@misc{pkgbuild-repos-distinct-places-are-listed-once-in-first-seen-order,
+  section = {repos},
+  title  = {Four dists, three repositories: the repeated default is listed once},
+  claim  = {Four dists, three repositories: the repeated default is listed once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_the_distinct_places_are_listed_once_in_first_seen_order},
+}
+
+@misc{pkgbuild-repos-file-without-a-default-table-keeps-the-current-default,
+  section = {repos},
+  title  = {Only exceptions listed: the default is still mikemol/mtools},
+  claim  = {Only exceptions listed: the default is still mikemol/mtools.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_a_file_without_a_default_table_keeps_the_current_default},
+}
+
+@misc{pkgbuild-repos-malformed-file-is-refused-with-its-reason,
+  section = {repos},
+  title  = {Not TOML, a table without a repo, and a non-table dist or default are each refused},
+  claim  = {Not TOML, a table without a repo, and a non-table dist or default are each refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_a_malformed_file_is_refused_with_its_reason},
+}
+
+@misc{pkgbuild-repos-unreadable-file-is-refused-not-defaulted,
+  section = {repos},
+  title  = {A path that does not exist is a reason, never the default layout},
+  claim  = {A path that does not exist is a reason, never the default layout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_an_unreadable_file_is_refused_not_defaulted},
+}
+
+@misc{pkgbuild-repos-file-is-read-from-disk,
+  section = {repos},
+  title  = {The text of a real file is parsed},
+  claim  = {The text of a real file is parsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_a_file_is_read_from_disk},
+}
