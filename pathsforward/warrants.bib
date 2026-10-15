@@ -5037,3 +5037,21 @@
             under an existing top directory that is absent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_check.py -k test_a_slash_that_is_not_a_path_is_not_an_evidence_finding},
 }
+
+@misc{pathsforward-tick-close-gate-reason-saying-a-card-needs-a-fresh-session-is-refused-with-atomize,
+  section = {tick_close_gate},
+  title  = {github-8f 2026-10-15: needing a fresh session or more context is an atomize signal},
+  claim  = {github-8f 2026-10-15: needing a fresh session or more context is an atomize signal. The
+            close still cites an open card (W3), which would pass alone; the control is
+            the same close with prose that names no such need.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_a_reason_saying_a_card_needs_a_fresh_session_is_refused_with_atomize},
+}
+
+@misc{pathsforward-tick-close-gate-close-says-how-many-cards-the-tick-advanced,
+  section = {tick_close_gate},
+  title  = {github-8f 2026-10-15: a one-card tick shows in its own output, and a two-card tick differs},
+  claim  = {github-8f 2026-10-15: a one-card tick shows in its own output, and a two-card tick
+            differs. The lock is taken at a stamp before any work; a card whose
+            `last_worked` is at or after it counts, one worked earlier does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_the_close_says_how_many_cards_the_tick_advanced},
+}

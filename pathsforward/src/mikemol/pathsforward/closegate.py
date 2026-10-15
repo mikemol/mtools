@@ -30,6 +30,7 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
+from mikemol.pathsforward import lock
 from mikemol.pathsforward.behindopen import plan
 from mikemol.pathsforward.model import text, workable
 
@@ -38,6 +39,10 @@ if TYPE_CHECKING:
 
 SYMBOL = re.compile(r"\bW\d+\b")
 FOREIGN = re.compile(r"[\w-]+:W\d+")
+FRESH = re.compile(
+    r"fresh (?:claude (?:code )?)?(?:session|context)|more context|new session",
+    re.IGNORECASE,
+)
 TOP = 3
 
 
@@ -64,6 +69,24 @@ def ready_cards(state: State) -> list[str]:
         for w in state.waypoints
         if text(w, "status") == "ready" and workable(w) and text(w, "symbol") not in behind
     ]
+
+
+def advanced(state: State) -> int:
+    """Count the cards worked since the tick took the lock.
+
+    ⚑ A ONE-CARD TICK SHOWS IN ITS OWN OUTPUT (github-8f, 2026-10-15): `last_worked` is stamped on
+    every work update, and both it and the lock's `taken_at` are the writer's UTC stamps, so they
+    compare as strings.
+
+    Returns:
+        the number of cards whose `last_worked` is at or after the lock time (0 when unlocked).
+
+    """
+    held = lock.current(state)
+    since = held[1] if held else ""
+    if not since:
+        return 0
+    return sum(1 for w in state.waypoints if text(w, "last_worked") >= since)
 
 
 def _named(state: State, blocked_by: str | None, reason: str | None, worked: str | None) -> str:
@@ -105,9 +128,14 @@ def judge(
 
     """
     ready = ready_cards(state)
-    count = f"ready and unblocked: {len(ready)}; top: {', '.join(ready[:TOP]) or 'none'}"
+    top = ", ".join(ready[:TOP]) or "none"
+    count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {advanced(state)}"
     if not ready:
         return Verdict(refused=False, lines=(count,), note="")
+    if FRESH.search(reason or ""):
+        card = worked or "the card"
+        why = f"REFUSED: a fresh session or more context is an atomize signal: atomize {card}"
+        return Verdict(refused=True, lines=(count, why), note="")
     note = _named(state, blocked_by, reason, worked)
     if note:
         named = f"closing on a named block ({note})"

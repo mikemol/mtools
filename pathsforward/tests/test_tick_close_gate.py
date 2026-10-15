@@ -179,3 +179,45 @@ def test_a_reason_or_blocker_that_names_no_card_of_the_queue_is_refused(tmp_path
     assert _close(path, "--blocked-by", "W99") == _REFUSED
     assert _close(path, "--blocked-by", "W1") == _REFUSED
     assert _locked(path)
+
+
+def test_a_reason_saying_a_card_needs_a_fresh_session_is_refused_with_atomize(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """github-8f 2026-10-15: needing a fresh session or more context is an atomize signal.
+
+    The close still cites an open card (W3), which would pass alone; the control is the same
+    close with prose that names no such need.
+    """
+    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "ready"), _card("W3", "blocked")])
+    assert _close(path, "--reason", "W2 needs a fresh session; waits on W3") == _REFUSED
+    assert "atomize W1" in capsys.readouterr().out
+    assert _close(path, "--reason", "more context is needed for W2 after W3") == _REFUSED
+    assert _locked(path)
+    assert _close(path, "--reason", "the rest waits on W3") == _OK
+    assert not _locked(path)
+
+
+def test_the_close_says_how_many_cards_the_tick_advanced(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """github-8f 2026-10-15: a one-card tick shows in its own output, and a two-card tick differs.
+
+    The lock is taken at a stamp before any work; a card whose `last_worked` is at or after it
+    counts, one worked earlier does not.
+    """
+    cards = [_card("W1", "working"), _card("W2", "ready"), _card("W3", "ready")]
+    cards[0]["last_worked"] = "2026-10-15T10:00:00Z"
+    cards[1]["last_worked"] = "2026-10-15T12:00:00Z"
+    cards[2]["last_worked"] = "2026-10-14T09:00:00Z"
+    path = _state(tmp_path, cards)
+    doc = cast("Rec", json.loads(path.read_text(encoding="utf-8")))
+    doc["lock"] = {"holder": _HOLDER, "taken_at": "2026-10-15T09:00:00Z"}
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    gate = ["--state", str(path), "--close-gate"]
+    assert cli.main(gate) == _REFUSED
+    assert "this tick advanced 2" in capsys.readouterr().out
+    doc["lock"] = {"holder": _HOLDER, "taken_at": "2026-10-15T11:00:00Z"}
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert cli.main(gate) == _REFUSED
+    assert "this tick advanced 1" in capsys.readouterr().out
