@@ -4,14 +4,10 @@ hooks/src/mikemol/hooks/commit_kata.py EXIT_RACED 4
 hooks/src/mikemol/hooks/flag_contract.py EXIT_REFUSED 2
 hooks/src/mikemol/hooks/new_dist_cli.py EXIT_REFUSED 2
 hooks/src/mikemol/hooks/pycheck_clear.py EXIT_NOT_RUN 3
-hooks/src/mikemol/hooks/pycheck_clear.py EXIT_REFUSED 1
 hooks/src/mikemol/hooks/pycheck_cli.py EXIT_NOT_CHECKED 3
-hooks/src/mikemol/hooks/pycheck_cli.py EXIT_REFUSED 1
 hooks/src/mikemol/hooks/pycheck_format.py EXIT_NOT_RUN 3
 hooks/src/mikemol/hooks/pycheck_install.py EXIT_NOT_CHECKED 3
-hooks/src/mikemol/hooks/pycheck_install.py EXIT_REFUSED 1
 hooks/src/mikemol/hooks/stackrun.py EXIT_RACED 4
 hooks/src/mikemol/hooks/vlogcli.py EXIT_BUSY 5
-hooks/src/mikemol/hooks/websubset_cli.py EXIT_FINDINGS 1
 hooks/src/mikemol/hooks/work_claims_hook.py EXIT_REFUSED 3
 pathsforward/src/mikemol/pathsforward/cli.py EXIT_REFUSED 2

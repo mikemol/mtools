@@ -33,7 +33,7 @@ from mikemol.hooks import websubset, websubset_list
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-EXIT_FINDINGS = 1
+EXIT_FINDINGS = 4
 EXIT_USAGE = 2
 _USAGE = (
     "usage: mikemol-websubset --check-file PATH\n"

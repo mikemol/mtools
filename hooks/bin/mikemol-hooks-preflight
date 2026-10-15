@@ -61,7 +61,7 @@ elif ! tested="$(bazel test "${targets[@]}" --ui_event_filters=-debug,-warning -
 fi
 
 # A refusal or a failed test outranks an unjudged file, which outranks a clean run.
-if [ "$verdict" -eq 1 ] || [ "$suite_rc" -ne 0 ]; then
+if [ "$verdict" -eq 4 ] || [ "$suite_rc" -ne 0 ]; then
     exit 1
 fi
 exit "$verdict"

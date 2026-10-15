@@ -19,7 +19,7 @@ refusing a `.toml` or `.md` would be a refusal with nothing behind it. It is sti
 and still refuses a link.
 
 ⚑ "NOT CHECKED" IS NEVER "CLEAN". No governing project, an unreadable draft or no formatter is exit
-3 and nothing is written; exit 1 is a refusal; exit 0 is installed.
+3 and nothing is written; exit 4 is a refusal; exit 0 is installed.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from mikemol.hooks.verdict import Verdict
 
 EXIT_INSTALLED = 0
-EXIT_REFUSED = 1
+EXIT_REFUSED = 4
 EXIT_NOT_CHECKED = 3
 PYTHON = ".py"
 

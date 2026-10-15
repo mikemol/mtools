@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 SAFE_RULES = "I,W,COM812"
 """The ruff rules whose autofix is applied: import order, whitespace, a trailing comma."""
 
-EXIT_REFUSED = 1
+EXIT_REFUSED = 4
 EXIT_NOT_RUN = 3
 
 

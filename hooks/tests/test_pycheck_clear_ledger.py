@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     import pytest
 
 _ADMITTED = 0
-_REFUSED = 1
+_REFUSED = pycheck_cli.EXIT_REFUSED
 _NOT_RUN = 3
 _ROOT = "/repo"
 
