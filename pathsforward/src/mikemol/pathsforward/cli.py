@@ -46,6 +46,7 @@ from mikemol.pathsforward import (
     store,
     vtodo,
 )
+from mikemol.pathsforward.advice import reject as reject_advice
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
@@ -65,6 +66,7 @@ if TYPE_CHECKING:
     from mikemol.pathsforward.model import Json, State
 
 CLOSE_JUDGE = judge_close
+REJECT_ADVICE = reject_advice
 EXIT_OK = 0
 EXIT_FAILED = 1
 EXIT_REFUSED = 2
@@ -193,6 +195,7 @@ _VALUED = (
     "commit_message",
     "embargo",
     "lift_embargo",
+    "reject_advice",
     "outcomes_set",
     "certify",
     "mint_residue",
@@ -612,6 +615,15 @@ def _parser() -> argparse.ArgumentParser:
         help="W511: forbid edits to a project-relative PATH while a freeze holds (rule 6)",
     )
     mode.add_argument("--lift-embargo", metavar="PATH", help="W511: remove PATH's embargo")
+    mode.add_argument(
+        "--reject-advice",
+        nargs=3,
+        metavar=("TOOL", "RULE", "REASON"),
+        help=(
+            "W1243: reject every open piece of TOOL's recorded dry-run advice under RULE; "
+            "the next dry run prints REASON instead of re-proposing it"
+        ),
+    )
     mode.add_argument(
         "--outcomes-set",
         nargs=2,
@@ -1619,6 +1631,36 @@ def _embargo(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _reject_advice(ctx: Ctx) -> int:
+    """Reject every open piece of one tool's advice under one rule, with a reason (W1243).
+
+    ⚑ ONE COMMAND REJECTS A WHOLE SELECTOR: a session that declines the advice of a dry run says so
+    here, with the reason the next dry run prints in place of the advice, instead of silently not
+    running `--write`. An empty reason, or no open advice to reject, is refused and changes
+    nothing: a rejection the caller believes happened and did not is the silence this verb exists
+    to remove.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    tool, rule, reason = ctx.many("reject_advice") or ("", "", "")
+
+    def edit(state: State) -> int:
+        try:
+            changed = REJECT_ADVICE(state.doc, tool, rule, reason)
+        except ValueError as exc:
+            raise RefusedError(str(exc)) from exc
+        if changed == 0:
+            msg = f"no open advice from {tool} under rule {rule}: nothing to reject"
+            raise RefusedError(msg)
+        _ledger(ctx, Entry("advice", NO_SYMBOL, "rejected", "advice", f"{tool} {rule}: {reason}"))
+        _say(f"rejected {changed} piece(s) of advice from {tool} under {rule}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _lift_embargo(ctx: Ctx) -> int:
     """Remove one embargo record (W511), and ledger it.
 
@@ -2061,6 +2103,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "drop": _drop,
     "embargo": _embargo,
     "lift_embargo": _lift_embargo,
+    "reject_advice": _reject_advice,
     "outcomes_set": _outcomes_set,
     "outcomes_clear": _outcomes_clear,
     "bump_blocked": _bump_blocked,

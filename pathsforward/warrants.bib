@@ -4701,3 +4701,24 @@
   claim  = {An `advice` that is not a list of objects raises; the waypoints key is never touched.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_a_malformed_list_is_refused_and_the_waypoints_are_left_alone},
 }
+
+@misc{pathsforward-reject-advice-one-command-rejects-every-open-row-of-the-tool-and-rule,
+  section = {advice},
+  title  = {W1 and W2 are rejected with the reason; another rule and another tool are untouched},
+  claim  = {W1 and W2 are rejected with the reason; another rule and another tool are untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reject_advice.py -k test_one_command_rejects_every_open_row_of_the_tool_and_rule},
+}
+
+@misc{pathsforward-reject-advice-empty-reason-or-nothing-open-is-refused-and-changes-nothing,
+  section = {advice},
+  title  = {The file is byte-identical after a blank reason and after a selector with no open row},
+  claim  = {The file is byte-identical after a blank reason and after a selector with no open row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reject_advice.py -k test_an_empty_reason_or_nothing_open_is_refused_and_changes_nothing},
+}
+
+@misc{pathsforward-reject-advice-second-rejection-of-the-same-selector-finds-nothing-open,
+  section = {advice},
+  title  = {Rejecting twice is refused the second time: the rows are already rejected, not open},
+  claim  = {Rejecting twice is refused the second time: the rows are already rejected, not open.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reject_advice.py -k test_a_second_rejection_of_the_same_selector_finds_nothing_open},
+}

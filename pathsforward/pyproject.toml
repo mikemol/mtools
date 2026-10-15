@@ -97,6 +97,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_model.py" = ["assert"]
 "tests/test_advice.py" = ["assert"]
+"tests/test_reject_advice.py" = ["assert"]
 "tests/test_digest.py" = ["assert"]
 "tests/test_check.py" = ["assert"]
 "tests/test_payload.py" = ["assert"]
