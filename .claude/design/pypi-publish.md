@@ -44,12 +44,19 @@ exactly those artifacts through trusted publishing; no token exists anywhere.
    Workflow name `publish.yml`; Environment name `testpypi`.
 3. **PyPI, once per project (34):** pypi.org, same page and fields, Environment name `pypi`.
    A pending publisher reserves nothing until the first upload, so it can be undone by deleting it.
-4. **Dispatch TestPyPI:** repository Actions, "publish", Run workflow, index `testpypi`. Expected:
-   the build job green (34 rows ok) and the publish job uploading 68 files.
+4. **Dispatch TestPyPI:** repository Actions, "publish", Run workflow, index `testpypi`, version
+   `0.0.N` where N is the number of a `publish` waypoint minted for this release (mtools:W803: the
+   build's version is the card's number, strictly higher than anything minted before, so a version
+   is never reused; the dists carry a placeholder `0.1.0` in git and the workflow stamps the
+   release version into its build only). Expected: the build job green (34 rows ok, plus the
+   INSTALL.md row) and the publish job uploading 68 files.
 5. **Install check (W1152):** in a clean venv,
    `pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mikemol-hooks`
    and run `mikemol-commit --help`. Done when it installs and runs.
-6. **Dispatch PyPI:** same, index `pypi`, then approve the `pypi` environment. Done when
+6. **Dispatch PyPI:** same, index `pypi`, with a version from a new publish card (the ruling mints
+   a fresh card for each publish, and a retry mints a higher one; whether the TestPyPI number may
+   be reused for the real upload is not ruled, so use a new one), then approve the `pypi`
+   environment. Done when
    `pip index versions mikemol-hooks` lists it.
 
 Undo: PyPI never deletes a release's filename for reuse; a bad release is yanked on the project

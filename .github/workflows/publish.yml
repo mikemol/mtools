@@ -30,6 +30,10 @@ on:
           - testpypi
           - pypi
         required: true
+      version:
+        description: "the release version, 0.0.N where N is the number of the publish waypoint minted for this release (mtools:W803)"
+        type: string
+        required: true
 
 permissions: {}
 
@@ -66,7 +70,8 @@ jobs:
           OPA_BIN: ${{ runner.temp }}/opa
           MIKEMOL_PRIVACY_SHIPPED: ${{ runner.temp }}/privacy-shipped
           MIKEMOL_PRIVACY_POLICY: hooks/policy/publish_privacy.rego
-        run: python -m mikemol.pkgbuild.wheel release-check . "$GITHUB_SHA" out
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: python -m mikemol.pkgbuild.wheel release-check . "$GITHUB_SHA" out --version "$RELEASE_VERSION"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: dists
