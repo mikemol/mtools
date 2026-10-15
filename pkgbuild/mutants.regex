@@ -80,7 +80,7 @@ src/mikemol/pkgbuild/environments.py|reviewer-id-not-a-number|int\(reviewer\) if
 src/mikemol/pkgbuild/environments.py|failed-sign-in-goes-on|if status != 0 or not who\.isdecimal\(\):|if False:|def=run
 src/mikemol/pkgbuild/environments.py|dry-run-writes|if not write:|if False:|def=run
 src/mikemol/pkgbuild/environments.py|failed-put-is-success|failed \+= int\(status != 0\)|failed += 0|def=run
-src/mikemol/pkgbuild/environments.py|repository-shape-unchecked|if len\(words\) != 1 or words\[0\]\.count\("/"\) != 1:|if len(words) != 1:|def=run
+src/mikemol/pkgbuild/environments.py|repository-shape-unchecked|if target\.count\("/"\) == 1:|if True:|def=slugs_of
 src/mikemol/pkgbuild/sdisttests.py|counts-keep-only-the-last-word|found\[str\(match\.group\(2\)\)\] = int\(match\.group\(1\)\)|found["passed"] = int(match.group(1))|def=counts_of
 src/mikemol/pkgbuild/sdisttests.py|symlinked-folder-is-a-dist|folders = sorted\(p for p in out\.iterdir\(\) if p\.is_dir\(\) and not p\.is_symlink\(\)\)|folders = sorted(p for p in out.iterdir() if p.is_dir())|def=dists_in
 src/mikemol/pkgbuild/sdisttests.py|install-failure-goes-on|if status != 0:|if False:|def=install

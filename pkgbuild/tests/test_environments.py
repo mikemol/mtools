@@ -70,6 +70,58 @@ def test_write_makes_testpypi_with_no_rules_and_pypi_needing_the_signed_in_user(
     assert capsys.readouterr().out.count("ok PUT") == len(fake.bodies)
 
 
+def _tree(tmp_path: Path) -> Path:
+    root = tmp_path / "root"
+    for folder in ("alpha", "beta", "gamma"):
+        (root / folder).mkdir(parents=True)
+        (root / folder / "pyproject.toml").write_text("[project]\n", encoding="utf-8")
+    return root
+
+
+def test_a_directory_with_a_two_org_layout_makes_environments_in_each_distinct_repo(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1222: alpha and beta moved to separate repos, gamma keeps the default: three repos, once."""
+    layout = tmp_path / "repos.toml"
+    layout.write_text(
+        '[dist.alpha]\nowner = "org-one"\nrepo = "alpha"\n'
+        '[dist.beta]\nowner = "org-two"\nrepo = "beta"\n',
+        encoding="utf-8",
+    )
+    fake = _Gh()
+    assert environments.run([str(_tree(tmp_path)), "--repos", str(layout), "--write"], fake) == 0
+    assert sorted(fake.bodies) == sorted(
+        f"repos/{slug}/environments/{name}"
+        for slug in ("org-one/alpha", "org-two/beta", "mikemol/mtools")
+        for name in ("testpypi", "pypi")
+    )
+    assert capsys.readouterr().out.count("ok PUT") == len(fake.bodies)
+
+
+def test_a_directory_without_a_layout_is_one_repository(tmp_path: Path) -> None:
+    """The default layout puts every dist in mikemol/mtools: one pair of environments."""
+    fake = _Gh()
+    assert environments.run([str(_tree(tmp_path)), "--write"], fake) == 0
+    assert len(fake.bodies) == _USAGE
+
+
+def test_a_bad_layout_a_dangling_flag_or_an_empty_directory_is_a_usage_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The controls: nothing is called when the repositories cannot be named."""
+    fake = _Gh()
+    bad = tmp_path / "repos.toml"
+    bad.write_text("[default]\nowner = 'x'\n", encoding="utf-8")
+    root = _tree(tmp_path)
+    assert environments.run([str(root), "--repos", str(bad), "--write"], fake) == _USAGE
+    assert environments.run([str(root), "--repos"], fake) == _USAGE
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    assert environments.run([str(empty), "--write"], fake) == _USAGE
+    assert fake.calls == []
+    assert "no dist found" in capsys.readouterr().err
+
+
 def test_a_failed_sign_in_stops_before_any_put(capsys: pytest.CaptureFixture[str]) -> None:
     """The control: no id, no PUT, exit 1, and the reason on standard error."""
     fake = _Gh(signed_in=False)

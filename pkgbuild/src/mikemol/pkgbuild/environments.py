@@ -29,12 +29,42 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.pkgbuild import repos
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
 WRITE_FLAG = "--write"
+REPOS_FLAG = "--repos"
 USAGE = 2
 NOT_FOUND = 127
+SYNOPSIS = "usage: mikemol-wheel environments OWNER/REPO|ROOT [--repos FILE] [--write]\n"
+
+
+def slugs_of(target: str, layout_file: Path | None) -> list[str] | str:
+    """Name the repositories to make environments in.
+
+    ⚑ A DIRECTORY MEANS EVERY REPOSITORY ITS DISTS PUBLISH FROM (W1222): each dist folder under it
+    is placed by the layout file (the current layout when none is given), and each distinct
+    repository is listed once. Anything else is one OWNER/REPO.
+
+    Returns:
+        the OWNER/REPO slugs, or the reason none can be named.
+
+    """
+    folder = Path(target)
+    if not folder.is_dir():
+        if target.count("/") == 1:
+            return [target]
+        return f"{target} is neither OWNER/REPO nor a directory"
+    layout = repos.load(layout_file)
+    if isinstance(layout, str):
+        return layout
+    found = folder.glob("*/pyproject.toml")
+    dists = sorted(p.parent.name for p in found if not p.parent.is_symlink())
+    if not dists:
+        return f"no dist found under {target}"
+    return [place.slug() for place in layout.places(dists)]
 
 
 def gh(argv: Sequence[str]) -> tuple[int, str]:
@@ -72,8 +102,20 @@ def run(args: Sequence[str], runner: Callable[[Sequence[str]], tuple[int, str]] 
 
     """
     words = [a for a in args if a != WRITE_FLAG]
-    if len(words) != 1 or words[0].count("/") != 1:
-        sys.stderr.write("usage: mikemol-wheel environments OWNER/REPO [--write]\n")
+    layout_file = None
+    if REPOS_FLAG in words:
+        place = words.index(REPOS_FLAG)
+        if place + 1 >= len(words):
+            sys.stderr.write(SYNOPSIS)
+            return USAGE
+        layout_file = Path(words[place + 1])
+        del words[place : place + 2]
+    if len(words) != 1:
+        sys.stderr.write(SYNOPSIS)
+        return USAGE
+    slugs = slugs_of(words[0], layout_file)
+    if isinstance(slugs, str):
+        sys.stderr.write(f"environments: {slugs}\n")
         return USAGE
     write = WRITE_FLAG in args
     reviewer = "<the signed-in gh user's id>"
@@ -85,12 +127,13 @@ def run(args: Sequence[str], runner: Callable[[Sequence[str]], tuple[int, str]] 
         reviewer = who
     failed = 0
     with tempfile.TemporaryDirectory() as scratch:
-        for place, (path, body) in enumerate(requests_of(words[0], reviewer)):
+        requests = [r for slug in slugs for r in requests_of(slug, reviewer)]
+        for number, (path, body) in enumerate(requests):
             line = f"PUT {path} {json.dumps(body)}"
             if not write:
                 sys.stdout.write(f"would {line}\n")
                 continue
-            source = Path(scratch) / f"request-{place}.json"
+            source = Path(scratch) / f"request-{number}.json"
             source.write_text(json.dumps(body), encoding="utf-8")
             status, answer = runner(["api", "-X", "PUT", path, "--input", str(source)])
             sys.stdout.write(f"{'ok' if status == 0 else 'FAILED'} {line}: {answer[:120]}\n")

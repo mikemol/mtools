@@ -585,3 +585,39 @@
   claim  = {The text of a real file is parsed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repos.py -k test_a_file_is_read_from_disk},
 }
+
+@misc{pkgbuild-publishers-layout-file-gives-each-dist-its-own-owner-and-repository,
+  section = {publishers},
+  title  = {W1221: two orgs in one file; the dist it names moves, the other keeps the default},
+  claim  = {W1221: two orgs in one file; the dist it names moves, the other keeps the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_a_layout_file_gives_each_dist_its_own_owner_and_repository},
+}
+
+@misc{pkgbuild-publishers-malformed-or-missing-layout-file-exits-two-and-names-the-reason,
+  section = {publishers},
+  title  = {The control: a bad layout is never read as the default, which would aim a form wrongly},
+  claim  = {The control: a bad layout is never read as the default, which would aim a form wrongly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_publishers.py -k test_a_malformed_or_missing_layout_file_exits_two_and_names_the_reason},
+}
+
+@misc{pkgbuild-environments-directory-with-a-two-org-layout-makes-environments-in-each-distinct-repo,
+  section = {environments},
+  title  = {W1222: alpha and beta moved to separate repos, gamma keeps the default: three repos, once},
+  claim  = {W1222: alpha and beta moved to separate repos, gamma keeps the default: three repos,
+            once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_environments.py -k test_a_directory_with_a_two_org_layout_makes_environments_in_each_distinct_repo},
+}
+
+@misc{pkgbuild-environments-directory-without-a-layout-is-one-repository,
+  section = {environments},
+  title  = {The default layout puts every dist in mikemol/mtools: one pair of environments},
+  claim  = {The default layout puts every dist in mikemol/mtools: one pair of environments.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_environments.py -k test_a_directory_without_a_layout_is_one_repository},
+}
+
+@misc{pkgbuild-environments-bad-layout-a-dangling-flag-or-an-empty-directory-is-a-usage-error,
+  section = {environments},
+  title  = {The controls: nothing is called when the repositories cannot be named},
+  claim  = {The controls: nothing is called when the repositories cannot be named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_environments.py -k test_a_bad_layout_a_dangling_flag_or_an_empty_directory_is_a_usage_error},
+}
