@@ -77,6 +77,21 @@ with no scripts is a library that other distributions import.
 - `waldo` (`mikemol-waldo`): Waldo: a narrow tool that holds one privilege and does only a declared action, with a declared allowed set, refuse-with-diff, same-plan apply and witnesses. A library, no scripts.
 - `witness` (`mikemol-witness`): the witness contract. A library, no scripts.
 
+## Running a distribution's own tests from its sdist
+
+Each sdist carries its tests, and `mikemol-wheel sdist-tests OUT [DIST...]` unpacks the sdists of a
+`release-check` output directory, installs each built wheel and the dev packages the distribution
+declares into a fresh virtual environment, and runs its tests there. Measured at `ac2783a`, 33 of the
+34 pass. Three things differ from running them in the repository:
+
+- `audiostruct` is the one that cannot: its tests import the GPU stack (torch, whisperx, CUDA,
+  about 8 GB), which this project installs out of band and does not offer as an extra.
+- `hooks` skips a few hundred tests in an unpacked sdist. They test the repository's own git hooks and
+  scripts that sit above the distribution, which an sdist does not contain; each skip names that
+  reason, and the same tests run in the repository's gate.
+- `pycodemod` leaves out the three test modules that import its `differential/` tree, which is not
+  shipped; they also run in the gate.
+
 The package list comes from each directory's `pyproject.toml`, which is also what the gate's `_dists`
 glob (`*/pyproject.toml`) reads. `rules_py` is the root of its own bazel module and is not a distribution.
 Some distributions depend on siblings (`gradekit` on `grade`, `bibparse` and `atomicwrite`; `importdag`
