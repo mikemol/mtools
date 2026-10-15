@@ -35,6 +35,7 @@ import zipfile
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pkgbuild import (
+    checklist,
     environments,
     installguide,
     licenses,
@@ -62,6 +63,7 @@ SUBCOMMANDS: dict[str, Callable[[Sequence[str]], int]] = {
     "environments": environments.run,
     "sdist-tests": sdisttests.run,
     "install-guide": installguide.run,
+    "checklist": checklist.run,
 }
 
 

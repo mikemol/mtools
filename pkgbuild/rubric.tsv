@@ -15,3 +15,4 @@ sdisttests	mikemol-wheel sdist-tests: each dist's own tests off host
 repos	Dist-to-repository layout
 sdistcomplete	Tests carried by the sdist
 installguide	Install guide against the tree
+checklist	Adopter checklist for a wheel

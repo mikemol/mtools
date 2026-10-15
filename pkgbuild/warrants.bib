@@ -722,3 +722,31 @@
             row.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_stale_install_guide_fails_the_release_beside_good_dists},
 }
+
+@misc{pkgbuild-checklist-name-is-normalized-from-the-file-name,
+  section = {checklist},
+  title  = {Underscores become hyphens and the case is folded; a name that is no wheel's is None},
+  claim  = {Underscores become hyphens and the case is folded; a name that is no wheel's is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_checklist.py -k test_the_name_is_normalized_from_the_file_name},
+}
+
+@misc{pkgbuild-checklist-three-steps-carry-the-real-hash-the-absolute-path-and-the-hub,
+  section = {checklist},
+  title  = {The requirement line, the lock hash and command, and the underscored pip target},
+  claim  = {The requirement line, the lock hash and command, and the underscored pip target.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_checklist.py -k test_the_three_steps_carry_the_real_hash_the_absolute_path_and_the_hub},
+}
+
+@misc{pkgbuild-checklist-command-prints-the-steps-with-the-given-flags,
+  section = {checklist},
+  title  = {Flags change the file names and the Python version in the printed command},
+  claim  = {Flags change the file names and the Python version in the printed command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_checklist.py -k test_the_command_prints_the_steps_with_the_given_flags},
+}
+
+@misc{pkgbuild-checklist-non-wheel-a-missing-file-a-dangling-flag-and-an-extra-operand-are-usage-errors,
+  section = {checklist},
+  title  = {Each exits 2 and writes nothing to standard output},
+  claim  = {Each exits 2 and writes nothing to standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_checklist.py -k test_a_non_wheel_a_missing_file_a_dangling_flag_and_an_extra_operand_are_usage_errors},
+}
