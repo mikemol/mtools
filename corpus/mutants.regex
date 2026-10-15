@@ -50,7 +50,9 @@ src/mikemol/corpus/import_edges.py|readings-share-a-cache-slot|key = \(path, rea
 src/mikemol/corpus/exitcensus.py|any-value-is-ok|if constant\.value == value:|if True:|def=judge
 src/mikemol/corpus/exitcensus.py|any-name-is-read|target\.id\.startswith\(PREFIX\)|True|def=constants
 src/mikemol/corpus/exitcensus.py|any-expression-is-read|isinstance\(value, ast\.Constant\) and|True and|def=constants
-src/mikemol/corpus/exitcensus.py|tests-trees-are-read|"src" not in path\.parts|False|def=census
+src/mikemol/corpus/exitcensus.py|tests-trees-are-read|and "src" not in parts|and False|def=census
+src/mikemol/corpus/exitcensus.py|all-reads-tests-dirs|\("tests" in parts and everything\)|False|def=census
+src/mikemol/corpus/exitcensus.py|all-keeps-the-checkout-root|path\.relative_to\(root\.parent\)|path|def=census
 src/mikemol/corpus/exitcensus.py|scope-is-ignored|if scope and path_of\(constant\) not in scope:|if False:|def=judge
 src/mikemol/corpus/exitcensus.py|new-and-fixed-swapped|return sorted\(today - listed\), sorted\(listed - today\)|return sorted(listed - today), sorted(today - listed)|def=diff
 src/mikemol/corpus/exitcensus.py|a-fixed-key-may-stay-listed|return EXIT_FOUND if new or fixed else 0|return EXIT_FOUND if new else 0|def=_baseline_main

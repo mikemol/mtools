@@ -129,6 +129,32 @@ def test_a_baseline_run_fails_on_new_and_on_fixed_and_passes_on_equal(tmp_path: 
     assert exitcensus.main(["--baseline", str(base), str(table), root]) == 1
 
 
+def test_everything_reads_a_root_with_no_src_and_names_files_from_the_root(tmp_path: Path) -> None:
+    """--all: `checks/a.py` is read though no `src` is in its path, a `tests` dir is not."""
+    (tmp_path / "checks" / "tests").mkdir(parents=True)
+    (tmp_path / "checks" / "a.py").write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    (tmp_path / "checks" / "tests" / "t.py").write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    root = tmp_path / "checks"
+    assert exitcensus.census([root], _table()) == []
+    rows = exitcensus.census([root], _table(), everything=True)
+    assert [(r.constant.path, r.status) for r in rows] == [("checks/a.py", "VIOLATION")]
+
+
+def test_the_all_flag_reaches_the_census_and_a_baseline_holds_across_checkouts(
+    tmp_path: Path,
+) -> None:
+    """The CLI form: `--all --write-baseline` then `--all --baseline` passes, key without root."""
+    (tmp_path / "checks").mkdir()
+    (tmp_path / "checks" / "a.py").write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    table = tmp_path / "t.json"
+    table.write_text(json.dumps(_TABLE_DOC), encoding="utf-8")
+    base = tmp_path / "base.txt"
+    root = str(tmp_path / "checks")
+    assert exitcensus.main(["--all", "--write-baseline", str(base), str(table), root]) == 0
+    assert base.read_text(encoding="utf-8") == "checks/a.py EXIT_REFUSED 2\n"
+    assert exitcensus.main(["--all", "--baseline", str(base), str(table), root]) == 0
+
+
 def test_a_scoped_verdict_is_allowed_only_in_its_listed_modules() -> None:
     """BLOCK at 2 is the harness's, so it holds in a listed hook module and violates elsewhere."""
     doc = {

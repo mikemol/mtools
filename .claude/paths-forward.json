@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1305,
+  "counter": 1308,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -26698,7 +26698,7 @@
     {
       "symbol": "W1300",
       "title": "Find every reader of the pycheck family's exit values (pycheck_cli, pycheck_install, pycheck_clear, pycheck_format) in code, hooks and prose, then move REFUSED 1 to 4 and NOT_CHECKED, NOT_RUN to 3 with those readers in one commit, shrinking the baseline",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1266"
       ],
@@ -26706,15 +26706,15 @@
         "hooks"
       ],
       "blocked_on": [],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Independent of the answer: add a BLOCK verdict at 2 for hook entry points to corpus/exit-table.json, rename hook_argv, flag_contract and build_failure's constants to EXIT_BLOCK and EXIT_FEEDBACK under it, shrinking the baseline; the pycheck REFUSED 1 move waits on github-8f's answer on linter findings",
-      "evidence": "2026-10-15: 2026-10-15 readers measured (hooks/src, hooks/tests, katas/src, .claude/settings via grep): every in-tree reader of the pycheck family's codes uses the constants by name (pycheck_cli.EXIT_*, pycheck_install and pycheck_clear compare their own constants; katas only PRINTS the pycheck commands and tests passed.returncode == 0); no literal 1 or 3 compared. Under the relayed table NOT_CHECKED and NOT_RUN are already 3 (DEFER); only REFUSED 1 would move. TWO QUESTIONS THE TABLE DOES NOT ANSWER: (a) the relayed text says 1 FAILED includes 'linter findings' and also that REFUSE absorbs 'pycheck's 1', and pycheck's refusal IS linter findings, so one of the two lines must give; (b) hook_argv.EXIT_REFUSED, flag_contract.EXIT_REFUSED and build_failure's EXIT_FEEDBACK are 2 because Claude Code's hook protocol treats exit 2 as BLOCK, which the harness fixes; 'nothing else may use 2' cannot hold for hook entry points, so the table needs a BLOCK verdict at 2 limited to hook entry points. Blind spots: prose in design notes, peers' scripts.",
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: 2026-10-15 readers measured (hooks/src, hooks/tests, katas/src, .claude/settings via grep): every in-tree reader of the pycheck family's codes uses the constants by name (pycheck_cli.EXIT_*, pycheck_install and pycheck_clear compare their own constants; katas only PRINTS the pycheck commands and tests passed.returncode == 0); no literal 1 or 3 compared. Under the relayed table NOT_CHECKED and NOT_RUN are already 3 (DEFER); only REFUSED 1 would move. TWO QUESTIONS THE TABLE DOES NOT ANSWER: (a) the relayed text says 1 FAILED includes 'linter findings' and also that REFUSE absorbs 'pycheck's 1', and pycheck's refusal IS linter findings, so one of the two lines must give; (b) hook_argv.EXIT_REFUSED, flag_contract.EXIT_REFUSED and build_failure's EXIT_FEEDBACK are 2 because Claude Code's hook protocol treats exit 2 as BLOCK, which the harness fixes; 'nothing else may use 2' cannot hold for hook entry points, so the table needs a BLOCK verdict at 2 limited to hook entry points. Blind spots: prose in design notes, peers' scripts. | 2026-10-15: Landed in mtools eb00b22 (pushed): BLOCK verdict at 2 scoped by module in corpus/exit-table.json with its reason, FINDINGS under REFUSE, hook_argv EXIT_BLOCK (EXIT_REFUSED kept as an alias), census scope check, baseline regenerated (13 rows). Moves are W1302-W1304.",
       "issued_at": "2026-10-15T20:39:42Z",
       "minted_during": "tick",
       "caused_by": "W1266",
-      "last_worked": "2026-10-15T21:09:14Z",
+      "last_worked": "2026-10-15T21:31:36Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T213136Z"
     },
     {
       "symbol": "W1301",
@@ -26814,6 +26814,68 @@
       "issued_at": "2026-10-15T21:19:38Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1086",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1306",
+      "title": "exitcensus --all reads every non-test .py under a root that has no src directory, so luthen's checks/ can be judged in place",
+      "status": "working",
+      "enables": [
+        "luthen-observability:W1074"
+      ],
+      "touches": [
+        "corpus"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add --all: census(roots, table, everything=True) takes every .py under the root except tests parts and skip dirs, paths relative to the root's parent; test it on a tree with no src",
+      "evidence": "",
+      "issued_at": "2026-10-15T21:33:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1074",
+      "last_worked": "2026-10-15T21:33:42Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1307",
+      "title": "Add the names luthen's census found to corpus/exit-table.json: CANNOT and UNREADABLE under DEFER, after checking each name's meaning in luthen's code",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1074"
+      ],
+      "touches": [
+        "corpus"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Landing: CANNOT_RUN at 7 in corpus/exit-table.json with its reason, DEFER keeps precondition-unmet only, baseline regenerated (13 to 17 rows because the table changed, recorded here); moves are W1308",
+      "evidence": "2026-10-15: 2026-10-15 luthen-observability-d9 (testimony, concrete): in luthen CANNOT and UNREADABLE are not DEFER. apply_converge exits 2 for cannot-run (lock held by another converger, or contract unsound) and 3 for deferred (precondition unmet, nothing ran); systemd units declare SuccessExitStatus=2 3 and treat 4 and 1 as failures. Folding cannot-run into 3 would hide an instrument fault as a retriable deferral. Asks for its own name (CANNOT_RUN, a number other than 3) or USAGE 2 for argument/contract faults. The relayed table (github-8f) puts 'not checked, not run, cannot-evaluate witnesses' in DEFER 3, and mtools' own pycheck NOT_CHECKED and NOT_RUN are instrument faults too, so the objection applies here. Question sent to github-8f. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f ruled (A): CANNOT_RUN at 7 for an instrument fault (UNKNOWN result: ruff or mypy cannot run, pycheck NOT_CHECKED and NOT_RUN, a witness that cannot reach its target, an unsound contract), never success, never retried as if a precondition might clear; DEFER 3 keeps only 'precondition unmet, nothing ran' incl. a lock held by another LIVE holder; waldo's unevaluated-witness exit moves to 7; a unit may list 7 in SuccessExitStatus as a unit-level choice. Applied in the table, with the reason beside the row. The baseline grew from 13 to 17 rows ONLY because the table changed (pycheck NOT_CHECKED/NOT_RUN at 3 now disagree); a table change is the one allowed reset, every later change must shrink it.",
+      "issued_at": "2026-10-15T21:34:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1074",
+      "last_worked": "2026-10-15T21:40:30Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1308",
+      "title": "Move CANNOT_RUN names to 7: pycheck family NOT_CHECKED and NOT_RUN from 3, snapshot and others that mean an instrument fault, and waldo's unevaluated-witness exit from 2, each with its readers in one commit, and add waldo to the exit gate's dists",
+      "status": "ready",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "List readers of NOT_CHECKED, NOT_RUN and waldo's cannot-run exit (tests name the constants; waldo's exit 2 is pinned by W-unevaluated tests), move per tool, add waldo to corpus test_exit_gate _DISTS and its BUILD deps, regenerate the baseline",
+      "evidence": "",
+      "issued_at": "2026-10-15T21:36:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1307",
       "last_worked": null,
       "ticks_blocked": 0
     }

@@ -540,3 +540,17 @@
   claim  = {BLOCK at 2 is the harness's, so it holds in a listed hook module and violates elsewhere.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_scoped_verdict_is_allowed_only_in_its_listed_modules},
 }
+
+@misc{corpus-exitcensus-everything-reads-a-root-with-no-src-and-names-files-from-the-root,
+  section = {exitcensus},
+  title  = {--all: `checks/a.py` is read though no `src` is in its path, a `tests` dir is not},
+  claim  = {--all: `checks/a.py` is read though no `src` is in its path, a `tests` dir is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_everything_reads_a_root_with_no_src_and_names_files_from_the_root},
+}
+
+@misc{corpus-exitcensus-all-flag-reaches-the-census-and-a-baseline-holds-across-checkouts,
+  section = {exitcensus},
+  title  = {The CLI form: `--all --write-baseline` then `--all --baseline` passes, key without root},
+  claim  = {The CLI form: `--all --write-baseline` then `--all --baseline` passes, key without root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_the_all_flag_reaches_the_census_and_a_baseline_holds_across_checkouts},
+}

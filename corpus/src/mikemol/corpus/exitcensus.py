@@ -34,7 +34,7 @@ PREFIX = "EXIT_"
 EXIT_FOUND = 1
 EXIT_USAGE = 2
 _USAGE = (
-    "usage: python3 -m mikemol.corpus.exitcensus [--baseline F | --write-baseline F] "
+    "usage: python3 -m mikemol.corpus.exitcensus [--all] [--baseline F | --write-baseline F] "
     "TABLE.json ROOT [ROOT ...]\n"
 )
 _BLIND = "# cannot see: a constant computed at run time, or a status that is not a named EXIT_\n"
@@ -132,8 +132,12 @@ def judge(constant: Constant, table: Table) -> Row:
     return Row(constant, "VIOLATION", f"{word} is {value}")
 
 
-def census(roots: Sequence[Path], table: Table) -> list[Row]:
+def census(roots: Sequence[Path], table: Table, *, everything: bool = False) -> list[Row]:
     """Judge every EXIT_ constant of every `src` tree under the roots.
+
+    ⚑ `everything` IS FOR A ROOT THAT HAS NO `src` DIRECTORY (luthen's `checks/`, 2026-10-15): every
+    `.py` under the root counts except a `tests` directory's, and a path is named from the root's
+    own name (`checks/apply_set.py`), so a baseline written for it holds in another checkout.
 
     Returns:
         the rows, in path order.
@@ -142,10 +146,13 @@ def census(roots: Sequence[Path], table: Table) -> list[Row]:
     rows: list[Row] = []
     for root in roots:
         for path in sorted(root.rglob("*.py")):
-            if _SKIP & set(path.parts) or "src" not in path.parts:
+            parts = set(path.parts)
+            if _SKIP & parts or ("tests" in parts and everything):
                 continue
-            text = path.read_text(encoding="utf-8")
-            rows.extend(judge(c, table) for c in constants(text, str(path)))
+            if not everything and "src" not in parts:
+                continue
+            named = str(path.relative_to(root.parent)) if everything else str(path)
+            rows.extend(judge(c, table) for c in constants(path.read_text(encoding="utf-8"), named))
     return rows
 
 
@@ -234,7 +241,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         something does, 2 for a usage refusal.
 
     """
-    args = list(sys.argv[1:] if argv is None else argv)
+    given = list(sys.argv[1:] if argv is None else argv)
+    everything = "--all" in given
+    args = [a for a in given if a != "--all"]
     modes = ("--baseline", "--write-baseline")
     mode = args.pop(0) if args and args[0] in modes else ""
     keep = [args.pop(0)] if mode and args else []
@@ -243,7 +252,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_USAGE
     doc = cast("object", json.loads(Path(args[0]).read_text(encoding="utf-8")))
     table = table_of(doc)
-    rows = census([Path(a) for a in args[1:]], table)
+    rows = census([Path(a) for a in args[1:]], table, everything=everything)
     if mode:
         return _baseline_main(keep, mode, rows)
     sys.stdout.write(render(rows))
