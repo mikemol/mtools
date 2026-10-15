@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1289,
+  "counter": 1292,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,10 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-15T19:08:21Z"
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -26009,39 +26006,42 @@
     {
       "symbol": "W1265",
       "title": "pathsforward lock.py LOCK_STALE_S wall-clock window becomes a liveness check of the holder pid or a derived bound",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Wire session.py into lock.acquire: record pid and start in the lock field (session_of the CLI's own pid), and for a foreign lock that has them, call it stale iff not session.alive; keep LOCK_STALE_S only for a lock with no pid; test with a fabricated reader, then run the lock and tick tests",
-      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: Landed in mtools f23d8a2 (pushed): lock.acquire records pid+start via session.own(), stale iff the process is gone; windowed only for a lock with no session.",
       "issued_at": "2026-10-15T14:29:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T19:08:26Z",
+      "last_worked": "2026-10-15T19:20:41Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T192041Z"
     },
     {
       "symbol": "W1266",
       "title": "One verdict codomain DONE NOOP DEFER REFUSE WITHHELD RACE and a fleet exit table that resolves the exit-3 collision",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "fence"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
+      "blocked_on": [
+        "W1291"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: after the census W1290, pick the codomain from the table and write the exit table as a design note, then one card per module that adopts it",
       "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: 2026-10-15 VERIFIED by github-8f (relayed, read on its side that day): fence admit.py:311 reads EXIT_REFUSED = 3, so the exit-3 collision is real on the fence side; luthen apply_set.py:49 EXIT_DEFERRED = 3 is still the report's claim, not verified.",
       "issued_at": "2026-10-15T14:29:40Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T14:30:49Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-15T19:10:52Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1267",
@@ -26486,6 +26486,67 @@
       "last_worked": "2026-10-15T18:49:58Z",
       "ticks_blocked": 0,
       "completed": "20261015T184958Z"
+    },
+    {
+      "symbol": "W1290",
+      "title": "Census the EXIT_* constants of fence, pathsforward and hooks CLIs as a table of name, value, module and meaning, to show where one value means two things",
+      "status": "done",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Table in .claude/design/exit-code-census.md: 3 carries seven names (REFUSED, LOCKED, NOT_CHECKED, NOT_RUN, NOT_TAKEN, NO_CAP, NO_DESTINATION), REFUSED has four values (1,2,3,4), 2 is usage and refusal. luthen's EXIT_DEFERRED=3 unread by me.",
+      "issued_at": "2026-10-15T19:10:18Z",
+      "minted_during": "tick",
+      "caused_by": "W1266",
+      "last_worked": "2026-10-15T19:10:45Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T191045Z"
+    },
+    {
+      "symbol": "W1291",
+      "title": "Decide the fleet exit table from the census: one value per verdict (DONE NOOP DEFER REFUSE WITHHELD RACE), whether usage keeps 2, and the migration order that never changes a value a live caller reads",
+      "status": "ready",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read exit-code-census.md and each caller of pathsforward's EXIT_REFUSED=2 (katas, hooks, stop hook); draft the table in .claude/design/exit-table.md with a per-tool migration order",
+      "evidence": "",
+      "issued_at": "2026-10-15T19:10:46Z",
+      "minted_during": "tick",
+      "caused_by": "W1266",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1292",
+      "title": "The close tally counts from the previous tick's ledger line and counts dropped cards, so a host tick end that locks at the close still shows the work",
+      "status": "ready",
+      "enables": [
+        "W1203"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Landing: tick_start and advanced(state, since) in closegate, judge takes the ledger path, fixture with cards worked before a close-time lock; then reply to github-8f",
+      "evidence": "",
+      "issued_at": "2026-10-15T19:13:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1285",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

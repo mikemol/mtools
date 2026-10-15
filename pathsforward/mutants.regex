@@ -134,6 +134,8 @@ src/mikemol/pathsforward/cli.py|close-writes-through-a-refusal|if verdict\.refus
 # A fresh-session reason is an atomize signal, not a block (W1284); the tally counts work (W1285).
 src/mikemol/pathsforward/closegate.py|fresh-session-reason-passes|if FRESH\.search\(reason or ""\):|if False:|def=judge
 src/mikemol/pathsforward/closegate.py|advanced-counts-every-card|text\(w, "last_worked"\) >= since|True|def=advanced
+src/mikemol/pathsforward/closegate.py|dropped-cards-are-not-advanced|if text\(r, "dropped_at"\) >= since|if False|def=advanced
+src/mikemol/pathsforward/closegate.py|tick-starts-at-the-first-tick-line|return stamps\[-1\]|return stamps[0]|def=tick_start
 
 # The session is the nearest claude ancestor and is alive only with its start time (W1289).
 src/mikemol/pathsforward/session.py|walk-takes-the-first-process|if proc\.comm == SESSION_COMM:|if True:|def=session_of

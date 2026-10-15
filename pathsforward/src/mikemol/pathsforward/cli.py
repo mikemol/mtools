@@ -1404,7 +1404,8 @@ def _tick_close(ctx: Ctx) -> int:
     # ⚑ W1203: A TICK IS A LOOP CYCLE, NOT A CARD. Read the queue before anything is written; with a
     # ready, unblocked card and no named block the close is REFUSED and the lock stays held.
     worked = entry[0] if entry else None
-    verdict = CLOSE_JUDGE(store.load(ctx.path), ctx.get("blocked_by"), ctx.get("reason"), worked)
+    when = (ctx.get("blocked_by"), ctx.get("reason"), worked)
+    verdict = CLOSE_JUDGE(store.load(ctx.path), *when, store.sibling(ctx.path, store.LEDGER))
     for said in verdict.lines:
         _say(said)
     if verdict.refused:
@@ -1474,7 +1475,8 @@ def _close_gate(ctx: Ctx) -> int:
         EXIT_OK when the tick may close, EXIT_REFUSED when it may not.
 
     """
-    verdict = CLOSE_JUDGE(store.load(ctx.path), ctx.get("blocked_by"), ctx.get("reason"))
+    when = (ctx.get("blocked_by"), ctx.get("reason"), None)
+    verdict = CLOSE_JUDGE(store.load(ctx.path), *when, store.sibling(ctx.path, store.LEDGER))
     for said in verdict.lines:
         _say(said)
     return EXIT_REFUSED if verdict.refused else EXIT_OK

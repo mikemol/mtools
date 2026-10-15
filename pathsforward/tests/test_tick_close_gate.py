@@ -221,3 +221,28 @@ def test_the_close_says_how_many_cards_the_tick_advanced(
     path.write_text(json.dumps(doc), encoding="utf-8")
     assert cli.main(gate) == _REFUSED
     assert "this tick advanced 1" in capsys.readouterr().out
+
+
+def test_cards_worked_before_a_close_time_lock_count_from_the_last_tick_line(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """github-8f 2026-10-15: a host `tick end` locks at the close, so the lock time is too late.
+
+    The ledger's last `tick` line (10:00) is when the previous tick closed. W2 was worked and W3
+    dropped after it, W4 was worked before it, and the lock is only taken at 12:00: the count is
+    two (a worked card and a dropped one), where counting from the lock gave zero.
+    """
+    cards = [_card("W1", "working"), _card("W2", "ready"), _card("W4", "ready")]
+    cards[1]["last_worked"] = "2026-10-15T10:30:00Z"
+    cards[2]["last_worked"] = "2026-10-15T09:00:00Z"
+    path = _state(tmp_path, cards)
+    doc = cast("Rec", json.loads(path.read_text(encoding="utf-8")))
+    doc["residue"] = [{"symbol": "W3", "title": "t", "dropped_at": "2026-10-15T11:00:00Z"}]
+    doc["lock"] = {"holder": _HOLDER, "taken_at": "2026-10-15T12:00:00Z"}
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    ledger = tmp_path / "paths-forward.ledger"
+    older = '2026-10-15T08:00:00Z  tick  W8  advanced  unblock  "older"\n'
+    previous = '2026-10-15T10:00:00Z  tick  W9  advanced  unblock  "before"\n'
+    ledger.write_text(older + previous, encoding="utf-8")
+    assert cli.main(["--state", str(path), "--close-gate"]) == _REFUSED
+    assert "this tick advanced 2" in capsys.readouterr().out

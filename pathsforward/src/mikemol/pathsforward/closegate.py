@@ -32,9 +32,12 @@ from typing import TYPE_CHECKING, cast
 
 from mikemol.pathsforward import lock
 from mikemol.pathsforward.behindopen import plan
+from mikemol.pathsforward.ledger import Parsed, read
 from mikemol.pathsforward.model import text, workable
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from mikemol.pathsforward.model import State
 
 SYMBOL = re.compile(r"\bW\d+\b")
@@ -71,22 +74,46 @@ def ready_cards(state: State) -> list[str]:
     ]
 
 
-def advanced(state: State) -> int:
-    """Count the cards worked since the tick took the lock.
+def tick_start(state: State, ledger: Path | None) -> str:
+    """Name when this tick began: the previous tick's close, else the lock's own time.
 
-    ⚑ A ONE-CARD TICK SHOWS IN ITS OWN OUTPUT (github-8f, 2026-10-15): `last_worked` is stamped on
-    every work update, and both it and the lock's `taken_at` are the writer's UTC stamps, so they
-    compare as strings.
+    ⚑ THE LOCK'S TIME IS NOT THE TICK'S START (github-8f, 2026-10-15): a host `tick end` takes the
+    lock only at the close, so everything done before it predates `taken_at` and counted as
+    nothing. The ledger's last `tick` line is when the previous tick closed, and a card worked
+    after it belongs to this one.
 
     Returns:
-        the number of cards whose `last_worked` is at or after the lock time (0 when unlocked).
+        a UTC stamp, or "" when neither a tick line nor a lock time exists.
 
     """
+    stamps = [
+        found.stamp
+        for found in (read(ledger) if ledger is not None and ledger.is_file() else [])
+        if isinstance(found, Parsed) and found.entry.kind == "tick"
+    ]
+    if stamps:
+        return stamps[-1]
     held = lock.current(state)
-    since = held[1] if held else ""
+    return held[1] if held else ""
+
+
+def advanced(state: State, since: str) -> int:
+    """Count the cards advanced since `since`: worked, finished or dropped.
+
+    ⚑ A ONE-CARD TICK SHOWS IN ITS OWN OUTPUT: `last_worked` is stamped on every work update
+    (a done transition included), and a dropped card leaves the queue for the residue with a
+    `dropped_at`, so both are counted. The stamps are the writer's UTC strings and compare as
+    strings.
+
+    Returns:
+        the number of distinct cards, 0 when `since` is empty.
+
+    """
     if not since:
         return 0
-    return sum(1 for w in state.waypoints if text(w, "last_worked") >= since)
+    worked = {text(w, "symbol") for w in state.waypoints if text(w, "last_worked") >= since}
+    dropped = {text(r, "symbol") for r in state.residue if text(r, "dropped_at") >= since}
+    return len(worked | dropped)
 
 
 def _named(state: State, blocked_by: str | None, reason: str | None, worked: str | None) -> str:
@@ -119,6 +146,7 @@ def judge(
     blocked_by: str | None = None,
     reason: str | None = None,
     worked: str | None = None,
+    ledger: Path | None = None,
 ) -> Verdict:
     """Decide whether a tick may close.
 
@@ -129,7 +157,8 @@ def judge(
     """
     ready = ready_cards(state)
     top = ", ".join(ready[:TOP]) or "none"
-    count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {advanced(state)}"
+    moved = advanced(state, tick_start(state, ledger))
+    count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {moved}"
     if not ready:
         return Verdict(refused=False, lines=(count,), note="")
     if FRESH.search(reason or ""):

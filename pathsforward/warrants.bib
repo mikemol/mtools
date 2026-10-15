@@ -5118,3 +5118,14 @@
   claim  = {A caller with no session (cron, a test) writes the old two-field lock.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock_session.py -k test_the_session_is_written_only_when_there_is_one},
 }
+
+@misc{pathsforward-tick-close-gate-cards-worked-before-a-close-time-lock-count-from-the-last-tick-line,
+  section = {tick_close_gate},
+  title  = {github-8f 2026-10-15: a host `tick end` locks at the close, so the lock time is too late},
+  claim  = {github-8f 2026-10-15: a host `tick end` locks at the close, so the lock time is too
+            late. The ledger's last `tick` line (10:00) is when the previous tick
+            closed. W2 was worked and W3 dropped after it, W4 was worked before it, and
+            the lock is only taken at 12:00: the count is two (a worked card and a
+            dropped one), where counting from the lock gave zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_cards_worked_before_a_close_time_lock_count_from_the_last_tick_line},
+}
