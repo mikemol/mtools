@@ -75,6 +75,12 @@ src/mikemol/pkgbuild/publishers.py|empty-root-accepted|if not rows:|if False:|de
 src/mikemol/pkgbuild/publishers.py|worksheet-never-written|if "--html" in options:|if False:|def=run
 src/mikemol/pkgbuild/publishers.py|value-not-escaped|safe = html\.escape\(value, quote=True\)|safe = value|def=_cell
 src/mikemol/pkgbuild/publishers.py|dangling-flag-read|if place \+ 1 >= len\(words\):|if False:|def=_options
+src/mikemol/pkgbuild/environments.py|absent-gh-is-success|return NOT_FOUND, "gh is not installed"|return 0, "gh is not installed"|def=gh
+src/mikemol/pkgbuild/environments.py|reviewer-id-not-a-number|int\(reviewer\) if reviewer\.isdecimal\(\) else reviewer|reviewer|def=requests_of
+src/mikemol/pkgbuild/environments.py|failed-sign-in-goes-on|if status != 0 or not who\.isdecimal\(\):|if False:|def=run
+src/mikemol/pkgbuild/environments.py|dry-run-writes|if not write:|if False:|def=run
+src/mikemol/pkgbuild/environments.py|failed-put-is-success|failed \+= int\(status != 0\)|failed += 0|def=run
+src/mikemol/pkgbuild/environments.py|repository-shape-unchecked|if len\(words\) != 1 or words\[0\]\.count\("/"\) != 1:|if len(words) != 1:|def=run
 src/mikemol/pkgbuild/names.py|case-kept-in-the-name|RUNS\.sub\("-", name\)\.lower\(\)|RUNS.sub("-", name)|def=normalized
 src/mikemol/pkgbuild/names.py|every-status-is-free|if status == FREE:|if True:|def=state_of
 src/mikemol/pkgbuild/names.py|every-answer-is-taken|return "taken" if status == TAKEN else f"error: HTTP \{status\}"|return "taken"|def=state_of

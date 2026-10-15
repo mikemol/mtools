@@ -10,3 +10,4 @@ privacycheck	mikemol-wheel release-check: shipped-file privacy judge
 licenses	mikemol-wheel licenses: ship each dist's license text
 names	mikemol-wheel names: is each dist's project name free
 publishers	mikemol-wheel publishers: the pending-publisher worksheet
+environments	mikemol-wheel environments: the two GitHub environments
