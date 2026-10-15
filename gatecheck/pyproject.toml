@@ -35,6 +35,7 @@ mikemol-hook-grid = "mikemol.gatecheck.hook_grid:main"
 mikemol-absence-audit = "mikemol.gatecheck.absence_audit:main"
 mikemol-lint-bzl = "mikemol.gatecheck.lint_bzl:main"
 mikemol-witness-reach = "mikemol.gatecheck.witness_reach:main"
+mikemol-sibling-pin = "mikemol.gatecheck.siblingpin:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -107,6 +108,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/gatecheck/rungate.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # witness_reach starts one child interpreter per witness, argv composed from its own constants.
 "src/mikemol/gatecheck/witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# siblingpin runs git in a sibling checkout, argv composed from its own constants (W1018).
+"src/mikemol/gatecheck/siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_siblingpin.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hook_index.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_indexdiverge.py" = ["assert"]
 "tests/test_hook_grid.py" = ["assert"]

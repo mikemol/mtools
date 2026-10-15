@@ -682,3 +682,53 @@
   claim  = {The gate's output goes to the terminal, so the completed process holds none of it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rungate.py -k test_run_passthrough_leaves_the_childs_output_uncaptured},
 }
+
+@misc{gatecheck-siblingpin-three-git-variables-are-removed-and-the-rest-kept,
+  section = {siblingpin},
+  title  = {GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE go; PATH and a lookalike stay},
+  claim  = {GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE go; PATH and a lookalike stay.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_the_three_git_variables_are_removed_and_the_rest_kept},
+}
+
+@misc{gatecheck-siblingpin-sibling-at-the-sha-and-clean-is-ok,
+  section = {siblingpin},
+  title  = {The real git agrees: HEAD matches (full and abbreviated) and nothing is modified},
+  claim  = {The real git agrees: HEAD matches (full and abbreviated) and nothing is modified.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_a_sibling_at_the_sha_and_clean_is_ok},
+}
+
+@misc{gatecheck-siblingpin-different-head-and-a-dirty-tree-each-fail-with-their-own-reason,
+  section = {siblingpin},
+  title  = {Another sha is 'not the recorded sha'; an edited tracked file is 'uncommitted changes'},
+  claim  = {Another sha is 'not the recorded sha'; an edited tracked file is 'uncommitted changes'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_a_different_head_and_a_dirty_tree_each_fail_with_their_own_reason},
+}
+
+@misc{gatecheck-siblingpin-committing-repositorys-git-variables-do-not-answer-for-the-sibling,
+  section = {siblingpin},
+  title  = {The control: GIT_DIR names another repo, yet the verdict is about the sibling's own HEAD},
+  claim  = {The control: GIT_DIR names another repo, yet the verdict is about the sibling's own
+            HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_the_committing_repositorys_git_variables_do_not_answer_for_the_sibling},
+}
+
+@misc{gatecheck-siblingpin-relative-root-a-bad-sha-and-a-non-checkout-are-refused,
+  section = {siblingpin},
+  title  = {Each is refused before or by git, with a reason that names it},
+  claim  = {Each is refused before or by git, with a reason that names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_a_relative_root_a_bad_sha_and_a_non_checkout_are_refused},
+}
+
+@misc{gatecheck-siblingpin-failing-status-is-a-refusal-not-a-pass,
+  section = {siblingpin},
+  title  = {The runner answers HEAD but fails `status`: the verdict is not ok and says why},
+  claim  = {The runner answers HEAD but fails `status`: the verdict is not ok and says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_a_failing_status_is_a_refusal_not_a_pass},
+}
+
+@misc{gatecheck-siblingpin-command-prints-one-json-line-and-exits-by-the-verdict,
+  section = {siblingpin},
+  title  = {Exit 0 and ok true at the sha; exit 1 and ok false elsewhere; 2 for the wrong arguments},
+  claim  = {Exit 0 and ok true at the sha; exit 1 and ok false elsewhere; 2 for the wrong arguments.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_the_command_prints_one_json_line_and_exits_by_the_verdict},
+}

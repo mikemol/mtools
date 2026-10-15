@@ -29,7 +29,8 @@ with no scripts is a library that other distributions import.
   `mikemol-fence`, `mikemol-membudget`.
 - `frontier` (`mikemol-frontier`): Pure frontier walk over plain nodes and edges: ready, deferred with the unmet predecessor or gate, realized, and a named cycle A library, no scripts.
 - `gatecheck` (`mikemol-gatecheck`): pre-commit and gate helpers. Scripts: `mikemol-hook-index`,
-  `mikemol-hook-grid`, `mikemol-absence-audit`, `mikemol-lint-bzl`, `mikemol-witness-reach`.
+  `mikemol-hook-grid`, `mikemol-absence-audit`, `mikemol-lint-bzl`, `mikemol-witness-reach`,
+  `mikemol-sibling-pin`.
 - `gmailstruct` (`mikemol-gmailstruct`): Gmail API message JSON read losslessly. Script: `mikemol-gmail`.
 - `grade` (`mikemol-grade`): the falsifiability grade ladder. A library, no scripts.
 - `gradekit` (`mikemol-gradekit`): grade records and the effective-grade clamp. Scripts:
