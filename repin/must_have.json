@@ -1,0 +1,42 @@
+[
+  {
+    "dists": [
+      "hooks"
+    ],
+    "reason": "mikemol-wheel builds into a temp directory and copies only the wheels out",
+    "requires": [],
+    "sha": "04d4f46bc0f6e328a4234a8ad1a81a0369c48925"
+  },
+  {
+    "dists": [
+      "hooks"
+    ],
+    "reason": "mikemol-commit says RACED, not COMMITTED, when HEAD moved to a commit it did not make",
+    "requires": [],
+    "sha": "2988de7992f0bbbac488b5b0efa8f8ac6449592b"
+  },
+  {
+    "dists": [
+      "pathsforward"
+    ],
+    "reason": "--block-behind-open blocks a ready card behind the open cards that enable it",
+    "requires": [],
+    "sha": "3ded8d155c6fcee635c04e7ed2bd29743d45469b"
+  },
+  {
+    "dists": [
+      "hooks"
+    ],
+    "reason": "mikemol-repin --revendor takes --no-sync and its plan says the sync removes packages",
+    "requires": [],
+    "sha": "440fef4fd8f9393eebac6f6b4f20ef86948ca87e"
+  },
+  {
+    "dists": [
+      "pathsforward"
+    ],
+    "reason": "--tick-close prunes landed local blockers before its check",
+    "requires": [],
+    "sha": "c47d50b0d54cd66fc5d1cdf8e03a319999b3d8a8"
+  }
+]

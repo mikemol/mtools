@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import repin
+from mikemol.hooks.musthave_cli import run as run_must_have
 from mikemol.hooks.repin_metrics import publish, render
 from mikemol.hooks.revendor_cli import run_revendor
 
@@ -44,13 +45,28 @@ _NOW = time.time
 _PUBLISH = publish
 _RENDER = render
 _REVENDOR = run_revendor
+_MUST_HAVE = run_must_have
 _USAGE = (
     "usage: mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--metrics FILE] [--write]"
     " [--no-sync]\n"
     "       mikemol-repin --revendor --sha SHA40 [--root REPO] [--mtools DIR] [--write]\n"
+    "       mikemol-repin --must-have SHA40 --dists D --reason R [--requires SHA40] [--write]\n"
+    "       mikemol-repin --check-must-have [--mtools DIR]\n"
 )
-_VALUED = frozenset({"--root", "--sha", "--dist", "--metrics", "--mtools"})
-_FLAGS = frozenset({"--write", "--no-sync", "--revendor"})
+_VALUED = frozenset(
+    {
+        "--root",
+        "--sha",
+        "--dist",
+        "--metrics",
+        "--mtools",
+        "--must-have",
+        "--dists",
+        "--reason",
+        "--requires",
+    }
+)
+_FLAGS = frozenset({"--write", "--no-sync", "--revendor", "--check-must-have"})
 
 
 @dataclass(frozen=True)
@@ -236,6 +252,9 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
         sys.stderr.write(_USAGE)
         return EXIT_USAGE
     valued, flags = parsed
+    if "--must-have" in valued or "--check-must-have" in flags:
+        mtools = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])
+        return _MUST_HAVE(mtools, valued, frozenset(flags), runner)
     if "--revendor" in flags:
         repo = Path(valued.get("--root", [str(Path.cwd())])[-1])
         mtools = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])

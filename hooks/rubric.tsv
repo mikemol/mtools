@@ -104,3 +104,4 @@ vlogbatch	mikemol-vlog batching and the consumed prefix
 privacy_audit	mikemol-privacy-audit: dry-run audit of a dist's tracked tree
 privacy_shipped	mikemol-privacy-shipped: judge the files an sdist and wheel ship
 hosttied	Host-tied tests skipped off the checkout
+musthave	Must-have fixes list and its verb

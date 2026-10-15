@@ -9885,3 +9885,61 @@
   claim  = {A host-tied module gets the stated reason; an unnamed one gets none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttied.py -k test_in_an_sdist_a_named_module_is_skipped_with_the_reason},
 }
+
+@misc{hooks-musthave-sound-entry-has-no-shape-problem-and-each-defect-is-named,
+  section = {musthave},
+  title  = {A short sha, empty dists, a two-line reason, a bad requires and a repeated sha each fail},
+  claim  = {A short sha, empty dists, a two-line reason, a bad requires and a repeated sha each
+            fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_a_sound_entry_has_no_shape_problem_and_each_defect_is_named},
+}
+
+@misc{hooks-musthave-adding-is-idempotent-on-sha-and-merges-dists-and-requires,
+  section = {musthave},
+  title  = {added, then unchanged on a rerun, then updated when a dist or the reason differs},
+  claim  = {added, then unchanged on a rerun, then updated when a dist or the reason differs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_adding_is_idempotent_on_sha_and_merges_dists_and_requires},
+}
+
+@misc{hooks-musthave-missing-file-is-empty-a-bad-one-is-a-reason-and-save-is-stable,
+  section = {musthave},
+  title  = {Absent loads as no entries; a non-list is refused with its path; save orders by sha},
+  claim  = {Absent loads as no entries; a non-list is refused with its path; save orders by sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_a_missing_file_is_empty_a_bad_one_is_a_reason_and_save_is_stable},
+}
+
+@misc{hooks-musthave-history-check-names-every-sha-and-required-sha-git-cannot-find,
+  section = {musthave},
+  title  = {One entry's own sha and its requires are both looked up; only the unknown ones are named},
+  claim  = {One entry's own sha and its requires are both looked up; only the unknown ones are
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_the_history_check_names_every_sha_and_required_sha_git_cannot_find},
+}
+
+@misc{hooks-musthave-dry-run-writes-nothing-and-write-writes-once,
+  section = {musthave},
+  title  = {WOULD ADDED without --write and no file; ADDED with it; the rerun says UNCHANGED},
+  claim  = {WOULD ADDED without --write and no file; ADDED with it; the rerun says UNCHANGED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_a_dry_run_writes_nothing_and_write_writes_once},
+}
+
+@misc{hooks-musthave-refused-entry-exits-two-and-leaves-the-file-alone,
+  section = {musthave},
+  title  = {A short sha, no dists, and a sha git cannot find are each refused; nothing is written},
+  claim  = {A short sha, no dists, and a sha git cannot find are each refused; nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_a_refused_entry_exits_two_and_leaves_the_file_alone},
+}
+
+@misc{hooks-musthave-check-exits-one-naming-a-problem-and-zero-when-sound,
+  section = {musthave},
+  title  = {A file whose sha git cannot find fails the check; the same file with it present passes},
+  claim  = {A file whose sha git cannot find fails the check; the same file with it present passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_the_check_exits_one_naming_a_problem_and_zero_when_sound},
+}
+
+@misc{hooks-musthave-repin-main-routes-the-must-have-modes-to-the-verb,
+  section = {musthave},
+  title  = {The shell hands `--must-have` and `--check-must-have` over with the --mtools directory},
+  claim  = {The shell hands `--must-have` and `--check-must-have` over with the --mtools directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_musthave.py -k test_repin_main_routes_the_must_have_modes_to_the_verb},
+}
