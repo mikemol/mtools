@@ -498,3 +498,24 @@
   claim  = {The real table: no value belongs to two verdicts and no name is listed under two.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_the_tracked_table_gives_each_value_one_verdict_and_each_name_one_value},
 }
+
+@misc{corpus-exitcensus-key-leaves-out-the-root-so-a-baseline-holds-in-another-checkout,
+  section = {exitcensus},
+  title  = {The key starts at the dist directory above `src`, not where the tree was checked out},
+  claim  = {The key starts at the dist directory above `src`, not where the tree was checked out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_the_key_leaves_out_the_root_so_a_baseline_holds_in_another_checkout},
+}
+
+@misc{corpus-exitcensus-diff-reports-a-new-violation-and-a-fixed-one-still-listed,
+  section = {exitcensus},
+  title  = {A violation the baseline lacks is NEW; a baseline key that no longer violates is FIXED},
+  claim  = {A violation the baseline lacks is NEW; a baseline key that no longer violates is FIXED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_diff_reports_a_new_violation_and_a_fixed_one_still_listed},
+}
+
+@misc{corpus-exitcensus-baseline-run-fails-on-new-and-on-fixed-and-passes-on-equal,
+  section = {exitcensus},
+  title  = {Write the baseline, check it passes; fix the code, it fails until the baseline shrinks},
+  claim  = {Write the baseline, check it passes; fix the code, it fails until the baseline shrinks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_baseline_run_fails_on_new_and_on_fixed_and_passes_on_equal},
+}

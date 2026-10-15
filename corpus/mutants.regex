@@ -51,3 +51,6 @@ src/mikemol/corpus/exitcensus.py|any-value-is-ok|if constant\.value == value:|if
 src/mikemol/corpus/exitcensus.py|any-name-is-read|target\.id\.startswith\(PREFIX\)|True|def=constants
 src/mikemol/corpus/exitcensus.py|any-expression-is-read|isinstance\(value, ast\.Constant\) and|True and|def=constants
 src/mikemol/corpus/exitcensus.py|tests-trees-are-read|"src" not in path\.parts|False|def=census
+src/mikemol/corpus/exitcensus.py|new-and-fixed-swapped|return sorted\(today - listed\), sorted\(listed - today\)|return sorted(listed - today), sorted(today - listed)|def=diff
+src/mikemol/corpus/exitcensus.py|a-fixed-key-may-stay-listed|return EXIT_FOUND if new or fixed else 0|return EXIT_FOUND if new else 0|def=_baseline_main
+src/mikemol/corpus/exitcensus.py|key-keeps-the-root|parts\.index\("src"\) - 1|parts.index("src") - 2|def=key_of

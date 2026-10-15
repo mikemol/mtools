@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1297,
+  "counter": 1298,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,7 +15,12 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": null,
+  "lock": {
+    "holder": "mtools-tick-opus",
+    "taken_at": "2026-10-15T20:17:27Z",
+    "pid": 3076458,
+    "start": 30649468
+  },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6123,7 +6128,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 246,
+      "ticks_blocked": 247,
       "completed": null
     },
     {
@@ -6171,7 +6176,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 245,
+      "ticks_blocked": 246,
       "completed": null
     },
     {
@@ -10054,7 +10059,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 250,
+      "ticks_blocked": 251,
       "completed": null
     },
     {
@@ -11802,7 +11807,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 184,
+      "ticks_blocked": 185,
       "completed": null
     },
     {
@@ -16156,7 +16161,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16697,7 +16702,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17506,7 +17511,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -17549,7 +17554,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -17572,7 +17577,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -17997,7 +18002,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 150,
+      "ticks_blocked": 151,
       "completed": null
     },
     {
@@ -18173,7 +18178,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 148,
+      "ticks_blocked": 149,
       "completed": null
     },
     {
@@ -18956,7 +18961,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 147,
+      "ticks_blocked": 148,
       "completed": null
     },
     {
@@ -20678,7 +20683,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -21417,7 +21422,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 39,
+      "ticks_blocked": 40,
       "completed": null
     },
     {
@@ -21463,7 +21468,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 107,
+      "ticks_blocked": 108,
       "completed": null
     },
     {
@@ -21555,7 +21560,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 107,
+      "ticks_blocked": 108,
       "completed": null
     },
     {
@@ -21621,7 +21626,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 28,
       "completed": null
     },
     {
@@ -22022,7 +22027,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -22043,7 +22048,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -22064,7 +22069,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 92,
+      "ticks_blocked": 93,
       "completed": null
     },
     {
@@ -22473,7 +22478,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 91,
+      "ticks_blocked": 92,
       "completed": null
     },
     {
@@ -22495,7 +22500,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 91,
+      "ticks_blocked": 92,
       "completed": null
     },
     {
@@ -22601,7 +22606,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 71,
+      "ticks_blocked": 72,
       "completed": null
     },
     {
@@ -22882,7 +22887,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 71
+      "ticks_blocked": 72
     },
     {
       "symbol": "W1116",
@@ -22903,7 +22908,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 71
+      "ticks_blocked": 72
     },
     {
       "symbol": "W1117",
@@ -22921,7 +22926,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 71
+      "ticks_blocked": 72
     },
     {
       "symbol": "W1118",
@@ -22939,7 +22944,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 71
+      "ticks_blocked": 72
     },
     {
       "symbol": "W1119",
@@ -23445,7 +23450,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 4
+      "ticks_blocked": 5
     },
     {
       "symbol": "W1144",
@@ -23603,7 +23608,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 40
+      "ticks_blocked": 41
     },
     {
       "symbol": "W1151",
@@ -23649,7 +23654,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 59
+      "ticks_blocked": 60
     },
     {
       "symbol": "W1153",
@@ -23673,7 +23678,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -24107,7 +24112,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -24569,7 +24574,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -26025,21 +26030,19 @@
     {
       "symbol": "W1266",
       "title": "One verdict codomain DONE NOOP DEFER REFUSE WITHHELD RACE and a fleet exit table that resolves the exit-3 collision",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "fence"
       ],
-      "blocked_on": [
-        "W1297"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Umbrella: W1297 (preamble stops depending on exit 4) and W1295 (gate test) before any pathsforward value moves",
-      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: 2026-10-15 VERIFIED by github-8f (relayed, read on its side that day): fence admit.py:311 reads EXIT_REFUSED = 3, so the exit-3 collision is real on the fence side; luthen apply_set.py:49 EXIT_DEFERRED = 3 is still the report's claim, not verified. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f says the operator answered in its session that fleet-level dominates and their standing direction (consolidate, reuse, pin latest mtools) already orders the exit table, so it is not a pending decision. I have no operator statement here. Effect on my work: none yet; the order already planned (checker landed, W1295 gate test, W1296 prose-reader measurement, then one mover per tool shipping with its callers) is what I would do on either reading. A live value move still waits on the measurement.",
+      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: 2026-10-15 VERIFIED by github-8f (relayed, read on its side that day): fence admit.py:311 reads EXIT_REFUSED = 3, so the exit-3 collision is real on the fence side; luthen apply_set.py:49 EXIT_DEFERRED = 3 is still the report's claim, not verified. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f says the operator answered in its session that fleet-level dominates and their standing direction (consolidate, reuse, pin latest mtools) already orders the exit table, so it is not a pending decision. I have no operator statement here. Effect on my work: none yet; the order already planned (checker landed, W1295 gate test, W1296 prose-reader measurement, then one mover per tool shipping with its callers) is what I would do on either reading. A live value move still waits on the measurement. | 2026-10-15: 2026-10-15 VERIFIED first-hand: the operator pointed me at /home/mikemol/.claude/projects/-home-mikemol-github/memory/feedback-fleet-level-dominates.md (their words recorded there: fleet-level dominates; consolidate, reuse and pin to latest mtools are standing direction). The exit table is therefore authorized as a fleet consolidation; no operator ask is needed. The measurement-first order (W1296 done, W1297, W1295) stands.",
       "issued_at": "2026-10-15T14:29:40Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T20:04:04Z",
+      "last_worked": "2026-10-15T20:11:19Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -26337,7 +26340,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -26595,7 +26598,7 @@
     {
       "symbol": "W1295",
       "title": "A gate test runs exitcensus over the fleet's dists and fails on any VIOLATION not in a ratchet baseline of today's, so disagreement with corpus/exit-table.json can only shrink",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1266"
       ],
@@ -26604,13 +26607,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After exitcensus lands: write the baseline (today's VIOLATION rows, path and name), a bazel test target over the sibling dists' src trees, and a test that a new disagreement fails and a fixed one is required to leave the baseline",
+      "next_bounded_step": "Step 1 (this card): exitcensus --baseline FILE and --write-baseline FILE; new violation or a fixed one still listed exits 1; then W1298 wires a bazel test over the sibling dists' src trees",
       "evidence": "",
       "issued_at": "2026-10-15T19:50:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1294",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-15T20:17:38Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1296",
@@ -26636,7 +26640,7 @@
     {
       "symbol": "W1297",
       "title": "Before pathsforward's REFUSED moves 2 to 4, --verify names a divergence in its own output and the payload preamble stops saying 'exit 4 means the FILE wins'",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1266"
       ],
@@ -26645,14 +26649,34 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Make --verify print DIVERGED: the FILE wins on stdout, change payload.py:149 to rely on that line, update the tests that pin the sentence, and only then plan the REFUSED move as its own card with its callers",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools ecf92fb (pushed): payload.header names the divergence line, test and mutant added.",
       "issued_at": "2026-10-15T20:03:58Z",
       "minted_during": "interrupt",
       "caused_by": "W1296",
-      "last_worked": "2026-10-15T20:04:05Z",
+      "last_worked": "2026-10-15T20:16:50Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T201650Z"
+    },
+    {
+      "symbol": "W1298",
+      "title": "A bazel test target runs exitcensus --baseline over the sibling dists' src trees, which needs each dist to export its src files to corpus",
+      "status": "ready",
+      "enables": [
+        "W1295"
+      ],
+      "touches": [
+        "corpus"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After W1295 step 1: find how another cross-dist test reads sibling sources (hooks test_bar_fires exports pyproject), export each dist's src py files, add the corpus target with the baseline as data",
+      "evidence": "",
+      "issued_at": "2026-10-15T20:17:38Z",
+      "minted_during": "tick",
+      "caused_by": "W1295",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

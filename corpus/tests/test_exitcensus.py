@@ -94,6 +94,41 @@ def test_main_refuses_a_missing_table(capsys: pytest.CaptureFixture[str]) -> Non
     assert "usage:" in capsys.readouterr().err
 
 
+def test_the_key_leaves_out_the_root_so_a_baseline_holds_in_another_checkout() -> None:
+    """The key starts at the dist directory above `src`, not where the tree was checked out."""
+    here = exitcensus.Constant("/a/b/mtools/fence/src/m/x.py", 4, "EXIT_REFUSED", 2)
+    there = exitcensus.Constant("/c/mtools/fence/src/m/x.py", 4, "EXIT_REFUSED", 2)
+    assert exitcensus.key_of(here) == exitcensus.key_of(there)
+    assert exitcensus.key_of(here) == "fence/src/m/x.py EXIT_REFUSED 2"
+
+
+def test_diff_reports_a_new_violation_and_a_fixed_one_still_listed() -> None:
+    """A violation the baseline lacks is NEW; a baseline key that no longer violates is FIXED."""
+    bad = exitcensus.judge(exitcensus.Constant("d/src/a.py", 1, "EXIT_REFUSED", 2), _table())
+    good = exitcensus.judge(exitcensus.Constant("d/src/b.py", 1, "EXIT_REFUSED", 3), _table())
+    listed = ["d/src/b.py EXIT_REFUSED 2", ""]
+    new, fixed = exitcensus.diff([bad, good], listed)
+    assert (new, fixed) == (["d/src/a.py EXIT_REFUSED 2"], ["d/src/b.py EXIT_REFUSED 2"])
+
+
+def test_a_baseline_run_fails_on_new_and_on_fixed_and_passes_on_equal(tmp_path: Path) -> None:
+    """Write the baseline, check it passes; fix the code, it fails until the baseline shrinks."""
+    (tmp_path / "d" / "src").mkdir(parents=True)
+    table = tmp_path / "t.json"
+    table.write_text(json.dumps(_TABLE_DOC), encoding="utf-8")
+    source = tmp_path / "d" / "src" / "a.py"
+    source.write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    base = tmp_path / "base.txt"
+    root = str(tmp_path / "d")
+    assert exitcensus.main(["--write-baseline", str(base), str(table), root]) == 0
+    assert exitcensus.main(["--baseline", str(base), str(table), root]) == 0
+    source.write_text("EXIT_REFUSED = 3\n", encoding="utf-8")
+    assert exitcensus.main(["--baseline", str(base), str(table), root]) == 1
+    source.write_text("EXIT_REFUSED = 4\n", encoding="utf-8")
+    base.write_text("", encoding="utf-8")
+    assert exitcensus.main(["--baseline", str(base), str(table), root]) == 1
+
+
 def test_the_tracked_table_gives_each_value_one_verdict_and_each_name_one_value() -> None:
     """The real table: no value belongs to two verdicts and no name is listed under two."""
     doc = _real()

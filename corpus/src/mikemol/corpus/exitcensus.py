@@ -33,7 +33,10 @@ if TYPE_CHECKING:
 PREFIX = "EXIT_"
 EXIT_FOUND = 1
 EXIT_USAGE = 2
-_USAGE = "usage: python3 -m mikemol.corpus.exitcensus TABLE.json ROOT [ROOT ...]\n"
+_USAGE = (
+    "usage: python3 -m mikemol.corpus.exitcensus [--baseline F | --write-baseline F] "
+    "TABLE.json ROOT [ROOT ...]\n"
+)
 _BLIND = "# cannot see: a constant computed at run time, or a status that is not a named EXIT_\n"
 _SKIP = frozenset({".git", ".venv", "node_modules", "build", "__pycache__"})
 
@@ -154,20 +157,79 @@ def render(rows: Sequence[Row]) -> str:
     return "".join(lines)
 
 
+def key_of(constant: Constant) -> str:
+    """Name a constant for the baseline: its path from the directory above `src`, name and value.
+
+    ⚑ THE ROOT IS NOT PART OF THE KEY, so a baseline written from one checkout holds in another.
+
+    Returns:
+        `<dist>/src/...py NAME value`.
+
+    """
+    parts = Path(constant.path).parts
+    at = parts.index("src") - 1 if "src" in parts and parts.index("src") > 0 else 0
+    return f"{'/'.join(parts[at:])} {constant.name} {constant.value}"
+
+
+def keys_of(rows: Sequence[Row]) -> list[str]:
+    """List the baseline keys of the rows that violate the table.
+
+    Returns:
+        the keys, sorted.
+
+    """
+    return sorted(key_of(r.constant) for r in rows if r.status == "VIOLATION")
+
+
+def diff(rows: Sequence[Row], baseline: Sequence[str]) -> tuple[list[str], list[str]]:
+    """Compare today's violations with the baseline that may only shrink.
+
+    Returns:
+        (new, fixed): violations the baseline does not list, and baseline keys that no longer
+        violate. Both are failures: a new one is a regression, a fixed one must leave the file.
+
+    """
+    today, listed = set(keys_of(rows)), {k for k in baseline if k.strip()}
+    return sorted(today - listed), sorted(listed - today)
+
+
+def _baseline_main(args: list[str], mode: str, rows: Sequence[Row]) -> int:
+    """Write or check the baseline named by `args[0]`.
+
+    Returns:
+        0 on a write or a match, 1 on a new or a stale-listed violation.
+
+    """
+    path = Path(args[0])
+    if mode == "--write-baseline":
+        path.write_text("".join(f"{k}\n" for k in keys_of(rows)), encoding="utf-8")
+        return 0
+    listed = path.read_text(encoding="utf-8").splitlines() if path.is_file() else []
+    new, fixed = diff(rows, listed)
+    sys.stdout.write("".join(f"NEW {k}\n" for k in new) + "".join(f"FIXED {k}\n" for k in fixed))
+    return EXIT_FOUND if new or fixed else 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the census.
 
     Returns:
-        0 when nothing violates the table, 1 when something does, 2 for a usage refusal.
+        0 when nothing violates the table (or, with a baseline, nothing differs from it), 1 when
+        something does, 2 for a usage refusal.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) < EXIT_USAGE or not Path(args[0]).is_file():
+    modes = ("--baseline", "--write-baseline")
+    mode = args.pop(0) if args and args[0] in modes else ""
+    keep = [args.pop(0)] if mode and args else []
+    if len(args) < EXIT_USAGE or not Path(args[0]).is_file() or (mode and not keep):
         sys.stderr.write(_USAGE)
         return EXIT_USAGE
     doc = cast("object", json.loads(Path(args[0]).read_text(encoding="utf-8")))
     table = table_of(doc)
     rows = census([Path(a) for a in args[1:]], table)
+    if mode:
+        return _baseline_main(keep, mode, rows)
     sys.stdout.write(render(rows))
     return EXIT_FOUND if any(r.status == "VIOLATION" for r in rows) else 0
 
