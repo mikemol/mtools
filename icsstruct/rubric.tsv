@@ -5,3 +5,4 @@ stub_authority	The Stubs: Checked Against the Libraries They Describe, Construct
 expand	The Expansion Layer: One Occurrence per Instance in an Overlapping Window, Unexpandable Events Carried
 source	The Source Edge: A Secret URL Is Read Once and Reaches No Record, Label or Error
 cli	The Command: One Line per Occurrence, Every Defect on the Page, Each Source by Its Label
+pathsforward_golden	The lossless reader parses pathsforward's golden calendar

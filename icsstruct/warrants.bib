@@ -262,3 +262,24 @@
   claim  = {A window that is not a positive count of days is refused by argparse, exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bad_window_is_refused},
 }
+
+@misc{icsstruct-pathsforward-golden-golden-calendar-lexes-with-no-malformed-line,
+  section = {pathsforward_golden},
+  title  = {Every physical line of the writer's output is a well-formed, well-nested content line},
+  claim  = {Every physical line of the writer's output is a well-formed, well-nested content line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathsforward_golden.py -k test_the_golden_calendar_lexes_with_no_malformed_line},
+}
+
+@misc{icsstruct-pathsforward-golden-golden-calendar-has-the-components-the-queue-was-built-to-produce,
+  section = {pathsforward_golden},
+  title  = {One calendar, one VTIMEZONE, and a VTODO per waypoint plus the completed override},
+  claim  = {One calendar, one VTIMEZONE, and a VTODO per waypoint plus the completed override.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathsforward_golden.py -k test_the_golden_calendar_has_the_components_the_queue_was_built_to_produce},
+}
+
+@misc{icsstruct-pathsforward-golden-recurring-series-and-its-override-share-one-uid-and-the-alarm-is-nested,
+  section = {pathsforward_golden},
+  title  = {W2's series and its December override carry one UID; the VALARM sits inside a VTODO},
+  claim  = {W2's series and its December override carry one UID; the VALARM sits inside a VTODO.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pathsforward_golden.py -k test_the_recurring_series_and_its_override_share_one_uid_and_the_alarm_is_nested},
+}

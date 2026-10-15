@@ -12,6 +12,8 @@ load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 exports_files([
+    # ⚑ EXPORTED FOR //icsstruct:test_pathsforward_golden, which parses it with the lossless reader (W1263).
+    "tests/golden/queue.ics",
     # ⚑ EXPORTED FOR `//hooks:test_bar_fires`, which globs `*/pyproject.toml` for the population.
     "pyproject.toml",
     "requirements.txt",

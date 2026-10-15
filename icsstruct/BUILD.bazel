@@ -52,7 +52,11 @@ py_library(
             "$(location pyproject.toml)",
         ],
         # ⚑ `stubs/**` IS DATA FOR test_stub_authority, which runs stubtest over it (W258).
-        data = ["pyproject.toml"] + glob(["tests/fixtures/*.ics", "stubs/**"]),
+        data = ["pyproject.toml", "//pathsforward:tests/golden/queue.ics"] + glob(
+            ["tests/fixtures/*.ics", "stubs/**"]
+        ),
+        # W1263: test_pathsforward_golden parses pathsforward's golden calendar; the gate names it.
+        env = {"PATHSFORWARD_GOLDEN": "$(location //pathsforward:tests/golden/queue.ics)"},
         size = "small",
         deps = [
             ":icsstruct",
