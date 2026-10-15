@@ -10157,3 +10157,24 @@
   claim  = {`--jsonl` has no meaning beside `--check-file`, and a repeated flag is ambiguous.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_cli.py -k test_a_ledger_flag_without_census_or_repeated_is_a_usage_error},
 }
+
+@misc{hooks-commit-body-no-body-and-a-plain-body-pass-even-when-they-mention-a-trailer-word,
+  section = {commit_body},
+  title  = {Empty and prose bodies are fine; a trailer word that does not START a line is prose},
+  claim  = {Empty and prose bodies are fine; a trailer word that does not START a line is prose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_no_body_and_a_plain_body_pass_even_when_they_mention_a_trailer_word},
+}
+
+@misc{hooks-commit-body-body-with-a-tool-owned-trailer-is-refused-naming-its-line,
+  section = {commit_body},
+  title  = {Either trailer, any case, indented or not, is refused with its line number and word},
+  claim  = {Either trailer, any case, indented or not, is refused with its line number and word.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_a_body_with_a_tool_owned_trailer_is_refused_naming_its_line},
+}
+
+@misc{hooks-commit-body-only-the-first-offending-line-is-reported,
+  section = {commit_body},
+  title  = {Two trailers in one body: the first is named, so the refusal stays one line},
+  claim  = {Two trailers in one body: the first is named, so the refusal stays one line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_only_the_first_offending_line_is_reported},
+}
