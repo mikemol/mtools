@@ -1,0 +1,4 @@
+# The sdist carries every file under tests/ (conftest.py included) and the differential/ tree the
+# tests import and read (W1228).
+graft tests
+recursive-include differential *.py *.rego *.json *.jsonl *.tsv *.txt

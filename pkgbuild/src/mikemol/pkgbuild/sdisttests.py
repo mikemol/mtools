@@ -14,8 +14,8 @@ bazel, no checkout path, no sibling checkout.
 it through `--find-links` over every wheel under OUT, the same artifacts the index will serve after
 the first upload; a third-party dependency comes from the public index.
 
-⚑ THE TEST RUNNER IS THE ONLY EXTRA: dev tools a test needs (mypy, ruff) are NOT installed, so a
-test that shells out to one fails here and is reported with its tail, not skipped.
+⚑ THE EXTRAS ARE THE DIST'S OWN DECLARED DEV GROUP (pytest always; mypy never): a test that needs
+a package the dist does not declare fails here and is reported with its tail, not skipped.
 
 ⚑ NO WALL-CLOCK TIMEOUT (operator, standing): a hang is seen as a hang. pytest's own
 `faulthandler_timeout` dumps stacks and kills nothing.
@@ -41,7 +41,7 @@ USAGE = 2
 NOT_FOUND = 127
 COUNTS = re.compile(r"(\d+) (passed|failed|error|skipped)")
 NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
-NOT_INSTALLED = frozenset({"mypy", "ruff", "pytest"})
+NOT_INSTALLED = frozenset({"mypy", "pytest"})
 TAIL = 600
 SYNOPSIS = "usage: mikemol-wheel sdist-tests OUT [DIST...] [--tail CHARS]\n"
 Row = dict[str, object]
@@ -51,13 +51,13 @@ Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 def dev_requirements(tree: Path) -> list[str]:
     """Read the requirements a dist declares for running its own tests.
 
-    ⚑ THE DECLARED DEV GROUP, MINUS THE LINT TOOLS (W1227): a test that needs a package the dist
-    itself lists under `[dependency-groups] dev` (a build backend, a renderer) is a legitimate
-    test, and installing what it declares is what a contributor does; mypy and ruff are the
-    checks, not test needs, so they stay out and a test that shells out to one still fails.
+    ⚑ THE DECLARED DEV GROUP, MINUS MYPY (W1227): a test that needs a package the dist itself
+    lists under `[dependency-groups] dev` (a build backend, a renderer, ruff for a dist whose
+    tests run it) is a legitimate test, and installing what it declares is what a contributor
+    does; mypy is the type check, not a test need, so it stays out.
 
     Returns:
-        the group's requirement strings except pytest (always installed) and the lint tools.
+        the group's requirement strings except pytest (always installed) and mypy.
 
     """
     try:

@@ -1,0 +1,2 @@
+# The sdist carries the tests' fixtures: without them test_lexical cannot even collect (W1228).
+graft tests

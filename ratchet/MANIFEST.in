@@ -1,0 +1,2 @@
+# The sdist carries the tests' data file (tests/CASES.txt): the suite reads it (W1228).
+graft tests
