@@ -252,6 +252,48 @@ def test_a_stale_install_guide_fails_the_release_beside_good_dists(
     assert rows[1]["guide"] == []
 
 
+def test_a_release_version_is_stamped_into_the_build_and_not_into_the_commit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W803: the artifacts carry 0.0.7 while the committed pyproject still says 0.0.1."""
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1"})
+    sha = _git(root, "rev-parse", "HEAD")
+    (row,) = relcheck.release_check(root, sha, tmp_path / "out", "0.0.7")
+    assert row["ok"] is True, row
+    built = sorted(p.name for p in (tmp_path / "out" / "demo-a").iterdir())
+    assert all("0.0.7" in name for name in built)
+    assert 'version = "0.0.1"' in (root / "demo-a" / "pyproject.toml").read_text("utf-8")
+
+
+def test_the_version_flag_must_be_a_plain_release_segment(tmp_path: Path) -> None:
+    """A local version, a missing value and a letter are usage errors; nothing is built."""
+    base = [str(tmp_path), "deadbeef", str(tmp_path / "out")]
+    assert relcheck.run([*base, "--version", "0.0.1+gabc"]) == _TWO
+    assert relcheck.run([*base, "--version"]) == _TWO
+    assert relcheck.run([*base, "--version", "v1"]) == _TWO
+    assert not (tmp_path / "out").exists()
+
+
+def test_a_dist_with_no_static_version_is_a_failing_row_beside_the_stamped_one(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The control: a dynamic version cannot take the stamp, so it fails by name, unguessed."""
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1", "demo-b": "0.0.1"})
+    (root / "demo-b" / "pyproject.toml").write_text(
+        _PYPROJECT.format(name="demo-b", version="0.0.1").replace(
+            'version = "0.0.1"\n', 'dynamic = ["version"]\n'
+        ),
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "dynamic")
+    sha = _git(root, "rev-parse", "HEAD")
+    good, odd = relcheck.release_check(root, sha, tmp_path / "out", "0.0.7")
+    assert (good["dist"], good["ok"]) == ("demo-a", True)
+    assert (odd["dist"], odd["ok"]) == ("demo-b", False)
+    assert "no static" in str(odd["build"])
+
+
 def test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clean(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

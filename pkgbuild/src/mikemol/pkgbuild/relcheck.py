@@ -42,13 +42,21 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import installguide, metacheck, privacycheck, sdistcomplete, twinecheck
+from mikemol.pkgbuild import (
+    installguide,
+    metacheck,
+    privacycheck,
+    sdistcomplete,
+    twinecheck,
+    versionstamp,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
 DEFAULT_BACKEND = "setuptools.build_meta"
 GUIDE = "INSTALL.md"
+VERSION_FLAG = "--version"
 ARGC = 3
 BUILD_ERRORS = (OSError, ValueError, RuntimeError, ImportError, KeyError, TypeError, SystemExit)
 Row = dict[str, object]
@@ -57,6 +65,8 @@ run_twine = twinecheck.check
 run_privacy = privacycheck.check
 run_tests_carried = sdistcomplete.verdict
 run_guide = installguide.findings
+stamp_tree = versionstamp.stamp_tree
+version_valid = versionstamp.valid
 
 
 def checkout(root: Path, sha: str, dest: Path) -> None:
@@ -192,8 +202,22 @@ def guide_rows(tree: Path, sha: str) -> list[Row]:
     return [{"dist": GUIDE, "sha": sha, "ok": not found, "build": "n/a", "guide": found}]
 
 
-def release_check(root: Path, sha: str, out: Path) -> list[Row]:
+def unstamped_row(dist: Path, sha: str, version: str) -> Row:
+    """Say why a dist could not take the release version.
+
+    Returns:
+        a failing row whose `build` names the missing static version line.
+
+    """
+    reason = f'no static `version = "..."` line under [project] to stamp {version} into'
+    return {"dist": dist.name, "sha": sha, "ok": False, "build": reason, "artifacts": []}
+
+
+def release_check(root: Path, sha: str, out: Path, version: str | None = None) -> list[Row]:
     """Build and check every dist of `sha`, and the install guide.
+
+    ⚑ WITH `version`, THE ARCHIVE IS STAMPED BEFORE THE BUILD (W803): every dist is built as
+    that release, from a tree that is a temporary copy, so the committed placeholders stay.
 
     Returns:
         one row per dist, in name order, then the install guide's row when there is a guide.
@@ -202,19 +226,32 @@ def release_check(root: Path, sha: str, out: Path) -> list[Row]:
     with tempfile.TemporaryDirectory() as scratch:
         tree = Path(scratch)
         checkout(root, sha, tree)
-        return [*(row_of(dist, out, sha) for dist in dists_in(tree)), *guide_rows(tree, sha)]
+        dists = dists_in(tree)
+        bad = set(stamp_tree(dists, version)) if version is not None else set()
+        rows = [
+            unstamped_row(d, sha, str(version)) if d.name in bad else row_of(d, out, sha)
+            for d in dists
+        ]
+        return [*rows, *guide_rows(tree, sha)]
 
 
 def run(args: Sequence[str]) -> int:
-    """Run `release-check ROOT SHA OUT`: one JSON line per dist, exit 1 if any is not ok.
+    """Run `release-check ROOT SHA OUT [--version V]`: one JSON line per dist, exit 1 if any fails.
 
     Returns:
-        0 when every dist built and passed, else 1; 2 for the wrong number of arguments.
+        0 when every dist built and passed, else 1; 2 for the wrong arguments or a version that is
+        not a plain release segment.
 
     """
-    if len(args) != ARGC:
-        sys.stderr.write("usage: mikemol-wheel release-check ROOT SHA OUT\n")
+    words = list(args)
+    version = None
+    if VERSION_FLAG in words:
+        place = words.index(VERSION_FLAG)
+        version = words[place + 1] if place + 1 < len(words) else ""
+        del words[place : place + 2]
+    if len(words) != ARGC or (version is not None and not version_valid(version)):
+        sys.stderr.write("usage: mikemol-wheel release-check ROOT SHA OUT [--version 0.0.N]\n")
         return 2
-    rows = release_check(Path(args[0]), args[1], Path(args[2]))
+    rows = release_check(Path(words[0]), words[1], Path(words[2]), version)
     sys.stdout.writelines(json.dumps(r, sort_keys=True) + "\n" for r in rows)
     return 0 if rows and all(r["ok"] for r in rows) else 1

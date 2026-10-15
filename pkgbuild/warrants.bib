@@ -750,3 +750,53 @@
   claim  = {Each exits 2 and writes nothing to standard output.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_checklist.py -k test_a_non_wheel_a_missing_file_a_dangling_flag_and_an_extra_operand_are_usage_errors},
 }
+
+@misc{pkgbuild-versionstamp-only-a-plain-release-segment-is-a-valid-version,
+  section = {versionstamp},
+  title  = {Digits and dots pass; a local part, a suffix, an empty string and a letter do not},
+  claim  = {Digits and dots pass; a local part, a suffix, an empty string and a letter do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_versionstamp.py -k test_only_a_plain_release_segment_is_a_valid_version},
+}
+
+@misc{pkgbuild-versionstamp-project-version-is-replaced-and-another-tables-is-not,
+  section = {versionstamp},
+  title  = {The [project] line changes; the [tool.other] version keeps its value},
+  claim  = {The [project] line changes; the [tool.other] version keeps its value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_versionstamp.py -k test_the_project_version_is_replaced_and_another_tables_is_not},
+}
+
+@misc{pkgbuild-versionstamp-pyproject-without-a-static-project-version-is-left-alone,
+  section = {versionstamp},
+  title  = {No [project], or [project] with no version line (a dynamic one), gives None},
+  claim  = {No [project], or [project] with no version line (a dynamic one), gives None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_versionstamp.py -k test_a_pyproject_without_a_static_project_version_is_left_alone},
+}
+
+@misc{pkgbuild-versionstamp-tree-is-stamped-in-place-and-the-unstampable-are-named,
+  section = {versionstamp},
+  title  = {Two dists take the version on disk; the one with a dynamic version is named and unchanged},
+  claim  = {Two dists take the version on disk; the one with a dynamic version is named and
+            unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_versionstamp.py -k test_a_tree_is_stamped_in_place_and_the_unstampable_are_named},
+}
+
+@misc{pkgbuild-relcheck-release-version-is-stamped-into-the-build-and-not-into-the-commit,
+  section = {relcheck},
+  title  = {W803: the artifacts carry 0.0.7 while the committed pyproject still says 0.0.1},
+  claim  = {W803: the artifacts carry 0.0.7 while the committed pyproject still says 0.0.1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_release_version_is_stamped_into_the_build_and_not_into_the_commit},
+}
+
+@misc{pkgbuild-relcheck-version-flag-must-be-a-plain-release-segment,
+  section = {relcheck},
+  title  = {A local version, a missing value and a letter are usage errors; nothing is built},
+  claim  = {A local version, a missing value and a letter are usage errors; nothing is built.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_the_version_flag_must_be_a_plain_release_segment},
+}
+
+@misc{pkgbuild-relcheck-dist-with-no-static-version-is-a-failing-row-beside-the-stamped-one,
+  section = {relcheck},
+  title  = {The control: a dynamic version cannot take the stamp, so it fails by name, unguessed},
+  claim  = {The control: a dynamic version cannot take the stamp, so it fails by name, unguessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_dist_with_no_static_version_is_a_failing_row_beside_the_stamped_one},
+}

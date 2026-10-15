@@ -25,7 +25,8 @@ src/mikemol/pkgbuild/twinecheck.py|twine-refusal-passes|\("ok" if done\.returnco
 src/mikemol/pkgbuild/twinecheck.py|twine-not-strict|"check", "--strict", |"check", |def=check
 src/mikemol/pkgbuild/twinecheck.py|missing-interpreter-escapes|except OSError as exc:|except ZeroDivisionError as exc:|def=check
 src/mikemol/pkgbuild/relcheck.py|exit-always-clean|return 0 if rows and all\(r\["ok"\] for r in rows\) else 1|return 0|def=run
-src/mikemol/pkgbuild/relcheck.py|arguments-unchecked|if len\(args\) != ARGC:|if False:|def=run
+src/mikemol/pkgbuild/relcheck.py|arguments-unchecked|if len\(words\) != ARGC or \(version is not None and not version_valid\(version\)\):|if False:|def=run
+src/mikemol/pkgbuild/relcheck.py|version-not-validated|if len\(words\) != ARGC or \(version is not None and not version_valid\(version\)\):|if len(words) != ARGC:|def=run
 src/mikemol/pkgbuild/relcheck.py|built-from-the-working-tree|checkout\(root, sha, tree\)|shutil.copytree(root, tree, dirs_exist_ok=True)|def=release_check
 src/mikemol/pkgbuild/metacheck.py|local-version-passes|if "\+" in version:|if False:|def=_identity
 src/mikemol/pkgbuild/metacheck.py|any-content-type-passes|elif kind not in CONTENT_TYPES:|elif False:|def=_description
