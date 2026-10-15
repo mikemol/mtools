@@ -203,6 +203,29 @@ def test_the_commands_stdout_is_json_only_and_the_build_noise_goes_to_stderr(
     assert "running sdist" in done.stderr
 
 
+def test_a_tracked_test_file_the_sdist_drops_fails_the_row_until_the_manifest_grafts_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1230: conftest.py is not test*.py, so setuptools leaves it out; a graft puts it back."""
+    root = _repo(tmp_path, monkeypatch, {"demo-a": "0.0.1"})
+    (root / "demo-a" / "tests").mkdir()
+    (root / "demo-a" / "tests" / "conftest.py").write_text("X = 1\n", encoding="utf-8")
+    (root / "demo-a" / "tests" / "test_a.py").write_text("def test_a() -> None: ...\n", "utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "tests")
+    (failed,) = relcheck.release_check(root, _git(root, "rev-parse", "HEAD"), tmp_path / "o1")
+    assert failed["ok"] is False
+    assert failed["tests"] == "failed"
+    assert "tests/conftest.py" in str(failed["tests_detail"])
+    assert "tests/test_a.py" not in str(failed["tests_detail"])
+    (root / "demo-a" / "MANIFEST.in").write_text("graft tests\n", encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "manifest")
+    (fixed,) = relcheck.release_check(root, _git(root, "rev-parse", "HEAD"), tmp_path / "o2")
+    assert fixed["ok"] is True, fixed
+    assert fixed["tests"] == "ok"
+
+
 def test_a_readme_the_renderer_refuses_fails_the_row_though_the_metadata_is_clean(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -642,3 +642,39 @@
   claim  = {The install command names the wheel, pytest, then each declared need.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_pip_is_given_the_dev_needs_the_sdist_declares},
 }
+
+@misc{pkgbuild-sdistcomplete-tracked-test-files-exclude-caches-and-a-missing-directory-is-empty,
+  section = {sdistcomplete},
+  title  = {Only real files under tests/, in name order; a pycache is not a file of a commit},
+  claim  = {Only real files under tests/, in name order; a pycache is not a file of a commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdistcomplete.py -k test_tracked_test_files_exclude_caches_and_a_missing_directory_is_empty},
+}
+
+@misc{pkgbuild-sdistcomplete-members-are-read-relative-to-the-single-top-directory,
+  section = {sdistcomplete},
+  title  = {The leading name-version directory is removed from each member},
+  claim  = {The leading name-version directory is removed from each member.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdistcomplete.py -k test_members_are_read_relative_to_the_single_top_directory},
+}
+
+@misc{pkgbuild-sdistcomplete-missing-names-the-tracked-test-files-the-sdist-lacks,
+  section = {sdistcomplete},
+  title  = {conftest.py is absent from the sdist and named; an extra member is not a finding},
+  claim  = {conftest.py is absent from the sdist and named; an extra member is not a finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdistcomplete.py -k test_missing_names_the_tracked_test_files_the_sdist_lacks},
+}
+
+@misc{pkgbuild-sdistcomplete-verdict-passes-when-nothing-is-missing-and-cuts-a-long-list,
+  section = {sdistcomplete},
+  title  = {A complete sdist is ok with no detail; a bare one names a count, eight files and the fix},
+  claim  = {A complete sdist is ok with no detail; a bare one names a count, eight files and the
+            fix.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdistcomplete.py -k test_the_verdict_passes_when_nothing_is_missing_and_cuts_a_long_list},
+}
+
+@misc{pkgbuild-relcheck-tracked-test-file-the-sdist-drops-fails-the-row-until-the-manifest-grafts-it,
+  section = {relcheck},
+  title  = {W1230: conftest.py is not test*.py, so setuptools leaves it out; a graft puts it back},
+  claim  = {W1230: conftest.py is not test*.py, so setuptools leaves it out; a graft puts it back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_tracked_test_file_the_sdist_drops_fails_the_row_until_the_manifest_grafts_it},
+}

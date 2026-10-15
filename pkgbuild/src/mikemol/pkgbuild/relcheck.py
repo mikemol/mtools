@@ -16,10 +16,12 @@ with no network and nothing installed.
 ⚑ A DIST THAT FAILS TO BUILD IS A ROW, NOT A CRASH: its `ok` is false and its `build` field says
 why, so one broken dist is reported beside the others instead of hiding them.
 
-⚑ THREE CHECKS, ALL REQUIRED FOR `ok`: the metadata check (`metacheck`, standard library), the
-README rendering (`twinecheck`, W1189: `twine check --strict`) and the shipped-file privacy judge
-(`privacycheck`, W1199: no deny and no unaccepted withheld finding in any file the artifacts carry).
-Each of the last two reports `ok`, `failed` or `unavailable`, and `unavailable` is a failure.
+⚑ FOUR CHECKS, ALL REQUIRED FOR `ok`: the metadata check (`metacheck`, standard library), the
+README rendering (`twinecheck`, W1189: `twine check --strict`), the shipped-file privacy judge
+(`privacycheck`, W1199: no deny and no unaccepted withheld finding in any file the artifacts carry)
+and the tests-carried check (`sdistcomplete`, W1230: every file the commit has under `tests/` is in
+the sdist). The twine and privacy checks report `ok`, `failed` or `unavailable`, and `unavailable`
+is a failure; the tests check reports `ok` or `failed`.
 
 CONSUMED BY: `mikemol-wheel release-check` and the publish preflight (W1151).
 """
@@ -40,7 +42,7 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import metacheck, privacycheck, twinecheck
+from mikemol.pkgbuild import metacheck, privacycheck, sdistcomplete, twinecheck
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -52,6 +54,7 @@ Row = dict[str, object]
 to_stderr = contextlib.redirect_stdout
 run_twine = twinecheck.check
 run_privacy = privacycheck.check
+run_tests_carried = sdistcomplete.verdict
 
 
 def checkout(root: Path, sha: str, dest: Path) -> None:
@@ -148,19 +151,24 @@ def row_of(dist: Path, out: Path, sha: str) -> Row:
     verdicts = [metacheck.verdict(sdist), metacheck.verdict(wheel)]
     twine, detail = run_twine([sdist, wheel])
     privacy, scan = run_privacy([sdist, wheel])
+    tests, lost = run_tests_carried(dist, sdist)
+    passed = all(v["ok"] for v in verdicts) and twine == "ok" and privacy == "ok"
     row: Row = {
         "dist": dist.name,
         "sha": sha,
-        "ok": all(v["ok"] for v in verdicts) and twine == "ok" and privacy == "ok",
+        "ok": passed and tests == "ok",
         "build": "ok",
         "twine": twine,
         "privacy": privacy,
+        "tests": tests,
         "artifacts": verdicts,
     }
     if twine != "ok":
         row["twine_detail"] = detail
     if privacy != "ok":
         row["privacy_detail"] = scan
+    if tests != "ok":
+        row["tests_detail"] = lost
     return row
 
 

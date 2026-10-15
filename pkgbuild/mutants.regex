@@ -11,10 +11,11 @@
 src/mikemol/pkgbuild/relcheck.py|build-noise-on-stdout|with to_stderr\(sys\.stderr\):|with to_stderr(sys.stdout):|def=build_dist
 src/mikemol/pkgbuild/relcheck.py|no-dist-found|sorted\(p\.parent for p in tree\.glob\("\*/pyproject\.toml"\)\)|[]|def=dists_in
 src/mikemol/pkgbuild/relcheck.py|build-failure-escapes|except BUILD_ERRORS as exc:|except ZeroDivisionError as exc:|def=row_of
-src/mikemol/pkgbuild/relcheck.py|row-always-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": True,|def=row_of
-src/mikemol/pkgbuild/relcheck.py|metadata-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": twine == "ok" and privacy == "ok",|def=row_of
-src/mikemol/pkgbuild/relcheck.py|twine-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": all(v["ok"] for v in verdicts) and privacy == "ok",|def=row_of
-src/mikemol/pkgbuild/relcheck.py|privacy-ignored-by-ok|"ok": all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok",|"ok": all(v["ok"] for v in verdicts) and twine == "ok",|def=row_of
+src/mikemol/pkgbuild/relcheck.py|row-always-ok|"ok": passed and tests == "ok",|"ok": True,|def=row_of
+src/mikemol/pkgbuild/relcheck.py|metadata-ignored-by-ok|passed = all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok"|passed = twine == "ok" and privacy == "ok"|def=row_of
+src/mikemol/pkgbuild/relcheck.py|twine-ignored-by-ok|passed = all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok"|passed = all(v["ok"] for v in verdicts) and privacy == "ok"|def=row_of
+src/mikemol/pkgbuild/relcheck.py|privacy-ignored-by-ok|passed = all\(v\["ok"\] for v in verdicts\) and twine == "ok" and privacy == "ok"|passed = all(v["ok"] for v in verdicts) and twine == "ok"|def=row_of
+src/mikemol/pkgbuild/relcheck.py|tests-carried-ignored-by-ok|"ok": passed and tests == "ok",|"ok": passed,|def=row_of
 src/mikemol/pkgbuild/relcheck.py|privacy-detail-dropped|if privacy != "ok":|if False:|def=row_of
 src/mikemol/pkgbuild/privacycheck.py|privacy-no-tool-passes|if not named:|if False:|def=check
 src/mikemol/pkgbuild/privacycheck.py|privacy-exit-two-is-failed|"failed" if done\.returncode == FOUND else "unavailable"|"failed"|def=check

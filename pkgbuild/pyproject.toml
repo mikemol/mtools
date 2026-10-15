@@ -105,6 +105,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_environments.py" = ["assert"]
 "tests/test_sdisttests.py" = ["assert"]
 "tests/test_repos.py" = ["assert"]
+"tests/test_sdistcomplete.py" = ["assert"]
 "src/mikemol/pkgbuild/sdisttests.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/pkgbuild/environments.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_names.py" = ["assert", "invalid-function-name", "builtin-argument-shadowing"]
