@@ -147,11 +147,11 @@ _DEV = '[dependency-groups]\ndev = ["pytest", "mypy", "ruff==0.16.6", "setuptool
 
 
 def test_the_declared_dev_group_is_read_without_the_lint_tools(tmp_path: Path) -> None:
-    """Ruff, setuptools and twine ride along; pytest and mypy do not; a bad file gives nothing."""
+    """Everything declared rides along but pytest, which is always there; a bad file gives none."""
     tree = tmp_path / "tree"
     tree.mkdir()
     (tree / "pyproject.toml").write_text(_DEV, encoding="utf-8")
-    assert sdisttests.dev_requirements(tree) == ["ruff==0.16.6", "setuptools>=77", "twine"]
+    assert sdisttests.dev_requirements(tree) == ["mypy", "ruff==0.16.6", "setuptools>=77", "twine"]
     (tree / "pyproject.toml").write_text("[[[", encoding="utf-8")
     assert sdisttests.dev_requirements(tree) == []
     assert sdisttests.dev_requirements(tmp_path / "absent") == []
@@ -164,7 +164,7 @@ def test_pip_is_given_the_dev_needs_the_sdist_declares(tmp_path: Path) -> None:
     fake = _Fake()
     assert sdisttests.run([str(out)], fake) == 0
     pip = next(call for call, _ in fake.calls if "pip" in call)
-    assert pip[-4:] == ["pytest", "ruff==0.16.6", "setuptools>=77", "twine"]
+    assert pip[-5:] == ["pytest", "mypy", "ruff==0.16.6", "setuptools>=77", "twine"]
 
 
 def test_tail_sets_how_much_of_a_failure_is_kept_and_a_dangling_tail_is_usage(
