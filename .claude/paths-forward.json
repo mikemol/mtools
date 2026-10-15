@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1294,
+  "counter": 1297,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -26031,15 +26031,15 @@
         "fence"
       ],
       "blocked_on": [
-        "W1294"
+        "W1297"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "W1293 found no code reader of pathsforward's 2/3/4 (prose readers unmeasured); next W1294, the shared exitcodes leaf, which changes no value",
-      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: 2026-10-15 VERIFIED by github-8f (relayed, read on its side that day): fence admit.py:311 reads EXIT_REFUSED = 3, so the exit-3 collision is real on the fence side; luthen apply_set.py:49 EXIT_DEFERRED = 3 is still the report's claim, not verified.",
+      "next_bounded_step": "Umbrella: W1297 (preamble stops depending on exit 4) and W1295 (gate test) before any pathsforward value moves",
+      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: 2026-10-15 VERIFIED by github-8f (relayed, read on its side that day): fence admit.py:311 reads EXIT_REFUSED = 3, so the exit-3 collision is real on the fence side; luthen apply_set.py:49 EXIT_DEFERRED = 3 is still the report's claim, not verified. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f says the operator answered in its session that fleet-level dominates and their standing direction (consolidate, reuse, pin latest mtools) already orders the exit table, so it is not a pending decision. I have no operator statement here. Effect on my work: none yet; the order already planned (checker landed, W1295 gate test, W1296 prose-reader measurement, then one mover per tool shipping with its callers) is what I would do on either reading. A live value move still waits on the measurement.",
       "issued_at": "2026-10-15T14:29:40Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T19:39:20Z",
+      "last_worked": "2026-10-15T20:04:04Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -26574,7 +26574,7 @@
     {
       "symbol": "W1294",
       "title": "A tracked exit table and a checker that reads every EXIT_ constant and reports each name whose value the table gives another verdict",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1266"
       ],
@@ -26583,12 +26583,74 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Write exit-table.json (value, verdict, allowed names) beside the design note; add exitcensus to corpus (it already walks dists for depmap) reading EXIT_ assignments by AST, with a ratchet baseline of today's violations so the census becomes a gate that only shrinks",
-      "evidence": "2026-10-15: Re-scoped 2026-10-15: a shared constants leaf would be the first inter-dist import for fence (dependencies = []) and pathsforward (dependencies = [] on purpose, see W1264), against the fleet's vendoring posture. So the table is DATA and each dist keeps its own constants; a checker compares them, which also mechanizes the census so it does not rot. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f sent a 'host ruling' for the table: 0 DONE (NOOP is 0 with state noop), 1 FAILED, 2 USAGE alone, 3 DEFER (absorbs LOCKED NOT_CHECKED NOT_RUN NOT_TAKEN NO_CAP NO_DESTINATION BUSY), 4 REFUSE (absorbs every REFUSED, DIVERGED, LEDGER), 5 RACE, 6 WITHHELD (HELD), 125-127 shell; reaper stuck = exit 1 with a list. I have no operator statement of it in this session; a peer cannot rule. corpus/exit-table.json now carries those numbers as the working proposal, which changes only what the checker reports, no live tool's value. NOT adopted from the message: 'one module every tool imports', which conflicts with fence and pathsforward dependencies = [] (W1264); the checker plus a gate test that fails an EXIT_ constant the table disagrees with covers the same ground. Open: the moves of values callers read (pathsforward 2->4, 3->3 DEFER, 4->5 RACE, fence 3->4) wait on the prose-reader measurement and the operator.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Re-scoped 2026-10-15: a shared constants leaf would be the first inter-dist import for fence (dependencies = []) and pathsforward (dependencies = [] on purpose, see W1264), against the fleet's vendoring posture. So the table is DATA and each dist keeps its own constants; a checker compares them, which also mechanizes the census so it does not rot. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f sent a 'host ruling' for the table: 0 DONE (NOOP is 0 with state noop), 1 FAILED, 2 USAGE alone, 3 DEFER (absorbs LOCKED NOT_CHECKED NOT_RUN NOT_TAKEN NO_CAP NO_DESTINATION BUSY), 4 REFUSE (absorbs every REFUSED, DIVERGED, LEDGER), 5 RACE, 6 WITHHELD (HELD), 125-127 shell; reaper stuck = exit 1 with a list. I have no operator statement of it in this session; a peer cannot rule. corpus/exit-table.json now carries those numbers as the working proposal, which changes only what the checker reports, no live tool's value. NOT adopted from the message: 'one module every tool imports', which conflicts with fence and pathsforward dependencies = [] (W1264); the checker plus a gate test that fails an EXIT_ constant the table disagrees with covers the same ground. Open: the moves of values callers read (pathsforward 2->4, 3->3 DEFER, 4->5 RACE, fence 3->4) wait on the prose-reader measurement and the operator. | 2026-10-15: Landed in mtools 6c57f3c (pushed): corpus exitcensus.py, exit-table.json, 8 tests, bazel data for the table, four mutants. Follow-ups W1295 (gate test with a shrinking baseline) and W1296 (prose readers).",
       "issued_at": "2026-10-15T19:38:54Z",
       "minted_during": "tick",
       "caused_by": "W1291",
-      "last_worked": "2026-10-15T19:49:49Z",
+      "last_worked": "2026-10-15T19:57:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T195738Z"
+    },
+    {
+      "symbol": "W1295",
+      "title": "A gate test runs exitcensus over the fleet's dists and fails on any VIOLATION not in a ratchet baseline of today's, so disagreement with corpus/exit-table.json can only shrink",
+      "status": "ready",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "corpus"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After exitcensus lands: write the baseline (today's VIOLATION rows, path and name), a bazel test target over the sibling dists' src trees, and a test that a new disagreement fails and a fixed one is required to leave the baseline",
+      "evidence": "",
+      "issued_at": "2026-10-15T19:50:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1294",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1296",
+      "title": "Measure the prose readers of pathsforward's exit values: markdown, skill text and cron prompt payloads under ~/github and ~/.claude that say exit 2, 3 or 4 next to a paths-forward verb",
+      "status": "done",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: 2026-10-15 measured. Prose readers of pathsforward's exit values: (1) payload.py:149 puts 'exit 4 means the FILE wins' into the preamble of EVERY armed tick prompt, so each peer loop carries that sentence in its cron payload (copies elsewhere not counted, not readable by me); (2) cli.py:693 help text 'take the tick lock (exit 3 if held)' and cli.py:1370 docstring; (3) the in-tree tests that pin exit 2/3/4 (test_cli, test_tick_open, test_skip, test_certify and more). The paths-forward-loop skill text carries no exit number (read §4 in full). Blind spots: peers' payload copies, ~/.claude memory files, other skills, luthen and summit code. FINDING UNDER THE RELAYED TABLE: pathsforward's LOCKED 3 stays 3 (DEFER) and DIVERGED 4 stays 4 (REFUSE), so only REFUSED 2 -> 4 moves, and it then SHARES 4 with DIVERGED, which makes the preamble sentence 'exit 4 means the FILE wins' false for a refusal. The sentence must change (to name the verdict by --verify's own output) before REFUSED moves.",
+      "issued_at": "2026-10-15T19:50:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1293",
+      "last_worked": "2026-10-15T20:03:57Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T200357Z"
+    },
+    {
+      "symbol": "W1297",
+      "title": "Before pathsforward's REFUSED moves 2 to 4, --verify names a divergence in its own output and the payload preamble stops saying 'exit 4 means the FILE wins'",
+      "status": "working",
+      "enables": [
+        "W1266"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Make --verify print DIVERGED: the FILE wins on stdout, change payload.py:149 to rely on that line, update the tests that pin the sentence, and only then plan the REFUSED move as its own card with its callers",
+      "evidence": "",
+      "issued_at": "2026-10-15T20:03:58Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1296",
+      "last_worked": "2026-10-15T20:04:05Z",
       "ticks_blocked": 0,
       "completed": null
     }

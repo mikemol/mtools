@@ -5129,3 +5129,10 @@
             dropped one), where counting from the lock gave zero.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_cards_worked_before_a_close_time_lock_count_from_the_last_tick_line},
 }
+
+@misc{pathsforward-payload-reconcile-line-names-the-divergence-line-not-an-exit-number,
+  section = {payload},
+  title  = {W1297: a refusal and a divergence may share an exit value, so the line is what to read},
+  claim  = {W1297: a refusal and a divergence may share an exit value, so the line is what to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_reconcile_line_names_the_divergence_line_not_an_exit_number},
+}

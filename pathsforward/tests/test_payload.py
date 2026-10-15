@@ -246,6 +246,13 @@ def test_the_header_carries_the_hash_and_the_build_time() -> None:
     assert line == f"counter=2 state_hash={v2(state.waypoints)} generated_at={_NOW}"
 
 
+def test_the_reconcile_line_names_the_divergence_line_not_an_exit_number() -> None:
+    """W1297: a refusal and a divergence may share an exit value, so the line is what to read."""
+    line = pl.header(pl.Request(_state([_wp("W1")]), _COPY, _NOW))[4]
+    assert "a `divergence` line in its output means the FILE wins" in line
+    assert "exit 4" not in line
+
+
 def test_a_bare_string_blocked_on_is_one_party() -> None:
     """`blocked_on="mikemol"` renders as one party, not as characters."""
     first = pl.stanza(_wp("W1", "blocked", blocked_on="mikemol", blocked_kind="human"))

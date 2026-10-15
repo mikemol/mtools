@@ -146,7 +146,7 @@ def header(req: Request) -> list[str]:
         f"counter={state.counter} state_hash={v2(state.waypoints)} generated_at={req.generated_at}",
         (
             f"Reconcile first: `{req.command} --state {path} --verify <state_hash>`; "
-            "exit 4 means the FILE wins."
+            "a `divergence` line in its output means the FILE wins."
         ),
         (
             f"Re-arm when the hash changes: {_binding(state, 'SCHEDULE_CREATE')} a fresh job from "
