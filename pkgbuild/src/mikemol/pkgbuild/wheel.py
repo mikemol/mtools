@@ -19,6 +19,7 @@ Usage:  mikemol-wheel build <out.whl> <pyproject.toml>   (needs the DECLARED set
         mikemol-wheel names <root> [--index URL]   (is each dist's project name free on the index)
         mikemol-wheel publishers <root> [--index NAME] [--html F]   (registration worksheet)
         mikemol-wheel environments <owner/repo> [--write]   (make the two GitHub environments)
+        mikemol-wheel sdist-tests <out> [dist ...]   (each dist's own tests, from its sdist)
 """
 
 from __future__ import annotations
@@ -33,7 +34,15 @@ import venv
 import zipfile
 from typing import TYPE_CHECKING, cast
 
-from mikemol.pkgbuild import environments, licenses, metacli, names, publishers, relcheck
+from mikemol.pkgbuild import (
+    environments,
+    licenses,
+    metacli,
+    names,
+    publishers,
+    relcheck,
+    sdisttests,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -50,6 +59,7 @@ SUBCOMMANDS: dict[str, Callable[[Sequence[str]], int]] = {
     "names": names.run,
     "publishers": publishers.run,
     "environments": environments.run,
+    "sdist-tests": sdisttests.run,
 }
 
 

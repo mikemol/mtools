@@ -478,3 +478,61 @@
   claim  = {With nothing on PATH the runner returns 127 and says why.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_environments.py -k test_an_absent_gh_is_a_status_and_a_message},
 }
+
+@misc{pkgbuild-sdisttests-pytest-counts-are-read-from-the-last-lines,
+  section = {sdisttests},
+  title  = {passed, failed, error(s) and skipped are each found; text before them is ignored},
+  claim  = {passed, failed, error(s) and skipped are each found; text before them is ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_pytest_counts_are_read_from_the_last_lines},
+}
+
+@misc{pkgbuild-sdisttests-dist-installs-its-wheel-beside-the-sibling-wheels-and-runs-its-extracted-tests,
+  section = {sdisttests},
+  title  = {venv, then pip with --find-links over every wheel, then pytest from the extracted tree},
+  claim  = {venv, then pip with --find-links over every wheel, then pytest from the extracted tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_a_dist_installs_its_wheel_beside_the_sibling_wheels_and_runs_its_extracted_tests},
+}
+
+@misc{pkgbuild-sdisttests-install-that-fails-is-reported-as-the-install-stage-and-no-test-runs,
+  section = {sdisttests},
+  title  = {The control: pip exits 1, so the row says `install` with its output and pytest is not run},
+  claim  = {The control: pip exits 1, so the row says `install` with its output and pytest is not
+            run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_an_install_that_fails_is_reported_as_the_install_stage_and_no_test_runs},
+}
+
+@misc{pkgbuild-sdisttests-failing-tests-make-the-run-exit-one-with-their-tail,
+  section = {sdisttests},
+  title  = {A red suite is `ok` false with the counts and the tail of its output},
+  claim  = {A red suite is `ok` false with the counts and the tail of its output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_failing_tests_make_the_run_exit_one_with_their_tail},
+}
+
+@misc{pkgbuild-sdisttests-dist-without-tests-is-not-a-failure-and-a-malformed-folder-is,
+  section = {sdisttests},
+  title  = {No tests directory: ok with a note. Two sdists: not ok},
+  claim  = {No tests directory: ok with a note. Two sdists: not ok.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_a_dist_without_tests_is_not_a_failure_and_a_malformed_folder_is},
+}
+
+@misc{pkgbuild-sdisttests-missing-directory-or-no-such-dist-is-a-usage-error,
+  section = {sdisttests},
+  title  = {No argument, a path that is no directory, and a name that matches no folder exit 2},
+  claim  = {No argument, a path that is no directory, and a name that matches no folder exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_a_missing_directory_or_no_such_dist_is_a_usage_error},
+}
+
+@misc{pkgbuild-sdisttests-symlinked-folder-is-not-a-dist,
+  section = {sdisttests},
+  title  = {No symlinks: a link in OUT to a real dist folder is skipped, so the dist is run once},
+  claim  = {No symlinks: a link in OUT to a real dist folder is skipped, so the dist is run once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_a_symlinked_folder_is_not_a_dist},
+}
+
+@misc{pkgbuild-sdisttests-real-runner-returns-status-and-output-and-a-status-when-it-cannot-start,
+  section = {sdisttests},
+  title  = {The one seam the fakes replace: a real command's output and status, and a missing program},
+  claim  = {The one seam the fakes replace: a real command's output and status, and a missing
+            program.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_the_real_runner_returns_status_and_output_and_a_status_when_it_cannot_start},
+}

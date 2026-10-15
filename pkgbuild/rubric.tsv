@@ -11,3 +11,4 @@ licenses	mikemol-wheel licenses: ship each dist's license text
 names	mikemol-wheel names: is each dist's project name free
 publishers	mikemol-wheel publishers: the pending-publisher worksheet
 environments	mikemol-wheel environments: the two GitHub environments
+sdisttests	mikemol-wheel sdist-tests: each dist's own tests off host
