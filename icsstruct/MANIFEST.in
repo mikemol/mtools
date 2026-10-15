@@ -1,2 +1,3 @@
-# The sdist carries the tests' fixtures: without them test_lexical cannot even collect (W1228).
+# The sdist carries the tests' fixtures and the stubs allowlist a test reads (W1228).
 graft tests
+graft stubs
