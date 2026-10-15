@@ -162,6 +162,23 @@ def test_a_stack_file_is_read_and_a_malformed_one_is_named(tmp_path: Path) -> No
     assert "entry 1 needs" in str(stackrun.items_of(bad))
 
 
+def test_an_entry_whose_body_carries_a_tool_trailer_is_named_with_its_place(
+    tmp_path: Path,
+) -> None:
+    """W1273: entry 2's body has a Waypoint: line, so the whole file is refused naming entry 2."""
+    entries = [
+        {"waypoint": "W1", "subject": "s", "body": "fine", "paths": ["a"]},
+        {"waypoint": "W2", "subject": "s", "body": "text\nWaypoint: W2", "paths": ["b"]},
+    ]
+    path = tmp_path / "stack.json"
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    reason = str(stackrun.items_of(path))
+    assert "entry 2: the body's line 2 is a Waypoint trailer" in reason
+    entries[1]["body"] = "plain"
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    assert isinstance(stackrun.items_of(path), list)
+
+
 _NAMING = '#!/bin/sh\necho "lint: b.txt line 3 is wrong" >&2\nexit 1\n'
 
 

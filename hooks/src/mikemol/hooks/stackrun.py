@@ -27,6 +27,7 @@ import json
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
+from mikemol.hooks.commit_body import refusal as body_refusal
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
 from mikemol.hooks.stacklanding import land
@@ -38,6 +39,7 @@ if TYPE_CHECKING:
 
     from mikemol.hooks.isolated import EnvRunner
 
+BODY_CHECK = body_refusal
 EXIT_RACED = 4
 SHORT = 7
 
@@ -100,6 +102,10 @@ def items_of(path: Path) -> list[Item] | str:
         item = _item_of(entry)
         if item is None:
             return f"{path}: entry {place} needs string waypoint and subject and a list of paths"
+        # ⚑ THE TRAILERS ARE THE TOOL'S (W1273): a body carrying either would have it twice.
+        reason = BODY_CHECK(item.body)
+        if reason is not None:
+            return f"{path}: entry {place}: {reason}"
         found.append(item)
     return found
 

@@ -206,6 +206,18 @@ def test_the_command_line_names_the_repo_the_waypoint_and_the_subject() -> None:
     assert commit_kata.parse(["repo", "--subject"], env) is None
 
 
+def test_a_body_that_carries_a_tool_trailer_is_refused_with_the_reason(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W1273: --body with Co-Authored-By or Waypoint would have it twice, so parse refuses it."""
+    env = {"HOME": "/h"}
+    base = ["repo", "--waypoint", "W1", "--subject", "s"]
+    assert commit_kata.parse([*base, "--body", "Co-Authored-By: x"], env) is None
+    assert "adds the Waypoint and Co-Authored-By trailers itself" in capsys.readouterr().err
+    assert commit_kata.parse([*base, "--body", "plain words"], env) is not None
+    assert commit_kata.parse(base, env) is not None
+
+
 def test_a_bad_command_line_is_a_usage_error(capsys: pytest.CaptureFixture[str]) -> None:
     """Main with no arguments prints the usage and exits 2."""
     assert commit_kata.main([]) == USAGE_RC

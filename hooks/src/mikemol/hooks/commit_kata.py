@@ -38,6 +38,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from mikemol.hooks.commit_body import refusal as _body_refusal
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.isolated import commit_isolated
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
@@ -48,6 +49,7 @@ from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
 from mikemol.hooks.verdictlog import ship_text as _ship_text
 
+body_refusal = _body_refusal
 wait_for_load = _wait_for_load
 add_argv_list = _add_argv_list
 StackItem = _Item
@@ -512,6 +514,12 @@ def parse(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Request] |
             positional.append(word)
             index += 1
     if not positional or not values["--waypoint"] or not values["--subject"]:
+        return None
+    # ⚑ THE TRAILERS ARE THE TOOL'S (W1273): a body carrying `Waypoint:` or `Co-Authored-By:` would
+    # have it twice, so it is refused here with the reason, as a usage error.
+    reason = body_refusal(values["--body"])
+    if reason is not None:
+        sys.stderr.write(f"mikemol-commit: {reason}\n")
         return None
     request = Request(
         waypoint=values["--waypoint"],

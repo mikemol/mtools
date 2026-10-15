@@ -10178,3 +10178,17 @@
   claim  = {Two trailers in one body: the first is named, so the refusal stays one line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_only_the_first_offending_line_is_reported},
 }
+
+@misc{hooks-commit-kata-body-that-carries-a-tool-trailer-is-refused-with-the-reason,
+  section = {commit-kata},
+  title  = {W1273: --body with Co-Authored-By or Waypoint would have it twice, so parse refuses it},
+  claim  = {W1273: --body with Co-Authored-By or Waypoint would have it twice, so parse refuses it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_body_that_carries_a_tool_trailer_is_refused_with_the_reason},
+}
+
+@misc{hooks-stackrun-entry-whose-body-carries-a-tool-trailer-is-named-with-its-place,
+  section = {stackland},
+  title  = {W1273: entry 2's body has a Waypoint: line, so the whole file is refused naming entry 2},
+  claim  = {W1273: entry 2's body has a Waypoint: line, so the whole file is refused naming entry 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_an_entry_whose_body_carries_a_tool_trailer_is_named_with_its_place},
+}
