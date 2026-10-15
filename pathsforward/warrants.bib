@@ -4927,3 +4927,68 @@
   claim  = {`--witness-lang` with no witness, and `sql` as a language, each exit 2 and save nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_lang.py -k test_a_language_alone_and_an_unknown_language_are_refused},
 }
+
+@misc{pathsforward-lift-valid-ruling-lifts-exactly-the-named-held-row-and-records-it,
+  section = {lift},
+  title  = {W1 goes done with the ruling in its evidence; W2, W3 and W4 are untouched},
+  claim  = {W1 goes done with the ruling in its evidence; W2, W3 and W4 are untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_valid_ruling_lifts_exactly_the_named_held_row_and_records_it},
+}
+
+@misc{pathsforward-lift-ruling-can-reblock-the-row-on-a-named-card-as-an-agent-block,
+  section = {lift},
+  title  = {The W1153 shape: the operator withdraws the ask and the row waits on the split design},
+  claim  = {The W1153 shape: the operator withdraws the ask and the row waits on the split design.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_ruling_can_reblock_the_row_on_a_named_card_as_an_agent_block},
+}
+
+@misc{pathsforward-lift-signature-cannot-be-moved-to-another-card-or-another-outcome,
+  section = {lift},
+  title  = {The signature over W1 is kept and the payload edited to name W3, or to say ready: refused},
+  claim  = {The signature over W1 is kept and the payload edited to name W3, or to say ready:
+            refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_signature_cannot_be_moved_to_another_card_or_another_outcome},
+}
+
+@misc{pathsforward-lift-ruling-signed-by-another-key-or-with-no-signature-is-refused,
+  section = {lift},
+  title  = {The key is the operator's: a different key's signature, an empty one and a zero one fail},
+  claim  = {The key is the operator's: a different key's signature, an empty one and a zero one
+            fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_ruling_signed_by_another_key_or_with_no_signature_is_refused},
+}
+
+@misc{pathsforward-lift-valid-ruling-cannot-lift-a-row-that-is-not-held,
+  section = {lift},
+  title  = {W2 is ready and W4 is blocked on an agent: neither is held on the operator},
+  claim  = {W2 is ready and W4 is blocked on an agent: neither is held on the operator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_valid_ruling_cannot_lift_a_row_that_is_not_held},
+}
+
+@misc{pathsforward-lift-ruling-lifts-a-row-once-even-if-it-is-held-again,
+  section = {lift},
+  title  = {After the lift the row is not held; held again, the same signed ruling is still refused},
+  claim  = {After the lift the row is not held; held again, the same signed ruling is still refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_ruling_lifts_a_row_once_even_if_it_is_held_again},
+}
+
+@misc{pathsforward-lift-malformed-ruling-is-refused-before-anything-is-judged,
+  section = {lift},
+  title  = {Each shape of garbage is a named refusal, not a traceback and not a false verdict},
+  claim  = {Each shape of garbage is a named refusal, not a traceback and not a false verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_a_malformed_ruling_is_refused_before_anything_is_judged},
+}
+
+@misc{pathsforward-lift-payload-must-have-the-right-types-outcome-and-blocked-on,
+  section = {lift},
+  title  = {A number for a string, an unknown outcome, and blocked_on out of step with the outcome},
+  claim  = {A number for a string, an unknown outcome, and blocked_on out of step with the outcome.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_the_payload_must_have_the_right_types_outcome_and_blocked_on},
+}
+
+@misc{pathsforward-lift-signing-input-is-canonical-and-reads-back-as-the-same-payload,
+  section = {lift},
+  title  = {Sorted keys, no spaces: one ruling, one byte string; and payload_of reads it back},
+  claim  = {Sorted keys, no spaces: one ruling, one byte string; and payload_of reads it back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift.py -k test_the_signing_input_is_canonical_and_reads_back_as_the_same_payload},
+}

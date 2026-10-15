@@ -106,6 +106,45 @@ def verdicts(items: list[Json], opa: str) -> list[Json]:
     return found
 
 
+_VERIFY = "io.jwt.verify_eddsa(input.jws, input.jwk)"
+
+
+def verify_eddsa(jws: str, jwk: str, opa: str) -> bool:
+    """Say whether a compact JWS carries a valid EdDSA signature under a public JWK.
+
+    ⚑ opa DOES THE CRYPTOGRAPHY, NO DEPENDENCY IS ADDED (W1271): the pinned opa's
+    `io.jwt.verify_eddsa` was run, not remembered, against a JWS signed with an openssl key: valid
+    true; the same signature over another payload, an empty signature and a zero signature false.
+    The token and the key travel on stdin as data (the key a JSON string, as the builtin takes it);
+    the argv is fixed, so neither ever becomes a word of the command.
+
+    ⚑ ANYTHING BUT A CLEAN `true` IS FALSE, AND opa NOT RUNNING IS AN ERROR, NEVER A FALSE: a
+    malformed token evaluates to false here, while an absent or failing opa raises, so "could not
+    verify" is never read as "did not verify" by a caller that then retries differently.
+
+    Returns:
+        True only when opa evaluated the builtin to true.
+
+    Raises:
+        OpaUnavailableError: when opa exits nonzero.
+
+    """
+    payload: Json = {"jws": jws, "jwk": jwk}
+    cmd = [opa, "eval", "--format", "json", "--stdin-input", _VERIFY]
+    code, out, err = _run(cmd, json.dumps(payload))
+    if code:
+        msg = f"opa eval exit {code}: {(err or out)[:_ERR_CHARS]}"
+        raise OpaUnavailableError(msg)
+    doc = cast("object", json.loads(out))
+    results = cast("Json", doc).get("result") if isinstance(doc, dict) else None
+    if not isinstance(results, list) or not results or not isinstance(results[0], dict):
+        return False
+    exprs = cast("Json", results[0]).get("expressions")
+    if not isinstance(exprs, list) or not exprs or not isinstance(exprs[0], dict):
+        return False
+    return cast("Json", exprs[0]).get("value") is True
+
+
 def verdicts_in(doc: object) -> list[Json]:
     """Pull the verdict list out of `opa eval --format json` output.
 
