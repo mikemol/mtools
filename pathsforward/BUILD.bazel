@@ -52,7 +52,11 @@ py_library(
             "$(location pyproject.toml)",
         ],
         # W850: test_certify runs the real policy under the hash-pinned opa, named by OPA_BIN.
-        data = ["pyproject.toml", "@opa//file", "//frontier:src/mikemol/frontier/walk.py"],
+        # W1258: test_vtodo_golden compares the writer's output to tests/golden/queue.ics.
+        data = ["pyproject.toml", "@opa//file", "//frontier:src/mikemol/frontier/walk.py"] + glob(
+            ["tests/golden/*"],
+            allow_empty = True,
+        ),
         env = {
             "OPA_BIN": "$(location @opa//file)",
             # W1135: test_frontier_copy compares the generated copy to this module.
