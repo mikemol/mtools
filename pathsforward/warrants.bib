@@ -4652,3 +4652,52 @@
             nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_prune.py -k test_marking_a_card_done_frees_its_dependent_in_the_same_write},
 }
+
+@misc{pathsforward-advice-same-advice-seen-again-updates-last-run-and-adds-no-row,
+  section = {advice},
+  title  = {First sight is new; the second run of the same advice is seen and moves only last_run},
+  claim  = {First sight is new; the second run of the same advice is seen and moves only last_run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_the_same_advice_seen_again_updates_last_run_and_adds_no_row},
+}
+
+@misc{pathsforward-advice-advice-differing-in-any-key-field-is-its-own-row,
+  section = {advice},
+  title  = {Another subject, another rule, another action is another row},
+  claim  = {Another subject, another rule, another action is another row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_advice_differing_in_any_key_field_is_its_own_row},
+}
+
+@misc{pathsforward-advice-rejection-needs-a-reason-and-holds-for-the-whole-selector,
+  section = {advice},
+  title  = {Every open row of the tool and rule is rejected at once; a row of another rule is not},
+  claim  = {Every open row of the tool and rule is rejected at once; a row of another rule is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_a_rejection_needs_a_reason_and_holds_for_the_whole_selector},
+}
+
+@misc{pathsforward-advice-rejection-can-name-one-subject,
+  section = {advice},
+  title  = {With a subject only that row is rejected},
+  claim  = {With a subject only that row is rejected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_a_rejection_can_name_one_subject},
+}
+
+@misc{pathsforward-advice-open-row-closes-as-applied-when-its-subject-is-no-longer-indicated,
+  section = {advice},
+  title  = {W10 is still indicated and stays open; W11 is gone and is applied; a rejected row stays},
+  claim  = {W10 is still indicated and stays open; W11 is gone and is applied; a rejected row stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_an_open_row_closes_as_applied_when_its_subject_is_no_longer_indicated},
+}
+
+@misc{pathsforward-advice-counts-split-proposed-rejected-and-new,
+  section = {advice},
+  title  = {Proposed is new plus seen; rejected is suppressed; new is first-time},
+  claim  = {Proposed is new plus seen; rejected is suppressed; new is first-time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_the_counts_split_proposed_rejected_and_new},
+}
+
+@misc{pathsforward-advice-malformed-list-is-refused-and-the-waypoints-are-left-alone,
+  section = {advice},
+  title  = {An `advice` that is not a list of objects raises; the waypoints key is never touched},
+  claim  = {An `advice` that is not a list of objects raises; the waypoints key is never touched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_a_malformed_list_is_refused_and_the_waypoints_are_left_alone},
+}
