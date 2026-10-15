@@ -129,6 +129,9 @@ test_the_policys_own_comments_and_the_standing_tests_are_accepted if {
 	b := publish_privacy.findings with input as own
 	a == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/policy/standing_test.rego", "line": 1, "accepted": true}}
 	b == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/policy/publish_privacy.rego", "line": 1, "accepted": true}}
+	itself := {"files": [{"path": "s.tar.gz/s/policy/publish_privacy_test.rego", "lines": ["/home/mikemol/x/"]}]}
+	c := publish_privacy.findings with input as itself
+	c == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/policy/publish_privacy_test.rego", "line": 1, "accepted": true}}
 }
 
 test_the_same_host_path_in_another_test_file_is_not_accepted if {

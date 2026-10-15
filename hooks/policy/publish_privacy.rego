@@ -130,6 +130,11 @@ accepted := [
 		"reason": "the standing rules' own tests quote this host's repo layout as the input they judge",
 	},
 	{
+		"path_suffix": "/policy/publish_privacy_test.rego",
+		"rule": "home-path",
+		"reason": "this policy's tests quote host paths as the input they judge",
+	},
+	{
 		"path_suffix": "/policy/publish_privacy.rego",
 		"rule": "home-path",
 		"reason": "this policy's comments quote the placeholder path shapes it exempts",
