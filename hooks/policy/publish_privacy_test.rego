@@ -122,6 +122,15 @@ test_a_host_path_in_an_accepted_test_file_is_accepted if {
 	got == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/tests/test_tick_gate.py", "line": 1, "accepted": true}}
 }
 
+test_the_policys_own_comments_and_the_standing_tests_are_accepted if {
+	standing := {"files": [{"path": "s.tar.gz/s/policy/standing_test.rego", "lines": ["/home/mikemol/x/"]}]}
+	own := {"files": [{"path": "s.tar.gz/s/policy/publish_privacy.rego", "lines": ["/home/mikemol/x/"]}]}
+	a := publish_privacy.findings with input as standing
+	b := publish_privacy.findings with input as own
+	a == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/policy/standing_test.rego", "line": 1, "accepted": true}}
+	b == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/policy/publish_privacy.rego", "line": 1, "accepted": true}}
+}
+
 test_the_same_host_path_in_another_test_file_is_not_accepted if {
 	got := publish_privacy.findings with input as {"files": [{"path": "s.tar.gz/s/tests/test_other.py", "lines": [concat("", ["/ho", "me/realname/x"])]}]}
 	got == {{"kind": "withheld", "rule": "home-path", "path": "s.tar.gz/s/tests/test_other.py", "line": 1}}

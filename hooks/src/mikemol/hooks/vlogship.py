@@ -91,7 +91,8 @@ def spool_name(keys: Sequence[str], source: str | None = None) -> str:
     `[source.NAME]` declares is then that file's.
 
     Returns:
-        for example `vlog-repo%2Ctool.spool`, or `vlog-repo%2Ctool@containerd.spool`.
+        for example `vlog-repo%2Ctool.spool`, or the same keys with the source's name after an
+        `@` just before the `.spool` (source `containerd`).
 
     """
     joined = ",".join(sorted(keys)) or NO_STREAMS

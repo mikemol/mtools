@@ -124,6 +124,21 @@ accepted := [
 		"rule": "home-path",
 		"reason": "the host's tick prompts, quoted as the input under test",
 	},
+	{
+		"path_suffix": "/policy/standing_test.rego",
+		"rule": "home-path",
+		"reason": "the standing rules' own tests quote this host's repo layout as the input they judge",
+	},
+	{
+		"path_suffix": "/policy/publish_privacy.rego",
+		"rule": "home-path",
+		"reason": "this policy's comments quote the placeholder path shapes it exempts",
+	},
+	{
+		"path_suffix": "/policy/publish_privacy.rego",
+		"rule": "mail-address",
+		"reason": "this policy's comments quote the address shapes it matches and exempts",
+	},
 ]
 
 is_accepted(f) if {
