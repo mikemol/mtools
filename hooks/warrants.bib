@@ -9864,3 +9864,24 @@
   claim  = {W1214: five lines, room for two. Without the flag the run is 0 as ever; with it, 6.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli.py -k test_exit_classes_make_a_held_tail_exit_six_and_the_default_stays_zero},
 }
+
+@misc{hooks-hosttied-every-named-module-is-a-test-file-here,
+  section = {hosttied},
+  title  = {A stale name would skip nothing and hide a rename},
+  claim  = {A stale name would skip nothing and hide a rename.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttied.py -k test_every_named_module_is_a_test_file_here},
+}
+
+@misc{hooks-hosttied-outside-an-sdist-no-module-is-skipped,
+  section = {hosttied},
+  title  = {Every named module still runs when this is not an unpacked sdist},
+  claim  = {Every named module still runs when this is not an unpacked sdist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttied.py -k test_outside_an_sdist_no_module_is_skipped},
+}
+
+@misc{hooks-hosttied-in-an-sdist-a-named-module-is-skipped-with-the-reason,
+  section = {hosttied},
+  title  = {A host-tied module gets the stated reason; an unnamed one gets none},
+  claim  = {A host-tied module gets the stated reason; an unnamed one gets none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hosttied.py -k test_in_an_sdist_a_named_module_is_skipped_with_the_reason},
+}
