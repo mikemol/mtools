@@ -85,7 +85,7 @@ src/mikemol/pkgbuild/sdisttests.py|counts-keep-only-the-last-word|found\[str\(ma
 src/mikemol/pkgbuild/sdisttests.py|symlinked-folder-is-a-dist|folders = sorted\(p for p in out\.iterdir\(\) if p\.is_dir\(\) and not p\.is_symlink\(\)\)|folders = sorted(p for p in out.iterdir() if p.is_dir())|def=dists_in
 src/mikemol/pkgbuild/sdisttests.py|install-failure-goes-on|if status != 0:|if False:|def=install
 src/mikemol/pkgbuild/sdisttests.py|no-tests-dir-fails|return \{"dist": folder\.name, "ok": True, "detail": "no tests directory"\}|return {"dist": folder.name, "ok": False, "detail": "no tests directory"}|def=check_dist
-src/mikemol/pkgbuild/sdisttests.py|failing-tests-lose-their-tail|row\["detail"\] = said\[-TAIL:\]|pass|def=check_dist
+src/mikemol/pkgbuild/sdisttests.py|failing-tests-lose-their-tail|row\["detail"\] = said\[-tail:\]|pass|def=check_dist
 src/mikemol/pkgbuild/sdisttests.py|failed-dist-exits-clean|failed \+= int\(row\["ok"\] is not True\)|failed += 0|def=run
 src/mikemol/pkgbuild/names.py|case-kept-in-the-name|RUNS\.sub\("-", name\)\.lower\(\)|RUNS.sub("-", name)|def=normalized
 src/mikemol/pkgbuild/names.py|every-status-is-free|if status == FREE:|if True:|def=state_of

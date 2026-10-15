@@ -621,3 +621,24 @@
   claim  = {The controls: nothing is called when the repositories cannot be named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_environments.py -k test_a_bad_layout_a_dangling_flag_or_an_empty_directory_is_a_usage_error},
 }
+
+@misc{pkgbuild-sdisttests-tail-sets-how-much-of-a-failure-is-kept-and-a-dangling-tail-is-usage,
+  section = {sdisttests},
+  title  = {`--tail 5` keeps the last five characters of a failing run; no number is exit 2},
+  claim  = {`--tail 5` keeps the last five characters of a failing run; no number is exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_tail_sets_how_much_of_a_failure_is_kept_and_a_dangling_tail_is_usage},
+}
+
+@misc{pkgbuild-sdisttests-declared-dev-group-is-read-without-the-lint-tools,
+  section = {sdisttests},
+  title  = {Setuptools and twine ride along; pytest, mypy and ruff do not; a bad file gives nothing},
+  claim  = {Setuptools and twine ride along; pytest, mypy and ruff do not; a bad file gives nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_the_declared_dev_group_is_read_without_the_lint_tools},
+}
+
+@misc{pkgbuild-sdisttests-pip-is-given-the-dev-needs-the-sdist-declares,
+  section = {sdisttests},
+  title  = {The install command names the wheel, pytest, then each declared need},
+  claim  = {The install command names the wheel, pytest, then each declared need.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sdisttests.py -k test_pip_is_given_the_dev_needs_the_sdist_declares},
+}

@@ -32,15 +32,47 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import tomllib
 from collections.abc import Callable, Sequence
 from pathlib import Path
+from typing import cast
 
 USAGE = 2
 NOT_FOUND = 127
 COUNTS = re.compile(r"(\d+) (passed|failed|error|skipped)")
+NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+NOT_INSTALLED = frozenset({"mypy", "ruff", "pytest"})
 TAIL = 600
+SYNOPSIS = "usage: mikemol-wheel sdist-tests OUT [DIST...] [--tail CHARS]\n"
 Row = dict[str, object]
 Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+
+
+def dev_requirements(tree: Path) -> list[str]:
+    """Read the requirements a dist declares for running its own tests.
+
+    ⚑ THE DECLARED DEV GROUP, MINUS THE LINT TOOLS (W1227): a test that needs a package the dist
+    itself lists under `[dependency-groups] dev` (a build backend, a renderer) is a legitimate
+    test, and installing what it declares is what a contributor does; mypy and ruff are the
+    checks, not test needs, so they stay out and a test that shells out to one still fails.
+
+    Returns:
+        the group's requirement strings except pytest (always installed) and the lint tools.
+
+    """
+    try:
+        text = (tree / "pyproject.toml").read_text(encoding="utf-8")
+        data = cast("dict[str, object]", tomllib.loads(text))
+    except (OSError, tomllib.TOMLDecodeError):
+        return []
+    groups = cast("dict[str, object]", data.get("dependency-groups", {}))
+    dev = cast("list[object]", groups.get("dev", []))
+    wanted: list[str] = []
+    for item in dev:
+        found = NAME.match(item) if isinstance(item, str) else None
+        if isinstance(item, str) and found and found.group(0).lower() not in NOT_INSTALLED:
+            wanted.append(item)
+    return wanted
 
 
 def run_command(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
@@ -82,27 +114,35 @@ def dists_in(out: Path, wanted: Sequence[str]) -> list[Path]:
     return [p for p in folders if not wanted or p.name in wanted]
 
 
-def install(home: Path, wheel: Path, links: Path, runner: Runner) -> str | None:
-    """Make the venv and install the wheel and the test runner into it.
+def install(
+    home: Path,
+    wheel: Path,
+    links: Path,
+    runner: Runner,
+    options: tuple[int, Sequence[str]] = (TAIL, ()),
+) -> str | None:
+    """Make the venv and install the wheel, the test runner and the declared dev needs into it.
 
     Returns:
-        None when it worked, else the tail of the output of the step that failed.
+        None when it worked, else the last `tail` characters of the failed step's output.
 
     """
+    tail, extras = options
     python = home / "venv" / "bin" / "python"
     pip = [str(python), "-m", "pip", "install", "--quiet", "--find-links", str(links)]
-    for argv in ([sys.executable, "-m", "venv", str(home / "venv")], [*pip, str(wheel), "pytest"]):
+    wanted = [str(wheel), "pytest", *extras]
+    for argv in ([sys.executable, "-m", "venv", str(home / "venv")], [*pip, *wanted]):
         status, said = runner(argv, home)
         if status != 0:
-            return said[-TAIL:]
+            return said[-tail:]
     return None
 
 
-def check_dist(folder: Path, links: Path, runner: Runner) -> Row:
+def check_dist(folder: Path, links: Path, runner: Runner, tail: int = TAIL) -> Row:
     """Install one dist's wheel in a fresh venv and run the extracted sdist's tests.
 
     Returns:
-        the row: `dist`, `ok`, the pytest counts, and on a failure the tail of the output.
+        the row: `dist`, `ok`, the pytest counts, and on a failure the last `tail` characters.
 
     """
     sdists, wheels = sorted(folder.glob("*.tar.gz")), sorted(folder.glob("*.whl"))
@@ -115,7 +155,7 @@ def check_dist(folder: Path, links: Path, runner: Runner) -> Row:
         tree = next((home / "src").iterdir())
         if not (tree / "tests").is_dir():
             return {"dist": folder.name, "ok": True, "detail": "no tests directory"}
-        failure = install(home, wheels[0], links, runner)
+        failure = install(home, wheels[0], links, runner, (tail, dev_requirements(tree)))
         if failure is not None:
             return {"dist": folder.name, "ok": False, "stage": "install", "detail": failure}
         python = str(home / "venv" / "bin" / "python")
@@ -123,7 +163,7 @@ def check_dist(folder: Path, links: Path, runner: Runner) -> Row:
         status, said = runner([*argv, "-o", "faulthandler_timeout=60"], tree)
     row: Row = {"dist": folder.name, "ok": status == 0, **counts_of(said)}
     if status != 0:
-        row["detail"] = said[-TAIL:]
+        row["detail"] = said[-tail:]
     return row
 
 
@@ -134,11 +174,19 @@ def run(args: Sequence[str], runner: Runner = run_command) -> int:
         0 when every dist's tests passed, 1 when one did not, 2 for a usage error.
 
     """
-    if not args or not Path(args[0]).is_dir():
-        sys.stderr.write("usage: mikemol-wheel sdist-tests OUT [DIST...]\n")
+    words, tail = list(args), TAIL
+    if "--tail" in words:
+        place = words.index("--tail")
+        if place + 1 >= len(words) or not words[place + 1].isdecimal():
+            sys.stderr.write(SYNOPSIS)
+            return USAGE
+        tail = int(words[place + 1])
+        del words[place : place + 2]
+    if not words or not Path(words[0]).is_dir():
+        sys.stderr.write(SYNOPSIS)
         return USAGE
-    out = Path(args[0]).resolve()
-    folders = dists_in(out, args[1:])
+    out = Path(words[0]).resolve()
+    folders = dists_in(out, words[1:])
     if not folders:
         sys.stderr.write("sdist-tests: no dist folder found\n")
         return USAGE
@@ -148,7 +196,7 @@ def run(args: Sequence[str], runner: Runner = run_command) -> int:
         for wheel in out.glob("*/*.whl"):
             shutil.copy2(wheel, links / wheel.name)
         for folder in folders:
-            row = check_dist(folder, links, runner)
+            row = check_dist(folder, links, runner, tail)
             sys.stdout.write(json.dumps(row, sort_keys=True) + "\n")
             sys.stdout.flush()
             failed += int(row["ok"] is not True)

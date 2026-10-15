@@ -50,13 +50,13 @@ class _Fake:
         return 0, ""
 
 
-def _folder(out: Path, name: str, *, tests: bool = True) -> Path:
+def _folder(out: Path, name: str, *, tests: bool = True, project: str = "") -> Path:
     folder = out / name
     folder.mkdir(parents=True)
     with tarfile.open(folder / f"mikemol_{name}-0.1.0.tar.gz", "w:gz") as archive:
         marker = tarfile.TarInfo(f"mikemol_{name}-0.1.0/pyproject.toml")
-        marker.size = 0
-        archive.addfile(marker, io.BytesIO(b""))
+        marker.size = len(project.encode())
+        archive.addfile(marker, io.BytesIO(project.encode()))
         if tests:
             test = tarfile.TarInfo(f"mikemol_{name}-0.1.0/tests/test_x.py")
             test.size = 0
@@ -141,6 +141,43 @@ def test_a_dist_without_tests_is_not_a_failure_and_a_malformed_folder_is(
     assert rows["plain"]["ok"] is True
     assert rows["plain"]["detail"] == "no tests directory"
     assert rows["twice"]["ok"] is False
+
+
+_DEV = '[dependency-groups]\ndev = ["pytest", "mypy", "ruff==0.16.6", "setuptools>=77", "twine"]\n'
+
+
+def test_the_declared_dev_group_is_read_without_the_lint_tools(tmp_path: Path) -> None:
+    """Setuptools and twine ride along; pytest, mypy and ruff do not; a bad file gives nothing."""
+    tree = tmp_path / "tree"
+    tree.mkdir()
+    (tree / "pyproject.toml").write_text(_DEV, encoding="utf-8")
+    assert sdisttests.dev_requirements(tree) == ["setuptools>=77", "twine"]
+    (tree / "pyproject.toml").write_text("[[[", encoding="utf-8")
+    assert sdisttests.dev_requirements(tree) == []
+    assert sdisttests.dev_requirements(tmp_path / "absent") == []
+
+
+def test_pip_is_given_the_dev_needs_the_sdist_declares(tmp_path: Path) -> None:
+    """The install command names the wheel, pytest, then each declared need."""
+    out = tmp_path / "out"
+    _folder(out, "alpha", project=_DEV)
+    fake = _Fake()
+    assert sdisttests.run([str(out)], fake) == 0
+    pip = next(call for call, _ in fake.calls if "pip" in call)
+    assert pip[-3:] == ["pytest", "setuptools>=77", "twine"]
+
+
+def test_tail_sets_how_much_of_a_failure_is_kept_and_a_dangling_tail_is_usage(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--tail 5` keeps the last five characters of a failing run; no number is exit 2."""
+    out = tmp_path / "out"
+    _folder(out, "alpha")
+    fake = _Fake(tests=(1, "0123456789 1 failed"))
+    assert sdisttests.run([str(out), "--tail", "5"], fake) == 1
+    assert _rows(capsys)["alpha"]["detail"] == "ailed"
+    assert sdisttests.run([str(out), "--tail"], fake) == _USAGE
+    assert sdisttests.run([str(out), "--tail", "x"], fake) == _USAGE
 
 
 def test_a_symlinked_folder_is_not_a_dist(
