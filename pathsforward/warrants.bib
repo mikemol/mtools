@@ -4768,3 +4768,46 @@
   claim  = {The control: `--except W5` (no `=reason`) leaves the advice list without a rejected row.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_an_except_with_no_reason_is_not_stored},
 }
+
+@misc{pathsforward-closeumbrellas-umbrella-whose-children-are-all-done-is-closed-with-them-named,
+  section = {closeumbrellas},
+  title  = {W3 closes over done W1 and W2 and carries the stamp; W5 has the open child W4},
+  claim  = {W3 closes over done W1 and W2 and carries the stamp; W5 has the open child W4.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_an_umbrella_whose_children_are_all_done_is_closed_with_them_named},
+}
+
+@misc{pathsforward-closeumbrellas-dry-run-saves-nothing-and-a-second-run-closes-nothing-more,
+  section = {closeumbrellas},
+  title  = {The dry run says WOULD CLOSE and leaves W2 ready; after --write the rerun is silent},
+  claim  = {The dry run says WOULD CLOSE and leaves W2 ready; after --write the rerun is silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_a_dry_run_saves_nothing_and_a_second_run_closes_nothing_more},
+}
+
+@misc{pathsforward-closeumbrellas-dropped-child-keeps-the-umbrella-open-and-says-so,
+  section = {closeumbrellas},
+  title  = {A residue child enabling W2 is dropped work: W2 is kept, not closed},
+  claim  = {A residue child enabling W2 is dropped work: W2 is kept, not closed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_a_dropped_child_keeps_the_umbrella_open_and_says_so},
+}
+
+@misc{pathsforward-closeumbrellas-umbrella-with-its-own-next-step-is-kept,
+  section = {closeumbrellas},
+  title  = {A recorded next step says work remains beyond the children},
+  claim  = {A recorded next step says work remains beyond the children.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_an_umbrella_with_its_own_next_step_is_kept},
+}
+
+@misc{pathsforward-closeumbrellas-working-umbrella-and-one-blocked-outside-the-queue-are-kept,
+  section = {closeumbrellas},
+  title  = {A working card is in hand; a foreign blocker is invisible here; a local one is not a bar},
+  claim  = {A working card is in hand; a foreign blocker is invisible here; a local one is not a
+            bar.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_a_working_umbrella_and_one_blocked_outside_the_queue_are_kept},
+}
+
+@misc{pathsforward-closeumbrellas-card-with-no-children-is-left-alone,
+  section = {closeumbrellas},
+  title  = {An umbrella needs at least one child; W1 enables nothing and stays ready},
+  claim  = {An umbrella needs at least one child; W1 enables nothing and stays ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas.py -k test_a_card_with_no_children_is_left_alone},
+}

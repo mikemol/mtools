@@ -56,6 +56,8 @@ from mikemol.pathsforward.advice import upsert as upsert_advice
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
+from mikemol.pathsforward.closeumbrellas import apply as close_apply
+from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
@@ -194,6 +196,33 @@ def _block_behind_open(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _close_umbrellas(ctx: Ctx) -> int:
+    """Mark done each open card whose local children are all done; a dry run unless `--write`.
+
+    ⚑ DRY RUN FIRST, as `--block-behind-open`: without `--write` nothing is saved and the lines
+    say WOULD CLOSE. A card that is not closed although its children are done is LISTED as KEPT
+    with its reason (mtools:W1139, nemik:W488).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        found = close_plan(state)
+        verb = "CLOSED" if write else "WOULD CLOSE"
+        for sym, kids in found.closed:
+            _say(f"{verb} {sym} (all children done: {', '.join(kids)})")
+        for sym, why in found.kept:
+            _say(f"KEPT {sym} ({why})")
+        if write:
+            close_apply(state, found, ctx.stamp())
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
     """Give an update the (path, sha256) of the file `--attach` names, resolved under the root.
 
@@ -216,6 +245,7 @@ _FLAGS = (
     "bump_blocked",
     "prune_landed",
     "block_behind_open",
+    "close_umbrellas",
     "inbound",
     "preamble_clear",
     "outcomes_clear",
@@ -384,6 +414,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     ),
     "prune_landed": frozenset({"root"}),
     "block_behind_open": frozenset({"write"}),
+    "close_umbrellas": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
     "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason"}),
@@ -2176,6 +2207,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "block_matching": _block_matching,
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
+    "close_umbrellas": _close_umbrellas,
     "inbound": _inbound,
     "ledger": _ledger_mode,
     "show": _show,

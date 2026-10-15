@@ -57,3 +57,4 @@ behindopen	Blocking a ready card behind the open cards that enable it (W1131)
 frontier_copy	Frontier walk copy
 tick_close_gate	The tick closer refuses while a ready unblocked card exists (W1203)
 advice	Dry-run advice recorded once
+closeumbrellas	Closing umbrellas whose children are done
