@@ -1,2 +1,6 @@
-# The sdist carries every file under tests/, conftest.py included: its fixtures are not test_*.py (W1228).
+# The sdist carries every file under tests/, conftest.py included (its fixtures are not test_*.py),
+# and the launchers, policies and adopt templates those tests execute and read (W1228).
 graft tests
+graft bin
+graft policy
+graft adopt
