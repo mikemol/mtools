@@ -36,6 +36,7 @@ from typing import TYPE_CHECKING, cast
 
 from mikemol.pkgbuild import (
     environments,
+    installguide,
     licenses,
     metacli,
     names,
@@ -60,6 +61,7 @@ SUBCOMMANDS: dict[str, Callable[[Sequence[str]], int]] = {
     "publishers": publishers.run,
     "environments": environments.run,
     "sdist-tests": sdisttests.run,
+    "install-guide": installguide.run,
 }
 
 

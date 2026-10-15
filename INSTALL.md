@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 31 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 34 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -20,9 +20,11 @@ with no scripts is a library that other distributions import.
 - `audiostruct` (`mikemol-audiostruct`): transcription and diarization read losslessly. Script:
   `mikemol-audio`.
 - `bibparse` (`mikemol-bibparse`): a strict parser for paperkit's bib grammar. A library, no scripts.
-- `buildtel` (`mikemol-buildtel`): build telemetry. Scripts: `mikemol-coord-sample`, `mikemol-logs-push`,
-  `mikemol-image-digest`.
+- `buildtel` (`mikemol-buildtel`): build telemetry. Scripts: `mikemol-buildlog`,
+  `mikemol-coord-sample`, `mikemol-logs-push`, `mikemol-image-digest`.
 - `corpus` (`mikemol-corpus`): which Python files are a tree's corpus. A library, no scripts.
+- `debtplan` (`mikemol-debtplan`): plan the pay-down of a per-file debt ledger: leaves first, direct
+  waits only, a cycle refused rather than blocked on. Script: `mikemol-debtplan`.
 - `fence` (`mikemol-fence`): run a command inside a cgroup and report what it consumed. Scripts:
   `mikemol-fence`, `mikemol-membudget`.
 - `frontier` (`mikemol-frontier`): Pure frontier walk over plain nodes and edges: ready, deferred with the unmet predecessor or gate, realized, and a named cycle A library, no scripts.
@@ -32,20 +34,29 @@ with no scripts is a library that other distributions import.
 - `grade` (`mikemol-grade`): the falsifiability grade ladder. A library, no scripts.
 - `gradekit` (`mikemol-gradekit`): grade records and the effective-grade clamp. Scripts:
   `mikemol-gradekit-verdict`, `mikemol-grades-rec`, `mikemol-read-grade`, `mikemol-effective`.
-- `hooks` (`mikemol-hooks`): Claude Code hooks, plus a few maintainer tools. Scripts:
-  `mikemol-hook-structural-query`, `mikemol-hook-no-chaining`, `mikemol-hook-no-verify`,
-  `mikemol-hook-shellcheck`, `mikemol-hook-pycheck`, `mikemol-hook-inbound-asks`,
-  `mikemol-hook-nemik-check`, `mikemol-gate-ledger`, `mikemol-shellcheck`, `mikemol-gen-warrants`,
-  `mikemol-githook-pre-push`, `mikemol-new-dist`, `mikemol-repin`.
+- `hooks` (`mikemol-hooks`): Claude Code hooks, git hooks and maintainer tools. Scripts:
+  `mikemol-bazel-admit`, `mikemol-build-failure`, `mikemol-commit`, `mikemol-gate-jobs`,
+  `mikemol-gate-ledger`, `mikemol-gen-warrants`, `mikemol-githook-post-commit`,
+  `mikemol-githook-pre-push`, `mikemol-githook-prepare-commit-msg`, `mikemol-hook-after-compaction`,
+  `mikemol-hook-build-failure`, `mikemol-hook-inbound-asks`, `mikemol-hook-nemik-check`,
+  `mikemol-hook-no-chaining`, `mikemol-hook-no-verify`, `mikemol-hook-pycheck`,
+  `mikemol-hook-pycheck-advise`, `mikemol-hook-read-guard`, `mikemol-hook-shellcheck`,
+  `mikemol-hook-structural-query`, `mikemol-hook-tick-gate`, `mikemol-hook-tick-release`,
+  `mikemol-hook-tick-stop`, `mikemol-hook-work-claims`, `mikemol-hooks-probe`, `mikemol-new-dist`,
+  `mikemol-privacy-audit`, `mikemol-privacy-shipped`, `mikemol-pycheck`, `mikemol-repin`,
+  `mikemol-shellcheck`, `mikemol-snapshot`, `mikemol-vlog`, `mikemol-wheel`.
 - `htmlstruct` (`mikemol-htmlstruct`): Read HTML and MHTML documents as structure. Scripts: `mikemol-htmlstruct`.
 - `icsstruct` (`mikemol-icsstruct`): iCalendar read losslessly. Script: `mikemol-ics`.
 - `importdag` (`mikemol-importdag`): a project's import DAG. Scripts: `mikemol-dagnames`,
   `mikemol-closure-census`, `mikemol-closure`, `mikemol-imports`, `mikemol-dagbzl`.
+- `katas` (`mikemol-katas`): the host orchestration katas: workstream discovery and the detached
+  commit's bookkeeping. Script: `mikemol-katas`.
 - `ledger` (`mikemol-ledger`): a findings ledger whose rows are witnessed by commands. A library, no
   scripts.
 - `mdstruct` (`mikemol-mdstruct`): structural reading and writing of markdown. Script: `mdstruct`.
 - `memres` (`mikemol-memres`): memory reservation tools. Scripts: `mikemol-mem-project`,
-  `mikemol-mem-harvest`, `mikemol-sweep-budget`, `mikemol-cpuweight`.
+  `mikemol-mem-harvest`, `mikemol-sweep-budget`, `mikemol-cpuweight`, `mikemol-cpu-census`,
+  `mikemol-rail`.
 - `mutantcell` (`mikemol-mutantcell`): the def-sweep's cell. Scripts: `mikemol-eval`, `mikemol-sites`.
 - `mutation` (`mikemol-mutation`): mutation primitives. Script: `mikemol-mutate`.
 - `pathsforward` (`mikemol-pathsforward`): the paths-forward loop's state file and its reader and writer.
@@ -53,6 +64,8 @@ with no scripts is a library that other distributions import.
 - `pathwalk` (`mikemol-pathwalk`): expand directory operands to their Python files. A library, no scripts.
 - `pkgbuild` (`mikemol-pkgbuild`): Bazel packaging actions. Scripts: `mikemol-wheel`, `mikemol-pyc`,
   `mikemol-pyinfo`.
+- `procrun` (`mikemol-procrun`): start a child process in one place: argv never a shell, output
+  captured as text, a non-zero status a value. A library, no scripts.
 - `pycodemod` (`mikemol-pycodemod`): structural queries over Python source. Script: `mikemol-pycodemod`.
 - `pytestspec` (`mikemol-pytestspec`): a pytest plugin that collects Rego specs. A library, no scripts.
 - `ratchet` (`mikemol-ratchet`): a paydown-only ratchet over a baseline set. Script: `mikemol-ratchet`.

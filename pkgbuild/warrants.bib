@@ -678,3 +678,39 @@
   claim  = {W1230: conftest.py is not test*.py, so setuptools leaves it out; a graft puts it back.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_relcheck.py -k test_a_tracked_test_file_the_sdist_drops_fails_the_row_until_the_manifest_grafts_it},
 }
+
+@misc{pkgbuild-installguide-guide-that-matches-the-tree-has-no-finding,
+  section = {installguide},
+  title  = {Scripts continued on a second line and in another order still match; a library has none},
+  claim  = {Scripts continued on a second line and in another order still match; a library has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_installguide.py -k test_a_guide_that_matches_the_tree_has_no_finding},
+}
+
+@misc{pkgbuild-installguide-each-kind-of-drift-is-its-own-finding,
+  section = {installguide},
+  title  = {Not listed, listed but absent, a wrong name, a wrong script list and a wrong count},
+  claim  = {Not listed, listed but absent, a wrong name, a wrong script list and a wrong count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_installguide.py -k test_each_kind_of_drift_is_its_own_finding},
+}
+
+@misc{pkgbuild-installguide-missing-count-sentence-is-a-finding,
+  section = {installguide},
+  title  = {The guide must say how many there are},
+  claim  = {The guide must say how many there are.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_installguide.py -k test_a_missing_count_sentence_is_a_finding},
+}
+
+@misc{pkgbuild-installguide-command-prints-one-json-line-per-finding-and-exits-one,
+  section = {installguide},
+  title  = {Exit 1 and a line per finding on standard output},
+  claim  = {Exit 1 and a line per finding on standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_installguide.py -k test_the_command_prints_one_json_line_per_finding_and_exits_one},
+}
+
+@misc{pkgbuild-installguide-missing-root-or-guide-is-a-usage-error,
+  section = {installguide},
+  title  = {The controls: no arguments, a root that is no directory, and a guide that cannot be read},
+  claim  = {The controls: no arguments, a root that is no directory, and a guide that cannot be
+            read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_installguide.py -k test_a_missing_root_or_guide_is_a_usage_error},
+}
