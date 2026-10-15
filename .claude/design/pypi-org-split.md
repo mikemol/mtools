@@ -59,6 +59,41 @@ managing-billing-for-github-actions/about-billing-for-github-actions:
 - An order that never breaks a consumer's pin: the old repository keeps resolving every existing
   sha until the last consumer has re-pinned.
 
+## Pin inventory (W1224, first reading)
+
+Instrument: `grep -r -l "mikemol/mtools"` over `/home/mikemol/github` for `pyproject.toml` and
+`uv.lock`, skipping `.venv`, `node_modules`, `bazel-mtools`, `.git`. Positive control: it finds
+mtools' own dists (below). Denominator: every directory under `~/github` the user can read;
+`luthen-observability/.kube` is unreadable and was not searched (so that repository is UNAVAILABLE
+for this reading, not absent). Markdown (INSTALL guides) was not searched by this instrument, only
+by name.
+
+- Outside repositories whose `pyproject.toml` or `uv.lock` names `mikemol/mtools`: aeternum,
+  el-openglo (plus about 40 agent worktrees under `.claude/worktrees`, which are copies, not
+  consumers), gabion, gcalculus, linux-sources (and its `.linux-sources-gate-wt` worktree),
+  paperkit, resumes, rosettapkg, substrate, summit, amr-skills, life.
+- Inside mtools: 34 dist `pyproject.toml` files name `mikemol/mtools` (sibling dependencies as
+  git references); a split must rewrite each to the sibling's new repository or to the index.
+- READ (W1229, 2026-10-14, from each consumer's `pyproject.toml` pin lines; `uv.lock` files were
+  not read): every pin is `git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=<dist>`.
+  Shas in use, by repository (dists pinned):
+  - `03749d56d557...`: life (pathsforward, hooks, transcriptstruct, gmailstruct); substrate
+    (mdstruct, hooks, fence, transcriptstruct, corpus, witness, ratchet, ledger, pathsforward).
+  - `f04f0a2f6b93...`: gcalculus (hooks, pathsforward); linux-sources (hooks, fence, pathsforward,
+    pycodemod, mdstruct); el-openglo (mdstruct, hooks, pathsforward, pycodemod, atomicwrite,
+    grade, bibparse, pytestspec, fence).
+  - `c3ca6d249eff...`: summit (hooks, mdstruct, pathsforward, pathwalk, pycodemod, witness).
+  - `2eeb11eba415...`: paperkit (atomicwrite, grade, hooks, pathsforward, pkgbuild, gatecheck,
+    mutation, bibparse, mutantcell, memres, buildtel, importdag, rulerseq).
+  - `7aa3b8fa2e87...`: gabion (pathsforward).
+  - Named but with no pin line my pattern matched (prose, or a different form; unread): aeternum,
+    rosettapkg, resumes, amr-skills.
+- CONSEQUENCE: five different shas are pinned, and the most-pinned dists are pathsforward (eight
+  repositories) and hooks (seven), so these two (and fence, mdstruct, pycodemod) are what a
+  consumer breaks on first. A pin by sha keeps resolving while `mikemol/mtools` exists with
+  those commits reachable, so the old repository must stay, with history intact, until the last
+  consumer has re-pinned to the index release or the new repository.
+
 ## What already works for it
 
 A layout file (TOML, format in `mikemol.pkgbuild.repos`; none is tracked yet, and with none every
