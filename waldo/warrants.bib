@@ -828,3 +828,61 @@
   claim  = {The world moved and the marker did not: exit 1 and a state that says so.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_runphase.py -k test_a_marker_that_cannot_be_written_after_success_is_reported},
 }
+
+@misc{waldo-unevaluated-environment-fault-in-an-after-witness-is-unevaluated-not-failed,
+  section = {unevaluated},
+  title  = {The change applied; the witness could not reach its target, so the state says so},
+  claim  = {The change applied; the witness could not reach its target, so the state says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_an_environment_fault_in_an_after_witness_is_unevaluated_not_failed},
+}
+
+@misc{waldo-unevaluated-real-unmet-condition-or-a-different-error-still-fails,
+  section = {unevaluated},
+  title  = {The controls: an exit 0 missing its text, and a non-zero exit with another message},
+  claim  = {The controls: an exit 0 missing its text, and a non-zero exit with another message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_a_real_unmet_condition_or_a_different_error_still_fails},
+}
+
+@misc{waldo-unevaluated-real-failure-outranks-an-unevaluated-witness-and-both-are-listed,
+  section = {unevaluated},
+  title  = {One witness failed and one could not be evaluated: failed wins the state, both are named},
+  claim  = {One witness failed and one could not be evaluated: failed wins the state, both are
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_a_real_failure_outranks_an_unevaluated_witness_and_both_are_listed},
+}
+
+@misc{waldo-unevaluated-exit-zero-is-always-judged-even-when-its-output-names-the-fault,
+  section = {unevaluated},
+  title  = {The classifier is asked only of a non-zero exit: this witness exited 0 and is met},
+  claim  = {The classifier is asked only of a non-zero exit: this witness exited 0 and is met.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_an_exit_zero_is_always_judged_even_when_its_output_names_the_fault},
+}
+
+@misc{waldo-unevaluated-with-no-classifier-the-fault-reads-as-a-failure-as-before,
+  section = {unevaluated},
+  title  = {The default is unchanged: no classifier, every non-zero exit is a failed witness},
+  claim  = {The default is unchanged: no classifier, every non-zero exit is a failed witness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_with_no_classifier_the_fault_reads_as_a_failure_as_before},
+}
+
+@misc{waldo-unevaluated-environment-fault-in-a-precondition-cannot-run-and-applies-nothing,
+  section = {unevaluated},
+  title  = {A precondition that could not be evaluated is cannot-run; a real failure still refuses},
+  claim  = {A precondition that could not be evaluated is cannot-run; a real failure still refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_an_environment_fault_in_a_precondition_cannot_run_and_applies_nothing},
+}
+
+@misc{waldo-unevaluated-run-all-flags-only-what-the-classifier-flags-and-keeps-the-exit-code,
+  section = {unevaluated},
+  title  = {The flagged result keeps rc 1 and carries the flag; the other result is judged normally},
+  claim  = {The flagged result keeps rc 1 and carries the flag; the other result is judged normally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_run_all_flags_only_what_the_classifier_flags_and_keeps_the_exit_code},
+}
+
+@misc{waldo-unevaluated-entry-assertion-that-cannot-be-evaluated-stops-the-phase-as-cannot-run,
+  section = {unevaluated},
+  title  = {An environment fault in a phase's entry is not a broken entry assertion; nothing applies},
+  claim  = {An environment fault in a phase's entry is not a broken entry assertion; nothing
+            applies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_an_entry_assertion_that_cannot_be_evaluated_stops_the_phase_as_cannot_run},
+}

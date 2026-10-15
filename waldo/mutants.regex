@@ -79,7 +79,12 @@ src/mikemol/waldo/pipeline.py|empty-plan-applied|if not planned\.changes:|if Fal
 src/mikemol/waldo/pipeline.py|apply-failure-ignored|if code == 0:|if True:|def=_apply
 src/mikemol/waldo/pipeline.py|dry-run-applies|if dry:|if False:|def=execute
 src/mikemol/waldo/pipeline.py|converged-reads-applied|"applied" if planned\.changes else "converged"|"applied"|def=execute
-src/mikemol/waldo/pipeline.py|failed-witness-exits-ok|\(EXIT_REFUSED if failed else EXIT_OK\)|EXIT_OK|def=execute
+src/mikemol/waldo/pipeline.py|failed-witness-exits-ok|\(EXIT_REFUSED if failed or blind else EXIT_OK\)|EXIT_OK|def=execute
+src/mikemol/waldo/pipeline.py|unevaluated-witness-exits-ok|\(EXIT_REFUSED if failed or blind else EXIT_OK\)|(EXIT_REFUSED if failed else EXIT_OK)|def=execute
+src/mikemol/waldo/pipeline.py|unevaluated-reads-failed|"-witness-unevaluated" if blind|"-witness-failed" if blind|def=execute
+src/mikemol/waldo/pipeline.py|failure-hidden-by-unevaluated|"-witness-failed" if failed else|"-witness-unevaluated" if blind else|def=execute
+src/mikemol/waldo/pipeline.py|unevaluated-precondition-passes|if blind:|if False:|def=_gate
+src/mikemol/waldo/witness.py|zero-exit-asks-the-classifier|if code != 0 and unevaluated is not None|if unevaluated is not None|def=run_all
 src/mikemol/waldo/pipeline.py|plan-tail-unscrubbed|scrub\(tail, \*secrets\)|tail|def=_plan
 src/mikemol/waldo/pipeline.py|apply-tail-unscrubbed|scrub\(out, \*secrets\)|out|def=_apply
 src/mikemol/waldo/cli.py|off-shape-command-accepted|if command is not None and not matches_shape\(command\):|if False:|def=main

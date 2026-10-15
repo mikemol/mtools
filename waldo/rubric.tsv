@@ -11,3 +11,4 @@ marker	durable phase marker
 confirm	point-of-no-return confirmation
 phases	phase model
 runphase	run one phase
+unevaluated	A witness that cannot be evaluated is not a failed witness

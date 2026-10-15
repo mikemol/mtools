@@ -68,6 +68,10 @@ class Result:
     rc: int
     unmet: tuple[str, ...]
     tail: tuple[str, ...]
+    # ⚑ CANNOT EVALUATE IS NOT FAILED (W1272, luthen-observability:W1076): a witness whose command
+    # could not reach its target (no kubeconfig, a refused connection) measured nothing, so it is
+    # neither met nor unmet. `rc` keeps the command's own non-zero exit; this flag says why.
+    unevaluated: bool = False
 
 
 def tail_of(text: str) -> tuple[str, ...]:
@@ -234,11 +238,19 @@ def run_all(
     *,
     before: Mapping[str, str] | None = None,
     started: float | None = None,
+    unevaluated: Callable[[int, str], bool] | None = None,
 ) -> list[Result]:
     """Run each witness and judge it.
 
+    ⚑ `unevaluated` IS THE CALLER'S OWN CLASSIFIER, NOT A RESERVED EXIT CODE: it takes the command's
+    (exit code, output) and says whether the command could not reach what it was to measure. A
+    reserved code would collide with a witness command that really exits with it, and would read a
+    genuine failure as unevaluated; a classifier the caller writes from the fault signatures it
+    knows cannot. It is asked only of a non-zero exit, so a command that exited 0 is always judged.
+
     Returns:
-        one Result per witness, in order; a witness with no argv fails with exit 2.
+        one Result per witness, in order; a witness with no argv fails with exit 2; one the
+        classifier flags carries `unevaluated` and is not judged against its conditions.
 
     """
     readings = before or {}
@@ -248,6 +260,10 @@ def run_all(
             results.append(Result(witness.name, NO_ARGV, ("no argv",), ()))
             continue
         code, out = run(witness.argv)
+        if code != 0 and unevaluated is not None and unevaluated(code, out):
+            blind = Result(witness.name, code, ("cannot evaluate",), tail_of(out), unevaluated=True)
+            results.append(blind)
+            continue
         prior = readings.get(witness.name)
         results.append(judge(witness, code, out, before=prior, started=started))
     return results

@@ -66,10 +66,22 @@ def _entry(phase: Phase, setting: Setting) -> Stop | None:
         a Stop naming the failing witnesses, or None when each holds.
 
     """
-    results = run_all(phase.entry, setting.seams.run, started=setting.seams.clock())
-    failed = [r.name for r in results if r.rc != 0]
+    results = run_all(
+        phase.entry,
+        setting.seams.run,
+        started=setting.seams.clock(),
+        unevaluated=setting.seams.unevaluated,
+    )
+    failed = [r.name for r in results if r.rc != 0 and not r.unevaluated]
     if failed:
         return _refused("an entry assertion failed", failed=failed)
+    blind = [r.name for r in results if r.unevaluated]
+    if blind:
+        # ⚑ AN ENVIRONMENT FAULT IS NOT A BROKEN ENTRY ASSERTION (W1272): nothing was measured, so
+        # the phase cannot start, and says so as cannot-run.
+        why = "an entry assertion could not be evaluated"
+        cannot: Verdict = {"state": "cannot-run", "why": why}
+        return Stop(EXIT_CANNOT, {**cannot, "unevaluated": blind})
     return None
 
 

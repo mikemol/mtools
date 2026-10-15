@@ -58,6 +58,10 @@ class Seams:
     apply: Callable[[Artifact, Contract], tuple[int, str]]
     run: Run
     clock: Callable[[], float]
+    # ⚑ WHICH NON-ZERO WITNESS RUNS MEASURED NOTHING (W1272): the waldo's own classifier of
+    # (exit code, output), written from the environment faults it knows; None means every non-zero
+    # exit is a failure, as before.
+    unevaluated: Callable[[int, str], bool] | None = None
 
 
 @dataclass(frozen=True)
@@ -100,6 +104,7 @@ def _results(results: Sequence[Result], secrets: Sequence[Secret]) -> list[Verdi
             "rc": r.rc,
             "unmet": list(r.unmet),
             "tail": [scrub(line, *secrets) for line in r.tail],
+            **({"unevaluated": True} if r.unevaluated else {}),
         }
         for r in results
     ]
@@ -118,10 +123,18 @@ def _gate(
     if findings:
         why = "the contract is unsound"
         return Stop(EXIT_CANNOT, {"state": "cannot-run", "why": why, "findings": findings})
-    failed = [r for r in run_all(contract.before, seams.run, started=started) if r.rc != 0]
+    results = run_all(contract.before, seams.run, started=started, unevaluated=seams.unevaluated)
+    failed = [r for r in results if r.rc != 0 and not r.unevaluated]
     if failed:
         refusal: Verdict = {"state": "refused", "why": "a precondition failed"}
         return Stop(EXIT_REFUSED, {**refusal, "before": _results(failed, secrets)})
+    blind = [r for r in results if r.unevaluated]
+    if blind:
+        # ⚑ NOTHING WAS APPLIED, AND NOTHING WAS MEASURED: an environment fault in a precondition is
+        # "cannot run", not a precondition that failed, so the caller fixes the environment.
+        why = "a precondition could not be evaluated"
+        unread: Verdict = {"state": "cannot-run", "why": why}
+        return Stop(EXIT_CANNOT, {**unread, "before": _results(blind, secrets)})
     return None
 
 
@@ -194,13 +207,21 @@ def execute(
     failed_apply = _apply(contract, seams, planned, secrets)
     if failed_apply is not None:
         return failed_apply.code, failed_apply.verdict
-    results = run_all(contract.after, seams.run, before=prior, started=started)
-    failed = [r.name for r in results if r.rc != 0]
-    state = ("applied" if planned.changes else "converged") + ("-witness-failed" if failed else "")
+    results = run_all(
+        contract.after, seams.run, before=prior, started=started, unevaluated=seams.unevaluated
+    )
+    failed = [r.name for r in results if r.rc != 0 and not r.unevaluated]
+    blind = [r.name for r in results if r.unevaluated]
+    # ⚑ A REAL FAILURE OUTRANKS AN UNEVALUATED WITNESS: when both occur the state says failed, and
+    # `unevaluated` still lists what could not be measured. With none failed and some unevaluated
+    # the change may have landed but is not verified, so the exit is not OK either.
+    suffix = "-witness-failed" if failed else ("-witness-unevaluated" if blind else "")
+    state = ("applied" if planned.changes else "converged") + suffix
     verdict: Verdict = {
         "state": state,
         "planned": planned.rows,
         "witnesses": _results(results, secrets),
         "failed": failed,
+        "unevaluated": blind,
     }
-    return (EXIT_REFUSED if failed else EXIT_OK), verdict
+    return (EXIT_REFUSED if failed or blind else EXIT_OK), verdict
