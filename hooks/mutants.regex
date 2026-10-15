@@ -161,7 +161,7 @@ src/mikemol/hooks/work_claims.py|release-others-claims|if who == owner\}|if who 
 src/mikemol/hooks/work_claims.py|release-wanted-claims|if label not in wished\)\)|if label in wished))|def=plan
 src/mikemol/hooks/work_claims.py|refusal-prefix-kept|\.split\(_REFUSED, 1\)\[-1\]|.split(_REFUSED, 1)[0]|def=advice
 src/mikemol/hooks/work_claims_hook.py|session-end-still-claims|if event == "SessionEnd" else work_claims|if False else work_claims|def=claim_lines
-src/mikemol/hooks/work_claims_hook.py|refusal-not-advised|if code == EXIT_REFUSED:|if code != EXIT_REFUSED:|def=claim_lines
+src/mikemol/hooks/work_claims_hook.py|refusal-not-advised|if code == EXIT_DEFERRED:|if code != EXIT_DEFERRED:|def=claim_lines
 src/mikemol/hooks/work_claims_hook.py|missing-tool-claims-anyway|if tool is None:|if False:|def=claim_lines
 src/mikemol/hooks/work_claims_hook.py|bazel-venv-ignored|for relative in \(built, MEMBUDGET\):|for relative in (MEMBUDGET,):|def=find_tool
 src/mikemol/hooks/work_claims_hook.py|no-session-claims-anyway|if session is None or owner is None:|if False:|def=claim_lines

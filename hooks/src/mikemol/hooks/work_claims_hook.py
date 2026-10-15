@@ -51,7 +51,7 @@ PROJECT_DIR_ENV = "CLAUDE_PROJECT_DIR"
 EVENTS = ("SessionStart", "UserPromptSubmit", "SessionEnd")
 PROMPT_TIMEOUT_S = 5.0
 END_TIMEOUT_S = 1.0
-EXIT_REFUSED = 3
+EXIT_DEFERRED = 3
 _SESSION_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
 _NOT_STARTED = 127
 _TIMED_OUT = 124
@@ -170,7 +170,7 @@ def claim_lines(
     lines: list[str] = []
     for label in todo.take:
         code, said = run([str(tool), "claim", label, "--owner-pid", pid], timeout)
-        if code == EXIT_REFUSED:
+        if code == EXIT_DEFERRED:
             lines.append(work_claims.advice(label, said))
     return lines
 

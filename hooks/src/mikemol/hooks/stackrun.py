@@ -8,7 +8,7 @@ value and lets the repo push. The verdict grammar is `mikemol-commit`'s own:
 
     COMMITTED <repo> <sha7> <subject> [PUSHED]      one per commit, oldest first
     REFUSED <repo> (rc=N) ...                       the tip's gate refused; NOTHING landed
-    RACED <repo>: HEAD moved ...                    a peer moved HEAD; NOTHING landed (exit 4)
+    RACED <repo>: HEAD moved ...                    a peer moved HEAD; NOTHING landed (exit 5)
     NOT COMMITTED <repo>: ...                       a commit could not be built; NOTHING landed
 
 ⚑ ALL OR NOTHING, STATED: a refusal names that nothing landed, because landing the prefix before
@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from mikemol.hooks.isolated import EnvRunner
 
 BODY_CHECK = body_refusal
-EXIT_RACED = 4
+EXIT_RACED = 5
 SHORT = 7
 
 
