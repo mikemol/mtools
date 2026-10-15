@@ -4744,3 +4744,27 @@
             touched.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_the_subjects_a_write_applied_are_marked_applied_and_the_rest_stay_open},
 }
+
+@misc{pathsforward-advice-exclusion-is-a-rejection-written-before-the-advice-was-made,
+  section = {advice},
+  title  = {The row is created rejected with its reason; an existing open row is turned rejected},
+  claim  = {The row is created rejected with its reason; an existing open row is turned rejected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_advice.py -k test_an_exclusion_is_a_rejection_written_before_the_advice_was_made},
+}
+
+@misc{pathsforward-update-many-except-is-remembered-and-a-later-dry-run-prints-the-reason-not-the-proposal,
+  section = {update_many},
+  title  = {W1158: `--except W2=reason` once; the next dry run without it prints EXCLUDED W2: reason},
+  claim  = {W1158: `--except W2=reason` once; the next dry run without it prints EXCLUDED W2:
+            reason. THE FIRST RUN IS A DRY RUN TOO: the exclusion is stored by the
+            command that states it, write or not, and a card with no reason (`--except
+            W3`) is not stored because there is nothing to say.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_an_except_is_remembered_and_a_later_dry_run_prints_the_reason_not_the_proposal},
+}
+
+@misc{pathsforward-update-many-except-with-no-reason-is-not-stored,
+  section = {update_many},
+  title  = {The control: `--except W5` (no `=reason`) leaves the advice list without a rejected row},
+  claim  = {The control: `--except W5` (no `=reason`) leaves the advice list without a rejected row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many.py -k test_an_except_with_no_reason_is_not_stored},
+}

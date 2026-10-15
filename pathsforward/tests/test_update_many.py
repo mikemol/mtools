@@ -152,6 +152,39 @@ def test_the_open_selector_takes_every_card_not_done_less_the_excluded_with_thei
     assert _vectors(path) == {"W1": _VEC, "W2": None, "W3": None, "W4": _VEC, "W5": _VEC}
 
 
+def test_an_except_is_remembered_and_a_later_dry_run_prints_the_reason_not_the_proposal(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1158: `--except W2=reason` once; the next dry run without it prints EXCLUDED W2: reason.
+
+    ⚑ THE FIRST RUN IS A DRY RUN TOO: the exclusion is stored by the command that states it, write
+    or not, and a card with no reason (`--except W3`) is not stored because there is nothing to say.
+    """
+    path = _state(tmp_path)
+    flags = ["--vector", _VEC, "--vector-source", "signal"]
+    assert _run(path, "--update-many", "open", "--except", "W2=held on W1", *flags) == 0
+    capsys.readouterr()
+    assert _run(path, "--update-many", "open", *flags) == 0
+    out = capsys.readouterr().out.splitlines()
+    assert "EXCLUDED W2: held on W1" in out
+    assert "WOULD UPDATE W2" not in out
+    assert "WOULD UPDATE W1" in out
+    assert out[-1] == "advice: 3 proposed, 1 rejected, 0 new"
+    doc: dict[str, list[Rec]] = json.loads(path.read_text(encoding="utf-8"))
+    assert [(r["subject"], r["status"]) for r in doc["advice"] if r["status"] == "rejected"] == [
+        ("W2", "rejected")
+    ]
+
+
+def test_an_except_with_no_reason_is_not_stored(tmp_path: Path) -> None:
+    """The control: `--except W5` (no `=reason`) leaves the advice list without a rejected row."""
+    path = _state(tmp_path)
+    flags = ["--vector", _VEC, "--vector-source", "signal"]
+    assert _run(path, "--update-many", "open", "--except", "W5", *flags) == 0
+    doc: dict[str, list[Rec]] = json.loads(path.read_text(encoding="utf-8"))
+    assert all(r["status"] != "rejected" for r in doc["advice"])
+
+
 def test_an_excluded_symbol_that_is_no_card_refuses_and_changes_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

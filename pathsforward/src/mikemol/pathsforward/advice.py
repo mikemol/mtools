@@ -83,6 +83,27 @@ def upsert(doc: Json, advice: Advice, run_id: str) -> str:
     return NEW
 
 
+def exclude(doc: Json, advice: Advice, reason: str, run_id: str) -> None:
+    """Record one piece of advice as rejected at once, with a reason (an `--except`).
+
+    ⚑ AN EXCLUSION IS A REJECTION WRITTEN BEFORE THE ADVICE WAS EVER MADE: the row is created if it
+    is absent, then set to rejected with the stated reason, so a later dry run that would propose
+    it prints the reason instead (mtools:W1158).
+
+    Raises:
+        ValueError: when the reason is empty.
+
+    """
+    if not reason.strip():
+        msg = "an exclusion needs a reason"
+        raise ValueError(msg)
+    upsert(doc, advice, run_id)
+    for row in rows(doc):
+        if _is(row, advice):
+            row["status"] = REJECTED
+            row["reason"] = reason.strip()
+
+
 def reason_for(doc: Json, advice: Advice) -> str | None:
     """Read the stated reason a piece of advice was rejected.
 

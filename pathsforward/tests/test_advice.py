@@ -90,6 +90,20 @@ def test_the_subjects_a_write_applied_are_marked_applied_and_the_rest_stay_open(
     assert advice.mark_applied(doc, "--block-matching", "blocks-on", {"W10"}) == 0
 
 
+def test_an_exclusion_is_a_rejection_written_before_the_advice_was_made() -> None:
+    """The row is created rejected with its reason; an existing open row is turned rejected."""
+    doc = _doc()
+    advice.exclude(doc, _A, "held on W5", "r1")
+    assert advice.reason_for(doc, _A) == "held on W5"
+    assert advice.upsert(doc, _A, "r2") == advice.REJECTED
+    advice.upsert(doc, _B, "r1")
+    advice.exclude(doc, _B, "  later  ", "r2")
+    assert advice.reason_for(doc, _B) == "later"
+    assert len(advice.rows(doc)) == _TWO
+    with pytest.raises(ValueError, match="needs a reason"):
+        advice.exclude(doc, _OTHER_RULE, "", "r3")
+
+
 def test_the_counts_split_proposed_rejected_and_new() -> None:
     """Proposed is new plus seen; rejected is suppressed; new is first-time."""
     outcomes = [advice.NEW, advice.NEW, advice.SEEN, advice.REJECTED]

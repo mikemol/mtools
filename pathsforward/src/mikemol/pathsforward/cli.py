@@ -48,6 +48,7 @@ from mikemol.pathsforward import (
 )
 from mikemol.pathsforward.advice import close_applied as close_advice
 from mikemol.pathsforward.advice import counts as count_advice
+from mikemol.pathsforward.advice import exclude as exclude_advice
 from mikemol.pathsforward.advice import mark_applied as apply_advice
 from mikemol.pathsforward.advice import reason_for as advice_reason
 from mikemol.pathsforward.advice import reject as reject_advice
@@ -66,7 +67,7 @@ from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+    from collections.abc import Callable, Mapping, Sequence
 
     from mikemol.pathsforward.model import Json, State
 
@@ -80,7 +81,13 @@ EXIT_DIVERGED = 4
 Planned = tuple[str, str, str]
 
 
-def _advise(ctx: Ctx, state: State, spec: tuple[str, str], planned: Sequence[Planned]) -> None:
+def _advise(
+    ctx: Ctx,
+    state: State,
+    spec: tuple[str, str],
+    planned: Sequence[Planned],
+    excluded: Mapping[str, str] | None = None,
+) -> None:
     """Say a dry run's plan through the advice store, or close the advice a write applied (W1244).
 
     `spec` is (tool, rule) and each planned item is (subject, action, the WOULD line). On a dry
@@ -90,20 +97,29 @@ def _advise(ctx: Ctx, state: State, spec: tuple[str, str], planned: Sequence[Pla
     the lines print as they did and the matching open rows are marked applied. ⚑ A rejection
     governs what a dry run PROPOSES; an explicit `--write` is the operator's own word and is not
     blocked by it.
+
+    ⚑ `excluded` IS EACH `--except SYMBOL=REASON` OF THE CALL (W1158): it is stored as a row
+    rejected with that reason, write or dry, so the decision outlives the command and a later dry
+    run that would propose the card prints `EXCLUDED <card>: <reason>` for update-many. An
+    exclusion with no reason is not stored: there is nothing to print.
     """
     tool, rule = spec
+    for symbol, why in (excluded or {}).items():
+        if why.strip():
+            exclude_advice(state.doc, (tool, rule, symbol, f"update {symbol}"), why, ctx.stamp())
     subjects = {subject for subject, _, _ in planned}
     if ctx.opts.get("write"):
         for _, _, said in planned:
             _say(said)
         apply_advice(state.doc, tool, rule, subjects)
         return
+    label = "EXCLUDED" if tool == "update-many" else "REJECTED"
     outcomes: list[str] = []
     for subject, action, said in planned:
         item = (tool, rule, subject, action)
         outcome = upsert_advice(state.doc, item, ctx.stamp())
         outcomes.append(outcome)
-        rejected_line = f"REJECTED {subject}: {advice_reason(state.doc, item)}"
+        rejected_line = f"{label} {subject}: {advice_reason(state.doc, item)}"
         _say(rejected_line if outcome == "rejected" else said)
     close_advice(state.doc, tool, rule, subjects)
     proposed, rejected, new = count_advice(outcomes)
@@ -1399,7 +1415,7 @@ def _update_many(ctx: Ctx) -> int:
     if write:
 
         def edit(state: State) -> int:
-            _advise(ctx, state, spec, plan(state))
+            _advise(ctx, state, spec, plan(state), skipped)
             return EXIT_OK
 
         return _mutate(ctx, edit)
@@ -1408,7 +1424,7 @@ def _update_many(ctx: Ctx) -> int:
     planned = plan(store.load(ctx.path))
 
     def record(state: State) -> int:
-        _advise(ctx, state, spec, planned)
+        _advise(ctx, state, spec, planned, skipped)
         return EXIT_OK
 
     return _mutate(ctx, record)
