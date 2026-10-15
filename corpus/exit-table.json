@@ -1,0 +1,15 @@
+{
+  "DONE": {"value": 0, "names": ["OK", "ADMITTED", "FORMATTED", "INSTALLED"]},
+  "FAILED": {"value": 1, "names": ["FAILED", "FINDINGS", "NOT_COMMITTED", "LOCK"]},
+  "USAGE": {"value": 2, "names": ["USAGE"]},
+  "DEFER": {
+    "value": 3,
+    "names": ["LOCKED", "NOT_CHECKED", "NOT_RUN", "NOT_TAKEN", "NO_CAP", "NO_DESTINATION", "BUSY"]
+  },
+  "REFUSE": {"value": 4, "names": ["REFUSED", "DIVERGED", "LEDGER"]},
+  "RACE": {"value": 5, "names": ["RACED"]},
+  "WITHHELD": {"value": 6, "names": ["HELD"]},
+  "HARNESS": {"value": 125, "names": ["HARNESS"]},
+  "NOT_EXECUTABLE": {"value": 126, "names": ["NOT_EXECUTABLE"]},
+  "NOT_FOUND": {"value": 127, "names": ["NOT_FOUND", "NOT_STARTED"]}
+}

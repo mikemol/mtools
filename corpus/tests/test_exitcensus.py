@@ -1,0 +1,103 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""Witnesses for the exit-constant census: it reads constants and judges them by the table."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import TYPE_CHECKING, cast
+
+from mikemol.corpus import exitcensus
+
+if TYPE_CHECKING:
+    import pytest
+
+_TABLE_DOC = {
+    "REFUSE": {"value": 3, "names": ["REFUSED"]},
+    "USAGE": {"value": 2, "names": ["USAGE"]},
+}
+_REAL_TABLE = Path(__file__).parents[1] / "exit-table.json"
+
+
+def _table() -> exitcensus.Table:
+    return exitcensus.table_of(_TABLE_DOC)
+
+
+def _real() -> dict[str, dict[str, object]]:
+    """Read the tracked table.
+
+    Returns:
+        verdict to its entry.
+
+    """
+    text = _REAL_TABLE.read_text(encoding="utf-8")
+    return cast("dict[str, dict[str, object]]", json.loads(text))
+
+
+def test_constants_reads_plain_and_annotated_integer_assignments_only() -> None:
+    """EXIT_ integers at module level are read; other names, strings and expressions are not."""
+    source = "EXIT_A = 1\nEXIT_B: int = 2\nOTHER = 3\nEXIT_C = 'x'\nEXIT_D = 1 + 1\n"
+    found = exitcensus.constants(source, "m.py")
+    assert [(c.name, c.value, c.line) for c in found] == [("EXIT_A", 1, 1), ("EXIT_B", 2, 2)]
+
+
+def test_a_class_level_or_unparseable_source_yields_nothing() -> None:
+    """Only module-level assignments count, and a file that does not parse is skipped."""
+    assert exitcensus.constants("class K:\n    EXIT_A = 1\n", "m.py") == []
+    assert exitcensus.constants("def (:\n", "m.py") == []
+
+
+def test_a_name_at_its_verdicts_value_is_ok_and_at_another_is_a_violation() -> None:
+    """REFUSED at 3 is OK; REFUSED at 2 is a VIOLATION naming the right value."""
+    ok = exitcensus.judge(exitcensus.Constant("m.py", 1, "EXIT_REFUSED", 3), _table())
+    bad = exitcensus.judge(exitcensus.Constant("m.py", 1, "EXIT_REFUSED", 2), _table())
+    assert (ok.status, bad.status, bad.detail) == ("OK", "VIOLATION", "REFUSE is 3")
+
+
+def test_a_name_the_table_does_not_list_is_unknown_not_a_violation() -> None:
+    """The control: a gap in the table is reported apart from a defect in the tool."""
+    row = exitcensus.judge(exitcensus.Constant("m.py", 1, "EXIT_MYSTERY", 9), _table())
+    assert row.status == "UNKNOWN"
+
+
+def test_census_walks_src_trees_and_skips_venvs_and_tests(tmp_path: Path) -> None:
+    """A constant under `src` is read; one under `tests` or `.venv` is not."""
+    (tmp_path / "d" / "src").mkdir(parents=True)
+    (tmp_path / "d" / "tests").mkdir()
+    (tmp_path / "d" / ".venv" / "src").mkdir(parents=True)
+    (tmp_path / "d" / "src" / "a.py").write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    (tmp_path / "d" / "tests" / "t.py").write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    (tmp_path / "d" / ".venv" / "src" / "v.py").write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    rows = exitcensus.census([tmp_path], _table())
+    assert [r.status for r in rows] == ["VIOLATION"]
+
+
+def test_main_exits_one_on_a_violation_and_zero_without(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The exit status is the verdict: 1 with a violation, 0 once the constant is right."""
+    (tmp_path / "src").mkdir()
+    table = tmp_path / "t.json"
+    table.write_text(json.dumps(_TABLE_DOC), encoding="utf-8")
+    source = tmp_path / "src" / "a.py"
+    source.write_text("EXIT_REFUSED = 2\n", encoding="utf-8")
+    assert exitcensus.main([str(table), str(tmp_path)]) == 1
+    assert "VIOLATION" in capsys.readouterr().out
+    source.write_text("EXIT_REFUSED = 3\n", encoding="utf-8")
+    assert exitcensus.main([str(table), str(tmp_path)]) == 0
+
+
+def test_main_refuses_a_missing_table(capsys: pytest.CaptureFixture[str]) -> None:
+    """Usage: no table file is exit 2 with the usage line on stderr."""
+    assert exitcensus.main(["/usr/nonexistent/x.json", "."]) == exitcensus.EXIT_USAGE
+    assert "usage:" in capsys.readouterr().err
+
+
+def test_the_tracked_table_gives_each_value_one_verdict_and_each_name_one_value() -> None:
+    """The real table: no value belongs to two verdicts and no name is listed under two."""
+    doc = _real()
+    values = [cast("int", entry["value"]) for entry in doc.values()]
+    names = [name for entry in doc.values() for name in cast("list[str]", entry["names"])]
+    assert len(values) == len(set(values))
+    assert len(names) == len(set(names))

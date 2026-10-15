@@ -442,3 +442,59 @@
   claim  = {`nemik-check` is run on line 3; the comment's name and the wrapper's own name are not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_depmap.py -k test_a_shell_wrapper_names_what_it_runs_and_not_a_comment_or_itself},
 }
+
+@misc{corpus-exitcensus-constants-reads-plain-and-annotated-integer-assignments-only,
+  section = {exitcensus},
+  title  = {EXIT_ integers at module level are read; other names, strings and expressions are not},
+  claim  = {EXIT_ integers at module level are read; other names, strings and expressions are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_constants_reads_plain_and_annotated_integer_assignments_only},
+}
+
+@misc{corpus-exitcensus-class-level-or-unparseable-source-yields-nothing,
+  section = {exitcensus},
+  title  = {Only module-level assignments count, and a file that does not parse is skipped},
+  claim  = {Only module-level assignments count, and a file that does not parse is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_class_level_or_unparseable_source_yields_nothing},
+}
+
+@misc{corpus-exitcensus-name-at-its-verdicts-value-is-ok-and-at-another-is-a-violation,
+  section = {exitcensus},
+  title  = {REFUSED at 3 is OK; REFUSED at 2 is a VIOLATION naming the right value},
+  claim  = {REFUSED at 3 is OK; REFUSED at 2 is a VIOLATION naming the right value.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_name_at_its_verdicts_value_is_ok_and_at_another_is_a_violation},
+}
+
+@misc{corpus-exitcensus-name-the-table-does-not-list-is-unknown-not-a-violation,
+  section = {exitcensus},
+  title  = {The control: a gap in the table is reported apart from a defect in the tool},
+  claim  = {The control: a gap in the table is reported apart from a defect in the tool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_a_name_the_table_does_not_list_is_unknown_not_a_violation},
+}
+
+@misc{corpus-exitcensus-census-walks-src-trees-and-skips-venvs-and-tests,
+  section = {exitcensus},
+  title  = {A constant under `src` is read; one under `tests` or `.venv` is not},
+  claim  = {A constant under `src` is read; one under `tests` or `.venv` is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_census_walks_src_trees_and_skips_venvs_and_tests},
+}
+
+@misc{corpus-exitcensus-main-exits-one-on-a-violation-and-zero-without,
+  section = {exitcensus},
+  title  = {The exit status is the verdict: 1 with a violation, 0 once the constant is right},
+  claim  = {The exit status is the verdict: 1 with a violation, 0 once the constant is right.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_main_exits_one_on_a_violation_and_zero_without},
+}
+
+@misc{corpus-exitcensus-main-refuses-a-missing-table,
+  section = {exitcensus},
+  title  = {Usage: no table file is exit 2 with the usage line on stderr},
+  claim  = {Usage: no table file is exit 2 with the usage line on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_main_refuses_a_missing_table},
+}
+
+@misc{corpus-exitcensus-tracked-table-gives-each-value-one-verdict-and-each-name-one-value,
+  section = {exitcensus},
+  title  = {The real table: no value belongs to two verdicts and no name is listed under two},
+  claim  = {The real table: no value belongs to two verdicts and no name is listed under two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_the_tracked_table_gives_each_value_one_verdict_and_each_name_one_value},
+}

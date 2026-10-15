@@ -45,3 +45,9 @@ src/mikemol/corpus/import_edges.py|deferred-in-an-if-missed|out \S= _lazy\(neste
 src/mikemol/corpus/import_edges.py|dotted-reading-ignored|reading\.endswith\("dotted"\)|False|def=_edges
 src/mikemol/corpus/import_edges.py|deferred-reading-ignored|reading\.startswith\("deferred"\)|False|def=_edges
 src/mikemol/corpus/import_edges.py|readings-share-a-cache-slot|key = \(path, reading\)|key = (path, "")|def=_edges
+
+# The exit census judges a value by its name's verdict, reads only EXIT_ integers, and only src trees.
+src/mikemol/corpus/exitcensus.py|any-value-is-ok|if constant\.value == value:|if True:|def=judge
+src/mikemol/corpus/exitcensus.py|any-name-is-read|target\.id\.startswith\(PREFIX\)|True|def=constants
+src/mikemol/corpus/exitcensus.py|any-expression-is-read|isinstance\(value, ast\.Constant\) and|True and|def=constants
+src/mikemol/corpus/exitcensus.py|tests-trees-are-read|"src" not in path\.parts|False|def=census

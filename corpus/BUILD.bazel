@@ -41,7 +41,7 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        data = ["pyproject.toml", "exit-table.json"],
         size = "small",
         deps = [
             ":corpus",

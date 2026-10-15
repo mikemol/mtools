@@ -2020,3 +2020,4 @@
 2026-10-15T19:13:35Z  interrupt W1292 minted    -         "The close tally counts from the previous tick's ledger line and counts dropped cards, so a host tick end that locks at the close still shows the work"  evidence=W1285
 2026-10-15T19:38:53Z  tick  W1293 minted    -         "Measure which files across ~/github read mikemol-paths-forward's exit values 2, 3 or 4 (skill text, stop hook, katas, peer prompts), as a list with file and line"  evidence=W1291
 2026-10-15T19:38:54Z  tick  W1294 minted    -         "A shared exitcodes leaf holds the fleet table as constants and verdict_of, imported by nothing yet"  evidence=W1291
+2026-10-15T19:41:33Z  tick  W1294 advanced  mechanism "W1291 exit table proposal written and committing; W1293 measured no code reader of pathsforward 2/3/4; W1294 re-scoped to table+checker and built (corpus exitcensus, 8 tests, real run: 21 violations, 2 unknown), commit next [blocked by W1194]"

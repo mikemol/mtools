@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-15T19:38:15Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -26578,7 +26573,7 @@
     },
     {
       "symbol": "W1294",
-      "title": "A shared exitcodes leaf holds the fleet table as constants and verdict_of, imported by nothing yet",
+      "title": "A tracked exit table and a checker that reads every EXIT_ constant and reports each name whose value the table gives another verdict",
       "status": "working",
       "enables": [
         "W1266"
@@ -26588,12 +26583,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Pick the home dist from the dependency map (a leaf both fence and hooks may import), write the constants and verdict_of with tests that pin every value in .claude/design/exit-table.md",
-      "evidence": "",
+      "next_bounded_step": "Write exit-table.json (value, verdict, allowed names) beside the design note; add exitcensus to corpus (it already walks dists for depmap) reading EXIT_ assignments by AST, with a ratchet baseline of today's violations so the census becomes a gate that only shrinks",
+      "evidence": "2026-10-15: Re-scoped 2026-10-15: a shared constants leaf would be the first inter-dist import for fence (dependencies = []) and pathsforward (dependencies = [] on purpose, see W1264), against the fleet's vendoring posture. So the table is DATA and each dist keeps its own constants; a checker compares them, which also mechanizes the census so it does not rot. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f sent a 'host ruling' for the table: 0 DONE (NOOP is 0 with state noop), 1 FAILED, 2 USAGE alone, 3 DEFER (absorbs LOCKED NOT_CHECKED NOT_RUN NOT_TAKEN NO_CAP NO_DESTINATION BUSY), 4 REFUSE (absorbs every REFUSED, DIVERGED, LEDGER), 5 RACE, 6 WITHHELD (HELD), 125-127 shell; reaper stuck = exit 1 with a list. I have no operator statement of it in this session; a peer cannot rule. corpus/exit-table.json now carries those numbers as the working proposal, which changes only what the checker reports, no live tool's value. NOT adopted from the message: 'one module every tool imports', which conflicts with fence and pathsforward dependencies = [] (W1264); the checker plus a gate test that fails an EXIT_ constant the table disagrees with covers the same ground. Open: the moves of values callers read (pathsforward 2->4, 3->3 DEFER, 4->5 RACE, fence 3->4) wait on the prose-reader measurement and the operator.",
       "issued_at": "2026-10-15T19:38:54Z",
       "minted_during": "tick",
       "caused_by": "W1291",
-      "last_worked": "2026-10-15T19:39:26Z",
+      "last_worked": "2026-10-15T19:49:49Z",
       "ticks_blocked": 0,
       "completed": null
     }

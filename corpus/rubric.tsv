@@ -6,3 +6,4 @@ import_edges	The Import Edges: What Importing Executes, Kept Apart From What the
 suite_discovery	The Suite Discovery: A Suite Is What Answers --selftest, and Git Owns What Is Walked
 suite_pragmas	The Suite Pragmas: What a Suite Declares, and a Typo That Declares Nothing
 depmap	A dependency map read from the syntax trees of a set of repos
+exitcensus	The fleet exit-constant census
