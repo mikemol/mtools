@@ -323,6 +323,7 @@ _FIELDS = (
     "promote",
     "weight",
     "witness",
+    "witness_lang",
     "vector",
     "vector_source",
     "dtstart",
@@ -366,6 +367,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "weight",
             "touches",
             "witness",
+            "witness_lang",
             "vector",
             "vector_source",
             "caused_by",
@@ -387,7 +389,9 @@ _APPLIES: dict[str, frozenset[str]] = {
             "root",
         }
     ),
-    "add": frozenset({"next", "enables", "touches", "caused_by", "witness", "admit", "root"}),
+    "add": frozenset(
+        {"next", "enables", "touches", "caused_by", "witness", "witness_lang", "admit", "root"}
+    ),
     "drop": frozenset({"admit", "gate", "reference_arm", "root"}),
     "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
@@ -406,6 +410,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "weight",
             "touches",
             "witness",
+            "witness_lang",
             "vector",
             "vector_source",
             "caused_by",
@@ -798,7 +803,12 @@ def _parser() -> argparse.ArgumentParser:
     # or `--blocked-on` still clears, as `extend` of nothing onto an absent flag yields `[]`.
     ap.add_argument("--touches", action="extend", nargs="+", metavar="TAG")
     ap.add_argument(
-        "--witness", metavar="QUERY", help="--add/--update: a one-line Rego query, stored unread"
+        "--witness", metavar="QUERY", help="--add/--update: a one-line query, stored unread"
+    )
+    ap.add_argument(
+        "--witness-lang",
+        metavar="LANG",
+        help="--add/--update: the witness's language, declared: rego or promql (W1260)",
     )
     ap.add_argument(
         "--vector", metavar="WV", help="--update: a WV:1 vector (W248); with --vector-source"
@@ -1440,6 +1450,7 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         weight=ctx.number("weight"),
         touches=ctx.many("touches"),
         witness=ctx.get("witness"),
+        witness_lang=ctx.get("witness_lang"),
         vector=ctx.get("vector"),
         vector_source=ctx.get("vector_source"),
         caused_by=ctx.get("caused_by"),
@@ -1616,6 +1627,7 @@ def _add(ctx: Ctx) -> int:
         ctx.many("touches") or (),
         ctx.get("caused_by") or "",
         ctx.get("witness") or "",
+        ctx.get("witness_lang") or "",
     )
 
     # ⚑ ORDER (W534): the line is FORMATTED before anything is saved, so a malformed one (a

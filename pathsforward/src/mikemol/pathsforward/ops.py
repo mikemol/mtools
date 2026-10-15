@@ -139,6 +139,9 @@ class Update:
     # over nemik-observed input. nemik's observers and `opa eval` decide it; this tool neither
     # parses nor validates the Rego, and only refuses a query that is empty or not one line.
     witness: str | None = None
+    # ⚑ THE WITNESS LANGUAGE IS DECLARED, NOT SNIFFED (W1260): `rego` or `promql`, given WITH the
+    # witness it describes, so a reader never guesses it from the text.
+    witness_lang: str | None = None
     # ⚑ A VECTOR IS CHECKED, NEVER SCORED HERE (W248, W256): vector.parse refuses one outside the
     # WV:1 grammar; nemik reads the stored string and owns the band.
     vector: str | None = None
@@ -191,6 +194,7 @@ class Draft:
     touches: tuple[str, ...] = ()
     caused_by: str = ""
     witness: str = ""
+    witness_lang: str = ""
 
 
 def minted_during(state: State, now: str) -> str:
@@ -259,6 +263,7 @@ def _refuse_enums(upd: Update) -> None:
         raise RefusedError(msg)
     _refuse_title(upd.title)
     _refuse_witness(upd.witness)
+    refuse_witness_lang(upd.witness, upd.witness_lang)
     _refuse_vector(upd.vector, upd.vector_source)
 
 
@@ -295,6 +300,34 @@ def _refuse_witness(query: str | None) -> None:
         raise RefusedError(msg)
     if "\n" in query or "\r" in query:
         msg = f"witness {query!r} is not a single line"
+        raise RefusedError(msg)
+
+
+WITNESS_LANGS = ("rego", "promql")
+
+
+def refuse_witness_lang(query: str | None, lang: str | None) -> None:
+    """Refuse a witness without a declared language, or a language without its witness.
+
+    ⚑ DECLARED, NEVER SNIFFED (W1260): nemik told Rego from PromQL by looking at the text
+    (test_witness_promql.py), so a query that happened to parse as both was whatever the heuristic
+    said. The language is now data given with the query, one of `WITNESS_LANGS`.
+
+    Raises:
+        RefusedError: on a witness with no language, a language with no witness, or an unknown
+            language.
+
+    """
+    if query is None and lang is None:
+        return
+    if query is None:
+        msg = "--witness-lang describes a witness: give --witness with it"
+        raise RefusedError(msg)
+    if lang is None:
+        msg = f"a witness needs its language: --witness-lang {'|'.join(WITNESS_LANGS)}"
+        raise RefusedError(msg)
+    if lang not in WITNESS_LANGS:
+        msg = f"witness language {lang!r} is not one of {', '.join(WITNESS_LANGS)}"
         raise RefusedError(msg)
 
 
@@ -463,6 +496,7 @@ def _set_given(new: Json, upd: Update) -> None:
         "weight": upd.weight,
         "touches": None if upd.touches is None else list(upd.touches),
         "witness": upd.witness,
+        "witness_lang": upd.witness_lang,
         "vector": upd.vector,
         "vector_source": upd.vector_source,
     }
@@ -825,6 +859,7 @@ def add(state: State, draft: Draft, now: str) -> str:
         msg = f"add refused, nothing minted: caused_by {draft.caused_by!r} is not one token"
         raise RefusedError(msg)
     _refuse_witness(draft.witness or None)
+    refuse_witness_lang(draft.witness or None, draft.witness_lang or None)
     counter = state.counter + 1
     sym = f"W{counter}"
     state.doc["counter"] = counter
@@ -845,6 +880,7 @@ def add(state: State, draft: Draft, now: str) -> str:
             "last_worked": None,
             "ticks_blocked": 0,
             **({"witness": draft.witness} if draft.witness else {}),
+            **({"witness_lang": draft.witness_lang} if draft.witness_lang else {}),
         }
     )
     return sym

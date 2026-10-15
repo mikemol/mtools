@@ -705,10 +705,34 @@ def test_witness_is_stored_verbatim_and_is_not_work() -> None:
     """--add and --update store the query unread; the update leaves last_worked alone (W131)."""
     query = 'input.pr.merged == true; input.pr.repo == "nemik"'
     state = _state()
-    sym = ops.add(state, ops.Draft("t", witness=query), _NOW)
-    ops.update(state, "W1", ops.Update(witness=query), _NOW)
+    sym = ops.add(state, ops.Draft("t", witness=query, witness_lang="rego"), _NOW)
+    ops.update(state, "W1", ops.Update(witness=query, witness_lang="rego"), _NOW)
     added, w1 = ops.find(state, sym), ops.find(state, "W1")
     assert (added["witness"], w1["witness"], "last_worked" in w1) == (query, query, False)
+    assert (added["witness_lang"], w1["witness_lang"]) == ("rego", "rego")
+
+
+def test_a_witness_needs_its_declared_language_and_a_language_needs_its_witness() -> None:
+    """W1260: a witness with no language, an unknown one, and a language alone are each refused."""
+    state = _state()
+    with pytest.raises(ops.RefusedError, match="needs its language"):
+        ops.update(state, "W1", ops.Update(witness="up == 1"), _NOW)
+    with pytest.raises(ops.RefusedError, match="not one of rego, promql"):
+        ops.update(state, "W1", ops.Update(witness="up == 1", witness_lang="sql"), _NOW)
+    with pytest.raises(ops.RefusedError, match="give --witness with it"):
+        ops.update(state, "W1", ops.Update(witness_lang="promql"), _NOW)
+    with pytest.raises(ops.RefusedError, match="needs its language"):
+        ops.add(state, ops.Draft("t", witness="up == 1"), _NOW)
+    assert "witness" not in ops.find(state, "W1")
+
+
+def test_each_declared_language_is_stored_as_given() -> None:
+    """Both languages are accepted and recorded; a card with no witness carries no language."""
+    state = _state()
+    ops.update(state, "W1", ops.Update(witness="up == 1", witness_lang="promql"), _NOW)
+    other = ops.add(state, ops.Draft("t"), _NOW)
+    assert ops.find(state, "W1")["witness_lang"] == "promql"
+    assert "witness_lang" not in ops.find(state, other)
 
 
 @pytest.mark.parametrize("query", ["", "  ", "a\nb"])

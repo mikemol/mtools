@@ -4884,3 +4884,46 @@
   claim  = {The control: the calendar carries a VTIMEZONE, an alarm, an override and a dependency.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vtodo_golden.py -k test_the_golden_queue_exercises_every_projection_it_claims_to},
 }
+
+@misc{pathsforward-ops-witness-needs-its-declared-language-and-a-language-needs-its-witness,
+  section = {ops},
+  title  = {W1260: a witness with no language, an unknown one, and a language alone are each refused},
+  claim  = {W1260: a witness with no language, an unknown one, and a language alone are each
+            refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_witness_needs_its_declared_language_and_a_language_needs_its_witness},
+}
+
+@misc{pathsforward-ops-each-declared-language-is-stored-as-given,
+  section = {ops},
+  title  = {Both languages are accepted and recorded; a card with no witness carries no language},
+  claim  = {Both languages are accepted and recorded; a card with no witness carries no language.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_each_declared_language_is_stored_as_given},
+}
+
+@misc{pathsforward-witness-lang-add-stores-the-declared-language-beside-the-witness,
+  section = {witness_lang},
+  title  = {`--add T --witness Q --witness-lang promql` mints a card carrying both},
+  claim  = {`--add T --witness Q --witness-lang promql` mints a card carrying both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_lang.py -k test_add_stores_the_declared_language_beside_the_witness},
+}
+
+@misc{pathsforward-witness-lang-update-sets-both-together-and-update-many-takes-them-too,
+  section = {witness_lang},
+  title  = {The language travels with the witness through `--update` and `--update-many`},
+  claim  = {The language travels with the witness through `--update` and `--update-many`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_lang.py -k test_update_sets_both_together_and_update_many_takes_them_too},
+}
+
+@misc{pathsforward-witness-lang-witness-without-a-language-is-refused-and-nothing-is-saved,
+  section = {witness_lang},
+  title  = {The refusal names the flag, and the queue is byte-identical afterwards},
+  claim  = {The refusal names the flag, and the queue is byte-identical afterwards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_lang.py -k test_a_witness_without_a_language_is_refused_and_nothing_is_saved},
+}
+
+@misc{pathsforward-witness-lang-language-alone-and-an-unknown-language-are-refused,
+  section = {witness_lang},
+  title  = {`--witness-lang` with no witness, and `sql` as a language, each exit 2 and save nothing},
+  claim  = {`--witness-lang` with no witness, and `sql` as a language, each exit 2 and save nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_witness_lang.py -k test_a_language_alone_and_an_unknown_language_are_refused},
+}

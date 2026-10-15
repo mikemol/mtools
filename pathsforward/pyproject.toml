@@ -132,6 +132,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_closeumbrellas.py" = ["assert"]
 "tests/test_tick_close_promote.py" = ["assert"]
 "tests/test_vtodo_golden.py" = ["assert"]
+"tests/test_witness_lang.py" = ["assert"]
 "tests/test_frontier_copy.py" = ["assert"]
 "tests/test_tick_close_prune.py" = ["assert"]
 "tests/test_tick_close.py" = ["assert"]
