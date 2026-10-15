@@ -13,11 +13,17 @@
   },
   "DEFER": {
     "value": 3,
-    "names": ["LOCKED", "NOT_CHECKED", "NOT_RUN", "NOT_TAKEN", "NO_CAP", "NO_DESTINATION", "BUSY"]
+    "names": ["LOCKED", "NOT_TAKEN", "NO_CAP", "NO_DESTINATION", "BUSY"],
+    "why": "a precondition is unmet and nothing ran; a later attempt may succeed. A lock held by another LIVE holder is this (the holder will finish)."
   },
   "REFUSE": {"value": 4, "names": ["REFUSED", "FINDINGS", "DIVERGED", "LEDGER"]},
   "RACE": {"value": 5, "names": ["RACED"]},
   "WITHHELD": {"value": 6, "names": ["HELD"]},
+  "CANNOT_RUN": {
+    "value": 7,
+    "names": ["CANNOT", "UNREADABLE", "NOT_CHECKED", "NOT_RUN", "CANNOT_RUN"],
+    "why": "an instrument fault: the tool, check or witness could not evaluate (ruff or mypy cannot run, a witness cannot reach its target, an unsound contract), so the result is UNKNOWN. Never read as success, never retried as if a precondition might clear; it surfaces as an instrument problem. A unit may still list 7 in SuccessExitStatus when its run record carries it and its stall alert reads it: that is a unit-level choice, not a verdict change (host ruling relayed by github-8f, 2026-10-15, after luthen's apply_converge case)."
+  },
   "HARNESS": {"value": 125, "names": ["HARNESS"]},
   "NOT_EXECUTABLE": {"value": 126, "names": ["NOT_EXECUTABLE"]},
   "NOT_FOUND": {"value": 127, "names": ["NOT_FOUND", "NOT_STARTED"]}

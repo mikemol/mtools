@@ -26820,7 +26820,7 @@
     {
       "symbol": "W1306",
       "title": "exitcensus --all reads every non-test .py under a root that has no src directory, so luthen's checks/ can be judged in place",
-      "status": "working",
+      "status": "done",
       "enables": [
         "luthen-observability:W1074"
       ],
@@ -26829,19 +26829,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add --all: census(roots, table, everything=True) takes every .py under the root except tests parts and skip dirs, paths relative to the root's parent; test it on a tree with no src",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools b07fd73 (pushed): exitcensus --all, 2 tests, 2 mutants.",
       "issued_at": "2026-10-15T21:33:37Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1074",
-      "last_worked": "2026-10-15T21:33:42Z",
+      "last_worked": "2026-10-15T21:45:21Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T214521Z"
     },
     {
       "symbol": "W1307",
       "title": "Add the names luthen's census found to corpus/exit-table.json: CANNOT and UNREADABLE under DEFER, after checking each name's meaning in luthen's code",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "luthen-observability:W1074"
       ],
@@ -26855,7 +26855,7 @@
       "issued_at": "2026-10-15T21:34:30Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1074",
-      "last_worked": "2026-10-15T21:40:30Z",
+      "last_worked": "2026-10-15T21:45:22Z",
       "ticks_blocked": 0,
       "completed": null
     },
