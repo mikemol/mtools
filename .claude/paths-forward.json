@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1287,
+  "counter": 1289,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -17,7 +17,7 @@
   },
   "lock": {
     "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-15T18:14:02Z"
+    "taken_at": "2026-10-15T18:38:15Z"
   },
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
@@ -6126,7 +6126,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 243,
+      "ticks_blocked": 244,
       "completed": null
     },
     {
@@ -6174,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 242,
+      "ticks_blocked": 243,
       "completed": null
     },
     {
@@ -10057,7 +10057,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 247,
+      "ticks_blocked": 248,
       "completed": null
     },
     {
@@ -11805,7 +11805,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 181,
+      "ticks_blocked": 182,
       "completed": null
     },
     {
@@ -16159,7 +16159,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16700,7 +16700,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17509,7 +17509,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "completed": null
     },
     {
@@ -17552,7 +17552,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "completed": null
     },
     {
@@ -17575,7 +17575,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 146,
+      "ticks_blocked": 147,
       "completed": null
     },
     {
@@ -18000,7 +18000,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 147,
+      "ticks_blocked": 148,
       "completed": null
     },
     {
@@ -18176,7 +18176,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 145,
+      "ticks_blocked": 146,
       "completed": null
     },
     {
@@ -18959,7 +18959,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 144,
+      "ticks_blocked": 145,
       "completed": null
     },
     {
@@ -20681,7 +20681,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -21420,7 +21420,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -21466,7 +21466,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 104,
+      "ticks_blocked": 105,
       "completed": null
     },
     {
@@ -21558,7 +21558,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 104,
+      "ticks_blocked": 105,
       "completed": null
     },
     {
@@ -21624,7 +21624,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 25,
       "completed": null
     },
     {
@@ -22025,7 +22025,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -22046,7 +22046,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -22067,7 +22067,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 89,
+      "ticks_blocked": 90,
       "completed": null
     },
     {
@@ -22476,7 +22476,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 88,
+      "ticks_blocked": 89,
       "completed": null
     },
     {
@@ -22498,7 +22498,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 88,
+      "ticks_blocked": 89,
       "completed": null
     },
     {
@@ -22604,7 +22604,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -22885,7 +22885,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 68
+      "ticks_blocked": 69
     },
     {
       "symbol": "W1116",
@@ -22906,7 +22906,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 68
+      "ticks_blocked": 69
     },
     {
       "symbol": "W1117",
@@ -22924,7 +22924,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 68
+      "ticks_blocked": 69
     },
     {
       "symbol": "W1118",
@@ -22942,7 +22942,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 68
+      "ticks_blocked": 69
     },
     {
       "symbol": "W1119",
@@ -23448,7 +23448,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 1
+      "ticks_blocked": 2
     },
     {
       "symbol": "W1144",
@@ -23606,7 +23606,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 37
+      "ticks_blocked": 38
     },
     {
       "symbol": "W1151",
@@ -23652,7 +23652,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 56
+      "ticks_blocked": 57
     },
     {
       "symbol": "W1153",
@@ -23676,7 +23676,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 34,
+      "ticks_blocked": 35,
       "completed": null
     },
     {
@@ -24110,7 +24110,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 57,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -24572,7 +24572,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 5,
       "completed": null
     },
     {
@@ -25990,38 +25990,42 @@
     {
       "symbol": "W1264",
       "title": "One single_flight flock helper replacing the raw fcntl.flock copies in luthen, pathsforward store.py and fence",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: Landed b0a0177: atomicwrite flock.exclusive. Not adopted by pathsforward store.py (W1287 dropped: dependencies=[] on purpose and ownership.open_append adopts the file owner). fence's variant is non-blocking with a wall-clock deadline: its replacement belongs to W1114, not this helper. Report to github-8f: F6 converged on a helper and two real distinctions, not on one call site.",
       "issued_at": "2026-10-15T14:29:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T14:29:49Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-15T18:38:30Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T183830Z"
     },
     {
       "symbol": "W1265",
       "title": "pathsforward lock.py LOCK_STALE_S wall-clock window becomes a liveness check of the holder pid or a derived bound",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
+      "blocked_on": [
+        "W1289"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: after W1288 names the session pid, record pid+start time in the lock and call a lock stale only when that process is gone",
       "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck.",
       "issued_at": "2026-10-15T14:29:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T14:29:49Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-15T18:39:08Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1266",
@@ -26335,7 +26339,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -26425,7 +26429,7 @@
     {
       "symbol": "W1286",
       "title": "atomicwrite gains a flock context manager: blocking exclusive lock on a path, released on exit, with tests including a contended-lock case",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1264"
       ],
@@ -26434,34 +26438,56 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read atomicwrite's modules and BUILD; add flock_exclusive(path) beside the atomic writer, test two holders in sequence and one contending holder via a subprocess",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools b0a0177 (pushed): atomicwrite/flock.py exclusive(), tests/test_flock.py (3), warrants, rubric row, lock-never-taken mutant.",
       "issued_at": "2026-10-15T18:14:21Z",
       "minted_during": "tick",
       "caused_by": "W1264",
-      "last_worked": "2026-10-15T18:14:27Z",
+      "last_worked": "2026-10-15T18:25:25Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T182525Z"
     },
     {
-      "symbol": "W1287",
-      "title": "pathsforward store.py takes the flock from atomicwrite instead of its raw fcntl.flock pair",
-      "status": "ready",
+      "symbol": "W1288",
+      "title": "Measure which ancestor process of a --tick-open call outlives the call and names the session (pid, start time), from the process tree on this host",
+      "status": "done",
       "enables": [
-        "W1264"
+        "W1265"
       ],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After W1286: add the atomicwrite dependency to pathsforward pyproject and BUILD, replace the flock/unlock pair in store.py, run the store and lock tests",
-      "evidence": "",
-      "issued_at": "2026-10-15T18:14:27Z",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: 2026-10-15 measured by pstree from a tool shell: systemd > code > code > drum > claude (3076458, the long-lived session) > bash -c (one per tool call, dies with it) > the CLI. The CLI's ppid is that dead-soon bash, so a lock pid must be the NEAREST ANCESTOR whose comm is claude, read from /proc/<pid>/stat (starttime guards pid reuse). One host, one harness (VS Code extension native binary); a terminal claude or a cron-run claude was not measured and may name its comm differently.",
+      "issued_at": "2026-10-15T18:38:46Z",
       "minted_during": "tick",
-      "caused_by": "W1264",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "caused_by": "W1265",
+      "last_worked": "2026-10-15T18:39:04Z",
+      "ticks_blocked": 0,
+      "completed": "20261015T183904Z"
+    },
+    {
+      "symbol": "W1289",
+      "title": "lock.py records the session's pid and start time (nearest ancestor named claude, /proc stat) and calls a foreign lock stale only when that process is gone, keeping LOCK_STALE_S only for a lock that has no pid",
+      "status": "working",
+      "enables": [
+        "W1265"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add session_of(pid_reader) in a new small module with a seam for /proc reads; unit-test a live chain, a dead pid and a reused pid (same pid, different starttime)",
+      "evidence": "",
+      "issued_at": "2026-10-15T18:39:05Z",
+      "minted_during": "tick",
+      "caused_by": "W1265",
+      "last_worked": "2026-10-15T18:39:09Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [
@@ -26615,6 +26641,13 @@
       "title": "mikemol-vlog resolver_key: read the base URL from a named key of the resolver's JSON output",
       "dropped_at": "2026-10-14T18:04:47Z",
       "reason": "No consumer: luthen-observability supplies checks.log_sink_origin, whose first stdout line is the base URL, which vlog already reads. Revisit if a consumer needs a JSON resolver.",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1287",
+      "title": "pathsforward store.py takes the flock from atomicwrite instead of its raw fcntl.flock pair",
+      "dropped_at": "2026-10-15T18:38:26Z",
+      "reason": "Rejected collapse, measured: pathsforward declares dependencies = [] on purpose, and store.exclusive opens its sidecar through ownership.open_append, which adopts the state file's owner; atomicwrite.flock.exclusive opens plain and would drop that. The convergence is the lock/unlock pair only, which is four lines; the helper stays for fence's blocking half and new callers.",
       "recoverable": true
     }
   ],

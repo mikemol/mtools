@@ -5055,3 +5055,38 @@
             `last_worked` is at or after it counts, one worked earlier does not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_gate.py -k test_the_close_says_how_many_cards_the_tick_advanced},
 }
+
+@misc{pathsforward-session-walk-names-the-nearest-ancestor-called-claude,
+  section = {session},
+  title  = {From the CLI, past its shell, the session is the claude process with its start time},
+  claim  = {From the CLI, past its shell, the session is the claude process with its start time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_session.py -k test_the_walk_names_the_nearest_ancestor_called_claude},
+}
+
+@misc{pathsforward-session-chain-with-no-claude-names-no-session,
+  section = {session},
+  title  = {The control: a table whose ancestors are never called claude finds nothing},
+  claim  = {The control: a table whose ancestors are never called claude finds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_session.py -k test_a_chain_with_no_claude_names_no_session},
+}
+
+@misc{pathsforward-session-broken-chain-and-a-parent-loop-both-end-the-walk,
+  section = {session},
+  title  = {A parent missing from the table, and two processes naming each other, return None},
+  claim  = {A parent missing from the table, and two processes naming each other, return None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_session.py -k test_a_broken_chain_and_a_parent_loop_both_end_the_walk},
+}
+
+@misc{pathsforward-session-alive-needs-the-same-pid-and-the-same-start-time,
+  section = {session},
+  title  = {Present and same start: alive. Gone, or the pid reused later: not alive},
+  claim  = {Present and same start: alive. Gone, or the pid reused later: not alive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_session.py -k test_alive_needs_the_same_pid_and_the_same_start_time},
+}
+
+@misc{pathsforward-session-real-reader-sees-this-process-and-not-a-missing-one,
+  section = {session},
+  title  = {The positive control for `/proc`: our own pid parses with a parent; a huge pid is None},
+  claim  = {The positive control for `/proc`: our own pid parses with a parent; a huge pid is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_session.py -k test_the_real_reader_sees_this_process_and_not_a_missing_one},
+}

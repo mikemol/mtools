@@ -130,3 +130,11 @@ src/mikemol/pathsforward/closegate.py|a-peers-card-is-not-a-block|named = \[\*fo
 src/mikemol/pathsforward/cli.py|close-gate-always-passes|return EXIT_REFUSED if verdict\.refused else EXIT_OK|return EXIT_OK|def=_close_gate
 src/mikemol/pathsforward/cli.py|done-leaves-a-stale-blocker|if code == EXIT_OK and upd\.status == "done":|if False:|def=_update
 src/mikemol/pathsforward/cli.py|close-writes-through-a-refusal|if verdict\.refused:|if False:|def=_tick_close
+
+# A fresh-session reason is an atomize signal, not a block (W1284); the tally counts work (W1285).
+src/mikemol/pathsforward/closegate.py|fresh-session-reason-passes|if FRESH\.search\(reason or ""\):|if False:|def=judge
+src/mikemol/pathsforward/closegate.py|advanced-counts-every-card|text\(w, "last_worked"\) >= since|True|def=advanced
+
+# The session is the nearest claude ancestor and is alive only with its start time (W1289).
+src/mikemol/pathsforward/session.py|walk-takes-the-first-process|if proc\.comm == SESSION_COMM:|if True:|def=session_of
+src/mikemol/pathsforward/session.py|alive-ignores-pid-reuse|return proc is not None and proc\.start == session\.start|return proc is not None|def=alive

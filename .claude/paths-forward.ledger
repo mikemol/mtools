@@ -2010,3 +2010,6 @@
 2026-10-15T17:56:04Z  interrupt W1285 minted    -         "--tick-close prints how many cards the tick advanced against how many were ready, so a one-card tick shows in its own output"  evidence=github-8f:W1
 2026-10-15T18:14:21Z  tick  W1286 minted    -         "atomicwrite gains a flock context manager: blocking exclusive lock on a path, released on exit, with tests including a contended-lock case"  evidence=W1264
 2026-10-15T18:14:27Z  tick  W1287 minted    -         "pathsforward store.py takes the flock from atomicwrite instead of its raw fcntl.flock pair"  evidence=W1264
+2026-10-15T18:16:04Z  tick  W1286 advanced  mechanism "atomicwrite flock.exclusive written with tests, warrants and a mutant, commit in the gate; W1264 atomized into W1286/W1287; W1194 evidence from luthen [blocked by W1194]"
+2026-10-15T18:38:46Z  tick  W1288 minted    -         "Measure which ancestor process of a --tick-open call outlives the call and names the session (pid, start time), from the process tree on this host"  evidence=W1265
+2026-10-15T18:39:05Z  tick  W1289 minted    -         "lock.py records the session's pid and start time (nearest ancestor named claude, /proc stat) and calls a foreign lock stale only when that process is gone, keeping LOCK_STALE_S only for a lock that has no pid"  evidence=W1265
