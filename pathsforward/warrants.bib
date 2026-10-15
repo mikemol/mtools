@@ -5090,3 +5090,31 @@
   claim  = {The positive control for `/proc`: our own pid parses with a parent; a huge pid is None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_session.py -k test_the_real_reader_sees_this_process_and_not_a_missing_one},
 }
+
+@misc{pathsforward-lock-session-live-session-holds-the-lock-however-old-it-is,
+  section = {lock_session},
+  title  = {A day-old lock whose process exists is HELD: age alone is not staleness},
+  claim  = {A day-old lock whose process exists is HELD: age alone is not staleness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock_session.py -k test_a_live_session_holds_the_lock_however_old_it_is},
+}
+
+@misc{pathsforward-lock-session-dead-session-is-taken-over-at-once-however-young-the-lock-is,
+  section = {lock_session},
+  title  = {A one-minute-old lock whose process is gone is a TAKEOVER; the new session is recorded},
+  claim  = {A one-minute-old lock whose process is gone is a TAKEOVER; the new session is recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock_session.py -k test_a_dead_session_is_taken_over_at_once_however_young_the_lock_is},
+}
+
+@misc{pathsforward-lock-session-lock-with-no-session-keeps-the-old-window,
+  section = {lock_session},
+  title  = {The control: no recorded session means age decides, so the day-old lock is taken over},
+  claim  = {The control: no recorded session means age decides, so the day-old lock is taken over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock_session.py -k test_a_lock_with_no_session_keeps_the_old_window},
+}
+
+@misc{pathsforward-lock-session-session-is-written-only-when-there-is-one,
+  section = {lock_session},
+  title  = {A caller with no session (cron, a test) writes the old two-field lock},
+  claim  = {A caller with no session (cron, a test) writes the old two-field lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lock_session.py -k test_the_session_is_written_only_when_there_is_one},
+}

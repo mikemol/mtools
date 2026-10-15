@@ -137,4 +137,6 @@ src/mikemol/pathsforward/closegate.py|advanced-counts-every-card|text\(w, "last_
 
 # The session is the nearest claude ancestor and is alive only with its start time (W1289).
 src/mikemol/pathsforward/session.py|walk-takes-the-first-process|if proc\.comm == SESSION_COMM:|if True:|def=session_of
+src/mikemol/pathsforward/lock.py|a-live-session-is-taken-over|gone = not alive\(recorded\)|gone = True|def=acquire
+src/mikemol/pathsforward/lock.py|a-sessionless-lock-never-goes-stale|else age >= LOCK_STALE_S|else False|def=acquire
 src/mikemol/pathsforward/session.py|alive-ignores-pid-reuse|return proc is not None and proc\.start == session\.start|return proc is not None|def=alive

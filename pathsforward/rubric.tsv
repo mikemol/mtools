@@ -64,3 +64,4 @@ witness_lang	A witness declares its language, Rego or PromQL, with the query
 lift	A signed operator ruling lifts exactly one held row
 lift_cli	--lift takes a signed ruling and the operator's public key
 session	The session process behind a tick lock
+lock_session	A tick lock is stale when its session process is gone

@@ -17,6 +17,7 @@ liveness test run in unit tests against a fabricated process table.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -88,6 +89,17 @@ def session_of(start: int, read: Reader = read_proc) -> Session | None:
             return Session(pid, proc.start)
         pid = proc.ppid
     return None
+
+
+def own(read: Reader = read_proc) -> Session | None:
+    """Name the session this very process runs under.
+
+    Returns:
+        the nearest ancestor named `claude`, or None when this process has none (a cron job, a
+        terminal run, a test), in which case a lock is written without a session.
+
+    """
+    return session_of(os.getpid(), read)
 
 
 def alive(session: Session, read: Reader = read_proc) -> bool:

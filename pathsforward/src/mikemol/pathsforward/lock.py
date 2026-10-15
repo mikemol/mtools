@@ -19,7 +19,11 @@ from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING, cast
 
+from mikemol.pathsforward import session
+
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from mikemol.pathsforward.model import Json, State
 
 LOCK_STALE_S = 1800.0
@@ -85,10 +89,39 @@ def current(state: State) -> tuple[str, str] | None:
     return str(lk.get("holder", "")), str(lk.get("taken_at", ""))
 
 
-def acquire(state: State, holder: str, now: datetime) -> Result:
-    """Take the lock unless another holder took it under LOCK_STALE_S ago.
+def holder_session(state: State) -> session.Session | None:
+    """Read the session process a lock records, if it records one.
 
-    The same holder re-acquiring refreshes its own lock. An unparseable `taken_at` is stale.
+    Returns:
+        the session (pid and start time), or None for a lock written without them.
+
+    """
+    raw = state.doc.get("lock")
+    if not isinstance(raw, dict):
+        return None
+    lk = cast("Json", raw)
+    pid, start = lk.get("pid"), lk.get("start")
+    if isinstance(pid, int) and isinstance(start, int):
+        return session.Session(pid, start)
+    return None
+
+
+def acquire(
+    state: State,
+    holder: str,
+    now: datetime,
+    who: session.Session | None = None,
+    alive: Callable[[session.Session], bool] = session.alive,
+) -> Result:
+    """Take the lock unless another holder's session is alive, or took it under LOCK_STALE_S ago.
+
+    ⚑ A LOCK THAT RECORDS ITS SESSION IS STALE WHEN THAT PROCESS IS GONE, NOT WHEN A WINDOW PASSES
+    (W1265, the avoid-wall-clock-timeouts ruling). `who` is the caller's own session, written into
+    the field with its start time; a foreign lock that carries one is HELD while `alive` says its
+    process exists and a TAKEOVER the moment it does not, whatever its age. Only a lock with no
+    recorded session keeps the old window, and an unparseable `taken_at` is stale there.
+
+    The same holder re-acquiring refreshes its own lock.
 
     Returns:
         ACQUIRED, HELD (nothing written) or TAKEOVER (the caller must ledger it).
@@ -101,10 +134,15 @@ def acquire(state: State, holder: str, now: datetime) -> Result:
         previous = held[0]
         taken = parse_time(held[1])
         age = (now - taken).total_seconds() if taken is not None else LOCK_STALE_S
-        if age < LOCK_STALE_S:
+        recorded = holder_session(state)
+        gone = not alive(recorded) if recorded is not None else age >= LOCK_STALE_S
+        if not gone:
             return Result(Outcome.HELD, holder, previous, age)
         outcome = Outcome.TAKEOVER
-    state.doc["lock"] = {"holder": holder, "taken_at": stamp(now)}
+    record: Json = {"holder": holder, "taken_at": stamp(now)}
+    if who is not None:
+        record["pid"], record["start"] = who.pid, who.start
+    state.doc["lock"] = record
     return Result(outcome, holder, previous, age)
 
 

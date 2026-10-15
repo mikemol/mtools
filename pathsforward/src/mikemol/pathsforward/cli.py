@@ -43,6 +43,7 @@ from mikemol.pathsforward import (
     outcomes,
     render,
     selftest,
+    session,
     store,
     vtodo,
 )
@@ -1323,7 +1324,7 @@ def _lock(ctx: Ctx) -> int:
     """
 
     def edit(state: State) -> int:
-        result = lock.acquire(state, ctx.get("lock") or "", ctx.now)
+        result = lock.acquire(state, ctx.get("lock") or "", ctx.now, session.own())
         if result.outcome is lock.Outcome.HELD:
             _say(f"locked by {result.previous} ({result.age_s:.0f}s); skip this tick")
             return EXIT_LOCKED
