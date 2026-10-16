@@ -22,7 +22,7 @@ from mikemol.pathsforward.cli import main as pf_main
 from mikemol.pathsforward.model import text
 from mikemol.pathsforward.store import load
 
-type Runner = Callable[[list[str]], int]
+Runner = Callable[[list[str]], int]
 
 EXIT_REFUSED = 2
 """The code a writer that exited without one is read as: refused."""

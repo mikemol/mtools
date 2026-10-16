@@ -302,7 +302,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         handler = _SYNCS.get(args.command)
         if handler is not None:
             return handler(args, planned)
-    except (OSError, ValueError, MintRefusedError, WorktreeRefusedError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, ValueError, MintRefusedError, WorktreeRefusedError)):
+            raise
         sys.stderr.write(f"mikemol-debtplan: {exc}\n")
         return EXIT_CANNOT
     sys.stdout.write(_render(planned) + "\n")
