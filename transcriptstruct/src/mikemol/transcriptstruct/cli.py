@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import TextIO, cast
 
 from mikemol.transcriptstruct.blocks import Block
+from mikemol.transcriptstruct.harvest import harvest
 from mikemol.transcriptstruct.query import (
     Hit,
     Result,
@@ -75,6 +76,11 @@ def _parser() -> argparse.ArgumentParser:
         "--verify",
         metavar="UUID",
         help="W1385: read the record a warrant cites; exit 1 and say why when it does not hold",
+    )
+    mode.add_argument(
+        "--harvest",
+        action="store_true",
+        help="W1386: one PROV-O entity per operator utterance, with its needle, as JSON lines",
     )
     parser.add_argument("--claim", help="--verify: the speaker claimed (`operator` needs human)")
     parser.add_argument("--line", type=int, help="--verify: the line the warrant cites")
@@ -195,6 +201,15 @@ def _extract(path: Path, lines: Sequence[str], out: TextIO) -> None:
         out.write(_line({"line": line, "blocks": body}))
 
 
+def _harvest(path: Path, scheduled: Sequence[str], out: TextIO) -> None:
+    """Write each operator utterance of one transcript as a JSON-LD line, then the counts."""
+    found = harvest(read_path(path), path, scheduled)
+    out.writelines(_line(entity) for entity in found.entities)
+    out.write(
+        f"# {len(found.entities)} entity(ies), {found.uncitable} human utterance(s) uncitable\n"
+    )
+
+
 def _verify(opts: dict[str, object], uuid: str, out: TextIO) -> int:
     """Read the record a warrant cites and print the verdict as one JSON line.
 
@@ -240,6 +255,9 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     cited = _text(opts, "verify")
     if cited is not None:
         return _verify(opts, cited, sink)
+    if opts.get("harvest") is True:
+        _harvest(path, scheduled, sink)
+        return 0
     if types is not None:
         _emit(_raw(path, types, window), sink)
     elif grep is not None:

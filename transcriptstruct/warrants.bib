@@ -576,3 +576,25 @@
   claim  = {Exit 0 and ok:true for the human record; exit 1 and the reason for the peer forgery.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_the_cli_verifies_a_citation_and_exits_one_on_a_forgery},
 }
+
+@misc{transcriptstruct-harvest-only-the-operators-own-utterance-becomes-an-entity,
+  section = {harvest},
+  title  = {The genuine line is harvested with its PROV-O parts; peer, harness and assistant are not},
+  claim  = {The genuine line is harvested with its PROV-O parts; peer, harness and assistant are
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_harvest.py -k test_only_the_operators_own_utterance_becomes_an_entity},
+}
+
+@misc{transcriptstruct-harvest-human-utterance-with-no-uuid-is-counted-not-silently-dropped,
+  section = {harvest},
+  title  = {The line cannot be cited, so it is no entity, but the count says it existed},
+  claim  = {The line cannot be cited, so it is no entity, but the count says it existed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_harvest.py -k test_a_human_utterance_with_no_uuid_is_counted_not_silently_dropped},
+}
+
+@misc{transcriptstruct-harvest-cli-prints-json-lines-then-the-denominator,
+  section = {harvest},
+  title  = {One JSON line per entity, then a `#` line carrying the counts},
+  claim  = {One JSON line per entity, then a `#` line carrying the counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_harvest.py -k test_the_cli_prints_json_lines_then_the_denominator},
+}
