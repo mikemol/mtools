@@ -67,3 +67,4 @@ docshape	docstring first-paragraph split
 measure	judge measurement seam
 cli_docshape	docshape verb under the ruff judge
 futureimport	The future-import verb removes the import and quotes forward references
+cli_futureimport	The future-import mode writes a file only when ruff sees no bare forward reference

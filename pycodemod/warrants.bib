@@ -6372,3 +6372,32 @@
   claim  = {Only the sole `annotations` import goes; no import means the text is returned unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_an_import_naming_another_feature_and_a_module_without_one_are_left_alone},
 }
+
+@misc{pycodemod-cli-futureimport-dry-run-names-the-write-and-changes-nothing,
+  section = {cli_futureimport},
+  title  = {The import goes and `Later` is quoted, so the judge accepts; the dry run leaves the file},
+  claim  = {The import goes and `Later` is quoted, so the judge accepts; the dry run leaves the
+            file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_a_dry_run_names_the_write_and_changes_nothing},
+}
+
+@misc{pycodemod-cli-futureimport-write-removes-the-import-and-quotes-the-forward-name,
+  section = {cli_futureimport},
+  title  = {`--write` lands the candidate: no future import, `Later` as a string},
+  claim  = {`--write` lands the candidate: no future import, `Later` as a string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_write_removes_the_import_and_quotes_the_forward_name},
+}
+
+@misc{pycodemod-cli-futureimport-name-the-planner-cannot-quote-is-refused-and-listed,
+  section = {cli_futureimport},
+  title  = {Base position stays unquoted; ruff's undefined name makes the judge refuse the file},
+  claim  = {Base position stays unquoted; ruff's undefined name makes the judge refuse the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_a_name_the_planner_cannot_quote_is_refused_and_listed},
+}
+
+@misc{pycodemod-cli-futureimport-measure-counts-the-import-line-as-a-finding,
+  section = {cli_futureimport},
+  title  = {With the import present the measure holds one finding},
+  claim  = {With the import present the measure holds one finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_the_measure_counts_the_import_line_as_a_finding},
+}

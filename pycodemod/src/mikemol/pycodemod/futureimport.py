@@ -26,6 +26,7 @@ from dataclasses import dataclass
 from typing import override
 
 import libcst as cst
+from libcst.metadata import MetadataWrapper, PositionProvider
 
 
 @dataclass(frozen=True, slots=True)
@@ -34,7 +35,7 @@ class Planned:
 
     text: str
     quoted: int
-    unhandled: tuple[str, ...]
+    unhandled: tuple[tuple[int, str], ...]
     removed: bool
 
 
@@ -55,6 +56,8 @@ def _is_future(stmt: cst.BaseStatement) -> bool:
 
 
 class _Quoter(cst.CSTTransformer):
+    METADATA_DEPENDENCIES = (PositionProvider,)
+
     def __init__(self, classes: frozenset[str]) -> None:
         super().__init__()
         self.classes = classes
@@ -62,7 +65,7 @@ class _Quoter(cst.CSTTransformer):
         self.depth = 0
         self.reading = 0
         self.quoted = 0
-        self.unhandled: list[str] = []
+        self.unhandled: list[tuple[int, str]] = []
         self.skip: set[cst.Name] = set()
 
     def _pending(self, name: str) -> bool:
@@ -71,7 +74,8 @@ class _Quoter(cst.CSTTransformer):
     def _leave_alone(self, node: cst.BaseExpression) -> None:
         # A name in base position (`X.attr`, `X[...]`) cannot be quoted; list it and skip it.
         if isinstance(node, cst.Name) and self._pending(node.value):
-            self.unhandled.append(node.value)
+            line = self.get_metadata(PositionProvider, node).start.line
+            self.unhandled.append((line, node.value))
             self.skip.add(node)
 
     @override
@@ -147,7 +151,7 @@ def plan(text: str) -> Planned:
         return Planned(text, 0, (), removed=False)
     classes = frozenset(s.name.value for s in module.body if isinstance(s, cst.ClassDef))
     quoter = _Quoter(classes)
-    changed = module.visit(quoter)
+    changed = MetadataWrapper(module).visit(quoter)
     body = [stmt for stmt in changed.body if not _is_future(stmt)]
     out = changed.with_changes(body=body)
-    return Planned(out.code, quoter.quoted, tuple(quoter.unhandled), removed=True)
+    return Planned(out.code, quoter.quoted, tuple(sorted(quoter.unhandled)), removed=True)

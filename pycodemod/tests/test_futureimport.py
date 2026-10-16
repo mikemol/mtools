@@ -43,7 +43,8 @@ def test_a_name_in_base_position_is_listed_and_left_unquoted() -> None:
     """`Later.Inner` and `Later[int]` cannot be quoted at the base; they are named."""
     source = _FUTURE + "def f(x: Later.Inner, y: Later[int]) -> None:\n    pass\n" + _LATER
     planned = futureimport.plan(source)
-    assert planned.unhandled == ("Later", "Later")
+    assert [name for _, name in planned.unhandled] == ["Later", "Later"]
+    assert {line for line, _ in planned.unhandled} == {2}
     assert planned.quoted == 0
     assert "x: Later.Inner" in planned.text
 
