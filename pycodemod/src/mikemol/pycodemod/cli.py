@@ -74,6 +74,7 @@ from mikemol.pycodemod.cli_judgedfix import JudgedFixFlags, check_select, print_
 from mikemol.pycodemod.cli_nonereturns import print_none_returns
 from mikemol.pycodemod.cli_orempty import OrEmptyFlags, print_orempty
 from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, print_typedargs
+from mikemol.pycodemod.cli_typingblocks import print_typing_blocks, print_typing_blocks_tree
 from mikemol.pycodemod.commentary import (
     COMMENTARY_MARKS,
     commentary_blocks,
@@ -176,6 +177,17 @@ def _handle_orempty(ns: argparse.Namespace) -> int:
 def _handle_futureimport(ns: argparse.Namespace) -> int:
     flags = TypedArgsFlags(root=_str(ns, "root"), write=_flag(ns, "write"))
     return print_future_import(_str_list(ns, "paths"), flags)
+
+
+def _handle_typingblocks(ns: argparse.Namespace) -> int:
+    flags = TypedArgsFlags(
+        root=_str(ns, "root"), write=_flag(ns, "write"), selftest=_str(ns, "selftest")
+    )
+    return print_typing_blocks(_str_list(ns, "paths"), flags)
+
+
+def _handle_typingblocks_tree(ns: argparse.Namespace) -> int:
+    return print_typing_blocks_tree(_str_list(ns, "roots"), write=_flag(ns, "write"))
 
 
 def _handle_futureimport_tree(ns: argparse.Namespace) -> int:
@@ -1182,6 +1194,8 @@ MODES = {
     "or-empty": _handle_orempty,
     "future-import": _handle_futureimport,
     "future-import-tree": _handle_futureimport_tree,
+    "type-checking-imports": _handle_typingblocks,
+    "type-checking-imports-tree": _handle_typingblocks_tree,
     "judged-fix": _handle_judgedfix,
     "docshape": _handle_docshape,
     "none-returns": _handle_nonereturns,
@@ -1469,6 +1483,27 @@ def _add_futureimport_mode(make: _Make) -> None:
     fut.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
+def _add_typingblocks_mode(make: _Make) -> None:
+    blocks = make("type-checking-imports", "hoist import-only TYPE_CHECKING blocks to real imports")
+    blocks.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    blocks.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    blocks.add_argument(
+        "--selftest",
+        default="",
+        help="a command run in --root with the candidate in place; a nonzero exit refuses the file",
+    )
+    blocks.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
+def _add_typingblocks_tree_mode(make: _Make) -> None:
+    tree = make("type-checking-imports-tree", "type-checking-imports over each project's src")
+    # ⚑ The operands are not `paths` (see future-import-tree): roots must reach the driver whole.
+    no_paths: list[str] = []
+    tree.set_defaults(paths=no_paths)
+    tree.add_argument("--write", action="store_true", help="write each file its judge accepts")
+    tree.add_argument("roots", nargs="+", help="project roots, each with src/ and .venv")
+
+
 def _add_futureimport_tree_mode(make: _Make) -> None:
     tree = make(
         "future-import-tree", "future-import over each project's src, judged by its own venv"
@@ -1548,6 +1583,8 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_nonereturns_mode,
     _add_futureimport_mode,
     _add_futureimport_tree_mode,
+    _add_typingblocks_mode,
+    _add_typingblocks_tree_mode,
     _add_runs_mode,
 )
 

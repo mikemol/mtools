@@ -1,0 +1,100 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+r"""Module-level `if TYPE_CHECKING:` import blocks turned into real imports.
+
+⚑⚑ CODON HAS NO `TYPE_CHECKING`, AND A TYPE-ONLY IMPORT IS ONLY A CYCLE-BREAKER THAT IS RARELY ONE.
+Of 453 modules in this tree 346 carry the block; in a leaf module its imports are plain imports that
+sit under a guard for no reason, and every annotation that names them must then be quoted once the
+`from __future__ import annotations` line goes. So the order is: this verb first, then the future
+import (W1357), and almost nothing is left to quote.
+
+    if TYPE_CHECKING:                 ->    from collections.abc import Sequence
+        from collections.abc import Sequence
+
+⚑ ONLY A BLOCK OF NOTHING BUT IMPORTS AND WITH NO `else` IS HOISTED. A block that holds anything
+else, or an `else`, is a worklist row with its line: it is doing something this verb cannot prove
+harmless. The `TYPE_CHECKING` import itself is left for the project's own unused-import fix, which
+the judge runs.
+
+⚑ WHAT IT CANNOT SEE IS AN IMPORT CYCLE: hoisting `from pkg.b import B` into `pkg.a` when `pkg.b`
+imports `pkg.a` fails at import time, and neither mypy nor ruff reads that. The caller runs the
+project's tests as the judge's second check (`cli_typedargs` `selftest`), which fails the file.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import libcst as cst
+from libcst.metadata import MetadataWrapper, PositionProvider
+
+_KEPT = "a TYPE_CHECKING block that holds more than imports, or an else, is left as it is"
+
+
+@dataclass(frozen=True, slots=True)
+class Planned:
+    """The rewritten text, how many blocks were hoisted, and the blocks that were not."""
+
+    text: str
+    hoisted: int
+    kept: tuple[tuple[int, str], ...]
+
+
+def is_checking(stmt: cst.BaseStatement) -> bool:
+    """Say whether a statement is `if TYPE_CHECKING:` or `if typing.TYPE_CHECKING:`.
+
+    Returns:
+        True for such an `if` at any level the caller passes.
+
+    """
+    if not isinstance(stmt, cst.If):
+        return False
+    test = stmt.test
+    if isinstance(test, cst.Name):
+        return test.value == "TYPE_CHECKING"
+    return isinstance(test, cst.Attribute) and test.attr.value == "TYPE_CHECKING"
+
+
+def _only_imports(block: cst.If) -> bool:
+    body = block.body
+    if not isinstance(body, cst.IndentedBlock) or block.orelse is not None:
+        return False
+    return all(
+        isinstance(line, cst.SimpleStatementLine)
+        and all(isinstance(item, (cst.Import, cst.ImportFrom)) for item in line.body)
+        for line in body.body
+    )
+
+
+def _hoisted(block: cst.If) -> list[cst.SimpleStatementLine]:
+    # The block's import lines, the first carrying the blank lines and comments the `if` had.
+    lines = [line for line in block.body.body if isinstance(line, cst.SimpleStatementLine)]
+    carried: list[cst.EmptyLine] = [*block.leading_lines, *lines[0].leading_lines]
+    return [lines[0].with_changes(leading_lines=carried), *lines[1:]]
+
+
+def plan(text: str) -> Planned:
+    """Replace every import-only `if TYPE_CHECKING:` block at module level by its imports.
+
+    Returns:
+        the Planned text; unchanged with `hoisted` 0 when there is no such block.
+
+    """
+    wrapper = MetadataWrapper(cst.parse_module(text))
+    module = wrapper.module
+    positions = wrapper.resolve(PositionProvider)
+    body: list[cst.SimpleStatementLine | cst.BaseCompoundStatement] = []
+    kept: list[tuple[int, str]] = []
+    hoisted = 0
+    for stmt in module.body:
+        if not is_checking(stmt) or not isinstance(stmt, cst.If):
+            body.append(stmt)
+        elif _only_imports(stmt):
+            body.extend(_hoisted(stmt))
+            hoisted += 1
+        else:
+            kept.append((positions[stmt].start.line, _KEPT))
+            body.append(stmt)
+    if not hoisted:
+        return Planned(text, 0, tuple(kept))
+    return Planned(module.with_changes(body=body).code, hoisted, tuple(kept))

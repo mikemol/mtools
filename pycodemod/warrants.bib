@@ -6431,3 +6431,52 @@
             nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_a_string_that_spells_the_import_is_not_the_import},
 }
+
+@misc{pycodemod-typingblocks-import-only-block-is-replaced-by-its-imports,
+  section = {typingblocks},
+  title  = {The `if` goes and both imports stay, at module level},
+  claim  = {The `if` goes and both imports stay, at module level.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typingblocks.py -k test_an_import_only_block_is_replaced_by_its_imports},
+}
+
+@misc{pycodemod-typingblocks-attribute-form-of-the-guard-is-hoisted-too,
+  section = {typingblocks},
+  title  = {`if typing.TYPE_CHECKING:` is the same guard},
+  claim  = {`if typing.TYPE_CHECKING:` is the same guard.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typingblocks.py -k test_the_attribute_form_of_the_guard_is_hoisted_too},
+}
+
+@misc{pycodemod-typingblocks-block-with-an-else-or-a-non-import-is-listed-and-left,
+  section = {typingblocks},
+  title  = {Neither is provably harmless to hoist; each is a worklist row with its line},
+  claim  = {Neither is provably harmless to hoist; each is a worklist row with its line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typingblocks.py -k test_a_block_with_an_else_or_a_non_import_is_listed_and_left},
+}
+
+@misc{pycodemod-typingblocks-module-without-the-guard-is-returned-unchanged,
+  section = {typingblocks},
+  title  = {No block, nothing hoisted, text byte for byte},
+  claim  = {No block, nothing hoisted, text byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typingblocks.py -k test_a_module_without_the_guard_is_returned_unchanged},
+}
+
+@misc{pycodemod-cli-typingblocks-hoist-that-drops-the-guard-count-is-written-when-the-tests-pass,
+  section = {cli_typingblocks},
+  title  = {The block and its import go, `from a import B` stays, and the selftest ran clean},
+  claim  = {The block and its import go, `from a import B` stays, and the selftest ran clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typingblocks.py -k test_a_hoist_that_drops_the_guard_count_is_written_when_the_tests_pass},
+}
+
+@misc{pycodemod-cli-typingblocks-failing-selftest-refuses-the-file-and-leaves-it,
+  section = {cli_typingblocks},
+  title  = {An import cycle shows as the project's tests failing: exit 1, the file as it was},
+  claim  = {An import cycle shows as the project's tests failing: exit 1, the file as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typingblocks.py -k test_a_failing_selftest_refuses_the_file_and_leaves_it},
+}
+
+@misc{pycodemod-cli-typingblocks-tree-driver-runs-each-project-with-its-own-tests-and-skips-one-without,
+  section = {cli_typingblocks},
+  title  = {A project with src and a python is judged with its own pytest; one without is skipped},
+  claim  = {A project with src and a python is judged with its own pytest; one without is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typingblocks.py -k test_the_tree_driver_runs_each_project_with_its_own_tests_and_skips_one_without},
+}
