@@ -633,3 +633,38 @@
   claim  = {`--harvest-tree LEDGER` over a projects directory prints one `#` summary line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_the_cli_walks_a_tree_into_a_ledger_and_reports_its_counts},
 }
+
+@misc{transcriptstruct-rulingq-matching-rulings-come-newest-first-with-their-citation,
+  section = {rulingq},
+  title  = {The later word leads; each carries the IRI a warrant cites and its line},
+  claim  = {The later word leads; each carries the IRI a warrant cites and its line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_matching_rulings_come_newest_first_with_their_citation},
+}
+
+@misc{transcriptstruct-rulingq-match-is-case-insensitive-over-the-needle-and-a-card-symbol-works,
+  section = {rulingq},
+  title  = {`FREEZE` finds the lowercase text; a card symbol is just a pattern},
+  claim  = {`FREEZE` finds the lowercase text; a card symbol is just a pattern.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_the_match_is_case_insensitive_over_the_needle_and_a_card_symbol_works},
+}
+
+@misc{transcriptstruct-rulingq-limit-keeps-the-newest-and-nothing-matching-is-empty-not-an-error,
+  section = {rulingq},
+  title  = {The limit cuts the oldest; an unmatched pattern and an absent ledger are empty lists},
+  claim  = {The limit cuts the oldest; an unmatched pattern and an absent ledger are empty lists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_a_limit_keeps_the_newest_and_nothing_matching_is_empty_not_an_error},
+}
+
+@misc{transcriptstruct-rulingq-cli-cli-prints-matching-rulings-newest-first-then-the-count,
+  section = {rulingq},
+  title  = {Two JSON lines, the later first, each with its citation, then the `#` count},
+  claim  = {Two JSON lines, the later first, each with its citation, then the `#` count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq_cli.py -k test_the_cli_prints_matching_rulings_newest_first_then_the_count},
+}
+
+@misc{transcriptstruct-rulingq-cli-limit-keeps-the-newest-and-a-pattern-that-matches-nothing-prints-only-the-count,
+  section = {rulingq},
+  title  = {`--limit 1` keeps the later ruling; an unmatched pattern is exit 0 with a zero count},
+  claim  = {`--limit 1` keeps the later ruling; an unmatched pattern is exit 0 with a zero count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq_cli.py -k test_limit_keeps_the_newest_and_a_pattern_that_matches_nothing_prints_only_the_count},
+}

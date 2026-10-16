@@ -37,6 +37,7 @@ from mikemol.transcriptstruct.query import (
     stats,
 )
 from mikemol.transcriptstruct.records import read_path
+from mikemol.transcriptstruct.rulingq import rulings
 from mikemol.transcriptstruct.rulings import harvest_tree
 from mikemol.transcriptstruct.warrant import verify
 
@@ -89,6 +90,13 @@ def _parser() -> argparse.ArgumentParser:
         help="W1401/W1402: the positional is a projects directory; append every new operator "
         "utterance under it to LEDGER (append-only, incremental by uuid)",
     )
+    mode.add_argument(
+        "--rulings",
+        metavar="REGEX",
+        help="W1387: the positional is a rulings LEDGER; print the operator's utterances matching "
+        "REGEX (case-insensitive), newest first, with their citations",
+    )
+    parser.add_argument("--limit", type=int, help="--rulings: at most this many, the newest")
     parser.add_argument("--claim", help="--verify: the speaker claimed (`operator` needs human)")
     parser.add_argument("--line", type=int, help="--verify: the line the warrant cites")
     parser.add_argument("--kinds", nargs="+", help="--grep: only these block kinds")
@@ -217,6 +225,24 @@ def _harvest(path: Path, scheduled: Sequence[str], out: TextIO) -> None:
     )
 
 
+def _rulings(ledger: Path, topic: str, limit: int | None, out: TextIO) -> None:
+    """Write the rulings matching `topic`, newest first, one JSON line each, then the count."""
+    matches = rulings(ledger, topic, limit)
+    out.writelines(
+        _line(
+            {
+                "iri": r.iri,
+                "said_at": r.said_at,
+                "line": r.line,
+                "session": r.session,
+                "needle": r.needle,
+            }
+        )
+        for r in matches
+    )
+    out.write(f"# {len(matches)} ruling(s) match\n")
+
+
 def _verify(opts: dict[str, object], uuid: str, out: TextIO) -> int:
     """Read the record a warrant cites and print the verdict as one JSON line.
 
@@ -245,6 +271,36 @@ def _verify(opts: dict[str, object], uuid: str, out: TextIO) -> int:
     return 0 if verdict.ok else _REFUSED
 
 
+def _special(
+    opts: dict[str, object], path: Path, scheduled: Sequence[str], out: TextIO
+) -> int | None:
+    """Run the modes that are not a query over one transcript's records, when one is asked for.
+
+    Returns:
+        that mode's exit code, or None when none of them was asked for.
+
+    """
+    cited = _text(opts, "verify")
+    if cited is not None:
+        return _verify(opts, cited, out)
+    topic = _text(opts, "rulings")
+    if topic is not None:
+        _rulings(path, topic, _number(opts, "limit"), out)
+        return 0
+    ledger = _text(opts, "harvest_tree")
+    if ledger is not None:
+        done = harvest_tree(path, Path(ledger), scheduled)
+        out.write(
+            f"# read {done.read} file(s), spared {done.spared}, added {done.added} line(s), "
+            f"{done.uncitable} human utterance(s) uncitable\n"
+        )
+        return 0
+    if opts.get("harvest") is True:
+        _harvest(path, scheduled, out)
+        return 0
+    return None
+
+
 def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     """Run one query over one transcript.
 
@@ -259,20 +315,9 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     scheduled = _texts(opts, "scheduled") or ()
     grep, human, lines = _text(opts, "grep"), _text(opts, "human"), _texts(opts, "extract")
     types = _texts(opts, "raw")
-    cited = _text(opts, "verify")
-    if cited is not None:
-        return _verify(opts, cited, sink)
-    ledger = _text(opts, "harvest_tree")
-    if ledger is not None:
-        done = harvest_tree(path, Path(ledger), scheduled)
-        sink.write(
-            f"# read {done.read} file(s), spared {done.spared}, added {done.added} line(s), "
-            f"{done.uncitable} human utterance(s) uncitable\n"
-        )
-        return 0
-    if opts.get("harvest") is True:
-        _harvest(path, scheduled, sink)
-        return 0
+    special = _special(opts, path, scheduled, sink)
+    if special is not None:
+        return special
     if types is not None:
         _emit(_raw(path, types, window), sink)
     elif grep is not None:
