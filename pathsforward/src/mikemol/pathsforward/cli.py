@@ -47,6 +47,7 @@ from mikemol.pathsforward import (
     store,
     triage,
     vtodo,
+    warrant,
 )
 from mikemol.pathsforward.advice import close_applied as close_advice
 from mikemol.pathsforward.advice import counts as count_advice
@@ -196,6 +197,36 @@ def _freeze(ctx: "Ctx") -> int:
             _say(f"KEPT {len(found.kept)} (already blocked; --verbose lists them)")
         if write:
             bulkblock.apply(state, found, ask)
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
+def _warrant(ctx: "Ctx") -> int:
+    """Attach a PROV-O warrant to a card after reading the transcript record it cites (W1384).
+
+    ⚑ THE RECORD IS READ BEFORE THE QUEUE IS LOCKED AND A REFUSAL CHANGES NOTHING: the reader's own
+    reason is the message, so a forged citation is named, not silently dropped.
+
+    Returns:
+        EXIT_OK.
+
+    Raises:
+        RefusedError: when the citation is incomplete or the reader refuses the record.
+
+    """
+    symbol = ctx.get("warrant") or ""
+    where, uuid = ctx.get("transcript"), ctx.get("uuid")
+    if not where or not uuid:
+        msg = "--warrant needs --transcript PATH and --uuid UUID, the record it cites"
+        raise RefusedError(msg)
+    cited = warrant.Citation(Path(where), uuid, ctx.get("claim"), ctx.number("line"))
+    verdict, argv = warrant.read(cited, ctx.get("reader") or warrant.READER)
+
+    def edit(state: State) -> int:
+        card = f"urn:nemik:{ctx.path.resolve().parent.parent.name}/{symbol}"
+        added = warrant.attach(state, symbol, warrant.build(card, cited, verdict, argv))
+        _say(f"WARRANT {'attached to' if added else 'already on'} {symbol}")
         return EXIT_OK
 
     return _mutate(ctx, edit)
@@ -402,6 +433,7 @@ _VALUED = (
     "gate_note",
     "block_matching",
     "freeze",
+    "warrant",
     "update_many",
     "lift",
 )
@@ -466,6 +498,11 @@ _FIELDS = (
     "on",
     "write",
     "verbose",
+    "transcript",
+    "uuid",
+    "claim",
+    "line",
+    "reader",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -514,6 +551,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
+    "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader"}),
     # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
     # `attach` (one file pinned to many cards is a different act), plus `--write`.
     "update_many": frozenset(
@@ -738,6 +776,11 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
         choices=GATES,
         help="--drop with --admit: the gate the waypoint died at",
     )
+    ap.add_argument("--transcript", metavar="PATH", help="--warrant: the transcript JSONL cited")
+    ap.add_argument("--uuid", metavar="UUID", help="--warrant: the cited record's uuid")
+    ap.add_argument("--claim", help="--warrant: the speaker claimed (`operator` needs a human)")
+    ap.add_argument("--line", type=int, help="--warrant: the line the citation names")
+    ap.add_argument("--reader", metavar="CMD", help="--warrant: the transcript reader to run")
     ap.add_argument(
         "--facts",
         metavar="FILE",
@@ -790,6 +833,14 @@ def _parser() -> argparse.ArgumentParser:
             (
                 "W1397: block every ready or working card but SYMBOL on SYMBOL (the operator's "
                 "unfreeze ask); blocked cards keep their blocker; a dry run without --write"
+            ),
+        ),
+        (
+            "--warrant",
+            "SYMBOL",
+            (
+                "W1384: attach a PROV-O warrant to SYMBOL after reading the transcript record it "
+                "cites (--transcript PATH --uuid UUID [--claim operator] [--line N] [--reader CMD])"
             ),
         ),
         (
@@ -2457,6 +2508,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "bump_blocked": _bump_blocked,
     "block_matching": _block_matching,
     "freeze": _freeze,
+    "warrant": _warrant,
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
     "close_umbrellas": _close_umbrellas,

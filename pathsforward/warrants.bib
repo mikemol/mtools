@@ -5332,3 +5332,59 @@
             --verbose.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_by_default_the_kept_cards_are_one_count_line_not_one_row_each},
 }
+
+@misc{pathsforward-warrant-accepted-record-returns-its-verdict-and-the-exact-command,
+  section = {warrant},
+  title  = {The control: ok verdict back, with the claim and the line on the command it ran},
+  claim  = {The control: ok verdict back, with the claim and the line on the command it ran.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_an_accepted_record_returns_its_verdict_and_the_exact_command},
+}
+
+@misc{pathsforward-warrant-refused-record-raises-with-the-readers-own-reason,
+  section = {warrant},
+  title  = {The forgery: the reader exits 1 and says why; the refusal carries that sentence},
+  claim  = {The forgery: the reader exits 1 and says why; the refusal carries that sentence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_refused_record_raises_with_the_readers_own_reason},
+}
+
+@misc{pathsforward-warrant-unrunnable-reader-and-an-unparseable-answer-are-refused,
+  section = {warrant},
+  title  = {A missing reader and a reader that printed prose are not a pass},
+  claim  = {A missing reader and a reader that printed prose are not a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_an_unrunnable_reader_and_an_unparseable_answer_are_refused},
+}
+
+@misc{pathsforward-warrant-built-warrant-is-the-prov-shape-nemik-publishes,
+  section = {warrant},
+  title  = {The card derives from a record with time, agent and activity; a human is the operator},
+  claim  = {The card derives from a record with time, agent and activity; a human is the operator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_the_built_warrant_is_the_prov_shape_nemik_publishes},
+}
+
+@misc{pathsforward-warrant-peer-record-is-attributed-to-a-speaker-not-the-operator,
+  section = {warrant},
+  title  = {The agent follows the record's kind, so a peer never reads as the operator},
+  claim  = {The agent follows the record's kind, so a peer never reads as the operator.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_peer_record_is_attributed_to_a_speaker_not_the_operator},
+}
+
+@misc{pathsforward-warrant-attach-is-idempotent-per-record-and-refuses-an-unknown-card,
+  section = {warrant},
+  title  = {The second attach of one record changes nothing; a symbol outside the queue is refused},
+  claim  = {The second attach of one record changes nothing; a symbol outside the queue is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_attach_is_idempotent_per_record_and_refuses_an_unknown_card},
+}
+
+@misc{pathsforward-warrant-cli-attaches-a-verified-warrant-once-and-check-stays-green,
+  section = {warrant},
+  title  = {Through a real reader process: attached, then 'already on', and --check passes},
+  claim  = {Through a real reader process: attached, then 'already on', and --check passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_the_cli_attaches_a_verified_warrant_once_and_check_stays_green},
+}
+
+@misc{pathsforward-warrant-cli-leaves-the-card-alone-when-the-reader-refuses-or-the-citation-is-short,
+  section = {warrant},
+  title  = {A refusing reader and a missing --uuid each exit refused with no warrant written},
+  claim  = {A refusing reader and a missing --uuid each exit refused with no warrant written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_the_cli_leaves_the_card_alone_when_the_reader_refuses_or_the_citation_is_short},
+}

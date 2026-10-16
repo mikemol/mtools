@@ -131,6 +131,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ RUNNING THE TRANSCRIPT READER IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1384): the argv is the
+# reader's name, fixed words and the citation's own path, uuid and claim; nothing is run through a shell.
+"src/mikemol/pathsforward/warrant.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_warrant.py" = ["assert"]
 "tests/test_render.py" = ["assert"]
 "tests/test_selftest.py" = ["assert"]
 "tests/test_cli.py" = ["assert"]
