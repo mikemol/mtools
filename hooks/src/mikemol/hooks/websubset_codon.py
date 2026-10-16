@@ -16,6 +16,8 @@ reads none of them. A detector reads one parsed tree and returns `(line, rule, m
     datetime-utc              `datetime.UTC`, absent in Codon's datetime
     dict-spread               `{**a}`: the compiler aborts (a Codon defect, probed 2026-10-16)
     stdlib-import             an import of a module Codon 0.20.3 lacks (the census's ten)
+    dataclasses-import        any import of `dataclasses` (nemik:W567 probe, re-run here)
+    variable-length-tuple     `tuple[X, ...]` in an annotation (nemik:W567 probe)
 """
 
 from __future__ import annotations
@@ -33,6 +35,8 @@ RULES = frozenset(
         "datetime-utc",
         "dict-spread",
         "stdlib-import",
+        "dataclasses-import",
+        "variable-length-tuple",
     }
 )
 # ⚑ ABSENT FROM CODON 0.20.3 as the census found them (W1321): an import of one stops the module.
@@ -54,6 +58,7 @@ Row = tuple[int, str, str]
 _CHECKING = "`TYPE_CHECKING` is not importable"
 _UTC = "`datetime.UTC` is missing"
 _DATACLASS = "dataclass takes arguments"
+_DATACLASSES = "Codon has no `dataclasses` module: `@dataclass` is a builtin there"
 
 
 def _imported(node: ast.ImportFrom) -> list[Row]:
@@ -66,6 +71,8 @@ def _imported(node: ast.ImportFrom) -> list[Row]:
     found: list[Row] = []
     if node.module == "__future__":
         found.append((node.lineno, "future-import", "Codon has no `__future__` module"))
+    if node.module == "dataclasses":
+        found.append((node.lineno, "dataclasses-import", _DATACLASSES))
     if node.module is not None and node.module.split(".")[0] in _ABSENT:
         found.append((node.lineno, "stdlib-import", f"Codon lacks `{node.module}`"))
     for alias in node.names:
@@ -83,11 +90,34 @@ def _plain(node: ast.Import) -> list[Row]:
         a row per imported module whose top-level package Codon lacks.
 
     """
-    return [
+    found: list[Row] = [
         (node.lineno, "stdlib-import", f"Codon lacks `{alias.name}`")
         for alias in node.names
         if alias.name.split(".")[0] in _ABSENT
     ]
+    found += [
+        (node.lineno, "dataclasses-import", _DATACLASSES)
+        for alias in node.names
+        if alias.name == "dataclasses"
+    ]
+    return found
+
+
+def _ellipsis(node: ast.Subscript) -> list[Row]:
+    """Name a variable-length tuple annotation `tuple[X, ...]`.
+
+    Returns:
+        one row when the subscripted name is a tuple and its index ends in `...`.
+
+    """
+    base = node.value
+    named = base.id if isinstance(base, ast.Name) else _called(base)
+    index = node.slice
+    if named in {"tuple", "Tuple"} and isinstance(index, ast.Tuple):
+        last = index.elts[-1]
+        if isinstance(last, ast.Constant) and last.value is Ellipsis:
+            return [(node.lineno, "variable-length-tuple", "`tuple[X, ...]` is rejected")]
+    return []
 
 
 def _called(func: ast.expr) -> str | None:
@@ -142,6 +172,22 @@ def _attribute(node: ast.Attribute) -> list[Row]:
     return []
 
 
+def _statement(node: ast.AST) -> list[Row]:
+    """Name the refusals of a statement form that has no helper of its own.
+
+    Returns:
+        a row for the type statement, a tuple except, or a dict spread.
+
+    """
+    if isinstance(node, ast.TypeAlias):
+        return [(node.lineno, "type-statement", "the `type` statement is a syntax error")]
+    if isinstance(node, ast.ExceptHandler) and isinstance(node.type, ast.Tuple):
+        return [(node.lineno, "tuple-except", "`except (A, B)` is rejected")]
+    if isinstance(node, ast.Dict) and None in node.keys:
+        return [(node.lineno, "dict-spread", "`{**a}` aborts the compiler")]
+    return []
+
+
 def scan(tree: ast.AST) -> list[Row]:
     """List every Codon-refused construct of one parsed module.
 
@@ -155,16 +201,14 @@ def scan(tree: ast.AST) -> list[Row]:
             found += _imported(node)
         elif isinstance(node, ast.Import):
             found += _plain(node)
-        elif isinstance(node, ast.TypeAlias):
-            found.append((node.lineno, "type-statement", "the `type` statement is a syntax error"))
         elif isinstance(node, ast.ClassDef):
             found += _decorated(node)
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             found += _function(node)
-        elif isinstance(node, ast.ExceptHandler) and isinstance(node.type, ast.Tuple):
-            found.append((node.lineno, "tuple-except", "`except (A, B)` is rejected"))
         elif isinstance(node, ast.Attribute):
             found += _attribute(node)
-        elif isinstance(node, ast.Dict) and None in node.keys:
-            found.append((node.lineno, "dict-spread", "`{**a}` aborts the compiler"))
+        elif isinstance(node, ast.Subscript):
+            found += _ellipsis(node)
+        else:
+            found += _statement(node)
     return found

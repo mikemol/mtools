@@ -20,6 +20,8 @@ _PLANTS: dict[str, str] = {
     "datetime-utc": "x = datetime.UTC\n",
     "dict-spread": "b = {**a, 'y': 2}\n",
     "stdlib-import": "import subprocess\nfrom hashlib import sha256\nimport os.path, io.x\n",
+    "dataclasses-import": "from dataclasses import dataclass\nimport dataclasses\n",
+    "variable-length-tuple": "x: tuple[str, ...] = ()\ny: Tuple[int, ...] = ()\n",
 }
 _CLEAN = (
     "import typing\n"
@@ -35,6 +37,8 @@ _CLEAN = (
     "except A:\n"
     "    pass\n"
     "b = {'y': 2}\n"
+    "pair: tuple[int, str] = (1, 'a')\n"
+    "rows: list[str] = []\n"
 )
 
 
