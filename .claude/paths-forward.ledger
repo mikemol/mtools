@@ -2074,3 +2074,6 @@
 2026-10-16T02:07:41Z  interrupt W1334 minted    -         "A bulk --drop over a selector with a per-card reason, all-or-none, through the advice store"  evidence=github-8f
 2026-10-16T02:07:41Z  interrupt W1335 minted    -         "--show accepts several symbols and prints one record each in the order given"  evidence=github-8f
 2026-10-16T02:07:42Z  interrupt W1336 minted    -         "A mode reads a card that cites an inbox letter and reports whether the letter is answered, archived or still open"  evidence=github-8f
+2026-10-16T02:16:32Z  tick  W1333 advanced  mechanism "triage mode landed (f968b8b); W1143's dropped blockers trimmed so check is clean; --drop --on SURVIVOR built with 6 tests and 5 mutants, commit in the gate; writer-gap cards W1333-W1336 [blocked by W1194]"
+2026-10-16T02:41:25Z  tick  W1337 minted    -         "Stage Codon's licence text beside its pin, checked against the v0.20.3 tag and not the repo head"  evidence=W1320
+2026-10-16T02:41:47Z  tick  W1320 advanced  mechanism "Codon 0.20.3 pinned as @codon with a verified sha256 and a bazel witness (version, typed program, future-import rejection); --show several symbols built, commit in the gate; W1281 W1073 dropped onto the Codon chain; licence staging carded W1337 [blocked by W1194]"

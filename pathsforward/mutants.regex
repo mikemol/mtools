@@ -143,6 +143,8 @@ src/mikemol/pathsforward/triage.py|a-series-of-per-file-cards-is-a-duplicate|if 
 src/mikemol/pathsforward/triage.py|any-overlap-is-a-duplicate|>= _SIMILAR|>= 0.0|def=_similar
 src/mikemol/pathsforward/triage.py|untagged-cards-are-duplicates|same = bool\(tags\) and|same = True and|def=_duplicates
 src/mikemol/pathsforward/triage.py|an-operator-ask-blocks-as-an-agent-card|card\["blocked_kind"\] = _HUMAN if asks else _AGENT|card["blocked_kind"] = _AGENT|def=_block
+src/mikemol/pathsforward/cli.py|show-hides-an-unknown-symbol-from-the-exit|return EXIT_REFUSED if missing else EXIT_OK|return EXIT_OK|def=_show
+src/mikemol/pathsforward/cli.py|show-stops-at-the-first-symbol|for sym in ctx\.many\("show"\) or \("",\):|for sym in (ctx.many("show") or ("",))[:1]:|def=_show
 src/mikemol/pathsforward/dropto.py|a-card-may-survive-itself|if survivor == gone:|if False:|def=check
 src/mikemol/pathsforward/dropto.py|a-closed-survivor-is-accepted|live\[survivor\] in _CLOSED|False|def=check
 src/mikemol/pathsforward/dropto.py|the-survivor-loses-its-own-entry-never|removed=card == survivor|removed=False|def=plan

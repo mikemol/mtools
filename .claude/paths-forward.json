@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1336,
+  "counter": 1337,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-16T02:13:12Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6128,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 258,
+      "ticks_blocked": 259,
       "completed": null
     },
     {
@@ -6176,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 257,
+      "ticks_blocked": 258,
       "completed": null
     },
     {
@@ -10059,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 262,
+      "ticks_blocked": 263,
       "completed": null
     },
     {
@@ -11807,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 196,
+      "ticks_blocked": 197,
       "completed": null
     },
     {
@@ -16161,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16702,7 +16697,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17511,7 +17506,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -17554,7 +17549,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -17577,7 +17572,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -18002,7 +17997,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 162,
+      "ticks_blocked": 163,
       "completed": null
     },
     {
@@ -18178,7 +18173,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 160,
+      "ticks_blocked": 161,
       "completed": null
     },
     {
@@ -18961,7 +18956,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 159,
+      "ticks_blocked": 160,
       "completed": null
     },
     {
@@ -20660,7 +20655,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 16,
+      "ticks_blocked": 17,
       "completed": null
     },
     {
@@ -21399,7 +21394,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 52,
       "completed": null
     },
     {
@@ -21445,7 +21440,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 119,
+      "ticks_blocked": 120,
       "completed": null
     },
     {
@@ -21537,7 +21532,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 119,
+      "ticks_blocked": 120,
       "completed": null
     },
     {
@@ -21603,7 +21598,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 39,
+      "ticks_blocked": 40,
       "completed": null
     },
     {
@@ -21966,44 +21961,23 @@
     },
     {
       "symbol": "W1072",
-      "title": "Conformance runner: one shared corpus through the Python and the generated TypeScript, failing on any difference with the input printed",
+      "title": "Conformance runner: one shared corpus through the Python and the Codon build, failing on any difference with the input printed",
       "status": "blocked",
       "enables": [],
       "touches": [
         "websubset"
       ],
       "blocked_on": [
-        "W1281"
+        "W1320"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-16: 2026-10-16 retargeted from the py2many TypeScript output to the Codon build: nemik:W560 ran 6 corpus cases and a 168-node fixture through Codon 0.20.3 and they agreed with the Python; that harness is nemik's. This card is the reusable runner, waiting on the pin (W1320).",
       "issued_at": "2026-10-13T01:19:10Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
-      "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 16,
-      "completed": null
-    },
-    {
-      "symbol": "W1073",
-      "title": "Spike harness on nemik.pieces.assemble: gate, transpile and conformance, and what the output says about narrowing the subset",
-      "status": "blocked",
-      "enables": [],
-      "touches": [
-        "websubset"
-      ],
-      "blocked_on": [
-        "W1072"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "2026-10-13: 2026-10-13 github-8f request (operator): identical semantics for Python machinery in a web interface with no client/server dynamics, proven in Python once and reused mechanically; typed Python subset consumed by py2many (TypeScript backend), enforced like ruff and mypy. The first spike's output is the evidence for whether the subset needs narrowing (py2many's TypeScript backend is less mature than its others, unverified here). nemik:W422 owns nemik.pieces.assemble.",
-      "issued_at": "2026-10-13T01:19:11Z",
-      "minted_during": "interrupt",
-      "caused_by": "nemik:W422",
-      "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 16,
+      "last_worked": "2026-10-16T02:29:29Z",
+      "ticks_blocked": 1,
       "completed": null
     },
     {
@@ -22015,7 +21989,7 @@
         "websubset"
       ],
       "blocked_on": [
-        "W1073"
+        "W1072"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "",
@@ -22024,7 +21998,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 104,
+      "ticks_blocked": 105,
       "completed": null
     },
     {
@@ -22149,7 +22123,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -22435,7 +22409,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 103,
+      "ticks_blocked": 104,
       "completed": null
     },
     {
@@ -22457,7 +22431,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 103,
+      "ticks_blocked": 104,
       "completed": null
     },
     {
@@ -22563,7 +22537,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 83,
+      "ticks_blocked": 84,
       "completed": null
     },
     {
@@ -22844,7 +22818,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 83
+      "ticks_blocked": 84
     },
     {
       "symbol": "W1116",
@@ -22865,7 +22839,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 83
+      "ticks_blocked": 84
     },
     {
       "symbol": "W1117",
@@ -22883,7 +22857,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 83
+      "ticks_blocked": 84
     },
     {
       "symbol": "W1118",
@@ -22901,7 +22875,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 83
+      "ticks_blocked": 84
     },
     {
       "symbol": "W1119",
@@ -23405,7 +23379,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-16T02:13:24Z",
-      "ticks_blocked": 0
+      "ticks_blocked": 1
     },
     {
       "symbol": "W1144",
@@ -23563,7 +23537,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 52
+      "ticks_blocked": 53
     },
     {
       "symbol": "W1151",
@@ -23609,7 +23583,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 71
+      "ticks_blocked": 72
     },
     {
       "symbol": "W1153",
@@ -23633,7 +23607,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 49,
+      "ticks_blocked": 50,
       "completed": null
     },
     {
@@ -24067,7 +24041,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 72,
+      "ticks_blocked": 73,
       "completed": null
     },
     {
@@ -24529,7 +24503,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 19,
+      "ticks_blocked": 20,
       "completed": null
     },
     {
@@ -25659,7 +25633,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T11:47:38Z",
-      "ticks_blocked": 2
+      "ticks_blocked": 3
     },
     {
       "symbol": "W1250",
@@ -25679,7 +25653,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T11:47:38Z",
-      "ticks_blocked": 2
+      "ticks_blocked": 3
     },
     {
       "symbol": "W1251",
@@ -26001,7 +25975,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T20:11:19Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -26279,34 +26253,11 @@
       "completed": "20261015T173513Z"
     },
     {
-      "symbol": "W1281",
-      "title": "Choose the transpile route now py2many 0.9 has no TypeScript backend: another target, a fork, or another transpiler",
-      "status": "blocked",
-      "enables": [
-        "W1143"
-      ],
-      "touches": [
-        "websubset"
-      ],
-      "blocked_on": [
-        "nemik:W423"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Ask nemik-84 which route; then pin it and name the bazel build output",
-      "evidence": "2026-10-15: Input to the route decision: W1282 measured py2many --rust: converts, but rustc refuses the output (3 of 4 sample functions broken); wasm32 leg unmeasured, target not installed on this host. | 2026-10-16: 2026-10-16 nemik-84 (testimony): the operator ruled strictness is the direction for nemik:W423, a strictly typed core and not py2many's untyped-subset transpile; Codon was spiked on nemik's pieces module (nemik:W559) and rejected on the opaque Any. py2many is no longer the leading route. Browser leg unresolved (Codon believed native-only, wasm unverified): nemik:W560 measures it and W423 now waits on that. Asked to leave this card as is until W560 reports. Left as is. Answer sent on websubset: its five refusal rules (metaclass, eval-exec, dynamic-attribute, float-equality, star-args) are generic to any ahead-of-time typed compile, not py2many syntax; the target is not a parameter today.",
-      "issued_at": "2026-10-15T17:42:25Z",
-      "minted_during": "tick",
-      "caused_by": "nemik:W422",
-      "last_worked": "2026-10-16T01:36:06Z",
-      "ticks_blocked": 16,
-      "completed": null
-    },
-    {
       "symbol": "W1282",
       "title": "Measure py2many's rust backend on the typed sample: converts, compiles with rustc, builds for wasm32-unknown-unknown",
       "status": "done",
       "enables": [
-        "W1281"
+        "W1319"
       ],
       "touches": [
         "websubset"
@@ -26906,7 +26857,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1309",
       "last_worked": "2026-10-15T23:53:57Z",
-      "ticks_blocked": 6,
+      "ticks_blocked": 7,
       "completed": null
     },
     {
@@ -27073,13 +27024,13 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W423",
       "last_worked": "2026-10-16T01:41:49Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
       "symbol": "W1320",
       "title": "Pin Codon as a bazel-staged tool like opa, reusing before building, with url and sha256",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1319"
       ],
@@ -27089,12 +27040,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Read how MODULE.bazel declares opa (http_file with sha256); find Codon's release archives, license and platform, and whether nemik:W560 already pinned one; record the url, sha256 and licence on this card and declare it beside opa",
-      "evidence": "",
+      "evidence": "2026-10-16: 2026-10-16 pinned: http_archive @codon in MODULE.bazel, asset codon-linux-x86_64.tar.gz of exaloop/codon v0.20.3, sha256 8716e5753a441764d13fd6a0b4f911060d292f66c9e61d0a4cdccb64c843da6f. That digest is the one GitHub publishes for the asset (gh release view --json assets) AND the one nemik-84 computed on its own download. Not pinned: codon-manylinux2014-x86_64 (sha256 2dbbfb60...), because it was never run. Apache-2.0 per nemik reading the repo head via the API; the tarball carries no LICENSE file in its first two levels (nemik), so the licence text is not staged: open item. //:codon_pin (codon_pin_test.sh) passes under bazel: the binary reports 0.20.3, a typed program prints 5, and 'from __future__ import annotations' is REJECTED with __future__ named, reproducing nemik:W560 here.",
       "issued_at": "2026-10-16T01:41:20Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-16T02:41:20Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1321",
@@ -27111,12 +27063,12 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "After the pin: pick a sample across dists (hooks, corpus, pathsforward, a pure leaf), run codon on each, group the rejections (dynamic attribute, untyped containers, unsupported stdlib, decorator and metaclass magic, the __future__ import nemik saw rejected), write counts to .claude/design/codon-census.md; cite nemik:W560 and W562 rather than re-measuring theirs",
-      "evidence": "",
+      "evidence": "2026-10-16: 2026-10-16 nemik-84 measured on codon 0.20.3 (nemik:W560): the constructs it rejects and accepts, and one miscompile, are recorded on W1324 and are the first rows of this census. Not tested by them: dataclasses, Protocols, third-party imports, which this census covers over mtools' modules once Codon is pinned (W1320).",
       "issued_at": "2026-10-16T01:41:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T01:53:09Z",
-      "ticks_blocked": 2,
+      "last_worked": "2026-10-16T02:29:08Z",
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -27159,7 +27111,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-16T01:53:10Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -27178,12 +27130,12 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "After the census and the target parameter: for each Codon rejection kind add or retire a rule id under the codon target, list the rules py2many and Codon share, and record the diff in the design note",
-      "evidence": "",
+      "evidence": "2026-10-16: 2026-10-16 nemik-84 (testimony) from nemik:W560, codon 0.20.3, a typed port of nemik.pieces (6 corpus cases and the 168-node fixture agree). REJECTED: (1) 'from __future__ import annotations' ('no module named __future__'); (2) use of Any (an Any value has no __iter__ or attributes; dict[str, Any] needs concrete records, Optional[T] for sparse fields); (3) a list comprehension over an Optional dict's .items() inside a function fed to ', '.join (compile error 'int' object has no attribute __iter__; an explicit loop works). ACCEPTED: typing List/Dict/Set/Optional, classes with typed fields and positional constructors, lambda sort keys with tuples, f-strings, set operations, sorted(), import json. CODON BUG to gate: x.as_bool() if key in j else None in an Optional[bool]-returning function yields False, not None; an explicit if/return None is correct (Optional[int] is fine); it invented fields silently. NOT tested: *args/**kwargs, metaclasses, eval/exec, dynamic getattr, dataclasses, Protocols, generics beyond List/Dict/Set/Optional, third-party imports. Wasm is nemik:W564 (IR is 64-bit, 30 runtime symbols undefined). New rule ids for the codon target: future-import, any-use, none-ternary-in-optional-return, comprehension-over-optional-items-in-join.",
       "issued_at": "2026-10-16T01:41:39Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T01:53:11Z",
-      "ticks_blocked": 2,
+      "last_worked": "2026-10-16T02:29:08Z",
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -27207,7 +27159,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": null,
-      "ticks_blocked": 2
+      "ticks_blocked": 3
     },
     {
       "symbol": "W1326",
@@ -27229,7 +27181,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -27294,7 +27246,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1327",
       "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -27361,7 +27313,7 @@
     {
       "symbol": "W1333",
       "title": "--drop W REASON --onto SURVIVOR repoints every blocked_on and enables edge naming the dropped card to the survivor, dry-run first",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1330"
       ],
@@ -27370,14 +27322,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read ops.drop and the edge fields (blocked_on, enables, caused_by); plan lists each repointed card, then --write applies; refuse a survivor that is closed or the card itself; if the survivor is already in a card's edge list, drop the duplicate; test the ring case where the survivor enables the dropped card",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: Landed in mtools 25a5a8d (pushed): dropto.py, --drop W REASON --on/--onto SURVIVOR with a dry run, 6 tests, warrants, 5 mutants.",
       "issued_at": "2026-10-16T02:07:40Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-16T02:13:35Z",
+      "last_worked": "2026-10-16T02:29:08Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T022908Z"
     },
     {
       "symbol": "W1334",
@@ -27436,6 +27388,26 @@
       "issued_at": "2026-10-16T02:07:42Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1337",
+      "title": "Stage Codon's licence text beside its pin, checked against the v0.20.3 tag and not the repo head",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read LICENSE at the v0.20.3 tag (gh api repos/exaloop/codon/contents/LICENSE?ref=v0.20.3), search the tarball for any notice deeper than two levels, and carry the text with the http_archive (a licenses file in the build content)",
+      "evidence": "",
+      "issued_at": "2026-10-16T02:41:25Z",
+      "minted_during": "tick",
+      "caused_by": "W1320",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -27613,6 +27585,20 @@
       "dropped_at": "2026-10-16T02:00:16Z",
       "reason": "Superseded by W1311/W1312: it derives a mutants shard's timeout from its solo wall runtime, which keeps a wall-clock bound; the direction (operator, 2026-10-16) is to bound by CPU time or a no-progress witness and to shard finer for load-based admission, which W1311 plans.",
       "recoverable": true
+    },
+    {
+      "symbol": "W1281",
+      "title": "Choose the transpile route now py2many 0.9 has no TypeScript backend: another target, a fork, or another transpiler",
+      "dropped_at": "2026-10-16T02:29:29Z",
+      "reason": "Superseded by W1319: the route question (py2many TypeScript) is answered by the operator's direction for Codon compatibility; nemik:W560 measured Codon 0.20.3 on a typed port of nemik.pieces, and the browser leg is nemik:W564.",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1073",
+      "title": "Spike harness on nemik.pieces.assemble: gate, transpile and conformance, and what the output says about narrowing the subset",
+      "dropped_at": "2026-10-16T02:29:29Z",
+      "reason": "Superseded by nemik:W559/W560: the spike on nemik.pieces ran there with Codon (not py2many), found the rejected constructs recorded on W1324, and the runner it would have needed is W1072.",
+      "recoverable": true
     }
   ],
   "preamble": [
@@ -27694,6 +27680,24 @@
       "first_run": "2026-10-16T01:56:27Z",
       "last_run": "2026-10-16T01:56:27Z",
       "status": "open"
+    },
+    {
+      "tool": "drop-onto",
+      "rule": "W1281->W1319",
+      "subject": "W1072.blocked_on",
+      "action": "repoint W1072 blocked_on W1281",
+      "first_run": "2026-10-16T02:29:21Z",
+      "last_run": "2026-10-16T02:29:21Z",
+      "status": "applied"
+    },
+    {
+      "tool": "drop-onto",
+      "rule": "W1281->W1319",
+      "subject": "W1282.enables",
+      "action": "repoint W1282 enables W1281",
+      "first_run": "2026-10-16T02:29:21Z",
+      "last_run": "2026-10-16T02:29:21Z",
+      "status": "applied"
     }
   ]
 }

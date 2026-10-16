@@ -839,7 +839,9 @@ def _parser() -> argparse.ArgumentParser:
         help=f"SYMBOL is a waypoint, or {_QUEUE_SYMBOL!r} for a queue-level line (not a bare --,"
         " which argparse consumes as end-of-options)",
     )
-    mode.add_argument("--show", metavar="SYMBOL", help="what is W<n>")
+    mode.add_argument(
+        "--show", nargs="+", metavar="SYMBOL", help="what is W<n>; several symbols print in order"
+    )
     mode.add_argument(
         "--lift",
         metavar="JWS",
@@ -2117,21 +2119,27 @@ def _ledger_mode(ctx: Ctx) -> int:
 
 
 def _show(ctx: Ctx) -> int:
-    """Say what a symbol is: live, residue, or never issued.
+    """Say what each named symbol is: live, residue, or never issued (mtools:W1335).
+
+    ⚑ One record is printed per symbol, in the order given. A symbol that resolves to nothing is
+    named on stderr in its place, the rest still print, and the exit is a refusal.
 
     Returns:
-        EXIT_OK when it resolves, else EXIT_REFUSED.
+        EXIT_OK when every symbol resolves, else EXIT_REFUSED.
 
     """
     state = store.load(ctx.path)
-    sym = ctx.get("show") or ""
-    found: list[Json] = [r for r in (*state.waypoints, *state.residue) if text(r, "symbol") == sym]
-    if not found:
-        _warn(f"{sym}: in neither waypoints nor residue (counter={state.counter})")
-        return EXIT_REFUSED
-    for rec in found:
-        _say(json.dumps(rec, indent=2, ensure_ascii=False))
-    return EXIT_OK
+    missing = 0
+    for sym in ctx.many("show") or ("",):
+        found: list[Json] = [
+            r for r in (*state.waypoints, *state.residue) if text(r, "symbol") == sym
+        ]
+        if not found:
+            _warn(f"{sym}: in neither waypoints nor residue (counter={state.counter})")
+            missing += 1
+        for rec in found:
+            _say(json.dumps(rec, indent=2, ensure_ascii=False))
+    return EXIT_REFUSED if missing else EXIT_OK
 
 
 def _commit_message(ctx: Ctx) -> int:

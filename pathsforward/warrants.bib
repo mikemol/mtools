@@ -5274,3 +5274,24 @@
   claim  = {The control: no --on means the old behaviour, a drop at once and the edges left alone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_plain_drop_is_unchanged},
 }
+
+@misc{pathsforward-show-many-several-symbols-print-in-the-order-given,
+  section = {show_many},
+  title  = {Live cards and a residue entry, asked for out of queue order, print in that order},
+  claim  = {Live cards and a residue entry, asked for out of queue order, print in that order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_show_many.py -k test_several_symbols_print_in_the_order_given},
+}
+
+@misc{pathsforward-show-many-unknown-symbol-is-named-the-rest-still-print-and-the-exit-refuses,
+  section = {show_many},
+  title  = {W9 was never issued: W1 and W2 print, W9 is named on stderr, and the exit is a refusal},
+  claim  = {W9 was never issued: W1 and W2 print, W9 is named on stderr, and the exit is a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_show_many.py -k test_an_unknown_symbol_is_named_the_rest_still_print_and_the_exit_refuses},
+}
+
+@misc{pathsforward-show-many-one-symbol-prints-as-it-always-did,
+  section = {show_many},
+  title  = {The control: a single symbol is one indented record and a zero exit},
+  claim  = {The control: a single symbol is one indented record and a zero exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_show_many.py -k test_one_symbol_prints_as_it_always_did},
+}
