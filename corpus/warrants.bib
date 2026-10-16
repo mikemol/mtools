@@ -554,3 +554,59 @@
   claim  = {The CLI form: `--all --write-baseline` then `--all --baseline` passes, key without root.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exitcensus.py -k test_the_all_flag_reaches_the_census_and_a_baseline_holds_across_checkouts},
 }
+
+@misc{corpus-codoncensus-message-is-classified-by-its-shape,
+  section = {exitcensus},
+  title  = {Each known rejection gets its kind, and an unknown one is `other`, never dropped},
+  claim  = {Each known rejection gets its kind, and an unknown one is `other`, never dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_a_message_is_classified_by_its_shape},
+}
+
+@misc{corpus-codoncensus-first-error-is-read-out-of-coloured-output,
+  section = {exitcensus},
+  title  = {The colour codes are removed and the message after `error:` is returned},
+  claim  = {The colour codes are removed and the message after `error:` is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_the_first_error_is_read_out_of_coloured_output},
+}
+
+@misc{corpus-codoncensus-future-import-is-removed-only-as-a-whole-line,
+  section = {exitcensus},
+  title  = {The control: a mention elsewhere in the text is left alone},
+  claim  = {The control: a mention elsewhere in the text is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_the_future_import_is_removed_only_as_a_whole_line},
+}
+
+@misc{corpus-codoncensus-both-readings-are-taken-and-the-second-has-no-future-import,
+  section = {exitcensus},
+  title  = {As it is, the module is rejected for the import; without it Codon accepts this one},
+  claim  = {As it is, the module is rejected for the import; without it Codon accepts this one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_both_readings_are_taken_and_the_second_has_no_future_import},
+}
+
+@misc{corpus-codoncensus-census-reads-the-file-twice-and-never-edits-it,
+  section = {exitcensus},
+  title  = {The file keeps its import; the second compile sees a copy without it},
+  claim  = {The file keeps its import; the second compile sees a copy without it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_the_census_reads_the_file_twice_and_never_edits_it},
+}
+
+@misc{corpus-codoncensus-pick-keeps-src-modules-and-thins-evenly,
+  section = {exitcensus},
+  title  = {Tests, stubs, venvs and `__init__` are skipped; a sample takes every k-th sorted file},
+  claim  = {Tests, stubs, venvs and `__init__` are skipped; a sample takes every k-th sorted file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_pick_keeps_src_modules_and_thins_evenly},
+}
+
+@misc{corpus-codoncensus-tally-counts-accepted-and-each-kind,
+  section = {exitcensus},
+  title  = {The totals line: how many modules fall in each class for each reading},
+  claim  = {The totals line: how many modules fall in each class for each reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_the_tally_counts_accepted_and_each_kind},
+}
+
+@misc{corpus-codoncensus-main-refuses-a-missing-operand,
+  section = {exitcensus},
+  title  = {Usage: with no root it is exit 2 and the usage line on stderr},
+  claim  = {Usage: with no root it is exit 2 and the usage line on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_main_refuses_a_missing_operand},
+}
