@@ -87,6 +87,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_dependencies.py" = ["assert"]
+"tests/test_core.py" = ["assert"]
+# ⚑ `worst_view_dE` IS THE NAME el-openglo's callers and nemik import (the capital E is the
+# delta-E of colour science), so the public name cannot be snake_case without breaking them.
+"src/mikemol/cvdcore/core.py" = ["invalid-function-name"]
 # ⚑ THE STUB MIRRORS numpy's OWN NAME: the class is `ndarray` upstream, so CapWords cannot apply.
 "stubs/numpy/__init__.pyi" = ["invalid-class-name"]
 "tests/test_smoke.py" = ["assert"]

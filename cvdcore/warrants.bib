@@ -12,3 +12,84 @@
   claim  = {Both dependencies import by name, so the hub and the lock agree with the pyproject.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dependencies.py -k test_the_runtime_dependencies_import},
 }
+
+@misc{cvdcore-core-measurement-can-see-a-collapse,
+  section = {core},
+  title  = {A vermillion and an orange are closer than a vermillion and a blue, so the minimum varies},
+  claim  = {A vermillion and an orange are closer than a vermillion and a blue, so the minimum
+            varies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_measurement_can_see_a_collapse},
+}
+
+@misc{cvdcore-core-identical-colours-are-at-distance-zero,
+  section = {core},
+  title  = {The control: the same colour twice is no distance apart in any view},
+  claim  = {The control: the same colour twice is no distance apart in any view.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_identical_colours_are_at_distance_zero},
+}
+
+@misc{cvdcore-core-four-views-are-read,
+  section = {core},
+  title  = {The trichromat and the three simulated deficiencies},
+  claim  = {The trichromat and the three simulated deficiencies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_four_views_are_read},
+}
+
+@misc{cvdcore-core-collapsing-view-is-named,
+  section = {core},
+  title  = {The second value is the view that collapses the pair, a name and never an empty string},
+  claim  = {The second value is the view that collapses the pair, a name and never an empty string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_collapsing_view_is_named},
+}
+
+@misc{cvdcore-core-okabe-ito-floor-names-two-palette-members,
+  section = {core},
+  title  = {The tightest pair inside the palette is two of its members},
+  claim  = {The tightest pair inside the palette is two of its members.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_okabe_ito_floor_names_two_palette_members},
+}
+
+@misc{cvdcore-core-floor-is-a-positive-distance-and-is-stable,
+  section = {core},
+  title  = {Positive, and the memoised second call returns the same tuple},
+  claim  = {Positive, and the memoised second call returns the same tuple.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_floor_is_a_positive_distance_and_is_stable},
+}
+
+@misc{cvdcore-core-per-class-floors-are-the-one-number-twice,
+  section = {core},
+  title  = {Both classes carry the single tightest distance, which is not the whole tuple},
+  claim  = {Both classes carry the single tightest distance, which is not the whole tuple.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_per_class_floors_are_the_one_number_twice},
+}
+
+@misc{cvdcore-core-rgb-parses-a-comma-triple,
+  section = {core},
+  title  = {A comma-separated colour becomes its integers},
+  claim  = {A comma-separated colour becomes its integers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_rgb_parses_a_comma_triple},
+}
+
+@misc{cvdcore-core-repeated-measurement-through-the-memo-is-unchanged,
+  section = {core},
+  title  = {The memoised conversions give the same answer on the second ask, after other asks},
+  claim  = {The memoised conversions give the same answer on the second ask, after other asks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_repeated_measurement_through_the_memo_is_unchanged},
+}
+
+@misc{cvdcore-core-okabe-ito-floor-is-the-value-the-original-computed,
+  section = {core},
+  title  = {Pinned against el-openglo's cvd_core at 9a4be98: orange and purple under tritanomaly},
+  claim  = {Pinned against el-openglo's cvd_core at 9a4be98: orange and purple under tritanomaly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_the_okabe_ito_floor_is_the_value_the_original_computed},
+}
+
+@misc{cvdcore-core-pair-the-trichromat-view-collapses-is-measured-in-that-view,
+  section = {core},
+  title  = {A dark navy against a saturated blue is closest to the trichromat, not to a deficiency},
+  claim  = {A dark navy against a saturated blue is closest to the trichromat, not to a deficiency.
+            Found by search (seed 1, 400 random pairs): the first of four whose worst
+            view is the trichromat, which pins the plain sRGB1 conversion that the
+            deficient views do not exercise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_pair_the_trichromat_view_collapses_is_measured_in_that_view},
+}

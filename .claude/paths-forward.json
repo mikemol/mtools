@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-16T00:48:10Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6128,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 254,
+      "ticks_blocked": 255,
       "completed": null
     },
     {
@@ -6176,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 253,
+      "ticks_blocked": 254,
       "completed": null
     },
     {
@@ -10059,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 258,
+      "ticks_blocked": 259,
       "completed": null
     },
     {
@@ -11807,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 192,
+      "ticks_blocked": 193,
       "completed": null
     },
     {
@@ -16161,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16702,7 +16697,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17511,7 +17506,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -17554,7 +17549,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -17577,7 +17572,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -18002,7 +17997,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "completed": null
     },
     {
@@ -18178,7 +18173,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 156,
+      "ticks_blocked": 157,
       "completed": null
     },
     {
@@ -18961,7 +18956,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 155,
+      "ticks_blocked": 156,
       "completed": null
     },
     {
@@ -20683,7 +20678,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -21422,7 +21417,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 47,
+      "ticks_blocked": 48,
       "completed": null
     },
     {
@@ -21468,7 +21463,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 115,
+      "ticks_blocked": 116,
       "completed": null
     },
     {
@@ -21560,7 +21555,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 115,
+      "ticks_blocked": 116,
       "completed": null
     },
     {
@@ -21626,7 +21621,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -22027,7 +22022,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -22048,7 +22043,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -22069,7 +22064,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 100,
+      "ticks_blocked": 101,
       "completed": null
     },
     {
@@ -22478,7 +22473,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 99,
+      "ticks_blocked": 100,
       "completed": null
     },
     {
@@ -22500,7 +22495,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 99,
+      "ticks_blocked": 100,
       "completed": null
     },
     {
@@ -22606,7 +22601,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 79,
+      "ticks_blocked": 80,
       "completed": null
     },
     {
@@ -22887,7 +22882,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 79
+      "ticks_blocked": 80
     },
     {
       "symbol": "W1116",
@@ -22908,7 +22903,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 79
+      "ticks_blocked": 80
     },
     {
       "symbol": "W1117",
@@ -22926,7 +22921,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 79
+      "ticks_blocked": 80
     },
     {
       "symbol": "W1118",
@@ -22944,7 +22939,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 79
+      "ticks_blocked": 80
     },
     {
       "symbol": "W1119",
@@ -23450,7 +23445,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 12
+      "ticks_blocked": 13
     },
     {
       "symbol": "W1144",
@@ -23608,7 +23603,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 48
+      "ticks_blocked": 49
     },
     {
       "symbol": "W1151",
@@ -23654,7 +23649,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 67
+      "ticks_blocked": 68
     },
     {
       "symbol": "W1153",
@@ -23678,7 +23673,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 45,
+      "ticks_blocked": 46,
       "completed": null
     },
     {
@@ -24112,7 +24107,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -24574,7 +24569,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 15,
+      "ticks_blocked": 16,
       "completed": null
     },
     {
@@ -26340,7 +26335,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -26948,7 +26943,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1309",
       "last_worked": "2026-10-15T23:53:57Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 3,
       "completed": null
     },
     {
@@ -27015,7 +27010,7 @@
     {
       "symbol": "W1315",
       "title": "Move el-openglo's cvd_core (worst_view_dE, VIEWS, OKABE_ITO, reference_floor) into mikemol.cvdcore with its 7 selftest arms as pytest tests, typed under the bar",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1313"
       ],
@@ -27029,7 +27024,7 @@
       "issued_at": "2026-10-15T23:54:31Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
-      "last_worked": "2026-10-16T00:49:25Z",
+      "last_worked": "2026-10-16T01:08:41Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -27077,7 +27072,7 @@
     {
       "symbol": "W1318",
       "title": "Write typed stubs for the numpy and colorspacious surface cvd_core uses (asarray, linalg.norm, cspace_convert) under cvdcore/stubs, with mypy_path set",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1315"
       ],
@@ -27086,14 +27081,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After the dependencies card: list the exact calls in cvd_core.py at 9a4be98, write .pyi stubs mirroring only those names (as treeio/stubs/pygit2 does), set mypy_path in cvdcore/pyproject.toml, add per-file ignores for the stub names",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: Landed in mtools 8d8696a (pushed): cvdcore/stubs for numpy (ndarray, asarray, linalg.norm) and colorspacious (cspace_convert), mypy_path src:stubs, stubs staged in the bazel mypy target.",
       "issued_at": "2026-10-16T00:41:22Z",
       "minted_during": "interrupt",
       "caused_by": "W1315",
-      "last_worked": "2026-10-16T00:48:20Z",
+      "last_worked": "2026-10-16T01:00:04Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T010004Z"
     }
   ],
   "residue": [

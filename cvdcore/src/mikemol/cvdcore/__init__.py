@@ -3,5 +3,23 @@
 """mikemol.cvdcore: the worst-view colour-vision-deficiency distance core.
 
 The minimum CAM02-UCS distance between two colours over four views, and the Okabe-Ito reference
-floor (el-openglo:W544, for nemik:W438).
+floor (el-openglo:W544, for nemik:W438). The names are re-exported from `core`.
 """
+
+from mikemol.cvdcore.core import (
+    OKABE_ITO,
+    VIEWS,
+    reference_floor,
+    reference_floors,
+    rgb,
+    worst_view_dE,
+)
+
+__all__ = [
+    "OKABE_ITO",
+    "VIEWS",
+    "reference_floor",
+    "reference_floors",
+    "rgb",
+    "worst_view_dE",
+]
