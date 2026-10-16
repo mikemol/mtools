@@ -12,7 +12,12 @@ from __future__ import annotations
 from collections import Counter
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.cli_futureimport import IMPORT_LINE, measure, print_future_import
+from mikemol.pycodemod.cli_futureimport import (
+    IMPORT_LINE,
+    measure,
+    print_future_import,
+    print_future_import_tree,
+)
 from mikemol.pycodemod.cli_typedargs import PROBE_PREFIX, TypedArgsFlags
 
 if TYPE_CHECKING:
@@ -78,6 +83,32 @@ def test_a_name_the_planner_cannot_quote_is_refused_and_listed(
     assert target.read_text(encoding="utf-8") == BASE
     out = capsys.readouterr().out
     assert f'{target}:3 Lit["a"] | Later: an annotation holding a quote' in out
+
+
+def test_the_tree_driver_judges_each_project_by_its_own_venv_and_skips_one_without(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A project with src and a ruff is judged; one without either is named and skipped."""
+    good = tmp_path / "good"
+    (good / "src").mkdir(parents=True)
+    (good / ".venv" / "bin").mkdir(parents=True)
+    (good / ".venv" / "bin" / "ruff").write_text("", encoding="utf-8")
+    (good / "src" / NAME).write_text(QUOTABLE, encoding="utf-8")
+    bare = tmp_path / "bare"
+    bare.mkdir()
+    assert print_future_import_tree([str(good), str(bare)], write=False, run=_ruff) == 0
+    out = capsys.readouterr().out
+    assert f"would-write {good / 'src' / NAME}" in out
+    assert f"project {good} exit 0" in out
+    assert f"skipped {bare}" in out
+
+
+def test_a_string_that_spells_the_import_is_not_the_import(tmp_path: Path) -> None:
+    """The measure reads a statement: the line inside a docstring or literal counts for nothing."""
+    spelled = 'TEMPLATE = "from __future__ import annotations\\n"\n'
+    (tmp_path / NAME).write_text(spelled, encoding="utf-8")
+    counted = measure(tmp_path, tmp_path.joinpath(NAME).relative_to(tmp_path), _ruff)
+    assert counted == Counter()
 
 
 def test_the_measure_counts_the_import_line_as_a_finding(tmp_path: Path) -> None:

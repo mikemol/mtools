@@ -20,8 +20,10 @@ named, until it lands).
 from __future__ import annotations
 
 import json
+import sys
 from collections import Counter
 from dataclasses import replace
+from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from mikemol.pycodemod import futureimport
@@ -35,7 +37,6 @@ from mikemol.pycodemod.cli_typedargs import (
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from pathlib import Path
 
     from mikemol.pycodemod.cli_typedargs import Runner
 
@@ -61,7 +62,7 @@ def measure(root: Path, rel: Path, run: Runner) -> Counter[str] | str:
     found: Counter[str] = Counter()
     for record in cast("list[dict[str, object]]", json.loads(out or "[]")):
         found[str(record["message"])] += 1
-    if IMPORT_LINE in (root / rel).read_text(encoding="utf-8"):
+    if futureimport.has_future_import((root / rel).read_text(encoding="utf-8")):
         found[IMPORT_LINE] += 1
     return found
 
@@ -77,6 +78,29 @@ def plan_future_import(text: str) -> Plan:
     changes = planned.quoted + int(planned.removed)
     worklist = tuple((line, name, _WHY) for line, name in planned.unhandled)
     return Plan(planned.text, changes, worklist)
+
+
+def print_future_import_tree(roots: Sequence[str], *, write: bool, run: Runner = run_tool) -> int:
+    """Run `future-import` over each project's `src` tree, each judged by its own venv.
+
+    ⚑ ONE PROJECT AT A TIME, EACH UNDER ITS OWN JUDGE: a root with no `src` or no `.venv/bin/ruff`
+    is named and skipped, never judged by another project's tools. The exit is the worst of them.
+
+    Returns:
+        the largest exit code any project produced (0 done, 1 worklist, 2 a tool could not run).
+
+    """
+    worst = 0
+    for root in map(Path, roots):
+        if not (root / "src").is_dir() or not (root / ".venv" / "bin" / "ruff").exists():
+            sys.stdout.write(f"{LABEL} skipped {root}: no src tree or no .venv/bin/ruff\n")
+            continue
+        flags = TypedArgsFlags(root=str(root), write=write)
+        files = sorted(str(p) for p in (root / "src").rglob("*.py") if "__pycache__" not in p.parts)
+        code = print_future_import(files, flags, run)
+        sys.stdout.write(f"{LABEL} project {root} exit {code}\n")
+        worst = max(worst, code)
+    return worst
 
 
 def print_future_import(paths: Sequence[str], flags: TypedArgsFlags, run: Runner = run_tool) -> int:

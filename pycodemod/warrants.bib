@@ -6416,3 +6416,18 @@
             not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_name_imported_only_under_type_checking_is_quoted_and_a_real_import_is_not},
 }
+
+@misc{pycodemod-cli-futureimport-tree-driver-judges-each-project-by-its-own-venv-and-skips-one-without,
+  section = {cli_futureimport},
+  title  = {A project with src and a ruff is judged; one without either is named and skipped},
+  claim  = {A project with src and a ruff is judged; one without either is named and skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_the_tree_driver_judges_each_project_by_its_own_venv_and_skips_one_without},
+}
+
+@misc{pycodemod-cli-futureimport-string-that-spells-the-import-is-not-the-import,
+  section = {cli_futureimport},
+  title  = {The measure reads a statement: the line inside a docstring or literal counts for nothing},
+  claim  = {The measure reads a statement: the line inside a docstring or literal counts for
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_a_string_that_spells_the_import_is_not_the_import},
+}

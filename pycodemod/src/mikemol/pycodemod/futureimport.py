@@ -62,6 +62,22 @@ def _is_future(stmt: cst.BaseStatement) -> bool:
     )
 
 
+def has_future_import(text: str) -> bool:
+    """Say whether a module holds the sole `from __future__ import annotations` statement.
+
+    ⚑ A STATEMENT, NOT THE TEXT: a docstring or template that spells the line out is not it.
+
+    Returns:
+        True for the statement at module level; False for text that does not parse.
+
+    """
+    try:
+        module = cst.parse_module(text)
+    except cst.ParserSyntaxError:
+        return False
+    return any(_is_future(stmt) for stmt in module.body)
+
+
 def _checking(stmt: cst.BaseStatement) -> bool:
     # `if TYPE_CHECKING:` or `if typing.TYPE_CHECKING:` at module level.
     if not isinstance(stmt, cst.If):
