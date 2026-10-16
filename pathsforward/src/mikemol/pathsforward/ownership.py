@@ -41,7 +41,7 @@ def reference(path: Path) -> os.stat_result:
     return path.stat() if path.exists() else path.parent.stat()
 
 
-def adopt(target: Path, ref: os.stat_result, *, mode: int) -> None:
+def adopt(target: Path, ref: os.stat_result, mode: int) -> None:
     """Give `target` the reference's group and (when privileged) owner, and the stated mode."""
     target.chmod(mode)
     if privileged():

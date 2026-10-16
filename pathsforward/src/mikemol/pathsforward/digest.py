@@ -58,7 +58,7 @@ class Verdict:
     forms: tuple[str, ...] = ()
 
 
-def _full(waypoints: list[Json], separators: tuple[str, str], *, ensure_ascii: bool) -> str:
+def _full(waypoints: list[Json], separators: tuple[str, str], ensure_ascii: bool) -> str:
     """Hash one byte-form in full.
 
     Returns:

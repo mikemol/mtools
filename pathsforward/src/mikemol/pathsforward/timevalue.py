@@ -179,7 +179,7 @@ def _anchor_instant(value: str, day_zone: tzinfo) -> datetime:
     return datetime(when.year, when.month, when.day, tzinfo=day_zone)
 
 
-def fires_at(trigger: str, dtstart: str, due: str, *, day_zone: tzinfo) -> datetime | None:
+def fires_at(trigger: str, dtstart: str, due: str, day_zone: tzinfo) -> datetime | None:
     """Resolve one TRIGGER to the UTC instant it fires (W308, nemik:W146).
 
     ⚑ `day_zone` IS REQUIRED, NOT THE HOST'S: an all-day (DATE) anchor has no instant of its own.
@@ -219,7 +219,9 @@ def parse(text: str) -> TimeValue:
             raise RefusedError(msg)
         try:
             zone = ZoneInfo(zone_name)
-        except (ZoneInfoNotFoundError, ValueError):
+        except Exception as caught:
+            if not isinstance(caught, (ZoneInfoNotFoundError, ValueError)):
+                raise
             msg = f"{text!r}: unknown time zone {zone_name!r}"
             raise RefusedError(msg) from None
         timed = _TIME.fullmatch(stamp)

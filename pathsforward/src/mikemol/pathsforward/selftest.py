@@ -19,7 +19,7 @@ _LEGACY_PREFIX = 16
 _ROOT = "/"
 
 
-def _state(*, heartbeat: str = "t0", status: str = "ready", counter: int = 1) -> State:
+def _state(heartbeat: str = "t0", status: str = "ready", counter: int = 1) -> State:
     """Build a one-waypoint state.
 
     Returns:

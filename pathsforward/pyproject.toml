@@ -191,3 +191,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/pathsforward/digest.py" = ["boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/pathsforward/payload.py" = ["boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]

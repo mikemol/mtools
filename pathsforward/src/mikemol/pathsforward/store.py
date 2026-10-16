@@ -57,7 +57,11 @@ def load(path: Path) -> State:
     """
     try:
         return validate(cast("object", json.loads(path.read_text(encoding="utf-8"))))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError, MalformedStateError) as exc:
+    except Exception as exc:
+        if not isinstance(
+            exc, (OSError, UnicodeDecodeError, json.JSONDecodeError, MalformedStateError)
+        ):
+            raise
         msg = f"REFUSED: {path}: {exc}"
         raise UnreadableStateError(msg) from exc
 

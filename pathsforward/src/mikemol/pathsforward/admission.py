@@ -87,7 +87,9 @@ def admit(state: State, op: str, symbol: str, site: Site) -> str:
     """
     try:
         item, verdict = _verdict(state, symbol, site)
-    except (RefusedError, opa_eval.OpaUnavailableError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (RefusedError, opa_eval.OpaUnavailableError, ValueError)):
+            raise
         return f"admit: {symbol} not judged ({exc})"
     marks.append(
         store.sibling(site.state_path, marks.MARKS), marks.judged(op, site.now, item, verdict)

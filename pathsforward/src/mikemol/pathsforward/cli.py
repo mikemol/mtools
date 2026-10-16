@@ -2433,7 +2433,11 @@ def _certify(ctx: Ctx) -> int:
         )
         built = certify.items(state, symbols, where, ctx.stamp(), facts)
         found = opa_eval.verdicts(built, opa_eval.resolve())
-    except (ops.RefusedError, opa_eval.OpaUnavailableError, OSError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(
+            exc, (ops.RefusedError, opa_eval.OpaUnavailableError, OSError, ValueError)
+        ):
+            raise
         _warn(f"not certified: {exc}")
         return EXIT_REFUSED
     valid = [v for v in found if v.get("level") == "coverable" and not v.get("residue")]
@@ -2480,7 +2484,9 @@ def _mint_residue(ctx: Ctx) -> int:
 
     try:
         said, new = locked()
-    except (ops.RefusedError, opa_eval.OpaUnavailableError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (ops.RefusedError, opa_eval.OpaUnavailableError, ValueError)):
+            raise
         _warn(f"not minted: {exc}")
         return EXIT_REFUSED
     _say(said if new is None else f"{said} -> {new}")
@@ -2609,6 +2615,10 @@ def main(argv: list[str] | None = None) -> int:
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
     try:
         return _HANDLERS[mode](ctx)
-    except (store.UnreadableStateError, ops.RefusedError, MalformedEntryError, OSError) as exc:
+    except Exception as exc:
+        if not isinstance(
+            exc, (store.UnreadableStateError, ops.RefusedError, MalformedEntryError, OSError)
+        ):
+            raise
         _warn(f"REFUSED: {exc}")
         return EXIT_REFUSED

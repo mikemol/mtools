@@ -142,7 +142,7 @@ def _repeats_and_alarms(w: Json) -> list[str]:
     return lines
 
 
-def overrides(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
+def overrides(w: Json, repo: str, host: str, stamp: str) -> list[str]:
     """Write one COMPLETED VTODO per completed occurrence of a recurring waypoint (W310).
 
     ⚑ LIFE'S MODEL (the Akonadi and Google Tasks one): an override shares the series' UID, is keyed
@@ -171,7 +171,7 @@ def overrides(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
     return lines
 
 
-def todo(w: Json, *, repo: str, host: str, stamp: str) -> list[str]:
+def todo(w: Json, repo: str, host: str, stamp: str) -> list[str]:
     """Project one waypoint as a VTODO.
 
     Returns:
@@ -227,7 +227,7 @@ def _zones(state: State) -> dict[str, list[int]]:
     return zones
 
 
-def calendar(state: State, *, repo: str, host: str, stamp: str) -> str:
+def calendar(state: State, repo: str, host: str, stamp: str) -> str:
     """Project a whole queue as one VCALENDAR, residue omitted.
 
     `stamp` is the DTSTAMP, a UTC DATE-TIME, injected so the projection is a pure function.

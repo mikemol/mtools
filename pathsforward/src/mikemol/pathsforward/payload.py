@@ -293,7 +293,7 @@ def _pinned(live: list[Json]) -> int:
     )
 
 
-def ladder(n_live: int, *, has_host: bool, has_inbound: bool = False) -> list[_Rung]:
+def ladder(n_live: int, has_host: bool, has_inbound: bool = False) -> list[_Rung]:
     """List the rungs in order, from everything to the least a tick can act on.
 
     Returns:
