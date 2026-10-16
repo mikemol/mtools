@@ -42,7 +42,7 @@ if TYPE_CHECKING:
 LABEL = "future-import"
 IMPORT_LINE = "from __future__ import annotations"
 RUNTIME_RULES = "F821,TC004"
-_WHY = "a name in base position cannot be quoted; quote the whole annotation by hand"
+_WHY = "an annotation holding a quote or a line break is not quoted for you; quote it by hand"
 _CLIP = 200
 
 

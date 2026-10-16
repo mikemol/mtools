@@ -6359,13 +6359,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_class_naming_itself_is_quoted_and_one_already_defined_is_not},
 }
 
-@misc{pycodemod-futureimport-name-in-base-position-is-listed-and-left-unquoted,
-  section = {futureimport},
-  title  = {`Later.Inner` and `Later[int]` cannot be quoted at the base; they are named},
-  claim  = {`Later.Inner` and `Later[int]` cannot be quoted at the base; they are named.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_name_in_base_position_is_listed_and_left_unquoted},
-}
-
 @misc{pycodemod-futureimport-import-naming-another-feature-and-a-module-without-one-are-left-alone,
   section = {futureimport},
   title  = {Only the sole `annotations` import goes; no import means the text is returned unchanged},
@@ -6400,4 +6393,26 @@
   title  = {With the import present the measure holds one finding},
   claim  = {With the import present the measure holds one finding.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_futureimport.py -k test_the_measure_counts_the_import_line_as_a_finding},
+}
+
+@misc{pycodemod-futureimport-pending-name-in-base-position-quotes-the-whole-annotation,
+  section = {futureimport},
+  title  = {`Later.Inner` and `Later[int] | None` become one string each; nothing is left over},
+  claim  = {`Later.Inner` and `Later[int] | None` become one string each; nothing is left over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_pending_name_in_base_position_quotes_the_whole_annotation},
+}
+
+@misc{pycodemod-futureimport-annotation-holding-a-quote-is-listed-with-its-line-and-left-alone,
+  section = {futureimport},
+  title  = {A string inside the annotation would need escapes; it is named for the caller instead},
+  claim  = {A string inside the annotation would need escapes; it is named for the caller instead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_an_annotation_holding_a_quote_is_listed_with_its_line_and_left_alone},
+}
+
+@misc{pycodemod-futureimport-name-imported-only-under-type-checking-is-quoted-and-a-real-import-is-not,
+  section = {futureimport},
+  title  = {`Seq` and `numpy` exist only for the checker, so their annotations are quoted; `Path` not},
+  claim  = {`Seq` and `numpy` exist only for the checker, so their annotations are quoted; `Path`
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_name_imported_only_under_type_checking_is_quoted_and_a_real_import_is_not},
 }

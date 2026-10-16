@@ -25,9 +25,10 @@ if TYPE_CHECKING:
 
 _TAIL = "\n\nclass Later:\n    pass\n"
 QUOTABLE = "from __future__ import annotations\n\ndef f(x: Later) -> int:\n    return 1\n" + _TAIL
-BASE = "from __future__ import annotations\n\ndef f(x: Later.Inner) -> int:\n    return 1\n" + _TAIL
+BASE = 'from __future__ import annotations\n\ndef f(x: Lit["a"] | Later) -> int:\n    return 1\n'
+BASE += _TAIL
 NAME = "mod.py"
-_UNQUOTED = (": Later)", ": Later.")
+_UNQUOTED = (": Later)", "| Later)")
 
 
 def _ruff(argv: Sequence[str], cwd: Path) -> tuple[int, str, str]:
@@ -76,7 +77,7 @@ def test_a_name_the_planner_cannot_quote_is_refused_and_listed(
     assert print_future_import([str(target)], _flags(tmp_path, write=True), _ruff) == 1
     assert target.read_text(encoding="utf-8") == BASE
     out = capsys.readouterr().out
-    assert f"{target}:3 Later: a name in base position" in out
+    assert f'{target}:3 Lit["a"] | Later: an annotation holding a quote' in out
 
 
 def test_the_measure_counts_the_import_line_as_a_finding(tmp_path: Path) -> None:
