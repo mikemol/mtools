@@ -43,6 +43,43 @@ def _single_items(raw: str) -> list[str]:
     return [item.strip() for item in raw.split(",") if item.strip()]
 
 
+def add_for_file(text: str, path: str, rules: list[str], reason: str) -> str | None:
+    """Add `rules` for ONE file to `[tool.ruff.lint.per-file-ignores]`, with `reason` above them.
+
+    ⚑ NARROWER THAN THE GLOBAL LIST, AND THE ONLY ROUTE FOR A DIST THAT PINS ITS GLOBAL LIST
+    (hooks' `test_the_ignore_list_is_exactly_three_rules`, mtools:W1399): the exemption names the
+    file that needed it, never a glob. A file already listed with a one-line list is extended; a
+    file not yet listed gets a new entry at the end of the table.
+
+    Returns:
+        the new text; the text unchanged when every rule is already listed for the file; None when
+        there is no per-file table, or the file's entry is not a one-line list.
+
+    """
+    header = "[tool.ruff.lint.per-file-ignores]"
+    at = f"\n{text}".find(f"\n{header}\n")
+    if at < 0:
+        return None
+    start = at + len(header) + 1
+    after = _NEXT_TABLE.search(text, start)
+    end = after.start() if after else len(text)
+    body = text[start:end]
+    entry = re.search(rf'^"{re.escape(path)}" = \[(?P<items>[^\n\]]*)\]$', body, re.MULTILINE)
+    if entry is not None:
+        held = _single_items(cast("str", entry.group("items")))
+        fresh = [rule for rule in rules if f'"{rule}"' not in held]
+        if not fresh:
+            return text
+        joined = ", ".join([*held, *(f'"{rule}"' for rule in fresh)])
+        line = f'"{path}" = [{joined}]'
+        return text[:start] + body[: entry.start()] + line + body[entry.end() :] + text[end:]
+    comment = "".join(f"# {line}\n" for line in reason.splitlines())
+    listed = ", ".join(f'"{rule}"' for rule in rules)
+    block = f'{comment}"{path}" = [{listed}]\n'
+    trimmed = body.rstrip("\n")
+    return text[:start] + trimmed + "\n\n" + block + ("\n" if after else "") + text[end:]
+
+
 def add(text: str, rules: list[str], reason: str) -> str | None:
     """Add `rules` to the `[tool.ruff.lint]` ignore list, with `reason` as comments above them.
 

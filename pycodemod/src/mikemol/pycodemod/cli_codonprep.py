@@ -118,7 +118,12 @@ def _ignore_the_contradiction(root: Path, refusal: Refusal) -> str | None:
     """
     path = root / "pyproject.toml"
     before = path.read_text(encoding="utf-8")
-    after = ruffignore.add(before, sorted(refusal.rules), _WHY)
+    # ⚑ THE FILE THAT NEEDED IT, WHEN THE DIST HAS A PER-FILE TABLE (W1399): narrower than the
+    # global list, and the only route for a dist that pins that list (hooks).
+    named = str(Path(refusal.name).relative_to(root))
+    after = ruffignore.add_for_file(before, named, sorted(refusal.rules), _WHY)
+    if after is None:
+        after = ruffignore.add(before, sorted(refusal.rules), _WHY)
     if after is None or after == before:
         return None
     path.write_text(after, encoding="utf-8")

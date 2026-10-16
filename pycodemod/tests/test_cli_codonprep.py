@@ -169,6 +169,19 @@ def test_a_refusal_that_is_only_a_rule_the_rewrite_contradicts_is_switched_off_n
     assert "ruff rules switched off" in capsys.readouterr().out
 
 
+def test_a_dist_with_a_per_file_table_gets_the_rule_for_the_file_not_the_global_list(
+    tmp_path: Path,
+) -> None:
+    """The route for a dist that pins its global ignore list: only the offending file is exempt."""
+    root = _project(tmp_path)
+    pyproject = _PYPROJECT + '\n[tool.ruff.lint.per-file-ignores]\n"tests/*" = ["assert"]\n'
+    (root / "pyproject.toml").write_text(pyproject, encoding="utf-8")
+    assert print_codon_prep_tree([str(root)], write=True, run=_rule_bar(_BOOL_RULE)) == 0
+    written = (root / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'ignore = ["a"]' in written
+    assert f'"src/{NAME}" = ["{_BOOL_RULE}"]' in written
+
+
 def test_ruffs_help_lines_are_not_read_as_rules() -> None:
     """The control: `help: ...` reads like `rule: message` and must not make a refusal unfixable."""
     output = f"--- ruff ---\n{_BOOL_RULE}: a boolean\n   --> f.py:1:1\nhelp: make it keyword-only\n"

@@ -63,6 +63,44 @@ def test_a_rule_already_listed_is_not_added_twice_and_the_text_is_unchanged() ->
     assert _ignored(once).count(_RULE) == 1
 
 
+_PERFILE = (
+    '[tool.ruff.lint]\nselect = ["ALL"]\nignore = ["a"]\n\n'
+    '[tool.ruff.lint.per-file-ignores]\n"tests/*" = ["assert"]\n\n'
+    '[tool.ruff.lint.isort]\nknown-third-party = ["x"]\n'
+)
+_PATH = "src/p/m.py"
+
+
+def _per_file(text: str) -> dict[str, list[str]]:
+    table = _table(text, "tool", "ruff", "lint", "per-file-ignores")
+    return {key: list(cast("list[str]", value)) for key, value in table.items()}
+
+
+def test_a_new_file_gets_its_own_per_file_entry_and_the_global_list_is_untouched() -> None:
+    """The route for a dist that pins its global list: one file, the rules, the reason above."""
+    grown = ruffignore.add_for_file(_PERFILE, _PATH, [_RULE], _REASON)
+    assert grown is not None
+    assert _per_file(grown) == {"tests/*": ["assert"], _PATH: [_RULE]}
+    assert _ignored(grown) == ["a"]
+    assert f"# {_REASON}" in grown
+    assert _table(grown, "tool", "ruff", "lint", "isort") == {"known-third-party": ["x"]}
+
+
+def test_a_listed_file_is_extended_in_place_and_a_repeat_changes_nothing() -> None:
+    """Idempotent per file: the second rule joins the first; adding it again is a no-op."""
+    once = ruffignore.add_for_file(_PERFILE, _PATH, [_RULE], _REASON)
+    assert once is not None
+    twice = ruffignore.add_for_file(once, _PATH, [_OTHER], _REASON)
+    assert twice is not None
+    assert _per_file(twice)[_PATH] == [_RULE, _OTHER]
+    assert ruffignore.add_for_file(twice, _PATH, [_RULE, _OTHER], _REASON) == twice
+
+
+def test_no_per_file_table_is_none_so_the_caller_falls_back_to_the_global_list() -> None:
+    """The control: without the table there is nowhere narrower to put it."""
+    assert ruffignore.add_for_file(_SINGLE, _PATH, [_RULE], _REASON) is None
+
+
 def test_a_file_with_no_lint_table_or_no_ignore_list_is_none() -> None:
     """Nowhere to put the entry means no answer, not a guess."""
     assert ruffignore.add("[tool.ruff]\nline-length = 100\n", [_RULE], _REASON) is None
