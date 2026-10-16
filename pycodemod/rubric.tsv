@@ -75,3 +75,5 @@ typealias	The type-statement rewrite makes a plain alias or lists what it cannot
 cli_modes_reach	Each judged mode's command-line handler is reached through cli.main
 exceptsplit	An except tuple becomes one clause per exception with the same body
 cli_exceptsplit	The except-split mode writes a file only when the tuple count falls
+kwonly	A bare star marker is dropped so keyword-only parameters become ordinary
+cli_kwonly	The kwonly-drop mode writes a file only when the marker count falls

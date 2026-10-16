@@ -23,6 +23,7 @@ from pathlib import Path
 
 from mikemol.pycodemod.cli_exceptsplit import print_except_split
 from mikemol.pycodemod.cli_futureimport import print_future_import
+from mikemol.pycodemod.cli_kwonly import print_kwonly
 from mikemol.pycodemod.cli_typealias import print_type_alias
 from mikemol.pycodemod.cli_typedargs import Runner, TypedArgsFlags, run_tool
 from mikemol.pycodemod.cli_typingblocks import (
@@ -65,6 +66,7 @@ def _both(files: list[str], flags: TypedArgsFlags, run: Runner) -> int:
         print_typing_blocks(files, flags, run),
         print_future_import(files, flags, run),
         print_except_split(files, flags, run),
+        print_kwonly(files, flags, run),
     )
 
 

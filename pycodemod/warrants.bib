@@ -6621,3 +6621,52 @@
   claim  = {The row names the line; the file is untouched and the exit is 1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_exceptsplit.py -k test_a_tuple_the_planner_cannot_split_is_a_worklist_row_and_nothing_is_written},
 }
+
+@misc{pycodemod-kwonly-bare-star-is-dropped-and-the-parameters-behind-it-stay-in-order,
+  section = {kwonly},
+  title  = {`def run(path, *, write, root=None)` loses only the marker},
+  claim  = {`def run(path, *, write, root=None)` loses only the marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kwonly.py -k test_a_bare_star_is_dropped_and_the_parameters_behind_it_stay_in_order},
+}
+
+@misc{pycodemod-kwonly-marker-first-in-the-list-and-one-before-kwargs-both-go,
+  section = {kwonly},
+  title  = {`(*, a)` and `(x, *, a, **rest)` keep `**rest` last},
+  claim  = {`(*, a)` and `(x, *, a, **rest)` keep `**rest` last.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kwonly.py -k test_a_marker_first_in_the_list_and_one_before_kwargs_both_go},
+}
+
+@misc{pycodemod-kwonly-lambda-with-a-bare-star-loses-it-too,
+  section = {kwonly},
+  title  = {The marker is the same node in a lambda},
+  claim  = {The marker is the same node in a lambda.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kwonly.py -k test_a_lambda_with_a_bare_star_loses_it_too},
+}
+
+@misc{pycodemod-kwonly-star-args-marker-and-an-unmarked-signature-are-untouched,
+  section = {kwonly},
+  title  = {`*args` is not bare and a plain signature has nothing to drop},
+  claim  = {`*args` is not bare and a plain signature has nothing to drop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kwonly.py -k test_a_star_args_marker_and_an_unmarked_signature_are_untouched},
+}
+
+@misc{pycodemod-kwonly-keyword-only-parameter-without-a-default-after-a-default-is-listed-and-left,
+  section = {kwonly},
+  title  = {`def f(a, b=1, *, c)` has no plain spelling: the line is named and the text kept},
+  claim  = {`def f(a, b=1, *, c)` has no plain spelling: the line is named and the text kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kwonly.py -k test_a_keyword_only_parameter_without_a_default_after_a_default_is_listed_and_left},
+}
+
+@misc{pycodemod-cli-kwonly-flattenable-signature-is-written-when-the-marker-count-falls,
+  section = {cli_kwonly},
+  title  = {The marker goes; the judge saw the count go from one to none},
+  claim  = {The marker goes; the judge saw the count go from one to none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_kwonly.py -k test_a_flattenable_signature_is_written_when_the_marker_count_falls},
+}
+
+@misc{pycodemod-cli-kwonly-signature-the-planner-cannot-flatten-is-a-worklist-row-and-nothing-is-written,
+  section = {cli_kwonly},
+  title  = {The row names the line; the file is untouched and the exit is 1},
+  claim  = {The row names the line; the file is untouched and the exit is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_kwonly.py -k test_a_signature_the_planner_cannot_flatten_is_a_worklist_row_and_nothing_is_written},
+}
