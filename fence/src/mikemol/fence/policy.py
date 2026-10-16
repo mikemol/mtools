@@ -155,6 +155,8 @@ def load(path: Path) -> list[Spec]:
         return []
     try:
         doc: object = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (OSError, tomllib.TOMLDecodeError)):
+            raise
         raise PolicyError([f"{path}: {problem}"]) from problem
     return parse(doc)

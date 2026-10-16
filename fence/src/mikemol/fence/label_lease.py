@@ -58,7 +58,7 @@ def peaks_of(rows: Iterable[ledger.Row], label: str) -> list[float]:
 
 
 def lease(
-    rows: Iterable[ledger.Row], label: str, *, default_mb: int, ceiling_mb: int
+    rows: Iterable[ledger.Row], label: str, default_mb: int, ceiling_mb: int
 ) -> autosize.Sizing:
     """Return the memory lease for `label` — `autosize.size` over that label's peaks.
 
@@ -207,7 +207,7 @@ def module_ledger(module: Path) -> Path:
     return module.parent / MODULE_LEDGER_NAME
 
 
-def module_lease(module: Path, *, default_mb: int, ceiling_mb: int) -> autosize.Sizing:
+def module_lease(module: Path, default_mb: int, ceiling_mb: int) -> autosize.Sizing:
     """Return `module`'s lease — `autosize.size` over THAT MODULE's peaks, never its label's.
 
     ⚑ A MISSING OR UNREADABLE LEDGER IS NO HISTORY, and no history is the default, as bash's

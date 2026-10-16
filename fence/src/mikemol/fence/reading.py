@@ -56,7 +56,9 @@ def endpoint_url(name: str, environ: Mapping[str, str]) -> str | None:
         return None
     try:
         doc: object = json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     if not isinstance(doc, dict):
         return None
@@ -125,7 +127,9 @@ def fetch(url: str, timeout: float) -> object:
         connection.request("GET", f"{parts.path}?{parts.query}")
         body = connection.getresponse().read().decode("utf-8")
         parsed: object = json.loads(body)
-    except (OSError, ValueError, HTTPException):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError, HTTPException)):
+            raise
         return None
     finally:
         connection.close()

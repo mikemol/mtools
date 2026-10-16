@@ -61,7 +61,7 @@ class Sizing:
     clamped_from: float | None = None
 
 
-def size(peaks: Sequence[float], *, default: int, ceiling: int) -> Sizing:
+def size(peaks: Sequence[float], default: int, ceiling: int) -> Sizing:
     """Return the lease for a key whose recorded peaks are `peaks`.
 
     ⚑ NO HISTORY IS THE DEFAULT, NOT A GUESS FROM NOTHING — and the default is itself under the one

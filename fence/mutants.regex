@@ -58,7 +58,7 @@ src/mikemol/fence/guard.py|hold-zero-allowed|if hold < 1:|if hold < 0:|def=trip_
 src/mikemol/fence/reading.py|foreign-scheme-followed|return url if scheme in _SCHEMES else None|return url|def=endpoint_url
 src/mikemol/fence/reading.py|nan-is-a-reading|return None if math\.isnan\(number\) else number|return number|def=value_of
 src/mikemol/fence/reading.py|error-answer-read|if top\.get\("status"\) != "success" or not isinstance\(data, dict\):|if not isinstance(data, dict):|def=value_of
-src/mikemol/fence/reading.py|failure-raises|except \(OSError, ValueError, HTTPException\):|except HTTPException:|def=fetch
+src/mikemol/fence/reading.py|failure-raises|if not isinstance\(caught, \(OSError, ValueError, HTTPException\)\):|if not isinstance(caught, HTTPException):|def=fetch
 src/mikemol/fence/policy.py|bool-samples-accepted|isinstance\(samples, int\) and not isinstance\(samples, bool\) and samples >= 1|isinstance(samples, int) and samples >= 1|def=_problems
 src/mikemol/fence/policy.py|unknown-key-ignored|found \+= \[f"\{label\}: unknown key \{key!r\}" for key in raw if key not in _KEYS\]|found += []|def=_problems
 src/mikemol/fence/guard_cli.py|signal-status-lost|return _SIGNAL_BASE - code if code < 0 else code|return code|def=exit_status

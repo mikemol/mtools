@@ -714,7 +714,9 @@ def zram_fraction(stat: Path) -> float | None:
     """
     try:
         fields = [int(value) for value in stat.read_text(encoding="utf-8").split()[:_ZRAM_FIELDS]]
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     if len(fields) < _ZRAM_FIELDS or fields[_ZRAM_LIMIT] <= 0:
         return None

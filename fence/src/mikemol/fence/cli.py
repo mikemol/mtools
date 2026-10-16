@@ -187,7 +187,7 @@ def _sweep_payload(results: list[core.Result]) -> core.ResultJSON:
     }
 
 
-def _report_ratchet(results: list[core.Result], *, json_out: bool) -> int:
+def _report_ratchet(results: list[core.Result], json_out: bool) -> int:
     """Render a ratchet sweep and name the binding constraint, if there was one.
 
     ⚑⚑⚑ EXTRACTED SO THE `try` CAN GUARD WHAT IT ACTUALLY CATCHES. This code used to sit INSIDE a

@@ -225,7 +225,7 @@ def waiting_of(env: Mapping[str, str]) -> admit.Waiting:
     )
 
 
-def megabytes(raw: str, *, zero_ok: bool) -> int:
+def megabytes(raw: str, zero_ok: bool) -> int:
     """Return `raw` as whole MB — bash's `_valid_mb`, which admits no zero for a total.
 
     Returns:
@@ -347,7 +347,7 @@ class RunArgs:
     command: tuple[str, ...]
 
     @classmethod
-    def parse(cls, args: Sequence[str], *, verb: str = _RUN) -> "RunArgs":
+    def parse(cls, args: Sequence[str], verb: str = _RUN) -> "RunArgs":
         """Read `MB|auto [LABEL] -- CMD...`, naming `verb` in any complaint.
 
         ⚑ A ZERO LEASE IS ALLOWED: a claim needs no capacity (`admit.decide`) — but under `run` it
@@ -373,9 +373,7 @@ class RunArgs:
         return cls(mb, label, command)
 
 
-def request_of(
-    call: RunArgs, env: Mapping[str, str], *, parent: str | None = None
-) -> admit.Request:
+def request_of(call: RunArgs, env: Mapping[str, str], parent: str | None = None) -> admit.Request:
     """Return the admission request for a sized call, nested under `parent` or the env's lease.
 
     `parent`, when given, is the lease to nest under — `own_parent`'s answer, which drops an

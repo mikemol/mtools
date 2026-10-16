@@ -296,7 +296,9 @@ def read_peak(cg: Path) -> int | None:
     """
     try:
         return int((cg / "memory.peak").read_text(encoding="utf-8").strip())
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
 
 
