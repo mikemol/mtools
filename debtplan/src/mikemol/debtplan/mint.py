@@ -61,6 +61,9 @@ HOW = "so the edit gate stops refusing it"
 AMBIGUITY_TAG = " ambiguity: "
 """What follows the file prefix' stem in the ambiguity cards' prefix."""
 
+IDIOM_TAG = " idiom: "
+"""What follows the file prefix' stem in the idiom cards' prefix."""
+
 
 class MintRefusedError(RuntimeError):
     """The queue's writer refused a step; the message is the step and the writer's own words."""
@@ -93,6 +96,15 @@ class Style:
     def ambiguity(self) -> str:
         """Name the title prefix of the ambiguity cards."""
         return self.prefix.removesuffix(": ") + AMBIGUITY_TAG
+
+    @property
+    def idiom(self) -> str:
+        """Name the title prefix of the idiom cards (mtools:W1370).
+
+        It starts `<repo> debt idiom: `, which neither is nor starts with the file prefix
+        `<repo> debt: `, so one kind of card is never read as the other.
+        """
+        return self.prefix.removesuffix(": ") + IDIOM_TAG
 
 
 @dataclass(frozen=True, slots=True)
@@ -312,6 +324,84 @@ def _retire(plan: Plan, queue: Queue, style: Style) -> int:
                 )
                 retired += 1
     return retired
+
+
+def idiom_title(idiom: str, files: int, findings: int, prefix: str) -> str:
+    """Title the one card of an idiom.
+
+    Returns:
+        `<prefix><idiom> (<files> files, <findings> findings)`.
+
+    """
+    return f"{prefix}{idiom} ({files} files, {findings} findings)"
+
+
+def idiom_step(how: str, ambiguous: int) -> str:
+    """Say what the idiom card's next bounded step is.
+
+    Returns:
+        The mechanization run, then where the per-file rows live; a count of unsettled import names
+        is added when there are any.
+
+    """
+    tail = f"; {ambiguous} import name(s) need a declared resolution" if ambiguous else ""
+    return f"{how}; the per-file rows are the ledger (`mikemol-debtplan plan` orders them){tail}"
+
+
+def mint_idiom(plan: Plan, queue: Queue, style: Style, idiom: str, how: str) -> Minted:
+    """Sync ONE card for the whole ledger, never one per file (mtools:W1370).
+
+    ⚑⚑ PER-FILE DEBT IS DATA, NOT WORK ITEMS. A repository's debt ledger already holds each file's
+    count; a card per file only widens the frontier (about 2,300 machine debt cards across the fleet
+    were each smaller than a day of completion capacity). The card is keyed by the idiom's name, so
+    a re-run rewrites its counts and step and never mints a second one, and it is marked done when
+    the ledger is empty. Per-file cards that an earlier `mint` made are left alone: folding them is
+    the migration's job (W1371), never this sync's.
+
+    Returns:
+        The counts of cards added, rewritten and retired (zero or one of each).
+
+    Raises:
+        MintRefusedError: The tick lock is held by another holder, or the writer refused a step.
+
+    """
+    code, out = queue.run("--lock", HOLDER)
+    if code != 0:
+        msg = f"cannot take the tick lock (exit {code}): {out.strip()}"
+        raise MintRefusedError(msg)
+    try:
+        findings = sum(row.count for row in plan.rows)
+        title = idiom_title(idiom, len(plan.rows), findings, style.idiom)
+        added = 0
+        if idiom not in queue.cards(style.idiom):
+            _call(queue, "--add", title)
+            added = 1
+        card = queue.cards(style.idiom).get(idiom)
+        if card is None:
+            msg = f"the idiom card for {idiom} was added and could not be read back"
+            raise MintRefusedError(msg)
+        gone = not plan.rows
+        status = "done" if gone else ("working" if card.status == "working" else "ready")
+        _call(
+            queue,
+            "--update",
+            card.symbol,
+            "--title",
+            title,
+            "--next",
+            idiom_step(how, len(candidates_of(plan))),
+            "--touches",
+            *style.touches,
+            "--status",
+            status,
+            "--vector",
+            style.vector,
+            "--vector-source",
+            "agent",
+        )
+    finally:
+        queue.run("--unlock", HOLDER)
+    return Minted(added, 1, 1 if gone and card.status != "done" else 0)
 
 
 def mint(plan: Plan, queue: Queue, style: Style) -> Minted:

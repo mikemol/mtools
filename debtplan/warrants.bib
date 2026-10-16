@@ -936,3 +936,59 @@
   claim  = {Where x waits on a dead end y and on z, and z waits on x, the loop is x, z, x without y.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cycle.py -k test_a_finished_branch_is_not_part_of_a_later_cycle},
 }
+
+@misc{debtplan-mint-idiom-many-files-make-one-card-with-the-counts-in-its-title,
+  section = {mint_idiom},
+  title  = {Three files, six findings: one card, titled with both, and no per-file card},
+  claim  = {Three files, six findings: one card, titled with both, and no per-file card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_many_files_make_one_card_with_the_counts_in_its_title},
+}
+
+@misc{debtplan-mint-idiom-second-run-rewrites-the-one-card-and-mints-none,
+  section = {mint_idiom},
+  title  = {The key is the idiom's name: a re-run adds nothing and the title follows the counts},
+  claim  = {The key is the idiom's name: a re-run adds nothing and the title follows the counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_a_second_run_rewrites_the_one_card_and_mints_none},
+}
+
+@misc{debtplan-mint-idiom-step-names-the-run-and-the-card-is-ready,
+  section = {mint_idiom},
+  title  = {The next step says how it retires, and where the per-file rows live},
+  claim  = {The next step says how it retires, and where the per-file rows live.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_the_step_names_the_run_and_the_card_is_ready},
+}
+
+@misc{debtplan-mint-idiom-empty-ledger-retires-the-card-once,
+  section = {mint_idiom},
+  title  = {Nothing left to pay down: the card is done, and a further run retires nothing},
+  claim  = {Nothing left to pay down: the card is done, and a further run retires nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_an_empty_ledger_retires_the_card_once},
+}
+
+@misc{debtplan-mint-idiom-card-being-worked-keeps-its-status,
+  section = {mint_idiom},
+  title  = {A re-run must not demote the card in hand},
+  claim  = {A re-run must not demote the card in hand.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_a_card_being_worked_keeps_its_status},
+}
+
+@misc{debtplan-mint-idiom-idiom-prefix-is-not-the-file-prefix-and-does-not-start-with-it,
+  section = {mint_idiom},
+  title  = {`p debt idiom: ` and `p debt: ` differ, so neither kind of card is read as the other},
+  claim  = {`p debt idiom: ` and `p debt: ` differ, so neither kind of card is read as the other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_the_idiom_prefix_is_not_the_file_prefix_and_does_not_start_with_it},
+}
+
+@misc{debtplan-mint-idiom-refused-step-is-raised-and-the-lock-is-released,
+  section = {mint_idiom},
+  title  = {The writer's refusal is loud, and a later mint can take the lock},
+  claim  = {The writer's refusal is loud, and a later mint can take the lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mint_idiom.py -k test_a_refused_step_is_raised_and_the_lock_is_released},
+}
+
+@misc{debtplan-cli-mint-idiom-makes-one-card-for-the-whole-ledger-and-no-card-per-file,
+  section = {cli},
+  title  = {Three ledger files make ONE idiom card and no file card; the summary says so (W1370)},
+  claim  = {Three ledger files make ONE idiom card and no file card; the summary says so (W1370).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_mint_idiom_makes_one_card_for_the_whole_ledger_and_no_card_per_file},
+}

@@ -24,7 +24,15 @@ from mikemol.pathwalk.walk import WorktreeRefusedError
 
 from mikemol.debtplan.config import read_config
 from mikemol.debtplan.ledger import read_ledger
-from mikemol.debtplan.mint import HOW, TOUCHES, VECTOR, MintRefusedError, Style, mint
+from mikemol.debtplan.mint import (
+    HOW,
+    TOUCHES,
+    VECTOR,
+    MintRefusedError,
+    Style,
+    mint,
+    mint_idiom,
+)
 from mikemol.debtplan.plan import Plan, plan
 from mikemol.debtplan.queue import Queue
 from mikemol.debtplan.resolutions import read_resolutions
@@ -80,6 +88,7 @@ class Args(argparse.Namespace):
     how: str
     touches: list[str] | None
     vector: str
+    idiom: str
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -120,6 +129,16 @@ def _parser() -> argparse.ArgumentParser:
     minting.add_argument("--how", default=HOW, help="how a ready card says its file is cleared")
     minting.add_argument("--touches", nargs="+", help="the tags a card carries; default: debt")
     minting.add_argument("--vector", default=VECTOR, help="the WV:1 vector a card carries")
+    # ⚑ ONE CARD FOR THE WHOLE LEDGER (W1370): `mint-idiom` never makes a card per file.
+    collapsing = commands.add_parser(
+        "mint-idiom", parents=[common], help="sync ONE card for the whole ledger, never per file"
+    )
+    collapsing.add_argument("--idiom", required=True, help="the idiom's name, the card's key")
+    collapsing.add_argument("--how", required=True, help="the mechanization run that retires it")
+    collapsing.add_argument("--state", type=Path, help="default: ROOT/.claude/paths-forward.json")
+    collapsing.add_argument("--prefix", help="the card title prefix; default: '<repo> debt: '")
+    collapsing.add_argument("--touches", nargs="+", help="the tags the card carries; default: debt")
+    collapsing.add_argument("--vector", default=VECTOR, help="the WV:1 vector the card carries")
     return parser
 
 
@@ -196,6 +215,25 @@ def _mint(args: Args, planned: Plan) -> int:
     return EXIT_OK
 
 
+def _mint_idiom(args: Args, planned: Plan) -> int:
+    """Sync the repository's one idiom card to the plan and say what changed.
+
+    Returns:
+        0 after the sync.
+
+    """
+    state = args.state or args.root / ".claude" / "paths-forward.json"
+    prefix = args.prefix or f"{args.root.resolve().name} debt: "
+    touches = tuple(args.touches) if args.touches else TOUCHES
+    style = Style(prefix, args.how, touches, args.vector)
+    done = mint_idiom(planned, Queue(state), style, args.idiom, args.how)
+    sys.stdout.write(
+        f"mikemol-debtplan: idiom card added {done.added}, rewrote {done.updated}, "
+        f"retired {done.retired}\n"
+    )
+    return EXIT_OK
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Plan a debt ledger, or mint it into the repository's queue.
 
@@ -210,6 +248,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             sys.stderr.write(_skipped(universe))
         if args.command == "mint":
             return _mint(args, planned)
+        if args.command == "mint-idiom":
+            return _mint_idiom(args, planned)
     except (OSError, ValueError, MintRefusedError, WorktreeRefusedError) as exc:
         sys.stderr.write(f"mikemol-debtplan: {exc}\n")
         return EXIT_CANNOT

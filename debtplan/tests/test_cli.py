@@ -248,6 +248,21 @@ def test_mint_options_set_the_step_the_tags_and_the_vector(tmp_path: Path) -> No
     assert text(record, "vector") == vector
 
 
+def test_mint_idiom_makes_one_card_for_the_whole_ledger_and_no_card_per_file(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Three ledger files make ONE idiom card and no file card; the summary says so (W1370)."""
+    ledger = _chain(tmp_path)
+    queue = Queue(tmp_path / "pf.json")
+    queue.run("--init")
+    options = ["--idiom", "mypy", "--how", "run the typed-args codemod", "--prefix", "t: "]
+    args = ["mint-idiom", *_args(tmp_path, ledger, "--no-universe", *options)]
+    assert main([*args, "--state", str(queue.state)]) == EXIT_OK
+    assert capsys.readouterr().out == "mikemol-debtplan: idiom card added 1, rewrote 1, retired 0\n"
+    assert set(queue.cards("t idiom: ")) == {"mypy"}
+    assert not queue.cards("t: ")
+
+
 def test_a_refused_mint_is_exit_2_and_says_why(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
