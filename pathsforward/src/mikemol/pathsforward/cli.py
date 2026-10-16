@@ -45,6 +45,7 @@ from mikemol.pathsforward import (
     selftest,
     session,
     store,
+    triage,
     vtodo,
 )
 from mikemol.pathsforward.advice import close_applied as close_advice
@@ -226,6 +227,38 @@ def _close_umbrellas(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _triage(ctx: Ctx) -> int:
+    """Propose the repairs that shrink the ready frontier; a dry run unless `--write` (W1332).
+
+    ⚑ DRY RUN FIRST, as `--block-behind-open`, and through the same advice store so a host can
+    apply a queue's proposals from a record. A card stored ready that still waits, an umbrella
+    edge pointing at the child it minted, and a duplicate are proposed; nothing is closed as done
+    and no dependency is invented (see `triage`).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        found = triage.plan(state)
+        planned = [
+            (
+                item.symbol,
+                f"{item.kind} {item.symbol}",
+                item.said.replace("WOULD ", "DONE " if write else "WOULD "),
+            )
+            for item in found
+        ]
+        _advise(ctx, state, ("triage", "frontier"), planned)
+        if write:
+            triage.apply(state, found, ctx.stamp())
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _lift(ctx: Ctx) -> int:
     """Lift the one held row a signed operator ruling names (W1277, W1194).
 
@@ -294,6 +327,7 @@ _FLAGS = (
     "prune_landed",
     "block_behind_open",
     "close_umbrellas",
+    "triage",
     "inbound",
     "preamble_clear",
     "outcomes_clear",
@@ -471,6 +505,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "prune_landed": frozenset({"root"}),
     "block_behind_open": frozenset({"write"}),
     "close_umbrellas": frozenset({"write"}),
+    "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
     "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote"}),
@@ -2334,6 +2369,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
     "close_umbrellas": _close_umbrellas,
+    "triage": _triage,
     "lift": _lift,
     "inbound": _inbound,
     "ledger": _ledger_mode,

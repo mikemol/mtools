@@ -65,3 +65,5 @@ lift	A signed operator ruling lifts exactly one held row
 lift_cli	--lift takes a signed ruling and the operator's public key
 session	The session process behind a tick lock
 lock_session	A tick lock is stale when its session process is gone
+triage	Frontier triage proposals
+triage_cli	Frontier triage on the command line

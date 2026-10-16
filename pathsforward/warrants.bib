@@ -5136,3 +5136,99 @@
   claim  = {W1297: a refusal and a divergence may share an exit value, so the line is what to read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_payload.py -k test_the_reconcile_line_names_the_divergence_line_not_an_exit_number},
 }
+
+@misc{pathsforward-triage-ready-card-that-still-waits-on-an-open-card-is-proposed-blocked,
+  section = {triage},
+  title  = {W2 stored ready with W1 (open) in blocked_on: it is waiting, and says it is not},
+  claim  = {W2 stored ready with W1 (open) in blocked_on: it is waiting, and says it is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_a_ready_card_that_still_waits_on_an_open_card_is_proposed_blocked},
+}
+
+@misc{pathsforward-triage-blocker-that-is-closed-or-absent-is-left-to-the-prune,
+  section = {triage},
+  title  = {The control: W1 is done and W9 is nothing here, so there is nothing to block on},
+  claim  = {The control: W1 is done and W9 is nothing here, so there is nothing to block on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_a_blocker_that_is_closed_or_absent_is_left_to_the_prune},
+}
+
+@misc{pathsforward-triage-foreign-card-or-an-operator-ask-is-a-wait-too,
+  section = {triage},
+  title  = {repo:W<n> and 'operator: ...' are waits the queue cannot see, and both are proposed},
+  claim  = {repo:W<n> and 'operator: ...' are waits the queue cannot see, and both are proposed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_a_foreign_card_or_an_operator_ask_is_a_wait_too},
+}
+
+@misc{pathsforward-triage-applying-a-block-keeps-the-blocker-and-names-the-kind,
+  section = {triage},
+  title  = {The card becomes blocked, agent for a card and human for an operator ask},
+  claim  = {The card becomes blocked, agent for a card and human for an operator ask.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_applying_a_block_keeps_the_blocker_and_names_the_kind},
+}
+
+@misc{pathsforward-triage-umbrella-that-enables-the-child-it-waits-on-is-flipped,
+  section = {triage},
+  title  = {W1 enables W2 and is blocked on W2: a ring in the record, so W2 is the child},
+  claim  = {W1 enables W2 and is blocked on W2: a ring in the record, so W2 is the child.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_an_umbrella_that_enables_the_child_it_waits_on_is_flipped},
+}
+
+@misc{pathsforward-triage-follow-on-minted-by-its-predecessor-is-not-flipped,
+  section = {triage},
+  title  = {The control that the first version failed: W2 was minted by W1 but W1 is not waiting on it},
+  claim  = {The control that the first version failed: W2 was minted by W1 but W1 is not waiting on
+            it. A follow-on card is minted by the card it follows, and W1 enabling it is
+            a true prerequisite.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_a_follow_on_minted_by_its_predecessor_is_not_flipped},
+}
+
+@misc{pathsforward-triage-two-open-cards-with-the-same-touches-and-title-are-one-card,
+  section = {triage},
+  title  = {The later is dropped with the earlier named, and the earlier is untouched},
+  claim  = {The later is dropped with the earlier named, and the earlier is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_two_open_cards_with_the_same_touches_and_title_are_one_card},
+}
+
+@misc{pathsforward-triage-different-titles-under-the-same-touches-are-not-duplicates,
+  section = {triage},
+  title  = {The control that sets the threshold: shared touches alone prove nothing about the title},
+  claim  = {The control that sets the threshold: shared touches alone prove nothing about the title.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_different_titles_under_the_same_touches_are_not_duplicates},
+}
+
+@misc{pathsforward-triage-cards-with-no-touches-are-never-duplicates-of-each-other,
+  section = {triage},
+  title  = {Two untagged cards with one title have only the words in common, which is not enough},
+  claim  = {Two untagged cards with one title have only the words in common, which is not enough.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_cards_with_no_touches_are_never_duplicates_of_each_other},
+}
+
+@misc{pathsforward-triage-similar-titles-under-different-touches-or-too-short-are-not-duplicates,
+  section = {triage},
+  title  = {The controls: another touches tag keeps them apart, and a short title proves nothing},
+  claim  = {The controls: another touches tag keeps them apart, and a short title proves nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_similar_titles_under_different_touches_or_too_short_are_not_duplicates},
+}
+
+@misc{pathsforward-triage-cli-dry-run-proposes-and-saves-nothing,
+  section = {triage_cli},
+  title  = {W2 is stored ready while waiting on W1: the line is printed and the card stays ready},
+  claim  = {W2 is stored ready while waiting on W1: the line is printed and the card stays ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage_cli.py -k test_a_dry_run_proposes_and_saves_nothing},
+}
+
+@misc{pathsforward-triage-cli-write-applies-the-proposal,
+  section = {triage_cli},
+  title  = {With --write the card is stored blocked and the line says it was done},
+  claim  = {With --write the card is stored blocked and the line says it was done.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage_cli.py -k test_write_applies_the_proposal},
+}
+
+@misc{pathsforward-triage-series-that-differs-only-in-the-file-it-names-is-not-a-duplicate,
+  section = {triage},
+  title  = {The false positive the first dry run found: 91 of gabion's per-file debt cards},
+  claim  = {The false positive the first dry run found: 91 of gabion's per-file debt cards. 'debt:
+            <path> (2 findings)' over many files is one title with the file changed, and
+            the words overlap almost wholly. Two titles are one card only if they name
+            the same things.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_a_series_that_differs_only_in_the_file_it_names_is_not_a_duplicate},
+}

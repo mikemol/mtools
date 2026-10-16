@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1318,
+  "counter": 1332,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 255,
+      "ticks_blocked": 256,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 254,
+      "ticks_blocked": 255,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 259,
+      "ticks_blocked": 260,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 193,
+      "ticks_blocked": 194,
       "completed": null
     },
     {
@@ -16156,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16697,7 +16697,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17506,7 +17506,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "completed": null
     },
     {
@@ -17549,7 +17549,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "completed": null
     },
     {
@@ -17572,7 +17572,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 158,
+      "ticks_blocked": 159,
       "completed": null
     },
     {
@@ -17997,7 +17997,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 159,
+      "ticks_blocked": 160,
       "completed": null
     },
     {
@@ -18173,7 +18173,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 157,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -18956,7 +18956,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 156,
+      "ticks_blocked": 157,
       "completed": null
     },
     {
@@ -20678,7 +20678,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 13,
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -21417,7 +21417,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 48,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -21463,7 +21463,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 116,
+      "ticks_blocked": 117,
       "completed": null
     },
     {
@@ -21555,7 +21555,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 116,
+      "ticks_blocked": 117,
       "completed": null
     },
     {
@@ -21621,7 +21621,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 37,
       "completed": null
     },
     {
@@ -22022,7 +22022,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 13,
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -22043,7 +22043,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 13,
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -22064,7 +22064,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 101,
+      "ticks_blocked": 102,
       "completed": null
     },
     {
@@ -22171,7 +22171,7 @@
     {
       "symbol": "W1080",
       "title": "--tick-close also trims the closed card from blocked_on, promotes a named next card to working, and prints the nemik warning delta by shape",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1143"
       ],
@@ -22179,8 +22179,10 @@
         "pathsforward",
         "kata"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1246"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "2026-10-13: 2026-10-13 luthen's additions: after closing Wn, trim Wn from every dependent's blocked_on (--bump-blocked, local citations), promote a named card to working (--next Wm), print the nemik-warning delta (before and after, by shape).",
       "issued_at": "2026-10-13T01:38:56Z",
@@ -22473,7 +22475,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 100,
+      "ticks_blocked": 101,
       "completed": null
     },
     {
@@ -22495,7 +22497,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 100,
+      "ticks_blocked": 101,
       "completed": null
     },
     {
@@ -22601,7 +22603,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 80,
+      "ticks_blocked": 81,
       "completed": null
     },
     {
@@ -22882,7 +22884,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 80
+      "ticks_blocked": 81
     },
     {
       "symbol": "W1116",
@@ -22903,7 +22905,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 80
+      "ticks_blocked": 81
     },
     {
       "symbol": "W1117",
@@ -22921,7 +22923,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 80
+      "ticks_blocked": 81
     },
     {
       "symbol": "W1118",
@@ -22939,7 +22941,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 80
+      "ticks_blocked": 81
     },
     {
       "symbol": "W1119",
@@ -23445,7 +23447,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 13
+      "ticks_blocked": 14
     },
     {
       "symbol": "W1144",
@@ -23603,7 +23605,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 49
+      "ticks_blocked": 50
     },
     {
       "symbol": "W1151",
@@ -23649,7 +23651,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 68
+      "ticks_blocked": 69
     },
     {
       "symbol": "W1153",
@@ -23673,7 +23675,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -24107,7 +24109,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 69,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -24569,7 +24571,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 16,
+      "ticks_blocked": 17,
       "completed": null
     },
     {
@@ -25684,7 +25686,7 @@
     {
       "symbol": "W1249",
       "title": "Usage-refusal record: every hook denial is logged through the one shared hook entrypoint",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks"
@@ -25704,7 +25706,7 @@
     {
       "symbol": "W1250",
       "title": "Usage-refusal record: mikemol-commit REFUSED verdicts are logged with their rule",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks"
@@ -26025,13 +26027,16 @@
     {
       "symbol": "W1266",
       "title": "One verdict codomain DONE NOOP DEFER REFUSE WITHHELD RACE and a fleet exit table that resolves the exit-3 collision",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "fence"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1304",
+        "W1308"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Umbrella: W1297 (preamble stops depending on exit 4) and W1295 (gate test) before any pathsforward value moves",
       "evidence": "2026-10-15: From github-8f's convergent-patterns audit /home/mikemol/github/.claude/design-convergent-patterns-2026-10-15.md (read in full; bounded pass: summit, substrate, gabion not read, and the luthen/fence line numbers it cites are its own, not verified by me): F6 single-flight locks (W1264, W1265: lock.py:25 LOCK_STALE_S=1800 is a typed wall-clock window, against the avoid-wall-clock-timeouts ruling), F2 verdict codomain with the exit-3 collision DEFERRED in luthen apply_set.py:49 vs REFUSED in fence admit.py:311 (W1266), F5 fence ledger whitespace format admit.py:406 (W1267), F4 judged-set-equals-applied-set in opa_plan (W1268). Real distinctions it says to keep: a kernel flock versus a JSON record lock; RACED versus DEFERRED and the reaper's stuck. | 2026-10-15: 2026-10-15 VERIFIED by github-8f (relayed, read on its side that day): fence admit.py:311 reads EXIT_REFUSED = 3, so the exit-3 collision is real on the fence side; luthen apply_set.py:49 EXIT_DEFERRED = 3 is still the report's claim, not verified. | 2026-10-15: 2026-10-15 RELAYED, NOT VERIFIED: github-8f says the operator answered in its session that fleet-level dominates and their standing direction (consolidate, reuse, pin latest mtools) already orders the exit table, so it is not a pending decision. I have no operator statement here. Effect on my work: none yet; the order already planned (checker landed, W1295 gate test, W1296 prose-reader measurement, then one mover per tool shipping with its callers) is what I would do on either reading. A live value move still waits on the measurement. | 2026-10-15: 2026-10-15 VERIFIED first-hand: the operator pointed me at /home/mikemol/.claude/projects/-home-mikemol-github/memory/feedback-fleet-level-dominates.md (their words recorded there: fleet-level dominates; consolidate, reuse and pin to latest mtools are standing direction). The exit table is therefore authorized as a fleet consolidation; no operator ask is needed. The measurement-first order (W1296 done, W1297, W1295) stands.",
       "issued_at": "2026-10-15T14:29:40Z",
@@ -26330,12 +26335,12 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Ask nemik-84 which route; then pin it and name the bazel build output",
-      "evidence": "2026-10-15: Input to the route decision: W1282 measured py2many --rust: converts, but rustc refuses the output (3 of 4 sample functions broken); wasm32 leg unmeasured, target not installed on this host.",
+      "evidence": "2026-10-15: Input to the route decision: W1282 measured py2many --rust: converts, but rustc refuses the output (3 of 4 sample functions broken); wasm32 leg unmeasured, target not installed on this host. | 2026-10-16: 2026-10-16 nemik-84 (testimony): the operator ruled strictness is the direction for nemik:W423, a strictly typed core and not py2many's untyped-subset transpile; Codon was spiked on nemik's pieces module (nemik:W559) and rejected on the opaque Any. py2many is no longer the leading route. Browser leg unresolved (Codon believed native-only, wasm unverified): nemik:W560 measures it and W423 now waits on that. Asked to leave this card as is until W560 reports. Left as is. Answer sent on websubset: its five refusal rules (metaclass, eval-exec, dynamic-attribute, float-equality, star-args) are generic to any ahead-of-time typed compile, not py2many syntax; the target is not a parameter today.",
       "issued_at": "2026-10-15T17:42:25Z",
       "minted_during": "tick",
       "caused_by": "nemik:W422",
-      "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 13,
+      "last_worked": "2026-10-16T01:36:06Z",
+      "ticks_blocked": 14,
       "completed": null
     },
     {
@@ -26943,7 +26948,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1309",
       "last_worked": "2026-10-15T23:53:57Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -26958,33 +26963,33 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "From bazel's test.xml or --test_summary per target, record user+sys CPU against the wall timeout for each mutants and suite target (the measured unloaded wall times so far: memres:mutants 41s of 300s, pycodemod:mutants_0 230s of 900s); list the BUILD size or timeout attributes; write the table to .claude/design/gate-wall-bounds.md",
-      "evidence": "2026-10-16: 2026-10-15 third W1309 gate attempt: only //pycodemod:mutants_1 timed out (900s) while the 1m load average read 97 and the 5m read 114 (other sessions' gates, not mine). Same target alone is now running to read wall against CPU under that load. | 2026-10-16: //pycodemod:mutants_1 alone took 187s elapsed (limit 900) as the load fell from 97 to about 14; so its 900s timeout in the gate was reached only under sustained load above 90. CPU seconds per target are still unmeasured (test.xml carries wall only); that is the card's remaining step.",
+      "next_bounded_step": "Measuring: /usr/bin/time -f 'user=%U sys=%S wall=%e' bazel run //<dist>:mutants[_N] gives CPU including every worker the runner spawns (client rusage includes waited-for children). cvdcore:mutants: user 12.5s sys 1.7s wall 2.6s, so the runner parallelises about 5x and CPU is not wall. Running pycodemod:mutants_0 and memres:mutants (background); then treeio, buildtel, mdstruct_1, pytestspec_1, hooks_10/11. Then write .claude/design/gate-wall-bounds.md: CPU per target against the bazel timeout class (small 60s, moderate 300s, long 900s) and the design of a no-progress witness for the runner.",
+      "evidence": "2026-10-16: 2026-10-15 third W1309 gate attempt: only //pycodemod:mutants_1 timed out (900s) while the 1m load average read 97 and the 5m read 114 (other sessions' gates, not mine). Same target alone is now running to read wall against CPU under that load. | 2026-10-16: //pycodemod:mutants_1 alone took 187s elapsed (limit 900) as the load fell from 97 to about 14; so its 900s timeout in the gate was reached only under sustained load above 90. CPU seconds per target are still unmeasured (test.xml carries wall only); that is the card's remaining step. | 2026-10-16: 2026-10-16 method found and validated on //cvdcore:mutants (CPU 14.1s over wall 2.6s). Bazel's only bound on a test is the size/timeout class, a wall-clock timer; 'timeout = long' (900s) appears on about 40 targets. | 2026-10-16: 2026-10-16 measured: //memres:mutants uses user 71.3s + sys 19.1s = 90.4s CPU over 19.9s wall (about 4.5 workers), against a 300s WALL timeout. Alone it is far inside the limit; at load 80 its CPU share shrinks and the same 90s of work takes more than 300s of wall: the failure is the wall timer, not the work. pycodemod:mutants_0 still running. | 2026-10-16: 2026-10-16 measured: //pycodemod:mutants_0 uses user 849.0s + sys 134.6s = 983.6s CPU over 272.5s wall (about 3.6 workers) against a 900s WALL timeout. So its CPU alone exceeds the wall limit: it passes only while it holds more than 1.1 cores, and at load 80 it cannot. (Caveat: this run was through bazel run, outside the test sandbox, and reported SURVIVED 1 at pycodemod/cli.py::_handle_docshape and exit 1, which the sandboxed gate target does not show; not chased, likely an environment difference of bazel run, noted so it is not read as a gate result.)",
       "issued_at": "2026-10-15T23:53:46Z",
       "minted_during": "interrupt",
       "caused_by": "W1311",
-      "last_worked": "2026-10-16T00:05:04Z",
+      "last_worked": "2026-10-16T01:46:25Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W1313",
       "title": "Answer el-openglo:W544: Extract cvd_gate pure core (worst_view_dE, Okabe-Ito floor) as a mikemol-* dist",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "el-openglo:W544"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Umbrella: W1314 (scaffold) then W1315 (port); the dist is mikemol-cvdcore as el-openglo suggested, WCAG and APCA stay out until el-openglo asks",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: All children landed: W1314 scaffold 7e65b9c, W1317 dependencies 16f1bd6, W1318 stubs 8d8696a, W1315 port e916285. el-openglo told to pin; it repoints cvd_gate and check_urgency_cues itself.",
       "issued_at": "2026-10-15T23:53:48Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
-      "last_worked": "2026-10-15T23:54:38Z",
+      "last_worked": "2026-10-16T01:17:28Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T011728Z"
     },
     {
       "symbol": "W1314",
@@ -27010,7 +27015,7 @@
     {
       "symbol": "W1315",
       "title": "Move el-openglo's cvd_core (worst_view_dE, VIEWS, OKABE_ITO, reference_floor) into mikemol.cvdcore with its 7 selftest arms as pytest tests, typed under the bar",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1313"
       ],
@@ -27019,14 +27024,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Port from el-openglo 9a4be98 (git show 9a4be98:cvd_core.py) into cvdcore/src/mikemol/cvdcore/: the stubs cover asarray, ndarray (shape, copy, sub, truediv), linalg.norm and cspace_convert. Type _ucs, worst_view_dE, reference_floor(s), rgb; _ucs_one is a functools.cache on a float triple; turn the 7 selftest arms into pytest tests; keep the module pure (no __main__ selftest)",
-      "evidence": "2026-10-15: 2026-10-15 el-openglo-5c (testimony): cvd_core.py is fixed at el-openglo commit 9a4be98 (git show 9a4be98:cvd_core.py); its 7 arms run with python3 -I; cvd_gate re-exports every moved name. el-openglo:W544 is now blocked on mtools:W1315 and will pin at the par sha.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: 2026-10-15 el-openglo-5c (testimony): cvd_core.py is fixed at el-openglo commit 9a4be98 (git show 9a4be98:cvd_core.py); its 7 arms run with python3 -I; cvd_gate re-exports every moved name. el-openglo:W544 is now blocked on mtools:W1315 and will pin at the par sha. | 2026-10-16: Landed in mtools e916285 (pushed): mikemol.cvdcore.core + re-exports, 12 pytest tests, warrants, 5 declared mutants killed; parity with el-openglo 9a4be98 checked on five pairs, the floor and the floors.",
       "issued_at": "2026-10-15T23:54:31Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
-      "last_worked": "2026-10-16T01:08:41Z",
+      "last_worked": "2026-10-16T01:17:23Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T011723Z"
     },
     {
       "symbol": "W1316",
@@ -27089,6 +27094,310 @@
       "last_worked": "2026-10-16T01:00:04Z",
       "ticks_blocked": 0,
       "completed": "20261016T010004Z"
+    },
+    {
+      "symbol": "W1319",
+      "title": "Codon compatibility is the house target for all the fleet's Python (umbrella over measure, pin, ratchet, one rule set, rollout)",
+      "status": "blocked",
+      "enables": [
+        "W1070"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1320"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella, measure first, order: W1320 pin, W1321 census, W1322 target parameter (independent), W1323 ratchet mode, W1324 one rule set, W1325 rollout",
+      "evidence": "2026-10-16: 2026-10-16 RELAYED, NOT VERIFIED by me directly: github-8f and nemik-84 both report the operator's direction (2026-10-15) to point ALL of the fleet's Python at Codon compatibility, Codon's typing rigor being the intent, so the web-subset gate becomes the house typed-subset gate (nemik:W561 is the umbrella). It falls under the standing fleet-level-dominates direction. Finding already visible: every mtools module starts with 'from __future__ import annotations', which nemik saw Codon reject; the census must count that first. Nothing changes any gate until the measurement lands.",
+      "issued_at": "2026-10-16T01:40:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W423",
+      "last_worked": "2026-10-16T01:41:49Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1320",
+      "title": "Pin Codon as a bazel-staged tool like opa, reusing before building, with url and sha256",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read how MODULE.bazel declares opa (http_file with sha256); find Codon's release archives, license and platform, and whether nemik:W560 already pinned one; record the url, sha256 and licence on this card and declare it beside opa",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:41:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1321",
+      "title": "Run Codon over a sample of mtools modules and record what it rejects, grouped by kind",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1320"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the pin: pick a sample across dists (hooks, corpus, pathsforward, a pure leaf), run codon on each, group the rejections (dynamic attribute, untyped containers, unsupported stdlib, decorator and metaclass magic, the __future__ import nemik saw rejected), write counts to .claude/design/codon-census.md; cite nemik:W560 and W562 rather than re-measuring theirs",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:41:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": "2026-10-16T01:53:09Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1322",
+      "title": "websubset takes the transpile target as a parameter with one rule list per target, starting with py2many and codon both on today's five rules",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read websubset.py's rule registry and the CLI; add a Target enum and a per-target rule tuple, --target on --check-file and --census, default unchanged; test that a rule removed from one target still fires for the other",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:41:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W561",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1323",
+      "title": "A pycheck codon-compat mode reports per file with a per-repo baseline ledger so only new debt refuses, the shape of the strict-mypy ratchet",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1321"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the census: read the ratchet and the pycheck ledger code, decide the report kind (rule id per finding), write the baseline format and the new-debt refusal as one mode of pycheck or of websubset, test with a planted finding and a baselined one",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:41:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": "2026-10-16T01:53:10Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1324",
+      "title": "Align the websubset allowlist with what Codon accepts so the fleet has one typed-subset rule set, not two",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1321",
+        "W1322"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the census and the target parameter: for each Codon rejection kind add or retire a rule id under the codon target, list the rules py2many and Codon share, and record the diff in the design note",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:41:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": "2026-10-16T01:53:11Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1325",
+      "title": "Roll the Codon typed-subset gate out repo by repo once mtools is clean, one card per repo",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "W1326",
+        "W1327"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After mtools' baseline is at zero or a declared residue: list the repos with a queue (nemik-inbound census), mint one card each with its measured debt, and send each a letter citing mtools:W1319",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:41:40Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1326",
+      "title": "A pycodemod verb removes 'from __future__ import annotations' with a dry run that lists forward references to quote and annotations read at run time",
+      "status": "blocked",
+      "enables": [
+        "W1325"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [
+        "W1321"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the census confirms the import is Codon's blocker on a sample file: add the verb beside the others, dry run by default, flag annotations in a class body that name the class (a NameError on 3.13), get_type_hints callers, dataclass and cast strings; test on a planted module",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:43:08Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": "2026-10-16T01:53:13Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1327",
+      "title": "Move the bazel python toolchain from 3.13 to 3.14, measuring what breaks only to plan the fixes",
+      "status": "working",
+      "enables": [
+        "W1325",
+        "W1329"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Plan, not decide: change python.toolchain (MODULE.bazel line 69) and the 72 hubs' python_version to 3.14 on a branch of the tree, run //corpus:all as the trial, list every locked dependency with no cp314 wheel and give each one a fix (build from sdist in the gate, replace, or vendor a built wheel), record the list here; never a reason to stay on 3.13",
+      "evidence": "2026-10-16: 2026-10-16 github-8f (relayed): a hand-run test on the 3.14 venv and the gate on 3.13 judge different semantics (lazy vs eager annotations and anything else 3.14 changed), so a test can pass by hand and fail at the gate or the reverse; the interpreter version should be a declared fact the venvs and the toolchain must agree on. | 2026-10-16: 2026-10-16 RELAYED, NOT VERIFIED directly (github-8f): operator ruling 2026-10-15, 'I won't get pinned to an older version; we rise to 3.14+.' So this card MOVES the toolchain: a dependency with no cp314 wheel is that dependency's problem, not a reason to pin. The interpreter-agreement check (W1328) then declares 3.14 as the floor for toolchain and venvs and refuses anything older. It matches the standing direction to pin to the latest.",
+      "issued_at": "2026-10-16T01:43:08Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1319",
+      "last_worked": "2026-10-16T01:46:26Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1328",
+      "title": "A check declares 3.14 as the Python floor and refuses a toolchain, requires-python or venv below it",
+      "status": "ready",
+      "enables": [
+        "W1327"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Declare 3.14 as the floor in one tracked file; the check reads MODULE.bazel's toolchain and hubs, each dist's requires-python and its .venv interpreter and refuses anything below 3.14; baseline today's mismatches (toolchain and 72 hubs at 3.13, every dist requires-python >=3.13) so each one ratchets away",
+      "evidence": "2026-10-16: 2026-10-16 MEASURED (grep of */.venv/pyvenv.cfg): 36 dist venvs, 26 on CPython 3.14.7 and 9 on 3.13 (audiostruct, debtplan, fence, hooks, katas, mdstruct, procrun, pytestspec, ratchet) plus bazel-mtools/.venv at 3.13.13; the bazel toolchain and 72 hubs are 3.13. So the fleet runs two Pythons by accident, inside one repo: a dist's tests on its host venv and at the gate can judge different semantics. These ten 3.13 venvs are the first baseline rows.",
+      "issued_at": "2026-10-16T01:44:18Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1327",
+      "last_worked": "2026-10-16T01:46:52Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1329",
+      "title": "Raise every fleet repo with a bazel python toolchain or requires-python below 3.14 to 3.14, one card per repo, gabion's >=3.12 ruling (its W1060) superseded",
+      "status": "blocked",
+      "enables": [
+        "W1143"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [
+        "W1327"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After mtools runs 3.14 at its gate: census the repos (nemik-inbound list) for python.toolchain and requires-python, mint one card per repo with its measured floor, send each a letter citing mtools:W1327 and the operator ruling as relayed",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:46:27Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1327",
+      "last_worked": "2026-10-16T01:53:13Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1330",
+      "title": "Bring mtools' unblocked frontier from about 78 ready to 10 or fewer by closing, dropping, blocking and chaining against proof (umbrella)",
+      "status": "ready",
+      "enables": [
+        "W1143"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Children: W-measure the classes, then act per class through the writer with reasons; never invent dependencies to hide cards. Report counts before and after to github-8f.",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:52:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1331",
+      "title": "Triage mtools' own ready cards by hand against proof and report counts before and after",
+      "status": "ready",
+      "enables": [
+        "W1330"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Counts so far: 91 stored ready at the start; triage --write blocked W1249 W1250 behind W1248 and block-behind-open blocked W1080 W1266 W1325; the Codon and 3.14 chains are chained to their heads. Next classes: superseded (W942, W1062 by W1311/W1312), the 22 sweep cards, the W1143 leaves",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:57:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1330",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1332",
+      "title": "A dry-run-first paths-forward --triage proposes ready-with-blocker, inverted-umbrella and duplicate repairs through the advice store",
+      "status": "ready",
+      "enables": [
+        "W1330"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Landing: triage.py with three detectors, the CLI mode, 10+2 tests, warrants and mutants; then run it on paperkit, gabion and el-openglo queues (read-only) and report counts to github-8f",
+      "evidence": "",
+      "issued_at": "2026-10-16T01:57:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1330",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -27277,6 +27586,60 @@
       "first_run": "2026-10-15T17:56:08Z",
       "last_run": "2026-10-15T17:56:08Z",
       "status": "applied"
+    },
+    {
+      "tool": "block-behind-open",
+      "rule": "behind-open",
+      "subject": "W1080",
+      "action": "block W1080 on W1246",
+      "first_run": "2026-10-16T01:52:58Z",
+      "last_run": "2026-10-16T01:52:58Z",
+      "status": "applied"
+    },
+    {
+      "tool": "block-behind-open",
+      "rule": "behind-open",
+      "subject": "W1266",
+      "action": "block W1266 on W1304, W1308",
+      "first_run": "2026-10-16T01:52:58Z",
+      "last_run": "2026-10-16T01:52:58Z",
+      "status": "applied"
+    },
+    {
+      "tool": "block-behind-open",
+      "rule": "behind-open",
+      "subject": "W1325",
+      "action": "block W1325 on W1326, W1327",
+      "first_run": "2026-10-16T01:52:58Z",
+      "last_run": "2026-10-16T01:52:58Z",
+      "status": "applied"
+    },
+    {
+      "tool": "triage",
+      "rule": "frontier",
+      "subject": "W1249",
+      "action": "ready-with-blocker W1249",
+      "first_run": "2026-10-16T01:56:27Z",
+      "last_run": "2026-10-16T01:56:27Z",
+      "status": "applied"
+    },
+    {
+      "tool": "triage",
+      "rule": "frontier",
+      "subject": "W1250",
+      "action": "ready-with-blocker W1250",
+      "first_run": "2026-10-16T01:56:27Z",
+      "last_run": "2026-10-16T01:56:27Z",
+      "status": "applied"
+    },
+    {
+      "tool": "triage",
+      "rule": "frontier",
+      "subject": "W1327",
+      "action": "inverted-umbrella W1327",
+      "first_run": "2026-10-16T01:56:27Z",
+      "last_run": "2026-10-16T01:56:27Z",
+      "status": "open"
     }
   ]
 }

@@ -135,6 +135,14 @@ src/mikemol/pathsforward/cli.py|close-writes-through-a-refusal|if verdict\.refus
 src/mikemol/pathsforward/closegate.py|fresh-session-reason-passes|if FRESH\.search\(reason or ""\):|if False:|def=judge
 src/mikemol/pathsforward/closegate.py|advanced-counts-every-card|text\(w, "last_worked"\) >= since|True|def=advanced
 src/mikemol/pathsforward/closegate.py|dropped-cards-are-not-advanced|if text\(r, "dropped_at"\) >= since|if False|def=advanced
+src/mikemol/pathsforward/triage.py|ready-card-with-a-blocker-is-not-proposed|if text\(w, "status"\) == "ready" else \[\]|if False else []|def=_ready_with_blocker
+src/mikemol/pathsforward/triage.py|a-foreign-wait-is-ignored|or ":" in entry|or False|def=_waiting
+src/mikemol/pathsforward/triage.py|an-operator-ask-is-ignored|or entry\.startswith\(_OPERATOR\)|or False|def=_waiting
+src/mikemol/pathsforward/triage.py|the-umbrella-need-not-wait-on-the-child|child not in strlist\(umbrella, "blocked_on"\)|False|def=_inverted_umbrellas
+src/mikemol/pathsforward/triage.py|a-series-of-per-file-cards-is-a-duplicate|if _identifying\(a\) != _identifying\(b\):|if False:|def=_similar
+src/mikemol/pathsforward/triage.py|any-overlap-is-a-duplicate|>= _SIMILAR|>= 0.0|def=_similar
+src/mikemol/pathsforward/triage.py|untagged-cards-are-duplicates|same = bool\(tags\) and|same = True and|def=_duplicates
+src/mikemol/pathsforward/triage.py|an-operator-ask-blocks-as-an-agent-card|card\["blocked_kind"\] = _HUMAN if asks else _AGENT|card["blocked_kind"] = _AGENT|def=_block
 src/mikemol/pathsforward/closegate.py|a-minted-line-resets-the-tick-start|and found\.entry\.outcome != "minted"|and True|def=tick_start
 src/mikemol/pathsforward/closegate.py|tick-starts-at-the-first-tick-line|return stamps\[-1\]|return stamps[0]|def=tick_start
 
