@@ -35,7 +35,7 @@ def test_the_attribute_form_of_the_guard_is_hoisted_too() -> None:
 def test_a_block_with_an_else_or_a_non_import_is_listed_and_left() -> None:
     """Neither is provably harmless to hoist; each is a worklist row with its line."""
     with_else = _HEAD + "if TYPE_CHECKING:\n    from a import B\nelse:\n    B = None\n"
-    with_code = _HEAD + "if TYPE_CHECKING:\n    from a import B\n    X = 1\n"
+    with_code = _HEAD + 'if TYPE_CHECKING:\n    from a import B\n    X = len("a")\n'
     for source in (with_else, with_code):
         planned = typingblocks.plan(source)
         assert planned.hoisted == 0

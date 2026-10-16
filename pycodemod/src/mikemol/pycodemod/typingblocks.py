@@ -55,13 +55,43 @@ def is_checking(stmt: cst.BaseStatement) -> bool:
     return isinstance(test, cst.Attribute) and test.attr.value == "TYPE_CHECKING"
 
 
+def _type_like(value: cst.BaseExpression) -> bool:
+    # A name, a dotted name, a subscript of those, a `|` of those, or a list or tuple of them.
+    if isinstance(value, (cst.Name, cst.Attribute)):
+        return True
+    if isinstance(value, cst.Subscript):
+        return _type_like(value.value) and all(
+            isinstance(s.slice, cst.Index) and _type_like(s.slice.value) for s in value.slice
+        )
+    if isinstance(value, cst.BinaryOperation):
+        return (
+            isinstance(value.operator, cst.BitOr)
+            and _type_like(value.left)
+            and _type_like(value.right)
+        )
+    if isinstance(value, (cst.List, cst.Tuple)):
+        return all(_type_like(element.value) for element in value.elements)
+    return False
+
+
+def _hoistable(item: cst.BaseSmallStatement) -> bool:
+    # An import, or a plain one-name alias (`Row = tuple[int, str]`, what a type statement becomes).
+    if isinstance(item, (cst.Import, cst.ImportFrom)):
+        return True
+    return (
+        isinstance(item, cst.Assign)
+        and len(item.targets) == 1
+        and isinstance(item.targets[0].target, cst.Name)
+        and _type_like(item.value)
+    )
+
+
 def _only_imports(block: cst.If) -> bool:
     body = block.body
     if not isinstance(body, cst.IndentedBlock) or block.orelse is not None:
         return False
     return all(
-        isinstance(line, cst.SimpleStatementLine)
-        and all(isinstance(item, (cst.Import, cst.ImportFrom)) for item in line.body)
+        isinstance(line, cst.SimpleStatementLine) and all(_hoistable(item) for item in line.body)
         for line in body.body
     )
 

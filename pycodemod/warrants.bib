@@ -6516,3 +6516,38 @@
   claim  = {The dry run reports and writes nothing; a root with no python is named and skipped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_dry_run_changes_nothing_and_a_project_without_a_venv_is_skipped},
 }
+
+@misc{pycodemod-typealias-type-statement-becomes-a-plain-alias,
+  section = {typealias},
+  title  = {`type Row = ...` is `Row = ...`, wherever the statement sits},
+  claim  = {`type Row = ...` is `Row = ...`, wherever the statement sits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_a_type_statement_becomes_a_plain_alias},
+}
+
+@misc{pycodemod-typealias-type-statement-inside-a-block-is-rewritten-too,
+  section = {typealias},
+  title  = {The aliases of a `TYPE_CHECKING` block are statements like any other},
+  claim  = {The aliases of a `TYPE_CHECKING` block are statements like any other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_a_type_statement_inside_a_block_is_rewritten_too},
+}
+
+@misc{pycodemod-typealias-statement-with-type-parameters-is-listed-and-left,
+  section = {typealias},
+  title  = {`type Pair[T] = ...` has no plain spelling that keeps T generic; its line is named},
+  claim  = {`type Pair[T] = ...` has no plain spelling that keeps T generic; its line is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_a_statement_with_type_parameters_is_listed_and_left},
+}
+
+@misc{pycodemod-typealias-module-without-a-type-statement-is-returned-unchanged,
+  section = {typealias},
+  title  = {A plain alias is already the target spelling; nothing is rewritten},
+  claim  = {A plain alias is already the target spelling; nothing is rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_a_module_without_a_type_statement_is_returned_unchanged},
+}
+
+@misc{pycodemod-typealias-hoist-then-takes-a-block-of-imports-and-the-alias,
+  section = {typealias},
+  title  = {After the rewrite the block holds imports and one plain alias, and the hoist moves it},
+  claim  = {After the rewrite the block holds imports and one plain alias, and the hoist moves it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_the_hoist_then_takes_a_block_of_imports_and_the_alias},
+}

@@ -71,3 +71,4 @@ cli_futureimport	The future-import mode writes a file only when ruff sees no bar
 typingblocks	The TYPE_CHECKING hoist turns import-only blocks into real imports
 cli_typingblocks	The type-checking-imports mode writes a file only when the guard count falls and the tests pass
 cli_codonprep	codon-prep-tree lands both verbs per project, held to the bar and the tests
+typealias	The type-statement rewrite makes a plain alias or lists what it cannot

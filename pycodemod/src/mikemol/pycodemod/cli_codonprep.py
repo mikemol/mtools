@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-r"""`codon-prep-tree`: hoist the TYPE_CHECKING blocks, drop the future import, prove the project.
+r"""`codon-prep-tree`: type statements to aliases, hoist TYPE_CHECKING, drop the future import.
 
 ⚑⚑ THE TWO VERBS ARE ONE ROLLOUT, SO ONE MODE (mtools:W1359, W1363). `type-checking-imports` alone
 leaves a hoisted import that ruff's TC rules call typing-only under the deferred annotations the
@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.cli_futureimport import print_future_import
+from mikemol.pycodemod.cli_typealias import print_type_alias
 from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, run_tool
 from mikemol.pycodemod.cli_typingblocks import (
     print_typing_blocks,
@@ -63,8 +64,13 @@ def _barred(root: Path, names: Sequence[str], run: Runner) -> str | None:
 
 
 def _both(files: list[str], flags: TypedArgsFlags, run: Runner) -> int:
-    # The hoist first, then the future import: the order the pair is measured in.
-    return max(print_typing_blocks(files, flags, run), print_future_import(files, flags, run))
+    # Aliases first (so a block of imports and aliases can be hoisted), then the hoist, then the
+    # future import: the order the three are measured in.
+    return max(
+        print_type_alias(files, flags, run),
+        print_typing_blocks(files, flags, run),
+        print_future_import(files, flags, run),
+    )
 
 
 def _prepared(root: Path, files: list[str], snapshot: dict[str, str], run: Runner) -> int:
