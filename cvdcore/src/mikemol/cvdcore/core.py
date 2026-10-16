@@ -18,17 +18,11 @@ WEAKNESS, STATED. The Okabe-Ito table is the 2008 chromatic set, seven colours; 
 recomputed once and cached, never stored.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 import numpy as np
 from colorspacious import cspace_convert
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from numpy import ndarray
+from numpy import ndarray
 
 VIEWS: tuple[str | None, ...] = (None, "protanomaly", "deuteranomaly", "tritanomaly")
 """The four views: trichromat (None) and the three simulated deficiencies."""
