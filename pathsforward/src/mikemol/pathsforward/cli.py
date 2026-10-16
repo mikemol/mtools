@@ -189,8 +189,11 @@ def _freeze(ctx: "Ctx") -> int:
         verb = "BLOCKED" if write else "WOULD BLOCK"
         planned = [(sym, f"block {sym} on {ask}", f"{verb} {sym} on {ask}") for sym in found.moved]
         _advise(ctx, state, ("freeze", ask), planned)
-        for sym, why in found.kept:
-            _say(f"KEPT {sym} ({why})")
+        if ctx.opts.get("verbose"):
+            for sym, why in found.kept:
+                _say(f"KEPT {sym} ({why})")
+        else:
+            _say(f"KEPT {len(found.kept)} (already blocked; --verbose lists them)")
         if write:
             bulkblock.apply(state, found, ask)
         return EXIT_OK
@@ -510,7 +513,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "drop": frozenset({"admit", "gate", "reference_arm", "root", "on", "write"}),
     "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
-    "freeze": frozenset({"write"}),
+    "freeze": frozenset({"write", "verbose"}),
     # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
     # `attach` (one file pinned to many cards is a different act), plus `--write`.
     "update_many": frozenset(

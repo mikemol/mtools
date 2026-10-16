@@ -83,12 +83,23 @@ def test_a_blocked_card_keeps_its_blocker_and_a_done_card_is_left_done(
 ) -> None:
     """The control: W4 keeps other:W7 and is listed; W5 is not open and is not mentioned."""
     path = _queue(tmp_path)
-    assert _run(path, "--write") == _OK
+    assert _run(path, "--write", "--verbose") == _OK
     said = capsys.readouterr().out
     assert "KEPT W4 (blocked on other:W7)" in said
     assert "W5" not in said
     assert _card_of(path, "W4")["blocked_on"] == ["other:W7"]
     assert _card_of(path, "W5")["status"] == "done"
+
+
+def test_by_default_the_kept_cards_are_one_count_line_not_one_row_each(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The cost control: one `KEPT 1` line stands for W4, whose row appears only under --verbose."""
+    path = _queue(tmp_path)
+    assert _run(path, "--write") == _OK
+    said = capsys.readouterr().out
+    assert "KEPT 1 (already blocked" in said
+    assert "KEPT W4" not in said
 
 
 def test_a_dry_run_saves_nothing_and_a_second_run_moves_nothing_more(

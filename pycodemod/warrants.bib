@@ -6793,3 +6793,11 @@
   claim  = {The control: the bar's path is the same whether the root is given relative or absolute.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_relative_root_reaches_the_bar_by_an_absolute_path},
 }
+
+@misc{pycodemod-cli-codonprep-ruffs-help-lines-are-not-read-as-rules,
+  section = {cli_codonprep},
+  title  = {The control: `help: ...` reads like `rule: message` and must not make a refusal unfixable},
+  claim  = {The control: `help: ...` reads like `rule: message` and must not make a refusal
+            unfixable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_ruffs_help_lines_are_not_read_as_rules},
+}

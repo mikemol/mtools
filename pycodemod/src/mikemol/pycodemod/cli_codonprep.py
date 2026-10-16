@@ -41,6 +41,8 @@ LABEL = "codon-prep"
 _FAILED = 2
 _TAIL = 3
 _FINDING = re.compile(r"^([a-z][a-z0-9-]*): ", re.MULTILINE)
+_NOT_RULES = frozenset({"help", "note", "error", "warning"})
+"""Ruff's own annotation lines (`help: ...`) read like `rule: message` and are not rules."""
 SELF_FIXABLE = frozenset(
     {
         "boolean-type-hint-positional-argument",
@@ -68,7 +70,8 @@ class Refusal:
     @property
     def rules(self) -> frozenset[str]:
         """Name the rule ids of the findings in the output."""
-        return frozenset(cast("list[str]", _FINDING.findall(self.output)))
+        found = frozenset(cast("list[str]", _FINDING.findall(self.output)))
+        return found - _NOT_RULES
 
     @property
     def self_fixable(self) -> bool:
@@ -83,7 +86,7 @@ class Refusal:
 
         """
         tail = " | ".join(self.output.strip().splitlines()[:_TAIL])
-        return f"{self.name} fails the bar (exit {self.code}): {tail}"
+        return f"{self.name} fails the bar (exit {self.code}, rules {sorted(self.rules)}): {tail}"
 
 
 def _changed(snapshot: dict[str, str]) -> list[str]:

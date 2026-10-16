@@ -5324,3 +5324,11 @@
   claim  = {A typo or a done ask would freeze nothing useful: refused, W2 still ready.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_an_ask_that_is_not_an_open_card_is_refused_and_nothing_moves},
 }
+
+@misc{pathsforward-freeze-by-default-the-kept-cards-are-one-count-line-not-one-row-each,
+  section = {freeze},
+  title  = {The cost control: one `KEPT 1` line stands for W4, whose row appears only under --verbose},
+  claim  = {The cost control: one `KEPT 1` line stands for W4, whose row appears only under
+            --verbose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_by_default_the_kept_cards_are_one_count_line_not_one_row_each},
+}

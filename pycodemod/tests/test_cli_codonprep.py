@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.cli_codonprep import print_codon_prep_tree
+from mikemol.pycodemod.cli_codonprep import Refusal, print_codon_prep_tree
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -167,6 +167,14 @@ def test_a_refusal_that_is_only_a_rule_the_rewrite_contradicts_is_switched_off_n
     assert f'"{_BOOL_RULE}"' in (root / "pyproject.toml").read_text(encoding="utf-8")
     assert "TYPE_CHECKING" not in (root / "src" / NAME).read_text(encoding="utf-8")
     assert "ruff rules switched off" in capsys.readouterr().out
+
+
+def test_ruffs_help_lines_are_not_read_as_rules() -> None:
+    """The control: `help: ...` reads like `rule: message` and must not make a refusal unfixable."""
+    output = f"--- ruff ---\n{_BOOL_RULE}: a boolean\n   --> f.py:1:1\nhelp: make it keyword-only\n"
+    refusal = Refusal("f.py", 4, output)
+    assert refusal.rules == {_BOOL_RULE}
+    assert refusal.self_fixable
 
 
 def test_a_refusal_for_any_other_rule_restores_the_project_and_the_pyproject(
