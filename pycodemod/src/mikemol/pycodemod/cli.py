@@ -68,6 +68,7 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
+from mikemol.pycodemod.cli_codonprep import print_codon_prep_tree
 from mikemol.pycodemod.cli_docshape import print_docshape
 from mikemol.pycodemod.cli_futureimport import print_future_import, print_future_import_tree
 from mikemol.pycodemod.cli_judgedfix import JudgedFixFlags, check_select, print_judged_fix
@@ -177,6 +178,10 @@ def _handle_orempty(ns: argparse.Namespace) -> int:
 def _handle_futureimport(ns: argparse.Namespace) -> int:
     flags = TypedArgsFlags(root=_str(ns, "root"), write=_flag(ns, "write"))
     return print_future_import(_str_list(ns, "paths"), flags)
+
+
+def _handle_codonprep_tree(ns: argparse.Namespace) -> int:
+    return print_codon_prep_tree(_str_list(ns, "roots"), write=_flag(ns, "write"))
 
 
 def _handle_typingblocks(ns: argparse.Namespace) -> int:
@@ -1194,6 +1199,7 @@ MODES = {
     "or-empty": _handle_orempty,
     "future-import": _handle_futureimport,
     "future-import-tree": _handle_futureimport_tree,
+    "codon-prep-tree": _handle_codonprep_tree,
     "type-checking-imports": _handle_typingblocks,
     "type-checking-imports-tree": _handle_typingblocks_tree,
     "judged-fix": _handle_judgedfix,
@@ -1483,6 +1489,17 @@ def _add_futureimport_mode(make: _Make) -> None:
     fut.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
+def _add_codonprep_tree_mode(make: _Make) -> None:
+    tree = make(
+        "codon-prep-tree", "hoist TYPE_CHECKING, drop the future import, prove each project"
+    )
+    # ⚑ The operands are not `paths` (see future-import-tree): roots must reach the driver whole.
+    no_paths: list[str] = []
+    tree.set_defaults(paths=no_paths)
+    tree.add_argument("--write", action="store_true", help="write each project that passes")
+    tree.add_argument("roots", nargs="+", help="project roots, each with src/ and .venv")
+
+
 def _add_typingblocks_mode(make: _Make) -> None:
     blocks = make("type-checking-imports", "hoist import-only TYPE_CHECKING blocks to real imports")
     blocks.add_argument("--root", required=True, help="the project whose .venv judges each file")
@@ -1585,6 +1602,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_futureimport_tree_mode,
     _add_typingblocks_mode,
     _add_typingblocks_tree_mode,
+    _add_codonprep_tree_mode,
     _add_runs_mode,
 )
 

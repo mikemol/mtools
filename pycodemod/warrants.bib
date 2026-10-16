@@ -6488,3 +6488,31 @@
             it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typingblocks.py -k test_failing_dist_tests_after_a_write_restore_every_file_and_are_exit_two},
 }
+
+@misc{pycodemod-cli-codonprep-both-verbs-land-and-nothing-is-left-to-quote,
+  section = {cli_codonprep},
+  title  = {The guard and the future import are gone, the import is real, the annotation is bare},
+  claim  = {The guard and the future import are gone, the import is real, the annotation is bare.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_both_verbs_land_and_nothing_is_left_to_quote},
+}
+
+@misc{pycodemod-cli-codonprep-file-the-bar-refuses-restores-the-project,
+  section = {cli_codonprep},
+  title  = {Both verbs accepted it, the bar did not: exit 2, the source as it was},
+  claim  = {Both verbs accepted it, the bar did not: exit 2, the source as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_file_the_bar_refuses_restores_the_project},
+}
+
+@misc{pycodemod-cli-codonprep-failing-project-tests-restore-the-project-too,
+  section = {cli_codonprep},
+  title  = {The bar passed and the tests did not: exit 2, the source as it was},
+  claim  = {The bar passed and the tests did not: exit 2, the source as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_failing_project_tests_restore_the_project_too},
+}
+
+@misc{pycodemod-cli-codonprep-dry-run-changes-nothing-and-a-project-without-a-venv-is-skipped,
+  section = {cli_codonprep},
+  title  = {The dry run reports and writes nothing; a root with no python is named and skipped},
+  claim  = {The dry run reports and writes nothing; a root with no python is named and skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_dry_run_changes_nothing_and_a_project_without_a_venv_is_skipped},
+}

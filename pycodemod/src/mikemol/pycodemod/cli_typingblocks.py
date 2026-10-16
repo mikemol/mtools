@@ -76,20 +76,36 @@ def print_typing_blocks(paths: Sequence[str], flags: TypedArgsFlags, run: Runner
     return print_judged(paths, replace(flags, measure=measure), (LABEL, plan_typing_blocks), run)
 
 
-def _source_files(root: Path) -> list[str]:
+def source_files(root: Path) -> list[str]:
+    """List a project's `src` Python files, sorted, bytecode caches left out.
+
+    Returns:
+        the paths as strings.
+
+    """
     return sorted(str(p) for p in (root / "src").rglob("*.py") if "__pycache__" not in p.parts)
 
 
-def _tested(root: Path, python: Path, snapshot: dict[str, str], run: Runner) -> int:
-    # Run the project's tests once over everything just written; on failure put every file back.
+def restore(snapshot: dict[str, str]) -> None:
+    """Put every file in the snapshot back as it was."""
+    for name, text in snapshot.items():
+        Path(name).write_text(text, encoding="utf-8")
+
+
+def tested(root: Path, python: Path, snapshot: dict[str, str], run: Runner) -> int:
+    """Run the project's tests once over everything just written; on failure put every file back.
+
+    Returns:
+        0 when the tests pass, else 2 with the files restored.
+
+    """
     code, out, err = run([str(python), "-m", "pytest", "-q", "-x"], root)
     if code == 0:
         return 0
-    for name, text in snapshot.items():
-        Path(name).write_text(text, encoding="utf-8")
+    restore(snapshot)
     last = (out + err).strip().splitlines()[-1:] or ["no output"]
     sys.stdout.write(f"{LABEL} dist tests failed (exit {code}), every file restored: {last[0]}\n")
-    return 2
+    return _FAILED
 
 
 def print_typing_blocks_tree(roots: Sequence[str], *, write: bool, run: Runner = run_tool) -> int:
@@ -111,11 +127,11 @@ def print_typing_blocks_tree(roots: Sequence[str], *, write: bool, run: Runner =
         if not (root / "src").is_dir() or not python.exists():
             sys.stdout.write(f"{LABEL} skipped {root}: no src tree or no .venv/bin/python\n")
             continue
-        files = _source_files(root)
+        files = source_files(root)
         snapshot = {name: Path(name).read_text(encoding="utf-8") for name in files}
         code = print_typing_blocks(files, TypedArgsFlags(root=str(root), write=write), run)
         if write and code < _FAILED:
-            code = max(code, _tested(root, python, snapshot, run))
+            code = max(code, tested(root, python, snapshot, run))
         sys.stdout.write(f"{LABEL} project {root} exit {code}\n")
         worst = max(worst, code)
     return worst
