@@ -126,3 +126,31 @@
   claim  = {A path that does not exist is created, so a caller needs no setup.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_flock.py -k test_the_file_is_created_when_absent},
 }
+
+@misc{atomicwrite-try-exclusive-free-lock-is-taken-held-inside-the-body-and-released-after,
+  section = {try_exclusive},
+  title  = {True inside, another descriptor refused inside, free again after},
+  claim  = {True inside, another descriptor refused inside, free again after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_try_exclusive.py -k test_a_free_lock_is_taken_held_inside_the_body_and_released_after},
+}
+
+@misc{atomicwrite-try-exclusive-held-lock-yields-false-without-waiting,
+  section = {try_exclusive},
+  title  = {With another holder the call returns False at once; reaching the assert proves no wait},
+  claim  = {With another holder the call returns False at once; reaching the assert proves no wait.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_try_exclusive.py -k test_a_held_lock_yields_false_without_waiting},
+}
+
+@misc{atomicwrite-try-exclusive-refused-attempt-does-not-release-the-holders-lock,
+  section = {try_exclusive},
+  title  = {The holder keeps the lock after a refused try_exclusive body ends},
+  claim  = {The holder keeps the lock after a refused try_exclusive body ends.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_try_exclusive.py -k test_a_refused_attempt_does_not_release_the_holders_lock},
+}
+
+@misc{atomicwrite-try-exclusive-file-is-created-when-absent,
+  section = {try_exclusive},
+  title  = {A path that does not exist is created, so a caller needs no setup},
+  claim  = {A path that does not exist is created, so a caller needs no setup.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_try_exclusive.py -k test_the_file_is_created_when_absent},
+}

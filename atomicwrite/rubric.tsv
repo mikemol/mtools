@@ -2,3 +2,4 @@
 # key <TAB> heading title
 durable	The Durable Write: The Path Is Replaced, Permissions Survive, and a Failure Leaves No Temp
 flock	The exclusive-lock primitive
+try_exclusive	A non-blocking flock answers instead of waiting and never frees a lock it did not take

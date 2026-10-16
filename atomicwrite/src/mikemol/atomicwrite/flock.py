@@ -37,3 +37,29 @@ def exclusive(path: Path) -> Iterator[None]:
             yield
         finally:
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+@contextlib.contextmanager
+def try_exclusive(path: Path) -> Iterator[bool]:
+    """Try an exclusive kernel flock on `path` without waiting, creating the file if absent.
+
+    ⚑ THE NON-BLOCKING SIBLING OF `exclusive` (mtools:W1264, luthen-observability:W1073): a holder
+    elsewhere is an answer, not a wait. It asks the kernel once with `LOCK_NB`, so there is no
+    deadline, no sleep and no retry loop in it: a caller that wants to try again does so on an event
+    of its own. The lock is released when the body ends if, and only if, this call took it.
+
+    Yields:
+        True while the lock is held by this call; False when another holder has it, in which case
+        the body runs without the lock and nothing is released.
+
+    """
+    with path.open("ab") as handle:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            yield False
+            return
+        try:
+            yield True
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
