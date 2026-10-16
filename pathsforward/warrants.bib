@@ -5295,3 +5295,32 @@
   claim  = {The control: a single symbol is one indented record and a zero exit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_show_many.py -k test_one_symbol_prints_as_it_always_did},
 }
+
+@misc{pathsforward-freeze-ready-and-working-cards-wait-on-the-ask-and-the-ask-is-untouched,
+  section = {freeze},
+  title  = {W2 and W3 are blocked on W1 as agent waits; the ask W1 keeps its operator block},
+  claim  = {W2 and W3 are blocked on W1 as agent waits; the ask W1 keeps its operator block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_ready_and_working_cards_wait_on_the_ask_and_the_ask_is_untouched},
+}
+
+@misc{pathsforward-freeze-blocked-card-keeps-its-blocker-and-a-done-card-is-left-done,
+  section = {freeze},
+  title  = {The control: W4 keeps other:W7 and is listed; W5 is not open and is not mentioned},
+  claim  = {The control: W4 keeps other:W7 and is listed; W5 is not open and is not mentioned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_blocked_card_keeps_its_blocker_and_a_done_card_is_left_done},
+}
+
+@misc{pathsforward-freeze-dry-run-saves-nothing-and-a-second-run-moves-nothing-more,
+  section = {freeze},
+  title  = {The dry run says WOULD BLOCK and leaves W2 ready; after --write the rerun is silent on W2},
+  claim  = {The dry run says WOULD BLOCK and leaves W2 ready; after --write the rerun is silent on
+            W2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_dry_run_saves_nothing_and_a_second_run_moves_nothing_more},
+}
+
+@misc{pathsforward-freeze-ask-that-is-not-an-open-card-is-refused-and-nothing-moves,
+  section = {freeze},
+  title  = {A typo or a done ask would freeze nothing useful: refused, W2 still ready},
+  claim  = {A typo or a done ask would freeze nothing useful: refused, W2 still ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_an_ask_that_is_not_an_open_card_is_refused_and_nothing_moves},
+}

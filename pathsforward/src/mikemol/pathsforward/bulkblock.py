@@ -63,6 +63,42 @@ def plan(state: State, tag: str, target: str) -> Plan:
     return Plan(tuple(moved), tuple(kept))
 
 
+def freeze_plan(state: State, ask: str) -> Plan:
+    """Decide which cards a freeze would block on `ask`, without changing anything (W1397).
+
+    ⚑ A FROZEN WORKSTREAM WAITS ON ONE ASK, SO THE WORK ORDER FOLLOWS THE OPERATOR'S ANSWER. Every
+    ready AND working card moves (a frozen repo has no session holding a working card); a card
+    already blocked keeps the blocker it has, so the ask is never stacked on top of a real wait. The
+    ask itself is never moved, and unfreezing is the ask going done plus `--prune-landed`.
+
+    Returns:
+        the ready and working cards that move and the blocked ones that stay, each with its reason.
+
+    Raises:
+        RefusedError: when the ask is not an open card of this queue, or nothing is left to move.
+
+    """
+    by_symbol = {text(w, "symbol"): w for w in state.waypoints}
+    if text(by_symbol.get(ask, {}), "status") in _CLOSED:
+        msg = f"{ask} is not an open card of this queue"
+        raise RefusedError(msg)
+    moved: list[str] = []
+    kept: list[tuple[str, str]] = []
+    for w in state.waypoints:
+        sym = text(w, "symbol")
+        status = text(w, "status")
+        if sym == ask or status in _CLOSED:
+            continue
+        if status in {"ready", "working"}:
+            moved.append(sym)
+        else:
+            kept.append((sym, f"{status} on {','.join(strlist(w, 'blocked_on'))}"))
+    if not moved and not kept:
+        msg = f"no open card besides {ask} to freeze"
+        raise RefusedError(msg)
+    return Plan(tuple(moved), tuple(kept))
+
+
 UNSCORED = "unscored"
 OPEN = "open"
 

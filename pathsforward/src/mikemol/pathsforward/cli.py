@@ -171,6 +171,33 @@ def _block_matching(ctx: "Ctx") -> int:
     return _mutate(ctx, edit)
 
 
+def _freeze(ctx: "Ctx") -> int:
+    """Block every ready or working card but the ask on the ask; a dry run unless `--write`.
+
+    ⚑ DRY RUN FIRST, as `--block-matching`: without `--write` nothing is saved and the lines say
+    WOULD BLOCK. A card already blocked is LISTED and keeps its blocker (mtools:W1397).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    ask = ctx.get("freeze") or ""
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        found = bulkblock.freeze_plan(state, ask)
+        verb = "BLOCKED" if write else "WOULD BLOCK"
+        planned = [(sym, f"block {sym} on {ask}", f"{verb} {sym} on {ask}") for sym in found.moved]
+        _advise(ctx, state, ("freeze", ask), planned)
+        for sym, why in found.kept:
+            _say(f"KEPT {sym} ({why})")
+        if write:
+            bulkblock.apply(state, found, ask)
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _block_behind_open(ctx: "Ctx") -> int:
     """Block each ready card behind the open cards that enable it; a dry run unless `--write`.
 
@@ -371,6 +398,7 @@ _VALUED = (
     "gate_green",
     "gate_note",
     "block_matching",
+    "freeze",
     "update_many",
     "lift",
 )
@@ -482,6 +510,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "drop": frozenset({"admit", "gate", "reference_arm", "root", "on", "write"}),
     "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
+    "freeze": frozenset({"write"}),
     # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
     # `attach` (one file pinned to many cards is a different act), plus `--write`.
     "update_many": frozenset(
@@ -751,6 +780,14 @@ def _parser() -> argparse.ArgumentParser:
             "--block-matching",
             "TAG",
             "W947: block every ready card touching TAG on --on SYMBOL; a dry run without --write",
+        ),
+        (
+            "--freeze",
+            "SYMBOL",
+            (
+                "W1397: block every ready or working card but SYMBOL on SYMBOL (the operator's "
+                "unfreeze ask); blocked cards keep their blocker; a dry run without --write"
+            ),
         ),
         (
             "--gate-red",
@@ -2416,6 +2453,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "outcomes_clear": _outcomes_clear,
     "bump_blocked": _bump_blocked,
     "block_matching": _block_matching,
+    "freeze": _freeze,
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
     "close_umbrellas": _close_umbrellas,
