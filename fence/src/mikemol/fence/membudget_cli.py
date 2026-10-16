@@ -49,22 +49,17 @@ fences whatever follows its flags, so it cannot take a subcommand.
 — the environment, `admit.Host` and the fencer — so no arm depends on the box's load or memory.
 """
 
-from __future__ import annotations
-
 import math
 import os
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.fence import admit, autosize, claims, core, label_lease, ledger, peaks
 from mikemol.fence.cgroup import FenceUnavailableError
 
 _CLAIMS = claims
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
 
 # Bash's exit codes that are not `admit`'s: a busy lock, and a malformed invocation.
 EXIT_LOCK = 1
@@ -271,7 +266,7 @@ class History:
     module: Path | None = None
 
     @classmethod
-    def of(cls, command: Sequence[str], label: str, env: Mapping[str, str]) -> History:
+    def of(cls, command: Sequence[str], label: str, env: Mapping[str, str]) -> "History":
         """Return the history `command` run under `label` reads and writes.
 
         Returns:
@@ -303,7 +298,7 @@ class AutoSize:
     ceiling_mb: int
 
     @classmethod
-    def of(cls, env: Mapping[str, str]) -> AutoSize:
+    def of(cls, env: Mapping[str, str]) -> "AutoSize":
         """Read `AGDA_MB_DEFAULT` and `AGDA_MB_MAX`; unset or empty is bash's value.
 
         ⚑ EACH MUST BE A POSITIVE WHOLE MB, or `megabytes` raises the usage error.
@@ -352,7 +347,7 @@ class RunArgs:
     command: tuple[str, ...]
 
     @classmethod
-    def parse(cls, args: Sequence[str], *, verb: str = _RUN) -> RunArgs:
+    def parse(cls, args: Sequence[str], *, verb: str = _RUN) -> "RunArgs":
         """Read `MB|auto [LABEL] -- CMD...`, naming `verb` in any complaint.
 
         ⚑ A ZERO LEASE IS ALLOWED: a claim needs no capacity (`admit.decide`) — but under `run` it

@@ -18,17 +18,13 @@ are read; a value computed at run time is not seen (said in the output's first l
 there is no VIOLATION, 1 when there is one, 2 for a usage refusal.
 """
 
-from __future__ import annotations
-
 import ast
 import json
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 PREFIX = "EXIT_"
 EXIT_FOUND = 1
@@ -40,7 +36,7 @@ _USAGE = (
 _BLIND = "# cannot see: a constant computed at run time, or a status that is not a named EXIT_\n"
 _SKIP = frozenset({".git", ".venv", "node_modules", "build", "__pycache__"})
 
-type Table = dict[str, tuple[int, str, tuple[str, ...]]]
+Table = dict[str, tuple[int, str, tuple[str, ...]]]
 
 
 @dataclass(frozen=True)

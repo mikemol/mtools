@@ -17,15 +17,11 @@ a change is its address and the SORTED actions, so two orders are one change.
 otherwise allow less, or more, than it reads as; it raises `ChangeShapeError` naming the row.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-type Change = tuple[str, tuple[str, ...]]
+Change = tuple[str, tuple[str, ...]]
 
 
 class ChangeShapeError(ValueError):

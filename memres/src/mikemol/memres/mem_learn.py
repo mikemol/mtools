@@ -24,17 +24,12 @@ into a zero.
 Usage:  python -m mikemol.memres.mem_learn <peak file> ...   (a library for mem_db and mem_harvest)
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Iterable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
-
-type Manifest = dict[str, int | dict[str, int]]
+Manifest = dict[str, int | dict[str, int]]
 
 # The pow2 reservation range. It starts TINY: an over-reservation is silent (idle cores), an
 # under-reservation is LOUD (the cap kills, the failure names the cell, the next pass raises it).

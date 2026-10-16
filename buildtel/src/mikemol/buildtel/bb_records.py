@@ -18,8 +18,6 @@ unreadable rather than dropped, so a total always states how much of the respons
     python -m mikemol.buildtel.bb_records <invocation-id>   # counts by worker and by command, JSON
 """
 
-from __future__ import annotations
-
 import http.client
 import json
 import sys

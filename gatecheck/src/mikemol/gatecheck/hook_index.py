@@ -23,17 +23,12 @@ allowlisted line must pass; a gate that cannot refuse is theater.
 Usage:  mikemol-hook-index        # exit 0 = worktree == index (outside the allowlist)
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Sequence
 
 from mikemol.gatecheck.indexdiverge import divergent
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 _REFUSED = 2
 _ALLOW_DIRTY_ENV = "PK_HOOK_ALLOW_DIRTY"

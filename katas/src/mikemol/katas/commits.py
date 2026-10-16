@@ -8,14 +8,9 @@ tracked-only pathspec, the trailers and the COMMITTED/REFUSED line live there. T
 names the request and reads the log a detached run leaves, whose last line is `rc=N`.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 RUNNING = "RUNNING"
 """A log with no `rc=N` line yet: the commit is still going."""

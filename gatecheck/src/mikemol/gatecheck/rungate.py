@@ -26,19 +26,14 @@ confines the `Any` instead of letting it fan out through every caller.
     python3 -m mikemol.gatecheck.rungate @paperkit_render//:gate --dry-run
 """
 
-from __future__ import annotations
-
 import argparse
 import subprocess
 import sys
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    type Runner = Callable[[Sequence[str], Path], subprocess.CompletedProcess[str]]
+Runner = Callable[[Sequence[str], Path], subprocess.CompletedProcess[str]]
 
 # Where, under the repo root, the owner of the sweep's RAM bound lives.
 _SWEEP_BUDGET = Path("tools") / "sweep_budget.py"

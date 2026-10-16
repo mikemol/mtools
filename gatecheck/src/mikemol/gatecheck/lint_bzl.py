@@ -23,15 +23,10 @@ Legit inline shell stays: env exports, /sys reads, `[ -f ]`, and running an ARBI
 Usage:  mikemol-lint-bzl FILE.bzl [FILE.bzl ...]
 """
 
-from __future__ import annotations
-
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 # `python3` immediately followed by whitespace + (-c | a script path) is a BARE invocation. The
 # sanctioned `"$(command -v python3)" script.py` has `python3` followed by `)`, so it never matches.

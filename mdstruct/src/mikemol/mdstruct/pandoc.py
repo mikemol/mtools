@@ -25,8 +25,6 @@ needs it installed; the tests report a DECLARED SKIP when it is absent rather th
 silently, and this module raises rather than returning an empty string.
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 

@@ -19,18 +19,13 @@ accepted answer is reported only as its fingerprint, for the ledger.
 value beyond one trailing newline, no case folding.
 """
 
-from __future__ import annotations
-
 import hmac
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.waldo.cli import matches_shape
 from mikemol.waldo.custody import fingerprint
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 MIN_LENGTH = 8
 

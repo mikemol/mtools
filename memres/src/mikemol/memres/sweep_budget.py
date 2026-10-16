@@ -20,15 +20,10 @@ PAPERKIT_SWEEP_RAM_MB when their box tolerates more.
     PAPERKIT_SWEEP_RAM_MB=9000 mikemol-sweep-budget   # operator override wins
 """
 
-from __future__ import annotations
-
 import os
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
 
 MEMINFO = Path("/proc/meminfo")
 OVERRIDE_ENV = "PAPERKIT_SWEEP_RAM_MB"

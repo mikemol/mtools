@@ -26,21 +26,17 @@ went with that log, execlog-drop; the per-action record is BuildBuddy's now.)
     mikemol-logs-push <hook-log> [--rc N] [--seconds N] [--run-id ID] [--url URL]
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
 import socket
 import sys
 import urllib.parse
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from http.client import HTTPConnection, HTTPSConnection
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 USAGE = "mikemol-logs-push <hook-log> [--rc N] [--seconds N] [--run-id ID] [--url URL]"
 EXIT_USAGE = 2

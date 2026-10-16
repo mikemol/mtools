@@ -26,19 +26,14 @@ state.  Each step is a banked probe-hygiene rule made structural:
     python -m mikemol.buildtel.probe paperkit/coherence.py --no-resync   # skip step 4
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import re
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.buildtel import proc
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 _LINE = re.compile(r"INFO: (\d+) processes: (.*)\.")
 HOOK_ARGV = ("bazel", "test", "//:hook", "--config=mutant")

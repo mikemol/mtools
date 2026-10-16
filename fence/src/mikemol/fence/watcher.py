@@ -23,22 +23,15 @@ finishing between the trip and the signal is the build doing what the guard want
 CONSUMED BY: `mikemol-commit`'s policy wiring (W921).
 """
 
-from __future__ import annotations
-
 import os
 import threading
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from types import TracebackType
+from typing import Self
 
-from mikemol.fence.guard import streak_after
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from types import TracebackType
-    from typing import Self
-
-    from mikemol.fence.guard import Sample
+from mikemol.fence.guard import Sample, streak_after
 
 PROC = Path("/proc")
 _STAT_FIELDS_AFTER_COMM = 2  # state, then the parent pid

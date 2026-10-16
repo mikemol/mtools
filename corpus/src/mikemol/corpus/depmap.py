@@ -37,8 +37,6 @@ or a name built at run time, a file named by a computed path, and anything a bui
 container image wires. Those are not absent edges; they are edges this reader returns empty for.
 """
 
-from __future__ import annotations
-
 import ast
 import io
 import json
@@ -46,14 +44,12 @@ import os
 import re
 import sys
 import tokenize
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.corpus import corpus, import_edges
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 NAMESPACE = "mikemol"
 EXIT_USAGE = 2

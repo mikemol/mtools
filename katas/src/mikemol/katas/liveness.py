@@ -18,15 +18,11 @@ nothing to skip on, so an unreadable queue reads as "no claim", and the flush's 
 `queue_pending` is what then decides whether there is anything to commit.
 """
 
-from __future__ import annotations
-
 import json
+from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 QUEUE = ".claude/paths-forward.json"
 """Where a workstream's queue lives, relative to its root."""

@@ -31,15 +31,11 @@ They are true positives by the rule's letter and false ones by its intent. **Thi
 divergence from the reference implementation, and a caller comparing the two will see it.**
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.mdstruct import frontmatter
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # The width the writer emits. ⚑ A DEFAULT, NOT A LAW: the point is to tell the rule what the
 # document already is, so a caller normalizing at another width passes that width here.

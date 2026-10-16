@@ -20,17 +20,12 @@ failure, because it reads as a missing instrument rather than as a wrong directo
 REQUIRED argument, and only the ledger's CLI — which knows its repository — resolves it.
 """
 
-from __future__ import annotations
-
 import subprocess
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Sequence
+from pathlib import Path
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from pathlib import Path
-
-    # A lens runner: one argv in, `(rc, output)` out, with `rc is None` when it never started.
-    Runner = Callable[[Sequence[str]], tuple[int | None, str]]
+# A lens runner: one argv in, `(rc, output)` out, with `rc is None` when it never started.
+Runner = Callable[[Sequence[str]], tuple[int | None, str]]
 
 # How long one witness command may take before it is reported as not having run.
 TIMEOUT = 300

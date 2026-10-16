@@ -14,8 +14,6 @@ resolution in a CLI, so this one takes `--ledger PATH` and refuses without it â€
 path that is not a file, rather than tracing back.
 """
 
-from __future__ import annotations
-
 import re
 import sys
 from pathlib import Path

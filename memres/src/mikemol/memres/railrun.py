@@ -19,13 +19,9 @@ operator's principle, via github-8f). Each evaluation is exactly one of a shrink
 a hold, and the counts are written as a Prometheus textfile series for luthen to chart (W1030).
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, replace
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from mikemol.memres.rail import Reading
+from mikemol.memres.rail import Reading
 
 _KB_PER_MB = 1024.0
 _AVAILABLE = "MemAvailable:"

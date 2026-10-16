@@ -18,19 +18,12 @@ refuses; an ordinary phase may be re-run (idempotent), but not this one.
 reasons a phase cannot run are listed all together, so one `status` tells the operator everything.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
+from mikemol.waldo.contract import Contract
 from mikemol.waldo.marker import mismatches
-from mikemol.waldo.witness import judge
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-
-    from mikemol.waldo.contract import Contract
-    from mikemol.waldo.witness import Run, Witness
+from mikemol.waldo.witness import Run, Witness, judge
 
 DONE = "done"
 READY = "ready"

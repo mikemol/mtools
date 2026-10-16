@@ -8,15 +8,10 @@ artifacts. "Invokes bazel" is the test here (a non-comment line of the hook name
 the logic is in a BUILD file is the next step.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.katas import fleet, workstreams
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 NO_HOOK = "NO HOOK"
 BAZEL = "BAZEL"

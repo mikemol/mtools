@@ -23,14 +23,9 @@ DOCUMENTED branch; "still dispatches undocumented" and "the mode is GONE" both r
 ⚑ THE PROBE RUNS WHERE ITS CALLER SAYS (`cwd`), as every witness does — see `finding_kinds`.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.ledger import finding_kinds
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # The kinds whose polarity a probe can decide. ⚑ `standing` and `unwitnessed` are absent BY
 # CONSTRUCTION: neither runs a command, so neither has a polarity to be born wrong about.

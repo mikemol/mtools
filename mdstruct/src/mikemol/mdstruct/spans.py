@@ -22,14 +22,10 @@ picking the earlier one — the target is a WRITE, and a rewrite that edits the 
 not recoverable by re-running.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.mdstruct import ast
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class Span(NamedTuple):

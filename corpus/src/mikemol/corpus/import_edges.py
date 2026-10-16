@@ -29,18 +29,13 @@ letter says wins where its bullets disagree.)
 here. An import-closure census reports the boundary of the import graph, not of access.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-    # Which spelling of a name an edge walk reports: a parameter, not a second walk, because
-    # the descent rules (what executes on import) are the measured part and must not be copied.
-    type Namer = Callable[[ast.stmt], set[str]]
+# Which spelling of a name an edge walk reports: a parameter, not a second walk, because
+# the descent rules (what executes on import) are the measured part and must not be copied.
+Namer = Callable[[ast.stmt], set[str]]
 
 # Parsed edges, keyed by path and reading: a file's imports do not change within one run.
 _CACHE: dict[tuple[str, str], frozenset[str]] = {}

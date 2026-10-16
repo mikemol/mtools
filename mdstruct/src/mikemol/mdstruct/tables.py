@@ -26,16 +26,12 @@ cannot see syntax at all.
 where they expected a method.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 import panflute
 
 from mikemol.mdstruct import ast
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # The separator joined between cells when matching a `where` filter. ⚑ A NUL, so a filter cannot
 # accidentally match across a cell boundary the way a space or a pipe would.

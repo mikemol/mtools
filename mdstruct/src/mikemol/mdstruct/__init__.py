@@ -24,8 +24,6 @@ own root with a call that does not resolve symlinks. A published distribution en
 problem: an installed package knows where it lives.
 """
 
-from __future__ import annotations
-
 import warnings
 
 # ⚑⚑ THE PARSER EMITS A `SyntaxWarning` FROM ITS OWN DOCSTRINGS, ON EVERY IMPORT. panflute's

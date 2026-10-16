@@ -20,14 +20,10 @@ can never be measured against a different root than the walk (substrate's `relat
 class, gates G245/G249/G252).
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterable, Sequence
 from importlib.resources import files
 from pathlib import Path
-from typing import TYPE_CHECKING, NamedTuple
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+from typing import NamedTuple
 
 #: The flag that names the tree. Required — see `from_argv`.
 ROOT_FLAG = "--root"

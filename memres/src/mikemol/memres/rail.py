@@ -25,13 +25,8 @@ from luthen's series), or how the allowance reaches the sweep (the fence ledger 
 and a held lease once it can be resized, mtools:W1029).
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 MIN_FOR_SLOPE = 2
 MIN_FOR_ACCELERATION = 3

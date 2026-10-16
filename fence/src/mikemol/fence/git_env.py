@@ -27,8 +27,6 @@ switch to that test.
 finds the repository from there; only the hook's per-invocation redirections are dropped.
 """
 
-from __future__ import annotations
-
 import os
 
 #: The prefix every per-invocation git variable carries.

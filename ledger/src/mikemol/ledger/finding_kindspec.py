@@ -19,8 +19,6 @@ listed WITH the condition under which it is legitimate.
 A command that parses to nothing is refused, and the refusal names both fixes.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 # The two kinds that carry no command and therefore no polarity.

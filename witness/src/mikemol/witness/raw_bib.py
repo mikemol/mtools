@@ -19,8 +19,6 @@ BROKEN: decoding with replacement characters would parse plausible fictional ent
 invented row corroborates itself where a missing one can at least move a denominator.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 from pathlib import Path

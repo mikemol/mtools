@@ -19,8 +19,6 @@ never *which files are suites*. Only nested noise a top-level walk cannot see st
 ⚑ The tree is always the caller's argument; there is no default root.
 """
 
-from __future__ import annotations
-
 import os
 import re
 import shutil

@@ -31,17 +31,12 @@ liability, not an instrument - the same rule the pushers follow.  An unrecognise
 REFUSED (exit 2) rather than read as a path to append to.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import sys
 import time
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 USAGE = "mikemol-coord-sample <pid> <out.jsonl> [--interval=SECONDS]"
 EXIT_USAGE = 2

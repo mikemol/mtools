@@ -21,16 +21,12 @@ Prints one line per project with a grid; exits 1 if any has not converged.
     INSTRUMENT, NOT A GATE. Nothing in paperkit runs this; re-verify its output at each use.
 """
 
-from __future__ import annotations
-
 import json
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 # ONE CELL PER LINE, not a paren-bounded scan: a site string can CONTAIN a `)`, so
 # `pk_eval\(name[^)]*` would stop inside the site and never reach the `mem` attr.
@@ -40,7 +36,7 @@ _PROJECT = re.compile(r"bib\.project\(([^)]*)\)")
 _NAME = re.compile(r'name\s*=\s*"paperkit_([^"]+)"')
 _PATH = re.compile(r'project\s*=\s*"([^"]+)"')
 
-type Survey = list[tuple[str, int, int, int | None]]
+Survey = list[tuple[str, int, int, int | None]]
 
 
 def _group(match: re.Match[str], index: int) -> str:

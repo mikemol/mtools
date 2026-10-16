@@ -21,14 +21,9 @@ are the caller's `skip` argument, not a constant here.
 are symlinks whose NAMES are how they are excluded.
 """
 
-from __future__ import annotations
-
 import os
+from collections.abc import Collection
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Collection
 
 # Top-level directories that are never a tree's own source, whatever the tree.
 GENERIC_SKIP_DIRS = frozenset({"node_modules", "__pycache__", ".venv", ".git", ".edit-snapshots"})

@@ -46,8 +46,6 @@ read*, and an empty result with no count reads as a tool that failed rather than
 does not contain the thing.
 """
 
-from __future__ import annotations
-
 import argparse
 import sys
 from collections.abc import Callable

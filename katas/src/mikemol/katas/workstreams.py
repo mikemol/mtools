@@ -7,12 +7,7 @@ directory is a workstream when it holds `.claude/paths-forward.json`, and a dot-
 (a scratch checkout, a hidden tool tree) is never one.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 QUEUE = ".claude/paths-forward.json"
 """Where a workstream's queue lives, relative to its directory."""

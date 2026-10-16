@@ -17,8 +17,6 @@ when a descendant ends; that is activity, not stillness. A tree that is gone (`c
 hung either: the child ended, and the waiter's own `poll` says so.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 PATIENCE = 120

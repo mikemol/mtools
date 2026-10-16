@@ -24,28 +24,23 @@ cgroup is removed — so it survives a payload that was killed, crashed, or exec
 that read from inside the payload would lose exactly the runs worth measuring.
 """
 
-from __future__ import annotations
-
 import os
 import re
+import resource
 import sys
 import time
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.fence import cgroup
-
-if TYPE_CHECKING:
-    import resource
-    from collections.abc import Mapping, Sequence
-    from pathlib import Path
 
 POLL = 0.2
 
 # ⚑ THE RESULT'S JSON SHAPE, NAMED. `dict[str, object]` is honest but propagates: a list
 # comprehension over it types as `list[Any]`, which under `disallow_any_expr` is an error at the
 # CALLER rather than here — so the fix belongs at the definition, where the shape is known.
-type ResultJSON = dict[str, object]
+ResultJSON = dict[str, object]
 
 # Exit codes for conditions that are NOT the payload's own result.  They follow the shell's
 # convention (126 = found but not executable, 127 = not found) so a caller's existing handling

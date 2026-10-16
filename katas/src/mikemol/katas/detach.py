@@ -15,16 +15,11 @@ bare child would not inherit.
 its own per-file exemption scoped to the one `Popen`.
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
+from collections.abc import Sequence
+from pathlib import Path
 
 
 def waiter_argv(

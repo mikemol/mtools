@@ -11,12 +11,7 @@ CALLER'S: this module writes files, it does not run bazel, so a hook is swapped 
 word that the target passed.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 PLACEHOLDER = "@REPO@"
 """The word in a template that becomes the repo's name."""

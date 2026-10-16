@@ -14,16 +14,11 @@ message for stderr.
 names the file the caller must give instead.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError, expand
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _SUFFIX = ".md"
 

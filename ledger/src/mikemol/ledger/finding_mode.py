@@ -26,17 +26,10 @@ lenses is their ROW FORMAT, read by `diverges` and `declared_by`.
 block and returned a FALSE ZERO on all three findings it was written to hold.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.ledger.finding_kinds import CLOSED, OPEN, UNRUNNABLE
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.ledger.finding_kinds import Runner, Verdict
+from mikemol.ledger.finding_kinds import CLOSED, OPEN, UNRUNNABLE, Runner, Verdict
 
 # The row marker a divergence listing uses to open a per-tool block.
 TOOL_MARK = "── "

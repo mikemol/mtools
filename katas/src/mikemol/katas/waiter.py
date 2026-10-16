@@ -24,23 +24,18 @@ always taken minutes is not given an open-ended index hold.
 CONSUMED BY: `detach.start`, which runs this module as `python -m mikemol.katas.waiter`.
 """
 
-from __future__ import annotations
-
 import contextlib
 import os
 import signal
 import subprocess
 import sys
 import time
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.katas import hangwatch, proctree
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from typing import TextIO
 
 TIMEOUT_S = 11000.0
 """How long the child may run: above `mikemol-commit`'s own 10800 s."""

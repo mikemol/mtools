@@ -10,14 +10,9 @@ same-named file already in the archive: a second letter with a reused name destr
 a name already archived is reported and left where it is, for the operator to decide.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 ARCHIVE = "archive"
 """The directory under the inbox that holds handled letters."""

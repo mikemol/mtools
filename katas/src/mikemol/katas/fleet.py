@@ -10,20 +10,15 @@ the operator's and changes with their rulings (a repo with a live session, a red
 queue).
 """
 
-from __future__ import annotations
-
 import shutil
+from collections.abc import Collection
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.procrun.proc import capture
 
 from mikemol.katas import commits, detach, liveness, waiter, workstreams
-
-if TYPE_CHECKING:
-    from collections.abc import Collection
-    from pathlib import Path
 
 QUEUE_PATHS = (
     ".claude/paths-forward.json",

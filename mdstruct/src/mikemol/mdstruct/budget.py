@@ -19,14 +19,10 @@ a line, and this module reports the bytes of exactly those lines. The two instru
 the population by construction; the denominator line states both totals.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.mdstruct import spans as spans_mod
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class Budget(NamedTuple):

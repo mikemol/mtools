@@ -22,23 +22,16 @@ machine; a repository that carried them would carry one host's numbers to every 
 CONSUMED BY: `mikemol-commit` (`commit_kata.claim_of`).
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 import sys
+from collections.abc import Mapping, Sequence
 from contextlib import ExitStack
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.fence.policy import PolicyError, load
+from mikemol.fence.policy import PolicyError, Spec, load
 from mikemol.fence.reading import reader
 from mikemol.fence.watcher import Guard
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-
-    from mikemol.fence.policy import Spec
 
 ENV = "MIKEMOL_GUARDS"
 DEFAULT_POLICY = Path("~/.config/mikemol/guards.toml")

@@ -21,8 +21,6 @@ the same mode succeeded on it while failing on YAML-fenced files, an inconsisten
 consumer surfaced while diagnosing the re-attach defect.
 """
 
-from __future__ import annotations
-
 # The fence a YAML frontmatter block opens with. ⚑ THE OPENING FORM CARRIES ITS NEWLINE so a
 # document beginning with a horizontal rule is not mistaken for frontmatter.
 OPEN_FENCE = "---\n"

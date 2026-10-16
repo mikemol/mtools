@@ -23,20 +23,15 @@ through a general URL opener would read local files as a "reading". The request 
 CONSUMED BY: the guard watcher (W920).
 """
 
-from __future__ import annotations
-
 import json
 import math
 import urllib.parse
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from http.client import HTTPConnection, HTTPException, HTTPSConnection
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-
-    from mikemol.fence.guard import Sample
+from mikemol.fence.guard import Sample
 
 ENV = "MIKEMOL_ENDPOINTS"
 QUERY_PATH = "/api/v1/query"

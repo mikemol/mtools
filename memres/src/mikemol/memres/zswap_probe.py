@@ -28,18 +28,13 @@ linux-source 7.0.0-30.30; these are claims about THAT pin.
     python -m mikemol.memres.zswap_probe [--selftest]
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Callable, Iterable, Sequence
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Sequence
-
-type Reading = str | dict[str, str]
+Reading = str | dict[str, str]
 
 CGROUP_FILE = Path("/proc/self/cgroup")
 CGROUP_ROOT = Path("/sys/fs/cgroup")

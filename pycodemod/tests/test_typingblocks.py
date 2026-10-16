@@ -23,6 +23,21 @@ def test_an_import_only_block_is_replaced_by_its_imports() -> None:
     assert not planned.kept
 
 
+def test_imports_go_up_to_the_import_section_when_the_block_sits_below_code() -> None:
+    """A block under a constant leaves no import below code (ruff E402); the alias stays put."""
+    source = (
+        "from typing import TYPE_CHECKING\n"
+        "import os\n\n"
+        "LIMIT = os.sep\n\n"
+        "if TYPE_CHECKING:\n    from a import B\n    Alias = B\n"
+    )
+    planned = typingblocks.plan(source)
+    assert planned.hoisted == 1
+    lines = planned.text.splitlines()
+    assert lines.index("from a import B") < lines.index("LIMIT = os.sep")
+    assert lines.index("Alias = B") > lines.index("LIMIT = os.sep")
+
+
 def test_the_attribute_form_of_the_guard_is_hoisted_too() -> None:
     """`if typing.TYPE_CHECKING:` is the same guard."""
     source = "import typing\n\nif typing.TYPE_CHECKING:\n    from a import B\n"

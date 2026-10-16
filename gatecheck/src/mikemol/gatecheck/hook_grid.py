@@ -29,16 +29,12 @@ hand-copied thing:
 Usage:  mikemol-hook-grid [--root PATH]   # exit 0 = the transcription matches the declarations
 """
 
-from __future__ import annotations
-
 import argparse
 import re
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
+from typing import cast
 
 # The canary: the ONE non-project member (the harness positive control). Named, not filtered, for
 # the same reason bnd-check uses set-equality: an unnamed residual admits any stray member.

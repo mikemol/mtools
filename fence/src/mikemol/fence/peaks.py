@@ -14,8 +14,6 @@ median alone under-sizes the tail.
 CONSUMED BY: `python -m mikemol.fence.peaks`, and the `mikemol-membudget` console script to come.
 """
 
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 

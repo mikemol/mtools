@@ -25,16 +25,12 @@ defaults (the witness must read the journal), and a witness that settles seconds
 flake.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.waldo.compare import Change, changes_from
 from mikemol.waldo.witness import Witness, judge
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 TOP_KEYS = frozenset({"_", "root", "plan_env", "allowed", "required", "before", "after"})
 WITNESS_KEYS = frozenset(

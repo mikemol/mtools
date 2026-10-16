@@ -29,17 +29,13 @@ no start time, they are UNMET, never vacuously met.
 needs no process, and the tail of the output (last non-empty lines) is kept for the verdict.
 """
 
-from __future__ import annotations
-
 import json
 import re
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-
-type Run = Callable[[Sequence[str]], tuple[int, str]]
+Run = Callable[[Sequence[str]], tuple[int, str]]
 
 TAIL_LINES = 6
 NO_ARGV = 2

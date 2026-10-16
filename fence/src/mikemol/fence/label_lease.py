@@ -22,18 +22,13 @@ fences whatever follows its flags. `python -m mikemol.fence.label_lease` is the 
 CONSUMED BY: substrate's `scripts/membudget` `_auto_mb` and `suite_run.timeout_for`, once landed.
 """
 
-from __future__ import annotations
-
 import math
 import sys
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.fence import autosize, ledger
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
 
 # Substrate-tuned defaults for an extrapolation, not bounds on what a caller may ask.
 FLOOR_S = 120

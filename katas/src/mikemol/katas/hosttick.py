@@ -16,16 +16,11 @@ carries the tick's note, and the file holding the live cron job id. This module 
 the steps (arm, ledger, evidence, flush, unlock) and nothing about whose queue it is.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.procrun.proc import capture
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from pathlib import Path
 
 
 @dataclass(frozen=True)

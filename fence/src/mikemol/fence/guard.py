@@ -19,13 +19,8 @@ would trip on no evidence, so it is refused.
 CONSUMED BY: the guard watcher (W920) and the policy wiring of `mikemol-commit` (W921).
 """
 
-from __future__ import annotations
-
 import math
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from collections.abc import Sequence
 
 Sample = float | None
 """One reading: a number, or None when it could not be read."""

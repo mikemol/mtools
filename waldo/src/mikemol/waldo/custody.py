@@ -23,15 +23,10 @@ identity is named or the caller says `as_current_user`; a waldo never quietly be
 command's output cannot carry it out.
 """
 
-from __future__ import annotations
-
 import hashlib
 import os
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 DIR_MODE = 0o700
 FILE_MODE = 0o600

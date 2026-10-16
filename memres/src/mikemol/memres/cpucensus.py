@@ -21,18 +21,13 @@ backwards, so it is left out of the table, never printed as zero or as a negativ
 `sleep`) so the table is tested over made-up counters.
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import sys
 import time
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
 
 ROOT = Path("/sys/fs/cgroup")
 USAGE_KEY = "usage_usec"
@@ -44,7 +39,7 @@ _DEFAULT_WINDOW_S = 10.0
 _DEFAULT_TOP = 25
 _DEFAULT_DEPTH = 5
 
-type Snapshot = Callable[[Path, int], dict[str, int]]
+Snapshot = Callable[[Path, int], dict[str, int]]
 
 
 @dataclass(frozen=True, slots=True)

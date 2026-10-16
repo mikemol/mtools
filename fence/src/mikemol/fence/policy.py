@@ -24,17 +24,13 @@ policy means for it (`guard_cli` reports it loudly and runs the command unguarde
 CONSUMED BY: `guard_cli` (the `mikemol-commit` wiring), W921.
 """
 
-from __future__ import annotations
-
 import signal
 import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
 from mikemol.fence.watcher import Row
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 READINGS = ("promql",)
 _KEYS = (

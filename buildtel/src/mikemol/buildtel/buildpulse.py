@@ -35,22 +35,17 @@ was right to; the tool lived outside the tree until the tree was quiet.
     python -m mikemol.buildtel.buildpulse --selftest              # prove every arm can fire
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import re
 import sys
 import tempfile
 import time
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.buildtel import proc
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 # Bazel's progress line: "[39,547 / 116,688] eval ..."
 PROGRESS = re.compile(r"\[([\d,]+)\s*/\s*([\d,]+)\]")

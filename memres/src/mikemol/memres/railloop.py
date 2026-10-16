@@ -20,21 +20,14 @@ at the ceiling writes nothing to the ledger, so a sampler started on a calm host
 error, and a sampler that dies leaves the ledger total where it last put it.
 """
 
-from __future__ import annotations
-
 import itertools
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.memres import rail, railrun
-from mikemol.memres.rail import Sample
+from mikemol.memres.rail import Rail, Reading, Sample
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    from mikemol.memres.rail import Rail, Reading
-
-type Runner = Callable[[Sequence[str]], int]
+Runner = Callable[[Sequence[str]], int]
 
 WINDOW = 3
 DEFAULT_INTERVAL_S = 5.0

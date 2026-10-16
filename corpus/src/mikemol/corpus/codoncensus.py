@@ -23,20 +23,16 @@ first line.
 small file and ends by itself.
 """
 
-from __future__ import annotations
-
 import re
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 _ANSI = re.compile(r"\x1b\[[0-9;]*m")
 _FUTURE_LINE = re.compile(r"^from __future__ import annotations[ \t]*\n", re.MULTILINE)

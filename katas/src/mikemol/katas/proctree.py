@@ -17,8 +17,6 @@ readings and must treat a fall as activity (something ended), never as stillness
 The `/proc` root is an argument, so a test builds a fake tree under `tmp_path`.
 """
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
 

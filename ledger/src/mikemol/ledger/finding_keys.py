@@ -21,14 +21,9 @@ given, `ROOT` derived from `__file__`; installed, that names a file inside `site
 reader takes the ledger's path, and only a CLI resolves it.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 # A witness key as the roster spells it: family, a letter-and-ordinal, an optional slug.
 _KEY = re.compile(r'^\s*"([a-z]+)-([A-Z])(\d+)(?:-([a-z0-9-]+))?"\s*:', re.MULTILINE)

@@ -34,18 +34,13 @@ Usage:
 Exit: 0 clean, 2 if an unverified absence claim is found.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-    from typing import TextIO
+from typing import TextIO, cast
 
 # ⚑ THE WATCHWORDS ARE ABSENCE PHRASINGS, and the dangerous ones are the CONFIDENT ones. These
 # are the verdicts a queue/warrant audit reaches for, each of which asserts about the ENGINE what

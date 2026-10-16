@@ -11,8 +11,6 @@ sorted list; everything around it in `hook_index` spawns git, reads the environm
 refusals, so a suite can exercise this half over porcelain FIXTURES alone.
 """
 
-from __future__ import annotations
-
 # Each entry is a path PREFIX, and each earns its place by OWNERSHIP: bazel-invisible (zero
 # references in any BUILD/bib/bzl) AND index-gated by its own check (cotype-monotone).
 ALLOW = ("cotype/",)

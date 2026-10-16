@@ -27,19 +27,13 @@ calls whether it is right UNRESOLVED; it is a parameter here.
 CONSUMED BY: the `mikemol-membudget` console script, whose `run` climbs under MEMBUDGET_RETRY_OOM.
 """
 
-from __future__ import annotations
-
 import os
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.fence import admit, core
+from mikemol.fence.core import Result
 from mikemol.fence.ledger import bucket
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-
-    from mikemol.fence.core import Result
 
 # The verdict prefix `cgroup.bound_by` gives a memory cap that KILLED, as opposed to one that
 # throttled.

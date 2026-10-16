@@ -6551,3 +6551,24 @@
   claim  = {After the rewrite the block holds imports and one plain alias, and the hoist moves it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_the_hoist_then_takes_a_block_of_imports_and_the_alias},
 }
+
+@misc{pycodemod-typingblocks-imports-go-up-to-the-import-section-when-the-block-sits-below-code,
+  section = {typingblocks},
+  title  = {A block under a constant leaves no import below code (ruff E402); the alias stays put},
+  claim  = {A block under a constant leaves no import below code (ruff E402); the alias stays put.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_typingblocks.py -k test_imports_go_up_to_the_import_section_when_the_block_sits_below_code},
+}
+
+@misc{pycodemod-cli-modes-reach-missing-file-inside-the-project-is-an-error-row-for-each-file-mode,
+  section = {cli_modes_reach},
+  title  = {The handler runs, the judge cannot read the file, and the mode says so and exits 2},
+  claim  = {The handler runs, the judge cannot read the file, and the mode says so and exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_modes_reach.py -k test_a_missing_file_inside_the_project_is_an_error_row_for_each_file_mode},
+}
+
+@misc{pycodemod-cli-modes-reach-project-without-a-venv-is-skipped-by-each-tree-mode,
+  section = {cli_modes_reach},
+  title  = {The tree handler gets the root whole, finds no venv, names the skip and exits clean},
+  claim  = {The tree handler gets the root whole, finds no venv, names the skip and exits clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_modes_reach.py -k test_a_project_without_a_venv_is_skipped_by_each_tree_mode},
+}

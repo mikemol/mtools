@@ -18,18 +18,14 @@ regenerate and byte-compare, so a drifted projection is named rather than silent
     mikemol-mem-project <db> <project> <out.json> --check  exit 1 if it would change
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Sequence
 from contextlib import closing
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.memres import mem_db
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _ARGC = 3
 

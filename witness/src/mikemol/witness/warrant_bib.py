@@ -20,15 +20,10 @@ importing paperkit at module scope made a whole CLI unreachable without paperkit
 - substrate's `speak()` usage text and `__main__` delegation, a CLI for a module with no modes.
 """
 
-from __future__ import annotations
-
 import re
 import tomllib
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from pathlib import Path
+from collections.abc import Mapping
+from pathlib import Path
 
 
 class WarrantError(KeyError):

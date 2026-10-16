@@ -21,21 +21,16 @@ parse as `parse`. This distribution stays stdlib-only and never imports the engi
   check answer about content rather than structure.
 """
 
-from __future__ import annotations
-
 import re
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.witness import raw_bib, witness_family, witness_row
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
-    from pathlib import Path
-
-    # The engine's parse: a bib path to `{key: {field: value}}`. The CALLER's to pass.
-    type Parse = Callable[[Path], dict[str, dict[str, str]]]
-    type Row = witness_row.Part | witness_row.Verdict
+# The engine's parse: a bib path to `{key: {field: value}}`. The CALLER's to pass.
+Parse = Callable[[Path], dict[str, dict[str, str]]]
+Row = witness_row.Part | witness_row.Verdict
 
 # A claim shorter than this is not a commitment. One spelling, shared by witness and cases.
 MIN_PROSE = 20

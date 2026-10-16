@@ -23,12 +23,7 @@ fixed it to the text following its own roster's closing brace; where a roster en
 roster's shape, so `splice` takes the anchor, and refuses unless it occurs exactly once.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from mikemol.ledger.finding_kindspec import Spec
+from mikemol.ledger.finding_kindspec import Spec
 
 # How wide a wrapped note line may run before it is broken.
 WIDTH = 94

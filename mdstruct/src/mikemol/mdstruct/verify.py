@@ -26,15 +26,11 @@ been tried. The class that bites next is one nobody has written an arm for, so t
 is the standing weakness here — ADD A SHAPE BEFORE TRUSTING THIS.
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.mdstruct import spans as spans_mod
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 _FENCE = re.compile(r"^\s*(```|~~~)")
 _ATX = re.compile(r"^(#{1,6})\s+(.*?)\s*$")

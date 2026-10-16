@@ -21,15 +21,10 @@ would silently answer about a DIFFERENT finding — a wrong witness reads exactl
 So the refusal NAMES ITS CANDIDATES, which the caller can retype.
 """
 
-from __future__ import annotations
+from collections.abc import Callable, Mapping
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
-
-    Witness = Callable[[], tuple[int, str]]
-    Answer = tuple[str, Witness | None]
+Witness = Callable[[], tuple[int, str]]
+Answer = tuple[str, Witness | None]
 
 
 def resolve(want: str, roster: Mapping[str, Witness]) -> Answer:

@@ -23,8 +23,6 @@ substrate's `__main__` block (a `speak()` usage text and exit 2) is not ported: 
 a module with no modes, and a package module has no `__main__` invocation.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 
 # The two row kinds. A reader dispatches on this, so they are constants, not bare strings.

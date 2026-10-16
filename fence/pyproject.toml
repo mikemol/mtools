@@ -126,7 +126,17 @@ namespace-packages = ["src/mikemol", "tests"]
 # `ignore` of a preview rule would be the same silence in a new place.
 preview = true
 select = ["ALL"]
-ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    # ⚑ CODON HAS NO `TYPE_CHECKING` (mtools:W1319): an import used only in an annotation is
+    # typing-only to ruff but must stay a real import, so the rules that push it into the guard
+    # are off for this dist.
+    "typing-only-first-party-import",
+    "typing-only-third-party-import",
+    "typing-only-standard-library-import",
+]
 
 [tool.ruff.lint.flake8-pytest-style]
 # ⚑ CALLED, NOT BARE: `pytest.fixture` applied bare resolves to the overload returning

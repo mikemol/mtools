@@ -25,26 +25,17 @@ it passes through `scrub` for the secrets the caller holds, so a secret echoed b
 reach the queue.
 """
 
-from __future__ import annotations
-
 import json
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.waldo.compare import Change, changes_from, compare, render, shown
-from mikemol.waldo.contract import lint
-from mikemol.waldo.custody import scrub
-from mikemol.waldo.witness import capture_before, run_all
+from mikemol.waldo.contract import Contract, lint
+from mikemol.waldo.custody import Secret, scrub
+from mikemol.waldo.witness import Result, Run, capture_before, run_all
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    from mikemol.waldo.contract import Contract
-    from mikemol.waldo.custody import Secret
-    from mikemol.waldo.witness import Result, Run
-
-type Artifact = str
-type Verdict = dict[str, object]
+Artifact = str
+Verdict = dict[str, object]
 
 # ⚑ THE FLEET EXIT TABLE (corpus/exit-table.json, W1310): a step that RAN AND BROKE is FAILED 1, a
 # verdict on the subject (a precondition, the declared set, a witness that failed) is REFUSED 4, and

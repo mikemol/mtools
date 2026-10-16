@@ -16,8 +16,6 @@ rather than silently winning, because "observe" and "cap this" is an incoherent 
 guessing which the caller meant is how a fence ends up not fencing.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
@@ -120,7 +118,7 @@ class _Args:
     cmd: tuple[str, ...]
 
     @classmethod
-    def parse(cls, ap: argparse.ArgumentParser, argv: list[str] | None) -> _Args:
+    def parse(cls, ap: argparse.ArgumentParser, argv: list[str] | None) -> "_Args":
         """Parse `argv` and narrow every field to its declared type.
 
         Returns:

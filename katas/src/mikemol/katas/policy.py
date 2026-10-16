@@ -13,15 +13,11 @@ error naming the key, never a guess; only values that are safe to omit (an empty
 job file, the standing waypoint `W2`) have defaults.
 """
 
-from __future__ import annotations
-
 import tomllib
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
+from typing import cast
 
 CONFIG_NAME = "katas.toml"
 """The policy file's name, under `<config dir>/mikemol/`."""

@@ -25,17 +25,12 @@ backticks, so a third of the file — and everything after the first such headin
 in this package does that.
 """
 
-from __future__ import annotations
-
 import io
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import panflute
 
 from mikemol.mdstruct import pandoc
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # ⚑⚑⚑ THERE IS NO LIST OF MARKUP CHARACTERS HERE ANY MORE, AND THAT IS THE REPAIR. This was
 # `_MARKUP = ("`", "*", "_")` — a HAND-MAINTAINED MODEL of what pandoc's rendering strips, whose

@@ -25,24 +25,25 @@ has not.
 and where to read it, with the standard command to re-run, and not the answer.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.waldo import marker
 from mikemol.waldo.confirm import ConfirmError, check, instructions, issue
 from mikemol.waldo.marker import MarkerError
-from mikemol.waldo.phases import eligibility, lint, read_done
-from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_FAILED, EXIT_OK, EXIT_REFUSED, Stop, execute
+from mikemol.waldo.phases import Phase, Recipe, eligibility, lint, read_done
+from mikemol.waldo.pipeline import (
+    EXIT_CANNOT,
+    EXIT_FAILED,
+    EXIT_OK,
+    EXIT_REFUSED,
+    Seams,
+    Stop,
+    Verdict,
+    execute,
+)
 from mikemol.waldo.witness import run_all
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from pathlib import Path
-
-    from mikemol.waldo.phases import Phase, Recipe
-    from mikemol.waldo.pipeline import Seams, Verdict
 
 
 @dataclass(frozen=True)

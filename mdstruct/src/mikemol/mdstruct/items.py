@@ -26,19 +26,15 @@ each of the three is a different kind of claim, stated as such:
     read and the docstring of `wiki_targets` says exactly what it can and cannot see.
 """
 
-from __future__ import annotations
-
 import io
 import re
-from typing import TYPE_CHECKING, NamedTuple
+from collections.abc import Sequence
+from pathlib import Path
+from typing import NamedTuple
 
 import panflute
 
 from mikemol.mdstruct import ast, pandoc
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
 
 # A raw line that MAY open a list item: bullet or ordered marker, any indent. Pandoc decides.
 _MARKER_RE = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+\S")

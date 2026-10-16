@@ -19,13 +19,8 @@ what a witness emits, and a runner owns invocation).
 named members cannot move the population, which is what makes a split auditable.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 
 @dataclass(frozen=True)
@@ -42,7 +37,7 @@ class Member:
     claim: str
     cases: int = 1
     premises: tuple[str, ...] = ()
-    family: Family | None = None
+    family: "Family | None" = None
 
     @property
     def count(self) -> int:

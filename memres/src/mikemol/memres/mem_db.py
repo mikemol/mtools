@@ -17,22 +17,18 @@ database serialises; the JSON equivalent is a read-modify-write across concurren
 Usage:  python -m mikemol.memres.mem_db <db> {manifest|provenance} <project>
 """
 
-from __future__ import annotations
-
 import json
 import sqlite3
 import sys
 import time
+from collections.abc import Sequence
 from contextlib import closing
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.memres.mem_learn import BYTES_PER_MB, Manifest, pow2
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-type Row = tuple[str, str, str, str, int]
+Row = tuple[str, str, str, str, int]
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS peak (

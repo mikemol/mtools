@@ -21,22 +21,17 @@ call made here, so the answer is about ROOT and only ROOT.
 CONSUMED BY: `mikemol-sibling-pin`, and gates that read a sibling (W1018, W1019).
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-
-    type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 GIT_ENV = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE")
 SHA = re.compile(r"[0-9a-f]{7,40}")

@@ -30,19 +30,14 @@ different question and the gate's to ask.
     mikemol-witness-reach --root DIR       # the repository is DIR
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.importdag import dagnames
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 EXCLUDE = frozenset({"__init__.py"})
 """File names in a checks directory that are not witnesses."""

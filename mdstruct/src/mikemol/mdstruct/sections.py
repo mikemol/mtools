@@ -26,14 +26,9 @@ READER is a gate that blocks without routing.
 share one derivation rather than being two code paths that can disagree.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.mdstruct import spans as spans_mod
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 def replace_section(

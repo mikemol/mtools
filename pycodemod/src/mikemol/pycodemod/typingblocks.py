@@ -24,9 +24,13 @@ project's tests as the judge's second check (`cli_typedargs` `selftest`), which 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 _KEPT = "a TYPE_CHECKING block that holds more than imports, or an else, is left as it is"
 
@@ -96,15 +100,31 @@ def _only_imports(block: cst.If) -> bool:
     )
 
 
-def _hoisted(block: cst.If) -> list[cst.SimpleStatementLine]:
-    # The block's import lines, the first carrying the blank lines and comments the `if` had.
+def _is_import_line(stmt: cst.BaseStatement) -> bool:
+    return isinstance(stmt, cst.SimpleStatementLine) and all(
+        isinstance(item, (cst.Import, cst.ImportFrom)) for item in stmt.body
+    )
+
+
+def _split(block: cst.If) -> tuple[list[cst.SimpleStatementLine], list[cst.SimpleStatementLine]]:
+    # The block's lines as (imports, everything else); every line is a SimpleStatementLine here.
     lines = [line for line in block.body.body if isinstance(line, cst.SimpleStatementLine)]
-    carried: list[cst.EmptyLine] = [*block.leading_lines, *lines[0].leading_lines]
-    return [lines[0].with_changes(leading_lines=carried), *lines[1:]]
+    return [x for x in lines if _is_import_line(x)], [x for x in lines if not _is_import_line(x)]
+
+
+def _carry(lines: list[cst.SimpleStatementLine], blank: Sequence[cst.EmptyLine]) -> None:
+    # Give the first line the blank lines and comments the `if` had.
+    if lines:
+        carried: list[cst.EmptyLine] = [*blank, *lines[0].leading_lines]
+        lines[0] = lines[0].with_changes(leading_lines=carried)
 
 
 def plan(text: str) -> Planned:
-    """Replace every import-only `if TYPE_CHECKING:` block at module level by its imports.
+    """Replace every import-only `if TYPE_CHECKING:` block at module level by its contents.
+
+    ⚑ THE IMPORTS GO UP TO THE IMPORT SECTION: after the last import that precedes the block, so a
+    block that sat below some code does not leave module-level imports under it (ruff E402). Its
+    aliases stay where the block was, after the imports they name.
 
     Returns:
         the Planned text; unchanged with `hoisted` 0 when there is no such block.
@@ -116,11 +136,22 @@ def plan(text: str) -> Planned:
     body: list[cst.SimpleStatementLine | cst.BaseCompoundStatement] = []
     kept: list[tuple[int, str]] = []
     hoisted = 0
+    anchor = -1
     for stmt in module.body:
         if not is_checking(stmt) or not isinstance(stmt, cst.If):
             body.append(stmt)
+            anchor = len(body) - 1 if _is_import_line(stmt) else anchor
         elif _only_imports(stmt):
-            body.extend(_hoisted(stmt))
+            imports, others = _split(stmt)
+            if anchor < 0:
+                _carry(imports or others, stmt.leading_lines)
+                body.extend(imports)
+                anchor = len(body) - 1 if imports else anchor
+            else:
+                _carry(others, stmt.leading_lines)
+                body[anchor + 1 : anchor + 1] = imports
+                anchor += len(imports)
+            body.extend(others)
             hoisted += 1
         else:
             kept.append((positions[stmt].start.line, _KEPT))

@@ -20,12 +20,7 @@ the two UNPAIRED lists, never the whole populations.
 ⚑ AMBIGUITY IS REPORTED, NEVER RESOLVED: a stem prefixing several bib keys stays witness-only.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Sequence
 
 Pair = tuple[str, str]
 Split = tuple[list[Pair], list[str], list[str]]

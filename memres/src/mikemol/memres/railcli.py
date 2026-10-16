@@ -22,8 +22,6 @@ new one, never half of one, so the text goes to a sibling temporary file and rep
 Ctrl-C ends the loop with exit 0. The ledger total stays wherever the rail last put it.
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import shutil
@@ -31,16 +29,13 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.memres import railloop
 from mikemol.memres.rail import Rail
 from mikemol.memres.railloop import Plan, Seams
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 MEMINFO = Path("/proc/meminfo")
 FENCE = "mikemol-membudget"

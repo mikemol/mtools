@@ -17,14 +17,9 @@ fence: the caller reads "nothing tripped" as evidence the payload was well-behav
 evidence of nothing at all. Every refusal here names the controller and the path.
 """
 
-from __future__ import annotations
-
 import contextlib
+from collections.abc import Iterable, Mapping
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping
 
 CG_ROOT = Path("/sys/fs/cgroup")
 

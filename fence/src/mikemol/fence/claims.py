@@ -20,17 +20,12 @@ Everything here takes the store, the host's facts and the time as arguments, so 
 temporary ledger and a fixed clock.
 """
 
-from __future__ import annotations
-
 import time
 import uuid
+from collections.abc import Sequence
 from dataclasses import dataclass, replace
-from typing import TYPE_CHECKING
 
 from mikemol.fence import admit
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _OWNER_FLAG = "--owner-pid"
 _ID_LENGTH = 12

@@ -18,14 +18,9 @@ returns `None`, never `set()`: a caller handed `set()` reports every witness as 
 prints a census claiming total drift, produced by a reader that failed.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.witness import raw_bib
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 def ledger_bibs(where: Path) -> list[Path]:

@@ -28,15 +28,11 @@ the output that nothing measured. A match inside a table reports its enclosing S
 which is the editable unit — and the caller states that limit with the result.
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.mdstruct import spans as spans_mod
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # The container reported for a match outside every section — before the first header, or in a
 # document with none. ⚑ NAMED RATHER THAN EMPTY: a blank container reads as a missing

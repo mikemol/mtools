@@ -17,20 +17,15 @@ raised into place, never removed by absence; the store's monotone-max upsert enf
     mikemol-mem-harvest <project-dir> [--db FILE] [--bazel-out DIR] [--run ID]
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Sequence
 from contextlib import closing
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.memres import mem_db
 from mikemol.memres.mem_learn import BYTES_PER_MB, resolution
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-type Measured = dict[tuple[str, str, str], float]
+Measured = dict[tuple[str, str, str], float]
 
 
 def _read_peak(path: Path) -> str | None:

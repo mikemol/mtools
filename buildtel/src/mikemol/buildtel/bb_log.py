@@ -27,8 +27,6 @@ exit 3 with the reason on stderr, while a log that was read and holds no lines s
     mikemol-buildlog <invocation-id-or-url> --all      # every line
 """
 
-from __future__ import annotations
-
 import base64
 import binascii
 import http.client
@@ -36,12 +34,9 @@ import json
 import sys
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import TextIO, cast
 
 from mikemol.buildtel.bb_records import EXIT_UNREACHABLE, EXIT_USAGE, HOST, HTTP_OK, PORT, TIMEOUT_S
-
-if TYPE_CHECKING:
-    from typing import TextIO
 
 RPC = "/rpc/BuildBuddyService/GetEventLogChunk"
 MIN_LINES = 100_000

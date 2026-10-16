@@ -17,22 +17,17 @@ holder) comes from the policy file (`policy`), never from a constant here.
 strict mypy refuses, and the grammar is small enough that a typed reader is shorter than the casts.
 """
 
-from __future__ import annotations
-
 import os
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.procrun.proc import capture
 
 from mikemol.katas import fleet, hosttick, inbox, policy, pulse, scaffold, survey
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-    from typing import TextIO
 
 EXIT_USAGE = 2
 _POLICY_FLAG = "--policy"

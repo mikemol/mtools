@@ -31,18 +31,13 @@ mine.  Same discipline as `project_endpoints`.
 verdict is ever produced under it to be mis-cached.  Read by tools/toolchain_status.sh.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.buildtel import proc
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 DIRECTORY_ENV = "LUTHEN_OBSERVABILITY_DIR"
 IMAGES = ("paperkit-executor", "buildbuddy-executor")

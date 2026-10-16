@@ -22,15 +22,10 @@ file and its directory (no-symlinks ruling).
 marker disagrees about and not just the first thing.
 """
 
-from __future__ import annotations
-
 import os
 import re
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from pathlib import Path
+from collections.abc import Mapping
+from pathlib import Path
 
 KEY = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 LINE = re.compile(r"\s*([^=\s]+)\s*=\s*(.*?)\s*")

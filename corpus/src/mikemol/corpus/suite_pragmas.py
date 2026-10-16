@@ -19,14 +19,9 @@ misspelled `# selftest-tenant: sandbxo` never makes a runner invent a tenant fro
 both readers return the empty answer and the failure surfaces when the suite is RUN.
 """
 
-from __future__ import annotations
-
 import re
+from collections.abc import Collection
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Collection
 
 REQUIRES = re.compile(r"^#\s*selftest-requires:\s*(.+)$", re.MULTILINE)
 

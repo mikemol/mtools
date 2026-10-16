@@ -10,8 +10,6 @@ calls live in this module, whose one responsibility they are, and the rest take 
 Every argv is a list built by the caller: never a shell.
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 from collections.abc import Callable, Sequence

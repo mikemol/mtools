@@ -34,8 +34,6 @@ CONSUMED BY: nothing in this repository yet — substrate's `scripts/membudget` 
 over it once it lands (letter, "After it lands").
 """
 
-from __future__ import annotations
-
 import contextlib
 import enum
 import fcntl
@@ -43,12 +41,9 @@ import os
 import sys
 import time
 import uuid
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, Mapping
 
 # The ledger's three line kinds, and each one's word count (a lease's or waiter's label may hold
 # spaces, so its count is a minimum). ⚑ A WAITER HAS A LEASE'S SHAPE, ticket in the id's place, so

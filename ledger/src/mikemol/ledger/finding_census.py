@@ -20,12 +20,7 @@ only its own roster builds (`excludes`, `agda_lacks_field`, `agda_grep_count`); 
 policy, so a caller with more kinds passes its own order — and the derivation holds for it too.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
+from collections.abc import Mapping, Sequence
 
 # The first kind no code change can flip; everything before it in an order is behavioural.
 FIRST_UNFALSIFIABLE = "mode_undocumented"

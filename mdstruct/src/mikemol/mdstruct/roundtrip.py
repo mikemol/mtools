@@ -39,15 +39,11 @@ kept firing on every edit. A census with no apply trains a reader to dismiss it 
 The answer was one return value away, not a build.
 """
 
-from __future__ import annotations
-
 import difflib
-from typing import TYPE_CHECKING, NamedTuple
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.mdstruct import pandoc
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # How many changed lines to carry as a sample — enough to see the shape, bounded so a whole-file
 # reflow cannot flood a caller.

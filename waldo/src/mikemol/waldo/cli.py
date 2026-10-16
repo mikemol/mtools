@@ -18,22 +18,17 @@ and no pipe, chaining or inline script. `invocation` builds exactly that and not
 witnesses are the safety.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import re
 import sys
-from typing import TYPE_CHECKING, cast
+from collections.abc import Sequence
+from pathlib import Path
+from typing import cast
 
 from mikemol.waldo.contract import ContractError, parse
+from mikemol.waldo.custody import Secret
 from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_OK, Seams, Verdict, execute, verdict_line
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.waldo.custody import Secret
 
 SHAPE = re.compile(r"env -C (/[\w./-]+) (/[\w./-]+) -m ([A-Za-z_][\w.]*) --set ([\w.-]+)( --dry)?")
 

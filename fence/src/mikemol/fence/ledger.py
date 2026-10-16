@@ -25,18 +25,13 @@ CONSUMED BY: `mikemol.fence.cli`'s `peaks` mode (next), and substrate's `scripts
 every fence letter has landed.
 """
 
-from __future__ import annotations
-
 import statistics
 import time
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
-    from pathlib import Path
-
-    from mikemol.fence.core import Result
+from mikemol.fence.core import Result
 
 # The smallest cap the report suggests, and the lease uses: below it a bucket is not worth sizing.
 BUCKET_FLOOR_MB = 64

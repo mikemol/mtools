@@ -10,17 +10,12 @@ adopted-writer notice, a long title) is noise to the operator who has already ac
 caller names the substrings to hide; they change with the operator's rulings, not with this code.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
+from pathlib import Path
 
 from mikemol.procrun.proc import capture
 
 from mikemol.katas import fleet
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
 
 CHECK_TIMEOUT_S = 1800.0
 """How long nemik-check or nemik-rank may take: they read every queue."""

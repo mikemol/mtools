@@ -18,14 +18,9 @@ witness as unknown, so it stays the caller's); the order is the caller's declare
 `finding_census` takes it.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Mapping, Sequence
 
 from mikemol.ledger import finding_census, finding_resolve
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
 
 # The modes this router dispatches. ⚑ DECLARED, so a case asserts the roster against the branches.
 MODES: tuple[str, ...] = ("--selftest", "--register", "--pairing", "--kinds", "--list")

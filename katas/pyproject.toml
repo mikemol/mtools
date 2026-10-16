@@ -81,7 +81,17 @@ namespace-packages = ["src/mikemol", "tests"]
 [tool.ruff.lint]
 preview = true
 select = ["ALL"]
-ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    # ⚑ CODON HAS NO `TYPE_CHECKING` (mtools:W1319): an import used only in a local-variable
+    # annotation is typing-only to ruff but must stay a real import, so the rules that push it
+    # into the guard are off for this dist.
+    "typing-only-first-party-import",
+    "typing-only-third-party-import",
+    "typing-only-standard-library-import",
+]
 
 # ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (the
 # treeio and ratchet precedent, W857): left to detection, a venv that has it installed classifies it

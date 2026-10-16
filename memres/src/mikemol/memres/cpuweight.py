@@ -32,15 +32,11 @@ lever must never be able to fail a build.
     mikemol-cpuweight [--weight N] [--report] [--verify] [--exec CMD...]
 """
 
-from __future__ import annotations
-
 import os
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, NamedTuple
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+from typing import NamedTuple
 
 CGROUP_ROOT = Path("/sys/fs/cgroup")
 PROC_ROOT = Path("/proc")

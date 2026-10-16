@@ -35,8 +35,6 @@ DISTINGUISHABILITY at a glance. Optimising the label for typing solved the wrong
 tool was simply unable to read the better one.
 """
 
-from __future__ import annotations
-
 import re
 
 # ⚑ THE ALTERNATION'S ARITY IS DELIBERATELY NOT DOCUMENTED, AND THAT IS THE FIX. A reader once
