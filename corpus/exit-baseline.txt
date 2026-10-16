@@ -1,4 +1,3 @@
-fence/src/mikemol/fence/admit.py EXIT_REFUSED 3
 hooks/src/mikemol/hooks/flag_contract.py EXIT_REFUSED 2
 hooks/src/mikemol/hooks/new_dist_cli.py EXIT_REFUSED 2
 hooks/src/mikemol/hooks/pycheck_clear.py EXIT_NOT_RUN 3

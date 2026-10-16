@@ -307,8 +307,13 @@ class Verdict(enum.Enum):
     AMBIGUOUS_TOTAL = "ambiguous-total"
 
 
-# Exit codes, as the origin: 3 = cannot proceed now (or ever), 4 = the ledger itself says no.
-EXIT_REFUSED = 3
+# ⚑ EXIT CODES BY VERDICT (W1309, corpus/exit-table.json): the origin's single 3 meant "cannot
+# proceed now (or ever)", which is two verdicts. DEFERRED 3 is a precondition unmet where a later
+# attempt may succeed (a claim held by a live holder, a wait refused under noblock or past its
+# timeout); REFUSED 4 is a request that can never fit (IMPOSSIBLE), and LEDGER 4 is the ledger
+# itself saying no. bazel_admit and work_claims_hook already read 3 as a deferral.
+EXIT_DEFERRED = 3
+EXIT_REFUSED = 4
 EXIT_LEDGER = 4
 
 
@@ -324,7 +329,7 @@ def exit_code(verdict: Verdict) -> int | None:
     """
     return {
         Verdict.IMPOSSIBLE: EXIT_REFUSED,
-        Verdict.CLAIMED: EXIT_REFUSED,
+        Verdict.CLAIMED: EXIT_DEFERRED,
         Verdict.PARENT_GONE: EXIT_LEDGER,
         Verdict.NO_TOTAL: EXIT_LEDGER,
         Verdict.AMBIGUOUS_TOTAL: EXIT_LEDGER,
@@ -918,13 +923,13 @@ def _give_up_if_done(verdict: Verdict, why: str, waiting: Waiting, waited_s: flo
     """Refuse a request that would wait when it may not: NOBLOCK, or past its timeout.
 
     Raises:
-        RefusedError: with EXIT_REFUSED, naming why it would have waited.
+        RefusedError: with EXIT_DEFERRED, naming why it would have waited.
 
     """
     if waiting.noblock:
-        raise RefusedError(verdict, EXIT_REFUSED, f"would wait ({why}); noblock set")
+        raise RefusedError(verdict, EXIT_DEFERRED, f"would wait ({why}); noblock set")
     if waiting.timeout_s is not None and waited_s >= waiting.timeout_s:
-        raise RefusedError(verdict, EXIT_REFUSED, f"gave up after {waiting.timeout_s}s")
+        raise RefusedError(verdict, EXIT_DEFERRED, f"gave up after {waiting.timeout_s}s")
 
 
 def holder_note(snap: Ledger, request: Request, now: int) -> str | None:

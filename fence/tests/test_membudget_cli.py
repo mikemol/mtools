@@ -496,10 +496,10 @@ def test_timeout_gives_up_with_3(ledger: Path) -> None:
     assert _cli(["run", str(_FITS), "--", "true"], ctx) == _EXIT_OK
 
 
-def test_impossible_exits_3_and_no_total_exits_4(ledger: Path) -> None:
-    """Over the total is 3; a file with no total is 4; the control, within the total, is 0."""
+def test_impossible_and_no_total_both_exit_4_as_refusals(ledger: Path) -> None:
+    """Over the total and a file with no total are both 4 (REFUSE); within the total is 0."""
     _write(ledger, f"TOTAL_MB {_TOTAL}\n")
-    assert _cli(["run", str(_OTHER_TOTAL), "--", "true"], _ctx(ledger)) == _EXIT_REFUSED
+    assert _cli(["run", str(_OTHER_TOTAL), "--", "true"], _ctx(ledger)) == _EXIT_LEDGER
     assert _cli(["run", str(_HELD), "--", "true"], _ctx(ledger)) == _EXIT_OK
     _write(ledger, "# no total\n")
     assert _cli(["run", str(_HELD), "--", "true"], _ctx(ledger)) == _EXIT_LEDGER

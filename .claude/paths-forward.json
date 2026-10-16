@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1309,
+  "counter": 1315,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -6123,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 251,
+      "ticks_blocked": 252,
       "completed": null
     },
     {
@@ -6171,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 250,
+      "ticks_blocked": 251,
       "completed": null
     },
     {
@@ -10054,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 255,
+      "ticks_blocked": 256,
       "completed": null
     },
     {
@@ -11802,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 189,
+      "ticks_blocked": 190,
       "completed": null
     },
     {
@@ -16156,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16697,7 +16697,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17506,7 +17506,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "completed": null
     },
     {
@@ -17549,7 +17549,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "completed": null
     },
     {
@@ -17572,7 +17572,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 154,
+      "ticks_blocked": 155,
       "completed": null
     },
     {
@@ -17997,7 +17997,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 155,
+      "ticks_blocked": 156,
       "completed": null
     },
     {
@@ -18173,7 +18173,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 153,
+      "ticks_blocked": 154,
       "completed": null
     },
     {
@@ -18956,7 +18956,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 152,
+      "ticks_blocked": 153,
       "completed": null
     },
     {
@@ -20678,7 +20678,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -21417,7 +21417,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 44,
+      "ticks_blocked": 45,
       "completed": null
     },
     {
@@ -21463,7 +21463,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 112,
+      "ticks_blocked": 113,
       "completed": null
     },
     {
@@ -21555,7 +21555,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 112,
+      "ticks_blocked": 113,
       "completed": null
     },
     {
@@ -21621,7 +21621,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 32,
+      "ticks_blocked": 33,
       "completed": null
     },
     {
@@ -22022,7 +22022,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:42:33Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -22043,7 +22043,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:22Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -22064,7 +22064,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 97,
+      "ticks_blocked": 98,
       "completed": null
     },
     {
@@ -22473,7 +22473,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 96,
+      "ticks_blocked": 97,
       "completed": null
     },
     {
@@ -22495,7 +22495,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 96,
+      "ticks_blocked": 97,
       "completed": null
     },
     {
@@ -22601,7 +22601,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 76,
+      "ticks_blocked": 77,
       "completed": null
     },
     {
@@ -22882,7 +22882,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 76
+      "ticks_blocked": 77
     },
     {
       "symbol": "W1116",
@@ -22903,7 +22903,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 76
+      "ticks_blocked": 77
     },
     {
       "symbol": "W1117",
@@ -22921,7 +22921,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 76
+      "ticks_blocked": 77
     },
     {
       "symbol": "W1118",
@@ -22939,7 +22939,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 76
+      "ticks_blocked": 77
     },
     {
       "symbol": "W1119",
@@ -23445,7 +23445,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T22:41:36Z",
-      "ticks_blocked": 9
+      "ticks_blocked": 10
     },
     {
       "symbol": "W1144",
@@ -23603,7 +23603,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 45
+      "ticks_blocked": 46
     },
     {
       "symbol": "W1151",
@@ -23649,7 +23649,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 64
+      "ticks_blocked": 65
     },
     {
       "symbol": "W1153",
@@ -23673,7 +23673,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 42,
+      "ticks_blocked": 43,
       "completed": null
     },
     {
@@ -24107,7 +24107,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 65,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -24569,7 +24569,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 12,
+      "ticks_blocked": 13,
       "completed": null
     },
     {
@@ -26335,7 +26335,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-15T17:53:20Z",
-      "ticks_blocked": 9,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -26761,7 +26761,7 @@
     {
       "symbol": "W1303",
       "title": "Move RACED 4 to 5 in commit_kata and stackrun and REFUSED 3 to 4 in bazel_admit, work_claims_hook and fence admit, each with the callers that branch on it in the same commit",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1266"
       ],
@@ -26770,14 +26770,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "work_claims_hook.py:173 branches on EXIT_REFUSED by name; find the readers of commit_kata's RACED 4 and fence admit's 3 (luthen's apply path is unread), then move per tool, one commit each",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: Landed in mtools d2911fe (pushed): RACED 4 to 5 (commit_kata, stackrun), bazel_admit and work_claims_hook EXIT_DEFERRED = 3 (renames, no value change), baseline 13 to 9. Fence admit's split is W1309.",
       "issued_at": "2026-10-15T21:11:52Z",
       "minted_during": "tick",
       "caused_by": "W1300",
-      "last_worked": "2026-10-15T22:09:21Z",
+      "last_worked": "2026-10-15T22:36:56Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261015T223656Z"
     },
     {
       "symbol": "W1304",
@@ -26863,7 +26863,7 @@
     },
     {
       "symbol": "W1308",
-      "title": "Move CANNOT_RUN names to 7: pycheck family NOT_CHECKED and NOT_RUN from 3, snapshot and others that mean an instrument fault, and waldo's unevaluated-witness exit from 2, each with its readers in one commit, and add waldo to the exit gate's dists",
+      "title": "Move the pycheck family's NOT_CHECKED and NOT_RUN names from 3 to 7 with their readers",
       "status": "ready",
       "enables": [
         "W1266"
@@ -26873,18 +26873,18 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "List readers of NOT_CHECKED, NOT_RUN and waldo's cannot-run exit (tests name the constants; waldo's exit 2 is pinned by W-unevaluated tests), move per tool, add waldo to corpus test_exit_gate _DISTS and its BUILD deps, regenerate the baseline",
+      "next_bounded_step": "Readers: the pycheck tests name the constants and hooks/bin/mikemol-hooks-preflight exits 3 for 'not checked' itself; update both with the value; regenerate the baseline. Waldo is W1310 and the gate's dists are part of it.",
       "evidence": "",
       "issued_at": "2026-10-15T21:36:42Z",
       "minted_during": "interrupt",
       "caused_by": "W1307",
-      "last_worked": null,
+      "last_worked": "2026-10-15T23:32:59Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W1309",
       "title": "Split fence admit's EXIT_REFUSED 3: IMPOSSIBLE becomes REFUSE 4 and the waiting refusals become EXIT_DEFERRED 3",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1266"
       ],
@@ -26898,7 +26898,133 @@
       "issued_at": "2026-10-15T22:10:50Z",
       "minted_during": "tick",
       "caused_by": "W1303",
+      "last_worked": "2026-10-15T22:38:20Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1310",
+      "title": "waldo adopts the exit table: EXIT_REFUSED 1 to 4 and EXIT_CANNOT 2 to 7, its docstrings and tests with them, and waldo joins the exit gate's dists",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1074"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read the callers (cli.py:132, runphase.py:84,147,151, pipeline.py:125,137,156) and waldo's tests that pin exit 1 and 2; move the two constants and the docstrings that say exit 1 or 2; add waldo to corpus test_exit_gate _DISTS and BUILD deps; regenerate the baseline; tell luthen the sha so it repins and renames in one change",
+      "evidence": "",
+      "issued_at": "2026-10-15T23:32:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1074",
       "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1311",
+      "title": "Gate test timeouts are wall-clock; bound mutants targets by CPU time and shard them finer so load-based admission can pace them",
+      "status": "blocked",
+      "enables": [
+        "W1309"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [
+        "W1312"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella of three: (1) measure CPU seconds per mutants shard (not wall) and list which BUILD targets bound by a wall timeout; (2) shard pycodemod and memres into finer targets; (3) admit shards by load through the existing admission (mikemol-bazel-admit and membudget) instead of all at once. Replacement mechanism for wall bounds is W1114's absence witness.",
+      "evidence": "2026-10-15: 2026-10-15 measured alone at load 14-30: //memres:mutants finishes in about 41s (limit 300), //pycodemod:mutants_0 in about 230s (limit 900). So neither is near its limit unloaded; both timed out only while the gate ran at load 80 (the 1m load average read 80-82 after the first refusal). Sharding them would not help; the cause is gate concurrency, which is W1109's measurement (peak running actions under the job cap). Not sharded. | 2026-10-15: 2026-10-15 CORRECTION by the operator: my entry above said the cause is gate concurrency and not to shard. Wrong in two ways. (a) The cause is a WALL-TIME dependency: a bazel test timeout is a wall-clock timer, so a loaded host (load 80) stretches elapsed time while the CPU the work needs stays constant (memres 41s and pycodemod_0 230s unloaded against 300s and 900s limits); the avoid-wall-clock-timeouts rule applies to the gate's own tests, not only to katas (W1114 did the katas half). (b) Sharding WOULD help if it means finer-grained load-based work admission: smaller shards let admission pace the work by load instead of releasing every shard at once. Reopened as an umbrella.",
+      "issued_at": "2026-10-15T23:34:32Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1309",
+      "last_worked": "2026-10-15T23:53:57Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1312",
+      "title": "Measure CPU seconds per mutants shard and list every gate test target bounded by a wall-clock timeout",
+      "status": "ready",
+      "enables": [
+        "W1311"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "From bazel's test.xml or --test_summary per target, record user+sys CPU against the wall timeout for each mutants and suite target (the measured unloaded wall times so far: memres:mutants 41s of 300s, pycodemod:mutants_0 230s of 900s); list the BUILD size or timeout attributes; write the table to .claude/design/gate-wall-bounds.md",
+      "evidence": "2026-10-16: 2026-10-15 third W1309 gate attempt: only //pycodemod:mutants_1 timed out (900s) while the 1m load average read 97 and the 5m read 114 (other sessions' gates, not mine). Same target alone is now running to read wall against CPU under that load. | 2026-10-16: //pycodemod:mutants_1 alone took 187s elapsed (limit 900) as the load fell from 97 to about 14; so its 900s timeout in the gate was reached only under sustained load above 90. CPU seconds per target are still unmeasured (test.xml carries wall only); that is the card's remaining step.",
+      "issued_at": "2026-10-15T23:53:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1311",
+      "last_worked": "2026-10-16T00:05:04Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1313",
+      "title": "Answer el-openglo:W544: Extract cvd_gate pure core (worst_view_dE, Okabe-Ito floor) as a mikemol-* dist",
+      "status": "blocked",
+      "enables": [
+        "el-openglo:W544"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W1314"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: W1314 (scaffold) then W1315 (port); the dist is mikemol-cvdcore as el-openglo suggested, WCAG and APCA stay out until el-openglo asks",
+      "evidence": "",
+      "issued_at": "2026-10-15T23:53:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W544",
+      "last_worked": "2026-10-15T23:54:38Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1314",
+      "title": "Scaffold the empty mikemol-cvdcore dist (import path mikemol.cvdcore) with the new-dist tool and land it alone, per the one-new-dist-at-a-time rule",
+      "status": "ready",
+      "enables": [
+        "W1313"
+      ],
+      "touches": [
+        "cvdcore"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run mikemol-new-dist for cvdcore (read its help first), declare numpy and colorspacious as the dependencies with stubs for bazel mypy, commit the empty dist through the gate",
+      "evidence": "",
+      "issued_at": "2026-10-15T23:54:29Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W544",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1315",
+      "title": "Move el-openglo's cvd_core (worst_view_dE, VIEWS, OKABE_ITO, reference_floor) into mikemol.cvdcore with its 7 selftest arms as pytest tests, typed under the bar",
+      "status": "ready",
+      "enables": [
+        "W1313"
+      ],
+      "touches": [
+        "cvdcore"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After the scaffold: read el-openglo/cvd_core.py at the sha its letter will cite, port it module by module under pycheck, turn the 7 arms into tests, add warrants and mutants, land it; then tell el-openglo the par sha to pin",
+      "evidence": "2026-10-15: 2026-10-15 el-openglo-5c (testimony): cvd_core.py is fixed at el-openglo commit 9a4be98 (git show 9a4be98:cvd_core.py); its 7 arms run with python3 -I; cvd_gate re-exports every moved name. el-openglo:W544 is now blocked on mtools:W1315 and will pin at the par sha.",
+      "issued_at": "2026-10-15T23:54:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W544",
+      "last_worked": "2026-10-15T23:56:27Z",
       "ticks_blocked": 0
     }
   ],

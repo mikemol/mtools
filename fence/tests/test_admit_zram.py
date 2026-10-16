@@ -164,7 +164,7 @@ def test_a_zram_that_stays_full_refuses_after_the_timeout_and_never_takes_a_plac
     )
     with pytest.raises(admit.RefusedError) as err:
         admit.acquire(store, admit.Request(1), waiting, host=host)
-    assert err.value.code == admit.EXIT_REFUSED
+    assert err.value.code == admit.EXIT_DEFERRED
     assert "gave up" in str(err.value)
     assert _TIMEOUT_S <= run.now <= _TIMEOUT_S + _POLL_S
     assert waiters_seen

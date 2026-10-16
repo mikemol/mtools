@@ -833,7 +833,7 @@ def cmd_claim(args: Sequence[str], ctx: Context) -> int:
     outcome = _CLAIMS.take(store, ctx.host, label, pid, _CLAIMS.now())
     if not outcome.ok:
         _say(f"REFUSED — {outcome.message}")
-        return admit.EXIT_REFUSED
+        return admit.EXIT_DEFERRED
     sys.stdout.write(f"{outcome.message}\n")
     return 0
 
@@ -851,7 +851,7 @@ def cmd_release(args: Sequence[str], ctx: Context) -> int:
     outcome = _CLAIMS.drop(store, ctx.host, label, pid)
     if not outcome.ok:
         _say(f"REFUSED — {outcome.message}")
-        return admit.EXIT_REFUSED
+        return admit.EXIT_DEFERRED
     _say(outcome.message)
     return 0
 

@@ -81,3 +81,7 @@ src/mikemol/fence/claims.py|release-by-label-only|and lease\.owner == owner\)|an
 src/mikemol/fence/claims.py|listing-includes-plain-leases|if admit\.claim_key\(lease\.label\) is not None|if True|def=listing
 src/mikemol/fence/claims.py|negative-age|max\(0, epoch - lease\.epoch\)|epoch - lease.epoch|def=listing
 src/mikemol/fence/membudget_cli.py|default-owner-is-the-short-command|os\.getppid\(\)|os.getpid()|def=_claim_operands
+
+# W1309: a claim held by a live holder is a deferral (3), an impossible request a refusal (4).
+src/mikemol/fence/admit.py|a-held-claim-is-a-refusal|Verdict\.CLAIMED: EXIT_DEFERRED|Verdict.CLAIMED: EXIT_REFUSED|def=exit_code
+src/mikemol/fence/admit.py|an-impossible-request-is-a-deferral|Verdict\.IMPOSSIBLE: EXIT_REFUSED|Verdict.IMPOSSIBLE: EXIT_DEFERRED|def=exit_code

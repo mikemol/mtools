@@ -405,7 +405,7 @@ def test_noblock_refuses_a_request_that_would_wait(tmp_path: Path) -> None:
     with admit.admit(store, admit.Request(_TOTAL - 20), host=_QUIET):
         with pytest.raises(admit.RefusedError) as err:
             admit.acquire(store, admit.Request(30), _NOBLOCK, host=_QUIET)
-        assert err.value.code == admit.EXIT_REFUSED
+        assert err.value.code == admit.EXIT_DEFERRED
         with admit.admit(store, admit.Request(10), _NOBLOCK, host=_QUIET):
             pass
 
@@ -433,7 +433,7 @@ def test_a_timeout_gives_up_with_the_refused_code(tmp_path: Path) -> None:
         pytest.raises(admit.RefusedError) as err,
     ):
         admit.acquire(store, admit.Request(1), waiting, host=host)
-    assert err.value.code == admit.EXIT_REFUSED
+    assert err.value.code == admit.EXIT_DEFERRED
     assert timeout_s <= now[0] <= timeout_s + poll_max_s
 
 
@@ -568,7 +568,7 @@ def test_two_racing_claims_admit_exactly_one(tmp_path: Path) -> None:
     os.close(release[1])
     codes = sorted(_exit_status(pid) for pid, _ready_r in children)
     assert marks == [b"h", b"r"]
-    assert codes == [0, admit.EXIT_REFUSED]
+    assert codes == [0, admit.EXIT_DEFERRED]
 
 
 def test_a_killed_holder_is_reaped_before_it_is_believed(tmp_path: Path) -> None:
