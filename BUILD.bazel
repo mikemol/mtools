@@ -88,6 +88,17 @@ sh_test(
     size = "small",
 )
 
+# W1320: the pinned Codon reports its version, compiles a typed program, and rejects the future
+# import, which is the rejection the typed-subset census is calibrated on. The stdlib is data so
+# the binary finds `lib/codon` beside `bin/` in the runfiles tree.
+sh_test(
+    name = "codon_pin",
+    srcs = ["codon_pin_test.sh"],
+    args = ["$(location @codon//:bin)"],
+    data = ["@codon//:bin", "@codon//:stdlib"],
+    size = "small",
+)
+
 # W499: run module-gate.yml's own cache-scope `case "$REF"` over sample refs; only stage and main
 # may produce an uploading cache array.
 sh_test(

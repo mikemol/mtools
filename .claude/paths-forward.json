@@ -27354,7 +27354,7 @@
     {
       "symbol": "W1335",
       "title": "--show accepts several symbols and prints one record each in the order given",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1330"
       ],
@@ -27363,13 +27363,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Change the --show operand to one or more symbols, print JSON records in order, an unknown symbol is a refusal naming it after printing the rest or before printing any (choose and test), keep the single-symbol output byte-identical",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: Landed in mtools 982142c (pushed): --show takes several symbols, prints in order, names unknown ones on stderr, exit refuses; 3 tests, warrants, 2 mutants.",
       "issued_at": "2026-10-16T02:07:41Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-16T03:04:29Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T030429Z"
     },
     {
       "symbol": "W1336",

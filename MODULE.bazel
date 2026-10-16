@@ -747,6 +747,35 @@ filegroup(
     url = "https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz",
 )
 
+# ⚑⚑ Codon IS THE FLEET'S TYPED-SUBSET TARGET (W1319, W1320; operator direction 2026-10-15, relayed):
+# its compiler is what decides whether a module meets the strictness the web-subset gate stands in
+# for, so the gate cannot be calibrated against a Codon nobody pinned. 0.20.3, the asset
+# `codon-linux-x86_64.tar.gz` nemik ran for nemik:W560 (6 corpus cases and a 168-node fixture
+# agreed with the Python). The sha256 is the digest GitHub publishes for that asset
+# (`gh release view v0.20.3 --repo exaloop/codon --json assets`), and it equals the sha256 nemik
+# computed on its own download, so it was not trusted from one side. Apache-2.0 at the repo's head
+# (read by nemik via the API; the tarball carries no LICENSE file in its first two levels, so the
+# licence text is NOT staged here yet). The manylinux2014 asset (older glibc, sha256 2dbbfb60…) was
+# never run, so it is not the pin.
+http_archive(
+    name = "codon",
+    build_file_content = """exports_files(["bin/codon"])
+filegroup(
+    name = "bin",
+    srcs = ["bin/codon"],
+    visibility = ["//visibility:public"],
+)
+filegroup(
+    name = "stdlib",
+    srcs = glob(["lib/codon/**"]),
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "8716e5753a441764d13fd6a0b4f911060d292f66c9e61d0a4cdccb64c843da6f",
+    strip_prefix = "codon-deploy-linux-x86_64",
+    url = "https://github.com/exaloop/codon/releases/download/v0.20.3/codon-linux-x86_64.tar.gz",
+)
+
 # ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, AND THE REASON RECORDED HERE WENT STALE.
 #
 # ⚑⚑ THE WITHDRAWN PREMISE, KEPT VISIBLE BECAUSE A READER WILL HAVE SPENT IT: this said
