@@ -111,3 +111,4 @@ websubset_cli	mikemol-websubset checks one file or the declared portable list
 commit_body	A commit body never carries the trailers the commit tool adds
 import_cycles	Every module of the hooks package imports first, alone, in a fresh interpreter
 rewake	The wake-up decision
+websubset_target	Each transpile target has its own refusal list

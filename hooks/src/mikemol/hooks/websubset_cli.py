@@ -36,20 +36,21 @@ if TYPE_CHECKING:
 EXIT_FINDINGS = 4
 EXIT_USAGE = 2
 _USAGE = (
-    "usage: mikemol-websubset --check-file PATH\n"
-    "       mikemol-websubset --census ROOT [--jsonl FILE] [--counts FILE]\n"
+    "usage: mikemol-websubset --check-file PATH [--target py2many|codon]\n"
+    "       mikemol-websubset --census ROOT [--jsonl FILE] [--counts FILE] [--target T]\n"
 )
 _LIST_DIR = "hooks"
 _LEDGER_FLAGS = frozenset({"--jsonl", "--counts"})
-_VALUED = frozenset({"--check-file", "--census"}) | _LEDGER_FLAGS
+_TARGET_FLAG = "--target"
+_VALUED = frozenset({"--check-file", "--census", _TARGET_FLAG}) | _LEDGER_FLAGS
 
 
 def _order(finding: websubset.Finding) -> tuple[int, str, str]:
     return finding.line, finding.rule, finding.message
 
 
-def _findings(path: Path) -> list[websubset.Finding] | None:
-    """Check one file.
+def _findings(path: Path, target: str) -> list[websubset.Finding] | None:
+    """Check one file against one target's refusal list.
 
     Returns:
         the allowlist and annotation findings in line order, or None when it cannot be read.
@@ -59,7 +60,7 @@ def _findings(path: Path) -> list[websubset.Finding] | None:
         source = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
         return None
-    found = [*websubset.check(source), *websubset.unannotated(source)]
+    found = [*websubset.check(source, target), *websubset.unannotated(source)]
     return sorted(found, key=_order)
 
 
@@ -74,8 +75,8 @@ def _publish(path: Path, text: str) -> None:
     scratch.replace(path)
 
 
-def _check_file(path: Path) -> int:
-    found = _findings(path)
+def _check_file(path: Path, target: str) -> int:
+    found = _findings(path, target)
     if found is None:
         sys.stderr.write(f"mikemol-websubset: cannot read {path}\n")
         return EXIT_USAGE
@@ -103,7 +104,7 @@ def _ledgers(rows: dict[str, list[websubset.Finding]], options: dict[str, str]) 
         _publish(Path(options["--counts"]), json.dumps(counts, sort_keys=True) + "\n")
 
 
-def _census(root: Path, options: dict[str, str]) -> int:
+def _census(root: Path, options: dict[str, str], target: str) -> int:
     """Check every module on the declared list under `root`.
 
     Returns:
@@ -117,7 +118,7 @@ def _census(root: Path, options: dict[str, str]) -> int:
         return EXIT_USAGE
     rows: dict[str, list[websubset.Finding]] = {}
     for entry in listed:
-        found = _findings(root / entry)
+        found = _findings(root / entry, target)
         if found is None:
             sys.stderr.write(f"mikemol-websubset: {entry} is listed but cannot be read\n")
             return EXIT_USAGE
@@ -154,12 +155,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     """
     options = _parse(sys.argv[1:] if argv is None else argv)
-    if options is not None:
+    target = options.pop(_TARGET_FLAG, websubset.DEFAULT_TARGET) if options is not None else ""
+    if options is not None and target in websubset.RULES:
         ledgers = {name: value for name, value in options.items() if name in _LEDGER_FLAGS}
         if set(options) == {"--check-file"}:
-            return _check_file(Path(options["--check-file"]))
+            return _check_file(Path(options["--check-file"]), target)
         if "--census" in options and set(options) - _LEDGER_FLAGS == {"--census"}:
-            return _census(Path(options["--census"]), ledgers)
+            return _census(Path(options["--census"]), ledgers, target)
     sys.stderr.write(_USAGE)
     return EXIT_USAGE
 

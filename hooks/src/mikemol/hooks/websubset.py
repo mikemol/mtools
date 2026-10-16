@@ -28,6 +28,14 @@ from dataclasses import dataclass
 
 _EVAL = frozenset({"eval", "exec", "compile"})
 _DYNAMIC = frozenset({"getattr", "setattr", "delattr", "vars", "globals", "locals"})
+_TODAY = frozenset({"metaclass", "eval-exec", "dynamic-attribute", "float-equality", "star-args"})
+DEFAULT_TARGET = "py2many"
+
+# ⚑ ONE REFUSAL LIST PER TRANSPILE TARGET (mtools:W1322): what py2many cannot translate and what
+# Codon cannot compile are different sets. Both start on today's five rules; a target's list is
+# narrowed or widened by editing its own row, and a rule removed from one still fires for the other.
+# `syntax` is no rule of a target: a module that does not parse is refused by every target.
+RULES: dict[str, frozenset[str]] = {DEFAULT_TARGET: _TODAY, "codon": _TODAY}
 
 
 @dataclass(frozen=True)
@@ -100,8 +108,19 @@ def _order(finding: Finding) -> tuple[int, str]:
     return finding.line, finding.rule
 
 
-def check(source: str) -> list[Finding]:
-    """List every construct of one module's source that the web subset refuses.
+def check(source: str, target: str = DEFAULT_TARGET) -> list[Finding]:
+    """List every construct of one module's source that `target` refuses.
+
+    Returns:
+        the findings in line order; a single `syntax` finding when the source does not parse.
+
+    """
+    refused = RULES[target]
+    return [f for f in _scan(source) if f.rule == "syntax" or f.rule in refused]
+
+
+def _scan(source: str) -> list[Finding]:
+    """Find every construct on the full refusal list, whatever the target.
 
     Returns:
         the findings in line order; a single `syntax` finding when the source does not parse.

@@ -10255,3 +10255,38 @@
   claim  = {`rewake_s` overrides the default: a minute ago is due at a short interval only.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rewake.py -k test_a_caller_may_set_its_own_interval},
 }
+
+@misc{hooks-websubset-target-both-targets-start-on-the-same-five-rules,
+  section = {websubset_target},
+  title  = {Today's list is the starting row of py2many and of codon},
+  claim  = {Today's list is the starting row of py2many and of codon.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_both_targets_start_on_the_same_five_rules},
+}
+
+@misc{hooks-websubset-target-rule-removed-from-one-target-still-fires-for-the-other,
+  section = {websubset_target},
+  title  = {Taking float-equality off codon silences it there and nowhere else},
+  claim  = {Taking float-equality off codon silences it there and nowhere else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_a_rule_removed_from_one_target_still_fires_for_the_other},
+}
+
+@misc{hooks-websubset-target-module-that-does-not-parse-is-refused-by-every-target,
+  section = {websubset_target},
+  title  = {`syntax` belongs to no target's list and is kept by all of them},
+  claim  = {`syntax` belongs to no target's list and is kept by all of them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_a_module_that_does_not_parse_is_refused_by_every_target},
+}
+
+@misc{hooks-websubset-target-default-target-is-py2many,
+  section = {websubset_target},
+  title  = {A call without a target reads the py2many row, so existing callers are unchanged},
+  claim  = {A call without a target reads the py2many row, so existing callers are unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_the_default_target_is_py2many},
+}
+
+@misc{hooks-websubset-target-cli-target-flag-picks-the-list-and-an-unknown-one-is-a-usage-error,
+  section = {websubset_target},
+  title  = {`--target codon` runs; `--target nope` exits 2 and names the usage},
+  claim  = {`--target codon` runs; `--target nope` exits 2 and names the usage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_cli_target_flag_picks_the_list_and_an_unknown_one_is_a_usage_error},
+}
