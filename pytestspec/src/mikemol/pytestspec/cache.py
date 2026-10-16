@@ -74,7 +74,9 @@ def load(root: Path, impl: str, key: str) -> tuple[bool, object]:
     """
     try:
         stored = cast("object", json.loads(entry(root, impl, key).read_text(encoding="utf-8")))
-    except (FileNotFoundError, json.JSONDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (FileNotFoundError, json.JSONDecodeError)):
+            raise
         return False, None
     if not isinstance(stored, dict):
         return False, None
@@ -94,7 +96,9 @@ def store(root: Path, impl: str, key: str, result: object) -> bool:
     payload: dict[str, object] = {"impl": impl, "key": key, "result": result}
     try:
         text = json.dumps(payload, sort_keys=True)
-    except (TypeError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (TypeError, ValueError)):
+            raise
         return False
     target = entry(root, impl, key)
     root.mkdir(parents=True, exist_ok=True)

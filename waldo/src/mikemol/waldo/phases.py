@@ -109,7 +109,7 @@ def lint(recipe: Recipe) -> list[str]:
     return findings
 
 
-def read_done(recipe: Recipe, run: Run, *, started: float | None = None) -> dict[str, bool]:
+def read_done(recipe: Recipe, run: Run, started: float | None = None) -> dict[str, bool]:
     """Run each phase's done-witness and say which phases the world shows done.
 
     Returns:

@@ -133,7 +133,7 @@ def _before(
 
 
 def run_phase(
-    recipe: Recipe, name: str, setting: Setting, *, dry: bool = False
+    recipe: Recipe, name: str, setting: Setting, dry: bool = False
 ) -> tuple[int, Verdict]:
     """Run the named phase and say what happened.
 

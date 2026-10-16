@@ -55,7 +55,9 @@ def _queue(root: Path, repo: str) -> dict[str, object] | None:
     """
     try:
         value = _parsed((root / repo / QUEUE).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     return cast("dict[str, object]", value) if isinstance(value, dict) else None
 

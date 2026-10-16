@@ -53,7 +53,7 @@ def scaffold(root: Path, templates: Path, bazel_version: str) -> tuple[list[str]
     return wrote, left
 
 
-def install_hook(root: Path, templates: Path, *, target_passed: bool) -> str:
+def install_hook(root: Path, templates: Path, target_passed: bool) -> str:
     """Swap `.githooks/pre-commit` for the bazel template, once the caller says //:precommit passed.
 
     Returns:

@@ -21,7 +21,7 @@ from mikemol.pytestspec.spec import Case, SpecDataError
 hookspec = pluggy.HookspecMarker("pytest")
 
 # Run one implementation on a case's fixture and operands; its output becomes the `result`.
-type Adapter = Callable[[object, object], object]
+Adapter = Callable[[object, object], object]
 
 # ⚑ THE ORIGIN IS NAMED, NOT INFERRED (W459). A do-not-port declaration is a decision about the
 # PORT; under the origin the case is still evaluated, or the spec would stop measuring the very

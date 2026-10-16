@@ -30,8 +30,8 @@ class Verdict:
 
 # ⚑ THE EVALUATOR IS A SEAM (W199), so the mapping is witnessed before any opa exists. W200
 # supplies the real one: the spec path and one case in, the spec's verdict out.
-type Case = dict[str, object]
-type Evaluator = Callable[[Path, Case], Verdict]
+Case = dict[str, object]
+Evaluator = Callable[[Path, Case], Verdict]
 
 
 def cases_path(spec: Path) -> Path:

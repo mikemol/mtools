@@ -43,7 +43,9 @@ def _read(proc: Path, pid: str) -> tuple[int, int] | None:
         text = (proc / pid / "stat").read_text(encoding="utf-8", errors="replace")
         fields = text[text.rindex(")") + _AFTER_COMM :].split()
         return int(fields[_PPID]), int(fields[_UTIME]) + int(fields[_STIME])
-    except (OSError, ValueError, IndexError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError, IndexError)):
+            raise
         return None
 
 

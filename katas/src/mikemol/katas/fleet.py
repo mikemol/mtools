@@ -182,7 +182,9 @@ def ceiling(fleet: Fleet, repo: str) -> float:
     path = waiter.seconds_of(log_of(fleet, repo))
     try:
         measured = float(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return UNMEASURED_S
     return min(CEILING_CAP_S, max(CEILING_FLOOR_S, measured * STRETCH))
 

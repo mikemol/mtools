@@ -84,7 +84,9 @@ def _table(path: Path) -> dict[str, object]:
     """
     try:
         parsed = cast("object", tomllib.loads(path.read_text(encoding="utf-8")))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, tomllib.TOMLDecodeError)):
+            raise
         msg = f"{path}: {exc}"
         raise PolicyError(msg) from exc
     if not isinstance(parsed, dict):

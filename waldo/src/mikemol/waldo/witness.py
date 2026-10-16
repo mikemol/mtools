@@ -198,7 +198,6 @@ def judge(
     witness: Witness,
     code: int,
     out: str,
-    *,
     before: str | None = None,
     started: float | None = None,
 ) -> Result:
@@ -231,7 +230,6 @@ def capture_before(witnesses: Sequence[Witness], run: Run) -> dict[str, str]:
 def run_all(
     witnesses: Sequence[Witness],
     run: Run,
-    *,
     before: Mapping[str, str] | None = None,
     started: float | None = None,
     unevaluated: Callable[[int, str], bool] | None = None,

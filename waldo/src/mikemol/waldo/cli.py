@@ -43,7 +43,7 @@ def matches_shape(command: str) -> bool:
     return SHAPE.fullmatch(command) is not None
 
 
-def invocation(repo: Path, interpreter: Path, module: str, name: str, *, dry: bool = False) -> str:
+def invocation(repo: Path, interpreter: Path, module: str, name: str, dry: bool = False) -> str:
     """Build the standard invocation for a named set.
 
     Returns:
@@ -77,7 +77,9 @@ def _load(contracts: Path, name: str) -> object:
     path = contracts / f"{name}.json"
     try:
         return cast("object", json.loads(path.read_text(encoding="utf-8")))
-    except (OSError, ValueError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (OSError, ValueError)):
+            raise
         msg = f"cannot read set {name}: {problem}"
         raise ContractError(msg) from problem
 
@@ -95,7 +97,6 @@ def main(
     argv: Sequence[str] | None,
     seams: Seams,
     contracts: Path,
-    *,
     command: str | None = None,
     secrets: Sequence[Secret] = (),
 ) -> int:

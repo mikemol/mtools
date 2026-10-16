@@ -91,6 +91,9 @@ ignore = [
     "typing-only-first-party-import",
     "typing-only-third-party-import",
     "typing-only-standard-library-import",
+    # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+    # that demand them are off for this dist.
+    "boolean-type-hint-positional-argument",
 ]
 
 # ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (the

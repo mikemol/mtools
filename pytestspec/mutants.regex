@@ -25,13 +25,13 @@ src/mikemol/pytestspec/outcomes.py|every-case-undisposed|UNDISPOSED if dispositi
 src/mikemol/pytestspec/cache.py|two-keys-cached-anyway|return keys\.pop\(\) if len\(keys\) == 1 else None|return keys.pop() if len(keys) >= 1 else None|def=key_for
 src/mikemol/pytestspec/cache.py|non-string-answers-count-as-keys|if isinstance\(answer, str\)|if True|def=key_for
 src/mikemol/pytestspec/cache.py|entry-address-ignores-the-impl|f"\{impl\}\\0\{key\}"|f"{key}"|def=entry
-src/mikemol/pytestspec/cache.py|missing-entry-raises|except \(FileNotFoundError, json\.JSONDecodeError\):|except json.JSONDecodeError:|def=load
-src/mikemol/pytestspec/cache.py|corrupt-entry-raises|except \(FileNotFoundError, json\.JSONDecodeError\):|except FileNotFoundError:|def=load
+src/mikemol/pytestspec/cache.py|missing-entry-raises|if not isinstance\(caught, \(FileNotFoundError, json\.JSONDecodeError\)\):|if not isinstance(caught, json.JSONDecodeError):|def=load
+src/mikemol/pytestspec/cache.py|corrupt-entry-raises|if not isinstance\(caught, \(FileNotFoundError, json\.JSONDecodeError\)\):|if not isinstance(caught, FileNotFoundError):|def=load
 src/mikemol/pytestspec/cache.py|non-object-entry-hit|if not isinstance\(stored, dict\):|if False:|def=load
 src/mikemol/pytestspec/cache.py|entry-for-another-impl-hits|fields\.get\("impl"\) != impl or ||def=load
 src/mikemol/pytestspec/cache.py|entry-for-another-key-hits| or fields\.get\("key"\) != key||def=load
 src/mikemol/pytestspec/cache.py|entry-without-a-result-hits| or "result" not in fields||def=load
-src/mikemol/pytestspec/cache.py|unserialisable-result-raises|except \(TypeError, ValueError\):|except KeyError:|def=store
+src/mikemol/pytestspec/cache.py|unserialisable-result-raises|if not isinstance\(caught, \(TypeError, ValueError\)\):|if not isinstance(caught, KeyError):|def=store
 src/mikemol/pytestspec/cache.py|entry-written-in-place|partial\.replace\(target\)|target.write_text(text, encoding="utf-8")|def=store
 src/mikemol/pytestspec/cache.py|entry-bytes-depend-on-key-order|sort_keys=True|sort_keys=False|def=store
 
@@ -168,7 +168,7 @@ src/mikemol/pytestspec/plugin.py|unmeasured-xfail-reason-dropped|reason=disposit
 src/mikemol/pytestspec/plugin.py|no-evaluator-installed|if found is None:|if False:|def=SpecItem._evaluator
 src/mikemol/pytestspec/plugin.py|skipped-case-evaluated|if _skips\(self\.config, self\.disposition\):|if False:|def=SpecItem.runtest
 src/mikemol/pytestspec/plugin.py|skipped-case-unlabelled|DECLARED-SKIPPED \(not evaluated\): --skip-declared|skipped|def=SpecItem.runtest
-src/mikemol/pytestspec/plugin.py|evaluation-error-escapes|except \(opa\.OpaUnavailableError, SpecDataError\) as exc:|except KeyError as exc:|def=SpecItem.runtest
+src/mikemol/pytestspec/plugin.py|evaluation-error-escapes|if not isinstance\(exc, \(opa\.OpaUnavailableError, SpecDataError\)\):|if not isinstance(exc, KeyError):|def=SpecItem.runtest
 src/mikemol/pytestspec/plugin.py|unmeasured-failure-unlabelled|msg = f"UNMEASURED \(not evaluated, not passed\): \{exc\}"|msg = f"{exc}"|def=SpecItem.runtest
 src/mikemol/pytestspec/plugin.py|judgment-never-raised|if failure is not None:|if False:|def=SpecItem.runtest
 src/mikemol/pytestspec/plugin.py|impl-name-passed-unchecked|expectation\(self\.name, self\.case, impl if isinstance\(impl, str\) else None\)|expectation(self.name, self.case, None)|def=SpecItem.runtest

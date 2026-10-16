@@ -182,7 +182,6 @@ def _apply(
 def execute(
     contract: Contract,
     seams: Seams,
-    *,
     dry: bool = False,
     secrets: Sequence[Secret] = (),
 ) -> tuple[int, Verdict]:

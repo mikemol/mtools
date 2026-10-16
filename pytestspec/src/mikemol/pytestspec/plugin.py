@@ -132,7 +132,6 @@ class SpecItem(pytest.Item):
 
     def __init__(
         self,
-        *,
         name: str,
         parent: pytest.Collector,
         case: Case,
@@ -205,7 +204,9 @@ class SpecItem(pytest.Item):
             raise SpecFailedError(msg)
         try:
             verdict = self._evaluator()(self.path, self._filled())
-        except (opa.OpaUnavailableError, SpecDataError) as exc:
+        except Exception as exc:
+            if not isinstance(exc, (opa.OpaUnavailableError, SpecDataError)):
+                raise
             self._record(None, expect)
             msg = f"UNMEASURED (not evaluated, not passed): {exc}"
             raise SpecFailedError(msg) from exc

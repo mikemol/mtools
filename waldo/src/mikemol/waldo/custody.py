@@ -117,7 +117,7 @@ def scrub(text: str, *secrets: Secret) -> str:
     return text
 
 
-def require_identity(identity: str | None, *, as_current_user: bool) -> str:
+def require_identity(identity: str | None, as_current_user: bool) -> str:
     """Refuse to act unless the caller chose who acts.
 
     Returns:
