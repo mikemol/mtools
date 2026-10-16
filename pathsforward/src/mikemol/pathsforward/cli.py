@@ -16,6 +16,7 @@ edit, bad arguments) · 3 lock held by another · 4 hash divergence (the FILE wi
 
 import argparse
 import json
+import os
 import socket
 import sys
 from collections.abc import Callable, Mapping, Sequence
@@ -221,7 +222,8 @@ def _warrant(ctx: "Ctx") -> int:
         msg = "--warrant needs --transcript PATH and --uuid UUID, the record it cites"
         raise RefusedError(msg)
     cited = warrant.Citation(Path(where), uuid, ctx.get("claim"), ctx.number("line"))
-    verdict, argv = warrant.read(cited, ctx.get("reader") or warrant.READER)
+    reader = warrant.resolve(ctx.get("reader"), _root(ctx), os.environ)
+    verdict, argv = warrant.read(cited, reader)
 
     def edit(state: State) -> int:
         card = f"urn:nemik:{ctx.path.resolve().parent.parent.name}/{symbol}"
@@ -551,7 +553,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "bump_blocked": frozenset({"exclude", "verbose", "root"}),
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
-    "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader"}),
+    "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader", "root"}),
     # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
     # `attach` (one file pinned to many cards is a different act), plus `--write`.
     "update_many": frozenset(

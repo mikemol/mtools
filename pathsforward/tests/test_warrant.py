@@ -104,6 +104,41 @@ def test_a_peer_record_is_attributed_to_a_speaker_not_the_operator(tmp_path: Pat
     assert agent["@id"] == "urn:nemik:speaker/peer"
 
 
+def _checkout_reader(root: Path) -> Path:
+    # The reader as the fleet root's mtools checkout holds it.
+    path = root / "mtools" / "transcriptstruct" / ".venv" / "bin" / warrant.READER
+    path.parent.mkdir(parents=True)
+    path.write_text("", encoding="utf-8")
+    return path
+
+
+def test_the_reader_is_found_in_the_order_named_env_path_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Each rung wins over the ones below it; the checkout is the last resort."""
+    monkeypatch.setenv("PATH", "")
+    checkout = _checkout_reader(tmp_path)
+    assert warrant.resolve(None, tmp_path, {}) == str(checkout)
+    on_path = tmp_path / "bin"
+    on_path.mkdir()
+    (on_path / warrant.READER).write_text("", encoding="utf-8")
+    (on_path / warrant.READER).chmod(0o755)
+    monkeypatch.setenv("PATH", str(on_path))
+    assert warrant.resolve(None, tmp_path, {}) == str(on_path / warrant.READER)
+    assert warrant.resolve(None, tmp_path, {warrant.READER_ENV: "from-env"}) == "from-env"
+    assert warrant.resolve("named", tmp_path, {warrant.READER_ENV: "from-env"}) == "named"
+
+
+def test_no_reader_anywhere_is_a_refusal_naming_the_variable_and_the_checkout_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The first-run trap, made legible: the message says every place that was looked at."""
+    monkeypatch.setenv("PATH", "")
+    with pytest.raises(RefusedError, match=warrant.READER_ENV) as raised:
+        warrant.resolve(None, tmp_path, {})
+    assert str(tmp_path / "mtools") in str(raised.value)
+
+
 def _card(symbol: str) -> Rec:
     return {
         "symbol": symbol,

@@ -19,8 +19,9 @@ later reader can re-run the exact check.
 """
 
 import json
+import shutil
 import subprocess
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
@@ -29,6 +30,7 @@ from mikemol.pathsforward.model import Json, RefusedError, State, text
 
 OPERATOR = "operator"
 READER = "mikemol-transcriptstruct"
+READER_ENV = "MIKEMOL_TRANSCRIPT_READER"
 OPERATOR_AGENT = "urn:nemik:operator"
 CONTEXT: Json = {
     "prov": "http://www.w3.org/ns/prov#",
@@ -36,6 +38,39 @@ CONTEXT: Json = {
     "mtools": "urn:mtools:warrant#",
 }
 Run = Callable[[Sequence[str]], tuple[int, str]]
+
+
+def resolve(named: str | None, root: Path, env: Mapping[str, str]) -> str:
+    """Find the transcript reader without requiring it on PATH (mtools:W1400).
+
+    ⚑ THE READER LIVES ONLY IN MTOOLS' OWN VENV, SO "ON PATH" IS A FIRST-RUN TRAP FOR EVERY OTHER
+    REPO (nemik, 2026-10-16: the first run refused with ENOENT). The order is: the command the
+    caller named, the `READER_ENV` variable, PATH, then the fleet root's mtools checkout. A reader
+    that is nowhere is a refusal that names the variable and the path it looked at.
+
+    Returns:
+        the command to run.
+
+    Raises:
+        RefusedError: when no reader is named, in the environment, on PATH or in the checkout.
+
+    """
+    if named:
+        return named
+    from_env = env.get(READER_ENV)
+    if from_env:
+        return from_env
+    on_path = shutil.which(READER)
+    if on_path:
+        return on_path
+    checkout = root / "mtools" / "transcriptstruct" / ".venv" / "bin" / READER
+    if checkout.is_file():
+        return str(checkout)
+    msg = (
+        f"no transcript reader found: pass --reader, set {READER_ENV}, put {READER} on PATH, "
+        f"or build it at {checkout}"
+    )
+    raise RefusedError(msg)
 
 
 def run_reader(argv: Sequence[str]) -> tuple[int, str]:
