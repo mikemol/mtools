@@ -548,7 +548,7 @@ _APPLIES: dict[str, frozenset[str]] = {
         {"next", "enables", "touches", "caused_by", "witness", "witness_lang", "admit", "root"}
     ),
     "drop": frozenset({"admit", "gate", "reference_arm", "root", "on", "write"}),
-    "bump_blocked": frozenset({"exclude", "verbose"}),
+    "bump_blocked": frozenset({"exclude", "verbose", "root"}),
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
     "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader"}),
@@ -2173,10 +2173,13 @@ def _bump_blocked(ctx: Ctx) -> int:
 
     """
     exclude = frozenset(ctx.many("exclude") or ())
+    root = _root(ctx)
 
     def edit(state: State) -> int:
         for sym in ops.prune_done(state):
             _say(f"UNBLOCKED {sym} (every local blocker is done)")
+        for sym in foreign.prune_foreign(state, root).freed:
+            _say(f"UNBLOCKED {sym} (every blocker is done)")
         bumped = ops.bump_blocked(state, exclude)
         if not ctx.opts.get("verbose"):
             for report_line in ops.nudge_summary(bumped):

@@ -194,6 +194,4 @@ def test_the_default_root_comes_from_the_home_directory(
 def test_root_is_refused_by_a_mode_that_does_not_read_it(tmp_path: Path) -> None:
     """`--root` on another mode is a stray flag, refused rather than accepted in silence."""
     one = _queue(tmp_path, "one", [_wp("W1")])
-    assert cli.main(["--state", str(one), "--bump-blocked", "--root", str(tmp_path)]) == (
-        cli.EXIT_REFUSED
-    )
+    assert cli.main(["--state", str(one), "--hash", "--root", str(tmp_path)]) == cli.EXIT_REFUSED

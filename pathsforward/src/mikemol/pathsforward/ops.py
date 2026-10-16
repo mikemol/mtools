@@ -31,6 +31,7 @@ from mikemol.pathsforward.model import (
     RefusedError,
     State,
     is_reference,
+    relieve,
     strlist,
     strmap,
     symbol_number,
@@ -972,6 +973,10 @@ def prune_done(state: State) -> list[str]:
     checked here, so a foreign `repo:W<n>` or an agent name is kept. A list that empties returns
     the item to ready; a list that only shrinks restarts its blocked count, as `--update` does.
 
+    ⚑ EVERY OPEN CARD, NOT ONLY A BLOCKED ONE (W1381): a ready or working card whose `blocked_on`
+    still names a done card loses that entry too (see `model.relieve`); a done or dropped card is
+    history and is left alone.
+
     Returns:
         the symbols returned to ready, in queue order.
 
@@ -981,11 +986,9 @@ def prune_done(state: State) -> list[str]:
     for w in state.waypoints:
         on = strlist(w, "blocked_on")
         kept = [b for b in on if b not in done]
-        if text(w, "status") != "blocked" or kept == on:
+        if text(w, "status") in {"done", "dropped"} or kept == on:
             continue
-        w["blocked_on"], w["ticks_blocked"] = kept, 0
-        if not kept:
-            w["status"], w["blocked_kind"] = "ready", None
+        if relieve(w, kept):
             freed.append(text(w, "symbol"))
     return freed
 

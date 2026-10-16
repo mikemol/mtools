@@ -138,6 +138,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "suspicious-subprocess-import",
 ]
 "tests/test_warrant.py" = ["assert"]
+"tests/test_prune_any_status.py" = ["assert"]
 "tests/test_render.py" = ["assert"]
 "tests/test_selftest.py" = ["assert"]
 "tests/test_cli.py" = ["assert"]

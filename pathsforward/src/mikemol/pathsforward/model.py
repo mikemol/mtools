@@ -155,6 +155,30 @@ def text(rec: Json, key: str) -> str:
     return "" if value is None else str(value)
 
 
+def relieve(rec: Json, kept: list[str]) -> bool:
+    """Replace a card's `blocked_on` with the blockers that stay, whatever its status (W1381).
+
+    ⚑ A LANDED BLOCKER IS STALE ON A READY OR WORKING CARD TOO (mtools:W1371 sat ready with
+    `blocked_on: [W1370]`, W1370 done, and two prune verbs left it). A blocked card that empties
+    returns to ready and restarts its count; a card in any other status only loses the dead
+    entries, and loses its `blocked_kind` when none remain.
+
+    Returns:
+        True when a blocked card was freed to ready.
+
+    """
+    rec["blocked_on"] = kept
+    if text(rec, "status") != "blocked":
+        if not kept:
+            rec["blocked_kind"] = None
+        return False
+    rec["ticks_blocked"] = 0
+    if kept:
+        return False
+    rec["status"], rec["blocked_kind"] = "ready", None
+    return True
+
+
 def strlist(rec: Json, key: str) -> list[str]:
     """Read a list field, guarding against a bare string.
 

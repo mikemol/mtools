@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from mikemol.pathsforward import store
-from mikemol.pathsforward.model import State, strlist, symbol_number, text
+from mikemol.pathsforward.model import State, relieve, strlist, symbol_number, text
 
 QUEUE = (".claude", "paths-forward.json")
 _SEP = ":"
@@ -142,7 +142,7 @@ def prune_foreign(state: State, root: Path) -> Pruned:
     seen: dict[str, tuple[bool, str]] = {}
     for w in state.waypoints:
         on = strlist(w, "blocked_on")
-        if text(w, "status") != "blocked":
+        if text(w, "status") in {"done", "dropped"}:
             continue
         kept: list[str] = []
         for b in on:
@@ -158,8 +158,6 @@ def prune_foreign(state: State, root: Path) -> Pruned:
                 out.kept.append(f"KEPT {text(w, 'symbol')} blocked on {b}: {why}")
         if kept == on:
             continue
-        w["blocked_on"], w["ticks_blocked"] = kept, 0
-        if not kept:
-            w["status"], w["blocked_kind"] = "ready", None
+        if relieve(w, kept):
             out.freed.append(text(w, "symbol"))
     return out
