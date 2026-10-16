@@ -26,10 +26,12 @@ def _rules(source: str, target: str) -> list[str]:
     return [finding.rule for finding in websubset.check(source, target)]
 
 
-def test_both_targets_start_on_the_same_five_rules() -> None:
-    """Today's list is the starting row of py2many and of codon."""
-    assert websubset.RULES["py2many"] == websubset.RULES["codon"]
-    assert len(websubset.RULES["codon"]) == len(["metaclass", "eval", "dyn", "float", "star"])
+def test_codon_refuses_everything_py2many_does_and_py2many_reads_no_codon_rule() -> None:
+    """The codon row is the shared rules plus its own; py2many gains none of them."""
+    shared = websubset.RULES["py2many"]
+    assert shared < websubset.RULES["codon"]
+    assert "future-import" in websubset.RULES["codon"]
+    assert "future-import" not in shared
 
 
 def test_a_rule_removed_from_one_target_still_fires_for_the_other(

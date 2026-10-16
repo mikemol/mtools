@@ -10256,13 +10256,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rewake.py -k test_a_caller_may_set_its_own_interval},
 }
 
-@misc{hooks-websubset-target-both-targets-start-on-the-same-five-rules,
-  section = {websubset_target},
-  title  = {Today's list is the starting row of py2many and of codon},
-  claim  = {Today's list is the starting row of py2many and of codon.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_both_targets_start_on_the_same_five_rules},
-}
-
 @misc{hooks-websubset-target-rule-removed-from-one-target-still-fires-for-the-other,
   section = {websubset_target},
   title  = {Taking float-equality off codon silences it there and nowhere else},
@@ -10289,4 +10282,26 @@
   title  = {`--target codon` runs; `--target nope` exits 2 and names the usage},
   claim  = {`--target codon` runs; `--target nope` exits 2 and names the usage.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_cli_target_flag_picks_the_list_and_an_unknown_one_is_a_usage_error},
+}
+
+@misc{hooks-websubset-codon-each-codon-rule-fires-on-its-plant-for-codon-and-not-for-py2many,
+  section = {websubset_codon},
+  title  = {Every plant is found by the codon target under its own id, and py2many reports nothing},
+  claim  = {Every plant is found by the codon target under its own id, and py2many reports nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_codon.py -k test_each_codon_rule_fires_on_its_plant_for_codon_and_not_for_py2many},
+}
+
+@misc{hooks-websubset-codon-nearest-accepted-shapes-raise-no-codon-rule,
+  section = {websubset_codon},
+  title  = {Bare `@dataclass`, `except A`, `*rest` beside keyword-only, and `import typing` are clean},
+  claim  = {Bare `@dataclass`, `except A`, `*rest` beside keyword-only, and `import typing` are
+            clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_codon.py -k test_the_nearest_accepted_shapes_raise_no_codon_rule},
+}
+
+@misc{hooks-websubset-target-codon-refuses-everything-py2many-does-and-py2many-reads-no-codon-rule,
+  section = {websubset_target},
+  title  = {The codon row is the shared rules plus its own; py2many gains none of them},
+  claim  = {The codon row is the shared rules plus its own; py2many gains none of them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_codon_refuses_everything_py2many_does_and_py2many_reads_no_codon_rule},
 }

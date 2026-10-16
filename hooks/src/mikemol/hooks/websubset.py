@@ -25,6 +25,9 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass
+from itertools import starmap
+
+from mikemol.hooks import websubset_codon
 
 _EVAL = frozenset({"eval", "exec", "compile"})
 _DYNAMIC = frozenset({"getattr", "setattr", "delattr", "vars", "globals", "locals"})
@@ -35,7 +38,10 @@ DEFAULT_TARGET = "py2many"
 # Codon cannot compile are different sets. Both start on today's five rules; a target's list is
 # narrowed or widened by editing its own row, and a rule removed from one still fires for the other.
 # `syntax` is no rule of a target: a module that does not parse is refused by every target.
-RULES: dict[str, frozenset[str]] = {DEFAULT_TARGET: _TODAY, "codon": _TODAY}
+RULES: dict[str, frozenset[str]] = {
+    DEFAULT_TARGET: _TODAY,
+    "codon": _TODAY | websubset_codon.RULES,
+}
 
 
 @dataclass(frozen=True)
@@ -142,6 +148,7 @@ def _scan(source: str) -> list[Finding]:
             found += _compare(node)
         elif isinstance(node, ast.Attribute) and node.attr == "__dict__":
             found.append(Finding(node.lineno, "dynamic-attribute", "`__dict__` is a dynamic view"))
+    found += list(starmap(Finding, websubset_codon.scan(tree)))
     return sorted(found, key=_order)
 
 
