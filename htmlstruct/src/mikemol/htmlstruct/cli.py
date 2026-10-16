@@ -29,9 +29,12 @@ EXIT_SKIP = 3
 _STDOUT_FD = 1
 _ARCHIVE_SUFFIXES = frozenset({".mhtml", ".mht"})
 _FIXED_ARGS = 2
+_SECTION_ARGS = 4
+_SECTION_FLAGS = frozenset({"--section", "--heading"})
 _USAGE = (
     "usage: mikemol-htmlstruct outline|links|tables|meta FILE\n"
     "       mikemol-htmlstruct text FILE ID\n"
+    "       mikemol-htmlstruct text FILE --section N | --heading TEXT\n"
     "       mikemol-htmlstruct parts FILE\n"
     "       mikemol-htmlstruct part FILE LOCATION\n"
 )
@@ -77,6 +80,9 @@ def _well_formed(args: Sequence[str]) -> bool:
     """
     if len(args) < _FIXED_ARGS or args[0] not in _OPERANDS:
         return False
+    if args[0] == "text" and len(args) == _SECTION_ARGS:
+        # ⚑ `text FILE --section N` and `text FILE --heading TEXT` read a headed section (W1403).
+        return args[_FIXED_ARGS] in _SECTION_FLAGS and bool(args[_SECTION_ARGS - 1])
     return len(args) - _FIXED_ARGS == _OPERANDS[args[0]]
 
 
@@ -135,6 +141,30 @@ def _html_verb(verb: str, path: Path, operand: str) -> int:
     return _lines(_HTML_VERBS[verb](root))
 
 
+def _section_verb(path: Path, flag: str, value: str) -> int:
+    """Print the text of one headed section, selected by outline row or by heading text.
+
+    Returns:
+        0 for the section's text, 1 for a MISS (no such row or heading), 2 for a row that is not a
+        number, 3 for a SKIP (the input is not a document).
+
+    """
+    root = _document(path)
+    if isinstance(root, tree.Skip):
+        return _skip(root.reason)
+    if flag == "--section":
+        if not value.isdecimal():
+            sys.stderr.write(f"mikemol-htmlstruct: --section wants a row number, not {value!r}\n")
+            return EXIT_USAGE
+        found = outline.section(root, number=int(value))
+    else:
+        found = outline.section(root, heading=value)
+    if isinstance(found, outline.Missing):
+        sys.stderr.write(f"MISS {found.why}\n")
+        return EXIT_MISS
+    return _lines([found])
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run one verb over one file.
 
@@ -150,6 +180,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not path.is_file():
         sys.stderr.write(f"mikemol-htmlstruct: {path} is not a file\n")
         return EXIT_USAGE
+    if verb == "text" and len(args) == _SECTION_ARGS:
+        return _section_verb(path, args[_FIXED_ARGS], args[_SECTION_ARGS - 1])
     if verb in {"parts", "part"}:
         return _archive_verb(verb, path, operand)
     return _html_verb(verb, path, operand)

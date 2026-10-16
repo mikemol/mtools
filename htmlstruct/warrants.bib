@@ -300,3 +300,39 @@
   claim  = {Bytes that are not text, and a non-archive given to `parts`, are skips.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_input_that_is_not_a_document_is_a_skip_with_exit_three},
 }
+
+@misc{htmlstruct-section-section-by-row-holds-its-subsections-and-stops-at-an-equal-rank-heading,
+  section = {section},
+  title  = {Row 2 is the h2: its text and its h3's, then it stops at the next h2},
+  claim  = {Row 2 is the h2: its text and its h3's, then it stops at the next h2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_section.py -k test_a_section_by_row_holds_its_subsections_and_stops_at_an_equal_rank_heading},
+}
+
+@misc{htmlstruct-section-section-by-heading-text-matches-exactly-then-by-prefix,
+  section = {section},
+  title  = {The full heading and its leading words select the same section},
+  claim  = {The full heading and its leading words select the same section.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_section.py -k test_a_section_by_heading_text_matches_exactly_then_by_prefix},
+}
+
+@misc{htmlstruct-section-last-section-runs-to-the-end-and-a-lower-rank-section-stops-at-the-next-h2,
+  section = {section},
+  title  = {Row 4 is the last h2, to the page end; row 3, the h3, stops where the next h2 begins},
+  claim  = {Row 4 is the last h2, to the page end; row 3, the h3, stops where the next h2 begins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_section.py -k test_the_last_section_runs_to_the_end_and_a_lower_rank_section_stops_at_the_next_h2},
+}
+
+@misc{htmlstruct-section-script-text-is-never-part-of-a-section,
+  section = {section},
+  title  = {The control: `var hidden = 1` sits inside the first reply and is not printed},
+  claim  = {The control: `var hidden = 1` sits inside the first reply and is not printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_section.py -k test_script_text_is_never_part_of_a_section},
+}
+
+@misc{htmlstruct-section-row-or-heading-that-matches-nothing-is-a-miss-and-a-bad-row-is-usage,
+  section = {section},
+  title  = {Exit 1 for an out-of-range row or an unknown heading; exit 2 for a row that is no number},
+  claim  = {Exit 1 for an out-of-range row or an unknown heading; exit 2 for a row that is no
+            number.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_section.py -k test_a_row_or_heading_that_matches_nothing_is_a_miss_and_a_bad_row_is_usage},
+}
