@@ -37,6 +37,7 @@ from mikemol.transcriptstruct.query import (
     stats,
 )
 from mikemol.transcriptstruct.records import read_path
+from mikemol.transcriptstruct.rulings import harvest_tree
 from mikemol.transcriptstruct.warrant import verify
 
 _REFUSED = 1
@@ -81,6 +82,12 @@ def _parser() -> argparse.ArgumentParser:
         "--harvest",
         action="store_true",
         help="W1386: one PROV-O entity per operator utterance, with its needle, as JSON lines",
+    )
+    mode.add_argument(
+        "--harvest-tree",
+        metavar="LEDGER",
+        help="W1401/W1402: the positional is a projects directory; append every new operator "
+        "utterance under it to LEDGER (append-only, incremental by uuid)",
     )
     parser.add_argument("--claim", help="--verify: the speaker claimed (`operator` needs human)")
     parser.add_argument("--line", type=int, help="--verify: the line the warrant cites")
@@ -255,6 +262,14 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     cited = _text(opts, "verify")
     if cited is not None:
         return _verify(opts, cited, sink)
+    ledger = _text(opts, "harvest_tree")
+    if ledger is not None:
+        done = harvest_tree(path, Path(ledger), scheduled)
+        sink.write(
+            f"# read {done.read} file(s), spared {done.spared}, added {done.added} line(s), "
+            f"{done.uncitable} human utterance(s) uncitable\n"
+        )
+        return 0
     if opts.get("harvest") is True:
         _harvest(path, scheduled, sink)
         return 0

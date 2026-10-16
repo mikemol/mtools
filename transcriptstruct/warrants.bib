@@ -598,3 +598,38 @@
   claim  = {One JSON line per entity, then a `#` line carrying the counts.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_harvest.py -k test_the_cli_prints_json_lines_then_the_denominator},
 }
+
+@misc{transcriptstruct-rulings-second-harvest-of-the-same-tree-adds-nothing-and-reads-nothing,
+  section = {rulings},
+  title  = {Idempotent twice over: the lines are not repeated and the unchanged file is spared},
+  claim  = {Idempotent twice over: the lines are not repeated and the unchanged file is spared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_a_second_harvest_of_the_same_tree_adds_nothing_and_reads_nothing},
+}
+
+@misc{transcriptstruct-rulings-transcript-that-grew-adds-only-its-new-utterance,
+  section = {rulings},
+  title  = {The control that the ledger still takes more: one new line, the old line byte-identical},
+  claim  = {The control that the ledger still takes more: one new line, the old line byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_a_transcript_that_grew_adds_only_its_new_utterance},
+}
+
+@misc{transcriptstruct-rulings-deleting-the-spare-record-costs-a-slow-run-and-loses-nothing,
+  section = {rulings},
+  title  = {The speed-up is only that: without it the file is read again and no line repeats},
+  claim  = {The speed-up is only that: without it the file is read again and no line repeats.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_deleting_the_spare_record_costs_a_slow_run_and_loses_nothing},
+}
+
+@misc{transcriptstruct-rulings-append-skips-a-known-iri-and-the-walk-lists-transcripts-in-path-order,
+  section = {rulings},
+  title  = {Direct: a repeated entity is refused; the walk lists only `.jsonl` files, sorted},
+  claim  = {Direct: a repeated entity is refused; the walk lists only `.jsonl` files, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_append_skips_a_known_iri_and_the_walk_lists_transcripts_in_path_order},
+}
+
+@misc{transcriptstruct-rulings-cli-walks-a-tree-into-a-ledger-and-reports-its-counts,
+  section = {rulings},
+  title  = {`--harvest-tree LEDGER` over a projects directory prints one `#` summary line},
+  claim  = {`--harvest-tree LEDGER` over a projects directory prints one `#` summary line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_the_cli_walks_a_tree_into_a_ledger_and_reports_its_counts},
+}
