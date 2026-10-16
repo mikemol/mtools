@@ -17,7 +17,6 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY: standard library only.
 # ⚑ TWO THIRD-PARTY DEPENDENCIES, numpy and colorspacious (el-openglo:W544): the CAM02-UCS conversion
 # is colorspacious's, the vector arithmetic numpy's. Both are untyped at runtime for mypy, so
 # `stubs` mirrors only the names the module uses, as treeio's stubs do for pygit2.
@@ -60,7 +59,10 @@ warn_unused_ignores = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 files = ["src", "tests"]
-mypy_path = "src"
+# ⚑ `stubs` IS THE THIRD-PARTY SURFACE (as in treeio and mdstruct): the bazel mypy runner cannot see
+# runtime dependencies, so numpy and colorspacious would be import-not-found and Any under
+# disallow_any_expr. The stubs mirror only the names cvdcore uses.
+mypy_path = "src:stubs"
 explicit_package_bases = true
 
 [tool.ruff]
@@ -85,4 +87,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_dependencies.py" = ["assert"]
+# ⚑ THE STUB MIRRORS numpy's OWN NAME: the class is `ndarray` upstream, so CapWords cannot apply.
+"stubs/numpy/__init__.pyi" = ["invalid-class-name"]
 "tests/test_smoke.py" = ["assert"]
