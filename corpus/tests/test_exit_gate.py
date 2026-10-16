@@ -16,7 +16,7 @@ from typing import cast
 from mikemol.corpus import exitcensus
 
 _ROOT = Path(__file__).parents[2]
-_DISTS = ("fence", "pathsforward", "hooks", "katas")
+_DISTS = ("fence", "pathsforward", "hooks", "katas", "waldo")
 _TABLE = _ROOT / "corpus" / "exit-table.json"
 _BASELINE = _ROOT / "corpus" / "exit-baseline.txt"
 _MINIMUM = 40

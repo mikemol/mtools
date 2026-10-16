@@ -6,17 +6,19 @@ Lifted from luthen-observability's `checks/apply_set.py::execute`, with the seam
 waldo supplies only what is its own: how to plan, how to read the plan's changes, how to apply that
 plan, and how to run a witness command. The steps, in order, each stopping the run at its failure:
 
-    0. lint the contract; an unsound contract (a witness that cannot fail) is exit 2
-    1. `before` witnesses (STAR-S); any failing refuses the run, exit 1
-    2. plan FRESH inside the command and keep the artifact; a plan that is not admitted is exit 1
-    3. read the plan's changes; unreadable is exit 2
+    0. lint the contract; an unsound contract (a witness that cannot fail) is exit 7
+    1. `before` witnesses (STAR-S); any failing refuses the run, exit 4
+    2. plan FRESH inside the command and keep the artifact; a plan that is not admitted is exit 4
+    3. read the plan's changes; unreadable is exit 7
     4. compare with the declared sets; outside `allowed` or missing a `required` row prints the diff
-       and the planned rows, applies NOTHING, exit 1
+       and the planned rows, applies NOTHING, exit 4
     5. dry run stops here with `matches`
     6. apply the SAME artifact that was compared (skipped for an empty plan: `converged`)
     7. `after` witnesses; the state names the act and whether a witness failed
 
-Exit 0 matched, applied or converged, witnessed; 1 refused or a step failed; 2 cannot run.
+Exit 0 matched, applied or converged, witnessed; 1 the apply failed; 4 refused (a precondition, the
+declared set, or a witness that failed); 7 cannot run (unsound or unreadable, or a witness that
+could not be evaluated).
 
 ⚑ THE VERDICT IS ONE JSON OBJECT with a fixed state vocabulary, and every tail of command output in
 it passes through `scrub` for the secrets the caller holds, so a secret echoed by a command cannot
@@ -44,9 +46,14 @@ if TYPE_CHECKING:
 type Artifact = str
 type Verdict = dict[str, object]
 
+# ⚑ THE FLEET EXIT TABLE (corpus/exit-table.json, W1310): a step that RAN AND BROKE is FAILED 1, a
+# verdict on the subject (a precondition, the declared set, a witness that failed) is REFUSED 4, and
+# anything that could not be evaluated is CANNOT 7, an instrument fault that is never read as
+# success and never retried as a deferral. Waldo's old 1 and 2 are read by luthen's apply family.
 EXIT_OK = 0
-EXIT_REFUSED = 1
-EXIT_CANNOT = 2
+EXIT_FAILED = 1
+EXIT_REFUSED = 4
+EXIT_CANNOT = 7
 
 
 @dataclass(frozen=True)
@@ -178,7 +185,7 @@ def _apply(
     if code == 0:
         return None
     failure: Verdict = {"state": "apply-failed", "rc": code, "tail": [scrub(out, *secrets)]}
-    return Stop(EXIT_REFUSED, {**failure, "planned": planned.rows})
+    return Stop(EXIT_FAILED, {**failure, "planned": planned.rows})
 
 
 def execute(
@@ -224,4 +231,5 @@ def execute(
         "failed": failed,
         "unevaluated": blind,
     }
-    return (EXIT_REFUSED if failed or blind else EXIT_OK), verdict
+    code = EXIT_REFUSED if failed else (EXIT_CANNOT if blind else EXIT_OK)
+    return code, verdict

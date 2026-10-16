@@ -75,7 +75,7 @@ def test_an_environment_fault_in_an_after_witness_is_unevaluated_not_failed() ->
     """The change applied; the witness could not reach its target, so the state says so."""
     world = _World(roll=(1, _FAULT))
     code, verdict = execute(_contract(_AFTER), world.seams())
-    assert (code, verdict["state"]) == (EXIT_REFUSED, "applied-witness-unevaluated")
+    assert (code, verdict["state"]) == (EXIT_CANNOT, "applied-witness-unevaluated")
     assert (verdict["failed"], verdict["unevaluated"]) == ([], ["rolled"])
     assert world.applied == 1
     (row,) = cast("list[dict[str, object]]", verdict["witnesses"])

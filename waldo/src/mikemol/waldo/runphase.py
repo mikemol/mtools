@@ -8,7 +8,7 @@ and writes the marker. The order is fixed, every step stops the run at its failu
 was refused leaves the marker exactly as it found it:
 
     1. lint the recipe (an unsound recipe runs nothing)
-    2. read the marker; an ambiguous marker is exit 2, not a guess
+    2. read the marker; an ambiguous marker is exit 7, not a guess
     3. read which phases the world shows done
     4. eligibility: order, standing flags, a point of no return not already done
     5. the phase's `entry` witnesses, run fresh
@@ -34,7 +34,7 @@ from mikemol.waldo import marker
 from mikemol.waldo.confirm import ConfirmError, check, instructions, issue
 from mikemol.waldo.marker import MarkerError
 from mikemol.waldo.phases import eligibility, lint, read_done
-from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_OK, EXIT_REFUSED, Stop, execute
+from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_FAILED, EXIT_OK, EXIT_REFUSED, Stop, execute
 from mikemol.waldo.witness import run_all
 
 if TYPE_CHECKING:
@@ -165,5 +165,5 @@ def run_phase(
     try:
         marker.write(setting.marker, {**(state or {}), **phase.sets})
     except MarkerError as problem:
-        return EXIT_REFUSED, {**verdict, "state": "marker-not-written", "why": str(problem)}
+        return EXIT_FAILED, {**verdict, "state": "marker-not-written", "why": str(problem)}
     return EXIT_OK, {**verdict, "marker": dict(phase.sets)}

@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING, cast
 import pytest
 
 from mikemol.waldo.cli import invocation, main, matches_shape
-from mikemol.waldo.pipeline import Seams
+from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_REFUSED, Seams
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -30,8 +30,8 @@ _GOOD = f"env -C {_REPO} {_PYTHON} -m checks.apply_set --set main"
 _NS = 'module.w45.kubernetes_namespace_v1.throwaway["amr-skills"]'
 _JOB = 'module.forgejo.kubernetes_job_v1.forgejo_admin["forgejo"]'
 _SET = {"allowed": [{"address": _NS, "actions": ["create"]}]}
-_REFUSED = 1
-_CANNOT = 2
+_REFUSED = EXIT_REFUSED
+_CANNOT = EXIT_CANNOT
 
 
 def _parsed(text: str) -> dict[str, object]:

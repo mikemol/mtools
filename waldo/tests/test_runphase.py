@@ -18,7 +18,7 @@ from mikemol.waldo.contract import parse
 from mikemol.waldo.custody import fingerprint
 from mikemol.waldo.marker import MarkerError
 from mikemol.waldo.phases import ConfirmSpec, Phase, Recipe
-from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_OK, EXIT_REFUSED, Seams
+from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_FAILED, EXIT_OK, EXIT_REFUSED, Seams
 from mikemol.waldo.runphase import Setting, run_phase
 from mikemol.waldo.witness import Witness
 
@@ -261,5 +261,5 @@ def test_a_marker_that_cannot_be_written_after_success_is_reported(
     monkeypatch.setattr(marker, "write", refuse)
     world = _World()
     code, verdict = run_phase(_RECIPE, "p1", _setting(world, tmp_path))
-    assert (code, verdict["state"]) == (EXIT_REFUSED, "marker-not-written")
+    assert (code, verdict["state"]) == (EXIT_FAILED, "marker-not-written")
     assert world.applied == 1

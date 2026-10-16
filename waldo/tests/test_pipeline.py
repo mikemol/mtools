@@ -14,7 +14,15 @@ from typing import TYPE_CHECKING, cast
 
 from mikemol.waldo.contract import parse
 from mikemol.waldo.custody import Secret
-from mikemol.waldo.pipeline import EXIT_CANNOT, EXIT_OK, EXIT_REFUSED, Seams, execute, verdict_line
+from mikemol.waldo.pipeline import (
+    EXIT_CANNOT,
+    EXIT_FAILED,
+    EXIT_OK,
+    EXIT_REFUSED,
+    Seams,
+    execute,
+    verdict_line,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -156,7 +164,7 @@ def test_a_failed_apply_is_reported_scrubbed_and_not_witnessed() -> None:
     """Exit 1 with the apply's rc, the secret scrubbed from its tail, and no witness run."""
     world = _World(apply_result=(_FAILED_APPLY, f"boom {_LEAKED}"))
     code, verdict = execute(parse(_DOC), world.seams(), secrets=[Secret(_LEAKED)])
-    assert (code, verdict["state"], verdict["rc"]) == (EXIT_REFUSED, "apply-failed", _FAILED_APPLY)
+    assert (code, verdict["state"], verdict["rc"]) == (EXIT_FAILED, "apply-failed", _FAILED_APPLY)
     assert _LEAKED not in verdict_line(verdict)
     assert not world.ran
 
