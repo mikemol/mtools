@@ -20,8 +20,6 @@ file as the author left it) needs the steps apart; before this split it kept its
 first one, without the flush.
 """
 
-from __future__ import annotations
-
 import contextlib
 import os
 import tempfile

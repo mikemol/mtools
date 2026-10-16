@@ -18,8 +18,6 @@ RECURRENCE-ID (measured, W259 probe). An override's matches its own VEVENT's, an
 came from the master. So `first`..`last` is the span of the VEVENT that produced the instance.
 """
 
-from __future__ import annotations
-
 import datetime
 from dataclasses import dataclass
 

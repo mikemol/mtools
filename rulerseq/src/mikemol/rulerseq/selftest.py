@@ -6,8 +6,6 @@ W1048. Run it as `python -m mikemol.rulerseq`: it prints a pass banner and retur
 reading is wrong on stderr and returns 1. The checks are the paperkit file's, one function each.
 """
 
-from __future__ import annotations
-
 import sys
 
 from mikemol.rulerseq.ruler import (

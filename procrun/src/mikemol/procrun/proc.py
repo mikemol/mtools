@@ -11,14 +11,9 @@ caller that only needs to start a child does not inherit treeio's native git dep
 Every argv is a sequence built by the caller: never a shell.
 """
 
-from __future__ import annotations
-
 import subprocess
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-    from pathlib import Path
+from collections.abc import Mapping, Sequence
+from pathlib import Path
 
 
 def capture(

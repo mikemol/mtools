@@ -17,19 +17,14 @@ the strict block refuses at every call site. `http.client` is typed, and it foll
 redirect is a status, reported as one.
 """
 
-from __future__ import annotations
-
 import hashlib
 import http.client
 import urllib.parse
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.icsstruct.lexical import ContentLine, lex
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 _REMOTE = frozenset({"http", "https", "webcal"})
 _TIMEOUT = 30.0

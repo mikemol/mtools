@@ -35,18 +35,13 @@ only `.git` itself is pruned. ⚑ THE ROOT'S OWN TREE is the deepest registered 
 root or an ancestor of it, so a query run from inside a linked worktree still reads that worktree.
 """
 
-from __future__ import annotations
-
 import fnmatch
 import os
 import shutil
 import subprocess
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _TIMEOUT = 60
 _PREFIX = "worktree "

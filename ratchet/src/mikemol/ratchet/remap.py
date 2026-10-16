@@ -51,21 +51,16 @@ trailing newline; other whitespace is re-rendered by `json.dumps`. A file with n
 discard is not rewritten at all.
 """
 
-from __future__ import annotations
-
 import json
 import subprocess
+from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
 from mikemol.atomicwrite import durable
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
-    from pathlib import Path
-
-    from mikemol.atomicwrite.durable import Staged
+from mikemol.atomicwrite.durable import Staged
 
 type Json = bool | int | float | str | list[Json] | dict[str, Json] | None
 type Segment = str | int

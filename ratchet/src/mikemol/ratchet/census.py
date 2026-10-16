@@ -17,16 +17,11 @@ that merges two lines look like paydown. The set answers "does this file still o
 rule", which is the question paydown-only can actually enforce.
 """
 
-from __future__ import annotations
-
 import os
 import re
 import subprocess
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-    from pathlib import Path
+from collections.abc import Iterable
+from pathlib import Path
 
 # ⚑⚑ ruff's concise line is `path:line:col: <rule> message`, and `<rule>` is a RULE NAME
 # (`docstring-missing-returns`) rather than a code (`DOC201`) under this configuration. A first

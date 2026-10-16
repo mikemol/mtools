@@ -15,15 +15,11 @@ bibs means the path list is wrong, so it raises: a census over nothing would pri
 all-clear over a tree it never read. `population` carries the `m` of `n of m`.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING, NamedTuple
+from collections.abc import Iterable
+from pathlib import Path
+from typing import NamedTuple
 
 from mikemol.bibparse.edges import collect
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-    from pathlib import Path
 
 TYPE_FIELD = "_type"
 

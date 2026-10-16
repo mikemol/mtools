@@ -15,15 +15,10 @@ holds it (pathsforward's tick lock) is a different thing and keeps its own stale
 Depends on nothing but the standard library, as `durable` does.
 """
 
-from __future__ import annotations
-
 import contextlib
 import fcntl
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
-    from pathlib import Path
+from collections.abc import Iterator
+from pathlib import Path
 
 
 @contextlib.contextmanager

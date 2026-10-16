@@ -26,8 +26,6 @@ Both line terminators are accepted: CRLF, which RFC 5545 requires and real expor
 bare LF, which hand-edited files have.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, replace
 
 type Nesting = tuple[tuple[str, int], ...]

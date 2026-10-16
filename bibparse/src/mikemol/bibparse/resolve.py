@@ -15,13 +15,8 @@ every edge it held), and a label with no `//` raises (paperkit hits an IndexErro
 paper.toml raises, as paperkit exits.
 """
 
-from __future__ import annotations
-
 import tomllib
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 DEFAULT_WARRANTS = ("warrants.bib",)
 _LABEL_PREFIXES = ("//", "@")

@@ -27,11 +27,9 @@ zero, EMPTY is not a formality — it is the strongest state the model has, wher
 future key is new and therefore refused.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterable
 from dataclasses import dataclass
-from pathlib import PurePosixPath
-from typing import TYPE_CHECKING
+from pathlib import Path, PurePosixPath
 
 from mikemol.ratchet.keys import (
     RUFF,
@@ -41,10 +39,6 @@ from mikemol.ratchet.keys import (
     schema_named,
 )
 from mikemol.ratchet.state import BaselineState
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-    from pathlib import Path
 
 
 # ⚑⚑⚑ A MOVE IS NEITHER GROWTH NOR PAYDOWN, AND CONFLATING IT WITH GROWTH BLOCKS THE DRAIN THAT

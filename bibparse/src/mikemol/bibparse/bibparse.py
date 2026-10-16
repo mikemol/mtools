@@ -27,8 +27,6 @@ rather than three positional arguments, every function states its return in a do
 Greek tag glyphs are written in prose.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import NamedTuple
 

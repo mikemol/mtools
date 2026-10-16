@@ -29,8 +29,6 @@ and a `__eq__` accepting strings is exactly how a typo becomes a silent non-matc
 state is a state.
 """
 
-from __future__ import annotations
-
 import enum
 
 

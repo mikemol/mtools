@@ -21,16 +21,11 @@ formatting. `core` owns what is TRUE; this owns how it reads.
 `emit` also takes an optional stream (stdout by default).
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
-    from typing import TextIO
+from typing import TextIO
 
 # How many lost keys a failed round-trip names before truncating.
 LOST_SHOWN = 5

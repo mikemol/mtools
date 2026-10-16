@@ -125,12 +125,14 @@ sh_test(
     size = "small",
 )
 
-# ⚑ SIX SHARDS, NOT ONE LONG TARGET (W972, operator 2026-10-10). 778 def-sites at about 0.7 s each
-# was 565 s alone and timed out inside a full gate; six shards of about 130 sites are six targets
-# bazel schedules independently, and `:mutants` is still the name that means all of them.
+# ⚑ TWELVE SHARDS, NOT ONE LONG TARGET (W972, operator 2026-10-10; W1311, 2026-10-15). 778 def-sites
+# at about 0.7 s each was 565 s alone and timed out inside a full gate; six shards still hit the 900 s
+# WALL limit twice in one day under host load of 55 (no test failed), because the bound is wall time
+# and load stretches it. Twelve shards of about 65 sites halve each target's wall time, and bazel
+# schedules them independently; `:mutants` is still the name that means all of them.
 mutants_sharded(
     name = "mutants",
-    shards = 6,
+    shards = 12,
     cpus = 4,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

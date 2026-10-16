@@ -12,19 +12,13 @@ while it stays cited and the gate stays green. The refusal names the key and bot
 paperkit refuses across files only; a repeat inside one file refuses here too.
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING, TypedDict
+from collections.abc import Iterable
+from pathlib import Path
+from typing import TypedDict
 
-from mikemol.bibparse.bibparse import parse
+from mikemol.bibparse.bibparse import Entry, parse
 from mikemol.bibparse.resolve import bib_paths
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-    from pathlib import Path
-
-    from mikemol.bibparse.bibparse import Entry
 
 _LIST_SEPARATOR = re.compile(r"[,\s]+")
 

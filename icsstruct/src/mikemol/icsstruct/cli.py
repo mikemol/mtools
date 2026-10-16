@@ -19,21 +19,16 @@ Options are read through `vars()` into a `dict[str, object]` and narrowed per ke
 siblings' CLIs do, because argparse's Namespace is untyped.
 """
 
-from __future__ import annotations
-
 import argparse
 import datetime
 import json
 import sys
-from typing import TYPE_CHECKING, cast
+from collections.abc import Sequence
+from typing import TextIO, cast
 
 from mikemol.icsstruct.expand import Occurrence, Unexpandable, expand
 from mikemol.icsstruct.lexical import Malformed, lex
 from mikemol.icsstruct.source import SourceError, read
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import TextIO
 
 _DEFAULT_DAYS = 14
 

@@ -27,8 +27,6 @@ and none is capped:
     css_defs(n)                 one CSS class per cycle order, for a style block
 """
 
-from __future__ import annotations
-
 DOT = "·"
 DASH = "-"
 _ON_DOT_PT = 0.5

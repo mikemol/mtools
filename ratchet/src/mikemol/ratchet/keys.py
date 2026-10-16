@@ -30,15 +30,10 @@ trailing KIND of a parsed key. The rest of `key_spec` duplicates what is here; i
 than moving.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 class MalformedKeyError(ValueError):

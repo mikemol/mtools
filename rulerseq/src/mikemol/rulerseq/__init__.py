@@ -9,8 +9,6 @@ paperkit's render/checks/rulerseq.py (W1048, paperkit:W338); the public names ar
 `python -m mikemol.rulerseq`.
 """
 
-from __future__ import annotations
-
 from mikemol.rulerseq.ruler import (
     column_encoding,
     css_defs,

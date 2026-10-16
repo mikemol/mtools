@@ -13,8 +13,6 @@ creates itself on first run grandfathers whatever happened to be present at that
 and nobody chose that set. ABSENT must be converted to a recorded set by someone saying so.
 """
 
-from __future__ import annotations
-
 import argparse
 import sys
 from pathlib import Path
