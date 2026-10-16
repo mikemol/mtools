@@ -94,3 +94,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE STUB MIRRORS numpy's OWN NAME: the class is `ndarray` upstream, so CapWords cannot apply.
 "stubs/numpy/__init__.pyi" = ["invalid-class-name"]
 "tests/test_smoke.py" = ["assert"]
+"tests/test_ucs.py" = ["assert"]

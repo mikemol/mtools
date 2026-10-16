@@ -3,3 +3,4 @@
 # key <TAB> heading title
 smoke	Smoke test
 core	The worst-view CVD distance core
+ucs	The public CAM02-UCS conversion keeps its shapes and reads the view

@@ -102,6 +102,29 @@ def _ucs(rgb255: Sequence[float] | ndarray, cvd: str | None) -> ndarray:
     return cspace_convert(colour / _BYTE, _source(cvd), _SPACE)
 
 
+def ucs(rgb255: Sequence[float] | ndarray, cvd: str | None) -> ndarray:
+    """Convert sRGB bytes (0 to 255) to CAM02-UCS under a view (el-openglo:W544, mtools:W1349).
+
+    ⚑ THE PUBLIC NAME OF THE PRIVATE CONVERSION: a caller outside the dist reaches this, not `_ucs`.
+
+    Returns:
+        shape (3,) for one colour, or (N, 3) for an (N, 3) array: J', a', b' per row. `cvd` is one
+        of `VIEWS`: None for the trichromat, else a deficiency name.
+
+    """
+    return _ucs(rgb255, cvd)
+
+
+def ucs_lightness(rgb255: Sequence[float] | ndarray, cvd: str | None) -> ndarray:
+    """Read the CAM02-UCS lightness J' of sRGB bytes under a view.
+
+    Returns:
+        the J' column of `ucs`: shape (N,) for an (N, 3) array, a 0-d array for one colour.
+
+    """
+    return _ucs(rgb255, cvd)[..., 0]
+
+
 def worst_view_dE(a: Sequence[float], b: Sequence[float]) -> tuple[float, str]:
     """Measure the minimum CAM02-UCS distance between two colours over the four views.
 

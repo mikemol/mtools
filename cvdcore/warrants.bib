@@ -93,3 +93,24 @@
             deficient views do not exercise.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_core.py -k test_a_pair_the_trichromat_view_collapses_is_measured_in_that_view},
 }
+
+@misc{cvdcore-ucs-one-colour-is-three-numbers-and-a-batch-is-n-by-three,
+  section = {ucs},
+  title  = {A triple converts to shape (3,); two rows convert to (2, 3)},
+  claim  = {A triple converts to shape (3,); two rows convert to (2, 3).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ucs.py -k test_one_colour_is_three_numbers_and_a_batch_is_n_by_three},
+}
+
+@misc{cvdcore-ucs-lightness-is-the-first-column-of-the-conversion-row-by-row,
+  section = {ucs},
+  title  = {The batch lightness is (2,) and matches the J' of each colour converted alone},
+  claim  = {The batch lightness is (2,) and matches the J' of each colour converted alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ucs.py -k test_lightness_is_the_first_column_of_the_conversion_row_by_row},
+}
+
+@misc{cvdcore-ucs-view-argument-changes-the-answer-for-a-red,
+  section = {ucs},
+  title  = {The trichromat and a protan view read a red at different lightness},
+  claim  = {The trichromat and a protan view read a red at different lightness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ucs.py -k test_the_view_argument_changes_the_answer_for_a_red},
+}
