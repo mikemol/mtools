@@ -16,16 +16,11 @@ value is the real sha256 of the file named, read here.
 CONSUMED BY: `mikemol-wheel checklist`, the adopter's step after `mikemol-wheel` builds a dist.
 """
 
-from __future__ import annotations
-
 import hashlib
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 USAGE = 2
 WHEEL_PARTS = 5

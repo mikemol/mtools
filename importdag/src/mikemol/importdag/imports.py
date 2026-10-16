@@ -21,8 +21,6 @@ The file is written with the sibling distribution's atomic write, so a crash can
 graph half stated.
 """
 
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 

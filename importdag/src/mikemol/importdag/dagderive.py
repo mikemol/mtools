@@ -17,8 +17,6 @@ Imports are read from the syntax tree, never by text search: a text search match
 comments and strings and reports phantom edges.
 """
 
-from __future__ import annotations
-
 import ast
 from pathlib import Path
 

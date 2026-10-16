@@ -28,20 +28,15 @@ it, by a code change or a declared resolution naming one of the candidates, and 
 recalculated by planning again.
 """
 
-from __future__ import annotations
-
+from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.importdag.dagderive import cone
 from mikemol.importdag.resolve import Resolution, Unsettled, derive
 
 from mikemol.debtplan.cycle import find_cycle
 from mikemol.debtplan.rows import Row, order_key
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Mapping
-    from pathlib import Path
 
 
 @dataclass(frozen=True, slots=True)

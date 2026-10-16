@@ -15,15 +15,18 @@ not the study's bare `transcriptstruct`. Options are read through `vars()` into 
 Namespace is untyped.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import TextIO, cast
 
+from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.query import (
+    Hit,
+    Result,
+    Stats,
     Window,
     extract,
     grep_blocks,
@@ -33,13 +36,6 @@ from mikemol.transcriptstruct.query import (
     stats,
 )
 from mikemol.transcriptstruct.records import read_path
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import TextIO
-
-    from mikemol.transcriptstruct.blocks import Block
-    from mikemol.transcriptstruct.query import Hit, Result, Stats
 
 _DEFAULT_SPEAKERS = ("human", "peer", "assistant")
 

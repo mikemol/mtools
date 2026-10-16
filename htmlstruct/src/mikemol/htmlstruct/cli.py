@@ -13,18 +13,13 @@ text, or a file that is not an archive). An empty answer is never printed for an
 three: a caller must be able to tell "no headings" from "could not read it".
 """
 
-from __future__ import annotations
-
 import os
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.htmlstruct import links, mhtml, outline, tables, text, tree
 from mikemol.htmlstruct import meta as metadata
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 EXIT_OK = 0
 EXIT_MISS = 1

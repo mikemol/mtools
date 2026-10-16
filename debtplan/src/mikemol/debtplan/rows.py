@@ -8,8 +8,6 @@ debt file stands in its closure but itself, and no import name in that closure i
 ambiguous name hides an edge, so the order behind it is not known and is not guessed.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 

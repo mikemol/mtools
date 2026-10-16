@@ -23,8 +23,6 @@ a package the dist does not declare fails here and is reported with its tail, no
 CONSUMED BY: `mikemol-wheel sdist-tests`, the off-host test preflight (W1147).
 """
 
-from __future__ import annotations
-
 import json
 import re
 import shutil

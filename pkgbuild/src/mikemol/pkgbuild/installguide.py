@@ -20,17 +20,13 @@ because the one-line description is prose that no tool should invent.
 CONSUMED BY: `mikemol-wheel install-guide`, the off-host installable-guide card (W1146).
 """
 
-from __future__ import annotations
-
 import json
 import re
 import sys
 import tomllib
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 USAGE = 2
 ROOT_ONLY = 1

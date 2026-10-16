@@ -25,8 +25,6 @@ would leave the build graph half stated.
     python3 -m mikemol.importdag.dagbzl [--engine DIR] --write     # regenerate
 """
 
-from __future__ import annotations
-
 import sys
 
 from mikemol.atomicwrite.durable import write_atomic

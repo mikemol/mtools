@@ -7,13 +7,9 @@ writes down. This module takes the one shape the plan needs and refuses everythi
 a malformed declaration is a refusal and not a name silently left unsettled.
 """
 
-from __future__ import annotations
-
 import json
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 
 class ResolutionsError(ValueError):

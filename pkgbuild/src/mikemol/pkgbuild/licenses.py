@@ -21,16 +21,11 @@ left alone, and a directory that is a symlink is not a dist (no symlinks, operat
 CONSUMED BY: `mikemol-wheel licenses` and the new-dist scaffold's check.
 """
 
-from __future__ import annotations
-
 import json
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 LICENSE = "LICENSE"
 FILES_LINE = 'license-files = ["LICENSE"]\n'

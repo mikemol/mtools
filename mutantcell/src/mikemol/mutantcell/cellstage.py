@@ -22,8 +22,6 @@ THE OPERANDS TRAVEL AS A RECORD, NOT AS SEVEN PARAMETERS: only two or three appl
 kind, so a flat signature makes every caller supply the operands of kinds it is not using.
 """
 
-from __future__ import annotations
-
 import pathlib
 import shutil
 import sys

@@ -9,8 +9,6 @@ values are kept as written. A repeated key is kept repeated, in order: `og:image
 appears many times and collapsing it to one would lose the rest.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 from mikemol.htmlstruct import text, tree

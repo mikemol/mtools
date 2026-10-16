@@ -26,8 +26,6 @@ is a failure; the tests check reports `ok` or `failed`.
 CONSUMED BY: `mikemol-wheel release-check` and the publish preflight (W1151).
 """
 
-from __future__ import annotations
-
 import contextlib
 import importlib
 import io
@@ -39,8 +37,9 @@ import sys
 import tarfile
 import tempfile
 import tomllib
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pkgbuild import (
     installguide,
@@ -50,9 +49,6 @@ from mikemol.pkgbuild import (
     twinecheck,
     versionstamp,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 DEFAULT_BACKEND = "setuptools.build_meta"
 GUIDE = "INSTALL.md"

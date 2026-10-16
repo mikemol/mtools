@@ -24,20 +24,13 @@ card, which reads as a queue in step when it is not. Here the first refusal stop
 raised with the writer's own words, after the tick lock is released on every path.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
-from mikemol.debtplan.plan import candidates_of, direct_unsettled
+from mikemol.debtplan.plan import Plan, candidates_of, direct_unsettled
+from mikemol.debtplan.queue import Card, Queue
 from mikemol.debtplan.reduce import direct_waits
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-
-    from mikemol.debtplan.plan import Plan
-    from mikemol.debtplan.queue import Card, Queue
-    from mikemol.debtplan.rows import Row
+from mikemol.debtplan.rows import Row
 
 
 def _blocked_on_names(plan: Plan) -> dict[str, tuple[str, ...]]:

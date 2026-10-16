@@ -7,8 +7,6 @@ facts about a page; resolving them against a base would erase which one the auth
 base is the caller's to know.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 from mikemol.htmlstruct import text, tree

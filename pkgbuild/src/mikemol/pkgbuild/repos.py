@@ -22,15 +22,11 @@ point a registration at the wrong repository.
 CONSUMED BY: `mikemol-wheel publishers` (W1221) and `mikemol-wheel environments` (W1222).
 """
 
-from __future__ import annotations
-
 import tomllib
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 
 @dataclass(frozen=True)

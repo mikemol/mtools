@@ -9,17 +9,12 @@ metadata said on the day it was built.
 CONSUMED BY: `mikemol.pkgbuild.wheel.main`.
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pkgbuild import metacheck
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 def run(paths: Sequence[str]) -> int:

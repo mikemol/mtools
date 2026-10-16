@@ -31,16 +31,12 @@ Usage:  python -m mikemol.mutantcell.decisions --flips <rec>... --reach <rec>...
         python -m mikemol.mutantcell.decisions --summary <decisions-record>...
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 Record = dict[str, object]
 

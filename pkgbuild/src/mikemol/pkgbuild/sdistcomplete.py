@@ -14,13 +14,8 @@ a named finding at release time instead of a failure a user finds.
 CONSUMED BY: `relcheck.row_of`, the publish preflight (W1151).
 """
 
-from __future__ import annotations
-
 import tarfile
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 JUNK = frozenset({"__pycache__", ".pytest_cache"})
 SHOWN = 8

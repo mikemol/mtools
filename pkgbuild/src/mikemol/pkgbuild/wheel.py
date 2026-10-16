@@ -22,8 +22,6 @@ Usage:  mikemol-wheel build <out.whl> <pyproject.toml>   (needs the DECLARED set
         mikemol-wheel sdist-tests <out> [dist ...]   (each dist's own tests, from its sdist)
 """
 
-from __future__ import annotations
-
 import importlib
 import os
 import pathlib
@@ -32,7 +30,8 @@ import sys
 import tempfile
 import venv
 import zipfile
-from typing import TYPE_CHECKING, cast
+from collections.abc import Callable, Sequence
+from typing import cast
 
 from mikemol.pkgbuild import (
     checklist,
@@ -46,9 +45,6 @@ from mikemol.pkgbuild import (
     relcheck,
     sdisttests,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 _ARGC_BUILD = 3
 _ARGC_INSTALL_MIN = 3

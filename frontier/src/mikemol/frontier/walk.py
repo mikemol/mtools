@@ -23,13 +23,8 @@ of those are realized, the unmet gates the optional `gates` callable names for i
 become ready; a cycle through a realized node breaks nothing and is not reported.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Sequence
 
 
 @dataclass(frozen=True)

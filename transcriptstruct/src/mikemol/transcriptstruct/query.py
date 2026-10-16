@@ -20,25 +20,17 @@ neither is a structural field inside a decoded block (its `type`, a tool_use's `
 were read to decode it.
 """
 
-from __future__ import annotations
-
 import json
 import re
 from collections import Counter
+from collections.abc import Collection, Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-from mikemol.transcriptstruct.blocks import blocks
+from mikemol.transcriptstruct.blocks import Block, blocks
 from mikemol.transcriptstruct.provenance import classify
-from mikemol.transcriptstruct.records import MalformedLine, UnknownRecord
-from mikemol.transcriptstruct.walk import strings
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Iterator, Sequence
-
-    from mikemol.transcriptstruct.blocks import Block
-    from mikemol.transcriptstruct.records import Record
-    from mikemol.transcriptstruct.walk import Path
+from mikemol.transcriptstruct.records import MalformedLine, Record, UnknownRecord
+from mikemol.transcriptstruct.walk import Path, strings
 
 _CONTENT_ROOTS: tuple[Path, ...] = (("message", "content"), ("attachment", "prompt"))
 
@@ -67,8 +59,8 @@ def _type_of(envelope: object) -> str:
 
 
 def raw(
-    records: Iterable[Record], types: Collection[str], *, window: Window | None = None
-) -> Result:
+    records: Iterable[Record], types: Collection[str], *, window: "Window | None" = None
+) -> "Result":
     """List whole records of the named envelope types, as JSON, in line order.
 
     This is the read that decides whether a record type earns a decoder: `unknown_types` says

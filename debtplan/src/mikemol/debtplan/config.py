@@ -15,16 +15,12 @@ unreadable, malformed or symlinked one is a refusal: a declared decision that va
 re-opens every ambiguity it settled. A symlink is refused as data and never followed.
 """
 
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
 from mikemol.debtplan.resolutions import ResolutionsError, parse_resolutions
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 CONFIG = (".claude", "debtplan.json")
 _KEYS = frozenset({"exclude", "resolutions"})

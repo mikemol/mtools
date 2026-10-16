@@ -13,14 +13,9 @@ silently does nothing would be a whole sweep's worth of wrong answers with no re
 `argparse` still owns `--help`, the error messages and the required-flag checks.
 """
 
-from __future__ import annotations
-
 import argparse
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 @dataclass(frozen=True)

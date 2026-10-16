@@ -11,14 +11,9 @@ A LEAF: pure data and pure functions, standard library only. It used to read the
 lazily from paperkit's `bib`; they are now `SCOPES` here, so nothing is imported from paperkit.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
 
 type Json = str | int | bool | list[Json] | dict[str, Json] | None
 type Record = dict[str, Json]

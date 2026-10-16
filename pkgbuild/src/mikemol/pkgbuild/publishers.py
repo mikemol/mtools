@@ -20,18 +20,13 @@ here and not at the first upload; the environment is the index's own (`pypi` or 
 CONSUMED BY: `mikemol-wheel publishers`, the operator's registration step (W1153).
 """
 
-from __future__ import annotations
-
 import html
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pkgbuild import names, repos
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 CURRENT = repos.Layout(repos.DEFAULT, {})
 WORKFLOW = "publish.yml"

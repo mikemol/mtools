@@ -25,18 +25,12 @@ raised `from None`: a library's message can embed the token or the audio path, s
 message nor the original exception is kept as `__cause__` or printed context.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from functools import partial
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-from mikemol.audiostruct.records import normalize
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    from mikemol.audiostruct.records import Record
+from mikemol.audiostruct.records import Record, normalize
 
 # A loaded speech-to-text model: one file's audio to a result with a `segments` list.
 type Transcriber = Callable[[object], object]

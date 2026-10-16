@@ -12,20 +12,15 @@ hand in a recorder and a real queue can be exercised end to end.
 with it, handed back to the caller, who decides what a refused card means.
 """
 
-from __future__ import annotations
-
 import contextlib
 import io
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.pathsforward.cli import main as pf_main
 from mikemol.pathsforward.model import text
 from mikemol.pathsforward.store import load
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from pathlib import Path
 
 type Runner = Callable[[list[str]], int]
 

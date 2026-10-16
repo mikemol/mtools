@@ -20,8 +20,6 @@ The one addition over paperkit is the SEAM: every function takes a `Cgroup` nami
 the host.
 """
 
-from __future__ import annotations
-
 import pathlib
 from dataclasses import dataclass
 

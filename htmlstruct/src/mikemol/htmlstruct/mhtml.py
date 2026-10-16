@@ -17,8 +17,6 @@ the part of RFC 2046 an archive needs is small (a boundary, headers, a blank lin
 CONSUMED BY: the CLI and the routing of one file to the HTML or MHTML reader (W908, W909).
 """
 
-from __future__ import annotations
-
 import base64
 import binascii
 import quopri

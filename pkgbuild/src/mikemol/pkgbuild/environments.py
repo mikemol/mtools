@@ -19,20 +19,15 @@ answer. Running it again changes nothing (a PUT of an existing environment sets 
 CONSUMED BY: `mikemol-wheel environments`, the operator's first step (W1153).
 """
 
-from __future__ import annotations
-
 import json
 import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pkgbuild import repos
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 WRITE_FLAG = "--write"
 REPOS_FLAG = "--repos"

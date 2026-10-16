@@ -16,13 +16,9 @@ Paths are tuples of dict keys (str) and list indices (int), from the envelope's 
 are walked in insertion order, which for parsed JSON is file order.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
+from typing import cast
 
 type Path = tuple[str | int, ...]
 

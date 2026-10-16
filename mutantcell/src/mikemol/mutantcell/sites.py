@@ -34,19 +34,14 @@ child process, so no interpreter path is chosen here; the grid that consumes the
 Usage:  python -m mikemol.mutantcell.sites <module.py> ...
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Iterator, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.importdag.dagderive import flat_imports
 from mikemol.mutation.mutate import branch_sites, data_sites, flip_sites
 
 from mikemol.mutantcell.def_sites import def_sites
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
 
 
 def sites(path: str | Path, names: set[str]) -> Iterator[str]:

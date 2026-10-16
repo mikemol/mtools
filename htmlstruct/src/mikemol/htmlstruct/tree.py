@@ -12,14 +12,9 @@ built from mojibake.
 CONSUMED BY: the outline, links, tables, meta and text readers (W950 to W953).
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 ROOT = "#document"
 VOID = frozenset(
@@ -48,7 +43,7 @@ class Node:
 
     tag: str
     attrs: tuple[tuple[str, str], ...]
-    children: tuple[Node | str, ...]
+    children: "tuple[Node | str, ...]"
 
     def attr(self, name: str) -> str | None:
         """Read one attribute.

@@ -20,15 +20,10 @@ exit status, and makes the interpreter a parameter, so a test can substitute one
 CONSUMED BY: `relcheck.row_of` (the `twine` field of each dist's row).
 """
 
-from __future__ import annotations
-
 import subprocess
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
+from collections.abc import Sequence
+from pathlib import Path
 
 NOT_INSTALLED = "No module named twine"
 

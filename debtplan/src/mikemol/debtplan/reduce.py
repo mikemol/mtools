@@ -8,14 +8,9 @@ edge costs a card a longer `blocked_on` and a graph a line to draw. What is left
 waits are dropped orders the files exactly as the closure did.
 """
 
-from __future__ import annotations
+from collections.abc import Sequence
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.debtplan.rows import Row
+from mikemol.debtplan.rows import Row
 
 
 def direct_waits(rows: Sequence[Row]) -> dict[str, tuple[str, ...]]:

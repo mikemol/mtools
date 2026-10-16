@@ -35,23 +35,16 @@ paperkit original so the tool could be staged into a sandbox as a lone file, wit
 two for agreement. This package is installed beside its dependencies, so the copy is gone.
 """
 
-from __future__ import annotations
-
 import json
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.atomicwrite.durable import write_atomic
-from mikemol.grade.grade import below
+from mikemol.grade.grade import Json, Record, below
 from mikemol.gradekit.cli import UsageError, report, take_options
 from mikemol.gradekit.jsonio import RecordError, as_record, read_json
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.grade.grade import Json, Record
 
 VERDICT_WORDS = ("pass", "fail", "cannot-run")
 TAIL_LINES = 40

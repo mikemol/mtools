@@ -22,15 +22,11 @@ Nothing here imports torch or whisperx: the input is plain parsed JSON, so every
 over synthetic data with no GPU and no audio.
 """
 
-from __future__ import annotations
-
 import json
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 type Json = dict[str, object]
 

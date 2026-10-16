@@ -18,15 +18,11 @@ malformed lines are records, never skips, so a count over the output is a count 
 Each decoded record keeps `raw`, the whole envelope, for the lossless walk (stage 2) to read.
 """
 
-from __future__ import annotations
-
 import json
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 type Json = dict[str, object]
 type Content = str | tuple[object, ...]

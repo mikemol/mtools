@@ -23,17 +23,12 @@ What is tested, each by name:
 CONSUMED BY: `mikemol-wheel check` and the publish preflight (W1151).
 """
 
-from __future__ import annotations
-
 import re
 import tarfile
 import zipfile
+from collections.abc import Mapping, Sequence
 from email.parser import Parser
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-    from pathlib import Path
+from pathlib import Path
 
 NAME = re.compile(r"^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$")
 PUBLIC_VERSION = re.compile(r"^\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$")

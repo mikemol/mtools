@@ -7,13 +7,9 @@ module takes the one shape the plan needs and refuses everything else by name, s
 is a refusal that says which file and which row, and not a plan over a guess.
 """
 
-from __future__ import annotations
-
 import json
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 
 class LedgerError(ValueError):

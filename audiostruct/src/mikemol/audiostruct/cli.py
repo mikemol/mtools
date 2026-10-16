@@ -21,15 +21,10 @@ This module is the orchestrator side only. The child side, `--stage NAME`, which
 whisperx pipeline, is W284.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.audiostruct.stages import STAGES
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
 
 # What membudget reads (fence/admit.py): the ledger's path, and the load gate, turned off as the
 # ledger's other user turns it off.

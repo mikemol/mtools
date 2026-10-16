@@ -15,13 +15,8 @@ guessed at.
 CONSUMED BY: `relcheck.release_check` (`mikemol-wheel release-check ROOT SHA OUT --version V`).
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 VERSION = re.compile(r"\d+(\.\d+)*")
 PROJECT = re.compile(r"^\[project\]\s*$", re.MULTILINE)

@@ -16,16 +16,12 @@ would issue and the plan says to mint first, because a card minted in between wo
 CONSUMED BY: `mikemol-wheel publish-plan`, the operator's release step (W1153, W1152).
 """
 
-from __future__ import annotations
-
 import json
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 USAGE = 2
 ARGC = 3

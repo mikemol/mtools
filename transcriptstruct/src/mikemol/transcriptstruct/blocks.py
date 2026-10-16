@@ -16,17 +16,18 @@ Every block carries its path from the envelope's root, in `walk`'s spelling, so 
 can subtract the paths decoded here from every string the walk finds.
 """
 
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-from mikemol.transcriptstruct.records import AssistantRecord, AttachmentRecord, UserRecord
-
-if TYPE_CHECKING:
-    from mikemol.transcriptstruct.records import Content, Record
-    from mikemol.transcriptstruct.walk import Path
+from mikemol.transcriptstruct.records import (
+    AssistantRecord,
+    AttachmentRecord,
+    Content,
+    Record,
+    UserRecord,
+)
+from mikemol.transcriptstruct.walk import Path
 
 # The block types whose text sits in one field of the same name.
 _TEXT_FIELD = {"text": "text", "thinking": "thinking"}

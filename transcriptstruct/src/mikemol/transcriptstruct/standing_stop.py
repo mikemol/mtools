@@ -22,8 +22,6 @@ reason when stop_hook_active is not true, so the failure surfaces; when it is tr
 goes to stderr and the turn ends. Unparseable input counts as not active.
 """
 
-from __future__ import annotations
-
 import json
 import re
 import shlex

@@ -24,24 +24,17 @@ on. Its failures are exceptions, and the command line reports each as one line a
 defined twice, `BibSyntaxError` for a malformed bib.
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.bibparse.bibparse import BibSyntaxError
 from mikemol.bibparse.edges import DuplicateKeyError, claim_edges
 from mikemol.bibparse.resolve import ProjectError
-from mikemol.grade.grade import clamp
+from mikemol.grade.grade import Json, OwnerGrades, Record, clamp
 from mikemol.gradekit.cli import UsageError, report
 from mikemol.gradekit.jsonio import RecordError, as_list, as_record, as_text, field, read_json
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.grade.grade import Json, OwnerGrades, Record
 
 USAGE = "usage: mikemol-effective <project-dir> <grade.json>... [--owners <project>=<eff.json>...]"
 OWNERS_OPTION = "--owners"

@@ -25,8 +25,6 @@ no change to `sys.path` made by code: the engine roots and this package's locati
 child through its `PYTHONPATH` environment variable.
 """
 
-from __future__ import annotations
-
 import ast
 import os
 import subprocess

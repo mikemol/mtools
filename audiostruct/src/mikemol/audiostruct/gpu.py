@@ -20,15 +20,11 @@ reference to the model, but a cycle can still hold it, and `empty_cache` only re
 nothing points at.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable
 from functools import partial
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-    from mikemol.audiostruct.stages import Aligner, Diarizer, Transcriber
+from mikemol.audiostruct.stages import Aligner, Diarizer, Transcriber
 
 # `pipeline.transcribe(audio, batch_size)`.
 type TranscribeFn = Callable[[object, int], dict[str, object]]

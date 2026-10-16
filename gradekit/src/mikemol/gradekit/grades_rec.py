@@ -21,21 +21,14 @@ lowest and drag every claim that rests on it down.
 The clamp is the ladder package's own fold, never re-implemented here.
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.grade.grade import clamp
+from mikemol.grade.grade import Record, clamp
 from mikemol.gradekit.cli import UsageError, report
 from mikemol.gradekit.jsonio import RecordError, as_list, as_record, as_text, field, read_json
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.grade.grade import Record
 
 USAGE = "usage: mikemol-grades-rec <meta.json> [<claim__grade.grade.json>...]"
 GRADE_MARK = "__grade"

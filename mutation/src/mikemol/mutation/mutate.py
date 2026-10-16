@@ -37,17 +37,13 @@ element is LOUD (a KeyError): a real miss is never a silent no-op. CLI:
 `mikemol-mutate <module.py> <spec>` prints the perturbed module to stdout.
 """
 
-from __future__ import annotations
-
 import ast
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from mikemol.mutation import regexop
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 type FuncNode = ast.FunctionDef | ast.AsyncFunctionDef
 type Literal = ast.Dict | ast.List | ast.Set | ast.Tuple

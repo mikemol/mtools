@@ -7,15 +7,11 @@ module is the one place an untyped value is checked into that type, so every rea
 gets a value the type checker can follow and a refusal that says which file and which part.
 """
 
-from __future__ import annotations
-
 import json
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.grade.grade import Json, Record
+from mikemol.grade.grade import Json, Record
 
 
 class RecordError(ValueError):

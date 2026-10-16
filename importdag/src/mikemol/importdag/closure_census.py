@@ -24,8 +24,6 @@ and the defaults are the paperkit layout with the module as the closure tool.
     python3 -m mikemol.importdag.closure_census --root DIR --closure SCRIPT
 """
 
-from __future__ import annotations
-
 import ast
 import os
 import subprocess

@@ -8,12 +8,7 @@ cannot happen by construction; this is the check that keeps it so, run on the pl
 before anything is written.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
+from collections.abc import Mapping
 
 ON_PATH = 1
 """A node on the path being walked: reaching it again closes a cycle."""

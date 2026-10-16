@@ -24,19 +24,12 @@ prompt, was either invisible or counted as the operator. Here every record gets 
 said" should search, and nothing else.
 """
 
-from __future__ import annotations
-
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.transcriptstruct.blocks import blocks
-from mikemol.transcriptstruct.records import AssistantRecord, AttachmentRecord, UserRecord
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.transcriptstruct.records import Record
+from mikemol.transcriptstruct.records import AssistantRecord, AttachmentRecord, Record, UserRecord
 
 # Moved from substrate's human_text: the harness's wrappers, stripped before asking whether
 # anything the human typed is left. Close tags are optional where an envelope may be cut.

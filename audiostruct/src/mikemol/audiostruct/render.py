@@ -11,16 +11,9 @@
 ⚑ One line per record, in the records' order, so the transcript's body is a count over the input.
 """
 
-from __future__ import annotations
+from collections.abc import Sequence
 
-from typing import TYPE_CHECKING
-
-from mikemol.audiostruct.records import Segment
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.audiostruct.records import Record
+from mikemol.audiostruct.records import Record, Segment
 
 UNATTRIBUTED = "unattributed"
 _MINUTE = 60

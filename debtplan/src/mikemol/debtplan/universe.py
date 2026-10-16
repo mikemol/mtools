@@ -12,16 +12,11 @@ what the walk left out; a walk that read nothing and a walk that skipped everyth
 alike.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import expand
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 @dataclass(frozen=True, slots=True)

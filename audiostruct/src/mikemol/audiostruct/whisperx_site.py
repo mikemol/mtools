@@ -15,8 +15,6 @@ tests/test_stub_authority.py holds to the installed packages.
 begins (stages.run_stage), so a transcribe-only or align-only process never holds it.
 """
 
-from __future__ import annotations
-
 import ctypes
 import gc
 import importlib.util

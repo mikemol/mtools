@@ -22,23 +22,19 @@ diarize child reads it, when that stage begins.
 runs under fakes in the witnesses. The real ones are the defaults.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import os
 import subprocess
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.audiostruct.cli import Plan, orchestrate
 from mikemol.audiostruct.render import markdown
 from mikemol.audiostruct.stages import STAGES, Pipeline, records, run_stage
 from mikemol.audiostruct.whisperx_site import Settings, pipeline
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
 
 # The settings flags, as the parent passes them through to every child.
 _SETTINGS = ("model", "device", "compute_type", "batch_size", "language", "token_file")

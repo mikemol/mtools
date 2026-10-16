@@ -18,21 +18,14 @@ which is the honest default for a record written before the field existed. A bas
 because the check could not run is then reported as unreachable rather than as a red repository.
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.grade.grade import grade_from_sens
+from mikemol.grade.grade import Record, grade_from_sens
 from mikemol.gradekit.cli import UsageError, report
 from mikemol.gradekit.jsonio import RecordError, as_list, as_record, field, read_json
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.grade.grade import Record
 
 USAGE = "usage: mikemol-read-grade <calc.json>"
 

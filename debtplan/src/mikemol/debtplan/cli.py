@@ -14,13 +14,11 @@ tick lock. The closure runs through the whole tree's Python files (the universe)
 Exit codes: 0 done, 2 cannot (an unreadable or malformed ledger, a git refusal, a refused card).
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError
 
@@ -31,9 +29,6 @@ from mikemol.debtplan.plan import Plan, plan
 from mikemol.debtplan.queue import Queue
 from mikemol.debtplan.resolutions import read_resolutions
 from mikemol.debtplan.universe import Universe, python_files
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 EXIT_OK = 0
 EXIT_CANNOT = 2

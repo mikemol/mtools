@@ -5,8 +5,6 @@
 Ported from paperkit's `tools/pyinfo.py` (paperkit:W142), output unchanged.
 """
 
-from __future__ import annotations
-
 import sys
 
 

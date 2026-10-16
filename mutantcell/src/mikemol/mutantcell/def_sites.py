@@ -11,15 +11,10 @@ it is skipped), qualname-prefixed by the enclosing classes and defs. The CLI emi
 Usage:  python -m mikemol.mutantcell.def_sites [--lines] <file.py> ...
 """
 
-from __future__ import annotations
-
 import ast
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _USAGE_EXIT = 2
 _USAGE = (

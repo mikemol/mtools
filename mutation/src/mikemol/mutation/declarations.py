@@ -21,8 +21,6 @@ defect, so `plant` answers `None` and the runner reports UNAPPLIED and fails: a 
 has moved away from would otherwise read as a suite that notices a defect nobody can write.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 from pathlib import PurePosixPath

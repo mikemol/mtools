@@ -12,18 +12,13 @@ unmutated source must pass first, and a regex that matches nothing is UNAPPLIED,
 killed or survived. Nothing is loaded in-process and nothing is written beside the source.
 """
 
-from __future__ import annotations
-
 import ast
 import enum
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.mutation import mutate
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 class UnappliedError(KeyError):

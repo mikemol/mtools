@@ -25,16 +25,12 @@ Two guards fail LOUD rather than emit a plausible-but-wrong set:
 Usage:  python -m mikemol.mutantcell.sens --baseline <empty-set record> [record ...]
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 _LEAK_EXIT = 1
 _NON_MONOTONE = ("::flip:", "::dflip:")

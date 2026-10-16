@@ -24,8 +24,6 @@ decline the caps instead of capping the test runner; `descendants` takes the `/p
 the siblings are imported as `mikemol.mutantcell.*`, not `tools`.
 """
 
-from __future__ import annotations
-
 import contextlib
 import ctypes
 import json
@@ -35,12 +33,10 @@ import resource
 import signal
 import subprocess
 import sys
-from typing import TYPE_CHECKING, cast
+from collections.abc import Callable, Sequence
+from typing import cast
 
 from mikemol.mutantcell import cellargs, cellcgroup, cellstage
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 CANNOT_RUN = 3
 WHY_CHARS = 300

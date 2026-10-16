@@ -9,15 +9,10 @@ is marked as a header or not (`th` against `td`) because that is what tells a re
 names the columns.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.htmlstruct import text, tree
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 
 @dataclass(frozen=True)

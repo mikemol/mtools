@@ -90,10 +90,14 @@ sh_test(
     size = "small",
 )
 
+# ⚑ FOUR SHARDS OF THREE CPUS, NOT TWO OF SIX (W1311, operator 2026-10-15). `mutants_1` hit the 300 s
+# WALL limit in a full gate under host load and no test failed; the bound is wall time and load
+# stretches it. Twice the shards at half the cpus each is the same total admission, in finer pieces
+# bazel can place one by one.
 mutants_sharded(
     name = "mutants",
-    shards = 2,
-    cpus = 6,
+    shards = 4,
+    cpus = 3,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",

@@ -11,15 +11,10 @@ CONSUMED BY: the outline, links, tables and meta readers, which take their cell 
 from `text_of`.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.htmlstruct import tree
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 SKIPPED = frozenset({"script", "style", "template"})
 

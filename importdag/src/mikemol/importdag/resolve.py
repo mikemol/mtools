@@ -41,15 +41,10 @@ its own import, so a package's `__init__.py` importing its own submodule adds no
 ⚑ THE TRANSITIVE CLOSURE IS `dagderive.cone`, NOT A SECOND WALK. This module derives edges only.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping, Sequence
 
 INIT = "__init__"
 """A package marker is named by its package, so its own stem is dropped from the module path."""

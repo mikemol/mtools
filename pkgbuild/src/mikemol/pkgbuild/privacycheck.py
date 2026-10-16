@@ -18,15 +18,10 @@ it cannot start, or it exited 2: no judge). `unavailable` is NOT a pass.
 CONSUMED BY: `relcheck.row_of` (the `privacy` field of each dist's row).
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
+from collections.abc import Sequence
+from pathlib import Path
 
 TOOL_ENV = "MIKEMOL_PRIVACY_SHIPPED"
 FOUND = 1

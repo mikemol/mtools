@@ -8,15 +8,10 @@ reader that wants a nesting repairs the gaps itself, because repairing them here
 structure the author did not write.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.htmlstruct import text, tree
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 _LEVELS: Mapping[str, int] = {f"h{n}": n for n in range(1, 7)}
 

@@ -35,8 +35,6 @@ at that process's first import, so each of these was a measured failure before i
     python3 -m mikemol.importdag.closure --check CHECK.py [--relpath REL] ENGINE.py ...
 """
 
-from __future__ import annotations
-
 import argparse
 import ast
 import sys

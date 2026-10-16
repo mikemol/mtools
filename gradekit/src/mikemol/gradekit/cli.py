@@ -8,13 +8,8 @@ keeps the argument values typed (the standard parser hands back untyped attribut
 ends in a traceback for a bad argument or a bad input file.
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Sequence
+from collections.abc import Collection, Sequence
 
 USAGE_STATUS = 2
 

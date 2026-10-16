@@ -13,14 +13,9 @@ byte-deterministic and cacheable) and authoritative (the build graph owns compil
 Usage:  mikemol-pyc <src.py> <out.pyc>
 """
 
-from __future__ import annotations
-
 import py_compile
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from collections.abc import Sequence
 
 
 def main(argv: Sequence[str] | None = None) -> int:

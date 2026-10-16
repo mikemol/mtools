@@ -19,20 +19,15 @@ network is a seam a test replaces. A symlinked directory is not a dist (as in `l
 CONSUMED BY: `mikemol-wheel names`, the naming preflight of the publish (W1149, W1195).
 """
 
-from __future__ import annotations
-
 import http.client
 import json
 import re
 import sys
 import tomllib
 import urllib.parse
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 DEFAULT_INDEX = "https://pypi.org/pypi"
 INDEX_FLAG = "--index"
