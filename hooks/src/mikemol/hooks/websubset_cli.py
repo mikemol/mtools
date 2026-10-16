@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import websubset, websubset_list
+from mikemol.hooks import websubset, websubset_list, websubset_tree
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -38,11 +38,12 @@ EXIT_USAGE = 2
 _USAGE = (
     "usage: mikemol-websubset --check-file PATH [--target py2many|codon]\n"
     "       mikemol-websubset --census ROOT [--jsonl FILE] [--counts FILE] [--target T]\n"
+    "       mikemol-websubset --idioms ROOT[:ROOT...] [--target T]\n"
 )
 _LIST_DIR = "hooks"
 _LEDGER_FLAGS = frozenset({"--jsonl", "--counts"})
 _TARGET_FLAG = "--target"
-_VALUED = frozenset({"--check-file", "--census", _TARGET_FLAG}) | _LEDGER_FLAGS
+_VALUED = frozenset({"--check-file", "--census", "--idioms", _TARGET_FLAG}) | _LEDGER_FLAGS
 
 
 def _order(finding: websubset.Finding) -> tuple[int, str, str]:
@@ -130,6 +131,16 @@ def _census(root: Path, options: dict[str, str], target: str) -> int:
     return EXIT_FINDINGS if total else 0
 
 
+def _roots(options: dict[str, str]) -> list[Path]:
+    """Read the colon-separated roots of `--idioms`.
+
+    Returns:
+        one path per non-empty piece.
+
+    """
+    return [Path(piece) for piece in options["--idioms"].split(":") if piece]
+
+
 def _parse(args: Sequence[str]) -> dict[str, str] | None:
     """Read the valued options.
 
@@ -160,6 +171,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         ledgers = {name: value for name, value in options.items() if name in _LEDGER_FLAGS}
         if set(options) == {"--check-file"}:
             return _check_file(Path(options["--check-file"]), target)
+        if set(options) == {"--idioms"}:
+            sys.stdout.write(websubset_tree.render(websubset_tree.census(_roots(options), target)))
+            return 0
         if "--census" in options and set(options) - _LEDGER_FLAGS == {"--census"}:
             return _census(Path(options["--census"]), ledgers, target)
     sys.stderr.write(_USAGE)

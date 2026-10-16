@@ -10305,3 +10305,31 @@
   claim  = {The codon row is the shared rules plus its own; py2many gains none of them.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_target.py -k test_codon_refuses_everything_py2many_does_and_py2many_reads_no_codon_rule},
 }
+
+@misc{hooks-websubset-tree-each-rule-counts-its-modules-once-and-every-site,
+  section = {websubset_tree},
+  title  = {Two `except (A, B)` in one module is one module and two sites; the future import is two},
+  claim  = {Two `except (A, B)` in one module is one module and two sites; the future import is two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_tree.py -k test_each_rule_counts_its_modules_once_and_every_site},
+}
+
+@misc{hooks-websubset-tree-tests-stubs-init-and-files-outside-src-are-not-read,
+  section = {websubset_tree},
+  title  = {Three modules are read (a, b, c) and the one without findings is counted clean},
+  claim  = {Three modules are read (a, b, c) and the one without findings is counted clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_tree.py -k test_tests_stubs_init_and_files_outside_src_are_not_read},
+}
+
+@misc{hooks-websubset-tree-target-selects-the-rules-and-the-report-orders-by-modules,
+  section = {websubset_tree},
+  title  = {py2many reads no codon rule, and the codon report puts the wider rule first},
+  claim  = {py2many reads no codon rule, and the codon report puts the wider rule first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_tree.py -k test_the_target_selects_the_rules_and_the_report_orders_by_modules},
+}
+
+@misc{hooks-websubset-tree-cli-mode-prints-the-report-and-exits-clean,
+  section = {websubset_tree},
+  title  = {`--idioms ROOT` prints the census; it is a report, not a gate, so the status is 0},
+  claim  = {`--idioms ROOT` prints the census; it is a report, not a gate, so the status is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_tree.py -k test_the_cli_mode_prints_the_report_and_exits_clean},
+}
