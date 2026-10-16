@@ -6344,3 +6344,31 @@
   claim  = {A file whose docstrings are already shaped plans no change and asks ruff nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_docshape.py -k test_a_file_with_nothing_to_split_is_left_alone},
 }
+
+@misc{pycodemod-futureimport-import-is-removed-and-a-later-class-in-an-annotation-is-quoted,
+  section = {futureimport},
+  title  = {`Later` is defined below the def that names it, so it becomes a string; `int` is not},
+  claim  = {`Later` is defined below the def that names it, so it becomes a string; `int` is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_the_import_is_removed_and_a_later_class_in_an_annotation_is_quoted},
+}
+
+@misc{pycodemod-futureimport-class-naming-itself-is-quoted-and-one-already-defined-is-not,
+  section = {futureimport},
+  title  = {Inside its own body a class is not yet defined; after it, a use needs no quotes},
+  claim  = {Inside its own body a class is not yet defined; after it, a use needs no quotes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_class_naming_itself_is_quoted_and_one_already_defined_is_not},
+}
+
+@misc{pycodemod-futureimport-name-in-base-position-is-listed-and-left-unquoted,
+  section = {futureimport},
+  title  = {`Later.Inner` and `Later[int]` cannot be quoted at the base; they are named},
+  claim  = {`Later.Inner` and `Later[int]` cannot be quoted at the base; they are named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_a_name_in_base_position_is_listed_and_left_unquoted},
+}
+
+@misc{pycodemod-futureimport-import-naming-another-feature-and-a-module-without-one-are-left-alone,
+  section = {futureimport},
+  title  = {Only the sole `annotations` import goes; no import means the text is returned unchanged},
+  claim  = {Only the sole `annotations` import goes; no import means the text is returned unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_futureimport.py -k test_an_import_naming_another_feature_and_a_module_without_one_are_left_alone},
+}
