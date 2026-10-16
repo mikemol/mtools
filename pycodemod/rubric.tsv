@@ -73,3 +73,5 @@ cli_typingblocks	The type-checking-imports mode writes a file only when the guar
 cli_codonprep	codon-prep-tree lands both verbs per project, held to the bar and the tests
 typealias	The type-statement rewrite makes a plain alias or lists what it cannot
 cli_modes_reach	Each judged mode's command-line handler is reached through cli.main
+exceptsplit	An except tuple becomes one clause per exception with the same body
+cli_exceptsplit	The except-split mode writes a file only when the tuple count falls

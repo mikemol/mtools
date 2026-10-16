@@ -6572,3 +6572,52 @@
   claim  = {The tree handler gets the root whole, finds no venv, names the skip and exits clean.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_modes_reach.py -k test_a_project_without_a_venv_is_skipped_by_each_tree_mode},
 }
+
+@misc{pycodemod-exceptsplit-tuple-handler-becomes-one-clause-per-exception-with-the-same-body-and-name,
+  section = {exceptsplit},
+  title  = {Both clauses keep `as exc` and the body; the tuple is gone},
+  claim  = {Both clauses keep `as exc` and the body; the tuple is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exceptsplit.py -k test_a_tuple_handler_becomes_one_clause_per_exception_with_the_same_body_and_name},
+}
+
+@misc{pycodemod-exceptsplit-dotted-names-are-plain-and-each-handler-of-a-try-is-split-in-place,
+  section = {exceptsplit},
+  title  = {`json.JSONDecodeError` splits; a later single clause keeps its place},
+  claim  = {`json.JSONDecodeError` splits; a later single clause keeps its place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exceptsplit.py -k test_dotted_names_are_plain_and_each_handler_of_a_try_is_split_in_place},
+}
+
+@misc{pycodemod-exceptsplit-single-clause-and-a-bare-except-are-left-alone,
+  section = {exceptsplit},
+  title  = {Already the target spelling: nothing is split, the text comes back byte for byte},
+  claim  = {Already the target spelling: nothing is split, the text comes back byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exceptsplit.py -k test_a_single_clause_and_a_bare_except_are_left_alone},
+}
+
+@misc{pycodemod-exceptsplit-tuple-with-a-call-or-a-starred-element-is-listed-and-left,
+  section = {exceptsplit},
+  title  = {Splitting `(make(), B)` or `(*errors, B)` is not a text move; the line is named},
+  claim  = {Splitting `(make(), B)` or `(*errors, B)` is not a text move; the line is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exceptsplit.py -k test_a_tuple_with_a_call_or_a_starred_element_is_listed_and_left},
+}
+
+@misc{pycodemod-exceptsplit-split-tree-has-the-same-bodies-under-the-same-exceptions-in-order,
+  section = {exceptsplit},
+  title  = {Read from the parsed trees: two clauses where there was a tuple, each with the one body},
+  claim  = {Read from the parsed trees: two clauses where there was a tuple, each with the one body.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exceptsplit.py -k test_the_split_tree_has_the_same_bodies_under_the_same_exceptions_in_order},
+}
+
+@misc{pycodemod-cli-exceptsplit-splittable-tuple-is-written-when-the-count-falls,
+  section = {cli_exceptsplit},
+  title  = {Two clauses where there was a tuple; the judge saw the tuple count go from one to none},
+  claim  = {Two clauses where there was a tuple; the judge saw the tuple count go from one to none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_exceptsplit.py -k test_a_splittable_tuple_is_written_when_the_count_falls},
+}
+
+@misc{pycodemod-cli-exceptsplit-tuple-the-planner-cannot-split-is-a-worklist-row-and-nothing-is-written,
+  section = {cli_exceptsplit},
+  title  = {The row names the line; the file is untouched and the exit is 1},
+  claim  = {The row names the line; the file is untouched and the exit is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_exceptsplit.py -k test_a_tuple_the_planner_cannot_split_is_a_worklist_row_and_nothing_is_written},
+}

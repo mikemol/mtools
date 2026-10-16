@@ -21,6 +21,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from mikemol.pycodemod.cli_exceptsplit import print_except_split
 from mikemol.pycodemod.cli_futureimport import print_future_import
 from mikemol.pycodemod.cli_typealias import print_type_alias
 from mikemol.pycodemod.cli_typedargs import Runner, TypedArgsFlags, run_tool
@@ -63,6 +64,7 @@ def _both(files: list[str], flags: TypedArgsFlags, run: Runner) -> int:
         print_type_alias(files, flags, run),
         print_typing_blocks(files, flags, run),
         print_future_import(files, flags, run),
+        print_except_split(files, flags, run),
     )
 
 
