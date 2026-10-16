@@ -25,10 +25,11 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import websubset, websubset_list, websubset_tree
+from mikemol.hooks import websubset, websubset_list, websubset_prom, websubset_tree
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -38,12 +39,15 @@ EXIT_USAGE = 2
 _USAGE = (
     "usage: mikemol-websubset --check-file PATH [--target py2many|codon]\n"
     "       mikemol-websubset --census ROOT [--jsonl FILE] [--counts FILE] [--target T]\n"
-    "       mikemol-websubset --idioms ROOT[:ROOT...] [--target T]\n"
+    "       mikemol-websubset --idioms ROOT[:ROOT...] [--target T] [--prom FILE]\n"
 )
 _LIST_DIR = "hooks"
 _LEDGER_FLAGS = frozenset({"--jsonl", "--counts"})
 _TARGET_FLAG = "--target"
-_VALUED = frozenset({"--check-file", "--census", "--idioms", _TARGET_FLAG}) | _LEDGER_FLAGS
+_PROM_FLAG = "--prom"
+_VALUED = frozenset({"--check-file", "--census", "--idioms", _TARGET_FLAG, _PROM_FLAG}) | (
+    _LEDGER_FLAGS
+)
 
 
 def _order(finding: websubset.Finding) -> tuple[int, str, str]:
@@ -141,6 +145,25 @@ def _roots(options: dict[str, str]) -> list[Path]:
     return [Path(piece) for piece in options["--idioms"].split(":") if piece]
 
 
+def _idioms(options: dict[str, str], target: str) -> int:
+    """Print the idiom census of the roots and, with `--prom`, write it as a textfile.
+
+    ⚑ ONE REPO PER ROOT: the series label `repo` is the root's directory name, so a fleet run over
+    several roots keeps them apart. It is a report, not a gate, so the status is 0.
+
+    Returns:
+        0.
+
+    """
+    roots = _roots(options)
+    counted = [(root.name, websubset_tree.census([root], target)) for root in roots]
+    sys.stdout.write(websubset_tree.render(websubset_tree.census(roots, target)))
+    if _PROM_FLAG in options:
+        text = websubset_prom.render(counted, int(time.time()))
+        websubset_prom.publish(Path(options[_PROM_FLAG]), text)
+    return 0
+
+
 def _parse(args: Sequence[str]) -> dict[str, str] | None:
     """Read the valued options.
 
@@ -171,9 +194,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         ledgers = {name: value for name, value in options.items() if name in _LEDGER_FLAGS}
         if set(options) == {"--check-file"}:
             return _check_file(Path(options["--check-file"]), target)
-        if set(options) == {"--idioms"}:
-            sys.stdout.write(websubset_tree.render(websubset_tree.census(_roots(options), target)))
-            return 0
+        if set(options) - {_PROM_FLAG} == {"--idioms"}:
+            return _idioms(options, target)
         if "--census" in options and set(options) - _LEDGER_FLAGS == {"--census"}:
             return _census(Path(options["--census"]), ledgers, target)
     sys.stderr.write(_USAGE)

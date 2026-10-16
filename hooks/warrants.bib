@@ -10333,3 +10333,31 @@
   claim  = {`--idioms ROOT` prints the census; it is a report, not a gate, so the status is 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_tree.py -k test_the_cli_mode_prints_the_report_and_exits_clean},
 }
+
+@misc{hooks-websubset-prom-rule-with-findings-is-written-with-its-modules-and-sites,
+  section = {websubset_prom},
+  title  = {The planted rule carries 3 modules and 4 sites under repo, target and rule labels},
+  claim  = {The planted rule carries 3 modules and 4 sites under repo, target and rule labels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_prom.py -k test_a_rule_with_findings_is_written_with_its_modules_and_sites},
+}
+
+@misc{hooks-websubset-prom-every-rule-of-the-target-is-written-and-an-unseen-one-is-zero,
+  section = {websubset_prom},
+  title  = {A rule the census did not see is a 0 series, so its last module leaving is a step},
+  claim  = {A rule the census did not see is a 0 series, so its last module leaving is a step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_prom.py -k test_every_rule_of_the_target_is_written_and_an_unseen_one_is_zero},
+}
+
+@misc{hooks-websubset-prom-each-family-is-contiguous-under-one-header-and-scan-time-is-optional,
+  section = {websubset_prom},
+  title  = {One TYPE line per family, the series right after it; the scan time only when given},
+  claim  = {One TYPE line per family, the series right after it; the scan time only when given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_prom.py -k test_each_family_is_contiguous_under_one_header_and_scan_time_is_optional},
+}
+
+@misc{hooks-websubset-prom-cli-writes-the-textfile-atomically-beside-the-report,
+  section = {websubset_prom},
+  title  = {`--idioms ROOT --prom FILE` leaves the file with the repo label and no temporary file},
+  claim  = {`--idioms ROOT --prom FILE` leaves the file with the repo label and no temporary file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_prom.py -k test_the_cli_writes_the_textfile_atomically_beside_the_report},
+}
