@@ -24,8 +24,6 @@ that reads as 'claimed'. The flood guard is one digest per session: a line repea
 changes.
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import os
@@ -33,17 +31,14 @@ import re
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import work_claims
 from mikemol.hooks.payload import as_record, text_of
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-type Runner = Callable[[Sequence[str], float], tuple[int, str]]
-type StatReader = Callable[[int], str | None]
+Runner = Callable[[Sequence[str], float], tuple[int, str]]
+StatReader = Callable[[int], str | None]
 
 MEMBUDGET = Path("fence") / ".venv" / "bin" / "mikemol-membudget"
 QUEUE = Path(".claude") / "paths-forward.json"

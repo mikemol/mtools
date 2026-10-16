@@ -26,18 +26,13 @@ first, then the shared one. An unarmed hook exits 0 with no decision, which the 
 "allow, nothing to report", so an unarmed guard says nothing and denies nothing.
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks.payload import armed, as_record, text_of
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from typing import TextIO
 
 # The hook's own arming switch (the shared one is consulted second, by `armed`).
 OWN_SWITCH = "READGUARD_HOOK_BLOCK"

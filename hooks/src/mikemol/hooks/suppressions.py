@@ -20,8 +20,6 @@ regex over raw text cannot tell the two apart.
 only a count that grows is reported.
 """
 
-from __future__ import annotations
-
 import io
 import re
 import tokenize

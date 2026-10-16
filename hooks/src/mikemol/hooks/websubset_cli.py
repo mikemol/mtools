@@ -21,18 +21,13 @@ empty file and `{}`), atomically, so a reader never sees half of one.
 that is absent. An unreadable list and an absent module are never a clean run.
 """
 
-from __future__ import annotations
-
 import json
 import sys
 import time
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import websubset, websubset_list, websubset_prom, websubset_tree
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 EXIT_FINDINGS = 4
 EXIT_USAGE = 2

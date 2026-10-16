@@ -8,14 +8,7 @@ another LIVE waypoint of this queue declares it. A one-off script that read only
 side called an enabled-only waypoint isolated; that is the case this module exists to get right.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-from mikemol.pathsforward.model import NO_SYMBOL, strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json
+from mikemol.pathsforward.model import NO_SYMBOL, Json, strlist, text
 
 _NOT_LIVE = frozenset({"done", "dropped"})
 _EDGE_FIELDS = ("enables", "blocked_on")

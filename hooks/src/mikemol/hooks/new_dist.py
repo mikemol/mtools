@@ -21,13 +21,8 @@ guesses writes a plausible-looking file the gate then rejects somewhere else.
 CONSUMED BY: the `mikemol-new-dist` console script (W945).
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
+from collections.abc import Mapping
 
 TEMPLATE = "pathwalk"
 _NAME = re.compile(r"[a-z][a-z0-9]*")

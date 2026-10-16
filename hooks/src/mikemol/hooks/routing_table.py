@@ -30,8 +30,6 @@ as an EMPTY SET, which is the method-versus-substrate confusion in miniature. Th
 distinction rather than failing silent.
 """
 
-from __future__ import annotations
-
 import os
 import re
 from dataclasses import dataclass

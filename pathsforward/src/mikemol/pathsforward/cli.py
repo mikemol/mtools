@@ -14,16 +14,15 @@ Exit codes: 0 ok · 1 payload over budget · 2 refused (unreadable file, a faile
 edit, bad arguments) · 3 lock held by another · 4 hash divergence (the FILE wins).
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import socket
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pathsforward import (
     admission,
@@ -65,17 +64,20 @@ from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
 from mikemol.pathsforward.lift import lift as lift_row
-from mikemol.pathsforward.model import BLOCKED_KINDS, NO_SYMBOL, STATUSES, RefusedError, text
+from mikemol.pathsforward.model import (
+    BLOCKED_KINDS,
+    NO_SYMBOL,
+    STATUSES,
+    Json,
+    RefusedError,
+    State,
+    text,
+)
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 from mikemol.pathsforward.realizable import GATES
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
 from mikemol.pathsforward.unlinked import report as unlinked_report
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-
-    from mikemol.pathsforward.model import Json, State
 
 LIFT_ROW = lift_row
 CLOSE_JUDGE = judge_close
@@ -89,7 +91,7 @@ Planned = tuple[str, str, str]
 
 
 def _advise(
-    ctx: Ctx,
+    ctx: "Ctx",
     state: State,
     spec: tuple[str, str],
     planned: Sequence[Planned],
@@ -133,7 +135,7 @@ def _advise(
     _say(f"advice: {proposed} proposed, {rejected} rejected, {new} new")
 
 
-def _block_matching(ctx: Ctx) -> int:
+def _block_matching(ctx: "Ctx") -> int:
     """Block every ready card carrying a touches tag on one card; a dry run unless `--write`.
 
     ⚑ DRY RUN FIRST (mtools:W947): without `--write` nothing is saved and the lines say WOULD
@@ -169,7 +171,7 @@ def _block_matching(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
-def _block_behind_open(ctx: Ctx) -> int:
+def _block_behind_open(ctx: "Ctx") -> int:
     """Block each ready card behind the open cards that enable it; a dry run unless `--write`.
 
     ⚑ DRY RUN FIRST, as `--block-matching`: without `--write` nothing is saved and the lines say
@@ -201,7 +203,7 @@ def _block_behind_open(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
-def _close_umbrellas(ctx: Ctx) -> int:
+def _close_umbrellas(ctx: "Ctx") -> int:
     """Mark done each open card whose local children are all done; a dry run unless `--write`.
 
     ⚑ DRY RUN FIRST, as `--block-behind-open`: without `--write` nothing is saved and the lines
@@ -228,7 +230,7 @@ def _close_umbrellas(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
-def _triage(ctx: Ctx) -> int:
+def _triage(ctx: "Ctx") -> int:
     """Propose the repairs that shrink the ready frontier; a dry run unless `--write` (W1332).
 
     ⚑ DRY RUN FIRST, as `--block-behind-open`, and through the same advice store so a host can
@@ -260,7 +262,7 @@ def _triage(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
-def _lift(ctx: Ctx) -> int:
+def _lift(ctx: "Ctx") -> int:
     """Lift the one held row a signed operator ruling names (W1277, W1194).
 
     ⚑ THE SIGNATURE IS THE ONLY AUTHORITY: `--lift JWS --jwk FILE` verifies the compact JWS against

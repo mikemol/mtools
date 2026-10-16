@@ -20,18 +20,13 @@ file append and a detached drainer is started, never for the endpoint.
 CONSUMED BY: `commit_kata.main` with `--ship`.
 """
 
-from __future__ import annotations
-
 import datetime as dt
 import json
 import re
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Sequence
+from pathlib import Path
 
 from mikemol.hooks import vlogconfig, vlogdetach, vlogrecord, vlogship
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from pathlib import Path
 
 COMMITTED = re.compile(
     r"^COMMITTED (?P<repo>\S+) (?P<sha>[0-9a-f]+) (?P<subject>.*?) \[(?P<pushed>[^\]]*)\]$"

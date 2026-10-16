@@ -17,17 +17,13 @@ AFTER the caller has spooled the lines, so a crash re-sends (at least once) and 
 CONSUMED BY: the `mikemol-vlog` command (W1179).
 """
 
-from __future__ import annotations
-
 import json
 import subprocess
 import sys
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, TextIO, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from pathlib import Path
+from pathlib import Path
+from typing import TextIO, cast
 
 EXIT_NOT_STARTED = 127
 

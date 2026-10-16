@@ -30,8 +30,6 @@ them.
     mikemol-gate-ledger --ledger PATH [--report]  # rates and timings
 """
 
-from __future__ import annotations
-
 import argparse
 import socket
 import sys

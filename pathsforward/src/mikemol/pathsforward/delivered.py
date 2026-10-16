@@ -13,14 +13,7 @@ clearly pre-1.0 so no consumer reads it as a compatibility promise. A queue with
 is not yet.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-from mikemol.pathsforward.model import symbol_number, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import State, symbol_number, text
 
 DONE = "done"
 NOTHING = 0

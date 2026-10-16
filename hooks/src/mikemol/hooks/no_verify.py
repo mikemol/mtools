@@ -45,8 +45,6 @@ an argument to `commit` or `push`, never inside a quoted string or a heredoc bod
 nobody. Two states only: armed, or absent.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import sys

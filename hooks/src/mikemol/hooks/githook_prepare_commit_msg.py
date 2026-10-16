@@ -44,17 +44,12 @@ the cost of not hiding the cause, and the message names what to fix.
 ⚑ NOT named `mikemol-hook-…`: those are Claude-harness hooks. This one is wired by git.
 """
 
-from __future__ import annotations
-
 import re
 import shutil
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 MARKER = "pre-commit gate report (auto-captured)"
 REPORT_NAME = "precommit-report.txt"

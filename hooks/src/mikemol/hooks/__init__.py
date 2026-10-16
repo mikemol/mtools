@@ -26,5 +26,3 @@ from the file it is handed, so a hook that names its OWN project applies one rep
 another repo's code — invisible while a session edits one tree, wrong in both directions the
 moment it edits two.
 """
-
-from __future__ import annotations

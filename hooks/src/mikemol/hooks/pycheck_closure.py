@@ -21,20 +21,15 @@ the hook adds nothing. This is advisory, so a gap in it is never a refusal, and 
 CONSUMED BY: `pycheck_advise` (the `mikemol-hook-pycheck-advise` console script).
 """
 
-from __future__ import annotations
-
 import json
 import os
 import subprocess
 import tempfile
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import tool_path
 from mikemol.hooks.payload import as_record, text_of
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
 
 LEDGER = ".claude/debt-ledger.json"
 PLANNER_ENV = "DEBTPLAN_BIN"

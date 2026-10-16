@@ -14,19 +14,15 @@ a typo cannot silently fall back to the ship time.
 CONSUMED BY: `vlogcli`.
 """
 
-from __future__ import annotations
-
 import os
 import re
 import tomllib
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.hooks import vlogrecord, vlogship
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
 
 DEFAULT_MAX_LINES = 100_000
 DEFAULT_MAX_BYTES = 64 << 20

@@ -16,17 +16,11 @@ link in the path is data to refuse, never to read through.
 stays, one line each, so the caller prints it.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathsforward import store
-from mikemol.pathsforward.model import strlist, symbol_number, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import State, strlist, symbol_number, text
 
 QUEUE = (".claude", "paths-forward.json")
 _SEP = ":"

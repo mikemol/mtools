@@ -51,8 +51,6 @@ so a `>>` append never receives a half-stream.
 CONSUMED BY: the `mikemol-gen-warrants` console script.
 """
 
-from __future__ import annotations
-
 import argparse
 import ast
 import json

@@ -36,8 +36,6 @@ Exit 0 only when all three are present, 1 otherwise, 2 for any other argument. I
 and writes nothing.
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import os

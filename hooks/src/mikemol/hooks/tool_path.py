@@ -14,14 +14,9 @@ fall back to a different tool.
 CONSUMED BY: `pycheck_closure` and `build_failure`.
 """
 
-from __future__ import annotations
-
 import shutil
+from collections.abc import Mapping
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 
 def find(name: str, env_var: str, root: Path, env: Mapping[str, str]) -> Path | None:

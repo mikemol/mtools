@@ -28,8 +28,6 @@ module, so importing `revendor_cli` first walked a cycle and failed (`cannot imp
 'run_revendor'`).
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import os
@@ -37,16 +35,13 @@ import shutil
 import sys
 import tarfile
 import tempfile
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import revendor, runproc
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 EXIT_FAILED = 1
 EXIT_USAGE = 2

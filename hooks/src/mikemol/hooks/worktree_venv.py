@@ -19,8 +19,6 @@ non-worktree, a worktree whose main tree has no venv for that distribution, a mi
 anything odd in git's answer all return None, so the caller keeps its existing deny.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess

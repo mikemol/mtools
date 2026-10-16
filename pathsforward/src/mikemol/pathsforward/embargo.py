@@ -15,15 +15,10 @@ would name something outside the project the queue governs.
 Shape: `embargoes: [{path, reason, since}]`, absent when empty (never `[]`).
 """
 
-from __future__ import annotations
-
 from pathlib import PurePosixPath
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-from mikemol.pathsforward.model import RefusedError, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, RefusedError, State, text
 
 FIELD = "embargoes"
 

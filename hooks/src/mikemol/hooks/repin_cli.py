@@ -16,26 +16,21 @@ shell never commits: the result is a clean, reviewable diff in each repo for its
 The exit is 1 when any sync failed, else 0; 2 for a usage refusal.
 """
 
-from __future__ import annotations
-
 import os
 import sys
 import time
-from dataclasses import dataclass
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.hooks import musthave, repin
+from mikemol.hooks import musthave, repin, repin_row
 from mikemol.hooks.musthave_cli import run as run_must_have
 from mikemol.hooks.repin_metrics import publish, render
 from mikemol.hooks.revendor_cli import run_revendor
 from mikemol.hooks.runproc import run_process
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
-type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
-
+Row = repin_row.Row
 EXIT_FAILED = 1
 EXIT_USAGE = 2
 SELF = "mtools"
@@ -69,32 +64,6 @@ _VALUED = frozenset(
     }
 )
 _FLAGS = frozenset({"--write", "--no-sync", "--revendor", "--check-must-have"})
-
-
-@dataclass(frozen=True)
-class Row:
-    """One pin in one repo and how it stands against the target.
-
-    `missing` is the must-have fixes a vendored pin lacks by commit ancestry (W1138): None when it
-    was not measured (no par, or the pin is not a commit in the mtools history), an empty tuple
-    when it has them all.
-    """
-
-    repo: str
-    dist: str
-    form: str
-    pinned: str
-    status: str
-    missing: tuple[str, ...] | None = None
-
-    def line(self) -> str:
-        """Render the row as one tab-separated line.
-
-        Returns:
-            the line, without a newline.
-
-        """
-        return f"{self.repo}\t{self.dist}\t{self.form}\t{self.pinned}\t{self.status}"
 
 
 def _scannable(directory: Path) -> bool:

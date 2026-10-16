@@ -24,16 +24,17 @@ The mapping (life accepted it 2026-09-28, W277):
 Recurrence, alarms and per-occurrence overrides are W314's.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 from mikemol.pathsforward.ics import content_line, escape, serialize
-from mikemol.pathsforward.model import foreign_symbol, strlist, strmap, symbol_number, text
+from mikemol.pathsforward.model import (
+    Json,
+    State,
+    foreign_symbol,
+    strlist,
+    strmap,
+    symbol_number,
+    text,
+)
 from mikemol.pathsforward.vtimezone import vtimezone
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
 
 _STATUS = {
     "ready": "NEEDS-ACTION",

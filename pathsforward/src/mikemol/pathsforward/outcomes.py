@@ -11,14 +11,9 @@ and a closed vocabulary imposed on every repo would break their ticks.
 Shape: `ledger_outcomes: {advance: [word], other: [word]}`, absent when cleared (never `{}`).
 """
 
-from __future__ import annotations
+from typing import cast
 
-from typing import TYPE_CHECKING, cast
-
-from mikemol.pathsforward.model import RefusedError
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import RefusedError, State
 
 FIELD = "ledger_outcomes"
 ADVANCE = "advance"

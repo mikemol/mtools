@@ -15,15 +15,10 @@ The reader is a seam: a function from a pid to what `/proc` says about it, so th
 liveness test run in unit tests against a fabricated process table.
 """
 
-from __future__ import annotations
-
 import os
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 SESSION_COMM = "claude"
 _STAT_AFTER_COMM = 2
@@ -41,7 +36,7 @@ class Proc:
     start: int
 
 
-type Reader = Callable[[int], Proc | None]
+Reader = Callable[[int], Proc | None]
 
 
 @dataclass(frozen=True)

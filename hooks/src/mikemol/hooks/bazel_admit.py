@@ -38,20 +38,15 @@ need the wrapper, which needs the tool.
 CONSUMED BY: the `mikemol-bazel-admit` console script.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess
 import sys
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks import host_facts, tool_path
-
-if TYPE_CHECKING:
-    from typing import TextIO
 
 HEAVY_MB = {"build": 4096, "test": 4096, "coverage": 4096, "run": 2048, "fetch": 1024}
 MEMBUDGET = "mikemol-membudget"

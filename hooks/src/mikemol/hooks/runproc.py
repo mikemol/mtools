@@ -10,14 +10,9 @@ the console script and the suite, and a consumer that imports every module (summ
 it. A module this one imports nothing of the package, so no module can reach it through a cycle.
 """
 
-from __future__ import annotations
-
 import subprocess
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
+from collections.abc import Sequence
+from pathlib import Path
 
 
 def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:

@@ -18,8 +18,6 @@ two copies of the shared namespace, so a rewrite moves every selected pin togeth
 CONSUMED BY: the `mikemol-repin` shell (W958).
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 

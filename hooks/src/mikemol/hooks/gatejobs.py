@@ -17,16 +17,11 @@ It prints one flag per line (`--jobs=N`, `--local_test_jobs=N`) for the hook to 
 never a word-split string. An unreadable load reads as an idle host, which is today's behaviour.
 """
 
-from __future__ import annotations
-
 import os
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import TextIO
+from typing import TextIO
 
 MIN_JOBS = 2
 """The fewest jobs the gate is ever held to: slow under load, never stopped."""

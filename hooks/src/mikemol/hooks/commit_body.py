@@ -12,8 +12,6 @@ nothing enforced it; this is the check, run where the body enters, so the prompt
 tool, and the next caller would repeat it. The message names the two trailers the tool adds.
 """
 
-from __future__ import annotations
-
 _OWNED = ("waypoint:", "co-authored-by:")
 
 

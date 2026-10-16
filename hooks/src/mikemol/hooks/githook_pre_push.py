@@ -30,18 +30,13 @@ skipping the checks — a silent skip would read as a pass.
 be wired in settings.json. This one is wired by git, through a repo's `.githooks/pre-push`.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import BinaryIO
+from typing import BinaryIO
 
 _IN_FLIGHT = (
     "index.lock",

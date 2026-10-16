@@ -53,8 +53,6 @@ required — two rules that look contradictory and are not, because they answer 
 questions: *where do I live* versus *whose file is this*.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 # The file whose presence declares a directory a project root.

@@ -18,16 +18,11 @@ CONSUMED BY: `.githooks/pre-commit`, as
 `hooks/.venv/bin/python3 -m mikemol.hooks.claude_code_census .`.
 """
 
-from __future__ import annotations
-
 import re
 import shutil
 import subprocess
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+from collections.abc import Iterable
 
 _WORKTREE_PREFIX = re.compile(r"^.*(?:^|/)\.claude/worktrees/[^/]+/")
 _UNDER_CLAUDE = re.compile(r"(?:^|/)\.claude/")

@@ -17,26 +17,22 @@ evidence names (skill section 7.8); it touches the filesystem once per path, so 
 under `--check-evidence`, never as the bare check.
 """
 
-from __future__ import annotations
-
 import re
 from collections import Counter
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathsforward import attach, outcomes, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
+    Json,
     RefusedError,
+    State,
     strlist,
     symbol_number,
     text,
 )
 from mikemol.pathsforward.tags import ARTIFACT_GRAINS, parse_tag
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
 
 _DROPPED = "dropped"
 _PATH_TRIM = ",;:()[]'\"`"

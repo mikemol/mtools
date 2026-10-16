@@ -18,8 +18,6 @@ through `zoneinfo`, so a misspelled zone is refused, not stored. Expanding recur
 the projection's job, not the writer's.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta, tzinfo

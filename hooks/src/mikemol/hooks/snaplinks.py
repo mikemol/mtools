@@ -20,16 +20,11 @@ chased, so the rule has no depth to get wrong.
 CONSUMED BY: `snapshot._extract` and `snapshot._lost`.
 """
 
-from __future__ import annotations
-
 import posixpath
 import shutil
 import subprocess
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 SYMLINK = "120000"
 REGULAR = {"100644": 0o644, "100755": 0o755}

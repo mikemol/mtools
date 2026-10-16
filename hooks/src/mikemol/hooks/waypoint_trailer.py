@@ -12,8 +12,6 @@ a trailer that exists only there is absent from the commit.
 CONSUMED BY: `.githooks/commit-msg`, as `hooks/.venv/bin/python3 -m mikemol.hooks.waypoint_trailer`.
 """
 
-from __future__ import annotations
-
 import re
 import sys
 from pathlib import Path

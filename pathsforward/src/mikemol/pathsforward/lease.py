@@ -15,20 +15,14 @@ filesystem or git: the caller supplies `now` and `base_sha`.
 other writes someone else holds.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
-from datetime import timedelta
-from typing import TYPE_CHECKING, cast
+from datetime import datetime, timedelta
+from typing import cast
 
 from mikemol.pathsforward.lock import LOCK_STALE_S, parse_time, stamp
+from mikemol.pathsforward.model import Json, State
 from mikemol.pathsforward.tags import parse_tag
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from datetime import datetime
-
-    from mikemol.pathsforward.model import Json, State
 
 # ⚑ EQUAL TO THE LOCK'S STALE BOUND (W119 point 4), so a lapse and a lock takeover agree.
 LEASE_TTL_S = LOCK_STALE_S

@@ -24,21 +24,15 @@ behind an open enabler are not counted, the same sets `--block-behind-open` and 
 CONSUMED BY: `cli._tick_close` (and the katas `tick end`, W1202).
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
 from mikemol.pathsforward import lock
 from mikemol.pathsforward.behindopen import plan
 from mikemol.pathsforward.ledger import Parsed, read
-from mikemol.pathsforward.model import text, workable
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import State, text, workable
 
 SYMBOL = re.compile(r"\bW\d+\b")
 FOREIGN = re.compile(r"[\w-]+:W\d+")

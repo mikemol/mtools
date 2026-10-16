@@ -8,8 +8,6 @@ is generated rather than copied). ⚑ EVERYTHING IS CHECKED BEFORE ANYTHING IS W
 existing directory, a missing template file or a failing edit refuses with the tree untouched.
 """
 
-from __future__ import annotations
-
 import subprocess
 import sys
 from pathlib import Path

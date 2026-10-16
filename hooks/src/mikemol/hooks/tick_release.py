@@ -24,23 +24,18 @@ timeout; a timeout is a failed release, said on stderr, and the lock is left hel
 spell that variable's name (the wiring arm reads a module that does as one that arms).
 """
 
-from __future__ import annotations
-
 import json
 import os
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks.payload import as_record
 from mikemol.hooks.tick_stop import QUEUE, fresh, payload_dir, payload_lock
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from typing import TextIO
 
 # The environment variable that names the writer, first in the search order.
 WRITER_ENV = "PATHS_FORWARD_BIN"

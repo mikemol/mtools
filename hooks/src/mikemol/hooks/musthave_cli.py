@@ -14,18 +14,13 @@ reason of two lines, a sha that is not a commit in history) exits 2 with the fil
 CONSUMED BY: `repin_cli.main`, which hands over the parsed options.
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Mapping, Sequence
+from pathlib import Path
 
 from mikemol.hooks import musthave
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-    from pathlib import Path
-
-    type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 EXIT_FAILED = 1
 EXIT_USAGE = 2

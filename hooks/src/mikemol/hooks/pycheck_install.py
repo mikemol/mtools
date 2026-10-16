@@ -22,18 +22,13 @@ and still refuses a link.
 3 and nothing is written; exit 4 is a refusal; exit 0 is installed.
 """
 
-from __future__ import annotations
-
 import os
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
+from typing import TextIO
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from pathlib import Path
-    from typing import TextIO
-
-    from mikemol.hooks.verdict import Verdict
+from mikemol.hooks.verdict import Verdict
 
 EXIT_INSTALLED = 0
 EXIT_REFUSED = 4

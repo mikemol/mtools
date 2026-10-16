@@ -21,8 +21,6 @@ changed paths are written or removed, so unchanged files keep their bytes and ba
 it need not.
 """
 
-from __future__ import annotations
-
 import fcntl
 import os
 import shutil
@@ -30,14 +28,12 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, Self
+from types import TracebackType
+from typing import Self
 
 from mikemol.hooks import snaplinks
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-    from types import TracebackType
 
 NAMESPACE_ENV = "MIKEMOL_SNAPSHOT_ROOT"
 DEFAULT_NAMESPACE = "/var/tmp/mikemol/gate"

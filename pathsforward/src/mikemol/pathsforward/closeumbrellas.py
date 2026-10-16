@@ -17,16 +17,10 @@ non-empty `next_bounded_step` is its owner saying work remains beyond the childr
 invisible here, W1133). An umbrella with a child still open is not listed: it is simply not due.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pathsforward import ops
-from mikemol.pathsforward.model import strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, State, strlist, text
 
 _CLOSED = frozenset({"done", "dropped"})
 _DONE = "done"

@@ -37,19 +37,14 @@ rules are three declared keys, emitted verbatim: el-openglo's `preamble`, and mt
 it is droppable.
 """
 
-from __future__ import annotations
-
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pathsforward.digest import v2
-from mikemol.pathsforward.model import ordered, strlist, text, ticks
+from mikemol.pathsforward.model import Json, State, ordered, strlist, text, ticks
 from mikemol.pathsforward.overlap import overlaps
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
 
 PROG = "mikemol-paths-forward"
 PAYLOAD_BUDGET = 6000

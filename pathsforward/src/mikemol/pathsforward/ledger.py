@@ -13,17 +13,12 @@ every later column of the line for a reader splitting on whitespace.
 re-splits the columns itself, and a legacy line comes back as `Unparsed`, never an exception.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.pathsforward import lock, ownership
 from mikemol.pathsforward.model import NO_SYMBOL, is_reference
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class MalformedEntryError(ValueError):

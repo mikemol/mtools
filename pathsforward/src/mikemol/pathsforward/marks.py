@@ -17,18 +17,12 @@ canonical input, so a mark can be re-derived and a stale one told from a current
 policy as `input.now`, which keeps a verdict a pure function of its input.
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.pathsforward import opa_eval, ownership
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.pathsforward.model import Json
+from mikemol.pathsforward.model import Json
 
 MARKS = ".marks.jsonl"
 

@@ -24,22 +24,17 @@ so an unreadable log is never mistaken for a failure with no cause.
 CONSUMED BY: the `mikemol-hook-build-failure` and `mikemol-build-failure` console scripts.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
 import subprocess
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks import tool_path
 from mikemol.hooks.payload import as_record, text_of
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-    from typing import TextIO
 
 BUILDLOG_ENV = "BUILDLOG_BIN"
 BUILDLOG = "mikemol-buildlog"

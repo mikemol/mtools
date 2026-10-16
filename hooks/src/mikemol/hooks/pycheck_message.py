@@ -16,8 +16,6 @@ an F401/F821-shaped report names the grain instead of leaving the author to redi
 CONSUMED BY: `mikemol.hooks.pycheck`, `mikemol.hooks.pycheck_cli`.
 """
 
-from __future__ import annotations
-
 import re
 
 # The deny message's line budget: its reader did not ask for it and cannot decline it.

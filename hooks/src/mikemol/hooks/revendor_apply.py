@@ -19,21 +19,16 @@ built. Everything is built and checked in a scratch directory first, and the rep
 after both the build and the hash check passed.
 """
 
-from __future__ import annotations
-
 import hashlib
 import shutil
 import tempfile
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import revendor, wheel
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 WHEELS = Path("vendor") / "wheels"
 STATE = Path(".claude") / "paths-forward.json"

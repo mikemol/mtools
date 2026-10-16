@@ -17,18 +17,13 @@ hooks or pathsforward wheel is refused rather than handed wheels nothing referen
 Exit 0 planned or applied · 1 refused or failed · 2 a usage refusal.
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import revendor, revendor_apply
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 EXIT_FAILED = 1
 EXIT_USAGE = 2

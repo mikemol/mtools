@@ -23,22 +23,17 @@ runs it; the project is named by `CLAUDE_PROJECT_DIR`, never by the cwd.
 CONSUMED BY: the `mikemol-hooks-probe` console script.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import shlex
 import subprocess
 import sys
 import tempfile
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks.payload import as_record, text_of
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 DEFAULT_LAUNCHER = "{project}/hooks/bin/{entry}"
 USAGE = "usage: mikemol-hooks-probe [--project DIR] [--launcher TEMPLATE] [ENTRY ...]\n"

@@ -24,23 +24,16 @@ for, so a project that has not written one learns it can.
 variable's name (the wiring arm reads a module that does as one that arms).
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
-from mikemol.hooks.host_facts import zram_headroom
+from mikemol.hooks.host_facts import Headroom, zram_headroom
 from mikemol.hooks.payload import as_record, text_of
 from mikemol.hooks.tick_gate import facts_line
 from mikemol.hooks.tick_stop import payload_dir, payload_lock
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from typing import TextIO
-
-    from mikemol.hooks.host_facts import Headroom
 
 # The project's pointers to its durable state, relative to the session's directory.
 NOTES = Path(".claude") / "after-compaction.md"

@@ -23,8 +23,6 @@ directly is what standing_facts already does (held_symbols, embargoes). W819 swa
 `mikemol.pathsforward.lock.current` when hooks gains that dependency.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 

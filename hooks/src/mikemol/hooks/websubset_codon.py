@@ -20,8 +20,6 @@ reads none of them. A detector reads one parsed tree and returns `(line, rule, m
     variable-length-tuple     `tuple[X, ...]` in an annotation (nemik:W567 probe)
 """
 
-from __future__ import annotations
-
 import ast
 
 RULES = frozenset(

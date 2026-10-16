@@ -30,22 +30,15 @@ name (`<repo>/.claude/paths-forward.json`), as nemik derives it from the directo
 Dot-named directories (git worktrees) are not repos, as in nemik's `workstream_files`.
 """
 
-from __future__ import annotations
-
 import re
 import shlex
+from collections.abc import Sequence
 from dataclasses import dataclass, replace
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.pathsforward import foreign
-from mikemol.pathsforward.model import foreign_symbol, strlist, symbol_number, text
+from mikemol.pathsforward.model import State, foreign_symbol, strlist, symbol_number, text
 from mikemol.pathsforward.payload import PROG
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.pathsforward.model import State
 
 _DONE = "done"
 _QUEUE_GLOB = "*/.claude/paths-forward.json"

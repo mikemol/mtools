@@ -18,18 +18,13 @@ only with a witness that its fix preserves the program.
 checked. A file it could not rewrite (no project, unreadable, ruff failed) is 3 and untouched.
 """
 
-from __future__ import annotations
-
 import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
+from typing import TextIO
 
 from mikemol.hooks import project_root
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from pathlib import Path
-    from typing import TextIO
 
 SAFE_RULES = "I,W,COM812"
 """The ruff rules whose autofix is applied: import order, whitespace, a trailing comma."""

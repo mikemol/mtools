@@ -22,20 +22,13 @@ this module only reads it. Each fact bears on the waypoints it names, at the gat
 and the clock it is handed, so a fact's age is never decided here.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.pathsforward import foreign
-from mikemol.pathsforward.model import RefusedError, strlist, symbol_number, text
+from mikemol.pathsforward.model import Json, RefusedError, State, strlist, symbol_number, text
 from mikemol.pathsforward.realizable import GATES, one_line
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-    from pathlib import Path
-
-    from mikemol.pathsforward.model import Json, State
 
 _DONE = "done"
 _CITED = ("blocked_on", "enables")

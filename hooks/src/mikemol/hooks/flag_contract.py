@@ -23,16 +23,11 @@ hear about the unstated MUTATION first.
 - `arg_after`, which EXTRACTS a value rather than validating: this package's hooks parse their own.
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.hooks.refusal_log import Refusal, log_fallthrough
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
 
 EXIT_REFUSED = 2
 

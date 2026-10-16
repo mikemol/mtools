@@ -16,14 +16,9 @@ forever is a worse failure than the one it prevents.
 The reader and the sleeper are parameters, so the tests run no clock.
 """
 
-from __future__ import annotations
-
 import time
+from collections.abc import Callable, Mapping
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
 
 LOAD_ENV = "MIKEMOL_COMMIT_MAXLOAD"
 WAIT_ENV = "MIKEMOL_COMMIT_LOAD_WAIT_S"

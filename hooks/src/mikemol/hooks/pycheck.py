@@ -42,8 +42,6 @@ substrate's triage). The commit-time ruff/mypy gate is what covers the moved fil
 CONSUMED BY: the `mikemol-hook-pycheck` console script.
 """
 
-from __future__ import annotations
-
 import ast
 import contextlib
 import json

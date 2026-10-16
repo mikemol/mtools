@@ -9,14 +9,7 @@ trailer names the waypoint. ⚑ A MISSING L2 FIELD IS SAID, NOT HIDDEN: each pri
 writer and absent from the commit.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-from mikemol.pathsforward.model import strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json
+from mikemol.pathsforward.model import Json, strlist, text
 
 L2_FIELDS = ("unchanged", "rejected", "consumers")
 EVIDENCE_SEP = " | "

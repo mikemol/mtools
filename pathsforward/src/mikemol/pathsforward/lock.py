@@ -12,19 +12,14 @@ holding the file's flock, so the second reader sees the first writer's lock.
 takeover and wrote nothing, which section 4.1 requires.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pathsforward import session
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, State
 
 LOCK_STALE_S = 1800.0
 _Z = "Z"

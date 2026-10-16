@@ -25,22 +25,20 @@ nothing.
 CONSUMED BY: the `mikemol-commit` console script.
 """
 
-from __future__ import annotations
-
 import io
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks.commit_body import refusal as _body_refusal
+from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
-from mikemol.hooks.isolated import commit_isolated
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackrun import Item as _Item
@@ -59,12 +57,6 @@ stack_run = _run_stack
 ship_text = _ship_text
 new_buffer = io.StringIO
 SHIP_FLAG = "--ship"
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from typing import TextIO
-
-    from mikemol.hooks.isolated import Done
 
 QUEUE_PATHS = (
     ".claude/paths-forward.json",

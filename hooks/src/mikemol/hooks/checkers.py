@@ -15,8 +15,6 @@ findings the author cannot act on.
 exemptions they had correctly declared, with nothing to point at.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 

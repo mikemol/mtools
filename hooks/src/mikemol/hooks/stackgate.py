@@ -11,15 +11,10 @@ to the index, as it does for a single commit.
 See `.claude/design/stack-land.md`. CONSUMED BY: the stack mode of `mikemol-commit` (W1161).
 """
 
-from __future__ import annotations
-
 from pathlib import Path
-from typing import TYPE_CHECKING
 
+from mikemol.hooks.isolated import Done, EnvRunner
 from mikemol.hooks.snapshot import Snapshot
-
-if TYPE_CHECKING:
-    from mikemol.hooks.isolated import Done, EnvRunner
 
 
 def _stopped(done: Done) -> bool:

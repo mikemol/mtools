@@ -46,15 +46,10 @@ package's whole design. **Config, staging directory and working directory are on
 Nothing changes until a caller has a better answer to bind.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
-    from pathlib import Path
+from pathlib import Path
 
 # ⚑ THE DEFAULT IS `None`, MEANING "wherever this process already is". An explicit default of
 # some repo's root would make the unbound case silently wrong for every other repo — the exact

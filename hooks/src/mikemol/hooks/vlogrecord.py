@@ -24,16 +24,12 @@ is used. The stream fields are added as fields; the sink names them in `_stream_
 CONSUMED BY: the `mikemol-vlog` command (W1169).
 """
 
-from __future__ import annotations
-
 import datetime as dt
 import json
+import re
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    import re
-    from collections.abc import Mapping
+from typing import cast
 
 TIME_KEYS = ("_time", "time", "timestamp", "ts")
 DEFAULT_MESSAGE_KEY = "message"

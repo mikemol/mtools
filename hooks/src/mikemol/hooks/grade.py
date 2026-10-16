@@ -31,16 +31,11 @@ the subject. A test that could not RUN establishes nothing; reporting that as "t
 is the same conflation this repository has measured seven times in its own checkers.
 """
 
-from __future__ import annotations
-
 import ast
 import subprocess
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 # ⚑ THE RUNGS, AND THE ORDER IS THE POINT. Written once here so a reader downstream cannot
 # re-list them: paperkit records at `grade.py:166-171` that re-listing rungs downstream caused

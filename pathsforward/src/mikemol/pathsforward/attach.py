@@ -12,18 +12,13 @@ waypoint, so it rides in the state digest and in `--show` without either learnin
 file included, is a symbolic link, because a link makes the hash a statement about some other file.
 """
 
-from __future__ import annotations
-
 import hashlib
 import re
 import stat
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-from mikemol.pathsforward.model import RefusedError, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, RefusedError, State, text
 
 KEY = "attachments"
 _SHA256 = re.compile(r"[0-9a-f]{64}")

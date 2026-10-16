@@ -31,8 +31,6 @@ look" render as a clean bill — the success-state-identical-to-failure-state de
 CONSUMED BY: the `mikemol-hook-shellcheck` console script.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re

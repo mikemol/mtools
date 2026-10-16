@@ -17,16 +17,11 @@ excludes is left alone.
 could run; the remaining findings are the verdict's to report, not this command's.
 """
 
-from __future__ import annotations
-
 import subprocess
-from typing import TYPE_CHECKING
+from pathlib import Path
+from typing import TextIO
 
 from mikemol.hooks import project_root
-
-if TYPE_CHECKING:
-    from pathlib import Path
-    from typing import TextIO
 
 EXIT_FORMATTED = 0
 EXIT_NOT_RUN = 3

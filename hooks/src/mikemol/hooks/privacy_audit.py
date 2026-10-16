@@ -26,8 +26,6 @@ placed at their NEW line numbers (the rest empty), so a finding's line is the li
 CONSUMED BY: the publish preflight (W1150).
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
@@ -35,11 +33,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from typing import cast
 
 QUERY = "data.mtools.publish_privacy.findings"
 SNIFF = 8192

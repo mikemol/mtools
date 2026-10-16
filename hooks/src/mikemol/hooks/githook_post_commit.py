@@ -38,8 +38,6 @@ the shared hook.
 ⚑ NOT named `mikemol-hook-…`: those are Claude-harness hooks. This one is wired by git.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess

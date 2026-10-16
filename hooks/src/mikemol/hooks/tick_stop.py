@@ -22,22 +22,15 @@ variable on its command would be decoration, as for the rule-8 Stop hook. (This 
 spell that variable's name at all: the wiring arm reads a module that does as one that arms.)
 """
 
-from __future__ import annotations
-
 import json
 import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
-from mikemol.hooks.host_facts import host_lock
+from mikemol.hooks.host_facts import HostLock, host_lock
 from mikemol.hooks.payload import as_record, text_of
-
-if TYPE_CHECKING:
-    from typing import TextIO
-
-    from mikemol.hooks.host_facts import HostLock
 
 # The host's queue, relative to the payload's cwd (the session's directory, not the project the
 # hooks were installed from: the host session runs from ~/github with mtools' hooks).

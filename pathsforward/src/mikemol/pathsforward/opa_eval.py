@@ -14,19 +14,15 @@ unset, PATH answers, and the version check still holds the binary to the pin.
 file; no waypoint text ever becomes a word in the command.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import shutil
 import subprocess
+from collections.abc import Mapping
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-
-    from mikemol.pathsforward.model import Json
+from mikemol.pathsforward.model import Json
 
 PINNED = "1.20.2"
 OPA_ENV = "OPA_BIN"

@@ -28,16 +28,10 @@ cross edge (A->B->C->A with B->D->C) is a member of the ring and in none of the 
 blocking it would deadlock. `_cycle_through` asks the member question directly.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pathsforward.frontier_walk import frontier
-from mikemol.pathsforward.model import strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import State, strlist, text
 
 _AGENT = "agent"
 _CLOSED = frozenset({"", "done", "dropped"})

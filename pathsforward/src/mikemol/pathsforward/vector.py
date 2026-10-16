@@ -14,8 +14,6 @@ zero, so a census can count them.
 the silent default luthen's letter rules out.
 """
 
-from __future__ import annotations
-
 from mikemol.pathsforward.model import RefusedError
 
 VERSION = "WV:1"

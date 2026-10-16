@@ -22,18 +22,13 @@ run, after a restart or an endpoint coming back, replays it in order.
 CONSUMED BY: the `mikemol-vlog` command (W1179).
 """
 
-from __future__ import annotations
-
 import json
 import urllib.parse
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import vlogrecord, vlogsink, vlogspool, vlogwatch
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Mapping, Sequence
 
 NO_STREAMS = "_none"
 PREFIX = "vlog-"

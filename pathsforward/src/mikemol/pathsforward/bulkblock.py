@@ -12,15 +12,9 @@ the first two are LISTED with the reason, so a dry run shows what the write will
 The target itself is never blocked on itself.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
-from mikemol.pathsforward.model import RefusedError, strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import RefusedError, State, strlist, text
 
 _AGENT = "agent"
 _CLOSED = frozenset({"", "done", "dropped"})

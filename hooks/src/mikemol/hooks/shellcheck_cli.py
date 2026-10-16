@@ -17,8 +17,6 @@ tool a person runs, not a gate the harness wires.
 CONSUMED BY: the `mikemol-shellcheck` console script.
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import sys

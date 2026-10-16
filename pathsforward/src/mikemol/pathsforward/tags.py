@@ -14,8 +14,6 @@ only an artifact-grain write is `leasable` (el-openglo's W30: a shared upstream 
 Parsing reads a stored string and never rewrites it: the state file keeps the text as written.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 from typing import Literal

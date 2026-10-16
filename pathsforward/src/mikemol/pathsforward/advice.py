@@ -18,8 +18,6 @@ state hash covers the waypoints and not it, and nemik reads the one file without
 CONSUMED BY: the four dry-run modes (W1244) and `--reject-advice` (W1243).
 """
 
-from __future__ import annotations
-
 from typing import cast
 
 from mikemol.pathsforward.model import Json, MalformedStateError

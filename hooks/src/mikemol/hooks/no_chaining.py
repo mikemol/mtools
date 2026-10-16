@@ -31,8 +31,6 @@ an unarmed hook exits 0 with no `permissionDecision` and the harness reads that 
 to report", so the text reaches nobody. Two states only: armed, or absent.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import shlex

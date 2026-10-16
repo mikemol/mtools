@@ -23,8 +23,6 @@ failure still cannot turn a refusal into a pass.
 emitter somewhere dead; a destination passed per call makes that a plain argument.
 """
 
-from __future__ import annotations
-
 import json
 import subprocess
 import sys

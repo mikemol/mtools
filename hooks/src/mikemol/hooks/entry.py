@@ -11,10 +11,8 @@ modules are unchanged, and their tests still call `main` directly.
 which substrate's script offered and adopters otherwise re-derived by importing `routes`.
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Callable
 
 from mikemol.hooks import (
     after_compaction,
@@ -35,9 +33,6 @@ from mikemol.hooks import (
     tick_stop,
     work_claims_hook,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 _ROUTES = "--routes"
 _WORK_CLAIMS = work_claims_hook.main

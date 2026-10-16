@@ -14,8 +14,6 @@ real time says `datetime.now(UTC)` once, in its own code.
 `last_nudged` was recorded.
 """
 
-from __future__ import annotations
-
 from datetime import UTC, datetime
 
 REWAKE_S = 30 * 60

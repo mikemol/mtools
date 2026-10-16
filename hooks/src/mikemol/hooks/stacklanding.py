@@ -17,18 +17,11 @@ each sha, so a failed push reads LOCAL and not PUSHED.
 See `.claude/design/stack-land.md`. CONSUMED BY: the stack mode of `mikemol-commit` (W1162).
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
-from mikemol.hooks.isolated import refresh_index
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.hooks.isolated import EnvRunner
+from mikemol.hooks.isolated import EnvRunner, refresh_index
 
 
 @dataclass(frozen=True)

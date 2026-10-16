@@ -33,12 +33,11 @@ runs, not a gate the harness wires, and the arm that requires every hook script 
 on that prefix.
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks import (
     project_root,
@@ -49,12 +48,7 @@ from mikemol.hooks import (
     pycheck_format,
     pycheck_install,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-    from typing import TextIO
-
-    from mikemol.hooks.verdict import Verdict
+from mikemol.hooks.verdict import Verdict
 
 # The flags: the file whose verdict is asked for, the root whose ledger is, or the root to refresh.
 FLAG = "--check-file"

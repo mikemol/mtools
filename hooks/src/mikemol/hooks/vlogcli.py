@@ -24,8 +24,6 @@ refused as a usage error with anything else.
 CONSUMED BY: the `mikemol-vlog` console script.
 """
 
-from __future__ import annotations
-
 import argparse
 import datetime as dt
 import json

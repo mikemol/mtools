@@ -14,16 +14,11 @@ does not name). The compile census (`mikemol.corpus.codoncensus`) is the check o
 this report calls clean that Codon still rejects names a missing rule.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.hooks import websubset
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
 
 _SKIP = frozenset({".git", ".venv", "node_modules", "build", "__pycache__", "tests", "stubs"})
 

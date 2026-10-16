@@ -14,13 +14,8 @@ on its command line can only be a mistake. Running with no arguments is unchange
 `hooks/bin/*` and every adopter's settings.json invoke it.
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from collections.abc import Sequence
 
 EXIT_BLOCK = 2
 # ⚑ THE HARNESS FIXES THIS VALUE: Claude Code reads a hook's exit 2 as BLOCK, so a hook entry point

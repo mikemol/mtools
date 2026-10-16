@@ -22,8 +22,6 @@ W901 measured each claim on real git (`hooks/tests/test_isolated_commit.py`).
 CONSUMED BY: `commit_kata.isolated_commit`, the `mikemol-commit` mode `MIKEMOL_COMMIT_ISOLATED=1`.
 """
 
-from __future__ import annotations
-
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path

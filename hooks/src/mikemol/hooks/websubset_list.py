@@ -13,13 +13,7 @@ error for a missing file and for every malformed entry (absolute, `..`, not `.py
 each naming the line, so the caller prints a row and refuses.
 """
 
-from __future__ import annotations
-
-from pathlib import PurePosixPath
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 LIST_NAME = "websubset-portable.txt"
 

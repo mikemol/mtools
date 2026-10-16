@@ -26,17 +26,12 @@ Three kinds, each a defect of RECORD and never a judgement about the work:
 dependency that is not already in the record is not this tool's to invent.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pathsforward import ops
-from mikemol.pathsforward.model import strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, State, strlist, text
 
 _CLOSED = frozenset({"done", "dropped"})
 _OPEN = frozenset({"ready", "working", "blocked"})

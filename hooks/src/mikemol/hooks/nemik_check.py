@@ -34,8 +34,6 @@ unreadable queue file, no session id, an unwritable temp directory and a failed 
 recorded, so the next prompt retries) all mean run it: the skip is never taken on doubt.
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import os

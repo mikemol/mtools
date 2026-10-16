@@ -23,8 +23,6 @@ fields the caller declared, so the streams are the caller's choice and not a gue
 CONSUMED BY: the `mikemol-vlog` command (W1169).
 """
 
-from __future__ import annotations
-
 import http.client
 import subprocess
 import urllib.parse

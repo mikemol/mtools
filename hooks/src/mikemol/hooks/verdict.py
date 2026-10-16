@@ -18,8 +18,6 @@ resolve against it: config, staging directory and working directory are one deci
 CONSUMED BY: `mikemol.hooks.pycheck`.
 """
 
-from __future__ import annotations
-
 import subprocess
 
 from mikemol.hooks import checker_context

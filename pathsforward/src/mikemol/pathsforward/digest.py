@@ -13,17 +13,13 @@ the ledger records the transition. Only a value no form explains is a divergence
 file wins (skill section 4.2).
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import re
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json
+from mikemol.pathsforward.model import Json
 
 TAG = "v2:"
 V2_HEX = 16

@@ -15,8 +15,6 @@ git or uv; the build, the throwaway-venv check and the swap sit behind a runner 
 shared `mikemol` namespace (docs/repinning.md), which is why `DISTS` is a pair and never one dist.
 """
 
-from __future__ import annotations
-
 import re
 
 DISTS = ("hooks", "pathsforward")

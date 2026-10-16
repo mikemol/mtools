@@ -15,12 +15,7 @@ module only makes them legal iCalendar text, and decides nothing about what a wa
 - Line ends are CRLF, always, including after the last line.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+from collections.abc import Iterable
 
 _LIMIT = 75
 _ESCAPES = (("\\", "\\\\"), (";", "\\;"), (",", "\\,"), ("\r\n", "\\n"), ("\n", "\\n"))

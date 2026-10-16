@@ -17,16 +17,10 @@ waits behind it. The host katas wrote this through the CLI one `--update` at a t
 - green marks the card done and lifts the blocks through the one pruning the CLI already has.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pathsforward import ops
-from mikemol.pathsforward.model import RefusedError, strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, RefusedError, State, strlist, text
 
 GATE_KIND = "commit gate is red"
 """The words after the repo name in a gate card's title; also how an open card is found."""

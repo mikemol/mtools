@@ -18,15 +18,10 @@ pin, and `behind_par` is then absent rather than 0, because 0 would say "current
 named.
 """
 
-from __future__ import annotations
+from collections.abc import Iterable
+from pathlib import Path
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-    from pathlib import Path
-
-    from mikemol.hooks.repin_cli import Row
+from mikemol.hooks import repin_row
 
 PREFIX = "mikemol_repin"
 _ESCAPES = (("\\", "\\\\"), ('"', '\\"'), ("\n", "\\n"))
@@ -56,7 +51,9 @@ def _header(name: str, help_text: str) -> list[str]:
     return [f"# HELP {PREFIX}_{name} {help_text}", f"# TYPE {PREFIX}_{name} gauge"]
 
 
-def render(rows: Iterable[Row], root: str, par: str | None, scanned: int | None = None) -> str:
+def render(
+    rows: Iterable[repin_row.Row], root: str, par: str | None, scanned: int | None = None
+) -> str:
     """Render the census as the textfile body.
 
     ⚑ `scan_time_seconds` IS WHEN THE CENSUS WAS TAKEN, in unix seconds, so a dead census alerts
@@ -109,7 +106,7 @@ def render(rows: Iterable[Row], root: str, par: str | None, scanned: int | None 
     return "\n".join(out) + "\n"
 
 
-def _behind(row: Row) -> int | None:
+def _behind(row: repin_row.Row) -> int | None:
     """Say whether a pin is behind: by ancestry for a measured wheel, by sha for a git pin.
 
     ⚑ A WHEEL NOT MEASURED, AND A PIN WITH NO TARGET, ARE NOT CLAIMED CURRENT: both are None, so no

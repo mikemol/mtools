@@ -21,23 +21,17 @@ a file is a record of what was asked (this deviates from W1162's first wording; 
 CONSUMED BY: `commit_kata.main` (`--stack FILE`).
 """
 
-from __future__ import annotations
-
 import json
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import TextIO, cast
 
 from mikemol.hooks.commit_body import refusal as body_refusal
+from mikemol.hooks.isolated import EnvRunner
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
 from mikemol.hooks.stacklanding import land
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from pathlib import Path
-    from typing import TextIO
-
-    from mikemol.hooks.isolated import EnvRunner
 
 BODY_CHECK = body_refusal
 EXIT_RACED = 5

@@ -13,16 +13,11 @@ file the caller did not have.
 CONSUMED BY: `vlogcli`.
 """
 
-from __future__ import annotations
-
 import subprocess
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.hooks import vlogship
+from mikemol.hooks import vlogship
 
 
 def drain_argv(config: vlogship.Config) -> list[str]:

@@ -20,17 +20,13 @@ parameters, so tests end no process.
 CONSUMED BY: `vlogship.drain_all`.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import signal
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 DEFAULT_PATIENCE = 3
 

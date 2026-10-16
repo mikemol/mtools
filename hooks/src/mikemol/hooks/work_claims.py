@@ -17,15 +17,11 @@ Nothing here reads the machine. The queue, the process ancestry, `/proc/<pid>/st
 `claims` listing are all arguments, so the tests run on strings; the effectful half is the hook.
 """
 
-from __future__ import annotations
-
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.hooks.payload import as_record
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
 
 LABEL_PREFIX = "claim:label:touch:"
 SESSION_NAME = "claude"

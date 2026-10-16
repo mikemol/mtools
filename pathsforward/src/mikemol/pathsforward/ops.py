@@ -17,18 +17,19 @@ symbol with a partial record is indistinguishable from an honest one.
 blocks looked like a tick that re-armed.
 """
 
-from __future__ import annotations
-
+from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import StrEnum
 from itertools import starmap
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pathsforward import attach, lock, realizable, recurrence, timevalue, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
+    Json,
     RefusedError,
+    State,
     is_reference,
     strlist,
     strmap,
@@ -36,11 +37,6 @@ from mikemol.pathsforward.model import (
     text,
     ticks,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-    from mikemol.pathsforward.model import Json, State
 
 # RefusedError moved to model (W256) and is re-exported here for every existing importer.
 __all__ = ["RefusedError"]
@@ -51,7 +47,7 @@ _DATE = 10
 _UNBLOCKING = ("ready", "done")
 
 
-def _attached(new: Json, upd: Update) -> Json:
+def _attached(new: Json, upd: "Update") -> Json:
     """Shape the attachments an update gives: this path set, the others kept.
 
     Returns:
@@ -73,7 +69,7 @@ def _bad_edges(edges: Iterable[str]) -> list[str]:
     return [e for e in edges if not is_reference(e)]
 
 
-def _realizable_fields(upd: Update) -> Json:
+def _realizable_fields(upd: "Update") -> Json:
     """Shape the realizability fields an update gives; a cleared one is None, an unset one absent.
 
     Returns:

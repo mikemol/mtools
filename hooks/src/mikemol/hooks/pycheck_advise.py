@@ -13,20 +13,15 @@ not a Python edit, or that names no file, says nothing at all.
 CONSUMED BY: the `mikemol-hook-pycheck-advise` console script.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import sys
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TextIO
 
 from mikemol.hooks import project_root, pycheck_closure
 from mikemol.hooks.payload import as_record, text_of
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-    from typing import TextIO
 
 EDIT_TOOLS = frozenset(("Write", "Edit"))
 PY_SUFFIX = ".py"

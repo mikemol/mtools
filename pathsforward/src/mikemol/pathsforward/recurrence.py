@@ -14,8 +14,6 @@ reader's job: icsstruct does it with recurring_ical_events, and nemik fires per 
 unknown part, a part given twice, or a value out of its range.
 """
 
-from __future__ import annotations
-
 import re
 from datetime import datetime
 

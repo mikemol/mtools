@@ -21,8 +21,6 @@ The refusal list, each a rule id that a test plants beside a clean control:
 portable, and the caller should see a row, not a traceback.
 """
 
-from __future__ import annotations
-
 import ast
 from dataclasses import dataclass
 from itertools import starmap

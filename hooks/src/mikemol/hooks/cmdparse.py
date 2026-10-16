@@ -38,8 +38,6 @@ stripped for the same reason.
 imported, and the linter says so.
 """
 
-from __future__ import annotations
-
 import shlex
 from pathlib import Path
 

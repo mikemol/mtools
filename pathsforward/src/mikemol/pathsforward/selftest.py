@@ -7,8 +7,6 @@ the transition rule, the check's sight of a vanished symbol, and the payload's r
 them. Every arm is in memory; the selftest touches no file.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from mikemol.pathsforward.check import check

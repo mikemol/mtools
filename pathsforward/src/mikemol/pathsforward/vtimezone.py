@@ -13,8 +13,6 @@ compressed rule, but exact for the years covered and nothing to get wrong. A zon
 transition in the window gets one STANDARD observance.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo

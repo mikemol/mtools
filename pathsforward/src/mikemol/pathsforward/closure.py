@@ -16,16 +16,9 @@ the queue). The writer mints one only when asked, for one waypoint and one gate.
 already names a `closes_ref` points at a card that exists, so nothing is minted for it.
 """
 
-from __future__ import annotations
+from collections.abc import Sequence
 
-from typing import TYPE_CHECKING
-
-from mikemol.pathsforward.model import RefusedError, text
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import Json, RefusedError, State, text
 
 # nemik's bundled-title check starts at 150 characters, so a minted title stays under it.
 TITLE_CHARS = 140

@@ -6,18 +6,19 @@
 watches the edit vanish stops trusting the loop.
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.pathsforward.digest import v2
-from mikemol.pathsforward.model import blocker_index, describe_rank, ordered, strlist, text
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.pathsforward.model import Json, State
+from mikemol.pathsforward.model import (
+    Json,
+    State,
+    blocker_index,
+    describe_rank,
+    ordered,
+    strlist,
+    text,
+)
 
 DERIVED = "<!-- DERIVED from the state file by mikemol-paths-forward --render. NEVER EDIT. -->"
 

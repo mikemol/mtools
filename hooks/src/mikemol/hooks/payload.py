@@ -11,8 +11,6 @@ when a checker, a message or a verdict does.
 imported, and the linter says so.
 """
 
-from __future__ import annotations
-
 import os
 
 # ⚑ THE HOOK'S OWN SWITCH, CHECKED FIRST. A shared switch alone cannot arm one hook without

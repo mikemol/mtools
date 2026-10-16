@@ -24,21 +24,16 @@ would have truncated it first, which is why the refresh is a mode of the tool, n
 CONSUMED BY: `pycheck_cli` (`mikemol-pycheck --census`, `--refresh-ledger`).
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
 import shutil
 import subprocess
 import tempfile
+from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Mapping
-
-    from mikemol.hooks.verdict import Verdict
+from mikemol.hooks.verdict import Verdict
 
 _RUFF = re.compile(r"^\s*Found (\d+) errors?\b", re.MULTILINE)
 _HUNK = re.compile(r"^@@ ", re.MULTILINE)

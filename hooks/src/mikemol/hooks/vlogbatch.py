@@ -11,16 +11,9 @@ nothing. Under `drop-oldest` every batch is taken and the count is the number of
 CONSUMED BY: `vlogcli`.
 """
 
-from __future__ import annotations
+from collections.abc import Callable, Mapping
 
-from typing import TYPE_CHECKING
-
-from mikemol.hooks import vlogship
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
-
-    from mikemol.hooks import vlogrecord
+from mikemol.hooks import vlogrecord, vlogship
 
 BATCH = 200
 

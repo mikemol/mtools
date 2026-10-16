@@ -12,8 +12,6 @@ was judged against and what would close it. There is no field that marks a gate 
 policy treats any such key as a violation.
 """
 
-from __future__ import annotations
-
 from mikemol.pathsforward.model import RefusedError, is_reference
 
 GATES: tuple[str, ...] = ("constructible", "reachable", "observable", "coverable")

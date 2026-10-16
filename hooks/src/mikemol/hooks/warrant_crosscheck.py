@@ -17,15 +17,10 @@ is nothing to compare, and "nothing disagreed" over an unread population is the 
 exists to end.
 """
 
-from __future__ import annotations
-
 import re
 import subprocess
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 SCRIPT = "count_test_functions.py"
 PAIRING = "--pairing"

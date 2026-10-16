@@ -22,16 +22,11 @@ the spool alone), so a batch is never removed twice.
 CONSUMED BY: the `mikemol-vlog` command (W1169).
 """
 
-from __future__ import annotations
-
 import fcntl
+from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, Sequence
-    from pathlib import Path
+from pathlib import Path
 
 DEFAULT_BATCH = 500
 

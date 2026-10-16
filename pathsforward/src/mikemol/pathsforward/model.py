@@ -11,8 +11,6 @@ still be loaded — that is what lets `--update` repair it — and `check` repor
 malformed symbol parses to `None` and every caller decides what that means.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 from typing import cast

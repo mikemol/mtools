@@ -17,19 +17,13 @@ hold. A crash between the save and the mark loses a mark, never invents one.
 `closes_by` into the draft of a claimable card, caused by the waypoint it belongs to.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
 from mikemol.pathsforward import certify, closure, inbound, marks, opa_eval, ops, store
-from mikemol.pathsforward.model import RefusedError, strlist, text
+from mikemol.pathsforward.model import Json, RefusedError, State, strlist, text
 from mikemol.pathsforward.realizable import GATES, one_line
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.pathsforward.model import Json, State
 
 
 @dataclass(frozen=True)

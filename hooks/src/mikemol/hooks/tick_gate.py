@@ -28,22 +28,15 @@ captured), and the fallback makes that immaterial to the gate.
 spell that variable's name (the wiring arm reads a module that does as one that arms).
 """
 
-from __future__ import annotations
-
 import json
 import sys
+from collections.abc import Callable
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, NamedTuple
+from typing import NamedTuple, TextIO
 
-from mikemol.hooks.host_facts import GIB, REFUSE_FRACTION, zram_headroom
+from mikemol.hooks.host_facts import GIB, REFUSE_FRACTION, Headroom, HostLock, zram_headroom
 from mikemol.hooks.payload import as_record, text_of
 from mikemol.hooks.tick_stop import fresh, payload_lock
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from typing import TextIO
-
-    from mikemol.hooks.host_facts import Headroom, HostLock
 
 # The loop prompt begins with this; a user mentioning a tick mid-sentence is not one.
 TICK_PREFIX = "paths-forward tick"

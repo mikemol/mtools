@@ -25,19 +25,15 @@ new `reason`; it says `unchanged` when that changes nothing, so a rerun is a no-
 CONSUMED BY: `mikemol-repin` and luthen-observability's repin census (W968).
 """
 
-from __future__ import annotations
-
 import json
 import re
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.hooks import repin
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 Entry = dict[str, object]
 FILE = Path("repin") / "must_have.json"

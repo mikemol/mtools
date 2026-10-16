@@ -14,21 +14,17 @@ because the replace swaps the state file's inode and a lock on the old inode pro
 the live ones. There is no default root: the caller names the file.
 """
 
-from __future__ import annotations
-
 import contextlib
 import fcntl
 import json
 import os
 import tempfile
+from collections.abc import Iterator
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pathsforward import ownership
 from mikemol.pathsforward.model import MalformedStateError, State, validate
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 MIRROR = ".md"
 LEDGER = ".ledger"

@@ -24,19 +24,13 @@ re-held cannot lift it a second time. Nothing but the one named row changes.
 signature verified, all before `ops.update` is called.
 """
 
-from __future__ import annotations
-
 import base64
 import json
-from typing import TYPE_CHECKING, cast
+from collections.abc import Callable, Sequence
+from typing import cast
 
 from mikemol.pathsforward import ops
-from mikemol.pathsforward.model import RefusedError, strlist, text
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import RefusedError, State, strlist, text
 
 HEADER = '{"alg":"EdDSA"}'
 FIELDS = frozenset({"card", "ruling", "time", "to", "blocked_on"})

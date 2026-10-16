@@ -13,18 +13,11 @@ by `digest`, and the scan reports where and how many, never what.
 typo match something else in silence.
 """
 
-from __future__ import annotations
-
 import hashlib
-from typing import TYPE_CHECKING
+from collections.abc import Iterable
 
-from mikemol.pathsforward.model import text
+from mikemol.pathsforward.model import Json, text
 from mikemol.pathsforward.ops import RefusedError
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-    from mikemol.pathsforward.model import Json
 
 REDACTED = "[redacted]"
 # The free-text fields of a waypoint; the structured ones (symbols, tags, enums) hold no prose.

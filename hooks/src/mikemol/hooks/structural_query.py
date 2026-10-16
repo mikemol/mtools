@@ -30,8 +30,6 @@ do and exits non-blocking rather than vanishing — an empty stdout reads to the
 permission granted, so silence is the one thing a broken gate must not do.
 """
 
-from __future__ import annotations
-
 import json
 import sys
 from pathlib import Path

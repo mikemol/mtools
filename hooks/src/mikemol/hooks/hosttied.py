@@ -18,8 +18,6 @@ Either would have dropped tests from the gate; this one cannot, because it is tr
 CONSUMED BY: `tests/conftest.py`, which skips these modules when the marker is present.
 """
 
-from __future__ import annotations
-
 REASON = (
     "tests the mtools checkout's own hooks and scripts above this distribution; not in an sdist"
 )

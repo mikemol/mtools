@@ -16,16 +16,10 @@ those would exclude each other once leases exist. A `mod:X` and a `file:` path w
 are never unified (a stem does not determine a path); they get their own `OVERLAP?` line.
 """
 
-from __future__ import annotations
-
 from pathlib import PurePosixPath
-from typing import TYPE_CHECKING
 
-from mikemol.pathsforward.model import strlist, text
+from mikemol.pathsforward.model import Json, strlist, text
 from mikemol.pathsforward.tags import Tag, parse_tag
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import Json
 
 _LIVE = ("ready", "working")
 

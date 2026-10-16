@@ -18,17 +18,11 @@ the textfile reads as stale, so every rule of the target is written for every re
 is what makes the last module leaving a rule show as a step to 0 and not as a vanished line.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
+from pathlib import Path
 
 from mikemol.hooks import websubset
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.hooks.websubset_tree import TreeCensus
+from mikemol.hooks.websubset_tree import TreeCensus
 
 PREFIX = "mikemol_codon"
 _ESCAPES = (("\\", "\\\\"), ('"', '\\"'), ("\n", "\\n"))

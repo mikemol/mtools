@@ -16,15 +16,9 @@ the list is not added twice. A survivor that is the dropped card, absent, or clo
 edges would point at nothing.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
-from mikemol.pathsforward.model import RefusedError, strlist, text
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.model import State
+from mikemol.pathsforward.model import RefusedError, State, strlist, text
 
 _CLOSED = frozenset({"done", "dropped"})
 _FIELDS = ("blocked_on", "enables")

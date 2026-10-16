@@ -22,20 +22,15 @@ a NUL in its first 8 KiB is counted as skipped, not decoded.
 CONSUMED BY: the publish preflight (W1150).
 """
 
-from __future__ import annotations
-
 import json
 import os
 import sys
 import tarfile
 import zipfile
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.hooks import privacy_audit
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 Finding = privacy_audit.Finding
 

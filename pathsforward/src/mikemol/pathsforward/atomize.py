@@ -21,16 +21,8 @@ for RAISED it. Now only advances after the symbol's most recent `atomized` line 
 split itself is not one, and the label says what k is: advances without landing, not ticks.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-from mikemol.pathsforward.ledger import Parsed
-from mikemol.pathsforward.model import ordered, text, workable
-
-if TYPE_CHECKING:
-    from mikemol.pathsforward.ledger import Unparsed
-    from mikemol.pathsforward.model import Json
+from mikemol.pathsforward.ledger import Parsed, Unparsed
+from mikemol.pathsforward.model import Json, ordered, text, workable
 
 _TICK_KINDS = ("tick", "interrupt")
 _SPLIT = "atomized"
