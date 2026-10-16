@@ -3,6 +3,7 @@
 
 # ⚑ SCAFFOLDED by mikemol-new-dist (W943) from //cvdcore; the rationale for
 # each shape lives there. `@cvdcore_dev` is declared in MODULE.bazel beside it.
+load("@cvdcore_deps//:requirements.bzl", "requirement")
 load("@cvdcore_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -16,11 +17,15 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ NO `deps`: the shipping hub is empty on purpose; the module is standard library only.
+# ⚑ TWO SHIPPING DEPENDENCIES, numpy and colorspacious, from the `@cvdcore_deps` hub.
 py_library(
     name = "cvdcore",
     srcs = glob(["src/mikemol/cvdcore/**/*.py"]),
     data = glob(["src/mikemol/cvdcore/py.typed"], allow_empty = True),
+    deps = [
+        requirement("colorspacious"),
+        requirement("numpy"),
+    ],
     imports = ["src"],
     visibility = ["//visibility:public"],
 )

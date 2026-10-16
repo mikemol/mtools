@@ -5,3 +5,10 @@
   claim  = {The scaffold compiles, imports and documents itself.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
 }
+
+@misc{cvdcore-dependencies-runtime-dependencies-import,
+  section = {smoke},
+  title  = {Both dependencies import by name, so the hub and the lock agree with the pyproject},
+  claim  = {Both dependencies import by name, so the hub and the lock agree with the pyproject.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dependencies.py -k test_the_runtime_dependencies_import},
+}

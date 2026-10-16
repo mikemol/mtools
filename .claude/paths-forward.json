@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1316,
+  "counter": 1318,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -26970,28 +26970,26 @@
     {
       "symbol": "W1313",
       "title": "Answer el-openglo:W544: Extract cvd_gate pure core (worst_view_dE, Okabe-Ito floor) as a mikemol-* dist",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "el-openglo:W544"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1314"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Umbrella: W1314 (scaffold) then W1315 (port); the dist is mikemol-cvdcore as el-openglo suggested, WCAG and APCA stay out until el-openglo asks",
       "evidence": "",
       "issued_at": "2026-10-15T23:53:48Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
       "last_worked": "2026-10-15T23:54:38Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W1314",
       "title": "Scaffold the empty mikemol-cvdcore dist (import path mikemol.cvdcore) with the new-dist tool and land it alone, per the one-new-dist-at-a-time rule",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1313"
       ],
@@ -27000,34 +26998,37 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run mikemol-new-dist for cvdcore (read its help first), declare numpy and colorspacious as the dependencies with stubs for bazel mypy, commit the empty dist through the gate",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: Landed in mtools 7e65b9c (pushed): the empty cvdcore dist (mikemol.cvdcore) with its smoke test, warrants, MODULE.bazel and INSTALL.md entries. Tool defects found: W1316.",
       "issued_at": "2026-10-15T23:54:29Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
-      "last_worked": "2026-10-16T00:28:31Z",
+      "last_worked": "2026-10-16T00:41:07Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T004107Z"
     },
     {
       "symbol": "W1315",
       "title": "Move el-openglo's cvd_core (worst_view_dE, VIEWS, OKABE_ITO, reference_floor) into mikemol.cvdcore with its 7 selftest arms as pytest tests, typed under the bar",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1313"
       ],
       "touches": [
         "cvdcore"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After the scaffold: read el-openglo/cvd_core.py at the sha its letter will cite, port it module by module under pycheck, turn the 7 arms into tests, add warrants and mutants, land it; then tell el-openglo the par sha to pin",
+      "blocked_on": [
+        "W1317"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: W1317 (dependencies) then W1318 (stubs), then the port itself from el-openglo commit 9a4be98: worst_view_dE, VIEWS, _ucs, OKABE_ITO, reference_floor, reference_floors, rgb; the 7 selftest arms become pytest tests",
       "evidence": "2026-10-15: 2026-10-15 el-openglo-5c (testimony): cvd_core.py is fixed at el-openglo commit 9a4be98 (git show 9a4be98:cvd_core.py); its 7 arms run with python3 -I; cvd_gate re-exports every moved name. el-openglo:W544 is now blocked on mtools:W1315 and will pin at the par sha.",
       "issued_at": "2026-10-15T23:54:31Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
-      "last_worked": "2026-10-15T23:56:27Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-16T00:41:26Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1316",
@@ -27047,6 +27048,47 @@
       "minted_during": "interrupt",
       "caused_by": "W1314",
       "last_worked": "2026-10-16T00:35:04Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1317",
+      "title": "Declare numpy and colorspacious as cvdcore's runtime dependencies: pyproject, uv lock, requirements, the MODULE.bazel pip hub and BUILD deps, with a test that imports both",
+      "status": "working",
+      "enables": [
+        "W1315"
+      ],
+      "touches": [
+        "cvdcore"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Copy how treeio declares pygit2 (pyproject dependencies, MODULE.bazel hub entry, BUILD deps), add numpy and colorspacious, uv lock, build //cvdcore:.venv, land alone",
+      "evidence": "",
+      "issued_at": "2026-10-16T00:41:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1315",
+      "last_worked": "2026-10-16T00:41:27Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1318",
+      "title": "Write typed stubs for the numpy and colorspacious surface cvd_core uses (asarray, linalg.norm, cspace_convert) under cvdcore/stubs, with mypy_path set",
+      "status": "ready",
+      "enables": [
+        "W1315"
+      ],
+      "touches": [
+        "cvdcore"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After the dependencies card: list the exact calls in cvd_core.py at 9a4be98, write .pyi stubs mirroring only those names (as treeio/stubs/pygit2 does), set mypy_path in cvdcore/pyproject.toml, add per-file ignores for the stub names",
+      "evidence": "",
+      "issued_at": "2026-10-16T00:41:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1315",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],

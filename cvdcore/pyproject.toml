@@ -18,7 +18,10 @@ classifiers = [
 ]
 
 # ⚑ NO RUNTIME DEPENDENCY: standard library only.
-dependencies = []
+# ⚑ TWO THIRD-PARTY DEPENDENCIES, numpy and colorspacious (el-openglo:W544): the CAM02-UCS conversion
+# is colorspacious's, the vector arithmetic numpy's. Both are untyped at runtime for mypy, so
+# `stubs` mirrors only the names the module uses, as treeio's stubs do for pygit2.
+dependencies = ["numpy", "colorspacious"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -81,4 +84,5 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/test_dependencies.py" = ["assert"]
 "tests/test_smoke.py" = ["assert"]
