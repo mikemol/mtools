@@ -114,7 +114,7 @@ class PortableReport:
     degraded: str = ""
 
 
-def classify_state(state: str, name: str, *, ddl: bool) -> Verdict:
+def classify_state(state: str, name: str, ddl: bool) -> Verdict:
     """Classify an engine error by its SQLSTATE.
 
     Returns:

@@ -182,12 +182,14 @@ def _has_entry_block(path: str) -> bool | None:
     """
     try:
         tree = ast.parse(Path(path).read_text(encoding="utf-8"), filename=path)
-    except (OSError, UnicodeDecodeError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, UnicodeDecodeError, SyntaxError)):
+            raise
         return None
     return any(isinstance(n, ast.If) and is_entry_test(ast.unparse(n.test)) for n in tree.body)
 
 
-def _at_entry(facts: CallFacts, *, has_block: bool) -> bool:
+def _at_entry(facts: CallFacts, has_block: bool) -> bool:
     """Say whether a call runs on a bare invocation.
 
     Returns:
@@ -199,7 +201,7 @@ def _at_entry(facts: CallFacts, *, has_block: bool) -> bool:
     return not has_block or any(is_entry_test(c) for c in facts.conds)
 
 
-def called_at_entry(path: str, fname: str, *, has_block: bool) -> bool:
+def called_at_entry(path: str, fname: str, has_block: bool) -> bool:
     """Say whether `fname` is called at entry in its own file (the one hop).
 
     Returns:
@@ -209,7 +211,7 @@ def called_at_entry(path: str, fname: str, *, has_block: bool) -> bool:
     return any(_at_entry(f, has_block=has_block) for f in scan([path], fname).facts.values())
 
 
-def _verdict(facts: CallFacts, path: str, *, first_write: bool, has_block: bool) -> str:
+def _verdict(facts: CallFacts, path: str, first_write: bool, has_block: bool) -> str:
     if first_write:
         return FIRST_WRITE
     if _dispatch(facts.conds):
@@ -220,7 +222,7 @@ def _verdict(facts: CallFacts, path: str, *, first_write: bool, has_block: bool)
     return ENTRY if _at_entry(facts, has_block=has_block) else DISPATCHED
 
 
-def _collect(sites: Sites, form: str, best: dict[str, Placement], *, first_write: bool) -> None:
+def _collect(sites: Sites, form: str, best: dict[str, Placement], first_write: bool) -> None:
     for key, facts in sites.facts.items():
         path, line = key[0], key[1]
         has_block = _has_entry_block(path)
@@ -338,7 +340,7 @@ def binds_snapshot_at_entry(paths: Sequence[str]) -> dict[str, Placement]:
     return out
 
 
-def _kind(intent: Placement | None, snap: Placement | None, *, store: bool) -> str:
+def _kind(intent: Placement | None, snap: Placement | None, store: bool) -> str:
     if store:
         return STORE
     i = intent.verdict if intent else ABSENT

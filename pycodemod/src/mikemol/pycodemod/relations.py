@@ -215,7 +215,7 @@ def _previous_word(toks: list[Tok], i: int, lo: int) -> str:
     return ""
 
 
-def _walk(toks: list[Tok], lo: int, hi: int, *, qscope: bool) -> Roles:
+def _walk(toks: list[Tok], lo: int, hi: int, qscope: bool) -> Roles:
     """Return {(name, role)} referenced in `toks[lo:hi]`; role `r` read, `w` written.
 
     ⚑ `DELETE`'S TARGET SITS AFTER `FROM`, the token that introduces every read; the token BEFORE

@@ -15,8 +15,6 @@ accepts a suppression, with the reason as a comment beside it. A rule already li
 twice, and nothing else in the file moves.
 """
 
-from __future__ import annotations
-
 import re
 from typing import cast
 

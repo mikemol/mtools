@@ -55,7 +55,7 @@ class Layout:
     skipped: list[Skip] = field(default_factory=list)
 
 
-def _stmt_name(stmt: ast.stmt, *, first: bool) -> str:
+def _stmt_name(stmt: ast.stmt, first: bool) -> str:
     """Name a simple top-level statement: an import block, a binding, the module docstring.
 
     Returns:
@@ -74,7 +74,7 @@ def _stmt_name(stmt: ast.stmt, *, first: bool) -> str:
     return name
 
 
-def _label(stmt: ast.stmt, *, first: bool) -> tuple[str, str]:
+def _label(stmt: ast.stmt, first: bool) -> tuple[str, str]:
     """Return a top-level statement's kind and name.
 
     Returns:

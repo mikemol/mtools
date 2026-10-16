@@ -82,7 +82,9 @@ def _bare_starts(path: str) -> set[tuple[int, int]]:
     """
     try:
         module = cst.parse_module(Path(path).read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, cst.ParserSyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, UnicodeDecodeError, cst.ParserSyntaxError)):
+            raise
         return set()
     visitor = _Bare()
     MetadataWrapper(module).visit(visitor)

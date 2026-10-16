@@ -213,7 +213,9 @@ def _token_lines(src: str) -> tuple[set[int], set[int]] | None:
                 comments.update(range(tok.start[0], tok.end[0] + 1))
             elif tok.type == tokenize.STRING:
                 strings.update(range(tok.start[0], tok.end[0] + 1))
-    except (tokenize.TokenError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (tokenize.TokenError, SyntaxError)):
+            raise
         return None
     return comments, strings
 

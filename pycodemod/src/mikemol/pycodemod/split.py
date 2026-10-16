@@ -483,7 +483,9 @@ def _owed(
     for caller in callers:
         try:
             tree = ast.parse(Path(caller).read_text(encoding="utf-8"))
-        except (UnicodeDecodeError, OSError, SyntaxError) as exc:
+        except Exception as exc:
+            if not isinstance(exc, (UnicodeDecodeError, OSError, SyntaxError)):
+                raise
             skipped.append(Skip(caller, "unreadable", type(exc).__name__))
             continue
         modules = _aliases(tree, stem)
@@ -682,7 +684,7 @@ def _refuse_unless_writable(p: Plan) -> None:
         raise RefusedError(p.path, "changed since it was planned")
 
 
-def apply(p: Plan, *, write: bool | None = None) -> tuple[Written, ...]:
+def apply(p: Plan, write: bool | None = None) -> tuple[Written, ...]:
     """Write the plan, or say what writing it would do. The choice is REQUIRED.
 
     The entry module goes last. A sibling that already exists with different content is refused

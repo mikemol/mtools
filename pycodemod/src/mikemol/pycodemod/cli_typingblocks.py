@@ -42,7 +42,9 @@ def measure(root: Path, rel: Path, run: Runner) -> Counter[str] | str:
     del run
     try:
         module = cst.parse_module((root / rel).read_text(encoding="utf-8"))
-    except (OSError, cst.ParserSyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, cst.ParserSyntaxError)):
+            raise
         return _SYNTAX
     names = m.findall(module, m.Name(GUARD))
     return Counter({GUARD: len(names)}) if names else Counter()
@@ -102,7 +104,7 @@ def tested(root: Path, python: Path, snapshot: dict[str, str], run: Runner) -> i
     return _FAILED
 
 
-def print_typing_blocks_tree(roots: Sequence[str], *, write: bool, run: Runner = run_tool) -> int:
+def print_typing_blocks_tree(roots: Sequence[str], write: bool, run: Runner = run_tool) -> int:
     """Run `type-checking-imports` over each project's `src`, then its tests ONCE.
 
     ⚑ ONE PROJECT AT A TIME, EACH UNDER ITS OWN VENV AND ITS OWN TESTS: a root with no `src` or no

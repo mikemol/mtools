@@ -8,23 +8,16 @@ nothing new appears; `codon-prep-tree` drives it, with the project's tests as th
 call site relied on the enforcement (a positional call that used to be an error now binds).
 """
 
-from __future__ import annotations
-
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import replace
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import libcst as cst
 import libcst.matchers as m
 
 from mikemol.pycodemod import kwonly
-from mikemol.pycodemod.cli_typedargs import Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.pycodemod.cli_typedargs import Runner
+from mikemol.pycodemod.cli_typedargs import Plan, Runner, TypedArgsFlags, print_judged, run_tool
 
 LABEL = "kwonly-drop"
 MARKER = "bare star marker"
@@ -41,7 +34,9 @@ def measure(root: Path, rel: Path, run: Runner) -> Counter[str] | str:
     del run
     try:
         module = cst.parse_module((root / rel).read_text(encoding="utf-8"))
-    except (OSError, cst.ParserSyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, cst.ParserSyntaxError)):
+            raise
         return _SYNTAX
     found = m.findall(module, m.Parameters(star_arg=m.ParamStar()))
     return Counter({MARKER: len(found)}) if found else Counter()

@@ -126,7 +126,7 @@ def string_constants(paths: Sequence[str]) -> tuple[set[str], list[Skip]]:
     return found, skipped
 
 
-def _excuse(name: str, constants: set[str], *, registered: bool) -> str | None:
+def _excuse(name: str, constants: set[str], registered: bool) -> str | None:
     if name.startswith(_DUNDER) and name.endswith(_DUNDER):
         return "dunder — invoked by the runtime"
     if name in ENTRY_POINTS:

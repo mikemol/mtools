@@ -189,7 +189,7 @@ def _relative(root: Path, path: Path) -> Path | None:
         return None
 
 
-def _settle(label: str, path: Path, changes: int, verdict: Verdict, *, write: bool) -> int:
+def _settle(label: str, path: Path, changes: int, verdict: Verdict, write: bool) -> int:
     # Say what happened to a judged file, write it only if accepted; the exit contribution.
     moved = f"findings {verdict.before}->{verdict.after}"
     if verdict.error is not None:

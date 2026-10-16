@@ -204,7 +204,7 @@ def _put_back(root: Path, original: str | None) -> None:
         (root / "pyproject.toml").write_text(original, encoding="utf-8")
 
 
-def print_codon_prep_tree(roots: Sequence[str], *, write: bool, run: Runner = run_tool) -> int:
+def print_codon_prep_tree(roots: Sequence[str], write: bool, run: Runner = run_tool) -> int:
     """Run both verbs over each project's `src`, proving each project before it is kept.
 
     Returns:

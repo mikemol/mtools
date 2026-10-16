@@ -86,7 +86,7 @@ def _spdx_id(line: str) -> str:
     return line.split(SPDX_KEY, 1)[1].strip()
 
 
-def plan(text: str, *, spdx: str, holder: str | None, year: int) -> Plan:
+def plan(text: str, spdx: str, holder: str | None, year: int) -> Plan:
     """Decide one file's header, and the text it should become.
 
     `holder` given: the header is SPDX plus `# Copyright (c) <year> <holder>`. Absent: SPDX only.

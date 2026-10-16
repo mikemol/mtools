@@ -62,7 +62,7 @@ def _read(path: str) -> str | Skip:
         return Skip(path, "unreadable", type(exc).__name__)
 
 
-def shape_sites(pattern: str, paths: Sequence[str], *, in_code_only: bool = True) -> Shapes:
+def shape_sites(pattern: str, paths: Sequence[str], in_code_only: bool = True) -> Shapes:
     """Return every line in `paths` matching `pattern`, in code lines only unless told otherwise.
 
     Returns:
@@ -82,7 +82,9 @@ def shape_sites(pattern: str, paths: Sequence[str], *, in_code_only: bool = True
         if in_code_only:
             try:
                 code = code_lines(src)
-            except (tokenize.TokenError, SyntaxError) as exc:
+            except Exception as exc:
+                if not isinstance(exc, (tokenize.TokenError, SyntaxError)):
+                    raise
                 out.skipped.append(Skip(path, "untokenizable", type(exc).__name__))
                 continue
             hits = [(i, ln) for i, ln in hits if i in code]

@@ -152,7 +152,7 @@ def decode_with_remainder(fp: int, rev: Iterable[tuple[int, str]]) -> tuple[list
     return keys, remaining
 
 
-def decode(fp: int, rev: Iterable[tuple[int, str]], *, strict: bool = False) -> list[str]:
+def decode(fp: int, rev: Iterable[tuple[int, str]], strict: bool = False) -> list[str]:
     """Return the understood keys; an unknown remainder is swallowed unless `strict`.
 
     Returns:

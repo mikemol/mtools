@@ -96,7 +96,9 @@ def _warrants(manifest: Path) -> tuple[str, ...] | Skip:
     """
     try:
         doc: object = tomllib.loads(manifest.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError)):
+            raise
         return Skip(str(manifest), "unreadable", type(exc).__name__)
     listed = _record(_record(doc).get("paper")).get("warrants")
     if listed is None:
@@ -142,7 +144,6 @@ def paperkit_projects(
     root: Path,
     resolve_token: Resolver,
     exclude: Sequence[str] = (),
-    *,
     include_worktrees: bool = False,
 ) -> Projects:
     """Find every paperkit project under `root` and decide which of its bibs are foreign.

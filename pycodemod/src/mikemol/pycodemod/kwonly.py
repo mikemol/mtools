@@ -17,8 +17,6 @@ may; so `def f(a, b=1, *, c)` has no plain spelling. Such a signature is listed 
 left. A `*args` marker is not bare and is never touched; `**kwargs` stays last.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import override
 

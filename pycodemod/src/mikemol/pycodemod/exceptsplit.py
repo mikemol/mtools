@@ -28,8 +28,6 @@ element, a call, a variable naming a tuple) is listed with its line, since split
 longer a text move. A bare `except:` and an `except A:` are already the target spelling.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import override
 

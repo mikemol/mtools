@@ -93,7 +93,9 @@ def print_split(paths: Sequence[str], flags: SplitFlags) -> int:
     _print_plan(found)
     try:
         rows = apply(found, write=flags.apply)
-    except (RefusedError, ExistsError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (RefusedError, ExistsError)):
+            raise
         sys.stdout.write(f"refused: {exc}\n")
         return REFUSED
     _print_written(rows)

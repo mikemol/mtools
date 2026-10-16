@@ -34,7 +34,9 @@ def measure(root: Path, rel: Path, run: Runner) -> Counter[str] | str:
     del run
     try:
         module = cst.parse_module((root / rel).read_text(encoding="utf-8"))
-    except (OSError, cst.ParserSyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, cst.ParserSyntaxError)):
+            raise
         return _SYNTAX
     found = m.findall(module, m.TypeAlias())
     return Counter({STATEMENT: len(found)}) if found else Counter()

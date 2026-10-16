@@ -207,7 +207,7 @@ PYTHON_BOUNDARY = Boundary(
 )
 
 
-def sql_form(construct: str, kind: str, *, loop_is_row: bool) -> str:
+def sql_form(construct: str, kind: str, loop_is_row: bool) -> str:
     """Return the relational form of a (construct, kind) pair, or `unknown` when none is named.
 
     ⚑ KEYED ON THE PAIR AND THE LOOP'S PROVENANCE, never on a site's text: an early exit has a form

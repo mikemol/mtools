@@ -75,7 +75,7 @@ def plan_future_import(text: str) -> Plan:
     return Plan(planned.text, changes, worklist)
 
 
-def print_future_import_tree(roots: Sequence[str], *, write: bool, run: Runner = run_tool) -> int:
+def print_future_import_tree(roots: Sequence[str], write: bool, run: Runner = run_tool) -> int:
     """Run `future-import` over each project's `src` tree, each judged by its own venv.
 
     ⚑ ONE PROJECT AT A TIME, EACH UNDER ITS OWN JUDGE: a root with no `src` or no `.venv/bin/ruff`

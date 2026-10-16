@@ -1108,7 +1108,9 @@ def _handle_header(ns: argparse.Namespace) -> int:
     for path in paths:
         try:
             text = Path(path).read_text(encoding="utf-8", newline="")
-        except (OSError, UnicodeDecodeError) as exc:
+        except Exception as exc:
+            if not isinstance(exc, (OSError, UnicodeDecodeError)):
+                raise
             skipped.append(("unreadable", type(exc).__name__))
             continue
         result = header_plan(text, spdx=_str(ns, "spdx"), holder=holder, year=_int(ns, "year"))
@@ -1655,7 +1657,9 @@ def _expand_operands(ns: argparse.Namespace) -> int | None:
             include_worktrees=_flag(ns, "include_worktrees"),
             exclude=_opt_str_list(ns, "exclude"),
         )
-    except (WorktreeRefusedError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (WorktreeRefusedError, ValueError)):
+            raise
         sys.stdout.write(f"{exc}\n")
         return _REFUSED
     if got.directories:

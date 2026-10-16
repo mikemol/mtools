@@ -111,7 +111,9 @@ def _run(git: str, args: Sequence[str], root: str) -> subprocess.CompletedProces
             timeout=_TIMEOUT,
             check=False,
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, subprocess.SubprocessError)):
+            raise
         msg = f"git could not be run: {exc}"
         raise GitRefusedError(msg) from exc
 

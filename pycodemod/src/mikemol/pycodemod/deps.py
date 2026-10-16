@@ -133,7 +133,9 @@ def declared_imports(manifest: Path) -> frozenset[str]:
     """
     try:
         doc: object = tomllib.loads(manifest.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError)):
+            raise
         msg = f"cannot read {manifest} as a pyproject: {type(exc).__name__}"
         raise ManifestError(msg) from exc
     project = _record(_record(doc).get("project"))
@@ -168,7 +170,9 @@ def _verdict(top: str, declared: frozenset[str]) -> str:
         return STDLIB
     try:
         spec = importlib.util.find_spec(top)
-    except (ImportError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (ImportError, ValueError)):
+            raise
         spec = None
     if spec is None:
         return MISSING

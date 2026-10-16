@@ -166,7 +166,7 @@ def _rows(path: str, node: ast.stmt, scope: str, local: frozenset[str] | None) -
 
 
 def aliases(
-    paths: Sequence[str], *, local_only: bool = True, extra_local: Iterable[str] = ()
+    paths: Sequence[str], local_only: bool = True, extra_local: Iterable[str] = ()
 ) -> Aliases:
     """Return every import in `paths` graded by form, local modules only unless told otherwise.
 

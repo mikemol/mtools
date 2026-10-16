@@ -8,23 +8,16 @@ accepted when that count falls and nothing new appears. `codon-prep-tree` drives
 project's tests as the check that the split changed no behaviour.
 """
 
-from __future__ import annotations
-
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import replace
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import libcst as cst
 import libcst.matchers as m
 
 from mikemol.pycodemod import exceptsplit
-from mikemol.pycodemod.cli_typedargs import Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.pycodemod.cli_typedargs import Runner
+from mikemol.pycodemod.cli_typedargs import Plan, Runner, TypedArgsFlags, print_judged, run_tool
 
 LABEL = "except-split"
 HANDLER = "except tuple"
@@ -41,7 +34,9 @@ def measure(root: Path, rel: Path, run: Runner) -> Counter[str] | str:
     del run
     try:
         module = cst.parse_module((root / rel).read_text(encoding="utf-8"))
-    except (OSError, cst.ParserSyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, cst.ParserSyntaxError)):
+            raise
         return _SYNTAX
     found = m.findall(module, m.ExceptHandler(type=m.Tuple()))
     return Counter({HANDLER: len(found)}) if found else Counter()

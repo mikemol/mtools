@@ -95,7 +95,7 @@ class _Source:
     spots: Mapping[cst.CSTNode, CodeRange]
     starts: list[int]
 
-    def at(self, node: cst.CSTNode, *, end: bool = False) -> int:
+    def at(self, node: cst.CSTNode, end: bool = False) -> int:
         # The character offset of a node's start (or end).
         pos = self.spots[node].end if end else self.spots[node].start
         return self.starts[pos.line - 1] + pos.column
@@ -164,7 +164,7 @@ def _many(keywords: Mapping[str, cst.BaseExpression], action: str) -> bool | Non
     return True if text in MANY_NARGS else None
 
 
-def _optional(keywords: Mapping[str, cst.BaseExpression], *, positional: bool) -> bool:
+def _optional(keywords: Mapping[str, cst.BaseExpression], positional: bool) -> bool:
     # Whether the parser can leave the destination as None.
     default = keywords.get("default")
     if default is not None:

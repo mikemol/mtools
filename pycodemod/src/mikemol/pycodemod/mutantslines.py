@@ -17,13 +17,8 @@ the formatted source; this asks only whether the pattern occurs in the file, so 
 certainly stale. A line whose text is not five fields is reported as malformed, not skipped.
 """
 
-from __future__ import annotations
-
 import re
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
+from collections.abc import Callable
 
 _FIELDS = 5
 

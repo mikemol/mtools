@@ -191,7 +191,9 @@ def package_root(modname: str) -> tuple[str | None, str]:
     """
     try:
         spec = importlib.util.find_spec(modname)
-    except (ImportError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (ImportError, ValueError)):
+            raise
         return None, f"not importable here: {exc}"
     if spec is None:
         return None, "not importable here: no such module"
@@ -213,7 +215,9 @@ def roundtrip(path: str) -> tuple[bool, str]:
     """
     try:
         src = Path(path).read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, UnicodeDecodeError)):
+            raise
         return False, f"unreadable: {exc}"
     try:
         out = cst.parse_module(src).code
@@ -291,7 +295,9 @@ def _literal(text: str) -> Value:
     """
     try:
         got: object = ast.literal_eval(text)
-    except (ValueError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, SyntaxError)):
+            raise
         return UNKNOWN
     if isinstance(got, (int, float, complex, str, bool)) or got is None:
         return got
@@ -425,5 +431,9 @@ def per_file[T](
     try:
         with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
             return [row for rows in pool.map(fn, files, chunksize=4) for row in rows]
-    except (OSError, RuntimeError, concurrent.futures.process.BrokenProcessPool):
+    except Exception as caught:
+        if not isinstance(
+            caught, (OSError, RuntimeError, concurrent.futures.process.BrokenProcessPool)
+        ):
+            raise
         return [row for path in files for row in fn(path)]

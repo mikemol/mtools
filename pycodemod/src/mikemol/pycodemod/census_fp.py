@@ -129,7 +129,9 @@ def modelled_keys(paths: Iterable[str]) -> Modelled:
         except OSError as exc:
             skipped.append(Skip(path, "unreadable", type(exc).__name__))
             continue
-        except (SyntaxError, ValueError) as exc:
+        except Exception as exc:
+            if not isinstance(exc, (SyntaxError, ValueError)):
+                raise
             skipped.append(Skip(path, "unparseable", type(exc).__name__))
             continue
         keys |= referents(tree) | _declared_names(tree)
