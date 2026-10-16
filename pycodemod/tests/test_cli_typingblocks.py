@@ -25,10 +25,11 @@ if TYPE_CHECKING:
 SOURCE = "from typing import TYPE_CHECKING\n\nif TYPE_CHECKING:\n    from a import B\n\nx = 1\n"
 NAME = "mod.py"
 _SELFTEST = "selftest-cmd"
+_TWO = 2
 _GUARD_IMPORT = "from typing import TYPE_CHECKING\n"
 
 
-def _runner(selftest_exit: int = 0) -> Runner:
+def _runner(selftest_exit: int = 0, tests_exit: int = 0) -> Runner:
     # A stand-in for the project's ruff and test run; its fix removes the guard import.
     def run(argv: Sequence[str], cwd: Path) -> tuple[int, str, str]:
         if "--fix" in argv:
@@ -38,6 +39,8 @@ def _runner(selftest_exit: int = 0) -> Runner:
             )
         if argv[0] == _SELFTEST:
             return selftest_exit, "", ""
+        if argv[1:2] == ["-m"]:
+            return tests_exit, "", "1 failed" if tests_exit else ""
         return 0, "", ""
 
     return run
@@ -68,6 +71,21 @@ def test_a_failing_selftest_refuses_the_file_and_leaves_it(
     assert print_typing_blocks([str(target)], flags, _runner(selftest_exit=1)) == 1
     assert target.read_text(encoding="utf-8") == SOURCE
     assert "selftest failed" in capsys.readouterr().out
+
+
+def test_failing_dist_tests_after_a_write_restore_every_file_and_are_exit_two(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A cycle shows only when the dist's tests run: they run once, and their failure undoes it."""
+    root = tmp_path / "proj"
+    (root / "src").mkdir(parents=True)
+    (root / ".venv" / "bin").mkdir(parents=True)
+    (root / ".venv" / "bin" / "python").write_text("", encoding="utf-8")
+    target = root / "src" / NAME
+    target.write_text(SOURCE, encoding="utf-8")
+    assert print_typing_blocks_tree([str(root)], write=True, run=_runner(tests_exit=1)) == _TWO
+    assert target.read_text(encoding="utf-8") == SOURCE
+    assert "every file restored" in capsys.readouterr().out
 
 
 def test_the_tree_driver_runs_each_project_with_its_own_tests_and_skips_one_without(

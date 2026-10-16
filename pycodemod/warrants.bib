@@ -6480,3 +6480,11 @@
   claim  = {A project with src and a python is judged with its own pytest; one without is skipped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typingblocks.py -k test_the_tree_driver_runs_each_project_with_its_own_tests_and_skips_one_without},
 }
+
+@misc{pycodemod-cli-typingblocks-failing-dist-tests-after-a-write-restore-every-file-and-are-exit-two,
+  section = {cli_typingblocks},
+  title  = {A cycle shows only when the dist's tests run: they run once, and their failure undoes it},
+  claim  = {A cycle shows only when the dist's tests run: they run once, and their failure undoes
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_typingblocks.py -k test_failing_dist_tests_after_a_write_restore_every_file_and_are_exit_two},
+}
