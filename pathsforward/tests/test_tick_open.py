@@ -71,7 +71,12 @@ def test_it_takes_the_lock_as_the_holder_and_prints_the_matching_close(
     lock = cast("Rec", _doc(path)["lock"])
     assert lock["holder"] == "mtools-tick-opus"
     assert _ticks(path) == 1
-    assert "--unlock mtools-tick-opus" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "--unlock mtools-tick-opus" in out
+    assert "inbound: no unclaimed asks" in out
+    root = str(path.parent / "x")
+    assert cli.main(["--state", str(path), "--inbound", "--root", root]) == _OK
+    assert not capsys.readouterr().out
 
 
 def test_a_second_open_while_held_stops_before_any_other_step(tmp_path: Path) -> None:

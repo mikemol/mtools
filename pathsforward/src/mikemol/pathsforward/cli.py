@@ -2061,11 +2061,14 @@ def _inbound(ctx: Ctx) -> int:
 
     """
     found = inbound.census(_root(ctx), inbound.repo_name(ctx.path), store.load(ctx.path))
-    for ask in found.asks:
-        if not ask.claimed_by or ctx.opts.get("all"):
-            _say(inbound.ask_line(ctx.path, ask))
+    shown = [ask for ask in found.asks if not ask.claimed_by or ctx.opts.get("all")]
+    for ask in shown:
+        _say(inbound.ask_line(ctx.path, ask))
     for entry in found.unreadable:
         _say(f"UNREADABLE {entry}")
+    # ⚑ W1111: under --tick-open every step speaks, so an empty inbound reads as a reading.
+    if ctx.get("tick_open") and not shown and not found.unreadable:
+        _say("inbound: no unclaimed asks")
     return EXIT_OK
 
 
