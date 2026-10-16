@@ -5232,3 +5232,45 @@
             the same things.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_triage.py -k test_a_series_that_differs_only_in_the_file_it_names_is_not_a_duplicate},
 }
+
+@misc{pathsforward-dropto-dry-run-names-each-repoint-and-drops-nothing,
+  section = {dropto},
+  title  = {W3 waits on W1: the line says WOULD REPOINT onto W2, and W1 is still in the file},
+  claim  = {W3 waits on W1: the line says WOULD REPOINT onto W2, and W1 is still in the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_dry_run_names_each_repoint_and_drops_nothing},
+}
+
+@misc{pathsforward-dropto-write-repoints-both-lists-and-drops-the-card,
+  section = {dropto},
+  title  = {blocked_on and enables both move to the survivor; the dropped card is in residue},
+  claim  = {blocked_on and enables both move to the survivor; the dropped card is in residue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_write_repoints_both_lists_and_drops_the_card},
+}
+
+@misc{pathsforward-dropto-survivor-already-named-is-not-listed-twice,
+  section = {dropto},
+  title  = {W3 waits on both: after the drop it waits on W2 once},
+  claim  = {W3 waits on both: after the drop it waits on W2 once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_survivor_already_named_is_not_listed_twice},
+}
+
+@misc{pathsforward-dropto-survivor-that-is-dropped-closed-or-absent-is-refused,
+  section = {dropto},
+  title  = {The controls: itself, a done card and a card that is not in the queue all refuse},
+  claim  = {The controls: itself, a done card and a card that is not in the queue all refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_survivor_that_is_dropped_closed_or_absent_is_refused},
+}
+
+@misc{pathsforward-dropto-write-without-a-survivor-is-refused,
+  section = {dropto},
+  title  = {A plain drop is already written, so --write there would be accepted in silence},
+  claim  = {A plain drop is already written, so --write there would be accepted in silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_write_without_a_survivor_is_refused},
+}
+
+@misc{pathsforward-dropto-plain-drop-is-unchanged,
+  section = {dropto},
+  title  = {The control: no --on means the old behaviour, a drop at once and the edges left alone},
+  claim  = {The control: no --on means the old behaviour, a drop at once and the edges left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_plain_drop_is_unchanged},
+}

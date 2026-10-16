@@ -32,6 +32,7 @@ from mikemol.pathsforward import (
     bulkblock,
     certify,
     delivered,
+    dropto,
     embargo,
     foreign,
     gate,
@@ -476,7 +477,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "add": frozenset(
         {"next", "enables", "touches", "caused_by", "witness", "witness_lang", "admit", "root"}
     ),
-    "drop": frozenset({"admit", "gate", "reference_arm", "root"}),
+    "drop": frozenset({"admit", "gate", "reference_arm", "root", "on", "write"}),
     "bump_blocked": frozenset({"exclude", "verbose"}),
     "block_matching": frozenset({"on", "write"}),
     # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
@@ -613,7 +614,13 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         default=None,
         help="--inbound: also print the CLAIMED rows (default: only the UNCLAIMED ones)",
     )
-    ap.add_argument("--on", metavar="SYMBOL", help="--block-matching: the card the matches wait on")
+    ap.add_argument(
+        "--on",
+        "--onto",
+        dest="on",
+        metavar="SYMBOL",
+        help="--block-matching: the card the matches wait on; --drop: the survivor to repoint to",
+    )
     ap.add_argument(
         "--write",
         action="store_true",
@@ -1755,13 +1762,24 @@ def _add(ctx: Ctx) -> int:
 
 
 def _drop(ctx: Ctx) -> int:
-    """Move a waypoint to residue.
+    """Move a waypoint to residue; with `--on SURVIVOR` repoint its edges first, dry run first.
+
+    ⚑ `--on` (also `--onto`) NAMES THE CARD THAT SURVIVES THE DROPPED ONE (mtools:W1333): every
+    `blocked_on` and `enables` naming the dropped card is moved to the survivor, so the drop leaves
+    no `--check` finding behind. Without `--write` the repoints are only listed and nothing is
+    dropped; a plain `--drop` with no `--on` is unchanged and already written.
 
     Returns:
         EXIT_OK.
 
+    Raises:
+        RefusedError: on `--write` with no `--on`.
+
     """
     sym, reason = ctx.many("drop") or ("", "")
+    if ctx.opts.get("write") and ctx.get("on") is None:
+        msg = "--drop: --write belongs to --on SURVIVOR; a plain drop is already written"
+        raise RefusedError(msg)
     # ⚑ UNDER --admit A DROP MUST SAY WHERE IT DIED (W851), checked BEFORE anything moves so a
     # refused drop leaves the waypoint live; without --admit the old two-operand drop is unchanged.
     account = (
@@ -1770,7 +1788,26 @@ def _drop(ctx: Ctx) -> int:
         else None
     )
 
+    survivor = ctx.get("on")
+    write = bool(ctx.opts.get("write"))
+
     def edit(state: State) -> int:
+        if survivor is not None:
+            found = dropto.plan(state, sym, survivor)
+            verb = "REPOINTED" if write else "WOULD REPOINT"
+            planned = [
+                (
+                    f"{r.card}.{r.field}",
+                    f"repoint {r.card} {r.field} {sym}",
+                    f"{verb} {r.card} {r.field}: {sym} -> {'(removed)' if r.removed else survivor}",
+                )
+                for r in found
+            ]
+            _advise(ctx, state, ("drop-onto", f"{sym}->{survivor}"), planned)
+            if not write:
+                _say(f"WOULD DROP {sym} onto {survivor}; nothing is dropped without --write")
+                return EXIT_OK
+            dropto.apply(state, found, sym, survivor)
         ops.drop(state, sym, reason, ctx.stamp(), account)
         _say(f"{sym} -> residue; state_hash={v2(state.waypoints)}")
         return EXIT_OK

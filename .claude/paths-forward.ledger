@@ -2070,3 +2070,7 @@
 2026-10-16T01:52:34Z  interrupt W1330 minted    -         "Bring mtools' unblocked frontier from about 78 ready to 10 or fewer by closing, dropping, blocking and chaining against proof (umbrella)"  evidence=github-8f
 2026-10-16T01:57:53Z  interrupt W1331 minted    -         "Triage mtools' own ready cards by hand against proof and report counts before and after"  evidence=W1330
 2026-10-16T01:57:54Z  interrupt W1332 minted    -         "A dry-run-first paths-forward --triage proposes ready-with-blocker, inverted-umbrella and duplicate repairs through the advice store"  evidence=W1330
+2026-10-16T02:07:40Z  interrupt W1333 minted    -         "--drop W REASON --onto SURVIVOR repoints every blocked_on and enables edge naming the dropped card to the survivor, dry-run first"  evidence=github-8f
+2026-10-16T02:07:41Z  interrupt W1334 minted    -         "A bulk --drop over a selector with a per-card reason, all-or-none, through the advice store"  evidence=github-8f
+2026-10-16T02:07:41Z  interrupt W1335 minted    -         "--show accepts several symbols and prints one record each in the order given"  evidence=github-8f
+2026-10-16T02:07:42Z  interrupt W1336 minted    -         "A mode reads a card that cites an inbox letter and reports whether the letter is answered, archived or still open"  evidence=github-8f

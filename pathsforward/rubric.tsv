@@ -67,3 +67,4 @@ session	The session process behind a tick lock
 lock_session	A tick lock is stale when its session process is gone
 triage	Frontier triage proposals
 triage_cli	Frontier triage on the command line
+dropto	Dropping a card onto its survivor
