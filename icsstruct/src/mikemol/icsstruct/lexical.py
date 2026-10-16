@@ -28,8 +28,8 @@ bare LF, which hand-edited files have.
 
 from dataclasses import dataclass, replace
 
-type Nesting = tuple[tuple[str, int], ...]
-type Params = tuple[tuple[str, str], ...]
+Nesting = tuple[tuple[str, int], ...]
+Params = tuple[tuple[str, str], ...]
 
 _ORPHAN = "continuation with nothing to fold onto"
 
@@ -58,7 +58,7 @@ class Malformed:
     reason: str
 
 
-type Record = ContentLine | Malformed
+Record = ContentLine | Malformed
 
 
 @dataclass(frozen=True, slots=True)

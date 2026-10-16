@@ -21,9 +21,11 @@ from dataclasses import dataclass
 from typing import override
 
 import libcst as cst
+import libcst.matchers as m
 from libcst.metadata import MetadataWrapper, PositionProvider
 
 _KEPT = "a type statement with type parameters has no plain alias spelling"
+_KEPT_RECURSIVE = "a recursive alias names itself, which a plain assignment cannot (NameError)"
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,9 +55,13 @@ class _Rewriter(cst.CSTTransformer):
             the assignment, or the statement unchanged when it has type parameters.
 
         """
-        if updated_node.type_parameters is not None:
+        recursive = any(
+            isinstance(found, cst.Name) and found.value == updated_node.name.value
+            for found in m.findall(updated_node.value, m.Name())
+        )
+        if updated_node.type_parameters is not None or recursive:
             line = self.get_metadata(PositionProvider, original_node).start.line
-            self.kept.append((line, _KEPT))
+            self.kept.append((line, _KEPT_RECURSIVE if recursive else _KEPT))
             return updated_node
         self.rewritten += 1
         return cst.Assign(

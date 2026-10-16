@@ -124,7 +124,9 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
         return BaselineState.ABSENT, frozenset()
     try:
         body = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, UnicodeDecodeError)):
+            raise
         return BaselineState.UNREAD, frozenset()
     # ⚑⚑⚑ A `#` LINE IS A COMMENT, NOT A KEY, AND THIS READER TREATED IT AS ONE. Measured: the
     # domain witness appends a nonce to this file as a `#` comment — deliberately, so that the
@@ -144,7 +146,7 @@ def read_baseline(path: Path) -> tuple[BaselineState, frozenset[str]]:
     return (BaselineState.EMPTY if not keys else BaselineState.OK), keys
 
 
-def partition(current: Iterable[str], baseline: Iterable[str], *, schema: str = RUFF) -> Diff:
+def partition(current: Iterable[str], baseline: Iterable[str], schema: str = RUFF) -> Diff:
     """Split the census against its baseline into growth and paydown.
 
     ⚑⚑ EVERY KEY ON BOTH SIDES IS PARSED UNDER THE DECLARED `schema` BEFORE ANY IS COMPARED, so
@@ -234,7 +236,7 @@ def partition(current: Iterable[str], baseline: Iterable[str], *, schema: str = 
     )
 
 
-def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
+def write_baseline(path: Path, keys: Iterable[str], write: bool) -> None:
     """Record `keys` as the baseline, and CONFIRM WHAT LANDED rather than what was intended.
 
     ⚑⚑ `write` IS KEYWORD-ONLY AND REQUIRED. There is no environment variable and no
@@ -266,7 +268,7 @@ def write_baseline(path: Path, keys: Iterable[str], *, write: bool) -> None:
 
 
 def ratchet(
-    current: Iterable[str], path: Path, *, write: bool, schema: str = RUFF
+    current: Iterable[str], path: Path, write: bool, schema: str = RUFF
 ) -> tuple[int, list[str]]:
     """Run the paydown-only ratchet. Return (exit code, report lines).
 
@@ -305,7 +307,9 @@ def ratchet(
         ]
     try:
         diff = partition(current, base, schema=schema)
-    except (MalformedKeyError, UnknownSchemaError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (MalformedKeyError, UnknownSchemaError)):
+            raise
         return 1, [f"key schema {schema!r} refused: {exc}"]
     lines: list[str] = []
     # ⚑ MOVES ARE REPORTED, NEVER SILENT. A relocation that vanished from the transcript would be

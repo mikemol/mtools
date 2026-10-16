@@ -70,7 +70,15 @@ namespace-packages = ["src/mikemol", "tests"]
 [tool.ruff.lint]
 preview = true
 select = ["ALL"]
-ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    # ⚑ CODON REJECTS A BARE `*,` (mtools:W1340): the keyword-only marker that kept a boolean out of
+    # the positional slot is gone, so the rules that demand it are off for this dist.
+    "boolean-type-hint-positional-argument",
+    "boolean-default-value-positional-argument",
+]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true

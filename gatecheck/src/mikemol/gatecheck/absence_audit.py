@@ -295,7 +295,7 @@ def _audit_files(files: Sequence[str]) -> int:
     return report(bad) if bad else 0
 
 
-def main(argv: Sequence[str] | None = None, *, stdin: TextIO | None = None) -> int:
+def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
     """Run the audit in selftest, files, transcript or Stop-hook mode.
 
     `argv` excludes the program name. `stdin` is the Stop-hook JSON source (default: stdin).

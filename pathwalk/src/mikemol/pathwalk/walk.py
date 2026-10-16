@@ -89,7 +89,10 @@ def registered(root: Path) -> list[Path]:
             timeout=_TIMEOUT,
             check=False,
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except OSError as exc:
+        msg = f"refused: git could not be run: {exc}"
+        raise WorktreeRefusedError(msg) from exc
+    except subprocess.SubprocessError as exc:
         msg = f"refused: git could not be run: {exc}"
         raise WorktreeRefusedError(msg) from exc
     if proc.returncode != 0:
@@ -165,7 +168,6 @@ def _walk(
 
 def expand(
     operands: Sequence[str],
-    *,
     include_worktrees: bool,
     suffix: str = _SUFFIX,
     exclude: Sequence[str] | None = None,

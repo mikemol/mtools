@@ -97,7 +97,6 @@ def new_marker() -> str:
 
 def main(
     argv: Sequence[str] | None = None,
-    *,
     run_hook: Callable[[str], tuple[int, str]] = hook,
     make_marker: Callable[[], str] = new_marker,
 ) -> int:

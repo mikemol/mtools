@@ -34,12 +34,13 @@ def _flags(root: Path, *, write: bool) -> TypedArgsFlags:
 
 
 def test_a_splittable_tuple_is_written_when_the_count_falls(tmp_path: Path) -> None:
-    """Two clauses where there was a tuple; the judge saw the tuple count go from one to none."""
+    """One guarded clause where there was a tuple; the judge saw the count go from one to none."""
     target = tmp_path / NAME
     target.write_text(SPLITTABLE, encoding="utf-8")
     assert print_except_split([str(target)], _flags(tmp_path, write=True), _ruff) == 0
-    assert "except OSError:" in target.read_text(encoding="utf-8")
-    assert "except ValueError:" in target.read_text(encoding="utf-8")
+    written = target.read_text(encoding="utf-8")
+    assert "except Exception as caught:" in written
+    assert "isinstance(caught, (OSError, ValueError))" in written
 
 
 def test_a_tuple_the_planner_cannot_split_is_a_worklist_row_and_nothing_is_written(

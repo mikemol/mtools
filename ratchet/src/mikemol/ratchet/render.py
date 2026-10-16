@@ -96,7 +96,11 @@ def renderer(voice: Voice) -> Callable[[str], str]:
             return key
         try:
             return custom(key) or key
-        except (KeyError, IndexError, AttributeError, TypeError, ValueError):
+        except Exception as caught:
+            if not isinstance(
+                caught, (KeyError, IndexError, AttributeError, TypeError, ValueError)
+            ):
+                raise
             return key
 
     return _render
@@ -163,7 +167,7 @@ def moved_lines(moved: set[tuple[str, str]], voice: Voice) -> list[str]:
 
 
 def paid_lines(
-    paid: set[str], sizes: tuple[int, int], voice: Voice, *, verb: str, dry: bool
+    paid: set[str], sizes: tuple[int, int], voice: Voice, verb: str, dry: bool
 ) -> list[str]:
     """Render paydown, given the (before, after) baseline sizes, whether or not keys were added.
 

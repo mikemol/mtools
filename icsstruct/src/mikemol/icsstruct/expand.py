@@ -26,7 +26,7 @@ import recurring_ical_events
 
 from mikemol.icsstruct.lexical import ContentLine, Malformed, Record
 
-type Component = tuple[Record, ...]
+Component = tuple[Record, ...]
 
 # ⚑ MEASURED, NOT GUESSED (W259 probe): a bad RRULE raises recurring-ical-events'
 # BadRuleStringFormat and a bad DTSTART or EXDATE raises icalendar's BrokenCalendarProperty, both
@@ -58,7 +58,7 @@ class Unexpandable:
     reason: str
 
 
-type Expanded = Occurrence | Unexpandable
+Expanded = Occurrence | Unexpandable
 
 
 def components(records: tuple[Record, ...], name: str) -> list[Component]:

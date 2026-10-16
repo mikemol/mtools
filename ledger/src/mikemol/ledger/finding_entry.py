@@ -80,7 +80,7 @@ def render(key: str, spec: Spec, note: str) -> str:
     return f'    "{key}": {body},\n'
 
 
-def splice(source: str, entry: str, *, anchor: str) -> tuple[str, str]:
+def splice(source: str, entry: str, anchor: str) -> tuple[str, str]:
     """Return `(new_source, "")`, or `("", refusal)` when `anchor` is not unique in `source`.
 
     `anchor` is the text the roster's closing brace is followed by; the entry lands just before.

@@ -147,7 +147,9 @@ def push(events: list[Finding], url: str, common: dict[str, object]) -> tuple[bo
     target = parts.path + (f"?{parts.query}" if parts.query else "")
     try:
         status = _post_status(parts.scheme, (parts.hostname, parts.port), target or "/", body)
-    except (OSError, ValueError) as err:
+    except OSError as err:
+        return False, f"{type(err).__name__}: {err}"
+    except ValueError as err:
         return False, f"{type(err).__name__}: {err}"
     return HTTP_OK_LO <= status < HTTP_OK_HI, f"{status} ({len(events)} events)"
 

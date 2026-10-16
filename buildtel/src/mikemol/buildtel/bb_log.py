@@ -28,7 +28,6 @@ exit 3 with the reason on stderr, while a log that was read and holds no lines s
 """
 
 import base64
-import binascii
 import http.client
 import json
 import sys
@@ -113,7 +112,7 @@ def post(invoked: str, chunk_id: str, host: str = HOST, port: int = PORT) -> tup
         raise OSError(msg)
     try:
         text = base64.b64decode(buffer).decode("utf-8", "replace")
-    except (binascii.Error, ValueError) as problem:
+    except ValueError as problem:
         msg = f"the chunk was not base64 ({problem})"
         raise OSError(msg) from problem
     return text, following

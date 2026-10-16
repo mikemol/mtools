@@ -48,7 +48,9 @@ def consumer_fields(config: Path) -> tuple[str, ...]:
     try:
         with config.open("rb") as handle:
             loaded: object = tomllib.load(handle)
-    except (OSError, tomllib.TOMLDecodeError):
+    except OSError:
+        return ()
+    except tomllib.TOMLDecodeError:
         return ()
     if not isinstance(loaded, dict):
         return ()

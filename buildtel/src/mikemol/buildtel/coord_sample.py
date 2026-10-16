@@ -59,7 +59,11 @@ def rss_bytes(pid: int, proc_root: Path = PROC_ROOT) -> int | None:
     try:
         fields = (proc_root / str(pid) / "statm").read_text(encoding="ascii").split()
         return int(fields[STATM_RSS_FIELD]) * os.sysconf("SC_PAGE_SIZE")
-    except (OSError, ValueError, IndexError):
+    except OSError:
+        return None
+    except ValueError:
+        return None
+    except IndexError:
         return None
 
 
@@ -79,7 +83,11 @@ def cgroup_current(
         line = (proc_root / str(pid) / "cgroup").read_text(encoding="ascii").strip()
         rel = line.rsplit(":", 1)[-1].lstrip("/")
         return int((cgroup_root / rel / "memory.current").read_text(encoding="ascii").strip())
-    except (OSError, ValueError, IndexError):
+    except OSError:
+        return None
+    except ValueError:
+        return None
+    except IndexError:
         return None
 
 
@@ -147,7 +155,6 @@ def sample(
 
 def main(
     argv: Sequence[str] | None = None,
-    *,
     is_alive: Callable[[int], bool] = alive,
     sleep: Callable[[float], None] = time.sleep,
 ) -> int:

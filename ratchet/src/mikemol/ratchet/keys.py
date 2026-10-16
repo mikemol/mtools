@@ -52,7 +52,7 @@ class ParsedKey:
     identity: tuple[str, ...]
 
 
-def split_last_field(key: str, *, sep: str) -> ParsedKey:
+def split_last_field(key: str, sep: str) -> ParsedKey:
     """Read ruff's `path:rule`: the rule is the LAST `sep` field, since a path may carry colons.
 
     ⚑ TOTAL — IT NEVER REFUSES, which is the pre-schema reading kept exactly: a key with no
@@ -75,7 +75,7 @@ class FieldShape:
     arity: int
 
 
-def split_fields(key: str, *, shape: FieldShape) -> ParsedKey:
+def split_fields(key: str, shape: FieldShape) -> ParsedKey:
     """Split on `shape.sep`, refusing any field count other than `shape.arity`.
 
     Returns:
@@ -96,7 +96,7 @@ def split_fields(key: str, *, shape: FieldShape) -> ParsedKey:
     return ParsedKey(fields[shape.path_field], ident)
 
 
-type KeySchema = Callable[[str], ParsedKey]
+KeySchema = Callable[[str], ParsedKey]
 
 _SEP = "::"
 _PATH_FIRST = 0

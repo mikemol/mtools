@@ -103,7 +103,6 @@ def declared_by(out: str, stem: str, mode: str) -> str | None:
 def mode_undocumented(
     tool: str,
     mode: str,
-    *,
     divergence: Sequence[str],
     find: Sequence[str],
     runner: Runner,

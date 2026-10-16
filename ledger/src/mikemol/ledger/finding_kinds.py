@@ -68,7 +68,9 @@ def run(*argv: str, cwd: Path) -> tuple[int | None, str]:
         done = subprocess.run(
             argv, cwd=cwd, capture_output=True, text=True, timeout=TIMEOUT, check=False
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except OSError as exc:
+        return None, str(exc)
+    except subprocess.SubprocessError as exc:
         return None, str(exc)
     return done.returncode, (done.stdout or "") + (done.stderr or "")
 
@@ -142,7 +144,7 @@ def evidence(out: str) -> str:
     return f"(no refusal line found; last output: {lines[-1][:110]})"
 
 
-def selftest(cmd: list[str], note: str, *, cwd: Path) -> Verdict:
+def selftest(cmd: list[str], note: str, cwd: Path) -> Verdict:
     """Report CLOSED while `cmd` exits 0 — the witness that a mechanism WORKS.
 
     Returns:
@@ -158,7 +160,7 @@ def selftest(cmd: list[str], note: str, *, cwd: Path) -> Verdict:
     return OPEN, f"{spelled} exits {code} — {failing_case(out)}"
 
 
-def refuses(cmd: list[str], note: str, *, cwd: Path) -> Verdict:
+def refuses(cmd: list[str], note: str, cwd: Path) -> Verdict:
     """Report CLOSED while `cmd` exits NON-ZERO — the witness for an installed REFUSAL.
 
     ⚑⚑⚑ EXIT 0 IS THE OPEN VERDICT HERE, AND THE INVERSION IS THE POINT: if the command SUCCEEDS

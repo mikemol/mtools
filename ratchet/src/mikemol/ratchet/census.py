@@ -119,7 +119,7 @@ class CensusUnavailableError(RuntimeError):
     """
 
 
-def run_ruff(dist: Path, *, preview: bool) -> frozenset[str]:
+def run_ruff(dist: Path, preview: bool) -> frozenset[str]:
     """Run ruff over one distribution and return its census.
 
     ⚑⚑ EXIT 0 AND EXIT 1 ARE BOTH SUCCESS HERE — 0 is a clean tree, 1 is findings. Anything

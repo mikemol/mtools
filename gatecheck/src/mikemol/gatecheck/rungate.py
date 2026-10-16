@@ -129,7 +129,6 @@ def argv_for(args: GateArgs, ram: str) -> list[str]:
 
 def main(
     argv: Sequence[str] | None = None,
-    *,
     root: Path | None = None,
     capture: Runner = capture_output,
     run: Runner = run_passthrough,

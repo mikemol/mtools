@@ -65,7 +65,6 @@ def git_status() -> subprocess.CompletedProcess[str]:
 
 def main(
     argv: Sequence[str] = (),
-    *,
     status: Callable[[], subprocess.CompletedProcess[str]] = git_status,
 ) -> int:
     """Refuse when the worktree differs from the index outside the allowlist.

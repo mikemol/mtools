@@ -409,7 +409,6 @@ def parse_args(argv: Sequence[str]) -> tuple[Path, Path, float, float, bool]:
 
 def main(
     argv: Sequence[str] | None = None,
-    *,
     is_alive: Callable[[], bool] = build_alive,
     clock: Callable[[], float] = time.time,
 ) -> int:

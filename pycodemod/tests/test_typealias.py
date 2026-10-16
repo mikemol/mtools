@@ -40,6 +40,16 @@ def test_a_statement_with_type_parameters_is_listed_and_left() -> None:
     assert "type Pair[T] = tuple[T, T]" in planned.text
 
 
+def test_a_recursive_alias_is_listed_and_left_because_it_cannot_name_itself() -> None:
+    """`type Json = dict[str, Json] | int` would be a NameError as an assignment: line named."""
+    source = "type Json = dict[str, Json] | int\ntype Plain = str\n"
+    planned = typealias.plan(source)
+    assert planned.rewritten == 1
+    assert [line for line, _ in planned.kept] == [1]
+    assert "type Json = dict[str, Json] | int" in planned.text
+    assert "Plain = str\n" in planned.text
+
+
 def test_a_module_without_a_type_statement_is_returned_unchanged() -> None:
     """A plain alias is already the target spelling; nothing is rewritten."""
     source = "Row = tuple[int, str]\n"

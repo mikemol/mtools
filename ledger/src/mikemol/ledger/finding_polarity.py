@@ -104,7 +104,7 @@ def _mode_is_documented(cmd: list[str], out: str) -> str:
     )
 
 
-def probe(cmd: list[str], kind: str, *, cwd: Path) -> str | None:
+def probe(cmd: list[str], kind: str, cwd: Path) -> str | None:
     """Return None if `cmd` already exits the way `kind` requires, else a REFUSAL string.
 
     ⚑ A COMMAND THAT CANNOT RUN IS REFUSED TOO, NEVER WAVED THROUGH: registering it files a

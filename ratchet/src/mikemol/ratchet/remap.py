@@ -63,8 +63,8 @@ from mikemol.atomicwrite import durable
 from mikemol.atomicwrite.durable import Staged
 
 type Json = bool | int | float | str | list[Json] | dict[str, Json] | None
-type Segment = str | int
-type Pointer = tuple[Segment, ...]
+Segment = str | int
+Pointer = tuple[Segment, ...]
 
 CLEAN = 0
 REFUSED = 1
@@ -78,7 +78,7 @@ class Missing(Enum):
     MISSING = "<MISSING>"
 
 
-type Side = Json | Missing
+Side = Json | Missing
 
 
 def render(pointer: Pointer) -> str:
@@ -324,7 +324,9 @@ def remap_guard(
     for rel in files:
         try:
             loaded.append(_load(root, rev, rel))
-        except (OSError, ValueError) as exc:  # JSONDecodeError, UnicodeDecodeError: ValueError
+        except Exception as exc:  # JSONDecodeError, UnicodeDecodeError: ValueError
+            if not isinstance(exc, (OSError, ValueError)):
+                raise
             return UNREADABLE, [
                 f"{rel}: error: {exc}",
                 "nothing written" if write else "remap guard could not read every file",

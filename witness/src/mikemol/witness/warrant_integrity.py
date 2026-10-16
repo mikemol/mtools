@@ -123,7 +123,7 @@ class Integrity:
         return tuple(out)
 
 
-def read(path: Path, *, parse: Parse) -> tuple[Integrity | None, str | None]:
+def read(path: Path, parse: Parse) -> tuple[Integrity | None, str | None]:
     """Read the warrant set through BOTH routes, or say why it could not be read.
 
     ⚑⚑ The engine's exception is caught broadly ON PURPOSE (declared per-file in pyproject): its
@@ -158,7 +158,7 @@ def _unreadable(key: str, why: str) -> Iterator[Row]:
     yield witness_row.opened(key, f"the warrant set could not be read: {why}")
 
 
-def witness_present(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
+def witness_present(key: str, path: Path, parse: Parse) -> Iterator[Row]:
     """Witness that the warrant set exists at all.
 
     Yields:
@@ -180,7 +180,7 @@ def witness_present(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
     yield witness_row.closed(key, f"{len(got.parsed)} warrant(s) present")
 
 
-def witness_unshadowed(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
+def witness_unshadowed(key: str, path: Path, parse: Parse) -> Iterator[Row]:
     """Witness that no key is silently shadowed.
 
     Yields:
@@ -203,7 +203,7 @@ def witness_unshadowed(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
     yield witness_row.closed(key, f"{len(got.parsed)} warrant key(s), all distinct")
 
 
-def witness_committed(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
+def witness_committed(key: str, path: Path, parse: Parse) -> Iterator[Row]:
     """Witness that every entry carries a claim and a check.
 
     Yields:
@@ -227,7 +227,7 @@ def witness_committed(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
     yield witness_row.closed(key, f"every one of {len(got.parsed)} warrants carries both fields")
 
 
-def witness_legible(key: str, *, path: Path, parse: Parse) -> Iterator[Row]:
+def witness_legible(key: str, path: Path, parse: Parse) -> Iterator[Row]:
     """Witness that every claim carries readable prose.
 
     Yields:

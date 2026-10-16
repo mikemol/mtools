@@ -59,7 +59,7 @@ src/mikemol/buildtel/bb_log.py|http-error-read-as-a-chunk|if resp\.status != HTT
 src/mikemol/buildtel/bb_log.py|non-object-body-trusted|if not isinstance\(raw, dict\):|if False:|def=post
 src/mikemol/buildtel/bb_log.py|non-string-chunk-trusted|if not isinstance\(buffer, str\) or not isinstance\(following, str\):|if False:|def=post
 src/mikemol/buildtel/bb_log.py|next-chunk-ignored|record\.get\("nextChunkId", ""\)|""|def=post
-src/mikemol/buildtel/bb_log.py|bad-base64-raises-unwrapped|except \(binascii\.Error, ValueError\) as problem:|except KeyError as problem:|def=post
+src/mikemol/buildtel/bb_log.py|bad-base64-raises-unwrapped|except ValueError as problem:|except KeyError as problem:|def=post
 
 # bb_log.py `collect`: bounded, and every page folded in order.
 src/mikemol/buildtel/bb_log.py|stuck-chunk-id-followed|if not following or following == chunk_id:|if not following:|def=collect
