@@ -17,12 +17,13 @@ Exit codes: 0 done, 2 cannot (an unreadable or malformed ledger, a git refusal, 
 import argparse
 import json
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from mikemol.pathwalk.walk import WorktreeRefusedError
 
 from mikemol.debtplan.config import read_config
+from mikemol.debtplan.fold import fold, survey
 from mikemol.debtplan.ledger import read_ledger
 from mikemol.debtplan.mint import (
     HOW,
@@ -89,6 +90,7 @@ class Args(argparse.Namespace):
     touches: list[str] | None
     vector: str
     idiom: str
+    write: bool
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -139,6 +141,19 @@ def _parser() -> argparse.ArgumentParser:
     collapsing.add_argument("--prefix", help="the card title prefix; default: '<repo> debt: '")
     collapsing.add_argument("--touches", nargs="+", help="the tags the card carries; default: debt")
     collapsing.add_argument("--vector", default=VECTOR, help="the WV:1 vector the card carries")
+    # ⚑ THE MIGRATION (W1371): a dry run by default, and a set check before any write.
+    folding = commands.add_parser(
+        "fold", parents=[common], help="fold per-file cards into the ledger and one idiom card"
+    )
+    folding.add_argument("--idiom", required=True, help="the idiom's name, the card's key")
+    folding.add_argument("--how", required=True, help="the mechanization run that retires it")
+    folding.add_argument("--state", type=Path, help="default: ROOT/.claude/paths-forward.json")
+    folding.add_argument("--prefix", help="the per-file card title prefix; default '<repo> debt: '")
+    folding.add_argument("--touches", nargs="+", help="the tags the card carries; default: debt")
+    folding.add_argument("--vector", default=VECTOR, help="the WV:1 vector the card carries")
+    folding.add_argument(
+        "--write", action="store_true", help="drop the cards; default is a dry run"
+    )
     return parser
 
 
@@ -234,6 +249,44 @@ def _mint_idiom(args: Args, planned: Plan) -> int:
     return EXIT_OK
 
 
+def _fold(args: Args, planned: Plan) -> int:
+    """Check the per-file cards against the ledger as a set, then (with --write) fold them.
+
+    Returns:
+        0 when the dry run agrees or the fold ran; 2 when the cards and the ledger disagree.
+
+    """
+    state = args.state or args.root / ".claude" / "paths-forward.json"
+    prefix = args.prefix or f"{args.root.resolve().name} debt: "
+    touches = tuple(args.touches) if args.touches else TOUCHES
+    style = Style(prefix, args.how, touches, args.vector)
+    queue = Queue(state)
+    seen = survey(queue, planned, style)
+    sys.stdout.write(
+        f"mikemol-debtplan: {len(seen.cards)} open per-file card(s); "
+        f"{len(seen.only_cards)} with no ledger row, "
+        f"{len(seen.only_ledger)} ledger row(s) with no card\n"
+    )
+    for file in seen.only_cards:
+        sys.stdout.write(f"  card only: {file}\n")
+    for file in seen.only_ledger:
+        sys.stdout.write(f"  ledger only: {file}\n")
+    if not seen.agrees:
+        return EXIT_CANNOT
+    if args.write:
+        dropped = fold(planned, queue, style, args.idiom, args.how)
+        sys.stdout.write(f"mikemol-debtplan: folded {dropped} card(s) into the idiom card\n")
+    return EXIT_OK
+
+
+_SYNCS: dict[str, Callable[[Args, Plan], int]] = {
+    "mint": _mint,
+    "mint-idiom": _mint_idiom,
+    "fold": _fold,
+}
+"""The commands that write to a queue, by name; every other command prints the plan."""
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Plan a debt ledger, or mint it into the repository's queue.
 
@@ -246,10 +299,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         planned, universe = _plan_for(args)
         if universe is not None:
             sys.stderr.write(_skipped(universe))
-        if args.command == "mint":
-            return _mint(args, planned)
-        if args.command == "mint-idiom":
-            return _mint_idiom(args, planned)
+        handler = _SYNCS.get(args.command)
+        if handler is not None:
+            return handler(args, planned)
     except (OSError, ValueError, MintRefusedError, WorktreeRefusedError) as exc:
         sys.stderr.write(f"mikemol-debtplan: {exc}\n")
         return EXIT_CANNOT

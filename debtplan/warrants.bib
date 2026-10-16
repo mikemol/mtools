@@ -992,3 +992,60 @@
   claim  = {Three ledger files make ONE idiom card and no file card; the summary says so (W1370).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_mint_idiom_makes_one_card_for_the_whole_ledger_and_no_card_per_file},
 }
+
+@misc{debtplan-fold-survey-names-the-open-cards-and-the-set-difference-both-ways,
+  section = {fold},
+  title  = {Three cards, the ledger the same three files: nothing on either side alone},
+  claim  = {Three cards, the ledger the same three files: nothing on either side alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fold.py -k test_the_survey_names_the_open_cards_and_the_set_difference_both_ways},
+}
+
+@misc{debtplan-fold-card-the-ledger-does-not-account-for-refuses-the-fold-and-writes-nothing,
+  section = {fold},
+  title  = {A ledger without c.py would lose c's debt: refused, the cards all still open},
+  claim  = {A ledger without c.py would lose c's debt: refused, the cards all still open.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fold.py -k test_a_card_the_ledger_does_not_account_for_refuses_the_fold_and_writes_nothing},
+}
+
+@misc{debtplan-fold-fold-mints-the-idiom-card-and-drops-every-per-file-card-onto-it,
+  section = {fold},
+  title  = {Three cards become one: the file cards leave the queue, the idiom card stays},
+  claim  = {Three cards become one: the file cards leave the queue, the idiom card stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fold.py -k test_a_fold_mints_the_idiom_card_and_drops_every_per_file_card_onto_it},
+}
+
+@misc{debtplan-fold-second-fold-drops-and-mints-nothing-new,
+  section = {fold},
+  title  = {Idempotent: no open per-file card is left, and the idiom card is the same card},
+  claim  = {Idempotent: no open per-file card is left, and the idiom card is the same card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fold.py -k test_a_second_fold_drops_and_mints_nothing_new},
+}
+
+@misc{debtplan-fold-done-per-file-card-is-left-where-it-is,
+  section = {fold},
+  title  = {A card that records finished work is not an open work item and is not folded},
+  claim  = {A card that records finished work is not an open work item and is not folded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fold.py -k test_a_done_per_file_card_is_left_where_it_is},
+}
+
+@misc{debtplan-fold-no-edge-is-left-pointing-at-a-folded-card,
+  section = {fold},
+  title  = {The writer repoints every blocked_on and enables that named a dropped card},
+  claim  = {The writer repoints every blocked_on and enables that named a dropped card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fold.py -k test_no_edge_is_left_pointing_at_a_folded_card},
+}
+
+@misc{debtplan-cli-fold-dry-run-reports-the-set-difference-and-writes-nothing,
+  section = {cli},
+  title  = {Without --write the survey is printed, the cards all stay, and no idiom card appears},
+  claim  = {Without --write the survey is printed, the cards all stay, and no idiom card appears.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_fold_dry_run_reports_the_set_difference_and_writes_nothing},
+}
+
+@misc{debtplan-cli-fold-with-write-folds-the-cards-onto-one-idiom-card,
+  section = {cli},
+  title  = {With --write the file cards leave the queue and the idiom card stays; the summary says so},
+  claim  = {With --write the file cards leave the queue and the idiom card stays; the summary says
+            so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_fold_with_write_folds_the_cards_onto_one_idiom_card},
+}

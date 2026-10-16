@@ -6786,3 +6786,10 @@
   claim  = {The control: a pattern that never matched is the dist's own debt, and the run proceeds.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_declaration_stale_before_the_run_is_not_charged_to_it},
 }
+
+@misc{pycodemod-cli-codonprep-relative-root-reaches-the-bar-by-an-absolute-path,
+  section = {cli_codonprep},
+  title  = {The control: the bar's path is the same whether the root is given relative or absolute},
+  claim  = {The control: the bar's path is the same whether the root is given relative or absolute.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_relative_root_reaches_the_bar_by_an_absolute_path},
+}

@@ -210,7 +210,9 @@ def print_codon_prep_tree(roots: Sequence[str], *, write: bool, run: Runner = ru
 
     """
     worst = 0
-    for root in map(Path, roots):
+    # ⚑ ABSOLUTE ROOTS: the bar's path is built from the root's parent and run with the root as cwd,
+    # so a relative root named a `hooks/.venv` that only exists beside the checkout.
+    for root in (Path(name).resolve() for name in roots):
         python = root / ".venv" / "bin" / "python"
         if not (root / "src").is_dir() or not python.exists():
             sys.stdout.write(f"{LABEL} skipped {root}: no src tree or no .venv/bin/python\n")

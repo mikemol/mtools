@@ -86,6 +86,25 @@ def test_failing_project_tests_restore_the_project_too(tmp_path: Path) -> None:
     assert (root / "src" / NAME).read_text(encoding="utf-8") == SOURCE
 
 
+def test_a_relative_root_reaches_the_bar_by_an_absolute_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The control: the bar's path is the same whether the root is given relative or absolute."""
+    _project(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    seen: list[str] = []
+    inner = _runner()
+
+    def run(argv: Sequence[str], cwd: Path) -> tuple[int, str, str]:
+        if "--check-file" in argv:
+            seen.append(argv[0])
+        return inner(argv, cwd)
+
+    assert print_codon_prep_tree(["proj"], write=True, run=run) == 0
+    assert seen
+    assert all(path.startswith("/") for path in seen)
+
+
 def test_a_declared_mutant_the_rewrite_made_stale_restores_the_project(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

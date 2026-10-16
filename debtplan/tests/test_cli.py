@@ -263,6 +263,44 @@ def test_mint_idiom_makes_one_card_for_the_whole_ledger_and_no_card_per_file(
     assert not queue.cards("t: ")
 
 
+def _minted_fold_args(tmp_path: Path) -> tuple[Queue, list[str]]:
+    # Three per-file cards minted from the chain ledger, and the operands that fold them.
+    ledger = _chain(tmp_path)
+    queue = Queue(tmp_path / "pf.json")
+    queue.run("--init")
+    mint = ["mint", *_args(tmp_path, ledger, "--no-universe", "--prefix", "t: ")]
+    assert main([*mint, "--state", str(queue.state)]) == EXIT_OK
+    options = ["--idiom", "mypy", "--how", "run the typed-args codemod", "--prefix", "t: "]
+    fold = ["fold", *_args(tmp_path, ledger, "--no-universe", *options)]
+    return queue, [*fold, "--state", str(queue.state)]
+
+
+def test_a_fold_dry_run_reports_the_set_difference_and_writes_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Without --write the survey is printed, the cards all stay, and no idiom card appears."""
+    queue, args = _minted_fold_args(tmp_path)
+    capsys.readouterr()
+    assert main(args) == EXIT_OK
+    assert "3 open per-file card(s); 0 with no ledger row, 0 ledger row(s) with no card" in (
+        capsys.readouterr().out
+    )
+    assert len(queue.cards("t: ")) == THREE
+    assert not queue.cards("t idiom: ")
+
+
+def test_a_fold_with_write_folds_the_cards_onto_one_idiom_card(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """With --write the file cards leave the queue and the idiom card stays; the summary says so."""
+    queue, args = _minted_fold_args(tmp_path)
+    capsys.readouterr()
+    assert main([*args, "--write"]) == EXIT_OK
+    assert "folded 3 card(s) into the idiom card" in capsys.readouterr().out
+    assert not queue.cards("t: ")
+    assert set(queue.cards("t idiom: ")) == {"mypy"}
+
+
 def test_a_refused_mint_is_exit_2_and_says_why(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
