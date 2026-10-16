@@ -19,9 +19,11 @@ _PLANTS: dict[str, str] = {
     "type-checking-import": "from typing import TYPE_CHECKING\n",
     "datetime-utc": "x = datetime.UTC\n",
     "dict-spread": "b = {**a, 'y': 2}\n",
+    "stdlib-import": "import subprocess\nfrom hashlib import sha256\nimport os.path, io.x\n",
 }
 _CLEAN = (
     "import typing\n"
+    "import json\n"
     "from datetime import timezone\n"
     "@dataclass\n"
     "class P:\n"

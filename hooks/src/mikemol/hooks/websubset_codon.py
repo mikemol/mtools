@@ -15,6 +15,7 @@ reads none of them. A detector reads one parsed tree and returns `(line, rule, m
     type-checking-import      `TYPE_CHECKING` imported from or read off `typing`
     datetime-utc              `datetime.UTC`, absent in Codon's datetime
     dict-spread               `{**a}`: the compiler aborts (a Codon defect, probed 2026-10-16)
+    stdlib-import             an import of a module Codon 0.20.3 lacks (the census's ten)
 """
 
 from __future__ import annotations
@@ -31,6 +32,22 @@ RULES = frozenset(
         "type-checking-import",
         "datetime-utc",
         "dict-spread",
+        "stdlib-import",
+    }
+)
+# ⚑ ABSENT FROM CODON 0.20.3 as the census found them (W1321): an import of one stops the module.
+_ABSENT = frozenset(
+    {
+        "hashlib",
+        "subprocess",
+        "argparse",
+        "contextlib",
+        "shutil",
+        "tarfile",
+        "ast",
+        "io",
+        "difflib",
+        "base64",
     }
 )
 Row = tuple[int, str, str]
@@ -49,12 +66,28 @@ def _imported(node: ast.ImportFrom) -> list[Row]:
     found: list[Row] = []
     if node.module == "__future__":
         found.append((node.lineno, "future-import", "Codon has no `__future__` module"))
+    if node.module is not None and node.module.split(".")[0] in _ABSENT:
+        found.append((node.lineno, "stdlib-import", f"Codon lacks `{node.module}`"))
     for alias in node.names:
         if alias.name == "TYPE_CHECKING":
             found.append((node.lineno, "type-checking-import", _CHECKING))
         if alias.name == "UTC" and node.module == "datetime":
             found.append((node.lineno, "datetime-utc", _UTC))
     return found
+
+
+def _plain(node: ast.Import) -> list[Row]:
+    """Name the absent modules a plain `import X` pulls in.
+
+    Returns:
+        a row per imported module whose top-level package Codon lacks.
+
+    """
+    return [
+        (node.lineno, "stdlib-import", f"Codon lacks `{alias.name}`")
+        for alias in node.names
+        if alias.name.split(".")[0] in _ABSENT
+    ]
 
 
 def _called(func: ast.expr) -> str | None:
@@ -120,6 +153,8 @@ def scan(tree: ast.AST) -> list[Row]:
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom):
             found += _imported(node)
+        elif isinstance(node, ast.Import):
+            found += _plain(node)
         elif isinstance(node, ast.TypeAlias):
             found.append((node.lineno, "type-statement", "the `type` statement is a syntax error"))
         elif isinstance(node, ast.ClassDef):
