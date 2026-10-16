@@ -64,7 +64,7 @@ def _git(root: Path, args: Sequence[str], env: Mapping[str, str] | None = None) 
     return done.stdout
 
 
-def tree_of(root: Path, *, working: bool) -> str:
+def tree_of(root: Path, working: bool) -> str:
     """Return the tree object of the index, or of the working tree through a temporary index.
 
     ⚑ THE REAL INDEX IS NEVER WRITTEN FOR THE WORKING CASE: `GIT_INDEX_FILE` names a scratch copy,
@@ -258,6 +258,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 sys.stdout.write(f"{snap.path}\n")
                 return 0
             return subprocess.run(command, cwd=snap.path, check=False).returncode
-    except (subprocess.CalledProcessError, OSError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (subprocess.CalledProcessError, OSError)):
+            raise
         sys.stderr.write(f"mikemol-snapshot: {root}: {problem}\n")
         return EXIT_NOT_TAKEN

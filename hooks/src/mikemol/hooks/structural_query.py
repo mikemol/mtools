@@ -681,7 +681,9 @@ def main() -> int:
     """
     try:
         parsed: object = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError):
+    except Exception as caught:
+        if not isinstance(caught, (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError)):
+            raise
         return 0  # never break the session on a parse failure
     cmd = command_of(parsed)
     if not cmd:

@@ -48,7 +48,9 @@ def _read(path: Path) -> dict[str, int]:
     """
     try:
         raw = cast("object", json.loads(path.read_text(encoding="utf-8")))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return {}
     if not isinstance(raw, dict):
         return {}
@@ -93,7 +95,9 @@ def kill_group(pid: int) -> None:
     """End the holder's whole process group, so a child it started goes with it."""
     try:
         os.killpg(os.getpgid(pid), signal.SIGTERM)
-    except (ProcessLookupError, PermissionError):
+    except Exception as caught:
+        if not isinstance(caught, (ProcessLookupError, PermissionError)):
+            raise
         return
 
 

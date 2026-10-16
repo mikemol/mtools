@@ -408,7 +408,7 @@ class _HeredocStripper:
         self.out.append(_BODY_SEPARATOR)
         self.i = min(k, len(self.cmd))
 
-    def _body_end(self, start: int, delimiter: str, *, dash: bool) -> int:
+    def _body_end(self, start: int, delimiter: str, dash: bool) -> int:
         """Return the index just past the line that terminates a body beginning at `start`.
 
         Returns:

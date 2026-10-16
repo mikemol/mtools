@@ -79,6 +79,18 @@ def test_a_file_the_bar_refuses_restores_the_project(
     assert "fails the bar" in capsys.readouterr().out
 
 
+def test_keep_leaves_the_rewrite_in_place_when_the_bar_refuses_it(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The diagnosis route: exit 2 as before, but the written source stays for reproduction."""
+    root = _project(tmp_path)
+    assert (
+        print_codon_prep_tree([str(root)], write=True, run=_runner(bar_exit=1), keep=True) == _TWO
+    )
+    assert (root / "src" / NAME).read_text(encoding="utf-8") != SOURCE
+    assert "LEFT IN PLACE" in capsys.readouterr().out
+
+
 def test_failing_project_tests_restore_the_project_too(tmp_path: Path) -> None:
     """The bar passed and the tests did not: exit 2, the source as it was."""
     root = _project(tmp_path)

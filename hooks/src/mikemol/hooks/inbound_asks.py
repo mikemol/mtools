@@ -226,7 +226,9 @@ def read_payload() -> dict[str, object]:
     """
     try:
         raw: object = json.load(sys.stdin)
-    except (ValueError, OSError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, OSError)):
+            raise
         return {}
     return as_record(raw)
 

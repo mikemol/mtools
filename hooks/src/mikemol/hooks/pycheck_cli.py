@@ -92,7 +92,9 @@ def check(
     """
     try:
         content = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (OSError, UnicodeDecodeError)):
+            raise
         err.write(f"mikemol-pycheck: {path}: cannot be read ({problem}); not checked\n")
         return EXIT_NOT_CHECKED
     if project_of(path) is None:

@@ -108,7 +108,9 @@ def queue_of(project: Path) -> object:
     """
     try:
         loaded: object = json.loads((project / QUEUE).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     return loaded
 
@@ -215,7 +217,9 @@ def main() -> int:
     """
     try:
         raw: object = json.load(sys.stdin)
-    except (ValueError, OSError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, OSError)):
+            raise
         return 0
     payload = as_record(raw)
     event = text_of(payload.get("hook_event_name"))

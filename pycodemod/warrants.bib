@@ -6830,3 +6830,17 @@
             exempt.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_dist_with_a_per_file_table_gets_the_rule_for_the_file_not_the_global_list},
 }
+
+@misc{pycodemod-ruffignore-file-listed-over-several-lines-is-extended-and-never-given-a-second-key,
+  section = {ruffignore},
+  title  = {The hooks regression: a duplicate key is invalid TOML and blinds every checker},
+  claim  = {The hooks regression: a duplicate key is invalid TOML and blinds every checker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruffignore.py -k test_a_file_listed_over_several_lines_is_extended_and_never_given_a_second_key},
+}
+
+@misc{pycodemod-cli-codonprep-keep-leaves-the-rewrite-in-place-when-the-bar-refuses-it,
+  section = {cli_codonprep},
+  title  = {The diagnosis route: exit 2 as before, but the written source stays for reproduction},
+  claim  = {The diagnosis route: exit 2 as before, but the written source stays for reproduction.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_keep_leaves_the_rewrite_in_place_when_the_bar_refuses_it},
+}

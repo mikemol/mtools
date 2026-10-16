@@ -436,7 +436,7 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
 
 
 def commit(
-    root: Path, request: Request, out: TextIO, run: Runner = run_git, *, isolated: bool = False
+    root: Path, request: Request, out: TextIO, run: Runner = run_git, isolated: bool = False
 ) -> int:
     """Commit the request's paths, print git's and the hook's output, then the verdict.
 
@@ -658,7 +658,7 @@ def lock_state(claim: str) -> str:
     return f"none ({claim})" if claim else "held"
 
 
-def routing_line(*, isolated: bool, reason: str, lock: str) -> str:
+def routing_line(isolated: bool, reason: str, lock: str) -> str:
     """Name the path this commit took and its lock, so a repo can tell a fallback from a choice.
 
     ⚑ A HOOK THAT DOES NOT NAME MIKEMOL_REAL_ROOT FALLS TO THE PLAIN PATH WITHOUT A WORD (the
@@ -685,7 +685,7 @@ def stack_target(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Pat
     return None
 
 
-def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], *, isolated: bool) -> int:
+def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], isolated: bool) -> int:
     """Land the stack in `stack_file`: build, gate the tip once, move HEAD, one verdict each.
 
     ⚑ A STACK NEEDS THE ISOLATED PATH: the gate runs on a snapshot of the tip, which only a
@@ -719,7 +719,7 @@ def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], *, isol
     return stack_run(root, items, sys.stdout, seams)
 
 
-def commit_shipping(root: Path, request: Request, *, isolated: bool) -> int:
+def commit_shipping(root: Path, request: Request, isolated: bool) -> int:
     """Commit, print the output as ever, then ship its verdict lines as structured fields (W1168).
 
     ⚑ THE OUTPUT IS NOT CHANGED: `commit` already writes after the commit has finished, so holding

@@ -159,7 +159,9 @@ def before_edit(path: str) -> str:
     """
     try:
         return Path(path).read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, UnicodeDecodeError)):
+            raise
         return ""
 
 
@@ -218,7 +220,9 @@ def main() -> int:
     """
     try:
         raw: object = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError):
+    except Exception as caught:
+        if not isinstance(caught, (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError)):
+            raise
         return 0
     record = payload.as_record(raw)
     tool = payload.text_of(record.get("tool_name"))

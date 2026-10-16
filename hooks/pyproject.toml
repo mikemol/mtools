@@ -414,6 +414,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "start-process-with-no-shell",
     "suspicious-subprocess-import",
     "subprocess-without-shell-equals-true",
+    "boolean-default-value-positional-argument",
+    "boolean-type-hint-positional-argument",
 ]
 "src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -474,8 +476,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_work_claims.py" = ["assert"]
 "tests/test_work_claims_hook.py" = ["assert"]
 "src/mikemol/hooks/runproc.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file"]
+"src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
+"src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/vlogdetach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/vlogforms.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/vlogsink.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -527,7 +529,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the
 # caller's destination URL, as ONE word; the untrusted payload is the JSON on STDIN, never a word
 # in the command. Never through a shell.
-"src/mikemol/hooks/refusal_log.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"src/mikemol/hooks/refusal_log.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 
 # ⚑⚑ THE THIRD NAMED FILE, AND THE SAME REASON AS THE SECOND. `test_no_verify.py`'s subject is
 # what the INSTALLED console script decides — a hook can have a correct predicate and a broken
@@ -605,7 +607,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 
 # ⚑ RUNNING THE LINTER IS THE SHELL HOOK'S ONE RESPONSIBILITY. argv is the resolved linter path
 # and literals; the script under judgement travels on STDIN, never through a shell.
-"src/mikemol/hooks/shellcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"src/mikemol/hooks/shellcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-type-hint-positional-argument"]
 
 # ⚑ THE GRADER'S OWN CASES. `assert` as everywhere in tests; `private-member-access` for ONE arm that reaches
 # `grade._flips` deliberately — that private function is the single place the reachable/passed
@@ -685,3 +687,31 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE SECTION-AGREEMENT WITNESSES RUN THE ROOT'S COUNTER AS A PROGRAM (W834), as the gate does:
 # an argv of the interpreter, the repo's script and temp distribution paths, never a shell.
 "tests/test_pairing_sections.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/cmdparse.py" = ["boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/hosttied.py" = ["boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/no_chaining.py" = ["boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/repin_cli.py" = ["boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/revendor.py" = ["boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/verdictlog.py" = ["boolean-type-hint-positional-argument"]
+
+# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+# that demand them are off for this dist.
+"src/mikemol/hooks/vlogspool.py" = ["boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]

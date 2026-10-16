@@ -191,7 +191,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
     try:
         prepare(Path(args[0]), args[1] if len(args) > 1 else "")
-    except (GitUnavailableError, HookError) as error:
+    except Exception as error:
+        if not isinstance(error, (GitUnavailableError, HookError)):
+            raise
         sys.stderr.write(f"{error}\n")
         return 1
     return 0

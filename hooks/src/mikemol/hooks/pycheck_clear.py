@@ -109,7 +109,9 @@ def clear(path: Path, steps: Steps, out: TextIO, err: TextIO) -> int:
     """
     try:
         before = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (OSError, UnicodeDecodeError)):
+            raise
         err.write(f"mikemol-pycheck: {path}: cannot be read ({problem}); not cleared\n")
         return EXIT_NOT_RUN
     formatted = steps.format_text(path, before, err)

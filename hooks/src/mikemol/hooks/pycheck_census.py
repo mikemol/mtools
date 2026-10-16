@@ -105,7 +105,9 @@ def tracked_python(root: Path) -> list[str] | None:
             check=False,
             timeout=_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
         return None
     if done.returncode != 0:
         return None
@@ -158,7 +160,9 @@ def changed_python(root: Path) -> list[str] | None:
             check=False,
             timeout=_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
         return None
     if done.returncode != 0:
         return None
@@ -181,7 +185,9 @@ def census(
     for rel in files:
         try:
             content = (root / rel).read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
+        except Exception as caught:
+            if not isinstance(caught, (OSError, UnicodeDecodeError)):
+                raise
             unchecked.append(rel)
             continue
         ok, report = analyze(content, str(root / rel))

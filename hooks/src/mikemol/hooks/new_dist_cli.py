@@ -19,7 +19,7 @@ _OPERANDS = 2
 _WITH_ROOT = 2
 
 
-def scaffold(root: Path, name: str, description: str, *, lock: bool = True) -> list[str]:
+def scaffold(root: Path, name: str, description: str, lock: bool = True) -> list[str]:
     """Write a new distribution under `root`.
 
     Returns:

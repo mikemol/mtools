@@ -41,7 +41,7 @@ class Drained:
 
 
 @contextmanager
-def _held(lock: Path, *, wait: bool = True) -> Iterator[bool]:
+def _held(lock: Path, wait: bool = True) -> Iterator[bool]:
     """Hold an flock on `lock`.
 
     Yields:

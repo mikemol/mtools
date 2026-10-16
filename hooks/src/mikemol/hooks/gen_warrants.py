@@ -225,7 +225,9 @@ def _defined_tests(path: Path) -> set[str] | None:
     """
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, SyntaxError)):
+            raise
         return None
     # ⚑ THE WHOLE TREE, NOT THE MODULE LEVEL: a class-based suite (fence's `class TestCaps: def
     # test_…`) defines its tests as methods, and reading only the top level judged 41 live warrants
@@ -566,7 +568,9 @@ def main(argv: list[str] | None = None) -> int:
         if options.write:
             sections = [section for _, section in options.pairs]
             rubric, rows = new_rubric_rows(options.root / options.dist, sections, options.titles)
-    except (BraceError, RubricError) as err:
+    except Exception as err:
+        if not isinstance(err, (BraceError, RubricError)):
+            raise
         sys.stderr.write(f"{err}\n")
         return EXIT_UNTRANSCRIBABLE
     refused = _gate_prune(options)

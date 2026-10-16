@@ -57,7 +57,9 @@ def read_ledger(root: Path) -> dict[str, int] | None:
     """
     try:
         raw: object = json.loads((root / LEDGER).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     counts: dict[str, int] = {}
     for name, count in as_record(raw).items():
@@ -82,7 +84,9 @@ def run_planner(argv: Sequence[str]) -> str | None:
             check=False,
             timeout=PLAN_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
         return None
     return done.stdout if done.returncode == 0 else None
 

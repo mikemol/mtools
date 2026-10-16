@@ -133,7 +133,9 @@ def declared_waiver(cwd: str) -> Path | None:
         return None
     try:
         doc: object = tomllib.loads(cfg.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, tomllib.TOMLDecodeError)):
+            raise
         return None
     tool = payload.as_record(payload.as_record(doc).get("tool"))
     hooks = payload.as_record(tool.get("mikemol-hooks"))
@@ -235,7 +237,9 @@ def run(
             check=False,
             cwd=cwd,
         )
-    except (OSError, subprocess.SubprocessError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
+            raise
         return None
     try:
         parsed: object = json.loads(proc.stdout)
@@ -489,7 +493,7 @@ def verdict(
     return "", []
 
 
-def emit(msg: str, *, armed: bool) -> int:
+def emit(msg: str, armed: bool) -> int:
     """Deliver a refusal — a deny payload when armed, an advisory on stderr otherwise.
 
     Returns:
@@ -512,7 +516,9 @@ def main() -> int:
     """
     try:
         raw: object = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError):
+    except Exception as caught:
+        if not isinstance(caught, (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError)):
+            raise
         return 0
     record = payload.as_record(raw)
     tool = payload.text_of(record.get("tool_name"))

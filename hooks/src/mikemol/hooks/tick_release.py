@@ -83,7 +83,9 @@ def release_with_writer(
             check=False,
             timeout=timeout_s,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
         return False
     return done.returncode == 0
 

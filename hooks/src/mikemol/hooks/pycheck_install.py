@@ -66,7 +66,9 @@ def _prepare(src: Path, dest: Path, gate: Gate, err: TextIO) -> str | None:
             return None
     try:
         draft = src.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (OSError, UnicodeDecodeError)):
+            raise
         err.write(f"mikemol-pycheck: {src}: cannot be read ({problem}); nothing installed\n")
         return None
     return draft if dest.suffix != PYTHON else gate.format_text(dest, draft, err)

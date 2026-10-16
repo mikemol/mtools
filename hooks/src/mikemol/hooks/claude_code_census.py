@@ -93,7 +93,9 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         paths = untracked(args[0])
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, subprocess.CalledProcessError)):
+            raise
         sys.stderr.write(f"claude-code census: CANNOT CENSUS — {exc}\n")
         return 2
     return report(paths)

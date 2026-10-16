@@ -63,7 +63,9 @@ def source_files(roots: Sequence[Path]) -> list[Path]:
 def _read(path: Path) -> str | None:
     try:
         return path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, UnicodeDecodeError)):
+            raise
         return None
 
 

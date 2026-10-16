@@ -36,7 +36,9 @@ def read_load() -> float:
     """
     try:
         return float(_LOADAVG.read_text(encoding="utf-8").split()[0])
-    except (OSError, ValueError, IndexError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError, IndexError)):
+            raise
         return 0.0
 
 

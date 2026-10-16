@@ -81,7 +81,7 @@ class Emission(NamedTuple):
     why: str = ""
 
 
-def _join(value: object, *, sort: bool = False) -> str:
+def _join(value: object, sort: bool = False) -> str:
     """Render an untrusted sequence-ish value as a space-joined string; junk renders as "".
 
     Returns:
@@ -163,7 +163,9 @@ def log_fallthrough(
             timeout=_RUN_TIMEOUT_S,
             check=False,
         )
-    except (OSError, ValueError, TypeError, subprocess.SubprocessError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, ValueError, TypeError, subprocess.SubprocessError)):
+            raise
         return Emission(emitted=False, why=f"{type(exc).__name__}: {exc}")
     if done.returncode != 0:
         return Emission(emitted=False, why=f"curl exit {done.returncode}: {done.stderr.strip()}")

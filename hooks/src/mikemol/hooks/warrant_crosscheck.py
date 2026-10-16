@@ -58,7 +58,9 @@ def independent_orphans(root: Path, dist: str) -> set[tuple[str, str]]:
             check=False,
             timeout=TIMEOUT_S,
         )
-    except (subprocess.TimeoutExpired, OSError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (subprocess.TimeoutExpired, OSError)):
+            raise
         msg = f"{SCRIPT} {PAIRING} did not run to a verdict: {exc}"
         raise UnverifiableError(msg) from exc
     code: int = proc.returncode

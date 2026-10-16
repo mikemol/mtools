@@ -19,6 +19,7 @@ a dry run is of the files as they stand, before the hoist has removed what would
 
 import re
 import sys
+import tomllib
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -124,10 +125,20 @@ def _ignore_the_contradiction(root: Path, refusal: Refusal) -> str | None:
     after = ruffignore.add_for_file(before, named, sorted(refusal.rules), _WHY)
     if after is None:
         after = ruffignore.add(before, sorted(refusal.rules), _WHY)
-    if after is None or after == before:
+    if after is None or after == before or not _parses(after):
         return None
     path.write_text(after, encoding="utf-8")
     return before
+
+
+def _parses(text: str) -> bool:
+    # ⚑ AN EDIT THAT BREAKS THE PYPROJECT BLINDS EVERY CHECKER, so it is never written (hooks, where
+    # a duplicate key made mypy lose its config and report every sibling import as missing).
+    try:
+        tomllib.loads(text)
+    except tomllib.TOMLDecodeError:
+        return False
+    return True
 
 
 def _both(files: list[str], flags: TypedArgsFlags, run: Runner) -> int:
@@ -142,8 +153,12 @@ def _both(files: list[str], flags: TypedArgsFlags, run: Runner) -> int:
     )
 
 
-def _prepared(root: Path, files: list[str], snapshot: dict[str, str], run: Runner) -> int:
+def _prepared(
+    root: Path, files: list[str], snapshot: dict[str, str], run: Runner, keep: bool = False
+) -> int:
     # Write both verbs over one project, then the bar, then its tests once; restore on a failure.
+    # ⚑ `keep` LEAVES THE REWRITE IN PLACE WHEN THE BAR REFUSES, so the refusal can be reproduced by
+    # hand (`mikemol-pycheck --check-file`); the caller then restores with git. Off by default.
     code = _both(files, TypedArgsFlags(root=str(root), write=True), run)
     if code >= _FAILED:
         restore(snapshot)
@@ -157,6 +172,9 @@ def _prepared(root: Path, files: list[str], snapshot: dict[str, str], run: Runne
         original = original or before
         sys.stdout.write(f"{LABEL} {root.name}: ruff rules switched off: {sorted(broken.rules)}\n")
         broken = _barred(root, _changed(snapshot), run)
+    if broken is not None and keep:
+        sys.stdout.write(f"{LABEL} {broken.line()}; the rewrite is LEFT IN PLACE (--keep)\n")
+        return _FAILED
     if broken is not None:
         restore(snapshot)
         _put_back(root, original)
@@ -209,7 +227,9 @@ def _put_back(root: Path, original: str | None) -> None:
         (root / "pyproject.toml").write_text(original, encoding="utf-8")
 
 
-def print_codon_prep_tree(roots: Sequence[str], write: bool, run: Runner = run_tool) -> int:
+def print_codon_prep_tree(
+    roots: Sequence[str], write: bool, run: Runner = run_tool, keep: bool = False
+) -> int:
     """Run both verbs over each project's `src`, proving each project before it is kept.
 
     Returns:
@@ -228,7 +248,7 @@ def print_codon_prep_tree(roots: Sequence[str], write: bool, run: Runner = run_t
         files = source_files(root)
         snapshot = {name: Path(name).read_text(encoding="utf-8") for name in files}
         if write:
-            code = _prepared(root, files, snapshot, run)
+            code = _prepared(root, files, snapshot, run, keep)
         else:
             code = _both(files, TypedArgsFlags(root=str(root), write=False), run)
         sys.stdout.write(f"{LABEL} project {root} exit {code}\n")

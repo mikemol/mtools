@@ -172,7 +172,9 @@ def _handle_futureimport(ns: argparse.Namespace) -> int:
 
 
 def _handle_codonprep_tree(ns: argparse.Namespace) -> int:
-    return print_codon_prep_tree(_str_list(ns, "roots"), write=_flag(ns, "write"))
+    return print_codon_prep_tree(
+        _str_list(ns, "roots"), write=_flag(ns, "write"), keep=_flag(ns, "keep")
+    )
 
 
 def _handle_typingblocks(ns: argparse.Namespace) -> int:
@@ -1490,6 +1492,11 @@ def _add_codonprep_tree_mode(make: _Make) -> None:
     no_paths: list[str] = []
     tree.set_defaults(paths=no_paths)
     tree.add_argument("--write", action="store_true", help="write each project that passes")
+    tree.add_argument(
+        "--keep",
+        action="store_true",
+        help="leave the rewrite in place when the bar refuses it, to reproduce the refusal",
+    )
     tree.add_argument("roots", nargs="+", help="project roots, each with src/ and .venv")
 
 

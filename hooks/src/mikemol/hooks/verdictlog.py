@@ -67,7 +67,7 @@ GATE_REFUSED = "pre-commit: REFUSED — the following check(s) failed:"
 CHECK_BULLET = re.compile(r"^  - (?P<check>\S.*)$")
 
 
-def gate_event_of(line: str, *, in_refusal: bool) -> dict[str, str] | None:
+def gate_event_of(line: str, in_refusal: bool) -> dict[str, str] | None:
     """Read one output line as an event of the commit gate (W1181).
 
     ⚑ THE GATE'S OWN LINES RIDE IN THE COMMIT'S OUTPUT, so no hook is touched: the job cap it was

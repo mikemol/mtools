@@ -100,7 +100,9 @@ def load(path: Path) -> list[Entry] | str:
         return []
     try:
         raw = cast("object", json.loads(path.read_text(encoding="utf-8")))
-    except (OSError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, ValueError)):
+            raise
         return f"cannot read {path}: {exc}"
     if not isinstance(raw, list) or not all(isinstance(e, dict) for e in cast("list[object]", raw)):
         return f"{path} is not a JSON list of objects"

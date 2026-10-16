@@ -57,7 +57,9 @@ def run_checker(name: str, argv: list[str], stdin_text: str | None = None) -> Ve
         )
     except FileNotFoundError:
         return None, f"{name} is not installed in the project venv"
-    except (OSError, subprocess.SubprocessError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
+            raise
         return None, f"{name} could not run"
     if proc.returncode == 0:
         return True, ""

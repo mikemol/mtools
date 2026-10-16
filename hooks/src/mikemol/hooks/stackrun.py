@@ -87,7 +87,9 @@ def items_of(path: Path) -> list[Item] | str:
     """
     try:
         raw = cast("object", json.loads(path.read_text(encoding="utf-8")))
-    except (OSError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, ValueError)):
+            raise
         return f"{path}: {exc}"
     if not isinstance(raw, list) or not raw:
         return f"{path}: a stack is a non-empty JSON list of entries"

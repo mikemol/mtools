@@ -93,7 +93,9 @@ def run(args: Sequence[str]) -> int:
         try:
             files, skipped = members_of(Path(name))
             findings = privacy_audit.judge(opa, privacy_audit.policy_path(), files)
-        except (OSError, RuntimeError, zipfile.BadZipFile, tarfile.TarError) as exc:
+        except Exception as exc:
+            if not isinstance(exc, (OSError, RuntimeError, zipfile.BadZipFile, tarfile.TarError)):
+                raise
             sys.stderr.write(f"mikemol-privacy-shipped: cannot judge {name}: {exc}\n")
             return privacy_audit.NO_JUDGE
         sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)

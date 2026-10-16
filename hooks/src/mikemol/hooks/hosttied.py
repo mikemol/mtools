@@ -51,7 +51,7 @@ HOST_TIED = frozenset(
 )
 
 
-def skip_reason(module: str, *, in_sdist: bool) -> str | None:
+def skip_reason(module: str, in_sdist: bool) -> str | None:
     """Say why a test module is skipped, if it is.
 
     Returns:

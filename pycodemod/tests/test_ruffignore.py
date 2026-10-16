@@ -96,6 +96,22 @@ def test_a_listed_file_is_extended_in_place_and_a_repeat_changes_nothing() -> No
     assert ruffignore.add_for_file(twice, _PATH, [_RULE, _OTHER], _REASON) == twice
 
 
+_MULTIFILE = (
+    '[tool.ruff.lint]\nselect = ["ALL"]\nignore = ["a"]\n\n'
+    '[tool.ruff.lint.per-file-ignores]\n"src/p/m.py" = [\n    "assert",\n    # why\n'
+    '    "other",\n]\n"tests/*" = ["assert"]\n'
+)
+
+
+def test_a_file_listed_over_several_lines_is_extended_and_never_given_a_second_key() -> None:
+    """The hooks regression: a duplicate key is invalid TOML and blinds every checker."""
+    grown = ruffignore.add_for_file(_MULTIFILE, _PATH, [_RULE], _REASON)
+    assert grown is not None
+    assert grown.count(f'"{_PATH}" =') == 1
+    assert _per_file(grown)[_PATH] == ["assert", "other", _RULE]
+    assert ruffignore.add_for_file(grown, _PATH, [_RULE], _REASON) == grown
+
+
 def test_no_per_file_table_is_none_so_the_caller_falls_back_to_the_global_list() -> None:
     """The control: without the table there is nowhere narrower to put it."""
     assert ruffignore.add_for_file(_SINGLE, _PATH, [_RULE], _REASON) is None

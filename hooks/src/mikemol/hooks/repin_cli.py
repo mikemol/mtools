@@ -162,7 +162,6 @@ def apply(
     target: str,
     dists: frozenset[str] | None,
     runner: Runner,
-    *,
     sync: bool,
 ) -> list[tuple[str, str]]:
     """Move every repo's selected pins to `target`, syncing each one that changed.
@@ -203,7 +202,7 @@ def _parse(args: Sequence[str]) -> tuple[dict[str, list[str]], set[str]] | None:
     return valued, flags
 
 
-def _refusal(target: str | None, *, write: bool) -> str | None:
+def _refusal(target: str | None, write: bool) -> str | None:
     """Say why the target and the write flag cannot be used together, if they cannot.
 
     Returns:

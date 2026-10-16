@@ -235,7 +235,9 @@ def run(args: Sequence[str]) -> int:
             else:
                 files, skipped = files_of(root, tracked(root, dist))
             findings = judge(opa, policy_path(), files)
-        except (OSError, RuntimeError) as exc:
+        except Exception as exc:
+            if not isinstance(exc, (OSError, RuntimeError)):
+                raise
             sys.stderr.write(f"mikemol-privacy-audit: cannot judge {dist}: {exc}\n")
             return NO_JUDGE
         sys.stdout.writelines(json.dumps(f, sort_keys=True) + "\n" for f in findings)

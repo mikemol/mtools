@@ -63,7 +63,9 @@ def format_file(path: Path, out: TextIO, err: TextIO) -> int:
     """
     try:
         before = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError) as problem:
+    except Exception as problem:
+        if not isinstance(problem, (OSError, UnicodeDecodeError)):
+            raise
         err.write(f"mikemol-pycheck: {path}: cannot be read ({problem}); not formatted\n")
         return EXIT_NOT_RUN
     after = format_text(path, before, err)

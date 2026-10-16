@@ -197,7 +197,7 @@ def _tokenize(cmd: str) -> list[str]:
         return []
 
 
-def _classify(tok: str, *, found: list[Finding], pending_interp: bool) -> bool:
+def _classify(tok: str, found: list[Finding], pending_interp: bool) -> bool:
     """Record any inline-script tell on `tok`; return the new pending-interp state.
 
     Returns:
@@ -381,7 +381,9 @@ def main() -> int:
     """
     try:
         payload: object = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError):
+    except Exception as caught:
+        if not isinstance(caught, (json.JSONDecodeError, ValueError, UnicodeDecodeError, OSError)):
+            raise
         return 0  # never break the session on a parse failure
     cmd = command_of(payload)
     if not cmd.strip():

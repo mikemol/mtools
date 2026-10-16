@@ -43,6 +43,42 @@ def _single_items(raw: str) -> list[str]:
     return [item.strip() for item in raw.split(",") if item.strip()]
 
 
+def _extend_oneline(text: str, bounds: tuple[int, int], path: str, rules: list[str]) -> str | None:
+    # A file already listed on one line gets the missing rules appended on that line.
+    start, end = bounds
+    body = text[start:end]
+    entry = re.search(rf'^"{re.escape(path)}" = \[(?P<items>[^\n\]]*)\]$', body, re.MULTILINE)
+    if entry is None:
+        return None
+    held = _single_items(cast("str", entry.group("items")))
+    fresh = [rule for rule in rules if f'"{rule}"' not in held]
+    if not fresh:
+        return text
+    joined = ", ".join([*held, *(f'"{rule}"' for rule in fresh)])
+    line = f'"{path}" = [{joined}]'
+    return text[:start] + body[: entry.start()] + line + body[entry.end() :] + text[end:]
+
+
+def _extend_multiline(
+    text: str, bounds: tuple[int, int], path: str, rules: list[str]
+) -> str | None:
+    # A file already listed over several lines gets the missing rules before the closing bracket;
+    # any other spelling of its key is not ours to edit, so the answer is None, never a second key.
+    start, end = bounds
+    body = text[start:end]
+    found = re.search(
+        rf'^"{re.escape(path)}" = \[\n(?P<items>.*?)^\]$', body, re.MULTILINE | re.DOTALL
+    )
+    if found is None:
+        return None
+    fresh = [rule for rule in rules if f'"{rule}"' not in cast("str", found.group("items"))]
+    if not fresh:
+        return text
+    cut = found.end("items")
+    added = "".join(f'    "{rule}",\n' for rule in fresh)
+    return text[:start] + body[:cut] + added + body[cut:] + text[end:]
+
+
 def add_for_file(text: str, path: str, rules: list[str], reason: str) -> str | None:
     """Add `rules` for ONE file to `[tool.ruff.lint.per-file-ignores]`, with `reason` above them.
 
@@ -62,22 +98,19 @@ def add_for_file(text: str, path: str, rules: list[str], reason: str) -> str | N
         return None
     start = at + len(header) + 1
     after = _NEXT_TABLE.search(text, start)
-    end = after.start() if after else len(text)
-    body = text[start:end]
-    entry = re.search(rf'^"{re.escape(path)}" = \[(?P<items>[^\n\]]*)\]$', body, re.MULTILINE)
-    if entry is not None:
-        held = _single_items(cast("str", entry.group("items")))
-        fresh = [rule for rule in rules if f'"{rule}"' not in held]
-        if not fresh:
-            return text
-        joined = ", ".join([*held, *(f'"{rule}"' for rule in fresh)])
-        line = f'"{path}" = [{joined}]'
-        return text[:start] + body[: entry.start()] + line + body[entry.end() :] + text[end:]
+    bounds = (start, after.start() if after else len(text))
+    body = text[bounds[0] : bounds[1]]
+    if re.search(rf'^"{re.escape(path)}" = ', body, re.MULTILINE):
+        # ⚑ NEVER A SECOND KEY: TOML refuses a duplicate, and a refused pyproject blinds every
+        # checker (measured on hooks, whose commit_kata.py entry spans lines).
+        return _extend_oneline(text, bounds, path, rules) or _extend_multiline(
+            text, bounds, path, rules
+        )
     comment = "".join(f"# {line}\n" for line in reason.splitlines())
     listed = ", ".join(f'"{rule}"' for rule in rules)
     block = f'{comment}"{path}" = [{listed}]\n'
-    trimmed = body.rstrip("\n")
-    return text[:start] + trimmed + "\n\n" + block + ("\n" if after else "") + text[end:]
+    tail = "\n" if after else ""
+    return text[:start] + body.rstrip("\n") + "\n\n" + block + tail + text[bounds[1] :]
 
 
 def add(text: str, rules: list[str], reason: str) -> str | None:

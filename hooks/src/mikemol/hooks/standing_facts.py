@@ -49,7 +49,9 @@ def _git(cwd: Path, *args: str) -> str | None:
             check=False,
             timeout=10,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
         return None
     return proc.stdout if proc.returncode == 0 else None
 
@@ -82,7 +84,9 @@ def queue_doc(state: Path) -> dict[str, object] | None:
     try:
         with state.open(encoding="utf-8") as handle:
             raw: object = json.load(handle)
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     return as_record(raw)
 
@@ -146,7 +150,9 @@ def baseline_lines(path: Path) -> int | None:
         text = path.read_text(encoding="utf-8")
     except FileNotFoundError:
         return 0
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     return sum(1 for line in text.splitlines() if line.strip())
 

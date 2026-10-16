@@ -115,7 +115,7 @@ NO_SYNC_LINE = "uv lock only (--no-sync): .venv is left exactly as it is"
 
 
 def plan_lines(
-    sha: str, old: set[str], source: str, dists: tuple[str, ...] = DISTS, *, sync: bool = True
+    sha: str, old: set[str], source: str, dists: tuple[str, ...] = DISTS, sync: bool = True
 ) -> list[str]:
     """Say what an apply would do, for printing before it does it.
 

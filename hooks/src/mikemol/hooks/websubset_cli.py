@@ -58,7 +58,9 @@ def _findings(path: Path, target: str) -> list[websubset.Finding] | None:
     """
     try:
         source = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, UnicodeDecodeError)):
+            raise
         return None
     found = [*websubset.check(source, target), *websubset.unannotated(source)]
     return sorted(found, key=_order)

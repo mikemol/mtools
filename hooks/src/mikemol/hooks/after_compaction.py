@@ -53,7 +53,9 @@ def read_notes(directory: Path) -> str | None:
     """
     try:
         text = (directory / NOTES).read_text(encoding="utf-8")
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     if len(text) <= MAX_NOTES_CHARS:
         return text

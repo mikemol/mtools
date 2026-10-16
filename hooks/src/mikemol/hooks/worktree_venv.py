@@ -71,7 +71,9 @@ def _ask_git(root: Path) -> list[str] | None:
             check=False,
             env=_clean_env(),
         )
-    except (OSError, subprocess.SubprocessError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
+            raise
         return None
     if proc.returncode != 0:
         return None

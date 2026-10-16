@@ -68,7 +68,9 @@ def _saved(state: Path) -> tuple[int, int]:
     """
     try:
         raw = cast("object", json.loads(state.read_text(encoding="utf-8")))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return 0, 0
     if not isinstance(raw, dict):
         return 0, 0

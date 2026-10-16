@@ -317,7 +317,9 @@ def _command_from_stdin() -> str:
     """
     try:
         payload: object = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (json.JSONDecodeError, ValueError)):
+            raise
         return ""
     if not isinstance(payload, dict):
         return ""

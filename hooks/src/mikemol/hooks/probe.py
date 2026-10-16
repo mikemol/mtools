@@ -178,7 +178,9 @@ def fire(row: Row, template: str, project: Path, cwd: Path, where: str) -> Verdi
             check=False,
             timeout=TIMEOUT_S,
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, subprocess.SubprocessError)):
+            raise
         return Verdict(row.entry, where, None, f"could not run {argv[0]}: {exc}")
     decision = decision_of(done.stdout)
     if decision is None:

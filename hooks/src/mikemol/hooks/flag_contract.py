@@ -50,7 +50,7 @@ def rest(argv: object) -> list[str]:
 
 
 def check_flags(
-    argv: object, known: Iterable[str], label: str, *, destination: str | None
+    argv: object, known: Iterable[str], label: str, destination: str | None
 ) -> int | None:
     """Refuse any flag not in `known`, naming the known set. Call this FIRST.
 
@@ -114,7 +114,7 @@ MUTATION = Choice(
 )
 
 
-def exactly_one(argv: object, label: str, choice: Choice, *, destination: str | None) -> int | None:
+def exactly_one(argv: object, label: str, choice: Choice, destination: str | None) -> int | None:
     """Refuse unless exactly one of `choice`'s flags is stated.
 
     ⚑ NO BARE-RUN EXEMPTION: a tool may treat no target as THE WHOLE TREE, so a no-argument run

@@ -101,7 +101,9 @@ def zram_headroom(stat: Path = ZRAM_MM_STAT) -> Headroom | None:
     try:
         fields = stat.read_text(encoding="utf-8").split()
         orig, compressed, used, limit = (int(value) for value in fields[:MM_STAT_FIELDS])
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     if limit <= 0:
         return None

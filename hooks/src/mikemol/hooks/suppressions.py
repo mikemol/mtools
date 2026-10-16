@@ -73,7 +73,9 @@ def directives(source: str) -> Counter[str]:
             text = _directive_text(token.string)
             if text is not None:
                 found[text] += 1
-    except (tokenize.TokenError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (tokenize.TokenError, SyntaxError)):
+            raise
         return Counter()
     return found
 

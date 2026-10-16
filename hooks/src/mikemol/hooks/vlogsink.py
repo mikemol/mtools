@@ -74,7 +74,9 @@ def _exchange(
         conn.request("POST", target, body=data, headers=headers)
         answer = conn.getresponse()
         answer.read()
-    except (http.client.HTTPException, OSError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (http.client.HTTPException, OSError)):
+            raise
         return 0, f"{type(exc).__name__}: {exc}"
     finally:
         conn.close()

@@ -122,7 +122,9 @@ def run_probe(argv: Sequence[str]) -> str | None:
             check=False,
             timeout=PROBE_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
         return None
     return done.stdout if done.returncode == 0 else None
 

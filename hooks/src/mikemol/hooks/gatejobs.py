@@ -64,7 +64,9 @@ def load_of(path: Path) -> float:
     """
     try:
         return float(path.read_text(encoding="utf-8").split()[0])
-    except (OSError, ValueError, IndexError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError, IndexError)):
+            raise
         return 0.0
 
 

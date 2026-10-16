@@ -63,7 +63,9 @@ def read_toml(path: Path) -> dict[str, object]:
     """
     try:
         return cast("dict[str, object]", tomllib.loads(path.expanduser().read_text("utf-8")))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return {}
 
 

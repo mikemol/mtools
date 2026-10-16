@@ -83,7 +83,9 @@ def _instant(value: object, unit: str) -> dt.datetime | None:
             return dt.datetime.fromtimestamp(value / UNITS[unit], dt.UTC)
         if isinstance(value, str):
             return dt.datetime.fromisoformat(value)
-    except (OverflowError, OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OverflowError, OSError, ValueError)):
+            raise
         return None
     return None
 
