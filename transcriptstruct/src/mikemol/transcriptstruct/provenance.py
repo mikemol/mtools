@@ -114,7 +114,7 @@ def _by_text(record: UserRecord, scheduled: Sequence[str]) -> Provenance:
     return Provenance("human", text)
 
 
-def classify(record: Record, *, scheduled: Sequence[str] = ()) -> Provenance:
+def classify(record: Record, scheduled: Sequence[str] = ()) -> Provenance:
     """Say who is speaking in `record`.
 
     `scheduled` lists prompt prefixes the caller's scheduler emits; see the module docstring.

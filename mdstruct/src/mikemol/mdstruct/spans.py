@@ -106,7 +106,7 @@ def spans(path: Path) -> list[Span]:
     return out
 
 
-def find_section(path: Path, needle: str, *, exact: bool = False) -> Span:
+def find_section(path: Path, needle: str, exact: bool = False) -> Span:
     """Return the ONE section whose heading contains `needle`, or EQUALS it under `exact`.
 
     ⚑ RAISES ON AMBIGUITY, naming both candidates. A substring matching two headings cannot be

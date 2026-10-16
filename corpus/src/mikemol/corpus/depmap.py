@@ -111,7 +111,9 @@ def source_of(root: Path, path: Path) -> str:
 def _tree(path: Path) -> ast.Module | None:
     try:
         return ast.parse(path.read_text(encoding="utf-8", errors="replace"), filename=str(path))
-    except (OSError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, SyntaxError)):
+            raise
         return None
 
 
@@ -224,7 +226,9 @@ def _mentions(path: Path, word: str, source: str, rel: str) -> list[Edge]:
     try:
         text = path.read_text(encoding="utf-8", errors="replace")
         tokens = list(tokenize.generate_tokens(io.StringIO(text).readline))
-    except (OSError, tokenize.TokenError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, tokenize.TokenError, SyntaxError)):
+            raise
         return []
     return [
         Edge("mention", source, rel, tok.start[0], word.lower())
@@ -262,7 +266,9 @@ def hook_edges(root: Path) -> list[Edge]:
         return []
     try:
         events = _dict(cast("object", json.loads(path.read_text(encoding="utf-8")))).get("hooks")
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return []
     found: list[Edge] = []
     for event, groups in _dict(events).items():
@@ -310,7 +316,9 @@ def shell_edges(root: Path) -> list[Edge]:
     for path in _shell_files(root):
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
-        except (OSError, UnicodeDecodeError):
+        except Exception as caught:
+            if not isinstance(caught, (OSError, UnicodeDecodeError)):
+                raise
             continue
         source, rel = source_of(root, path), str(path.relative_to(root))
         for number, line in enumerate(lines, start=1):

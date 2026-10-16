@@ -178,6 +178,8 @@ def root_tree(archive: Archive) -> tree.Node | tree.Skip:
     charset = root.charset or "utf-8"
     try:
         text = root.payload.decode(charset)
-    except (UnicodeDecodeError, LookupError) as fault:
+    except Exception as fault:
+        if not isinstance(fault, (UnicodeDecodeError, LookupError)):
+            raise
         return tree.Skip(f"root part is not decodable as {charset}: {fault}")
     return tree.parse(text)

@@ -16,9 +16,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 type Json = str | int | bool | list[Json] | dict[str, Json] | None
-type Record = dict[str, Json]
-type OwnerGrades = Mapping[tuple[str, str], Json]
-type _Hop = tuple[int, str | None, list[str]]
+Record = dict[str, Json]
+OwnerGrades = Mapping[tuple[str, str], Json]
+_Hop = tuple[int, str | None, list[str]]
 
 STRENGTH = {"vacuous": 0, "existence": 1, "indeterminate": 1, "behavioral": 2, "imported": 3}
 ORDER = {"existence": 1, "behavioral": 2}  # valid --min-strength thresholds

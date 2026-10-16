@@ -90,7 +90,7 @@ def excluded(rel: Path) -> bool:
     )
 
 
-def roots(*, root: Path, skip: Collection[str] = ()) -> tuple[str, ...]:
+def roots(root: Path, skip: Collection[str] = ()) -> tuple[str, ...]:
     """Discover the top-level directories that make up the corpus of `root`.
 
     ⚑ The skip vocabulary applies at the ROOT level too: a generated tree that is a top-level
@@ -114,7 +114,7 @@ def roots(*, root: Path, skip: Collection[str] = ()) -> tuple[str, ...]:
     )
 
 
-def resolve_root(requested: str, *, root: Path) -> Path:
+def resolve_root(requested: str, root: Path) -> Path:
     """Resolve one caller-supplied path: the current directory FIRST, then `root`.
 
     ⚑ The caller's shell is what they meant, so CWD wins; `root` is a fallback that can only

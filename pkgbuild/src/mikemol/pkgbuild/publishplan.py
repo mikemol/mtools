@@ -41,13 +41,15 @@ def counter_of(state: Path) -> int | None:
     """
     try:
         table = cast("dict[str, object]", json.loads(state.read_text(encoding="utf-8")))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     value = table.get("counter")
     return value if isinstance(value, int) else None
 
 
-def steps(sha: str, index: str, number: int, *, minted: bool) -> list[str]:
+def steps(sha: str, index: str, number: int, minted: bool) -> list[str]:
     """Write the plan for one release.
 
     Returns:

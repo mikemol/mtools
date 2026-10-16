@@ -85,7 +85,9 @@ def project_name(dist: Path) -> str | None:
     try:
         text = (dist / "pyproject.toml").read_text(encoding="utf-8")
         table = cast("dict[str, object]", tomllib.loads(text))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
     project = table.get("project")
     name = cast("dict[str, object]", project).get("name") if isinstance(project, dict) else None

@@ -50,7 +50,7 @@ and the build then runs one monolithic sweep per claim."""
 
 CONCEPT_PREFIX = "concept:"
 
-type FuncDef = ast.FunctionDef | ast.AsyncFunctionDef
+FuncDef = ast.FunctionDef | ast.AsyncFunctionDef
 
 
 class Args(argparse.Namespace):

@@ -153,7 +153,7 @@ def unpaired_holds(records: list[Record]) -> list[str]:
     return [s for s in holds if not _is_paired(s, asked)]
 
 
-def cannot(why: str, *, active: bool) -> tuple[dict[str, str] | None, str | None]:
+def cannot(why: str, active: bool) -> tuple[dict[str, str] | None, str | None]:
     """Report a check that could not run: a block when not active, else a stderr note.
 
     Returns:
@@ -201,7 +201,9 @@ def main() -> int:
     """
     try:
         payload = cast("object", json.load(sys.stdin))
-    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (json.JSONDecodeError, UnicodeDecodeError)):
+            raise
         decision, note = cannot(f"payload is not JSON ({exc})", active=False)
     else:
         if isinstance(payload, dict):

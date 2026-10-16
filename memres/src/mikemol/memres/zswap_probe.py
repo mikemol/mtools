@@ -136,7 +136,6 @@ def zswap_bound(leaf: Path, root: Path = CGROUP_ROOT) -> dict[str, object]:
 def pinned(
     cur: str,
     mx: str,
-    *,
     tol_rel: int = _TOL_REL,
     tol_abs: int = _TOL_ABS,
     flip: bool = False,

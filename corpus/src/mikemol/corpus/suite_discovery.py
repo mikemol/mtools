@@ -69,7 +69,9 @@ def _ignored(root: Path, names: list[str]) -> frozenset[str]:
             check=False,
             timeout=_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.SubprocessError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
+            raise
         return frozenset()
     return frozenset(line.strip() for line in done.stdout.splitlines() if line.strip())
 

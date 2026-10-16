@@ -45,12 +45,12 @@ from typing import Protocol
 
 from mikemol.mutation import regexop
 
-type FuncNode = ast.FunctionDef | ast.AsyncFunctionDef
-type Literal = ast.Dict | ast.List | ast.Set | ast.Tuple
-type DefSite = tuple[str, FuncNode]
-type BranchSite = tuple[str, int, tuple[ast.stmt, ast.stmt]]
-type FlipSite = tuple[str, int, ast.expr]
-type DataSite = tuple[str, int, str, ast.expr | None, ast.expr]
+FuncNode = ast.FunctionDef | ast.AsyncFunctionDef
+Literal = ast.Dict | ast.List | ast.Set | ast.Tuple
+DefSite = tuple[str, FuncNode]
+BranchSite = tuple[str, int, tuple[ast.stmt, ast.stmt]]
+FlipSite = tuple[str, int, ast.expr]
+DataSite = tuple[str, int, str, ast.expr | None, ast.expr]
 
 _RAISE = "raise BaseException('PAPERKIT_MUT')\n"
 _MARKER = '"PAPERKIT_PERTURB"'

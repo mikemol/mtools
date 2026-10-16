@@ -85,7 +85,6 @@ def write(
     path: str | Path,
     data: str | bytes | bytearray,
     source: Source | None = None,
-    *,
     mkdirs: bool = False,
 ) -> int:
     """Write bytes or text to the working tree, atomically, always UTF-8.

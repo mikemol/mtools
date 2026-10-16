@@ -23,8 +23,8 @@ class Cell:
     header: bool
 
 
-type Row = tuple[Cell, ...]
-type Table = tuple[Row, ...]
+Row = tuple[Cell, ...]
+Table = tuple[Row, ...]
 
 
 def _rows(table: tree.Node) -> Iterator[tree.Node]:

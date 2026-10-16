@@ -87,7 +87,15 @@ namespace-packages = ["src/mikemol", "tests"]
 [tool.ruff.lint]
 preview = true
 select = ["ALL"]
-ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+    # that demand them are off for this dist.
+    "boolean-default-value-positional-argument",
+    "boolean-type-hint-positional-argument",
+]
 
 # ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (mtools:
 # W857, as debtplan declares for its siblings, W547). Left to detection, a venv that has it

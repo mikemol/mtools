@@ -44,7 +44,7 @@ def contents(sha: str, root: str | Path | None = None) -> tuple[list[str], list[
     return tracked, sorted(saved)
 
 
-def _restore_tracked(here: Layout, sha: str, rel: str, *, apply: bool) -> tuple[str, str]:
+def _restore_tracked(here: Layout, sha: str, rel: str, apply: bool) -> tuple[str, str]:
     """Restore or report one tracked path.
 
     Returns:
@@ -57,7 +57,7 @@ def _restore_tracked(here: Layout, sha: str, rel: str, *, apply: bool) -> tuple[
     return rel, "tracked" if ok else "FAILED"
 
 
-def _restore_untracked(here: Layout, rel: str, src: Path, *, apply: bool) -> tuple[str, str]:
+def _restore_untracked(here: Layout, rel: str, src: Path, apply: bool) -> tuple[str, str]:
     """Restore or report one untracked path from the store.
 
     Returns:
@@ -77,7 +77,6 @@ def _restore_untracked(here: Layout, rel: str, src: Path, *, apply: bool) -> tup
 def restore(
     sha: str,
     paths: Sequence[str | Path] = (),
-    *,
     apply: bool = False,
     root: str | Path | None = None,
 ) -> list[tuple[str, str]]:

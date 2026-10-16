@@ -61,7 +61,9 @@ def dev_requirements(tree: Path) -> list[str]:
     try:
         text = (tree / "pyproject.toml").read_text(encoding="utf-8")
         data = cast("dict[str, object]", tomllib.loads(text))
-    except (OSError, tomllib.TOMLDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, tomllib.TOMLDecodeError)):
+            raise
         return []
     groups = cast("dict[str, object]", data.get("dependency-groups", {}))
     dev = cast("list[object]", groups.get("dev", []))

@@ -33,7 +33,7 @@ class Presence:
     ABSENT: "ClassVar[Presence]"
     BROKEN: "ClassVar[Presence]"
 
-    def __init__(self, name: str, *, is_defect: bool, gloss: str) -> None:
+    def __init__(self, name: str, is_defect: bool, gloss: str) -> None:
         """Make one member.
 
         Args:

@@ -69,7 +69,9 @@ def peak_bytes(where: Cgroup = SELF) -> int | None:
         return None
     try:
         return int(pathlib.Path(where.root + cg + "/memory.peak").read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
         return None
 
 

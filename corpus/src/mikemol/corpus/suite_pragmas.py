@@ -72,7 +72,7 @@ def requires(path: str) -> tuple[str, ...]:
     return tuple(p.strip() for p in declared.split(",") if p.strip())
 
 
-def tenant(path: str, *, admitted: Collection[str]) -> str | None:
+def tenant(path: str, admitted: Collection[str]) -> str | None:
     """Name the tenant FLAG a suite declares, when it names an admitted tenant.
 
     Returns:

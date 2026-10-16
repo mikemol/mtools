@@ -154,7 +154,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     try:
         text = run(sys.argv[1:] if argv is None else argv)
-    except (UsageError, RecordError, OSError) as err:
+    except Exception as err:
+        if not isinstance(err, (UsageError, RecordError, OSError)):
+            raise
         return report("mikemol-grades-rec", err)
     sys.stdout.write(text)
     return 0

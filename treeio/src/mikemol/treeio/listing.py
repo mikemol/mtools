@@ -155,7 +155,7 @@ def _list_rev(pattern: str, source: Rev) -> list[str]:
     return sorted(found)
 
 
-def listdir(pattern: str, source: Source | None = None, *, strict: bool = True) -> list[str]:
+def listdir(pattern: str, source: Source | None = None, strict: bool = True) -> list[str]:
     """List repo-relative paths matching a glob at `source`, in `LISTDIR_ORDER`.
 
     REFUSES (`AmbiguousPatternError`) a pattern that would mean different things at a WorkingTree

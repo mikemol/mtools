@@ -78,7 +78,9 @@ def _declaration(raw: str, number: int) -> Declared:
     try:
         spec = parse_regex_spec(rest)
         re.compile(spec.pattern)
-    except (ValueError, re.error) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (ValueError, re.error)):
+            raise
         msg = f"line {number}: {exc}"
         raise ValueError(msg) from exc
     return Declared(_module(module, number), spec)

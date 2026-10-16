@@ -33,11 +33,11 @@ from typing import cast
 from mikemol.audiostruct.records import Record, normalize
 
 # A loaded speech-to-text model: one file's audio to a result with a `segments` list.
-type Transcriber = Callable[[object], object]
+Transcriber = Callable[[object], object]
 # A loaded forced-alignment model: one file's segments and audio to a word-timed result.
-type Aligner = Callable[[list[object], object], object]
+Aligner = Callable[[list[object], object], object]
 # A loaded diarization pipeline: one file's audio and aligned result to a speaker-assigned result.
-type Diarizer = Callable[[object, object], object]
+Diarizer = Callable[[object, object], object]
 
 
 @dataclass(frozen=True, slots=True)

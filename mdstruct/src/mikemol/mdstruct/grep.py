@@ -110,9 +110,7 @@ def regex_tell(pattern: str) -> str:
     return ""
 
 
-def search(
-    path: Path, pattern: str, *, regex: bool = False, ignore_case: bool = False
-) -> list[Hit]:
+def search(path: Path, pattern: str, regex: bool = False, ignore_case: bool = False) -> list[Hit]:
     """Return every matching line with the structural span containing it.
 
     ⚑ THE PATTERN IS LITERAL BY DEFAULT. A staleness sweep looks for prose, and prose contains

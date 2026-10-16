@@ -192,7 +192,9 @@ def script_imports(path: Path, names: set[str]) -> set[str]:
     """
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError):
+    except Exception as caught:
+        if not isinstance(caught, (OSError, SyntaxError)):
+            raise
         return set()
     return dagderive.node_imports(tree, names)
 

@@ -87,7 +87,14 @@ namespace-packages = ["src/mikemol", "tests"]
 [tool.ruff.lint]
 preview = true
 select = ["ALL"]
-ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+    # that demand them are off for this dist.
+    "boolean-type-hint-positional-argument",
+]
 
 # ⚑ THE SIBLINGS ARE `mikemol.*` TOO. Without this, ruff sorts them as third-party when they are
 # installed (the dev venv) and as first-party when they sit beside src (the Bazel sandbox), and

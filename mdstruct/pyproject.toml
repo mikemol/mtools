@@ -242,7 +242,15 @@ select = ["ALL"]
 # ⚑⚑ CPY001 IS ABSENT FROM THIS LIST, UNLIKE UPSTREAM — because this repo HAS a license
 # (Apache-2.0, declared above), so the copyright-header rule is a real gate here rather than a
 # licensing decision a linter would be making on the operator's behalf.
-ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
+ignore = [
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
+    # that demand them are off for this dist.
+    "boolean-default-value-positional-argument",
+    "boolean-type-hint-positional-argument",
+]
 
 # ⚑⚑ THE PATTERN IS STRICTER THAN ITS PROSE, AND DELIBERATELY. "Carry the two-line header"
 # underspecifies it: this also fixes ORDER (SPDX first), ADJACENCY, the `#` prefix on the

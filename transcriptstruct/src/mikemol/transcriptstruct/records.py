@@ -24,8 +24,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
-type Json = dict[str, object]
-type Content = str | tuple[object, ...]
+Json = dict[str, object]
+Content = str | tuple[object, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,7 +80,7 @@ class MalformedLine:
     error: str
 
 
-type Record = UserRecord | AssistantRecord | AttachmentRecord | UnknownRecord | MalformedLine
+Record = UserRecord | AssistantRecord | AttachmentRecord | UnknownRecord | MalformedLine
 
 
 class _ShapeError(Exception):
@@ -132,7 +132,7 @@ def _optional_str(value: object) -> str | None:
     return value if isinstance(value, str) else None
 
 
-def _attachment(env: Json, line: int, *, sidechain: bool) -> AttachmentRecord:
+def _attachment(env: Json, line: int, sidechain: bool) -> AttachmentRecord:
     """Decode an attachment envelope, reading `origin` where it actually is: nested.
 
     Returns:

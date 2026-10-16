@@ -59,7 +59,7 @@ def _type_of(envelope: object) -> str:
 
 
 def raw(
-    records: Iterable[Record], types: Collection[str], *, window: "Window | None" = None
+    records: Iterable[Record], types: Collection[str], window: "Window | None" = None
 ) -> "Result":
     """List whole records of the named envelope types, as JSON, in line order.
 
@@ -82,7 +82,7 @@ def raw(
 
 
 # An extracted line: its blocks, or None where no well-formed record has that line.
-type Found = tuple[Block, ...] | None
+Found = tuple[Block, ...] | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -163,7 +163,6 @@ def _pass(records: Iterable[Record], window: Window, tally: _Tally) -> Iterator[
 def grep_blocks(
     records: Iterable[Record],
     pattern: str,
-    *,
     block_kinds: Collection[str] | None = None,
     window: Window | None = None,
 ) -> Result:
@@ -186,7 +185,6 @@ def grep_blocks(
 def grep_prose(
     records: Iterable[Record],
     pattern: str,
-    *,
     speakers: Collection[str],
     scheduled: Sequence[str] = (),
     window: Window | None = None,
@@ -209,7 +207,6 @@ def grep_prose(
 
 def prose(
     records: Iterable[Record],
-    *,
     speakers: Collection[str] = ("human", "peer", "assistant"),
     scheduled: Sequence[str] = (),
     window: Window | None = None,
@@ -269,7 +266,7 @@ def _under(path: Path, roots: Iterable[Path]) -> bool:
     return any(path[: len(root)] == root for root in roots)
 
 
-def stats(records: Iterable[Record], *, scheduled: Sequence[str] = ()) -> Stats:
+def stats(records: Iterable[Record], scheduled: Sequence[str] = ()) -> Stats:
     """Count the populations: speakers, block kinds, and what nothing decoded.
 
     Returns:

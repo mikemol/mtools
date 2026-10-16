@@ -71,7 +71,7 @@ class VerdictError(Exception):
     """A verdict command cannot be carried out as asked."""
 
 
-def verdict_word(*, ok: bool) -> str:
+def verdict_word(ok: bool) -> str:
     """Name a boolean outcome as a verdict word.
 
     Returns:
@@ -308,7 +308,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     try:
         dispatch(sys.argv[1:] if argv is None else argv)
-    except (UsageError, RecordError, VerdictError, OSError) as err:
+    except Exception as err:
+        if not isinstance(err, (UsageError, RecordError, VerdictError, OSError)):
+            raise
         return report("mikemol-gradekit-verdict", err)
     return 0
 

@@ -128,7 +128,7 @@ def judge(constant: Constant, table: Table) -> Row:
     return Row(constant, "VIOLATION", f"{word} is {value}")
 
 
-def census(roots: Sequence[Path], table: Table, *, everything: bool = False) -> list[Row]:
+def census(roots: Sequence[Path], table: Table, everything: bool = False) -> list[Row]:
     """Judge every EXIT_ constant of every `src` tree under the roots.
 
     ⚑ `everything` IS FOR A ROOT THAT HAS NO `src` DIRECTORY (luthen's `checks/`, 2026-10-15): every

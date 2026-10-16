@@ -27,11 +27,11 @@ from typing import cast
 from mikemol.audiostruct.stages import Aligner, Diarizer, Transcriber
 
 # `pipeline.transcribe(audio, batch_size)`.
-type TranscribeFn = Callable[[object, int], dict[str, object]]
+TranscribeFn = Callable[[object, int], dict[str, object]]
 # `alignment.align(transcript, model, align_model_metadata, audio, device)`.
-type AlignFn = Callable[[list[object], object, dict[str, object], object, str], dict[str, object]]
+AlignFn = Callable[[list[object], object, dict[str, object], object, str], dict[str, object]]
 # `diarize.assign_word_speakers(diarize_df, transcript_result)`.
-type AssignFn = Callable[[object, dict[str, object]], dict[str, object]]
+AssignFn = Callable[[object, dict[str, object]], dict[str, object]]
 
 
 def _transcribe(transcribe: TranscribeFn, batch_size: int, audio: object) -> object:

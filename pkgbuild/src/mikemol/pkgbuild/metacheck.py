@@ -232,7 +232,9 @@ def verdict(path: Path) -> dict[str, object]:
     try:
         fields, body = parse(read_metadata(path))
         shipped = license_files(path, fields)
-    except (OSError, ValueError, zipfile.BadZipFile, tarfile.TarError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (OSError, ValueError, zipfile.BadZipFile, tarfile.TarError)):
+            raise
         reason = [str(exc)]
         return {"artifact": path.name, "name": "", "version": "", "ok": False, "problems": reason}
     problems = [*check(fields, body), *shipped]

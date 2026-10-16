@@ -28,7 +28,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import cast
 
-type Json = dict[str, object]
+Json = dict[str, object]
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,7 +65,7 @@ class Unplaced:
     reason: str
 
 
-type Record = Segment | Unplaced
+Record = Segment | Unplaced
 
 
 class _ShapeError(Exception):

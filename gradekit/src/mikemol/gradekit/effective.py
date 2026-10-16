@@ -183,14 +183,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     try:
         text = run(sys.argv[1:] if argv is None else argv)
-    except (
-        UsageError,
-        RecordError,
-        ProjectError,
-        DuplicateKeyError,
-        BibSyntaxError,
-        OSError,
-    ) as err:
+    except Exception as err:
+        if not isinstance(
+            err,
+            (
+                UsageError,
+                RecordError,
+                ProjectError,
+                DuplicateKeyError,
+                BibSyntaxError,
+                OSError,
+            ),
+        ):
+            raise
         return report("mikemol-effective", err)
     sys.stdout.write(text)
     return 0

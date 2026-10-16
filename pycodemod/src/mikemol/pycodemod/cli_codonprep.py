@@ -17,10 +17,14 @@ a dry run is of the files as they stand, before the hoist has removed what would
     mikemol-pycodemod codon-prep-tree [--write] PROJECT...
 """
 
+import re
 import sys
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
+from mikemol.pycodemod import mutantslines, ruffignore
 from mikemol.pycodemod.cli_exceptsplit import print_except_split
 from mikemol.pycodemod.cli_futureimport import print_future_import
 from mikemol.pycodemod.cli_kwonly import print_kwonly
@@ -36,26 +40,86 @@ from mikemol.pycodemod.cli_typingblocks import (
 LABEL = "codon-prep"
 _FAILED = 2
 _TAIL = 3
+_FINDING = re.compile(r"^([a-z][a-z0-9-]*): ", re.MULTILINE)
+SELF_FIXABLE = frozenset(
+    {
+        "boolean-type-hint-positional-argument",
+        "boolean-default-value-positional-argument",
+        "typing-only-first-party-import",
+        "typing-only-third-party-import",
+        "typing-only-standard-library-import",
+    }
+)
+"""The rules a rewrite makes contradict Codon; each is switched off, per dist, in pyproject."""
+_WHY = (
+    "CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules\n"
+    "that demand them are off for this dist."
+)
+
+
+@dataclass(frozen=True, slots=True)
+class Refusal:
+    """The bar's refusal of one file: which file, its exit, what it said, which rules."""
+
+    name: str
+    code: int
+    output: str
+
+    @property
+    def rules(self) -> frozenset[str]:
+        """Name the rule ids of the findings in the output."""
+        return frozenset(cast("list[str]", _FINDING.findall(self.output)))
+
+    @property
+    def self_fixable(self) -> bool:
+        """Say whether every finding is a rule the rewrite itself makes contradict the target."""
+        return bool(self.rules) and self.rules <= SELF_FIXABLE
+
+    def line(self) -> str:
+        """Render the refusal as one line.
+
+        Returns:
+            the file, the exit and the first lines of the output.
+
+        """
+        tail = " | ".join(self.output.strip().splitlines()[:_TAIL])
+        return f"{self.name} fails the bar (exit {self.code}): {tail}"
 
 
 def _changed(snapshot: dict[str, str]) -> list[str]:
     return [name for name, text in snapshot.items() if Path(name).read_text("utf-8") != text]
 
 
-def _barred(root: Path, names: Sequence[str], run: Runner) -> str | None:
+def _barred(root: Path, names: Sequence[str], run: Runner) -> Refusal | None:
     """Hold each changed file to the repository bar.
 
     Returns:
-        None when every file is admitted, else a line naming the first that is not.
+        None when every file is admitted, else the refusal of the first that is not.
 
     """
     pycheck = root.parent / "hooks" / ".venv" / "bin" / "mikemol-pycheck"
     for name in names:
         code, out, err = run([str(pycheck), "--check-file", name], root)
         if code != 0:
-            tail = " | ".join((out + err).strip().splitlines()[:_TAIL])
-            return f"{name} fails the bar (exit {code}): {tail}"
+            return Refusal(name, code, out + err)
     return None
+
+
+def _ignore_the_contradiction(root: Path, refusal: Refusal) -> str | None:
+    """Switch off, in the dist's pyproject, the rules the rewrite made contradict the target.
+
+    Returns:
+        the pyproject's text before the edit (so a failure can put it back), or None when there was
+        no `ignore` list to extend.
+
+    """
+    path = root / "pyproject.toml"
+    before = path.read_text(encoding="utf-8")
+    after = ruffignore.add(before, sorted(refusal.rules), _WHY)
+    if after is None or after == before:
+        return None
+    path.write_text(after, encoding="utf-8")
+    return before
 
 
 def _both(files: list[str], flags: TypedArgsFlags, run: Runner) -> int:
@@ -76,13 +140,65 @@ def _prepared(root: Path, files: list[str], snapshot: dict[str, str], run: Runne
     if code >= _FAILED:
         restore(snapshot)
         return code
+    original: str | None = None
     broken = _barred(root, _changed(snapshot), run)
+    while broken is not None and broken.self_fixable:
+        before = _ignore_the_contradiction(root, broken)
+        if before is None:
+            break
+        original = original or before
+        sys.stdout.write(f"{LABEL} {root.name}: ruff rules switched off: {sorted(broken.rules)}\n")
+        broken = _barred(root, _changed(snapshot), run)
     if broken is not None:
         restore(snapshot)
-        sys.stdout.write(f"{LABEL} {broken}; every file restored\n")
+        _put_back(root, original)
+        sys.stdout.write(f"{LABEL} {broken.line()}; every file restored\n")
+        return _FAILED
+    stale = _stale_mutants(root, snapshot)
+    if stale:
+        restore(snapshot)
+        _put_back(root, original)
+        sys.stdout.write(f"{LABEL} {root.name}: declared mutants left matching nothing: {stale}\n")
         return _FAILED
     python = root / ".venv" / "bin" / "python"
-    return max(code, tested(root, python, snapshot, run))
+    result = tested(root, python, snapshot, run)
+    if result >= _FAILED:
+        _put_back(root, original)
+    return max(code, result)
+
+
+def _stale_mutants(root: Path, snapshot: dict[str, str]) -> list[str]:
+    """List the declared mutants this run left matching nothing (and that matched before).
+
+    ⚑ BLAME ONLY WHAT THE RUN DID: a declaration already stale before the rewrite is the dist's
+    own debt and is not charged to it, so the check compares the unapplied set after against before.
+
+    Returns:
+        the `<file>::<name>` of each newly stale declaration; empty when the dist has no
+        `mutants.regex`.
+
+    """
+    declared = root / "mutants.regex"
+    if not declared.is_file():
+        return []
+    lines = declared.read_text(encoding="utf-8")
+
+    def now(file: str) -> str | None:
+        path = root / file
+        return path.read_text(encoding="utf-8") if path.is_file() else None
+
+    def before(file: str) -> str | None:
+        return snapshot.get(str(root / file), now(file))
+
+    return sorted(
+        set(mutantslines.unapplied(lines, now)) - set(mutantslines.unapplied(lines, before))
+    )
+
+
+def _put_back(root: Path, original: str | None) -> None:
+    # Restore the dist's pyproject when this run had edited it.
+    if original is not None:
+        (root / "pyproject.toml").write_text(original, encoding="utf-8")
 
 
 def print_codon_prep_tree(roots: Sequence[str], *, write: bool, run: Runner = run_tool) -> int:

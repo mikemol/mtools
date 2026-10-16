@@ -6693,3 +6693,96 @@
   claim  = {`type Json = dict[str, Json] | int` would be a NameError as an assignment: line named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_typealias.py -k test_a_recursive_alias_is_listed_and_left_because_it_cannot_name_itself},
 }
+
+@misc{pycodemod-ruffignore-single-line-list-becomes-a-list-with-the-new-rules-and-the-old-ones,
+  section = {ruffignore},
+  title  = {Both old entries stay in order, the new rules follow under the reason, other tables stay},
+  claim  = {Both old entries stay in order, the new rules follow under the reason, other tables
+            stay.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruffignore.py -k test_a_single_line_list_becomes_a_list_with_the_new_rules_and_the_old_ones},
+}
+
+@misc{pycodemod-ruffignore-multi-line-list-keeps-its-comments-and-gains-the-rules-at-the-end,
+  section = {ruffignore},
+  title  = {The existing comment survives; the new entries are appended before the closing bracket},
+  claim  = {The existing comment survives; the new entries are appended before the closing bracket.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruffignore.py -k test_a_multi_line_list_keeps_its_comments_and_gains_the_rules_at_the_end},
+}
+
+@misc{pycodemod-ruffignore-rule-already-listed-is-not-added-twice-and-the-text-is-unchanged,
+  section = {ruffignore},
+  title  = {Idempotent: adding the same rule again returns the same text},
+  claim  = {Idempotent: adding the same rule again returns the same text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruffignore.py -k test_a_rule_already_listed_is_not_added_twice_and_the_text_is_unchanged},
+}
+
+@misc{pycodemod-ruffignore-file-with-no-lint-table-or-no-ignore-list-is-none,
+  section = {ruffignore},
+  title  = {Nowhere to put the entry means no answer, not a guess},
+  claim  = {Nowhere to put the entry means no answer, not a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ruffignore.py -k test_a_file_with_no_lint_table_or_no_ignore_list_is_none},
+}
+
+@misc{pycodemod-cli-codonprep-refusal-that-is-only-a-rule-the-rewrite-contradicts-is-switched-off-not-fatal,
+  section = {cli_codonprep},
+  title  = {The bar refuses on the boolean rule; the dist's pyproject gains it and the project stays},
+  claim  = {The bar refuses on the boolean rule; the dist's pyproject gains it and the project
+            stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_refusal_that_is_only_a_rule_the_rewrite_contradicts_is_switched_off_not_fatal},
+}
+
+@misc{pycodemod-cli-codonprep-refusal-for-any-other-rule-restores-the-project-and-the-pyproject,
+  section = {cli_codonprep},
+  title  = {A rule outside the self-fixable set stays refused: files and pyproject come back},
+  claim  = {A rule outside the self-fixable set stays refused: files and pyproject come back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_refusal_for_any_other_rule_restores_the_project_and_the_pyproject},
+}
+
+@misc{pycodemod-mutantslines-pattern-that-still-occurs-is-not-named,
+  section = {mutantslines},
+  title  = {The control: an applied declaration yields nothing},
+  claim  = {The control: an applied declaration yields nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutantslines.py -k test_a_pattern_that_still_occurs_is_not_named},
+}
+
+@misc{pycodemod-mutantslines-pattern-that-left-its-file-is-named,
+  section = {mutantslines},
+  title  = {The case: the text the regex looked for is gone},
+  claim  = {The case: the text the regex looked for is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutantslines.py -k test_a_pattern_that_left_its_file_is_named},
+}
+
+@misc{pycodemod-mutantslines-comments-and-blank-lines-are-skipped,
+  section = {mutantslines},
+  title  = {A header is not a declaration},
+  claim  = {A header is not a declaration.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutantslines.py -k test_comments_and_blank_lines_are_skipped},
+}
+
+@misc{pycodemod-mutantslines-malformed-line-is-reported,
+  section = {mutantslines},
+  title  = {Four fields is not a declaration the runner can read},
+  claim  = {Four fields is not a declaration the runner can read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutantslines.py -k test_a_malformed_line_is_reported},
+}
+
+@misc{pycodemod-mutantslines-unreadable-file-is-reported,
+  section = {mutantslines},
+  title  = {A file the reader cannot give is named, not treated as applied},
+  claim  = {A file the reader cannot give is named, not treated as applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutantslines.py -k test_an_unreadable_file_is_reported},
+}
+
+@misc{pycodemod-cli-codonprep-declared-mutant-the-rewrite-made-stale-restores-the-project,
+  section = {cli_codonprep},
+  title  = {A pattern that matched before and matches nothing after: exit 2, the source as it was},
+  claim  = {A pattern that matched before and matches nothing after: exit 2, the source as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_declared_mutant_the_rewrite_made_stale_restores_the_project},
+}
+
+@misc{pycodemod-cli-codonprep-declaration-stale-before-the-run-is-not-charged-to-it,
+  section = {cli_codonprep},
+  title  = {The control: a pattern that never matched is the dist's own debt, and the run proceeds},
+  claim  = {The control: a pattern that never matched is the dist's own debt, and the run proceeds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_a_declaration_stale_before_the_run_is_not_charged_to_it},
+}

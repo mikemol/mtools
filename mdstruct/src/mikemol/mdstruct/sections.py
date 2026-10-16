@@ -32,7 +32,7 @@ from mikemol.mdstruct import spans as spans_mod
 
 
 def replace_section(
-    path: Path, needle: str, body: str, *, exact: bool = False
+    path: Path, needle: str, body: str, exact: bool = False
 ) -> tuple[str, spans_mod.Span]:
     """Return the document with ONE section's body replaced, and the span it targeted.
 
@@ -97,7 +97,7 @@ def _split_trailing_blanks(body_lines: list[str]) -> tuple[list[str], list[str]]
 
 
 def append_to_section(
-    path: Path, needle: str, body: str, *, exact: bool = False
+    path: Path, needle: str, body: str, exact: bool = False
 ) -> tuple[str, spans_mod.Span]:
     """Return the document with `body` appended INSIDE one section, before the next heading.
 

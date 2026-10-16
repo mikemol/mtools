@@ -32,7 +32,7 @@ src/mikemol/corpus/tree_root.py|census-skips-the-existence-check|return \[of\(ro
 
 # import_edges.py: AST not import; module-level and deferred are different edges and never merged;
 # a relative import is no edge and an unparseable file yields none.
-src/mikemol/corpus/import_edges.py|unparseable-file-raises|except \(OSError, SyntaxError\):|except OSError:|def=_parse
+src/mikemol/corpus/import_edges.py|unparseable-file-raises|if not isinstance\(caught, \(OSError, SyntaxError\)\):|if not isinstance(caught, OSError):|def=_parse
 src/mikemol/corpus/import_edges.py|relative-import-named|not node\.level and node\.module|node.module|def=_named
 src/mikemol/corpus/import_edges.py|submodule-kept-in-top-level-name|a\.name\.split\("\."\)\[0\]|a.name|def=_named
 src/mikemol/corpus/import_edges.py|relative-import-named-dotted|not node\.level and node\.module|node.module|def=_named_dotted

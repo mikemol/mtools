@@ -253,7 +253,6 @@ def require_at_entry(
     argv: Sequence[str] | None = None,
     intent: str | None = None,
     paths: Sequence[str | Path] = (),
-    *,
     store: bool = False,
 ) -> str | None:
     """State the intent BEFORE any dispatch; on `--apply`, take the snapshot in the same act.

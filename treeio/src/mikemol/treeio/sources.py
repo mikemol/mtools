@@ -108,17 +108,23 @@ class Rev:
         """
         try:
             repo = pygit2.Repository(str(self.root))
-        except (pygit2.GitError, OSError) as e:
+        except Exception as e:
+            if not isinstance(e, (pygit2.GitError, OSError)):
+                raise
             return None, RuntimeError(f"not a git repository at {self.root}: {e}")
         try:
             obj = repo.revparse_single(self.rev)
         except KeyError as e:
             return None, ValueError(f"bad revision {self.rev!r} in {self.root}: {e}")
-        except (pygit2.GitError, ValueError) as e:
+        except Exception as e:
+            if not isinstance(e, (pygit2.GitError, ValueError)):
+                raise
             return None, RuntimeError(f"cannot resolve {self.rev!r}: {e}")
         try:
             return obj.peel(pygit2.Tree), None
-        except (pygit2.GitError, ValueError) as e:
+        except Exception as e:
+            if not isinstance(e, (pygit2.GitError, ValueError)):
+                raise
             return None, ValueError(f"revision {self.rev!r} does not name a tree: {e}")
 
     def resolve(self) -> tuple[pygit2.Tree | None, Exception | None]:

@@ -20,7 +20,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import cast
 
-type Path = tuple[str | int, ...]
+Path = tuple[str | int, ...]
 
 
 @dataclass(frozen=True, slots=True)

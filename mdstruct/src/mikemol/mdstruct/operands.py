@@ -33,7 +33,7 @@ class Resolved:
 
 
 def resolve(
-    operands: Sequence[str], *, include_worktrees: bool, exclude: Sequence[str] = ()
+    operands: Sequence[str], include_worktrees: bool, exclude: Sequence[str] = ()
 ) -> Resolved:
     """Expand each directory operand to its markdown files and say what the walk left out.
 
@@ -49,7 +49,9 @@ def resolve(
     """
     try:
         got = expand(operands, include_worktrees=include_worktrees, suffix=_SUFFIX, exclude=exclude)
-    except (WorktreeRefusedError, ValueError) as exc:
+    except Exception as exc:
+        if not isinstance(exc, (WorktreeRefusedError, ValueError)):
+            raise
         return Resolved(refusal=f"mdstruct: {exc}\n")
     notes = ""
     if got.directories:

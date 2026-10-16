@@ -331,7 +331,6 @@ def apply_caps() -> None:
 
 def main(
     argv: Sequence[str] | None = None,
-    *,
     cgroup: cellcgroup.Cgroup = cellcgroup.SELF,
     caps: Callable[[], None] = apply_caps,
 ) -> int:

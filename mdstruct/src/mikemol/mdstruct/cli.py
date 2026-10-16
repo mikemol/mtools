@@ -763,7 +763,7 @@ def _lint_mode(_pattern: str, path: Path, argv: list[str]) -> int:
     return _over_paths(path, argv, lambda p: _lint(p, argv), many=True)
 
 
-def _write_section(path: Path, needle: str, argv: list[str], *, append: bool) -> int:
+def _write_section(path: Path, needle: str, argv: list[str], append: bool) -> int:
     """Replace or append one section's body, printing the diff or applying it.
 
     ⚑⚑⚑ THE FIRST WRITE MODE THIS TOOL HAS EXPOSED, and the library functions predate it by a
@@ -968,7 +968,7 @@ def _grep_verdict(codes: list[int]) -> int:
 
 
 def _over_paths(
-    path: Path, argv: list[str], one: Callable[[Path], int], *, many: bool = False, skip: int = 0
+    path: Path, argv: list[str], one: Callable[[Path], int], many: bool = False, skip: int = 0
 ) -> int:
     """Run `one` over every path operand and return the WORST code; see `_codes_over_paths`.
 
@@ -980,7 +980,7 @@ def _over_paths(
 
 
 def _codes_over_paths(
-    path: Path, argv: list[str], one: Callable[[Path], int], *, many: bool = False, skip: int = 0
+    path: Path, argv: list[str], one: Callable[[Path], int], many: bool = False, skip: int = 0
 ) -> list[int]:
     """Run `one` over every path operand and return each file's code, in order.
 
