@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1315,
+  "counter": 1316,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-16T00:13:58Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -26910,7 +26905,7 @@
     {
       "symbol": "W1310",
       "title": "waldo adopts the exit table: EXIT_REFUSED 1 to 4 and EXIT_CANNOT 2 to 7, its docstrings and tests with them, and waldo joins the exit gate's dists",
-      "status": "working",
+      "status": "done",
       "enables": [
         "luthen-observability:W1074"
       ],
@@ -26919,14 +26914,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read the callers (cli.py:132, runphase.py:84,147,151, pipeline.py:125,137,156) and waldo's tests that pin exit 1 and 2; move the two constants and the docstrings that say exit 1 or 2; add waldo to corpus test_exit_gate _DISTS and BUILD deps; regenerate the baseline; tell luthen the sha so it repins and renames in one change",
-      "evidence": "2026-10-16: Per-site mapping is my reading, for waldo and luthen to review: precondition failed, outside the declared set, plan not admitted, failed after-witness -> 4; apply failed and marker-not-written (a step ran and broke) -> 1; unsound contract, unreadable plan, unevaluated precondition or after-witness, missing set, ambiguous marker -> 7. A failed witness outranks an unevaluated one (4, not 7). The post-apply unevaluated exit moved from 1 to 7, which changes what luthen's apply_set reads.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: Per-site mapping is my reading, for waldo and luthen to review: precondition failed, outside the declared set, plan not admitted, failed after-witness -> 4; apply failed and marker-not-written (a step ran and broke) -> 1; unsound contract, unreadable plan, unevaluated precondition or after-witness, missing set, ambiguous marker -> 7. A failed witness outranks an unevaluated one (4, not 7). The post-apply unevaluated exit moved from 1 to 7, which changes what luthen's apply_set reads. | 2026-10-16: Landed in mtools 814c5e4 (pushed): waldo pipeline and runphase constants 0/1/4/7, docstrings, tests, mutants, waldo in the exit gate.",
       "issued_at": "2026-10-15T23:32:52Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1074",
-      "last_worked": "2026-10-16T00:16:21Z",
+      "last_worked": "2026-10-16T00:21:53Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T002153Z"
     },
     {
       "symbol": "W1311",
@@ -26996,7 +26991,7 @@
     {
       "symbol": "W1314",
       "title": "Scaffold the empty mikemol-cvdcore dist (import path mikemol.cvdcore) with the new-dist tool and land it alone, per the one-new-dist-at-a-time rule",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1313"
       ],
@@ -27010,8 +27005,9 @@
       "issued_at": "2026-10-15T23:54:29Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-16T00:28:31Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1315",
@@ -27031,6 +27027,26 @@
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W544",
       "last_worked": "2026-10-15T23:56:27Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1316",
+      "title": "mikemol-new-dist prints a stale gen-warrants step: 'CVDCORE tests.test_smoke=smoke' fails; the working form is 'cvdcore smoke=smoke' with --title",
+      "status": "ready",
+      "enables": [
+        "W1314"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Fix the printed step in new_dist_cli.scaffold to the working form (dist directory lowercase, module=section, --title), and have a test run the printed commands' argument shape through gen_warrants' own parser",
+      "evidence": "2026-10-16: 2026-10-15 second defect found scaffolding cvdcore: new_dist writes the DESCRIPTION argument unwrapped into the module docstring of __init__.py, so a description over about 90 characters fails ruff line-too-long and the ratchet (the commit gate refused: //cvdcore:ruff and //cvdcore:ratchet). The tool should wrap the description into a docstring or refuse an over-long one before writing.",
+      "issued_at": "2026-10-16T00:29:06Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1314",
+      "last_worked": "2026-10-16T00:35:04Z",
       "ticks_blocked": 0
     }
   ],

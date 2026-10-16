@@ -2048,3 +2048,5 @@
 2026-10-15T23:53:48Z  interrupt W1313 minted    -         "Answer el-openglo:W544: Extract cvd_gate pure core (worst_view_dE, Okabe-Ito floor) as a mikemol-* dist"  evidence=el-openglo:W544
 2026-10-15T23:54:29Z  interrupt W1314 minted    -         "Scaffold the empty mikemol-cvdcore dist (import path mikemol.cvdcore) with the new-dist tool and land it alone, per the one-new-dist-at-a-time rule"  evidence=el-openglo:W544
 2026-10-15T23:54:31Z  interrupt W1315 minted    -         "Move el-openglo's cvd_core (worst_view_dE, VIEWS, OKABE_ITO, reference_floor) into mikemol.cvdcore with its 7 selftest arms as pytest tests, typed under the bar"  evidence=el-openglo:W544
+2026-10-16T00:16:25Z  tick  W1310 advanced  mechanism "waldo adopts the exit table (1/4/7 by what happened), 166 waldo tests and 22 bazel targets green, waldo joins the exit gate, commit in the gate; el-openglo cvd core accepted as W1313-W1315 [blocked by W1194]"
+2026-10-16T00:29:06Z  interrupt W1316 minted    -         "mikemol-new-dist prints a stale gen-warrants step: 'CVDCORE tests.test_smoke=smoke' fails; the working form is 'cvdcore smoke=smoke' with --title"  evidence=W1314

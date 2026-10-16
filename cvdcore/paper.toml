@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.cvdcore: The worst-view colour-vision-deficiency distance core: the minimum CAM02-UCS distance between two colours over four views, and the Okabe-Ito reference floor."
+subtitle = "The witnesses behind mikemol.cvdcore."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "CVDCORE.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

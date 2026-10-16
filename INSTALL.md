@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 34 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 35 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -23,6 +23,7 @@ with no scripts is a library that other distributions import.
 - `buildtel` (`mikemol-buildtel`): build telemetry. Scripts: `mikemol-buildlog`,
   `mikemol-coord-sample`, `mikemol-logs-push`, `mikemol-image-digest`.
 - `corpus` (`mikemol-corpus`): which Python files are a tree's corpus. A library, no scripts.
+- `cvdcore` (`mikemol-cvdcore`): The worst-view colour-vision-deficiency distance core: the minimum CAM02-UCS distance between two colours over four views, and the Okabe-Ito reference floor. A library, no scripts.
 - `debtplan` (`mikemol-debtplan`): plan the pay-down of a per-file debt ledger: leaves first, direct
   waits only, a cycle refused rather than blocked on. Script: `mikemol-debtplan`.
 - `fence` (`mikemol-fence`): run a command inside a cgroup and report what it consumed. Scripts:
