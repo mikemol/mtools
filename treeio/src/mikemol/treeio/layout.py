@@ -8,8 +8,6 @@ directory above paperkit's `tools/`. This package has no checkout of its own to 
 root is a PARAMETER: a caller names it, and omitting it means the current directory.
 """
 
-from __future__ import annotations
-
 import os
 from dataclasses import dataclass
 from pathlib import Path

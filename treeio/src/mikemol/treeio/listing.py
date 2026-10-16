@@ -28,21 +28,14 @@ saying a `**/` cannot match zero segments "in either matcher" is not, and is kep
 it because it is another item's live text.
 """
 
-from __future__ import annotations
-
 import fnmatch
 import glob
-from typing import TYPE_CHECKING
+from collections.abc import Iterable
 
 import pygit2
 
 from mikemol.treeio.read import relpath
-from mikemol.treeio.sources import Rev, WorkingTree
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-    from mikemol.treeio.sources import Source
+from mikemol.treeio.sources import Rev, Source, WorkingTree
 
 LISTDIR_ORDER = "path-lexicographic, repo-relative, forward-slashed"
 """The order `listdir` returns, NAMED rather than discarded: a plain sorted list would pay for

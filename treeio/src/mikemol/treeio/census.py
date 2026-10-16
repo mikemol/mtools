@@ -14,20 +14,13 @@ and the check are one artefact. It bypasses the refusal by construction, since t
 patterns are precisely its subject matter.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.treeio.listing import listdir, suffixed
 from mikemol.treeio.presence import Presence
 from mikemol.treeio.read import read
-from mikemol.treeio.sources import Rev, WorkingTree
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.treeio.sources import Source
+from mikemol.treeio.sources import Rev, Source, WorkingTree
 
 
 @dataclass(frozen=True)

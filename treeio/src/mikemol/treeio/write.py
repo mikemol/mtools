@@ -26,18 +26,11 @@ named `.<name>.<random>.tmp` instead of `<name>.vfs-tmp.<pid>` (no consumer in t
 that name: searched, only paperkit's and substrate's origin copies and this package's own test did).
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.atomicwrite import durable
 
-from mikemol.treeio.sources import WorkingTree
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.treeio.sources import Source
+from mikemol.treeio.sources import Source, WorkingTree
 
 DRY_RUN = False
 """Set by a caller that wants this seam to refuse writes: the dry-run half of the contract,

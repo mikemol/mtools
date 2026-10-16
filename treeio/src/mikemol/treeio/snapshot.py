@@ -31,19 +31,14 @@ half. Anything untracked is copied into the snapshot directory first; recovery f
 copy.
 """
 
-from __future__ import annotations
-
 import shutil
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Iterable, Sequence
+from pathlib import Path
 
 from mikemol.treeio.context import SNAPSHOT_STATE, SnapshotState
 from mikemol.treeio.gitrun import git, is_tracked
 from mikemol.treeio.layout import Layout, layout
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Sequence
-    from pathlib import Path
 
 _SHOWN = 5  # how many copied untracked files the report names before it summarizes
 _JOURNAL_PATHS = 40  # how many intended paths one journal row records

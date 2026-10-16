@@ -19,8 +19,6 @@ the class body runs, which puts every method out of the mutation gate's reach. T
 are module-level instances assigned onto the class, as paperkit did.
 """
 
-from __future__ import annotations
-
 from typing import ClassVar
 
 
@@ -31,9 +29,9 @@ class Presence:
     writes `p == "ABSENT"` keeps working: the lift is additive.
     """
 
-    PRESENT: ClassVar[Presence]
-    ABSENT: ClassVar[Presence]
-    BROKEN: ClassVar[Presence]
+    PRESENT: "ClassVar[Presence]"
+    ABSENT: "ClassVar[Presence]"
+    BROKEN: "ClassVar[Presence]"
 
     def __init__(self, name: str, *, is_defect: bool, gloss: str) -> None:
         """Make one member.
@@ -66,7 +64,7 @@ class Presence:
         """
         return hash(self.name)
 
-    def __lt__(self, other: Presence | str) -> bool:
+    def __lt__(self, other: "Presence | str") -> bool:
         """Order by name, against another member or a bare string.
 
         Returns:
@@ -94,7 +92,7 @@ class Presence:
         return f"Presence({self.name!r})"
 
     @classmethod
-    def all(cls) -> tuple[Presence, ...]:
+    def all(cls) -> "tuple[Presence, ...]":
         """Return the roster, which is the definition itself so no member can be omitted.
 
         A selftest asking whether every arm is starved cannot omit a member the way a hand-typed
@@ -107,7 +105,7 @@ class Presence:
         return (cls.PRESENT, cls.ABSENT, cls.BROKEN)
 
     @classmethod
-    def of(cls, name: str) -> Presence:
+    def of(cls, name: str) -> "Presence":
         """Resolve a name, REFUSING an unknown one.
 
         An unrecognised state silently reading as PRESENT is the false-green shape.

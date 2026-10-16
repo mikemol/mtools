@@ -17,8 +17,6 @@ module, so a caller that assigned it here would silently change nothing. Assign
 `mikemol.treeio.write.DRY_RUN` instead.
 """
 
-from __future__ import annotations
-
 from mikemol.treeio.census import census, compare
 from mikemol.treeio.listing import (
     LISTDIR_ORDER,

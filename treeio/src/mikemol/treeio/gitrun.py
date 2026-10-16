@@ -7,15 +7,10 @@ is built on `git stash create`, which makes a commit OBJECT and prints its sha w
 worktree or the stash stack, so concurrent runs cannot interfere.
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+import subprocess
+from pathlib import Path
 
 from mikemol.procrun.proc import capture
-
-if TYPE_CHECKING:
-    import subprocess
-    from pathlib import Path
 
 
 def git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:

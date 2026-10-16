@@ -20,22 +20,15 @@ caller that needs the distinction can have it. An ambiguous pattern is a VERDICT
 message already names the replacement and a traceback would bury it.
 """
 
-from __future__ import annotations
-
 import argparse
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 from mikemol.treeio.census import Comparison, census, compare
 from mikemol.treeio.listing import AmbiguousPatternError, listdir, suffixed
 from mikemol.treeio.presence import Presence
 from mikemol.treeio.read import read
-from mikemol.treeio.sources import Rev, WorkingTree
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.treeio.sources import Source
+from mikemol.treeio.sources import Rev, Source, WorkingTree
 
 _SHOWN = 12  # how many missed or extra paths a comparison names per side
 _EXIT_BROKEN = 2

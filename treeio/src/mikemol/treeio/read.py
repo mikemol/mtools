@@ -13,20 +13,14 @@ no filesystem path to escape from. Working-tree reads are ordinary filesystem re
 such guarantee.
 """
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pygit2
 
 from mikemol.treeio.presence import Presence
 from mikemol.treeio.result import Result
-from mikemol.treeio.sources import Rev, WorkingTree
-
-if TYPE_CHECKING:
-    from mikemol.treeio.sources import Source
+from mikemol.treeio.sources import Rev, Source, WorkingTree
 
 
 def relpath(path: str | Path, root: Path) -> str:

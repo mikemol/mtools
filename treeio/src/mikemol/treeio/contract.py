@@ -49,11 +49,10 @@ exception there would dump a traceback and exit 1 where a clean message and exit
 in a hook whose stderr is discarded it would degrade to no diagnostic at all.
 """
 
-from __future__ import annotations
-
 import os
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Sequence
+from pathlib import Path
 
 from mikemol.treeio.context import (
     INTENT,
@@ -65,10 +64,6 @@ from mikemol.treeio.context import (
 from mikemol.treeio.errors import MutationContractError
 from mikemol.treeio.layout import layout
 from mikemol.treeio.snapshot import announce, copy_untracked, snapshot
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from pathlib import Path
 
 NEAR_MISS_SPELLINGS = {
     "--dry": "--dry-run",

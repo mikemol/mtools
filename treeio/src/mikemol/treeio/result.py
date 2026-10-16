@@ -7,17 +7,11 @@ is a normal answer that callers branch on. BROKEN carries its cause in `error`, 
 turns either non-answer into a raise for callers that want the exception.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.treeio.presence import Presence
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.treeio.sources import Source
+from mikemol.treeio.sources import Source
 
 
 @dataclass(slots=True, eq=False, repr=False)

@@ -25,17 +25,12 @@ everywhere.
 RECENT pre-write copy, because the store is keyed by path and not by sha.
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
+from pathlib import Path
 
 from mikemol.treeio.layout import layout
 from mikemol.treeio.restore import restore
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
 
 _FROM_SNAPSHOT = "--from-snapshot"
 _SHOWN = 5  # how many matching paths one snapshot's row names before it summarizes

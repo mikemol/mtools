@@ -32,18 +32,14 @@ own, which is correct. If a threaded writer ever lands here it must pass the con
 because the failure would be a silently unbound ambient, which reads exactly like a first write.
 """
 
-from __future__ import annotations
-
 import contextvars
 import sys
-from typing import TYPE_CHECKING, NoReturn
+from collections.abc import Callable
+from typing import NoReturn
 
 from mikemol.treeio.errors import AmbientVocabError, MutationContractError
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-type Tokens = tuple[contextvars.Token[str | None], contextvars.Token[str | None]]
+Tokens = tuple[contextvars.Token[str | None], contextvars.Token[str | None]]
 
 SANCTIONED_OVERRIDES = {
     ("intent", "prune_leaf_opens (dry-run writes-then-restores)"): (
@@ -88,7 +84,7 @@ class AmbientConflictError(MutationContractError):
     Write-once makes the FIRST resolution the answer and the second an ERROR.
     """
 
-    def __init__(self, amb: Ambient, label: str, stated: str, ambient: str, origin: str) -> None:
+    def __init__(self, amb: "Ambient", label: str, stated: str, ambient: str, origin: str) -> None:
         """Record the conflict and render its message.
 
         Args:
@@ -288,7 +284,7 @@ class Ambient:
         reason: str,
         label: str = "override",
         announce_to: Callable[[str], None] | None = None,
-    ) -> Override:
+    ) -> "Override":
         """Make a SCOPED, REASONED divergence from the ambient value: the deliberate override.
 
         It must exist, and the one registered case proves it. A refuse-on-disagreement policy

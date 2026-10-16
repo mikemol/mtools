@@ -14,8 +14,6 @@ and these take an optional `root` (the current directory when omitted) where a s
 for one. The entry-point form `require_at_entry` always uses the current directory.
 """
 
-from __future__ import annotations
-
 from mikemol.treeio.ambient import (
     SANCTIONED_OVERRIDES,
     Ambient,

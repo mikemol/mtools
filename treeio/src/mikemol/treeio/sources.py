@@ -17,8 +17,6 @@ Unlike paperkit's module, the default root is the current directory at construct
 directory above the module: this package has no checkout of its own to default to.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 import pygit2
@@ -135,4 +133,4 @@ class Rev:
         return self._tree, self._err
 
 
-type Source = WorkingTree | Rev
+Source = WorkingTree | Rev

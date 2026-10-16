@@ -18,17 +18,12 @@ believe it is restoring a specific historical version. Rows are therefore labell
 Restoring is a deliberate act: without `apply` the call only reports what it would do.
 """
 
-from __future__ import annotations
-
 import shutil
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
+from pathlib import Path
 
 from mikemol.treeio.gitrun import git
 from mikemol.treeio.layout import Layout, layout
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
 
 
 def contents(sha: str, root: str | Path | None = None) -> tuple[list[str], list[tuple[str, Path]]]:

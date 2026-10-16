@@ -43,8 +43,6 @@ this and is admitted only because it is a RECORD rather than a compared value, s
 `resolve`.
 """
 
-from __future__ import annotations
-
 import contextvars
 from dataclasses import dataclass, field
 

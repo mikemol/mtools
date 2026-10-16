@@ -9,8 +9,6 @@ script's to end. The dividing line is not "is it dangerous", it is WHO OWNS THE 
 should assume it is the sole owner of the current pid.
 """
 
-from __future__ import annotations
-
 
 class MutationContractError(BaseException):
     """The base of every refusal this package RAISES rather than exits on.
