@@ -527,3 +527,52 @@
             its neighbour.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocks.py -k test_a_tool_reference_with_an_empty_tool_name_decodes_as_an_empty_string},
 }
+
+@misc{transcriptstruct-warrant-genuine-human-record-holds-and-carries-its-line-and-stamp,
+  section = {warrant},
+  title  = {The control: the operator's own record is found, stamped, and kind human},
+  claim  = {The control: the operator's own record is found, stamped, and kind human.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_genuine_human_record_holds_and_carries_its_line_and_stamp},
+}
+
+@misc{transcriptstruct-warrant-peer-message-claimed-as-the-operator-is-refused,
+  section = {warrant},
+  title  = {The forgery: it wears the user role, but its provenance is peer},
+  claim  = {The forgery: it wears the user role, but its provenance is peer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_peer_message_claimed_as_the_operator_is_refused},
+}
+
+@misc{transcriptstruct-warrant-same-peer-record-is-fine-when-no-operator-is-claimed,
+  section = {warrant},
+  title  = {The refusal is about the claim, not the record: an unclaimed peer citation holds},
+  claim  = {The refusal is about the claim, not the record: an unclaimed peer citation holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_the_same_peer_record_is_fine_when_no_operator_is_claimed},
+}
+
+@misc{transcriptstruct-warrant-unknown-uuid-is-refused-by-name,
+  section = {warrant},
+  title  = {A uuid that names no record says so},
+  claim  = {A uuid that names no record says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_an_unknown_uuid_is_refused_by_name},
+}
+
+@misc{transcriptstruct-warrant-right-uuid-on-the-wrong-line-is-refused,
+  section = {warrant},
+  title  = {The cited line must be the record's line},
+  claim  = {The cited line must be the record's line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_right_uuid_on_the_wrong_line_is_refused},
+}
+
+@misc{transcriptstruct-warrant-record-without-a-timestamp-is-refused,
+  section = {warrant},
+  title  = {The shape needs generatedAtTime, so a record without one cannot be cited},
+  claim  = {The shape needs generatedAtTime, so a record without one cannot be cited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_record_without_a_timestamp_is_refused},
+}
+
+@misc{transcriptstruct-warrant-cli-verifies-a-citation-and-exits-one-on-a-forgery,
+  section = {warrant},
+  title  = {Exit 0 and ok:true for the human record; exit 1 and the reason for the peer forgery},
+  claim  = {Exit 0 and ok:true for the human record; exit 1 and the reason for the peer forgery.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_the_cli_verifies_a_citation_and_exits_one_on_a_forgery},
+}

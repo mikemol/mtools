@@ -36,7 +36,9 @@ from mikemol.transcriptstruct.query import (
     stats,
 )
 from mikemol.transcriptstruct.records import read_path
+from mikemol.transcriptstruct.warrant import verify
 
+_REFUSED = 1
 _DEFAULT_SPEAKERS = ("human", "peer", "assistant")
 
 
@@ -69,6 +71,13 @@ def _parser() -> argparse.ArgumentParser:
     mode.add_argument("--prose", action="store_true", help="list utterances, whole, in order")
     mode.add_argument("--extract", metavar="LINE", type=int, nargs="+", help="lines' blocks")
     mode.add_argument("--raw", metavar="TYPE", nargs="+", help="whole records of these types")
+    mode.add_argument(
+        "--verify",
+        metavar="UUID",
+        help="W1385: read the record a warrant cites; exit 1 and say why when it does not hold",
+    )
+    parser.add_argument("--claim", help="--verify: the speaker claimed (`operator` needs human)")
+    parser.add_argument("--line", type=int, help="--verify: the line the warrant cites")
     parser.add_argument("--kinds", nargs="+", help="--grep: only these block kinds")
     parser.add_argument("--speakers", nargs="+", help="--prose: only these speaker kinds")
     parser.add_argument(
@@ -186,6 +195,34 @@ def _extract(path: Path, lines: Sequence[str], out: TextIO) -> None:
         out.write(_line({"line": line, "blocks": body}))
 
 
+def _verify(opts: dict[str, object], uuid: str, out: TextIO) -> int:
+    """Read the record a warrant cites and print the verdict as one JSON line.
+
+    Returns:
+        0 when the citation holds, 1 when it does not.
+
+    """
+    verdict = verify(
+        read_path(Path(str(opts["transcript"]))),
+        uuid,
+        claim=_text(opts, "claim"),
+        line=_number(opts, "line"),
+        scheduled=_texts(opts, "scheduled") or (),
+    )
+    out.write(
+        _line(
+            {
+                "ok": verdict.ok,
+                "reason": verdict.reason,
+                "line": verdict.line,
+                "timestamp": verdict.timestamp,
+                "kind": verdict.kind,
+            }
+        )
+    )
+    return 0 if verdict.ok else _REFUSED
+
+
 def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     """Run one query over one transcript.
 
@@ -200,6 +237,9 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     scheduled = _texts(opts, "scheduled") or ()
     grep, human, lines = _text(opts, "grep"), _text(opts, "human"), _texts(opts, "extract")
     types = _texts(opts, "raw")
+    cited = _text(opts, "verify")
+    if cited is not None:
+        return _verify(opts, cited, sink)
     if types is not None:
         _emit(_raw(path, types, window), sink)
     elif grep is not None:
