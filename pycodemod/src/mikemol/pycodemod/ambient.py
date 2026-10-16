@@ -25,15 +25,10 @@ passes the tree; its top-level directories are the subtrees, and nothing else.
 ⚑ RESULTS ARE RETURNED, NOT HUNG ON THE FUNCTION: the origin set `ambient.skipped` as an attribute.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 # The callee vocabulary by family: the spellings of "resolve a path". Keyed on the UNQUALIFIED
 # name, a deliberate over-reach in the safe direction — an alias is what one-spelling censuses miss.

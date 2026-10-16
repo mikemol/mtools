@@ -26,21 +26,14 @@ narrowed through the call sites of the alias itself (`sites.scan`), and the row 
 ⚑ THE FILES THAT COULD NOT BE READ are returned, from both the import census and the narrowing.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.aliases import AS_MOD, FROM_AS, aliases
+from mikemol.pycodemod.aliases import AS_MOD, FROM_AS, Alias, aliases
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.imports import attr_reads
 from mikemol.pycodemod.sites import scan
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.aliases import Alias
-    from mikemol.pycodemod.core import Skip
 
 _AS = " as "
 _CALL = "call"

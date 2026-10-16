@@ -28,23 +28,18 @@ metadata was the cost), and the driver owns any cache.
 which a second space after `def` defeats.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
 
 DELEGATES = "DELEGATES"
 REIMPLEMENTS = "REIMPLEMENTS"
 _PRIVATE = "_"
 _RIVALS = 2
 
-type Def = ast.FunctionDef | ast.AsyncFunctionDef
+Def = ast.FunctionDef | ast.AsyncFunctionDef
 
 
 @dataclass(frozen=True, slots=True, order=True)

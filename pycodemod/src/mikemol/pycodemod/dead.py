@@ -24,19 +24,13 @@ code as dead — the trap the origin's own docstring records firing on `set_ratc
 ⚑ A DUNDER IS `__x__`, not any `__`-prefixed name: `__private` is an ordinary def and can be dead.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.sites import Sites
+from mikemol.pycodemod.sites import Sites
 
 # ⚑⚑ THE CALLER IS OUTSIDE THE CORPUS, WHICH IS NOT THE SAME AS ABSENT: each prefix is a naming
 # contract with a framework that constructs the name. A prefix table, not a name list, so a new

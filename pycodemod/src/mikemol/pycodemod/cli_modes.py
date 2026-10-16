@@ -10,23 +10,17 @@ refused operand, else the shared incomplete-scan code.
 through `report.note`, so an empty result still says what it searched (W643).
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 from mikemol.pycodemod import report
 from mikemol.pycodemod.artifacts import artifact_readers
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.placement import ENTRY_FORMS, FIRST_WRITE_FORMS
 from mikemol.pycodemod.portable import Probe, portable_sites
 from mikemol.pycodemod.reads import function_reads
 from mikemol.pycodemod.registered import registered_defs
 from mikemol.pycodemod.sql import SqlConfig, sql_sites
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.core import Skip
 
 REFUSED = 2
 _ABSENT = "-"

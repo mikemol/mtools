@@ -25,17 +25,11 @@ and `module_consts` read no boundary table, so they take no `Boundary`: an opera
 reads is a claim it depends on something.
 """
 
-from __future__ import annotations
-
 import ast
-from typing import TYPE_CHECKING
+from collections.abc import Collection, Iterable, Iterator
 
+from mikemol.pycodemod.control_roster import Boundary
 from mikemol.pycodemod.storeflow import touches
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Iterator
-
-    from mikemol.pycodemod.control_roster import Boundary
 
 _DEFS = (ast.FunctionDef, ast.AsyncFunctionDef)
 _ROUNDS = 5

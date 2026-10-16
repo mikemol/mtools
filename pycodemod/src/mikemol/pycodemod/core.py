@@ -19,8 +19,6 @@ repo's bisect measured. A missing libcst is now an import error.
 nothing to the census. Here a reader returns what it could not read beside what it found.
 """
 
-from __future__ import annotations
-
 import ast
 import concurrent.futures
 import contextlib
@@ -30,14 +28,11 @@ import shutil
 import tarfile
 import tempfile
 import warnings
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import libcst as cst
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, Sequence
 
 # The token that ends the flags: everything after it is an operand, however flag-shaped.
 END_OF_FLAGS = "--"
@@ -249,7 +244,7 @@ class _Unknown:
 
 UNKNOWN = _Unknown()
 
-type Value = int | float | complex | str | bool | _Unknown | None
+Value = int | float | complex | str | bool | _Unknown | None
 
 _NAMED: dict[str, Value] = {"True": True, "False": False, "None": None}
 

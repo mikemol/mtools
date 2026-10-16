@@ -26,19 +26,14 @@ its text (measured: `'�� import os'`). It is now in `skipped`, as is an unre
 file (the origin dropped it with `continue`) and one that will not tokenize.
 """
 
-from __future__ import annotations
-
 import re
 import tokenize
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.size import code_lines
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 @dataclass(frozen=True, slots=True, order=True)

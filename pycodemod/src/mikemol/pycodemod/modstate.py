@@ -29,16 +29,11 @@ by `del` and read by `in`, reported `const`).
 ⚑ AN UNREADABLE FILE IS REPORTED; the origin raised on a non-UTF-8 one (measured).
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
 
 CACHE = "cache"
 ACCUM = "accum"
@@ -52,7 +47,7 @@ _MUTATORS = frozenset(
 _READERS = frozenset({"get", "keys", "values", "items", "setdefault", "pop"})
 _SCOPES = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)
 
-type Def = ast.FunctionDef | ast.AsyncFunctionDef
+Def = ast.FunctionDef | ast.AsyncFunctionDef
 
 
 @dataclass(frozen=True, slots=True, order=True)

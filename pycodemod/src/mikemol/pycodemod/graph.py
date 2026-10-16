@@ -28,21 +28,15 @@ returning 0/1 (no clear arm), and read a negative literal as data.
 two functions. A cross-module chain reads "not reached" — under-reporting, the safe direction.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
+from mikemol.pycodemod.sites import Sites
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.sites import Sites
-
-type Caller = tuple[str, str]
-type Graph = dict[Caller, set[str]]
+Caller = tuple[str, str]
+Graph = dict[Caller, set[str]]
 
 DEPTH = 6
 _CLEAR = "clear"

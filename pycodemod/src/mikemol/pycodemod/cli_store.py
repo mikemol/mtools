@@ -13,18 +13,13 @@ drawn from `relalg.RELALG_KINDS`.
 build their vocabulary with an explicitly empty set rather than ask for a flag they never read.
 """
 
-from __future__ import annotations
-
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 from mikemol.pycodemod.cli_modes import REFUSED, csv, denominator, refusal
 from mikemol.pycodemod.relalg import RELALG_KINDS, relalg_sites
 from mikemol.pycodemod.snapshots import snapshot_sites
 from mikemol.pycodemod.storeflow import StoreVocab, rawread_sites
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _NONE = frozenset[str]()
 

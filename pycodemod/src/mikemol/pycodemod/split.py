@@ -42,21 +42,16 @@ LAST, so a crash leaves the original intact and the siblings merely unreferenced
 already exists with different content is never overwritten.
 """
 
-from __future__ import annotations
-
 import ast
 import heapq
 import textwrap
 from collections import Counter
+from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.splitscope import Refusal, Source, Statement, read, slices
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Mapping, Sequence
 
 _WIDTH = 98
 _LICENCE_KEY = "SPDX-License-Identifier"

@@ -27,15 +27,10 @@ to any handler's loop; `note()` writes a line that is NOT a row (a banner, a sum
 mode that always prints a summary still counts as empty when it found nothing.
 """
 
-from __future__ import annotations
-
 import io
 import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import TextIO
+from collections.abc import Sequence
+from typing import TextIO
 
 _BANNER = "\N{WARNING SIGN} INCOMPLETE SCAN"
 _BROKEN = (

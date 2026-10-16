@@ -40,19 +40,15 @@ CLI), so the witnesses in `tests/test_reads.py` are written here from the origin
 and are not transcribed. The discrimination is not borrowed from substrate's record.
 """
 
-from __future__ import annotations
-
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, override
+from typing import override
 
 import libcst as cst
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 MAX_ALTERNATIVES = 256
 _SYMBOL = re.compile(r"^(--[a-z][\w-]*|[A-Za-z_]\w+)$")

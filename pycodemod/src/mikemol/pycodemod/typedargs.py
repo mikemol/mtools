@@ -28,20 +28,14 @@ original source bottom-up, so nothing else in the file moves. The caller (the or
 checks the result before it is written.
 """
 
-from __future__ import annotations
-
 import re
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 import libcst as cst
 import libcst.matchers as m
-from libcst.metadata import MetadataWrapper, PositionProvider
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-
-    from libcst.metadata import CodeRange
+from libcst.metadata import CodeRange, MetadataWrapper, PositionProvider
 
 COUNT = "count"
 BOOLEAN_ACTIONS = frozenset({"store_true", "store_false"})
@@ -281,7 +275,7 @@ def _is_group(value: cst.BaseExpression, var: str) -> bool:
     )
 
 
-def _added(small: cst.BaseSmallStatement | None, owners: Sequence[str]) -> _Added | None:
+def _added(small: cst.BaseSmallStatement | None, owners: Sequence[str]) -> "_Added | None":
     # An `add_argument` statement on the parser or on one of its groups.
     for owner in owners:
         if (call := _call_on(small, owner, "add_argument")) is not None:

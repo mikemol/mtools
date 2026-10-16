@@ -23,8 +23,6 @@ so `--write` refuses it and names the file.
 bit only the filesystem holds. `--write` lists the rewritten files that carry one.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 

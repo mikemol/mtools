@@ -24,13 +24,8 @@ tuple for no expression, as `fp_sites` does, so a `None` is a bug it should see 
 referent set that reads as "mentions nothing".
 """
 
-from __future__ import annotations
-
 import ast
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+from collections.abc import Iterable
 
 MAX_TOKEN = 64
 

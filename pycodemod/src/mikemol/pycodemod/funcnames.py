@@ -33,22 +33,17 @@ them `verbatim`.
 scoping by attribute name alone buries the signal under unrelated sites.
 """
 
-from __future__ import annotations
-
 import ast
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from collections.abc import Mapping, Sequence
 
 from mikemol.pycodemod.core import Skip, parse_file
+from mikemol.pycodemod.funccalls import FuncCall, FuncCalls
 
 try:
     from sqlalchemy.sql.functions import _registry
 except ImportError as exc:
     _MISSING = "funcnames needs SQLAlchemy: install the extra mikemol-pycodemod[sqlalchemy]"
     raise ImportError(_MISSING) from exc
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
 
 _DEFAULT = "_default"
 _RECEIVER = "func"
@@ -59,25 +54,6 @@ VERBATIM = "verbatim"
 
 class RegistryMovedError(RuntimeError):
     """SQLAlchemy's generic-function registry is empty or gone; nothing can be graded."""
-
-
-@dataclass(frozen=True, slots=True, order=True)
-class FuncCall:
-    """One `func.<name>(...)` call: where, in which function, and whether Core translates it."""
-
-    path: str
-    line: int
-    caller: str
-    name: str
-    kind: str
-
-
-@dataclass(frozen=True, slots=True)
-class FuncCalls:
-    """The graded calls found, and the files that could not be read."""
-
-    rows: list[FuncCall] = field(default_factory=list)
-    skipped: list[Skip] = field(default_factory=list)
 
 
 def generic_names(registry: Mapping[str, Mapping[str, object]] = _registry) -> frozenset[str]:

@@ -38,17 +38,12 @@ Scope is now `func`, `class` or `module`, innermost first.
 ⚑ AN UNREAD FILE IS REPORTED, not dropped with `continue`.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 BARE = "BARE"
 AS_MOD = "AS-MOD"

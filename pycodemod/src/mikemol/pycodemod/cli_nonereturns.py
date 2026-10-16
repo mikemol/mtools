@@ -10,17 +10,10 @@ its line and reason, which is the census by idiom aeternum asked for (mtools:W97
     mikemol-pycodemod none-returns --root PROJECT [--write] FILE...
 """
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 from mikemol.pycodemod import nonereturns
-from mikemol.pycodemod.cli_typedargs import Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Runner
+from mikemol.pycodemod.cli_typedargs import Plan, Runner, TypedArgsFlags, print_judged, run_tool
 
 LABEL = "none-returns"
 

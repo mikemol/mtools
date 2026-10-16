@@ -25,19 +25,15 @@ way. `sql_relnames` and `sql_rw` are projections of `sql_rel_roles`, so they can
     so it did not move.
 """
 
-from __future__ import annotations
-
 import re
 import sqlite3
-from typing import TYPE_CHECKING, NamedTuple
+from collections.abc import Sequence
+from typing import NamedTuple
 
 from mikemol.pycodemod.strings import Found, literal_sites
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-type Tok = tuple[str, str]
-type Roles = set[tuple[str, str]]
+Tok = tuple[str, str]
+Roles = set[tuple[str, str]]
 
 _TOKEN = re.compile(
     r"""(?P<ws>\s+)

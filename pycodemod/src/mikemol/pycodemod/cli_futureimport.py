@@ -17,28 +17,23 @@ named, until it lands).
     mikemol-pycodemod future-import --root PROJECT [--write] FILE...
 """
 
-from __future__ import annotations
-
 import json
 import sys
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pycodemod import futureimport
 from mikemol.pycodemod.cli_typedargs import (
     JUDGED,
     Plan,
+    Runner,
     TypedArgsFlags,
     print_judged,
     run_tool,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Runner
 
 LABEL = "future-import"
 IMPORT_LINE = "from __future__ import annotations"

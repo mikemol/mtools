@@ -21,19 +21,14 @@ statement; the project's own import sorter merges it, and an unused `cast` impor
 to drop (the judge runs both).
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 import libcst as cst
 from libcst import matchers as m
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-type Found = dict[str, cst.CSTNode | Sequence[cst.CSTNode]]
-type Replacement = cst.MaybeSentinel | cst.RemovalSentinel | cst.CSTNode
+Found = dict[str, cst.CSTNode | Sequence[cst.CSTNode]]
+Replacement = cst.MaybeSentinel | cst.RemovalSentinel | cst.CSTNode
 
 OBJECT_TYPES = frozenset({"Json", "dict[str, object]"})
 LIST_TYPES = frozenset({"list[object]"})

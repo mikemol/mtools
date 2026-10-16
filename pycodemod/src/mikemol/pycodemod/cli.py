@@ -42,13 +42,11 @@ uses: this package's mypy refuses an `Any` expression, and argparse hands every 
 untyped.
 """
 
-from __future__ import annotations
-
 import argparse
 import re
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import WorktreeRefusedError, expand
 
@@ -83,6 +81,7 @@ from mikemol.pycodemod.commentary import (
     commentary_kinds,
 )
 from mikemol.pycodemod.commentary import commentary_lost as run_commentary_lost
+from mikemol.pycodemod.core import Escape
 from mikemol.pycodemod.core import escapes as run_escapes
 from mikemol.pycodemod.crossings import crossings as run_crossings
 from mikemol.pycodemod.dead import dead as run_dead
@@ -90,46 +89,38 @@ from mikemol.pycodemod.definitions import bindings as run_bindings
 from mikemol.pycodemod.definitions import source_of
 from mikemol.pycodemod.deps import ManifestError, import_census
 from mikemol.pycodemod.discards import discards as run_discards
+from mikemol.pycodemod.exit import Catcher, ExitRow, Interlock
 from mikemol.pycodemod.exit import catchers as run_catchers
 from mikemol.pycodemod.exit import exits as run_exits
 from mikemol.pycodemod.exit import interlock as run_interlock
-from mikemol.pycodemod.graph import DEPTH, callgraph, reaches, verdict_returners
+from mikemol.pycodemod.funccalls import FuncCalls
+from mikemol.pycodemod.graph import DEPTH, VerdictDef, callgraph, reaches, verdict_returners
 from mikemol.pycodemod.header import COMPLETE, WRONG
 from mikemol.pycodemod.header import plan as header_plan
 from mikemol.pycodemod.hints import alias_hint
-from mikemol.pycodemod.imports import attr_reads
+from mikemol.pycodemod.imports import AttrRead, ImportRow, attr_reads
 from mikemol.pycodemod.imports import importers as run_importers
+from mikemol.pycodemod.layout import Group
 from mikemol.pycodemod.layout import layout as run_layout
-from mikemol.pycodemod.modstate import module_state
+from mikemol.pycodemod.modstate import ModuleState, module_state
+from mikemol.pycodemod.ordering import Reification
 from mikemol.pycodemod.ordering import reifies as run_reifies
 from mikemol.pycodemod.ordering import resorts as run_resorts
 from mikemol.pycodemod.owes import GitRefusedError, fix_owes_callers, git_show
+from mikemol.pycodemod.placement import Disagreement, Placement
 from mikemol.pycodemod.placement import disagreement as run_disagreement
 from mikemol.pycodemod.placement import placement as run_placement
 from mikemol.pycodemod.relations import relname_sites
+from mikemol.pycodemod.rivals import Collision
 from mikemol.pycodemod.rivals import collisions as run_collisions
 from mikemol.pycodemod.rivals import rivals as run_rivals
 from mikemol.pycodemod.shapes import shape_sites
 from mikemol.pycodemod.sites import Site, scan
 from mikemol.pycodemod.size import OVERLARGE_LINES, module_sizes
 from mikemol.pycodemod.strings import key_reads, literal_sites
+from mikemol.pycodemod.swallows import Swallow
 from mikemol.pycodemod.swallows import swallows as run_swallows
 from mikemol.pycodemod.writes import writes_by_default
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    from mikemol.pycodemod.core import Escape
-    from mikemol.pycodemod.exit import Catcher, ExitRow, Interlock
-    from mikemol.pycodemod.funcnames import FuncCalls
-    from mikemol.pycodemod.graph import VerdictDef
-    from mikemol.pycodemod.imports import AttrRead, ImportRow
-    from mikemol.pycodemod.layout import Group
-    from mikemol.pycodemod.modstate import ModuleState
-    from mikemol.pycodemod.ordering import Reification
-    from mikemol.pycodemod.placement import Disagreement, Placement
-    from mikemol.pycodemod.rivals import Collision
-    from mikemol.pycodemod.swallows import Swallow
 
 _REFUSED = 2
 _INTERNAL = "internal: argparse returned no"
@@ -1226,7 +1217,7 @@ _PATHS_ONLY: tuple[tuple[str, str], ...] = (
 )
 
 
-type _Make = Callable[[str, str], argparse.ArgumentParser]
+_Make = Callable[[str, str], argparse.ArgumentParser]
 
 
 def _add_scan_modes(make: _Make) -> None:

@@ -32,18 +32,14 @@ when it is wrong.
 line share a grade. ⚑ A DOCSTRING THAT IS A STATEMENT IS REPORTED, as the origin did.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, NamedTuple
+from typing import NamedTuple
 
 from mikemol.pycodemod import relations
 from mikemol.pycodemod.strings import Found, literal_sites
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 _RAW = "raw"
 _BUILDER = "builder"

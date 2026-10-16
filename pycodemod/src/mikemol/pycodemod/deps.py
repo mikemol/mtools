@@ -37,22 +37,17 @@ where `find_spec` pointed (`site-packages` in the path, the stdlib directory pre
 ⚑ AN UNREAD FILE IS REPORTED: the origin read with `errors="replace"` and skipped a SyntaxError.
 """
 
-from __future__ import annotations
-
 import ast
 import importlib.metadata
 import importlib.util
 import re
 import sys
 import tomllib
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 FIRST_PARTY = "FIRST-PARTY"
 VENDORED = "VENDORED"

@@ -22,18 +22,11 @@ the store-read predicates of `storeflow`, whose `StoreVocab` is a required opera
 empty one makes no loop a row loop, so every early exit reports `unknown`, claiming no SQL form.
 """
 
-from __future__ import annotations
-
+import ast
+from collections.abc import Collection
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.storeflow import has_read, touches
-
-if TYPE_CHECKING:
-    import ast
-    from collections.abc import Collection
-
-    from mikemol.pycodemod.storeflow import StoreVocab
+from mikemol.pycodemod.storeflow import StoreVocab, has_read, touches
 
 CONTROL_KINDS = (
     "external",

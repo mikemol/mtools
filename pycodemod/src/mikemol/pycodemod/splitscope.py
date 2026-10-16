@@ -21,17 +21,12 @@ its leading comments, blank lines and trailing comment travel with it byte-for-b
 libcst. Two statements on one line break that correspondence and are REFUSED, never mis-paired.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 #: Attribute calls that read a path as SOURCE TEXT rather than as a location.
 _TEXT_READS = ("read_text", "read_bytes", "readlines", "getsource", "getsourcelines")

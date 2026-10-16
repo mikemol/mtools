@@ -17,26 +17,19 @@ a dry run is of the files as they stand, before the hoist has removed what would
     mikemol-pycodemod codon-prep-tree [--write] PROJECT...
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.cli_futureimport import print_future_import
 from mikemol.pycodemod.cli_typealias import print_type_alias
-from mikemol.pycodemod.cli_typedargs import TypedArgsFlags, run_tool
+from mikemol.pycodemod.cli_typedargs import Runner, TypedArgsFlags, run_tool
 from mikemol.pycodemod.cli_typingblocks import (
     print_typing_blocks,
     restore,
     source_files,
     tested,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Runner
 
 LABEL = "codon-prep"
 _FAILED = 2

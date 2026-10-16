@@ -20,21 +20,22 @@ exit. A ruff that cannot run is a worklist row and no write, never a clean bill.
     mikemol-pycodemod judged-fix --root PROJECT --select ANN,FA [--unsafe] [--write] FILE...
 """
 
-from __future__ import annotations
-
 import re
 import tempfile
+from collections.abc import Sequence
 from dataclasses import dataclass
 from itertools import zip_longest
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.cli_typedargs import JUDGED, Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Planner, Runner
+from mikemol.pycodemod.cli_typedargs import (
+    JUDGED,
+    Plan,
+    Planner,
+    Runner,
+    TypedArgsFlags,
+    print_judged,
+    run_tool,
+)
 
 LABEL = "judged-fix"
 _RULES = re.compile(r"[A-Za-z0-9][A-Za-z0-9-]*(,[A-Za-z0-9][A-Za-z0-9-]*)*")

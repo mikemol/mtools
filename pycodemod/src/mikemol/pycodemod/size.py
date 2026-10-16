@@ -37,20 +37,15 @@ with a regex, which an escaped quote defeats: a list item `"a\"b",` left a stray
 code (line 8 of the same measurement).
 """
 
-from __future__ import annotations
-
 import ast
 import io
 import tokenize
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.placement import is_entry_test
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
 
 OVERLARGE_LINES = 1200
 _NOT_CODE = frozenset(

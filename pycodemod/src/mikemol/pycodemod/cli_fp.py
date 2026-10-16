@@ -15,23 +15,16 @@ and the per-site divisibility check that makes the total monotone.
 Each goes through `report.incomplete`; a summary goes through `report.note`.
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
-from mikemol.pycodemod.census_fp import Census, modelled_keys
+from mikemol.pycodemod.census_fp import Census, FpSite, modelled_keys
 from mikemol.pycodemod.cli_modes import REFUSED, denominator
 from mikemol.pycodemod.control_report import CensusFlags, operands
 from mikemol.pycodemod.fingerprint import decode_with_remainder, reverse_index
 from mikemol.pycodemod.fp_sites import fp_sites
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.census_fp import FpSite
 
 _ABSENT = "-"
 

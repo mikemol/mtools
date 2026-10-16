@@ -26,27 +26,22 @@ neither listed nor an owner. No `ROOT` global: the tree is an operand, and `excl
 directory name through the shared corpus walk.
 """
 
-from __future__ import annotations
-
 import os
 import tomllib
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pathwalk.walk import expand
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 PROJECT_FILE = "paper.toml"
 DEFAULT_WARRANTS = ("warrants.bib",)
 OUTSIDE = "(outside any project)"
 _SUFFIX = ".toml"
 
-type Resolver = Callable[[str, Path], Path]
+Resolver = Callable[[str, Path], Path]
 """Turn a warrant token and the project directory it appears in into the path it names."""
 
 

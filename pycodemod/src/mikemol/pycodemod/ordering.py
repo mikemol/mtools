@@ -25,17 +25,12 @@ visitor bug raises instead of reading as a skipped file.
 `sqlalchemy` extra, so SQLAlchemy never becomes a runtime dependency of this one.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
 from mikemol.pycodemod.sites import MODULE
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 # What a builder call returns; `sorted` gets its own `why`, because it paid for an ORDER.
 _BUILDERS = {

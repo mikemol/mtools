@@ -17,8 +17,6 @@ the candidate with the project's own mypy and accepts it only when the findings 
 and none is new. This module plans; it never decides to write.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import override
 

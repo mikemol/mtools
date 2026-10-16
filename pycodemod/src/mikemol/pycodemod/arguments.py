@@ -19,16 +19,11 @@ as having no calls, a zero that is a fact about the scan.
 so one spelling had two meanings.
 """
 
-from __future__ import annotations
-
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-
-    from mikemol.pycodemod.core import Value
-    from mikemol.pycodemod.sites import CallFacts, Sites, Text
+from mikemol.pycodemod.core import Value
+from mikemol.pycodemod.sites import CallFacts, Sites, Text
 
 
 @dataclass(frozen=True, slots=True, order=True)
@@ -153,7 +148,7 @@ def asserted(sites: Sites, keyword: str) -> Asserted:
     return out
 
 
-def value_at(facts: CallFacts, argument: str | int) -> Value | _Missing:
+def value_at(facts: CallFacts, argument: str | int) -> "Value | _Missing":
     """Return what one call passes for a keyword (`str`) or a positional ordinal (`int`).
 
     Returns:

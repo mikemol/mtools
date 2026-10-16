@@ -52,20 +52,13 @@ The origin read the keyword set as closed and called it `entry-nopaths`.
 it; the scan's `skipped` now carries it.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from mikemol.pycodemod.sites import MODULE, scan
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.core import Skip
-    from mikemol.pycodemod.sites import CallFacts, Sites, Text
+from mikemol.pycodemod.core import Skip
+from mikemol.pycodemod.sites import MODULE, CallFacts, Sites, Text, scan
 
 ENTRY_FORMS = ("require_at_entry", "require_explicit_mutation")
 FIRST_WRITE_FORMS = ("_snapshot_once",)

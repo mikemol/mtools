@@ -17,8 +17,6 @@ an assignment, so a name it uses must exist when the line runs. A caller checks 
 project's tests; the verb only changes the statement.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import override
 

@@ -14,19 +14,12 @@ at 100 columns and refuses a summary that would not fit, so the verb does not tr
     mikemol-pycodemod docshape --root PROJECT [--write] [--selftest CMD] FILE...
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import replace
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import docshape
-from mikemol.pycodemod.cli_typedargs import print_judged, run_tool
+from mikemol.pycodemod.cli_typedargs import Runner, TypedArgsFlags, print_judged, run_tool
 from mikemol.pycodemod.measure import ruff_measure
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Runner, TypedArgsFlags
 
 LABEL = "docshape"
 SELECT = "D205,D209"

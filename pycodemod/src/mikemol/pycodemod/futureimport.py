@@ -24,8 +24,6 @@ quoting it would need escapes this verb will not guess. The caller fixes those b
 as well is left as it is, because the other features still need it.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import override
 

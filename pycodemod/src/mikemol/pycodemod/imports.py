@@ -26,21 +26,17 @@ the context column is how a reader discards the misses. A relative import names 
 reader can resolve, and is not reported.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, override
+from typing import override
 
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.sites import MODULE, dotted
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _ANY = ".*"
 

@@ -32,14 +32,9 @@ origin's `Census` never called it. `omega_against` is the one count of prime fac
 a registry, so there is nothing for the stub to answer.
 """
 
-from __future__ import annotations
-
 import math
+from collections.abc import Collection, Iterable
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable
 
 _FIRST_PRIME = 2
 

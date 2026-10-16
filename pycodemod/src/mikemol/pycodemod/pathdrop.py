@@ -17,10 +17,9 @@ empty, and never one that carries a comment line: commentary is not tidied away.
 analysis that proves a name's uses also proves it has none left; a `sys` still read elsewhere stays.
 """
 
-from __future__ import annotations
-
+import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, override
+from typing import override
 
 import libcst as cst
 import libcst.matchers as m
@@ -31,9 +30,6 @@ from libcst.metadata import (
     PositionProvider,
     ScopeProvider,
 )
-
-if TYPE_CHECKING:
-    import re
 
 _MUTATORS = {"insert": 1, "append": 0}
 
@@ -88,7 +84,7 @@ class _Collector(cst.CSTVisitor):
             self.drop[node] = self.get_metadata(PositionProvider, node).start.line
 
 
-type _Line = cst.SimpleStatementLine | cst.BaseCompoundStatement
+_Line = cst.SimpleStatementLine | cst.BaseCompoundStatement
 
 
 def _prefixed(stmt: _Line, carry: list[cst.EmptyLine]) -> _Line:

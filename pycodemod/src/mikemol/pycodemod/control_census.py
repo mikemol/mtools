@@ -49,11 +49,9 @@ the two agree on every file compared (the probe's `case` and comprehension lines
 argued from the tree's shape, not run on a hand-built tree, which this reader is never given.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.control_provenance import (
     ext_names,
@@ -68,11 +66,13 @@ from mikemol.pycodemod.control_roster import (
     ALWAYS_EXTERNAL,
     EARLY_EXIT_CONSTRUCTS,
     LOOP_CONSTRUCTS,
+    Boundary,
     is_row_loop,
     sql_form,
 )
 from mikemol.pycodemod.core import Skip, parse_file
 from mikemol.pycodemod.storeflow import (
+    StoreVocab,
     derived_names,
     has_read,
     row_names,
@@ -80,18 +80,12 @@ from mikemol.pycodemod.storeflow import (
     touches,
 )
 
-if TYPE_CHECKING:
-    from collections.abc import Collection, Sequence
-
-    from mikemol.pycodemod.control_roster import Boundary
-    from mikemol.pycodemod.storeflow import StoreVocab
-
 SNIPPET_LIMIT = 96
 _PAIR = 2
 _DEFAULT_TYPES = (ast.Constant, ast.Dict, ast.List, ast.Tuple, ast.Set)
 _COMPREHENSIONS = (ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp)
 _SCOPE_DEFS = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
-type Governing = ast.AST | list[ast.AST] | None
+Governing = ast.AST | list[ast.AST] | None
 
 
 @dataclass(frozen=True, slots=True)

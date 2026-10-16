@@ -35,13 +35,11 @@ seed and passes the modelled set in, so the `Census` keeps what it counts (`rows
 Nothing in the origin's own walk read the four back.
 """
 
-from __future__ import annotations
-
 import ast
 import math
+from collections.abc import Collection, Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.fingerprint import (
@@ -53,9 +51,6 @@ from mikemol.pycodemod.fingerprint import (
     reverse_index,
 )
 from mikemol.pycodemod.referents import MAX_TOKEN, referents
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Sequence
 
 MIN_SHARED_OMEGA = 2
 _DEFS = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)

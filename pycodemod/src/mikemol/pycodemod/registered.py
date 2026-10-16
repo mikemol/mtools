@@ -23,17 +23,12 @@ identifier-shaped, so a reader filters it by the file or call it came from.
 defs are read from a second parse of each file; the literals reuse `strings.literal_sites`.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
 from mikemol.pycodemod.strings import Literal, literal_sites
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 @dataclass(frozen=True, slots=True)

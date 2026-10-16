@@ -33,21 +33,15 @@ refused, and `--` ends the revision list, so no revision string reaches git as a
 call. ⚑ The def is not a row.
 """
 
-from __future__ import annotations
-
 import shutil
 import subprocess
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.hints import AliasHint, alias_hint
 from mikemol.pycodemod.sites import Site, scan
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-    from mikemol.pycodemod.core import Skip
 
 WORKING = "WORKING"
 _USES = frozenset({"call", "ref"})

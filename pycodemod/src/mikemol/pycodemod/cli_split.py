@@ -13,19 +13,12 @@ file as source, or naming its own basename, is printed beside the plan so a read
 cut could not move safely.
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.cli_modes import REFUSED, denominator
-from mikemol.pycodemod.split import ExistsError, Options, RefusedError, apply, plan
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.split import Plan, Written
+from mikemol.pycodemod.split import ExistsError, Options, Plan, RefusedError, Written, apply, plan
 
 
 @dataclass(frozen=True, slots=True)

@@ -28,20 +28,15 @@ first string of ANY block body, so a marked string opening an `if` body was file
 while it is executable payload.
 """
 
-from __future__ import annotations
-
 import ast
 import io
 import re
 import tokenize
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 # The glyphs that mark a line of incident commentary. A tuple a caller WIDENS, never a literal
 # buried in a comprehension: this tooling reads several checkouts with different conventions.
@@ -54,7 +49,7 @@ _BACKTICKED = re.compile(r"`(--?[A-Za-z][\w-]*|[A-Za-z_][\w.]*(?:\(\))?)`")
 _QUOTES = ('"""', "'''")
 _KEY_STRIP = "#:'\" "
 
-type Place = tuple[str, int]
+Place = tuple[str, int]
 
 
 @dataclass(frozen=True, slots=True)

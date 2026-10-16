@@ -8,21 +8,16 @@ any member of the symmetric difference refuses the write and is printed. After a
 taken again, and what remains must be exactly the sites the rewriter refused.
 """
 
-from __future__ import annotations
-
 import re
 import sys
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import atomize, pathdrop, report
 from mikemol.pycodemod.imports import importers
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
-
-type _Key = tuple[str, int, str]
+_Key = tuple[str, int, str]
 
 
 @dataclass(frozen=True, slots=True)

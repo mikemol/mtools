@@ -39,27 +39,21 @@ unparseable FILE is a skip; the origin's `except Exception` around the visit onc
 query while each skip looked routine.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, override
+from typing import override
 
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
-from mikemol.pycodemod.core import Skip, Value, shape_of, src_of, value_of
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.core import _Unknown
+from mikemol.pycodemod.core import Skip, Value, _Unknown, shape_of, src_of, value_of
 
 MODULE = "<module>"
 _SPLAT = "**"
 
-type Text = str | _Unknown
-type Key = tuple[str, int, int, int, int]
+Text = str | _Unknown
+Key = tuple[str, int, int, int, int]
 
 
 @dataclass(frozen=True, slots=True, order=True)

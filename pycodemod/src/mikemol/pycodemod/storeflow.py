@@ -22,16 +22,11 @@ for it in `tests/test_storeflow.py` are AUTHORED FRESH for this port. ⚑ `snaps
 `relalg_sites` are not here: each is its own module over these predicates.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Collection, Iterable, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Sequence
 
 # DB-API spellings of "run a statement", and the builtins that materialise a cursor: Python and
 # the driver contract, not any one store.

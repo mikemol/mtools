@@ -19,23 +19,15 @@ construct the census found that the roster does not name is printed too, never d
 ⚑ EVERY PRINTER PRINTS ITS DENOMINATOR: skipped files go through `report.incomplete`.
 """
 
-from __future__ import annotations
-
 import sys
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report
-from mikemol.pycodemod.control_census import control_sites
-from mikemol.pycodemod.control_roster import CONSTRUCT_GROUPS, CONSTRUCTS, PYTHON_BOUNDARY
+from mikemol.pycodemod.control_census import ControlSites, control_sites
+from mikemol.pycodemod.control_roster import CONSTRUCT_GROUPS, CONSTRUCTS, PYTHON_BOUNDARY, Boundary
 from mikemol.pycodemod.storeflow import StoreVocab
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.control_census import ControlSites
-    from mikemol.pycodemod.control_roster import Boundary
 
 REFUSED = 2
 BOUNDARIES = {"python": PYTHON_BOUNDARY}

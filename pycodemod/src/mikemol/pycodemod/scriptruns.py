@@ -20,17 +20,12 @@ to read rather than as nothing.
 census over what was written, not by trusting the substitution.
 """
 
-from __future__ import annotations
-
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 # An interpreter word as it appears in shell and Starlark strings: python3, "$PY", "$(command -v
 # python3)", ${PY}; its closing quotes or paren; then whitespace.

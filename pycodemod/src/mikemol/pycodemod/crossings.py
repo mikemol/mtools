@@ -38,16 +38,11 @@ own.
 UnicodeDecodeError, so one non-UTF-8 file aborted the whole census (measured).
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator, Sequence
 
 CORPUS = "corpus"
 DERIVED = "derived"
@@ -61,7 +56,7 @@ _CONSTRUCTORS = frozenset({"dict", "set", "list", "sorted"})
 _RECEIVERS = frozenset({"self", "cls"})
 _GENERATOR = "generator"
 
-type Def = ast.FunctionDef | ast.AsyncFunctionDef
+Def = ast.FunctionDef | ast.AsyncFunctionDef
 _SCOPES = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)
 
 

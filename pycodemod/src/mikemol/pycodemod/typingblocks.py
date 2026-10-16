@@ -21,16 +21,11 @@ imports `pkg.a` fails at import time, and neither mypy nor ruff reads that. The 
 project's tests as the judge's second check (`cli_typedargs` `selftest`), which fails the file.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 _KEPT = "a TYPE_CHECKING block that holds more than imports, or an else, is left as it is"
 

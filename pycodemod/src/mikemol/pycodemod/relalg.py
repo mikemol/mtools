@@ -36,11 +36,9 @@ the control census) and is not carried.
 so; the kinds-operand, vocabulary-operand, async, unknown-kind and skip arms are AUTHORED FRESH.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
 from mikemol.pycodemod.storeflow import (
@@ -52,9 +50,6 @@ from mikemol.pycodemod.storeflow import (
     store_reader_fns,
     touches,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Sequence
 
 RELALG_KINDS = ("join", "group-by", "filter", "sort", "set-op", "distinct")
 SNIPPET_LIMIT = 78

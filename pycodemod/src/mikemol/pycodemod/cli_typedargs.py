@@ -30,24 +30,20 @@ else is exit 2 here, never a pass.
     mikemol-pycodemod typed-args --root PROJECT [--write] FILE...
 """
 
-from __future__ import annotations
-
 import json
 import sys
 from collections import Counter
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.procrun import proc
 
 from mikemol.pycodemod import typedargs
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-
-type Runner = Callable[[Sequence[str], Path], tuple[int, str, str]]
-type Measure = Callable[[Path, Path, Runner], Counter[str] | str]
+Runner = Callable[[Sequence[str], Path], tuple[int, str, str]]
+Measure = Callable[[Path, Path, Runner], Counter[str] | str]
 
 TIMEOUT_S = 300.0
 PROBE_PREFIX = "_typedargs_probe_"
@@ -84,7 +80,7 @@ class Plan:
     worklist: tuple[tuple[int, str, str], ...] = ()
 
 
-type Planner = Callable[[str], Plan]
+Planner = Callable[[str], Plan]
 
 
 @dataclass(frozen=True, slots=True)

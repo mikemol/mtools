@@ -32,19 +32,14 @@ it is a `Skip` here. libcst is required (see core), so the origin's `cst is None
 origin's memo and its relpath base are dropped; paths are reported as given.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import libcst as cst
 import libcst.matchers as m
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 MAX_LITERAL = 80
 

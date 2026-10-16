@@ -26,15 +26,10 @@ not UTF-8 was parsed as a different file. Here it is skipped, and says so.
 ⚑ NO ROOT AND NO DEFAULT POPULATION: the caller passes the files.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 # The spellings that catch `SystemExit`: bare `except:` is handled by node shape; these two name a
 # class. Naming `SystemExit` is DELIBERATE by construction and is its own bucket, not a defect.

@@ -13,29 +13,23 @@ writes a whole project and runs its tests once, restoring every file when they f
     mikemol-pycodemod type-checking-imports-tree [--write] PROJECT...
 """
 
-from __future__ import annotations
-
 import sys
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import libcst as cst
 import libcst.matchers as m
 
 from mikemol.pycodemod import typingblocks
-from mikemol.pycodemod.cli_typedargs import Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Runner
+from mikemol.pycodemod.cli_typedargs import Plan, Runner, TypedArgsFlags, print_judged, run_tool
 
 LABEL = "type-checking-imports"
 GUARD = "TYPE_CHECKING"
 _SYNTAX = "the file does not parse"
 _FAILED = 2
+_TAIL = 12
 
 
 def measure(root: Path, rel: Path, run: Runner) -> Counter[str] | str:
@@ -103,8 +97,8 @@ def tested(root: Path, python: Path, snapshot: dict[str, str], run: Runner) -> i
     if code == 0:
         return 0
     restore(snapshot)
-    last = (out + err).strip().splitlines()[-1:] or ["no output"]
-    sys.stdout.write(f"{LABEL} dist tests failed (exit {code}), every file restored: {last[0]}\n")
+    tail = " | ".join((out + err).strip().splitlines()[-_TAIL:]) or "no output"
+    sys.stdout.write(f"{LABEL} dist tests failed (exit {code}), every file restored: {tail}\n")
     return _FAILED
 
 

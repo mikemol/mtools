@@ -21,19 +21,14 @@ lines are now `size.code_lines`, the same counter the size census uses: that `f`
 ⚑ AN UNPARSEABLE FILE IS REPORTED; the origin raised ParserSyntaxError (measured).
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.placement import is_entry_test
 from mikemol.pycodemod.size import code_lines
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 ENTRY = "__main__ guard"
 _UNNAMED = "-"

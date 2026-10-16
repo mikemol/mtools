@@ -11,18 +11,12 @@ or exempt the rule, and a measurement that silently counts nothing would read ev
 no better. A ruff that cannot run is the reason string, never an empty count.
 """
 
-from __future__ import annotations
-
 import json
 from collections import Counter
-from typing import TYPE_CHECKING, cast
+from pathlib import Path
+from typing import cast
 
-from mikemol.pycodemod.cli_typedargs import CLIP, JUDGED
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from mikemol.pycodemod.cli_typedargs import Measure, Runner
+from mikemol.pycodemod.cli_typedargs import CLIP, JUDGED, Measure, Runner
 
 
 def ruff_measure(select: str) -> Measure:

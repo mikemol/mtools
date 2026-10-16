@@ -10,18 +10,11 @@ optional `--object-fn` / `--list-fn`) and hands `orempty.plan` over as the plann
     mikemol-pycodemod or-empty --root PROJECT --module checks.jsonio [--write] FILE...
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import orempty
-from mikemol.pycodemod.cli_typedargs import Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.cli_typedargs import Runner
+from mikemol.pycodemod.cli_typedargs import Plan, Runner, TypedArgsFlags, print_judged, run_tool
 
 LABEL = "or-empty"
 

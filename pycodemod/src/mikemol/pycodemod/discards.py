@@ -30,23 +30,18 @@ joined on their start position, line and column, from the same libcst walk as `s
 dropped it from both sides.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, override
+from typing import override
 
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.sites import scan
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.core import Skip
-
-type Where = tuple[str, int, int]
+Where = tuple[str, int, int]
 
 
 @dataclass(frozen=True, slots=True)

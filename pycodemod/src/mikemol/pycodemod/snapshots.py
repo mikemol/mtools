@@ -20,19 +20,12 @@ adds nothing, and an `IfExp` runs one branch, so its branches are MAXed.
 instead of vanishing as "no site".
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-from mikemol.pycodemod.storeflow import is_store_read
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.storeflow import StoreVocab
+from mikemol.pycodemod.storeflow import StoreVocab, is_store_read
 
 SNIPPET_LIMIT = 88
 MANY = 2

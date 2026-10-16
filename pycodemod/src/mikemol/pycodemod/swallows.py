@@ -26,23 +26,18 @@ own kind, beside a bare `except:` — both also swallow SystemExit and KeyboardI
 origin knew three. ⚑ An `except*` handler (`ast.TryStar`) is read as well.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
 
 _BROAD = frozenset({"Exception"})
 _BASE = frozenset({"BaseException"})
 _ACCUMULATE = frozenset({"append", "add", "update", "extend", "setdefault", "insert"})
 _OUTPUT = ("print", "log", "warn", "debug")
 
-type Scope = ast.Module | ast.FunctionDef | ast.AsyncFunctionDef
+Scope = ast.Module | ast.FunctionDef | ast.AsyncFunctionDef
 
 
 @dataclass(frozen=True, slots=True, order=True)

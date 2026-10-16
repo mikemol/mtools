@@ -21,8 +21,6 @@ at. A ` - ` is NOT a split point though paperkit:W335 named it: splitting there 
 the dash, and this verb keeps every word.
 """
 
-from __future__ import annotations
-
 import ast
 import re
 import textwrap
@@ -39,7 +37,7 @@ _COLON = re.compile(r":(?=\s)")
 _FIRST_CONTENT_LINE = 1
 _ONE_LINE = 1
 
-type Owner = ast.Module | ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef
+Owner = ast.Module | ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef
 
 
 @dataclass(frozen=True, slots=True)

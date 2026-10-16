@@ -26,12 +26,11 @@ import cone (paperkit:W296, found by diffing per-claim closure roots).
 the origin of the dropped line's commentary is never lost to tidiness.
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, override
+from typing import override
 
 import libcst as cst
 from libcst.helpers import get_full_name_for_node
@@ -39,17 +38,13 @@ from libcst.metadata import (
     Assignment,
     MetadataWrapper,
     PositionProvider,
+    Scope,
     ScopeProvider,
 )
 
 from mikemol.pycodemod.core import Skip
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from libcst.metadata import Scope
-
-type _Stmt = cst.BaseStatement
+_Stmt = cst.BaseStatement
 
 REWRITE = "REWRITE"
 REFUSED = "REFUSED"

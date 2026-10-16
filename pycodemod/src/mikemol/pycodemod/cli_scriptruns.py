@@ -6,17 +6,12 @@ r"""`by-path-runs`: report, and with --write rewrite, the scripts run by path in
 and any run still found fails the command. Mentions are printed either way and never rewritten.
 """
 
-from __future__ import annotations
-
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod import report, scriptruns
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 @dataclass(frozen=True, slots=True)

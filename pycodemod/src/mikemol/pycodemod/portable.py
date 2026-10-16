@@ -30,20 +30,16 @@ generated file (the marker in its first 400 bytes) is listed under `generated`, 
 be carried to the next file by construction.
 """
 
-from __future__ import annotations
-
 import ast
 import re
+from collections.abc import Callable, Sequence
+from contextlib import AbstractContextManager
 from dataclasses import dataclass, field
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from mikemol.pycodemod.core import Skip
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
-    from contextlib import AbstractContextManager
 
 OK = "ok"
 ABSENT = "parsed_absent"
@@ -75,8 +71,8 @@ class Verdict:
     kind: str = ""
 
 
-type Judge = Callable[[str], Verdict]
-type Literals = Callable[[str], Sequence[tuple[int, str]]]
+Judge = Callable[[str], Verdict]
+Literals = Callable[[str], Sequence[tuple[int, str]]]
 
 
 @dataclass(frozen=True, slots=True)

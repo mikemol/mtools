@@ -8,23 +8,16 @@ when that count falls and nothing new appears. The mode is driven by `codon-prep
 it first so the hoist can then move a block that held only imports and aliases.
 """
 
-from __future__ import annotations
-
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import replace
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import libcst as cst
 import libcst.matchers as m
 
 from mikemol.pycodemod import typealias
-from mikemol.pycodemod.cli_typedargs import Plan, TypedArgsFlags, print_judged, run_tool
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
-    from mikemol.pycodemod.cli_typedargs import Runner
+from mikemol.pycodemod.cli_typedargs import Plan, Runner, TypedArgsFlags, print_judged, run_tool
 
 LABEL = "type-alias"
 STATEMENT = "type statement"

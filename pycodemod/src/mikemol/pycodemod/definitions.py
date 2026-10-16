@@ -26,20 +26,15 @@ DECORATORS (the origin's extent began at `def`), carries the qualified name, and
 files rather than skipping them with `except Exception`.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
-
-type Span = tuple[int, int]
-type Defn = ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef
+Span = tuple[int, int]
+Defn = ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef
 
 _FUNCTIONS = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
 _COMPREHENSIONS = (ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp)

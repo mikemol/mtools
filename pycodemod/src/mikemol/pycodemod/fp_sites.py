@@ -20,21 +20,15 @@ What changed from the origin, and why:
   origin's `referents([])` did the same.
 """
 
-from __future__ import annotations
-
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.census_fp import FpSite
 from mikemol.pycodemod.control_census import control_sites
+from mikemol.pycodemod.control_roster import Boundary
+from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.referents import referents
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from mikemol.pycodemod.control_roster import Boundary
-    from mikemol.pycodemod.core import Skip
-    from mikemol.pycodemod.storeflow import StoreVocab
+from mikemol.pycodemod.storeflow import StoreVocab
 
 
 @dataclass(frozen=True, slots=True)

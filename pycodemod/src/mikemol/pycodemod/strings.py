@@ -28,18 +28,13 @@ text reject applies only to values made wholly of plain printable ASCII. ⚑ A R
 climbing to the enclosing STATEMENT, with no depth cap (the origin stopped at twelve levels).
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip
 from mikemol.pycodemod.sites import MODULE
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
 
 _READERS = frozenset({"get", "setdefault", "pop", "__contains__", "__getitem__"})
 _COLLECTIONS = (ast.Tuple, ast.List, ast.Set)

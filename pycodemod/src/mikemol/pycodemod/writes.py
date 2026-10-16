@@ -32,16 +32,11 @@ docstrings. The flag and the fixture-function names are operands (the origin's `
 `open(tf, "w")` is inert.
 """
 
-from __future__ import annotations
-
 import ast
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from mikemol.pycodemod.core import Skip, parse_file
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
 
 _WRITE_MODES = frozenset("wax+")
 _WRITE_METHODS = frozenset({"write_text", "write_bytes"})
