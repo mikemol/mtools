@@ -39,12 +39,6 @@
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names}
 }
 
-@misc{root-mutate-runner-a-mutant-that-makes-a-wait-unbounded-is-killed-by-the-time-limit,
-  section = {mutate_runner},
-  claim   = {A mutant whose suite never ends (a retry loop around the raised mutant) is recorded as KILLED once MUTATE_TIMEOUT expires, its process group killed, instead of holding the grid until bazel's ceiling: W356 measured //gmailstruct:mutants TIMEOUT 300s},
-  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_that_makes_a_wait_unbounded_is_killed_by_the_time_limit}
-}
-
 @misc{root-mutate-runner-declared-defect-the-suite-fails-on-is-killed-and-the-planted-text-reached-it,
   section = {mutate_runner},
   title  = {W629: a failing suite KILLS the declared defect, and it ran against the rewritten module},
@@ -168,4 +162,78 @@
   title  = {Sites that cannot be mutated do not count toward the cost of a grid},
   claim  = {Sites that cannot be mutated do not count toward the cost of a grid.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_plan_line_counts_mutable_sites_without_the_unreachable_ones},
+}
+
+@misc{root-mutate-runner-mutant-that-makes-a-wait-unbounded-is-killed-as-hung,
+  section = {mutate_runner},
+  title  = {A mutant whose suite waits forever is recorded as KILLED once it shows no progress (W1376)},
+  claim  = {A mutant whose suite waits forever is recorded as KILLED once it shows no progress
+            (W1376). RUN ON A WORKER THREAD AND JOINED WITH A BOUND, so a runner without
+            the limit fails this test by ASSERTION (the verdict never arrives) rather
+            than hanging the suite that tests it.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_that_makes_a_wait_unbounded_is_killed_as_hung},
+}
+
+@misc{root-mutate-runner-mutant-that-turns-the-wait-into-a-busy-loop-is-killed-by-the-cpu-limit,
+  section = {mutate_runner},
+  title  = {A suite that spins is KILLED when its CPU seconds reach `MUTATE_CPU_S`, not by a timer},
+  claim  = {A suite that spins is KILLED when its CPU seconds reach `MUTATE_CPU_S`, not by a timer.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_that_turns_the_wait_into_a_busy_loop_is_killed_by_the_cpu_limit},
+}
+
+@misc{root-mutate-runner-suite-burning-cpu-is-never-ended-as-hung,
+  section = {mutate_runner},
+  title  = {The control: one CPU second across many short polls advances every poll, so it finishes},
+  claim  = {The control: one CPU second across many short polls advances every poll, so it finishes.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_burning_cpu_is_never_ended_as_hung},
+}
+
+@misc{root-mutate-runner-suite-that-prints-while-idle-is-never-ended-as-hung,
+  section = {mutate_runner},
+  title  = {Output growth is progress even when the CPU is flat, so a chatty idle suite finishes},
+  claim  = {Output growth is progress even when the CPU is flat, so a chatty idle suite finishes.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_that_prints_while_idle_is_never_ended_as_hung},
+}
+
+@misc{root-mutate-runner-silent-idle-suite-is-ended-after-the-patience-not-a-deadline,
+  section = {mutate_runner},
+  title  = {The positive control: no output and no CPU for the patience raises TimeoutExpired},
+  claim  = {The positive control: no output and no CPU for the patience raises TimeoutExpired.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_silent_idle_suite_is_ended_after_the_patience_not_a_deadline},
+}
+
+@misc{root-mutate-runner-tree-cpu-of-a-live-process-is-a-number-and-of-a-gone-one-is-none,
+  section = {mutate_runner},
+  title  = {A gone root is None, never 0.0: a finished suite and an idle one are different answers},
+  claim  = {A gone root is None, never 0.0: a finished suite and an idle one are different answers.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_tree_cpu_of_a_live_process_is_a_number_and_of_a_gone_one_is_none},
+}
+
+@misc{root-mutate-runner-limits-read-their-environment-and-default-without-it,
+  section = {mutate_runner},
+  title  = {Poll, patience and CPU seconds come from the environment, with defaults when it is empty},
+  claim  = {Poll, patience and CPU seconds come from the environment, with defaults when it is
+            empty.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_limits_read_their_environment_and_default_without_it},
+}
+
+@misc{root-mutate-runner-suite-that-leaves-a-child-in-its-group-is-ended-as-hung,
+  section = {mutate_runner},
+  title  = {The suite exits 0, but its leaked sleeper is silent and idle, so the group is killed},
+  claim  = {The suite exits 0, but its leaked sleeper is silent and idle, so the group is killed.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_that_leaves_a_child_in_its_group_is_ended_as_hung},
+}
+
+@misc{root-mutate-runner-suite-that-leaves-nothing-behind-returns-when-it-exits,
+  section = {mutate_runner},
+  title  = {The control: no leaked child, so the wait ends with the suite and its output is kept},
+  claim  = {The control: no leaked child, so the wait ends with the suite and its output is kept.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_that_leaves_nothing_behind_returns_when_it_exits},
+}
+
+@misc{root-mutate-runner-group-cpu-of-a-live-group-is-a-number-and-of-an-empty-one-is-none,
+  section = {mutate_runner},
+  title  = {A group with a member reads a number, and a group with none reads None, never 0.0},
+  claim  = {A group with a member reads a number, and a group with none reads None, never 0.0.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_group_cpu_of_a_live_group_is_a_number_and_of_an_empty_one_is_none},
 }

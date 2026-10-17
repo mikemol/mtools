@@ -4,8 +4,11 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from typing import TYPE_CHECKING
+
+import pytest
 
 from mikemol.katas import commits, waiter
 
@@ -15,7 +18,14 @@ if TYPE_CHECKING:
 _THREE = "import sys; print('out', flush=True); sys.stderr.write('err\\n'); sys.exit(3)"
 _EXIT_THREE = [sys.executable, "-c", _THREE]
 _OK = [sys.executable, "-c", "print('fine')"]
-_SLEEP = [sys.executable, "-c", "import time; time.sleep(30)"]
+# ⚑ IT SAYS WHO IT IS AND THEN SLEEPS FAR PAST ANY TEST: a waiter that does not end the child's tree
+# on the backstop either leaves it alive (the pid check) or waits on it (the suite hangs, which the
+# mutants runner ends as hung). Thirty seconds let both defects pass slowly (W1376).
+_SLEEP = [
+    sys.executable,
+    "-c",
+    "import os, time; print(os.getpid(), flush=True); time.sleep(600)",
+]
 _STATUS = 3
 _SHORT = 0.2
 
@@ -65,6 +75,9 @@ def test_a_command_that_outlasts_its_timeout_is_recorded_as_timed_out(tmp_path: 
     assert status == waiter.TIMED_OUT
     assert "timed out" in log.read_text(encoding="utf-8")
     assert commits.commit_state(log) == f"FAILED rc={waiter.TIMED_OUT}"
+    child = int(log.read_text(encoding="utf-8").split()[0])
+    with pytest.raises(ProcessLookupError):
+        os.kill(child, 0)
 
 
 def test_leading_rm_pairs_are_peeled_off_the_command(tmp_path: Path) -> None:

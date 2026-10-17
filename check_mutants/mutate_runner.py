@@ -31,15 +31,18 @@ from __future__ import annotations
 
 import ast
 import concurrent.futures
+import contextlib
 import dataclasses
 import fnmatch
 import os
 import pathlib
+import resource
 import shutil
 import signal
 import subprocess
 import sys
 import tempfile
+import threading
 
 # ⚑⚑ THE FENCE SIBLING EDGE (mtools:W619, ruled A+B 2026-10-04). This runs under each
 # distribution's own `.venv`, and only fence's carries `mikemol.fence`, so `mutate_check.sh` names
@@ -193,21 +196,179 @@ class Mutant:
     name: str
 
 
-# ⚑⚑ THE PER-MUTANT TIME LIMIT (W359), in seconds of WALL time. A mutant that turns a bounded wait
-# into an unbounded one (a retry loop around the raised `AssertionError`) never ends its suite, and
-# without a limit ONE such cell held the whole grid until bazel's own ceiling killed it — measured
-# as //gmailstruct:mutants TIMEOUT 300s (W356), a grid that reported nothing about any site.
-_DEFAULT_TIMEOUT_S = 60.0
+# ⚑⚑ NO WALL-CLOCK TIMEOUT (operator 2026-09-23/24, "avoid wall-clock timeouts"; W1376). A mutant
+# that turns a bounded wait into an unbounded one (a retry loop around the raised `AssertionError`)
+# never ends its suite, and without a bound ONE such cell held the whole grid until bazel's own
+# ceiling killed it (W356/W359). The bound used to be 60 s of WALL time, and on a loaded host
+# elapsed time measures contention, not whether the suite is stuck: three shards were refused at
+# 300 s with no test failing (2026-10-17), and each of them passes alone in about 110 s.
+#
+# So a suite is ended for one of two ABSENCES, never for being slow:
+#   - HUNG: for `MUTATE_PATIENCE` polls in a row (every `MUTATE_POLL_S` seconds) neither its
+#     output nor the CPU of its whole process tree changed. A slow suite on a loaded host still
+#     advances its CPU every poll, so it is never ended; the count is of polls without progress,
+#     and any progress resets it. This is `katas.hangwatch`'s rule (W1126), written again here
+#     because this runner runs under each distribution's own venv and may import nothing of katas.
+#   - SPINNING: its CPU seconds reach `MUTATE_CPU_S` (an `RLIMIT_CPU` on the suite process), for a
+#     mutant that turns a wait into a busy loop, which a CPU-advancing tree never shows as hung.
+_DEFAULT_POLL_S = 5.0
+_DEFAULT_PATIENCE = 24
+_DEFAULT_CPU_S = 120.0
+_AFTER_COMM = 2
+_PPID = 1
+_UTIME = 11
+_STIME = 12
+_PGRP = 2
+_BLOCK = 65536
 
 
-def mutant_timeout() -> float:
-    """Read the per-mutant wall-time limit from `MUTATE_TIMEOUT`, defaulting to 60s.
+def limits() -> tuple[float, int, float]:
+    """Read the absence witness's knobs from the environment.
 
     Returns:
-        the limit in seconds of wall time.
+        (poll interval in seconds, polls of no progress that count as hung, CPU seconds a suite may
+        use) from `MUTATE_POLL_S`, `MUTATE_PATIENCE` and `MUTATE_CPU_S`, with their defaults.
 
     """
-    return float(os.environ.get("MUTATE_TIMEOUT", "") or _DEFAULT_TIMEOUT_S)
+    poll = float(os.environ.get("MUTATE_POLL_S", "") or _DEFAULT_POLL_S)
+    patience = int(os.environ.get("MUTATE_PATIENCE", "") or _DEFAULT_PATIENCE)
+    cpu = float(os.environ.get("MUTATE_CPU_S", "") or _DEFAULT_CPU_S)
+    return poll, patience, cpu
+
+
+def _stat(pid: str) -> tuple[int, int, int] | None:
+    """Read one process's parent, CPU ticks and process group from `/proc/<pid>/stat`.
+
+    The command name may hold spaces and parentheses, so fields count from the LAST `)`.
+
+    Returns:
+        (parent pid, utime + stime in ticks, process group), or None when the process is gone or
+        unreadable.
+
+    """
+    try:
+        text = pathlib.Path("/proc", pid, "stat").read_text(encoding="utf-8", errors="replace")
+        fields = text[text.rindex(")") + _AFTER_COMM :].split()
+        ticks = int(fields[_UTIME]) + int(fields[_STIME])
+        return int(fields[_PPID]), ticks, int(fields[_PGRP])
+    except (OSError, ValueError, IndexError):
+        return None
+
+
+def tree_cpu(root: int) -> float | None:
+    """Sum the CPU seconds of `root` and every live descendant, read from `/proc`.
+
+    ⚑ A TREE THAT IS GONE IS None, NOT 0: a finished suite and an idle one are different answers,
+    and the sum falls when a descendant ends, which `_hung` counts as progress, never as stillness.
+
+    Returns:
+        the seconds, or None when `root` is not a live process.
+
+    """
+    own = _stat(str(root))
+    if own is None:
+        return None
+    children: dict[int, list[tuple[int, int]]] = {}
+    for entry in pathlib.Path("/proc").iterdir():
+        row = _stat(entry.name) if entry.name.isdecimal() else None
+        if row is not None:
+            children.setdefault(row[0], []).append((int(entry.name), row[1]))
+    ticks, pending = own[1], [root]
+    while pending:
+        for pid, used in children.get(pending.pop(), []):
+            ticks += used
+            pending.append(pid)
+    return ticks / os.sysconf("SC_CLK_TCK")
+
+
+def group_cpu(group: int) -> float | None:
+    """Sum the CPU seconds of every live process in a process group, read from `/proc`.
+
+    ⚑ THE SUITE'S GROUP OUTLIVES THE SUITE WHEN IT LEAKS A CHILD: `tree_cpu` of a finished leader is
+    None, but a grandchild still in its session holds the group open. Pipes used to make the read
+    wait on such a child until the wall timer killed it, and the katas mutants
+    `child-shares-the-waiters-group` and `timeout-leaves-the-tree` were recorded KILLED that way;
+    with files the suite exits at once and they survived. The group is the witness for what is left.
+
+    Returns:
+        the seconds, or None when no process is in the group.
+
+    """
+    ticks, found = 0, False
+    for entry in pathlib.Path("/proc").iterdir():
+        row = _stat(entry.name) if entry.name.isdecimal() else None
+        if row is not None and row[2] == group:
+            ticks += row[1]
+            found = True
+    return ticks / os.sysconf("SC_CLK_TCK") if found else None
+
+
+def _cpu(pid: int) -> float | None:
+    """Read the CPU of the suite's tree while its leader lives, else of its process group.
+
+    Returns:
+        the seconds, or None when nothing of the suite is left.
+
+    """
+    alive = tree_cpu(pid)
+    return alive if alive is not None else group_cpu(pid)
+
+
+def _drain(fd: int, chunks: list[bytes]) -> None:
+    """Copy a pipe's read end into `chunks` as it arrives, until every writer has closed it.
+
+    ⚑ THE READER ENDS ONLY AT EOF, so a descendant that outlives the suite and keeps the pipe open
+    keeps the reader alive: exactly what made the old blocking read wait on a leaked child, and the
+    two katas mutants that plant one (`child-shares-the-waiters-group`, `timeout-leaves-the-tree`)
+    were recorded KILLED by it. The progress witness below is what now ends that wait.
+    """
+    while block := os.read(fd, _BLOCK):
+        chunks.append(block)
+
+
+def _hung(
+    proc: subprocess.Popen[bytes],
+    drains: tuple[tuple[list[bytes], threading.Thread], ...],
+    watch: tuple[float, int],
+) -> bool:
+    """Wait for the suite and its pipes to close, or end it when it shows no progress.
+
+    ⚑ THE COUNT IS OF POLLS WITHOUT PROGRESS, NOT OF SECONDS: bytes received and CPU are read each
+    poll, any change in either resets the count, and the suite's group is killed only when it
+    reaches `patience`. The suite runs in its own session, so killing the group takes its
+    descendants with it. After the leader has exited, silence with nothing computing counts too:
+    that is a leaked child holding a pipe.
+
+    Returns:
+        True when the suite was hung and has been killed, False when it ended and its pipes closed.
+
+    """
+    poll, patience = watch
+    still = 0
+    last: tuple[int, float | None] | None = None
+    while True:
+        with contextlib.suppress(subprocess.TimeoutExpired):
+            proc.wait(timeout=poll)
+        ended = proc.poll() is not None
+        if ended and not any(reader.is_alive() for _chunks, reader in drains):
+            return False
+        cpu = _cpu(proc.pid)
+        seen = (sum(len(block) for chunks, _reader in drains for block in chunks), cpu)
+        still = still + 1 if seen == last and (cpu is not None or ended) else 0
+        last = seen
+        if still >= patience:
+            os.killpg(proc.pid, signal.SIGKILL)
+            return True
+
+
+def _text(chunks: list[bytes]) -> str:
+    """Join what a pipe delivered into text.
+
+    Returns:
+        the bytes, undecodable ones replaced.
+
+    """
+    return b"".join(chunks).decode("utf-8", errors="replace")
 
 
 def launch(
@@ -215,39 +376,57 @@ def launch(
     cwd: pathlib.Path,
     env: dict[str, str],
 ) -> subprocess.CompletedProcess[str]:
-    """Run one mutant's suite: argv only, no shell, output captured as text, bounded in time.
+    """Run one mutant's suite: argv only, no shell, output captured as text, ended by an absence.
 
     ⚑ ONE SEAM FOR THE ONE SUBPROCESS, so a test replaces THIS rather than `subprocess.run` for the
     whole interpreter — which also replaced the git its own fixture needed.
 
-    ⚑⚑ THE SUITE RUNS IN ITS OWN SESSION AND THE WHOLE GROUP IS KILLED AT THE LIMIT. Killing only
-    the direct child would leave any grandchild holding the output pipes, and the read would wait
-    on it — the hang moved one level down rather than removed.
+    ⚑⚑ THE SUITE RUNS IN ITS OWN SESSION AND THE WHOLE GROUP IS KILLED WHEN IT IS HUNG. Its output
+    is read by two threads as it arrives, so the poll can see it grow, and the call returns only
+    when the suite has exited AND every holder of its pipes has closed them, as a blocking read
+    did before.
 
     Returns:
         the completed process; its status is read by `verdict`, never raised.
 
     Raises:
-        subprocess.TimeoutExpired: when the suite outlives `mutant_timeout()`; the group is dead.
+        subprocess.TimeoutExpired: when the suite was hung (no output and no CPU for the patience)
+            or spent its CPU limit; the group is dead. It carries no wall-clock claim.
 
     """
-    limit = mutant_timeout()
-    with subprocess.Popen(
-        argv,
-        cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        start_new_session=True,
-    ) as proc:
-        try:
-            out, err = proc.communicate(timeout=limit)
-        except subprocess.TimeoutExpired:
-            os.killpg(proc.pid, signal.SIGKILL)
-            proc.communicate()
-            raise
-        return subprocess.CompletedProcess(argv, proc.returncode, out, err)
+    poll, patience, cpu_limit = limits()
+    out: list[bytes] = []
+    err: list[bytes] = []
+    out_r, out_w = os.pipe()
+    err_r, err_w = os.pipe()
+    # ⚑ THE PIPES ARE MADE HERE, NOT BY POPEN, and Popen is not a `with`: its exit would close pipes
+    # that a hung suite's leaked child still holds with a reader blocked inside `read`, and the
+    # close would wait on that reader forever. The readers are daemon threads and a hung suite's
+    # read ends are left to them.
+    try:
+        proc = subprocess.Popen(
+            argv, cwd=cwd, env=env, stdout=out_w, stderr=err_w, start_new_session=True
+        )
+    finally:
+        os.close(out_w)
+        os.close(err_w)
+    with contextlib.suppress(ProcessLookupError):
+        resource.prlimit(proc.pid, resource.RLIMIT_CPU, (int(cpu_limit), int(cpu_limit)))
+    drains = (
+        (out, threading.Thread(target=_drain, args=(out_r, out), daemon=True)),
+        (err, threading.Thread(target=_drain, args=(err_r, err), daemon=True)),
+    )
+    for _chunks, reader in drains:
+        reader.start()
+    if _hung(proc, drains, (poll, patience)):
+        proc.wait()
+        raise subprocess.TimeoutExpired(argv, 0.0)
+    os.close(out_r)
+    os.close(err_r)
+    code = proc.wait()
+    if code == -signal.SIGXCPU:
+        raise subprocess.TimeoutExpired(argv, cpu_limit)
+    return subprocess.CompletedProcess(argv, code, _text(out), _text(err))
 
 
 def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | None]]:
@@ -527,7 +706,7 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
             proc = _launch_suite(grid, work, env)
         except subprocess.TimeoutExpired:
             if debug:
-                sys.stdout.write(f"      timed out after {mutant_timeout()}s\n")
+                sys.stdout.write("      ended with no progress or over its CPU limit\n")
             return "killed"
         if debug:
             _report_debug(proc)
