@@ -37,6 +37,7 @@ src/mikemol/corpus/import_edges.py|relative-import-named|not node\.level and nod
 src/mikemol/corpus/import_edges.py|submodule-kept-in-top-level-name|a\.name\.split\("\."\)\[0\]|a.name|def=_named
 src/mikemol/corpus/import_edges.py|relative-import-named-dotted|not node\.level and node\.module|node.module|def=_named_dotted
 src/mikemol/corpus/import_edges.py|from-import-drops-the-package| \S \{node\.module\}||def=_named_dotted
+src/mikemol/corpus/import_edges.py|class-body-imports-deferred|if isinstance\(node, ast\.ClassDef\):|if False:|def=_eager_bodies
 src/mikemol/corpus/import_edges.py|else-branch-imports-missed|return \[node\.body, node\.orelse\]|return [node.body]|def=_eager_bodies
 src/mikemol/corpus/import_edges.py|except-handlers-not-walked|, \*\[h\.body for h in node\.handlers\]||def=_eager_bodies
 src/mikemol/corpus/import_edges.py|match-cases-not-walked|\[case\.body for case in node\.cases\]|[]|def=_eager_bodies

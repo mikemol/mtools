@@ -40,8 +40,10 @@ Namer = Callable[[ast.stmt], set[str]]
 # Parsed edges, keyed by path and reading: a file's imports do not change within one run.
 _CACHE: dict[tuple[str, str], frozenset[str]] = {}
 
-# The node types whose bodies do NOT execute on import.
-_LAZY = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+# The node types whose bodies do NOT execute on import. ⚑ A CLASS BODY IS NOT ONE (W861): Python
+# runs it at definition, so `import x` directly inside `class K:` fires when the module is imported
+# and is an eager edge; only the methods inside it are deferred.
+_LAZY = (ast.FunctionDef, ast.AsyncFunctionDef)
 
 
 def _parse(path: str) -> ast.Module | None:
@@ -93,9 +95,11 @@ def _eager_bodies(node: ast.stmt) -> list[list[ast.stmt]]:
     ⚑ Typed accessors, not `getattr(node, field)`: reflection over a field name returns `Any`.
 
     Returns:
-        the bodies of an if/for/while/try/with/match; none for anything else.
+        the bodies of an if/for/while/try/with/match/class; none for anything else.
 
     """
+    if isinstance(node, ast.ClassDef):
+        return [node.body]
     if isinstance(node, (ast.If, ast.For, ast.AsyncFor, ast.While)):
         return [node.body, node.orelse]
     if isinstance(node, ast.Try):

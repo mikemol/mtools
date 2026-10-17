@@ -44,6 +44,9 @@ def fn():
 class K:
     import in_class
 
+    def method(self):
+        import in_method
+
 from . import relative
 """
 
@@ -58,10 +61,12 @@ _EAGER = {
     "in_finally",
     "in_for",
     "in_with",
+    # ⚑ A CLASS BODY RUNS AT DEFINITION (W861), so an import directly in it fires on import.
+    "in_class",
 }
 
-# Names that fire only when something is called.
-_LAZY = {"in_function", "deferred", "in_class"}
+# Names that fire only when something is called; a method's import is deferred, a class body's not.
+_LAZY = {"in_function", "deferred", "in_method"}
 
 
 def _fixture(tmp_path: Path) -> str:
@@ -87,7 +92,7 @@ def test_every_module_scope_import_shape_is_an_eager_edge(tmp_path: Path) -> Non
 
 
 def test_imports_inside_definitions_never_leak_into_module_level(tmp_path: Path) -> None:
-    """An import inside a def or class is NOT a module-level edge.
+    """An import inside a def (a method included) is NOT a module-level edge.
 
     ⚑⚑⚑ The arm that would have caught substrate's measured 54-of-99 false positive: a lazy import
     read as eager made a lexer and a text gate both "reach" a store.
