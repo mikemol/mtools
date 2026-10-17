@@ -344,3 +344,11 @@ src/mikemol/hooks/commit_kata.py|submit-leaves-no-beat|        beat\(ledger\)|  
 src/mikemol/hooks/commit_kata.py|beat-in-the-wrong-dir|_try_beat\(ledger\.parent, |_try_beat(ledger, |def=beat
 src/mikemol/hooks/scratch_cli.py|scratch-beats-on-a-git-refusal|    if code == 0:|    if True:|def=beat
 src/mikemol/hooks/scratch_cli.py|scratch-beat-skipped|        try_beat\(Path\(text\.strip\(\)\), BEAT_TOOL, time\.time_ns\(\)\)|        pass|def=beat
+src/mikemol/hooks/watchdog.py|no-history-wakes-early|        return MAX_FIRE_S|        return MIN_FIRE_S|def=silence_limit_s
+src/mikemol/hooks/watchdog.py|limit-not-clamped|return min\(max\(phi_fire \* mean \* math\.log\(10\), MIN_FIRE_S\), MAX_FIRE_S\)|return phi_fire * mean * math.log(10)|def=silence_limit_s
+src/mikemol/hooks/watchdog.py|fires-inside-the-limit|if silent_s >= silence_limit_s\(last, phi_fire\):|if True:|def=watch
+src/mikemol/hooks/watchdog.py|blocked-session-fired-on|                if waiting:|                if waiting is not None:|def=watch
+src/mikemol/hooks/watchdog.py|same-silence-asked-twice|                asked_about = last\.at_ns|                asked_about = None|def=watch
+src/mikemol/hooks/watchdog.py|unreadable-count-read-as-a-number|return int\(said\) if done\.returncode == 0 and said\.isdecimal\(\) else None|return int(said) if done.returncode == 0 else None|def=ready_from
+src/mikemol/hooks/gatephase.py|a-time-that-is-not-a-number-is-a-mark|if len\(parts\) == _FIELDS and parts\[1\]\.isdecimal\(\):|if len(parts) == _FIELDS:|def=marks
+src/mikemol/hooks/commit_span.py|phase-starts-before-the-lease|start = min\(max\(mark\.at_ns, moments\.lease_ns\), moments\.end_ns\)|start = mark.at_ns|def=phase_pieces

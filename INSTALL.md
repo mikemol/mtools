@@ -48,7 +48,7 @@ with no scripts is a library that other distributions import.
   `mikemol-hook-tick-release`, `mikemol-hook-tick-stop`, `mikemol-hook-work-claims`,
   `mikemol-hooks-probe`, `mikemol-new-dist`, `mikemol-privacy-audit`, `mikemol-privacy-shipped`,
   `mikemol-pycheck`, `mikemol-repin`, `mikemol-scratch`, `mikemol-shellcheck`, `mikemol-snapshot`,
-  `mikemol-vlog`, `mikemol-websubset`, `mikemol-wheel`.
+  `mikemol-vlog`, `mikemol-watchdog`, `mikemol-websubset`, `mikemol-wheel`.
 - `htmlstruct` (`mikemol-htmlstruct`): Read HTML and MHTML documents as structure. Scripts: `mikemol-htmlstruct`.
 - `icsstruct` (`mikemol-icsstruct`): iCalendar read losslessly. Script: `mikemol-ics`.
 - `importdag` (`mikemol-importdag`): a project's import DAG. Scripts: `mikemol-dagnames`,

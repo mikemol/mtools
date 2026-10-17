@@ -136,6 +136,7 @@ mikemol-websubset = "mikemol.hooks.websubset_cli:main"
 # W1461: compiles one file with the pinned Codon, fetched and hash-verified on first use. NOT
 # `mikemol-hook-…`: a maintainer or a consumer's gate runs it, no harness wires it.
 mikemol-codon-probe = "mikemol.hooks.codon_probe:main"
+mikemol-watchdog = "mikemol.hooks.watchdog:main"
 mikemol-wheel = "mikemol.hooks.wheel:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
@@ -347,6 +348,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # file rather than to the package. An entry naming a directory would grant it to every hook in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.
 "src/mikemol/hooks/verdict.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
+# ⚑ ASKING THE WRITER HOW MANY CARDS ARE READY IS THE WATCHDOG'S ONE SUBPROCESS (W1474): the argv is
+# the resolved writer, a fixed flag, and the queue path the caller named; nothing runs through a
+# shell, and the count has one definition because the writer is the only thing that answers it.
+"src/mikemol/hooks/watchdog.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑ THE SAME RULE, THE SAME REASON, A SECOND NAMED FILE. `test_adoption.py`'s subject is what a
 # real checkout produces WHEN INSTALLED, so building venvs and installing wheels is the case

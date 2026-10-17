@@ -24,6 +24,12 @@
     "names": ["CANNOT", "UNREADABLE", "NOT_CHECKED", "NOT_RUN", "CANNOT_RUN"],
     "why": "an instrument fault: the tool, check or witness could not evaluate (ruff or mypy cannot run, a witness cannot reach its target, an unsound contract), so the result is UNKNOWN. Never read as success, never retried as if a precondition might clear; it surfaces as an instrument problem. A unit may still list 7 in SuccessExitStatus when its run record carries it and its stall alert reads it: that is a unit-level choice, not a verdict change (host ruling relayed by github-8f, 2026-10-15, after luthen's apply_converge case)."
   },
+  "IDLE": {
+    "value": 8,
+    "names": ["IDLE"],
+    "why": "the idle-session watchdog's alarm: a session went quiet past its learned limit while ready cards waited, and the process exits so the harness tells the session (operator ask relayed by github-8f, 2026-10-17; mtools:W1474). Not a failure of the watchdog.",
+    "modules": ["hooks/src/mikemol/hooks/watchdog.py"]
+  },
   "HARNESS": {"value": 125, "names": ["HARNESS"]},
   "NOT_EXECUTABLE": {"value": 126, "names": ["NOT_EXECUTABLE"]},
   "NOT_FOUND": {"value": 127, "names": ["NOT_FOUND", "NOT_STARTED"]}

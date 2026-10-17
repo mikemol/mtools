@@ -11242,3 +11242,137 @@
   claim  = {When git refuses there is no git dir to write under, and the scratch call goes on.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_beat.py -k test_a_checkout_git_cannot_name_beats_nothing_and_raises_nothing},
 }
+
+@misc{hooks-watchdog-repo-with-no-history-is-woken-by-the-latest-limit,
+  section = {heartbeat},
+  title  = {Too few gaps to learn a mean: the band's far edge, ten minutes},
+  claim  = {Too few gaps to learn a mean: the band's far edge, ten minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_repo_with_no_history_is_woken_by_the_latest_limit},
+}
+
+@misc{hooks-watchdog-fast-repo-is-not-woken-sooner-than-the-band-allows,
+  section = {heartbeat},
+  title  = {Beats ten seconds apart suspect a silence at 23 s, and the band holds it at five minutes},
+  claim  = {Beats ten seconds apart suspect a silence at 23 s, and the band holds it at five
+            minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_fast_repo_is_not_woken_sooner_than_the_band_allows},
+}
+
+@misc{hooks-watchdog-slow-repo-is-woken-inside-the-band-not-at-its-own-pace,
+  section = {heartbeat},
+  title  = {A mean of 40 minutes would wait an hour and a half; the band caps it at ten minutes},
+  claim  = {A mean of 40 minutes would wait an hour and a half; the band caps it at ten minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_slow_repo_is_woken_inside_the_band_not_at_its_own_pace},
+}
+
+@misc{hooks-watchdog-learned-mean-inside-the-band-picks-the-moment,
+  section = {heartbeat},
+  title  = {Mean 200 s at one-in-ten suspicion is 200 * ln 10, about 460 s, between the edges},
+  claim  = {Mean 200 s at one-in-ten suspicion is 200 * ln 10, about 460 s, between the edges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_learned_mean_inside_the_band_picks_the_moment},
+}
+
+@misc{hooks-watchdog-quiet-past-the-limit-with-ready-cards-prints-one-line-and-exits-idle,
+  section = {heartbeat},
+  title  = {The exit is the alarm, and its line says how many cards wait and how long it has been},
+  claim  = {The exit is the alarm, and its line says how many cards wait and how long it has been.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_quiet_past_the_limit_with_ready_cards_prints_one_line_and_exits_idle},
+}
+
+@misc{hooks-watchdog-quiet-inside-the-limit-keeps-watching-and-asks-nothing,
+  section = {heartbeat},
+  title  = {A session that beat a minute ago is working},
+  claim  = {A session that beat a minute ago is working.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_quiet_inside_the_limit_keeps_watching_and_asks_nothing},
+}
+
+@misc{hooks-watchdog-session-with-no-ready-cards-is-asked-once-per-beat-and-never-fired-on,
+  section = {heartbeat},
+  title  = {Really blocked: the check is recorded, quietly, and not repeated until it beats again},
+  claim  = {Really blocked: the check is recorded, quietly, and not repeated until it beats again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_session_with_no_ready_cards_is_asked_once_per_beat_and_never_fired_on},
+}
+
+@misc{hooks-watchdog-new-beat-reopens-the-question,
+  section = {heartbeat},
+  title  = {The earlier answer was about the earlier silence},
+  claim  = {The earlier answer was about the earlier silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_new_beat_reopens_the_question},
+}
+
+@misc{hooks-watchdog-writer-that-cannot-answer-does-not-fire,
+  section = {heartbeat},
+  title  = {An unknown count is not evidence of work},
+  claim  = {An unknown count is not evidence of work.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_writer_that_cannot_answer_does_not_fire},
+}
+
+@misc{hooks-watchdog-no-heartbeat-yet-is-not-silence,
+  section = {heartbeat},
+  title  = {A repo that has never beaten has nothing to be quiet about},
+  claim  = {A repo that has never beaten has nothing to be quiet about.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_yet_is_not_silence},
+}
+
+@misc{hooks-watchdog-parent-going-away-ends-the-watch-quietly,
+  section = {heartbeat},
+  title  = {A watchdog that outlives its session is an orphan},
+  claim  = {A watchdog that outlives its session is an orphan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_parent_going_away_ends_the_watch_quietly},
+}
+
+@misc{hooks-watchdog-ready-count-is-the-writers-answer,
+  section = {heartbeat},
+  title  = {The count has one definition, and the watchdog only asks},
+  claim  = {The count has one definition, and the watchdog only asks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_ready_count_is_the_writers_answer},
+}
+
+@misc{hooks-watchdog-answer-that-is-not-a-number-or-a-failing-writer-is-unknown,
+  section = {heartbeat},
+  title  = {Neither reads as zero work, because zero would be a claim},
+  claim  = {Neither reads as zero work, because zero would be a claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_an_answer_that_is_not_a_number_or_a_failing_writer_is_unknown},
+}
+
+@misc{hooks-watchdog-without-a-writer-the-watchdog-cannot-run,
+  section = {heartbeat},
+  title  = {No writer on PATH and none named: exit 7, the instrument fault},
+  claim  = {No writer on PATH and none named: exit 7, the instrument fault.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_without_a_writer_the_watchdog_cannot_run},
+}
+
+@misc{hooks-gatephase-whole-mark-lines-are-read-in-the-order-printed,
+  section = {heartbeat},
+  title  = {Other gate output between the marks is ignored},
+  claim  = {Other gate output between the marks is ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatephase.py -k test_whole_mark_lines_are_read_in_the_order_printed},
+}
+
+@misc{hooks-gatephase-line-that-is-not-a-whole-mark-is-skipped,
+  section = {heartbeat},
+  title  = {No name, a time that is not a number, or a name with a space is not a mark},
+  claim  = {No name, a time that is not a number, or a name with a space is not a mark.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatephase.py -k test_a_line_that_is_not_a_whole_mark_is_skipped},
+}
+
+@misc{hooks-gatephase-each-phase-runs-to-the-next-mark-and-the-last-to-the-verdict,
+  section = {heartbeat},
+  title  = {The spans are children of gating and named for the phase},
+  claim  = {The spans are children of gating and named for the phase.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatephase.py -k test_each_phase_runs_to_the_next_mark_and_the_last_to_the_verdict},
+}
+
+@misc{hooks-gatephase-mark-outside-the-gating-window-is-clamped-into-it,
+  section = {heartbeat},
+  title  = {A phase never starts before the lease or ends after the verdict},
+  claim  = {A phase never starts before the lease or ends after the verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatephase.py -k test_a_mark_outside_the_gating_window_is_clamped_into_it},
+}
+
+@misc{hooks-gatephase-no-marks-leaves-the-three-spans-alone,
+  section = {heartbeat},
+  title  = {A gate that prints none is traced exactly as before},
+  claim  = {A gate that prints none is traced exactly as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatephase.py -k test_no_marks_leaves_the_three_spans_alone},
+}
