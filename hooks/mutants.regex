@@ -352,3 +352,5 @@ src/mikemol/hooks/watchdog.py|same-silence-asked-twice|                asked_abo
 src/mikemol/hooks/watchdog.py|unreadable-count-read-as-a-number|return int\(said\) if done\.returncode == 0 and said\.isdecimal\(\) else None|return int(said) if done.returncode == 0 else None|def=ready_from
 src/mikemol/hooks/gatephase.py|a-time-that-is-not-a-number-is-a-mark|if len\(parts\) == _FIELDS and parts\[1\]\.isdecimal\(\):|if len(parts) == _FIELDS:|def=marks
 src/mikemol/hooks/commit_span.py|phase-starts-before-the-lease|start = min\(max\(mark\.at_ns, moments\.lease_ns\), moments\.end_ns\)|start = mark.at_ns|def=phase_pieces
+src/mikemol/hooks/watchdog.py|no-source-note-every-poll|                noted = True|                noted = False|def=watch
+src/mikemol/hooks/watchdog.py|missing-heartbeat-never-counted|            last = started|            return 0|def=watch

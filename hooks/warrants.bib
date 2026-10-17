@@ -11307,13 +11307,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_writer_that_cannot_answer_does_not_fire},
 }
 
-@misc{hooks-watchdog-no-heartbeat-yet-is-not-silence,
-  section = {heartbeat},
-  title  = {A repo that has never beaten has nothing to be quiet about},
-  claim  = {A repo that has never beaten has nothing to be quiet about.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_yet_is_not_silence},
-}
-
 @misc{hooks-watchdog-parent-going-away-ends-the-watch-quietly,
   section = {heartbeat},
   title  = {A watchdog that outlives its session is an orphan},
@@ -11375,4 +11368,25 @@
   title  = {A gate that prints none is traced exactly as before},
   claim  = {A gate that prints none is traced exactly as before.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatephase.py -k test_no_marks_leaves_the_three_spans_alone},
+}
+
+@misc{hooks-watchdog-no-heartbeat-file-is-a-beat-at-the-watchdogs-own-start,
+  section = {heartbeat},
+  title  = {A repo with ready cards and no beat at all is fired on after the band, and says why},
+  claim  = {A repo with ready cards and no beat at all is fired on after the band, and says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start},
+}
+
+@misc{hooks-watchdog-no-heartbeat-file-and-no-ready-cards-does-not-fire-and-says-so-once,
+  section = {heartbeat},
+  title  = {The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone},
+  claim  = {The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once},
+}
+
+@misc{hooks-watchdog-no-heartbeat-file-inside-the-band-does-not-fire,
+  section = {heartbeat},
+  title  = {Counting from the start is still a silence measured against the band},
+  claim  = {Counting from the start is still a silence measured against the band.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_inside_the_band_does_not_fire},
 }

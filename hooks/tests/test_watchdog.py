@@ -123,9 +123,29 @@ def test_a_writer_that_cannot_answer_does_not_fire() -> None:
     assert watchdog.watch(seams, 1.0, _POLL) == 0
 
 
-def test_no_heartbeat_yet_is_not_silence() -> None:
-    """A repo that has never beaten has nothing to be quiet about."""
-    seams = _seams([None], lambda: 9, [10_000], lives=3)
+def test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A repo with ready cards and no beat at all is fired on after the band, and says why."""
+    seams = _seams([None], lambda: _FOUR, [0, 700])
+    assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
+    said = capsys.readouterr().out.splitlines()
+    assert said[0] == "mikemol-watchdog: no heartbeat file: counting from my start"
+    assert said[1] == "idle with 4 ready cards, last heartbeat 700s ago (no heartbeat source)"
+
+
+def test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone."""
+    seams = _seams([None], lambda: 0, [0, 700, 800], lives=4)
+    assert watchdog.watch(seams, 1.0, _POLL) == 0
+    assert capsys.readouterr().out.count("no heartbeat file") == 1
+
+
+def test_no_heartbeat_file_inside_the_band_does_not_fire() -> None:
+    """Counting from the start is still a silence measured against the band."""
+    seams = _seams([None], lambda: _FOUR, [0, 60], lives=3)
     assert watchdog.watch(seams, 1.0, _POLL) == 0
 
 

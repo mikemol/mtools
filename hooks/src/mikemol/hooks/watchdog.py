@@ -85,15 +85,28 @@ def idle_line(waiting: int, last: Beat, now_ns: int) -> str:
 def watch(seams: Seams, phi_fire: float, poll_s: float) -> int:
     """Watch until the silence passes the limit with work waiting, or the parent goes away.
 
+    ⚑ NO HEARTBEAT FILE IS A BEAT AT THE WATCHDOG'S OWN START (github-8f, 2026-10-17). A repo whose
+    tools are too old to beat has ready cards and no beat at all, which is the strongest stall
+    signal there is; reading it as "never beaten, never fire" hid exactly the repos that need the
+    alarm. So the silence is counted from the start, the alarm fires after the band with work
+    waiting, and one line says no heartbeat source exists, so an old pin shows up instead of hiding.
+
     Returns:
         EXIT_IDLE after printing the idle line; 0 when the parent is gone.
 
     """
     read, ready, now_ns, sleep, alive = seams
     asked_about: int | None = None
+    started = Beat("no heartbeat source", now_ns(), ())
+    noted = False
     while alive():
         last = read()
-        if last is not None and last.at_ns != asked_about:
+        if last is None:
+            last = started
+            if not noted:
+                sys.stdout.write("mikemol-watchdog: no heartbeat file: counting from my start\n")
+                noted = True
+        if last.at_ns != asked_about:
             silent_s = (now_ns() - last.at_ns) / _NS_PER_S
             if silent_s >= silence_limit_s(last, phi_fire):
                 waiting = ready()
