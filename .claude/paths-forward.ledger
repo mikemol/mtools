@@ -2260,3 +2260,20 @@
 2026-10-17T17:58:58Z  interrupt W1479 minted    -         "reconcile the interpreter the hooks venv and the bazel python run (CPython 3.13.13) with the 3.14 floor"  evidence=github-8f
 2026-10-17T18:53:32Z  interrupt W1480 minted    -         "measure which targets dominate a gate run, since a 35-minute gate multiplies every queue"  evidence=github-8f
 2026-10-17T18:55:30Z  interrupt W1481 minted    -         "bazel admission waits on load and the holder's liveness, with no wall-clock deadline"  evidence=github-8f
+2026-10-17T20:00:42Z  tick  W1482 minted    -         "commit and stack runs beat: commit_kata main calls heartbeat.try_beat with the git dir it already resolves, tool mikemol-commit"  evidence=github-8f
+2026-10-17T20:00:43Z  tick  W1483 minted    -         "scratch open and land beat: scratch_cli main calls heartbeat.try_beat, tool mikemol-scratch"  evidence=github-8f
+2026-10-17T20:00:43Z  tick  W1484 minted    -         "writer calls beat: decide how mikemol-paths-forward (zero runtime dependencies) writes the hooks heartbeat record, by depending on mikemol-hooks or by carrying a parity-tested copy as fence does for endpoints"  evidence=github-8f
+2026-10-17T20:07:46Z  tick  W1482 advanced  unblock   "LANDED: 14ceda9 (queue state). IN FLIGHT, three stacks queued in order: W1482 (commit submit leaves a heartbeat), W1481 (bazel admission has no clock), W1470 (--standing). BUILT AND WAITING ON W1482: W1483 (scratch beat; hooks warrants.bib and mutants.regex are frozen in W1482's stack). W1473 atomized into W1482, W1483 and W1484. W1480 next step set. [blocked by W1483]"
+2026-10-17T20:23:12Z  interrupt W1485 minted    -         "mikemol-pycheck --ratchet ROOT: changed files against the committed ruff and mypy baselines, exit 4 on a rise"  evidence=nemik:W639
+2026-10-17T20:26:15Z  interrupt W1486 minted    -         "record each gate step's CPU cost and refusal count per repo from commit spans and BuildBuddy invocations"  evidence=github-8f
+2026-10-17T20:26:20Z  interrupt W1487 minted    -         "order the gate's steps by failure_rate / cost descending, learned from the recorded table"  evidence=github-8f
+2026-10-17T20:26:20Z  interrupt W1488 minted    -         "cheap high-ratio steps become pre-submit checks, and the per-step ratio is published as a series"  evidence=github-8f
+2026-10-17T20:28:57Z  interrupt W1489 minted    -         "the gate runs its steps in learned failure_rate / cost order and aborts on the first failing step"  evidence=github-8f
+2026-10-17T20:28:58Z  interrupt W1490 minted    -         "every gate step is invocable by name, so a session runs any subset before submitting"  evidence=github-8f
+2026-10-17T20:28:59Z  interrupt W1491 minted    -         "mikemol-commit runs the cheap prefix of the gate's steps before it claims the lease"  evidence=github-8f
+2026-10-17T20:30:09Z  interrupt W1492 minted    -         "presubmit is a declared stage beside precommit: each repo names its set and mikemol-presubmit REPO runs it alone"  evidence=github-8f
+2026-10-17T20:35:13Z  tick  W1490 advanced  sweep     "LANDED: eb77866 (W1482). IN FLIGHT: W1481, W1470, W1483 stacks and the queue-state commit, none with a verdict yet. Read the first half of .githooks/pre-commit: the gate has no nameable steps, so W1490 waits on W1486 and a split of the script. Warrants for W1489 to W1492 attached after reading both transcript records. [blocked by W1483]"
+2026-10-17T20:40:44Z  interrupt W1493 minted    -         "the gate emits one child span per phase under commit.gating: prebuild, each dist's host pytest, each witness, bazel"  evidence=github-8f
+2026-10-17T20:40:45Z  interrupt W1494 minted    -         "check whether the gate's per-dist host pytest loop repeats tests that bazel test //... already ran"  evidence=github-8f
+2026-10-17T20:53:24Z  interrupt W1495 minted    -         "the per-prompt nemik hook passes --digest to nemik-check once the flag exists"  evidence=nemik:W641
+2026-10-17T21:22:02Z  interrupt W1496 minted    -         "remove the per-dist host pytest loop that bazel test //... repeats, about 4 minutes of every gate"  evidence=github-8f

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1481,
+  "counter": 1496,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-17T17:02:54Z",
   "job_id": "89b24f28",
@@ -6120,7 +6120,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 303,
+      "ticks_blocked": 305,
       "completed": null
     },
     {
@@ -6168,7 +6168,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 302,
+      "ticks_blocked": 304,
       "completed": null
     },
     {
@@ -10051,7 +10051,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 307,
+      "ticks_blocked": 309,
       "completed": null
     },
     {
@@ -11799,7 +11799,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 241,
+      "ticks_blocked": 243,
       "completed": null
     },
     {
@@ -16153,7 +16153,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 206,
+      "ticks_blocked": 208,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16694,7 +16694,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 206,
+      "ticks_blocked": 208,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17503,7 +17503,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 206,
+      "ticks_blocked": 208,
       "completed": null
     },
     {
@@ -17546,7 +17546,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 206,
+      "ticks_blocked": 208,
       "completed": null
     },
     {
@@ -17569,7 +17569,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 206,
+      "ticks_blocked": 208,
       "completed": null
     },
     {
@@ -17995,7 +17995,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 207,
+      "ticks_blocked": 209,
       "completed": null
     },
     {
@@ -18171,7 +18171,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 205,
+      "ticks_blocked": 207,
       "completed": null
     },
     {
@@ -18954,7 +18954,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 204,
+      "ticks_blocked": 206,
       "completed": null
     },
     {
@@ -20669,7 +20669,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 61,
+      "ticks_blocked": 63,
       "completed": null
     },
     {
@@ -21408,7 +21408,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 96,
+      "ticks_blocked": 98,
       "completed": null
     },
     {
@@ -21454,7 +21454,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 164,
+      "ticks_blocked": 166,
       "completed": null
     },
     {
@@ -21546,7 +21546,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 164,
+      "ticks_blocked": 166,
       "completed": null
     },
     {
@@ -21612,7 +21612,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 84,
+      "ticks_blocked": 86,
       "completed": null
     },
     {
@@ -22010,7 +22010,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 149,
+      "ticks_blocked": 151,
       "completed": null
     },
     {
@@ -22135,7 +22135,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 47,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -22421,7 +22421,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 148,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -22443,7 +22443,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 148,
+      "ticks_blocked": 150,
       "completed": null
     },
     {
@@ -22549,7 +22549,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 128,
+      "ticks_blocked": 130,
       "completed": null
     },
     {
@@ -22831,7 +22831,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 128
+      "ticks_blocked": 130
     },
     {
       "symbol": "W1116",
@@ -22852,7 +22852,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 128
+      "ticks_blocked": 130
     },
     {
       "symbol": "W1117",
@@ -22870,7 +22870,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 128
+      "ticks_blocked": 130
     },
     {
       "symbol": "W1118",
@@ -22888,7 +22888,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 128
+      "ticks_blocked": 130
     },
     {
       "symbol": "W1119",
@@ -23388,7 +23388,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-16T02:13:24Z",
-      "ticks_blocked": 1
+      "ticks_blocked": 3
     },
     {
       "symbol": "W1144",
@@ -23546,7 +23546,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 97
+      "ticks_blocked": 99
     },
     {
       "symbol": "W1151",
@@ -23592,7 +23592,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 116
+      "ticks_blocked": 118
     },
     {
       "symbol": "W1153",
@@ -23616,7 +23616,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 94,
+      "ticks_blocked": 96,
       "completed": null
     },
     {
@@ -24050,7 +24050,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 117,
+      "ticks_blocked": 119,
       "completed": null
     },
     {
@@ -24512,7 +24512,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 64,
+      "ticks_blocked": 66,
       "completed": null
     },
     {
@@ -25983,7 +25983,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T20:11:19Z",
-      "ticks_blocked": 47,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -26845,7 +26845,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1309",
       "last_worked": "2026-10-16T09:58:49Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 53,
       "completed": null
     },
     {
@@ -27024,7 +27024,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W423",
       "last_worked": "2026-10-16T22:43:34Z",
-      "ticks_blocked": 8,
+      "ticks_blocked": 10,
       "completed": null
     },
     {
@@ -27152,7 +27152,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": null,
-      "ticks_blocked": 36
+      "ticks_blocked": 38
     },
     {
       "symbol": "W1326",
@@ -27196,7 +27196,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-16T03:33:35Z",
-      "ticks_blocked": 24,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -27239,7 +27239,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1327",
       "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 47,
+      "ticks_blocked": 49,
       "completed": null
     },
     {
@@ -27263,7 +27263,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 23
+      "ticks_blocked": 25
     },
     {
       "symbol": "W1331",
@@ -27492,7 +27492,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-16T05:25:16Z",
-      "ticks_blocked": 38,
+      "ticks_blocked": 40,
       "completed": null
     },
     {
@@ -27720,7 +27720,7 @@
       "minted_during": "tick",
       "caused_by": "W1350",
       "last_worked": "2026-10-16T13:33:57Z",
-      "ticks_blocked": 36,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -27855,7 +27855,7 @@
       "minted_during": "tick",
       "caused_by": "W1343",
       "last_worked": "2026-10-16T14:11:31Z",
-      "ticks_blocked": 27,
+      "ticks_blocked": 29,
       "completed": null
     },
     {
@@ -28607,7 +28607,7 @@
       "minted_during": "tick",
       "caused_by": "gabion:W1046",
       "last_worked": "2026-10-16T18:47:35Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -28631,7 +28631,7 @@
       "minted_during": "tick",
       "caused_by": "gabion:W1057",
       "last_worked": "2026-10-16T18:47:36Z",
-      "ticks_blocked": 20,
+      "ticks_blocked": 22,
       "completed": null
     },
     {
@@ -29255,7 +29255,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T02:05:51Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -29709,7 +29709,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1086",
       "last_worked": "2026-10-17T11:56:17Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -30066,20 +30066,21 @@
     {
       "symbol": "W1470",
       "title": "--standing prints the standing rules alone and --tick-open prints them too, so no session greps its queue",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 landed as 5608c3e and pushed: standing.py, --standing, --tick-open prints the rules, 4 tests, 2 mutants.",
       "issued_at": "2026-10-17T17:00:40Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T21:06:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T210601Z"
     },
     {
       "symbol": "W1471",
@@ -30125,7 +30126,7 @@
     {
       "symbol": "W1473",
       "title": "every writer, commit, stack and scratch call beats, and the beat is also an OTel gauge series per repo",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1474"
       ],
@@ -30133,15 +30134,19 @@
         "heartbeat",
         "watchdog"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
+      "blocked_on": [
+        "W1483",
+        "W1484"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Umbrella: the OTel gauge series per repo is the remaining piece once W1482, W1483 and W1484 land; mint it then.",
       "evidence": "",
       "issued_at": "2026-10-17T17:37:35Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T20:00:47Z",
+      "ticks_blocked": 1,
+      "completed": null
     },
     {
       "symbol": "W1474",
@@ -30263,25 +30268,61 @@
     {
       "symbol": "W1480",
       "title": "measure which targets dominate a gate run, since a 35-minute gate multiplies every queue",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "gate"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "blocked_on": [
+        "W1486",
+        "W1487",
+        "W1488",
+        "W1489",
+        "W1490",
+        "W1491"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Measure from a finished gate: find where the gate tree leaves its bazel-testlogs (test.xml carries a per-target time), read the times with a tool mode (mikemol-gate-ledger takes a hook gate's stages, not bazel targets, so the mode may be new), and rank the targets by share of the run; shard the dominant ones (W1469).",
+      "evidence": "2026-10-17: 2026-10-17 github-8f relayed the operator verbatim (not yet checked against the transcript): profiling precommit steps to find those that can run more often because they are cheap or must run earlier because they fail more often; fail-fast ordering by failure_rate / cost. Folded in as W1486 (record per step cost and refusal rate), W1487 (order steps by failure_rate / cost, the p/c rule for independent tests, Mitten 1960 and Garey 1973), W1488 (cheap high-ratio steps become pre-submit checks, with W1485 and the codon probe, and the ratio is published as a series so the order is learned).",
       "issued_at": "2026-10-17T18:53:32Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T20:29:05Z",
+      "ticks_blocked": 1,
+      "completed": null,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1480",
+          "prov:wasDerivedFrom": {
+            "@id": "file:///home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl#2f9e90ee-1621-4f9a-86bf-e178f621e42b",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-17T20:24:50.447Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/2f9e90ee-1621-4f9a-86bf-e178f621e42b",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 75969,
+            "mtools:reader": "/home/mikemol/github/mtools/transcriptstruct/.venv/bin/mikemol-transcriptstruct /home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl --verify 2f9e90ee-1621-4f9a-86bf-e178f621e42b --claim operator --line 75969"
+          }
+        }
+      ]
     },
     {
       "symbol": "W1481",
       "title": "bazel admission waits on load and the holder's liveness, with no wall-clock deadline",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "bazel",
@@ -30294,8 +30335,447 @@
       "issued_at": "2026-10-17T18:55:30Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-17T18:55:44Z",
+      "last_worked": "2026-10-17T20:02:55Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1482",
+      "title": "commit and stack runs beat: commit_kata main calls heartbeat.try_beat with the git dir it already resolves, tool mikemol-commit",
+      "status": "done",
+      "enables": [
+        "W1473"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 landed as eb77866 and pushed: commit_kata.submit and beat, 5 tests, 3 mutants.",
+      "issued_at": "2026-10-17T20:00:42Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:24:26Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T202426Z"
+    },
+    {
+      "symbol": "W1483",
+      "title": "scratch open and land beat: scratch_cli main calls heartbeat.try_beat, tool mikemol-scratch",
+      "status": "working",
+      "enables": [
+        "W1473"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Code and tests are in the main tree (scratch_cli.py beat, test_scratch_beat.py, 2 tests, pass). Remaining after W1482 lands: mikemol-gen-warrants --write hooks scratch_beat=heartbeat (hooks/warrants.bib is frozen in W1482's stack), declare mutants for beat (code == 0 test and the git dir used), then submit a stack.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:00:43Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:04:54Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1484",
+      "title": "writer calls beat: decide how mikemol-paths-forward (zero runtime dependencies) writes the hooks heartbeat record, by depending on mikemol-hooks or by carrying a parity-tested copy as fence does for endpoints",
+      "status": "ready",
+      "enables": [
+        "W1473"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read how fence pins its endpoints copy with a parity test, then record the choice and its reason in evidence; a parity-tested copy is the precedent.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:00:43Z",
+      "minted_during": "tick",
+      "caused_by": "github-8f",
+      "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1485",
+      "title": "mikemol-pycheck --ratchet ROOT: changed files against the committed ruff and mypy baselines, exit 4 on a rise",
+      "status": "ready",
+      "enables": [
+        "nemik:W639"
+      ],
+      "touches": [
+        "pycheck",
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read nemik's tools/ruff_ratchet.py and tools/mypy_ratchet.py in its own checkout first, then generalise them into pycheck --ratchet ROOT over a repo's committed baselines; a test plants a new file with one ruff finding and a changed file that adds an Any-typed expression, each exits 4.",
+      "evidence": "2026-10-17: 2026-10-17 github-8f relayed: nemik already has repo-local tools/mypy_ratchet.py and tools/ruff_ratchet.py (mypy about a minute), so nemik:W639 closes without this card. Kept as the fleet version: start from those two scripts, generalise them to any repo's committed baselines, and make them the presubmit step W1488 lists.",
+      "issued_at": "2026-10-17T20:23:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W639",
+      "last_worked": "2026-10-17T21:20:33Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1486",
+      "title": "record each gate step's CPU cost and refusal count per repo from commit spans and BuildBuddy invocations",
+      "status": "working",
+      "enables": [
+        "W1480"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add a --targets mode to buildtel (new module bb_targets.py beside bb_records.py) that reads GetInvocation for an id and prints label, status and totalRunDurationMillis, longest first; a test feeds a recorded event list. Then time the non-bazel stages of .githooks/pre-commit from the commit span (VictoriaTraces) to cover the other 20 minutes.",
+      "evidence": "2026-10-17: 2026-10-17 measured from the W1482 gate, bazel invocation b6133e04-6bb4-4fe8-80ff-edee54dc57ca (readable by id, unauthenticated; the invocation search RPC answers PermissionDenied, so ids must come from gate logs): bazel started 20:07:28 after the stack began, elapsed 787.5 s with critical path 73 s, 1064 test targets of which 163 ran, and a single pytest-in-bazel target took up to 71 s (testSummary totalRunDurationMillis per label). So bazel is about 13 of the gate's roughly 35 minutes and the rest is outside it: the prebuild, the per-dist host pytest loop and the witnesses in .githooks/pre-commit. The data to tabulate is in the GetInvocation RPC (events with buildEvent.testSummary) and in the gate script's own timing, not in anything new to instrument.",
+      "issued_at": "2026-10-17T20:26:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:39:27Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1487",
+      "title": "order the gate's steps by failure_rate / cost descending, learned from the recorded table",
+      "status": "blocked",
+      "enables": [
+        "W1480"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [
+        "W1486"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W1486, compute the ratio per step and print the order; the p/c rule is optimal for independent steps, so record where steps are not independent.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:26:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:26:24Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1488",
+      "title": "cheap high-ratio steps become pre-submit checks, and the per-step ratio is published as a series",
+      "status": "blocked",
+      "enables": [
+        "W1480"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [
+        "W1486"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W1486, publish failure_rate / cost per step as a gauge series per repo and list the steps cheap enough to run before every --stack; W1485 and the codon probe are the first two.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:26:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:26:25Z",
+      "ticks_blocked": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W1489",
+      "title": "the gate runs its steps in learned failure_rate / cost order and aborts on the first failing step",
+      "status": "blocked",
+      "enables": [
+        "W1480"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [
+        "W1487"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W1487 gives the order, make the gate runner stop at the first failing step instead of running the tail; read how the gate sequences its steps today before choosing the seam. Operator, relayed by github-8f: a gate is a composite of check steps ordered so it can abort quickly.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:28:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:29:03Z",
+      "ticks_blocked": 1,
+      "completed": null,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1489",
+          "prov:wasDerivedFrom": {
+            "@id": "file:///home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl#2dd6e9e3-c098-46c5-8029-338a1f1dd408",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-17T20:27:23.662Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/2dd6e9e3-c098-46c5-8029-338a1f1dd408",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 76012,
+            "mtools:reader": "/home/mikemol/github/mtools/transcriptstruct/.venv/bin/mikemol-transcriptstruct /home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl --verify 2dd6e9e3-c098-46c5-8029-338a1f1dd408 --claim operator --line 76012"
+          }
+        }
+      ]
+    },
+    {
+      "symbol": "W1490",
+      "title": "every gate step is invocable by name, so a session runs any subset before submitting",
+      "status": "ready",
+      "enables": [
+        "W1480"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Name the gate's steps and give each a mode (mikemol-gate --step NAME, or a bazel target per step); a test runs one step alone and expects its verdict. Operator, relayed by github-8f: steps can be run independently before a full gate.",
+      "evidence": "2026-10-17: 2026-10-17 read .githooks/pre-commit lines 1 to 696 of 1262: the gate is one bash script whose steps are run_checked and witness calls plus a single bazel test //... with the per-dist pytest in a loop, so a step has no name a caller can ask for and the 35 minutes are mostly that one bazel call. Naming steps means splitting the script into a declared list first; do not start before W1486 says which steps carry the time. | 2026-10-17: 2026-10-17 operator, line 76079 of session 695f3e0a (read, origin human): nothing prevents it from collecting the cost data that already exists. W1486 reads existing BuildBuddy invocations and commit spans; the split follows from its table.",
+      "issued_at": "2026-10-17T20:28:58Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:38:27Z",
+      "ticks_blocked": 0,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1490",
+          "prov:wasDerivedFrom": {
+            "@id": "file:///home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl#2dd6e9e3-c098-46c5-8029-338a1f1dd408",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-17T20:27:23.662Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/2dd6e9e3-c098-46c5-8029-338a1f1dd408",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 76012,
+            "mtools:reader": "/home/mikemol/github/mtools/transcriptstruct/.venv/bin/mikemol-transcriptstruct /home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl --verify 2dd6e9e3-c098-46c5-8029-338a1f1dd408 --claim operator --line 76012"
+          }
+        }
+      ],
+      "completed": null
+    },
+    {
+      "symbol": "W1491",
+      "title": "mikemol-commit runs the repo's presubmit set before it claims the lease and refuses a failure without queueing",
+      "status": "blocked",
+      "enables": [
+        "W1480"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [
+        "W1490"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W1490 and W1492, run the declared presubmit set before claim_of in commit_kata main; a failing step refuses the submit with its reason and registers nothing in commit.counts. The gate still runs every step.",
+      "evidence": "2026-10-17: 2026-10-17 github-8f relayed the operator verbatim (not yet checked against the transcript): we should have presubmit checks just like precommit checks. Merged with the cheap-prefix card; the declaration and the standalone tool are W1492.",
+      "issued_at": "2026-10-17T20:28:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T20:30:08Z",
+      "ticks_blocked": 1,
+      "completed": null,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1491",
+          "prov:wasDerivedFrom": {
+            "@id": "file:///home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl#a2afb399-deaa-4482-8847-291f297aa148",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-17T20:27:55.647Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/a2afb399-deaa-4482-8847-291f297aa148",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 76029,
+            "mtools:reader": "/home/mikemol/github/mtools/transcriptstruct/.venv/bin/mikemol-transcriptstruct /home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl --verify a2afb399-deaa-4482-8847-291f297aa148 --claim operator --line 76029"
+          }
+        }
+      ]
+    },
+    {
+      "symbol": "W1492",
+      "title": "presubmit is a declared stage beside precommit: each repo names its set and mikemol-presubmit REPO runs it alone",
+      "status": "ready",
+      "enables": [
+        "W1491"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Decide where a repo declares its presubmit set (a bazel target set, the cheap high failure_rate / cost prefix of its gate, learned from W1486's data), then add mikemol-presubmit REPO; a test declares a two-step set and expects the first failing step to stop the run.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:30:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1492",
+          "prov:wasDerivedFrom": {
+            "@id": "file:///home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl#a2afb399-deaa-4482-8847-291f297aa148",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-17T20:27:55.647Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/a2afb399-deaa-4482-8847-291f297aa148",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 76029,
+            "mtools:reader": "/home/mikemol/github/mtools/transcriptstruct/.venv/bin/mikemol-transcriptstruct /home/mikemol/.claude/projects/-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e.jsonl --verify a2afb399-deaa-4482-8847-291f297aa148 --claim operator --line 76029"
+          }
+        }
+      ]
+    },
+    {
+      "symbol": "W1493",
+      "title": "the gate emits one child span per phase under commit.gating: prebuild, each dist's host pytest, each witness, bazel",
+      "status": "working",
+      "enables": [
+        "W1486"
+      ],
+      "touches": [
+        "gate",
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "BUILT in the main tree, tests pass (17): hooks/src/mikemol/hooks/gatephase.py reads 'pre-commit: phase NAME NS' lines, commit_span.pieces/phase_pieces make child spans of gating, tests in hooks/tests/test_gatephase.py. REMAINING, in order: (1) when W1483's stack has landed, run mikemol-gen-warrants --write hooks gatephase=heartbeat style for test_gatephase, add mutants for the clamp and the next-mark end, bazel build //hooks:.venv (commit_span now imports a new module), submit the stack; (2) only after it lands, edit .githooks/pre-commit to print the marks (a live hook, so last and alone): a phase function using date +%s%N at prebuild, each dist's host pytest, each witness and the bazel test.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:40:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T21:23:45Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1494",
+      "title": "check whether the gate's per-dist host pytest loop repeats tests that bazel test //... already ran",
+      "status": "ready",
+      "enables": [
+        "W1486"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Name the other unmeasured stretch: from the W1482 log, time the gap between 'checking atomicwrite' and the bazel start, and the witness block after bazel, using the commit span timestamps (commit.gating start and end) against the invocation start 20:07:28 and its 787 s; W1493's per-phase spans make this exact.",
+      "evidence": "2026-10-17: 2026-10-17 first reading from the W1482 gate log (tasks output, lines 12 to 227): the per-dist host pytest loop reports each dist's own time; hooks alone is 85.3 s for 1675 passed, 10 skipped, audiostruct 30 s, mdstruct 19 s, pycodemod 18 s, pathsforward 11 s, fence 9 s, katas 8.5 s, and about thirty others under 7 s each, so the whole loop is roughly 4 minutes, not 20. Bazel then ran 1064 test targets in 787 s, so the loop does repeat tests bazel runs (the pre-commit comment calls it a developer-venv smoke check), but removing it saves about 4 minutes of a gate that took 35, not half of it. Where the other time went is unmeasured: the gap between the stack starting and bazel starting at 20:07:28, the prebuild, the witnesses, and waiting for the turn.",
+      "issued_at": "2026-10-17T20:40:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T21:20:47Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1495",
+      "title": "the per-prompt nemik hook passes --digest to nemik-check once the flag exists",
+      "status": "ready",
+      "enables": [
+        "nemik:W641"
+      ],
+      "touches": [
+        "nemik",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "When nemik-check --digest exists (nemik:W641 part 2), add it to reader_argv in hooks/src/mikemol/hooks/nemik_check.py and update its test; check the flag with nemik-check --help first, never by guess.",
+      "evidence": "",
+      "issued_at": "2026-10-17T20:53:24Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W641",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1496",
+      "title": "remove the per-dist host pytest loop that bazel test //... repeats, about 4 minutes of every gate",
+      "status": "blocked",
+      "enables": [
+        "W1494"
+      ],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [
+        "W1493"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W1493's spans have measured the gate with the loop, drop the loop from .githooks/pre-commit (a live hook, so the edit is last and alone), keep the unstaged-test refusal if it is not covered by bazel, and re-measure; the pre-commit comment says the loop is a developer-venv smoke check, so first confirm bazel's pytest targets import through the same venv.",
+      "evidence": "",
+      "issued_at": "2026-10-17T21:22:02Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T21:22:08Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [
