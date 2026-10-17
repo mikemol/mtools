@@ -10931,3 +10931,31 @@
   claim  = {The positive control: a file outside the manifest still shows, beside the queue files.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_real_drift_is_still_named_when_the_queue_files_ride_along},
 }
+
+@misc{hooks-repin-cli-write-over-a-directory-of-repos-is-refused-without-fleet,
+  section = {repin_cli},
+  title  = {W1458: the control for the fleet writes above; without --fleet nothing is touched},
+  claim  = {W1458: the control for the fleet writes above; without --fleet nothing is touched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_write_over_a_directory_of_repos_is_refused_without_fleet},
+}
+
+@misc{hooks-repin-cli-write-from-inside-one-repo-moves-only-that-repo,
+  section = {repin_cli},
+  title  = {W1458: no --root and no --fleet means the invoking repo, never its neighbours},
+  claim  = {W1458: no --root and no --fleet means the invoking repo, never its neighbours.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_write_from_inside_one_repo_moves_only_that_repo},
+}
+
+@misc{hooks-repin-cli-write-from-a-directory-of-repos-with-no-root-is-refused,
+  section = {repin_cli},
+  title  = {W1458: the el-openglo case, a bare --write from a place that holds other repos},
+  claim  = {W1458: the el-openglo case, a bare --write from a place that holds other repos.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_write_from_a_directory_of_repos_with_no_root_is_refused},
+}
+
+@misc{hooks-repin-cli-dry-run-names-the-repos-a-write-would-change,
+  section = {repin_cli},
+  title  = {W1458: WOULD-WRITE lists each repo with a differing git pin, once, and not a wheel repo},
+  claim  = {W1458: WOULD-WRITE lists each repo with a differing git pin, once, and not a wheel repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_the_dry_run_names_the_repos_a_write_would_change},
+}

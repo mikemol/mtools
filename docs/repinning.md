@@ -40,9 +40,16 @@ What the survey does not read:
 ## Then write
 
 ```
-mikemol-repin --sha <40-hex commit> --write
+mikemol-repin --sha <40-hex commit> --write            # the repo you are in
+mikemol-repin --sha <40-hex commit> --write --fleet    # every repo under ~/github
 ```
 
+* **A write starts in the invoking repo** (W1458). With a `--sha` and no `--root`, the directory read
+  is the current one, so a bare `--write` moves that repo's pins and no other. Moving the others
+  takes `--fleet`, which reads `~/github`. A `--write` whose root is a directory of repos, not a repo,
+  is refused (exit 2) unless `--fleet` is given. A survey with no `--sha` still reads the fleet.
+* **The dry run lists what a write would change**: after the survey rows, one
+  `WOULD-WRITE repo` line per repo with a git pin that differs from the target.
 * The target must be a full 40-character lowercase hex commit; a short sha or a branch is refused,
   because it would write a pin that does not pin.
 * All the chosen pins move to the one commit together. Two specs of one repo at different commits

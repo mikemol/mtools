@@ -51,7 +51,7 @@ _FIXES_AT = musthave.at_commit
 _MISSING = musthave.missing_for
 _USAGE = (
     "usage: mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--metrics FILE] [--write]"
-    " [--no-sync]\n"
+    " [--no-sync] [--fleet]\n"
     "       mikemol-repin --revendor --sha SHA40 [--root REPO] [--mtools DIR] [--write]\n"
     "       mikemol-repin --must-have SHA40 --dists D --reason R [--requires SHA40] [--write]\n"
     "       mikemol-repin --check-must-have [--mtools DIR]\n"
@@ -69,7 +69,7 @@ _VALUED = frozenset(
         "--requires",
     }
 )
-_FLAGS = frozenset({"--write", "--no-sync", "--revendor", "--check-must-have"})
+_FLAGS = frozenset({"--write", "--no-sync", "--revendor", "--check-must-have", "--fleet"})
 
 
 def _scannable(directory: Path) -> bool:
@@ -225,6 +225,55 @@ def _refusal(target: str | None, write: bool) -> str | None:
     return None
 
 
+def _root_of(valued: dict[str, list[str]], flags: set[str], target: str | None) -> Path:
+    """Choose the directory to read, and with a target to move pins in (W1458).
+
+    ⚑ MOVING PINS STARTS IN THE INVOKING REPO (github-8f, 2026-10-17): a `--sha SHA --write` run
+    from el-openglo with no `--root` synced six other repos, three of them frozen by the operator,
+    because the default root was the whole fleet. With a target the default root is the current
+    directory; `--fleet` selects `~/github`, and a plain survey (no target) still reads the fleet.
+    An explicit `--root` always wins.
+
+    Returns:
+        the root.
+
+    """
+    if "--root" in valued:
+        return Path(valued["--root"][-1])
+    if "--fleet" in flags or target is None:
+        return Path.home() / "github"
+    return Path.cwd()
+
+
+def _scope_refusal(root: Path, flags: set[str]) -> str | None:
+    """Refuse a write whose root is a directory of repos unless `--fleet` was given (W1458).
+
+    Returns:
+        the reason, or None when the write stays inside one repo or the fleet was asked for.
+
+    """
+    if "--write" not in flags or "--fleet" in flags or (root / "pyproject.toml").is_file():
+        return None
+    return (
+        f"--write would move the pins of every repo under {root}: run it from the one repo to "
+        "move, or add --fleet to move them all"
+    )
+
+
+def _would_write(rows: list[Row]) -> list[str]:
+    """Name the repos a `--write` of the surveyed target would change.
+
+    Returns:
+        each repo with a git pin that differs from the target, in survey order, once.
+
+    """
+    names: list[str] = []
+    for row in rows:
+        if row.form != repin.WHEEL and row.status == "DIFFERS" and row.repo not in names:
+            names.append(row.repo)
+    return names
+
+
 def _measure(
     par: str | None, mtools: Path, runner: Runner
 ) -> Callable[[repin.Pin], tuple[str, ...] | None] | None:
@@ -271,18 +320,24 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
         mtools = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])
         sha = valued.get("--sha", [""])[-1]
         return _REVENDOR(repo, sha, mtools, runner, frozenset(flags))
-    root = Path(valued.get("--root", [str(Path.home() / "github")])[-1])
     target = valued.get("--sha", [None])[-1]
+    root = _root_of(valued, flags, target)
     dists = frozenset(valued["--dist"]) if "--dist" in valued else None
     metrics = valued.get("--metrics", [None])[-1]
     par = target if target is not None or metrics is None else (_ENV.get(PAR_ENV) or None)
-    refusal = _refusal(target, write="--write" in flags) or _refusal(par, write=False)
+    refusal = (
+        _refusal(target, write="--write" in flags)
+        or _refusal(par, write=False)
+        or _scope_refusal(root, flags)
+    )
     if refusal is not None:
         sys.stderr.write(f"mikemol-repin: {refusal}\n")
         return EXIT_USAGE
     mtools_dir = Path(valued.get("--mtools", [str(Path.home() / "github" / "mtools")])[-1])
     rows = survey(root, par, dists, _measure(par, mtools_dir, runner))
     sys.stdout.write("".join(f"{row.line()}\n" for row in rows))
+    if target is not None and "--write" not in flags:
+        sys.stdout.write("".join(f"WOULD-WRITE {name}\n" for name in _would_write(rows)))
     if metrics is not None:
         _PUBLISH(Path(metrics), _RENDER(rows, str(root), par, int(_NOW())))
     if "--write" not in flags or target is None:

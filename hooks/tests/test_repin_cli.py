@@ -63,6 +63,8 @@ def test_the_survey_lists_each_pin_with_its_standing(
         f"alpha\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1",
         f"bravo\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1",
         "charlie\tledger\twheel\tc3ca6d2\tVENDORED\tpyproject.toml:1",
+        "WOULD-WRITE alpha",
+        "WOULD-WRITE bravo",
     ]
 
 
@@ -72,7 +74,7 @@ def test_write_repins_the_clean_repo_syncs_it_and_skips_the_dirty_one(
     """The control and the refusal side by side; nothing in the dirty repo or mtools changes."""
     root = _tree(tmp_path)
     runner = _Runner()
-    assert repin_cli.main(["--root", str(root), "--sha", _NEW, "--write"], runner) == 0
+    assert repin_cli.main(["--root", str(root), "--sha", _NEW, "--fleet", "--write"], runner) == 0
     assert _NEW in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
     assert _OLD in (root / "bravo" / "pyproject.toml").read_text(encoding="utf-8")
     assert _OLD in (root / "mtools" / "pyproject.toml").read_text(encoding="utf-8")
@@ -90,7 +92,7 @@ def test_no_sync_writes_without_running_uv(tmp_path: Path) -> None:
     """The rewrite alone, leaving the lock to the repo's own session."""
     root = _tree(tmp_path)
     runner = _Runner()
-    argv = ["--root", str(root), "--sha", _NEW, "--write", "--no-sync"]
+    argv = ["--root", str(root), "--sha", _NEW, "--fleet", "--write", "--no-sync"]
     assert repin_cli.main(argv, runner) == 0
     assert all(call[0] != "uv" for _repo, call in runner.calls)
     assert _NEW in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
@@ -102,14 +104,14 @@ def test_a_failed_sync_exits_one_and_says_which_repo(
     """The text is rewritten, the sync failure is reported and the exit says so."""
     root = _tree(tmp_path)
     runner = _Runner(failing=frozenset({"alpha"}))
-    assert repin_cli.main(["--root", str(root), "--sha", _NEW, "--write"], runner) == 1
+    assert repin_cli.main(["--root", str(root), "--sha", _NEW, "--fleet", "--write"], runner) == 1
     assert "RESULT alpha sync-failed" in capsys.readouterr().out
 
 
 def test_a_repo_already_at_the_target_is_current_and_not_synced(tmp_path: Path) -> None:
     """A second run changes nothing and runs nothing."""
     root = _tree(tmp_path)
-    argv = ["--root", str(root), "--sha", _NEW, "--write", "--no-sync"]
+    argv = ["--root", str(root), "--sha", _NEW, "--fleet", "--write", "--no-sync"]
     repin_cli.main(argv, _Runner())
     again = _Runner()
     assert repin_cli.main(argv, again) == 0
@@ -119,7 +121,17 @@ def test_a_repo_already_at_the_target_is_current_and_not_synced(tmp_path: Path) 
 def test_only_the_named_dists_move(tmp_path: Path) -> None:
     """--dist narrows both the survey and the rewrite."""
     root = _tree(tmp_path)
-    argv = ["--root", str(root), "--sha", _NEW, "--write", "--no-sync", "--dist", "nosuch"]
+    argv = [
+        "--root",
+        str(root),
+        "--sha",
+        _NEW,
+        "--fleet",
+        "--write",
+        "--no-sync",
+        "--dist",
+        "nosuch",
+    ]
     assert repin_cli.main(argv, _Runner()) == 0
     assert _OLD in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
 
@@ -134,7 +146,8 @@ def test_a_root_that_is_itself_a_repo_is_read_as_that_repo(
     (stale / "pyproject.toml").write_text(f"dependencies = [{_LINE}]\n", encoding="utf-8")
     assert repin_cli.main(["--root", str(tmp_path), "--sha", _NEW]) == 0
     assert capsys.readouterr().out.splitlines() == [
-        f"{tmp_path.name}\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1"
+        f"{tmp_path.name}\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1",
+        f"WOULD-WRITE {tmp_path.name}",
     ]
 
 
@@ -145,10 +158,56 @@ def test_a_pin_on_a_later_line_reports_that_line_and_the_old_columns_come_first(
     body = f'name = "x"\nversion = "1"\ndependencies = [{_LINE}]\n'
     (tmp_path / "pyproject.toml").write_text(body, encoding="utf-8")
     assert repin_cli.main(["--root", str(tmp_path), "--sha", _NEW]) == 0
-    [line] = capsys.readouterr().out.splitlines()
+    line = capsys.readouterr().out.splitlines()[0]
     columns = line.split("\t")
     assert columns[:5] == [tmp_path.name, "hooks", "pep508", _OLD, "DIFFERS"]
     assert columns[5] == "pyproject.toml:3"
+
+
+def test_a_write_over_a_directory_of_repos_is_refused_without_fleet(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1458: the control for the fleet writes above; without --fleet nothing is touched."""
+    root = _tree(tmp_path)
+    runner = _Runner()
+    code = repin_cli.main(["--root", str(root), "--sha", _NEW, "--write"], runner)
+    assert code == repin_cli.EXIT_USAGE
+    assert "add --fleet to move them all" in capsys.readouterr().err
+    assert runner.calls == []
+    assert _OLD in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
+
+
+def test_a_write_from_inside_one_repo_moves_only_that_repo(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1458: no --root and no --fleet means the invoking repo, never its neighbours."""
+    root = _tree(tmp_path)
+    monkeypatch.chdir(root / "alpha")
+    argv = ["--sha", _NEW, "--write", "--no-sync"]
+    assert repin_cli.main(argv, _Runner()) == 0
+    assert _NEW in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
+    assert _OLD in (root / "bravo" / "pyproject.toml").read_text(encoding="utf-8")
+
+
+def test_a_write_from_a_directory_of_repos_with_no_root_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1458: the el-openglo case, a bare --write from a place that holds other repos."""
+    root = _tree(tmp_path)
+    monkeypatch.chdir(root)
+    code = repin_cli.main(["--sha", _NEW, "--write", "--no-sync"], _Runner())
+    assert code == repin_cli.EXIT_USAGE
+    assert _OLD in (root / "alpha" / "pyproject.toml").read_text(encoding="utf-8")
+
+
+def test_the_dry_run_names_the_repos_a_write_would_change(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1458: WOULD-WRITE lists each repo with a differing git pin, once, and not a wheel repo."""
+    root = _tree(tmp_path)
+    assert repin_cli.main(["--root", str(root), "--sha", _NEW]) == 0
+    would = [x for x in capsys.readouterr().out.splitlines() if x.startswith("WOULD-WRITE")]
+    assert would == ["WOULD-WRITE alpha", "WOULD-WRITE bravo"]
 
 
 def _only_linked_is_a_link(path: Path) -> bool:
