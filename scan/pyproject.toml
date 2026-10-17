@@ -89,5 +89,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+# ⚑ RUNNING scanimage IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1423): the argv is the fixed
+# program name, fixed flags and the caller's device and directory as single words; no shell.
+"src/mikemol/scan/adf.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_adf.py" = ["assert"]
 "tests/test_pages.py" = ["assert"]
 "tests/test_smoke.py" = ["assert"]

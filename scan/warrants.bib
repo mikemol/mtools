@@ -33,3 +33,46 @@
   claim  = {A lost or double-fed sheet raises, with the counts, and builds nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_unequal_passes_are_refused_naming_both_counts},
 }
+
+@misc{scan-adf-command-names-the-device-source-resolution-mode-and-batch-pattern,
+  section = {adf},
+  title  = {Every part is its own argv word; the batch pattern lives in the pass's own directory},
+  claim  = {Every part is its own argv word; the batch pattern lives in the pass's own directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_the_command_names_the_device_source_resolution_mode_and_batch_pattern},
+}
+
+@misc{scan-adf-pass-returns-its-pages-in-feed-order,
+  section = {adf},
+  title  = {Three pages planted: they come back as page-001 to page-003, sorted},
+  claim  = {Three pages planted: they come back as page-001 to page-003, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_a_pass_returns_its_pages_in_feed_order},
+}
+
+@misc{scan-adf-exit-seven-with-pages-is-the-feeder-running-out-and-is-accepted,
+  section = {adf},
+  title  = {The end of a batch: scanimage's out-of-documents status is not a failure when pages exist},
+  claim  = {The end of a batch: scanimage's out-of-documents status is not a failure when pages
+            exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_exit_seven_with_pages_is_the_feeder_running_out_and_is_accepted},
+}
+
+@misc{scan-adf-failed-exit-and-an-empty-pass-are-refused-with-the-tools-words,
+  section = {adf},
+  title  = {The control: exit 1 raises; exit 0 with no page raises; exit 7 with no page raises},
+  claim  = {The control: exit 1 raises; exit 0 with no page raises; exit 7 with no page raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_a_failed_exit_and_an_empty_pass_are_refused_with_the_tools_words},
+}
+
+@misc{scan-adf-directory-already-holding-pages-is-refused-before-scanning,
+  section = {adf},
+  title  = {The control: a second pass into the first's directory never runs scanimage},
+  claim  = {The control: a second pass into the first's directory never runs scanimage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_a_directory_already_holding_pages_is_refused_before_scanning},
+}
+
+@misc{scan-adf-real-runner-returns-a-childs-exit-code-and-its-stderr,
+  section = {adf},
+  title  = {The one function that starts a process, exercised on a child that is not a scanner},
+  claim  = {The one function that starts a process, exercised on a child that is not a scanner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_the_real_runner_returns_a_childs_exit_code_and_its_stderr},
+}
