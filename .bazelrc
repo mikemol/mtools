@@ -1,17 +1,6 @@
 common --enable_bzlmod
 test --test_output=errors --test_summary=terse
 
-# ⚑⚑ ONE WALL-CLOCK BACKSTOP FOR EVERY TEST, AND NO TIMER PER TARGET (operator 2026-09-23/24 "avoid
-# wall-clock timeouts"; mtools:W1455, github-8f 2026-10-17). On a host loaded past its core count,
-# elapsed time measures contention, not whether a test is stuck. MEASURED 2026-10-17: a gate run
-# refused for three `//hooks:mutants_N` shards at 300 s (the `medium` default) and
-# `//pathsforward:test_tick_close_gate` at 60 s (the `small` default), none with a failing test, and
-# all four pass alone (a shard in 113 s). All four classes are one hour here, the length of bazel's
-# longest, so a target's size never decides how long a loaded host may take. A stuck test is found
-# by an ABSENCE, not by this: the mutants runner ends a suite whose output and process-tree CPU stop
-# changing (W1376); this is only what is left if an absence witness itself fails.
-test --test_timeout=3600,3600,3600,3600
-
 # ⚑⚑⚑ NO `--host_jvm_args=-Xmx…` RUNG HERE, AND ITS ABSENCE IS DELIBERATE. paperkit carries a
 # documented climb (4G → 8G → 12G → 16G), each rung EVIDENCED by a coordinator OOM with
 # `Build completed successfully` printed immediately above it. That ceiling tracks GRAPH SIZE, and
