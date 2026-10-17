@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 36 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 37 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -73,6 +73,7 @@ with no scripts is a library that other distributions import.
 - `pytestspec` (`mikemol-pytestspec`): a pytest plugin that collects Rego specs. A library, no scripts.
 - `ratchet` (`mikemol-ratchet`): a paydown-only ratchet over a baseline set. Script: `mikemol-ratchet`.
 - `rulerseq` (`mikemol-rulerseq`): Ruler-sequence table rules: the 2-adic valuation of a row boundary rendered as a Morse motif, so a rule's pattern carries a row enumeration's binary structure (WCAG 1.4.1). A library, no scripts.
+- `scan` (`mikemol-scan`): Two-sided ADF scanning for eSCL devices. A library, no scripts.
 - `transcriptstruct` (`mikemol-transcriptstruct`): Claude Code transcripts read losslessly. Script:
   `mikemol-transcriptstruct`.
 - `treeio` (`mikemol-treeio`): one read/write seam over a working tree and git history. Scripts:

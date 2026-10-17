@@ -275,6 +275,14 @@ pip.parse(
     requirements_lock = "//pathwalk:requirements.txt",
 )
 
+# ⚑ `mikemol-scan` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
+# it declares a dependency.
+pip.parse(
+    hub_name = "scan_deps",
+    python_version = "3.13",
+    requirements_lock = "//scan:requirements.txt",
+)
+
 # ⚑ `mikemol-otlp` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
 # it declares a dependency.
 pip.parse(
@@ -520,6 +528,11 @@ pip.parse(
     uv_lock = "//pathwalk:uv.lock",
 )
 pip.parse(
+    hub_name = "scan_dev",
+    python_version = "3.13",
+    uv_lock = "//scan:uv.lock",
+)
+pip.parse(
     hub_name = "otlp_dev",
     python_version = "3.13",
     uv_lock = "//otlp:uv.lock",
@@ -616,6 +629,7 @@ use_repo(
     "gradekit_deps",
     "gradekit_dev",
     "pathwalk_deps",
+    "scan_deps",
     "otlp_deps",
     "cvdcore_deps",
     "frontier_deps",
@@ -623,6 +637,7 @@ use_repo(
     "rulerseq_deps",
     "htmlstruct_deps",
     "pathwalk_dev",
+    "scan_dev",
     "otlp_dev",
     "cvdcore_dev",
     "frontier_dev",

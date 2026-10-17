@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.scan: Two-sided ADF scanning for eSCL devices."
+subtitle = "The witnesses behind mikemol.scan."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "SCAN.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

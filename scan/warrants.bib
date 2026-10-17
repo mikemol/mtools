@@ -1,0 +1,35 @@
+
+@misc{scan-smoke-package-imports-and-carries-its-docstring,
+  section = {smoke},
+  title  = {The scaffold compiles, imports and documents itself},
+  claim  = {The scaffold compiles, imports and documents itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
+}
+
+@misc{scan-pages-backs-are-reversed-then-interleaved-into-page-order,
+  section = {pages},
+  title  = {Three sheets: the second pass yields b3 b2 b1, and the document is f1 b1 f2 b2 f3 b3},
+  claim  = {Three sheets: the second pass yields b3 b2 b1, and the document is f1 b1 f2 b2 f3 b3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_the_backs_are_reversed_then_interleaved_into_page_order},
+}
+
+@misc{scan-pages-backs-in-arrival-order-would-misplace-every-page,
+  section = {pages},
+  title  = {The control: interleaving without the reversal gives b3 after f1, which is the bug},
+  claim  = {The control: interleaving without the reversal gives b3 after f1, which is the bug.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_the_backs_in_arrival_order_would_misplace_every_page},
+}
+
+@misc{scan-pages-single-sheet-and-an-empty-document-are-fine,
+  section = {pages},
+  title  = {One sheet is f1 b1; nothing at all is an empty list, not an error},
+  claim  = {One sheet is f1 b1; nothing at all is an empty list, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_a_single_sheet_and_an_empty_document_are_fine},
+}
+
+@misc{scan-pages-unequal-passes-are-refused-naming-both-counts,
+  section = {pages},
+  title  = {A lost or double-fed sheet raises, with the counts, and builds nothing},
+  claim  = {A lost or double-fed sheet raises, with the counts, and builds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pages.py -k test_unequal_passes_are_refused_naming_both_counts},
+}

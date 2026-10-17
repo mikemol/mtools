@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the scan warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+smoke	smoke
+pages	pages
