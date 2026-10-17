@@ -104,3 +104,52 @@
   claim  = {The second step failing is reported as the second step.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pdf.py -k test_a_failed_ocr_names_ocrmypdf},
 }
+
+@misc{scan-cli-fronts-then-the-wait-then-backs-then-the-pdf-in-page-order,
+  section = {cli},
+  title  = {f1 b1 f2 b2: the backs reversed, the wait between the passes, then join and OCR},
+  claim  = {f1 b1 f2 b2: the backs reversed, the wait between the passes, then join and OCR.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_fronts_then_the_wait_then_backs_then_the_pdf_in_page_order},
+}
+
+@misc{scan-cli-unequal-passes-are-refused-and-nothing-is-joined,
+  section = {cli},
+  title  = {The control: 2 fronts and 1 back exit 1 naming both counts and the kept pages, no PDF},
+  claim  = {The control: 2 fronts and 1 back exit 1 naming both counts and the kept pages, no PDF.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_unequal_passes_are_refused_and_nothing_is_joined},
+}
+
+@misc{scan-cli-failed-first-pass-never-asks-the-operator-to-flip,
+  section = {cli},
+  title  = {A scanner exit 1 on the fronts gives exit 1 with its words, and the wait is not called},
+  claim  = {A scanner exit 1 on the fronts gives exit 1 with its words, and the wait is not called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_a_failed_first_pass_never_asks_the_operator_to_flip},
+}
+
+@misc{scan-cli-bad-arguments-are-a-usage-error,
+  section = {cli},
+  title  = {One positional, an unknown flag, a valueless flag and a bad resolution all exit 2},
+  claim  = {One positional, an unknown flag, a valueless flag and a bad resolution all exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bad_arguments_are_a_usage_error},
+}
+
+@misc{scan-cli-options-reach-the-scan-settings,
+  section = {cli},
+  title  = {The positive control for parsing: resolution and mode come through, source keeps ADF},
+  claim  = {The positive control for parsing: resolution and mode come through, source keeps ADF.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_options_reach_the_scan_settings},
+}
+
+@misc{scan-cli-operator-wait-prints-the-instruction-and-reads-one-line,
+  section = {cli},
+  title  = {The real wait writes its message to stderr and consumes exactly one line of stdin},
+  claim  = {The real wait writes its message to stderr and consumes exactly one line of stdin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_operator_wait_prints_the_instruction_and_reads_one_line},
+}
+
+@misc{scan-cli-console-entry-exits-with-the-commands-code,
+  section = {cli},
+  title  = {With no arguments the entry reaches `main` and exits 2, starting no scanner},
+  claim  = {With no arguments the entry reaches `main` and exits 2, starting no scanner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_console_entry_exits_with_the_commands_code},
+}

@@ -20,6 +20,9 @@ classifiers = [
 # ⚑ NO RUNTIME DEPENDENCY: standard library only.
 dependencies = []
 
+[project.scripts]
+mikemol-scan = "mikemol.scan.cli:entry"
+
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
 
@@ -96,6 +99,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "suspicious-subprocess-import",
 ]
 "tests/test_adf.py" = ["assert"]
+"tests/test_cli.py" = ["assert"]
 "tests/test_pages.py" = ["assert"]
 "tests/test_pdf.py" = ["assert"]
 "tests/test_smoke.py" = ["assert"]
