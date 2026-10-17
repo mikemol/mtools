@@ -12,6 +12,7 @@ bool, and the four resource attributes are present.
 
 from __future__ import annotations
 
+import socket
 from typing import cast
 
 from google.protobuf.json_format import MessageToDict
@@ -41,6 +42,17 @@ def _point(metric: Doc, kind: str) -> Doc:
 
 def _pairs(attrs: object) -> list[tuple[str, object]]:
     return [(str(a["key"]), a["value"]) for a in cast("list[Doc]", attrs)]
+
+
+def test_the_host_name_comes_from_the_machine_not_a_literal() -> None:
+    """The control: resource_here reads the host's own name, so the stream key matches luthen's."""
+    here = metrics.resource_here("svc", "mtools", "abc123")
+    assert here.host_name == socket.gethostname()
+    assert (here.service_name, here.service_namespace, here.service_version) == (
+        "svc",
+        "mtools",
+        "abc123",
+    )
 
 
 def test_a_gauge_carries_its_name_unit_time_value_and_labels() -> None:

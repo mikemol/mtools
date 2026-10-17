@@ -18,6 +18,7 @@ arrival time and says nothing about when the number was true.
 only when a payload is built, never at a hook's start (measured: 24 ms warm, 79 ms cold).
 """
 
+import socket
 from collections.abc import Mapping
 from dataclasses import dataclass
 
@@ -46,6 +47,21 @@ class Resource:
     service_namespace: str
     host_name: str
     service_version: str
+
+
+def resource_here(service_name: str, service_namespace: str, service_version: str = "") -> Resource:
+    """Name the speaker with this machine's own host name, never a literal.
+
+    ⚑ `host.name` IS PART OF THE LOG STREAM KEY (luthen-observability docs/prr/otlp.md), so a wrong
+    value splits one producer's stream in two; a probe that said `host-probe` did exactly that
+    (luthen, 2026-10-17). The value is `socket.gethostname()`, which is `luthen` on the host the
+    docs call out.
+
+    Returns:
+        the Resource; `service_version` is the commit the producer runs, or empty when it has none.
+
+    """
+    return Resource(service_name, service_namespace, socket.gethostname(), service_version)
 
 
 def _value(value: Value) -> AnyValue:

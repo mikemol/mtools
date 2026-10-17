@@ -91,3 +91,11 @@
   claim  = {Connection refused (a port nobody listens on) surfaces as SendError naming the URL.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sender.py -k test_an_unreachable_endpoint_is_a_send_error_not_a_bare_os_error},
 }
+
+@misc{otlp-metrics-host-name-comes-from-the-machine-not-a-literal,
+  section = {metrics},
+  title  = {The control: resource_here reads the host's own name, so the stream key matches luthen's},
+  claim  = {The control: resource_here reads the host's own name, so the stream key matches
+            luthen's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_the_host_name_comes_from_the_machine_not_a_literal},
+}
