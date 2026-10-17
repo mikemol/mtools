@@ -116,3 +116,4 @@ websubset_codon	The codon target refuses the constructs Codon rejects
 websubset_tree	The tree census counts each refused idiom by the modules it blocks
 websubset_prom	The Codon idiom burn-down is a Prometheus textfile series
 scratch	scratch
+scratch-land	Scratch Land: a Worktree's Change Reaches the Main Tree Whole or Not at All, Refusing on a Dirty Path, a Symlink or No Change

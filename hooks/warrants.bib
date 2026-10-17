@@ -10418,3 +10418,47 @@
   claim  = {`--format` and the safe fixer run the main tree's ruff from the worktree dist (W1429).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_format_and_safe_fix_borrow_the_main_trees_interpreter_in_a_worktree},
 }
+
+@misc{hooks-scratch-land-modified-added-and-deleted-file-all-land-and-nothing-is-staged,
+  section = {scratch-land},
+  title  = {a.txt edited, c.txt new and untracked, b.txt deleted: all reach the main tree, unstaged},
+  claim  = {a.txt edited, c.txt new and untracked, b.txt deleted: all reach the main tree, unstaged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_a_modified_added_and_deleted_file_all_land_and_nothing_is_staged},
+}
+
+@misc{hooks-scratch-land-committed-change-on-the-scratch-branch-lands-too,
+  section = {scratch-land},
+  title  = {Work committed inside the worktree counts: the diff is against the fork point},
+  claim  = {Work committed inside the worktree counts: the diff is against the fork point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_a_committed_change_on_the_scratch_branch_lands_too},
+}
+
+@misc{hooks-scratch-land-path-the-main-tree-holds-dirty-refuses-the-whole-change,
+  section = {scratch-land},
+  title  = {The control: main edited a.txt (as a queued commit would); nothing lands, c.txt included},
+  claim  = {The control: main edited a.txt (as a queued commit would); nothing lands, c.txt
+            included.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_a_path_the_main_tree_holds_dirty_refuses_the_whole_change},
+}
+
+@misc{hooks-scratch-land-symlink-is-refused-and-nothing-lands,
+  section = {scratch-land},
+  title  = {A link in the worktree is named and refused; the plain file beside it is not copied},
+  claim  = {A link in the worktree is named and refused; the plain file beside it is not copied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_a_symlink_is_refused_and_nothing_lands},
+}
+
+@misc{hooks-scratch-land-no-change-and-no-worktree-are-refused,
+  section = {scratch-land},
+  title  = {An untouched worktree has nothing to land; an unknown symbol has no worktree at all},
+  claim  = {An untouched worktree has nothing to land; an unknown symbol has no worktree at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_no_change_and_no_worktree_are_refused},
+}
+
+@misc{hooks-scratch-land-land-verb-prints-each-path-and-a-refusal-is-exit-four,
+  section = {scratch-land},
+  title  = {Through the command: landed lines and 0, then the same land finds c.txt dirty: 4, reason},
+  claim  = {Through the command: landed lines and 0, then the same land finds c.txt dirty: 4,
+            reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_the_land_verb_prints_each_path_and_a_refusal_is_exit_four},
+}

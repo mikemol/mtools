@@ -175,3 +175,18 @@ def run_git(argv: Sequence[str]) -> tuple[int, str]:
     code: int = proc.returncode
     err: str = proc.stderr
     return code, err
+
+
+def git_out(argv: Sequence[str]) -> tuple[int, str]:
+    """Run git as `run_git` does but capture STDOUT, for the reads that land needs (W1379).
+
+    Returns:
+        (exit code, stdout text).
+
+    """
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    git = shutil.which("git") or "git"
+    proc = subprocess.run([git, *argv[1:]], capture_output=True, text=True, check=False, env=env)
+    code: int = proc.returncode
+    out: str = proc.stdout
+    return code, out
