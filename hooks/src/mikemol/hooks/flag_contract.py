@@ -70,7 +70,11 @@ def check_flags(
     flags = [a for a in args if a.startswith("-")]
     if not unknown:
         log_fallthrough(
-            label, "accepted", " ".join(flags), Refusal(names, args, 0), destination=destination
+            label,
+            "accepted",
+            destination,
+            typed=" ".join(flags),
+            refusal=Refusal(names, args, 0),
         )
         return None
     sys.stderr.write(
@@ -81,9 +85,9 @@ def check_flags(
     log_fallthrough(
         label,
         "unknown-flag",
-        " ".join(unknown),
-        Refusal(names, args, EXIT_REFUSED),
-        destination=destination,
+        destination,
+        typed=" ".join(unknown),
+        refusal=Refusal(names, args, EXIT_REFUSED),
     )
     return EXIT_REFUSED
 

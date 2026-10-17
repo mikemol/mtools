@@ -84,7 +84,7 @@ def test_no_destination_is_reported_and_starts_nothing(
     once and swallowed every event silently. There is nothing to fall back to here.
     """
     _curl_at(monkeypatch, _fake_curl(tmp_path, 0))
-    got = refusal_log.log_fallthrough("gate", "unknown-flag", "--queit", destination=None)
+    got = refusal_log.log_fallthrough("gate", "unknown-flag", None, typed="--queit")
     assert got == refusal_log.Emission(emitted=False, why=refusal_log.NO_DESTINATION)
     assert not (tmp_path / "argv").exists()
 
@@ -96,7 +96,7 @@ def test_a_destination_emits_one_jsonline_to_it(
     _curl_at(monkeypatch, _fake_curl(tmp_path, 0))
     refusal = refusal_log.Refusal(known=("--quiet", "--list"), argv=("gate", "--queit"))
     got = refusal_log.log_fallthrough(
-        "gate --queit", "unknown-flag", "--queit", refusal, destination=_DEST
+        "gate --queit", "unknown-flag", _DEST, typed="--queit", refusal=refusal
     )
     assert got == refusal_log.Emission(emitted=True)
     assert _DEST in (tmp_path / "argv").read_text(encoding="utf-8").splitlines()
@@ -127,4 +127,4 @@ def test_junk_arguments_never_raise(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     """Junk in every slot still emits: a gate that cannot log must still gate."""
     _curl_at(monkeypatch, _fake_curl(tmp_path, 0))
     junk = refusal_log.Refusal(known=None, argv=None)
-    assert refusal_log.log_fallthrough(None, None, "", junk, destination=_DEST).emitted
+    assert refusal_log.log_fallthrough(None, None, _DEST, refusal=junk).emitted

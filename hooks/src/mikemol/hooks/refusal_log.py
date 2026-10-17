@@ -121,10 +121,9 @@ def event_line(tool: object, reason: object, typed: str, refusal: Refusal) -> st
 def log_fallthrough(
     tool: object,
     reason: object,
+    destination: str | None,
     typed: str = "",
     refusal: Refusal | None = None,
-    *,
-    destination: str | None,
 ) -> Emission:
     """Send one refused invocation to `destination`. Best-effort; never raises.
 
