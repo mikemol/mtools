@@ -36,6 +36,7 @@ from mikemol.pathsforward import (
     embargo,
     foreign,
     gate,
+    generated,
     inbound,
     lease,
     lock,
@@ -1229,6 +1230,9 @@ def _lease_for_status(ctx: Ctx, state: State, sym: str, status: str | None) -> i
         return EXIT_OK
     touches = ops.find(state, sym).get("touches")
     tags = [str(t) for t in cast("list[object]", touches)] if isinstance(touches, list) else []
+    root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+    # ⚑ A GENERATED FILE IS NOT AN EXCLUSIVE WRITE (W1468): the repo's list leaves them out.
+    tags = generated.leased(tags, generated.paths(root))
     conflicts = lease.take(state, sym, tags, _claimant(ctx, state))
     for c in conflicts:
         _warn(f"REFUSED: {sym} cannot lease {c.tag}: {c.waypoint} holds it (holder={c.holder})")
@@ -1659,9 +1663,9 @@ def _tick_close(ctx: Ctx) -> int:
 def _promote(ctx: Ctx) -> int:
     """Set the card `--promote` names working, as part of the close (W1245, W1080).
 
-    ⚑ ONE WORKING CARD: nemik warns on none and on two, so the close that frees the lock also names
-    the next card. It is refused while another card is working (finish or mark that one first), and
-    for a card that is not ready: promoting a blocked card would work what cannot be worked.
+    ⚑ MORE THAN ONE WORKING CARD IS NORMAL (operator 2026-10-15, W1468): anything in a stack,
+    building, queued or gating, is working, so a second working card no longer refuses this. It is
+    refused for a card that is not ready: promoting a blocked card would work what cannot be worked.
 
     Returns:
         EXIT_OK (also when `--promote` is not given), or EXIT_REFUSED.
@@ -1672,14 +1676,6 @@ def _promote(ctx: Ctx) -> int:
         return EXIT_OK
 
     def edit(state: State) -> int:
-        busy = [
-            text(w, "symbol")
-            for w in state.waypoints
-            if text(w, "status") == _WORKING and text(w, "symbol") != sym
-        ]
-        if busy:
-            msg = f"--promote {sym}: {', '.join(busy)} is already working"
-            raise RefusedError(msg)
         status = text(ops.find(state, sym), "status")
         if status not in {"ready", _WORKING}:
             msg = f"--promote {sym}: it is {status}, not ready"

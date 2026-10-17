@@ -82,14 +82,12 @@ def test_a_close_without_promote_changes_no_status(tmp_path: Path) -> None:
     assert _status(path, "W2") == "ready"
 
 
-def test_promote_is_refused_while_another_card_is_working(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """W3 is working, so W2 is not promoted and the refusal names W3."""
+def test_promote_is_allowed_while_another_card_is_working(tmp_path: Path) -> None:
+    """W3 is working and W2 is promoted beside it: anything in a stack is working (W1468)."""
     path = _state(tmp_path, [_card("W1", "done"), _card("W2", "ready"), _card("W3", "working")])
-    assert _close(path, "--promote", "W2", "--reason", "waiting on luthen:W9") == _REFUSED
-    assert _status(path, "W2") == "ready"
-    assert "W3 is already working" in capsys.readouterr().err
+    assert _close(path, "--promote", "W2", "--reason", "waiting on luthen:W9") == _OK
+    assert _status(path, "W2") == "working"
+    assert _status(path, "W3") == "working"
 
 
 def test_promote_refuses_a_card_that_is_not_ready(

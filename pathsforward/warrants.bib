@@ -4856,13 +4856,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_promote.py -k test_a_close_without_promote_changes_no_status},
 }
 
-@misc{pathsforward-tick-close-promote-promote-is-refused-while-another-card-is-working,
-  section = {tick_close_promote},
-  title  = {W3 is working, so W2 is not promoted and the refusal names W3},
-  claim  = {W3 is working, so W2 is not promoted and the refusal names W3.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_promote.py -k test_promote_is_refused_while_another_card_is_working},
-}
-
 @misc{pathsforward-tick-close-promote-promote-refuses-a-card-that-is-not-ready,
   section = {tick_close_promote},
   title  = {W2 is blocked: promoting it would work what cannot be worked},
@@ -5712,4 +5705,39 @@
   title  = {The read half refuses on a skipped top card too, and leaves the state as it found it},
   claim  = {The read half refuses on a skipped top card too, and leaves the state as it found it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_close_gate_applies_the_same_rule_and_writes_nothing},
+}
+
+@misc{pathsforward-generated-two-cards-writing-a-real-file-still-conflict,
+  section = {generated},
+  title  = {The control: with no list, the second card to work a shared `!w` file is refused},
+  claim  = {The control: with no list, the second card to work a shared `!w` file is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_generated.py -k test_two_cards_writing_a_real_file_still_conflict},
+}
+
+@misc{pathsforward-generated-two-cards-writing-a-generated-file-both-work,
+  section = {generated},
+  title  = {The el-openglo case: the shared file is listed as generated, so neither holds a lease},
+  claim  = {The el-openglo case: the shared file is listed as generated, so neither holds a lease.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_generated.py -k test_two_cards_writing_a_generated_file_both_work},
+}
+
+@misc{pathsforward-generated-list-that-does-not-parse-exempts-nothing,
+  section = {generated},
+  title  = {A broken or wrongly shaped list is no list, so the conflict stands},
+  claim  = {A broken or wrongly shaped list is no list, so the conflict stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_generated.py -k test_a_list_that_does_not_parse_exempts_nothing},
+}
+
+@misc{pathsforward-generated-only-the-listed-file-leaves-the-lease,
+  section = {generated},
+  title  = {Another file of the same card is still leased: the tags are filtered one by one},
+  claim  = {Another file of the same card is still leased: the tags are filtered one by one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_generated.py -k test_only_the_listed_file_leaves_the_lease},
+}
+
+@misc{pathsforward-tick-close-promote-promote-is-allowed-while-another-card-is-working,
+  section = {tick_close_promote},
+  title  = {W3 is working and W2 is promoted beside it: anything in a stack is working (W1468)},
+  claim  = {W3 is working and W2 is promoted beside it: anything in a stack is working (W1468).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_promote.py -k test_promote_is_allowed_while_another_card_is_working},
 }
