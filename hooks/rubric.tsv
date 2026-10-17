@@ -117,3 +117,4 @@ websubset_tree	The tree census counts each refused idiom by the modules it block
 websubset_prom	The Codon idiom burn-down is a Prometheus textfile series
 scratch	scratch
 scratch-land	Scratch Land: a Worktree's Change Reaches the Main Tree Whole or Not at All, Refusing on a Dirty Path, a Symlink or No Change
+commit-span	Commit Span: One Commit Is Three Spans in One Trace, the Phases Meet at the Lease, and a Refusal Reads as an Error

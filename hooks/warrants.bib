@@ -10462,3 +10462,59 @@
             reason.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_the_land_verb_prints_each_path_and_a_refusal_is_exit_four},
 }
+
+@misc{hooks-commit-span-verdict-is-the-last-verdict-line-and-nothing-else-counts,
+  section = {commit-span},
+  title  = {Gate chatter before it is ignored; output with no verdict line gives no event},
+  claim  = {Gate chatter before it is ignored; output with no verdict line gives no event.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_verdict_is_the_last_verdict_line_and_nothing_else_counts},
+}
+
+@misc{hooks-commit-span-phases-meet-at-the-lease-and-together-cover-the-whole,
+  section = {commit-span},
+  title  = {The wait ends where the gate starts, and the commit span is submit to verdict},
+  claim  = {The wait ends where the gate starts, and the commit span is submit to verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_phases_meet_at_the_lease_and_together_cover_the_whole},
+}
+
+@misc{hooks-commit-span-three-argvs-share-one-trace-and-the-children-name-the-commit-as-parent,
+  section = {commit-span},
+  title  = {The commit span has no parent; both phases point at it; all three carry the trace id},
+  claim  = {The commit span has no parent; both phases point at it; all three carry the trace id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_three_argvs_share_one_trace_and_the_children_name_the_commit_as_parent},
+}
+
+@misc{hooks-commit-span-attributes-name-the-repo-waypoint-sha-and-verdict,
+  section = {commit-span},
+  title  = {The fields a panel groups by ride on every span, and the namespace is the repo},
+  claim  = {The fields a panel groups by ride on every span, and the namespace is the repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_attributes_name_the_repo_waypoint_sha_and_verdict},
+}
+
+@misc{hooks-commit-span-refusal-is-an-error-span-and-a-landing-is-ok,
+  section = {commit-span},
+  title  = {The control: REFUSED must not read as OK in the trace},
+  claim  = {The control: REFUSED must not read as OK in the trace.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_refusal_is_an_error_span_and_a_landing_is_ok},
+}
+
+@misc{hooks-commit-span-emit-starts-three-children-when-a-binary-and-a-store-are-configured,
+  section = {commit-span},
+  title  = {The positive control: configured and a verdict present, three spawns},
+  claim  = {The positive control: configured and a verdict present, three spawns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_emit_starts_three_children_when_a_binary_and_a_store_are_configured},
+}
+
+@misc{hooks-commit-span-emit-starts-nothing-without-a-store-or-a-verdict,
+  section = {commit-span},
+  title  = {No MIKEMOL_ENDPOINTS, or no verdict line: silent, nothing spawned},
+  claim  = {No MIKEMOL_ENDPOINTS, or no verdict line: silent, nothing spawned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_emit_starts_nothing_without_a_store_or_a_verdict},
+}
+
+@misc{hooks-commit-span-child-that-cannot-start-never-raises-into-the-commit,
+  section = {commit-span},
+  title  = {The control: the first spawn raising OSError gives 0 started and no exception},
+  claim  = {The control: the first spawn raising OSError gives 0 started and no exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_child_that_cannot_start_never_raises_into_the_commit},
+}
