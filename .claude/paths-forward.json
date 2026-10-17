@@ -29047,12 +29047,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "DECIDED 2026-10-17: a new small dist (mikemol-endpoints, module mikemol.endpoints) holds the one resolver; fence and otlp both depend on it and their two copies are deleted. Atomized: (a) integrate the new dist alone with BUILD, hubs, stubs, tests; (b) switch otlp to it; (c) switch fence to it. Land (a) first; measure callers of both functions before (b) and (c). Reversal: restore the two in-place copies from git.",
-      "evidence": "2026-10-17: 2026-10-17: read both resolvers; the bodies are the same apart from how the scheme check is spelled. fence/pyproject.toml dependencies = [], otlp/pyproject.toml dependencies = [opentelemetry-proto], so the consolidation needs a home dist or a new dependency edge. | 2026-10-17: 2026-10-17: decision made here, not waited on (github-8f: a shared resolver belongs in a new small dist both depend on, since neither depends on the other).",
+      "next_bounded_step": "Step (a) landed fcf0887. Step (b): otlp imports mikemol.endpoints.resolve.base_url (pyproject dependency and uv source, BUILD deps per target, MODULE/lock) and deletes its copy. Step (c) CHANGED: fence stays with its own copy, because MODULE.bazel:97 records that fence declares NO runtime dependencies on purpose (every gate that wraps a command in it would inherit one). Instead pin fence's copy against the shared one with a test that runs the same cases through both, so the two implementations cannot drift unseen.",
+      "evidence": "2026-10-17: 2026-10-17: read both resolvers; the bodies are the same apart from how the scheme check is spelled. fence/pyproject.toml dependencies = [], otlp/pyproject.toml dependencies = [opentelemetry-proto], so the consolidation needs a home dist or a new dependency edge. | 2026-10-17: 2026-10-17: decision made here, not waited on (github-8f: a shared resolver belongs in a new small dist both depend on, since neither depends on the other). | 2026-10-17: 2026-10-17: step (a) landed fcf0887 (pushed). Reading MODULE.bazel:97 found that fence's empty dependency list is a recorded design decision, so the plan's step (c) is replaced by a parity test; reversal is to restore the plan if the operator rules fence may take a dependency.",
       "issued_at": "2026-10-17T01:19:26Z",
       "minted_during": "interrupt",
       "caused_by": "W1418",
-      "last_worked": "2026-10-17T11:55:05Z",
+      "last_worked": "2026-10-17T12:18:37Z",
       "ticks_blocked": 0
     },
     {
