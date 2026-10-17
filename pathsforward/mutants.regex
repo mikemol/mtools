@@ -163,3 +163,8 @@ src/mikemol/pathsforward/lock.py|a-sessionless-lock-never-goes-stale|else age >=
 src/mikemol/pathsforward/session.py|alive-ignores-pid-reuse|return proc is not None and proc\.start == session\.start|return proc is not None|def=alive
 src/mikemol/pathsforward/standing.py|rules-count-from-zero|enumerate\(stored, start=1\)|enumerate(stored, start=0)|def=lines
 src/mikemol/pathsforward/standing.py|no-rules-is-silent|    if not stored:|    if False:|def=lines
+src/mikemol/pathsforward/beat.py|gaps-not-bounded|\[\*gaps, now_ns - before\]\[-KEEP:\]|[*gaps, now_ns - before]|def=beat
+src/mikemol/pathsforward/beat.py|zero-gap-kept|if before is not None and now_ns > before:|if before is not None:|def=beat
+src/mikemol/pathsforward/beat.py|worktree-guessed-at|    if not git_dir.is_dir\(\):|    if False:|def=try_beat
+src/mikemol/pathsforward/idle.py|working-cards-counted|text\(w, "status"\) == "ready"|text(w, "status") in {"ready", "working"}|def=ready_count
+src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witness"\)|and True|def=ready_count

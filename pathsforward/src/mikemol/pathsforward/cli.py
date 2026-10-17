@@ -19,6 +19,7 @@ import json
 import os
 import socket
 import sys
+import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
@@ -28,6 +29,7 @@ from typing import cast
 from mikemol.pathsforward import (
     admission,
     attach,
+    beat,
     behindopen,
     bulkblock,
     certify,
@@ -37,6 +39,7 @@ from mikemol.pathsforward import (
     foreign,
     gate,
     generated,
+    idle,
     inbound,
     lease,
     lock,
@@ -411,6 +414,7 @@ _FLAGS = (
     "delivered",
     "close_gate",
     "standing",
+    "ready_count",
 )
 _VALUED = (
     "verify",
@@ -2394,6 +2398,17 @@ def _standing_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _ready_count(ctx: Ctx) -> int:
+    """Print how many unblocked ready cards the queue holds, for the idle watchdog (W1474).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    _say(str(idle.ready_count(store.load(ctx.path))))
+    return EXIT_OK
+
+
 def _standing(ctx: Ctx) -> int:
     """Print the standing rules alone, one numbered line each (W1470).
 
@@ -2697,6 +2712,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
     "standing": _standing,
+    "ready_count": _ready_count,
     "standing_set": _standing_set,
     "tick_hooks_set": _tick_hooks_set,
     "preamble_clear": _preamble_clear,
@@ -2796,6 +2812,7 @@ def main(argv: list[str] | None = None) -> int:
         _warn("REFUSED: --state PATH is required; there is no default root")
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
+    beat.try_beat(ctx.path, time.time_ns())
     try:
         code = _HANDLERS[mode](ctx)
     except Exception as exc:

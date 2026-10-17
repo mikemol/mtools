@@ -5769,3 +5769,73 @@
   claim  = {A tick that opens has read the repo's rules, so no session greps its queue for them.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_read.py -k test_tick_open_prints_the_rules_before_its_closing_line},
 }
+
+@misc{pathsforward-beat-beat-names-the-writer-and-keeps-the-gap-since-the-last,
+  section = {beat},
+  title  = {The record is the one the reading side parses: tool, time, and the gaps between beats},
+  claim  = {The record is the one the reading side parses: tool, time, and the gaps between beats.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_a_beat_names_the_writer_and_keeps_the_gap_since_the_last},
+}
+
+@misc{pathsforward-beat-gap-that-is-not-positive-is-not-kept,
+  section = {beat},
+  title  = {Two beats in one instant say nothing about how long a session stays quiet},
+  claim  = {Two beats in one instant say nothing about how long a session stays quiet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_a_gap_that_is_not_positive_is_not_kept},
+}
+
+@misc{pathsforward-beat-only-the-last-gaps-are-kept,
+  section = {beat},
+  title  = {The history is bounded at the number the reading side keeps},
+  claim  = {The history is bounded at the number the reading side keeps.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_only_the_last_gaps_are_kept},
+}
+
+@misc{pathsforward-beat-record-that-does-not-parse-starts-a-fresh-history,
+  section = {beat},
+  title  = {A torn file is a missed sample, never a refused call},
+  claim  = {A torn file is a missed sample, never a refused call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_a_record_that_does_not_parse_starts_a_fresh_history},
+}
+
+@misc{pathsforward-beat-checkout-without-a-git-directory-is-skipped,
+  section = {beat},
+  title  = {A worktree's .git is a file, and the beat is not guessed at},
+  claim  = {A worktree's .git is a file, and the beat is not guessed at.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_a_checkout_without_a_git_directory_is_skipped},
+}
+
+@misc{pathsforward-beat-git-directory-that-will-not-take-the-file-raises-nothing,
+  section = {beat},
+  title  = {A beat that cannot be written is a missed sample},
+  claim  = {A beat that cannot be written is a missed sample.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_a_git_directory_that_will_not_take_the_file_raises_nothing},
+}
+
+@misc{pathsforward-beat-every-writer-call-beats,
+  section = {beat},
+  title  = {Even a read leaves a beat, because using the tool is the heartbeat},
+  claim  = {Even a read leaves a beat, because using the tool is the heartbeat.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_every_writer_call_beats},
+}
+
+@misc{pathsforward-idle-only-ready-cards-without-a-witness-count,
+  section = {idle},
+  title  = {Working, blocked and done cards are not work to start, nor is a witnessed one},
+  claim  = {Working, blocked and done cards are not work to start, nor is a witnessed one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle.py -k test_only_ready_cards_without_a_witness_count},
+}
+
+@misc{pathsforward-idle-empty-queue-has-no-ready-cards,
+  section = {idle},
+  title  = {Nothing to start means the session is not stalled for lack of effort},
+  claim  = {Nothing to start means the session is not stalled for lack of effort.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle.py -k test_an_empty_queue_has_no_ready_cards},
+}
+
+@misc{pathsforward-idle-ready-count-mode-prints-the-number,
+  section = {idle},
+  title  = {The watchdog asks the writer, so the count has one definition},
+  claim  = {The watchdog asks the writer, so the count has one definition.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle.py -k test_the_ready_count_mode_prints_the_number},
+}
