@@ -34,6 +34,11 @@ Row = repin_row.Row
 EXIT_FAILED = 1
 EXIT_USAGE = 2
 SELF = "mtools"
+# ⚑ `--inexact` KEEPS WHAT THE VENV ALREADY HAS (W1421): a plain `uv sync` makes the venv exactly
+# the lock's default groups and REMOVES every extra a repo had synced (el-openglo retyped `--extra
+# tooling --extra research` after every repin). Inexact makes the minimum change, so the moved pin
+# updates and the extras stay. FROM uv's documentation; not yet run against a repo with extras.
+SYNC = ["uv", "sync", "--inexact"]
 PAR_ENV = "MIKEMOL_REPIN_PAR"
 _ENV = os.environ
 _NOW = time.time
@@ -176,7 +181,7 @@ def apply(
     for repo in (r for r in repos(root) if r.name in selected):
         result = _repin_one(repo, target, dists, runner)
         if result == "written" and sync:
-            result = "synced" if runner(["uv", "sync"], repo)[0] == 0 else "sync-failed"
+            result = "synced" if runner(SYNC, repo)[0] == 0 else "sync-failed"
         results.append((repo.name, result))
     return results
 

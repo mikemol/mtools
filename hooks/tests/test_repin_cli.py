@@ -80,8 +80,10 @@ def test_write_repins_the_clean_repo_syncs_it_and_skips_the_dirty_one(
         "RESULT alpha synced",
         "RESULT bravo skipped-dirty",
     ]
-    assert ("alpha", ("uv", "sync")) in runner.calls
-    assert ("bravo", ("uv", "sync")) not in runner.calls
+    assert ("alpha", ("uv", "sync", "--inexact")) in runner.calls
+    assert ("bravo", ("uv", "sync", "--inexact")) not in runner.calls
+    # The control for W1421: never the plain sync that removes a repo's extras.
+    assert ("alpha", ("uv", "sync")) not in runner.calls
 
 
 def test_no_sync_writes_without_running_uv(tmp_path: Path) -> None:
