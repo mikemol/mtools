@@ -99,3 +99,31 @@
             luthen's.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_the_host_name_comes_from_the_machine_not_a_literal},
 }
+
+@misc{otlp-cli-each-non-blank-line-arrives-with-its-fields-severity-and-one-shared-nonce,
+  section = {cli},
+  title  = {Two lines and a blank: two records, the same nonce, the field and the severity text},
+  claim  = {Two lines and a blank: two records, the same nonce, the field and the severity text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_each_non_blank_line_arrives_with_its_fields_severity_and_one_shared_nonce},
+}
+
+@misc{otlp-cli-no-url-and-a-malformed-field-are-usage-refusals-that-send-nothing,
+  section = {cli},
+  title  = {The control: exit 2 for a missing URL and for a `--field` with no `=`; nothing is sent},
+  claim  = {The control: exit 2 for a missing URL and for a `--field` with no `=`; nothing is sent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_no_url_and_a_malformed_field_are_usage_refusals_that_send_nothing},
+}
+
+@misc{otlp-cli-url-may-come-from-the-environment,
+  section = {cli},
+  title  = {MIKEMOL_OTLP_LOGS_URL stands in for --url},
+  claim  = {MIKEMOL_OTLP_LOGS_URL stands in for --url.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_url_may_come_from_the_environment},
+}
+
+@misc{otlp-cli-unreachable-endpoint-is-exit-one-naming-the-reason-and-the-count-sent,
+  section = {cli},
+  title  = {A closed port fails the first line: exit 1, `0 sent before it`, the cause on stderr},
+  claim  = {A closed port fails the first line: exit 1, `0 sent before it`, the cause on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unreachable_endpoint_is_exit_one_naming_the_reason_and_the_count_sent},
+}

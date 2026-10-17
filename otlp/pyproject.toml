@@ -17,8 +17,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY: standard library only.
+# ⚑ ONE RUNTIME DEPENDENCY, the published opentelemetry-proto wheel (protobuf comes with it), pinned
+# exactly with hashes in uv.lock: the payload builders fill its messages instead of hand-encoding.
 dependencies = ["opentelemetry-proto==1.45.1"]
+
+[project.scripts]
+mikemol-otlp = "mikemol.otlp.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -97,6 +101,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "stubs/opentelemetry/proto/collector/metrics/v1/metrics_service_pb2.pyi" = ["invalid-function-name"]
 "stubs/opentelemetry/proto/collector/logs/v1/logs_service_pb2.pyi" = ["invalid-function-name"]
 "stubs/opentelemetry/proto/metrics/v1/metrics_pb2.pyi" = ["builtin-argument-shadowing"]
+"tests/test_cli.py" = ["assert"]
 "tests/test_logs.py" = ["assert"]
 "tests/test_sender.py" = ["assert"]
 "tests/test_smoke.py" = ["assert"]
