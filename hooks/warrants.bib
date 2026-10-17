@@ -10539,3 +10539,59 @@
   claim  = {The controls: garbage in SUBMIT_ENV does not crash the commit, and --ship is not lost.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_malformed_submission_time_reads_as_now_and_ship_still_ships},
 }
+
+@misc{hooks-new-dist-long-description-is-wrapped-so-the-scaffold-passes-its-own-line-limit,
+  section = {new_dist},
+  title  = {The control (W1413): a 46-word description gives lines of at most 100 and all its words},
+  claim  = {The control (W1413): a 46-word description gives lines of at most 100 and all its words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_a_long_description_is_wrapped_so_the_scaffold_passes_its_own_line_limit},
+}
+
+@misc{hooks-new-dist-description-that-fits-keeps-the-one-line-docstring,
+  section = {new_dist},
+  title  = {The boundary: exactly at the limit stays one line, one character more wraps},
+  claim  = {The boundary: exactly at the limit stays one line, one character more wraps.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist.py -k test_a_description_that_fits_keeps_the_one_line_docstring},
+}
+
+@misc{hooks-commit-span-stack-folds-into-one-event-committed-only-when-every-entry-is,
+  section = {commit-span},
+  title  = {Two COMMITTED lines make one COMMITTED event with both shas and the count},
+  claim  = {Two COMMITTED lines make one COMMITTED event with both shas and the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_stack_folds_into_one_event_committed_only_when_every_entry_is},
+}
+
+@misc{hooks-commit-span-stack-with-one-refusal-reads-as-that-refusal,
+  section = {commit-span},
+  title  = {The control: a COMMITTED then a REFUSED is REFUSED, so the trace is an ERROR},
+  claim  = {The control: a COMMITTED then a REFUSED is REFUSED, so the trace is an ERROR.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_stack_with_one_refusal_reads_as_that_refusal},
+}
+
+@misc{hooks-commit-span-stack-is-one-trace-named-commit-stack-with-its-waypoints-joined,
+  section = {commit-span},
+  title  = {Three spans, not one per entry: the shared gate is counted once},
+  claim  = {Three spans, not one per entry: the shared gate is counted once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_stack_is_one_trace_named_commit_stack_with_its_waypoints_joined},
+}
+
+@misc{hooks-commit-span-tee-buffer-writes-through-and-keeps-a-copy,
+  section = {commit-span},
+  title  = {Live output is unchanged: standard output sees each write at once, the buffer keeps it},
+  claim  = {Live output is unchanged: standard output sees each write at once, the buffer keeps it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_tee_buffer_writes_through_and_keeps_a_copy},
+}
+
+@misc{hooks-scratch-land-path-main-committed-to-since-the-cut-is-refused-and-nothing-lands,
+  section = {scratch-land},
+  title  = {The control (W1444): main changed a.txt after the cut, so the whole change is refused},
+  claim  = {The control (W1444): main changed a.txt after the cut, so the whole change is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_a_path_main_committed_to_since_the_cut_is_refused_and_nothing_lands},
+}
+
+@misc{hooks-scratch-land-main-moving-on-in-other-files-does-not-block-the-land,
+  section = {scratch-land},
+  title  = {The positive control: main changed b.txt, the worktree touches a.txt only, so it lands},
+  claim  = {The positive control: main changed b.txt, the worktree touches a.txt only, so it lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_main_moving_on_in_other_files_does_not_block_the_land},
+}

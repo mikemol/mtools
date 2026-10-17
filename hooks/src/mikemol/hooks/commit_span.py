@@ -111,17 +111,17 @@ def binary(env: Mapping[str, str]) -> str | None:
     return str(checkout) if checkout.is_file() else None
 
 
-def pieces(moments: Moments, ids: Ids) -> list[Piece]:
-    """Lay out the three spans: the commit whole, then its two phases as children.
+def pieces(moments: Moments, ids: Ids, root: str = "commit") -> list[Piece]:
+    """Lay out the three spans: the whole named `root`, then its two phases as children.
 
     Returns:
-        the commit span first, so a reader meets the parent before its children.
+        the whole first, so a reader meets the parent before its children.
 
     """
     return [
-        Piece("commit", moments.submit_ns, moments.end_ns, ids.commit, ""),
-        Piece("commit.queued", moments.submit_ns, moments.lease_ns, ids.queued, ids.commit),
-        Piece("commit.gating", moments.lease_ns, moments.end_ns, ids.gating, ids.commit),
+        Piece(root, moments.submit_ns, moments.end_ns, ids.commit, ""),
+        Piece(f"{root}.queued", moments.submit_ns, moments.lease_ns, ids.queued, ids.commit),
+        Piece(f"{root}.gating", moments.lease_ns, moments.end_ns, ids.gating, ids.commit),
     ]
 
 
@@ -139,6 +139,7 @@ def plan(
     status = "OK" if event["verdict"] == _OK else "ERROR"
     fields = {"repo": repo, "waypoint": waypoint, "sha": event.get("sha", "")}
     fields["verdict"] = event["verdict"]
+    fields.update({key: event[key] for key in ("entries",) if key in event})
     shared = ["--service", SERVICE, "--namespace", repo, "--status", status]
     shared += ["--trace-id", ids.trace]
     for key, value in fields.items():
@@ -149,6 +150,57 @@ def plan(
         argv += ["--start-ns", str(part.start_ns), "--end-ns", str(part.end_ns)]
         argvs.append([*argv, *(["--parent-id", part.parent_id] if part.parent_id else [])])
     return argvs
+
+
+def stack_event(text: str) -> dict[str, str] | None:
+    """Fold the verdict lines of a stack run into ONE event: the run as a whole.
+
+    ⚑ A STACK IS ONE GATE, SO IT IS ONE TRACE: the wait for the lease and the gate on the tip are
+    shared by every entry, and one span per entry would count that gate N times in a panel. The
+    verdict is COMMITTED only when every entry committed, else the first entry that did not; the
+    shas are joined and `entries` says how many verdict lines there were.
+
+    Returns:
+        the event, or None when the output holds no verdict line.
+
+    """
+    names = {name for name, _ in verdictlog.VERDICTS}
+    found = [e for e in verdictlog.events_of(text) if e["verdict"] in names]
+    if not found:
+        return None
+    bad = next((e["verdict"] for e in found if e["verdict"] != _OK), _OK)
+    shas = ",".join(e["sha"] for e in found if "sha" in e)
+    return {"verdict": bad, "repo": found[0]["repo"], "sha": shas, "entries": str(len(found))}
+
+
+def _start(
+    what: tuple[Mapping[str, str] | None, str, str],
+    moments: Moments,
+    env: Mapping[str, str],
+    spawn: Spawn,
+) -> int:
+    """Start the span children for one finished run, when a child and a store exist.
+
+    `what` is (event, waypoint, root name of the trace).
+
+    Returns:
+        how many were started, 0 when there is no event, binary or endpoints file, or the first
+        start failed.
+
+    """
+    event, waypoint, root = what
+    program = binary(env)
+    if event is None or program is None or not env.get(ENDPOINTS_ENV):
+        return 0
+    ids = new_ids()
+    started = 0
+    for argv in plan(program, event, waypoint, (ids, pieces(moments, ids, root))):
+        try:
+            spawn(argv)
+        except OSError:
+            break
+        started += 1
+    return started
 
 
 def emit(
@@ -165,16 +217,20 @@ def emit(
         the first start failed; a failure never propagates.
 
     """
-    event = verdict_of(text)
-    program = binary(env)
-    if event is None or program is None or not env.get(ENDPOINTS_ENV):
-        return 0
-    ids = new_ids()
-    started = 0
-    for argv in plan(program, event, waypoint, (ids, pieces(moments, ids))):
-        try:
-            spawn(argv)
-        except OSError:
-            break
-        started += 1
-    return started
+    return _start((verdict_of(text), waypoint, "commit"), moments, env, spawn)
+
+
+def emit_stack(
+    text: str,
+    moments: Moments,
+    waypoints: Sequence[str],
+    env: Mapping[str, str],
+    spawn: Spawn = spawn_detached,
+) -> int:
+    """Start the three span children for a finished stack run: `commit.stack` and its phases.
+
+    Returns:
+        how many were started, as `emit`; the waypoint attribute is the entries' joined.
+
+    """
+    return _start((stack_event(text), ",".join(waypoints), "commit.stack"), moments, env, spawn)

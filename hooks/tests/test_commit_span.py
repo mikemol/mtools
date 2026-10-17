@@ -12,10 +12,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_span
+from mikemol.hooks import commit_kata, commit_span
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+    import pytest
 
 COMMITTED = "COMMITTED mtools abc1234 W9: a subject [PUSHED]\n"
 REFUSED = "pre-commit: gate jobs=4\nREFUSED mtools (rc=1): the cause is above\n"
@@ -101,3 +103,50 @@ def test_a_child_that_cannot_start_never_raises_into_the_commit() -> None:
         raise OSError
 
     assert commit_span.emit(COMMITTED, MOMENTS, "W9", ENV, broken) == 0
+
+
+STACK_OK = (
+    "COMMITTED mtools aaa1111 W1: first [PUSHED]\nCOMMITTED mtools bbb2222 W2: second [PUSHED]\n"
+)
+STACK_BAD = (
+    "COMMITTED mtools aaa1111 W1: first [LOCAL]\nREFUSED mtools (rc=1): the cause is above\n"
+)
+
+
+def test_a_stack_folds_into_one_event_committed_only_when_every_entry_is() -> None:
+    """Two COMMITTED lines make one COMMITTED event with both shas and the count."""
+    event = commit_span.stack_event(STACK_OK)
+    assert event is not None
+    assert event["verdict"] == "COMMITTED"
+    assert event["sha"] == "aaa1111,bbb2222"
+    assert event["entries"] == "2"
+
+
+def test_a_stack_with_one_refusal_reads_as_that_refusal() -> None:
+    """The control: a COMMITTED then a REFUSED is REFUSED, so the trace is an ERROR."""
+    event = commit_span.stack_event(STACK_BAD)
+    assert event is not None
+    assert event["verdict"] == "REFUSED"
+    assert commit_span.stack_event("no verdict\n") is None
+
+
+def test_a_stack_is_one_trace_named_commit_stack_with_its_waypoints_joined() -> None:
+    """Three spans, not one per entry: the shared gate is counted once."""
+    started: list[Sequence[str]] = []
+    count = commit_span.emit_stack(STACK_OK, MOMENTS, ["W1", "W2"], ENV, started.append)
+    assert count == THREE
+    names = [_flag(a, "--name") for a in started]
+    assert names == ["commit.stack", "commit.stack.queued", "commit.stack.gating"]
+    fields = [started[0][i + 1] for i, word in enumerate(started[0]) if word == "--field"]
+    assert "waypoint=W1,W2" in fields
+    assert "entries=2" in fields
+
+
+def test_the_tee_buffer_writes_through_and_keeps_a_copy(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Live output is unchanged: standard output sees each write at once, the buffer keeps it."""
+    tee = commit_kata.TeeBuffer()
+    assert tee.write("COMMITTED x\n") == len("COMMITTED x\n")
+    assert capsys.readouterr().out == "COMMITTED x\n"
+    assert tee.getvalue() == "COMMITTED x\n"

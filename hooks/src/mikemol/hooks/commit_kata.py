@@ -40,6 +40,7 @@ from typing import TextIO
 from mikemol.hooks.commit_body import refusal as _body_refusal
 from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
+from mikemol.hooks.commit_span import emit_stack as _emit_stack
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
@@ -688,12 +689,40 @@ def stack_target(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Pat
     return None
 
 
-def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], isolated: bool) -> int:
+class TeeBuffer(io.StringIO):
+    """A buffer that also writes everything to standard output as it arrives (W1442).
+
+    ⚑ THE STACK'S OUTPUT STAYS LIVE: the span starter needs the verdict lines after the run, and
+    holding them back until then would change when the caller sees them. This keeps the exact
+    stream and remembers a copy.
+    """
+
+    def write(self, text: str, /) -> int:
+        """Pass `text` to standard output, then keep it.
+
+        Returns:
+            the number of characters kept.
+
+        """
+        sys.stdout.write(text)
+        return super().write(text)
+
+
+def run_stack_mode(
+    root: Path,
+    stack_file: Path,
+    env: Mapping[str, str],
+    isolated: bool,
+    started: tuple[int, int],
+) -> int:
     """Land the stack in `stack_file`: build, gate the tip once, move HEAD, one verdict each.
 
     ⚑ A STACK NEEDS THE ISOLATED PATH: the gate runs on a snapshot of the tip, which only a
     repository whose pre-commit knows `MIKEMOL_REAL_ROOT` can do. A plain-path repository is
     refused, not run some other way.
+
+    ⚑ THE RUN IS ONE TRACE (W1442): `started` is (submitted, lease held) in epoch ns, and the spans
+    `commit.stack`, `commit.stack.queued` and `commit.stack.gating` start after the last verdict.
 
     Returns:
         the stack's exit code; EXIT_USAGE for an unreadable file; EXIT_NOT_COMMITTED when the
@@ -719,7 +748,11 @@ def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], isolate
         ),
         published=lambda sha: published(root, sha),
     )
-    return stack_run(root, items, sys.stdout, seams)
+    tee = TeeBuffer()
+    code = stack_run(root, items, tee, seams)
+    moments = Moments(started[0], started[1], time.time_ns())
+    _emit_stack(tee.getvalue(), moments, [item.waypoint for item in items], env)
+    return code
 
 
 def commit_buffered(
@@ -812,7 +845,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     reason = isolation_reason(root, env)
     sys.stdout.write(routing_line(isolated=isolated, reason=reason, lock=lock_state(claim)) + "\n")
     if stacked is not None:
-        return run_stack_mode(root, stacked[1], env, isolated=isolated)
+        return run_stack_mode(root, stacked[1], env, isolated, (submitted, lease))
     if parsed is None:
         return EXIT_USAGE
     after = after_of(shipping, env, parsed[1].waypoint, (submitted, lease))
