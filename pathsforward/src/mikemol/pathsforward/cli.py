@@ -2812,7 +2812,8 @@ def main(argv: list[str] | None = None) -> int:
         _warn("REFUSED: --state PATH is required; there is no default root")
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
-    beat.try_beat(ctx.path, time.time_ns())
+    if mode != "ready_count":
+        beat.try_beat(ctx.path, time.time_ns())
     try:
         code = _HANDLERS[mode](ctx)
     except Exception as exc:

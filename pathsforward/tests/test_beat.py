@@ -79,6 +79,13 @@ def test_a_git_directory_that_will_not_take_the_file_raises_nothing(tmp_path: Pa
     assert not beat.try_beat(state, _FIRST)
 
 
+def test_the_ready_count_question_is_not_a_beat(tmp_path: Path) -> None:
+    """The watchdog asks it, and asking must not reset the silence the watchdog measures."""
+    state = _repo(tmp_path)
+    cli.main(["--state", str(state), "--ready-count"])
+    assert not beat.path_of(state.parent.parent / ".git").exists()
+
+
 def test_every_writer_call_beats(tmp_path: Path) -> None:
     """Even a read leaves a beat, because using the tool is the heartbeat."""
     state = _repo(tmp_path)
