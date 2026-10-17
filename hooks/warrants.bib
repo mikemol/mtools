@@ -10595,3 +10595,108 @@
   claim  = {The positive control: main changed b.txt, the worktree touches a.txt only, so it lands.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_land.py -k test_main_moving_on_in_other_files_does_not_block_the_land},
 }
+
+@misc{hooks-commit-counts-commit-is-one-entry-that-changes-state-and-then-ends,
+  section = {commit-counts},
+  title  = {Queued, then in flight under the same key, then gone: never counted twice},
+  claim  = {Queued, then in flight under the same key, then gone: never counted twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_a_commit_is_one_entry_that_changes_state_and_then_ends},
+}
+
+@misc{hooks-commit-counts-live-peer-is-counted-beside-this-commit,
+  section = {commit-counts},
+  title  = {A peer whose pid and start time both match stays in the count},
+  claim  = {A peer whose pid and start time both match stays in the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_a_live_peer_is_counted_beside_this_commit},
+}
+
+@misc{hooks-commit-counts-killed-commit-stops-being-counted-at-the-next-transition,
+  section = {commit-counts},
+  title  = {The control: the peer's pid is gone, so its entry is dropped and the file is rewritten},
+  claim  = {The control: the peer's pid is gone, so its entry is dropped and the file is rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_a_killed_commit_stops_being_counted_at_the_next_transition},
+}
+
+@misc{hooks-commit-counts-recycled-pid-does-not-keep-a-dead-commit-counted,
+  section = {commit-counts},
+  title  = {The control (github-8f): the pid runs again but started later, so the entry is not live},
+  claim  = {The control (github-8f): the pid runs again but started later, so the entry is not live.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_a_recycled_pid_does_not_keep_a_dead_commit_counted},
+}
+
+@misc{hooks-commit-counts-torn-or-foreign-file-reads-as-empty-and-is-replaced,
+  section = {commit-counts},
+  title  = {Garbage in the map never raises: the commit starts a fresh one},
+  claim  = {Garbage in the map never raises: the commit starts a fresh one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_a_torn_or_foreign_file_reads_as_empty_and_is_replaced},
+}
+
+@misc{hooks-commit-counts-start-time-is-read-from-after-the-last-parenthesis,
+  section = {commit-counts},
+  title  = {A name with spaces and parentheses must not shift the fields: field 22 is still found},
+  claim  = {A name with spaces and parentheses must not shift the fields: field 22 is still found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_the_start_time_is_read_from_after_the_last_parenthesis},
+}
+
+@misc{hooks-commit-counts-this-process-has-a-start-time-and-a-missing-pid-has-none,
+  section = {commit-counts},
+  title  = {The real probe: our own pid answers with digits, an impossible pid with nothing},
+  claim  = {The real probe: our own pid answers with digits, an impossible pid with nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_this_process_has_a_start_time_and_a_missing_pid_has_none},
+}
+
+@misc{hooks-commit-gauge-plan-is-two-absolute-gauges-carrying-the-repo,
+  section = {commit-gauge},
+  title  = {Queued first, in flight second, each with its own value and the repo as namespace},
+  claim  = {Queued first, in flight second, each with its own value and the repo as namespace.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_gauge.py -k test_the_plan_is_two_absolute_gauges_carrying_the_repo},
+}
+
+@misc{hooks-commit-gauge-transition-keeps-the-map-and-starts-both-gauges,
+  section = {commit-gauge},
+  title  = {The positive control: the count is returned and two children are started for it},
+  claim  = {The positive control: the count is returned and two children are started for it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_gauge.py -k test_a_transition_keeps_the_map_and_starts_both_gauges},
+}
+
+@misc{hooks-commit-gauge-without-a-store-the-map-is-kept-and-nothing-is-started,
+  section = {commit-gauge},
+  title  = {No MIKEMOL_ENDPOINTS: the count is right for the next commit, no child is spawned},
+  claim  = {No MIKEMOL_ENDPOINTS: the count is right for the next commit, no child is spawned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_gauge.py -k test_without_a_store_the_map_is_kept_and_nothing_is_started},
+}
+
+@misc{hooks-commit-gauge-unwritable-ledger-gives-none-and-never-raises,
+  section = {commit-gauge},
+  title  = {The control: the ledger path is a file, so the map cannot be made; the commit sees None},
+  claim  = {The control: the ledger path is a file, so the map cannot be made; the commit sees None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_gauge.py -k test_an_unwritable_ledger_gives_none_and_never_raises},
+}
+
+@misc{hooks-commit-gauge-child-that-cannot-start-never-raises-into-the-commit,
+  section = {commit-gauge},
+  title  = {A spawn raising OSError: the counts come back and the exception does not},
+  claim  = {A spawn raising OSError: the counts come back and the exception does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_gauge.py -k test_a_child_that_cannot_start_never_raises_into_the_commit},
+}
+
+@misc{hooks-verdictlog-commit-that-holds-the-claim-counts-in-flight-then-ends,
+  section = {verdictlog},
+  title  = {Under HELD_ENV the commit was queued by its parent: it records in flight, then its end},
+  claim  = {Under HELD_ENV the commit was queued by its parent: it records in flight, then its end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_commit_that_holds_the_claim_counts_in_flight_then_ends},
+}
+
+@misc{hooks-verdictlog-commit-that-had-to-queue-counts-queued-in-flight-and-ends,
+  section = {verdictlog},
+  title  = {Without the claim in hand: queued first, then in flight, then its end},
+  claim  = {Without the claim in hand: queued first, then in flight, then its end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_commit_that_had_to_queue_counts_queued_in_flight_and_ends},
+}
+
+@misc{hooks-verdictlog-commit-that-raises-still-ends-its-count,
+  section = {verdictlog},
+  title  = {The control: an exception inside the commit must not leave it counted as in flight},
+  claim  = {The control: an exception inside the commit must not leave it counted as in flight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_commit_that_raises_still_ends_its_count},
+}

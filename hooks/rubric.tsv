@@ -118,3 +118,5 @@ websubset_prom	The Codon idiom burn-down is a Prometheus textfile series
 scratch	scratch
 scratch-land	Scratch Land: a Worktree's Change Reaches the Main Tree Whole or Not at All, Refusing on a Dirty Path, a Symlink or No Change
 commit-span	Commit Span: One Commit Is Three Spans in One Trace, the Phases Meet at the Lease, and a Refusal Reads as an Error
+commit-counts	Commit Counts: Queued and In-Flight Commits Are Counted From a Crash-Safe Map, and a Killed Commit or a Recycled Pid Is Not Counted
+commit-gauge	Commit Gauge: Each Transition Starts Two Absolute Gauges and Never Raises Into the Commit

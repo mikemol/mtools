@@ -513,6 +513,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_scratch.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_scratch_land.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_commit_counts.py" = ["assert"]
+"tests/test_commit_gauge.py" = ["assert"]
 "tests/test_commit_span.py" = ["assert"]
 "tests/test_worktree_venv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 

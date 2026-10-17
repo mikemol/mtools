@@ -17,14 +17,14 @@ import shutil
 import subprocess
 from typing import TYPE_CHECKING, cast
 
+import pytest
+
+from mikemol.hooks import commit_counts, commit_span, verdictlog
 from mikemol.hooks import commit_kata as ck
-from mikemol.hooks import commit_span, verdictlog
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
-
-    import pytest
 
 _COMMITTED = "COMMITTED mtools 5d421dd W1180: subject with [brackets] inside [PUSHED]"
 _REFUSED = "REFUSED mtools (rc=1): the cause is above; HEAD is still 0a310f9"
@@ -202,6 +202,7 @@ def test_main_with_ship_prints_the_same_output_and_ships_the_text_it_printed(
         "HOME": str(tmp_path),
         ck.HELD_ENV: "1",
         ck.ISOLATED_ENV: "0",
+        commit_span.BIN_ENV: "/nonexistent/mikemol-otlp",
     }.items():
         monkeypatch.setenv(key, value)
     root = tmp_path / "repo"
@@ -246,6 +247,7 @@ def _held_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         "HOME": str(tmp_path),
         ck.HELD_ENV: "1",
         ck.ISOLATED_ENV: "0",
+        commit_span.BIN_ENV: "/nonexistent/mikemol-otlp",
     }.items():
         monkeypatch.setenv(key, value)
     root = tmp_path / "repo"
@@ -313,3 +315,62 @@ def test_a_malformed_submission_time_reads_as_now_and_ship_still_ships(
     monkeypatch.setattr(ck, "_emit_spans", _Spans())
     assert ck.main([str(root), "--waypoint", "W1", "--subject", "s", "--ship", "a.txt"]) == 0
     assert len(shipped) == 1
+
+
+def _no_fence(*_args: object) -> str:
+    return "no fence in this test"
+
+
+class _Counts:
+    """A recorder standing in for the live-count writer, remembering each state it was given."""
+
+    def __init__(self) -> None:
+        self.states: list[str | None] = []
+
+    def __call__(self, ledger: object, key: str, state: str | None, env: object) -> None:
+        del ledger, key, env
+        self.states.append(state)
+
+
+def test_a_commit_that_holds_the_claim_counts_in_flight_then_ends(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Under HELD_ENV the commit was queued by its parent: it records in flight, then its end."""
+    root = _held_repo(tmp_path, monkeypatch)
+    monkeypatch.setattr(ck, "_emit_spans", _Spans())
+    counts = _Counts()
+    monkeypatch.setattr(ck, "_note_counts", counts)
+    assert ck.main([str(root), "--waypoint", "W1", "--subject", "s", "a.txt"]) == 0
+    assert counts.states == [commit_counts.INFLIGHT, None]
+
+
+def test_a_commit_that_had_to_queue_counts_queued_in_flight_and_ends(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Without the claim in hand: queued first, then in flight, then its end."""
+    root = _held_repo(tmp_path, monkeypatch)
+    monkeypatch.delenv(ck.HELD_ENV)
+    monkeypatch.setattr(ck, "claim_of", _no_fence)
+    monkeypatch.setattr(ck, "_emit_spans", _Spans())
+    counts = _Counts()
+    monkeypatch.setattr(ck, "_note_counts", counts)
+    assert ck.main([str(root), "--waypoint", "W1", "--subject", "s", "a.txt"]) == 0
+    assert counts.states == [commit_counts.QUEUED, commit_counts.INFLIGHT, None]
+
+
+def test_a_commit_that_raises_still_ends_its_count(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The control: an exception inside the commit must not leave it counted as in flight."""
+    root = _held_repo(tmp_path, monkeypatch)
+    counts = _Counts()
+    monkeypatch.setattr(ck, "_note_counts", counts)
+
+    def explode(*_args: object) -> int:
+        msg = "boom"
+        raise RuntimeError(msg)
+
+    monkeypatch.setattr(ck, "run_held", explode)
+    with pytest.raises(RuntimeError, match="boom"):
+        ck.main([str(root), "--waypoint", "W1", "--subject", "s", "a.txt"])
+    assert counts.states[-1] is None

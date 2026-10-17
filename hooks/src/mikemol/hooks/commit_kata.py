@@ -38,6 +38,8 @@ from pathlib import Path
 from typing import TextIO
 
 from mikemol.hooks.commit_body import refusal as _body_refusal
+from mikemol.hooks.commit_counts import INFLIGHT, QUEUED
+from mikemol.hooks.commit_gauge import note as _note_counts
 from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.commit_span import emit_stack as _emit_stack
@@ -832,21 +834,74 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_USAGE
     submitted = submitted_ns(env)
     env[SUBMIT_ENV] = str(submitted)
+    ledger = ledger_of(root)
+    key = str(submitted)
+    if not env.get(HELD_ENV):
+        track(ledger, key, QUEUED, env)
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
     if isinstance(claim, Claim):
         os.execve(claim.argv[0], claim.argv, claim.env)
     if claim:
         sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
-    lease = time.time_ns()
-    waited = wait_for_load(env)
+    held = Held(env, submitted, time.time_ns(), claim, shipping)
+    track(ledger, key, INFLIGHT, env)
+    try:
+        return run_held(root, (stacked, parsed), held)
+    finally:
+        track(ledger, key, None, env)
+
+
+@dataclass(frozen=True)
+class Held:
+    """What a commit knows once it holds the lease (or went without it)."""
+
+    env: Mapping[str, str]
+    submitted: int
+    lease: int
+    claim: str
+    shipping: bool
+
+
+def ledger_of(root: Path) -> Path | None:
+    """Name the repository's commit ledger directory, `<git dir>/mtools`, where the counts live.
+
+    Returns:
+        the directory path, or None when git cannot name the git directory.
+
+    """
+    found = run_git(["-C", str(root), "rev-parse", "--absolute-git-dir"])
+    return Path(found.stdout.strip()) / "mtools" if found.returncode == 0 else None
+
+
+def track(ledger: Path | None, key: str, state: str | None, env: Mapping[str, str]) -> None:
+    """Move this commit to `state` in the live counts, None ending it; never raises."""
+    if ledger is not None:
+        _note_counts(ledger, key, state, env)
+
+
+def run_held(
+    root: Path,
+    which: tuple[tuple[Path, Path] | None, tuple[Path, Request] | None],
+    held: Held,
+) -> int:
+    """Run the stack or the single commit once the lease is held.
+
+    Returns:
+        the exit code of the stack or the commit; EXIT_USAGE when neither was parsed.
+
+    """
+    stacked, parsed = which
+    waited = wait_for_load(held.env)
     if waited:
         sys.stdout.write(waited + "\n")
-    isolated = isolation_wanted(root, env)
-    reason = isolation_reason(root, env)
-    sys.stdout.write(routing_line(isolated=isolated, reason=reason, lock=lock_state(claim)) + "\n")
+    isolated = isolation_wanted(root, held.env)
+    reason = isolation_reason(root, held.env)
+    lock = lock_state(held.claim)
+    sys.stdout.write(routing_line(isolated=isolated, reason=reason, lock=lock) + "\n")
+    started = (held.submitted, held.lease)
     if stacked is not None:
-        return run_stack_mode(root, stacked[1], env, isolated, (submitted, lease))
+        return run_stack_mode(root, stacked[1], held.env, isolated, started)
     if parsed is None:
         return EXIT_USAGE
-    after = after_of(shipping, env, parsed[1].waypoint, (submitted, lease))
+    after = after_of(held.shipping, held.env, parsed[1].waypoint, started)
     return commit_buffered(root, parsed[1], isolated, after)
