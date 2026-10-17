@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1451,
+  "counter": 1452,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -19582,7 +19582,11 @@
       "minted_during": "interrupt",
       "caused_by": "github:W-substrate-94",
       "last_worked": "2026-10-12T07:25:37Z",
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "docs/adopting-a-hook.md"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W955",
@@ -19825,7 +19829,12 @@
       "minted_during": "interrupt",
       "caused_by": "linux-sources:W-repin-path",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "docs/repinning.md",
+        "pyproject.toml"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W967",
@@ -27770,7 +27779,12 @@
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W555",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "waldo/src/mikemol/waldo/phases.py",
+        "waldo/src/mikemol/waldo/runphase.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1356",
@@ -28036,7 +28050,11 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W580",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "pathsforward/src/mikemol/pathsforward/closegate.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1369",
@@ -28175,7 +28193,12 @@
       "minted_during": "interrupt",
       "caused_by": "W1374",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "ratchet/pyproject.toml",
+        "ratchet/src/mikemol/ratchet/core.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1376",
@@ -28195,7 +28218,11 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "check_mutants/mutate_runner.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1377",
@@ -29176,7 +29203,7 @@
     {
       "symbol": "W1427",
       "title": "mikemol-commit --stack compares each commit's real diff to its card's manifest and reports drift",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
@@ -29184,13 +29211,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed 5ede5c8 in a stack with d789b1a, pushed. stackdrift.py plus the call in commit_kata.run_stack_mode; 4 tests pass under bazel. Its own gate run printed NO-MANIFEST W1427, W1419, so the report works live.",
       "issued_at": "2026-10-17T02:01:13Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T12:08:44Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T120844Z"
     },
     {
       "symbol": "W1428",
@@ -29681,6 +29709,25 @@
       "issued_at": "2026-10-17T11:25:35Z",
       "minted_during": "interrupt",
       "caused_by": "W1448",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1452",
+      "title": "manifest pass: give the ready cards that nemik-stackable --propose could not draft a file-naming next step",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "manifest",
+        "stacking"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T12:07:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W613",
       "last_worked": null,
       "ticks_blocked": 0
     }

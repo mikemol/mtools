@@ -2227,3 +2227,4 @@
 2026-10-17T10:49:59Z  interrupt W1450 minted    -         "Answer luthen-observability:W1086: a pinned hermetic git (relocatable, url + sha256, the verbs init/config/add/commit/rev-parse) declared beside opa so rung-two tests can run a real commit"  evidence=luthen-observability:W1086
 2026-10-17T11:25:35Z  interrupt W1451 minted    -         "narrow the gate's environment beyond MIKEMOL_*: a per-repo declared allow-list (env -i plus names) in place of pass-through, once each peer's pre-commit needs are known"  evidence=W1448
 2026-10-17T11:40:08Z  tick  W1448 advanced  unblock   "LANDED: 712ad10 queue state (W1448 38c447b scrub, W1348 b0e996c, W1449 12419a5). IN FLIGHT: none. No new asks; W1427 next, not started this tick. [blocked by W1427]"
+2026-10-17T12:07:21Z  interrupt W1452 minted    -         "manifest pass: give the ready cards that nemik-stackable --propose could not draft a file-naming next step"  evidence=nemik:W613
