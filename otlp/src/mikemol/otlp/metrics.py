@@ -69,7 +69,13 @@ def attributes(pairs: Mapping[str, Value]) -> list[KeyValue]:
     return [KeyValue(key=key, value=_value(pairs[key])) for key in sorted(pairs)]
 
 
-def _resource(resource: Resource) -> ProtoResource:
+def resource_message(resource: Resource) -> ProtoResource:
+    """Spell the four attributes as the wire's Resource message (shared with the log builder).
+
+    Returns:
+        the protobuf Resource.
+
+    """
     return ProtoResource(
         attributes=attributes(
             {
@@ -107,7 +113,9 @@ def _point(sample: Sample) -> NumberDataPoint:
 def _request(resource: Resource, metric: Metric) -> ExportMetricsServiceRequest:
     scope = ScopeMetrics(scope=InstrumentationScope(name=SCOPE), metrics=[metric])
     return ExportMetricsServiceRequest(
-        resource_metrics=[ResourceMetrics(resource=_resource(resource), scope_metrics=[scope])]
+        resource_metrics=[
+            ResourceMetrics(resource=resource_message(resource), scope_metrics=[scope])
+        ]
     )
 
 
