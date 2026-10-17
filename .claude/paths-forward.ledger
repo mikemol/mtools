@@ -2237,3 +2237,4 @@
 2026-10-17T14:18:35Z  tick  W1457 minted    -         "mikemol-repin --revendor plan says vendor/wheels/README.md history is written by hand"  evidence=nemik:W450
 2026-10-17T14:22:15Z  tick  W1458 minted    -         "mikemol-repin writes only the invoking repo unless --fleet is given, and its dry run lists the repos it would write"  evidence=github-8f
 2026-10-17T14:36:51Z  tick  W1458 advanced  mechanize "LANDED this tick: W1453 3f6fcf0, W1375 38e1ba5, W1355 b1e0963, W966 5446a43, queue 42328fb. IN FLIGHT: W1456 drift fix (brdufxt3q), W1458 repin --fleet plus W1368 --rank-from plus queue state (bgkw45l7d), no verdicts yet. Next: W1376 runner witness, W1455 BUILD sweep. [blocked by W1376]"
+2026-10-17T15:35:46Z  interrupt W1459 minted    -         "retire the per-target timeout settings and their comments that the .bazelrc backstop makes redundant"  evidence=W1455
