@@ -38,16 +38,17 @@ with no scripts is a library that other distributions import.
 - `gradekit` (`mikemol-gradekit`): grade records and the effective-grade clamp. Scripts:
   `mikemol-gradekit-verdict`, `mikemol-grades-rec`, `mikemol-read-grade`, `mikemol-effective`.
 - `hooks` (`mikemol-hooks`): Claude Code hooks, git hooks and maintainer tools. Scripts:
-  `mikemol-bazel-admit`, `mikemol-build-failure`, `mikemol-commit`, `mikemol-gate-jobs`,
-  `mikemol-gate-ledger`, `mikemol-gen-warrants`, `mikemol-githook-post-commit`,
-  `mikemol-githook-pre-push`, `mikemol-githook-prepare-commit-msg`, `mikemol-hook-after-compaction`,
-  `mikemol-hook-build-failure`, `mikemol-hook-inbound-asks`, `mikemol-hook-nemik-check`,
-  `mikemol-hook-no-chaining`, `mikemol-hook-no-verify`, `mikemol-hook-pycheck`,
-  `mikemol-hook-pycheck-advise`, `mikemol-hook-read-guard`, `mikemol-hook-shellcheck`,
-  `mikemol-hook-structural-query`, `mikemol-hook-tick-gate`, `mikemol-hook-tick-release`,
-  `mikemol-hook-tick-stop`, `mikemol-hook-work-claims`, `mikemol-hooks-probe`, `mikemol-new-dist`,
-  `mikemol-privacy-audit`, `mikemol-privacy-shipped`, `mikemol-pycheck`, `mikemol-repin`,
-  `mikemol-shellcheck`, `mikemol-snapshot`, `mikemol-vlog`, `mikemol-wheel`.
+  `mikemol-bazel-admit`, `mikemol-build-failure`, `mikemol-codon-probe`, `mikemol-commit`,
+  `mikemol-gate-jobs`, `mikemol-gate-ledger`, `mikemol-gen-warrants`,
+  `mikemol-githook-post-commit`, `mikemol-githook-pre-push`, `mikemol-githook-prepare-commit-msg`,
+  `mikemol-hook-after-compaction`, `mikemol-hook-build-failure`, `mikemol-hook-inbound-asks`,
+  `mikemol-hook-nemik-check`, `mikemol-hook-no-chaining`, `mikemol-hook-no-verify`,
+  `mikemol-hook-pycheck`, `mikemol-hook-pycheck-advise`, `mikemol-hook-read-guard`,
+  `mikemol-hook-shellcheck`, `mikemol-hook-structural-query`, `mikemol-hook-tick-gate`,
+  `mikemol-hook-tick-release`, `mikemol-hook-tick-stop`, `mikemol-hook-work-claims`,
+  `mikemol-hooks-probe`, `mikemol-new-dist`, `mikemol-privacy-audit`, `mikemol-privacy-shipped`,
+  `mikemol-pycheck`, `mikemol-repin`, `mikemol-scratch`, `mikemol-shellcheck`, `mikemol-snapshot`,
+  `mikemol-vlog`, `mikemol-websubset`, `mikemol-wheel`.
 - `htmlstruct` (`mikemol-htmlstruct`): Read HTML and MHTML documents as structure. Scripts: `mikemol-htmlstruct`.
 - `icsstruct` (`mikemol-icsstruct`): iCalendar read losslessly. Script: `mikemol-ics`.
 - `importdag` (`mikemol-importdag`): a project's import DAG. Scripts: `mikemol-dagnames`,
@@ -62,7 +63,7 @@ with no scripts is a library that other distributions import.
   `mikemol-rail`.
 - `mutantcell` (`mikemol-mutantcell`): the def-sweep's cell. Scripts: `mikemol-eval`, `mikemol-sites`.
 - `mutation` (`mikemol-mutation`): mutation primitives. Script: `mikemol-mutate`.
-- `otlp` (`mikemol-otlp`): Build OTLP protobuf metric and log payloads from the published opentelemetry-proto wheels and send them to a named endpoint. A library, no scripts.
+- `otlp` (`mikemol-otlp`): Build OTLP protobuf metric and log payloads from the published opentelemetry-proto wheels and send them to a named endpoint. Script: `mikemol-otlp`.
 - `pathsforward` (`mikemol-pathsforward`): the paths-forward loop's state file and its reader and writer.
   Script: `mikemol-paths-forward`.
 - `pathwalk` (`mikemol-pathwalk`): expand directory operands to their Python files. A library, no scripts.
@@ -74,7 +75,7 @@ with no scripts is a library that other distributions import.
 - `pytestspec` (`mikemol-pytestspec`): a pytest plugin that collects Rego specs. A library, no scripts.
 - `ratchet` (`mikemol-ratchet`): a paydown-only ratchet over a baseline set. Script: `mikemol-ratchet`.
 - `rulerseq` (`mikemol-rulerseq`): Ruler-sequence table rules: the 2-adic valuation of a row boundary rendered as a Morse motif, so a rule's pattern carries a row enumeration's binary structure (WCAG 1.4.1). A library, no scripts.
-- `scan` (`mikemol-scan`): Two-sided ADF scanning for eSCL devices. A library, no scripts.
+- `scan` (`mikemol-scan`): Two-sided ADF scanning for eSCL devices. Script: `mikemol-scan`.
 - `transcriptstruct` (`mikemol-transcriptstruct`): Claude Code transcripts read losslessly. Script:
   `mikemol-transcriptstruct`.
 - `treeio` (`mikemol-treeio`): one read/write seam over a working tree and git history. Scripts:
