@@ -10865,3 +10865,31 @@
             either.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_a_commit_runs_its_hook_in_the_same_scrubbed_environment},
 }
+
+@misc{hooks-stackdrift-entry-that-matches-its-manifest-reports-nothing,
+  section = {stackdrift},
+  title  = {The negative control: equal sets, and a directory entry covering a file under it},
+  claim  = {The negative control: equal sets, and a directory entry covering a file under it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_an_entry_that_matches_its_manifest_reports_nothing},
+}
+
+@misc{hooks-stackdrift-file-outside-the-manifest-and-a-file-left-out-are-both-named,
+  section = {stackdrift},
+  title  = {The positive control: one extra path and one untaken manifest path in one line},
+  claim  = {The positive control: one extra path and one untaken manifest path in one line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_a_file_outside_the_manifest_and_a_file_left_out_are_both_named},
+}
+
+@misc{hooks-stackdrift-card-without-a-manifest-is-counted-not-flagged,
+  section = {stackdrift},
+  title  = {No manifest is no claim to drift from, so only the NO-MANIFEST line appears},
+  claim  = {No manifest is no claim to drift from, so only the NO-MANIFEST line appears.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_a_card_without_a_manifest_is_counted_not_flagged},
+}
+
+@misc{hooks-stackdrift-missing-or-malformed-queue-reads-as-no-manifests,
+  section = {stackdrift},
+  title  = {A fault in the queue file never raises: every entry is just without a manifest},
+  claim  = {A fault in the queue file never raises: every entry is just without a manifest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_a_missing_or_malformed_queue_reads_as_no_manifests},
+}

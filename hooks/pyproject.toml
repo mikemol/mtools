@@ -517,6 +517,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_gauge.py" = ["assert"]
 "tests/test_commit_span.py" = ["assert"]
 "tests/test_gateenv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_stackdrift.py" = ["assert"]
 "tests/test_stackfreeze.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacksnap.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_worktree_venv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

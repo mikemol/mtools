@@ -48,6 +48,8 @@ from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
+from mikemol.hooks.stackdrift import QUEUE as _QUEUE
+from mikemol.hooks.stackdrift import report as _drift_report
 from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit, forget, with_files
 from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
@@ -744,6 +746,8 @@ def run_stack_mode(
         sys.stderr.write(f"mikemol-commit: {items}\n")
         return EXIT_USAGE
     items = with_files(items, root, env, run_git_in)
+    for line in _drift_report(items, root / _QUEUE):
+        sys.stdout.write(line + "\n")
     trailer = env.get(TRAILER_ENV) or DEFAULT_TRAILER
     seams = StackSeams(
         run=run_git_in,
