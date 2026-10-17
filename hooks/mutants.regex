@@ -50,7 +50,8 @@ src/mikemol/hooks/probe.py|empty-decision-is-a-decision|or None$|or ""|def=decis
 src/mikemol/hooks/commit_kata.py|nested-call-waits-on-itself|if env\.get\(HELD_ENV\):|if False:|def=claim_of
 src/mikemol/hooks/commit_kata.py|restore-and-removal-swapped|for name in BUDGET if name not in env for part|for name in BUDGET if name in env for part|def=claim_of
 src/mikemol/hooks/commit_kata.py|load-gate-left-on|held\["MEMBUDGET_MAXLOAD"\] = "0"|held["MEMBUDGET_MAXLOAD"] = "1"|def=claim_of
-src/mikemol/hooks/commit_kata.py|wait-override-ignored|env\.get\(TIMEOUT_ENV\) or DEFAULT_LOCK_TIMEOUT_S|DEFAULT_LOCK_TIMEOUT_S|def=claim_of
+src/mikemol/hooks/commit_kata.py|wait-override-ignored|held\["MEMBUDGET_TIMEOUT"\] = env\[TIMEOUT_ENV\]|held["MEMBUDGET_TIMEOUT"] = "3600"|def=claim_of
+src/mikemol/hooks/commit_kata.py|lease-wait-gets-a-deadline|held\.pop\("MEMBUDGET_TIMEOUT", None\)|held["MEMBUDGET_TIMEOUT"] = "3600"|def=claim_of
 
 # W924: the verdict says whether the sha is on origin/main. Always PUSHED hides an unpushed commit;
 # skipping the no-ref test reports a repository with no remote as LOCAL.

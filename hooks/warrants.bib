@@ -7302,13 +7302,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_two_repositories_get_two_different_claims},
 }
 
-@misc{hooks-commit-claim-load-gate-is-off-and-the-wait-bounded,
-  section = {commit_claim},
-  title  = {A busy host must not stall a commit, and a wedged holder ends as a refusal},
-  claim  = {A busy host must not stall a commit, and a wedged holder ends as a refusal.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_bounded},
-}
-
 @misc{hooks-commit-claim-commands-own-budget-variables-are-put-back-or-removed,
   section = {commit_claim},
   title  = {Between the hold and the commit, `env` restores what the caller had and removes the rest},
@@ -10958,4 +10951,245 @@
   title  = {W1458: WOULD-WRITE lists each repo with a differing git pin, once, and not a wheel repo},
   claim  = {W1458: WOULD-WRITE lists each repo with a differing git pin, once, and not a wheel repo.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_the_dry_run_names_the_repos_a_write_would_change},
+}
+
+@misc{hooks-codon-probe-pin-is-read-from-the-codon-block-not-another-archive,
+  section = {codon_probe},
+  title  = {The control: the ruff block precedes it in the text, and its fields are not taken},
+  claim  = {The control: the ruff block precedes it in the text, and its fields are not taken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_the_pin_is_read_from_the_codon_block_not_another_archive},
+}
+
+@misc{hooks-codon-probe-missing-block-field-or-a-plain-http-url-is-refused,
+  section = {codon_probe},
+  title  = {No codon block, no strip prefix and a non-https URL each raise PinError},
+  claim  = {No codon block, no strip prefix and a non-https URL each raise PinError.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_a_missing_block_field_or_a_plain_http_url_is_refused},
+}
+
+@misc{hooks-codon-probe-verified-download-is-unpacked-cached-and-not-fetched-twice,
+  section = {codon_probe},
+  title  = {The bytes hash to the pin: bin/codon appears under the sha256, and a second call is free},
+  claim  = {The bytes hash to the pin: bin/codon appears under the sha256, and a second call is
+            free.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_a_verified_download_is_unpacked_cached_and_not_fetched_twice},
+}
+
+@misc{hooks-codon-probe-bytes-that-do-not-hash-to-the-pin-unpack-nothing,
+  section = {codon_probe},
+  title  = {The positive control for the check: wrong bytes raise and leave the cache empty},
+  claim  = {The positive control for the check: wrong bytes raise and leave the cache empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_bytes_that_do_not_hash_to_the_pin_unpack_nothing},
+}
+
+@misc{hooks-codon-probe-archive-that-leaves-its-directory-is-refused-and-writes-nothing-outside,
+  section = {codon_probe},
+  title  = {A `..` member passes the hash (the pin is of those bytes) but not the extraction filter},
+  claim  = {A `..` member passes the hash (the pin is of those bytes) but not the extraction filter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_an_archive_that_leaves_its_directory_is_refused_and_writes_nothing_outside},
+}
+
+@misc{hooks-codon-probe-main-runs-the-cached-compiler-on-the-file-and-passes-its-status-through,
+  section = {codon_probe},
+  title  = {The compiler's output and exit code are the tool's own},
+  claim  = {The compiler's output and exit code are the tool's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_main_runs_the_cached_compiler_on_the_file_and_passes_its_status_through},
+}
+
+@misc{hooks-codon-probe-main-refuses-a-download-that-is-not-the-pinned-bytes,
+  section = {codon_probe},
+  title  = {The pin in MODULE.bazel is `b`*64, so any archive hashes wrong and the tool refuses},
+  claim  = {The pin in MODULE.bazel is `b`*64, so any archive hashes wrong and the tool refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_main_refuses_a_download_that_is_not_the_pinned_bytes},
+}
+
+@misc{hooks-codon-probe-main-without-exactly-one-existing-file-is-a-usage-error,
+  section = {codon_probe},
+  title  = {No file, two files and a missing file are each exit 2},
+  claim  = {No file, two files and a missing file are each exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_main_without_exactly_one_existing_file_is_a_usage_error},
+}
+
+@misc{hooks-websubset-builtins-measured-missing-builtins-are-flagged-where-they-are-read,
+  section = {websubset_builtins},
+  title  = {frozenset, callable, classmethod and an except clause on ImportError each give a row},
+  claim  = {frozenset, callable, classmethod and an except clause on ImportError each give a row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_builtins.py -k test_the_measured_missing_builtins_are_flagged_where_they_are_read},
+}
+
+@misc{hooks-websubset-builtins-builtins-codon-does-define-are-not-flagged,
+  section = {websubset_builtins},
+  title  = {The control: a spread of names the measurement found FINE raises nothing},
+  claim  = {The control: a spread of names the measurement found FINE raises nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_builtins.py -k test_the_builtins_codon_does_define_are_not_flagged},
+}
+
+@misc{hooks-websubset-builtins-property-and-staticmethod-are-allowed-as-decorators-and-not-otherwise,
+  section = {websubset_builtins},
+  title  = {Codon compiles them as decorators (probed), but a bare read of either is undefined},
+  claim  = {Codon compiles them as decorators (probed), but a bare read of either is undefined.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_builtins.py -k test_property_and_staticmethod_are_allowed_as_decorators_and_not_otherwise},
+}
+
+@misc{hooks-websubset-builtins-name-the-module-binds-itself-is-left-alone,
+  section = {websubset_builtins},
+  title  = {A parameter, a function, a loop target and an import named like a missing builtin},
+  claim  = {A parameter, a function, a loop target and an import named like a missing builtin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_builtins.py -k test_a_name_the_module_binds_itself_is_left_alone},
+}
+
+@misc{hooks-websubset-builtins-decorator-name-is-only-exempt-in-the-decorator-position,
+  section = {websubset_builtins},
+  title  = {A property used as a decorator in one place and read bare in another is flagged once},
+  claim  = {A property used as a decorator in one place and read bare in another is flagged once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_builtins.py -k test_a_decorator_name_is_only_exempt_in_the_decorator_position},
+}
+
+@misc{hooks-websubset-builtins-exempt-decorators-are-themselves-in-the-missing-list,
+  section = {websubset_builtins},
+  title  = {The exemption only means something for names the list holds},
+  claim  = {The exemption only means something for names the list holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_builtins.py -k test_the_exempt_decorators_are_themselves_in_the_missing_list},
+}
+
+@misc{hooks-commit-turn-first-submission-has-nobody-ahead,
+  section = {commit_turn},
+  title  = {The control: the oldest key waits on nothing},
+  claim  = {The control: the oldest key waits on nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_the_first_submission_has_nobody_ahead},
+}
+
+@misc{hooks-commit-turn-commits-ahead-are-named-oldest-first,
+  section = {commit_turn},
+  title  = {The third submission has the first and the second ahead, in submission order},
+  claim  = {The third submission has the first and the second ahead, in submission order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_the_commits_ahead_are_named_oldest_first},
+}
+
+@misc{hooks-commit-turn-dead-or-recycled-entry-is-not-ahead-of-anyone,
+  section = {commit_turn},
+  title  = {Pid 9 is gone and pid 1 was recycled (its start time differs): neither blocks the turn},
+  claim  = {Pid 9 is gone and pid 1 was recycled (its start time differs): neither blocks the turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_dead_or_recycled_entry_is_not_ahead_of_anyone},
+}
+
+@misc{hooks-commit-turn-key-that-is-not-a-number-is-not-ordered,
+  section = {commit_turn},
+  title  = {A malformed key neither waits nor is waited on},
+  claim  = {A malformed key neither waits nor is waited on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_key_that_is_not_a_number_is_not_ordered},
+}
+
+@misc{hooks-commit-turn-missing-map-has-nobody-ahead,
+  section = {commit_turn},
+  title  = {No file means no live commits},
+  claim  = {No file means no live commits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_missing_map_has_nobody_ahead},
+}
+
+@misc{hooks-commit-turn-turn-waits-on-the-oldest-ahead-and-then-looks-again,
+  section = {commit_turn},
+  title  = {Two ahead: it waits on pid 1, which ends, then on pid 2, then goes on having waited twice},
+  claim  = {Two ahead: it waits on pid 1, which ends, then on pid 2, then goes on having waited
+            twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_turn_waits_on_the_oldest_ahead_and_then_looks_again},
+}
+
+@misc{hooks-commit-turn-turn-with-nobody-ahead-never-waits,
+  section = {commit_turn},
+  title  = {The first in line returns at once with zero waits, and the waiter is never called},
+  claim  = {The first in line returns at once with zero waits, and the waiter is never called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_turn_with_nobody_ahead_never_waits},
+}
+
+@misc{hooks-commit-turn-real-wait-ends-when-the-real-process-does,
+  section = {commit_turn},
+  title  = {A child that sleeps briefly: wait_exit returns only after it has exited},
+  claim  = {A child that sleeps briefly: wait_exit returns only after it has exited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_the_real_wait_ends_when_the_real_process_does},
+}
+
+@misc{hooks-commit-turn-waiting-on-a-process-that-is-already-gone-returns-at-once,
+  section = {commit_turn},
+  title  = {A reaped child's pid no longer exists, so there is nothing to wait for},
+  claim  = {A reaped child's pid no longer exists, so there is nothing to wait for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_waiting_on_a_process_that_is_already_gone_returns_at_once},
+}
+
+@misc{hooks-commit-turn-zombie-has-no-start-time-and-a-running-process-has-one,
+  section = {commit_turn},
+  title  = {The control: state S reads field 22, and Z or X, a process that is over, reads nothing},
+  claim  = {The control: state S reads field 22, and Z or X, a process that is over, reads nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_zombie_has_no_start_time_and_a_running_process_has_one},
+}
+
+@misc{hooks-commit-turn-wait-sleeps-once-per-look-and-ends-when-the-start-time-changes,
+  section = {commit_turn},
+  title  = {Two looks at one start time are one sleep, and the third, none, ends it as a zombie does},
+  claim  = {Two looks at one start time are one sleep, and the third, none, ends it as a zombie
+            does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_turn.py -k test_a_wait_sleeps_once_per_look_and_ends_when_the_start_time_changes},
+}
+
+@misc{hooks-heartbeat-beat-is-written-and-read-back,
+  section = {heartbeat},
+  title  = {The record under the git dir round-trips, and the first beat has no gap},
+  claim  = {The record under the git dir round-trips, and the first beat has no gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_a_beat_is_written_and_read_back},
+}
+
+@misc{hooks-heartbeat-second-beat-records-the-gap-since-the-first,
+  section = {heartbeat},
+  title  = {Ten seconds apart is one gap of ten seconds, and the tool is the latest one},
+  claim  = {Ten seconds apart is one gap of ten seconds, and the tool is the latest one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_the_second_beat_records_the_gap_since_the_first},
+}
+
+@misc{hooks-heartbeat-only-the-most-recent-gaps-are-kept,
+  section = {heartbeat},
+  title  = {More beats than KEEP leave exactly KEEP gaps},
+  claim  = {More beats than KEEP leave exactly KEEP gaps.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_only_the_most_recent_gaps_are_kept},
+}
+
+@misc{hooks-heartbeat-gap-that-is-not-positive-is-not-kept,
+  section = {heartbeat},
+  title  = {Two beats in one instant, and a clock stepping back, leave no gap},
+  claim  = {Two beats in one instant, and a clock stepping back, leave no gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_a_gap_that_is_not_positive_is_not_kept},
+}
+
+@misc{hooks-heartbeat-there-is-no-mean-and-no-suspicion-until-enough-gaps-are-seen,
+  section = {heartbeat},
+  title  = {One gap short of MIN_GAPS yields None; reaching it yields the mean},
+  claim  = {One gap short of MIN_GAPS yields None; reaching it yields the mean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_there_is_no_mean_and_no_suspicion_until_enough_gaps_are_seen},
+}
+
+@misc{hooks-heartbeat-suspicion-is-t-over-mean-times-ln-ten,
+  section = {heartbeat},
+  title  = {With a ten-second mean, a silence of 10 ln 10 seconds is exactly one unit of suspicion},
+  claim  = {With a ten-second mean, a silence of 10 ln 10 seconds is exactly one unit of suspicion.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_the_suspicion_is_t_over_mean_times_ln_ten},
+}
+
+@misc{hooks-heartbeat-torn-or-wrongly-shaped-file-reads-as-no-beat-and-the-next-beat-recovers,
+  section = {heartbeat},
+  title  = {Garbage in the record is no record, and a new history starts from the next beat},
+  claim  = {Garbage in the record is no record, and a new history starts from the next beat.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_a_torn_or_wrongly_shaped_file_reads_as_no_beat_and_the_next_beat_recovers},
+}
+
+@misc{hooks-heartbeat-beat-that-cannot-be-written-returns-none-and-raises-nothing,
+  section = {heartbeat},
+  title  = {try_beat is for tools: a file where the directory should be is a missed sample},
+  claim  = {try_beat is for tools: a file where the directory should be is a missed sample.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_a_beat_that_cannot_be_written_returns_none_and_raises_nothing},
+}
+
+@misc{hooks-commit-claim-load-gate-is-off-and-the-wait-has-no-deadline-unless-asked,
+  section = {commit_claim},
+  title  = {A busy host must not stall a commit, and the lease wait has no timer of its own (W1463)},
+  claim  = {A busy host must not stall a commit, and the lease wait has no timer of its own (W1463).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_has_no_deadline_unless_asked},
 }

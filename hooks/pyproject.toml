@@ -133,6 +133,9 @@ mikemol-scratch = "mikemol.hooks.scratch_cli:main"
 # NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
 mikemol-repin = "mikemol.hooks.repin_cli:main"
 mikemol-websubset = "mikemol.hooks.websubset_cli:main"
+# W1461: compiles one file with the pinned Codon, fetched and hash-verified on first use. NOT
+# `mikemol-hook-…`: a maintainer or a consumer's gate runs it, no harness wires it.
+mikemol-codon-probe = "mikemol.hooks.codon_probe:main"
 mikemol-wheel = "mikemol.hooks.wheel:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
@@ -477,6 +480,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_work_claims.py" = ["assert"]
 "tests/test_work_claims_hook.py" = ["assert"]
 "src/mikemol/hooks/runproc.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+# ⚑ ONE RESPONSIBILITY EACH (W1461): the probe runs the pinned compiler (subprocess) and downloads it
+# from the https URL the repo's own MODULE.bazel pins (urlopen), verified by sha256 before it is opened.
+"src/mikemol/hooks/codon_probe.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "suspicious-url-open-usage"]
+"tests/test_codon_probe.py" = ["assert"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/vlogdetach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

@@ -481,6 +481,8 @@ venv_from_hub(
         "mikemol-new-dist": "mikemol.hooks.new_dist_cli:main",
         "mikemol-repin": "mikemol.hooks.repin_cli:main",
         "mikemol-websubset": "mikemol.hooks.websubset_cli:main",
+        # W1461: compiles one file with the pinned Codon, fetched and hash-verified on first use.
+        "mikemol-codon-probe": "mikemol.hooks.codon_probe:main",
         "mikemol-wheel": "mikemol.hooks.wheel:main",
     },
     hub_requirements = dev_all_requirements,

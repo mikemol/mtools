@@ -124,3 +124,7 @@ stacksnap	Stack Snapshot: A File Frozen at Submit Keeps Its Bytes Whatever the W
 stackfreeze	Stack Freeze: The Snapshot Taken at Submit Reaches the Run, and Every Fallback Freezes Now Rather Than Reading the Tree Late
 gateenv	Gate Environment: The Commit Gate Does Not See the Submitter's MIKEMOL_ Variables Except the Ones It Reads, and Everything Else Passes Untouched
 stackdrift	Stack Manifest Drift: A Stack Entry Is Compared With Its Card's Declared Manifest and Drift Is Reported, Never Refused
+codon_probe	Codon Probe: One File Is Compiled With the Pinned Compiler, Fetched and Hash-Verified on First Use, and Nothing Unverified Is Unpacked
+websubset_builtins	Undefined Builtins: A Builtin Name Codon 0.20.3 Does Not Define Is Flagged Where It Is Read, Except a Name the Module Binds and the Two Decorators Codon Allows
+commit_turn	Commit Turns: Queued Commits Take the Lease in Submission Order, Each Waiting on the One Ahead, With No Deadline
+heartbeat	Session Heartbeat: A Tool Call Leaves a Record, the Gaps Between Records Are Learned, and a Fault Never Fails the Tool
