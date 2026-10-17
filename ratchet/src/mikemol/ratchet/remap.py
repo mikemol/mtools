@@ -308,7 +308,7 @@ def _write_all(root: Path, outputs: list[tuple[str, str]]) -> list[str]:
 
 
 def remap_guard(
-    root: Path, files: list[str], *, rev: str = "HEAD", write: bool
+    root: Path, files: list[str], write: bool, rev: str = "HEAD"
 ) -> tuple[int, list[str]]:
     """Refuse any baseline whose diff against `rev` touches a non-path leaf. Return (code, lines).
 
