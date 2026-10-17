@@ -29,7 +29,7 @@ src/mikemol/ratchet/core.py|comment-read-as-a-key|and not stripped\.startswith\(
 src/mikemol/ratchet/core.py|unreadable-baseline-reads-empty|return BaselineState\.UNREAD, frozenset\(\)|return BaselineState.EMPTY, frozenset()|def=read_baseline
 
 # ABSENT exits 1: a gate with no baseline is green over nothing.
-src/mikemol/ratchet/core.py|absent-baseline-passes|if state\.is_defect:|if False:|def=ratchet
+src/mikemol/ratchet/core.py|absent-baseline-passes|if state\.is_defect:|if False:|def=_baseline_refusal
 
 # Growth exits 1; a ratchet that reports it and exits 0 is a report.
 src/mikemol/ratchet/core.py|growth-exits-zero|return 1, lines|return 0, lines|def=ratchet

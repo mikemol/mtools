@@ -262,11 +262,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
 
-# ⚑ AN EXCEPT TUPLE SPLIT FOR CODON (mtools:W1342) ADDS ONE BRANCH PER EXCEPTION: `ratchet` was at the
-# limit with one tuple clause and is one over it with two. Listed as its own entry so the next
-# function over the limit is not excused by it; the real fix is a helper (mtools:W1375).
-"src/mikemol/ratchet/core.py" = ["complex-structure"]
-
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file rather than to the package. An entry naming a directory would grant it to every module in
 # order to cover one call — the blast radius a per-responsibility override exists to avoid.

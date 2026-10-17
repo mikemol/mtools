@@ -267,6 +267,29 @@ def write_baseline(path: Path, keys: Iterable[str], write: bool) -> None:
         raise OSError(msg)
 
 
+def _baseline_refusal(state: BaselineState, path: Path) -> list[str]:
+    """Say why a baseline in this state cannot be checked against, or nothing when it can.
+
+    Returns:
+        the report lines of the refusal, empty when the baseline was read.
+
+    """
+    if state.is_defect:
+        return [
+            f"baseline {state}: {path}",
+            (
+                "  a gate with no baseline reports green over nothing — "
+                "run with --init-absent to record the zero-tolerance floor"
+            ),
+        ]
+    if state is BaselineState.UNREAD:
+        return [
+            f"baseline {state}: {path} could not be read",
+            "  this is a fact about the reader, not a verdict about the gate",
+        ]
+    return []
+
+
 def ratchet(
     current: Iterable[str], path: Path, write: bool, schema: str = RUFF
 ) -> tuple[int, list[str]]:
@@ -292,19 +315,9 @@ def ratchet(
 
     """
     state, base = read_baseline(path)
-    if state.is_defect:
-        return 1, [
-            f"baseline {state}: {path}",
-            (
-                "  a gate with no baseline reports green over nothing — "
-                "run with --init-absent to record the zero-tolerance floor"
-            ),
-        ]
-    if state is BaselineState.UNREAD:
-        return 1, [
-            f"baseline {state}: {path} could not be read",
-            "  this is a fact about the reader, not a verdict about the gate",
-        ]
+    refusal = _baseline_refusal(state, path)
+    if refusal:
+        return 1, refusal
     try:
         diff = partition(current, base, schema=schema)
     except Exception as exc:
