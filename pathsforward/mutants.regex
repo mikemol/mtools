@@ -161,3 +161,5 @@ src/mikemol/pathsforward/session.py|walk-takes-the-first-process|if proc\.comm =
 src/mikemol/pathsforward/lock.py|a-live-session-is-taken-over|gone = not alive\(recorded\)|gone = True|def=acquire
 src/mikemol/pathsforward/lock.py|a-sessionless-lock-never-goes-stale|else age >= LOCK_STALE_S|else False|def=acquire
 src/mikemol/pathsforward/session.py|alive-ignores-pid-reuse|return proc is not None and proc\.start == session\.start|return proc is not None|def=alive
+src/mikemol/pathsforward/standing.py|rules-count-from-zero|enumerate\(stored, start=1\)|enumerate(stored, start=0)|def=lines
+src/mikemol/pathsforward/standing.py|no-rules-is-silent|    if not stored:|    if False:|def=lines

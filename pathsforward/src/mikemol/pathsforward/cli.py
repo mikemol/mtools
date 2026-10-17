@@ -49,6 +49,7 @@ from mikemol.pathsforward import (
     render,
     selftest,
     session,
+    standing,
     store,
     tickhooks,
     triage,
@@ -409,6 +410,7 @@ _FLAGS = (
     "unlinked",
     "delivered",
     "close_gate",
+    "standing",
 )
 _VALUED = (
     "verify",
@@ -1592,6 +1594,8 @@ def _tick_open(ctx: Ctx) -> int:
     root = ctx.path.parent.parent
     for said in tickhooks.run_all(tickhooks.stored(store.load(ctx.path).doc), root):
         _say(said)
+    for said in standing.lines(store.load(ctx.path).doc):
+        _say(said)
     _say(f"tick open as {holder}; close: --ledger ..., --render, --check, --unlock {holder}")
     return code
 
@@ -2390,6 +2394,18 @@ def _standing_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _standing(ctx: Ctx) -> int:
+    """Print the standing rules alone, one numbered line each (W1470).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    for said in standing.lines(store.load(ctx.path).doc):
+        _say(said)
+    return EXIT_OK
+
+
 def _tick_hooks_set(ctx: Ctx) -> int:
     """Store a file's commands as the tick hooks, replacing them whole (W1348, nemik:W450).
 
@@ -2680,6 +2696,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "commit_message": _commit_message,
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
+    "standing": _standing,
     "standing_set": _standing_set,
     "tick_hooks_set": _tick_hooks_set,
     "preamble_clear": _preamble_clear,

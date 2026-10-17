@@ -5741,3 +5741,31 @@
   claim  = {W3 is working and W2 is promoted beside it: anything in a stack is working (W1468).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_promote.py -k test_promote_is_allowed_while_another_card_is_working},
 }
+
+@misc{pathsforward-standing-read-lines-number-each-rule-in-stored-order,
+  section = {standing},
+  title  = {A caller cites a rule by its number, and the list reads in the order it was stored},
+  claim  = {A caller cites a rule by its number, and the list reads in the order it was stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_read.py -k test_lines_number_each_rule_in_stored_order},
+}
+
+@misc{pathsforward-standing-read-no-stored-rules-says-so-and-names-the-writer,
+  section = {standing},
+  title  = {An absent or empty list is a reading, not a silence},
+  claim  = {An absent or empty list is a reading, not a silence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_read.py -k test_no_stored_rules_says_so_and_names_the_writer},
+}
+
+@misc{pathsforward-standing-read-standing-mode-prints-the-rules-alone,
+  section = {standing},
+  title  = {Nothing else is printed and no lock is taken},
+  claim  = {Nothing else is printed and no lock is taken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_read.py -k test_the_standing_mode_prints_the_rules_alone},
+}
+
+@misc{pathsforward-standing-read-tick-open-prints-the-rules-before-its-closing-line,
+  section = {standing},
+  title  = {A tick that opens has read the repo's rules, so no session greps its queue for them},
+  claim  = {A tick that opens has read the repo's rules, so no session greps its queue for them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_read.py -k test_tick_open_prints_the_rules_before_its_closing_line},
+}
