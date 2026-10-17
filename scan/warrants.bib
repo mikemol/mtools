@@ -76,3 +76,31 @@
   claim  = {The one function that starts a process, exercised on a child that is not a scanner.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_adf.py -k test_the_real_runner_returns_a_childs_exit_code_and_its_stderr},
 }
+
+@misc{scan-pdf-pages-reach-img2pdf-in-the-order-given-then-ocrmypdf-reads-the-joined-pdf,
+  section = {pdf},
+  title  = {f1 b1 f2 b2 stays f1 b1 f2 b2, one word each; the OCR step reads what the join wrote},
+  claim  = {f1 b1 f2 b2 stays f1 b1 f2 b2, one word each; the OCR step reads what the join wrote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pdf.py -k test_the_pages_reach_img2pdf_in_the_order_given_then_ocrmypdf_reads_the_joined_pdf},
+}
+
+@misc{scan-pdf-no-pages-is-refused-and-nothing-runs,
+  section = {pdf},
+  title  = {The control: an empty list never becomes an empty PDF},
+  claim  = {The control: an empty list never becomes an empty PDF.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pdf.py -k test_no_pages_is_refused_and_nothing_runs},
+}
+
+@misc{scan-pdf-failed-join-stops-before-ocr-and-names-the-step,
+  section = {pdf},
+  title  = {img2pdf exits 1: the error says so, with its words, and ocrmypdf is never run},
+  claim  = {img2pdf exits 1: the error says so, with its words, and ocrmypdf is never run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pdf.py -k test_a_failed_join_stops_before_ocr_and_names_the_step},
+}
+
+@misc{scan-pdf-failed-ocr-names-ocrmypdf,
+  section = {pdf},
+  title  = {The second step failing is reported as the second step},
+  claim  = {The second step failing is reported as the second step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pdf.py -k test_a_failed_ocr_names_ocrmypdf},
+}
