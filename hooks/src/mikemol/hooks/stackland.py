@@ -26,14 +26,20 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from mikemol.hooks.isolated import Done, EnvRunner, add_argv_list
+from mikemol.hooks.stacksnap import Frozen, apply_argv
 
 
 @dataclass(frozen=True)
 class Entry:
-    """One commit of the stack: its full message (trailer included) and the paths it carries."""
+    """One commit of the stack: its full message (trailer included) and the paths it carries.
+
+    `files`, when given, are the bytes frozen at submit (W1447): they are placed into the index
+    instead of re-reading `paths` from the working tree, which a queued peer may have changed.
+    """
 
     message: str
     paths: tuple[str, ...]
+    files: tuple[Frozen, ...] | None = None
 
 
 @dataclass
@@ -74,8 +80,12 @@ def build(root: Path, entries: Sequence[Entry], run: EnvRunner, head: str) -> St
         return stack
     parent = head
     for entry in entries:
-        for argv in add_argv_list(root, entry.paths):
-            added = run(argv, tracked_tree, root)
+        frozen = entry.files is not None
+        plan = (
+            apply_argv(entry.files) if entry.files is not None else add_argv_list(root, entry.paths)
+        )
+        for argv in plan:
+            added = run(argv, scope if frozen else tracked_tree, root)
             if _stopped(added):
                 stack.failed = added
                 return stack

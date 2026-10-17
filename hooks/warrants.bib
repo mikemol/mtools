@@ -10700,3 +10700,75 @@
   claim  = {The control: an exception inside the commit must not leave it counted as in flight.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_commit_that_raises_still_ends_its_count},
 }
+
+@misc{hooks-stacksnap-frozen-file-keeps-its-bytes-whatever-the-tree-does-next,
+  section = {stacksnap},
+  title  = {The control: a.txt is frozen at v1, edited to v2 afterwards; the commit holds v1},
+  claim  = {The control: a.txt is frozen at v1, edited to v2 afterwards; the commit holds v1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_frozen_file_keeps_its_bytes_whatever_the_tree_does_next},
+}
+
+@misc{hooks-stacksnap-head-moving-between-freeze-and-build-keeps-both-changes,
+  section = {stacksnap},
+  title  = {A peer's stack landed first: its change to c.txt is in the new HEAD, ours is on top},
+  claim  = {A peer's stack landed first: its change to c.txt is in the new HEAD, ours is on top.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_head_moving_between_freeze_and_build_keeps_both_changes},
+}
+
+@misc{hooks-stacksnap-tracked-file-that-is-gone-is-frozen-as-a-deletion,
+  section = {stacksnap},
+  title  = {b.txt removed before the freeze: the frozen record is a deletion and the commit drops it},
+  claim  = {b.txt removed before the freeze: the frozen record is a deletion and the commit drops
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_tracked_file_that_is_gone_is_frozen_as_a_deletion},
+}
+
+@misc{hooks-stacksnap-directory-expands-to-tracked-and-new-files-but-not-ignored-or-links,
+  section = {stacksnap},
+  title  = {src/: the tracked file, a new one and a deletion; the ignored file and the link are left},
+  claim  = {src/: the tracked file, a new one and a deletion; the ignored file and the link are
+            left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_directory_expands_to_tracked_and_new_files_but_not_ignored_or_links},
+}
+
+@misc{hooks-stacksnap-path-that-names-nothing-contributes-nothing,
+  section = {stacksnap},
+  title  = {Never tracked and not on disk: not a deletion, just nothing},
+  claim  = {Never tracked and not on disk: not a deletion, just nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_path_that_names_nothing_contributes_nothing},
+}
+
+@misc{hooks-stacksnap-frozen-files-round-trip-through-the-dump,
+  section = {stacksnap},
+  title  = {A dump then a load gives the same entries; a torn or foreign file loads as None},
+  claim  = {A dump then a load gives the same entries; a torn or foreign file loads as None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_the_frozen_files_round_trip_through_the_dump},
+}
+
+@misc{hooks-stackfreeze-snapshot-taken-at-submit-survives-a-later-edit-of-the-tree,
+  section = {stackfreeze},
+  title  = {The control: a.txt is v1 at submit, v2 by the time the stack runs; the items carry v1},
+  claim  = {The control: a.txt is v1 at submit, v2 by the time the stack runs; the items carry v1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackfreeze.py -k test_the_snapshot_taken_at_submit_survives_a_later_edit_of_the_tree},
+}
+
+@misc{hooks-stackfreeze-without-a-usable-snapshot-the-run-freezes-now-not-late,
+  section = {stackfreeze},
+  title  = {No variable, a vanished file, or a count mismatch: each freezes at run time},
+  claim  = {No variable, a vanished file, or a count mismatch: each freezes at run time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackfreeze.py -k test_without_a_usable_snapshot_the_run_freezes_now_not_late},
+}
+
+@misc{hooks-stackfreeze-stack-file-or-ledger-that-cannot-be-used-gives-no-snapshot,
+  section = {stackfreeze},
+  title  = {The controls: a malformed stack file and a missing ledger both return the empty string},
+  claim  = {The controls: a malformed stack file and a missing ledger both return the empty string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackfreeze.py -k test_a_stack_file_or_ledger_that_cannot_be_used_gives_no_snapshot},
+}
+
+@misc{hooks-stackfreeze-forget-removes-the-named-snapshot-and-nothing-else,
+  section = {stackfreeze},
+  title  = {The file it was given goes; an unset variable or an already-gone file is not an error},
+  claim  = {The file it was given goes; an unset variable or an already-gone file is not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackfreeze.py -k test_forget_removes_the_named_snapshot_and_nothing_else},
+}

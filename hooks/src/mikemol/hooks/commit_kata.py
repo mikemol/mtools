@@ -47,6 +47,7 @@ from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
+from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit, forget, with_files
 from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
@@ -741,6 +742,7 @@ def run_stack_mode(
     if isinstance(items, str):
         sys.stderr.write(f"mikemol-commit: {items}\n")
         return EXIT_USAGE
+    items = with_files(items, root, env, run_git_in)
     trailer = env.get(TRAILER_ENV) or DEFAULT_TRAILER
     seams = StackSeams(
         run=run_git_in,
@@ -751,7 +753,10 @@ def run_stack_mode(
         published=lambda sha: published(root, sha),
     )
     tee = TeeBuffer()
-    code = stack_run(root, items, tee, seams)
+    try:
+        code = stack_run(root, items, tee, seams)
+    finally:
+        forget(env)
     moments = Moments(started[0], started[1], time.time_ns())
     _emit_stack(tee.getvalue(), moments, [item.waypoint for item in items], env)
     return code
@@ -838,6 +843,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     key = str(submitted)
     if not env.get(HELD_ENV):
         track(ledger, key, QUEUED, env)
+    if stacked is not None and not env.get(HELD_ENV):
+        env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
     if isinstance(claim, Claim):
         os.execve(claim.argv[0], claim.argv, claim.env)

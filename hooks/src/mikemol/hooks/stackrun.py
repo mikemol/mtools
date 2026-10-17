@@ -32,6 +32,7 @@ from mikemol.hooks.isolated import EnvRunner
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
 from mikemol.hooks.stacklanding import land
+from mikemol.hooks.stacksnap import Frozen
 
 BODY_CHECK = body_refusal
 EXIT_RACED = 5
@@ -40,12 +41,16 @@ SHORT = 7
 
 @dataclass(frozen=True)
 class Item:
-    """One commit asked for: its waypoint, subject, body and the paths it takes."""
+    """One commit asked for: its waypoint, subject, body and the paths it takes.
+
+    `files` are those paths frozen at submit (W1447), when the caller froze them.
+    """
 
     waypoint: str
     subject: str
     body: str
     paths: tuple[str, ...]
+    files: tuple[Frozen, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -153,7 +158,7 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
     """
     name, run = root.name, seams.run
     before = run(["rev-parse", "HEAD"], {}, root).stdout.strip()
-    entries = [Entry(seams.message_of(item), item.paths) for item in items]
+    entries = [Entry(seams.message_of(item), item.paths, item.files) for item in items]
     stack = build(root, entries, run, before)
     if stack.failed is not None:
         place = len(stack.commits) + 1
