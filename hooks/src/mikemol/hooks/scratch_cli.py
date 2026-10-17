@@ -16,16 +16,19 @@ its reason on stderr, 2 a usage refusal.
 import argparse
 import os
 import sys
+import time
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import cast
 
 from mikemol.hooks import scratch, scratch_land
+from mikemol.hooks.heartbeat import try_beat
 from mikemol.hooks.scratch import Run
 from mikemol.hooks.scratch_land import Out
 
 EXIT_OK = 0
 EXIT_REFUSED = 4
+BEAT_TOOL = "mikemol-scratch"
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -54,6 +57,13 @@ def _act(opts: dict[str, object], environ: Mapping[str, str], run: Run, out: Out
     return [str(where), scratch.hint(where, cast("str", dist), python)]
 
 
+def beat(repo: Path, out: Out) -> None:
+    """Leave the session heartbeat (W1483): a scratch call is the session using a tool."""
+    code, text = out(["git", "-C", str(repo), "rev-parse", "--absolute-git-dir"])
+    if code == 0:
+        try_beat(Path(text.strip()), BEAT_TOOL, time.time_ns())
+
+
 def main(
     argv: Sequence[str] | None = None,
     environ: Mapping[str, str] | None = None,
@@ -67,6 +77,7 @@ def main(
 
     """
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
+    beat(Path(str(opts["repo"])).resolve(), out)
     try:
         lines = _act(opts, os.environ if environ is None else environ, run, out)
     except scratch.ScratchError as refused:

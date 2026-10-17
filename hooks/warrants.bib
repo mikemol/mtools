@@ -11228,3 +11228,17 @@
   claim  = {The nested run holds the lease already, so only the first entry counts as a tool use.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_beat.py -k test_a_fresh_submission_beats_and_a_reexec_under_the_lease_does_not},
 }
+
+@misc{hooks-scratch-beat-scratch-call-leaves-a-beat-naming-the-scratch-tool,
+  section = {heartbeat},
+  title  = {The record lands under the git dir that git names for the checkout},
+  claim  = {The record lands under the git dir that git names for the checkout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_beat.py -k test_a_scratch_call_leaves_a_beat_naming_the_scratch_tool},
+}
+
+@misc{hooks-scratch-beat-checkout-git-cannot-name-beats-nothing-and-raises-nothing,
+  section = {heartbeat},
+  title  = {When git refuses there is no git dir to write under, and the scratch call goes on},
+  claim  = {When git refuses there is no git dir to write under, and the scratch call goes on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_beat.py -k test_a_checkout_git_cannot_name_beats_nothing_and_raises_nothing},
+}

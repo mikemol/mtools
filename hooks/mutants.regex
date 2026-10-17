@@ -342,3 +342,5 @@ src/mikemol/hooks/rewake.py|never-nudged-is-not-due|if last_nudged is None:|if F
 src/mikemol/hooks/commit_kata.py|nested-run-beats-too|if not env\.get\(HELD_ENV\):|if True:|def=submit
 src/mikemol/hooks/commit_kata.py|submit-leaves-no-beat|        beat\(ledger\)|        pass|def=submit
 src/mikemol/hooks/commit_kata.py|beat-in-the-wrong-dir|_try_beat\(ledger\.parent, |_try_beat(ledger, |def=beat
+src/mikemol/hooks/scratch_cli.py|scratch-beats-on-a-git-refusal|    if code == 0:|    if True:|def=beat
+src/mikemol/hooks/scratch_cli.py|scratch-beat-skipped|        try_beat\(Path\(text\.strip\(\)\), BEAT_TOOL, time\.time_ns\(\)\)|        pass|def=beat
