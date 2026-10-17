@@ -29,6 +29,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from mikemol.hooks import verdictlog
+from mikemol.hooks.gatephase import Mark
+from mikemol.hooks.gatephase import marks as _marks_of
 from mikemol.hooks.vlogdetach import spawn_detached
 
 BIN_ENV = "MIKEMOL_OTLP_BIN"
@@ -111,18 +113,42 @@ def binary(env: Mapping[str, str]) -> str | None:
     return str(checkout) if checkout.is_file() else None
 
 
-def pieces(moments: Moments, ids: Ids, root: str = "commit") -> list[Piece]:
-    """Lay out the three spans: the whole named `root`, then its two phases as children.
+def pieces(
+    moments: Moments, ids: Ids, root: str = "commit", phases: Sequence[Mark] = ()
+) -> list[Piece]:
+    """Lay out the three spans, then one child of `gating` per phase mark the gate printed.
 
     Returns:
-        the whole first, so a reader meets the parent before its children.
+        the whole first, so a reader meets the parent before its children; the phase spans last.
 
     """
     return [
         Piece(root, moments.submit_ns, moments.end_ns, ids.commit, ""),
         Piece(f"{root}.queued", moments.submit_ns, moments.lease_ns, ids.queued, ids.commit),
         Piece(f"{root}.gating", moments.lease_ns, moments.end_ns, ids.gating, ids.commit),
+        *phase_pieces(moments, ids.gating, f"{root}.gating", phases),
     ]
+
+
+def phase_pieces(moments: Moments, parent: str, prefix: str, phases: Sequence[Mark]) -> list[Piece]:
+    """Turn phase marks into spans: each runs to the next mark, the last to the verdict (W1493).
+
+    ⚑ A MARK OUTSIDE THE GATING WINDOW IS CLAMPED INTO IT, because the gate's clock and the lease
+    are read by different processes and a phase must never start before its parent.
+
+    Returns:
+        one span per mark, named `<prefix>.<mark name>`, children of `parent`.
+
+    """
+    if not phases:
+        return []
+    edges = [*(m.at_ns for m in phases[1:]), moments.end_ns]
+    found: list[Piece] = []
+    for mark, end in zip(phases, edges, strict=True):
+        start = min(max(mark.at_ns, moments.lease_ns), moments.end_ns)
+        stop = min(max(end, start), moments.end_ns)
+        found.append(Piece(f"{prefix}.{mark.name}", start, stop, secrets.token_hex(8), parent))
+    return found
 
 
 def plan(
@@ -174,27 +200,27 @@ def stack_event(text: str) -> dict[str, str] | None:
 
 
 def _start(
-    what: tuple[Mapping[str, str] | None, str, str],
+    what: tuple[Mapping[str, str] | None, str, str, Sequence[Mark]],
     moments: Moments,
     env: Mapping[str, str],
     spawn: Spawn,
 ) -> int:
     """Start the span children for one finished run, when a child and a store exist.
 
-    `what` is (event, waypoint, root name of the trace).
+    `what` is (event, waypoint, root name of the trace, the gate's phase marks).
 
     Returns:
         how many were started, 0 when there is no event, binary or endpoints file, or the first
         start failed.
 
     """
-    event, waypoint, root = what
+    event, waypoint, root, phases = what
     program = binary(env)
     if event is None or program is None or not env.get(ENDPOINTS_ENV):
         return 0
     ids = new_ids()
     started = 0
-    for argv in plan(program, event, waypoint, (ids, pieces(moments, ids, root))):
+    for argv in plan(program, event, waypoint, (ids, pieces(moments, ids, root, phases))):
         try:
             spawn(argv)
         except OSError:
@@ -217,7 +243,7 @@ def emit(
         the first start failed; a failure never propagates.
 
     """
-    return _start((verdict_of(text), waypoint, "commit"), moments, env, spawn)
+    return _start((verdict_of(text), waypoint, "commit", _marks_of(text)), moments, env, spawn)
 
 
 def emit_stack(
@@ -233,4 +259,7 @@ def emit_stack(
         how many were started, as `emit`; the waypoint attribute is the entries' joined.
 
     """
-    return _start((stack_event(text), ",".join(waypoints), "commit.stack"), moments, env, spawn)
+    found = _marks_of(text)
+    return _start(
+        (stack_event(text), ",".join(waypoints), "commit.stack", found), moments, env, spawn
+    )
