@@ -197,3 +197,53 @@
   claim  = {new_ids gives 16 and 8 bytes, never all zero, and two draws differ.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_fresh_ids_have_the_right_widths_and_are_not_zero},
 }
+
+@misc{otlp-tracecmd-span-is-posted-as-protobuf-to-the-traces-path-and-read-back,
+  section = {tracecmd},
+  title  = {Send then GET once: the POST path is luthen's, the GET path ends in the trace id, exit 0},
+  claim  = {Send then GET once: the POST path is luthen's, the GET path ends in the trace id, exit
+            0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_a_span_is_posted_as_protobuf_to_the_traces_path_and_read_back},
+}
+
+@misc{otlp-tracecmd-without-readback-nothing-is-fetched,
+  section = {tracecmd},
+  title  = {The default sends and stops: no GET is made and the trace id is printed for later},
+  claim  = {The default sends and stops: no GET is made and the trace id is printed for later.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_without_readback_nothing_is_fetched},
+}
+
+@misc{otlp-tracecmd-span-not-visible-yet-is-busy-not-success,
+  section = {tracecmd},
+  title  = {The control: a 404 on the read is exit 3 with the URL to retry, never a quiet 0},
+  claim  = {The control: a 404 on the read is exit 3 with the URL to retry, never a quiet 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_a_span_not_visible_yet_is_busy_not_success},
+}
+
+@misc{otlp-tracecmd-store-that-refuses-the-span-is-a-failed-send,
+  section = {tracecmd},
+  title  = {A 500 on the POST exits 1 naming the status, and no read is attempted},
+  claim  = {A 500 on the POST exits 1 naming the status, and no read is attempted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_a_store_that_refuses_the_span_is_a_failed_send},
+}
+
+@misc{otlp-tracecmd-answer-without-the-spans-own-id-is-not-a-witness,
+  section = {tracecmd},
+  title  = {The control for the read: 200 with some other trace's body is busy, not found},
+  claim  = {The control for the read: 200 with some other trace's body is busy, not found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_an_answer_without_the_spans_own_id_is_not_a_witness},
+}
+
+@misc{otlp-tracecmd-no-destination-is-a-usage-refusal,
+  section = {tracecmd},
+  title  = {With no --url and no endpoints file the command refuses, naming the endpoint},
+  claim  = {With no --url and no endpoints file the command refuses, naming the endpoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_no_destination_is_a_usage_refusal},
+}
+
+@misc{otlp-tracecmd-get-refuses-a-non-http-url-and-names-an-unreachable-endpoint,
+  section = {tracecmd},
+  title  = {The reader refuses a non-http URL and names a dead port, as the poster does},
+  claim  = {The reader refuses a non-http URL and names a dead port, as the poster does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_get_refuses_a_non_http_url_and_names_an_unreachable_endpoint},
+}

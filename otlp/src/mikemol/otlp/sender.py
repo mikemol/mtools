@@ -24,6 +24,7 @@ from urllib.parse import urlsplit
 CONTENT_TYPE = "application/x-protobuf"
 METRICS_PATH = "/opentelemetry/v1/metrics"
 LOGS_PATH = "/insert/opentelemetry/v1/logs"
+TRACES_PATH = "/insert/opentelemetry/v1/traces"
 _SCHEMES: dict[str, type[HTTPConnection]] = {"http": HTTPConnection, "https": HTTPSConnection}
 _OK_LOW = 200
 _OK_HIGH = 300
@@ -63,6 +64,38 @@ def post(url: str, body: bytes) -> int:
     finally:
         connection.close()
     return status
+
+
+def get(url: str) -> tuple[int, str]:
+    """GET `url` and return the HTTP status and body text, for reading a record back.
+
+    Returns:
+        (status code, body); a 404 is an answer, not an exception.
+
+    Raises:
+        SendError: when the URL is not http(s) or the endpoint cannot be reached.
+
+    """
+    parts = urlsplit(url)
+    if parts.scheme not in _SCHEMES:
+        msg = f"not an http(s) URL: {url!r}"
+        raise SendError(msg)
+    connection = _SCHEMES[parts.scheme](parts.netloc)
+    target = parts.path + (f"?{parts.query}" if parts.query else "")
+    try:
+        connection.request("GET", target)
+        response = connection.getresponse()
+        text = response.read().decode("utf-8", errors="replace")
+        status = response.status
+    except OSError as unreachable:
+        msg = f"cannot reach {url}: {unreachable}"
+        raise SendError(msg) from unreachable
+    except HTTPException as broken:
+        msg = f"{url} answered something that is not HTTP: {broken}"
+        raise SendError(msg) from broken
+    finally:
+        connection.close()
+    return status, text
 
 
 def send(url: str, payload: bytes, poster: Post = post) -> int:

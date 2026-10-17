@@ -107,5 +107,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_logs.py" = ["assert"]
 "tests/test_sender.py" = ["assert"]
 "tests/test_spans.py" = ["assert"]
+"tests/test_tracecmd.py" = ["assert"]
 "tests/test_smoke.py" = ["assert"]
 "tests/test_metrics.py" = ["assert"]
