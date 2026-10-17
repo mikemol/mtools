@@ -115,3 +115,4 @@ websubset_target	Each transpile target has its own refusal list
 websubset_codon	The codon target refuses the constructs Codon rejects
 websubset_tree	The tree census counts each refused idiom by the modules it blocks
 websubset_prom	The Codon idiom burn-down is a Prometheus textfile series
+scratch	scratch

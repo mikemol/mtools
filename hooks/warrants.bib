@@ -10361,3 +10361,46 @@
   claim  = {`--idioms ROOT --prom FILE` leaves the file with the repo label and no temporary file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_prom.py -k test_the_cli_writes_the_textfile_atomically_beside_the_report},
 }
+
+@misc{hooks-scratch-root-has-no-default-and-a-symbol-must-be-a-waypoint-symbol,
+  section = {scratch},
+  title  = {The control: an unset root and a symbol like `main` are refused before git is asked},
+  claim  = {The control: an unset root and a symbol like `main` are refused before git is asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_the_root_has_no_default_and_a_symbol_must_be_a_waypoint_symbol},
+}
+
+@misc{hooks-scratch-worktree-is-named-for-the-repo-and-the-card-and-cut-from-head,
+  section = {scratch},
+  title  = {`<root>/<repo>-W7`, on a branch `scratch/W7`, argv words kept single},
+  claim  = {`<root>/<repo>-W7`, on a branch `scratch/W7`, argv words kept single.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_the_worktree_is_named_for_the_repo_and_the_card_and_cut_from_head},
+}
+
+@misc{hooks-scratch-existing-worktree-and-a-non-checkout-are-refused-before-git-runs,
+  section = {scratch},
+  title  = {The control: no git call is made for either refusal},
+  claim  = {The control: no git call is made for either refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_an_existing_worktree_and_a_non_checkout_are_refused_before_git_runs},
+}
+
+@misc{hooks-scratch-closing-a-worktree-that-is-not-there-is-refused,
+  section = {scratch},
+  title  = {There is nothing to remove, and git is not asked},
+  claim  = {There is nothing to remove, and git is not asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_closing_a_worktree_that_is_not_there_is_refused},
+}
+
+@misc{hooks-scratch-real-git-opens-then-closes-a-worktree-and-leaves-the-branch,
+  section = {scratch},
+  title  = {End to end on a temp repo: the directory and branch appear; close removes only the tree},
+  claim  = {End to end on a temp repo: the directory and branch appear; close removes only the tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_real_git_opens_then_closes_a_worktree_and_leaves_the_branch},
+}
+
+@misc{hooks-scratch-cli-prints-the-path-and-the-pytest-recipe-and-refuses-with-exit-one,
+  section = {scratch},
+  title  = {`open --dist` prints the worktree path then the PYTHONPATH recipe; an unset root exits 1},
+  claim  = {`open --dist` prints the worktree path then the PYTHONPATH recipe; an unset root exits
+            1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_the_cli_prints_the_path_and_the_pytest_recipe_and_refuses_with_exit_one},
+}

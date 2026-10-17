@@ -128,6 +128,7 @@ mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
 # W945: scaffolds a new distribution from the pathwalk template. NOT `mikemol-hook-…`: a maintainer
 # runs it, no harness wires it.
 mikemol-new-dist = "mikemol.hooks.new_dist_cli:main"
+mikemol-scratch = "mikemol.hooks.scratch_cli:main"
 # W959: surveys every repo's mtools pins against a commit and moves them (dry run unless --write).
 # NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
 mikemol-repin = "mikemol.hooks.repin_cli:main"
@@ -507,6 +508,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # has every GIT_* variable removed and git's config off. Never through a shell. Its witnesses build
 # decoy repositories with `git init` and `git worktree add` under tmp_path: the same reason.
 "src/mikemol/hooks/worktree_venv.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ RUNNING git FOR A SCRATCH WORKTREE IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1378): the argv is
+# `git`, fixed words, the repo and the worktree path as single words; no shell.
+"src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_scratch.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_worktree_venv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.
