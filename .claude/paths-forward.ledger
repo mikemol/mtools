@@ -2234,3 +2234,6 @@
 2026-10-17T13:36:45Z  tick  W1455 minted    -         "set bazel's longest timeout class on the long targets with one backstop comment (the BUILD half of W1376, about 41 BUILD files)"  evidence=W1376
 2026-10-17T13:48:41Z  tick  W966 advanced  mechanize "LANDED: none since the last close (3f6fcf0 W1453, 38e1ba5 W1375 landed earlier this tick). IN FLIGHT: queue state bmo0ef8b9, W1355 stack buxtnfuhr, W966 stack by72njxwj, no verdicts yet. Next: W1368 and W1376 builds. [blocked by W1368]"
 2026-10-17T13:56:34Z  interrupt W1456 minted    -         "stack drift report compares a waypoint's entries together and leaves the queue files out"  evidence=W1427
+2026-10-17T14:18:35Z  tick  W1457 minted    -         "mikemol-repin --revendor plan says vendor/wheels/README.md history is written by hand"  evidence=nemik:W450
+2026-10-17T14:22:15Z  tick  W1458 minted    -         "mikemol-repin writes only the invoking repo unless --fleet is given, and its dry run lists the repos it would write"  evidence=github-8f
+2026-10-17T14:36:51Z  tick  W1458 advanced  mechanize "LANDED this tick: W1453 3f6fcf0, W1375 38e1ba5, W1355 b1e0963, W966 5446a43, queue 42328fb. IN FLIGHT: W1456 drift fix (brdufxt3q), W1458 repin --fleet plus W1368 --rank-from plus queue state (bgkw45l7d), no verdicts yet. Next: W1376 runner witness, W1455 BUILD sweep. [blocked by W1376]"
