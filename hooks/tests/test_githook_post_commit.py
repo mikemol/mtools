@@ -99,6 +99,18 @@ def test_a_commit_gains_the_marker_and_the_header(
     assert HEADER in capsys.readouterr().out
 
 
+def test_the_amend_leaves_other_staged_work_staged_and_out_of_the_tip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A file staged by someone else stays staged: the amend rewrites the message only (W1437)."""
+    repo = _decoy(tmp_path, monkeypatch)
+    (repo / "peer.txt").write_text("not this commit's\n", encoding="utf-8")
+    _g("add", "peer.txt")
+    assert main() == 0
+    assert "peer.txt" not in _g("show", "--name-only", "--format=", "HEAD")
+    assert _g("diff", "--cached", "--name-only").split() == ["peer.txt"]
+
+
 def test_the_local_hooks_output_is_folded_into_the_message(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

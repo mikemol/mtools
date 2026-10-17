@@ -137,6 +137,9 @@ def _amend(text: str) -> int:
     amended = run_git(
         "commit",
         "--amend",
+        # ⚑ --only: a plain amend commits the WHOLE real index, so a file a peer staged while a
+        # stack ran landed in this tip (el-openglo-5c measured it, mtools:W1434/W1437).
+        "--only",
         "--no-verify",
         "--allow-empty",
         "-F",
