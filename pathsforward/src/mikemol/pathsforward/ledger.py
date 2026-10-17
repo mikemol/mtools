@@ -15,6 +15,7 @@ re-splits the columns itself, and a legacy line comes back as `Unparsed`, never 
 
 import re
 from dataclasses import dataclass
+from datetime import UTC
 from pathlib import Path
 
 from mikemol.pathsforward import lock, ownership
@@ -51,6 +52,25 @@ def is_stamp(stamp: str) -> bool:
     """
     parsed = lock.parse_time(stamp)
     return parsed is not None and lock.stamp(parsed) == stamp
+
+
+def utc_stamp(stamp: str) -> str | None:
+    """Read any RFC 3339 instant with an offset as the `Z` form `line` writes.
+
+    ⚑ THE READER IS WIDER THAN THE WRITER (el-openglo, 2026-10-17): 162 lines of its append-only
+    ledger carry `+00:00` instead of `Z`, and rewriting history to please the reader is the wrong
+    direction. `line` still refuses anything but the `Z` form (`is_stamp`); `parse` accepts a
+    whole second at any numeric offset and reports it in UTC. A fraction of a second is refused,
+    because dropping it would change the instant, and a naive or partial stamp is refused as before.
+
+    Returns:
+        the stamp as `YYYY-MM-DDTHH:MM:SSZ`, or None when it is not a whole-second aware instant.
+
+    """
+    parsed = lock.parse_time(stamp)
+    if parsed is None or parsed.microsecond:
+        return None
+    return lock.stamp(parsed.astimezone(UTC))
 
 
 @dataclass(frozen=True)
@@ -167,9 +187,9 @@ def parse(text: str) -> Parsed | Unparsed:
     match = _LINE.match(raw)
     if match is None:
         return Unparsed(raw, "not stamp, four columns, a quoted note and optional evidence=")
-    stamp = _group(match, "stamp")
-    if not is_stamp(stamp):
-        return Unparsed(raw, f"stamp {stamp!r} is not YYYY-MM-DDTHH:MM:SSZ")
+    stamp = utc_stamp(_group(match, "stamp"))
+    if stamp is None:
+        return Unparsed(raw, f"stamp {_group(match, 'stamp')!r} is not YYYY-MM-DDTHH:MM:SSZ")
     symbol = _group(match, "symbol")
     if not is_symbol(symbol):
         return Unparsed(raw, f"symbol {symbol!r} is neither {NO_SYMBOL}, W<n> nor repo:W<n>")

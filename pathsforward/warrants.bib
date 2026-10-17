@@ -5839,3 +5839,52 @@
   claim  = {The watchdog asks the writer, so the count has one definition.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle.py -k test_the_ready_count_mode_prints_the_number},
 }
+
+@misc{pathsforward-beat-ready-count-question-is-not-a-beat,
+  section = {beat},
+  title  = {The watchdog asks it, and asking must not reset the silence the watchdog measures},
+  claim  = {The watchdog asks it, and asking must not reset the silence the watchdog measures.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_the_ready_count_question_is_not_a_beat},
+}
+
+@misc{pathsforward-ledger-offset-plus-zero-offset-reads-as-the-z-form,
+  section = {ledger},
+  title  = {el-openglo's 162 lines: the same instant, spelled +00:00},
+  claim  = {el-openglo's 162 lines: the same instant, spelled +00:00.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_a_plus_zero_offset_reads_as_the_z_form},
+}
+
+@misc{pathsforward-ledger-offset-non-zero-offset-is-converted-to-utc,
+  section = {ledger},
+  title  = {Half past six in the evening at +05:30 is 13:00 UTC, not 18:30},
+  claim  = {Half past six in the evening at +05:30 is 13:00 UTC, not 18:30.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_a_non_zero_offset_is_converted_to_utc},
+}
+
+@misc{pathsforward-ledger-offset-negative-offset-crossing-midnight-is-converted,
+  section = {ledger},
+  title  = {The date moves with the offset},
+  claim  = {The date moves with the offset.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_a_negative_offset_crossing_midnight_is_converted},
+}
+
+@misc{pathsforward-ledger-offset-columns-after-the-stamp-are-unchanged,
+  section = {ledger},
+  title  = {Only the stamp is normalised},
+  claim  = {Only the stamp is normalised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_the_columns_after_the_stamp_are_unchanged},
+}
+
+@misc{pathsforward-ledger-offset-fraction-a-naive-or-partial-stamp-is-still-unparsed,
+  section = {ledger},
+  title  = {Dropping a fraction would change the instant; the others name no instant at all},
+  claim  = {Dropping a fraction would change the instant; the others name no instant at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_a_fraction_a_naive_or_partial_stamp_is_still_unparsed},
+}
+
+@misc{pathsforward-ledger-offset-writer-still-refuses-an-offset-stamp,
+  section = {ledger},
+  title  = {The reader is wider than the writer, which keeps one spelling},
+  claim  = {The reader is wider than the writer, which keeps one spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_the_writer_still_refuses_an_offset_stamp},
+}

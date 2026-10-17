@@ -88,7 +88,10 @@ def test_parse_reads_back_exactly_what_line_wrote(entry: Entry) -> None:
     assert parse(line(entry, _STAMP)) == Parsed(_STAMP, entry)
 
 
-_BAD_STAMPS = ("2026-09-24T", "2026-09-24", "2026-09-24T12:00:00", "2026-09-24T12:00:00+02:00")
+_UNREADABLE_STAMPS = ("2026-09-24T", "2026-09-24", "2026-09-24T12:00:00")
+"""What the reader refuses: a partial or naive stamp."""
+_BAD_STAMPS = (*_UNREADABLE_STAMPS, "2026-09-24T12:00:00+02:00")
+"""What the writer refuses: those, and the offset form, which the reader takes (W1506)."""
 
 
 @pytest.mark.parametrize("stamp", _BAD_STAMPS)
@@ -101,9 +104,12 @@ def test_a_stamp_that_is_not_a_whole_utc_second_is_refused(stamp: str) -> None:
         line(Entry("tick", "W7", "advanced", "unblock", "n"), stamp)
 
 
-@pytest.mark.parametrize("stamp", _BAD_STAMPS)
+@pytest.mark.parametrize("stamp", _UNREADABLE_STAMPS)
 def test_a_line_with_a_bad_stamp_reads_back_unparsed(stamp: str) -> None:
-    """⚑ A line whose stamp is not a whole UTC second reads back `Unparsed`, naming the stamp."""
+    """⚑ A line whose stamp names no whole aware second reads back `Unparsed`, naming the stamp.
+
+    A numeric offset is readable (W1506, el-openglo 2026-10-17) and the writer still refuses it.
+    """
     got = parse(f'{stamp}  tick  W7  advanced  unblock  "n"')
     assert isinstance(got, Unparsed)
     assert stamp in got.why
