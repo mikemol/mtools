@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 35 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 36 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -61,6 +61,7 @@ with no scripts is a library that other distributions import.
   `mikemol-rail`.
 - `mutantcell` (`mikemol-mutantcell`): the def-sweep's cell. Scripts: `mikemol-eval`, `mikemol-sites`.
 - `mutation` (`mikemol-mutation`): mutation primitives. Script: `mikemol-mutate`.
+- `otlp` (`mikemol-otlp`): Build OTLP protobuf metric and log payloads from the published opentelemetry-proto wheels and send them to a named endpoint. A library, no scripts.
 - `pathsforward` (`mikemol-pathsforward`): the paths-forward loop's state file and its reader and writer.
   Script: `mikemol-paths-forward`.
 - `pathwalk` (`mikemol-pathwalk`): expand directory operands to their Python files. A library, no scripts.

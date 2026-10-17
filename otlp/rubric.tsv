@@ -1,0 +1,4 @@
+# rubric.tsv — the sections of the otlp warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+smoke	smoke

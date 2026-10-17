@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.otlp: Build OTLP protobuf metric and log payloads from the published opentelemetry-proto wheels and send them to a named endpoint."
+subtitle = "The witnesses behind mikemol.otlp."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "OTLP.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"
