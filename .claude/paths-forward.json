@@ -27791,9 +27791,13 @@
       "ticks_blocked": 0,
       "manifest": [
         "waldo/src/mikemol/waldo/phases.py",
-        "waldo/src/mikemol/waldo/runphase.py"
+        "waldo/src/mikemol/waldo/runphase.py",
+        "waldo/tests/test_act.py",
+        "waldo/pyproject.toml",
+        "waldo/rubric.tsv",
+        "waldo/warrants.bib"
       ],
-      "size_class": "small"
+      "size_class": "medium"
     },
     {
       "symbol": "W1356",
