@@ -15,6 +15,10 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+# ⚑ CODON EXCEPTION, SCOPED TO THIS ALIAS (W1430): Codon cannot express a self-referential alias,
+# and a closed depth-2 replacement was tried and measured: gradekit's mypy fails with 20 errors,
+# because its records legitimately nest lists of mappings (graded claims, owner grades read from
+# JSON files). The consumers read arbitrary JSON, so the recursive shape is the real one.
 type Json = str | int | bool | list[Json] | dict[str, Json] | None
 Record = dict[str, Json]
 OwnerGrades = Mapping[tuple[str, str], Json]

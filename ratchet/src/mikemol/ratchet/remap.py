@@ -62,6 +62,9 @@ from typing import cast
 from mikemol.atomicwrite import durable
 from mikemol.atomicwrite.durable import Staged
 
+# ⚑ CODON EXCEPTION, SCOPED TO THIS ALIAS (W1431): Codon cannot express a self-referential alias,
+# and `leaf_diffs` diffs two arbitrary JSON documents (any depth, any keys), so there is no closed
+# shape to type it by; the recursive alias is the honest one.
 type Json = bool | int | float | str | list[Json] | dict[str, Json] | None
 Segment = str | int
 Pointer = tuple[Segment, ...]
