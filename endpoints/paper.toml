@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.endpoints: Resolve a named endpoint to a URL through the host's own MIKEMOL_ENDPOINTS file"
+subtitle = "The witnesses behind mikemol.endpoints."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "ENDPOINTS.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

@@ -1,0 +1,5 @@
+# rubric.tsv — the sections of the endpoints warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+smoke	Smoke: The Package Imports and Documents Itself
+resolve	Endpoint Resolution: A Named Endpoint Resolves Through the Host's File and Every Fault Is No Answer

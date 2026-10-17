@@ -1,0 +1,35 @@
+
+@misc{endpoints-smoke-package-imports-and-carries-its-docstring,
+  section = {smoke},
+  title  = {The scaffold compiles, imports and documents itself},
+  claim  = {The scaffold compiles, imports and documents itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
+}
+
+@misc{endpoints-resolve-named-endpoint-resolves-to-the-url-the-file-holds,
+  section = {resolve},
+  title  = {The positive control: http and https both resolve, and the URL is returned unchanged},
+  claim  = {The positive control: http and https both resolve, and the URL is returned unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_named_endpoint_resolves_to_the_url_the_file_holds},
+}
+
+@misc{endpoints-resolve-unset-variable-and-a-missing-file-are-no-answer,
+  section = {resolve},
+  title  = {Nothing to read is None, whether the variable is absent, empty or names no file},
+  claim  = {Nothing to read is None, whether the variable is absent, empty or names no file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_unset_variable_and_a_missing_file_are_no_answer},
+}
+
+@misc{endpoints-resolve-file-that-is-not-an-object-of-urls-is-no-answer,
+  section = {resolve},
+  title  = {Malformed JSON, a top-level list, an unknown name and a non-string value are all None},
+  claim  = {Malformed JSON, a top-level list, an unknown name and a non-string value are all None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_file_that_is_not_an_object_of_urls_is_no_answer},
+}
+
+@misc{endpoints-resolve-scheme-other-than-http-is-no-answer-so-no-local-file-is-read,
+  section = {resolve},
+  title  = {A host-supplied file is still data: file and ftp URLs are refused as None},
+  claim  = {A host-supplied file is still data: file and ftp URLs are refused as None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_scheme_other_than_http_is_no_answer_so_no_local_file_is_read},
+}
