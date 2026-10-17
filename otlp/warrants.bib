@@ -127,3 +127,31 @@
   claim  = {A closed port fails the first line: exit 1, `0 sent before it`, the cause on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_an_unreachable_endpoint_is_exit_one_naming_the_reason_and_the_count_sent},
 }
+
+@misc{otlp-endpoints-named-endpoint-resolves-to-its-base-and-joins-the-path-once,
+  section = {endpoints},
+  title  = {The base comes back as written; a trailing slash on it does not double the path's},
+  claim  = {The base comes back as written; a trailing slash on it does not double the path's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_endpoints.py -k test_a_named_endpoint_resolves_to_its_base_and_joins_the_path_once},
+}
+
+@misc{otlp-endpoints-every-way-of-not-knowing-is-none-not-an-exception,
+  section = {endpoints},
+  title  = {Unset variable, missing file, non-object file, absent name: all None},
+  claim  = {Unset variable, missing file, non-object file, absent name: all None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_endpoints.py -k test_every_way_of_not_knowing_is_none_not_an_exception},
+}
+
+@misc{otlp-endpoints-file-scheme-or-a-non-string-value-is-refused,
+  section = {endpoints},
+  title  = {The control: a host-supplied file is data, so file: and a number never become a URL},
+  claim  = {The control: a host-supplied file is data, so file: and a number never become a URL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_endpoints.py -k test_a_file_scheme_or_a_non_string_value_is_refused},
+}
+
+@misc{otlp-cli-named-endpoint-resolves-through-the-hosts-file-and-the-full-url-still-wins,
+  section = {cli},
+  title  = {Luthen's route: MIKEMOL_ENDPOINTS names the base and the path is appended; a URL wins},
+  claim  = {Luthen's route: MIKEMOL_ENDPOINTS names the base and the path is appended; a URL wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_named_endpoint_resolves_through_the_hosts_file_and_the_full_url_still_wins},
+}

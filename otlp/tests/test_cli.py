@@ -11,6 +11,7 @@ endpoint is exit 1 with the reason and how many records were sent before it.
 from __future__ import annotations
 
 import io
+import json
 import threading
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -19,10 +20,11 @@ from typing import TYPE_CHECKING, cast
 from google.protobuf.json_format import MessageToDict
 from opentelemetry.proto.collector.logs.v1.logs_service_pb2 import ExportLogsServiceRequest
 
-from mikemol.otlp import cli, sender
+from mikemol.otlp import cli, endpoints, sender
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from pathlib import Path
 
     import pytest
 
@@ -103,6 +105,31 @@ def test_the_url_may_come_from_the_environment(monkeypatch: pytest.MonkeyPatch) 
         monkeypatch.setenv(cli.URL_ENV, url)
         code = cli.main(["log", "--service", "s", "--namespace", "n"], io.StringIO("hello\n"))
     assert (code, len(bodies)) == (cli.EXIT_SENT, 1)
+
+
+def _publish(path: Path, base: str) -> None:
+    # The host's endpoints file with the one name this CLI resolves.
+    doc: dict[str, str] = {"victorialogs-http": base}
+    path.write_text(json.dumps(doc), encoding="utf-8")
+
+
+def test_the_named_endpoint_resolves_through_the_hosts_file_and_the_full_url_still_wins(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Luthen's route: MIKEMOL_ENDPOINTS names the base and the path is appended; a URL wins."""
+    with _endpoint() as (url, bodies):
+        base = url.removesuffix(sender.LOGS_PATH)
+        names = tmp_path / "endpoints.json"
+        _publish(names, base)
+        monkeypatch.delenv(cli.URL_ENV, raising=False)
+        monkeypatch.setenv(endpoints.ENV, str(names))
+        argv = ["log", "--service", "s", "--namespace", "n"]
+        assert cli.main(argv, io.StringIO("by name\n")) == cli.EXIT_SENT
+        assert len(bodies) == 1
+        _publish(names, "http://127.0.0.1:1")
+        monkeypatch.setenv(cli.URL_ENV, url)
+        assert cli.main(argv, io.StringIO("full url wins\n")) == cli.EXIT_SENT
+        assert len(bodies) == _TWO
 
 
 def test_an_unreachable_endpoint_is_exit_one_naming_the_reason_and_the_count_sent(

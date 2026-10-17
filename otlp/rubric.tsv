@@ -6,3 +6,4 @@ metrics	metrics
 logs	logs
 sender	sender
 cli	cli
+endpoints	endpoints

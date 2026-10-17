@@ -25,12 +25,13 @@ import os
 import secrets
 import sys
 import time
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import TextIO, cast
 
-from mikemol.otlp import logs, metrics, sender
+from mikemol.otlp import endpoints, logs, metrics, sender
 
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
+ENDPOINT = "victorialogs-http"
 NONCE_FIELD = "otlp_log_nonce"
 EXIT_SENT = 0
 EXIT_FAILED = 1
@@ -70,6 +71,25 @@ def _fields(opts: dict[str, object]) -> dict[str, str] | None:
     return out
 
 
+def _destination(given: str, environ: Mapping[str, str]) -> str:
+    """Pick the logs URL: `--url`, else the environment's full URL, else the named endpoint.
+
+    ⚑ THE NAME IS RESOLVED LAST (luthen, 2026-10-17): an address in an environment is an address
+    literal in their tree, so the host's endpoints file is the route they want, with the older
+    full-URL variable still winning when set so nothing built before it breaks.
+
+    Returns:
+        the URL, or empty when none of the three yields one.
+
+    """
+    if given:
+        return given
+    full = environ.get(URL_ENV, "")
+    if full:
+        return full
+    return endpoints.url_for(ENDPOINT, sender.LOGS_PATH, environ) or ""
+
+
 def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
     """Send stdin's lines as OTLP log records.
 
@@ -78,10 +98,13 @@ def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
 
     """
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
-    url = _text(opts, "url") or os.environ.get(URL_ENV, "")
+    url = _destination(_text(opts, "url"), os.environ)
     fields = _fields(opts)
     if not url or fields is None:
-        sys.stderr.write(f"mikemol-otlp: need --url (or ${URL_ENV}) and --field KEY=VALUE pairs\n")
+        sys.stderr.write(
+            f"mikemol-otlp: need --url, ${URL_ENV}, or ${endpoints.ENV} naming {ENDPOINT}; "
+            "and --field KEY=VALUE pairs\n"
+        )
         return EXIT_USAGE
     nonce = secrets.token_hex(8)
     service = _text(opts, "service")
