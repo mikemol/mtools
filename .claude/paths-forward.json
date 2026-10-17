@@ -19838,6 +19838,7 @@
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/repin.py",
+        "hooks/src/mikemol/hooks/repin_row.py",
         "hooks/src/mikemol/hooks/repin_cli.py",
         "hooks/tests/test_repin.py",
         "hooks/tests/test_repin_cli.py",
