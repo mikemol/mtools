@@ -47,6 +47,9 @@ class Phase:
     `entry` witnesses are re-run when the phase starts (never trusted from an earlier pass),
     `contract` is the waldo contract the phase applies (None for a phase that only records), and
     `confirm` makes the phase wait for a confirmation read off the thing it will change.
+
+    `act` is a command (argv) that IS the phase (W1355): run only while the `done` witness is false,
+    and judged by that witness afterwards. A phase carries an act or a contract, never both.
     """
 
     name: str
@@ -58,6 +61,7 @@ class Phase:
     entry: tuple[Witness, ...] = ()
     contract: Contract | None = None
     confirm: ConfirmSpec | None = None
+    act: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -85,12 +89,29 @@ class Status:
     why: tuple[str, ...]
 
 
+def _act_findings(phase: Phase) -> list[str]:
+    """Find what is unsound about a phase's act (W1355).
+
+    Returns:
+        a finding when the phase carries both an act and a contract, and one when it carries an act
+        with no done witness (nothing could tell the act ran, or refuse its re-run).
+
+    """
+    findings: list[str] = []
+    if phase.act and phase.contract is not None:
+        findings.append(f"{phase.name}: a phase carries an act or a contract, not both")
+    if phase.act and phase.done is None:
+        findings.append(f"{phase.name}: a phase with an act needs a done witness")
+    return findings
+
+
 def lint(recipe: Recipe) -> list[str]:
     """Find what is unsound in a recipe.
 
     Returns:
-        one line per finding: a repeated phase name, an `after` that names no earlier phase, and a
-        point of no return with no done-witness (nothing could refuse its re-run).
+        one line per finding: a repeated phase name, an `after` that names no earlier phase, a
+        point of no return with no done-witness (nothing could refuse its re-run), and an unsound
+        act (both an act and a contract, or an act with no done-witness).
 
     """
     findings: list[str] = []
@@ -105,6 +126,7 @@ def lint(recipe: Recipe) -> list[str]:
         )
         if phase.point_of_no_return and phase.done is None:
             findings.append(f"{phase.name}: a point of no return needs a done witness")
+        findings.extend(_act_findings(phase))
         seen.append(phase.name)
     return findings
 
@@ -141,6 +163,8 @@ def eligibility(
     reasons: list[str] = []
     if phase.point_of_no_return and done.get(phase.name, False):
         reasons.append("already done: a point of no return is never re-run")
+    if phase.act and done.get(phase.name, False):
+        reasons.append("already done: an act runs only while its done witness is false")
     reasons.extend(
         f"waiting for {earlier}, which is not done"
         for earlier in phase.after

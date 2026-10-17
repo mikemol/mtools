@@ -132,6 +132,44 @@ def _before(
     return _confirmation(phase, setting)
 
 
+def _act(phase: Phase, setting: Setting, dry: bool) -> tuple[int, Verdict]:
+    """Run the phase's act, then judge its done witness (W1355).
+
+    ⚑ THE ACT IS JUDGED BY THE WORLD, NOT BY ITS EXIT CODE: an act that exited 0 and left the done
+    witness false did not do the phase, so it is `not-done` and the marker does not move. Only the
+    exit code is reported, never the act's output, which this module has no secrets list to scrub.
+
+    Returns:
+        (exit code, verdict): OK when the act ran and the witness now holds, FAILED otherwise;
+        a dry run runs nothing and says `would-act`.
+
+    """
+    if dry:
+        return EXIT_OK, {"state": "would-act"}
+    code, _out = setting.seams.run(phase.act)
+    if code != 0:
+        return EXIT_FAILED, {"state": "act-failed", "rc": code}
+    shown = read_done(Recipe((phase,)), setting.seams.run, started=setting.seams.clock())
+    if not shown[phase.name]:
+        why = "the act ran but its done witness does not hold"
+        return EXIT_FAILED, {"state": "not-done", "why": why}
+    return EXIT_OK, {"state": "acted"}
+
+
+def _apply(phase: Phase, setting: Setting, dry: bool) -> tuple[int, Verdict]:
+    """Do the phase's work: its act, its contract through the pipeline, or only record it.
+
+    Returns:
+        (exit code, verdict).
+
+    """
+    if phase.act:
+        return _act(phase, setting, dry)
+    if phase.contract is not None:
+        return execute(phase.contract, setting.seams, dry=dry)
+    return EXIT_OK, {"state": "matches" if dry else "recorded"}
+
+
 def run_phase(
     recipe: Recipe, name: str, setting: Setting, dry: bool = False
 ) -> tuple[int, Verdict]:
@@ -153,11 +191,7 @@ def run_phase(
     stopped, confirmed = _before(recipe, phase, setting, state)
     if stopped is not None:
         return stopped.code, {**stopped.verdict, "phase": name}
-    code, verdict = (
-        execute(phase.contract, setting.seams, dry=dry)
-        if phase.contract is not None
-        else (EXIT_OK, {"state": "matches" if dry else "recorded"})
-    )
+    code, verdict = _apply(phase, setting, dry)
     verdict = {**verdict, "phase": name}
     if confirmed:
         verdict["confirmed"] = confirmed

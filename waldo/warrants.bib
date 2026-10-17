@@ -886,3 +886,52 @@
             applies.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_unevaluated.py -k test_an_entry_assertion_that_cannot_be_evaluated_stops_the_phase_as_cannot_run},
 }
+
+@misc{waldo-act-act-runs-while-its-witness-is-false-and-the-marker-records-it,
+  section = {act},
+  title  = {The positive control: acted once, the done witness now holds, the marker moved},
+  claim  = {The positive control: acted once, the done witness now holds, the marker moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_the_act_runs_while_its_witness_is_false_and_the_marker_records_it},
+}
+
+@misc{waldo-act-act-whose-witness-already-holds-is-refused-and-not-run,
+  section = {act},
+  title  = {The world already shows the phase done: the act is not run again and nothing is written},
+  claim  = {The world already shows the phase done: the act is not run again and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_an_act_whose_witness_already_holds_is_refused_and_not_run},
+}
+
+@misc{waldo-act-act-that-fails-is-failed-and-the-marker-does-not-move,
+  section = {act},
+  title  = {A non-zero act exit is `act-failed` with its code, never a marker write},
+  claim  = {A non-zero act exit is `act-failed` with its code, never a marker write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_an_act_that_fails_is_failed_and_the_marker_does_not_move},
+}
+
+@misc{waldo-act-act-that-exits-zero-but-changes-nothing-is-not-done,
+  section = {act},
+  title  = {The world judges the act: exit 0 with the witness still false is `not-done`},
+  claim  = {The world judges the act: exit 0 with the witness still false is `not-done`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_an_act_that_exits_zero_but_changes_nothing_is_not_done},
+}
+
+@misc{waldo-act-dry-run-says-it-would-act-and-runs-nothing,
+  section = {act},
+  title  = {Dry stops before the act: `would-act`, the act not run, no marker},
+  claim  = {Dry stops before the act: `would-act`, the act not run, no marker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_a_dry_run_says_it_would_act_and_runs_nothing},
+}
+
+@misc{waldo-act-phase-with-both-an-act-and-a-contract-is-unsound,
+  section = {act},
+  title  = {The recipe runs nothing and the finding says a phase carries one or the other},
+  claim  = {The recipe runs nothing and the finding says a phase carries one or the other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_a_phase_with_both_an_act_and_a_contract_is_unsound},
+}
+
+@misc{waldo-act-phase-with-an-act-and-no-done-witness-is-unsound,
+  section = {act},
+  title  = {Without a witness nothing could tell the act ran or refuse its re-run, so it is unsound},
+  claim  = {Without a witness nothing could tell the act ran or refuse its re-run, so it is unsound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_a_phase_with_an_act_and_no_done_witness_is_unsound},
+}
