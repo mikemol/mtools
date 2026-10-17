@@ -1357,3 +1357,66 @@
   claim  = {Syntax errors yield two empty halves rather than raising.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_split.py -k test_a_text_that_does_not_parse_has_no_references},
 }
+
+@misc{importdag-graph-all-three-spellings-of-a-package-import-are-edges,
+  section = {graph},
+  title  = {A plain import, a from-package import and a from-module import each name the module},
+  claim  = {A plain import, a from-package import and a from-module import each name the module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_all_three_spellings_of_a_package_import_are_edges},
+}
+
+@misc{importdag-graph-module-outside-the-package-is-not-an-edge,
+  section = {graph},
+  title  = {The standard library and third parties are not this graph's nodes},
+  claim  = {The standard library and third parties are not this graph's nodes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_module_outside_the_package_is_not_an_edge},
+}
+
+@misc{importdag-graph-test-lists-the-modules-it-imports,
+  section = {graph},
+  title  = {The graph covers tests as well as modules, since a test is what a change must rerun},
+  claim  = {The graph covers tests as well as modules, since a test is what a change must rerun.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_test_lists_the_modules_it_imports},
+}
+
+@misc{importdag-graph-declared-read-is-carried-beside-the-import-edges,
+  section = {graph},
+  title  = {A file read without being imported is an edge a cone can follow},
+  claim  = {A file read without being imported is an edge a cone can follow.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_declared_read_is_carried_beside_the_import_edges},
+}
+
+@misc{importdag-graph-declared-read-of-a-file-that-is-not-there-is-refused,
+  section = {graph},
+  title  = {A dangling edge would send a cone to nothing},
+  claim  = {A dangling edge would send a cone to nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_declared_read_of_a_file_that_is_not_there_is_refused},
+}
+
+@misc{importdag-graph-declaration-for-a-module-that-does-not-exist-is-refused,
+  section = {graph},
+  title  = {The owner of a read must be a module or test of the distribution},
+  claim  = {The owner of a read must be a module or test of the distribution.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_declaration_for_a_module_that_does_not_exist_is_refused},
+}
+
+@misc{importdag-graph-check-is-stale-until-written-and-fresh-after,
+  section = {graph},
+  title  = {The generated file is byte-compared, as dag.bzl is},
+  claim  = {The generated file is byte-compared, as dag.bzl is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_check_is_stale_until_written_and_fresh_after},
+}
+
+@misc{importdag-graph-rendering-is-byte-stable,
+  section = {graph},
+  title  = {Sorted keys and a closing newline, so a regeneration changes nothing},
+  claim  = {Sorted keys and a closing newline, so a regeneration changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_rendering_is_byte_stable},
+}
+
+@misc{importdag-graph-module-that-names-itself-has-no-edge-to-itself,
+  section = {graph},
+  title  = {A self-import is not a dependency, and a cone must not loop on it},
+  claim  = {A self-import is not a dependency, and a cone must not loop on it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_module_that_names_itself_has_no_edge_to_itself},
+}

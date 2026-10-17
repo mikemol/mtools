@@ -1,0 +1,108 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""The distribution graph: import edges derived, reads declared, one file for three consumers."""
+
+import json
+from pathlib import Path
+from typing import cast
+
+import pytest
+
+from mikemol.importdag import graph
+
+_PKG = "demo.pkg"
+_BETA = "src/demo/pkg/beta.py"
+
+
+def _dist(tmp_path: Path) -> Path:
+    src = tmp_path / "src" / "demo" / "pkg"
+    src.mkdir(parents=True)
+    (tmp_path / "tests").mkdir()
+    (src / "__init__.py").write_text("", encoding="utf-8")
+    (src / "alpha.py").write_text("from demo.pkg import beta\nimport demo.pkg.gamma\n", "utf-8")
+    (src / "beta.py").write_text("from demo.pkg.gamma import thing\n", encoding="utf-8")
+    (src / "gamma.py").write_text("import os\n\nthing = os.sep\n", encoding="utf-8")
+    (tmp_path / "tests" / "test_alpha.py").write_text("from demo.pkg import alpha\n", "utf-8")
+    return tmp_path
+
+
+def _declare(dist: Path, reads: dict[str, list[str]]) -> None:
+    (dist / "reads.json").write_text(json.dumps(reads), encoding="utf-8")
+
+
+def _modules(doc: dict[str, object]) -> dict[str, graph.Entry]:
+    return cast("dict[str, graph.Entry]", doc["modules"])
+
+
+def test_all_three_spellings_of_a_package_import_are_edges(tmp_path: Path) -> None:
+    """A plain import, a from-package import and a from-module import each name the module."""
+    mods = _modules(graph.build(_dist(tmp_path), _PKG))
+    alpha = mods["src/demo/pkg/alpha.py"]["imports"]
+    assert alpha == [_BETA, "src/demo/pkg/gamma.py"]
+    assert mods[_BETA]["imports"] == ["src/demo/pkg/gamma.py"]
+
+
+def test_a_module_outside_the_package_is_not_an_edge(tmp_path: Path) -> None:
+    """The standard library and third parties are not this graph's nodes."""
+    mods = _modules(graph.build(_dist(tmp_path), _PKG))
+    assert mods["src/demo/pkg/gamma.py"]["imports"] == []
+
+
+def test_a_module_that_names_itself_has_no_edge_to_itself(tmp_path: Path) -> None:
+    """A self-import is not a dependency, and a cone must not loop on it."""
+    dist = _dist(tmp_path)
+    own = dist / "src" / "demo" / "pkg" / "gamma.py"
+    own.write_text("import demo.pkg.gamma\n", encoding="utf-8")
+    mods = _modules(graph.build(dist, _PKG))
+    assert mods["src/demo/pkg/gamma.py"]["imports"] == []
+
+
+def test_a_test_lists_the_modules_it_imports(tmp_path: Path) -> None:
+    """The graph covers tests as well as modules, since a test is what a change must rerun."""
+    doc = graph.build(_dist(tmp_path), _PKG)
+    tests = cast("dict[str, graph.Entry]", doc["tests"])
+    assert tests["tests/test_alpha.py"]["imports"] == ["src/demo/pkg/alpha.py"]
+
+
+def test_a_declared_read_is_carried_beside_the_import_edges(tmp_path: Path) -> None:
+    """A file read without being imported is an edge a cone can follow."""
+    dist = _dist(tmp_path)
+    (dist / "shapes.ttl").write_text("", encoding="utf-8")
+    _declare(dist, {_BETA: ["shapes.ttl"]})
+    mods = _modules(graph.build(dist, _PKG))
+    assert mods[_BETA]["reads"] == ["shapes.ttl"]
+    assert mods["src/demo/pkg/alpha.py"]["reads"] == []
+
+
+def test_a_declared_read_of_a_file_that_is_not_there_is_refused(tmp_path: Path) -> None:
+    """A dangling edge would send a cone to nothing."""
+    dist = _dist(tmp_path)
+    _declare(dist, {_BETA: ["no.ttl"]})
+    with pytest.raises(ValueError, match="not there"):
+        graph.build(dist, _PKG)
+
+
+def test_a_declaration_for_a_module_that_does_not_exist_is_refused(tmp_path: Path) -> None:
+    """The owner of a read must be a module or test of the distribution."""
+    dist = _dist(tmp_path)
+    _declare(dist, {"src/demo/pkg/ghost.py": []})
+    with pytest.raises(ValueError, match="no module or test"):
+        graph.build(dist, _PKG)
+
+
+def test_check_is_stale_until_written_and_fresh_after(tmp_path: Path) -> None:
+    """The generated file is byte-compared, as dag.bzl is."""
+    dist = _dist(tmp_path)
+    args = ["--dist", str(dist), "--package", _PKG]
+    assert graph.main([*args, "--check"]) == graph.EXIT_STALE
+    assert graph.main([*args, "--write"]) == 0
+    assert graph.main([*args, "--check"]) == 0
+    (dist / "src" / "demo" / "pkg" / "gamma.py").write_text("import demo.pkg.beta\n", "utf-8")
+    assert graph.main([*args, "--check"]) == graph.EXIT_STALE
+
+
+def test_a_rendering_is_byte_stable(tmp_path: Path) -> None:
+    """Sorted keys and a closing newline, so a regeneration changes nothing."""
+    doc = graph.build(_dist(tmp_path), _PKG)
+    assert graph.render(doc) == graph.render(graph.build(tmp_path, _PKG))
+    assert graph.render(doc).endswith("}\n")
