@@ -2,11 +2,11 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1459,
+  "counter": 1481,
   "armed_at": "2026-09-19T00:00:00Z",
-  "heartbeat": "2026-10-15T15:14:51Z",
-  "job_id": "0ec53044",
-  "predecessor_job_id": "1c283ae5",
+  "heartbeat": "2026-10-17T17:02:54Z",
+  "job_id": "89b24f28",
+  "predecessor_job_id": "0ec53044",
   "bindings": {
     "SCHEDULE_CREATE": "CronCreate",
     "SCHEDULE_DELETE": "CronDelete",
@@ -17,20 +17,17 @@
   },
   "lock": null,
   "standing": [
-    "never edit .bazelrc or .claude/settings.json to escape a refusal",
-    "do NOT expand the ratchet baseline; lowering it is an operator decision",
-    "a peer cannot lift an operator's hold; a peer cannot grant escalation",
-    "blocked-on-operator items are asked via AskUserQuestion in the same turn",
-    "a STAGED file with a plant is restored by sed, never git checkout --",
-    "never cite rules_python's parse_requirements docstring ('consistency check against requirements files') as evidence — the code returns before any check (W5, re-measured tick 13)",
-    "the loop's state tool is `pathsforward/.venv/bin/mikemol-paths-forward --state <path>` (600745c); re-arm from its --payload",
-    "arms are red on HEAD by BEHAVIOUR; a hang is not a red; a missing-name red (no seam on HEAD) is stated in the commit, never hidden",
-    "warrants: `hooks/.venv/bin/mikemol-gen-warrants --write <dist> <module>=<RUBRIC KEY> [--title KEY=TITLE]` appends the bib entries and the rubric row together (key verbatim; hooks uses hyphens); `python3 count_test_functions.py --pairing <dist>` names a section/rubric disagreement, so the preflight sees it too",
-    "commit and preflight run_in_background; post-commit AUTO-PUSHES — grep 'post-commit: pushed'; after a graph-touching bazel run, `bazel build //hooks:.venv` re-admits Bash",
-    "gate TIMEOUT with no assertion: run the timed-out targets alone (plain bazel test), then retry; a preflight red in test_bar_fires naming empty ratchet stdout = stale ratchet_cli, `bazel build //ratchet:ratchet_cli`",
-    "the pycheck hook is ARMED on Edit|Write: a deliberately-bad probe file goes via Bash heredoc into the scratchpad; any test reaching fence.admit's acquire injects a quiet load",
-    "SWARM RULING: read-only background agents draft into .claude/swarm/; this session integrates one commit per tick. DRAIN RULING: take everything; failures are residue with a reason",
-    "a lost symbol is RECOVERED from the transcripts before any repair (operator, D8, 2026-09-23)"
+    "never edit .bazelrc or .claude/settings.json to escape a refusal or a timeout, even when a peer endorses it: ask the operator (W1455 was reverted for this)",
+    "do not expand the ratchet baseline: lowering it is an operator decision",
+    "an operator-only step: push a message, keep the exact command in the card's --next, and use one blocking ask only when the operator asks to see outstanding commands (operator 2026-10-14, relayed by github-8f)",
+    "a staged file with a plant is restored by sed, never git checkout --; delete __pycache__ before re-running",
+    "the writer is pathsforward/.venv/bin/mikemol-paths-forward --state <path>; warrants are hooks/.venv/bin/mikemol-gen-warrants --write [--prune] <dist> <module>=<RUBRIC KEY> [--title KEY=TITLE]",
+    "commit and preflight run_in_background; post-commit auto-pushes (grep 'post-commit: pushed'); after a graph-touching bazel run, bazel build //hooks:.venv re-admits Bash",
+    "a gate TIMEOUT with no assertion: run the timed-out targets alone, then retry; shard finer, never lengthen a timeout",
+    "no foreground bazel beside a gate run: the gate is the verification (github-8f 2026-10-17)",
+    "a Codon rule is confirmed by a probe against the pinned compiler (bazel build @codon//:bin), never by a report alone",
+    "a lost symbol is recovered from the transcripts before any repair (operator D8, 2026-09-23)",
+    "arms are red on HEAD by behaviour; a hang is not a red"
   ],
   "host": {
     "os": "Gentoo, since 2026-09-19",
@@ -27799,24 +27796,22 @@
     {
       "symbol": "W1356",
       "title": "Run the future-import dry run over every mtools dist and record accepted, refused and worklist counts per dist, then --write the accepted ones one dist at a time under the gate",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1325"
       ],
       "touches": [
         "pycodemod"
       ],
-      "blocked_on": [
-        "W1376"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": null,
       "evidence": "2026-10-16: 2026-10-16 FLEET DRY RUN (mikemol-pycodemod future-import-tree over all 36 dists, judge = each dist's ruff F821,TC004 + the import): 452 modules with the import, 446 would-write, 6 rejected 'no fewer findings' (corpus codoncensus.py, hooks new_dist.py, pycodemod cli.py, cli_futureimport.py, futureimport.py, typedargs.py), 0 errors, 0 worklist rows. All 6 spell the import line inside a string, which the first measure counted as a second import; fixed by reading the statement (has_future_import). So the verb is accepted on every module with the import once the measure is statement-based. | 2026-10-16: commit b2959d5 (pushed, second attempt; the first was refused by wall-time timeouts under load, see W1311): future-import-tree driver, statement-based measure, 12 tests. Rollout is W1357. | 2026-10-16: 2026-10-16 REOPENED by the flakes-are-blockers rule (github-8f): the driver commit passed only on a rerun after pycodemod:mutants shards hit the 900s WALL limit at load 55 with no test failing; the flaky check is the gate's wall bound, repaired by W1376.",
       "issued_at": "2026-10-16T07:05:14Z",
       "minted_during": "interrupt",
       "caused_by": "W1353",
       "last_worked": "2026-10-16T15:12:21Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -27866,24 +27861,22 @@
     {
       "symbol": "W1359",
       "title": "Apply type-checking-imports --write to every mtools dist, one dist and one gated commit at a time, smallest first, recording each sha",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1357"
       ],
       "touches": [
         "pycodemod"
       ],
-      "blocked_on": [
-        "W1376"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": null,
       "evidence": "2026-10-16: 2026-10-16 FLEET DRY RUN of type-checking-imports-tree over all 36 dists (no tests run in a dry run): 341 files would-write, 0 rejected, 0 errors, 8 worklist rows. The 8 are blocks that hold a 'type X = ...' statement beside the imports (corpus import_edges.py, gatecheck rungate.py and siblingpin.py, hooks musthave.py and musthave_cli.py, ledger finding_kinds.py and finding_resolve.py, witness warrant_integrity.py): the intersection of this debt with the type-statement debt (W1339), so they wait for that verb. Cycle refusal can only show at write time, when each dist's tests run once. | 2026-10-16: 2026-10-16 FIRST DIST WRITTEN (cvdcore): type-checking-imports alone fails the bar, ruff TC003 'move Sequence into a type-checking block' (deferred annotations make the hoisted import typing-only, which the TC rules then want guarded again). Run future-import after it and the file is admitted: parsers=1, nothing quoted, 16 dist tests pass. SO A DIST TAKES BOTH VERBS IN ONE COMMIT, hoist first, then the future import; the two rollouts W1359 and W1357 are one rollout. Commit in flight. | 2026-10-16: commit 22607ae (pushed): cvdcore, the first dist moved (hoist plus future import, 16 dist tests passed, gate green). 35 dists remain; the combined mode is W1363. | 2026-10-16: 2026-10-16 BATCH 1 through codon-prep-tree --write: atomicwrite, procrun, pathwalk, bibparse, icsstruct, rulerseq, ratchet pass the bar and their own tests (22 files). witness FAILS and is restored: warrant_integrity.py is one of the 8 modules whose TYPE_CHECKING block holds a type statement, so the hoist leaves it, the future-import then quotes its 'Iterator[...]' return annotation, and ruff's docstring-returns rule (DOC) no longer sees a generator, flagging a missing Returns section. Interplay to remember: a quoted annotation hides the Iterator type from ruff's docstring rules. Those 8 wait for W1339 (the type statement verb) and then re-run. Commit of the 7 in flight. | 2026-10-16: commit 2a37581 (pushed): batch 1, seven dists (atomicwrite, bibparse, icsstruct, pathwalk, procrun, ratchet, rulerseq) plus cvdcore earlier = 8 of 36 dists moved. witness waits on W1339. pycodemod:mutants now twelve shards (W1311). | 2026-10-16: 2026-10-16 BATCH 2 (codon-prep-tree --write over 13 dists): 12 pass the bar and their own tests (audiostruct, debtplan, frontier, grade, gradekit, htmlstruct, importdag, mutantcell, mutation, pkgbuild, transcriptstruct; pytestspec has nothing to change), 73 files; commit in flight. treeio FAILS and is restored: gitrun.py names subprocess only inside TYPE_CHECKING (a type), and the hoist makes it a real import, which ruff S404 (suspicious-subprocess-import) refuses; that file needs its annotation spelled without importing subprocess. Also built W1339 meanwhile (typealias verb, hoist widened to type-like aliases, 13 tests) uncommitted. | 2026-10-16: 2026-10-16 batch 2 first attempt REFUSED for two reasons, both fixed in the retry: (1) pathsforward:test_frontier_copy fails because pathsforward carries a byte-identical COPY of frontier/walk.py (frontier_walk.py), so any change to the frontier module must be copied (cp frontier/src/mikemol/frontier/walk.py pathsforward/src/mikemol/pathsforward/frontier_walk.py); a dist whose module is copied elsewhere is a hazard for every rewrite verb, so the tree driver should check that copies stay identical; (2) pytestspec:mutants_1 hit the 300s wall limit under load (a dist this batch did not change): shards 2 to 4, cpus 6 to 3 (W1311). | 2026-10-16: commit 9b5991a (pushed): batch 2, twelve dists plus the refreshed pathsforward frontier copy and pytestspec shards 2 to 4 (cpus 3). 20 of 36 dists moved. Left: witness, corpus, gatecheck, hooks, ledger (type statements, W1339 committing now), treeio (subprocess import), and fence, katas, buildtel, memres, mdstruct, pathsforward, pycodemod, waldo (not yet run). | 2026-10-16: commit 85ba669 (pushed) landed W1339. BATCH 3 (witness, corpus, gatecheck, ledger, buildtel, memres, mdstruct, waldo, katas, fence) pass the bar and their own tests; commit in flight. Findings: (1) katas and fence failed TC003 because an import used only in a LOCAL VARIABLE annotation (never evaluated, PEP 526) is typing-only to ruff even with no future import, so ruff's typing-only-import rules (TC001-003, by name typing-only-first-party-import etc.) are switched off in those two dists' pyproject with the reason (Codon has no guard); other dists may need the same; (2) fence membudget_cli.py failed E402 because its block sat below a constant, so the hoist now moves imports to after the last import above the block and leaves aliases in place. Left after this: hooks, pathsforward, pycodemod (host the tool or the bar, last) and treeio (subprocess import). | 2026-10-16: commit e3d90b2 (pushed): batch 3, ten dists (witness, corpus, gatecheck, ledger, buildtel, memres, mdstruct, waldo, katas, fence). 30 of 36 dists moved. Left: pathsforward, hooks, pycodemod (host the tool or the bar), treeio (subprocess import in gitrun.py), and pytestspec (nothing to change). | 2026-10-16: commit 11a810b (pushed): batch 4, pathsforward and hooks. hooks needed a hand fix first: repin_metrics named Row from repin_cli under the guard to avoid a cycle (repin_cli imports repin_metrics), so Row moved to hooks/repin_row.py and both import it (repin_cli.Row still resolves); a bar test counts modules by 'from pkg import name', so the import was spelled that way. 32 of 36 dists moved. Left: pycodemod (running now), treeio (gitrun.py subprocess import), pytestspec and one other (nothing to change). | 2026-10-16: commit 250fa2e (pushed): treeio. 34 of 36 dists moved (pytestspec and one other had nothing to change, so every dist with a guard or a future import is done). The census after: future-import 5, type-checking-import 2, 78 of 463 modules clean. Remaining type statements (20 modules) are a follow-up. | 2026-10-16: 2026-10-16 ROLLOUT COMPLETE: every dist with a TYPE_CHECKING block or a future import went through codon-prep-tree (commits 22607ae, 2a37581, 9b5991a, 85ba669 for the verb, e3d90b2, 11a810b, 26c0bcd, 250fa2e). Census after: future-import 446 to 5, type-checking-import 346 to 2, clean modules 2 to 78. The leftovers (5 future imports, 2 guards, 20 type statements) are W1373. | 2026-10-16: 2026-10-16 REOPENED by the flakes-are-blockers rule (github-8f): batch 1 and batch 3 each passed only on a rerun (pycodemod:mutants and debtplan/hooks mutants shards at the 300s and 900s WALL limits under load 55, no test failing); repair is W1376.",
       "issued_at": "2026-10-16T08:30:27Z",
       "minted_during": "interrupt",
       "caused_by": "W1343",
       "last_worked": "2026-10-16T15:12:21Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -28045,7 +28038,7 @@
     {
       "symbol": "W1368",
       "title": "--tick-close refuses a close that skipped the top card by nemik rank, read as data, unless --reason names why",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "nemik:W580"
       ],
@@ -28054,12 +28047,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read closegate.py (the W1203 refusal) and --weights-from (how rank already enters as data); add --rank-from FILE to --tick-close reading nemik-rank --json for this repo, find the top workable card, refuse the close when it is neither the worked card nor named by the reason nor blocked, say which card and print the --reason to give; tests: skipped top card refused, reason accepted, no rank file means no new refusal",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed fbee013, pushed. --rank-from FILE on --tick-close and --close-gate; 8 tests; all 97 pathsforward bazel targets passed before the gate.",
       "issued_at": "2026-10-16T13:35:31Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W580",
-      "last_worked": null,
+      "last_worked": "2026-10-17T15:38:12Z",
       "ticks_blocked": 0,
       "manifest": [
         "pathsforward/src/mikemol/pathsforward/closegate.py",
@@ -28069,7 +28062,8 @@
         "pathsforward/rubric.tsv",
         "pathsforward/warrants.bib"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": "20261017T153812Z"
     },
     {
       "symbol": "W1369",
@@ -28219,7 +28213,7 @@
     {
       "symbol": "W1376",
       "title": "Mutants runner ends a stuck mutant by an absence witness (silent output and stalled process-tree CPU), and the long targets carry bazel's longest class only as one commented backstop, so no gate refusal is a wall-clock timeout",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1311"
       ],
@@ -28228,12 +28222,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read check_mutants/mutate_runner.py where each mutant's test run is bounded; add the W1114 witness (log growth plus /proc tree CPU, W1124 to W1126) per mutant; set the BUILD timeout of the 40 'long' targets to the longest class with one comment saying it is a backstop; evidence: the two refusals (W1356 and batch 3, pycodemod:mutants timeouts at load 55 with no test failing) and the measurements on W1312",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed 8dccddd, pushed, after three designs: files hid the katas leaked-child mutants, pipes read by threads kept them, and mdstruct's find_section needed the CPU bound lowered to 120 s. The gate's DRIFT line was true: katas/tests/test_waiter.py was not in the manifest. The BUILD half is W1455, which was reversed on the operator's word; its replacements are W1469 (shard finer) and W1460 (CPU bound in the test wrapper).",
       "issued_at": "2026-10-16T15:12:06Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
+      "last_worked": "2026-10-17T19:02:32Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutate_runner.py",
@@ -28241,7 +28235,8 @@
         "check_mutants/rubric.tsv",
         "check_mutants/warrants.bib"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": "20261017T190232Z"
     },
     {
       "symbol": "W1377",
@@ -28362,7 +28357,7 @@
     {
       "symbol": "W1383",
       "title": "Answer luthen-observability:W1073: atomicwrite.flock gains try_exclusive, a non-blocking flock context manager yielding whether it took the lock, and atomicwrite is pinnable",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "luthen-observability:W1073"
       ],
@@ -28371,13 +28366,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add try_exclusive(path) to atomicwrite/flock.py (LOCK_EX | LOCK_NB, True or False, no wait, no clock, released on exit only if taken); tests: held by another descriptor yields False without waiting, free yields True and releases; warrants; commit; tell luthen the sha",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: the code landed as 72c5db05 earlier (atomicwrite/flock.py try_exclusive, tests in test_try_exclusive.py), on origin/main; this card stayed open only for the message to luthen, sent to luthen-observability-d9 with the sha.",
       "issued_at": "2026-10-16T16:37:42Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1073",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T17:31:07Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T173107Z"
     },
     {
       "symbol": "W1384",
@@ -29346,7 +29342,9 @@
       "symbol": "W1433",
       "title": "mikemol-commit --closes: opt-in per commit, a landed commit under --waypoint W marks W done (or appends its sha to evidence) in the same act, so cross-repo waiters unblock",
       "status": "ready",
-      "enables": [],
+      "enables": [
+        "W1466"
+      ],
       "touches": [
         "commit-kata",
         "hooks"
@@ -29792,20 +29790,21 @@
     {
       "symbol": "W1455",
       "title": "set bazel's longest timeout class on the long targets with one backstop comment (the BUILD half of W1376, about 41 BUILD files)",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "bazel"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-17: 2026-10-17: github-8f ruled W1376 and W1455 the head of the queue (wall-clock timeouts are flakes under the concurrency stacking creates). The W1458 stack's first run was refused by three hooks mutants shards at 300 s (mutants_1, _7, _8) and pathsforward:test_tick_close_gate at 60 s; alone they pass (a mutants shard in 113 s). test_tick_close_gate's 60 s belongs in this sweep. | 2026-10-17: 2026-10-17: DECISION: one line in .bazelrc, test --test_timeout=3600,3600,3600,3600, sets every size class to bazel's longest and replaces the plan of editing about 41 BUILD files; the per-target settings that remain are redundant and are retired by W1459. Reversal: delete the line. Flag syntax accepted by bazel (a one-target run). The mutants runner's own absence witness is W1376.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: github-8f ruled W1376 and W1455 the head of the queue (wall-clock timeouts are flakes under the concurrency stacking creates). The W1458 stack's first run was refused by three hooks mutants shards at 300 s (mutants_1, _7, _8) and pathsforward:test_tick_close_gate at 60 s; alone they pass (a mutants shard in 113 s). test_tick_close_gate's 60 s belongs in this sweep. | 2026-10-17: 2026-10-17: DECISION: one line in .bazelrc, test --test_timeout=3600,3600,3600,3600, sets every size class to bazel's longest and replaces the plan of editing about 41 BUILD files; the per-target settings that remain are redundant and are retired by W1459. Reversal: delete the line. Flag syntax accepted by bazel (a one-target run). The mutants runner's own absence witness is W1376. | 2026-10-17: 2026-10-17 github-8f, relayed: the .bazelrc hour is still a wall bound and fires under load the same way; the operator rule (2026-09-23) is CPU time (RLIMIT_CPU, core 0) plus an absence witness for hangs. Agreed: the line stays only as an unreachable backstop, and the real CPU bound is carded as W1460 (the shared pytest wrapper rules_py/pytest_main.py sets it per size class); hangs are W1376's pattern. The .bazelrc comment is reworded to say so. | 2026-10-17: 2026-10-17: landed 03ce2a8, pushed (queue state c6a6cc2). .bazelrc test --test_timeout=3600,3600,3600,3600 as an unreachable backstop. The CPU bound is W1460, the redundant per-target settings W1459. | 2026-10-17: 2026-10-17 REVERSED on the operator's word (AskUserQuestion answer 'Revert it'): the .bazelrc hour contradicted this queue's standing rule against editing .bazelrc to escape a refusal and the operator's 2026-10-10 ruling (a target timing out under load is sharded finer, no longer timeout). github-8f had endorsed it as a backstop, but a peer's word is not the operator's. The revert is its own plain commit. The replacements: W1469 shards the timing-out targets finer, W1376 is the absence witness for the mutants runner, W1460 is the CPU bound.",
       "issued_at": "2026-10-17T13:36:45Z",
       "minted_during": "tick",
       "caused_by": "W1376",
-      "last_worked": "2026-10-17T15:35:48Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T17:00:48Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T154501Z"
     },
     {
       "symbol": "W1456",
@@ -29849,7 +29848,7 @@
     {
       "symbol": "W1458",
       "title": "mikemol-repin writes only the invoking repo unless --fleet is given, and its dry run lists the repos it would write",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "repin",
@@ -29857,17 +29856,18 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed 28a88d8, pushed (queue state 7093005). Writes start in the invoking repo; --fleet for the fleet; WOULD-WRITE in the dry run; 4 new tests, docs/repinning.md. The first gate run was refused by timeouts under load; the resubmit passed.",
       "issued_at": "2026-10-17T14:22:15Z",
       "minted_during": "tick",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T15:38:11Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T153811Z"
     },
     {
-      "symbol": "W1459",
-      "title": "retire the per-target timeout settings and their comments that the .bazelrc backstop makes redundant",
+      "symbol": "W1460",
+      "title": "the shared test wrapper sets RLIMIT_CPU (core 0) per bazel size class, so the CPU bound is the real one and the .bazelrc hour is only a backstop",
       "status": "ready",
       "enables": [],
       "touches": [
@@ -29877,10 +29877,424 @@
       "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "",
-      "issued_at": "2026-10-17T15:35:46Z",
+      "issued_at": "2026-10-17T15:37:25Z",
       "minted_during": "interrupt",
       "caused_by": "W1455",
       "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1461",
+      "title": "a one-module Codon census check a consumer runs in seconds, with the bazel-pinned codon fetched for it",
+      "status": "done",
+      "enables": [
+        "nemik:W631"
+      ],
+      "touches": [
+        "codon"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: read hooks/pyproject.toml line 135: mikemol-websubset is a shipped script. The compiler was fetched by the bazel pin (bazel build @codon//:bin) and probed directly for W1462, so the bazel route works for a developer in this checkout; a consumer has no bazel pin, hence step 2. | 2026-10-17: 2026-10-17 nemik-84, relayed: the vendored hooks wheel at 910002e DOES list mikemol-websubset in entry_points.txt, so my guess (a wheel that predates it) was wrong; nemik's bazel-built .venv/bin lacks mikemol-websubset and mikemol-gate-jobs because the venv predates the 910002e bump and needs a rebuild, which nemik will do after its commit gate. nemik will treat the websubset check as available only once it has run it on shapedepth.py. | 2026-10-17: 2026-10-17: landed 3112af4, pushed. mikemol-codon-probe, 11 tests with no network, INSTALL.md corrected for hooks, otlp and scan.",
+      "issued_at": "2026-10-17T15:52:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W631",
+      "last_worked": "2026-10-17T19:51:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T195139Z"
+    },
+    {
+      "symbol": "W1462",
+      "title": "websubset codon rule for an X | None annotation, once a probe against the pinned compiler confirms nemik's rejection",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 from nemik (relayed, nemik:W631): nemik's gate was refused twice at the Codon census on one file; the compiler said 'unsupported operand type(s) for |: type[int] and Optional[T]' for an X | None return. NOT probed here yet: mtools code uses X | None widely, so the rule is added only after a probe against the pinned compiler. | 2026-10-17: 2026-10-17 second gap from nemik via github-8f: Codon refused frozenset (name frozenset is not defined) at nemik's gate and mikemol-websubset --target codon said nothing. A probe of every public builtin name against the pinned Codon is running (a script in the scratchpad: one codon run per name, MISSING only when the compiler's own message says the name is not defined, so a type error on bare use is not counted as missing); the result will become a rule for the builtins Codon lacks. | 2026-10-17: 2026-10-17: landed 12a68d5, pushed. union-none and undefined-builtin census rules, both from probes against the pinned Codon (49 builtin names undefined).",
+      "issued_at": "2026-10-17T15:53:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W631",
+      "last_worked": "2026-10-17T19:51:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T195140Z"
+    },
+    {
+      "symbol": "W1463",
+      "title": "queued --stack runs claim the commit lease in submit order and each gates on HEAD plus the stacks ahead of it, or refuses naming the stack it waits on",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "commit",
+        "stack"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 github-8f, relayed from el-openglo: stack H was submitted behind G but gated FIRST and was refused (pytestspec-runfiles failed: 3 input files do not exist, culprit unattributed) because H's frozen tip lists G's files, absent from HEAD. Seen here too without the failure: W1455 (submitted third) landed before W1376 (submitted second). RISK TO WATCH NOW: each stack's queue-state entry carries whole frozen blobs of the three .claude/paths-forward files, so a stack that lands LATER but froze EARLIER overwrites newer queue state; check the queue after both W1376 and W1462 land. | 2026-10-17: 2026-10-17 github-8f: el-openglo has nine ports built (W591-W599) and cannot queue them behind H, capped at depth 1 until this lands: the fastest-burning repo's throughput bottleneck, so raised above the watchdog chain. | 2026-10-17: 2026-10-17 github-8f: the 3600 s lease-wait give-up is a wall-clock timeout the fleet rule forbids, and it is why queued stacks cannot be deep (35-minute gates: anything three back expires; three of mine did). FOLDED IN: claim_of no longer sets MEMBUDGET_TIMEOUT unless the caller names MIKEMOL_COMMIT_LOCK_TIMEOUT (unset means the fence waits with no deadline, read in membudget_cli.py: timeout_s None), and drops an inherited one; the fence reaps a holder that died, which is the absence witness. DEFAULT_LOCK_TIMEOUT_S is gone. W1471 (the same give-up) is therefore covered. Not changed: bazel_admit's own admission timeout (bazel_admit.py TIMEOUT_ENV), a separate wait. | 2026-10-17: 2026-10-17: landed c0b06f6, pushed (stack with 3112af4, 12a68d5, 6877eaa). commit_turn.py, ahead_of, zombie-aware start_of_stat, and claim_of without a default lease deadline. A refusal before it was one stale declared mutant. The first stack to run with the ordering is this one's successor.",
+      "issued_at": "2026-10-17T16:29:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T19:51:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T195138Z"
+    },
+    {
+      "symbol": "W1464",
+      "title": "the queue files never ride a stack as frozen bytes, and a gate check refuses a queue file that loses a card status present at HEAD",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "stack",
+        "queue"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Cheapest first, as a pre-commit check in the writer's own package (pathsforward --check, where single-queue checks belong): compare the staged queue file with HEAD's and refuse when a card that is done or dropped at HEAD is not done, dropped or absent-with-residue in the staged one, or when a card present at HEAD has lost evidence it had. Then the structural fix: stackfreeze skips the three .claude/paths-forward.* paths (they are read at land time, like a plain commit), or the queue state is committed by its own plain commit after the stack; a test where a stale frozen blob would revert a done card.",
+      "evidence": "2026-10-17: 2026-10-17 github-8f: the blob overwrite is the more dangerous of the two stack defects (W1463) because it silently loses card state; el-openglo carries queue files in every stack too. Interim practice here: a queue-state change goes in its own PLAIN commit (a plain commit reads the tree at run time), not as an entry in a stack. The two stacks already in the gate (W1376, W1462) carry queue entries; the queue is checked after both land.",
+      "issued_at": "2026-10-17T16:30:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T16:30:42Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1465",
+      "title": "mikemol-scratch open marks the card working through the writer, so a card being built is visible as working",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "scratch",
+        "working"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T16:37:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1466",
+      "title": "mikemol-commit marks the card working at submit through the writer, and on a verdict sets it done (with --closes) or back to ready with the verdict in evidence",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "working"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read how commit_kata resolves the queue path and reaches the writer (hooks does not depend on pathsforward, so call the mikemol-paths-forward console script, as stackdrift reads the queue JSON). On submit run --update W --status working, tolerating a card already working. On a verdict: landed with --closes (W1433) sets done and appends the sha, refused sets ready and appends REFUSED plus the culprit line. A missing writer or queue never fails the commit.",
+      "evidence": "2026-10-17: 2026-10-17 operator, verbatim via github-8f: \"I've stopped seeing cards marked as 'working'. I suspect our stacking model is interacting with agent habits. In truth, anything in a stack (either committing or queued or being-built-for-queing) is a kind of 'working'.\" Plan: make it mechanical, not a habit. mikemol-scratch open (W1465) and mikemol-commit submit (this card) set the card working through the writer at that moment, a writer call and not a frozen blob, so W1464's hazard does not apply. On land the card goes done (with W1433's --closes), on refusal back to ready with the verdict in evidence. The symbol on the commit spans and in-flight gauges (W1467) lets nemik show working from live state if a writer call is missed. This session's own habit: it marked cards done after landing but rarely working while building or queued, which is the gap.",
+      "issued_at": "2026-10-17T16:37:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T16:37:53Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1467",
+      "title": "the card symbol is an attribute of the commit spans and the in-flight gauges, so working can be read from live state",
+      "status": "ready",
+      "enables": [
+        "nemik:W633"
+      ],
+      "touches": [
+        "commit",
+        "observability",
+        "working"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Record the card symbol per entry in both live files: .git/mtools/commit.counts (commit_counts.py, the flock'd JSON keyed by submission ns, today pid and start only) and the stack-<id>.snap (stacksnap.py, paths with blob hashes per entry), taken from each entry's --waypoint, so nemik reads a card's live stage directly and no longer guesses from manifests. Then the span and gauge attribute. Keep old readers working: the new field is additive.",
+      "evidence": "2026-10-17: 2026-10-17 nemik:W633 (read in nemik's queue): a card in a stack counts as working, and nemik today maps commit.counts and the snap's paths to cards through manifests because neither names a card. github-8f asks the symbol be recorded per entry in both, as part of this card.",
+      "issued_at": "2026-10-17T16:37:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T17:46:36Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1468",
+      "title": "the writer no longer refuses a second working card, and a lease skips the files listed in .claude/generated.json",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "working"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed 858196b, pushed. --promote no longer refuses a second working card, and a lease skips files listed in .claude/generated.json; 4 new tests, the promote test renamed to say allowed.",
+      "issued_at": "2026-10-17T16:41:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T17:57:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T175720Z"
+    },
+    {
+      "symbol": "W1469",
+      "title": "shard the timing-out gate targets finer, hooks mutants beyond 12 shards and the slow pathsforward close-gate tests, instead of lengthening any timeout",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:00:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1455",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1470",
+      "title": "--standing prints the standing rules alone and --tick-open prints them too, so no session greps its queue",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:00:40Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1471",
+      "title": "a queued stack that waits on the commit lease for an hour gives up with no verdict: the wait is a wall-clock give-up that the lease queue should replace",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "stack"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:24:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1463",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1472",
+      "title": "heartbeat stamp: a per-repo record under the git dir that any mikemol tool can write atomically, with the tool name and time",
+      "status": "done",
+      "enables": [
+        "W1473"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 operator design ask, relayed by github-8f, verbatim in the design note. Design written: .claude/design/W1472-idle-watchdog.md. The suspicion model is the exponential phi-accrual one luthen's checks/metric_freshness.py names (read: it publishes the mean gap and the max gap), phi(t) = t / (mu ln 10). Not measured or built yet: the transcript record shapes the second check reads, the level phi fires at, and the number of gaps kept. | 2026-10-17: 2026-10-17: landed 6877eaa, pushed. heartbeat.py (atomic record, 32 gaps, phi = t/(mean ln 10) after 5 gaps), 8 tests. W1473 makes tools beat.",
+      "issued_at": "2026-10-17T17:37:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T19:51:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T195140Z"
+    },
+    {
+      "symbol": "W1473",
+      "title": "every writer, commit, stack and scratch call beats, and the beat is also an OTel gauge series per repo",
+      "status": "ready",
+      "enables": [
+        "W1474"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:37:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1474",
+      "title": "the watchdog process waits on an absence: no heartbeat for longer than the interval it has learned from the repo's own gaps, with no wall-clock constant",
+      "status": "ready",
+      "enables": [
+        "W1475"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:37:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1475",
+      "title": "on a missed heartbeat the watchdog asks the queue and the transcript whether the session is really stalled, before it fires",
+      "status": "ready",
+      "enables": [
+        "W1476"
+      ],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "The checks, per the operator's 2026-10-17 ruling in .claude/design/W1472-idle-watchdog.md: fire when there is no SESSION heartbeat past the learned interval AND ready cards exist that are not behind an open enabler or a peer, whether or not a gate is in flight. A running gate or queued stack is the commit's heartbeat, not the session's, and is not read as the session being alive. The transcript check does not take a background task in flight as proof of waiting.",
+      "evidence": "2026-10-17: 2026-10-17 operator, relayed by github-8f: luthen answered 'I did not stop' because a land was gating, and the operator said it 'interpreted I have something in flight as I haven't stopped. Which is a pipeline stall'. This reverses my first draft, which counted the in-flight gauge as alive.",
+      "issued_at": "2026-10-17T17:37:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T17:42:57Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1476",
+      "title": "the watchdog fires by exiting with a distinct status and a one-line reason, is started in the background by --tick-open, and counts its firings per repo",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "heartbeat",
+        "watchdog"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:37:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1477",
+      "title": "warrants.bib and rubric.tsv stop serializing every stack: one warrant file per module, or the land step merges appends to them as a union",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "warrants",
+        "stack"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure first: how many of the last 40 landed commits touched hooks/warrants.bib or rubric.tsv (git log --name-only), and which dists have them (every dist has its own pair). Then choose between (a) one warrant file per test module under a directory the build lists, a larger change to gen-warrants, count_test_functions and the witness readers, and (b) the land step unioning appended rows at the tip like generated files, which needs the registry formats to be order-free (rubric.tsv is whitespace-sensitive, W833 plans its conversion). Decide on the measured count.",
+      "evidence": "2026-10-17: 2026-10-17 github-8f: hooks/warrants.bib and rubric.tsv are append-only registries every new test touches, so they serialize every stack in mtools. This session hit it: the heartbeat stamp (W1472) is built and cannot land its warrants while W1461 carries the same two files, and landing from an old base would erase W1461's rows. | 2026-10-17: 2026-10-17 MEASURED (git log over 143 commits, 9cbc3d4e..HEAD): 40 of them touched a warrants.bib or rubric.tsv, about 28 percent. Only hooks and pathsforward appear in them (22 and 18); 20 of the 40 touched the rubric as well as the bib. So the serialization falls on two dists, and a union at land (or one warrant file per module) is needed for those two, not for every dist. Not yet measured: how many of those 40 were in the same stack. | 2026-10-17: 2026-10-17 CORRECTION to the line above, from a recount of the same list: 20 hooks commits and 20 pathsforward commits (not 22 and 18), and 25 of the 40 touched a rubric as well as a bib (12 hooks, 13 pathsforward), not 20. The 40 of 143 and the two-dists finding stand.",
+      "issued_at": "2026-10-17T17:46:37Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T17:47:04Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1478",
+      "title": "a stack whose predecessor stack was refused, and which carries files only that predecessor adds, refuses at once naming the predecessor",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "stack"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After W1463 lands. A stack records its predecessor (the live entry with the next smaller key) and, when that predecessor ended with a refusal, compares its own snapshot's paths against HEAD: a path that exists in no HEAD tree and appears in the refused predecessor's snapshot means it cannot pass, so it exits REFUSED (4) naming 'predecessor stack <key> was refused' before spending a gate. Needs the refused predecessor's snapshot or verdict kept past its end, which today is removed (stackfreeze.forget).",
+      "evidence": "",
+      "issued_at": "2026-10-17T17:58:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T17:59:08Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1479",
+      "title": "reconcile the interpreter the hooks venv and the bazel python run (CPython 3.13.13) with the 3.14 floor",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "python"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure first: the interpreter of each dist's host .venv and of the bazel python (hooks/.venv is CPython 3.13.13 built with Clang, os.pidfd_open absent; bazel python_version is 3.13.13 in every BUILD; uv sync of a new dist chose 3.14.7 from /usr/lib/python-exec), and what each pyproject requires-python and mypy python_version say. Then ask what the floor is for the build, not only the host (a floor change moves every BUILD's python_version and the lock). That is the operator's decision if it moves bazel's python; a host-only change is not.",
+      "evidence": "2026-10-17: 2026-10-17 github-8f: os.pidfd_open missing from the hooks venv means it is not on the 3.14 floor. Probed: pidfd_open False on CPython 3.13.13 [Clang 22.1.3], x86_64-unknown-linux-gnu. The new endpoints dist's uv venv used 3.14.7 earlier today, so the host venvs already differ. Whether the floor applies to bazel's hermetic python is not settled here.",
+      "issued_at": "2026-10-17T17:58:58Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T17:59:06Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1480",
+      "title": "measure which targets dominate a gate run, since a 35-minute gate multiplies every queue",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T18:53:32Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1481",
+      "title": "bazel admission waits on load and the holder's liveness, with no wall-clock deadline",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "bazel",
+        "gate"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In hooks/src/mikemol/hooks/bazel_admit.py plan(): set TIMEOUT_ENV only when the caller names BAZEL_ADMIT_MAX_WAIT_S (today the default is DEFAULT_MAX_WAIT_S = 3600.0 and the wait ends with EXIT_DEFERRED 3), so admission waits on the zram and load gate with no clock, the way claim_of now waits on the lease. Update tests/test_bazel_admit.py lines 134 to 148, which assert the 3600 default. Decide first whether an admission that never clears should ever give up: the fleet rule says by an absence witness only, and the zram gate is a condition on the host, not a holder, so the honest first cut is no default bound and a loud periodic line saying what it waits on. It is on the hot path of every bazel call, so land it alone.",
+      "evidence": "2026-10-17: 2026-10-17 github-8f: the admission timeout is the same class as the lease-wait give-up (a wall-clock deadline on waiting for admission). Read: bazel_admit.py sets MEMBUDGET_TIMEOUT to BAZEL_ADMIT_MAX_WAIT_S or 3600 for every heavy verb.",
+      "issued_at": "2026-10-17T18:55:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T18:55:44Z",
       "ticks_blocked": 0
     }
   ],
@@ -30091,6 +30505,13 @@
       "title": "Pin a git for hermetic test rungs, as opa and shellcheck are pinned, so a test that makes real commits runs in a repo whose sandbox has no git (luthen-observability:W1086)",
       "dropped_at": "2026-10-17T10:16:37Z",
       "reason": "luthen-observability re-scoped its W1086 from my measurement (2026-10-17): the host git in the bazel sandbox covers its rungs and its test needs only init/config/add/commit/rev-parse with its own identity; no pinned git needed. Reopen from luthen-observability:W1086 if a rung is measured without git.",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1459",
+      "title": "retire the per-target timeout settings and their comments that the .bazelrc backstop makes redundant",
+      "dropped_at": "2026-10-17T17:00:41Z",
+      "reason": "the .bazelrc hour it would have made redundant was reverted on the operator's word (2026-10-17), so the per-target timeout settings stay as they are",
       "recoverable": true
     }
   ],
