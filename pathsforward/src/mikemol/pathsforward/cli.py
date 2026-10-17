@@ -48,6 +48,7 @@ from mikemol.pathsforward import (
     selftest,
     session,
     store,
+    tickhooks,
     triage,
     vtodo,
     warrant,
@@ -420,6 +421,7 @@ _VALUED = (
     "show",
     "preamble_set",
     "standing_set",
+    "tick_hooks_set",
     "weights_from",
     "vectors_from",
     "repair_counter",
@@ -823,6 +825,26 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
+    """Register the modes that store a file's lines into the queue state.
+
+    ⚑ ONE HELPER, BECAUSE `_parser` IS AT THE STATEMENT LIMIT: `--preamble-set`, `--standing-set`
+    and `--tick-hooks-set` (W1348) have one shape, FILE in and a list stored.
+    """
+    mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
+    mode.add_argument(
+        "--standing-set",
+        metavar="FILE",
+        help="W862: store FILE's non-blank lines as the whole standing list, one rule per line",
+    )
+    mode.add_argument(
+        "--tick-hooks-set",
+        metavar="FILE",
+        help="W1348: store FILE's commands (one per non-blank, non-# line) for --tick-open to run; "
+        "an empty file clears",
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     """Build the argument parser: one optional mode, and the typed fields modes read.
 
@@ -984,12 +1006,7 @@ def _parser() -> argparse.ArgumentParser:
         metavar="PATTERN",
         help="where a literal still appears: waypoints, residue, ledger, mirror (exit 1 on a hit)",
     )
-    mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
-    mode.add_argument(
-        "--standing-set",
-        metavar="FILE",
-        help="W862: store FILE's non-blank lines as the whole standing list, one rule per line",
-    )
+    _add_file_modes(mode)
     mode.add_argument(
         "--weights-from",
         metavar="FILE",
@@ -1551,6 +1568,9 @@ def _tick_open(ctx: Ctx) -> int:
         return code
     for step in (_bump_blocked, _inbound, _check):
         code = max(code, step(held))
+    root = ctx.path.parent.parent
+    for said in tickhooks.run_all(tickhooks.stored(store.load(ctx.path).doc), root):
+        _say(said)
     _say(f"tick open as {holder}; close: --ledger ..., --render, --check, --unlock {holder}")
     return code
 
@@ -2332,6 +2352,23 @@ def _standing_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _tick_hooks_set(ctx: Ctx) -> int:
+    """Store a file's commands as the tick hooks, replacing them whole (W1348, nemik:W450).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    lines = tickhooks.lines_of(Path(ctx.get("tick_hooks_set") or "").read_text(encoding="utf-8"))
+
+    def edit(state: State) -> int:
+        state.doc[tickhooks.KEY] = lines
+        _say(f"tick hooks set: {len(lines)} command(s)")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _json_file(source: Path) -> object:
     """Read a JSON file a bulk mode applies.
 
@@ -2577,6 +2614,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
     "standing_set": _standing_set,
+    "tick_hooks_set": _tick_hooks_set,
     "preamble_clear": _preamble_clear,
     "init": _init,
     "weights_from": _weights_from,

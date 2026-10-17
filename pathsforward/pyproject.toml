@@ -143,6 +143,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ RUNNING THE REPO'S OWN TICK COMMANDS IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1348): the
+# argv is a line the repo stored in its own queue, split with shlex and run without a shell.
+"src/mikemol/pathsforward/tickhooks.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_tickhooks.py" = ["assert"]
 "tests/test_refusal_record.py" = ["assert"]
 "tests/test_warrant.py" = ["assert"]
 "tests/test_prune_any_status.py" = ["assert"]

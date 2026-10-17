@@ -5570,3 +5570,60 @@
   claim  = {Only small, medium and large (or '' to clear) are accepted by the parser.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_a_size_outside_the_enum_is_a_usage_refusal},
 }
+
+@misc{pathsforward-tickhooks-blank-and-comment-lines-are-skipped-and-the-rest-kept-in-order,
+  section = {tickhooks},
+  title  = {Only commands survive, stripped, in the order written},
+  claim  = {Only commands survive, stripped, in the order written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_blank_and_comment_lines_are_skipped_and_the_rest_kept_in_order},
+}
+
+@misc{pathsforward-tickhooks-unbalanced-quote-is-refused-when-stored-not-mid-tick,
+  section = {tickhooks},
+  title  = {The control: the line is named in the refusal},
+  claim  = {The control: the line is named in the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_an_unbalanced_quote_is_refused_when_stored_not_mid_tick},
+}
+
+@misc{pathsforward-tickhooks-stored-reads-only-a-list-of-strings,
+  section = {tickhooks},
+  title  = {Absent, a string, or a list with a number reads as what it validly holds},
+  claim  = {Absent, a string, or a list with a number reads as what it validly holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_stored_reads_only_a_list_of_strings},
+}
+
+@misc{pathsforward-tickhooks-failing-hook-is-reported-and-the-next-still-runs,
+  section = {tickhooks},
+  title  = {The control: `b` exits 3, `c` runs anyway, and each result line names its status},
+  claim  = {The control: `b` exits 3, `c` runs anyway, and each result line names its status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_a_failing_hook_is_reported_and_the_next_still_runs},
+}
+
+@misc{pathsforward-tickhooks-long-output-is-capped-with-a-count-of-the-rest,
+  section = {tickhooks},
+  title  = {Twenty-five lines show twenty indented and say how many were left out},
+  claim  = {Twenty-five lines show twenty indented and say how many were left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_long_output_is_capped_with_a_count_of_the_rest},
+}
+
+@misc{pathsforward-tickhooks-real-runner-captures-output-and-reports-a-missing-command,
+  section = {tickhooks},
+  title  = {Echo answers with its words; a command that is not there is 127 with the reason},
+  claim  = {Echo answers with its words; a command that is not there is 127 with the reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_the_real_runner_captures_output_and_reports_a_missing_command},
+}
+
+@misc{pathsforward-tickhooks-set-stores-whole-and-an-empty-file-clears,
+  section = {tickhooks},
+  title  = {`--tick-hooks-set` replaces the list; an empty file is the decision to have none},
+  claim  = {`--tick-hooks-set` replaces the list; an empty file is the decision to have none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_set_stores_whole_and_an_empty_file_clears},
+}
+
+@misc{pathsforward-tickhooks-tick-open-runs-the-stored-hooks-and-a-failing-one-changes-nothing,
+  section = {tickhooks},
+  title  = {Real echo and false: both reported, the exit status and the held lock are the tick's own},
+  claim  = {Real echo and false: both reported, the exit status and the held lock are the tick's
+            own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_tick_open_runs_the_stored_hooks_and_a_failing_one_changes_nothing},
+}
