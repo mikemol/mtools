@@ -33,3 +33,24 @@
   claim  = {A host-supplied file is still data: file and ftp URLs are refused as None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_a_scheme_other_than_http_is_no_answer_so_no_local_file_is_read},
 }
+
+@misc{endpoints-parity-both-copies-read-the-same-variable,
+  section = {parity},
+  title  = {The variable name is part of the contract, so the two constants are one string},
+  claim  = {The variable name is part of the contract, so the two constants are one string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parity.py -k test_both_copies_read_the_same_variable},
+}
+
+@misc{endpoints-parity-both-copies-answer-every-case-alike,
+  section = {parity},
+  title  = {Resolving the same name through the same file gives the same answer from both copies},
+  claim  = {Resolving the same name through the same file gives the same answer from both copies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parity.py -k test_both_copies_answer_every_case_alike},
+}
+
+@misc{endpoints-parity-both-copies-answer-alike-when-there-is-nothing-to-read,
+  section = {parity},
+  title  = {An unset variable, an empty one and a missing file are no answer from both},
+  claim  = {An unset variable, an empty one and a missing file are no answer from both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_parity.py -k test_both_copies_answer_alike_when_there_is_nothing_to_read},
+}

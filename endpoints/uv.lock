@@ -135,10 +135,26 @@ source = { editable = "." }
 
 [package.dev-dependencies]
 dev = [
+    { name = "mikemol-fence" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "ruff" },
 ]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mikemol-fence", directory = "../fence" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
+name = "mikemol-fence"
+version = "0.1.0"
+source = { directory = "../fence" }
 
 [package.metadata]
 

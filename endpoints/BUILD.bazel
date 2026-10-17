@@ -45,10 +45,13 @@ py_library(
         size = "small",
         deps = [
             ":endpoints",
+            # TEST-ONLY: the parity test runs fence's copy beside this one (W1419).
+            "//fence:fence",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
         imports = ["src"],
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -109,9 +112,11 @@ sh_test(
 
 py_binary(
     name = "mypy_runner",
+    legacy_create_init = 0,
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//fence:fence",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -141,7 +146,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/endpoints/**"]),
+    srcs = glob(["src/mikemol/endpoints/**"]) + ["//fence:fence"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

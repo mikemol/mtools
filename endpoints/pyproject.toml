@@ -24,7 +24,9 @@ dependencies = []
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ mikemol-fence IS TEST-ONLY HERE (W1419): the parity test runs fence's own copy of the resolver beside
+# this one. It is a dev dependency, never a runtime one, and Bazel carries it as a test dep.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-fence"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -36,6 +38,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-fence = { path = "../fence" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -78,6 +83,9 @@ ignore = [
     "boolean-default-value-positional-argument",
 ]
 
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.fence"]
+
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
 
@@ -91,3 +99,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/test_smoke.py" = ["assert"]
 "tests/test_resolve.py" = ["assert"]
+"tests/test_parity.py" = ["assert"]
