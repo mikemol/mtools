@@ -247,3 +247,18 @@
   claim  = {The reader refuses a non-http URL and names a dead port, as the poster does.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_get_refuses_a_non_http_url_and_names_an_unreachable_endpoint},
 }
+
+@misc{otlp-tracecmd-explicit-ids-and-times-are-sent-as-given,
+  section = {tracecmd},
+  title  = {A span for something that already happened keeps its own ids, parent and nanosecond times},
+  claim  = {A span for something that already happened keeps its own ids, parent and nanosecond
+            times.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_explicit_ids_and_times_are_sent_as_given},
+}
+
+@misc{otlp-tracecmd-malformed-id-is-a-usage-refusal-and-nothing-is-sent,
+  section = {tracecmd},
+  title  = {The control: a 4-byte trace id never reaches the store; the builder's reason is printed},
+  claim  = {The control: a 4-byte trace id never reaches the store; the builder's reason is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_a_malformed_id_is_a_usage_refusal_and_nothing_is_sent},
+}

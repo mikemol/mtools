@@ -30,6 +30,7 @@ ENDPOINT = "victoriatraces-http"
 JAEGER_PATH = "/select/jaeger/api/traces/"
 EXIT_SENT = 0
 EXIT_FAILED = 1
+EXIT_USAGE = 2
 EXIT_BUSY = 3
 _NS_PER_MS = 1_000_000
 _OK = 200
@@ -49,6 +50,34 @@ class Request:
     duration_ms: int
     labels: Mapping[str, str]
     readback: bool
+    start_ns: int = 0
+    end_ns: int = 0
+    trace_id: str = ""
+    span_id: str = ""
+    parent_id: str = ""
+
+
+def _entry(req: Request) -> spans.Entry:
+    """Build the span: explicit ids and times where given, fresh ids and 'ending now' otherwise.
+
+    Returns:
+        the entry; a malformed id or span surfaces as the builder's own ValueError.
+
+    """
+    fresh_trace, fresh_span = spans.new_ids()
+    trace_id = bytes.fromhex(req.trace_id) if req.trace_id else fresh_trace
+    span_id = bytes.fromhex(req.span_id) if req.span_id else fresh_span
+    end = req.end_ns or time.time_ns()
+    start = req.start_ns or end - req.duration_ms * _NS_PER_MS
+    return spans.Entry(
+        req.name,
+        trace_id,
+        span_id,
+        spans.Timing(start, end),
+        parent_id=bytes.fromhex(req.parent_id),
+        labels=req.labels,
+        status=req.status,
+    )
 
 
 def run(req: Request, post: sender.Post, get: Get) -> int:
@@ -56,16 +85,19 @@ def run(req: Request, post: sender.Post, get: Get) -> int:
 
     Returns:
         EXIT_SENT when sent (and found, with `readback`), EXIT_FAILED when a call failed,
-        EXIT_BUSY when the span was sent but is not visible yet.
+        EXIT_USAGE when the span itself is malformed, EXIT_BUSY when it was sent but is not
+        visible yet.
 
     """
     resource = metrics.resource_here(req.service, req.namespace, req.version)
-    now = time.time_ns()
-    trace_id, span_id = spans.new_ids()
-    timing = spans.Timing(now - req.duration_ms * _NS_PER_MS, now)
-    entry = spans.Entry(req.name, trace_id, span_id, timing, labels=req.labels, status=req.status)
+    try:
+        entry = _entry(req)
+        payload = spans.request(resource, entry).SerializeToString()
+    except ValueError as malformed:
+        sys.stderr.write(f"mikemol-otlp: {malformed}\n")
+        return EXIT_USAGE
+    trace_id = entry.trace_id
     base = req.base.rstrip("/")
-    payload = spans.request(resource, entry).SerializeToString()
     try:
         sender.send(base + sender.TRACES_PATH, payload, post)
     except sender.SendError as failed:

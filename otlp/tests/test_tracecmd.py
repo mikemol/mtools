@@ -157,3 +157,31 @@ def test_get_refuses_a_non_http_url_and_names_an_unreachable_endpoint() -> None:
         pass
     with pytest.raises(sender.SendError, match="cannot reach"):
         sender.get(base + tracecmd.JAEGER_PATH + "x")
+
+
+def test_explicit_ids_and_times_are_sent_as_given(capsys: pytest.CaptureFixture[str]) -> None:
+    """A span for something that already happened keeps its own ids, parent and nanosecond times."""
+    trace, span, parent = "ab" * 16, "cd" * 8, "ef" * 8
+    start, end = 1_760_000_000_000_000_000, 1_760_000_002_000_000_000
+    given = ["--trace-id", trace, "--span-id", span, "--parent-id", parent]
+    given += ["--start-ns", str(start), "--end-ns", str(end)]
+    with _store() as (base, state):
+        assert cli.main(_argv(base, *given)) == tracecmd.EXIT_SENT
+    doc = MessageToDict(ExportTraceServiceRequest.FromString(state.posts[0][1]))
+    resource = cast("list[Doc]", doc["resourceSpans"])[0]
+    sent = cast("list[Doc]", cast("list[Doc]", resource["scopeSpans"])[0]["spans"])[0]
+    assert base64.b64decode(cast("str", sent["traceId"])).hex() == trace
+    assert base64.b64decode(cast("str", sent["spanId"])).hex() == span
+    assert base64.b64decode(cast("str", sent["parentSpanId"])).hex() == parent
+    assert (sent["startTimeUnixNano"], sent["endTimeUnixNano"]) == (str(start), str(end))
+    assert f"trace_id={trace}" in capsys.readouterr().out
+
+
+def test_a_malformed_id_is_a_usage_refusal_and_nothing_is_sent(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """The control: a 4-byte trace id never reaches the store; the builder's reason is printed."""
+    with _store() as (base, state):
+        assert cli.main(_argv(base, "--trace-id", "abcdef01")) == tracecmd.EXIT_USAGE
+    assert not state.posts
+    assert "trace_id must be 16 bytes" in capsys.readouterr().err

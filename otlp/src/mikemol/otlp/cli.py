@@ -64,6 +64,11 @@ def _parser() -> argparse.ArgumentParser:
     trace.add_argument("--duration-ms", dest="duration_ms", type=int, default=1)
     trace.add_argument("--field", action="append", metavar="KEY=VALUE")
     trace.add_argument("--readback", action="store_true", help="GET the trace once afterwards")
+    trace.add_argument("--start-ns", dest="start_ns", type=int, default=0, help="start, epoch ns")
+    trace.add_argument("--end-ns", dest="end_ns", type=int, default=0, help="end, epoch ns")
+    trace.add_argument("--trace-id", dest="trace_id", default="", help="32 hex digits")
+    trace.add_argument("--span-id", dest="span_id", default="", help="16 hex digits")
+    trace.add_argument("--parent-id", dest="parent_id", default="", help="16 hex digits")
     return parser
 
 
@@ -125,6 +130,11 @@ def _trace(opts: dict[str, object], environ: Mapping[str, str]) -> int:
         duration_ms=int(_text(opts, "duration_ms")),
         labels=fields,
         readback=bool(opts.get("readback")),
+        start_ns=int(_text(opts, "start_ns")),
+        end_ns=int(_text(opts, "end_ns")),
+        trace_id=_text(opts, "trace_id"),
+        span_id=_text(opts, "span_id"),
+        parent_id=_text(opts, "parent_id"),
     )
     return tracecmd.run(request, sender.post, sender.get)
 
