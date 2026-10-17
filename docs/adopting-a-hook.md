@@ -163,7 +163,44 @@ Its failures are `PreToolUse` deny answers. Whether that is right for a context 
 and the inbound-asks reader still has to be found in the adopting repo, so for the two context hooks prefer
 shape (a).
 
+## Isolated commit: what a hook sees when it runs in a snapshot
+
+`mikemol-commit` can run a repo's pre-commit hook against a snapshot of the tree that is about to land,
+not the working tree. Isolation is on only where `.githooks/pre-commit` names `MIKEMOL_REAL_ROOT`
+(`commit_kata.supports_isolation` reads the file's text); a hook that does not name it falls to the plain
+path without a word. A hook written for it must know the following.
+
+- **The variables.**
+  `MIKEMOL_REAL_ROOT` is the real checkout; the hook's working directory is the snapshot.
+  `MIKEMOL_COMMIT_ISOLATED=0` opts out and `=1` forces it. `MIKEMOL_SNAPSHOT_ROOT` moves the namespace the
+  snapshot lives under. `MIKEMOL_COMMIT_TIMEOUT_S` raises the default bound on the run, because a cold
+  engine sweep outlasts it.
+- **Only some `MIKEMOL_` variables reach the hook.** The gate gives a hook the submitter's environment
+  with every `MIKEMOL_*` variable removed except a short declared list (`gateenv.py`); a variable outside
+  `MIKEMOL_` passes through. Arming `MIKEMOL_ENDPOINTS` on a submission does not make it visible to the hook.
+- **Host tools come from the real root.** Venvs and `bazel-bin` are not in the snapshot, so name them as
+  `${MIKEMOL_REAL_ROOT:-root}/...`.
+- **A relative root resolves against the snapshot.** A check that reads a sibling repo by a relative
+  path passes vacuously there; resolve it from the real root.
+- **`GIT_DIR`, `GIT_WORK_TREE` and `GIT_INDEX_FILE` are set** for the hook, so `git -C <sibling>` answers
+  for the COMMITTING repo. Strip them from any git call about another repo.
+- **Tests that run git in their own root fail in a snapshot** (it has no `.git`), and library code should
+  not read `MIKEMOL_REAL_ROOT`: bazel's `env_inherit` hands it to every test. Make the anchor a parameter and
+  read the variable only in the entrypoint.
+
+(The pitfalls after the variables are github-8f's findings from amr-skills:W297, restated and not
+re-measured here. The variables and the environment scrub are read from the code.)
+
+### The commit lock needs the fence dist
+
+The commit lock needs `mikemol-fence` (import `mikemol.fence`, console script `mikemol-membudget`) in the
+repo's venv beside the interpreter. A repo does not carry `//fence`; that Bazel target exists only in
+mtools. For a repo that vendors wheels, build the wheel with `mikemol-wheel fence`, add a uv source path and
+a dependency, and `mikemol-repin --revendor` then moves it with the rest of the pair. linux-sources pins
+hooks, fence, pathsforward, pycodemod and mdstruct and prints `lock: held`.
+
 ## What is not built
 
+- **A check that this page names every isolation variable.** Waypoint W954's last step.
 - **The user-level route.** Shape (b), waypoint W580.
 - **A `SessionStart` confirmation.** See the known limits above.
