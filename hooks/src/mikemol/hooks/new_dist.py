@@ -22,12 +22,14 @@ CONSUMED BY: the `mikemol-new-dist` console script (W945).
 """
 
 import re
+import textwrap
 from collections.abc import Mapping
 
 TEMPLATE = "pathwalk"
 _NAME = re.compile(r"[a-z][a-z0-9]*")
 _SPDX = "# SPDX-License-Identifier: Apache-2.0\n# Copyright (c) 2026 Mike Mol\n"
 _IGNORES = "[tool.ruff.lint.per-file-ignores]"
+LINE_LIMIT = 100
 _FILES = (
     "BUILD.bazel",
     "paper.toml",
@@ -157,6 +159,24 @@ def _smoke(name: str) -> str:
     )
 
 
+def _package_doc(name: str, description: str) -> str:
+    """Render the package's `__init__.py`, wrapping a description that would pass the line limit.
+
+    ⚑ A LONG DESCRIPTION MADE THE SCAFFOLD FAIL ITS OWN LINT (W1413, found by mikemol-scan, whose
+    one-line description put the docstring line at 104 columns): the one-line form is kept while it
+    fits, else the summary is the short `mikemol.<name>.` and the description is wrapped below it.
+
+    Returns:
+        the file's text, SPDX header first.
+
+    """
+    one = f'"""mikemol.{name}: {description}"""'
+    if len(one) <= LINE_LIMIT:
+        return f"{_SPDX}{one}\n"
+    body = textwrap.fill(description, width=LINE_LIMIT)
+    return f'{_SPDX}"""mikemol.{name}.\n\n{body}\n"""\n'
+
+
 def skeleton(
     name: str, description: str, template: Mapping[str, str], template_name: str = TEMPLATE
 ) -> dict[str, str]:
@@ -197,7 +217,7 @@ def skeleton(
         ),
         "warrants.bib": "",
         "ratchet-preview.txt": "",
-        f"src/mikemol/{name}/__init__.py": f'{_SPDX}"""mikemol.{name}: {description}"""\n',
+        f"src/mikemol/{name}/__init__.py": _package_doc(name, description),
         f"src/mikemol/{name}/py.typed": "",
         "tests/test_smoke.py": _smoke(name),
     }

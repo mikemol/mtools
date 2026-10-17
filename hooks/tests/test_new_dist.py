@@ -93,6 +93,28 @@ def test_the_package_the_test_and_the_empty_files_are_generated() -> None:
     assert files["rubric.tsv"].startswith("# rubric.tsv")
 
 
+def test_a_long_description_is_wrapped_so_the_scaffold_passes_its_own_line_limit() -> None:
+    """The control (W1413): a 46-word description gives lines of at most 100 and all its words."""
+    words = ["scan"] * 40 + ["twosided", "ADF", "scanning", "for", "eSCL", "devices"]
+    description = " ".join(words)
+    init = new_dist.skeleton("scan", description, _TEMPLATE)["src/mikemol/scan/__init__.py"]
+    compile(init, "<init>", "exec")
+    assert max(len(line) for line in init.splitlines()) <= new_dist.LINE_LIMIT
+    docstring = init.split('"""')[1]
+    assert docstring.startswith("mikemol.scan.\n\n")
+    assert " ".join(docstring.split()[1:]) == description
+
+
+def test_a_description_that_fits_keeps_the_one_line_docstring() -> None:
+    """The boundary: exactly at the limit stays one line, one character more wraps."""
+    base = 'mikemol.scan: """"""'
+    fits = "a" * (new_dist.LINE_LIMIT - len(base))
+    one = new_dist.skeleton("scan", fits, _TEMPLATE)["src/mikemol/scan/__init__.py"]
+    assert one.endswith(f'"""mikemol.scan: {fits}"""\n')
+    over = new_dist.skeleton("scan", fits + "a", _TEMPLATE)["src/mikemol/scan/__init__.py"]
+    assert "\n\n" in over.split('"""')[1]
+
+
 @pytest.mark.parametrize("bad", ["", "Html", "9html", "html-struct", "html struct", "html_struct"])
 def test_a_name_that_is_not_a_lowercase_word_is_refused(bad: str) -> None:
     """The name becomes a directory, a package, a hub and a project name."""
