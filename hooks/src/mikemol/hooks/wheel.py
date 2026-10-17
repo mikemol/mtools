@@ -58,6 +58,8 @@ class Source:
     sha: str
     mtools: Path | None = None
     tree: Path | None = None
+    tag: str = revendor.TAG
+    """The local-version prefix the wheels carry: `g` (luthen) or empty (nemik), W1449."""
 
 
 def _failed(what: str, code: int, out: str) -> str:
@@ -110,7 +112,8 @@ def build_into(
         return failure
     for dist in dists:
         project = work / "src" / dist / "pyproject.toml"
-        edited = revendor.with_local_version(project.read_text(encoding="utf-8"), short)
+        text = project.read_text(encoding="utf-8")
+        edited = revendor.with_local_version(text, short, source.tag)
         if edited is None:
             return f"{dist}/pyproject.toml has no version {revendor.VERSION} to extend"
         project.write_text(edited, encoding="utf-8")

@@ -98,5 +98,55 @@ def test_the_plan_builds_each_dist_the_repo_vendors() -> None:
     dists = (*revendor.DISTS, "fence")
     text = "\n".join(revendor.plan_lines(SHA, {OLD}, "mtools", dists))
     assert f"uv build --wheel fence -> {revendor.wheel_name('fence', NEW)}" in text
-    assert "move the 3 [tool.uv.sources]" in text
-    assert "move the 2 [tool.uv.sources]" in "\n".join(revendor.plan_lines(SHA, {OLD}, "mtools"))
+    assert "move the 3 wheel paths" in text
+    assert "move the 2 wheel paths" in "\n".join(revendor.plan_lines(SHA, {OLD}, "mtools"))
+
+
+NEMIK_DISTS = ("pathsforward", "hooks", "icsstruct", "fence", "rulerseq", "frontier")
+NEMIK_OLD = "b5db3c4"
+NEMIK = "".join(
+    f'mikemol-{d} = {{ path = "vendor/wheels/{revendor.wheel_name(d, NEMIK_OLD, "")}" }}\n'
+    for d in NEMIK_DISTS
+)
+
+
+def test_nemiks_layout_reads_without_the_g_and_with_six_dists() -> None:
+    """W1449: no `g` in the local version, and the dists beyond the pair and the fence count."""
+    assert not revendor.tag_of(NEMIK)
+    assert revendor.tag_of(SOURCES) == "g"
+    assert revendor.tag_of("dependencies = []\n") == "g"
+    assert revendor.pinned_shorts(NEMIK) == {NEMIK_OLD}
+    assert revendor.vendored(NEMIK) == (
+        "hooks",
+        "pathsforward",
+        "fence",
+        "icsstruct",
+        "rulerseq",
+        "frontier",
+    )
+
+
+def test_moving_nemiks_sources_keeps_the_missing_g_missing() -> None:
+    """The control: the repo's own naming survives, so the new paths are the names uv will find."""
+    moved = revendor.move_sources(NEMIK, NEW)
+    assert revendor.pinned_shorts(moved) == {NEW}
+    assert "+g" not in moved
+    assert revendor.wheel_name("hooks", NEW, "") in moved
+    assert revendor.wheel_name("hooks", NEW, "") == "mikemol_hooks-0.1.0+3142177-py3-none-any.whl"
+
+
+def test_the_local_version_and_the_plan_follow_the_repos_tag() -> None:
+    """A tag-less repo builds `0.1.0+<short>` and the plan names exactly that wheel."""
+    got = revendor.with_local_version('version = "0.1.0"\n', NEW, "")
+    assert got == 'version = "0.1.0+3142177"\n'
+    text = "\n".join(revendor.plan_lines(SHA, {NEMIK_OLD}, "mtools", NEMIK_DISTS, (True, "")))
+    assert "+3142177 in the archive only" in text
+    assert revendor.wheel_name("frontier", NEW, "") in text
+
+
+def test_the_prose_naming_the_old_commit_moves_too() -> None:
+    """Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin."""
+    text = "# vendored the same way at mtools b5db3c4, one sha\n"
+    assert revendor.move_mentions(text, NEMIK_OLD, NEW) == (
+        "# vendored the same way at mtools 3142177, one sha\n"
+    )

@@ -40,7 +40,7 @@ def _pyproject(short: str) -> str:
 def _archive(argv: Sequence[str], archived: str) -> tuple[int, str]:
     out = next(a for a in argv if a.startswith("--output=")).removeprefix("--output=")
     with tarfile.open(out, "w") as tar:
-        for dist in revendor.KNOWN:
+        for dist in revendor.ALL:
             data = archived.encode()
             info = tarfile.TarInfo(f"{dist}/pyproject.toml")
             info.size = len(data)
@@ -250,8 +250,76 @@ def test_without_sync_the_lock_runs_and_the_sync_never_does(tmp_path: Path) -> N
 def test_the_plan_warns_that_the_sync_removes_packages_and_names_the_way_out() -> None:
     """The plan's own sync line says what it does to .venv; --no-sync says it leaves it alone."""
     synced = revendor.plan_lines(SHA, {OLD}, "mtools")
-    quiet = revendor.plan_lines(SHA, {OLD}, "mtools", sync=False)
+    quiet = revendor.plan_lines(SHA, {OLD}, "mtools", how=(False, "g"))
     assert any("REMOVES every package not named in uv.lock" in line for line in synced)
     assert any("--no-sync" in line and "sync --frozen" in line for line in synced)
     assert not any("sync --frozen" in line for line in quiet)
     assert any(".venv is left exactly as it is" in line for line in quiet)
+
+
+NEMIK_OLD = "b5db3c4"
+NEMIK_DISTS = ("hooks", "pathsforward", "fence", "icsstruct", "rulerseq", "frontier")
+
+
+def _nemik_repo(tmp_path: Path) -> Target:
+    # nemik's shape: six dists, no `g`, MODULE.bazel beside pyproject, a SHA256SUMS in the wheels.
+    repo = tmp_path / "nemik"
+    wheels = repo / "vendor" / "wheels"
+    wheels.mkdir(parents=True)
+    (repo / ".claude").mkdir()
+    (repo / ".claude" / "paths-forward.json").write_text("{}\n", encoding="utf-8")
+    names = [revendor.wheel_name(d, NEMIK_OLD, "") for d in NEMIK_DISTS]
+    sources = "".join(f'mikemol-x = {{ path = "vendor/wheels/{n}" }}\n' for n in names)
+    (repo / "pyproject.toml").write_text(f'name = "nemik"\n{sources}', encoding="utf-8")
+    module = "".join(f'wheel = "//:vendor/wheels/{n}",\n' for n in names)
+    module += f"# vendored the same way at mtools {NEMIK_OLD}\n"
+    (repo / "MODULE.bazel").write_text(module, encoding="utf-8")
+    for name in names:
+        (wheels / name).write_text("old wheel", encoding="utf-8")
+    (wheels / "SHA256SUMS").write_text("stale\n", encoding="utf-8")
+    return Target(repo, tmp_path / "mtools", SHA, Path("/live/mpf"), NEMIK_DISTS, tag="")
+
+
+def test_nemiks_layout_moves_pyproject_module_bazel_and_the_sums(tmp_path: Path) -> None:
+    """W1449: six tag-less wheels, both files moved, the comment too, SHA256SUMS rewritten."""
+    target = _nemik_repo(tmp_path)
+    world = _World()
+    assert revendor_apply.apply(world, target) is None
+    wheels = target.repo / "vendor" / "wheels"
+    new = sorted(revendor.wheel_name(d, NEW, "") for d in NEMIK_DISTS)
+    assert sorted(p.name for p in wheels.glob("*.whl")) == new
+    for name in ("pyproject.toml", "MODULE.bazel"):
+        text = (target.repo / name).read_text(encoding="utf-8")
+        assert revendor.pinned_shorts(text) == {NEW}
+        assert NEMIK_OLD not in text
+    assert "mtools 3142177" in (target.repo / "MODULE.bazel").read_text(encoding="utf-8")
+    sums = (wheels / "SHA256SUMS").read_text(encoding="utf-8").splitlines()
+    assert [line.split("  ./")[1] for line in sums] == new
+    for line in sums:
+        digest, name = line.split("  ./")
+        assert digest == hashlib.sha256((wheels / name).read_bytes()).hexdigest()
+
+
+def test_the_new_wheels_and_the_sums_are_force_added_after_the_old_are_removed(
+    tmp_path: Path,
+) -> None:
+    """The wheels directory ignores everything: git add -f stages the new wheels and the sums."""
+    target = _nemik_repo(tmp_path)
+    world = _World()
+    assert revendor_apply.apply(world, target) is None
+    adds = [call for call in world.calls if call[:3] == ["git", "add", "-f"]]
+    assert len(adds) == 1
+    staged = adds[0][4:]
+    assert "vendor/wheels/SHA256SUMS" in staged
+    assert len(staged) == len(NEMIK_DISTS) + 1
+    removed = [call[-1] for call in world.calls if call[:2] == ["git", "rm"]]
+    assert sorted(removed) == sorted(
+        f"vendor/wheels/{revendor.wheel_name(d, NEMIK_OLD, '')}" for d in NEMIK_DISTS
+    )
+
+
+def test_a_repo_with_no_sums_file_gets_none(tmp_path: Path) -> None:
+    """The control: luthen's layout has no SHA256SUMS, and none appears."""
+    target = _repo(tmp_path)
+    assert revendor_apply.apply(_World(), target) is None
+    assert not (target.repo / "vendor" / "wheels" / "SHA256SUMS").exists()

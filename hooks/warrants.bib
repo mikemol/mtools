@@ -10772,3 +10772,60 @@
   claim  = {The file it was given goes; an unset variable or an already-gone file is not an error.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackfreeze.py -k test_forget_removes_the_named_snapshot_and_nothing_else},
 }
+
+@misc{hooks-revendor-nemiks-layout-reads-without-the-g-and-with-six-dists,
+  section = {revendor},
+  title  = {W1449: no `g` in the local version, and the dists beyond the pair and the fence count},
+  claim  = {W1449: no `g` in the local version, and the dists beyond the pair and the fence count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_nemiks_layout_reads_without_the_g_and_with_six_dists},
+}
+
+@misc{hooks-revendor-moving-nemiks-sources-keeps-the-missing-g-missing,
+  section = {revendor},
+  title  = {The control: the repo's own naming survives, so the new paths are the names uv will find},
+  claim  = {The control: the repo's own naming survives, so the new paths are the names uv will
+            find.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_moving_nemiks_sources_keeps_the_missing_g_missing},
+}
+
+@misc{hooks-revendor-local-version-and-the-plan-follow-the-repos-tag,
+  section = {revendor},
+  title  = {A tag-less repo builds `0.1.0+<short>` and the plan names exactly that wheel},
+  claim  = {A tag-less repo builds `0.1.0+<short>` and the plan names exactly that wheel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_the_local_version_and_the_plan_follow_the_repos_tag},
+}
+
+@misc{hooks-revendor-prose-naming-the-old-commit-moves-too,
+  section = {revendor},
+  title  = {Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin},
+  claim  = {Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_the_prose_naming_the_old_commit_moves_too},
+}
+
+@misc{hooks-revendor-apply-nemiks-layout-moves-pyproject-module-bazel-and-the-sums,
+  section = {revendor_apply},
+  title  = {W1449: six tag-less wheels, both files moved, the comment too, SHA256SUMS rewritten},
+  claim  = {W1449: six tag-less wheels, both files moved, the comment too, SHA256SUMS rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_nemiks_layout_moves_pyproject_module_bazel_and_the_sums},
+}
+
+@misc{hooks-revendor-apply-new-wheels-and-the-sums-are-force-added-after-the-old-are-removed,
+  section = {revendor_apply},
+  title  = {The wheels directory ignores everything: git add -f stages the new wheels and the sums},
+  claim  = {The wheels directory ignores everything: git add -f stages the new wheels and the sums.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_the_new_wheels_and_the_sums_are_force_added_after_the_old_are_removed},
+}
+
+@misc{hooks-revendor-apply-repo-with-no-sums-file-gets-none,
+  section = {revendor_apply},
+  title  = {The control: luthen's layout has no SHA256SUMS, and none appears},
+  claim  = {The control: luthen's layout has no SHA256SUMS, and none appears.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_repo_with_no_sums_file_gets_none},
+}
+
+@misc{hooks-revendor-cli-tag-less-six-dist-repo-is-planned-and-applied-with-its-own-naming,
+  section = {revendor_cli},
+  title  = {W1449: nemik's shape is accepted, and the target carries its dists and the empty tag},
+  claim  = {W1449: nemik's shape is accepted, and the target carries its dists and the empty tag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_a_tag_less_six_dist_repo_is_planned_and_applied_with_its_own_naming},
+}

@@ -14,9 +14,14 @@ live writer's: a writer that reads the queue differently stops the swap with the
 (luthen-observability:W811 did this by hand for W807 and then built it in).
 
 ⚑ NEVER COMMITS, AND REFUSES A DIRTY TREE. The result is a reviewable diff for the repo's own
-session; while `pyproject.toml`, `uv.lock` or `vendor/wheels` have uncommitted changes nothing is
-built. Everything is built and checked in a scratch directory first, and the repo is written only
-after both the build and the hash check passed.
+session; while `pyproject.toml`, `MODULE.bazel`, `uv.lock` or `vendor/wheels` have uncommitted
+changes nothing is built. Everything is built and checked in a scratch directory first, and the
+repo is written only after both the build and the hash check passed.
+
+⚑ NEMIK'S LAYOUT TOO (W1449): the wheel paths are moved in `MODULE.bazel` as well as in
+`pyproject.toml`, `vendor/wheels/SHA256SUMS` is rewritten for the new wheels when the repo keeps
+one, and the new wheels (and that file) are `git add -f`ed because such a repo's
+`vendor/wheels/.gitignore` is `*`. Staging is as far as it goes; it still never commits.
 """
 
 import hashlib
@@ -32,16 +37,18 @@ Runner = Callable[[Sequence[str], Path], tuple[int, str]]
 
 WHEELS = Path("vendor") / "wheels"
 STATE = Path(".claude") / "paths-forward.json"
+SUMS = "SHA256SUMS"
+BAZEL = "MODULE.bazel"
 _TAIL = 200
-_WRITES = ("pyproject.toml", "uv.lock", str(WHEELS))
+_WRITES = ("pyproject.toml", BAZEL, "uv.lock", str(WHEELS))
 
 
 @dataclass(frozen=True)
 class Target:
     """What to re-vendor: the vendoring repo, the mtools checkout, the commit, the live writer.
 
-    `dists` are the wheels the repo vendors (`revendor.vendored`): the pair, plus the fence when the
-    repo has added it, all moved to the one commit together.
+    `dists` are the wheels the repo vendors (`revendor.vendored`): all moved to the one commit
+    together. `tag` is the repo's own local-version prefix (`g`, or empty for nemik).
     """
 
     repo: Path
@@ -51,6 +58,7 @@ class Target:
     dists: tuple[str, ...] = revendor.DISTS
     sync: bool = True
     """False runs `uv lock` only: `uv sync --frozen` removes packages the lock does not name."""
+    tag: str = revendor.TAG
 
 
 def _failed(what: str, code: int, out: str) -> str:
@@ -69,13 +77,13 @@ def dirty(run: Runner, repo: Path) -> bool:
 
 
 def build(run: Runner, target: Target, work: Path) -> str | None:
-    """Build both dists' wheels at the commit into `work/dist`, through `wheel.build_into`.
+    """Build every dist's wheel at the commit into `work/dist`, through `wheel.build_into`.
 
     Returns:
-        why it failed, or None when both wheels were built.
+        why it failed, or None when every wheel was built.
 
     """
-    source = wheel.Source(target.sha, target.mtools)
+    source = wheel.Source(target.sha, target.mtools, tag=target.tag)
     return wheel.build_into(run, source, target.dists, work, work / "dist")
 
 
@@ -96,7 +104,8 @@ def same_reading(run: Runner, target: Target, work: Path) -> str | None:
     code, out = run(["uv", "venv", "--quiet", str(venv)], work)
     if code != 0:
         return _failed("uv venv", code, out)
-    wheels = [str(work / "dist" / revendor.wheel_name(d, short)) for d in target.dists]
+    names = [revendor.wheel_name(d, short, target.tag) for d in target.dists]
+    wheels = [str(work / "dist" / name) for name in names]
     python = str(venv / "bin" / "python")
     code, out = run(["uv", "pip", "install", "--quiet", "--python", python, *wheels], work)
     if code != 0:
@@ -110,6 +119,34 @@ def same_reading(run: Runner, target: Target, work: Path) -> str | None:
     return None
 
 
+def _move_file(path: Path, short: str, old: set[str]) -> None:
+    # Move the wheel paths (and the prose naming the old commit) in one text file, if it exists.
+    if not path.is_file():
+        return
+    text = revendor.move_sources(path.read_text(encoding="utf-8"), short)
+    for stale in sorted(old - {short}):
+        text = revendor.move_mentions(text, stale, short)
+    path.write_text(text, encoding="utf-8")
+
+
+def write_sums(target: Target) -> None:
+    """Rewrite `vendor/wheels/SHA256SUMS` for the new wheels, when the repo keeps one.
+
+    ⚑ THE `sha256sum ./*.whl` FORMAT (nemik:W417): `<hash>  ./<name>`, names in sorted order, so
+    `sha256sum -c` checks it. A repo with no such file gets none.
+    """
+    sums = target.repo / WHEELS / SUMS
+    if not sums.is_file():
+        return
+    short = revendor.short_of(target.sha)
+    names = sorted(revendor.wheel_name(d, short, target.tag) for d in target.dists)
+    lines = [
+        f"{hashlib.sha256((target.repo / WHEELS / n).read_bytes()).hexdigest()}  ./{n}\n"
+        for n in names
+    ]
+    sums.write_text("".join(lines), encoding="utf-8")
+
+
 def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
     """Copy the new wheels in, remove the old, move the pins, then lock and sync.
 
@@ -118,16 +155,20 @@ def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
 
     """
     short = revendor.short_of(target.sha)
-    for dist in target.dists:
-        name = revendor.wheel_name(dist, short)
+    new_names = [revendor.wheel_name(d, short, target.tag) for d in target.dists]
+    for name in new_names:
         shutil.copyfile(work / "dist" / name, target.repo / WHEELS / name)
     for stale in sorted(old - {short}):
         for dist in target.dists:
-            gone = str(WHEELS / revendor.wheel_name(dist, stale))
+            gone = str(WHEELS / revendor.wheel_name(dist, stale, target.tag))
             run(["git", "rm", "--quiet", "--force", gone], target.repo)
-    project = target.repo / "pyproject.toml"
-    moved = revendor.move_sources(project.read_text(encoding="utf-8"), short)
-    project.write_text(moved, encoding="utf-8")
+    for name in ("pyproject.toml", BAZEL):
+        _move_file(target.repo / name, short, old)
+    write_sums(target)
+    added = [str(WHEELS / name) for name in new_names]
+    if (target.repo / WHEELS / SUMS).is_file():
+        added.append(str(WHEELS / SUMS))
+    run(["git", "add", "-f", "--", *added], target.repo)
     steps = [["uv", "lock"], ["uv", "sync", "--frozen"]] if target.sync else [["uv", "lock"]]
     for step in steps:
         code, out = run(step, target.repo)
@@ -137,14 +178,14 @@ def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
 
 
 def apply(run: Runner, target: Target) -> str | None:
-    """Re-vendor both dists at the commit: refuse a dirty tree, build and check, then swap.
+    """Re-vendor the dists at the commit: refuse a dirty tree, build and check, then swap.
 
     Returns:
         why it was refused or failed, or None when the repo now vendors the commit.
 
     """
     if dirty(run, target.repo):
-        return "pyproject.toml, uv.lock or vendor/wheels have uncommitted changes"
+        return "pyproject.toml, MODULE.bazel, uv.lock or vendor/wheels have uncommitted changes"
     old = revendor.pinned_shorts((target.repo / "pyproject.toml").read_text(encoding="utf-8"))
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
@@ -153,7 +194,7 @@ def apply(run: Runner, target: Target) -> str | None:
 
 
 def checksums(target: Target) -> dict[str, str]:
-    """Hash the vendored wheels for the hand-written vendor/wheels/README.md record.
+    """Hash the vendored wheels for the vendor/wheels/README.md record.
 
     Returns:
         the sha256 hex of each dist's wheel at the commit.
@@ -161,6 +202,7 @@ def checksums(target: Target) -> dict[str, str]:
     """
     short = revendor.short_of(target.sha)
     wheels = {
-        dist: target.repo / WHEELS / revendor.wheel_name(dist, short) for dist in target.dists
+        dist: target.repo / WHEELS / revendor.wheel_name(dist, short, target.tag)
+        for dist in target.dists
     }
     return {dist: hashlib.sha256(path.read_bytes()).hexdigest() for dist, path in wheels.items()}

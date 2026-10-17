@@ -53,17 +53,21 @@ def run_revendor(repo: Path, sha: str, mtools: Path, runner: Runner, flags: froz
         return _refuse("--revendor needs --sha, a full 40-hex commit")
     if not project.is_file() or not mtools.is_dir():
         return _refuse(f"needs a pyproject.toml in {repo} and an mtools checkout at {mtools}")
-    old = revendor.pinned_shorts(project.read_text(encoding="utf-8"))
+    text = project.read_text(encoding="utf-8")
+    old = revendor.pinned_shorts(text)
     if not old:
-        return _refuse(f"{repo.name} vendors no hooks or pathsforward wheel")
-    dists = revendor.vendored(project.read_text(encoding="utf-8"))
+        return _refuse(
+            f"{repo.name} vendors no hooks or pathsforward wheel, nor any other mtools wheel"
+        )
+    dists = revendor.vendored(text)
     sync = "--no-sync" not in flags
-    for line in revendor.plan_lines(sha, old, mtools.name, dists, sync=sync):
+    tag = revendor.tag_of(text)
+    for line in revendor.plan_lines(sha, old, mtools.name, dists, (sync, tag)):
         _say(f"PLAN {line}")
     if "--write" not in flags:
         return 0
     writer = repo / ".venv" / "bin" / "mikemol-paths-forward"
-    target = revendor_apply.Target(repo, mtools, sha, writer, dists, sync)
+    target = revendor_apply.Target(repo, mtools, sha, writer, dists, sync, tag)
     failure = revendor_apply.apply(runner, target)
     if failure is not None:
         _say(f"REFUSED {failure}")

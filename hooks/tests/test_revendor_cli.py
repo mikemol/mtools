@@ -169,3 +169,27 @@ def test_no_sync_reaches_the_apply_and_the_plan_says_the_venv_is_left_alone(
     assert repin_cli.main(_args(repo, tmp_path / "mtools", "--write"), _runner) == 0
     assert apply.targets[1].sync is True
     assert "REMOVES every package not named in uv.lock" in capsys.readouterr().out
+
+
+def test_a_tag_less_six_dist_repo_is_planned_and_applied_with_its_own_naming(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1449: nemik's shape is accepted, and the target carries its dists and the empty tag."""
+    repo = tmp_path / "nemik"
+    repo.mkdir()
+    dists = ("hooks", "pathsforward", "fence", "icsstruct", "rulerseq", "frontier")
+    sources = "".join(
+        f'mikemol-{d} = {{ path = "vendor/wheels/{revendor.wheel_name(d, "b5db3c4", "")}" }}\n'
+        for d in dists
+    )
+    (repo / "pyproject.toml").write_text(sources, encoding="utf-8")
+    (tmp_path / "mtools").mkdir()
+    apply = _Apply()
+    _install(monkeypatch, apply)
+    assert repin_cli.main(_args(repo, tmp_path / "mtools", "--write"), _runner) == 0
+    target = apply.targets[0]
+    assert target.dists == dists
+    assert not target.tag
+    said = capsys.readouterr().out
+    assert "+3142177 in the archive only" in said
+    assert "b5db3c4" in said
