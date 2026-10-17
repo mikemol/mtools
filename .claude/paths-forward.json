@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1455,
+  "counter": 1456,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -17,7 +17,7 @@
   },
   "lock": {
     "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-17T13:35:47Z",
+    "taken_at": "2026-10-17T14:12:42Z",
     "pid": 3076458,
     "start": 30649468
   },
@@ -6128,7 +6128,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 302,
+      "ticks_blocked": 303,
       "completed": null
     },
     {
@@ -6176,7 +6176,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 301,
+      "ticks_blocked": 302,
       "completed": null
     },
     {
@@ -10059,7 +10059,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 306,
+      "ticks_blocked": 307,
       "completed": null
     },
     {
@@ -11807,7 +11807,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 240,
+      "ticks_blocked": 241,
       "completed": null
     },
     {
@@ -16161,7 +16161,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 205,
+      "ticks_blocked": 206,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16702,7 +16702,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 205,
+      "ticks_blocked": 206,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17511,7 +17511,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 205,
+      "ticks_blocked": 206,
       "completed": null
     },
     {
@@ -17554,7 +17554,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 205,
+      "ticks_blocked": 206,
       "completed": null
     },
     {
@@ -17577,7 +17577,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 205,
+      "ticks_blocked": 206,
       "completed": null
     },
     {
@@ -18003,7 +18003,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 206,
+      "ticks_blocked": 207,
       "completed": null
     },
     {
@@ -18179,7 +18179,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 204,
+      "ticks_blocked": 205,
       "completed": null
     },
     {
@@ -18962,7 +18962,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 203,
+      "ticks_blocked": 204,
       "completed": null
     },
     {
@@ -19820,7 +19820,7 @@
     {
       "symbol": "W966",
       "title": "repin rows carry the file and line each pin came from, so a survey can be checked from its own output",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1143"
       ],
@@ -19829,12 +19829,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add path:line to every survey row (repo-relative pyproject.toml:LINE; line from the match offset). Decide and test two things linux-sources left open: a repo's uv.lock transitive pins get no row (the lock follows the pyproject; --write runs uv sync) and say so in docs/repinning.md; a repo with two pyproject files is out of scope today (only the root file is read) and the doc says that. Keep the old columns first so existing parsers still split.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed 5446a43, pushed (queue state 7d81286). Survey rows end with FILE:LINE; docs/repinning.md states what is not read. The gate's DRIFT line was the W1456 false positive (two entries under one waypoint).",
       "issued_at": "2026-10-10T20:03:05Z",
       "minted_during": "interrupt",
       "caused_by": "linux-sources:W-repin-path",
-      "last_worked": null,
+      "last_worked": "2026-10-17T14:11:30Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/repin.py",
@@ -19845,7 +19845,8 @@
         "hooks/warrants.bib",
         "docs/repinning.md"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": "20261017T141130Z"
     },
     {
       "symbol": "W967",
@@ -20676,7 +20677,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 60,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -21415,7 +21416,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 95,
+      "ticks_blocked": 96,
       "completed": null
     },
     {
@@ -21461,7 +21462,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 164,
       "completed": null
     },
     {
@@ -21553,7 +21554,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 164,
       "completed": null
     },
     {
@@ -21619,7 +21620,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 83,
+      "ticks_blocked": 84,
       "completed": null
     },
     {
@@ -22017,7 +22018,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 148,
+      "ticks_blocked": 149,
       "completed": null
     },
     {
@@ -22142,7 +22143,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -22428,7 +22429,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 147,
+      "ticks_blocked": 148,
       "completed": null
     },
     {
@@ -22450,7 +22451,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 147,
+      "ticks_blocked": 148,
       "completed": null
     },
     {
@@ -22556,7 +22557,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 127,
+      "ticks_blocked": 128,
       "completed": null
     },
     {
@@ -22838,7 +22839,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 127
+      "ticks_blocked": 128
     },
     {
       "symbol": "W1116",
@@ -22859,7 +22860,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 127
+      "ticks_blocked": 128
     },
     {
       "symbol": "W1117",
@@ -22877,7 +22878,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 127
+      "ticks_blocked": 128
     },
     {
       "symbol": "W1118",
@@ -22895,7 +22896,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 127
+      "ticks_blocked": 128
     },
     {
       "symbol": "W1119",
@@ -23354,7 +23355,6 @@
         "W960",
         "W963",
         "W965",
-        "W966",
         "W996",
         "W1005",
         "W1017",
@@ -23554,7 +23554,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 96
+      "ticks_blocked": 97
     },
     {
       "symbol": "W1151",
@@ -23600,7 +23600,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 115
+      "ticks_blocked": 116
     },
     {
       "symbol": "W1153",
@@ -23624,7 +23624,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 93,
+      "ticks_blocked": 94,
       "completed": null
     },
     {
@@ -24058,7 +24058,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 116,
+      "ticks_blocked": 117,
       "completed": null
     },
     {
@@ -24520,7 +24520,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 63,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -25991,7 +25991,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T20:11:19Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -26853,7 +26853,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1309",
       "last_worked": "2026-10-16T09:58:49Z",
-      "ticks_blocked": 50,
+      "ticks_blocked": 51,
       "completed": null
     },
     {
@@ -27032,7 +27032,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W423",
       "last_worked": "2026-10-16T22:43:34Z",
-      "ticks_blocked": 7,
+      "ticks_blocked": 8,
       "completed": null
     },
     {
@@ -27160,7 +27160,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": null,
-      "ticks_blocked": 35
+      "ticks_blocked": 36
     },
     {
       "symbol": "W1326",
@@ -27204,7 +27204,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-16T03:33:35Z",
-      "ticks_blocked": 23,
+      "ticks_blocked": 24,
       "completed": null
     },
     {
@@ -27247,7 +27247,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1327",
       "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 47,
       "completed": null
     },
     {
@@ -27271,7 +27271,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 22
+      "ticks_blocked": 23
     },
     {
       "symbol": "W1331",
@@ -27500,7 +27500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-16T05:25:16Z",
-      "ticks_blocked": 37,
+      "ticks_blocked": 38,
       "completed": null
     },
     {
@@ -27728,7 +27728,7 @@
       "minted_during": "tick",
       "caused_by": "W1350",
       "last_worked": "2026-10-16T13:33:57Z",
-      "ticks_blocked": 35,
+      "ticks_blocked": 36,
       "completed": null
     },
     {
@@ -27776,19 +27776,19 @@
     {
       "symbol": "W1355",
       "title": "waldo Phase may carry a command as its act, run only when its done witness is false and judged by it afterwards",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "waldo"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read waldo phases.py and runphase.py again; add Phase.act (argv) beside contract, run through Seams.run, refuse when both are set, refuse a phase whose done witness already holds before the act, judge done after; tests for each refusal; tell el-openglo the sha",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: landed b1e0963, pushed (queue state 1f80dd3). Phase.act in waldo phases.py and runphase.py; 7 tests, all 22 waldo bazel targets pass. The gate's DRIFT line for it was a false positive of the drift report, minted as W1456: two stack entries under one waypoint were compared separately.",
       "issued_at": "2026-10-16T06:50:03Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W555",
-      "last_worked": null,
+      "last_worked": "2026-10-17T13:56:34Z",
       "ticks_blocked": 0,
       "manifest": [
         "waldo/src/mikemol/waldo/phases.py",
@@ -27798,7 +27798,8 @@
         "waldo/rubric.tsv",
         "waldo/warrants.bib"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": "20261017T135634Z"
     },
     {
       "symbol": "W1356",
@@ -27820,7 +27821,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1353",
       "last_worked": "2026-10-16T15:12:21Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -27864,7 +27865,7 @@
       "minted_during": "tick",
       "caused_by": "W1343",
       "last_worked": "2026-10-16T14:11:31Z",
-      "ticks_blocked": 26,
+      "ticks_blocked": 27,
       "completed": null
     },
     {
@@ -27887,7 +27888,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1343",
       "last_worked": "2026-10-16T15:12:21Z",
-      "ticks_blocked": 25,
+      "ticks_blocked": 26,
       "completed": null
     },
     {
@@ -28615,7 +28616,7 @@
       "minted_during": "tick",
       "caused_by": "gabion:W1046",
       "last_worked": "2026-10-16T18:47:35Z",
-      "ticks_blocked": 19,
+      "ticks_blocked": 20,
       "completed": null
     },
     {
@@ -28639,7 +28640,7 @@
       "minted_during": "tick",
       "caused_by": "gabion:W1057",
       "last_worked": "2026-10-16T18:47:36Z",
-      "ticks_blocked": 19,
+      "ticks_blocked": 20,
       "completed": null
     },
     {
@@ -29263,7 +29264,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T02:05:51Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -29715,7 +29716,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1086",
       "last_worked": "2026-10-17T11:56:17Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 4,
       "completed": null
     },
     {
@@ -29808,6 +29809,25 @@
       "issued_at": "2026-10-17T13:36:45Z",
       "minted_during": "tick",
       "caused_by": "W1376",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1456",
+      "title": "stack drift report compares a waypoint's entries together and leaves the queue files out",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "manifest"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T13:56:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1427",
       "last_worked": null,
       "ticks_blocked": 0
     }
