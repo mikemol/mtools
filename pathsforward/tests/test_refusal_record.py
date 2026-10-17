@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     import pytest
 
 _REFUSED = cli.EXIT_REFUSED
+_ID_LENGTH = 12
 
 
 def _state(tmp_path: Path) -> Path:
@@ -83,7 +84,18 @@ def test_a_configured_host_starts_the_child_with_shapes_the_repo_and_the_caller(
     assert argv[argv.index("--url") + 1] == "http://sink/logs"
     assert "flags=--update" in argv
     assert "caller=mtools-tick" in argv
+    assert f"rule={refusal_record.rule_id("REFUSED: bad 'v'")}" in argv
     assert line == "bad <value>"
+
+
+def test_one_rule_keeps_one_id_whatever_values_it_quotes_and_another_rule_differs() -> None:
+    """The id groups refusals by rule: quoted values do not change it, different words do."""
+    first = refusal_record.rule_id("REFUSED: W9 is not a card; got 'a'")
+    again = refusal_record.rule_id("REFUSED: W9 is not a card; got 'other'")
+    other = refusal_record.rule_id("REFUSED: title is too long")
+    assert first == again
+    assert first != other
+    assert len(first) == _ID_LENGTH
 
 
 def test_with_only_the_endpoints_file_set_the_child_starts_without_a_url(tmp_path: Path) -> None:

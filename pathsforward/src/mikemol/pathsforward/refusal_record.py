@@ -20,6 +20,7 @@ is swallowed because the refusal itself is the product.
 argv is its flag names only, so a path or a token typed after a flag is never shipped.
 """
 
+import hashlib
 import os
 import re
 import shutil
@@ -52,6 +53,20 @@ def rule_of(message: str) -> str:
     """
     bare = _QUOTED.sub("<value>", _REFUSED.sub("", message))
     return _PATH.sub("<path>", bare).strip()
+
+
+def rule_id(message: str) -> str:
+    """Name the rule that refused as a short stable key over its shape text.
+
+    ⚑ THE ID IS THE DIGEST OF THE RULE TEXT, SO TWO REFUSALS BY ONE RULE SHARE IT whatever values
+    they quoted, and a reworded rule is a new id on purpose: the old key then stops accruing and
+    the new one starts, which is what 'top rules by refusals' should read.
+
+    Returns:
+        twelve hex characters of the SHA-256 of `rule_of(message)`.
+
+    """
+    return hashlib.sha256(rule_of(message).encode("utf-8")).hexdigest()[:12]
 
 
 def flags_of(args: Sequence[str]) -> str:
@@ -134,6 +149,8 @@ def emit(
         "WARN",
         "--field",
         "verdict=REFUSED",
+        "--field",
+        f"rule={rule_id(message)}",
         "--field",
         f"flags={flags_of(args)}",
         "--field",

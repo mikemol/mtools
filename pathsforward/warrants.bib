@@ -5497,3 +5497,10 @@
             must say no tick was counted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bump_blocked_without_count_tick_prunes_and_counts_nothing},
 }
+
+@misc{pathsforward-refusal-record-one-rule-keeps-one-id-whatever-values-it-quotes-and-another-rule-differs,
+  section = {refusal_record},
+  title  = {The id groups refusals by rule: quoted values do not change it, different words do},
+  claim  = {The id groups refusals by rule: quoted values do not change it, different words do.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_one_rule_keeps_one_id_whatever_values_it_quotes_and_another_rule_differs},
+}
