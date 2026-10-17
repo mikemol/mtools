@@ -18,9 +18,13 @@ reads none of them. A detector reads one parsed tree and returns `(line, rule, m
     stdlib-import             an import of a module Codon 0.20.3 lacks (the census's ten)
     dataclasses-import        any import of `dataclasses` (nemik:W567 probe, re-run here)
     variable-length-tuple     `tuple[X, ...]` in an annotation (nemik:W567 probe)
+    union-none                `X | None`: write `Optional[X]` instead (W1462 probe)
+    undefined-builtin         a builtin name Codon does not define, e.g. `frozenset` (W1462 probe)
 """
 
 import ast
+
+from mikemol.hooks.websubset_builtins import undefined_names
 
 RULES = frozenset(
     {
@@ -35,6 +39,8 @@ RULES = frozenset(
         "stdlib-import",
         "dataclasses-import",
         "variable-length-tuple",
+        "union-none",
+        "undefined-builtin",
     }
 )
 # ⚑ ABSENT FROM CODON 0.20.3 as the census found them (W1321): an import of one stops the module.
@@ -170,11 +176,30 @@ def _attribute(node: ast.Attribute) -> list[Row]:
     return []
 
 
+def _union(node: ast.BinOp) -> list[Row]:
+    """Name an `X | None` union.
+
+    ⚑ PROBED AGAINST CODON 0.20.3 (W1462, from nemik:W631's report): `-> int | None`,
+    `-> str | None`, `-> list[int] | None` and `x: int | None` each fail with "unsupported operand
+    type(s) for |: 'type[int]' and 'Optional[T.8]'", while `Optional[int]` compiles and runs on the
+    value and the None path. So the rule flags a `|` with a `None` operand, and the way out is
+    `Optional[X]`, not a sentinel or a raised error (both also work, but cost a caller change).
+
+    Returns:
+        one row when either operand of a `|` is the constant `None`.
+
+    """
+    for side in (node.left, node.right):
+        if isinstance(side, ast.Constant) and side.value is None:
+            return [(node.lineno, "union-none", "`X | None` is rejected: write `Optional[X]`")]
+    return []
+
+
 def _statement(node: ast.AST) -> list[Row]:
     """Name the refusals of a statement form that has no helper of its own.
 
     Returns:
-        a row for the type statement, a tuple except, or a dict spread.
+        a row for the type statement, a tuple except, a dict spread, or an `X | None` union.
 
     """
     if isinstance(node, ast.TypeAlias):
@@ -183,6 +208,8 @@ def _statement(node: ast.AST) -> list[Row]:
         return [(node.lineno, "tuple-except", "`except (A, B)` is rejected")]
     if isinstance(node, ast.Dict) and None in node.keys:
         return [(node.lineno, "dict-spread", "`{**a}` aborts the compiler")]
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
+        return _union(node)
     return []
 
 
@@ -209,4 +236,5 @@ def scan(tree: ast.AST) -> list[Row]:
             found += _ellipsis(node)
         else:
             found += _statement(node)
+    found += undefined_names(tree)
     return found

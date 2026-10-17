@@ -22,6 +22,13 @@ _PLANTS: dict[str, str] = {
     "stdlib-import": "import subprocess\nfrom hashlib import sha256\nimport os.path, io.x\n",
     "dataclasses-import": "from dataclasses import dataclass\nimport dataclasses\n",
     "variable-length-tuple": "x: tuple[str, ...] = ()\ny: Tuple[int, ...] = ()\n",
+    "undefined-builtin": "x = frozenset([1])\ny = callable(print)\n",
+    "union-none": (
+        "def f(a: int) -> int | None:\n"
+        "    return a\n"
+        "def g(b: list[int] | None) -> int:\n"
+        "    return 0\n"
+    ),
 }
 _CLEAN = (
     "import typing\n"
@@ -39,6 +46,9 @@ _CLEAN = (
     "b = {'y': 2}\n"
     "pair: tuple[int, str] = (1, 'a')\n"
     "rows: list[str] = []\n"
+    "from typing import Optional\n"
+    "def h(a: int) -> Optional[int]:\n"
+    "    return a\n"
 )
 
 
