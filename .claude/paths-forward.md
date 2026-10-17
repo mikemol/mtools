@@ -3,126 +3,126 @@
 
 state file: `.claude/paths-forward.json`
 
-counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:7627e161df003af0`
+counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:8ac14fb0ffa8cae1`
 
 | # | symbol | status |
 |---|---|---|
-| 1 | W1109 | ready |
-| 2 | W1122 | ready |
-| 3 | W798 | ready |
-| 4 | W1025 | ready |
-| 5 | W1026 | ready |
-| 6 | W1027 | ready |
-| 7 | W1029 | ready |
-| 8 | W1040 | ready |
-| 9 | W1069 | ready |
-| 10 | W1091 | ready |
-| 11 | W1093 | ready |
-| 12 | W1096 | ready |
-| 13 | W1102 | ready |
-| 14 | W1113 | ready |
-| 15 | W1344 | ready |
-| 16 | W1376 | ready |
-| 17 | W793 | ready |
-| 18 | W806 | ready |
-| 19 | W822 | ready |
-| 20 | W831 | ready |
-| 21 | W841 | ready |
-| 22 | W858 | ready |
-| 23 | W883 | ready |
-| 24 | W890 | ready |
-| 25 | W914 | ready |
-| 26 | W954 | ready |
-| 27 | W960 | ready |
-| 28 | W963 | ready |
-| 29 | W965 | ready |
-| 30 | W966 | ready |
-| 31 | W996 | ready |
-| 32 | W1005 | ready |
-| 33 | W1007 | ready |
-| 34 | W1017 | ready |
-| 35 | W1028 | ready |
-| 36 | W1030 | ready |
-| 37 | W1047 | ready |
-| 38 | W1081 | ready |
-| 39 | W1083 | ready |
-| 40 | W1084 | ready |
-| 41 | W1086 | ready |
-| 42 | W1088 | ready |
-| 43 | W1089 | ready |
-| 44 | W1090 | ready |
-| 45 | W1103 | ready |
-| 46 | W1104 | ready |
-| 47 | W1132 | ready |
-| 48 | W1133 | ready |
-| 49 | W1146 | ready |
-| 50 | W1246 | ready |
-| 51 | W1304 | ready |
-| 52 | W1308 | ready |
-| 53 | W1312 | ready |
-| 54 | W1323 | ready |
-| 55 | W1328 | ready |
-| 56 | W1334 | ready |
-| 57 | W1336 | ready |
-| 58 | W1337 | ready |
-| 59 | W1345 | ready |
-| 60 | W1347 | ready |
-| 61 | W1364 | ready |
-| 62 | W1369 | ready |
-| 63 | W1426 | ready |
-| 64 | W1072 | ready |
-| 65 | W1175 | ready |
-| 66 | W1212 | ready |
-| 67 | W1237 | ready |
-| 68 | W1238 | ready |
-| 69 | W1261 | ready |
-| 70 | W1262 | ready |
-| 71 | W1305 | ready |
-| 72 | W1316 | ready |
-| 73 | W1348 | ready |
-| 74 | W1360 | ready |
-| 75 | W1361 | ready |
-| 76 | W1362 | ready |
-| 77 | W1366 | ready |
-| 78 | W1367 | ready |
-| 79 | W1368 | ready |
-| 80 | W1372 | ready |
-| 81 | W1375 | ready |
-| 82 | W1382 | ready |
-| 83 | W1383 | ready |
-| 84 | W1407 | ready |
-| 85 | W1415 | ready |
-| 86 | W1416 | ready |
-| 87 | W622 | ready |
-| 88 | W833 | ready |
-| 89 | W1171 | ready |
-| 90 | W1172 | ready |
-| 91 | W1176 | ready |
-| 92 | W1227 | ready |
-| 93 | W1240 | ready |
-| 94 | W1249 | ready |
-| 95 | W1250 | ready |
-| 96 | W1259 | ready |
-| 97 | W1267 | ready |
-| 98 | W1268 | ready |
-| 99 | W1269 | ready |
-| 100 | W1274 | ready |
-| 101 | W1275 | ready |
-| 102 | W1355 | ready |
-| 103 | W1371 | ready |
-| 104 | W1377 | ready |
-| 105 | W1379 | ready |
-| 106 | W1388 | ready |
-| 107 | W1389 | ready |
-| 108 | W1396 | ready |
-| 109 | W1397 | ready |
-| 110 | W1398 | ready |
-| 111 | W1413 | ready |
-| 112 | W1419 | ready |
-| 113 | W1421 | ready |
-| 114 | W1427 | ready |
-| 115 | W1429 | ready |
-| 116 | W1430 | ready |
+| 1 | W1430 | working |
+| 2 | W1109 | ready |
+| 3 | W1122 | ready |
+| 4 | W798 | ready |
+| 5 | W1025 | ready |
+| 6 | W1026 | ready |
+| 7 | W1027 | ready |
+| 8 | W1029 | ready |
+| 9 | W1040 | ready |
+| 10 | W1069 | ready |
+| 11 | W1091 | ready |
+| 12 | W1093 | ready |
+| 13 | W1096 | ready |
+| 14 | W1102 | ready |
+| 15 | W1113 | ready |
+| 16 | W1344 | ready |
+| 17 | W1376 | ready |
+| 18 | W793 | ready |
+| 19 | W806 | ready |
+| 20 | W822 | ready |
+| 21 | W831 | ready |
+| 22 | W841 | ready |
+| 23 | W858 | ready |
+| 24 | W883 | ready |
+| 25 | W890 | ready |
+| 26 | W914 | ready |
+| 27 | W954 | ready |
+| 28 | W960 | ready |
+| 29 | W963 | ready |
+| 30 | W965 | ready |
+| 31 | W966 | ready |
+| 32 | W996 | ready |
+| 33 | W1005 | ready |
+| 34 | W1007 | ready |
+| 35 | W1017 | ready |
+| 36 | W1028 | ready |
+| 37 | W1030 | ready |
+| 38 | W1047 | ready |
+| 39 | W1081 | ready |
+| 40 | W1083 | ready |
+| 41 | W1084 | ready |
+| 42 | W1086 | ready |
+| 43 | W1088 | ready |
+| 44 | W1089 | ready |
+| 45 | W1090 | ready |
+| 46 | W1103 | ready |
+| 47 | W1104 | ready |
+| 48 | W1132 | ready |
+| 49 | W1133 | ready |
+| 50 | W1146 | ready |
+| 51 | W1246 | ready |
+| 52 | W1304 | ready |
+| 53 | W1308 | ready |
+| 54 | W1312 | ready |
+| 55 | W1323 | ready |
+| 56 | W1328 | ready |
+| 57 | W1334 | ready |
+| 58 | W1336 | ready |
+| 59 | W1337 | ready |
+| 60 | W1345 | ready |
+| 61 | W1347 | ready |
+| 62 | W1364 | ready |
+| 63 | W1369 | ready |
+| 64 | W1426 | ready |
+| 65 | W1072 | ready |
+| 66 | W1175 | ready |
+| 67 | W1212 | ready |
+| 68 | W1237 | ready |
+| 69 | W1238 | ready |
+| 70 | W1261 | ready |
+| 71 | W1262 | ready |
+| 72 | W1305 | ready |
+| 73 | W1316 | ready |
+| 74 | W1348 | ready |
+| 75 | W1360 | ready |
+| 76 | W1361 | ready |
+| 77 | W1362 | ready |
+| 78 | W1366 | ready |
+| 79 | W1367 | ready |
+| 80 | W1368 | ready |
+| 81 | W1372 | ready |
+| 82 | W1375 | ready |
+| 83 | W1382 | ready |
+| 84 | W1383 | ready |
+| 85 | W1407 | ready |
+| 86 | W1415 | ready |
+| 87 | W1416 | ready |
+| 88 | W622 | ready |
+| 89 | W833 | ready |
+| 90 | W1171 | ready |
+| 91 | W1172 | ready |
+| 92 | W1176 | ready |
+| 93 | W1227 | ready |
+| 94 | W1240 | ready |
+| 95 | W1249 | ready |
+| 96 | W1250 | ready |
+| 97 | W1259 | ready |
+| 98 | W1267 | ready |
+| 99 | W1268 | ready |
+| 100 | W1269 | ready |
+| 101 | W1274 | ready |
+| 102 | W1275 | ready |
+| 103 | W1355 | ready |
+| 104 | W1371 | ready |
+| 105 | W1377 | ready |
+| 106 | W1379 | ready |
+| 107 | W1388 | ready |
+| 108 | W1389 | ready |
+| 109 | W1396 | ready |
+| 110 | W1397 | ready |
+| 111 | W1398 | ready |
+| 112 | W1413 | ready |
+| 113 | W1419 | ready |
+| 114 | W1421 | ready |
+| 115 | W1427 | ready |
+| 116 | W1429 | ready |
 | 117 | W1431 | ready |
 | 118 | W1433 | ready |
 | 119 | W317 | blocked |
@@ -1419,51 +1419,53 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
 
 ## waypoints
 
-1. **W1109** (ready) Profile one commit gate under the job cap: peak running actions over time (bazel --profile) and the
+1. **W1430** (working) type grade.py's Json by what it consumes: a closed Record TypedDict (key, grade, delegations,
+   ...) and a small union, no recursive alias
+2. **W1109** (ready) Profile one commit gate under the job cap: peak running actions over time (bazel --profile) and the
    same commit's wall time idle versus loaded
-2. **W1122** (ready) mtools' own pre-commit records each check to a gate ledger with mikemol-gate-ledger --record (live
+3. **W1122** (ready) mtools' own pre-commit records each check to a gate ledger with mikemol-gate-ledger --record (live
    hook: tool first, hook last)
-3. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
+4. **W798** (ready) Make each repo's pre-commit a bazel target, with the gate logic in a BUILD file and logs and outputs
    captured by BuildBuddy
    - next: Rule (operator 2026-10-06): a bazel gate never globs or declares a directory as input; name every file
      (aeternum BUILD.bazel, aeternum:W109). Open: a tracked gated file missing from the list must itself fail the gate,
      else a new file escapes it unseen.
-4. **W1025** (ready) The gate runner stops a gate tree's bazel server when the gate ends or gives gate trees a short
+5. **W1025** (ready) The gate runner stops a gate tree's bazel server when the gate ends or gives gate trees a short
    --max_idle_secs (15 to 30 minutes), keeping back-to-back commits warm
-5. **W1026** (ready) mikemol-cpuweight gives each repo its own build scope (gate-`<repo>`.scope) and writes an optional
+6. **W1026** (ready) mikemol-cpuweight gives each repo its own build scope (gate-`<repo>`.scope) and writes an optional
    memory.high and memory.max to it, so memory is attributable and bounded per repo
-6. **W1027** (ready) A regression check that fails when a gate's peak sandbox size exceeds a declared budget (now the
+7. **W1027** (ready) A regression check that fails when a gate's peak sandbox size exceeds a declared budget (now the
    nvme sandbox directory)
-7. **W1029** (ready) fence gains a verb that resizes a held lease without killing or refusing it, so the lease itself
+8. **W1029** (ready) fence gains a verb that resizes a held lease without killing or refusing it, so the lease itself
    can follow the live memory rail
-8. **W1040** (ready) mikemol-commit's time cap follows the build's progress, not the wall clock, and on any exit stops
+9. **W1040** (ready) mikemol-commit's time cap follows the build's progress, not the wall clock, and on any exit stops
    the bazel client, removes the index.lock its killed git left and releases the commit claim
-9. **W1069** (ready) Registry check mode: a landed metric family with no row, or a row naming no panel, fails
+10. **W1069** (ready) Registry check mode: a landed metric family with no row, or a row naming no panel, fails
    (luthen-observability:W905)
-10. **W1091** (ready) transcriptstruct filter: --tool Bash, --tail N and --field command, so a window of recent commands
+11. **W1091** (ready) transcriptstruct filter: --tool Bash, --tail N and --field command, so a window of recent commands
    fits the cap
-11. **W1093** (ready) pycheck chooses the project's ruff config by ruff's own precedence and prints which config and
+12. **W1093** (ready) pycheck chooses the project's ruff config by ruff's own precedence and prints which config and
    line-length drove a refusal
-12. **W1096** (ready) A failing gate check prints its own words and its cause: exit code or signal, wall and CPU time
+13. **W1096** (ready) A failing gate check prints its own words and its cause: exit code or signal, wall and CPU time
    against the cap, never a bare name
-13. **W1102** (ready) Answer gcalculus:W259: Promotion candidate for mtools: scripts/after_leaf_change.sh (snapshot,
+14. **W1102** (ready) Answer gcalculus:W259: Promotion candidate for mtools: scripts/after_leaf_change.sh (snapshot,
    arms bazel)
-14. **W1113** (ready) A VRAM-in-MiB membudget ledger beside gpu-contexts.ledger (second ledger --unit MiB, TOTAL about
+15. **W1113** (ready) A VRAM-in-MiB membudget ledger beside gpu-contexts.ledger (second ledger --unit MiB, TOTAL about
    6500, nested under the context lease via MEMBUDGET_PARENT)
-15. **W1344** (ready) Design the stdlib boundary for Codon: a typed interop module over subprocess, argparse, hashlib,
+16. **W1344** (ready) Design the stdlib boundary for Codon: a typed interop module over subprocess, argparse, hashlib,
    shutil, ast and io, or a patch list for Codon, chosen by modules unblocked
-16. **W1376** (ready) Mutants runner ends a stuck mutant by an absence witness (silent output and stalled process-tree
+17. **W1376** (ready) Mutants runner ends a stuck mutant by an absence witness (silent output and stalled process-tree
    CPU), and the long targets carry bazel's longest class only as one commented backstop, so no gate refusal is a
    wall-clock timeout
    - next: Read check_mutants/mutate_runner.py where each mutant's test run is bounded; add the W1114 witness (log
      growth plus /proc tree CPU, W1124 to W1126) per mutant; set the BUILD timeout of the 40 'long' targets to the
      longest class with one comment saying it is a backstop; evidence: the two refusals (W1356 and batch 3,
      pycodemod:mutants timeouts at load 55 with no test failing) and the measurements on W1312
-17. **W793** (ready) AE: pilot consumer-constraint type inference: derive what a value must be from its uses (pycodemod
+18. **W793** (ready) AE: pilot consumer-constraint type inference: derive what a value must be from its uses (pycodemod
    sites.scan, importdag), reporting determined / ambiguous / underdetermined holes
    - next: Pick one repo's Any/object boundary files; scan consumers of each hole; emit the constraint set per hole
      without editing
-18. **W806** (ready) Bound the bazel disk cache and output base on zram1: its real ceiling is compressed RAM, which
+19. **W806** (ready) Bound the bazel disk cache and output base on zram1: its real ceiling is compressed RAM, which
    compression ratio sets
    - next: Incident 2026-10-06: zram1 (backs /tmp, /var/tmp, luthen scratch) hit its limit, ext4 failed on inode
      creation and remounted read-only; a reboot cleared it. df shows project-quota views (128G/32G/252G) of a device
@@ -1472,17 +1474,17 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
      --experimental_disk_cache_gc_max_size (and the idle delay), set a per-repo bound whose sum fits under mem_limit at
      the worst measured ratio, and cap the shared output base. Record the budget arithmetic in one place, not in each
      repo.
-19. **W822** (ready) observe live that PostToolUse additionalContext from mikemol-hook-pycheck-advise reaches the model
+20. **W822** (ready) observe live that PostToolUse additionalContext from mikemol-hook-pycheck-advise reaches the model
    (armed in the host from the next session)
    - next: Observe in a repo whose debt ledger is non-empty (luthen-observability has ~2000 findings): once its ledger
      exists, edit a .py file with a stale import and see whether the closure advice arrives as context; mtools cannot
      show it, its ledger is {}.
-20. **W831** (ready) wire mikemol-build-failure into every other repo's precommit bazel lines
+21. **W831** (ready) wire mikemol-build-failure into every other repo's precommit bazel lines
    - next: Operator 2026-10-06: the hook goes on each bazel line in the precommits. Done for mtools (15f848f).
      Remaining: the other bazel-gated repos' precommits (aeternum, gcalculus once its scaffold lands, rosettapkg,
      paperkit, luthen, ...), each calling mikemol-build-failure on its failing bazel branch via the sha-pinned
      mikemol-hooks wheel; survey with katas.py precommit. Mind each repo's own rulings on what its summary may print.
-21. **W841** (ready) bazel admits each ACTION before it materializes data into zram, letting running actions finish and
+22. **W841** (ready) bazel admits each ACTION before it materializes data into zram, letting running actions finish and
    zram's LRU GC drain between them
    - next: Operator 2026-10-06 (replaces the watchdog/stop-a-running-job design): the key is an admission check prior to
      the executor copying data into zram, catching actions as they are about to begin; existing actions continue; zram's
@@ -1497,229 +1499,229 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
      prototype (2) for tests and (1) for the heavy macro targets on mtools, measure whether the heavy zram writers are
      covered, and only then decide whether the remainder needs remote execution (remote_executor is already configured).
      Still open from the earlier measurement: the staged-tree wrapper path and adoption in the other bazel repos.
-22. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
+23. **W858** (ready) Python-file discovery is carried by corpus.py_files and pathwalk.expand: one should depend on the
    other
    - next: Decide which of the five differences corpus keeps as policy and which it takes from pathwalk: the shape that
      fits is corpus.py_files = pathwalk.expand(operands, include_worktrees=..., exclude=`<corpus's` vocabulary as globs,
      bazel-* included>) plus corpus's root resolution; the open choices are (1) symlinked files, (2) the git
      requirement, (3) venv by marker rather than by name. Ask corpus's consumers (substrate imported it 173 times)
      before changing (1)-(3); until then keep both and record the decision here.
-23. **W883** (ready) pycodemod: typed-args rewrite mode (one argparse Namespace subclass per parser), dry-run-first,
+24. **W883** (ready) pycodemod: typed-args rewrite mode (one argparse Namespace subclass per parser), dry-run-first,
    verified on a copy by the edit gate
    - next: Build the orchestrator + CLI mode typed-args (dry-run default, --write): per file plan(text); write the
      candidate to a probe path INSIDE the target project; judge with the project's own mypy --output json and ruff
      format; accept only if the finding multiset (messages) of the new text is a strict subset of the old and ruff
      format is a no-op; otherwise the file goes to the worklist with the refusal or the new findings. Probes are removed
      even on failure (mtools-a1: no WIP left in a shared tree).
-24. **W890** (ready) pycodemod --projects: the command-line mode over paperkit_projects, taking paperkit's own warrant
+25. **W890** (ready) pycodemod --projects: the command-line mode over paperkit_projects, taking paperkit's own warrant
    resolver as its operand
    - next: Decide how the CLI obtains paperkit's resolver (an importable paperkit.bib function named by an operand, or a
      path to the checkout), then add the mode in cli_modes with a refusal when no resolver is given, and a test that
      runs it on a fixture corpus.
-25. **W914** (ready) pathsforward --add gives a new card the default priority vector so nemik-rank has no UNSCORED items
+26. **W914** (ready) pathsforward --add gives a new card the default priority vector so nemik-rank has no UNSCORED items
    - next: In ops.add set vector to the documented default WV with vector_source default when none is given (read the
      default and its axes from nemik's vector spec, do not restate), and a test that a minted card scores; nemik-rank
      --check then prints no UNSCORED for new cards.
-26. **W954** (ready) Document isolated commit for hook authors: MIKEMOL_REAL_ROOT, MIKEMOL_COMMIT_ISOLATED,
+27. **W954** (ready) Document isolated commit for hook authors: MIKEMOL_REAL_ROOT, MIKEMOL_COMMIT_ISOLATED,
    MIKEMOL_SNAPSHOT_ROOT in docs/adopting-a-hook.md and hooks/README.md
    - next: Add an Isolated commit section to docs/adopting-a-hook.md: isolation is on only where .githooks/pre-commit
      text names MIKEMOL_REAL_ROOT (commit_kata.supports_isolation); the hook then runs in a snapshot of the tree that
      lands, so host tools (venvs, bazel-bin) come from ${MIKEMOL_REAL_ROOT:-root}; MIKEMOL_COMMIT_ISOLATED=0|1
      overrides; MIKEMOL_SNAPSHOT_ROOT moves the namespace; MIKEMOL_COMMIT_TIMEOUT_S bounds the run. Link
      .claude/design/W939-isolated-gate-tools.md. Test: a doc-names-every-env-var check.
-27. **W960** (ready) gate_stages imports option takes a repo name and computes the bazel canonical path, so adopters
+28. **W960** (ready) gate_stages imports option takes a repo name and computes the bazel canonical path, so adopters
    stop hardcoding +_repo_rules2+ numbering
    - next: In rules_py gate.bzl options, accept imports_repo=[(repo, subpath)] and expand to the runfiles path via Label
      canonical-name resolution instead of the literal '../+_repo_rules2+mtools_bibparse/...'; test with a repo name
      whose numbering differs; tell gcalculus-f6 when it lands. Evidence 2026-10-10 gcalculus-22: engine stage
      every_gcalc_leaf_certifies passes (775 leaves, 56 s) and three bibparse stages with imports pass; hooks c5f2c58
      probe 8/8 with a relative launcher.
-28. **W963** (ready) mikemol-membudget records a 13 MB peak floor for a trivial payload because the forked python image
+29. **W963** (ready) mikemol-membudget records a 13 MB peak floor for a trivial payload because the forked python image
    counts
    - next: Measure first (run 64 x -- /usr/bin/true; a 200 MiB allocation: python 212 vs bash 211), then in fence
      subtract the pre-exec baseline maxrss or spawn without the fork; add a tiny-payload arm to test_membudget_cli
      asserting a peak under a few MB. Fold in the two arms substrate could not verify: two clients on one ledger, and
      the load-gate refusal with MAXLOAD's default. Evidence 2026-10-10 substrate-94: a self-SIGKILL payload runs once
      and exits 137 in python while bash climbs to REFUSED exit 3, so that direction is already better.
-29. **W965** (ready) bump-blocked rows count the cards behind an external blocker transitively and shorten the symbol
+30. **W965** (ready) bump-blocked rows count the cards behind an external blocker transitively and shorten the symbol
    list
    - next: In ops.nudge_summary count every card that waits on the blocker through blocked_on chains in the same queue
      (W315 on W314, W300 on W314, everything on W300), not only cards naming it directly; print the first few direct
      symbols then 'and N more'; say '1 card' in the singular. The nudge decision (which party is due) still follows the
      direct cards. Test: a chain of three plus a fan-out, asserting the transitive count and the shortened list.
      substrate-94 measured 1 direct vs about 250 transitive for operator ask W314 (nemik-operator weight 264).
-30. **W966** (ready) repin rows carry the file and line each pin came from, so a survey can be checked from its own
+31. **W966** (ready) repin rows carry the file and line each pin came from, so a survey can be checked from its own
    output
    - next: Add path:line to every survey row (repo-relative pyproject.toml:LINE; line from the match offset). Decide and
      test two things linux-sources left open: a repo's uv.lock transitive pins get no row (the lock follows the
      pyproject; --write runs uv sync) and say so in docs/repinning.md; a repo with two pyproject files is out of scope
      today (only the root file is read) and the doc says that. Keep the old columns first so existing parsers still
      split.
-31. **W996** (ready) inbound-asks context line prints the live claim holder beside a tag another session is working, by
+32. **W996** (ready) inbound-asks context line prints the live claim holder beside a tag another session is working, by
    calling nemik-overlaps
    - next: nemik:W305 (dd3b73e) put the holder on nemik-overlaps rows and left the inbound-asks hook to mtools; have
      mikemol.hooks.inbound_asks add the holder for this repo's working-card tags, advisory, absent tool said once,
      behind its runner seam.
-32. **W1005** (ready) mutation: a nested def is named find_cycle.`<locals>`.visit in the grid's report but
+33. **W1005** (ready) mutation: a nested def is named find_cycle.`<locals>`.visit in the grid's report but
    find_cycle.visit in a regex def= scope, so the report's own name plants nothing
    - next: Seen 2026-10-11 declaring debtplan: five declarations scoped def=find_cycle.`<locals>`.visit (the name the
      KILLED list prints) came back UNAPPLIED; def_sites() yields find_cycle.visit. Make the scope accept both spellings,
      or print the name def_sites uses.
-33. **W1007** (ready) Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row,
+34. **W1007** (ready) Declare ~/.claude/settings.json inbound-asks hook entries as a luthen terraform/user row,
    replacing the hand-applied W881 patch
-34. **W1017** (ready) Fleet survey mode: list every repo whose pre-commit hook does not name MIKEMOL_REAL_ROOT and every
+35. **W1017** (ready) Fleet survey mode: list every repo whose pre-commit hook does not name MIKEMOL_REAL_ROOT and every
    hook or gate-script lookup that resolves against the snapshot root
    - next: Express the five adoption pitfalls as a Rego contract with a test file of refusing and admitting cases,
      shipped with mtools; the survey mode evaluates it per repo and publishes the result as a series; each adopter can
      run the same contract locally
-35. **W1028** (ready) mikemol-repin --revendor takes --no-sync, so a repo with undeclared packages in its venv can
+36. **W1028** (ready) mikemol-repin --revendor takes --no-sync, so a repo with undeclared packages in its venv can
    revendor in place without uv sync --frozen removing them
-36. **W1030** (ready) fence publishes its rail engagement counts (leases granted, resized, refused) as a Prometheus
+37. **W1030** (ready) fence publishes its rail engagement counts (leases granted, resized, refused) as a Prometheus
    textfile series luthen can chart
-37. **W1047** (ready) Reuse-readiness census: for each published component report what stops a stranger adopting it, as
+38. **W1047** (ready) Reuse-readiness census: for each published component report what stops a stranger adopting it, as
    a dry-run mode and a metric
    - next: Write the boundary policy first as Rego plus its test file (refusing and admitting cases per class), the
      census and the export builder both read it; schema fields and repo classes are its input
-38. **W1081** (ready) Refuse paths-forward state writes while the repo's gate or board is running, and print why
-39. **W1083** (ready) pycodemod mode taking FILE OLD NEW triples with an exactly-one-match assertion, for files the
+39. **W1081** (ready) Refuse paths-forward state writes while the repo's gate or board is running, and print why
+40. **W1083** (ready) pycodemod mode taking FILE OLD NEW triples with an exactly-one-match assertion, for files the
    pycheck bar refuses to Edit
-40. **W1084** (ready) A paperkit lock-regen, bazel shutdown and isolated commit chain as one mode
-41. **W1086** (ready) A CPU-pinned verify mode: the suite minus the hanging groups, failures diffed against HEAD
-42. **W1088** (ready) mikemol-commit --wait with --message-file, and --explain printing the refusal's cause and the
+41. **W1084** (ready) A paperkit lock-regen, bazel shutdown and isolated commit chain as one mode
+42. **W1086** (ready) A CPU-pinned verify mode: the suite minus the hanging groups, failures diffed against HEAD
+43. **W1088** (ready) mikemol-commit --wait with --message-file, and --explain printing the refusal's cause and the
    failing check's source
-43. **W1089** (ready) mikemol-paths-forward --add-many and --atomize PARENT t1 t2 ...: children with enables and
+44. **W1089** (ready) mikemol-paths-forward --add-many and --atomize PARENT t1 t2 ...: children with enables and
    caused-by, parent blocked on them
-44. **W1090** (ready) mikemol-commit --prepare: a per-repo declared regen list run in order (format, check,
+45. **W1090** (ready) mikemol-commit --prepare: a per-repo declared regen list run in order (format, check,
    gen-warrants, test)
-45. **W1103** (ready) waldo cli.main takes a command callable of the set name, so a consumer need not pre-read --set
+46. **W1103** (ready) waldo cli.main takes a command callable of the set name, so a consumer need not pre-read --set
    from argv
-46. **W1104** (ready) docs/repinning.md: mikemol-wheel's ignored vendor/wheels/.gitignore makes an isolated commit
+47. **W1104** (ready) docs/repinning.md: mikemol-wheel's ignored vendor/wheels/.gitignore makes an isolated commit
    refuse a NEW wheel, and a library wheel must also be a hashed hermetic input of the consumer's bazel rung
-47. **W1132** (ready) Remove the wall-clock ceiling: the waiter --timeout flag, fleet.ceiling and the LOG.seconds wall
+48. **W1132** (ready) Remove the wall-clock ceiling: the waiter --timeout flag, fleet.ceiling and the LOG.seconds wall
    measure, leaving one commented backstop
-48. **W1133** (ready) block-behind-open reads enablers that live in other queues (repo:W`<n>` cards whose enables name a
+49. **W1133** (ready) block-behind-open reads enablers that live in other queues (repo:W`<n>` cards whose enables name a
    card here) through the same resolution --prune-landed uses
-49. **W1146** (ready) An installable guide that works off this host: INSTALL.md followed in a clean container from the
+50. **W1146** (ready) An installable guide that works off this host: INSTALL.md followed in a clean container from the
    index, with no host path or private remote in it
    - next: Extend W1104's guide: run the documented steps in a clean container, record the output, and fix every step
      that names this host
-50. **W1246** (ready) --tick-close prints the nemik warning delta by shape (before and after its own check) so a tick
+51. **W1246** (ready) --tick-close prints the nemik warning delta by shape (before and after its own check) so a tick
    sees which shapes it cleared or added
-51. **W1304** (ready) Rename usage-style refusals to EXIT_USAGE (flag_contract, new_dist_cli) and move pathsforward cli
+52. **W1304** (ready) Rename usage-style refusals to EXIT_USAGE (flag_contract, new_dist_cli) and move pathsforward cli
    EXIT_REFUSED 2 to 4, DEFER and BUSY names to match the table, with pathsforward's tests and prose readers updated
    together
    - next: pathsforward last: its help text and tests pin 2 and 3 (W1296 list); update them with the value, then
      regenerate the baseline
-52. **W1308** (ready) Move the pycheck family's NOT_CHECKED and NOT_RUN names from 3 to 7 with their readers
+53. **W1308** (ready) Move the pycheck family's NOT_CHECKED and NOT_RUN names from 3 to 7 with their readers
    - next: Readers: the pycheck tests name the constants and hooks/bin/mikemol-hooks-preflight exits 3 for 'not checked'
      itself; update both with the value; regenerate the baseline. Waldo is W1310 and the gate's dists are part of it.
-53. **W1312** (ready) Measure CPU seconds per mutants shard and list every gate test target bounded by a wall-clock
+54. **W1312** (ready) Measure CPU seconds per mutants shard and list every gate test target bounded by a wall-clock
    timeout
    - next: Continue the CPU-per-target table; the debtplan:mutants (one shard, 300s) and hooks:mutants_1,5,7 timeouts of
      the same run are unmeasured
-54. **W1323** (ready) A pycheck codon-compat mode reports per file with a per-repo baseline ledger so only new debt
+55. **W1323** (ready) A pycheck codon-compat mode reports per file with a per-repo baseline ledger so only new debt
    refuses, the shape of the strict-mypy ratchet
    - next: After the census: read the ratchet and the pycheck ledger code, decide the report kind (rule id per finding),
      write the baseline format and the new-debt refusal as one mode of pycheck or of websubset, test with a planted
      finding and a baselined one
-55. **W1328** (ready) A check declares 3.14 as the Python floor and refuses a toolchain, requires-python or venv below
+56. **W1328** (ready) A check declares 3.14 as the Python floor and refuses a toolchain, requires-python or venv below
    it
    - next: Declare 3.14 as the floor in one tracked file; the check reads MODULE.bazel's toolchain and hubs, each dist's
      requires-python and its .venv interpreter and refuses anything below 3.14; baseline today's mismatches (toolchain
      and 72 hubs at 3.13, every dist requires-python >=3.13) so each one ratchets away
-56. **W1334** (ready) A bulk --drop over a selector with a per-card reason, all-or-none, through the advice store
+57. **W1334** (ready) A bulk --drop over a selector with a per-card reason, all-or-none, through the advice store
    - next: Reuse the --update-many selector and reason forms and the advice rows; dry run prints one WOULD DROP line
      with its reason per card, --write drops all or none (one refusal stops every drop), residue gets each reason
-57. **W1336** (ready) A mode reads a card that cites an inbox letter and reports whether the letter is answered,
+58. **W1336** (ready) A mode reads a card that cites an inbox letter and reports whether the letter is answered,
    archived or still open
    - next: Define the citation (inbox/`<name>`.md in title, next step or evidence), look for the file in inbox/ and
      inbox/archive/, and for an answering letter by the reply naming convention; report one line per card; el-openglo's
      13 letter cards are the fixture shape
-58. **W1337** (ready) Stage Codon's licence text beside its pin, checked against the v0.20.3 tag and not the repo head
+59. **W1337** (ready) Stage Codon's licence text beside its pin, checked against the v0.20.3 tag and not the repo head
    - next: Read LICENSE at the v0.20.3 tag (gh api repos/exaloop/codon/contents/LICENSE?ref=v0.20.3), search the tarball
      for any notice deeper than two levels, and carry the text with the http_archive (a licenses file in the build
      content)
-59. **W1345** (ready) Minimal reproducer and a draft upstream report for the Codon dict-spread compiler abort; nothing
+60. **W1345** (ready) Minimal reproducer and a draft upstream report for the Codon dict-spread compiler abort; nothing
    is published, the operator sends it
-60. **W1347** (ready) Codon target gains nemik's three rules: any-use, none-ternary-in-optional-return,
+61. **W1347** (ready) Codon target gains nemik's three rules: any-use, none-ternary-in-optional-return,
    comprehension-over-optional-items-in-join
-61. **W1364** (ready) codon-prep-tree finds modules another dist carries a byte-identical copy of and refreshes or
+62. **W1364** (ready) codon-prep-tree finds modules another dist carries a byte-identical copy of and refreshes or
    refuses them
    - next: Read how tests name a copy (pathsforward tests/test_frontier_copy.py: _COPY path and _REL source); list every
      such pair under the tree (grep tests for 'byte-identical'), then make the tree driver copy the changed source over
      its twin, or refuse the dist, with a test
-62. **W1369** (ready) Decide and build the tuple[X, ...] rewrite for Codon (136 modules): fixed tuple, list, or a
+63. **W1369** (ready) Decide and build the tuple[X, ...] rewrite for Codon (136 modules): fixed tuple, list, or a
    Sequence alias, judged by mypy and the dist tests
    - next: Probe Codon for which spellings of a homogeneous variable-length tuple compile (tuple[X, ...] is rejected per
      nemik; test Sequence[X], list[X], a bare tuple); list the call sites where immutability matters (hashing, dict
      keys); then a verb for the safe spelling with the judge, and a worklist of sites that need a hand decision
-63. **W1426** (ready) --manifest PATH... sets a card's manifest, the repo-relative paths it will create or edit plus a
+64. **W1426** (ready) --manifest PATH... sets a card's manifest, the repo-relative paths it will create or edit plus a
    size class, validated: inside the repo, named, never globbed
-64. **W1072** (ready) Conformance runner: one shared corpus through the Python and the Codon build, failing on any
+65. **W1072** (ready) Conformance runner: one shared corpus through the Python and the Codon build, failing on any
    difference with the input printed
-65. **W1175** (ready) Sweep every repo under the host root for tracked symlinks with a tool mode, and say for each
+66. **W1175** (ready) Sweep every repo under the host root for tracked symlinks with a tool mode, and say for each
    whether the snapshot carries it or refuses it
    - next: A mikemol-snapshot mode (--links REPO) printing each tracked link, its target, and CARRIED (in-tree regular
      file) or REFUSED with the reason, built on snaplinks.links; then one sweep over the repos with a queue;
      luthen-observability's images/paperkit-executor is the known REFUSED control
-66. **W1212** (ready) Ship publish_privacy.rego inside the hooks wheel as package data so an installed
+67. **W1212** (ready) Ship publish_privacy.rego inside the hooks wheel as package data so an installed
    mikemol-privacy-shipped needs no environment variable
-67. **W1237** (ready) INSTALL.md gains the index install route once the first release exists, followed in a clean
+68. **W1237** (ready) INSTALL.md gains the index install route once the first release exists, followed in a clean
    container
    - next: After W1152 (TestPyPI upload and install check): add the pip or uv add lines by distribution name, reword the
      paragraph about sibling path sources, run the documented steps in a clean container from TestPyPI and record the
      output.
-68. **W1238** (ready) The publish tool: mint a publish card, build every dist at its number via release-check --version,
+69. **W1238** (ready) The publish tool: mint a publish card, build every dist at its number via release-check --version,
    upload through the publish workflow, mark the card done, tag v0.0.N
    - next: After the operator's go and W1152: a verb that mints the card (counter), runs release-check with --version
      0.0.`<card>`, dispatches publish.yml with that sha and version, and on success marks the card done and tags
      v0.0.`<card>`. publish.yml needs a version input first (it builds at the pinned sha today with the placeholder
      versions).
-69. **W1261** (ready) Run nemik's shapes.ttl over pathsforward's own queue fixtures so a format change fails both sides
-70. **W1262** (ready) Each independent reader of the queue (hooks modules and katas) validates the shared fixtures
+70. **W1261** (ready) Run nemik's shapes.ttl over pathsforward's own queue fixtures so a format change fails both sides
+71. **W1262** (ready) Each independent reader of the queue (hooks modules and katas) validates the shared fixtures
    against nemik's shapes in its own tests
-71. **W1305** (ready) Pin a git for hermetic test rungs, as opa and shellcheck are pinned, so a test that makes real
+72. **W1305** (ready) Pin a git for hermetic test rungs, as opa and shellcheck are pinned, so a test that makes real
    commits runs in a repo whose sandbox has no git (luthen-observability:W1086)
    - next: Measure first: which git features mtools tests need (worktree, update-index, cat-file), what a sandbox run
      resolves as git today (host /usr/bin or none), and which static or relocatable git build exists to pin by url and
      sha256; record the three on this card, then declare it in MODULE.bazel beside opa
-72. **W1316** (ready) mikemol-new-dist prints a stale gen-warrants step: 'CVDCORE tests.test_smoke=smoke' fails; the
+73. **W1316** (ready) mikemol-new-dist prints a stale gen-warrants step: 'CVDCORE tests.test_smoke=smoke' fails; the
    working form is 'cvdcore smoke=smoke' with --title
    - next: Fix the printed step in new_dist_cli.scaffold to the working form (dist directory lowercase, module=section,
      --title), and have a test run the printed commands' argument shape through gen_warrants' own parser
-73. **W1348** (ready) --tick-open runs a per-repo list of commands after its own steps, read from a declared file, so a
+74. **W1348** (ready) --tick-open runs a per-repo list of commands after its own steps, read from a declared file, so a
    tick opens in one call (nemik:W450)
-74. **W1360** (ready) mikemol-repin --revendor accepts a wheel local version with or without the g before the sha
-75. **W1361** (ready) mikemol-repin --revendor reads the dists to move from the vendored wheel names, not a fixed three
-76. **W1362** (ready) mikemol-repin --revendor rewrites the mtools sha mentions in MODULE.bazel and writes
+75. **W1360** (ready) mikemol-repin --revendor accepts a wheel local version with or without the g before the sha
+76. **W1361** (ready) mikemol-repin --revendor reads the dists to move from the vendored wheel names, not a fixed three
+77. **W1362** (ready) mikemol-repin --revendor rewrites the mtools sha mentions in MODULE.bazel and writes
    vendor/wheels/SHA256SUMS
-77. **W1366** (ready) mikemol-websubset --idioms emits the Codon idiom counts as OTLP gauges with OTel resource
+78. **W1366** (ready) mikemol-websubset --idioms emits the Codon idiom counts as OTLP gauges with OTel resource
    attributes instead of a Prometheus textfile
    - next: After the shared emitter exists: turn websubset_prom.render into a metric-point builder for it (one gauge per
      rule with repo, target and rule as attributes, service.name mikemol-websubset, service.namespace the repo), keep
      --prom only if luthen still reads textfiles, test the payload
-78. **W1367** (ready) mikemol-vlog exports its records as OTLP logs through the shared emitter; its spool and drainer
+79. **W1367** (ready) mikemol-vlog exports its records as OTLP logs through the shared emitter; its spool and drainer
    stay
    - next: Read hooks vlogship, vlogspool and the drainer to see where a record leaves the box; add an OTLP logs sink
      that maps a record's fields to attributes and its time to the log timestamp, behind the existing sink seam, tested
      with the drainer's own fixtures
-79. **W1368** (ready) --tick-close refuses a close that skipped the top card by nemik rank, read as data, unless
+80. **W1368** (ready) --tick-close refuses a close that skipped the top card by nemik rank, read as data, unless
    --reason names why
    - next: Read closegate.py (the W1203 refusal) and --weights-from (how rank already enters as data); add --rank-from
      FILE to --tick-close reading nemik-rank --json for this repo, find the top workable card, refuse the close when it
      is neither the worked card nor named by the reason nor blocked, say which card and print the --reason to give;
      tests: skipped top card refused, reason accepted, no rank file means no new refusal
-80. **W1372** (ready) The paths-forward ledger records every status transition, including blocked to ready, so ready
+81. **W1372** (ready) The paths-forward ledger records every status transition, including blocked to ready, so ready
    history can be rebuilt
    - next: Read the ledger line grammar and where status changes happen (update, prune_done, bump, promote, close); add
      one transition line per change with from, to and cause, keeping old lines readable; test that a blocker landing
      writes blocked to ready and that a replay of the ledger reproduces the status history
-81. **W1375** (ready) Extract a helper from ratchet core.ratchet so the split except clauses fit the complexity limit,
+82. **W1375** (ready) Extract a helper from ratchet core.ratchet so the split except clauses fit the complexity limit,
    and drop its per-file complex-structure ignore
    - next: Read core.ratchet (src/mikemol/ratchet/core.py:270), find the branch to move into a helper, keep its tests,
      remove the ratchet/pyproject.toml per-file entry W1375 names; check whether any other dist's function is pushed
      over the limit by the split (count them in the next batches)
-82. **W1382** (ready) A reap mode removes a repo's stale scratch worktrees safely: liveness by two reads over time,
+83. **W1382** (ready) A reap mode removes a repo's stale scratch worktrees safely: liveness by two reads over time,
    patch-equivalence by git cherry, unmerged or dirty work saved to a named ref and reported, removal by exact path only
    when nothing is at risk
    - next: After W1378 (the worktree claims file): for each registered worktree under the scratch root read git worktree
@@ -1728,21 +1730,21 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
      refs/stash-reap/NAME at the branch tip (a commit for the dirty diff) and report, never remove; clean and fully
      patch-equivalent -> git worktree remove by exact path; default is a read-only classification; tests on a temp repo
      with each class; no symlinks
-83. **W1383** (ready) Answer luthen-observability:W1073: atomicwrite.flock gains try_exclusive, a non-blocking flock
+84. **W1383** (ready) Answer luthen-observability:W1073: atomicwrite.flock gains try_exclusive, a non-blocking flock
    context manager yielding whether it took the lock, and atomicwrite is pinnable
    - next: Add try_exclusive(path) to atomicwrite/flock.py (LOCK_EX | LOCK_NB, True or False, no wait, no clock,
      released on exit only if taken); tests: held by another descriptor yields False without waiting, free yields True
      and releases; warrants; commit; tell luthen the sha
-84. **W1407** (ready) mikemol-commit and the lease emit an OTel up-down counter of in-flight and queued commits per repo
-85. **W1415** (ready) type-hole pilot step 2: for each listed hole collect its consumers (calls, attribute reads,
+85. **W1407** (ready) mikemol-commit and the lease emit an OTel up-down counter of in-flight and queued commits per repo
+86. **W1415** (ready) type-hole pilot step 2: for each listed hole collect its consumers (calls, attribute reads,
    passes) with the existing pycodemod readers
-86. **W1416** (ready) type-hole pilot step 3: emit each hole's constraint set and classify it determined, ambiguous or
+87. **W1416** (ready) type-hole pilot step 3: emit each hole's constraint set and classify it determined, ambiguous or
    underdetermined, without editing
-87. **W622** (ready) Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks,
+88. **W622** (ready) Send each peer repo one letter with the steps to adopt the inbound-asks and nemik-check hooks,
    citing docs/adopting-a-hook.md
    - next: W881 landed: once the operator merges the user-level lines (W881 design note), drop this card for
      inbound-asks; keep it only for the nemik-check hook letters
-88. **W833** (ready) replace rubric.tsv with rubric.jsonl across mtools: 32 files, paper.toml, BUILD inputs, tests, and
+89. **W833** (ready) replace rubric.tsv with rubric.jsonl across mtools: 32 files, paper.toml, BUILD inputs, tests, and
    the pre-commit's grep|cut over the rubric
    - next: Operator 2026-10-06: tsv to jsonl. Blocked on paperkit:W295 (the reader and paperkit-rubric). Then: convert
      each dist's rubric.tsv (32: atomicwrite audiostruct bibparse buildtel check_mutants check_ratchet check_ruff corpus
@@ -1753,7 +1755,7 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
      and replace .githooks/pre-commit lines 711-719 (grep -v ^# | cut -f1 | sort -u, a textual query over a structured
      file) with paperkit-rubric --keys. Pin the paperkit sha that carries the reader. Four other tracked .tsv files
      (.claude/design/*.tsv, pycodemod/differential/origin-modes.tsv) are data, not rubrics: survey for a follow-up.
-89. **W1171** (ready) mikemol-katas retro: the retrospective ritual as a kata over graph records, keeping the skill's
+90. **W1171** (ready) mikemol-katas retro: the retrospective ritual as a kata over graph records, keeping the skill's
    mentality as the printed constraint at each gate
    - next: Operator ask 2026-10-14: ~/.claude/skills/retrospective-ritual (gates G0 to G9) must become a kata; nemik and
      the waypoint graph already carry much of it, the skill carries the mentality. Read the skill, then: a Retro record
@@ -1770,7 +1772,7 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
      closed against its own witness. The kata prints each gate's constraint question and the one-line test. Check
      pathsforward and nemik for existing parts first (rejected, unchanged, consumers fields, W488 and W489 shapes).
      Shapes go to nemik:W492.
-90. **W1172** (ready) mikemol-vlog tail: follow a VictoriaLogs stream with a LogsQL filter so runs are watched from the
+91. **W1172** (ready) mikemol-vlog tail: follow a VictoriaLogs stream with a LogsQL filter so runs are watched from the
    store, not by polling files
    - next: Operator 2026-10-14: watching a live run should be a tail on a filter from VictoriaLogs, like Loki's tail,
      not luthen polling a jsonl file. Add a follow mode beside the shipper (W1165 to W1170): mikemol-vlog tail --filter
@@ -1779,81 +1781,79 @@ counter 1437 · heartbeat 2026-10-15T15:14:51Z · job `0ec53044` · hash `v2:762
      endpoint failed. Prerequisite for the first use: the reaper-runs.jsonl stream is shipped (luthen log_ship Source,
      not yet landed, rides the morning's lib-log-ship drift row). Test against a fake endpoint, including one that drops
      the connection mid-tail.
-91. **W1176** (ready) Lint mutants.regex lines before the gate: exactly four pipe-separated fields, so an escaped pipe
+92. **W1176** (ready) Lint mutants.regex lines before the gate: exactly four pipe-separated fields, so an escaped pipe
    in a pattern is refused at edit time, not by 12 failed shards
    - next: 2026-10-14 a W1156 gate attempt failed all 12 mutants shards on one line (mutate: mutants.regex: line 207:
      want 4 fields separated by '|', got 5) because a pattern held an escaped pipe; the format splits on every pipe. A
      pycheck-style edit check on mutants.regex (field count, no pipe inside a pattern or replacement, the file named in
      field 1 exists) makes the class mechanical
-92. **W1227** (ready) Off-host: tests that read a sibling checkout or host tool fail from the sdist (pathsforward,
+93. **W1227** (ready) Off-host: tests that read a sibling checkout or host tool fail from the sdist (pathsforward,
    pkgbuild, pycodemod, ratchet, hooks)
    - next: Per dist from the W1147 reading: make the test skip with a stated reason when its host file or tool is
      absent, or ship the file; re-run sdist-tests for that dist.
-93. **W1240** (ready) Send cassian-obs its sibling-read letter (pm/checks/ledger-check.py:25 reads ~/github/paperkit):
+94. **W1240** (ready) Send cassian-obs its sibling-read letter (pm/checks/ledger-check.py:25 reads ~/github/paperkit):
    the repo has no inbox/ and no live session
    - next: When a cassian-obs session exists, message it with the text of any sibling letter
      (inbox/2026-10-15-mtools-sibling-pin-check.md in another repo, substituting its reader); or ask the operator
      whether an inbox/ may be created there.
-94. **W1249** (ready) Usage-refusal record: every hook denial is logged through the one shared hook entrypoint
-95. **W1250** (ready) Usage-refusal record: mikemol-commit REFUSED verdicts are logged with their rule
-96. **W1259** (ready) Validate stored RRULEs with a real parser beside recurrence.py and report verdict differences on
+95. **W1249** (ready) Usage-refusal record: every hook denial is logged through the one shared hook entrypoint
+96. **W1250** (ready) Usage-refusal record: mikemol-commit REFUSED verdicts are logged with their rule
+97. **W1259** (ready) Validate stored RRULEs with a real parser beside recurrence.py and report verdict differences on
    the fleet's queues
-97. **W1267** (ready) Convert the fence admit ledger from space-separated lines to jsonl with named fields
-98. **W1268** (ready) A dry-run set-diff helper lifted from opa_plan's judged-set-equals-applied-set, reused by
+98. **W1267** (ready) Convert the fence admit ledger from space-separated lines to jsonl with named fields
+99. **W1268** (ready) A dry-run set-diff helper lifted from opa_plan's judged-set-equals-applied-set, reused by
    gen-warrants --prune and repin
-99. **W1269** (ready) mikemol-sibling-pin takes --paths so cleanliness is judged on the files a consumer reads, not the
+100. **W1269** (ready) mikemol-sibling-pin takes --paths so cleanliness is judged on the files a consumer reads, not the
    sibling's whole tree
    - next: Add --paths PATH... to mikemol-sibling-pin: status --porcelain -- PATHS (and the HEAD check unchanged); tests
      plant a dirty file inside and outside the paths; keep ROOT SHA alone meaning the whole tree
-100. **W1274** (ready) Reconcile the tick prompt's plumbing (verify, re-arm, inbound, unlock) with the skill, the
+101. **W1274** (ready) Reconcile the tick prompt's plumbing (verify, re-arm, inbound, unlock) with the skill, the
    harness hooks and the operator's loop prompt, externalizing each step a tool can carry
-101. **W1275** (ready) A PreToolUse hook on the Agent tool refuses a second concurrent subagent of the same session
+102. **W1275** (ready) A PreToolUse hook on the Agent tool refuses a second concurrent subagent of the same session
    - next: Find what the harness exposes about running subagents to a PreToolUse hook (task records under the session
      dir?) before designing; measure, do not guess
-102. **W1355** (ready) waldo Phase may carry a command as its act, run only when its done witness is false and judged by
+103. **W1355** (ready) waldo Phase may carry a command as its act, run only when its done witness is false and judged by
    it afterwards
    - next: Read waldo phases.py and runphase.py again; add Phase.act (argv) beside contract, run through Seams.run,
      refuse when both are set, refuse a phase whose done witness already holds before the act, judge done after; tests
      for each refusal; tell el-openglo the sha
-103. **W1371** (ready) Migration folds existing per-file debt cards into the ledger plus their mechanization card, dry
+104. **W1371** (ready) Migration folds existing per-file debt cards into the ledger plus their mechanization card, dry
    run first and checked against the ledger as a set
    - next: After the planner change: identify the per-file debt and typing cards by their minted_during and title shape
      in each repo's queue, write the ledger rows and the one card per idiom, drop each folded card with the new card as
      survivor (--drop --on), dry run prints the set difference between folded cards and ledger rows and refuses unless
      equal
-104. **W1377** (ready) --tick-close counts a card as advanced only when a landed commit carries its waypoint, and names
+105. **W1377** (ready) --tick-close counts a card as advanced only when a landed commit carries its waypoint, and names
    in-flight work separately
    - next: Read closegate.advanced and the Waypoint trailer commits write; at close, count the cards named by trailers
      on commits since the tick opened; an 'advanced' line for a card with none is rewritten to in-flight and not
      counted; test: advanced with a landed commit counted, advanced with only a working tree not
-105. **W1379** (ready) The scratch-worktree land mode brings a finished change into the main tree as one fast land or a
+106. **W1379** (ready) The scratch-worktree land mode brings a finished change into the main tree as one fast land or a
    --stack entry, and refuses when its paths overlap the in-flight commit
    - next: Read the --stack path (stackrun, stackland) and how the in-flight commit's paths are known; land = apply the
      worktree's diff for its card to the main tree (or enqueue it as a stack entry) after checking the path sets are
      disjoint from the in-flight commit's; on overlap refuse naming the shared paths; remove the scratch worktree
      afterwards; tests: disjoint lands, overlap refused, worktree removed
-106. **W1388** (ready) pre-write hook in mikemol-paths-forward and the commit gate prints the rulings relevant to the
+107. **W1388** (ready) pre-write hook in mikemol-paths-forward and the commit gate prints the rulings relevant to the
    card being changed
-107. **W1389** (ready) ingest paperkit argument graphs and summit floor entries into the same rulings ledger, not
+108. **W1389** (ready) ingest paperkit argument graphs and summit floor entries into the same rulings ledger, not
    separate stores
-108. **W1396** (ready) Answer el-openglo: a home for the CVD distinctness core as a mikemol-* dist (el-openglo:W544, for
+109. **W1396** (ready) Answer el-openglo: a home for the CVD distinctness core as a mikemol-* dist (el-openglo:W544, for
    nemik:W438)
-109. **W1397** (ready) mikemol-paths-forward --freeze W`<ask>` [--write]: block every open card but the ask on the ask
-110. **W1398** (ready) --freeze prints a KEPT n count line by default and the KEPT rows only under --verbose
-111. **W1413** (ready) mikemol-new-dist wraps or shortens the description it writes into the package docstring
-112. **W1419** (ready) consolidate the two endpoint-name resolvers (fence.reading.endpoint_url and
+110. **W1397** (ready) mikemol-paths-forward --freeze W`<ask>` [--write]: block every open card but the ask on the ask
+111. **W1398** (ready) --freeze prints a KEPT n count line by default and the KEPT rows only under --verbose
+112. **W1413** (ready) mikemol-new-dist wraps or shortens the description it writes into the package docstring
+113. **W1419** (ready) consolidate the two endpoint-name resolvers (fence.reading.endpoint_url and
    otlp.endpoints.base_url) into one shared function
-113. **W1421** (ready) mikemol-repin keeps the extras the venv was synced with, so el-openglo's uv sync --extra tooling
+114. **W1421** (ready) mikemol-repin keeps the extras the venv was synced with, so el-openglo's uv sync --extra tooling
    --extra research is no longer typed after every repin
    - next: Read hooks repin_cli.py and revendor.py for where the sync runs after a repin; find the extras the venv
      carries (the lock's optional-dependencies groups present in the installed environment, or the project's pyproject
      extras); run uv sync with those extras instead of none; test: a fixture project with two extras keeps both after a
      repin, and a project with none is unchanged. The peer's pin that lacks d8900d4 is el-openglo 6fba7de.
-114. **W1427** (ready) mikemol-commit --stack compares each commit's real diff to its card's manifest and reports drift
-115. **W1429** (ready) pycheck --install and --format borrow the main tree's interpreter inside a linked worktree, as
+115. **W1427** (ready) mikemol-commit --stack compares each commit's real diff to its card's manifest and reports drift
+116. **W1429** (ready) pycheck --install and --format borrow the main tree's interpreter inside a linked worktree, as
    the edit gate already does
-116. **W1430** (ready) type grade.py's Json by what it consumes: a closed Record TypedDict (key, grade, delegations,
-   ...) and a small union, no recursive alias
 117. **W1431** (ready) record ratchet remap.py's recursive Json as the scoped Codon exception: leaf_diffs diffs
    arbitrary JSON documents, so no closed shape exists
 118. **W1433** (ready) mikemol-commit --closes: opt-in per commit, a landed commit under --waypoint W marks W done (or
