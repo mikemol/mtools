@@ -179,6 +179,11 @@ class Update:
     command: str | None = None
     population: tuple[str, ...] | None = None
     deferred: tuple[str, ...] | None = None
+    # ⚑ THE MANIFEST IS SET, NOT MERGED, AND CHECKED BY THE CALLER (W1426): exact repo-relative
+    # files (`manifest.check`, which needs the project root, so the CLI runs it before this), and
+    # `()` clears. `size_class` is `small`, `medium` or `large` ('' clears).
+    manifest: tuple[str, ...] | None = None
+    size_class: str | None = None
 
 
 @dataclass(frozen=True)
@@ -482,6 +487,21 @@ def _append_edges(new: Json, upd: Update) -> None:
         new["enables"] = edges
 
 
+def _manifest_fields(upd: Update) -> dict[str, object | None]:
+    """Name the manifest fields an update sets, an empty value clearing the field.
+
+    Returns:
+        `manifest` and `size_class`, each only when given.
+
+    """
+    out: dict[str, object | None] = {}
+    if upd.manifest is not None:
+        out["manifest"] = list(upd.manifest) or None
+    if upd.size_class is not None:
+        out["size_class"] = upd.size_class or None
+    return out
+
+
 def _set_given(new: Json, upd: Update) -> None:
     """Set each plain field the update gives, over whatever the status change implied."""
     given: dict[str, object | None] = {
@@ -512,6 +532,7 @@ def _set_given(new: Json, upd: Update) -> None:
         new["rrule"] = upd.rrule or None
     if upd.exdates is not None:
         new["exdates"] = list(upd.exdates) or None
+    new.update(_manifest_fields(upd))
     for key, item in (
         ("unchanged", upd.unchanged),
         ("rejected", upd.rejected),

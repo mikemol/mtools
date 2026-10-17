@@ -39,6 +39,7 @@ from mikemol.pathsforward import (
     inbound,
     lease,
     lock,
+    manifest,
     opa_eval,
     ops,
     outcomes,
@@ -493,6 +494,8 @@ _FIELDS = (
     "command",
     "population",
     "deferred",
+    "manifest",
+    "size",
     "facts",
     "admit",
     "gate",
@@ -544,6 +547,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "command",
             "population",
             "deferred",
+            "manifest",
+            "size",
             "admit",
             "root",
         }
@@ -744,11 +749,30 @@ def _add_signoff_fields(ap: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_manifest_fields(ap: argparse.ArgumentParser) -> None:
+    """Add the flags for a card's manifest and size class (W1426); checked in `manifest.check`."""
+    ap.add_argument(
+        "--manifest",
+        action="extend",
+        nargs="*",
+        metavar="PATH",
+        help="--update: the whole list of exact repo-relative files this card will create or "
+        "edit (no directory, glob or link); bare --manifest clears",
+    )
+    ap.add_argument(
+        "--size",
+        choices=(*manifest.SIZES, ""),
+        help="--update: the card's size class, small (~50 lines), medium (~300) or large "
+        "(atomize); '' clears",
+    )
+
+
 def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     """Add the flags for the fields the realizability policy reads (W849).
 
     ⚑ FORM IS CHECKED IN `realizable`, NEVER HERE: these only collect the words.
     """
+    _add_manifest_fields(ap)
     for name in ("reference-arm", "command"):
         ap.add_argument(
             f"--{name}", metavar="TEXT", help=f"--update: the realizability {name}; '' clears"
@@ -1683,6 +1707,8 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         command=ctx.get("command"),
         population=ctx.many("population"),
         deferred=ctx.many("deferred"),
+        manifest=ctx.many("manifest"),
+        size_class=ctx.get("size"),
     )
 
 
@@ -1748,6 +1774,7 @@ def _update(ctx: Ctx) -> int:
         sym = ctx.get("update") or ""
         root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
         pinned = _pinned(upd, root, ctx.get("attach"))
+        manifest.check(upd.manifest or (), root)
         ops.update(state, sym, pinned, ctx.stamp())
         code = _lease_for_status(ctx, state, sym, upd.status)
         if code == EXIT_OK and upd.status == "done":

@@ -5525,3 +5525,48 @@
   claim  = {The writer's own success path emits ACCEPTED; a failure of the child changes nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_successful_invocation_ships_one_accepted_record},
 }
+
+@misc{pathsforward-manifest-exact-new-and-existing-files-pass-and-the-list-is-set-whole,
+  section = {manifest},
+  title  = {A file that exists and one that will be created are both fine; the order is kept},
+  claim  = {A file that exists and one that will be created are both fine; the order is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_exact_new_and_existing_files_pass_and_the_list_is_set_whole},
+}
+
+@misc{pathsforward-manifest-bare-manifest-and-an-empty-size-clear-them,
+  section = {manifest},
+  title  = {The way to withdraw a claim: bare --manifest empties the list, --size '' drops the class},
+  claim  = {The way to withdraw a claim: bare --manifest empties the list, --size '' drops the
+            class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_a_bare_manifest_and_an_empty_size_clear_them},
+}
+
+@misc{pathsforward-manifest-directory-through-the-command-is-refused-and-the-old-manifest-stays,
+  section = {manifest},
+  title  = {The control: `--manifest src` where src is a directory exits 2 naming it; nothing changes},
+  claim  = {The control: `--manifest src` where src is a directory exits 2 naming it; nothing
+            changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_a_directory_through_the_command_is_refused_and_the_old_manifest_stays},
+}
+
+@misc{pathsforward-manifest-each-way-to-stop-naming-a-file-is-refused-with-its-reason,
+  section = {manifest},
+  title  = {Directory-ish, glob, absolute, parent-step, empty and padded entries each name the fault},
+  claim  = {Directory-ish, glob, absolute, parent-step, empty and padded entries each name the
+            fault.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_each_way_to_stop_naming_a_file_is_refused_with_its_reason},
+}
+
+@misc{pathsforward-manifest-link-and-a-duplicate-are-refused,
+  section = {manifest},
+  title  = {A symlink is never followed (the standing rule); a path listed twice is a mistake},
+  claim  = {A symlink is never followed (the standing rule); a path listed twice is a mistake.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_a_link_and_a_duplicate_are_refused},
+}
+
+@misc{pathsforward-manifest-size-outside-the-enum-is-a-usage-refusal,
+  section = {manifest},
+  title  = {Only small, medium and large (or '' to clear) are accepted by the parser},
+  claim  = {Only small, medium and large (or '' to clear) are accepted by the parser.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifest.py -k test_a_size_outside_the_enum_is_a_usage_refusal},
+}
