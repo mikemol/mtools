@@ -9,3 +9,4 @@ cli	cli
 endpoints	endpoints
 spans	Spans: a Trace Span Round-Trips the Wire with Ids, Times and Status, and a Span a Receiver Would Misread Is Refused
 tracecmd	Trace Command: One Span Is Posted to the Named Trace Store and Read Back Once, and Every Way It Can Fail Has Its Own Exit
+metriccmd	Metric Command: One Sample Is Posted to the Named Metrics Store as the Kind Asked, and Every Way It Can Fail Has Its Own Exit

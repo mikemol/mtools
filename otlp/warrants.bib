@@ -262,3 +262,38 @@
   claim  = {The control: a 4-byte trace id never reaches the store; the builder's reason is printed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_a_malformed_id_is_a_usage_refusal_and_nothing_is_sent},
 }
+
+@misc{otlp-metriccmd-gauge-is-posted-to-the-metrics-path-as-a-gauge,
+  section = {metriccmd},
+  title  = {The default kind: the path is luthen's, the metric is a gauge with the value and labels},
+  claim  = {The default kind: the path is luthen's, the metric is a gauge with the value and labels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_gauge_is_posted_to_the_metrics_path_as_a_gauge},
+}
+
+@misc{otlp-metriccmd-up-down-sample-arrives-as-a-non-monotonic-sum,
+  section = {metriccmd},
+  title  = {The other kind: a cumulative sum that is allowed to fall},
+  claim  = {The other kind: a cumulative sum that is allowed to fall.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_an_up_down_sample_arrives_as_a_non_monotonic_sum},
+}
+
+@misc{otlp-metriccmd-fractional-value-stays-a-double,
+  section = {metriccmd},
+  title  = {2.5 is not rounded to 2: it arrives as a double point},
+  claim  = {2.5 is not rounded to 2: it arrives as a double point.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_fractional_value_stays_a_double},
+}
+
+@misc{otlp-metriccmd-store-that-refuses-the-sample-is-a-failed-send,
+  section = {metriccmd},
+  title  = {A 500 is exit 1 naming the status},
+  claim  = {A 500 is exit 1 naming the status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_store_that_refuses_the_sample_is_a_failed_send},
+}
+
+@misc{otlp-metriccmd-no-destination-is-a-usage-refusal,
+  section = {metriccmd},
+  title  = {With no --url and no endpoints file the command refuses, naming the endpoint},
+  claim  = {With no --url and no endpoints file the command refuses, naming the endpoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_no_destination_is_a_usage_refusal},
+}

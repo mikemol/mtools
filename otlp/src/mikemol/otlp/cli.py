@@ -33,7 +33,7 @@ import time
 from collections.abc import Mapping, Sequence
 from typing import TextIO, cast
 
-from mikemol.otlp import endpoints, logs, metrics, sender, tracecmd
+from mikemol.otlp import endpoints, logs, metriccmd, metrics, sender, tracecmd
 
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
 ENDPOINT = "victorialogs-http"
@@ -69,6 +69,15 @@ def _parser() -> argparse.ArgumentParser:
     trace.add_argument("--trace-id", dest="trace_id", default="", help="32 hex digits")
     trace.add_argument("--span-id", dest="span_id", default="", help="16 hex digits")
     trace.add_argument("--parent-id", dest="parent_id", default="", help="16 hex digits")
+    metric = verbs.add_parser("metric", help="send one gauge or up-down sample")
+    metric.add_argument("--url", help=f"the metrics base URL (default: ${endpoints.ENV} name)")
+    metric.add_argument("--service", required=True, help="service.name")
+    metric.add_argument("--namespace", required=True, help="service.namespace, the owning repo")
+    metric.add_argument("--version", default="", help="service.version, the commit it runs")
+    metric.add_argument("--name", required=True, help="the metric's name")
+    metric.add_argument("--value", required=True, type=float, help="the sample's value")
+    metric.add_argument("--kind", default="gauge", choices=metriccmd.KINDS)
+    metric.add_argument("--field", action="append", metavar="KEY=VALUE")
     return parser
 
 
@@ -139,8 +148,31 @@ def _trace(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     return tracecmd.run(request, sender.post, sender.get)
 
 
+def _metric(opts: dict[str, object], environ: Mapping[str, str]) -> int:
+    # The `metric` verb: parse into a request and run it; a missing base or a bad field is usage.
+    base = _text(opts, "url") or endpoints.base_url(metriccmd.ENDPOINT, environ) or ""
+    fields = _fields(opts)
+    if not base or fields is None:
+        sys.stderr.write(
+            f"mikemol-otlp: need --url or ${endpoints.ENV} naming {metriccmd.ENDPOINT}; "
+            "and --field KEY=VALUE pairs\n"
+        )
+        return EXIT_USAGE
+    request = metriccmd.Request(
+        base=base,
+        service=_text(opts, "service"),
+        namespace=_text(opts, "namespace"),
+        version=_text(opts, "version"),
+        name=_text(opts, "name"),
+        value=float(_text(opts, "value")),
+        kind=_text(opts, "kind"),
+        labels=fields,
+    )
+    return metriccmd.run(request, sender.post)
+
+
 def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
-    """Send stdin's lines as OTLP log records, or one span with `trace`.
+    """Send stdin's lines as OTLP log records, one span with `trace`, or one sample with `metric`.
 
     Returns:
         0 when everything was sent, 1 when a send failed, 2 on a usage refusal, 3 when a span was
@@ -150,6 +182,8 @@ def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
     if opts.get("verb") == "trace":
         return _trace(opts, os.environ)
+    if opts.get("verb") == "metric":
+        return _metric(opts, os.environ)
     url = _destination(_text(opts, "url"), os.environ)
     fields = _fields(opts)
     if not url or fields is None:
