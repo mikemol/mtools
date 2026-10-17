@@ -7,3 +7,4 @@ logs	logs
 sender	sender
 cli	cli
 endpoints	endpoints
+spans	Spans: a Trace Span Round-Trips the Wire with Ids, Times and Status, and a Span a Receiver Would Misread Is Refused

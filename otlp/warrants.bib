@@ -155,3 +155,45 @@
   claim  = {Luthen's route: MIKEMOL_ENDPOINTS names the base and the path is appended; a URL wins.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_named_endpoint_resolves_through_the_hosts_file_and_the_full_url_still_wins},
 }
+
+@misc{otlp-spans-span-carries-its-ids-name-and-times,
+  section = {spans},
+  title  = {The parsed span has the exact id bytes, the name and both nanosecond times},
+  claim  = {The parsed span has the exact id bytes, the name and both nanosecond times.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_span_carries_its_ids_name_and_times},
+}
+
+@misc{otlp-spans-child-span-names-its-parent-and-a-root-has-none,
+  section = {spans},
+  title  = {parent_id rides as parentSpanId; with none given the field is absent},
+  claim  = {parent_id rides as parentSpanId; with none given the field is absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_child_span_names_its_parent_and_a_root_has_none},
+}
+
+@misc{otlp-spans-attributes-keep-their-kinds-and-status-carries-code-and-message,
+  section = {spans},
+  title  = {Labels are typed values; an ERROR status keeps its message},
+  claim  = {Labels are typed values; an ERROR status keeps its message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_attributes_keep_their_kinds_and_status_carries_code_and_message},
+}
+
+@misc{otlp-spans-four-resource-attributes-ride-with-the-span,
+  section = {spans},
+  title  = {The same resource the metric and log builders send},
+  claim  = {The same resource the metric and log builders send.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_the_four_resource_attributes_ride_with_the_span},
+}
+
+@misc{otlp-spans-span-a-receiver-would-misread-is-refused-by-field,
+  section = {spans},
+  title  = {The control: each malformed span raises ValueError naming the field it broke},
+  claim  = {The control: each malformed span raises ValueError naming the field it broke.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_a_span_a_receiver_would_misread_is_refused_by_field},
+}
+
+@misc{otlp-spans-fresh-ids-have-the-right-widths-and-are-not-zero,
+  section = {spans},
+  title  = {new_ids gives 16 and 8 bytes, never all zero, and two draws differ},
+  claim  = {new_ids gives 16 and 8 bytes, never all zero, and two draws differ.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_spans.py -k test_fresh_ids_have_the_right_widths_and_are_not_zero},
+}
