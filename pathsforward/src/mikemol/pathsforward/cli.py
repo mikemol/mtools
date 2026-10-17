@@ -42,6 +42,7 @@ from mikemol.pathsforward import (
     opa_eval,
     ops,
     outcomes,
+    refusal_record,
     render,
     selftest,
     session,
@@ -2592,6 +2593,20 @@ def bind_alarms(argv: list[str]) -> list[str]:
     return out
 
 
+def _refuse(message: str, args: list[str], opts: dict[str, object]) -> int:
+    """Print a usage refusal and ship it as an OTLP record when a sink is configured (W1248).
+
+    Returns:
+        EXIT_REFUSED; shipping is best effort and never changes the answer.
+
+    """
+    _warn(message)
+    state = opts.get("state")
+    if state:
+        refusal_record.emit(message, args, Path(str(state)).absolute())
+    return EXIT_REFUSED
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run one invocation.
 
@@ -2604,8 +2619,9 @@ def main(argv: list[str] | None = None) -> int:
     mode = mode_of(opts)
     stray = stray_flags(mode, opts)
     if stray:
-        _warn(f"REFUSED: {', '.join(stray)} does not apply to --{mode.replace('_', '-')}")
-        return EXIT_REFUSED
+        return _refuse(
+            f"REFUSED: {', '.join(stray)} does not apply to --{mode.replace('_', '-')}", args, opts
+        )
     if mode == "selftest":
         return _selftest()
     state = opts.get("state")
@@ -2620,5 +2636,4 @@ def main(argv: list[str] | None = None) -> int:
             exc, (store.UnreadableStateError, ops.RefusedError, MalformedEntryError, OSError)
         ):
             raise
-        _warn(f"REFUSED: {exc}")
-        return EXIT_REFUSED
+        return _refuse(f"REFUSED: {exc}", args, opts)

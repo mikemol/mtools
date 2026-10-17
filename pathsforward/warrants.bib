@@ -5437,3 +5437,45 @@
   claim  = {The first-run trap, made legible: the message says every place that was looked at.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_no_reader_anywhere_is_a_refusal_naming_the_variable_and_the_checkout_path},
 }
+
+@misc{pathsforward-refusal-record-rule-text-drops-the-prefix-and-replaces-every-quoted-value,
+  section = {refusal_record},
+  title  = {A path or token inside quotes never reaches the record; the rule's own words do},
+  claim  = {A path or token inside quotes never reaches the record; the rule's own words do.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_the_rule_text_drops_the_prefix_and_replaces_every_quoted_value},
+}
+
+@misc{pathsforward-refusal-record-unquoted-absolute-path-is-replaced-too,
+  section = {refusal_record},
+  title  = {The first real record carried the whole --state path unquoted; now it is `<path>`},
+  claim  = {The first real record carried the whole --state path unquoted; now it is `<path>`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_an_unquoted_absolute_path_is_replaced_too},
+}
+
+@misc{pathsforward-refusal-record-flags-are-names-without-their-values,
+  section = {refusal_record},
+  title  = {The argv shape is the flag names: `--update W1 --next=do it` ships `--update --next`},
+  claim  = {The argv shape is the flag names: `--update W1 --next=do it` ships `--update --next`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_flags_are_names_without_their_values},
+}
+
+@misc{pathsforward-refusal-record-nothing-starts-without-a-url,
+  section = {refusal_record},
+  title  = {The control: a host with no logs URL set is a silent no-op, whatever binary exists},
+  claim  = {The control: a host with no logs URL set is a silent no-op, whatever binary exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_nothing_starts_without_a_url},
+}
+
+@misc{pathsforward-refusal-record-configured-host-starts-the-child-with-shapes-the-repo-and-the-caller,
+  section = {refusal_record},
+  title  = {The child gets the url, the service, the repo as namespace and the rule on stdin},
+  claim  = {The child gets the url, the service, the repo as namespace and the rule on stdin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_configured_host_starts_the_child_with_shapes_the_repo_and_the_caller},
+}
+
+@misc{pathsforward-refusal-record-child-that-cannot-start-leaves-the-refusal-untouched,
+  section = {refusal_record},
+  title  = {The control: spawn raising OSError still gives exit 2 and the same printed line},
+  claim  = {The control: spawn raising OSError still gives exit 2 and the same printed line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_child_that_cannot_start_leaves_the_refusal_untouched},
+}

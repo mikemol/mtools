@@ -137,6 +137,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ STARTING THE OTLP CHILD IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1248): the argv is the
+# resolved mikemol-otlp binary and fixed words; the refusal text travels on stdin as data.
+"src/mikemol/pathsforward/refusal_record.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_refusal_record.py" = ["assert"]
 "tests/test_warrant.py" = ["assert"]
 "tests/test_prune_any_status.py" = ["assert"]
 "tests/test_render.py" = ["assert"]
