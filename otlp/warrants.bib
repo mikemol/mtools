@@ -5,3 +5,32 @@
   claim  = {The scaffold compiles, imports and documents itself.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
 }
+
+@misc{otlp-metrics-gauge-carries-its-name-unit-time-value-and-labels,
+  section = {metrics},
+  title  = {The parsed gauge has the series name, the unit, the point's time, an int value and labels},
+  claim  = {The parsed gauge has the series name, the unit, the point's time, an int value and
+            labels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_a_gauge_carries_its_name_unit_time_value_and_labels},
+}
+
+@misc{otlp-metrics-four-resource-attributes-are-on-the-wire,
+  section = {metrics},
+  title  = {The receiver attributes a series by these; all four arrive, in key order},
+  claim  = {The receiver attributes a series by these; all four arrive, in key order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_the_four_resource_attributes_are_on_the_wire},
+}
+
+@misc{otlp-metrics-up-down-counter-is-a-non-monotonic-cumulative-sum-not-a-gauge,
+  section = {metrics},
+  title  = {The control: a counter that can fall must not be sent as monotonic or as a gauge},
+  claim  = {The control: a counter that can fall must not be sent as monotonic or as a gauge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_an_up_down_counter_is_a_non_monotonic_cumulative_sum_not_a_gauge},
+}
+
+@misc{otlp-metrics-int-is-as-int-a-float-is-as-double-and-a-bool-label-stays-a-bool,
+  section = {metrics},
+  title  = {Number kinds are not blurred, and True is not sent as 1},
+  claim  = {Number kinds are not blurred, and True is not sent as 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_an_int_is_as_int_a_float_is_as_double_and_a_bool_label_stays_a_bool},
+}

@@ -3,6 +3,7 @@
 
 # ⚑ SCAFFOLDED by mikemol-new-dist (W943) from //otlp; the rationale for
 # each shape lives there. `@otlp_dev` is declared in MODULE.bazel beside it.
+load("@otlp_deps//:requirements.bzl", "requirement")
 load("@otlp_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
@@ -16,12 +17,17 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ NO `deps`: the shipping hub is empty on purpose; the module is standard library only.
+# ⚑ ONE SHIPPING DEPENDENCY, opentelemetry-proto (protobuf comes with it): the payload builders fill
+# its published messages rather than hand-encoding the wire (github-8f 2026-10-17, standards-first).
 py_library(
     name = "otlp",
     srcs = glob(["src/mikemol/otlp/**/*.py"]),
     data = glob(["src/mikemol/otlp/py.typed"], allow_empty = True),
     imports = ["src"],
+    deps = [
+        requirement("opentelemetry-proto"),
+        requirement("protobuf"),
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -127,7 +133,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":mypy_runner",
-    ] + glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
     size = "small",
     # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
     # things"). See //transcriptstruct:mypy for the measurement.
