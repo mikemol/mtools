@@ -26,6 +26,7 @@ import re
 import shutil
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 from mikemol.pathsforward import foreign
@@ -115,14 +116,47 @@ def spawn(argv: Sequence[str], line: str) -> None:
         os.close(write_end)
 
 
-def emit(
-    message: str,
-    args: Sequence[str],
-    state: Path,
-    env: Mapping[str, str] | None = None,
-    start: Spawn | None = None,
-) -> bool:
-    """Hand one refusal record to `mikemol-otlp log`, when a binary and a URL exist.
+@dataclass(frozen=True, slots=True)
+class Record:
+    """One log record before it is shipped: its text, severity and ordered fields."""
+
+    body: str
+    severity: str
+    fields: tuple[tuple[str, str], ...]
+
+
+def parent_command() -> str:
+    """Name the command that started this process, or nothing when the system will not say.
+
+    Returns:
+        the parent's `comm` (never a pid or a path), or the empty string.
+
+    """
+    try:
+        return Path(f"/proc/{os.getppid()}/comm").read_text(encoding="utf-8").strip()
+    except OSError:
+        return ""
+
+
+def caller_of(env: Mapping[str, str], repo: str) -> str:
+    """Name who is calling, stable within a session so a retry pairs with its refusal.
+
+    ⚑ AN EXPLICIT `MIKEMOL_CALLER` WINS; ELSE THE PARENT COMMAND PLUS THE REPO. Never a pid or a
+    path (luthen-observability, 2026-10-17): either would differ between a refusal and its retry.
+
+    Returns:
+        the env value, else `<parent command>@<repo>`, else the empty string.
+
+    """
+    explicit = env.get(CALLER_ENV)
+    if explicit:
+        return explicit
+    parent = parent_command()
+    return f"{parent}@{repo}" if parent else ""
+
+
+def _ship(record: Record, state: Path, env: Mapping[str, str] | None, start: Spawn | None) -> bool:
+    """Hand one record to `mikemol-otlp log`, when a binary and a destination exist.
 
     Returns:
         True when a child was started, False when there was nothing to start or it could not be.
@@ -137,6 +171,7 @@ def emit(
     if (not url and not where.get(ENDPOINTS_ENV)) or program is None:
         return False
     repo = state.parent.parent.name
+    fields = (*record.fields, ("caller", caller_of(where, repo)))
     argv = [
         program,
         "log",
@@ -146,18 +181,52 @@ def emit(
         "--namespace",
         repo,
         "--severity",
-        "WARN",
-        "--field",
-        "verdict=REFUSED",
-        "--field",
-        f"rule={rule_id(message)}",
-        "--field",
-        f"flags={flags_of(args)}",
-        "--field",
-        f"caller={where.get(CALLER_ENV, '')}",
+        record.severity,
+        *(word for name, value in fields for word in ("--field", f"{name}={value}")),
     ]
     try:
-        (spawn if start is None else start)(argv, rule_of(message))
+        (spawn if start is None else start)(argv, record.body)
     except OSError:
         return False
     return True
+
+
+def emit(
+    message: str,
+    args: Sequence[str],
+    state: Path,
+    env: Mapping[str, str] | None = None,
+    start: Spawn | None = None,
+) -> bool:
+    """Hand one refusal record to `mikemol-otlp log`, when a binary and a URL exist.
+
+    Returns:
+        True when a child was started, False when there was nothing to start or it could not be.
+
+    """
+    fields = (
+        ("verdict", "REFUSED"),
+        ("rule", rule_id(message)),
+        ("flags", flags_of(args)),
+    )
+    return _ship(Record(rule_of(message), "WARN", fields), state, env, start)
+
+
+def emit_accepted(
+    mode: str,
+    args: Sequence[str],
+    state: Path,
+    env: Mapping[str, str] | None = None,
+    start: Spawn | None = None,
+) -> bool:
+    """Hand one ACCEPTED record, the same shape as a refusal, so a retry can be paired (W1436).
+
+    ⚑ EVERY ACCEPTED CALL, UNSAMPLED (luthen-observability, 2026-10-17): a sample would drop exactly
+    the accepted retry the pairing query is looking for. `rule` is empty because nothing refused.
+
+    Returns:
+        True when a child was started, False when there was nothing to start or it could not be.
+
+    """
+    fields = (("verdict", "ACCEPTED"), ("rule", ""), ("flags", flags_of(args)))
+    return _ship(Record(f"accepted --{mode.replace('_', '-')}", "INFO", fields), state, env, start)

@@ -2647,10 +2647,14 @@ def main(argv: list[str] | None = None) -> int:
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
     try:
-        return _HANDLERS[mode](ctx)
+        code = _HANDLERS[mode](ctx)
     except Exception as exc:
         if not isinstance(
             exc, (store.UnreadableStateError, ops.RefusedError, MalformedEntryError, OSError)
         ):
             raise
         return _refuse(f"REFUSED: {exc}", args, opts)
+    else:
+        if code == EXIT_OK:
+            refusal_record.emit_accepted(mode, args, ctx.path)
+        return code

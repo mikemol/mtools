@@ -126,3 +126,55 @@ def test_a_child_that_cannot_start_leaves_the_refusal_untouched(
     code = cli.main(["--state", str(_state(tmp_path)), "--update", "W9", "--status", "ready"])
     assert code == _REFUSED
     assert "REFUSED:" in capsys.readouterr().err
+
+
+def test_an_accepted_call_ships_the_same_shape_with_verdict_accepted_and_no_rule(
+    tmp_path: Path,
+) -> None:
+    """The record pairs with a refusal: same fields, INFO, empty rule, the caller from the env."""
+    seen: list[tuple[list[str], str]] = []
+
+    def start(argv: object, line: str) -> None:
+        seen.append((list(argv) if isinstance(argv, list) else [], line))
+
+    env = {
+        refusal_record.URL_ENV: "http://sink/logs",
+        refusal_record.BIN_ENV: "/opt/mikemol-otlp",
+        refusal_record.CALLER_ENV: "mtools-tick",
+    }
+    assert refusal_record.emit_accepted(
+        "tick_open", ["--tick-open", "h"], _state(tmp_path), env, start
+    )
+    argv, line = seen[0]
+    assert argv[argv.index("--severity") + 1] == "INFO"
+    assert "verdict=ACCEPTED" in argv
+    assert "rule=" in argv
+    assert "flags=--tick-open" in argv
+    assert "caller=mtools-tick" in argv
+    assert line == "accepted --tick-open"
+
+
+def test_the_caller_falls_back_to_the_parent_command_and_repo_never_a_pid() -> None:
+    """With no MIKEMOL_CALLER: `<parent comm>@<repo>`, and the explicit value wins when set."""
+    explicit = refusal_record.caller_of({refusal_record.CALLER_ENV: "me"}, "repo")
+    assert explicit == "me"
+    fallback = refusal_record.caller_of({}, "repo")
+    assert fallback.endswith("@repo") or not fallback
+    assert not any(part.isdigit() for part in fallback.split("@"))
+
+
+def test_a_successful_invocation_ships_one_accepted_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The writer's own success path emits ACCEPTED; a failure of the child changes nothing."""
+    lines: list[str] = []
+
+    def spawned(argv: object, line: str) -> None:
+        del argv
+        lines.append(line)
+
+    monkeypatch.setenv(refusal_record.URL_ENV, "http://sink/logs")
+    monkeypatch.setenv(refusal_record.BIN_ENV, "/opt/mikemol-otlp")
+    monkeypatch.setattr(refusal_record, "spawn", spawned)
+    assert cli.main(["--state", str(_state(tmp_path)), "--hash"]) == 0
+    assert lines == ["accepted --hash"]

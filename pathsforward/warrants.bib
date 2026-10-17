@@ -5504,3 +5504,24 @@
   claim  = {The id groups refusals by rule: quoted values do not change it, different words do.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_one_rule_keeps_one_id_whatever_values_it_quotes_and_another_rule_differs},
 }
+
+@misc{pathsforward-refusal-record-accepted-call-ships-the-same-shape-with-verdict-accepted-and-no-rule,
+  section = {refusal_record},
+  title  = {The record pairs with a refusal: same fields, INFO, empty rule, the caller from the env},
+  claim  = {The record pairs with a refusal: same fields, INFO, empty rule, the caller from the env.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_an_accepted_call_ships_the_same_shape_with_verdict_accepted_and_no_rule},
+}
+
+@misc{pathsforward-refusal-record-caller-falls-back-to-the-parent-command-and-repo-never-a-pid,
+  section = {refusal_record},
+  title  = {With no MIKEMOL_CALLER: `<parent comm>@<repo>`, and the explicit value wins when set},
+  claim  = {With no MIKEMOL_CALLER: `<parent comm>@<repo>`, and the explicit value wins when set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_the_caller_falls_back_to_the_parent_command_and_repo_never_a_pid},
+}
+
+@misc{pathsforward-refusal-record-successful-invocation-ships-one-accepted-record,
+  section = {refusal_record},
+  title  = {The writer's own success path emits ACCEPTED; a failure of the child changes nothing},
+  claim  = {The writer's own success path emits ACCEPTED; a failure of the child changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_successful_invocation_ships_one_accepted_record},
+}
