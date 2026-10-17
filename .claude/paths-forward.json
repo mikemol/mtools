@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1434,
+  "counter": 1437,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -29333,7 +29333,7 @@
     {
       "symbol": "W1434",
       "title": "reproduce el-openglo-5c's leak: real-index adds during a --stack gate land in its last commit",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit-kata",
@@ -29341,13 +29341,76 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "stackland.py uses a private index and commit-tree, so find which step folds the real index in (host flush, post-commit hook or snapshot); test a single commit and a non-final entry",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 read, not run: stackland.build adds each entry's paths from the REAL WORKING TREE (GIT_WORK_TREE=root) into a private index, and stacklanding.land only update-refs and runs the post-commit hook, so by this code the real index is never folded in. Hypothesis: the last entry's paths named a directory (policy/) and the cases files sat in the working tree when its add -A ran. Not reproduced; the order of build vs gate is unmeasured here. | 2026-10-17: 2026-10-17 REPRODUCTION ATTEMPT (scratchpad/repro_w1434.py, temp repo, real stackland.build then stacklanding.land): two new files copied in and git-added to the real index between build and land did NOT enter either commit; both commits held only their own path, the files stayed staged as A. So the library does not fold the real index. Remaining candidates are outside it: el-openglo's post-commit hook, land_template.py after the call (read: validates only), or a host flush; asked el-openglo for its reflog. Open until the reflog says. | 2026-10-17: closed not-mtools-code: el-openglo-5c's .githooks/post-commit line 60 ran a plain git commit --amend, which commits the whole real index; reflog showed commit (amend) after every stack update-ref; their fix is --amend --only. Library innocent (repro 2026-10-17). BUT mtools' own githook_post_commit._amend has the same plain --amend: carded as the follow-up.",
       "issued_at": "2026-10-17T03:38:07Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo-5c",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T04:14:05Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T041405Z"
+    },
+    {
+      "symbol": "W1435",
+      "title": "usage-refusal records carry a RULE field: the id of the rule that refused, beside the option names",
+      "status": "done",
+      "enables": [
+        "luthen-observability:W1214"
+      ],
+      "touches": [
+        "otlp",
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed bbcda48 (pushed): rule=<12 hex sha256 of rule_of(message)> field on the refusal record; 93 pathsforward bazel tests passed locally; first gate attempt refused on unrelated //debtplan:test_mint (passes locally)",
+      "issued_at": "2026-10-17T04:00:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1214",
+      "last_worked": "2026-10-17T04:48:05Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T044805Z"
+    },
+    {
+      "symbol": "W1436",
+      "title": "ship every ACCEPTED usage verdict as a record, unsampled, with a caller field",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "otlp",
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed efa49dd (pushed): emit_accepted ships verdict=ACCEPTED unsampled; caller = MIKEMOL_CALLER else parent comm@repo; 93 pathsforward bazel tests pass. Not yet read back from VictoriaLogs.",
+      "issued_at": "2026-10-17T04:00:58Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1214",
+      "last_worked": "2026-10-17T05:12:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T051259Z"
+    },
+    {
+      "symbol": "W1437",
+      "title": "githook_post_commit amends with a plain --amend, which commits the whole real index; add --only and pin it with a real-git test",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "commit-kata",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed de88dd7 (pushed): githook_post_commit amends with --only; real-git test fails without it, 21 post-commit tests pass",
+      "issued_at": "2026-10-17T04:14:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1434",
+      "last_worked": "2026-10-17T04:42:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T044243Z"
     }
   ],
   "residue": [
