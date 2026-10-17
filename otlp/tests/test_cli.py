@@ -90,6 +90,9 @@ def test_no_url_and_a_malformed_field_are_usage_refusals_that_send_nothing(
 ) -> None:
     """The control: exit 2 for a missing URL and for a `--field` with no `=`; nothing is sent."""
     monkeypatch.delenv(cli.URL_ENV, raising=False)
+    # ⚑ HERMETIC AGAINST THE HOST (found 2026-10-17): with MIKEMOL_ENDPOINTS in the caller's
+    # environment this test resolved the real logs store, SENT a record to it and failed.
+    monkeypatch.delenv(endpoints.ENV, raising=False)
     base = ["log", "--service", "svc", "--namespace", "mtools"]
     assert cli.main(base, io.StringIO("x\n")) == _USAGE
     assert (
