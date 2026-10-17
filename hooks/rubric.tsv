@@ -122,3 +122,4 @@ commit-counts	Commit Counts: Queued and In-Flight Commits Are Counted From a Cra
 commit-gauge	Commit Gauge: Each Transition Starts Two Absolute Gauges and Never Raises Into the Commit
 stacksnap	Stack Snapshot: A File Frozen at Submit Keeps Its Bytes Whatever the Working Tree Does Next, and HEAD Moving Keeps Both Changes
 stackfreeze	Stack Freeze: The Snapshot Taken at Submit Reaches the Run, and Every Fallback Freezes Now Rather Than Reading the Tree Late
+gateenv	Gate Environment: The Commit Gate Does Not See the Submitter's MIKEMOL_ Variables Except the Ones It Reads, and Everything Else Passes Untouched

@@ -10829,3 +10829,39 @@
   claim  = {W1449: nemik's shape is accepted, and the target carries its dists and the empty tag.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_cli.py -k test_a_tag_less_six_dist_repo_is_planned_and_applied_with_its_own_naming},
 }
+
+@misc{hooks-gateenv-subcommand-skips-the-global-dash-c-option,
+  section = {gateenv},
+  title  = {`git -C path commit` is a commit; a bare option list names nothing},
+  claim  = {`git -C path commit` is a commit; a bare option list names nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_the_subcommand_skips_the_global_dash_c_option},
+}
+
+@misc{hooks-gateenv-scrubbing-keeps-the-gates-own-variables-and-everything-outside-the-namespace,
+  section = {gateenv},
+  title  = {The list and the pass-through, in one table},
+  claim  = {The list and the pass-through, in one table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_scrubbing_keeps_the_gates_own_variables_and_everything_outside_the_namespace},
+}
+
+@misc{hooks-gateenv-only-the-commands-that-run-a-hook-are-scrubbed,
+  section = {gateenv},
+  title  = {Plumbing with nothing to add inherits as ever; plumbing with extras keeps everything},
+  claim  = {Plumbing with nothing to add inherits as ever; plumbing with extras keeps everything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_only_the_commands_that_run_a_hook_are_scrubbed},
+}
+
+@misc{hooks-gateenv-hook-run-by-the-gate-does-not-see-an-armed-endpoints-variable,
+  section = {gateenv},
+  title  = {The control: `git hook run pre-commit` through the real runner},
+  claim  = {The control: `git hook run pre-commit` through the real runner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_the_hook_run_by_the_gate_does_not_see_an_armed_endpoints_variable},
+}
+
+@misc{hooks-gateenv-commit-runs-its-hook-in-the-same-scrubbed-environment,
+  section = {gateenv},
+  title  = {`git commit` is the other way the hook runs; the armed variable does not reach it either},
+  claim  = {`git commit` is the other way the hook runs; the armed variable does not reach it
+            either.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_a_commit_runs_its_hook_in_the_same_scrubbed_environment},
+}

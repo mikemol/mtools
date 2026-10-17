@@ -43,6 +43,7 @@ from mikemol.hooks.commit_gauge import note as _note_counts
 from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.commit_span import emit_stack as _emit_stack
+from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
@@ -189,7 +190,7 @@ def run_git_in(
             stdout=out,
             stderr=err,
             cwd=cwd,
-            env={**os.environ, **extra} if extra else None,
+            env=child_env(argv, extra),
         )
         limit = commit_limit({**os.environ, **extra})
         try:
