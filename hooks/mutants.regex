@@ -339,3 +339,6 @@ src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FL
 # The wake-up decision: the boundary is inclusive, a zoneless stamp is UTC, never-nudged is due.
 src/mikemol/hooks/rewake.py|boundary-is-exclusive|now\.timestamp\(\) - last_nudged >= rewake_s|now.timestamp() - last_nudged > rewake_s|def=should_nudge
 src/mikemol/hooks/rewake.py|never-nudged-is-not-due|if last_nudged is None:|if False:|def=should_nudge
+src/mikemol/hooks/commit_kata.py|nested-run-beats-too|if not env\.get\(HELD_ENV\):|if True:|def=submit
+src/mikemol/hooks/commit_kata.py|submit-leaves-no-beat|        beat\(ledger\)|        pass|def=submit
+src/mikemol/hooks/commit_kata.py|beat-in-the-wrong-dir|_try_beat\(ledger\.parent, |_try_beat(ledger, |def=beat

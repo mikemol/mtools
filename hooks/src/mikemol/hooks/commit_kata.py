@@ -45,6 +45,7 @@ from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.commit_span import emit_stack as _emit_stack
 from mikemol.hooks.commit_turn import wait_turn as _wait_turn
 from mikemol.hooks.gateenv import child_env
+from mikemol.hooks.heartbeat import try_beat as _try_beat
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
@@ -68,6 +69,8 @@ stack_run = _run_stack
 ship_text = _ship_text
 new_buffer = io.StringIO
 SHIP_FLAG = "--ship"
+BEAT_TOOL = "mikemol-commit"
+"""The tool name a submit leaves in the session heartbeat (W1482)."""
 
 QUEUE_PATHS = (
     ".claude/paths-forward.json",
@@ -867,8 +870,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     env[SUBMIT_ENV] = str(submitted)
     ledger = ledger_of(root)
     key = str(submitted)
-    if not env.get(HELD_ENV):
-        track(ledger, key, QUEUED, env)
+    submit(ledger, key, env)
     if stacked is not None and not env.get(HELD_ENV):
         env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
     if ledger is not None and not env.get(HELD_ENV):
@@ -906,6 +908,19 @@ def ledger_of(root: Path) -> Path | None:
     """
     found = run_git(["-C", str(root), "rev-parse", "--absolute-git-dir"])
     return Path(found.stdout.strip()) / "mtools" if found.returncode == 0 else None
+
+
+def submit(ledger: Path | None, key: str, env: Mapping[str, str]) -> None:
+    """Queue a fresh submission and leave the heartbeat; a re-exec under the lease does neither."""
+    if not env.get(HELD_ENV):
+        beat(ledger)
+        track(ledger, key, QUEUED, env)
+
+
+def beat(ledger: Path | None) -> None:
+    """Leave the session heartbeat (W1482): a submit is the session using a tool; never raises."""
+    if ledger is not None:
+        _try_beat(ledger.parent, BEAT_TOOL, time.time_ns())
 
 
 def track(ledger: Path | None, key: str, state: str | None, env: Mapping[str, str]) -> None:

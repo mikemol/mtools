@@ -11193,3 +11193,38 @@
   claim  = {A busy host must not stall a commit, and the lease wait has no timer of its own (W1463).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_has_no_deadline_unless_asked},
 }
+
+@misc{hooks-commit-beat-submit-leaves-a-beat-naming-the-commit-tool,
+  section = {heartbeat},
+  title  = {The record sits beside the commit ledger, under the git dir},
+  claim  = {The record sits beside the commit ledger, under the git dir.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_beat.py -k test_a_submit_leaves_a_beat_naming_the_commit_tool},
+}
+
+@misc{hooks-commit-beat-two-submits-keep-the-gap-between-them,
+  section = {heartbeat},
+  title  = {The second beat records how long the session was quiet},
+  claim  = {The second beat records how long the session was quiet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_beat.py -k test_two_submits_keep_the_gap_between_them},
+}
+
+@misc{hooks-commit-beat-repository-with-no-git-dir-beats-nothing-and-raises-nothing,
+  section = {heartbeat},
+  title  = {When the git dir has no name the ledger is None and the beat is skipped},
+  claim  = {When the git dir has no name the ledger is None and the beat is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_beat.py -k test_a_repository_with_no_git_dir_beats_nothing_and_raises_nothing},
+}
+
+@misc{hooks-commit-beat-git-dir-that-will-not-take-the-file-raises-nothing,
+  section = {heartbeat},
+  title  = {A beat that cannot be written is a missed sample, never a refused commit},
+  claim  = {A beat that cannot be written is a missed sample, never a refused commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_beat.py -k test_a_git_dir_that_will_not_take_the_file_raises_nothing},
+}
+
+@misc{hooks-commit-beat-fresh-submission-beats-and-a-reexec-under-the-lease-does-not,
+  section = {heartbeat},
+  title  = {The nested run holds the lease already, so only the first entry counts as a tool use},
+  claim  = {The nested run holds the lease already, so only the first entry counts as a tool use.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_beat.py -k test_a_fresh_submission_beats_and_a_reexec_under_the_lease_does_not},
+}
