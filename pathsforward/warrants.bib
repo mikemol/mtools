@@ -5656,3 +5656,60 @@
   claim  = {An unknown symbol and a glob are both named, so the review fixes them in one pass.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifests_file.py -k test_a_refusal_names_every_fault_at_once},
 }
+
+@misc{pathsforward-rank-from-without-a-rank-file-a-named-block-closes-as-before,
+  section = {rank_from},
+  title  = {The control: this exact close passes, so the refusals below are the rank file's doing},
+  claim  = {The control: this exact close passes, so the refusals below are the rank file's doing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_without_a_rank_file_a_named_block_closes_as_before},
+}
+
+@misc{pathsforward-rank-from-skipped-top-card-refuses-the-close-and-names-it,
+  section = {rank_from},
+  title  = {W4 is top, ready, not worked and not named: refused, lock kept, the reason to give shown},
+  claim  = {W4 is top, ready, not worked and not named: refused, lock kept, the reason to give
+            shown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_a_skipped_top_card_refuses_the_close_and_names_it},
+}
+
+@misc{pathsforward-rank-from-naming-the-top-card-lets-the-close-through,
+  section = {rank_from},
+  title  = {A --blocked-by of the top card, or a --reason that cites it, accounts for it},
+  claim  = {A --blocked-by of the top card, or a --reason that cites it, accounts for it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_naming_the_top_card_lets_the_close_through},
+}
+
+@misc{pathsforward-rank-from-worked-card-being-top-is-not-a-skip,
+  section = {rank_from},
+  title  = {Top is W1, the card this tick worked: nothing was passed over},
+  claim  = {Top is W1, the card this tick worked: nothing was passed over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_the_worked_card_being_top_is_not_a_skip},
+}
+
+@misc{pathsforward-rank-from-blocked-top-card-is-not-a-skip,
+  section = {rank_from},
+  title  = {Top is W2, which is blocked: it could not have been worked, so the close passes},
+  claim  = {Top is W2, which is blocked: it could not have been worked, so the close passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_a_blocked_top_card_is_not_a_skip},
+}
+
+@misc{pathsforward-rank-from-empty-rank-list-adds-no-refusal,
+  section = {rank_from},
+  title  = {No ranked card, no new refusal},
+  claim  = {No ranked card, no new refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_an_empty_rank_list_adds_no_refusal},
+}
+
+@misc{pathsforward-rank-from-rank-file-that-is-not-a-ranked-list-refuses-the-close,
+  section = {rank_from},
+  title  = {Data we were asked to read and cannot is a refusal, and the lock stays held},
+  claim  = {Data we were asked to read and cannot is a refusal, and the lock stays held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_a_rank_file_that_is_not_a_ranked_list_refuses_the_close},
+}
+
+@misc{pathsforward-rank-from-close-gate-applies-the-same-rule-and-writes-nothing,
+  section = {rank_from},
+  title  = {The read half refuses on a skipped top card too, and leaves the state as it found it},
+  claim  = {The read half refuses on a skipped top card too, and leaves the state as it found it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rank_from.py -k test_close_gate_applies_the_same_rule_and_writes_nothing},
+}

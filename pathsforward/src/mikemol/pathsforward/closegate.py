@@ -18,6 +18,12 @@ of the session that is about to stop.
 ⚑ A SELF-CITATION IS NOT A BLOCK (github-8f, 2026-10-15, W1247): a gate or suite running for the
 card just worked does not stop the other ready cards; it is when to start the next one.
 
+⚑ THE TOP CARD BY RANK IS NOT SKIPPED IN SILENCE (W1368, nemik:W580): given `--rank-from FILE`
+(nemik-rank --json for this repo, read as data), a close that would pass is also refused when the
+top ranked card is ready and unblocked here but is neither the card worked nor named by
+`--blocked-by` or `--reason`. Without the file there is no such refusal; the rule only ever adds to
+the check above.
+
 ⚑ READY MEANS WORKABLE: a witnessed card (its evaluator, not a mind, marks it done) and a card
 behind an open enabler are not counted, the same sets `--block-behind-open` and the ranker use.
 
@@ -135,6 +141,64 @@ def _named(state: State, blocked_by: str | None, reason: str | None, worked: str
     cited = [s for s in cast("list[str]", SYMBOL.findall(FOREIGN.sub("", said))) if s in live]
     named = [*foreign, *cited]
     return f"reason: {reason} (cites {', '.join(named)})" if named else ""
+
+
+def top_ranked(raw: object) -> str | None:
+    """Read the top card's symbol off a `nemik-rank --json` document.
+
+    ⚑ THE DOCUMENT IS DATA: a list of records, best first, each with a string `symbol`. The first
+    record's symbol is the top; nothing else in it is read, so a new field cannot change it.
+
+    Returns:
+        the symbol, or None for an empty list.
+
+    Raises:
+        TypeError: when the document is not a list.
+        ValueError: when its first record carries no string symbol.
+
+    """
+    if not isinstance(raw, list):
+        msg = "a rank file is a JSON list of records, best first"
+        raise TypeError(msg)
+    records = cast("list[object]", raw)
+    if not records:
+        return None
+    first = records[0]
+    symbol = cast("dict[str, object]", first).get("symbol") if isinstance(first, dict) else None
+    if not isinstance(symbol, str) or not symbol:
+        msg = "the first record of a rank file has no string symbol"
+        raise ValueError(msg)
+    return symbol
+
+
+def rank_check(
+    verdict: Verdict,
+    state: State,
+    top: str | None,
+    named: tuple[str | None, str | None, str | None],
+) -> Verdict:
+    """Add the rank rule to a close that would otherwise pass (W1368).
+
+    ⚑ ONLY A CARD THAT COULD HAVE BEEN WORKED COUNTS: a top card that is blocked, done or behind an
+    open enabler is not ready here, so it is not skipped. The worked card, a `--blocked-by` card
+    and any card the `--reason` cites are the three ways a close accounts for the top card.
+
+    Returns:
+        the verdict unchanged when it already refused or the top card is accounted for, else a
+        refusal naming the top card and the `--reason` to give.
+
+    """
+    blocked_by, reason, worked = named
+    if verdict.refused or top is None or top not in ready_cards(state):
+        return verdict
+    cited = cast("list[str]", SYMBOL.findall(reason or ""))
+    if top in {worked, blocked_by} or top in cited:
+        return verdict
+    why = (
+        f"REFUSED: the top card by nemik rank is {top}, ready and unblocked, and this close "
+        f'neither worked nor names it: work it, or give --reason "{top}: <why it waits>"'
+    )
+    return Verdict(refused=True, lines=(*verdict.lines, why), note="")
 
 
 def judge(

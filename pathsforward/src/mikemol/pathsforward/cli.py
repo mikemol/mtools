@@ -64,6 +64,7 @@ from mikemol.pathsforward.advice import upsert as upsert_advice
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
+from mikemol.pathsforward.closegate import rank_check, top_ranked
 from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
@@ -477,6 +478,7 @@ _FIELDS = (
     "evidence",
     "blocked_by",
     "reason",
+    "rank_from",
     "promote",
     "weight",
     "witness",
@@ -595,8 +597,8 @@ _APPLIES: dict[str, frozenset[str]] = {
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
-    "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote"}),
-    "close_gate": frozenset({"blocked_by", "reason"}),
+    "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote", "rank_from"}),
+    "close_gate": frozenset({"blocked_by", "reason", "rank_from"}),
     "lift": frozenset({"jwk"}),
     "payload": frozenset({"root"}),
     "ledger": frozenset({"kind", "evidence"}),
@@ -730,6 +732,12 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         "--reason",
         metavar="TEXT",
         help="W1203: --tick-close with ready cards left: why, citing a card of this queue",
+    )
+    ap.add_argument(
+        "--rank-from",
+        metavar="FILE",
+        help="W1368: --tick-close and --close-gate: nemik-rank --json for this repo; refuse "
+        "a close that skipped the top ready card unless it is named",
     )
     ap.add_argument(
         "--promote",
@@ -1584,6 +1592,27 @@ def _tick_open(ctx: Ctx) -> int:
     return code
 
 
+def _top_of(ctx: Ctx) -> str | None:
+    """Read the top ranked card off `--rank-from`, or nothing when no file is given (W1368).
+
+    Returns:
+        the top card's symbol, or None without the flag (so no new refusal) or for an empty list.
+
+    Raises:
+        RefusedError: when the file is not JSON, not a list, or its first record has no symbol.
+
+    """
+    given = ctx.get("rank_from")
+    if given is None:
+        return None
+    doc = _json_file(Path(given))
+    try:
+        return top_ranked(doc)
+    except (TypeError, ValueError) as exc:
+        msg = f"{given}: {exc}"
+        raise ops.RefusedError(msg) from exc
+
+
 def _tick_close(ctx: Ctx) -> int:
     """Close a tick in one verb: ledger line, prune landed blockers, render, check, unlock (W1079).
 
@@ -1605,7 +1634,9 @@ def _tick_close(ctx: Ctx) -> int:
     # ready, unblocked card and no named block the close is REFUSED and the lock stays held.
     worked = entry[0] if entry else None
     when = (ctx.get("blocked_by"), ctx.get("reason"), worked)
-    verdict = CLOSE_JUDGE(store.load(ctx.path), *when, store.sibling(ctx.path, store.LEDGER))
+    state = store.load(ctx.path)
+    verdict = CLOSE_JUDGE(state, *when, store.sibling(ctx.path, store.LEDGER))
+    verdict = rank_check(verdict, state, _top_of(ctx), when)
     for said in verdict.lines:
         _say(said)
     if verdict.refused:
@@ -1676,7 +1707,9 @@ def _close_gate(ctx: Ctx) -> int:
 
     """
     when = (ctx.get("blocked_by"), ctx.get("reason"), None)
-    verdict = CLOSE_JUDGE(store.load(ctx.path), *when, store.sibling(ctx.path, store.LEDGER))
+    state = store.load(ctx.path)
+    verdict = CLOSE_JUDGE(state, *when, store.sibling(ctx.path, store.LEDGER))
+    verdict = rank_check(verdict, state, _top_of(ctx), when)
     for said in verdict.lines:
         _say(said)
     return EXIT_REFUSED if verdict.refused else EXIT_OK
