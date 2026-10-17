@@ -70,6 +70,24 @@ def dirty_in_main(repo: Path, paths: Sequence[str], out: Out) -> list[str]:
     return sorted(e[_STATUS_PREFIX:] for e in entries)
 
 
+def moved_on_in_main(repo: Path, base: str, paths: Sequence[str], out: Out) -> list[str]:
+    """Name the paths among `paths` that main's HEAD has changed since the worktree's fork point.
+
+    ⚑ LAND COPIES WHOLE FILES, so a path that main committed to after the cut would be overwritten
+    by the worktree's older copy of it, silently dropping that commit (W1444, found when a stale
+    `warrants.bib` was about to be landed over a commit made meanwhile). Refusing is the only safe
+    answer: the caller re-cuts the worktree or lands that file by hand.
+
+    Returns:
+        the paths, sorted.
+
+    """
+    if not paths:
+        return []
+    argv = ["git", "-C", str(repo), "diff", "--name-only", "-z", base, "HEAD", "--", *paths]
+    return sorted(p for p in _ask(out, argv).split("\0") if p)
+
+
 def land(repo: Path, root: Path, symbol: str, out: Out) -> list[str]:
     """Copy the worktree's change for `symbol` into the main tree, refusing on any overlap.
 
@@ -77,8 +95,9 @@ def land(repo: Path, root: Path, symbol: str, out: Out) -> list[str]:
         the landed paths, sorted, each as `<letter> <path>`.
 
     Raises:
-        ScratchError: no such worktree, no change, a symlink among the paths, or a path the main
-            tree holds dirty (every such path is named, and nothing is copied).
+        ScratchError: no such worktree, no change, a symlink among the paths, a path main committed
+            to since the cut, or a path the main tree holds dirty (every such path is named, and
+            nothing is copied).
 
     """
     where = path_for(root, repo, symbol)
@@ -93,6 +112,10 @@ def land(repo: Path, root: Path, symbol: str, out: Out) -> list[str]:
     links = sorted(p for p, s in moved.items() if s != _DELETED and (where / p).is_symlink())
     if links:
         msg = f"refusing symlink(s): {', '.join(links)}"
+        raise ScratchError(msg)
+    stale = moved_on_in_main(repo, base, sorted(moved), out)
+    if stale:
+        msg = f"main committed to {', '.join(stale)} since the cut: re-cut the worktree (W1444)"
         raise ScratchError(msg)
     held = dirty_in_main(repo, sorted(moved), out)
     if held:

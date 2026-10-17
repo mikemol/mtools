@@ -113,3 +113,33 @@ def test_the_land_verb_prints_each_path_and_a_refusal_is_exit_four(
     assert capsys.readouterr().out == "A c.txt\n"
     assert scratch_cli.main(argv, env) == scratch_cli.EXIT_REFUSED
     assert "holds c.txt dirty" in capsys.readouterr().err
+
+
+def _main_commits(repo: Path, name: str, text: str) -> None:
+    # A commit in the main tree after the worktree was cut.
+    (repo / name).write_text(text, encoding="utf-8")
+    _git(repo, "add", name)
+    _git(repo, *IDENTITY, "commit", "-q", "-m", f"main moves {name}")
+
+
+def test_a_path_main_committed_to_since_the_cut_is_refused_and_nothing_lands(
+    tmp_path: Path,
+) -> None:
+    """The control (W1444): main changed a.txt after the cut, so the whole change is refused."""
+    repo, root, where = _cut(tmp_path)
+    _main_commits(repo, "a.txt", "main's newer a\n")
+    (where / "a.txt").write_text("worktree\n", encoding="utf-8")
+    (where / "c.txt").write_text("new\n", encoding="utf-8")
+    with pytest.raises(scratch.ScratchError, match=r"main committed to a\.txt since the cut"):
+        scratch_land.land(repo, root, SYMBOL, scratch.git_out)
+    assert (repo / "a.txt").read_text(encoding="utf-8") == "main's newer a\n"
+    assert not (repo / "c.txt").exists()
+
+
+def test_main_moving_on_in_other_files_does_not_block_the_land(tmp_path: Path) -> None:
+    """The positive control: main changed b.txt, the worktree touches a.txt only, so it lands."""
+    repo, root, where = _cut(tmp_path)
+    _main_commits(repo, "b.txt", "main's b\n")
+    (where / "a.txt").write_text("worktree\n", encoding="utf-8")
+    assert scratch_land.land(repo, root, SYMBOL, scratch.git_out) == ["M a.txt"]
+    assert (repo / "b.txt").read_text(encoding="utf-8") == "main's b\n"
