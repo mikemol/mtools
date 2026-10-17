@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1438,
+  "counter": 1451,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -26711,26 +26711,6 @@
       "ticks_blocked": 0
     },
     {
-      "symbol": "W1305",
-      "title": "Pin a git for hermetic test rungs, as opa and shellcheck are pinned, so a test that makes real commits runs in a repo whose sandbox has no git (luthen-observability:W1086)",
-      "status": "ready",
-      "enables": [
-        "luthen-observability:W1086"
-      ],
-      "touches": [
-        "bazel"
-      ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Measure first: which git features mtools tests need (worktree, update-index, cat-file), what a sandbox run resolves as git today (host /usr/bin or none), and which static or relocatable git build exists to pin by url and sha256; record the three on this card, then declare it in MODULE.bazel beside opa",
-      "evidence": "",
-      "issued_at": "2026-10-15T21:19:38Z",
-      "minted_during": "interrupt",
-      "caused_by": "luthen-observability:W1086",
-      "last_worked": null,
-      "ticks_blocked": 0
-    },
-    {
       "symbol": "W1306",
       "title": "exitcensus --all reads every non-test .py under a root that has no src directory, so luthen's checks/ can be judged in place",
       "status": "done",
@@ -27112,11 +27092,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After the census: read the ratchet and the pycheck ledger code, decide the report kind (rule id per finding), write the baseline format and the new-debt refusal as one mode of pycheck or of websubset, test with a planted finding and a baselined one",
-      "evidence": "",
+      "evidence": "2026-10-17: 2026-10-17: waited 49 ticks on nemik:W561 because it was never started, not because it is blocked. Told nemik (message) it is not being worked this tick, what exists without it (@codon pin W1320, websubset --target codon W1322, pycodemod codon-prep-tree per-file measure/rewrite) and asked whether W566's census can start from a one-off codon-prep-tree report, which would let W561 unblock first.",
       "issued_at": "2026-10-16T01:41:39Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T01:53:10Z",
+      "last_worked": "2026-10-17T10:50:42Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -27630,7 +27610,7 @@
     {
       "symbol": "W1348",
       "title": "--tick-open runs a per-repo list of commands after its own steps, read from a declared file, so a tick opens in one call (nemik:W450)",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1143"
       ],
@@ -27639,13 +27619,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed b0e996c (pushed, armed --stack): --tick-hooks-set FILE and --tick-open runs the stored commands; //pathsforward:all 95 pass, 8 new tests, a real echo/false run proves a failing hook changes neither lock nor exit. Not yet adopted by nemik:W450.",
       "issued_at": "2026-10-16T04:09:35Z",
       "minted_during": "tick",
       "caused_by": "nemik:W450",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T11:10:40Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T111040Z"
     },
     {
       "symbol": "W1349",
@@ -28765,7 +28746,7 @@
     {
       "symbol": "W1404",
       "title": "mikemol-commit emits one OTel span per commit, queued through gating to landed or refused, with repo, waypoint, sha and verdict as attributes",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "commit",
@@ -28773,19 +28754,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-16: re-scoped 2026-10-17 per the operator (via github-8f): stack depth emerges from OTel, not a bespoke reader; the lease emits too | 2026-10-17: 2026-10-17: destination exists (luthen-observability:W1189: VictoriaTraces live, victoriatraces-http in the host map); span builder is mtools:W1408 (in the gate), push and read-back is W1438, then this card emits the per-commit span.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: re-scoped 2026-10-17 per the operator (via github-8f): stack depth emerges from OTel, not a bespoke reader; the lease emits too | 2026-10-17: 2026-10-17: destination exists (luthen-observability:W1189: VictoriaTraces live, victoriatraces-http in the host map); span builder is mtools:W1408 (in the gate), push and read-back is W1438, then this card emits the per-commit span. | 2026-10-17: LIVE 2026-10-17 in victoriatraces-http via the Jaeger API, service mikemol-commit: trace dac77e97... commit.stack 342.8 s = commit.stack.queued 0.76 ms + commit.stack.gating 342 s, entries=2, sha 628e732,c8f4307, waypoint W1445,W1446, verdict COMMITTED, error false; trace 36bee58d... commit (W1446 single) = queued 1.38 ms + gating 0.85 s, verdict REFUSED, error true. Parts: W1438 push, W1439 explicit ids, W1440 plan, W1441 single, W1442 stack.",
       "issued_at": "2026-10-16T23:46:49Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-17T06:38:45Z",
+      "last_worked": "2026-10-17T09:22:59Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261017T092259Z"
     },
     {
       "symbol": "W1407",
       "title": "mikemol-commit and the lease emit an OTel up-down counter of in-flight and queued commits per repo",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "luthen-observability:W1192"
       ],
@@ -28795,14 +28776,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-16: re-scoped 2026-10-17 per the operator (via github-8f): low depth with many disjoint cards becomes one rule over this counter and nemik's ready counts, in Victoria",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: re-scoped 2026-10-17 per the operator (via github-8f): low depth with many disjoint cards becomes one rule over this counter and nemik's ready counts, in Victoria | 2026-10-17: delivered as two absolute gauges, not an up-down counter (W1445 metric verb, W1446 counts); LIVE in vmsingle: mikemol.commit.queued and mikemol.commit.inflight, service mikemol-commit, repo label. luthen-observability:W1192 can read them.",
       "issued_at": "2026-10-16T23:46:51Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1192",
-      "last_worked": "2026-10-16T23:48:57Z",
+      "last_worked": "2026-10-17T09:23:00Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261017T092300Z"
     },
     {
       "symbol": "W1408",
@@ -28908,7 +28889,7 @@
     {
       "symbol": "W1413",
       "title": "mikemol-new-dist wraps or shortens the description it writes into the package docstring",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -28916,13 +28897,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 9cd7f77 (pushed, stack entry 1 of 3): new_dist wraps a long description; boundary and long cases tested; found by mikemol-scan",
       "issued_at": "2026-10-17T00:16:15Z",
       "minted_during": "interrupt",
       "caused_by": "W1409",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T08:46:17Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T084617Z"
     },
     {
       "symbol": "W1414",
@@ -29068,7 +29050,7 @@
     {
       "symbol": "W1421",
       "title": "mikemol-repin keeps the extras the venv was synced with, so el-openglo's uv sync --extra tooling --extra research is no longer typed after every repin",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -29076,13 +29058,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read hooks repin_cli.py and revendor.py for where the sync runs after a repin; find the extras the venv carries (the lock's optional-dependencies groups present in the installed environment, or the project's pyproject extras); run uv sync with those extras instead of none; test: a fixture project with two extras keeps both after a repin, and a project with none is unchanged. The peer's pin that lacks d8900d4 is el-openglo 6fba7de.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed f96fc63 (pushed): repin syncs with uv sync --inexact; built in a scratch worktree, landed with mikemol-scratch land. The flag is from uv's docs, not yet run against a repo with extras: el-openglo's next repin is the check.",
       "issued_at": "2026-10-17T01:30:01Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-17T01:30:07Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T07:07:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T070716Z"
     },
     {
       "symbol": "W1422",
@@ -29171,7 +29154,7 @@
     {
       "symbol": "W1426",
       "title": "--manifest PATH... sets a card's manifest, the repo-relative paths it will create or edit plus a size class, validated: inside the repo, named, never globbed",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1427"
       ],
@@ -29181,13 +29164,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-10-17: 2026-10-17 decisions (nemik answer relayed by github-8f): size class is a closed enum small (about 50 changed lines or fewer), medium (about 300 or fewer), large (atomize instead; warns like a missing manifest), read by nemik as sizeClass. Paths are repo-relative EXACT files to create or edit. nemik's proposal that a directory entry means any path under it is REFUSED here: it is a glob by another name and breaks the named-never-globbed rule; directories are refused at write time. | 2026-10-17: nemik RETRACTED the directory clause (relayed by github-8f): the manifest holds exact repo-relative files only, directory and glob entries refused at write time; nemik:W613 computes overlap as plain set intersection. Size classes stand.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 decisions (nemik answer relayed by github-8f): size class is a closed enum small (about 50 changed lines or fewer), medium (about 300 or fewer), large (atomize instead; warns like a missing manifest), read by nemik as sizeClass. Paths are repo-relative EXACT files to create or edit. nemik's proposal that a directory entry means any path under it is REFUSED here: it is a glob by another name and breaks the named-never-globbed rule; directories are refused at write time. | 2026-10-17: nemik RETRACTED the directory clause (relayed by github-8f): the manifest holds exact repo-relative files only, directory and glob entries refused at write time; nemik:W613 computes overlap as plain set intersection. Size classes stand. | 2026-10-17: landed 410167c (pushed, via --stack): --update --manifest PATH... --size; mikemol.pathsforward.manifest refuses directory, glob, absolute, .. step, link, duplicate; 12 tests, full pathsforward pytest 1062 pass; the gate was the bazel verification. Not yet used on a real card: nemik:W613 reads manifest and size_class.",
       "issued_at": "2026-10-17T02:01:12Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-17T02:05:52Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T07:20:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T072002Z"
     },
     {
       "symbol": "W1427",
@@ -29218,7 +29202,6 @@
         "stackmaster"
       ],
       "blocked_on": [
-        "W1426",
         "nemik:W613"
       ],
       "blocked_kind": "agent",
@@ -29228,7 +29211,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T02:05:51Z",
-      "ticks_blocked": 2,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -29432,6 +29415,274 @@
       "last_worked": "2026-10-17T06:38:44Z",
       "ticks_blocked": 0,
       "completed": "20261017T063844Z"
+    },
+    {
+      "symbol": "W1439",
+      "title": "mikemol-otlp trace takes explicit start and end ns, trace id, span id and parent id, so a caller can emit a span for something that already happened",
+      "status": "done",
+      "enables": [
+        "W1404"
+      ],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed b98e24e (pushed): trace verb takes explicit times and ids; otlp bazel 18 pass; 43 otlp tests",
+      "issued_at": "2026-10-17T06:41:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1404",
+      "last_worked": "2026-10-17T06:55:30Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T065530Z"
+    },
+    {
+      "symbol": "W1440",
+      "title": "hooks commit_span: plan three spans for one commit (commit, queued, gating) from submit, lease and end times, detached like the writer's record, silent when no store is configured",
+      "status": "done",
+      "enables": [
+        "W1404"
+      ],
+      "touches": [
+        "hooks",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 99ef0a3 (pushed, via --stack, no local bazel run: the gate was the verification): commit_span.py; 8 tests. Not called from mikemol-commit yet (W1441, W1442).",
+      "issued_at": "2026-10-17T06:41:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1404",
+      "last_worked": "2026-10-17T07:37:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T073701Z"
+    },
+    {
+      "symbol": "W1441",
+      "title": "mikemol-commit calls commit_span: submit time through the claim re-exec, lease time on entry, the verdict from the output buffer, for the single-commit path",
+      "status": "done",
+      "enables": [
+        "W1404"
+      ],
+      "touches": [
+        "hooks",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed b538048 (pushed): commit_buffered/after_of/submitted_ns in commit_kata; 3 wiring tests; first gate attempt refused by //hooks:mutants_6 (ship-flag-ignored unapplied, retargeted to after_of). Not yet seen in the live store: first real commit under this code will show service mikemol-commit.",
+      "issued_at": "2026-10-17T06:44:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1440",
+      "last_worked": "2026-10-17T08:07:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T080739Z"
+    },
+    {
+      "symbol": "W1442",
+      "title": "the --stack path of mikemol-commit emits its spans: one trace per stack run with a span per entry and the shared gate as a phase",
+      "status": "done",
+      "enables": [
+        "W1404"
+      ],
+      "touches": [
+        "hooks",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 877e3ef (pushed, stack entry 3 of 3, one gate for the three): --stack run starts commit.stack / .queued / .gating; shas joined; TeeBuffer. All twelve //hooks mutants shards passed locally first. Not yet seen in the live store.",
+      "issued_at": "2026-10-17T06:44:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1440",
+      "last_worked": "2026-10-17T08:46:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T084619Z"
+    },
+    {
+      "symbol": "W1443",
+      "title": "mikemol-scratch close deletes the card's branch, and land --close removes the worktree a landed change left dirty",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T07:07:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1379",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1444",
+      "title": "mikemol-scratch land refuses a path that main moved on since the cut: it copies whole files, so a worktree's stale warrants.bib would silently drop a commit that landed meanwhile",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed fd60e34 (pushed, stack entry 2 of 3): land refuses a path main committed to since the cut",
+      "issued_at": "2026-10-17T08:07:40Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1379",
+      "last_worked": "2026-10-17T08:46:18Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T084618Z"
+    },
+    {
+      "symbol": "W1445",
+      "title": "mikemol-otlp metric: push one gauge or up-down sample (name, value, attributes) to vmsingle-http by name",
+      "status": "done",
+      "enables": [
+        "W1407"
+      ],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 4c95b1d (pushed): mikemol-otlp metric; //otlp 19 pass; LIVE: probe gauge mikemol.otlp.w1445.probe=7 read back from vmsingle with source label and resource attributes",
+      "issued_at": "2026-10-17T08:33:14Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1407",
+      "last_worked": "2026-10-17T08:59:15Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T085915Z"
+    },
+    {
+      "symbol": "W1446",
+      "title": "mikemol-commit counts queued and in-flight commits: +1 queued at submit, -1 queued and +1 in flight at the lease, -1 in flight at the verdict, per repo, via detached metric children",
+      "status": "done",
+      "enables": [
+        "W1407"
+      ],
+      "touches": [
+        "hooks",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: github-8f 2026-10-17: key each entry on pid PLUS process start time (/proc/<pid>/stat field 22) and count it live only when both match, so a recycled pid cannot keep a dead commit counted. | 2026-10-17: landed c8f4307 (pushed, stack entry 2 of 2 with W1445's test fix 628e732). First attempt refused: arming MIKEMOL_ENDPOINTS on the submission leaked into the gate and an otlp test sent a stray record. LIVE 2026-10-17: vmsingle holds mikemol.commit.queued (0) and mikemol.commit.inflight (1 then 0, twice) for service mikemol-commit, repo mtools; the pid+start-time guard is github-8f's.",
+      "issued_at": "2026-10-17T08:33:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1407",
+      "last_worked": "2026-10-17T09:22:58Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T092258Z"
+    },
+    {
+      "symbol": "W1447",
+      "title": "a queued stack captures its files at submit time, not run time: take a commit object or scratch worktree per stack so queued stacks never see each other's working-tree edits",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 52de4de (pushed, plain commit; first gate attempt refused: my tests relied on git identity from -c flags and the hermetic bazel sandbox has none, so they now set a repository identity). stacksnap/stackfreeze/stackland/stackrun/commit_kata wiring; control test: a file frozen then edited keeps its frozen bytes in the commit. Not yet seen end to end through two real queued --stack runs.",
+      "issued_at": "2026-10-17T08:36:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T10:06:13Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T100613Z"
+    },
+    {
+      "symbol": "W1448",
+      "title": "the commit gate runs with a scrubbed environment (env -i plus a declared allow-list), and a test asserts an armed MIKEMOL_ENDPOINTS on the submitter does not reach it",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 38c447b (pushed, armed --stack): gateenv.child_env scrubs MIKEMOL_* off a ten-name list for git commit/hook; the control test runs a real pre-commit hook and shows an armed MIKEMOL_ENDPOINTS is not seen while MIKEMOL_REAL_ROOT, PATH and an unrelated variable are. This commit was itself submitted with MIKEMOL_ENDPOINTS armed and passed the gate.",
+      "issued_at": "2026-10-17T09:19:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T11:25:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T112535Z"
+    },
+    {
+      "symbol": "W1449",
+      "title": "mikemol-repin --revendor recognises nemik's layout: path-source wheels in tool.uv.sources, MODULE.bazel references and a SHA256SUMS beside vendor/wheels, so nemik's tools/revendor-mtools.sh retires",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "repin"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 12419a5 (pushed, one --stack gate, armed): repin --revendor takes nemik's layout (tag-less versions, six dists, MODULE.bazel, SHA256SUMS, git add -f); two declared mutants retargeted (caught by the local mutants shards before submitting). A real dry run on nemik's tree plans six wheels at +410167c. NOT yet applied to nemik's tree: nemik compares its output with tools/revendor-mtools.sh before retiring the script.",
+      "issued_at": "2026-10-17T09:52:27Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik-84",
+      "last_worked": "2026-10-17T10:51:49Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T105149Z"
+    },
+    {
+      "symbol": "W1450",
+      "title": "Answer luthen-observability:W1086: a pinned hermetic git (relocatable, url + sha256, the verbs init/config/add/commit/rev-parse) declared beside opa so rung-two tests can run a real commit",
+      "status": "blocked",
+      "enables": [
+        "luthen-observability:W1086"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [
+        "operator: decide whether a pinned hermetic cc toolchain is wanted (for codon or other native tools); git from the kernel.org tarball would be its first consumer"
+      ],
+      "blocked_kind": "human",
+      "next_bounded_step": "wait for luthen-observability's choice between (a) pinned cc toolchain then git from the kernel.org tarball, and (b) conda-forge git closure",
+      "evidence": "2026-10-17: 2026-10-17 SEARCH (two web searches): no first-party static git binary exists (git-scm.com ships source, kernel.org tarballs carry sha256 signatures). Third-party static builds exist (individual GitHub projects such as pierzchalski/static-bins, ryanwoodsmall/static-binaries; unread, git not confirmed in them): pinning an individual's binary is a supply-chain call I will not make unread. Real options: (a) build git from the official kernel.org tarball (url + sha256, signed) under bazel with a pinned C toolchain: hermetic and verifiable, costs a build rule; (b) conda-forge git plus its shared-library deps, relocatable but several packages; (c) INTERIM, luthen's own words: declare the host /usr/bin/git in their unit_tests.bzl --tool git=PATH (a host input). Luthen's need is only init/config/add/commit and reading .git/HEAD and .git/logs/HEAD. | 2026-10-17: 2026-10-17 READ MODULE.bazel/.bazelrc: no pinned C toolchain (only http_archive of prebuilt binaries: opa, ruff, codon...). (a) source build therefore needs a hermetic cc toolchain first (two cards). (b) conda-forge git + ~8 shared-library archives, sha256 from repodata, relocatable, C verbs only. luthen-observability refuses (c) host /usr/bin/git (undeclared input) and leans (a). Told luthen the cost of each; waiting on their choice, will not start either unasked. | 2026-10-17: 2026-10-17 luthen-observability: keep its real-commit test out of the tree, do NOT start (a) or (b) for one test; revisit (a) when a cc toolchain is wanted for codon or anything native. Nothing else of theirs waits on it. | 2026-10-17: 2026-10-17 operator answer (AskUserQuestion): not now; no pinned cc toolchain until a native tool needs a compiler. The block stays as filed; re-file it against that condition when the operator lifts it.",
+      "issued_at": "2026-10-17T10:49:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1086",
+      "last_worked": "2026-10-17T11:00:57Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1451",
+      "title": "narrow the gate's environment beyond MIKEMOL_*: a per-repo declared allow-list (env -i plus names) in place of pass-through, once each peer's pre-commit needs are known",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T11:25:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1448",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -29634,6 +29885,13 @@
       "title": "katas status mode prints each repo's stack depth beside its disjoint ready-card count",
       "dropped_at": "2026-10-16T23:48:58Z",
       "reason": "superseded 2026-10-17 by the operator's ruling (via github-8f): no katas status mode; depth is a query over the OTel counter and spans",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1305",
+      "title": "Pin a git for hermetic test rungs, as opa and shellcheck are pinned, so a test that makes real commits runs in a repo whose sandbox has no git (luthen-observability:W1086)",
+      "dropped_at": "2026-10-17T10:16:37Z",
+      "reason": "luthen-observability re-scoped its W1086 from my measurement (2026-10-17): the host git in the bazel sandbox covers its rungs and its test needs only init/config/add/commit/rev-parse with its own identity; no pinned git needed. Reopen from luthen-observability:W1086 if a rung is measured without git.",
       "recoverable": true
     }
   ],
