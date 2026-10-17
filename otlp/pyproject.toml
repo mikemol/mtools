@@ -95,6 +95,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # CamelCase methods and the Metric message's `sum` field are the wheel's names, not ours.
 "stubs/google/protobuf/json_format.pyi" = ["invalid-function-name"]
 "stubs/opentelemetry/proto/collector/metrics/v1/metrics_service_pb2.pyi" = ["invalid-function-name"]
+"stubs/opentelemetry/proto/collector/logs/v1/logs_service_pb2.pyi" = ["invalid-function-name"]
 "stubs/opentelemetry/proto/metrics/v1/metrics_pb2.pyi" = ["builtin-argument-shadowing"]
+"tests/test_logs.py" = ["assert"]
+"tests/test_sender.py" = ["assert"]
 "tests/test_smoke.py" = ["assert"]
 "tests/test_metrics.py" = ["assert"]

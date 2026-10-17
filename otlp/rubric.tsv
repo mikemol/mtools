@@ -3,3 +3,5 @@
 # key <TAB> heading title
 smoke	smoke
 metrics	metrics
+logs	logs
+sender	sender

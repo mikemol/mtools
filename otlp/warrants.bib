@@ -34,3 +34,60 @@
   claim  = {Number kinds are not blurred, and True is not sent as 1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_an_int_is_as_int_a_float_is_as_double_and_a_bool_label_stays_a_bool},
 }
+
+@misc{otlp-logs-record-carries-its-body-time-severity-number-and-text,
+  section = {logs},
+  title  = {The parsed record has the body, the nanosecond time and both halves of the severity},
+  claim  = {The parsed record has the body, the nanosecond time and both halves of the severity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs.py -k test_a_record_carries_its_body_time_severity_number_and_text},
+}
+
+@misc{otlp-logs-attributes-keep-their-kinds-and-the-default-severity-is-info,
+  section = {logs},
+  title  = {A label is a string, an int or a bool value, in key order; no severity means INFO},
+  claim  = {A label is a string, an int or a bool value, in key order; no severity means INFO.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs.py -k test_attributes_keep_their_kinds_and_the_default_severity_is_info},
+}
+
+@misc{otlp-logs-four-resource-attributes-ride-with-the-record,
+  section = {logs},
+  title  = {The same resource the metric builder sends, so a log and a metric attribute alike},
+  claim  = {The same resource the metric builder sends, so a log and a metric attribute alike.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs.py -k test_the_four_resource_attributes_ride_with_the_record},
+}
+
+@misc{otlp-logs-unknown-severity-is-refused-not-sent-as-info,
+  section = {logs},
+  title  = {The control: DEBUG is not built, so it raises and names the allowed three},
+  claim  = {The control: DEBUG is not built, so it raises and names the allowed three.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_logs.py -k test_an_unknown_severity_is_refused_not_sent_as_info},
+}
+
+@misc{otlp-sender-payload-arrives-unchanged-with-the-protobuf-content-type-on-the-path,
+  section = {sender},
+  title  = {The control: the bytes, the type and the path the caller named are what the endpoint saw},
+  claim  = {The control: the bytes, the type and the path the caller named are what the endpoint
+            saw.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sender.py -k test_the_payload_arrives_unchanged_with_the_protobuf_content_type_on_the_path},
+}
+
+@misc{otlp-sender-refusal-raises-and-names-the-status-and-the-protobuf-rule,
+  section = {sender},
+  title  = {A 400 (luthen's answer to a JSON body) is a failure the caller sees, not a quiet pass},
+  claim  = {A 400 (luthen's answer to a JSON body) is a failure the caller sees, not a quiet pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sender.py -k test_a_refusal_raises_and_names_the_status_and_the_protobuf_rule},
+}
+
+@misc{otlp-sender-url-that-is-not-http-is-refused-before-any-connection,
+  section = {sender},
+  title  = {The control: file: and custom schemes never reach a socket},
+  claim  = {The control: file: and custom schemes never reach a socket.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sender.py -k test_a_url_that_is_not_http_is_refused_before_any_connection},
+}
+
+@misc{otlp-sender-unreachable-endpoint-is-a-send-error-not-a-bare-os-error,
+  section = {sender},
+  title  = {Connection refused (a port nobody listens on) surfaces as SendError naming the URL},
+  claim  = {Connection refused (a port nobody listens on) surfaces as SendError naming the URL.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sender.py -k test_an_unreachable_endpoint_is_a_send_error_not_a_bare_os_error},
+}
