@@ -75,3 +75,4 @@ prune_any_status	prune_any_status
 refusal_record	refusal_record
 manifest	Manifest: A Card Names Exact Repo-Relative Files and a Size Class, and a Directory, Glob, Absolute Path, Parent Step, Link or Duplicate Is Refused
 tickhooks	Tick Hooks: A Repo's Stored Commands Run After --tick-open's Steps, and No Hook Can Break the Tick
+manifests_file	Manifests From File: Many Cards' Manifests Are Stored From One JSON File, All or Nothing, With a Dry Run by Default

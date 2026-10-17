@@ -5627,3 +5627,32 @@
             own.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_tick_open_runs_the_stored_hooks_and_a_failing_one_changes_nothing},
 }
+
+@misc{pathsforward-manifests-file-dry-run-prints-each-change-and-stores-nothing,
+  section = {manifests_file},
+  title  = {Without --write the plan is printed, one line per card, and the file is byte-identical},
+  claim  = {Without --write the plan is printed, one line per card, and the file is byte-identical.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifests_file.py -k test_a_dry_run_prints_each_change_and_stores_nothing},
+}
+
+@misc{pathsforward-manifests-file-write-stores-every-manifest-and-size-together,
+  section = {manifests_file},
+  title  = {With --write every card in the file gets its manifest and size class in one call},
+  claim  = {With --write every card in the file gets its manifest and size class in one call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifests_file.py -k test_write_stores_every_manifest_and_size_together},
+}
+
+@misc{pathsforward-manifests-file-refused-file-leaves-the-state-byte-identical-even-with-write,
+  section = {manifests_file},
+  title  = {The control: one bad card refuses the whole file, so the good ones are not stored either},
+  claim  = {The control: one bad card refuses the whole file, so the good ones are not stored
+            either.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifests_file.py -k test_a_refused_file_leaves_the_state_byte_identical_even_with_write},
+}
+
+@misc{pathsforward-manifests-file-refusal-names-every-fault-at-once,
+  section = {manifests_file},
+  title  = {An unknown symbol and a glob are both named, so the review fixes them in one pass},
+  claim  = {An unknown symbol and a glob are both named, so the review fixes them in one pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_manifests_file.py -k test_a_refusal_names_every_fault_at_once},
+}

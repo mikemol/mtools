@@ -40,6 +40,7 @@ from mikemol.pathsforward import (
     lease,
     lock,
     manifest,
+    manifestsfile,
     opa_eval,
     ops,
     outcomes,
@@ -424,6 +425,7 @@ _VALUED = (
     "tick_hooks_set",
     "weights_from",
     "vectors_from",
+    "manifests_from",
     "repair_counter",
     "scan_literal",
     "commit_message",
@@ -562,6 +564,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "bump_blocked": frozenset({"exclude", "verbose", "root", "count_tick"}),
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
+    "manifests_from": frozenset({"write"}),
     "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader", "root"}),
     # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
     # `attach` (one file pinned to many cards is a different act), plus `--write`.
@@ -842,6 +845,12 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         metavar="FILE",
         help="W1348: store FILE's commands (one per non-blank, non-# line) for --tick-open to run; "
         "an empty file clears",
+    )
+    mode.add_argument(
+        "--manifests-from",
+        metavar="FILE",
+        help="W1453: store [{symbol, manifest, size}] from a JSON file, all or nothing; "
+        "a dry run unless --write",
     )
 
 
@@ -2406,6 +2415,35 @@ def _vectors_from(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _manifests_from(ctx: Ctx) -> int:
+    """Store a file's manifests in one write, or refuse the whole file; a dry run without --write.
+
+    ⚑ PARSED BEFORE THE LOCK, JUDGED WHOLE UNDER IT (W1453): a malformed file is refused without
+    touching the state, and a well-formed one is checked against the live queue and the repo's
+    files before the first card is written. Without `--write` the changes are printed, none saved.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    entries = manifestsfile.parse(_json_file(Path(ctx.get("manifests_from") or "")))
+    if not ctx.opts.get("write"):
+        state = store.load(ctx.path)
+        root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+        for line in manifestsfile.plan(state, entries, root):
+            _say(line)
+        _say(f"dry run: {len(entries)} manifest(s) would be stored; add --write to store them")
+        return EXIT_OK
+
+    def edit(state: State) -> int:
+        root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+        count = manifestsfile.store(state, entries, root, ctx.stamp())
+        _say(f"manifests set: {count}; state_hash={v2(state.waypoints)}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _repair_counter(ctx: Ctx) -> int:
     """Raise a lagging counter to the highest claimed symbol, and ledger the repair (W355).
 
@@ -2619,6 +2657,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "init": _init,
     "weights_from": _weights_from,
     "vectors_from": _vectors_from,
+    "manifests_from": _manifests_from,
     "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,
