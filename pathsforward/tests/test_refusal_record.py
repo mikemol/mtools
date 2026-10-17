@@ -86,6 +86,19 @@ def test_a_configured_host_starts_the_child_with_shapes_the_repo_and_the_caller(
     assert line == "bad <value>"
 
 
+def test_with_only_the_endpoints_file_set_the_child_starts_without_a_url(tmp_path: Path) -> None:
+    """Luthen's route: MIKEMOL_ENDPOINTS alone configures it, and no address is passed on argv."""
+    seen: list[list[str]] = []
+
+    def start(argv: object, line: str) -> None:
+        del line
+        seen.append(list(argv) if isinstance(argv, list) else [])
+
+    env = {refusal_record.ENDPOINTS_ENV: "/host/endpoints.json", refusal_record.BIN_ENV: "/o/bin"}
+    assert refusal_record.emit("REFUSED: x", [], _state(tmp_path), env, start)
+    assert "--url" not in seen[0]
+
+
 def test_a_child_that_cannot_start_leaves_the_refusal_untouched(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

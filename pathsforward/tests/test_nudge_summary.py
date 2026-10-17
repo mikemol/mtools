@@ -63,7 +63,7 @@ def _state(tmp_path: Path) -> Path:
 
 
 def _bump(path: Path, *extra: str) -> int:
-    return cli.main(["--state", str(path), "--bump-blocked", *extra])
+    return cli.main(["--state", str(path), "--bump-blocked", "--count-tick", *extra])
 
 
 def test_the_default_is_a_count_line_and_one_row_per_external_party(

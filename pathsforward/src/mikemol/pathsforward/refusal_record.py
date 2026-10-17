@@ -31,6 +31,7 @@ from mikemol.pathsforward import foreign
 
 BIN_ENV = "MIKEMOL_OTLP_BIN"
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
+ENDPOINTS_ENV = "MIKEMOL_ENDPOINTS"
 CALLER_ENV = "MIKEMOL_CALLER"
 SERVICE = "mikemol-paths-forward"
 _QUOTED = re.compile(r"'[^']*'|\"[^\"]*\"")
@@ -115,14 +116,16 @@ def emit(
     where = os.environ if env is None else env
     url = where.get(URL_ENV)
     program = binary(where, foreign.default_root())
-    if not url or program is None:
+    # ⚑ ENDPOINT BY NAME IS THE ROUTE LUTHEN PREFERS (an address in an environment is an address
+    # literal in their tree): with only MIKEMOL_ENDPOINTS set, the child resolves the name itself,
+    # so no --url is passed. Neither variable set means nothing is configured: a silent no-op.
+    if (not url and not where.get(ENDPOINTS_ENV)) or program is None:
         return False
     repo = state.parent.parent.name
     argv = [
         program,
         "log",
-        "--url",
-        url,
+        *(["--url", url] if url else []),
         "--service",
         SERVICE,
         "--namespace",

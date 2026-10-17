@@ -501,6 +501,7 @@ _FIELDS = (
     "on",
     "write",
     "verbose",
+    "count_tick",
     "transcript",
     "uuid",
     "claim",
@@ -551,7 +552,7 @@ _APPLIES: dict[str, frozenset[str]] = {
         {"next", "enables", "touches", "caused_by", "witness", "witness_lang", "admit", "root"}
     ),
     "drop": frozenset({"admit", "gate", "reference_arm", "root", "on", "write"}),
-    "bump_blocked": frozenset({"exclude", "verbose", "root"}),
+    "bump_blocked": frozenset({"exclude", "verbose", "root", "count_tick"}),
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
     "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader", "root"}),
@@ -778,6 +779,12 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
         "--gate",
         choices=GATES,
         help="--drop with --admit: the gate the waypoint died at",
+    )
+    ap.add_argument(
+        "--count-tick",
+        action="store_true",
+        default=None,
+        help="--bump-blocked: also count a blocked tick on each blocked card (tick-open does)",
     )
     ap.add_argument("--transcript", metavar="PATH", help="--warrant: the transcript JSONL cited")
     ap.add_argument("--uuid", metavar="UUID", help="--warrant: the cited record's uuid")
@@ -1514,7 +1521,7 @@ def _tick_open(ctx: Ctx) -> int:
 
     """
     holder = ctx.get("tick_open") or ""
-    held = replace(ctx, opts={**ctx.opts, "lock": holder})
+    held = replace(ctx, opts={**ctx.opts, "lock": holder, "count_tick": True})
     code = _lock(held)
     if code != EXIT_OK:
         return code
@@ -2169,7 +2176,13 @@ def _inbound(ctx: Ctx) -> int:
 
 
 def _bump_blocked(ctx: Ctx) -> int:
-    """Prune landed blockers, then count a blocked tick on every blocked waypoint.
+    """Prune landed blockers, and with `--count-tick` count a blocked tick on every blocked card.
+
+    ⚑ COUNTING IS EXPLICIT (W1420, github-8f 2026-10-17): twice a session ran `--bump-blocked` to
+    clear a landed-blocker warning and inflated `ticks_blocked` on 243 and 229 cards, because the
+    verb that prunes also advanced the nudge back-off. Without `--count-tick` it now only prunes
+    (exactly `--prune-landed`) and says so; `--tick-open` passes the flag itself, since a tick is
+    what the count is of.
 
     Returns:
         EXIT_OK.
@@ -2177,12 +2190,16 @@ def _bump_blocked(ctx: Ctx) -> int:
     """
     exclude = frozenset(ctx.many("exclude") or ())
     root = _root(ctx)
+    counting = bool(ctx.opts.get("count_tick"))
 
     def edit(state: State) -> int:
         for sym in ops.prune_done(state):
             _say(f"UNBLOCKED {sym} (every local blocker is done)")
         for sym in foreign.prune_foreign(state, root).freed:
             _say(f"UNBLOCKED {sym} (every blocker is done)")
+        if not counting:
+            _say("pruned only: no tick was counted (pass --count-tick inside a tick-open)")
+            return EXIT_OK
         bumped = ops.bump_blocked(state, exclude)
         if not ctx.opts.get("verbose"):
             for report_line in ops.nudge_summary(bumped):

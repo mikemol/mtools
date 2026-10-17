@@ -98,7 +98,8 @@ src/mikemol/pathsforward/cli.py|enables-keeps-last|"--enables", action="extend",
 
 # W1078: --tick-open takes the lock as the given holder, stops when it is held, bumps, and names the close.
 src/mikemol/pathsforward/cli.py|tick-open-ignores-a-held-lock|if code != EXIT_OK:|if False:|def=_tick_open
-src/mikemol/pathsforward/cli.py|tick-open-wrong-holder|"lock": holder\}|"lock": "x"}|def=_tick_open
+src/mikemol/pathsforward/cli.py|tick-open-wrong-holder|"lock": holder, |"lock": "x", |def=_tick_open
+src/mikemol/pathsforward/cli.py|tick-open-stops-counting|"count_tick": True|"count_tick": False|def=_tick_open
 src/mikemol/pathsforward/cli.py|tick-open-skips-bump|\(_bump_blocked, _inbound, _check\)|(_inbound, _check)|def=_tick_open
 src/mikemol/pathsforward/cli.py|tick-open-close-names-no-holder|--unlock \{holder\}"|--unlock"|def=_tick_open
 

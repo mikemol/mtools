@@ -5479,3 +5479,21 @@
   claim  = {The control: spawn raising OSError still gives exit 2 and the same printed line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_child_that_cannot_start_leaves_the_refusal_untouched},
 }
+
+@misc{pathsforward-refusal-record-with-only-the-endpoints-file-set-the-child-starts-without-a-url,
+  section = {refusal_record},
+  title  = {Luthen's route: MIKEMOL_ENDPOINTS alone configures it, and no address is passed on argv},
+  claim  = {Luthen's route: MIKEMOL_ENDPOINTS alone configures it, and no address is passed on argv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_with_only_the_endpoints_file_set_the_child_starts_without_a_url},
+}
+
+@misc{pathsforward-cli-bump-blocked-without-count-tick-prunes-and-counts-nothing,
+  section = {cli},
+  title  = {The W1420 control: the remedy people reached for twice no longer inflates ticks_blocked},
+  claim  = {The W1420 control: the remedy people reached for twice no longer inflates ticks_blocked.
+            github-8f 2026-10-17: `--bump-blocked` run to clear a landed-blocker warning
+            bumped 243 and 229 cards. A card blocked on an agent at ticks_blocked=4 must
+            stay at 4, a card whose blocker is done must still be freed, and the output
+            must say no tick was counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_bump_blocked_without_count_tick_prunes_and_counts_nothing},
+}

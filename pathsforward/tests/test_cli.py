@@ -536,13 +536,35 @@ def test_bump_blocked_says_who_is_owed(tmp_path: Path, capsys: pytest.CaptureFix
     """--bump-blocked prints NUDGE on the first blocked tick, and honours --except."""
     blocked = {"blocked_on": ["agent-2"], "blocked_kind": "agent"}
     path = _file(tmp_path, [_wp("W1", "blocked", **blocked), _wp("W2", "blocked", **blocked)])
-    code = _run(path, "--bump-blocked", "--verbose", "--except", "W2")
+    code = _run(path, "--bump-blocked", "--count-tick", "--verbose", "--except", "W2")
     out = capsys.readouterr().out
     assert (code, "W1 ticks_blocked=1 on=agent-2(agent)  NUDGE" in out, "W2" in out) == (
         _OK,
         True,
         False,
     )
+
+
+def test_bump_blocked_without_count_tick_prunes_and_counts_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The W1420 control: the remedy people reached for twice no longer inflates ticks_blocked.
+
+    ⚑ github-8f 2026-10-17: `--bump-blocked` run to clear a landed-blocker warning bumped 243 and
+    229 cards. A card blocked on an agent at ticks_blocked=4 must stay at 4, a card whose blocker
+    is done must still be freed, and the output must say no tick was counted.
+    """
+    counted = {"blocked_on": ["agent-2"], "blocked_kind": "agent", "ticks_blocked": _FOUR}
+    waiting = {"blocked_on": ["W3"], "blocked_kind": "agent"}
+    path = _file(
+        tmp_path,
+        [_wp("W1", "blocked", **waiting), _wp("W2", "blocked", **counted), _wp("W3", "done")],
+    )
+    code = _run(path, "--bump-blocked")
+    cards = {str(w["symbol"]): w for w in cast("list[Rec]", _doc(path)["waypoints"])}
+    said = capsys.readouterr().out
+    assert (code, "UNBLOCKED W1" in said, "no tick was counted" in said) == (_OK, True, True)
+    assert (cards["W1"]["status"], cards["W2"]["ticks_blocked"]) == ("ready", _FOUR)
 
 
 def test_prune_landed_frees_a_card_and_counts_no_tick(
