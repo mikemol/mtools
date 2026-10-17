@@ -21,8 +21,10 @@ dirty tree, so uncommitted work is never destroyed by it.
 
 ⚑ TO TEST THE WORKTREE'S CODE, NOT THE MAIN TREE'S: a dist's editable install points at the main
 tree, so pytest in the worktree would import the main tree's source. `PYTHONPATH=<dist>/src` comes
-before the editable path, which is the recipe `hint` prints. That ordering is stated from how the
-interpreter builds `sys.path` and has not been run end to end here.
+before the editable path, which is the recipe `hint` prints. Run end to end (2026-10-16, W1424's
+scan tests in a scratch worktree with the main tree's python): the worktree's pdf module imported
+while the main tree's source lacked it. `pycheck --install` and `--format` borrow the main tree's
+interpreter inside a worktree too (W1429).
 """
 
 import os

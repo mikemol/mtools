@@ -24,7 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import project_root
+from mikemol.hooks import project_root, worktree_venv
 
 SAFE_RULES = "I,W,COM812"
 """The ruff rules whose autofix is applied: import order, whitespace, a trailing comma."""
@@ -52,6 +52,8 @@ def fix_text(path: Path, text: str, err: TextIO) -> str | None:
     """
     root = project_root.project_for(str(path))
     venv_py = project_root.venv_python_for(str(path))
+    if venv_py is None and root is not None:
+        venv_py = worktree_venv.main_tree_venv_python(root)  # a linked worktree borrows (W1429)
     if root is None or venv_py is None:
         err.write(f"mikemol-pycheck: {path}: no governing project or interpreter; not fixed\n")
         return None

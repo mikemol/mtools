@@ -10411,3 +10411,10 @@
   claim  = {A file staged by someone else stays staged: the amend rewrites the message only (W1437).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_the_amend_leaves_other_staged_work_staged_and_out_of_the_tip},
 }
+
+@misc{hooks-worktree-venv-format-and-safe-fix-borrow-the-main-trees-interpreter-in-a-worktree,
+  section = {worktree-venv},
+  title  = {`--format` and the safe fixer run the main tree's ruff from the worktree dist (W1429)},
+  claim  = {`--format` and the safe fixer run the main tree's ruff from the worktree dist (W1429).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_format_and_safe_fix_borrow_the_main_trees_interpreter_in_a_worktree},
+}

@@ -9,6 +9,7 @@ shell script that records its working directory and argv, then exits clean.
 
 from __future__ import annotations
 
+import io
 import os
 import shutil
 import subprocess
@@ -16,7 +17,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.hooks import pycheck, worktree_venv
+from mikemol.hooks import pycheck, pycheck_clear, pycheck_format, worktree_venv
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -165,3 +166,21 @@ def test_a_directory_outside_any_repository_resolves_nothing(decoy: Path) -> Non
     plain.mkdir()
     assert worktree_venv.main_tree_venv_python(plain) is None
     assert worktree_venv.main_tree_venv_python(decoy / "absent") is None
+
+
+def test_format_and_safe_fix_borrow_the_main_trees_interpreter_in_a_worktree(
+    decoy: Path,
+) -> None:
+    """`--format` and the safe fixer run the main tree's ruff from the worktree dist (W1429)."""
+    main = _main(decoy)
+    wt = _worktree(decoy, main)
+    log = decoy / "log"
+    _fake_venv(main / _DIST, log)
+    target = wt / _DIST / "src" / "mod.py"
+    err = io.StringIO()
+    assert pycheck_format.format_text(target, _SOURCE, err) is not None
+    assert pycheck_clear.fix_text(target, _SOURCE, err) is not None
+    assert not err.getvalue()
+    lines = log.read_text(encoding="utf-8").splitlines()
+    assert [line.split("|", 1)[1].split()[2] for line in lines] == ["format", "check"]
+    assert all(line.split("|", 1)[0] == str((wt / _DIST).resolve()) for line in lines)
