@@ -10518,3 +10518,24 @@
   claim  = {The control: the first spawn raising OSError gives 0 started and no exception.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_child_that_cannot_start_never_raises_into_the_commit},
 }
+
+@misc{hooks-verdictlog-main-starts-the-spans-from-the-printed-text-with-ordered-moments,
+  section = {verdictlog},
+  title  = {Without --ship the spans still start, from the text printed, submit <= lease <= end},
+  claim  = {Without --ship the spans still start, from the text printed, submit <= lease <= end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_main_starts_the_spans_from_the_printed_text_with_ordered_moments},
+}
+
+@misc{hooks-verdictlog-submission-time-left-by-the-first-process-is-kept,
+  section = {verdictlog},
+  title  = {The re-exec'd process reads SUBMIT_ENV: the queued span starts when the first one began},
+  claim  = {The re-exec'd process reads SUBMIT_ENV: the queued span starts when the first one began.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_submission_time_left_by_the_first_process_is_kept},
+}
+
+@misc{hooks-verdictlog-malformed-submission-time-reads-as-now-and-ship-still-ships,
+  section = {verdictlog},
+  title  = {The controls: garbage in SUBMIT_ENV does not crash the commit, and --ship is not lost},
+  claim  = {The controls: garbage in SUBMIT_ENV does not crash the commit, and --ship is not lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_a_malformed_submission_time_reads_as_now_and_ship_still_ships},
+}

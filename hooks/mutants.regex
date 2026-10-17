@@ -216,7 +216,7 @@ src/mikemol/hooks/verdictlog.py|refusal-never-closes|elif not line\.startswith\(
 src/mikemol/hooks/verdictlog.py|verdict-never-matched|if found:|if False:|def=event_of
 src/mikemol/hooks/verdictlog.py|ship-text-always-drains|if not events:|if False:|def=ship_text
 src/mikemol/hooks/verdictlog.py|ship-text-starts-no-drainer|spawn\(vlogdetach\.drain_argv\(config\)\)|pass|def=ship_text
-src/mikemol/hooks/commit_kata.py|ship-flag-ignored|if shipping:|if False:|def=main
+src/mikemol/hooks/commit_kata.py|ship-flag-ignored|if shipping:|if False:|def=after_of
 src/mikemol/hooks/commit_kata.py|ship-flag-reaches-parse|bare = \[a for a in args if a != SHIP_FLAG\]|bare = args|def=main
 src/mikemol/hooks/vlogwatch.py|watch-never-counts-a-stall|before\.get\("stalls", 0\) \+ 1|before.get("stalls", 0) + 0|def=observe
 src/mikemol/hooks/vlogwatch.py|watch-never-kills|if stalls >= patience:|if False:|def=observe

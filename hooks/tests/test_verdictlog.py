@@ -18,7 +18,7 @@ import subprocess
 from typing import TYPE_CHECKING, cast
 
 from mikemol.hooks import commit_kata as ck
-from mikemol.hooks import verdictlog
+from mikemol.hooks import commit_span, verdictlog
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -225,3 +225,91 @@ def test_main_with_ship_prints_the_same_output_and_ships_the_text_it_printed(
     assert len(shipped) == 1
     assert shipped[0] in printed
     assert "COMMITTED repo " in shipped[0]
+
+
+def _held_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Build a throwaway repo with a modified tracked file, in an environment holding the claim.
+
+    Returns:
+        the repository root.
+
+    """
+    for name in [name for name in os.environ if name.startswith("GIT_")]:
+        monkeypatch.delenv(name)
+    for key, value in {
+        "GIT_CEILING_DIRECTORIES": str(tmp_path),
+        "GIT_AUTHOR_NAME": "t",
+        "GIT_AUTHOR_EMAIL": "t@example.invalid",
+        "GIT_COMMITTER_NAME": "t",
+        "GIT_COMMITTER_EMAIL": "t@example.invalid",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "HOME": str(tmp_path),
+        ck.HELD_ENV: "1",
+        ck.ISOLATED_ENV: "0",
+    }.items():
+        monkeypatch.setenv(key, value)
+    root = tmp_path / "repo"
+    root.mkdir()
+    _git(root, "init", "--quiet", "-b", "main")
+    (root / "a.txt").write_text("one\n", encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "--quiet", "-m", "first")
+    (root / "a.txt").write_text("two\n", encoding="utf-8")
+    return root
+
+
+class _Spans:
+    """A recorder standing in for the span starter, remembering each call."""
+
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, commit_span.Moments, str]] = []
+
+    def __call__(self, text: str, moments: commit_span.Moments, waypoint: str, env: object) -> int:
+        del env
+        self.calls.append((text, moments, waypoint))
+        return 0
+
+
+def test_main_starts_the_spans_from_the_printed_text_with_ordered_moments(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Without --ship the spans still start, from the text printed, submit <= lease <= end."""
+    root = _held_repo(tmp_path, monkeypatch)
+    spans = _Spans()
+    monkeypatch.setattr(ck, "_emit_spans", spans)
+    assert ck.main([str(root), "--waypoint", "W1", "--subject", "subject", "a.txt"]) == 0
+    text, moments, waypoint = spans.calls[0]
+    assert "COMMITTED repo " in text
+    assert waypoint == "W1"
+    assert 0 < moments.submit_ns <= moments.lease_ns <= moments.end_ns
+
+
+def test_a_submission_time_left_by_the_first_process_is_kept(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The re-exec'd process reads SUBMIT_ENV: the queued span starts when the first one began."""
+    root = _held_repo(tmp_path, monkeypatch)
+    left = 12345
+    monkeypatch.setenv(commit_span.SUBMIT_ENV, str(left))
+    spans = _Spans()
+    monkeypatch.setattr(ck, "_emit_spans", spans)
+    assert ck.main([str(root), "--waypoint", "W1", "--subject", "subject", "a.txt"]) == 0
+    assert spans.calls[0][1].submit_ns == left
+
+
+def test_a_malformed_submission_time_reads_as_now_and_ship_still_ships(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The controls: garbage in SUBMIT_ENV does not crash the commit, and --ship is not lost."""
+    root = _held_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv(commit_span.SUBMIT_ENV, "not-a-number")
+    shipped: list[str] = []
+
+    def record(text: str) -> int:
+        shipped.append(text)
+        return 0
+
+    monkeypatch.setattr(ck, "ship_text", record)
+    monkeypatch.setattr(ck, "_emit_spans", _Spans())
+    assert ck.main([str(root), "--waypoint", "W1", "--subject", "s", "--ship", "a.txt"]) == 0
+    assert len(shipped) == 1

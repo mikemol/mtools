@@ -31,12 +31,15 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TextIO
 
 from mikemol.hooks.commit_body import refusal as _body_refusal
+from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
+from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
@@ -719,12 +722,15 @@ def run_stack_mode(root: Path, stack_file: Path, env: Mapping[str, str], isolate
     return stack_run(root, items, sys.stdout, seams)
 
 
-def commit_shipping(root: Path, request: Request, isolated: bool) -> int:
-    """Commit, print the output as ever, then ship its verdict lines as structured fields (W1168).
+def commit_buffered(
+    root: Path, request: Request, isolated: bool, after: Callable[[str], None]
+) -> int:
+    """Commit, print the output as ever, then hand its text to `after` (W1168, W1441).
 
     ⚑ THE OUTPUT IS NOT CHANGED: `commit` already writes after the commit has finished, so holding
-    it in a buffer and printing it at once is the same bytes at the same moment. Shipping comes
-    AFTER the print and can fail only silently, so a logging fault never alters a verdict.
+    it in a buffer and printing it at once is the same bytes at the same moment. Whatever `after`
+    does (shipping verdict lines, starting spans) comes AFTER the print and can fail only
+    silently, so a logging fault never alters a verdict.
 
     Returns:
         the same exit code `commit` returned.
@@ -733,8 +739,41 @@ def commit_shipping(root: Path, request: Request, isolated: bool) -> int:
     out = new_buffer()
     code = commit(root, request, out, isolated=isolated)
     sys.stdout.write(out.getvalue())
-    ship_text(out.getvalue())
+    after(out.getvalue())
     return code
+
+
+def submitted_ns(env: Mapping[str, str]) -> int:
+    """Read when this commit was first submitted, else now.
+
+    ⚑ THE SUBMISSION TIME SURVIVES THE CLAIM RE-EXEC through the environment (`SUBMIT_ENV`): the
+    process that waits for the lease is replaced by the one that holds it, so the queued span can
+    only be measured from a time the first process left behind. A malformed value reads as now.
+
+    Returns:
+        epoch nanoseconds.
+
+    """
+    given = env.get(SUBMIT_ENV, "")
+    return int(given) if given.isdigit() else time.time_ns()
+
+
+def after_of(
+    shipping: bool, env: Mapping[str, str], waypoint: str, started: tuple[int, int]
+) -> Callable[[str], None]:
+    """Build what runs on a finished commit's output: ship the verdict lines, start the spans.
+
+    Returns:
+        a function of the output text; `started` is (submitted, lease held) in epoch ns.
+
+    """
+
+    def after(text: str) -> None:
+        if shipping:
+            ship_text(text)
+        _emit_spans(text, Moments(started[0], started[1], time.time_ns()), waypoint, env)
+
+    return after
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -758,11 +797,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
+    submitted = submitted_ns(env)
+    env[SUBMIT_ENV] = str(submitted)
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
     if isinstance(claim, Claim):
         os.execve(claim.argv[0], claim.argv, claim.env)
     if claim:
         sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
+    lease = time.time_ns()
     waited = wait_for_load(env)
     if waited:
         sys.stdout.write(waited + "\n")
@@ -773,6 +815,5 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_stack_mode(root, stacked[1], env, isolated=isolated)
     if parsed is None:
         return EXIT_USAGE
-    if shipping:
-        return commit_shipping(root, parsed[1], isolated=isolated)
-    return commit(root, parsed[1], sys.stdout, isolated=isolated)
+    after = after_of(shipping, env, parsed[1].waypoint, (submitted, lease))
+    return commit_buffered(root, parsed[1], isolated, after)
