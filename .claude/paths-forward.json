@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1337,
+  "counter": 1434,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-15T15:14:51Z",
   "job_id": "0ec53044",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-tick-opus",
-    "taken_at": "2026-10-16T03:12:00Z",
-    "pid": 3076458,
-    "start": 30649468
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal",
     "do NOT expand the ratchet baseline; lowering it is an operator decision",
@@ -6128,7 +6123,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 260,
+      "ticks_blocked": 297,
       "completed": null
     },
     {
@@ -6176,7 +6171,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 259,
+      "ticks_blocked": 296,
       "completed": null
     },
     {
@@ -10059,7 +10054,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 264,
+      "ticks_blocked": 301,
       "completed": null
     },
     {
@@ -11807,7 +11802,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 198,
+      "ticks_blocked": 235,
       "completed": null
     },
     {
@@ -16161,7 +16156,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 200,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16702,7 +16697,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 200,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -17511,7 +17506,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 200,
       "completed": null
     },
     {
@@ -17554,7 +17549,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 200,
       "completed": null
     },
     {
@@ -17577,13 +17572,13 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 163,
+      "ticks_blocked": 200,
       "completed": null
     },
     {
       "symbol": "W861",
       "title": "corpus.import_edges classes a class body's imports as deferred, but a class body executes when the module is imported",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1143"
       ],
@@ -17593,13 +17588,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Python runs a class body at definition, so 'import x' directly inside 'class K:' fires on import and belongs with module_level, not deferred. corpus/tests/test_import_edges.py asserts the opposite on purpose (the ported substrate fixture lists in_class among names that do not execute on import) and import_edges._LAZY includes ast.ClassDef. Ask corpus's consumers (substrate's census) whether they relied on it; if not, change _LAZY to functions only, let _eager descend a ClassDef body, move in_class to the eager set, and record the change in the module docstring. Methods inside the class stay deferred.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 7a61ae9; decision recorded in the commit and the _LAZY comment: a class body runs at definition, so its imports are eager; methods stay deferred",
       "issued_at": "2026-10-09T03:00:42Z",
       "minted_during": "tick",
       "caused_by": "W859",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T00:47:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T004728Z"
     },
     {
       "symbol": "W862",
@@ -18002,7 +17998,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 164,
+      "ticks_blocked": 201,
       "completed": null
     },
     {
@@ -18178,7 +18174,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 162,
+      "ticks_blocked": 199,
       "completed": null
     },
     {
@@ -18961,7 +18957,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 161,
+      "ticks_blocked": 198,
       "completed": null
     },
     {
@@ -20660,7 +20656,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-15T17:59:59Z",
-      "ticks_blocked": 18,
+      "ticks_blocked": 55,
       "completed": null
     },
     {
@@ -21399,7 +21395,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 53,
+      "ticks_blocked": 90,
       "completed": null
     },
     {
@@ -21445,7 +21441,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 121,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -21537,7 +21533,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 121,
+      "ticks_blocked": 158,
       "completed": null
     },
     {
@@ -21603,7 +21599,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 41,
+      "ticks_blocked": 78,
       "completed": null
     },
     {
@@ -22001,7 +21997,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 106,
+      "ticks_blocked": 143,
       "completed": null
     },
     {
@@ -22126,7 +22122,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 41,
       "completed": null
     },
     {
@@ -22412,7 +22408,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 105,
+      "ticks_blocked": 142,
       "completed": null
     },
     {
@@ -22434,7 +22430,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 105,
+      "ticks_blocked": 142,
       "completed": null
     },
     {
@@ -22540,7 +22536,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 85,
+      "ticks_blocked": 122,
       "completed": null
     },
     {
@@ -22730,21 +22726,22 @@
     },
     {
       "symbol": "W1111",
-      "title": "--tick-open prints one line per step (lock, bumped, inbound, check) even when a step finds nothing, and runs a per-repo list of commands after its own steps",
-      "status": "ready",
+      "title": "--tick-open prints one line per step (lock, bumped, inbound, check) even when a step finds nothing",
+      "status": "done",
       "enables": [
         "W1143"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 re-scoped for nemik:W450: ready, not blocked; picked up after the Codon verb chain, answer to nemik sent. | 2026-10-16: commit ec110ac (pushed): tick-open prints 'inbound: no unclaimed asks' when empty; bare --inbound stays silent. Per-repo command list is W1348.",
       "issued_at": "2026-10-13T13:13:31Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W426",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-16T04:38:46Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T043846Z"
     },
     {
       "symbol": "W1112",
@@ -22821,7 +22818,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T14:47:58Z",
-      "ticks_blocked": 85
+      "ticks_blocked": 122
     },
     {
       "symbol": "W1116",
@@ -22842,7 +22839,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 85
+      "ticks_blocked": 122
     },
     {
       "symbol": "W1117",
@@ -22860,7 +22857,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 85
+      "ticks_blocked": 122
     },
     {
       "symbol": "W1118",
@@ -22878,7 +22875,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 85
+      "ticks_blocked": 122
     },
     {
       "symbol": "W1119",
@@ -23331,7 +23328,6 @@
         "W831",
         "W841",
         "W858",
-        "W861",
         "W883",
         "W890",
         "W914",
@@ -23367,7 +23363,6 @@
         "W1103",
         "W1104",
         "W1109",
-        "W1111",
         "W1113",
         "W1122",
         "W1132",
@@ -23382,7 +23377,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-16T02:13:24Z",
-      "ticks_blocked": 2
+      "ticks_blocked": 4
     },
     {
       "symbol": "W1144",
@@ -23540,7 +23535,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 54
+      "ticks_blocked": 91
     },
     {
       "symbol": "W1151",
@@ -23586,7 +23581,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 73
+      "ticks_blocked": 110
     },
     {
       "symbol": "W1153",
@@ -23610,7 +23605,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 51,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -24044,7 +24039,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 74,
+      "ticks_blocked": 111,
       "completed": null
     },
     {
@@ -24506,7 +24501,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 21,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -25603,60 +25598,59 @@
     {
       "symbol": "W1248",
       "title": "Usage-refusal record: the paths-forward writer logs each REFUSED line as a structured record through mikemol-vlog",
-      "status": "ready",
-      "enables": [],
+      "status": "done",
+      "enables": [
+        "W1418"
+      ],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Writer REFUSED lines (cli.py RefusedError path) emit one record via mikemol-vlog: tool, rule id, repo, caller, argv shape without values, verdict, time; fixture asserts the record. The luthen_usage_refused_total{tool,rule,repo} producer is luthen's; the three questions (top rule, repeat caller, time-to-first-correct-use) are queries over these records",
-      "evidence": "2026-10-15: DESIGN (read cli.py, not yet built): pathsforward is dependency-free, so the writer does not import hooks' vlogship. Every usage refusal passes ONE funnel: the REFUSED _warn calls and main()'s RefusedError catch (cli.py 2336-2349). Add one emitter there that builds the record (tool=mikemol-paths-forward, rule=the refusal text with its quoted values stripped, repo=project dir name, caller=the tick holder or MIKEMOL_CALLER, argv shape = flag names only, verdict=REFUSED, time) and hands it to the mikemol-vlog CLI when it is on PATH (absent is a silent no-op, so tests and offline hosts are unchanged). Open question for the operator: rule id from message text is unstable if wording changes; a stable code per refusal would need a table. Producer luthen_usage_refused_total is luthen's.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-15: DESIGN (read cli.py, not yet built): pathsforward is dependency-free, so the writer does not import hooks' vlogship. Every usage refusal passes ONE funnel: the REFUSED _warn calls and main()'s RefusedError catch (cli.py 2336-2349). Add one emitter there that builds the record (tool=mikemol-paths-forward, rule=the refusal text with its quoted values stripped, repo=project dir name, caller=the tick holder or MIKEMOL_CALLER, argv shape = flag names only, verdict=REFUSED, time) and hands it to the mikemol-vlog CLI when it is on PATH (absent is a silent no-op, so tests and offline hosts are unchanged). Open question for the operator: rule id from message text is unstable if wording changes; a stable code per refusal would need a table. Producer luthen_usage_refused_total is luthen's. | 2026-10-16: 2026-10-16 DIRECTION relayed by github-8f (operator, not verified by me): integrate into Victoria via OpenTelemetry, standards-first, so the usage-refusal records go out as OTLP log records with OTel resource attributes (service.name, service.namespace the repo) to the declared endpoint luthen is carding, not bespoke JSON lines. pathsforward stays dependency-free, so the shared emitter (W1365) must be reachable from it without a dependency, or the record goes through mikemol-vlog (W1367) as today and vlog exports OTLP. Decide that once W1365 is read. | 2026-10-17: 2026-10-17 DECISION: the writer stays dependency-free and hands the refusal record to the mikemol-vlog CLI when it is on PATH (absent = silent no-op); vlog exports it as OTLP logs through the shared emitter (W1367, now unblocked since W1365 landed). Reason: importing the opentelemetry-proto wheel into the writer would add a dependency to a package every peer repo installs, for a record that vlog already spools and drains. | 2026-10-17: 2026-10-17 CORRECTION of my own decision above, after reading luthen's docs/prr/otlp.md (W1157 section): mikemol-vlog ships host files through a ROOT-ONLY spool, so a user-level producer (the writer runs as the user) does not use it; it posts OTLP logs directly ('you log to services, not to files', operator). So the writer hands its REFUSED record to a mikemol-otlp log CLI (W1418, found by the same env-var, PATH, checkout order as the warrant reader, absent = silent no-op), not to mikemol-vlog. The writer stays dependency-free. host.name defaults from the machine (otlp resource_here). | 2026-10-17: landed bb772e5 (writer ships REFUSED records; read back from victorialogs before the path-stripping fix, post-fix record not yet read by luthen); the endpoint-name gate follows in the stack with W1418 | 2026-10-17: writer shipping bb772e5; name-only trigger and the explicit tick count 1f4581f; resolver 518bfc3; record read back from victorialogs by luthen (post-fix shape, MIKEMOL_ENDPOINTS only)",
       "issued_at": "2026-10-15T11:47:17Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-15T12:03:18Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-17T02:07:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T020721Z"
     },
     {
       "symbol": "W1249",
       "title": "Usage-refusal record: every hook denial is logged through the one shared hook entrypoint",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [
-        "W1248"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-15T11:47:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T11:47:38Z",
-      "ticks_blocked": 4
+      "ticks_blocked": 0
     },
     {
       "symbol": "W1250",
       "title": "Usage-refusal record: mikemol-commit REFUSED verdicts are logged with their rule",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [
-        "W1248"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-15T11:47:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T11:47:38Z",
-      "ticks_blocked": 4
+      "ticks_blocked": 0
     },
     {
       "symbol": "W1251",
@@ -25978,7 +25972,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T20:11:19Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 41,
       "completed": null
     },
     {
@@ -26855,12 +26849,12 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Umbrella of three: (1) measure CPU seconds per mutants shard (not wall) and list which BUILD targets bound by a wall timeout; (2) shard pycodemod and memres into finer targets; (3) admit shards by load through the existing admission (mikemol-bazel-admit and membudget) instead of all at once. Replacement mechanism for wall bounds is W1114's absence witness.",
-      "evidence": "2026-10-15: 2026-10-15 measured alone at load 14-30: //memres:mutants finishes in about 41s (limit 300), //pycodemod:mutants_0 in about 230s (limit 900). So neither is near its limit unloaded; both timed out only while the gate ran at load 80 (the 1m load average read 80-82 after the first refusal). Sharding them would not help; the cause is gate concurrency, which is W1109's measurement (peak running actions under the job cap). Not sharded. | 2026-10-15: 2026-10-15 CORRECTION by the operator: my entry above said the cause is gate concurrency and not to shard. Wrong in two ways. (a) The cause is a WALL-TIME dependency: a bazel test timeout is a wall-clock timer, so a loaded host (load 80) stretches elapsed time while the CPU the work needs stays constant (memres 41s and pycodemod_0 230s unloaded against 300s and 900s limits); the avoid-wall-clock-timeouts rule applies to the gate's own tests, not only to katas (W1114 did the katas half). (b) Sharding WOULD help if it means finer-grained load-based work admission: smaller shards let admission pace the work by load instead of releasing every shard at once. Reopened as an umbrella.",
+      "evidence": "2026-10-15: 2026-10-15 measured alone at load 14-30: //memres:mutants finishes in about 41s (limit 300), //pycodemod:mutants_0 in about 230s (limit 900). So neither is near its limit unloaded; both timed out only while the gate ran at load 80 (the 1m load average read 80-82 after the first refusal). Sharding them would not help; the cause is gate concurrency, which is W1109's measurement (peak running actions under the job cap). Not sharded. | 2026-10-15: 2026-10-15 CORRECTION by the operator: my entry above said the cause is gate concurrency and not to shard. Wrong in two ways. (a) The cause is a WALL-TIME dependency: a bazel test timeout is a wall-clock timer, so a loaded host (load 80) stretches elapsed time while the CPU the work needs stays constant (memres 41s and pycodemod_0 230s unloaded against 300s and 900s limits); the avoid-wall-clock-timeouts rule applies to the gate's own tests, not only to katas (W1114 did the katas half). (b) Sharding WOULD help if it means finer-grained load-based work admission: smaller shards let admission pace the work by load instead of releasing every shard at once. Reopened as an umbrella. | 2026-10-16: 2026-10-16 another instance: the W1356 commit was REFUSED because pycodemod:mutants_0,1,2,4,5 hit the 900s wall limit while host load was about 55 (now 21); no test failed. Retrying; the cause is wall time under load, the W1311/W1312 finding. | 2026-10-16: 2026-10-16 second REFUSAL of this kind in two commits: pycodemod:mutants_0,2,3,5 hit 900s (a commit that did not touch pycodemod, so the gate runs it regardless). Acted on the operator's ruling (finer shards, not a longer timeout, not exclusive): pycodemod:mutants shards 6 to 12, carried by the batch-1 commit of W1359. Measure afterwards whether twelve holds under load, then the same for the other long shard sets.",
       "issued_at": "2026-10-15T23:34:32Z",
       "minted_during": "interrupt",
       "caused_by": "W1309",
-      "last_worked": "2026-10-15T23:53:57Z",
-      "ticks_blocked": 8,
+      "last_worked": "2026-10-16T09:58:49Z",
+      "ticks_blocked": 45,
       "completed": null
     },
     {
@@ -26875,12 +26869,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measuring: /usr/bin/time -f 'user=%U sys=%S wall=%e' bazel run //<dist>:mutants[_N] gives CPU including every worker the runner spawns (client rusage includes waited-for children). cvdcore:mutants: user 12.5s sys 1.7s wall 2.6s, so the runner parallelises about 5x and CPU is not wall. Running pycodemod:mutants_0 and memres:mutants (background); then treeio, buildtel, mdstruct_1, pytestspec_1, hooks_10/11. Then write .claude/design/gate-wall-bounds.md: CPU per target against the bazel timeout class (small 60s, moderate 300s, long 900s) and the design of a no-progress witness for the runner.",
-      "evidence": "2026-10-16: 2026-10-15 third W1309 gate attempt: only //pycodemod:mutants_1 timed out (900s) while the 1m load average read 97 and the 5m read 114 (other sessions' gates, not mine). Same target alone is now running to read wall against CPU under that load. | 2026-10-16: //pycodemod:mutants_1 alone took 187s elapsed (limit 900) as the load fell from 97 to about 14; so its 900s timeout in the gate was reached only under sustained load above 90. CPU seconds per target are still unmeasured (test.xml carries wall only); that is the card's remaining step. | 2026-10-16: 2026-10-16 method found and validated on //cvdcore:mutants (CPU 14.1s over wall 2.6s). Bazel's only bound on a test is the size/timeout class, a wall-clock timer; 'timeout = long' (900s) appears on about 40 targets. | 2026-10-16: 2026-10-16 measured: //memres:mutants uses user 71.3s + sys 19.1s = 90.4s CPU over 19.9s wall (about 4.5 workers), against a 300s WALL timeout. Alone it is far inside the limit; at load 80 its CPU share shrinks and the same 90s of work takes more than 300s of wall: the failure is the wall timer, not the work. pycodemod:mutants_0 still running. | 2026-10-16: 2026-10-16 measured: //pycodemod:mutants_0 uses user 849.0s + sys 134.6s = 983.6s CPU over 272.5s wall (about 3.6 workers) against a 900s WALL timeout. So its CPU alone exceeds the wall limit: it passes only while it holds more than 1.1 cores, and at load 80 it cannot. (Caveat: this run was through bazel run, outside the test sandbox, and reported SURVIVED 1 at pycodemod/cli.py::_handle_docshape and exit 1, which the sandboxed gate target does not show; not chased, likely an environment difference of bazel run, noted so it is not read as a gate result.)",
+      "next_bounded_step": "Continue the CPU-per-target table; the debtplan:mutants (one shard, 300s) and hooks:mutants_1,5,7 timeouts of the same run are unmeasured",
+      "evidence": "2026-10-16: 2026-10-15 third W1309 gate attempt: only //pycodemod:mutants_1 timed out (900s) while the 1m load average read 97 and the 5m read 114 (other sessions' gates, not mine). Same target alone is now running to read wall against CPU under that load. | 2026-10-16: //pycodemod:mutants_1 alone took 187s elapsed (limit 900) as the load fell from 97 to about 14; so its 900s timeout in the gate was reached only under sustained load above 90. CPU seconds per target are still unmeasured (test.xml carries wall only); that is the card's remaining step. | 2026-10-16: 2026-10-16 method found and validated on //cvdcore:mutants (CPU 14.1s over wall 2.6s). Bazel's only bound on a test is the size/timeout class, a wall-clock timer; 'timeout = long' (900s) appears on about 40 targets. | 2026-10-16: 2026-10-16 measured: //memres:mutants uses user 71.3s + sys 19.1s = 90.4s CPU over 19.9s wall (about 4.5 workers), against a 300s WALL timeout. Alone it is far inside the limit; at load 80 its CPU share shrinks and the same 90s of work takes more than 300s of wall: the failure is the wall timer, not the work. pycodemod:mutants_0 still running. | 2026-10-16: 2026-10-16 measured: //pycodemod:mutants_0 uses user 849.0s + sys 134.6s = 983.6s CPU over 272.5s wall (about 3.6 workers) against a 900s WALL timeout. So its CPU alone exceeds the wall limit: it passes only while it holds more than 1.1 cores, and at load 80 it cannot. (Caveat: this run was through bazel run, outside the test sandbox, and reported SURVIVED 1 at pycodemod/cli.py::_handle_docshape and exit 1, which the sandboxed gate target does not show; not chased, likely an environment difference of bazel run, noted so it is not read as a gate result.) | 2026-10-16: 2026-10-16 MEASURED pycodemod:mutants_7 alone with twelve shards: user=434 sys=72 wall=136s against the 900s wall limit, so the 900s TIMEOUT in the gate was load (about 6.6x stretch), not the shard's work. Same shard refused on 2026-10-16 for a REAL cause the timeout line hid: two cli handlers (_handle_futureimport, _handle_judgedfix) SURVIVED; fixed by tests/test_cli_modes_reach.py. LESSON: when a gate run shows TIMEOUTs, also grep it for SURVIVED/ERRORED before assuming load is the only cause.",
       "issued_at": "2026-10-15T23:53:46Z",
       "minted_during": "interrupt",
       "caused_by": "W1311",
-      "last_worked": "2026-10-16T01:46:25Z",
+      "last_worked": "2026-10-16T12:26:06Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -27018,21 +27012,28 @@
         "websubset"
       ],
       "blocked_on": [
-        "W1321",
-        "W1322",
         "W1323",
-        "W1324",
         "W1325",
-        "W1337"
+        "W1337",
+        "W1341",
+        "W1344",
+        "W1345",
+        "W1347",
+        "W1352",
+        "W1358",
+        "W1364",
+        "W1366",
+        "W1367",
+        "W1369"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Umbrella, measure first, order: W1320 pin, W1321 census, W1322 target parameter (independent), W1323 ratchet mode, W1324 one rule set, W1325 rollout",
-      "evidence": "2026-10-16: 2026-10-16 RELAYED, NOT VERIFIED by me directly: github-8f and nemik-84 both report the operator's direction (2026-10-15) to point ALL of the fleet's Python at Codon compatibility, Codon's typing rigor being the intent, so the web-subset gate becomes the house typed-subset gate (nemik:W561 is the umbrella). It falls under the standing fleet-level-dominates direction. Finding already visible: every mtools module starts with 'from __future__ import annotations', which nemik saw Codon reject; the census must count that first. Nothing changes any gate until the measurement lands.",
+      "evidence": "2026-10-16: 2026-10-16 RELAYED, NOT VERIFIED by me directly: github-8f and nemik-84 both report the operator's direction (2026-10-15) to point ALL of the fleet's Python at Codon compatibility, Codon's typing rigor being the intent, so the web-subset gate becomes the house typed-subset gate (nemik:W561 is the umbrella). It falls under the standing fleet-level-dominates direction. Finding already visible: every mtools module starts with 'from __future__ import annotations', which nemik saw Codon reject; the census must count that first. Nothing changes any gate until the measurement lands. | 2026-10-16: 2026-10-16 FIRST MEASUREMENT (W1321, Codon 0.20.3, 75 sampled src modules): zero accepted in either reading. The house style fails on constructs that are not decoration: the type statement, keyword-only '*,', @dataclass(frozen=True), TYPE_CHECKING, dict spread (a compiler crash), tuple except, datetime.UTC, and most of the stdlib the tools use (hashlib, subprocess, argparse, contextlib, shutil, ...). Removing 'from __future__ import annotations' (W1326) clears 33 of 75 only to expose the next rejection. So 'point ALL of the fleet's Python at Codon' means rewriting house idioms or an interop boundary, not a codemod of one import; the pure-logic modules (such as hooks rewake.py: only datetime.UTC stops it) are the candidates, the I/O and process modules cannot be Codon source as written. Raised to github-8f for the operator. | 2026-10-16: 2026-10-16 BURN-DOWN after the first rollout (mikemol-websubset --idioms over the tree, target codon; before then after, modules): future-import 446 to 5; type-checking-import 346 to 2; type-statement 68 to 20; clean modules 2 to 78 of 463. Now the widest: dataclasses-import 215, dataclass-decorator-args 205 (both W1341, blocked on nemik:W567's operator decision), stdlib-import 172 (W1344), variable-length-tuple 136 (new card), tuple-except 104 (W1342), keyword-only-star 87 (W1340), star-args 37, dict-spread 35, datetime-utc 16 (W1358). Unmoved 20 type-statement modules need a look: the verb leaves a statement with type parameters, and the judge may have refused others. | 2026-10-16: 2026-10-16 census after the cheap-verb rollout (hooks websubset_cli --target codon over mtools, 472 modules, 114 clean): dataclasses-import 223 modules, dataclass-decorator-args 211 (W1341, blocked on nemik:W567), stdlib-import 173 (W1344), variable-length-tuple 139 (W1369), star-args 37, dict-spread 35, datetime-utc 16 (W1358), dynamic-attribute 13; the verbs already built are down to future-import 5, type-statement 5, tuple-except 4, keyword-only-star 3, type-checking-import 2 modules (not yet traced: likely tests or non-src files)",
       "issued_at": "2026-10-16T01:40:39Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W423",
-      "last_worked": "2026-10-16T01:41:49Z",
-      "ticks_blocked": 1,
+      "last_worked": "2026-10-16T22:43:34Z",
+      "ticks_blocked": 2,
       "completed": null
     },
     {
@@ -27059,7 +27060,7 @@
     {
       "symbol": "W1321",
       "title": "Run Codon over a sample of mtools modules and record what it rejects, grouped by kind",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1319"
       ],
@@ -27068,18 +27069,39 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After the pin: pick a sample across dists (hooks, corpus, pathsforward, a pure leaf), run codon on each, group the rejections (dynamic attribute, untyped containers, unsupported stdlib, decorator and metaclass magic, the __future__ import nemik saw rejected), write counts to .claude/design/codon-census.md; cite nemik:W560 and W562 rather than re-measuring theirs",
-      "evidence": "2026-10-16: 2026-10-16 nemik-84 measured on codon 0.20.3 (nemik:W560): the constructs it rejects and accepts, and one miscompile, are recorded on W1324 and are the first rows of this census. Not tested by them: dataclasses, Protocols, third-party imports, which this census covers over mtools' modules once Codon is pinned (W1320).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 nemik-84 measured on codon 0.20.3 (nemik:W560): the constructs it rejects and accepts, and one miscompile, are recorded on W1324 and are the first rows of this census. Not tested by them: dataclasses, Protocols, third-party imports, which this census covers over mtools' modules once Codon is pinned (W1320). | 2026-10-16: Tool landed in mtools 6e46e0e (pushed): python3 -m mikemol.corpus.codoncensus CODON [--sample N] ROOT..., two readings per module (as is, and a copy without the future import), 8 tests, 5 mutants. FIRST SAMPLE (75 src modules, evenly thinned from hooks, pathsforward, corpus, fence, katas, waldo, treeio, mdstruct; Codon 0.20.3): ZERO accepted in either reading. As is: 33 stop at the future import, 42 stop earlier at a SYNTAX error. Without the future import: syntax 42, missing-name 18, missing-module 14, other 1. Constructs behind those counts, each confirmed with a 3-line probe: (1) the PEP 695 'type X = ...' statement is a syntax error; (2) keyword-only parameters with a bare '*,' are a syntax error (fence autosize.py:70 col 35); (3) @dataclass(frozen=True): 'class decorator got unexpected argument' (17 modules); (4) a dict spread {**a, 'y': 2} ABORTS the compiler (core dump, 'dictionary items are invalid', expr.cpp:238); (5) except (A, B): 'expected type expression'; (6) typing.TYPE_CHECKING is not importable (15 modules); (7) datetime.UTC, pathlib.PurePosixPath missing; (8) stdlib modules absent: hashlib, subprocess, argparse, contextlib, shutil, tarfile, ast, io, difflib, base64 (Codon needs 'from python import ...' interop); (9) a sibling mikemol import is unresolved, which hides the module's own code. The sample is a thinned census, not all modules; the full run is the same command without --sample.",
       "issued_at": "2026-10-16T01:41:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T03:12:09Z",
+      "last_worked": "2026-10-16T03:26:08Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261016T032608Z"
     },
     {
       "symbol": "W1322",
       "title": "websubset takes the transpile target as a parameter with one rule list per target, starting with py2many and codon both on today's five rules",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit cac86a5 (pushed): websubset.RULES per target, check(source, target), mikemol-websubset --target py2many|codon; 5 tests in hooks/tests/test_websubset_target.py",
+      "issued_at": "2026-10-16T01:41:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W561",
+      "last_worked": "2026-10-16T03:40:49Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T034049Z"
+    },
+    {
+      "symbol": "W1323",
+      "title": "A pycheck codon-compat mode reports per file with a per-repo baseline ledger so only new debt refuses, the shape of the strict-mypy ratchet",
       "status": "ready",
       "enables": [
         "W1319"
@@ -27089,60 +27111,35 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read websubset.py's rule registry and the CLI; add a Target enum and a per-target rule tuple, --target on --check-file and --census, default unchanged; test that a rule removed from one target still fires for the other",
-      "evidence": "",
-      "issued_at": "2026-10-16T01:41:22Z",
-      "minted_during": "interrupt",
-      "caused_by": "nemik:W561",
-      "last_worked": null,
-      "ticks_blocked": 0
-    },
-    {
-      "symbol": "W1323",
-      "title": "A pycheck codon-compat mode reports per file with a per-repo baseline ledger so only new debt refuses, the shape of the strict-mypy ratchet",
-      "status": "blocked",
-      "enables": [
-        "W1319"
-      ],
-      "touches": [
-        "websubset"
-      ],
-      "blocked_on": [
-        "W1321"
-      ],
-      "blocked_kind": "agent",
       "next_bounded_step": "After the census: read the ratchet and the pycheck ledger code, decide the report kind (rule id per finding), write the baseline format and the new-debt refusal as one mode of pycheck or of websubset, test with a planted finding and a baselined one",
       "evidence": "",
       "issued_at": "2026-10-16T01:41:39Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-16T01:53:10Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W1324",
       "title": "Align the websubset allowlist with what Codon accepts so the fleet has one typed-subset rule set, not two",
-      "status": "blocked",
+      "status": "done",
       "enables": [
         "W1319"
       ],
       "touches": [
         "websubset"
       ],
-      "blocked_on": [
-        "W1321",
-        "W1322"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "After the census and the target parameter: for each Codon rejection kind add or retire a rule id under the codon target, list the rules py2many and Codon share, and record the diff in the design note",
-      "evidence": "2026-10-16: 2026-10-16 nemik-84 (testimony) from nemik:W560, codon 0.20.3, a typed port of nemik.pieces (6 corpus cases and the 168-node fixture agree). REJECTED: (1) 'from __future__ import annotations' ('no module named __future__'); (2) use of Any (an Any value has no __iter__ or attributes; dict[str, Any] needs concrete records, Optional[T] for sparse fields); (3) a list comprehension over an Optional dict's .items() inside a function fed to ', '.join (compile error 'int' object has no attribute __iter__; an explicit loop works). ACCEPTED: typing List/Dict/Set/Optional, classes with typed fields and positional constructors, lambda sort keys with tuples, f-strings, set operations, sorted(), import json. CODON BUG to gate: x.as_bool() if key in j else None in an Optional[bool]-returning function yields False, not None; an explicit if/return None is correct (Optional[int] is fine); it invented fields silently. NOT tested: *args/**kwargs, metaclasses, eval/exec, dynamic getattr, dataclasses, Protocols, generics beyond List/Dict/Set/Optional, third-party imports. Wasm is nemik:W564 (IR is 64-bit, 30 runtime symbols undefined). New rule ids for the codon target: future-import, any-use, none-ternary-in-optional-return, comprehension-over-optional-items-in-join.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 nemik-84 (testimony) from nemik:W560, codon 0.20.3, a typed port of nemik.pieces (6 corpus cases and the 168-node fixture agree). REJECTED: (1) 'from __future__ import annotations' ('no module named __future__'); (2) use of Any (an Any value has no __iter__ or attributes; dict[str, Any] needs concrete records, Optional[T] for sparse fields); (3) a list comprehension over an Optional dict's .items() inside a function fed to ', '.join (compile error 'int' object has no attribute __iter__; an explicit loop works). ACCEPTED: typing List/Dict/Set/Optional, classes with typed fields and positional constructors, lambda sort keys with tuples, f-strings, set operations, sorted(), import json. CODON BUG to gate: x.as_bool() if key in j else None in an Optional[bool]-returning function yields False, not None; an explicit if/return None is correct (Optional[int] is fine); it invented fields silently. NOT tested: *args/**kwargs, metaclasses, eval/exec, dynamic getattr, dataclasses, Protocols, generics beyond List/Dict/Set/Optional, third-party imports. Wasm is nemik:W564 (IR is 64-bit, 30 runtime symbols undefined). New rule ids for the codon target: future-import, any-use, none-ternary-in-optional-return, comprehension-over-optional-items-in-join. | 2026-10-16: 2026-10-16 mtools census (W1321, Codon 0.20.3, 75 sampled modules, 0 accepted) adds probe-confirmed rule ids for the codon target: type-statement (PEP 695 'type X = ...'), keyword-only-star (bare '*,' parameter), dataclass-decorator-args (@dataclass(frozen=True); 17 modules), dict-spread ({**a} aborts the compiler, core dump), tuple-except (except (A, B)), type-checking-import (typing.TYPE_CHECKING; 15 modules), stdlib-import (hashlib, subprocess, argparse, contextlib, shutil, tarfile, ast, io, difflib, base64), datetime-utc (datetime.UTC). W1322 landed the target parameter; these rows go into RULES['codon'] with a detector each. | 2026-10-16: commit 1fbc233 (pushed): websubset_codon.scan, eight rules under RULES['codon']; stdlib-import and the three nemik rules (any-use, none-ternary-in-optional-return, comprehension-over-optional-items-in-join) carded as W1346.",
       "issued_at": "2026-10-16T01:41:39Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T02:29:08Z",
-      "ticks_blocked": 4,
-      "completed": null
+      "last_worked": "2026-10-16T03:57:18Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T035718Z"
     },
     {
       "symbol": "W1325",
@@ -27155,7 +27152,6 @@
         "websubset"
       ],
       "blocked_on": [
-        "W1326",
         "W1327"
       ],
       "blocked_kind": "agent",
@@ -27165,35 +27161,33 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": null,
-      "ticks_blocked": 4
+      "ticks_blocked": 30
     },
     {
       "symbol": "W1326",
-      "title": "A pycodemod verb removes 'from __future__ import annotations' with a dry run that lists forward references to quote and annotations read at run time",
-      "status": "blocked",
+      "title": "pycodemod futureimport planner removes the annotations future import and quotes forward class names, listing unquotable bases",
+      "status": "done",
       "enables": [
         "W1325"
       ],
       "touches": [
         "pycodemod"
       ],
-      "blocked_on": [
-        "W1321"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "After the census confirms the import is Codon's blocker on a sample file: add the verb beside the others, dry run by default, flag annotations in a class body that name the class (a NameError on 3.13), get_type_hints callers, dataclass and cast strings; test on a planted module",
-      "evidence": "",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 DESIGN from reading pycodemod's orempty (planner plan(text)->Planned wrapped by cli_typedargs.print_judged, judged by the project's mypy+ruff so a rewrite lands only when findings do not rise). The future-import verb is the same shape: a libcst planner that removes the import line. Mypy does NOT see the failure that matters (an unquoted forward reference is fine to mypy and a NameError on 3.13 at import), so the planner must itself quote three classes of annotation name: (1) a class used before its module-level definition or inside its own body, (2) a name bound only under 'if TYPE_CHECKING:' (346 of 453 tree modules have the TYPE_CHECKING import, so this is the dominant case), (3) a name from a module that would become a runtime import cycle. Class 2 interacts with W1343: Codon rejects TYPE_CHECKING itself, so a quoted TYPE_CHECKING-only name is an interim form; the end state turns those into real imports, where cycles then decide. Atomized: W1326a planner for classes 1 and 3-free case, dry run lists the sites; W1326b the TYPE_CHECKING-bound case; both before any --write. | 2026-10-16: commit 65ac1e5 (pushed): futureimport.plan, 4 tests. The CLI mode and the tree dry run are W1354; TYPE_CHECKING-bound names are W1353.",
       "issued_at": "2026-10-16T01:43:08Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 4,
-      "completed": null
+      "last_worked": "2026-10-16T06:30:30Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T063030Z"
     },
     {
       "symbol": "W1327",
       "title": "Move the bazel python toolchain from 3.13 to 3.14, measuring what breaks only to plan the fixes",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W1325",
         "W1329"
@@ -27201,15 +27195,17 @@
       "touches": [
         "bazel"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1328"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Plan, not decide: change python.toolchain (MODULE.bazel line 69) and the 72 hubs' python_version to 3.14 on a branch of the tree, run //corpus:all as the trial, list every locked dependency with no cp314 wheel and give each one a fix (build from sdist in the gate, replace, or vendor a built wheel), record the list here; never a reason to stay on 3.13",
       "evidence": "2026-10-16: 2026-10-16 github-8f (relayed): a hand-run test on the 3.14 venv and the gate on 3.13 judge different semantics (lazy vs eager annotations and anything else 3.14 changed), so a test can pass by hand and fail at the gate or the reverse; the interpreter version should be a declared fact the venvs and the toolchain must agree on. | 2026-10-16: 2026-10-16 RELAYED, NOT VERIFIED directly (github-8f): operator ruling 2026-10-15, 'I won't get pinned to an older version; we rise to 3.14+.' So this card MOVES the toolchain: a dependency with no cp314 wheel is that dependency's problem, not a reason to pin. The interpreter-agreement check (W1328) then declares 3.14 as the floor for toolchain and venvs and refuses anything older. It matches the standing direction to pin to the latest.",
       "issued_at": "2026-10-16T01:43:08Z",
       "minted_during": "interrupt",
       "caused_by": "W1319",
-      "last_worked": "2026-10-16T01:46:26Z",
-      "ticks_blocked": 0,
+      "last_worked": "2026-10-16T03:33:35Z",
+      "ticks_blocked": 18,
       "completed": null
     },
     {
@@ -27252,7 +27248,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1327",
       "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 41,
       "completed": null
     },
     {
@@ -27266,7 +27262,6 @@
         "pathsforward"
       ],
       "blocked_on": [
-        "W1331",
         "W1334",
         "W1336"
       ],
@@ -27277,12 +27272,12 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 1
+      "ticks_blocked": 17
     },
     {
       "symbol": "W1331",
       "title": "Triage mtools' own ready cards by hand against proof and report counts before and after",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1330"
       ],
@@ -27291,13 +27286,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Counts so far: 91 stored ready at the start; triage --write blocked W1249 W1250 behind W1248 and block-behind-open blocked W1080 W1266 W1325; the Codon and 3.14 chains are chained to their heads. Next classes: superseded (W942, W1062 by W1311/W1312), the 22 sweep cards, the W1143 leaves",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 PASS 2 (github-8f's request, planning pass behind a gate): ready and unblocked 103 at the last close, 99 now after the honest moves: triage --write blocked W1366 W1367 W1379 behind their enablers W1365 W1378, block-behind-open blocked W1327 behind W1328, W1370 closed (49b2e0d), W1356 and W1359 reopened as blocked on W1376 (flakes are blockers), --bump-blocked trimmed landed blockers. NOT done, with reasons: W1132 looked superseded by W1114 but the waiter --timeout flag and fleet.ceiling still exist in katas, so it is real; W942 and W1062 were already dropped (pass 1). The remaining ready cards are independent leaves (38 enable the W1143 umbrella, the Codon leaves enable W1319, the nemik asks enable their nemik cards, 16 sweep cards have no edge); none is a duplicate or stale by proof, so none is dropped.",
       "issued_at": "2026-10-16T01:57:53Z",
       "minted_during": "interrupt",
       "caused_by": "W1330",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-16T15:46:22Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T154622Z"
     },
     {
       "symbol": "W1332",
@@ -27419,6 +27415,1937 @@
       "issued_at": "2026-10-16T02:41:25Z",
       "minted_during": "tick",
       "caused_by": "W1320",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1338",
+      "title": "codoncensus reports every rejection per module, not the first: record it, apply a probe rewrite in a copy, re-run until accepted or stuck, and count the debt by idiom over the full tree",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 first static idiom census, full mtools tree (453 src modules, 2 clean, target codon, mikemol-websubset --idioms): future-import 446 modules, type-checking-import 346, dataclass-decorator-args 202 (392 sites), stdlib-import 172, tuple-except 102, keyword-only-star 84, type-statement 68, star-args 37, dict-spread 34, datetime-utc 16, dynamic-attribute 13, eval-exec 1. Static, so it counts every site, where the compiler stops at the first. Compile-census validation of a clean module remains codoncensus. | 2026-10-16: commit 45493f5 (pushed): mikemol-websubset --idioms ROOT[:ROOT] --target T; websubset_tree.census; 4 tests. Metric emission is W1350.",
+      "issued_at": "2026-10-16T03:33:14Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T05:20:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T052035Z"
+    },
+    {
+      "symbol": "W1339",
+      "title": "A pycodemod verb rewrites the PEP 695 type statement to a Codon-accepted alias, dry run first",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 PROBED on Codon 0.20.3: a plain alias 'Row = tuple[int, str]' COMPILES and runs; 'from typing import TypeAlias' fails (cannot import name TypeAlias). So the type statement's Codon form is the plain assignment, which mypy reads as an implicit alias and ruff UP040 leaves alone. Eight modules are waiting on this (their TYPE_CHECKING blocks hold a type statement). DESIGN: libcst planner turns 'type X = expr' into 'X = expr' (a statement with type parameters is a worklist row); typingblocks then also hoists blocks holding plain single-name assignments, since after the rewrite the alias is a run-time expression over real imports; measure = count of type statements. | 2026-10-16: commit 85ba669 (pushed): typealias.plan, cli_typealias measure, typingblocks hoists type-like aliases, codon-prep-tree runs alias first; 13 tests.",
+      "issued_at": "2026-10-16T03:33:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T11:35:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T113538Z"
+    },
+    {
+      "symbol": "W1340",
+      "title": "A pycodemod verb rewrites bare keyword-only star markers to a Codon-accepted signature, dry run first",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 DESIGN: drop the bare star marker so keyword-only parameters become positional-or-keyword. Every call that passed them by keyword still works and a positional call that was an error now binds, so the rewrite is a superset; the cost is the lost enforcement. A parameter without a default may not follow one with a default, so a signature where a keyword-only parameter lacks its default after a defaulted positional is a worklist row. Lambdas have the same marker. | 2026-10-16: commit ff9ab94 (pushed): kwonly.plan, cli_kwonly measure and judge, wired into codon-prep-tree; 11 tests. The application over the dists is W1374.",
+      "issued_at": "2026-10-16T03:33:16Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T14:31:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T143135Z"
+    },
+    {
+      "symbol": "W1341",
+      "title": "Probe which record form Codon accepts in place of dataclass(frozen=True), then a pycodemod verb rewrites to it, dry run first",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [
+        "nemik:W567"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-16: 2026-10-16 nemik-84 probes (nemik:W567, testimony), two re-run by me on Codon 0.20.3: 'from dataclasses import dataclass' fails 'no module named dataclasses' (VERIFIED, p_dc2.py), and 'import dataclasses' + '@dataclasses.dataclass' fails 'unsupported class decorator' (VERIFIED, p_dc3.py). Per nemik, untested by me: builtin @dataclass takes no import and no arguments; field(default_factory) absent; @tuple is the immutable value type; tuple[str, ...] rejected; typing.NamedTuple rejected; a plain class with annotations and explicit __init__ runs the same in CPython and Codon. No decorator is valid in both, so the record form is a design decision (shared plain-class subset, Codon-only core, or shim), put to the operator as nemik:W567. ALSO: Codon reports an error that is not the first by line (p_dc.py reported the line-4 decorator, not the line-1 import), so codoncensus's 'first rejection' is not source order.",
+      "issued_at": "2026-10-16T03:33:18Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T05:25:16Z",
+      "ticks_blocked": 32,
+      "completed": null
+    },
+    {
+      "symbol": "W1342",
+      "title": "A pycodemod verb rewrites except (A, B) to the shape Codon accepts, dry run first",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit dd6225d (pushed): exceptsplit.plan, cli_exceptsplit measure and judge, wired into codon-prep-tree; 11 tests. The per-dist application is the next run of codon-prep-tree --write (W1374).",
+      "issued_at": "2026-10-16T03:33:18Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T14:09:33Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T140933Z"
+    },
+    {
+      "symbol": "W1343",
+      "title": "A pycodemod verb turns module-level TYPE_CHECKING import blocks into real imports, judged by the dist's tests, dry run first",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 split: datetime.UTC to datetime.timezone.utc is its own card; this card is the TYPE_CHECKING blocks (346 of 453 tree modules). The judge cannot see an import cycle a hoisted import creates, so the dist's own tests run as the selftest (print_judged supports --selftest). | 2026-10-16: commit 8290c98 (pushed): typingblocks.plan, type-checking-imports and -tree modes, 7 tests. cvdcore dry run findings 2->0. The rollout per dist is the next card.",
+      "issued_at": "2026-10-16T03:33:19Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T08:30:26Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T083026Z"
+    },
+    {
+      "symbol": "W1344",
+      "title": "Design the stdlib boundary for Codon: a typed interop module over subprocess, argparse, hashlib, shutil, ast and io, or a patch list for Codon, chosen by modules unblocked",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T03:33:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1345",
+      "title": "Minimal reproducer and a draft upstream report for the Codon dict-spread compiler abort; nothing is published, the operator sends it",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T03:33:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1346",
+      "title": "Codon target gains the stdlib-import rule: modules the pinned Codon lacks, from the census",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 6a74ee9 (pushed): stdlib-import rule over hashlib, subprocess, argparse, contextlib, shutil, tarfile, ast, io, difflib, base64; nemik's three rules are W1347.",
+      "issued_at": "2026-10-16T03:57:18Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1324",
+      "last_worked": "2026-10-16T04:19:14Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T041914Z"
+    },
+    {
+      "symbol": "W1347",
+      "title": "Codon target gains nemik's three rules: any-use, none-ternary-in-optional-return, comprehension-over-optional-items-in-join",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T04:08:27Z",
+      "minted_during": "tick",
+      "caused_by": "W1346",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1348",
+      "title": "--tick-open runs a per-repo list of commands after its own steps, read from a declared file, so a tick opens in one call (nemik:W450)",
+      "status": "ready",
+      "enables": [
+        "W1143"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T04:09:35Z",
+      "minted_during": "tick",
+      "caused_by": "nemik:W450",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1349",
+      "title": "mikemol.cvdcore exports ucs and ucs_lightness over its private conversion, tested, for el-openglo to repoint",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "cvdcore"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 6fba7de (pushed): ucs and ucs_lightness exported from mikemol.cvdcore; 3 witnesses; numpy stub gains __getitem__.",
+      "issued_at": "2026-10-16T04:20:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W544",
+      "last_worked": "2026-10-16T04:45:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T044528Z"
+    },
+    {
+      "symbol": "W1350",
+      "title": "websubset --idioms --prom emits the Codon idiom counts as Prometheus textfile series, per repo, rule and target",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 30646e3 (pushed): websubset_prom.render/publish, --idioms --prom FILE; series mikemol_codon_idiom_modules, mikemol_codon_idiom_sites, mikemol_codon_modules, mikemol_codon_clean_modules. Scheduling and telling luthen is W1352.",
+      "issued_at": "2026-10-16T05:10:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T05:53:48Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T055348Z"
+    },
+    {
+      "symbol": "W1351",
+      "title": "Codon target gains dataclasses-import and variable-length-tuple rules (tuple[X, ...]), each probe-verified, beside accepted controls",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 54ab351 (pushed): dataclasses-import and variable-length-tuple under RULES['codon']; scan split with _statement.",
+      "issued_at": "2026-10-16T05:25:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W567",
+      "last_worked": "2026-10-16T05:38:52Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T053852Z"
+    },
+    {
+      "symbol": "W1352",
+      "title": "Codon idiom textfile is written on a schedule where luthen's textfile collector reads it, and luthen is told the series names",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [
+        "luthen-observability:W1107"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-16: 2026-10-16 read luthen-observability checks/repin_census.py and host/metrics_relays.json: the producer is luthen-side (a checks module on a timer pushing a prefix). Sent luthen-observability-d9 the command, series names and the repin_census shape; waiting for their card number to cite. | 2026-10-16: 2026-10-16 SUPERSESSION PENDING: github-8f relays the operator's direction to emit OTLP with OTel conventions instead of new Prometheus textfiles. The textfile and its luthen producer (luthen-observability:W1107) may be replaced by W1366 once the shared emitter and luthen's endpoint exist; do not build further on the textfile route.",
+      "issued_at": "2026-10-16T05:41:08Z",
+      "minted_during": "tick",
+      "caused_by": "W1350",
+      "last_worked": "2026-10-16T13:33:57Z",
+      "ticks_blocked": 30,
+      "completed": null
+    },
+    {
+      "symbol": "W1353",
+      "title": "future-import verb quotes annotation names bound only under TYPE_CHECKING, so removing the import never makes one a NameError on 3.13",
+      "status": "done",
+      "enables": [
+        "W1326"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 first real dry run (cvdcore core.py, future-import mode): REFUSED by the judge, 'Move import collections.abc.Sequence / numpy.ndarray out of type-checking block' (TC004). So the judge already catches class-2 names: every module with annotation names bound under TYPE_CHECKING is refused until those names are quoted, which is exactly this card. | 2026-10-16: 2026-10-16 second dry run on cvdcore core.py after the per-name quoting landed in the tree: still refused, because 'Sequence[float]' puts the pending name in base position, which a per-name quote cannot reach. Changing the unit from the name to the WHOLE ANNOTATION ('Sequence[float] | ndarray' as one string): one rule covers names, subscripts and attributes, and leaves only annotations holding a quote or line break as worklist rows. | 2026-10-16: commit a375f71 (pushed): whole-annotation quoting for not-yet-defined classes and TYPE_CHECKING-only names; cvdcore core.py dry run accepted (findings 1 to 0, 11 changes); fleet dry run is W1356.",
+      "issued_at": "2026-10-16T05:41:33Z",
+      "minted_during": "tick",
+      "caused_by": "W1326",
+      "last_worked": "2026-10-16T07:24:25Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T072425Z"
+    },
+    {
+      "symbol": "W1354",
+      "title": "pycodemod gains a future-import mode over futureimport.plan under the shared judge, dry run default, listing unquoted bases, tested like or-empty",
+      "status": "done",
+      "enables": [
+        "W1325"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit a7a0754 (pushed): mikemol-pycodemod future-import, judged by ruff F821,TC004 plus the import line; 8 tests. First dry run on cvdcore core.py refused on TYPE_CHECKING names: W1353.",
+      "issued_at": "2026-10-16T06:11:24Z",
+      "minted_during": "tick",
+      "caused_by": "W1326",
+      "last_worked": "2026-10-16T07:02:33Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T070233Z"
+    },
+    {
+      "symbol": "W1355",
+      "title": "waldo Phase may carry a command as its act, run only when its done witness is false and judged by it afterwards",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read waldo phases.py and runphase.py again; add Phase.act (argv) beside contract, run through Seams.run, refuse when both are set, refuse a phase whose done witness already holds before the act, judge done after; tests for each refusal; tell el-openglo the sha",
+      "evidence": "",
+      "issued_at": "2026-10-16T06:50:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo:W555",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1356",
+      "title": "Run the future-import dry run over every mtools dist and record accepted, refused and worklist counts per dist, then --write the accepted ones one dist at a time under the gate",
+      "status": "blocked",
+      "enables": [
+        "W1325"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [
+        "W1376"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 FLEET DRY RUN (mikemol-pycodemod future-import-tree over all 36 dists, judge = each dist's ruff F821,TC004 + the import): 452 modules with the import, 446 would-write, 6 rejected 'no fewer findings' (corpus codoncensus.py, hooks new_dist.py, pycodemod cli.py, cli_futureimport.py, futureimport.py, typedargs.py), 0 errors, 0 worklist rows. All 6 spell the import line inside a string, which the first measure counted as a second import; fixed by reading the statement (has_future_import). So the verb is accepted on every module with the import once the measure is statement-based. | 2026-10-16: commit b2959d5 (pushed, second attempt; the first was refused by wall-time timeouts under load, see W1311): future-import-tree driver, statement-based measure, 12 tests. Rollout is W1357. | 2026-10-16: 2026-10-16 REOPENED by the flakes-are-blockers rule (github-8f): the driver commit passed only on a rerun after pycodemod:mutants shards hit the 900s WALL limit at load 55 with no test failing; the flaky check is the gate's wall bound, repaired by W1376.",
+      "issued_at": "2026-10-16T07:05:14Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1353",
+      "last_worked": "2026-10-16T15:12:21Z",
+      "ticks_blocked": 20,
+      "completed": null
+    },
+    {
+      "symbol": "W1357",
+      "title": "Apply future-import --write to every mtools dist, one dist and one gated commit at a time, smallest first, recording each sha",
+      "status": "done",
+      "enables": [
+        "W1325"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 first write (cvdcore core.py, written then REVERTED, tests passed 16/16): the verb works but quotes EVERY annotation naming a TYPE_CHECKING-only name, here 'ndarray' and 'Sequence', which are plain runtime imports in a leaf module. That is churn that the TYPE_CHECKING rewrite (W1343) would undo, and 346 of 453 modules carry the block. ORDER FINDING: W1343 FIRST (turn each 'if TYPE_CHECKING:' import into a real import wherever no import cycle results, which Codon needs anyway), THEN future-import has nothing left to quote except true forward references. The rollout waits on W1343. | 2026-10-16: 2026-10-16 done by W1359: the future-import rollout ran together with the TYPE_CHECKING hoist and the type-statement rewrite through codon-prep-tree, one dist at a time (the two had to land together); the census went 446 to 5 modules.",
+      "issued_at": "2026-10-16T07:30:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1356",
+      "last_worked": "2026-10-16T13:48:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T134842Z"
+    },
+    {
+      "symbol": "W1358",
+      "title": "Decide the Codon time boundary: 16 modules use aware datetimes and Codon has none",
+      "status": "blocked",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [
+        "W1344"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Classify the 17 sites by use (now injected, formatting, parsing, arithmetic); for the injected-now majority change the signature to take epoch seconds with the datetime made only at the entry point; decide the rest (timevalue, vtimezone need real zone logic: Codon-excluded) and record per module",
+      "evidence": "2026-10-16: 2026-10-16 PROBED on Codon 0.20.3: 'from datetime import timezone' FAILS (cannot import name timezone), so datetime.UTC has no rewrite to timezone.utc; naive 'datetime.utcnow()' and 'datetime.fromtimestamp(0)' compile. The 17 sites (hooks refusal_log, tick_release, tick_stop, tick_gate, verdictlog, vlogrecord, vlogcli, rewake; pathsforward cli, timevalue, vtimezone; katas cli, fleet, liveness; icsstruct cli; waldo custody) all build or convert AWARE datetimes (now(UTC), astimezone(UTC), fromtimestamp(x, UTC), tzinfo=UTC; pathsforward also ZoneInfo). A rewrite to naive datetimes changes meaning (and is deprecated, ruff DTZ), so this is a design decision, not a verb: pure cores take epoch seconds (ints or floats) and a formatting boundary builds RFC3339 strings, or an interop module owns every aware conversion. Classified by shape, most are 'now as an injected parameter' (hooks, katas) and could take an epoch.",
+      "issued_at": "2026-10-16T08:08:27Z",
+      "minted_during": "tick",
+      "caused_by": "W1343",
+      "last_worked": "2026-10-16T14:11:31Z",
+      "ticks_blocked": 21,
+      "completed": null
+    },
+    {
+      "symbol": "W1359",
+      "title": "Apply type-checking-imports --write to every mtools dist, one dist and one gated commit at a time, smallest first, recording each sha",
+      "status": "blocked",
+      "enables": [
+        "W1357"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [
+        "W1376"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 FLEET DRY RUN of type-checking-imports-tree over all 36 dists (no tests run in a dry run): 341 files would-write, 0 rejected, 0 errors, 8 worklist rows. The 8 are blocks that hold a 'type X = ...' statement beside the imports (corpus import_edges.py, gatecheck rungate.py and siblingpin.py, hooks musthave.py and musthave_cli.py, ledger finding_kinds.py and finding_resolve.py, witness warrant_integrity.py): the intersection of this debt with the type-statement debt (W1339), so they wait for that verb. Cycle refusal can only show at write time, when each dist's tests run once. | 2026-10-16: 2026-10-16 FIRST DIST WRITTEN (cvdcore): type-checking-imports alone fails the bar, ruff TC003 'move Sequence into a type-checking block' (deferred annotations make the hoisted import typing-only, which the TC rules then want guarded again). Run future-import after it and the file is admitted: parsers=1, nothing quoted, 16 dist tests pass. SO A DIST TAKES BOTH VERBS IN ONE COMMIT, hoist first, then the future import; the two rollouts W1359 and W1357 are one rollout. Commit in flight. | 2026-10-16: commit 22607ae (pushed): cvdcore, the first dist moved (hoist plus future import, 16 dist tests passed, gate green). 35 dists remain; the combined mode is W1363. | 2026-10-16: 2026-10-16 BATCH 1 through codon-prep-tree --write: atomicwrite, procrun, pathwalk, bibparse, icsstruct, rulerseq, ratchet pass the bar and their own tests (22 files). witness FAILS and is restored: warrant_integrity.py is one of the 8 modules whose TYPE_CHECKING block holds a type statement, so the hoist leaves it, the future-import then quotes its 'Iterator[...]' return annotation, and ruff's docstring-returns rule (DOC) no longer sees a generator, flagging a missing Returns section. Interplay to remember: a quoted annotation hides the Iterator type from ruff's docstring rules. Those 8 wait for W1339 (the type statement verb) and then re-run. Commit of the 7 in flight. | 2026-10-16: commit 2a37581 (pushed): batch 1, seven dists (atomicwrite, bibparse, icsstruct, pathwalk, procrun, ratchet, rulerseq) plus cvdcore earlier = 8 of 36 dists moved. witness waits on W1339. pycodemod:mutants now twelve shards (W1311). | 2026-10-16: 2026-10-16 BATCH 2 (codon-prep-tree --write over 13 dists): 12 pass the bar and their own tests (audiostruct, debtplan, frontier, grade, gradekit, htmlstruct, importdag, mutantcell, mutation, pkgbuild, transcriptstruct; pytestspec has nothing to change), 73 files; commit in flight. treeio FAILS and is restored: gitrun.py names subprocess only inside TYPE_CHECKING (a type), and the hoist makes it a real import, which ruff S404 (suspicious-subprocess-import) refuses; that file needs its annotation spelled without importing subprocess. Also built W1339 meanwhile (typealias verb, hoist widened to type-like aliases, 13 tests) uncommitted. | 2026-10-16: 2026-10-16 batch 2 first attempt REFUSED for two reasons, both fixed in the retry: (1) pathsforward:test_frontier_copy fails because pathsforward carries a byte-identical COPY of frontier/walk.py (frontier_walk.py), so any change to the frontier module must be copied (cp frontier/src/mikemol/frontier/walk.py pathsforward/src/mikemol/pathsforward/frontier_walk.py); a dist whose module is copied elsewhere is a hazard for every rewrite verb, so the tree driver should check that copies stay identical; (2) pytestspec:mutants_1 hit the 300s wall limit under load (a dist this batch did not change): shards 2 to 4, cpus 6 to 3 (W1311). | 2026-10-16: commit 9b5991a (pushed): batch 2, twelve dists plus the refreshed pathsforward frontier copy and pytestspec shards 2 to 4 (cpus 3). 20 of 36 dists moved. Left: witness, corpus, gatecheck, hooks, ledger (type statements, W1339 committing now), treeio (subprocess import), and fence, katas, buildtel, memres, mdstruct, pathsforward, pycodemod, waldo (not yet run). | 2026-10-16: commit 85ba669 (pushed) landed W1339. BATCH 3 (witness, corpus, gatecheck, ledger, buildtel, memres, mdstruct, waldo, katas, fence) pass the bar and their own tests; commit in flight. Findings: (1) katas and fence failed TC003 because an import used only in a LOCAL VARIABLE annotation (never evaluated, PEP 526) is typing-only to ruff even with no future import, so ruff's typing-only-import rules (TC001-003, by name typing-only-first-party-import etc.) are switched off in those two dists' pyproject with the reason (Codon has no guard); other dists may need the same; (2) fence membudget_cli.py failed E402 because its block sat below a constant, so the hoist now moves imports to after the last import above the block and leaves aliases in place. Left after this: hooks, pathsforward, pycodemod (host the tool or the bar, last) and treeio (subprocess import). | 2026-10-16: commit e3d90b2 (pushed): batch 3, ten dists (witness, corpus, gatecheck, ledger, buildtel, memres, mdstruct, waldo, katas, fence). 30 of 36 dists moved. Left: pathsforward, hooks, pycodemod (host the tool or the bar), treeio (subprocess import in gitrun.py), and pytestspec (nothing to change). | 2026-10-16: commit 11a810b (pushed): batch 4, pathsforward and hooks. hooks needed a hand fix first: repin_metrics named Row from repin_cli under the guard to avoid a cycle (repin_cli imports repin_metrics), so Row moved to hooks/repin_row.py and both import it (repin_cli.Row still resolves); a bar test counts modules by 'from pkg import name', so the import was spelled that way. 32 of 36 dists moved. Left: pycodemod (running now), treeio (gitrun.py subprocess import), pytestspec and one other (nothing to change). | 2026-10-16: commit 250fa2e (pushed): treeio. 34 of 36 dists moved (pytestspec and one other had nothing to change, so every dist with a guard or a future import is done). The census after: future-import 5, type-checking-import 2, 78 of 463 modules clean. Remaining type statements (20 modules) are a follow-up. | 2026-10-16: 2026-10-16 ROLLOUT COMPLETE: every dist with a TYPE_CHECKING block or a future import went through codon-prep-tree (commits 22607ae, 2a37581, 9b5991a, 85ba669 for the verb, e3d90b2, 11a810b, 26c0bcd, 250fa2e). Census after: future-import 446 to 5, type-checking-import 346 to 2, clean modules 2 to 78. The leftovers (5 future imports, 2 guards, 20 type statements) are W1373. | 2026-10-16: 2026-10-16 REOPENED by the flakes-are-blockers rule (github-8f): batch 1 and batch 3 each passed only on a rerun (pycodemod:mutants and debtplan/hooks mutants shards at the 300s and 900s WALL limits under load 55, no test failing); repair is W1376.",
+      "issued_at": "2026-10-16T08:30:27Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1343",
+      "last_worked": "2026-10-16T15:12:21Z",
+      "ticks_blocked": 20,
+      "completed": null
+    },
+    {
+      "symbol": "W1360",
+      "title": "mikemol-repin --revendor accepts a wheel local version with or without the g before the sha",
+      "status": "ready",
+      "enables": [
+        "nemik:W537"
+      ],
+      "touches": [
+        "revendor"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T08:53:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W537",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1361",
+      "title": "mikemol-repin --revendor reads the dists to move from the vendored wheel names, not a fixed three",
+      "status": "ready",
+      "enables": [
+        "nemik:W537"
+      ],
+      "touches": [
+        "revendor"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T08:53:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W537",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1362",
+      "title": "mikemol-repin --revendor rewrites the mtools sha mentions in MODULE.bazel and writes vendor/wheels/SHA256SUMS",
+      "status": "ready",
+      "enables": [
+        "nemik:W537"
+      ],
+      "touches": [
+        "revendor"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T08:53:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W537",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1363",
+      "title": "pycodemod codon-prep-tree runs type-checking-imports then future-import over each dist, then the bar on every changed file, restoring the dist on any failure",
+      "status": "done",
+      "enables": [
+        "W1359"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 9e012dd (pushed): codon-prep-tree, 4 tests. Next: drive each dist through it (W1359).",
+      "issued_at": "2026-10-16T09:01:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1359",
+      "last_worked": "2026-10-16T09:28:28Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T092828Z"
+    },
+    {
+      "symbol": "W1364",
+      "title": "codon-prep-tree finds modules another dist carries a byte-identical copy of and refreshes or refuses them",
+      "status": "ready",
+      "enables": [
+        "W1359"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read how tests name a copy (pathsforward tests/test_frontier_copy.py: _COPY path and _REL source); list every such pair under the tree (grep tests for 'byte-identical'), then make the tree driver copy the changed source over its twin, or refuse the dist, with a test",
+      "evidence": "2026-10-16: pathsforward conversion landed b0a76ef (frontier needed no rewrite); this card's tool work (codon-prep-tree detecting a byte-identical twin and refreshing or refusing) is still open",
+      "issued_at": "2026-10-16T11:05:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1359",
+      "last_worked": "2026-10-16T22:43:10Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1365",
+      "title": "A shared mikemol OTLP emitter builds OTLP protobuf metric and log payloads from the published opentelemetry-proto wheels, sha-pinned, imported lazily",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: AUDIT GAP recorded 2026-10-17 (operator via github-8f): the OTel audit cards W1365-W1367 listed the emitter library, the websubset idiom gauges and the vlog logs, and NOT the commit lifecycle (mikemol-commit and its lease: a span per commit from queued through gating to landed or refused, an up-down counter of in-flight and queued commits) nor trace spans at all (W1365 names metric and log payloads only). The operator expected the audit to have caught both; it did not. Re-scoped: W1404 (commit spans) and W1407 (in-flight counter), with the span builder as its own card. | 2026-10-16: READ 2026-10-17 in luthen-observability:W1128 (done): vmsingle-http /opentelemetry/v1/metrics and victorialogs-http /insert/opentelemetry/v1/logs answer 200; the JSON body answers 400 (PROTOBUF ONLY, measured by luthen's otlp_probe); dotted names and attributes are kept; resource attributes service.name, service.namespace (= the repo), host.name, service.version; docs/prr/otlp.md holds the naming, unit and cardinality rules. This corrects this card's first title (it said JSON): the emitter must encode protobuf, by hand to stay dependency-free. NO TRACE STORE IS DEPLOYED, so spans (W1408, W1404) have nowhere to land yet. | 2026-10-16: 2026-10-17 per github-8f (standards-first, reuse): prefer the published opentelemetry-proto and opentelemetry-exporter-otlp-proto-common wheels over hand-encoding. MEASURED in a scratch venv (opentelemetry-proto 1.45.1, exporter-otlp-proto-common 1.45.1, protobuf 7.36.2): importing metrics_service_pb2 costs 79 ms cold and 24 ms warm, 43 modules. That is not a hard ruling-out for a hook if the import is LAZY (on send, never at hook start). NOT YET CHECKED, so no constraint is claimed: whether Codon can use protobuf (a C extension); the first bounded step is a Codon probe of an import of these wheels, and the answer goes here either way. | 2026-10-17: CODON PROBED 2026-10-17 (0.20.3): a plain import of opentelemetry.proto.collector.metrics.v1 does not compile (no module named); the from-python-import form, Codon's CPython bridge, COMPILES, and at runtime aborts with libpython.so: cannot open shared object file unless a libpython is provided. So under Codon the wheels are reachable only through the bridge and a runtime libpython; under CPython (every hook and tool today) they import normally. No constraint is claimed against using them. Atomized into W1409 (dist scaffold), W1410 (metrics), W1411 (logs), W1412 (sender); this card closes when the four land. | 2026-10-17: landed 2026-10-17: fa53938 scaffold (W1409), 4dc596e metrics (W1410), a493e24 logs (W1411), b0e3531 sender (W1412). Uses the published opentelemetry-proto 1.45.1 wheel (exporter-common dropped: unused). NOT DONE: a real read-back against luthen's receiver; Codon use of the wheels (bridge only, runtime libpython needed).",
+      "issued_at": "2026-10-16T13:33:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T00:58:54Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T005854Z"
+    },
+    {
+      "symbol": "W1366",
+      "title": "mikemol-websubset --idioms emits the Codon idiom counts as OTLP gauges with OTel resource attributes instead of a Prometheus textfile",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After the shared emitter exists: turn websubset_prom.render into a metric-point builder for it (one gauge per rule with repo, target and rule as attributes, service.name mikemol-websubset, service.namespace the repo), keep --prom only if luthen still reads textfiles, test the payload",
+      "evidence": "",
+      "issued_at": "2026-10-16T13:33:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T13:33:54Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1367",
+      "title": "mikemol-vlog exports its records as OTLP logs through the shared emitter; its spool and drainer stay",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read hooks vlogship, vlogspool and the drainer to see where a record leaves the box; add an OTLP logs sink that maps a record's fields to attributes and its time to the log timestamp, behind the existing sink seam, tested with the drainer's own fixtures",
+      "evidence": "",
+      "issued_at": "2026-10-16T13:33:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T13:33:55Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1368",
+      "title": "--tick-close refuses a close that skipped the top card by nemik rank, read as data, unless --reason names why",
+      "status": "ready",
+      "enables": [
+        "nemik:W580"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read closegate.py (the W1203 refusal) and --weights-from (how rank already enters as data); add --rank-from FILE to --tick-close reading nemik-rank --json for this repo, find the top workable card, refuse the close when it is neither the worked card nor named by the reason nor blocked, say which card and print the --reason to give; tests: skipped top card refused, reason accepted, no rank file means no new refusal",
+      "evidence": "",
+      "issued_at": "2026-10-16T13:35:31Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W580",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1369",
+      "title": "Decide and build the tuple[X, ...] rewrite for Codon (136 modules): fixed tuple, list, or a Sequence alias, judged by mypy and the dist tests",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Probe Codon for which spellings of a homogeneous variable-length tuple compile (tuple[X, ...] is rejected per nemik; test Sequence[X], list[X], a bare tuple); list the call sites where immutability matters (hashing, dict keys); then a verb for the safe spelling with the judge, and a worklist of sites that need a hand decision",
+      "evidence": "",
+      "issued_at": "2026-10-16T13:39:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1351",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1370",
+      "title": "debtplan and mypy_plan record per-file debt in the debt ledger and mint one mechanization card per repo per idiom, never per-file cards",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "debtplan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 49b2e0d (pushed): Style.idiom, idiom_title, idiom_step, mint_idiom, mikemol-debtplan mint-idiom; 8 tests + a CLI test. The fold of existing per-file cards is W1371.",
+      "issued_at": "2026-10-16T13:45:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T15:41:48Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T154148Z"
+    },
+    {
+      "symbol": "W1371",
+      "title": "Migration folds existing per-file debt cards into the ledger plus their mechanization card, dry run first and checked against the ledger as a set",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "debtplan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the planner change: identify the per-file debt and typing cards by their minted_during and title shape in each repo's queue, write the ledger rows and the one card per idiom, drop each folded card with the new card as survivor (--drop --on), dry run prints the set difference between folded cards and ledger rows and refuses unless equal",
+      "evidence": "2026-10-16: 2026-10-16 relayed by github-8f (not verified by me): the interim block-matching route is DONE on the offline queues, paperkit's 67 debt and typing cards blocked on its W305, gabion's 104 on W1064, el-openglo's 34 on W553, each set verified card by card. The migration must treat those mechanization cards (W305, W1064, W553 in their repos) as the existing idiom cards or fold them into the keyed ones, and fold their blocked debt cards into ledger rows, so nothing is migrated twice. Read those three cards in their queues before citing them. | 2026-10-16: fold tool landed abf0ce7 (mikemol-debtplan fold, dry run by default); remaining: the per-repo dry runs against paperkit W305, gabion W1064, el-openglo W553 (read each in its queue first); the stale W1370 blocker removed",
+      "issued_at": "2026-10-16T13:45:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T20:19:56Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1372",
+      "title": "The paths-forward ledger records every status transition, including blocked to ready, so ready history can be rebuilt",
+      "status": "ready",
+      "enables": [
+        "nemik:W582"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read the ledger line grammar and where status changes happen (update, prune_done, bump, promote, close); add one transition line per change with from, to and cause, keeping old lines readable; test that a blocker landing writes blocked to ready and that a replay of the ledger reproduces the status history",
+      "evidence": "",
+      "issued_at": "2026-10-16T13:45:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1373",
+      "title": "Find why 5 future imports, 2 TYPE_CHECKING guards and 20 type-statement modules survived codon-prep-tree, and clear them",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: FOUND 2026-10-17 (scratch listing with hooks websubset.check over every .py): of the modules still carrying future-import, type-checking-import, type-statement, tuple-except or keyword-only-star, 564 are under tests/ (never rewritten: the tree driver only rewrites src, and tests run under CPython), plus build/lib copies and stray top-level scripts; only 8 are under src: the whole gmailstruct dist (the rollout never ran on it; converted 2026-10-17, uncommitted), grade/grade.py and ratchet/remap.py (recursive aliases the verb refuses by design), ratchet/remap.py:311 and hooks/refusal_log.py (a keyword-only parameter without a default after one with a default). The census counted tests; a src-only census is the honest Codon number. | 2026-10-17: landed f004eed (gmailstruct); the four remaining src modules need a hand decision and are carded separately",
+      "issued_at": "2026-10-16T13:48:26Z",
+      "minted_during": "tick",
+      "caused_by": "W1359",
+      "last_worked": "2026-10-17T00:42:17Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T004217Z"
+    },
+    {
+      "symbol": "W1374",
+      "title": "Apply the except-split verb (and whatever else codon-prep-tree now runs) to every mtools dist, batches of dists per gated commit",
+      "status": "done",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: commit 3690785 (pushed): batch A, twelve dists (atomicwrite, bibparse, cvdcore, icsstruct, pathwalk, procrun, ratchet, rulerseq, witness, gatecheck, ledger, buildtel) with the except-tuple rewrite and the keyword-only drop. First attempt REFUSED for real causes, not timeouts: ratchet's now-unused line suppression (ruff unused-noqa), buildtel's declared mutant no longer matching after the clause split. Fixed in the retry. | 2026-10-16: 2026-10-16 BATCH B: audiostruct, grade, htmlstruct, importdag, mutantcell, mutation passed on the first run; gradekit, pkgbuild, transcriptstruct, treeio, memres, mdstruct, corpus failed the bar on ruff's boolean-positional rule (the rewrite drops the star marker that kept booleans out of positional slots). Rather than a fifth hand fix the tool now does it: ruffignore.add switches the rule off in the dist's pyproject when EVERY finding is one of the five rules the rewrite makes contradict Codon (boolean-positional pair, typing-only trio), retries the bar, and restores everything for any other rule; all seven then passed. In the tree, uncommitted, with the tool change; waiting on the W1370 gate commit (still running). | 2026-10-16: atomized 2026-10-16: batches A-C landed (3690785, 08b31b7, 970e31f); the rest are W1390 debtplan, W1391 fence, W1392 hooks, W1393 pycodemod, W1364 frontier+pathsforward",
+      "issued_at": "2026-10-16T14:09:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1342",
+      "last_worked": "2026-10-16T18:34:53Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T183453Z"
+    },
+    {
+      "symbol": "W1375",
+      "title": "Extract a helper from ratchet core.ratchet so the split except clauses fit the complexity limit, and drop its per-file complex-structure ignore",
+      "status": "ready",
+      "enables": [
+        "W1319"
+      ],
+      "touches": [
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read core.ratchet (src/mikemol/ratchet/core.py:270), find the branch to move into a helper, keep its tests, remove the ratchet/pyproject.toml per-file entry W1375 names; check whether any other dist's function is pushed over the limit by the split (count them in the next batches)",
+      "evidence": "",
+      "issued_at": "2026-10-16T14:33:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1374",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1376",
+      "title": "Mutants runner ends a stuck mutant by an absence witness (silent output and stalled process-tree CPU), and the long targets carry bazel's longest class only as one commented backstop, so no gate refusal is a wall-clock timeout",
+      "status": "ready",
+      "enables": [
+        "W1311"
+      ],
+      "touches": [
+        "bazel"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read check_mutants/mutate_runner.py where each mutant's test run is bounded; add the W1114 witness (log growth plus /proc tree CPU, W1124 to W1126) per mutant; set the BUILD timeout of the 40 'long' targets to the longest class with one comment saying it is a backstop; evidence: the two refusals (W1356 and batch 3, pycodemod:mutants timeouts at load 55 with no test failing) and the measurements on W1312",
+      "evidence": "",
+      "issued_at": "2026-10-16T15:12:06Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1377",
+      "title": "--tick-close counts a card as advanced only when a landed commit carries its waypoint, and names in-flight work separately",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read closegate.advanced and the Waypoint trailer commits write; at close, count the cards named by trailers on commits since the tick opened; an 'advanced' line for a card with none is rewritten to in-flight and not counted; test: advanced with a landed commit counted, advanced with only a working tree not",
+      "evidence": "",
+      "issued_at": "2026-10-16T15:12:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1378",
+      "title": "A scratch-worktree mode opens an isolated checkout for the next card by symbol, with its venv, so work proceeds while a gate runs on the main tree",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: DOGFOODED 2026-10-17 before landing: mikemol-scratch open W1424 --dist scan cut mtools-W1424 and printed the PYTHONPATH recipe (works). FOUND: mikemol-pycheck --install inside the worktree refuses ('no governing project or interpreter'): pycheck_format resolves the interpreter with project_root.venv_python_for and never tries worktree_venv.main_tree_venv_python, which does find the main tree's scan venv from the worktree (probed). Carded as the next card. Also unverified: that PYTHONPATH=<worktree dist>/src really beats the editable install in a pytest run. | 2026-10-17: VERIFIED 2026-10-17: with PYTHONPATH=<worktree>/scan/src and the main tree's scan venv, a worktree-only module (pdf.py) imports and a worktree-only test file runs and passes (4 tests) from the worktree; without the PYTHONPATH the same import fails. So the printed recipe works as written. The module docstring still says 'not run end to end'; fix it with the next hooks change (W1429). | 2026-10-17: landed 1821739 (pushed): mikemol-scratch; refusals exit 4 per corpus/exit-table.json; BUILD console script wired",
+      "issued_at": "2026-10-16T15:13:26Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T03:32:18Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T033218Z"
+    },
+    {
+      "symbol": "W1379",
+      "title": "The scratch-worktree land mode brings a finished change into the main tree as one fast land or a --stack entry, and refuses when its paths overlap the in-flight commit",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read the --stack path (stackrun, stackland) and how the in-flight commit's paths are known; land = apply the worktree's diff for its card to the main tree (or enqueue it as a stack entry) after checking the path sets are disjoint from the in-flight commit's; on overlap refuse naming the shared paths; remove the scratch worktree afterwards; tests: disjoint lands, overlap refused, worktree removed",
+      "evidence": "",
+      "issued_at": "2026-10-16T15:13:26Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T15:13:34Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1380",
+      "title": "Answer gcalculus:W255: the portable-module list names one root's modules, so decide whether it takes entries of other repos or gcalculus keeps its own list, then run the census over its four flow modules",
+      "status": "done",
+      "enables": [
+        "gcalculus:W255"
+      ],
+      "touches": [
+        "websubset"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16 ANSWERED by letter gcalculus/inbox/2026-10-16-mtools-portable-list-is-per-root.md: the list is per census root (ROOT/hooks/websubset-portable.txt, entries relative to ROOT), so gcalculus declares its four modules in its own tree. MEASURED on a scratch copy with that list: --target py2many 4 modules 0 findings; --target codon 4 findings, one each, future-import. The stale installed mikemol-websubset (bazel-bin) lacks websubset_codon; a bazel build //hooks:.venv refreshes it.",
+      "issued_at": "2026-10-16T15:30:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "gcalculus:W255",
+      "last_worked": "2026-10-16T15:31:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T153120Z"
+    },
+    {
+      "symbol": "W1381",
+      "title": "One prune verb: landed local and foreign blockers are lifted on cards in any status, a ready card with a stale blocked_on included",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: 2026-10-16: second hand clear of the shape (W1371 ready with blocked_on W1370 done; --prune-landed --root printed only foreign KEPT rows and left it); github-8f ruled it folds into this card | 2026-10-16: landed d8900d4",
+      "issued_at": "2026-10-16T15:48:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T21:23:43Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T212343Z"
+    },
+    {
+      "symbol": "W1382",
+      "title": "A reap mode removes a repo's stale scratch worktrees safely: liveness by two reads over time, patch-equivalence by git cherry, unmerged or dirty work saved to a named ref and reported, removal by exact path only when nothing is at risk",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1149"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After W1378 (the worktree claims file): for each registered worktree under the scratch root read git worktree list twice with a gap measured in events (the claims file's own timestamps), scan /proc/*/cwd for a live holder, compare dir mtime; git cherry main BRANCH and git status --porcelain; unmerged commits or a dirty tree -> create refs/stash-reap/NAME at the branch tip (a commit for the dirty diff) and report, never remove; clean and fully patch-equivalent -> git worktree remove by exact path; default is a read-only classification; tests on a temp repo with each class; no symlinks",
+      "evidence": "",
+      "issued_at": "2026-10-16T16:27:50Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1149",
+      "last_worked": "2026-10-16T16:27:56Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1383",
+      "title": "Answer luthen-observability:W1073: atomicwrite.flock gains try_exclusive, a non-blocking flock context manager yielding whether it took the lock, and atomicwrite is pinnable",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1073"
+      ],
+      "touches": [
+        "atomicwrite"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add try_exclusive(path) to atomicwrite/flock.py (LOCK_EX | LOCK_NB, True or False, no wait, no clock, released on exit only if taken); tests: held by another descriptor yields False without waiting, free yields True and releases; warrants; commit; tell luthen the sha",
+      "evidence": "",
+      "issued_at": "2026-10-16T16:37:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1073",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1384",
+      "title": "mikemol-paths-forward --warrant: store a W3C PROV-O JSON-LD warrant on a card, validated against nemik's SHACL shape (nemik:W598)",
+      "status": "done",
+      "enables": [
+        "nemik:W598"
+      ],
+      "touches": [
+        "pathsforward",
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: operator via github-8f 2026-10-16: no format to invent, PROV-O (record = prov:Entity file#uuid with generatedAtTime, operator = prov:Agent, judgement wasDerivedFrom record), JSON-LD on the card; supersedes the warrants-list field shape sent to nemik-84 | 2026-10-16: landed a9d4080; field is the card key warrants (list of PROV-O JSON-LD); real-transcript end-to-end not yet run",
+      "issued_at": "2026-10-16T18:30:23Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W598",
+      "last_worked": "2026-10-16T20:58:15Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T205815Z"
+    },
+    {
+      "symbol": "W1385",
+      "title": "warrant validation reads the cited record through mikemol-transcriptstruct at write time and refuses a missing record or a claimed operator speaker whose record is not origin human",
+      "status": "done",
+      "enables": [
+        "W1384"
+      ],
+      "touches": [
+        "pathsforward",
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 01f0f76",
+      "issued_at": "2026-10-16T18:30:28Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-10-16T20:42:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T204239Z"
+    },
+    {
+      "symbol": "W1386",
+      "title": "transcriptstruct --harvest: one PROV-O entity per human-origin utterance of a transcript, with its needle, printed as JSON lines",
+      "status": "done",
+      "enables": [
+        "W1387",
+        "W1389",
+        "W1401",
+        "W1402"
+      ],
+      "touches": [
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: sizing from nemik-84 2026-10-16 (nemik-check at nemik 1d01527, nemik:W597): 71 open cards fleet-wide claim an operator ruling in prose with no warrants (mtools 12, luthen-observability 16, el-openglo 7, nemik 7, paperkit 6, substrate 6, gabion 4, life 3, aeternum/amr-skills/gcalculus 2 each, github/linux-sources/rosettapkg/summit 1 each); match is the [rulings] substring list in nemik rank-weights.toml over title, evidence and next step; ratchet series is nemik:W607. A repo:W<n> list is available from nemik as input to backfilling warrants. | 2026-10-16: landed 8d59808; --since/--until are not applied to --harvest (whole transcript each run)",
+      "issued_at": "2026-10-16T18:32:32Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T22:52:37Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T225237Z"
+    },
+    {
+      "symbol": "W1387",
+      "title": "mikemol-transcriptstruct rulings query: rulings touching a card or topic from the PROV-O ledger, newest first",
+      "status": "done",
+      "enables": [
+        "W1388"
+      ],
+      "touches": [
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 48ab91e (rulingq module) and f59a7ca (--rulings mode) as the first --stack: two dependent commits, one gate run, both pushed; real 6.2G tree not yet harvested",
+      "issued_at": "2026-10-16T18:32:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T23:47:29Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T234729Z"
+    },
+    {
+      "symbol": "W1388",
+      "title": "pre-write hook in mikemol-paths-forward and the commit gate prints the rulings relevant to the card being changed",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T18:32:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1389",
+      "title": "ingest paperkit argument graphs and summit floor entries into the same rulings ledger, not separate stores",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T18:32:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1390",
+      "title": "Codon rollout: debtplan through codon-prep-tree",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "debtplan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 7777c35",
+      "issued_at": "2026-10-16T18:33:58Z",
+      "minted_during": "tick",
+      "caused_by": "W1374",
+      "last_worked": "2026-10-16T20:13:24Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T201324Z"
+    },
+    {
+      "symbol": "W1391",
+      "title": "Codon rollout: fence through codon-prep-tree",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "fence"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 18e5072",
+      "issued_at": "2026-10-16T18:33:58Z",
+      "minted_during": "tick",
+      "caused_by": "W1374",
+      "last_worked": "2026-10-16T20:13:25Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T201325Z"
+    },
+    {
+      "symbol": "W1392",
+      "title": "Codon rollout: hooks through codon-prep-tree",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed e099872; refusal_log.py:122 kwonly site left (default order), so Codon still rejects that one marker",
+      "issued_at": "2026-10-16T18:33:59Z",
+      "minted_during": "tick",
+      "caused_by": "W1374",
+      "last_worked": "2026-10-16T22:14:32Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T221432Z"
+    },
+    {
+      "symbol": "W1393",
+      "title": "Codon rollout: pycodemod through codon-prep-tree",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 28a1883",
+      "issued_at": "2026-10-16T18:34:00Z",
+      "minted_during": "tick",
+      "caused_by": "W1374",
+      "last_worked": "2026-10-16T20:33:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T203302Z"
+    },
+    {
+      "symbol": "W1394",
+      "title": "mikemol-pycheck --format-ledger LEDGER: format every file a debt ledger names in one call, printing formatted, unchanged and failed",
+      "status": "blocked",
+      "enables": [
+        "gabion:W1046"
+      ],
+      "touches": [
+        "pycheck",
+        "mechanization"
+      ],
+      "blocked_on": [
+        "gabion:W1065"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T18:37:54Z",
+      "minted_during": "tick",
+      "caused_by": "gabion:W1046",
+      "last_worked": "2026-10-16T18:47:35Z",
+      "ticks_blocked": 14,
+      "completed": null
+    },
+    {
+      "symbol": "W1395",
+      "title": "mikemol-pycodemod drop-kwarg CALLEE KEYWORD: remove a keyword argument at every call site of a named callee, with a dry run",
+      "status": "blocked",
+      "enables": [
+        "gabion:W1057"
+      ],
+      "touches": [
+        "pycodemod",
+        "mechanization"
+      ],
+      "blocked_on": [
+        "gabion:W1065"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T18:37:55Z",
+      "minted_during": "tick",
+      "caused_by": "gabion:W1057",
+      "last_worked": "2026-10-16T18:47:36Z",
+      "ticks_blocked": 14,
+      "completed": null
+    },
+    {
+      "symbol": "W1396",
+      "title": "Answer el-openglo: a home for the CVD distinctness core as a mikemol-* dist (el-openglo:W544, for nemik:W438)",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T18:37:57Z",
+      "minted_during": "tick",
+      "caused_by": "inbox/2026-10-15-el-openglo-cvd-core-dist.md",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1397",
+      "title": "mikemol-paths-forward --freeze W<ask> [--write]: block every open card but the ask on the ask",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T18:45:32Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1398",
+      "title": "--freeze prints a KEPT n count line by default and the KEPT rows only under --verbose",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-16T19:48:00Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1399",
+      "title": "hooks takes the Codon rewrite without widening its three-rule ignore list: test_bar_fires pins it, so the boolean-positional rules need a per-file route",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 50463f0",
+      "issued_at": "2026-10-16T19:48:00Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1392",
+      "last_worked": "2026-10-16T21:41:59Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T214159Z"
+    },
+    {
+      "symbol": "W1400",
+      "title": "--warrant finds mikemol-transcriptstruct without PATH: a named env var, else the fleet root's mtools venv, else a refusal naming both",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward",
+        "transcriptstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 8f63589",
+      "issued_at": "2026-10-16T21:05:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W598",
+      "last_worked": "2026-10-16T22:27:14Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T222714Z"
+    },
+    {
+      "symbol": "W1401",
+      "title": "rulings ledger append: write harvested entities to an append-only JSONL, incremental by record uuid, never rewriting a line",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 8ce3900 (one commit covers both); not yet run against the real projects directory",
+      "issued_at": "2026-10-16T22:44:29Z",
+      "minted_during": "tick",
+      "caused_by": "W1386",
+      "last_worked": "2026-10-16T23:18:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T231838Z"
+    },
+    {
+      "symbol": "W1402",
+      "title": "rulings harvest walks every transcript under the projects directory, skipping files unchanged since the last harvest",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "transcriptstruct",
+        "provenance"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 8ce3900 (one commit covers both); not yet run against the real projects directory",
+      "issued_at": "2026-10-16T22:44:30Z",
+      "minted_during": "tick",
+      "caused_by": "W1386",
+      "last_worked": "2026-10-16T23:18:39Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T231839Z"
+    },
+    {
+      "symbol": "W1403",
+      "title": "htmlstruct text FILE --section N / --heading TEXT prints the decoded text of a headed section up to the next heading of equal or higher rank",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "htmlstruct"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-16: landed 8ee7d5a",
+      "issued_at": "2026-10-16T23:17:29Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T23:27:36Z",
+      "ticks_blocked": 0,
+      "completed": "20261016T232736Z"
+    },
+    {
+      "symbol": "W1404",
+      "title": "mikemol-commit emits one OTel span per commit, queued through gating to landed or refused, with repo, waypoint, sha and verdict as attributes",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "commit",
+        "stackmaster"
+      ],
+      "blocked_on": [
+        "W1408"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-16: re-scoped 2026-10-17 per the operator (via github-8f): stack depth emerges from OTel, not a bespoke reader; the lease emits too",
+      "issued_at": "2026-10-16T23:46:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T23:48:57Z",
+      "ticks_blocked": 6,
+      "completed": null
+    },
+    {
+      "symbol": "W1407",
+      "title": "mikemol-commit and the lease emit an OTel up-down counter of in-flight and queued commits per repo",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1192"
+      ],
+      "touches": [
+        "katas",
+        "stackmaster"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-16: re-scoped 2026-10-17 per the operator (via github-8f): low depth with many disjoint cards becomes one rule over this counter and nemik's ready counts, in Victoria",
+      "issued_at": "2026-10-16T23:46:51Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1192",
+      "last_worked": "2026-10-16T23:48:57Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1408",
+      "title": "the shared OTLP emitter also builds trace spans (name, start and end, attributes, status), dependency-free, beside its metric and log builders",
+      "status": "blocked",
+      "enables": [
+        "luthen-observability:W1193"
+      ],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [
+        "luthen-observability:W1189"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-10-16: 2026-10-17: luthen-observability:W1128 (read) records that no trace store is deployed, so a span has no destination today; this card waits on W1365 AND on a trace store (luthen's to card; not minted by me). Until then the commit lifecycle can ride metrics and logs, which land: W1407's counter, and a log record per commit transition.",
+      "issued_at": "2026-10-16T23:48:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-16T23:52:19Z",
+      "ticks_blocked": 2,
+      "completed": null
+    },
+    {
+      "symbol": "W1409",
+      "title": "mikemol-otlp dist scaffold: pyproject with sha-pinned opentelemetry-proto and exporter-otlp-proto-common, bazel stubs for mypy, one import-lazy seam module",
+      "status": "done",
+      "enables": [
+        "W1410",
+        "W1411",
+        "W1412"
+      ],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed fa53938 (second attempt; first refused for a scaffold docstring over 100 columns, carded as W1413)",
+      "issued_at": "2026-10-17T00:09:09Z",
+      "minted_during": "tick",
+      "caused_by": "W1365",
+      "last_worked": "2026-10-17T00:23:35Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T002335Z"
+    },
+    {
+      "symbol": "W1410",
+      "title": "mikemol-otlp metric builder: gauge and up-down counter points with resource attributes service.name, service.namespace, host.name, service.version, as protobuf",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 4dc596e in a two-commit stack with W861",
+      "issued_at": "2026-10-17T00:09:09Z",
+      "minted_during": "tick",
+      "caused_by": "W1365",
+      "last_worked": "2026-10-17T00:47:27Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T004727Z"
+    },
+    {
+      "symbol": "W1411",
+      "title": "mikemol-otlp log builder: a log record with timestamp, severity, body and attributes, same resource attributes, as protobuf",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed a493e24 (stack with W1412, one gate)",
+      "issued_at": "2026-10-17T00:09:10Z",
+      "minted_during": "tick",
+      "caused_by": "W1365",
+      "last_worked": "2026-10-17T00:58:47Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T005847Z"
+    },
+    {
+      "symbol": "W1412",
+      "title": "mikemol-otlp sender behind a seam posts protobuf to a named endpoint, with a read-back test against luthen's otlp_probe shape",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed b0e3531; tested against a planted loopback server only, NOT against luthen's receiver: a real read-back against vmsingle is not done | 2026-10-17: READ-BACK DONE 2026-10-17T01:00Z: mikemol.otlp sent one INFO log record (service.name mikemol-otlp-probe, nonce ec0c371d33490bbb) to victorialogs-http (victorialogs.buildbuddy.svc.cluster.local:9428, resolved with luthen's checks.endpoints_query) and it answered 200; luthen's checks.vlogs_query returned it with service.name, service.namespace, host.name, service.version, severity_number 9, severity_text INFO and the nonce attribute intact. Metrics path not yet read back.",
+      "issued_at": "2026-10-17T00:09:10Z",
+      "minted_during": "tick",
+      "caused_by": "W1365",
+      "last_worked": "2026-10-17T01:00:23Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T005848Z"
+    },
+    {
+      "symbol": "W1413",
+      "title": "mikemol-new-dist wraps or shortens the description it writes into the package docstring",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "newdist"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T00:16:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1409",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1414",
+      "title": "type-hole pilot step 1: list one small dist's Any and object annotation sites as a file:line worklist with pycodemod's existing site scanner, no edits",
+      "status": "done",
+      "enables": [
+        "W1415"
+      ],
+      "touches": [
+        "typehole",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17: the existing scanner is pycodemod shapes (not sites.scan): mikemol-pycodemod shapes 'object' gmailstruct/src printed 42 lines, about 20 of them true holes (cast('object', json.loads(...)) followed by isinstance narrowing and cast('dict[str, object]', ...)), the rest messages that say 'is not an object' or dict[str, object] parameter types. The mypy bar (disallow_any_expr) already forbids Any, so the pilot's population is the JSON-boundary object holes, not Any. A narrower pattern for step 2 is 'cast\\(\"object\"' plus the isinstance that follows.",
+      "issued_at": "2026-10-17T00:36:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "W793",
+      "last_worked": "2026-10-17T00:52:17Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T005217Z"
+    },
+    {
+      "symbol": "W1415",
+      "title": "type-hole pilot step 2: for each listed hole collect its consumers (calls, attribute reads, passes) with the existing pycodemod readers",
+      "status": "ready",
+      "enables": [
+        "W1416"
+      ],
+      "touches": [
+        "typehole",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T00:36:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W793",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1416",
+      "title": "type-hole pilot step 3: emit each hole's constraint set and classify it determined, ambiguous or underdetermined, without editing",
+      "status": "ready",
+      "enables": [
+        "W793"
+      ],
+      "touches": [
+        "typehole",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T00:36:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W793",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1417",
+      "title": "hand-fix the four src Codon leftovers: grade.py and ratchet remap.py recursive aliases, remap.py:311 and hooks refusal_log.py:122 keyword-only after a default",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 PARTIAL: ratchet remap_guard's keyword-only marker is gone (write moved before rev; its one caller passes keywords; 110 ratchet tests pass). STILL OPEN, each a decision, not a tool gap: (1) the recursive Json alias in grade/grade.py and ratchet/remap.py, which Codon cannot express and a plain assignment cannot name; the options are Json = object with isinstance narrowing at every use, or leaving the pair as the documented Codon exception. (2) hooks refusal_log.log_fallthrough: destination is keyword-only and required BY DESIGN (the module docstring); making it positional before the defaults breaks the test and flag_contract callers that pass typed positionally, so it needs a caller sweep first. | 2026-10-17: atomized 2026-10-17 per github-8f ruling (no Json=object): ratchet marker landed earlier, log_fallthrough landed 29904f6 (W1432), grade typing is W1430, remap scoped exception is W1431",
+      "issued_at": "2026-10-17T00:42:17Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1373",
+      "last_worked": "2026-10-17T03:47:58Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T034758Z"
+    },
+    {
+      "symbol": "W1418",
+      "title": "mikemol-otlp log CLI: stdin lines become OTLP log records sent to a named endpoint, with a read-back, for user-level producers",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 87abf6b; read back from victorialogs by field query on otlp_log_nonce (a bare word searches only _msg) | 2026-10-17: resolver landed 518bfc3 (name from MIKEMOL_ENDPOINTS plus the logs path)",
+      "issued_at": "2026-10-17T01:01:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1248",
+      "last_worked": "2026-10-17T01:51:31Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T011432Z"
+    },
+    {
+      "symbol": "W1419",
+      "title": "consolidate the two endpoint-name resolvers (fence.reading.endpoint_url and otlp.endpoints.base_url) into one shared function",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "fence",
+        "otlp"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T01:19:26Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1418",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1420",
+      "title": "--bump-blocked only prunes unless --count-tick is given (tick-open passes it), so the landed-blocker remedy cannot inflate ticks_blocked",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 1f4581f",
+      "issued_at": "2026-10-17T01:25:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T02:07:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T020720Z"
+    },
+    {
+      "symbol": "W1421",
+      "title": "mikemol-repin keeps the extras the venv was synced with, so el-openglo's uv sync --extra tooling --extra research is no longer typed after every repin",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "repin"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read hooks repin_cli.py and revendor.py for where the sync runs after a repin; find the extras the venv carries (the lock's optional-dependencies groups present in the installed environment, or the project's pyproject extras); run uv sync with those extras instead of none; test: a fixture project with two extras keeps both after a repin, and a project with none is unchanged. The peer's pin that lacks d8900d4 is el-openglo 6fba7de.",
+      "evidence": "",
+      "issued_at": "2026-10-17T01:30:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T01:30:07Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1422",
+      "title": "scan dist: page order for a two-pass ADF scan (backs arrive reversed) as a pure function, tested with planted page files",
+      "status": "done",
+      "enables": [
+        "W1425"
+      ],
+      "touches": [
+        "scan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 3a85d58 | 2026-10-17: landed 3a85d581: mikemol-scan dist scaffold and pages.order",
+      "issued_at": "2026-10-17T01:41:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1210",
+      "last_worked": "2026-10-17T03:24:20Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T021407Z"
+    },
+    {
+      "symbol": "W1423",
+      "title": "scan dist: one ADF pass through scanimage against a named eSCL device, writing numbered page files, behind a seam",
+      "status": "done",
+      "enables": [
+        "W1425"
+      ],
+      "touches": [
+        "scan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 9af4a63 | 2026-10-17: landed 9af4a637: mikemol-scan adf.py one ADF pass; exit-7 meaning from the manual, unverified on a real scan",
+      "issued_at": "2026-10-17T01:41:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1210",
+      "last_worked": "2026-10-17T03:24:19Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T023457Z"
+    },
+    {
+      "symbol": "W1424",
+      "title": "scan dist: ocrmypdf step turning ordered page files into one searchable PDF, behind a seam",
+      "status": "done",
+      "enables": [
+        "W1425"
+      ],
+      "touches": [
+        "scan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 findings while building W1423: ocrmypdf takes ONE input (an image or a PDF), not a list, and img2pdf reads TIFF but not PNM, so the pass writes TIFF pages (page-NNN.tif) and this step is two commands behind the seam: img2pdf joins the ordered pages into one PDF, then ocrmypdf makes it searchable. Both programs' presence and flags are UNVERIFIED here (luthen-observability:W1209 lands ocrmypdf and unpaper into @scanner); check them before writing the command line. | 2026-10-17: landed 75cc650 (pushed): mikemol-scan pdf.py; bazel //scan:all 14 pass; img2pdf/ocrmypdf flags unverified against the real programs",
+      "issued_at": "2026-10-17T01:41:11Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1210",
+      "last_worked": "2026-10-17T03:24:18Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T032418Z"
+    },
+    {
+      "symbol": "W1425",
+      "title": "mikemol-scan CLI: fronts, prompt to flip the stack, backs, interleave, ocrmypdf, one searchable PDF, for any eSCL device",
+      "status": "done",
+      "enables": [
+        "luthen-observability:W1210"
+      ],
+      "touches": [
+        "scan"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 7cd590f (pushed): mikemol-scan CLI; bazel //scan:all 15 pass; unrun on a real scanner and real img2pdf/ocrmypdf (luthen-observability:W1210 is the check)",
+      "issued_at": "2026-10-17T01:41:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1210",
+      "last_worked": "2026-10-17T03:57:17Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T035717Z"
+    },
+    {
+      "symbol": "W1426",
+      "title": "--manifest PATH... sets a card's manifest, the repo-relative paths it will create or edit plus a size class, validated: inside the repo, named, never globbed",
+      "status": "ready",
+      "enables": [
+        "W1427"
+      ],
+      "touches": [
+        "pathsforward",
+        "manifest"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-10-17: 2026-10-17 decisions (nemik answer relayed by github-8f): size class is a closed enum small (about 50 changed lines or fewer), medium (about 300 or fewer), large (atomize instead; warns like a missing manifest), read by nemik as sizeClass. Paths are repo-relative EXACT files to create or edit. nemik's proposal that a directory entry means any path under it is REFUSED here: it is a glob by another name and breaks the named-never-globbed rule; directories are refused at write time. | 2026-10-17: nemik RETRACTED the directory clause (relayed by github-8f): the manifest holds exact repo-relative files only, directory and glob entries refused at write time; nemik:W613 computes overlap as plain set intersection. Size classes stand.",
+      "issued_at": "2026-10-17T02:01:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T02:05:52Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1427",
+      "title": "mikemol-commit --stack compares each commit's real diff to its card's manifest and reports drift",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit",
+        "manifest"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T02:01:13Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1428",
+      "title": "kata: read nemik's stackable set for this repo, open a scratch worktree per card, submit each to mikemol-commit --stack as it goes green",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "katas",
+        "stackmaster"
+      ],
+      "blocked_on": [
+        "W1426",
+        "nemik:W613"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T02:05:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-17T02:05:51Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1429",
+      "title": "pycheck --install and --format borrow the main tree's interpreter inside a linked worktree, as the edit gate already does",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "pycheck"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T02:30:46Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1378",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1430",
+      "title": "type grade.py's Json by what it consumes: a closed Record TypedDict (key, grade, delegations, ...) and a small union, no recursive alias",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "codon",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T03:20:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1417",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1431",
+      "title": "record ratchet remap.py's recursive Json as the scoped Codon exception: leaf_diffs diffs arbitrary JSON documents, so no closed shape exists",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "codon",
+        "pycodemod"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T03:20:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1417",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1432",
+      "title": "sweep the callers of hooks refusal_log.log_fallthrough, then drop its keyword-only destination marker",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "codon",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: landed 29904f6 (pushed): log_fallthrough destination positional before defaults; 14 hooks tests passed locally",
+      "issued_at": "2026-10-17T03:20:16Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1417",
+      "last_worked": "2026-10-17T03:47:58Z",
+      "ticks_blocked": 0,
+      "completed": "20261017T034758Z"
+    },
+    {
+      "symbol": "W1433",
+      "title": "mikemol-commit --closes: opt-in per commit, a landed commit under --waypoint W marks W done (or appends its sha to evidence) in the same act, so cross-repo waiters unblock",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit-kata",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-17T03:24:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1424",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1434",
+      "title": "reproduce el-openglo-5c's leak: real-index adds during a --stack gate land in its last commit",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "commit-kata",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "stackland.py uses a private index and commit-tree, so find which step folds the real index in (host flush, post-commit hook or snapshot); test a single commit and a non-final entry",
+      "evidence": "",
+      "issued_at": "2026-10-17T03:38:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "el-openglo-5c",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -27610,6 +29537,20 @@
       "dropped_at": "2026-10-16T02:29:29Z",
       "reason": "Superseded by nemik:W559/W560: the spike on nemik.pieces ran there with Codon (not py2many), found the rejected constructs recorded on W1324, and the runner it would have needed is W1072.",
       "recoverable": true
+    },
+    {
+      "symbol": "W1405",
+      "title": "count of ready cards that do not overlap on touches tags, per repo, read from the queue",
+      "dropped_at": "2026-10-16T23:48:58Z",
+      "reason": "superseded 2026-10-17 by the operator's ruling (via github-8f): the disjoint-ready measure is a rule over nemik's exported ready counts and tag overlap in Victoria, not a bespoke reader here",
+      "recoverable": true
+    },
+    {
+      "symbol": "W1406",
+      "title": "katas status mode prints each repo's stack depth beside its disjoint ready-card count",
+      "dropped_at": "2026-10-16T23:48:58Z",
+      "reason": "superseded 2026-10-17 by the operator's ruling (via github-8f): no katas status mode; depth is a query over the OTel counter and spans",
+      "recoverable": true
     }
   ],
   "preamble": [
@@ -27690,7 +29631,7 @@
       "action": "inverted-umbrella W1327",
       "first_run": "2026-10-16T01:56:27Z",
       "last_run": "2026-10-16T01:56:27Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "drop-onto",
@@ -27708,6 +29649,42 @@
       "action": "repoint W1282 enables W1281",
       "first_run": "2026-10-16T02:29:21Z",
       "last_run": "2026-10-16T02:29:21Z",
+      "status": "applied"
+    },
+    {
+      "tool": "triage",
+      "rule": "frontier",
+      "subject": "W1366",
+      "action": "ready-with-blocker W1366",
+      "first_run": "2026-10-16T15:44:58Z",
+      "last_run": "2026-10-16T15:44:58Z",
+      "status": "applied"
+    },
+    {
+      "tool": "triage",
+      "rule": "frontier",
+      "subject": "W1367",
+      "action": "ready-with-blocker W1367",
+      "first_run": "2026-10-16T15:44:58Z",
+      "last_run": "2026-10-16T15:44:58Z",
+      "status": "applied"
+    },
+    {
+      "tool": "triage",
+      "rule": "frontier",
+      "subject": "W1379",
+      "action": "ready-with-blocker W1379",
+      "first_run": "2026-10-16T15:44:58Z",
+      "last_run": "2026-10-16T15:44:58Z",
+      "status": "applied"
+    },
+    {
+      "tool": "block-behind-open",
+      "rule": "behind-open",
+      "subject": "W1327",
+      "action": "block W1327 on W1328",
+      "first_run": "2026-10-16T15:45:32Z",
+      "last_run": "2026-10-16T15:45:32Z",
       "status": "applied"
     }
   ]
