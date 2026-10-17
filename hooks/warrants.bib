@@ -10907,3 +10907,27 @@
   claim  = {W966: the line is the pin's own, and splitting the first five columns still works.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_pin_on_a_later_line_reports_that_line_and_the_old_columns_come_first},
 }
+
+@misc{hooks-stackdrift-cards-code-and-queue-entries-are-compared-together-not-apart,
+  section = {stackdrift},
+  title  = {W1456: a card's two stack entries (its work and its queue state) are one comparison},
+  claim  = {W1456: a card's two stack entries (its work and its queue state) are one comparison. The
+            control is the false positive this replaces: each entry judged alone read as
+            drift from the manifest, the work entry for what it left out and the queue
+            entry for what it added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_a_cards_code_and_queue_entries_are_compared_together_not_apart},
+}
+
+@misc{hooks-stackdrift-card-that-takes-only-queue-files-is-not-reported,
+  section = {stackdrift},
+  title  = {A queue-state entry names no work, so it is neither drift nor a missing manifest},
+  claim  = {A queue-state entry names no work, so it is neither drift nor a missing manifest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_a_card_that_takes_only_queue_files_is_not_reported},
+}
+
+@misc{hooks-stackdrift-real-drift-is-still-named-when-the-queue-files-ride-along,
+  section = {stackdrift},
+  title  = {The positive control: a file outside the manifest still shows, beside the queue files},
+  claim  = {The positive control: a file outside the manifest still shows, beside the queue files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_real_drift_is_still_named_when_the_queue_files_ride_along},
+}

@@ -50,6 +50,35 @@ def test_a_card_without_a_manifest_is_counted_not_flagged(tmp_path: Path) -> Non
     assert lines == ["NO-MANIFEST W1"]
 
 
+def test_a_cards_code_and_queue_entries_are_compared_together_not_apart(tmp_path: Path) -> None:
+    """W1456: a card's two stack entries (its work and its queue state) are one comparison.
+
+    The control is the false positive this replaces: each entry judged alone read as drift from the
+    manifest, the work entry for what it left out and the queue entry for what it added.
+    """
+    queue = _queue(tmp_path, [{"symbol": "W1", "manifest": ["a.py", "b.py"]}])
+    items = [
+        _item("W1", "a.py", "b.py"),
+        _item("W1", ".claude/paths-forward.json", ".claude/paths-forward.ledger"),
+    ]
+    assert stackdrift.report(items, queue) == []
+
+
+def test_a_card_that_takes_only_queue_files_is_not_reported(tmp_path: Path) -> None:
+    """A queue-state entry names no work, so it is neither drift nor a missing manifest."""
+    queue = _queue(tmp_path, [{"symbol": "W1", "manifest": ["a.py"]}])
+    assert stackdrift.report([_item("W2", ".claude/paths-forward.md")], queue) == []
+
+
+def test_real_drift_is_still_named_when_the_queue_files_ride_along(tmp_path: Path) -> None:
+    """The positive control: a file outside the manifest still shows, beside the queue files."""
+    queue = _queue(tmp_path, [{"symbol": "W1", "manifest": ["a.py"]}])
+    items = [_item("W1", "a.py", "z.py"), _item("W1", ".claude/paths-forward.md")]
+    assert stackdrift.report(items, queue) == [
+        "DRIFT W1: not in manifest [z.py]; manifest not taken []"
+    ]
+
+
 def test_a_missing_or_malformed_queue_reads_as_no_manifests(tmp_path: Path) -> None:
     """A fault in the queue file never raises: every entry is just without a manifest."""
     assert stackdrift.manifests(tmp_path / "absent.json") == {}

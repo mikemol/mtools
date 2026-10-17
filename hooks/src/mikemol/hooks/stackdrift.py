@@ -22,6 +22,9 @@ from typing import cast
 from mikemol.hooks.stackrun import Item
 
 QUEUE = ".claude/paths-forward.json"
+QUEUE_FILES = frozenset(
+    {".claude/paths-forward.json", ".claude/paths-forward.ledger", ".claude/paths-forward.md"}
+)
 
 
 def _declared(card: object) -> tuple[str, tuple[str, ...]] | None:
@@ -85,26 +88,45 @@ def drift(taken: Sequence[str], declared: Sequence[str]) -> tuple[list[str], lis
     return extra, left
 
 
-def report(items: Sequence[Item], queue: Path) -> list[str]:
-    """Say, per stack entry, whether it matches its card's manifest.
+def taken_by(items: Sequence[Item]) -> dict[str, list[str]]:
+    """Group the paths a stack takes by waypoint, the queue's own files left out (W1456).
+
+    ⚑ ONE CARD, ONE COMPARISON: a card's code and its queue-state commit are two stack entries under
+    one waypoint, and judging them apart made each look like drift from the other. The queue files
+    are the loop's bookkeeping, never a card's work, so they are not counted.
 
     Returns:
-        one `DRIFT <waypoint> ...` line per drifting entry, and one `NO-MANIFEST` line naming every
-        entry whose card declares none; empty when every entry matches.
+        waypoint to its paths in stack order; a waypoint taking only queue files is absent.
+
+    """
+    grouped: dict[str, list[str]] = {}
+    for item in items:
+        work = [p for p in item.paths if p not in QUEUE_FILES]
+        if work:
+            grouped.setdefault(item.waypoint, []).extend(work)
+    return grouped
+
+
+def report(items: Sequence[Item], queue: Path) -> list[str]:
+    """Say, per card in the stack, whether the paths it takes match its manifest.
+
+    Returns:
+        one `DRIFT <waypoint> ...` line per drifting card, and one `NO-MANIFEST` line naming every
+        card that declares none; empty when every card matches.
 
     """
     known = manifests(queue)
     lines: list[str] = []
     bare: list[str] = []
-    for item in items:
-        declared = known.get(item.waypoint)
+    for waypoint, taken in taken_by(items).items():
+        declared = known.get(waypoint)
         if declared is None:
-            bare.append(item.waypoint)
+            bare.append(waypoint)
             continue
-        extra, left = drift(item.paths, declared)
+        extra, left = drift(taken, declared)
         if extra or left:
             lines.append(
-                f"DRIFT {item.waypoint}: not in manifest [{', '.join(extra)}]; "
+                f"DRIFT {waypoint}: not in manifest [{', '.join(extra)}]; "
                 f"manifest not taken [{', '.join(left)}]"
             )
     if bare:
