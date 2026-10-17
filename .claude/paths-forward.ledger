@@ -2230,3 +2230,5 @@
 2026-10-17T12:07:21Z  interrupt W1452 minted    -         "manifest pass: give the ready cards that nemik-stackable --propose could not draft a file-naming next step"  evidence=nemik:W613
 2026-10-17T12:52:44Z  tick  W1453 minted    -         "writer mode --manifests-from FILE: store [{symbol, manifest, size}] all or nothing, a dry run by default"  evidence=github-8f
 2026-10-17T12:53:12Z  tick  W1454 minted    -         "check that docs/adopting-a-hook.md names every isolation variable the gate reads"  evidence=W954
+2026-10-17T13:12:59Z  tick  W1453 advanced  mechanize "LANDED: W1419 (fcf0887, 8c04e34, 910002e), W954 1ee9969, queue 8ad3aff. IN FLIGHT: stack bp0h85ytc (W1453 --manifests-from, W1375 ratchet helper), no verdict yet. Next: W1368, W1355, W1376, W966 as one stack. [blocked by W1368]"
+2026-10-17T13:36:45Z  tick  W1455 minted    -         "set bazel's longest timeout class on the long targets with one backstop comment (the BUILD half of W1376, about 41 BUILD files)"  evidence=W1376
