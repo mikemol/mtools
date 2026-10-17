@@ -59,7 +59,6 @@ TIMEOUT_ENV = "MEMBUDGET_TIMEOUT"
 BYPASS_ENV = "BAZEL_ADMIT"
 MAX_WAIT_ENV = "BAZEL_ADMIT_MAX_WAIT_S"
 TRACE_ENV = "BAZEL_ADMIT_TRACE"
-DEFAULT_MAX_WAIT_S = 3600.0
 EXIT_DEFERRED = 3
 EXIT_USAGE = 2
 SEPARATOR = "--"
@@ -136,8 +135,9 @@ def plan(
 
     Returns:
         the argv (under a membudget hold when a membudget with the zram gate is found), the
-        environment to run it in (the zram ceiling and the wait bound added unless the caller set
-        them), and a note to say when no usable membudget was found.
+        environment to run it in (the zram ceiling added unless the caller set it, and a wait
+        bound only when the caller names one), and a note to say when no usable membudget was
+        found.
 
     """
     budget = tool_path.find(MEMBUDGET, MEMBUDGET_ENV, Path.cwd(), env)
@@ -147,12 +147,9 @@ def plan(
     if CAPABILITY not in (probe([str(budget), "capabilities"]) or "").split():
         note = f"bazel-admit: {budget} has no {CAPABILITY} (too old); running without a zram gate"
         return [real, *args], dict(env), note
-    limit = float(env.get(MAX_WAIT_ENV) or DEFAULT_MAX_WAIT_S)
-    gated = {
-        ZRAM_MAX_ENV: str(host_facts.REFUSE_FRACTION),
-        TIMEOUT_ENV: f"{limit:.0f}",
-        **env,
-    }
+    gated = {ZRAM_MAX_ENV: str(host_facts.REFUSE_FRACTION), **env}
+    if env.get(MAX_WAIT_ENV):
+        gated.setdefault(TIMEOUT_ENV, f"{float(env[MAX_WAIT_ENV]):.0f}")
     return [str(budget), "hold", str(mb), LABEL, SEPARATOR, real, *args], gated, None
 
 

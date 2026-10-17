@@ -124,21 +124,21 @@ def test_only_heavy_verbs_have_a_memory_estimate() -> None:
 
 
 def test_a_hold_carries_the_zram_ceiling_and_the_wait_bound_to_membudget(tmp_path: Path) -> None:
-    """The wait is membudget's: it is told the ceiling and the bound, and holds, not caps."""
+    """The wait is membudget's: it is told the ceiling, and no clock bounds it unless named."""
     tool = _budget(tmp_path)
     env = {bazel_admit.MEMBUDGET_ENV: str(tool)}
     argv, gated, note = bazel_admit.plan(REAL, ["test", "//..."], BUILD_MB, env, _supports)
     assert argv == [str(tool), "hold", str(BUILD_MB), "bazel", "--", REAL, "test", "//..."]
     assert "run" not in argv[:3]
     assert gated[bazel_admit.ZRAM_MAX_ENV] == str(host_facts.REFUSE_FRACTION)
-    assert gated[bazel_admit.TIMEOUT_ENV] == "3600"
+    assert bazel_admit.TIMEOUT_ENV not in gated
     assert note is None
 
 
 def test_the_bound_follows_the_callers_setting_and_what_the_caller_set_is_kept(
     tmp_path: Path,
 ) -> None:
-    """BAZEL_ADMIT_MAX_WAIT_S sets the default bound; an explicit MEMBUDGET_* value wins."""
+    """BAZEL_ADMIT_MAX_WAIT_S names a bound; an explicit MEMBUDGET_* value wins."""
     tool = _budget(tmp_path)
     base = {bazel_admit.MEMBUDGET_ENV: str(tool), bazel_admit.MAX_WAIT_ENV: "60"}
     _argv, gated, _note = bazel_admit.plan(REAL, ["build"], BUILD_MB, base, _supports)
