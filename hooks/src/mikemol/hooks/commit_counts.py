@@ -51,11 +51,18 @@ def start_of_stat(raw: str) -> str | None:
     ⚑ THE NAME IS PARSED AROUND: `comm` is field 2 and may hold spaces and parentheses, so the
     fields after it are read from the LAST closing parenthesis.
 
+    ⚑ A ZOMBIE IS NOT RUNNING (W1463): a process that has exited but whose parent has not yet
+    reaped it keeps its `/proc` entry, with state `Z`. It holds no queue place and does no work, so
+    it has no start time here, and a wait on it ends when it exits, not when it is reaped.
+
     Returns:
-        field 22 as text, or None when the line is too short to hold it.
+        field 22 as text, or None when the line is too short to hold it or the process is a zombie
+        or dead.
 
     """
     fields = raw.rpartition(")")[2].split()
+    if not fields or fields[0] in {"Z", "X"}:
+        return None
     return fields[_START_FIELD] if len(fields) > _START_FIELD else None
 
 
@@ -104,6 +111,32 @@ def counts_of(entries: dict[str, dict[str, object]]) -> Counts:
     """
     states = [entry.get("state") for entry in entries.values()]
     return Counts(states.count(QUEUED), states.count(INFLIGHT))
+
+
+def ahead_of(path: Path, key: str, probe: Probe = proc_start) -> list[int]:
+    """Name the live commits submitted before `key`, oldest first (W1463).
+
+    ⚑ THE KEY IS THE SUBMISSION TIME IN NANOSECONDS, so a smaller key is an earlier submission. An
+    entry whose key is not a number is not ordered and is left out, and a dead entry is not ahead
+    of anyone.
+
+    Returns:
+        the pids of the live entries with a smaller key, in key order; empty when this commit is
+        first or `key` is not a number.
+
+    """
+    try:
+        mine = int(key)
+    except ValueError:
+        return []
+    older: list[tuple[int, int]] = []
+    for other, entry in _load(path).items():
+        pid = entry.get("pid")
+        if not (other.isdecimal() and isinstance(pid, int)):
+            continue
+        if int(other) < mine and _alive(entry, probe):
+            older.append((int(other), pid))
+    return [pid for _stamp, pid in sorted(older)]
 
 
 def transition(path: Path, key: str, state: str | None, probe: Probe = proc_start) -> Counts:

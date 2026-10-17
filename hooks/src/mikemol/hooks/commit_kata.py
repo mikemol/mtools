@@ -43,6 +43,7 @@ from mikemol.hooks.commit_gauge import note as _note_counts
 from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.commit_span import emit_stack as _emit_stack
+from mikemol.hooks.commit_turn import wait_turn as _wait_turn
 from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
@@ -90,7 +91,6 @@ FENCE_ENV = "MIKEMOL_FENCE_BIN"
 HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
 COMMIT_LIMIT_ENV = "MIKEMOL_COMMIT_TIMEOUT_S"
 TIMEOUT_ENV = "MIKEMOL_COMMIT_LOCK_TIMEOUT"
-DEFAULT_LOCK_TIMEOUT_S = "3600"
 BUDGET = (
     "MEMBUDGET_FILE",
     "MEMBUDGET_MAXLOAD",
@@ -590,8 +590,13 @@ def claim_of(
 
     ⚑ `hold 0 claim:path:<git dir>/mtools/commit` is fence's zero-capacity claim: it waits, names
     the holder, and is reaped when its owner dies. The ledger is per repository under the git
-    directory with the load and zram gates off, so a busy host cannot stall a commit, and the wait
-    is bounded by MIKEMOL_COMMIT_LOCK_TIMEOUT (an hour by default).
+    directory with the load and zram gates off, so a busy host cannot stall a commit.
+
+    ⚑ THE WAIT HAS NO DEADLINE (W1463, github-8f 2026-10-17): it ended after an hour, and with
+    35-minute gates a stack three back in the queue expired with no verdict, three of them in one
+    day. A wall-clock give-up is what the fleet rule forbids. The wait ends when the holder does,
+    and the fence reaps a holder that died; only a caller that sets MIKEMOL_COMMIT_LOCK_TIMEOUT
+    gets a bound, and that is its own choice.
 
     ⚑⚑ NOTHING OF THAT CONFIGURATION REACHES THE COMMAND. `hold` hands its environment to what it
     runs, and the gate beneath leases from the HOST ledger with the HOST's ceilings, so each
@@ -637,7 +642,10 @@ def claim_of(
     held["MEMBUDGET_FILE"] = str(ledger / "commit.ledger")
     held["MEMBUDGET_MAXLOAD"] = "0"
     held["MEMBUDGET_ZRAM_MAX"] = "0"
-    held["MEMBUDGET_TIMEOUT"] = env.get(TIMEOUT_ENV) or DEFAULT_LOCK_TIMEOUT_S
+    if env.get(TIMEOUT_ENV):
+        held["MEMBUDGET_TIMEOUT"] = env[TIMEOUT_ENV]
+    else:
+        held.pop("MEMBUDGET_TIMEOUT", None)
     return Claim(argv, held)
 
 
@@ -821,6 +829,19 @@ def after_of(
     return after
 
 
+def _take_turn(ledger: Path, key: str) -> None:
+    """Wait for every commit submitted before this one to finish, then go on (W1463).
+
+    ⚑ BEFORE THE CLAIM, NOT INSIDE IT: the fence woke whichever waiting run it chose, so a stack
+    built on an earlier queued stack could gate first and be refused for files not yet in HEAD. The
+    queue's own map already orders the live commits by submission time, so a run waits here until
+    none is ahead and only then asks for the lease.
+    """
+    waited = _wait_turn(ledger / "commit.counts", key)
+    if waited:
+        sys.stdout.write(f"commit: waited for {waited} earlier submission(s) to finish\n")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -850,6 +871,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         track(ledger, key, QUEUED, env)
     if stacked is not None and not env.get(HELD_ENV):
         env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
+    if ledger is not None and not env.get(HELD_ENV):
+        _take_turn(ledger, key)
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
     if isinstance(claim, Claim):
         os.execve(claim.argv[0], claim.argv, claim.env)

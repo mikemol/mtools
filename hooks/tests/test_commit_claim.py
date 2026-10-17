@@ -78,14 +78,14 @@ def test_two_repositories_get_two_different_claims(tmp_path: Path) -> None:
     assert one.argv[3] != two.argv[3]
 
 
-def test_the_load_gate_is_off_and_the_wait_bounded(tmp_path: Path) -> None:
-    """A busy host must not stall a commit, and a wedged holder ends as a refusal."""
+def test_the_load_gate_is_off_and_the_wait_has_no_deadline_unless_asked(tmp_path: Path) -> None:
+    """A busy host must not stall a commit, and the lease wait has no timer of its own (W1463)."""
     target = _repo(tmp_path, "r")
     env = {commit_kata.FENCE_ENV: str(_fence(tmp_path))}
     got = commit_kata.claim_of(target, env, ["x"])
     assert isinstance(got, commit_kata.Claim)
     assert got.env["MEMBUDGET_MAXLOAD"] == "0"
-    assert got.env["MEMBUDGET_TIMEOUT"] == commit_kata.DEFAULT_LOCK_TIMEOUT_S
+    assert "MEMBUDGET_TIMEOUT" not in got.env
     env[commit_kata.TIMEOUT_ENV] = "90"
     again = commit_kata.claim_of(target, env, ["x"])
     assert isinstance(again, commit_kata.Claim)
