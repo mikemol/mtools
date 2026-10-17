@@ -25,6 +25,7 @@ py_library(
     data = glob(["src/mikemol/otlp/py.typed"], allow_empty = True),
     imports = ["src"],
     deps = [
+        "//endpoints:endpoints",
         requirement("opentelemetry-proto"),
         requirement("protobuf"),
     ],
@@ -51,10 +52,13 @@ py_library(
         size = "small",
         deps = [
             ":otlp",
+            "//endpoints:endpoints",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
         imports = ["src"],
+        # The sibling and this dist share the `mikemol` namespace (W1419).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -115,9 +119,12 @@ sh_test(
 
 py_binary(
     name = "mypy_runner",
+    legacy_create_init = 0,
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        # How mypy sees the sibling inside the sandbox (W1419).
+        "//endpoints:endpoints",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -147,7 +154,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/otlp/**"]),
+    srcs = glob(["src/mikemol/otlp/**"]) + ["//endpoints:endpoints"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

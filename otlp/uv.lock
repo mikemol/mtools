@@ -129,10 +129,25 @@ wheels = [
 ]
 
 [[package]]
+name = "mikemol-endpoints"
+version = "0.1.0"
+source = { directory = "../endpoints" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
 name = "mikemol-otlp"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "mikemol-endpoints" },
     { name = "opentelemetry-proto" },
 ]
 
@@ -144,7 +159,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "opentelemetry-proto", specifier = "==1.45.1" }]
+requires-dist = [
+    { name = "mikemol-endpoints", directory = "../endpoints" },
+    { name = "opentelemetry-proto", specifier = "==1.45.1" },
+]
 
 [package.metadata.requires-dev]
 dev = [

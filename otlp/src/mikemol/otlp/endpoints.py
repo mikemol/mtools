@@ -4,49 +4,19 @@
 
 ⚑⚑ NO ADDRESS IS IN MTOOLS. `MIKEMOL_ENDPOINTS` names a JSON file `{"victorialogs-http":
 "http://host:port"}` that the host writes (luthen-observability's `user/published_endpoints.json`),
-so a port change moves the file and nothing here. This is the contract of `fence.reading.
-endpoint_url` (W919), which was read before this was written: the environment variable holds the
-file's PATH; an unreadable file, an unknown name and a scheme other than http(s) are all "no
-answer" (None), never an exception.
+so a port change moves the file and nothing here.
 
-⚑ A SECOND IMPLEMENTATION, RECORDED AS ONE: fence's copy returns the base the same way and the two
-could be one shared function; neither dist depends on the other, so the consolidation is a card, not
-a quiet merge.
+⚑ THE RESOLVER IS SHARED (W1419): `base_url` is `mikemol.endpoints.resolve.base_url`, the one body
+that this module and `fence.reading.endpoint_url` (W919) each carried before. Fence keeps its own
+copy because it declares no runtime dependencies on purpose (MODULE.bazel), and a parity test pins
+the two together.
 """
 
-import json
 from collections.abc import Mapping
-from pathlib import Path
-from typing import cast
-from urllib.parse import urlsplit
 
-ENV = "MIKEMOL_ENDPOINTS"
-_SCHEMES = frozenset({"http", "https"})
+from mikemol.endpoints.resolve import ENV, base_url
 
-
-def base_url(name: str, environ: Mapping[str, str]) -> str | None:
-    """Resolve an endpoint name through the host's file.
-
-    Returns:
-        the base URL, or None when the variable is unset, the file is unreadable, it holds no such
-        name or the value is not an http(s) URL.
-
-    """
-    path = environ.get(ENV)
-    if not path:
-        return None
-    try:
-        doc: object = json.loads(Path(path).read_text(encoding="utf-8"))
-    except Exception as caught:
-        if not isinstance(caught, (OSError, ValueError)):
-            raise
-        return None
-    if not isinstance(doc, dict):
-        return None
-    url = cast("dict[object, object]", doc).get(name)
-    if not isinstance(url, str) or urlsplit(url).scheme not in _SCHEMES:
-        return None
-    return url
+__all__ = ["ENV", "base_url", "url_for"]
 
 
 def url_for(name: str, path: str, environ: Mapping[str, str]) -> str | None:

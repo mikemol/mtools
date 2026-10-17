@@ -19,7 +19,10 @@ classifiers = [
 
 # ⚑ ONE RUNTIME DEPENDENCY, the published opentelemetry-proto wheel (protobuf comes with it), pinned
 # exactly with hashes in uv.lock: the payload builders fill its messages instead of hand-encoding.
-dependencies = ["opentelemetry-proto==1.45.1"]
+# ⚑ A DIST-TO-DIST EDGE (mtools:W1419): `mikemol-endpoints` holds the one named-endpoint resolver, resolved
+# by uv as a NON-editable path source and carried in Bazel as a py_library dep; the pip hubs do not
+# resolve it and requirements.txt is not regenerated for it.
+dependencies = ["mikemol-endpoints", "opentelemetry-proto==1.45.1"]
 
 [project.scripts]
 mikemol-otlp = "mikemol.otlp.cli:main"
@@ -40,6 +43,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-endpoints = { path = "../endpoints" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -83,6 +89,10 @@ ignore = [
     "boolean-type-hint-positional-argument",
     "boolean-default-value-positional-argument",
 ]
+
+# ⚑ THE SIBLING IS THIRD-PARTY TO THIS DISTRIBUTION, in the editor and in the sandbox alike (mtools:W547).
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.endpoints"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
