@@ -13,8 +13,6 @@ at --max-pages while Google still offers a next page is reported by records.page
 else is refused before a request is made.
 """
 
-from __future__ import annotations
-
 import binascii
 import json
 from collections.abc import Callable
@@ -34,7 +32,7 @@ API = "https://gmail.googleapis.com/gmail/v1/users/me/messages"
 _OK = 200
 
 # (url, access token) -> (HTTP status, body). The CLI supplies one that GETs; tests fake it.
-type Getter = Callable[[str, str], tuple[int, bytes]]
+Getter = Callable[[str, str], tuple[int, bytes]]
 
 
 class FetchError(Exception):
@@ -44,7 +42,9 @@ class FetchError(Exception):
 def _json(body: bytes) -> object:
     try:
         return cast("object", json.loads(body))
-    except (ValueError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, UnicodeDecodeError)):
+            raise
         return None
 
 

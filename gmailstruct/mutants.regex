@@ -43,7 +43,7 @@ src/mikemol/gmailstruct/records.py|missing-payload-walked|if "payload" not in re
 
 # fetch.py `_json` and `search`: a failed request is an error and never a shorter result, a body that
 # is not JSON reads as None, and the page token is followed only while Google offers a real one.
-src/mikemol/gmailstruct/fetch.py|bad-json-raises|except \(ValueError, UnicodeDecodeError\):|except KeyError:|def=_json
+src/mikemol/gmailstruct/fetch.py|bad-json-raises|if not isinstance\(caught, \(ValueError, UnicodeDecodeError\)\):|if not isinstance(caught, KeyError):|def=_json
 src/mikemol/gmailstruct/fetch.py|failed-page-read-as-empty|if status != _OK:|if False:|def=search
 src/mikemol/gmailstruct/fetch.py|failed-page-number-shifted|listing page \{page_no\} failed|listing page {page_no + 1} failed|def=search
 src/mikemol/gmailstruct/fetch.py|query-not-sent|params = \{"q": query\}|params = {}|def=search
@@ -82,7 +82,7 @@ src/mikemol/gmailstruct/auth.py|empty-token-accepted|if not token:|if False:|def
 
 # auth.py `_oauth_error` and `exchange`: only a plain identifier OAuth code is quoted, never the body;
 # a non-200 status, a body that is not JSON, and a response without both fields are each an error.
-src/mikemol/gmailstruct/auth.py|unreadable-error-body-raises|except \(ValueError, UnicodeDecodeError\):|except KeyError:|def=_oauth_error
+src/mikemol/gmailstruct/auth.py|unreadable-error-body-raises|if not isinstance\(caught, \(ValueError, UnicodeDecodeError\)\):|if not isinstance(caught, KeyError):|def=_oauth_error
 src/mikemol/gmailstruct/auth.py|non-object-error-body-trusted|if isinstance\(value, dict\):|if True:|def=_oauth_error
 src/mikemol/gmailstruct/auth.py|unicode-error-code-echoed|code\.isascii\(\) and ||def=_oauth_error
 src/mikemol/gmailstruct/auth.py|punctuated-error-code-echoed|and code\.replace\("_", ""\)\.isalnum\(\)||def=_oauth_error
@@ -90,7 +90,7 @@ src/mikemol/gmailstruct/auth.py|non-string-error-code-echoed|isinstance\(code, s
 src/mikemol/gmailstruct/auth.py|grant-type-wrong|"grant_type": "refresh_token"|"grant_type": "password"|def=exchange
 src/mikemol/gmailstruct/auth.py|client-id-and-secret-swapped|"client_id": client_id,|"client_id": client_secret,|def=exchange
 src/mikemol/gmailstruct/auth.py|failed-exchange-accepted|if status != _OK:|if False:|def=exchange
-src/mikemol/gmailstruct/auth.py|non-json-exchange-escapes|except \(ValueError, UnicodeDecodeError\):|except KeyError:|def=exchange
+src/mikemol/gmailstruct/auth.py|non-json-exchange-escapes|if not isinstance\(caught, \(ValueError, UnicodeDecodeError\)\):|if not isinstance(caught, KeyError):|def=exchange
 src/mikemol/gmailstruct/auth.py|exchange-body-not-an-object-trusted|if isinstance\(value, dict\) else \{\}|if True else {}|def=exchange
 src/mikemol/gmailstruct/auth.py|missing-fields-accepted|if not isinstance\(token, str\) or not token or not isinstance\(expires, int\):|if False:|def=exchange
 src/mikemol/gmailstruct/auth.py|empty-access-token-accepted| or not token or not isinstance\(expires, int\)| or not isinstance(expires, int)|def=exchange

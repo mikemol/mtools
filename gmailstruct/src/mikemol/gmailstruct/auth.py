@@ -14,17 +14,13 @@ subprocess, and the path from ciphertext to token is testable without a key.
 only the file and the exit status, so a partial or garbage plaintext cannot reach a traceback.
 """
 
-from __future__ import annotations
-
 import json
 from collections.abc import Callable
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
+from typing import cast
 
 # argv -> (exit status, stdout, stderr). The CLI supplies one that runs the command; tests fake it.
-type Runner = Callable[[list[str]], tuple[int, bytes, bytes]]
+Runner = Callable[[list[str]], tuple[int, bytes, bytes]]
 
 
 class DecryptError(Exception):
@@ -66,7 +62,7 @@ OAUTH_ENDPOINT = "https://oauth2.googleapis.com/token"
 _OK = 200
 
 # (url, form fields) -> (HTTP status, body). The CLI supplies one that POSTs; tests fake it.
-type Poster = Callable[[str, dict[str, str]], tuple[int, bytes]]
+Poster = Callable[[str, dict[str, str]], tuple[int, bytes]]
 
 
 class ExchangeError(Exception):
@@ -85,7 +81,9 @@ def _oauth_error(body: bytes) -> str:
     """
     try:
         value = cast("object", json.loads(body))
-    except (ValueError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, UnicodeDecodeError)):
+            raise
         return "unreadable"
     if isinstance(value, dict):
         code = cast("dict[str, object]", value).get("error")
@@ -119,7 +117,9 @@ def exchange(refresh: str, client_id: str, client_secret: str, post: Poster) -> 
         raise ExchangeError(msg)
     try:
         value = cast("object", json.loads(body))
-    except (ValueError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, UnicodeDecodeError)):
+            raise
         msg = "token exchange returned a body that is not JSON"
         raise ExchangeError(msg) from None
     fields = cast("dict[str, object]", value) if isinstance(value, dict) else {}

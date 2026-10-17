@@ -18,8 +18,6 @@ file; the operator removes the old one on purpose.
 http.client, which is typed, rather than urllib, whose response is untyped.
 """
 
-from __future__ import annotations
-
 import argparse
 import http.client
 import json
@@ -29,18 +27,20 @@ import sys
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from typing import TYPE_CHECKING, override
+from typing import override
 from urllib.parse import parse_qs, urlencode, urlsplit
 
-from mikemol.gmailstruct.auth import DecryptError, ExchangeError, decrypt, exchange
-from mikemol.gmailstruct.consent import ConsentError, consent, read_client
-from mikemol.gmailstruct.fetch import FetchError, raw, search, show
+from mikemol.gmailstruct.auth import DecryptError, ExchangeError, Poster, Runner, decrypt, exchange
+from mikemol.gmailstruct.consent import (
+    AwaitCode,
+    Browser,
+    ConsentError,
+    Encrypt,
+    consent,
+    read_client,
+)
+from mikemol.gmailstruct.fetch import FetchError, Getter, raw, search, show
 from mikemol.gmailstruct.records import Listed, Message, Unreadable
-
-if TYPE_CHECKING:
-    from mikemol.gmailstruct.auth import Poster, Runner
-    from mikemol.gmailstruct.consent import AwaitCode, Browser, Encrypt
-    from mikemol.gmailstruct.fetch import Getter
 
 _TIMEOUT_S = 30
 # A YubiKey decrypt waits for a touch, so it gets longer than a network call.
@@ -304,7 +304,6 @@ def _read(opts: dict[str, object], effects: tuple[Runner, Poster, Getter]) -> in
 
 def main(
     argv: list[str] | None = None,
-    *,
     browser: Browser = open_browser,
     post: Poster = post_form,
     get: Getter = get_bearer,
@@ -321,7 +320,9 @@ def main(
         if opts["command"] == "consent":
             return _consent(opts, browser, post)
         return _read(opts, (runner or age_runner(str(opts["age"])), post, get))
-    except (ConsentError, DecryptError, ExchangeError, FetchError, OSError) as err:
+    except Exception as err:
+        if not isinstance(err, (ConsentError, DecryptError, ExchangeError, FetchError, OSError)):
+            raise
         sys.stderr.write(f"mikemol-gmail: {err}\n")
         return 1
 

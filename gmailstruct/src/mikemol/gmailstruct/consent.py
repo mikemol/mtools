@@ -19,8 +19,6 @@ never leaves this process except in the token POST, and a redirect whose `state`
 one sent is refused before its code is used.
 """
 
-from __future__ import annotations
-
 import base64
 import hashlib
 import hmac
@@ -36,12 +34,12 @@ SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
 _OK = 200
 _ENTROPY = 32
 
-type Random = Callable[[int], bytes]
-type Browser = Callable[[str], None]
+Random = Callable[[int], bytes]
+Browser = Callable[[str], None]
 # () -> (code, state), from the loopback redirect the CLI listens for.
-type AwaitCode = Callable[[], tuple[str, str]]
+AwaitCode = Callable[[], tuple[str, str]]
 # The refresh token -> nothing: the CLI writes it age-encrypted to the YubiKey recipient.
-type Encrypt = Callable[[str], None]
+Encrypt = Callable[[str], None]
 
 
 class ConsentError(Exception):
@@ -129,7 +127,9 @@ def _redeem(form: dict[str, str], post: Poster) -> str:
         raise ConsentError(msg)
     try:
         value = cast("object", json.loads(body))
-    except (ValueError, UnicodeDecodeError):
+    except Exception as caught:
+        if not isinstance(caught, (ValueError, UnicodeDecodeError)):
+            raise
         msg = "the code exchange returned a body that is not JSON"
         raise ConsentError(msg) from None
     fields = cast("dict[str, object]", value) if isinstance(value, dict) else {}

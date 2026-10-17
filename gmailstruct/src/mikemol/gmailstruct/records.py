@@ -17,8 +17,6 @@ holds. Every other field is required, and a present field of the wrong type is a
 `Unreadable`, never coerced.
 """
 
-from __future__ import annotations
-
 import base64
 import binascii
 from dataclasses import dataclass
