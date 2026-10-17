@@ -4,9 +4,10 @@
 
     mikemol-repin [--root DIR] [--sha SHA] [--dist D ...] [--write] [--no-sync]
 
-⚑ A DRY RUN UNLESS `--write`. The survey prints one line per pin, `repo dist form pinned STATUS`,
-with STATUS `SAME`, `DIFFERS` or `VENDORED` (a vendored wheel is named, never rewritten: see
-`repin`). `--write` needs `--sha`, a full 40-hex commit.
+⚑ A DRY RUN UNLESS `--write`. The survey prints one line per pin, `repo dist form pinned STATUS
+FILE:LINE`, with STATUS `SAME`, `DIFFERS` or `VENDORED` (a vendored wheel is named, never rewritten:
+see `repin`). FILE:LINE is last, so a parser that splits the first five columns still works (W966).
+`--write` needs `--sha`, a full 40-hex commit.
 
 ⚑ A REPO WITH UNSAVED WORK IS NEVER TOUCHED. If its `pyproject.toml` or `uv.lock` has uncommitted
 changes the repo is skipped, so a rewrite can never be tangled into someone's half-made edit. This
@@ -137,6 +138,7 @@ def survey(
                 pin.sha,
                 _status(pin, target),
                 measure(pin) if measure is not None and pin.form == repin.WHEEL else None,
+                f"pyproject.toml:{pin.line}",
             )
             for pin in repin.find(text)
             if dists is None or pin.dist in dists

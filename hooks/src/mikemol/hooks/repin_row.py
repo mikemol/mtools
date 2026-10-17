@@ -17,7 +17,8 @@ class Row:
 
     `missing` is the must-have fixes a vendored pin lacks by commit ancestry (W1138): None when it
     was not measured (no par, or the pin is not a commit in the mtools history), an empty tuple
-    when it has them all.
+    when it has them all. `where` is the file and line the pin was read from (W966), appended as the
+    last column so a parser that splits the first five still works.
     """
 
     repo: str
@@ -26,6 +27,7 @@ class Row:
     pinned: str
     status: str
     missing: tuple[str, ...] | None = None
+    where: str = ""
 
     def line(self) -> str:
         """Render the row as one tab-separated line.
@@ -34,4 +36,5 @@ class Row:
             the line, without a newline.
 
         """
-        return f"{self.repo}\t{self.dist}\t{self.form}\t{self.pinned}\t{self.status}"
+        head = f"{self.repo}\t{self.dist}\t{self.form}\t{self.pinned}\t{self.status}"
+        return f"{head}\t{self.where}" if self.where else head

@@ -10893,3 +10893,17 @@
   claim  = {A fault in the queue file never raises: every entry is just without a manifest.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackdrift.py -k test_a_missing_or_malformed_queue_reads_as_no_manifests},
 }
+
+@misc{hooks-repin-each-pin-carries-the-line-it-was-read-from,
+  section = {repin},
+  title  = {W966: the 1-based line of every shape, and the line takes no part in a pin's identity},
+  claim  = {W966: the 1-based line of every shape, and the line takes no part in a pin's identity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin.py -k test_each_pin_carries_the_line_it_was_read_from},
+}
+
+@misc{hooks-repin-cli-pin-on-a-later-line-reports-that-line-and-the-old-columns-come-first,
+  section = {repin_cli},
+  title  = {W966: the line is the pin's own, and splitting the first five columns still works},
+  claim  = {W966: the line is the pin's own, and splitting the first five columns still works.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_cli.py -k test_a_pin_on_a_later_line_reports_that_line_and_the_old_columns_come_first},
+}

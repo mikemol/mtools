@@ -36,6 +36,12 @@ def test_the_three_shapes_are_found_in_file_order() -> None:
     )
 
 
+def test_each_pin_carries_the_line_it_was_read_from() -> None:
+    """W966: the 1-based line of every shape, and the line takes no part in a pin's identity."""
+    assert [pin.line for pin in repin.find(_PYPROJECT)] == [2, 3, 7, 8]
+    assert repin.Pin("hooks", _OLD, repin.PEP508, 3) == repin.Pin("hooks", _OLD, repin.PEP508, 99)
+
+
 def test_rewriting_all_moves_every_git_pin_and_leaves_the_wheel() -> None:
     """Three git pins change; the vendored wheel's name is untouched."""
     text, changed = repin.rewrite(_PYPROJECT, _NEW)

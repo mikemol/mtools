@@ -60,9 +60,9 @@ def test_the_survey_lists_each_pin_with_its_standing(
     root = _tree(tmp_path)
     assert repin_cli.main(["--root", str(root), "--sha", _NEW]) == 0
     assert capsys.readouterr().out.splitlines() == [
-        f"alpha\thooks\tpep508\t{_OLD}\tDIFFERS",
-        f"bravo\thooks\tpep508\t{_OLD}\tDIFFERS",
-        "charlie\tledger\twheel\tc3ca6d2\tVENDORED",
+        f"alpha\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1",
+        f"bravo\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1",
+        "charlie\tledger\twheel\tc3ca6d2\tVENDORED\tpyproject.toml:1",
     ]
 
 
@@ -134,8 +134,21 @@ def test_a_root_that_is_itself_a_repo_is_read_as_that_repo(
     (stale / "pyproject.toml").write_text(f"dependencies = [{_LINE}]\n", encoding="utf-8")
     assert repin_cli.main(["--root", str(tmp_path), "--sha", _NEW]) == 0
     assert capsys.readouterr().out.splitlines() == [
-        f"{tmp_path.name}\thooks\tpep508\t{_OLD}\tDIFFERS"
+        f"{tmp_path.name}\thooks\tpep508\t{_OLD}\tDIFFERS\tpyproject.toml:1"
     ]
+
+
+def test_a_pin_on_a_later_line_reports_that_line_and_the_old_columns_come_first(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W966: the line is the pin's own, and splitting the first five columns still works."""
+    body = f'name = "x"\nversion = "1"\ndependencies = [{_LINE}]\n'
+    (tmp_path / "pyproject.toml").write_text(body, encoding="utf-8")
+    assert repin_cli.main(["--root", str(tmp_path), "--sha", _NEW]) == 0
+    [line] = capsys.readouterr().out.splitlines()
+    columns = line.split("\t")
+    assert columns[:5] == [tmp_path.name, "hooks", "pep508", _OLD, "DIFFERS"]
+    assert columns[5] == "pyproject.toml:3"
 
 
 def _only_linked_is_a_link(path: Path) -> bool:

@@ -19,7 +19,7 @@ CONSUMED BY: the `mikemol-repin` shell (W958).
 """
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 _GIT = r"https://github\.com/mikemol/mtools(?:\.git)?"
 _SHA = r"[0-9a-f]{7,40}"
@@ -43,6 +43,9 @@ class Pin:
     dist: str
     sha: str
     form: str
+    # The 1-based line of the match (W966); not part of a pin's identity, so two pins compare equal
+    # wherever they were written.
+    line: int = field(default=0, compare=False)
 
 
 def check_sha(sha: str) -> None:
@@ -80,7 +83,10 @@ def find(text: str) -> tuple[Pin, ...]:
         for pattern, form in ((_PEP508, PEP508), (_SOURCE, SOURCE), (_WHEEL, WHEEL))
         for m in pattern.finditer(text)
     ]
-    return tuple(Pin(dist, sha, form) for _start, dist, sha, form in sorted(found))
+    return tuple(
+        Pin(dist, sha, form, text.count("\n", 0, start) + 1)
+        for start, dist, sha, form in sorted(found)
+    )
 
 
 def rewrite(

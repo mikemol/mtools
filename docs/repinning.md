@@ -14,7 +14,10 @@ maintainer tool, installed beside `mikemol-gen-warrants`.
 mikemol-repin --sha <40-hex commit>
 ```
 
-One line per pin, tab separated: `repo dist form pinned STATUS`.
+One line per pin, tab separated: `repo dist form pinned STATUS FILE:LINE`. `FILE:LINE` is the
+repo-relative file and the 1-based line the pin was read from (`pyproject.toml:12`), so a survey can be
+checked against the file from its own output. It is the last column, so a parser that splits the first
+five still works.
 
 | STATUS | meaning |
 |---|---|
@@ -25,6 +28,14 @@ One line per pin, tab separated: `repo dist form pinned STATUS`.
 Without `--sha` the status column is `-`. `--root DIR` changes the directory scanned (default
 `~/github`), `--dist D` (repeatable) narrows to named distributions. mtools itself, hidden
 directories and `.claude` worktrees are not scanned.
+
+What the survey does not read:
+
+* **A repo's `uv.lock`.** Its transitive pins get no row: the lock follows the `pyproject.toml`, and
+  `--write` runs `uv sync` so the lock moves with it. A `--no-sync` run leaves the lock for the repo's
+  own session.
+* **A second `pyproject.toml` in one repo.** Only the repo's root file is read; a pin in a nested
+  project is not surveyed and not moved.
 
 ## Then write
 
