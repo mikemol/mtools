@@ -100,6 +100,7 @@ def freeze_plan(state: State, ask: str) -> Plan:
 
 
 UNSCORED = "unscored"
+UNMANIFESTED = "unmanifested"
 OPEN = "open"
 
 
@@ -138,12 +139,19 @@ def select_symbols(
                 for w in state.waypoints
                 if text(w, "status") != "done" and not text(w, "vector")
             ]
+        elif name == UNMANIFESTED:
+            found = [
+                text(w, "symbol")
+                for w in state.waypoints
+                if text(w, "status") == "ready" and not strlist(w, "manifest")
+            ]
         elif name == OPEN:
             found = [text(w, "symbol") for w in state.waypoints if text(w, "status") != "done"]
         elif name in known:
             found = [name]
         else:
-            msg = f"{name} is neither a waypoint of this queue nor a selector ({UNSCORED}, {OPEN})"
+            selectors = f"{UNSCORED}, {OPEN}, {UNMANIFESTED}"
+            msg = f"{name} is neither a waypoint of this queue nor a selector ({selectors})"
             raise RefusedError(msg)
         chosen.extend(s for s in found if s not in chosen and s not in skipped)
     return chosen
