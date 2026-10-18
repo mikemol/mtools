@@ -6100,3 +6100,17 @@
   claim  = {The count line names the advanced cards and, apart, those touched with no landed commit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_close_says_how_many_edits_landed_nothing},
 }
+
+@misc{pathsforward-watchdog-line-mode-prints-the-line-alone-and-takes-no-lock,
+  section = {watchdog_line},
+  title  = {One `watchdog:` line, exit 0, and the queue afterwards holds no lock},
+  claim  = {One `watchdog:` line, exit 0, and the queue afterwards holds no lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_line.py -k test_the_mode_prints_the_line_alone_and_takes_no_lock},
+}
+
+@misc{pathsforward-watchdog-line-held-lock-still-prints-the-line-before-the-skip,
+  section = {watchdog_line},
+  title  = {The nemik case: the tick was already open, and the skipped open still says how to arm},
+  claim  = {The nemik case: the tick was already open, and the skipped open still says how to arm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_line.py -k test_a_held_lock_still_prints_the_line_before_the_skip},
+}

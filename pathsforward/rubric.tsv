@@ -85,3 +85,4 @@ bulk_status	Bulk Status: One Reviewed Call Blocks or Releases a Set of Cards All
 promptwatch	Loop Prompt Watch: --tick-open Says What Changed in the Canonical Loop Prompt Since the Last Tick, Once, and Says Nothing When There Is None
 suppliers	A Waiting Card Names Other Acceptable Suppliers, as a Fallback and Never a Second Block
 landed	A Card Is Advanced Only When a Landed Commit Carries It, and an Edit Alone Is Shown Apart
+watchdog_line	The Watchdog Start Line Reaches a Session Whose Tick Stays Open

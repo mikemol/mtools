@@ -418,6 +418,7 @@ _FLAGS = (
     "close_gate",
     "standing",
     "ready_count",
+    "watchdog_line",
 )
 _VALUED = (
     "verify",
@@ -1625,6 +1626,7 @@ def _tick_open(ctx: Ctx) -> int:
     held = replace(ctx, opts={**ctx.opts, "lock": holder, "count_tick": True})
     code = _lock(held)
     if code != EXIT_OK:
+        _watchdog_line(ctx)
         return code
     for step in (_bump_blocked, _inbound, _check):
         code = max(code, step(held))
@@ -2469,6 +2471,21 @@ def _standing(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _watchdog_line(ctx: Ctx) -> int:
+    """Print the watchdog start line alone, whatever the tick lock says (W1540, nemik).
+
+    ⚑ A TICK THAT STAYS OPEN NEVER SEES THE LINE FROM `--tick-open` (it stops at a held lock), so
+    a session whose lock is held by its own earlier open had no way to read how to arm the
+    watchdog. This reads nothing but the queue's path and the host, takes no lock and does not beat.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], Path.home(), shutil.which))
+    return EXIT_OK
+
+
 def _tick_hooks_set(ctx: Ctx) -> int:
     """Store a file's commands as the tick hooks, replacing them whole (W1348, nemik:W450).
 
@@ -2760,6 +2777,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,
     "standing": _standing,
+    "watchdog_line": _watchdog_line,
     "ready_count": _ready_count,
     "standing_set": _standing_set,
     "tick_hooks_set": _tick_hooks_set,
@@ -2860,7 +2878,7 @@ def main(argv: list[str] | None = None) -> int:
         _warn("REFUSED: --state PATH is required; there is no default root")
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
-    if mode != "ready_count":
+    if mode not in {"ready_count", "watchdog_line"}:
         beat.try_beat(ctx.path, time.time_ns())
     try:
         code = _HANDLERS[mode](ctx)

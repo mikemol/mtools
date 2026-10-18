@@ -168,7 +168,7 @@ src/mikemol/pathsforward/beat.py|zero-gap-kept|if before is not None and now_ns 
 src/mikemol/pathsforward/beat.py|worktree-guessed-at|    if not git_dir.is_dir\(\):|    if False:|def=try_beat
 src/mikemol/pathsforward/idle.py|working-cards-counted|text\(w, "status"\) == "ready"|text(w, "status") in {"ready", "working"}|def=ready_count
 src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witness"\)|and True|def=ready_count
-src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode != "ready_count":|    if True:|def=main
+src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line"\}:|    if True:|def=main
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
 src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = which\(SCRIPT\) or |    found = |def=command
@@ -183,5 +183,7 @@ src/mikemol/pathsforward/refusal_record.py|home-file-not-counted|    return \(Pa
 src/mikemol/pathsforward/refusal_record.py|set-variable-not-enough|    if where\.get\(ENDPOINTS_ENV\):|    if False:|def=store_named
 src/mikemol/pathsforward/landed.py|unreadable-log-read-as-empty|    return None if log is None else trailer_cards\(log\)|    return trailer_cards(log or "")|def=landed_since
 src/mikemol/pathsforward/closegate.py|every-edit-counts-as-advanced|    return len\(stamped if landed is None else stamped & landed\)|    return len(stamped)|def=advanced
+src/mikemol/pathsforward/cli.py|held-lock-skips-the-watchdog-line|        _watchdog_line\(ctx\)|        pass|def=_tick_open
+src/mikemol/pathsforward/cli.py|watchdog-line-mode-prints-nothing|    _say\(watchdogcmd\.tick_line\(ctx\.path, sys\.argv\[0\], Path\.home\(\), shutil\.which\)\)|    pass|def=_watchdog_line
 src/mikemol/pathsforward/suppliers.py|non-citation-supplier-accepted|        if not is_reference\(item\):|        if False:|def=check
 src/mikemol/pathsforward/suppliers.py|empty-list-stored-not-cleared|        out\["acceptable_suppliers"\] = list\(suppliers\) or None|        out["acceptable_suppliers"] = list(suppliers)|def=fields
