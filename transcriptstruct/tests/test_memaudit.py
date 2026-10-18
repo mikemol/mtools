@@ -4,6 +4,7 @@
 
 import io
 import json
+import os
 from pathlib import Path
 
 from mikemol.transcriptstruct import memaudit
@@ -161,6 +162,80 @@ def test_the_index_reader_maps_each_target_to_its_first_line_and_reads_several_p
     """A note linked twice reports the earlier line; two links on one line are both read."""
     text = "- [A](a.md) and [B](b.md)\n- [A again](a.md)\n- [not a note](page.html)\n"
     assert memaudit.indexed(text) == {"a.md": 1, "b.md": 1}
+
+
+def _swarm_pair(tmp_path: Path, grant_at: str, ruling_at: str) -> Path:
+    """Write an indexed grant note and an unindexed note on the same subject, and an unrelated one.
+
+    Returns:
+        the memory directory.
+
+    """
+    memory = tmp_path / "proj" / "memory"
+    memory.mkdir(parents=True)
+    head = '---\nname: {n}\ndescription: "{d}"\nmetadata:\n  modified: {m}\n---\n\n{b}\n'
+    notes = {
+        "grant.md": ("swarm anything actionable every tick", grant_at, "Agents may swarm."),
+        "ruling.md": ("swarm withdrawn, anything actionable needs a card", ruling_at, "Stop."),
+        "other.md": ("quiet unrelated gardening advice", ruling_at, "Water the plants."),
+    }
+    for name, (desc, stamp, body) in notes.items():
+        text = head.format(n=name, d=desc, m=stamp, b=body)
+        (memory / name).write_text(text, encoding="utf-8")
+    (memory / "MEMORY.md").write_text("- [Grant](grant.md) - swarm\n", encoding="utf-8")
+    return memory
+
+
+def test_an_unindexed_note_newer_than_an_indexed_grant_on_its_subject_ranks_first(
+    tmp_path: Path,
+) -> None:
+    """The el-openglo shape: the withdrawing ruling was never indexed, so it leads the report."""
+    rows = memaudit.audit(_swarm_pair(tmp_path, "2026-10-03T00:00:00Z", "2026-10-18T00:00:00Z"))
+    assert (rows[0].note, rows[0].status) == ("ruling.md", memaudit.UNINDEXED)
+    assert "newer than grant.md (GRANT)" in rows[0].detail
+    other = next(r for r in rows if r.note == "other.md" and r.status == memaudit.UNINDEXED)
+    assert "may supersede" not in other.detail
+    assert rows.index(other) > 0
+
+
+def test_an_unindexed_note_older_than_the_grant_is_not_ranked_ahead(tmp_path: Path) -> None:
+    """An older note cannot have withdrawn a newer grant: it is reported, in place."""
+    rows = memaudit.audit(_swarm_pair(tmp_path, "2026-10-18T00:00:00Z", "2026-10-03T00:00:00Z"))
+    ruling = next(r for r in rows if r.note == "ruling.md" and r.status == memaudit.UNINDEXED)
+    assert "may supersede" not in ruling.detail
+
+
+def test_without_modified_stamps_the_file_times_decide_which_note_is_newer(tmp_path: Path) -> None:
+    """Notes with no `modified:` line fall back to when their files were last written."""
+    memory = _swarm_pair(tmp_path, "", "")
+    older, newer = 1_000_000_000_000_000_000, 2_000_000_000_000_000_000
+    os.utime(memory / "grant.md", ns=(older, older))
+    os.utime(memory / "ruling.md", ns=(newer, newer))
+    rows = memaudit.audit(memory)
+    assert (rows[0].note, rows[0].status) == ("ruling.md", memaudit.UNINDEXED)
+
+
+def test_without_modified_stamps_an_older_file_is_not_ranked_ahead(tmp_path: Path) -> None:
+    """The file-time fallback cuts both ways: the unindexed note written first is not newer."""
+    memory = _swarm_pair(tmp_path, "", "")
+    older, newer = 1_000_000_000_000_000_000, 2_000_000_000_000_000_000
+    os.utime(memory / "grant.md", ns=(newer, newer))
+    os.utime(memory / "ruling.md", ns=(older, older))
+    ruling = next(r for r in memaudit.audit(memory) if r.note == "ruling.md")
+    assert "may supersede" not in ruling.detail
+
+
+def test_an_indexed_note_with_no_grant_row_does_not_make_an_unindexed_note_urgent(
+    tmp_path: Path,
+) -> None:
+    """Only a GRANT note can be the stale rule a newer ruling withdrew."""
+    memory = _swarm_pair(tmp_path, "2026-10-03T00:00:00Z", "2026-10-18T00:00:00Z")
+    said = "Operator ruling 2026-10-01 - plain advice."
+    plain = (memory / "grant.md").read_text(encoding="utf-8").replace("Agents may swarm.", said)
+    (memory / "grant.md").write_text(plain, encoding="utf-8")
+    rows = memaudit.audit(memory)
+    ruling = next(r for r in rows if r.note == "ruling.md" and r.status == memaudit.UNINDEXED)
+    assert "may supersede" not in ruling.detail
 
 
 def test_the_mode_prints_one_row_per_line_and_writes_nothing(tmp_path: Path) -> None:

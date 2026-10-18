@@ -41,7 +41,7 @@ _INDEXED = re.compile(r"\]\(([^)\s]+\.md)\)")
 _DATE = re.compile(r"\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b")
 _SUBJECT = re.compile(r"^(?:name|description):")
 _LINK = re.compile(r"\[\[([^\]\n]+)\]\]")
-_MODIFIED = re.compile(r"^\s*modified:\s*(\S+)", re.MULTILINE)
+_MODIFIED = re.compile(r"^[ \t]*modified:[ \t]*(\S+)", re.MULTILINE)
 _DETAIL = 100
 _END_OF_DAY = "T99"
 
@@ -92,6 +92,57 @@ def indexed(index: str) -> dict[str, int]:
         for target in cast("list[str]", _INDEXED.findall(raw)):
             found.setdefault(target, number)
     return found
+
+
+Stamp = tuple[str, int]
+"""A note's `modified:` stamp ("" when it has none) and its file's modification time in ns."""
+
+
+def _newer(mine: Stamp, other: Stamp) -> bool:
+    # By the notes' own `modified:` stamps when both carry one, else by file modification time.
+    if mine[0] and other[0]:
+        return mine[0] > other[0]
+    return mine[1] > other[1]
+
+
+def _supersedes(
+    name: str, grants: list[str], notes: dict[str, str], stamps: dict[str, Stamp]
+) -> str | None:
+    # The first indexed GRANT note this one is newer than and shares `LINK_OVERLAP` terms with.
+    subject = _subject(notes[name])
+    for other in grants:
+        shared = len(subject & _subject(notes[other]))
+        if _newer(stamps[name], stamps[other]) and shared >= LINK_OVERLAP:
+            return other
+    return None
+
+
+def rank_unindexed(
+    rows: list[Row], notes: dict[str, str], stamps: dict[str, Stamp], pointed: dict[str, int]
+) -> list[Row]:
+    """Put first the UNINDEXED notes that may supersede an indexed grant.
+
+    ⚑ THIS IS EXACTLY THE SWARM SHAPE (github-8f, 2026-10-18, W1570, from el-openglo's W686): the
+    stale grant was indexed and loaded, the ruling that withdrew it was a newer note on the same
+    subject that no index line named. So an UNINDEXED note that is newer than an indexed note with
+    a GRANT row, and shares `LINK_OVERLAP` of its key terms, is moved ahead of every other row and
+    its detail names that grant note.
+
+    Returns:
+        the rows, those unindexed notes first (in their original order), then the rest unchanged.
+
+    """
+    grants = sorted({r.note for r in rows if r.status == GRANT and r.note in pointed})
+    first: list[Row] = []
+    rest: list[Row] = []
+    for row in rows:
+        other = _supersedes(row.note, grants, notes, stamps) if row.status == UNINDEXED else None
+        if other is None:
+            rest.append(row)
+        else:
+            detail = f"{row.detail}; newer than {other} (GRANT) on the same subject: may supersede"
+            first.append(Row(row.note, row.line, UNINDEXED, detail))
+    return [*first, *rest]
 
 
 def _subject(text: str) -> frozenset[str]:
@@ -237,7 +288,9 @@ def audit(memory: Path) -> list[Row]:
 
     """
     utterances = utterances_of(memory.parent)
-    notes = {p.name: p.read_text(encoding="utf-8") for p in sorted(memory.glob("*.md"))}
+    paths = sorted(memory.glob("*.md"))
+    notes = {p.name: p.read_text(encoding="utf-8") for p in paths}
+    stamps = {p.name: (_modified(notes[p.name]), p.stat().st_mtime_ns) for p in paths}
     pointed = indexed(notes.get(INDEX, ""))
     rows: list[Row] = []
     for name, text in notes.items():
@@ -251,4 +304,4 @@ def audit(memory: Path) -> list[Row]:
         for target, line in pointed.items()
         if target not in notes
     )
-    return elsewhere(rows, _siblings(memory))
+    return elsewhere(rank_unindexed(rows, notes, stamps, pointed), _siblings(memory))

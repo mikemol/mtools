@@ -1018,3 +1018,38 @@
   claim  = {A rule the author thinks is loaded and is not: the row sits on MEMORY.md at that line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_an_index_line_whose_file_is_missing_is_dangling_on_the_index},
 }
+
+@misc{transcriptstruct-memaudit-unindexed-note-newer-than-an-indexed-grant-on-its-subject-ranks-first,
+  section = {memaudit},
+  title  = {The el-openglo shape: the withdrawing ruling was never indexed, so it leads the report},
+  claim  = {The el-openglo shape: the withdrawing ruling was never indexed, so it leads the report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_an_unindexed_note_newer_than_an_indexed_grant_on_its_subject_ranks_first},
+}
+
+@misc{transcriptstruct-memaudit-unindexed-note-older-than-the-grant-is-not-ranked-ahead,
+  section = {memaudit},
+  title  = {An older note cannot have withdrawn a newer grant: it is reported, in place},
+  claim  = {An older note cannot have withdrawn a newer grant: it is reported, in place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_an_unindexed_note_older_than_the_grant_is_not_ranked_ahead},
+}
+
+@misc{transcriptstruct-memaudit-without-modified-stamps-the-file-times-decide-which-note-is-newer,
+  section = {memaudit},
+  title  = {Notes with no `modified:` line fall back to when their files were last written},
+  claim  = {Notes with no `modified:` line fall back to when their files were last written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_without_modified_stamps_the_file_times_decide_which_note_is_newer},
+}
+
+@misc{transcriptstruct-memaudit-without-modified-stamps-an-older-file-is-not-ranked-ahead,
+  section = {memaudit},
+  title  = {The file-time fallback cuts both ways: the unindexed note written first is not newer},
+  claim  = {The file-time fallback cuts both ways: the unindexed note written first is not newer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_without_modified_stamps_an_older_file_is_not_ranked_ahead},
+}
+
+@misc{transcriptstruct-memaudit-indexed-note-with-no-grant-row-does-not-make-an-unindexed-note-urgent,
+  section = {memaudit},
+  title  = {Only a GRANT note can be the stale rule a newer ruling withdrew},
+  claim  = {Only a GRANT note can be the stale rule a newer ruling withdrew.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_an_indexed_note_with_no_grant_row_does_not_make_an_unindexed_note_urgent},
+}

@@ -35,4 +35,9 @@ src/mikemol/transcriptstruct/memgrants.py|long-quote-hidden-as-a-mention|       
 src/mikemol/transcriptstruct/memgrants.py|name-line-flagged|        if _IDENTIFIER\.match\(raw\):|        if False:|def=grants
 src/mikemol/transcriptstruct/memaudit.py|unindexed-note-not-reported|            if name not in pointed:|            if False:|def=audit
 src/mikemol/transcriptstruct/memaudit.py|dangling-index-line-not-reported|        if target not in notes|        if False|def=audit
+src/mikemol/transcriptstruct/memaudit.py|older-stamp-ranked-ahead|        return mine\[0\] > other\[0\]|        return True|def=_newer
+src/mikemol/transcriptstruct/memaudit.py|older-file-ranked-ahead|    return mine\[1\] > other\[1\]|    return True|def=_newer
+src/mikemol/transcriptstruct/memaudit.py|shared-terms-bar-dropped|        if _newer\(stamps\[name\], stamps\[other\]\) and shared >= LINK_OVERLAP:|        if _newer(stamps[name], stamps[other]):|def=_supersedes
+src/mikemol/transcriptstruct/memaudit.py|unindexed-ranked-last|    return \[\*first, \*rest\]|    return [*rest, *first]|def=rank_unindexed
+src/mikemol/transcriptstruct/memaudit.py|any-indexed-note-counts-as-a-grant|r\.status == GRANT and r\.note in pointed|r.note in pointed|def=rank_unindexed
 src/mikemol/transcriptstruct/memaudit.py|index-target-keeps-its-last-line|            found\.setdefault\(target, number\)|            found[target] = number|def=indexed
