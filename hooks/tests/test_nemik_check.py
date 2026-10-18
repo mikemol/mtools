@@ -178,7 +178,7 @@ def test_the_reader_is_run_with_the_fleet_root_as_one_word(
     argv_file = tmp_path / "argv.txt"
     _script(tmp_path / "reader", f"printf '%s|' \"$@\" > '{argv_file}'\n")
     _run(monkeypatch, capsys, "SessionStart")
-    assert argv_file.read_text(encoding="utf-8") == f"--root|{tmp_path / 'fleet'}|"
+    assert argv_file.read_text(encoding="utf-8") == f"--root|{tmp_path / 'fleet'}|--digest|"
 
 
 def test_absent_reader_says_so_and_does_not_claim_the_queue_is_clean(
@@ -343,7 +343,7 @@ def test_find_reader_skips_a_non_executable_env_file(
 def test_reader_argv_is_constants_plus_the_root_as_one_word(tmp_path: Path) -> None:
     """The argv is a list, the root is one element, and nothing is shell-joined."""
     root = tmp_path / "a b"
-    assert nemik_check.reader_argv("/r", root) == ["/r", "--root", str(root)]
+    assert nemik_check.reader_argv("/r", root) == ["/r", "--root", str(root), "--digest"]
 
 
 def test_run_reader_reports_ok_nonzero_timeout_and_unstartable(tmp_path: Path) -> None:

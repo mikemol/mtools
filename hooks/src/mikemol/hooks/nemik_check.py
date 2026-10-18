@@ -103,7 +103,7 @@ def reader_argv(reader: str, root: Path) -> list[str]:
         the argv, never passed through a shell.
 
     """
-    return [reader, "--root", str(root)]
+    return [reader, "--root", str(root), "--digest"]
 
 
 def run_reader(reader: str, root: Path, timeout: float) -> tuple[str | None, str]:
