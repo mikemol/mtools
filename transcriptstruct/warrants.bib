@@ -1011,3 +1011,10 @@
   claim  = {A note linked twice reports the earlier line; two links on one line are both read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_the_index_reader_maps_each_target_to_its_first_line_and_reads_several_per_line},
 }
+
+@misc{transcriptstruct-memaudit-index-line-whose-file-is-missing-is-dangling-on-the-index,
+  section = {memaudit},
+  title  = {A rule the author thinks is loaded and is not: the row sits on MEMORY.md at that line},
+  claim  = {A rule the author thinks is loaded and is not: the row sits on MEMORY.md at that line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_an_index_line_whose_file_is_missing_is_dangling_on_the_index},
+}

@@ -140,6 +140,16 @@ def test_a_note_no_index_line_points_at_is_unindexed_and_an_indexed_one_is_not(
     assert "MEMORY.md" in rows[0].detail
 
 
+def test_an_index_line_whose_file_is_missing_is_dangling_on_the_index(tmp_path: Path) -> None:
+    """A rule the author thinks is loaded and is not: the row sits on MEMORY.md at that line."""
+    index = "- [Seen](seen.md) - indexed\n- [Gone](gone.md) - deleted\n"
+    memory = _memory(tmp_path, index, "seen.md")
+    rows = memaudit.audit(memory)
+    dangling = [(r.note, r.line, r.detail) for r in rows if r.status == memaudit.DANGLING]
+    assert dangling == [("MEMORY.md", 2, "gone.md is not in the directory")]
+    assert not any(r.status == memaudit.UNINDEXED for r in rows)
+
+
 def test_a_directory_with_no_index_has_every_note_unindexed(tmp_path: Path) -> None:
     """With no MEMORY.md nothing loads at all."""
     memory = _memory(tmp_path, None, "a.md", "b.md")

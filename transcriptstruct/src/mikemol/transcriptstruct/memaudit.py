@@ -34,6 +34,7 @@ LINKED_NEWER = "LINKED-NEWER"
 LINK_OVERLAP = 2
 ELSEWHERE = "ELSEWHERE"
 UNINDEXED = "UNINDEXED"
+DANGLING = "DANGLING"
 _UNFOUND = frozenset({memfind.UNWARRANTED, memfind.RELAYED})
 INDEX = "MEMORY.md"
 _INDEXED = re.compile(r"\]\(([^)\s]+\.md)\)")
@@ -228,7 +229,8 @@ def audit(memory: Path) -> list[Row]:
     ⚑ A NOTE NO INDEX LINE POINTS AT NEVER LOADS (github-8f, 2026-10-18, W1568, from el-openglo's
     W686): the superseding no-swarm ruling sat in a file with no `MEMORY.md` line, so only the stale
     grant was ever read. Every such note gets an UNINDEXED row, and a directory with no index at
-    all has every note unindexed.
+    all has every note unindexed. The converse is a DANGLING row (W1569) on the index itself, for a
+    line whose file the directory does not hold: a rule the author thinks is loaded, and is not.
 
     Returns:
         the findings, note by note in name order; `MEMORY.md` is the index and is skipped.
@@ -244,4 +246,9 @@ def audit(memory: Path) -> list[Row]:
             rows.extend(linked_newer(name, text, notes))
             if name not in pointed:
                 rows.append(Row(name, 0, UNINDEXED, f"no line of {INDEX} points at it"))
+    rows.extend(
+        Row(INDEX, line, DANGLING, f"{target} is not in the directory")
+        for target, line in pointed.items()
+        if target not in notes
+    )
     return elsewhere(rows, _siblings(memory))
