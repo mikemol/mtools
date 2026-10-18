@@ -12117,3 +12117,38 @@
             none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_submission_names_the_waypoints_it_carries},
 }
+
+@misc{hooks-watchdog-hint-hint-names-the-first-stackable-card-and-the-first-draftable-leaf,
+  section = {heartbeat},
+  title  = {A WAITING row is not offered: it waits on something; the STACK row is the one to submit},
+  claim  = {A WAITING row is not offered: it waits on something; the STACK row is the one to submit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_the_hint_names_the_first_stackable_card_and_the_first_draftable_leaf},
+}
+
+@misc{hooks-watchdog-hint-half-with-nothing-to-name-is-left-out-and-neither-is-silence,
+  section = {heartbeat},
+  title  = {No stackable row: only the leaf; no draft: only the stack; neither: no line at all},
+  claim  = {No stackable row: only the leaf; no draft: only the stack; neither: no line at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_a_half_with_nothing_to_name_is_left_out_and_neither_is_silence},
+}
+
+@misc{hooks-watchdog-hint-alarm-prints-the-hint-after-the-idle-line,
+  section = {heartbeat},
+  title  = {The reminder carries its own content: the idle line, then the next action},
+  claim  = {The reminder carries its own content: the idle line, then the next action.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_the_alarm_prints_the_hint_after_the_idle_line},
+}
+
+@misc{hooks-watchdog-hint-without-nemik-stackable-the-hint-is-empty-and-nothing-is-raised,
+  section = {heartbeat},
+  title  = {A host with no nemik-stackable gets the idle line alone},
+  claim  = {A host with no nemik-stackable gets the idle line alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_without_nemik_stackable_the_hint_is_empty_and_nothing_is_raised},
+}
+
+@misc{hooks-watchdog-hint-found-tool-is-asked-twice-and-its-answers-become-the-line,
+  section = {heartbeat},
+  title  = {The plain call gives the rows, the --propose --json call gives the drafts},
+  claim  = {The plain call gives the rows, the --propose --json call gives the drafts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_a_found_tool_is_asked_twice_and_its_answers_become_the_line},
+}

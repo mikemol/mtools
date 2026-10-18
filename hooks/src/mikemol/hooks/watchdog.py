@@ -93,6 +93,25 @@ def idle_line(waiting: int, last: Beat, now_ns: int) -> str:
     return f"idle with {waiting} ready cards, last heartbeat {ago}s ago ({last.tool})"
 
 
+def next_action(stackable: str, drafts: str) -> str:
+    """Name one concrete thing to do now, from nemik-stackable's rows and its drafted manifests.
+
+    ⚑ AN IDLE ALARM THAT ONLY RESTATES ITSELF IS A WASTED REMINDER (github-8f for the operator,
+    2026-10-18, W1591): it carries its own content, the first stackable card and the first ready
+    leaf with no manifest that a manifest can be drafted for.
+
+    Returns:
+        `next: stack W<n>; atomize W<m>`, either half left out when there is none, "" for neither.
+
+    """
+    rows = [ln.split() for ln in stackable.splitlines() if ln.startswith(("STACK", "WAITING"))]
+    stack = next((row[1].rpartition(":")[2] for row in rows if row[0] == "STACK"), "")
+    leaf = drafts.partition('"symbol": "')[2].partition('"')[0]
+    parts = [f"stack {stack}" if stack else "", f"atomize {leaf}" if leaf else ""]
+    named = "; ".join(part for part in parts if part)
+    return f"next: {named}" if named else ""
+
+
 def pidfile_of(git_dir: Path) -> Path:
     """Name the file a running watchdog leaves for its repo (W1556).
 
@@ -198,11 +217,16 @@ def armed_publisher(
     return publish
 
 
+def _no_hint() -> str:
+    return ""
+
+
 def watch(
     seams: Seams,
     phi_fire: float,
     poll_s: float,
     armed: Callable[[], None] = _nothing,
+    hint: Callable[[], str] = _no_hint,
 ) -> int:
     """Watch until the silence passes the limit with work waiting, or the parent goes away.
 
@@ -216,6 +240,9 @@ def watch(
     W1564): the session started this watchdog, which is its own action, so the silence is counted
     from the start whenever the last beat predates it. Otherwise a stale file fires the first poll,
     the session restarts it, it fires again, and nothing watches in between.
+
+    ⚑ THE ALARM CARRIES ITS OWN NEXT ACTION (W1591): after the idle line, `hint` supplies one line
+    naming a stackable card and a leaf to atomize, when it has any.
 
     Returns:
         EXIT_IDLE after printing the idle line; 0 when the parent is gone.
@@ -244,6 +271,9 @@ def watch(
                 waiting = ready()
                 if waiting:
                     sys.stdout.write(idle_line(waiting, last, now_ns()) + "\n")
+                    said = hint()
+                    if said:
+                        sys.stdout.write(said + "\n")
                     return EXIT_IDLE
                 asked_about = last.at_ns
         sleep(poll_s)
@@ -272,6 +302,36 @@ def ready_from(writer: str, state: Path) -> int | None:
         return None
     said = done.stdout.strip()
     return int(said) if done.returncode == 0 and said.isdecimal() else None
+
+
+STACKABLE_ENV = "MIKEMOL_NEMIK_STACKABLE"
+STACKABLE_DEFAULT = Path("github") / "nemik" / ".venv" / "bin" / "nemik-stackable"
+
+
+def hint_from(repo: str, env: Mapping[str, str]) -> str:
+    """Ask nemik-stackable what to do next in `repo`; never raises.
+
+    Returns:
+        the line `next_action` builds, or "" when nemik-stackable is not there or does not answer.
+
+    """
+    tool = Path(env.get(STACKABLE_ENV) or Path.home() / STACKABLE_DEFAULT)
+    if not os.access(tool, os.X_OK):
+        return ""
+    heard: list[str] = []
+    for extra in ([], ["--propose", "--json"]):
+        try:
+            done = subprocess.run(
+                [str(tool), repo, *extra],
+                capture_output=True,
+                text=True,
+                check=False,
+                stdin=subprocess.DEVNULL,
+            )
+        except OSError:
+            return ""
+        heard.append(done.stdout if done.returncode == 0 else "")
+    return next_action(heard[0], heard[1])
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -321,7 +381,10 @@ def main(
     gone = armed_publisher(os.environ, repo, spawn, ARMED_DOWN)
     claim(git_dir, os.getpid())
     try:
-        return watch(seams, float(str(opts["phi_fire"])), float(str(opts["poll_s"])), announce)
+        poll = float(str(opts["poll_s"]))
+        return watch(
+            seams, float(str(opts["phi_fire"])), poll, announce, lambda: hint_from(repo, os.environ)
+        )
     finally:
         release(git_dir, os.getpid())
         gone()
