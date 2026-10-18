@@ -53,6 +53,7 @@ from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackdrift import QUEUE as _QUEUE
 from mikemol.hooks.stackdrift import report as _drift_report
 from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit, forget, with_files
+from mikemol.hooks.stackimports import refusal as _stack_refusal
 from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
@@ -873,6 +874,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     submit(ledger, key, env)
     if stacked is not None and not env.get(HELD_ENV):
         env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
+        problem = _stack_refusal(root, stacked[1], env[SNAP_ENV], run_git_in)
+        if problem is not None:
+            return unordered(root, ledger, key, env, problem)
     if ledger is not None and not env.get(HELD_ENV):
         _take_turn(ledger, key)
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
@@ -921,6 +925,22 @@ def beat(ledger: Path | None) -> None:
     """Leave the session heartbeat (W1482): a submit is the session using a tool; never raises."""
     if ledger is not None:
         _try_beat(ledger.parent, BEAT_TOOL, time.time_ns())
+
+
+def unordered(
+    root: Path, ledger: Path | None, key: str, env: Mapping[str, str], problem: str
+) -> int:
+    """Refuse a stack at submit whose frozen files import a module only a later entry adds (W1527).
+
+    Returns:
+        EXIT_NOT_COMMITTED, after printing each finding and taking the submission out of the counts.
+
+    """
+    sys.stdout.write(f"NOT COMMITTED {root.name}: a stack entry imports a module added later:\n")
+    sys.stdout.write(problem + "\n")
+    forget(env)
+    track(ledger, key, None, env)
+    return EXIT_NOT_COMMITTED
 
 
 def track(ledger: Path | None, key: str, state: str | None, env: Mapping[str, str]) -> None:

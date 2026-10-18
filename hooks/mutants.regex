@@ -354,3 +354,13 @@ src/mikemol/hooks/gatephase.py|a-time-that-is-not-a-number-is-a-mark|if len\(par
 src/mikemol/hooks/commit_span.py|phase-starts-before-the-lease|start = min\(max\(mark\.at_ns, moments\.lease_ns\), moments\.end_ns\)|start = mark.at_ns|def=phase_pieces
 src/mikemol/hooks/watchdog.py|no-source-note-every-poll|                noted = True|                noted = False|def=watch
 src/mikemol/hooks/watchdog.py|missing-heartbeat-never-counted|            last = started|            return 0|def=watch
+src/mikemol/hooks/watchdog.py|armed-sent-every-poll-never|        if polls %25 ARMED_EVERY_POLLS == 0:|        if False:|def=watch
+src/mikemol/hooks/watchdog.py|armed-sent-without-a-store|    if program is None or not env\.get\(ENDPOINTS_ENV\):|    if program is None:|def=armed_publisher
+src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
+src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
+src/mikemol/hooks/hold_lift.py|a-verdict-that-is-not-ok-lifts|    if not isinstance\(verdict, dict\) or cast\("dict\[str, object\]", verdict\)\.get\("ok"\) is not True:|    if not isinstance(verdict, dict) or cast("dict[str, object]", verdict).get("ok") is None:|def=verifies
+src/mikemol/hooks/hold_lift.py|symbol-matched-as-a-prefix|    pattern = rf"\\b\{re\.escape\(symbol\)\}\\b"|    pattern = re.escape(symbol)|def=verifies
+src/mikemol/hooks/standing_facts.py|lifted-rows-stay-held|row\.get\("blocked_kind"\) == "human" and not check\(row\):|row.get("blocked_kind") == "human":|def=held_symbols
+src/mikemol/hooks/stackimports.py|same-entry-counted-as-later|                later = added\.get\(module, -1\) > place|                later = added.get(module, -1) >= place|def=findings
+src/mikemol/hooks/stackimports.py|head-module-refused|                if later and not in_head\(module\):|                if later:|def=findings
+src/mikemol/hooks/stackimports.py|names-from-a-package-not-read|            found\.update\(str\(root / base / \(alias\.name \+ "\.py"\)\) for alias in node\.names\)|            pass|def=candidates

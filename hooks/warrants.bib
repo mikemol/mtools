@@ -11390,3 +11390,234 @@
   claim  = {Counting from the start is still a silence measured against the band.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_inside_the_band_does_not_fire},
 }
+
+@misc{hooks-watchdog-watch-announces-it-is-armed-on-the-first-poll-and-every-few-after,
+  section = {heartbeat},
+  title  = {The armed gauge goes stale when the watchdog dies, so it is refreshed while it runs},
+  claim  = {The armed gauge goes stale when the watchdog dies, so it is refreshed while it runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_watch_announces_it_is_armed_on_the_first_poll_and_every_few_after},
+}
+
+@misc{hooks-watchdog-publisher-sends-one-armed-sample-naming-the-repo,
+  section = {heartbeat},
+  title  = {A detached mikemol-otlp metric, as the commit gauges are sent},
+  claim  = {A detached mikemol-otlp metric, as the commit gauges are sent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_publisher_sends_one_armed_sample_naming_the_repo},
+}
+
+@misc{hooks-watchdog-without-a-store-the-publisher-sends-nothing,
+  section = {heartbeat},
+  title  = {No MIKEMOL_ENDPOINTS means nowhere to send, and the watch goes on},
+  claim  = {No MIKEMOL_ENDPOINTS means nowhere to send, and the watch goes on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_without_a_store_the_publisher_sends_nothing},
+}
+
+@misc{hooks-watchdog-publisher-whose-child-cannot-start-never-raises,
+  section = {heartbeat},
+  title  = {A failed start is a missed sample},
+  claim  = {A failed start is a missed sample.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_publisher_whose_child_cannot_start_never_raises},
+}
+
+@misc{hooks-beat-hook-tool-call-leaves-a-beat-naming-the-tool,
+  section = {heartbeat},
+  title  = {The record is the one the watchdog reads, with the tool the harness reported},
+  claim  = {The record is the one the watchdog reads, with the tool the harness reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_tool_call_leaves_a_beat_naming_the_tool},
+}
+
+@misc{hooks-beat-hook-payloads-cwd-names-the-project-when-the-environment-does-not,
+  section = {heartbeat},
+  title  = {The harness variable wins, and the payload's directory is the fallback},
+  claim  = {The harness variable wins, and the payload's directory is the fallback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_payloads_cwd_names_the_project_when_the_environment_does_not},
+}
+
+@misc{hooks-beat-hook-harness-variable-wins-over-the-payloads-cwd,
+  section = {heartbeat},
+  title  = {Two projects named: the beat lands in the one the harness variable names},
+  claim  = {Two projects named: the beat lands in the one the harness variable names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_harness_variable_wins_over_the_payloads_cwd},
+}
+
+@misc{hooks-beat-hook-payload-that-is-not-json-still-beats-and-exits-zero,
+  section = {heartbeat},
+  title  = {The beat is the call having happened, not what the harness said about it},
+  claim  = {The beat is the call having happened, not what the harness said about it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_payload_that_is_not_json_still_beats_and_exits_zero},
+}
+
+@misc{hooks-beat-hook-project-with-no-git-directory-is-skipped-quietly,
+  section = {heartbeat},
+  title  = {A worktree's .git is a file, and nothing is written or raised},
+  claim  = {A worktree's .git is a file, and nothing is written or raised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_project_with_no_git_directory_is_skipped_quietly},
+}
+
+@misc{hooks-beat-hook-no-project-at-all-is-a-no-op,
+  section = {heartbeat},
+  title  = {Neither the environment nor the payload names one},
+  claim  = {Neither the environment nor the payload names one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_no_project_at_all_is_a_no_op},
+}
+
+@misc{hooks-beat-hook-argument-is-refused-as-every-hook-refuses-it,
+  section = {heartbeat},
+  title  = {A mistyped invocation must not read as one that ran},
+  claim  = {A mistyped invocation must not read as one that ran.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_an_argument_is_refused_as_every_hook_refuses_it},
+}
+
+@misc{hooks-hold-lift-writers-warrant-shape-yields-the-cited-path-uuid-and-line,
+  section = {hold_lift},
+  title  = {The record is found from what the writer stores, not from its stored command},
+  claim  = {The record is found from what the writer stores, not from its stored command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_the_writers_warrant_shape_yields_the_cited_path_uuid_and_line},
+}
+
+@misc{hooks-hold-lift-warrant-not-shaped-as-the-writer-writes-it-cites-nothing,
+  section = {hold_lift},
+  title  = {Anything else is not a warrant to lift on},
+  claim  = {Anything else is not a warrant to lift on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_warrant_not_shaped_as_the_writer_writes_it_cites_nothing},
+}
+
+@misc{hooks-hold-lift-human-record-naming-the-card-lifts-it,
+  section = {hold_lift},
+  title  = {Origin human by the reader's own verdict, and the same line names the symbol},
+  claim  = {Origin human by the reader's own verdict, and the same line names the symbol.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_human_record_naming_the_card_lifts_it},
+}
+
+@misc{hooks-hold-lift-command-stored-in-the-warrant-is-never-run,
+  section = {hold_lift},
+  title  = {A queue file is editable by any session, so only this module's own reader runs},
+  claim  = {A queue file is editable by any session, so only this module's own reader runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_the_command_stored_in_the_warrant_is_never_run},
+}
+
+@misc{hooks-hold-lift-record-the-reader-will-not-verify-as-human-does-not-lift,
+  section = {hold_lift},
+  title  = {A tool result or a peer's message fails --verify, and the hold stays},
+  claim  = {A tool result or a peer's message fails --verify, and the hold stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_record_the_reader_will_not_verify_as_human_does_not_lift},
+}
+
+@misc{hooks-hold-lift-verdict-that-is-not-ok-does-not-lift,
+  section = {hold_lift},
+  title  = {Exit zero is not enough: the verdict must say ok},
+  claim  = {Exit zero is not enough: the verdict must say ok.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_verdict_that_is_not_ok_does_not_lift},
+}
+
+@misc{hooks-hold-lift-human-record-that-names-another-card-does-not-lift,
+  section = {hold_lift},
+  title  = {The line must match this card's symbol, so a lift for W9 cannot free W1510},
+  claim  = {The line must match this card's symbol, so a lift for W9 cannot free W1510.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_human_record_that_names_another_card_does_not_lift},
+}
+
+@misc{hooks-hold-lift-symbol-is-matched-whole-not-as-a-prefix,
+  section = {hold_lift},
+  title  = {W15 must not be freed by a record that names W1510: the pattern is anchored by word},
+  claim  = {W15 must not be freed by a record that names W1510: the pattern is anchored by word.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_symbol_is_matched_whole_not_as_a_prefix},
+}
+
+@misc{hooks-hold-lift-no-reader-leaves-every-hold-held,
+  section = {hold_lift},
+  title  = {A hook that cannot read the record must not lift on faith},
+  claim  = {A hook that cannot read the record must not lift on faith.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_no_reader_leaves_every_hold_held},
+}
+
+@misc{hooks-hold-lift-row-with-no-warrant-is-not-lifted,
+  section = {hold_lift},
+  title  = {The ordinary hold: nothing to verify},
+  claim  = {The ordinary hold: nothing to verify.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_a_row_with_no_warrant_is_not_lifted},
+}
+
+@misc{hooks-hold-lift-held-symbols-leaves-out-a-row-whose-warrant-lifts-it,
+  section = {hold_lift},
+  title  = {Standing 5 reads this set, so the writer may then change the lifted row},
+  claim  = {Standing 5 reads this set, so the writer may then change the lifted row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_held_symbols_leaves_out_a_row_whose_warrant_lifts_it},
+}
+
+@misc{hooks-stackimports-file-that-imports-a-module-only-a-later-entry-adds-is-a-finding,
+  section = {stackimports},
+  title  = {The W1520 shape: cli.py frozen first, watchdogcmd.py added last},
+  claim  = {The W1520 shape: cli.py frozen first, watchdogcmd.py added last.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_a_file_that_imports_a_module_only_a_later_entry_adds_is_a_finding},
+}
+
+@misc{hooks-stackimports-modules-first-is-sound,
+  section = {stackimports},
+  title  = {The same two files in the other order land in order},
+  claim  = {The same two files in the other order land in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_modules_first_is_sound},
+}
+
+@misc{hooks-stackimports-module-in-head-is-not-a-finding,
+  section = {stackimports},
+  title  = {HEAD already carries it, so the later entry only changes it},
+  claim  = {HEAD already carries it, so the later entry only changes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_a_module_in_head_is_not_a_finding},
+}
+
+@misc{hooks-stackimports-same-entry-may-add-both,
+  section = {stackimports},
+  title  = {One commit carries the importer and the module together},
+  claim  = {One commit carries the importer and the module together.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_the_same_entry_may_add_both},
+}
+
+@misc{hooks-stackimports-name-that-is-not-a-file-is-never-a-finding,
+  section = {stackimports},
+  title  = {A class imported from the package is not a module the stack adds},
+  claim  = {A class imported from the package is not a module the stack adds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_a_name_that_is_not_a_file_is_never_a_finding},
+}
+
+@misc{hooks-stackimports-from-module-and-plain-import-spellings-are-read,
+  section = {stackimports},
+  title  = {Both a from-module import and a plain dotted import name the file},
+  claim  = {Both a from-module import and a plain dotted import name the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_the_from_module_and_plain_import_spellings_are_read},
+}
+
+@misc{hooks-stackimports-import-from-another-package-is-ignored,
+  section = {stackimports},
+  title  = {Only the file's own top-level package is judged},
+  claim  = {Only the file's own top-level package is judged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_an_import_from_another_package_is_ignored},
+}
+
+@misc{hooks-stackimports-file-outside-src-a-deletion-and-unparsable-text-are-skipped,
+  section = {stackimports},
+  title  = {None of these can be judged, so none is refused},
+  claim  = {None of these can be judged, so none is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_a_file_outside_src_a_deletion_and_unparsable_text_are_skipped},
+}
+
+@misc{hooks-stackimports-blob-that-cannot-be-read-is-skipped,
+  section = {stackimports},
+  title  = {A missing object is the gate's to report},
+  claim  = {A missing object is the gate's to report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_a_blob_that_cannot_be_read_is_skipped},
+}
+
+@misc{hooks-stackimports-refusal-reads-the-snapshot-and-names-the-findings,
+  section = {stackimports},
+  title  = {The whole submit-time path: the stack file, the frozen snapshot, git for the blobs},
+  claim  = {The whole submit-time path: the stack file, the frozen snapshot, git for the blobs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_refusal_reads_the_snapshot_and_names_the_findings},
+}
+
+@misc{hooks-stackimports-refusal-is-none-for-a-sound-order-or-no-snapshot,
+  section = {stackimports},
+  title  = {Modules first passes, and a stack with no snapshot is left to the gate},
+  claim  = {Modules first passes, and a stack with no snapshot is left to the gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_refusal_is_none_for_a_sound_order_or_no_snapshot},
+}
