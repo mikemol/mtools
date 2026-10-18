@@ -62,6 +62,28 @@ def test_a_quote_on_a_line_that_says_it_was_relayed_is_a_relayed_claim() -> None
     assert found[-1].text == "a relayed passage that is long enough to count"
 
 
+def test_a_stray_mark_does_not_turn_the_words_between_two_quotes_into_a_quote() -> None:
+    """The words BETWEEN a closing mark and the next opening mark are not a quote."""
+    stray = 'operator said foo" means it is the host\'s. It is never "kept" at all'
+    assert memclaims.first_quote(stray) is None
+    pair = 'operator: "Those are inherently unsafe." means it is the host\'s. It is never "x"'
+    assert memclaims.first_quote(pair) == "Those are inherently unsafe."
+
+
+def test_curly_and_escaped_quote_marks_read_as_plain_ones() -> None:
+    """A transcript and a note spell the same words with different marks."""
+    curly = "operator said “Please avoid wall-clock timeouts.” once"
+    assert memclaims.first_quote(curly) == "Please avoid wall-clock timeouts."
+    escaped = 'operator rule \\"Please avoid wall-clock timeouts\\" (2026-09-23)'
+    assert memclaims.first_quote(escaped) == "Please avoid wall-clock timeouts"
+
+
+def test_a_short_quote_is_not_a_claim_and_the_next_long_one_is() -> None:
+    """Under twenty characters is a word in quotes, not an utterance; the scan goes on."""
+    line = 'operator said "no" and then "Return to the no-swarm rule please." fin'
+    assert memclaims.first_quote(line) == "Return to the no-swarm rule please."
+
+
 def test_a_line_with_a_quote_and_a_date_is_one_claim_never_two() -> None:
     """The quote wins, so the same line is not listed again as a ruling."""
     found = memclaims.claims('operator 2026-10-02: "I do not want one waypoint per tick."\n')
