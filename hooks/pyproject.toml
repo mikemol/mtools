@@ -137,6 +137,7 @@ mikemol-websubset = "mikemol.hooks.websubset_cli:main"
 # `mikemol-hook-…`: a maintainer or a consumer's gate runs it, no harness wires it.
 mikemol-codon-probe = "mikemol.hooks.codon_probe:main"
 mikemol-watchdog = "mikemol.hooks.watchdog:main"
+mikemol-hook-beat = "mikemol.hooks.beat:main"
 mikemol-wheel = "mikemol.hooks.wheel:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").
@@ -354,6 +355,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # shell, and the count has one definition because the writer is the only thing that answers it.
 "src/mikemol/hooks/watchdog.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
+# ⚑ ASKING THE TRANSCRIPT READER WHETHER A WARRANT'S RECORD HOLDS IS THIS MODULE'S ONE SUBPROCESS
+# (W1525): the argv is the reader this module finds by name and fixed flags, with a path, a uuid
+# and a line taken from the warrant as arguments; nothing runs through a shell, and the command a
+# warrant stores is never run.
+"src/mikemol/hooks/hold_lift.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+
 # ⚑⚑ THE SAME RULE, THE SAME REASON, A SECOND NAMED FILE. `test_adoption.py`'s subject is what a
 # real checkout produces WHEN INSTALLED, so building venvs and installing wheels is the case
 # rather than a helper around it. ⚑ MEASURED: every argument is a literal or a path this module
@@ -546,7 +553,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # resolved by `shutil.which` (absent → the fact is left out); the argv is module constants plus the
 # payload's cwd as ONE word after `-C`. Never through a shell. Its witnesses build decoy
 # repositories under tmp_path and execute the launcher, which is the case: the same reason.
-"src/mikemol/hooks/standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"src/mikemol/hooks/standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "import-outside-top-level"]
 "tests/test_standing_facts.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # W513: the rule-8 Stop launcher's witnesses execute it end to end, the same reason.
 "tests/test_standing_stop_launcher.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

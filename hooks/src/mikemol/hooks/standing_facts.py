@@ -26,6 +26,7 @@ import os
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable, Mapping
 from pathlib import Path
 
 from mikemol.hooks.payload import as_record, text_of
@@ -91,8 +92,15 @@ def queue_doc(state: Path) -> dict[str, object] | None:
     return as_record(raw)
 
 
-def held_symbols(state: Path) -> list[str] | None:
+def held_symbols(
+    state: Path,
+    lifts: Callable[[Mapping[str, object]], bool] | None = None,
+) -> list[str] | None:
     """Return the symbols blocked on a human in a queue file, or None when it cannot be read.
+
+    ⚑ A HOLD THE OPERATOR HAS LIFTED IN THEIR OWN VERIFIED WORDS IS NOT HELD (W1525): a card whose
+    warrant verifies now as origin human and names it is left out, so the policy lets the writer
+    change it. The signed lift still works as it did.
 
     Returns:
         the held symbols, sorted; None for a missing or malformed queue.
@@ -104,10 +112,21 @@ def held_symbols(state: Path) -> list[str] | None:
     rows = doc.get("waypoints")
     if not isinstance(rows, list):
         return None
+
+    def check(row: Mapping[str, object]) -> bool:
+        if lifts is not None:
+            return lifts(row)
+        # Imported here, not at the top: a built hook venv links the modules that existed when it
+        # was built, and a module-level import of a newer one stops the gate's own bazel wrapper
+        # from starting, so no bazel call could ever rebuild the venv that lacks it.
+        from mikemol.hooks import hold_lift
+
+        return hold_lift.lifted(row)
+
     held: list[str] = []
     for item in rows:
         row = as_record(item)
-        if row.get("status") == "blocked" and row.get("blocked_kind") == "human":
+        if row.get("status") == "blocked" and row.get("blocked_kind") == "human" and not check(row):
             held.append(text_of(row.get("symbol")))
     return sorted(held)
 
