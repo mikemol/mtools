@@ -60,6 +60,16 @@ src/mikemol/buildtel/bb_targets.py|short-listing-reads-as-complete|        retur
 src/mikemol/buildtel/bb_targets.py|every-group-named-as-short|self\.groups if g\.short\(\)|self.groups if True|def=Report.verdict
 src/mikemol/buildtel/bb_targets.py|partial-rows-under-tests|        "tests" if whole else "observed_only": rows,|        "tests": rows,|def=main
 
+# targettimes.py (W1572): an id once, the invocation's coverage on every row, a link refused, one dead
+# invocation does not stop the rest, and a log that names none says so.
+src/mikemol/buildtel/targettimes.py|duplicate-id-fetched-twice|    return list\(seen\)|    return [m.group(1) for m in _INVOCATION.finditer(text)]|def=invocation_ids
+src/mikemol/buildtel/targettimes.py|coverage-lost-from-rows|    whole = report\.complete\(\)|    whole = True|def=rows_of
+src/mikemol/buildtel/targettimes.py|symlinked-log-followed|    if path\.is_symlink\(\):|    if False:|def=main
+src/mikemol/buildtel/targettimes.py|dead-invocation-stops-the-rest|            continue|            break|def=main
+src/mikemol/buildtel/targettimes.py|flag-taken-as-a-log| or args\[0\]\.startswith\("-"\)||def=main
+src/mikemol/buildtel/targettimes.py|unreachable-exit-lost|            code = EXIT_UNREACHABLE|            code = 0|def=main
+src/mikemol/buildtel/targettimes.py|empty-log-not-named|    if not ids:|    if False:|def=main
+
 # image_digest.py `digest`: `absent` is a stable answer for everything but an unknown image name.
 src/mikemol/buildtel/image_digest.py|unknown-image-accepted|if image not in IMAGES:|if False:|def=digest
 src/mikemol/buildtel/image_digest.py|missing-query-run-anyway|if not query\.is_file\(\) or not python\.is_file\(\):|if False:|def=digest

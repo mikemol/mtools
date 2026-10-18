@@ -1015,3 +1015,59 @@
   claim  = {github-8f's rule: a partial listing has no `tests` row to read as the slowest.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_an_incomplete_report_names_no_maximum_and_prints_its_rows_as_observed_only},
 }
+
+@misc{buildtel-targettimes-invocation-ids-are-taken-in-order-once-and-a-near-miss-is-ignored,
+  section = {targettimes},
+  title  = {Both spellings of the URL in a log name one id once; text that is not a uuid is skipped},
+  claim  = {Both spellings of the URL in a log name one id once; text that is not a uuid is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_invocation_ids_are_taken_in_order_once_and_a_near_miss_is_ignored},
+}
+
+@misc{buildtel-targettimes-row-per-test-target-carries-the-invocation-and-its-coverage,
+  section = {targettimes},
+  title  = {A complete invocation marks every row complete; a short one marks every row incomplete},
+  claim  = {A complete invocation marks every row complete; a short one marks every row incomplete.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_a_row_per_test_target_carries_the_invocation_and_its_coverage},
+}
+
+@misc{buildtel-targettimes-rows-are-the-whole-listing-not-the-report-cut-to-thirty,
+  section = {targettimes},
+  title  = {The table keeps every test, where the report prints only the longest thirty},
+  claim  = {The table keeps every test, where the report prints only the longest thirty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_rows_are_the_whole_listing_not_the_report_cut_to_thirty},
+}
+
+@misc{buildtel-targettimes-main-prints-one-json-line-per-row-for-every-invocation-the-log-names,
+  section = {targettimes},
+  title  = {The log is read, each id is fetched, and the rows come out as JSON lines},
+  claim  = {The log is read, each id is fetched, and the rows come out as JSON lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_main_prints_one_json_line_per_row_for_every_invocation_the_log_names},
+}
+
+@misc{buildtel-targettimes-unreachable-invocation-is-named-and-the-others-still-print,
+  section = {targettimes},
+  title  = {One dead id exits 3 after the rest are printed, never a traceback},
+  claim  = {One dead id exits 3 after the rest are printed, never a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_an_unreachable_invocation_is_named_and_the_others_still_print},
+}
+
+@misc{buildtel-targettimes-log-that-names-no-invocation-prints-nothing-and-says-so,
+  section = {targettimes},
+  title  = {Silence would read as an empty table, so the log is named},
+  claim  = {Silence would read as an empty table, so the log is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_a_log_that_names_no_invocation_prints_nothing_and_says_so},
+}
+
+@misc{buildtel-targettimes-symlinked-log-is-refused-not-followed,
+  section = {targettimes},
+  title  = {A link is made only to prove the refusal, inside tmp_path (operator 2026-10-02)},
+  claim  = {A link is made only to prove the refusal, inside tmp_path (operator 2026-10-02).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_a_symlinked_log_is_refused_not_followed},
+}
+
+@misc{buildtel-targettimes-main-refuses-anything-but-one-log,
+  section = {targettimes},
+  title  = {No operand, a flag, or two operands is a usage error: exit 2 and the usage line},
+  claim  = {No operand, a flag, or two operands is a usage error: exit 2 and the usage line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_main_refuses_anything_but_one_log},
+}
