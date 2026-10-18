@@ -718,6 +718,42 @@ def test_plan_mode_prints_the_grid_size_and_runs_no_suite(
     assert seen == []
 
 
+def test_lint_mode_admits_a_declaration_that_plants_and_runs_no_suite(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W1176: MUTATE_LINT=1 on a clean declaration says nothing, exits 0 and starts no suite."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    seen = _seam(monkeypatch, 1, _FAILED)
+    monkeypatch.setenv("MUTATE_LINT", "1")
+    assert _run_main(grid) == 0
+    assert not capsys.readouterr().err
+    assert seen == []
+
+
+def test_lint_mode_names_each_declaration_the_grid_would_error_or_leave_unapplied(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W1176: a missing module, a stale pattern and an unparsable rewrite are each named."""
+    bad = (
+        "src/ghost.py|no-module|return 1|return 2|\n"
+        "src/mod.py|stale|nothing-here|x|\n"
+        "src/mod.py|breaks|return|return (|\n"
+    )
+    grid = _declared_grid(tmp_path, bad)
+    seen = _seam(monkeypatch, 0, _PASSED)
+    monkeypatch.setenv("MUTATE_LINT", "1")
+    assert _run_main(grid) == 1
+    err = capsys.readouterr().err
+    assert "no-module: src/ghost.py is not a file" in err
+    assert "stale: the pattern matches nothing in its scope" in err
+    assert "breaks:" in err
+    assert seen == []
+
+
 def test_plan_line_counts_mutable_sites_without_the_unreachable_ones() -> None:
     """Sites that cannot be mutated do not count toward the cost of a grid."""
     line = mutate_runner.plan_line("d", ["a", "b", "c"], ["c"], 2)

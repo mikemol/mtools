@@ -837,6 +837,35 @@ def _plan(
     return attempted, unreachable, jobs
 
 
+def lint_declared(dist: pathlib.Path, declared: list[Declared]) -> int:
+    """Check every declared defect plants, without running a suite: `MUTATE_LINT=1` (W1176).
+
+    A declaration the grid would report as errored or unapplied is found here in a second, not in
+    a gate: the module is not a file, the rewrite leaves source that does not parse, or the pattern
+    matches nothing in its scope. The line's format was already checked when it was read.
+
+    Returns:
+        0 when every declaration plants, 1 after naming each one that does not on stderr.
+
+    """
+    problems: list[str] = []
+    for item in declared:
+        path = dist / item.module
+        if not path.is_file():
+            problems.append(f"{item.label}: {item.module} is not a file")
+            continue
+        try:
+            planted = plant(path.read_text(encoding="utf-8"), item.spec)
+        except ValueError as exc:
+            problems.append(f"{item.label}: {exc}")
+            continue
+        if planted is None:
+            problems.append(f"{item.label}: the pattern matches nothing in its scope")
+    for problem in problems:
+        sys.stderr.write(f"mutate: {problem}\n")
+    return 1 if problems else 0
+
+
 def main(argv: list[str]) -> int:
     """Run the grid over one distribution and report the three categories by name.
 
@@ -889,6 +918,8 @@ def main(argv: list[str]) -> int:
     if os.environ.get("MUTATE_PLAN"):
         sys.stdout.write(plan_line(grid.dist.name, attempted, unreachable, len(declared)))
         return 0
+    if os.environ.get("MUTATE_LINT"):
+        return lint_declared(grid.dist, declared)
     verdicts, regex = _run_all(
         grid,
         [m for _site, m in jobs],

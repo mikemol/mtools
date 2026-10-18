@@ -273,3 +273,17 @@
   claim  = {A torn or wrongly shaped file is a missing graph, never a narrowing.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_graph_that_is_not_json_or_not_a_mapping_runs_everything},
 }
+
+@misc{root-mutate-runner-lint-mode-admits-a-declaration-that-plants-and-runs-no-suite,
+  section = {mutate_runner},
+  title  = {W1176: MUTATE_LINT=1 on a clean declaration says nothing, exits 0 and starts no suite},
+  claim  = {W1176: MUTATE_LINT=1 on a clean declaration says nothing, exits 0 and starts no suite.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_lint_mode_admits_a_declaration_that_plants_and_runs_no_suite},
+}
+
+@misc{root-mutate-runner-lint-mode-names-each-declaration-the-grid-would-error-or-leave-unapplied,
+  section = {mutate_runner},
+  title  = {W1176: a missing module, a stale pattern and an unparsable rewrite are each named},
+  claim  = {W1176: a missing module, a stale pattern and an unparsable rewrite are each named.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_lint_mode_names_each_declaration_the_grid_would_error_or_leave_unapplied},
+}
