@@ -73,6 +73,14 @@
             "command": "DEBTPLAN_BIN=\"$CLAUDE_PROJECT_DIR/debtplan/.venv/bin/mikemol-debtplan\" \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-pycheck-advise\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-beat\""
+          }
+        ]
       }
     ],
     "PostToolUseFailure": [
@@ -82,6 +90,14 @@
           {
             "type": "command",
             "command": "BUILDLOG_BIN=\"$CLAUDE_PROJECT_DIR/bazel-bin/buildtel/.venv/bin/mikemol-buildlog\" \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-build-failure\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-beat\""
           }
         ]
       }
