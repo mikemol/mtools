@@ -86,13 +86,16 @@ def test_each_non_blank_line_arrives_with_its_fields_severity_and_one_shared_non
 
 
 def test_no_url_and_a_malformed_field_are_usage_refusals_that_send_nothing(
-    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """The control: exit 2 for a missing URL and for a `--field` with no `=`; nothing is sent."""
     monkeypatch.delenv(cli.URL_ENV, raising=False)
     # ⚑ HERMETIC AGAINST THE HOST (found 2026-10-17): with MIKEMOL_ENDPOINTS in the caller's
     # environment this test resolved the real logs store, SENT a record to it and failed.
+    # ⚑ AND AGAINST THE HOST'S FILE (W1528, 2026-10-18): with the variable unset the resolver reads
+    # $HOME/.config/mikemol/endpoints.json, so HOME is an empty directory here.
     monkeypatch.delenv(endpoints.ENV, raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
     base = ["log", "--service", "svc", "--namespace", "mtools"]
     assert cli.main(base, io.StringIO("x\n")) == _USAGE
     assert (

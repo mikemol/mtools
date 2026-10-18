@@ -26,6 +26,7 @@ from mikemol.otlp import cli, sender, tracecmd
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from pathlib import Path
 
 
 Doc = dict[str, object]
@@ -140,10 +141,12 @@ def test_an_answer_without_the_spans_own_id_is_not_a_witness() -> None:
 
 
 def test_no_destination_is_a_usage_refusal(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
 ) -> None:
     """With no --url and no endpoints file the command refuses, naming the endpoint."""
     monkeypatch.delenv("MIKEMOL_ENDPOINTS", raising=False)
+    # The resolver falls back to $HOME/.config/mikemol/endpoints.json (W1528): an empty HOME.
+    monkeypatch.setenv("HOME", str(tmp_path))
     argv = ["trace", "--service", "s", "--namespace", "n", "--name", "x"]
     assert cli.main(argv) == cli.EXIT_USAGE
     assert tracecmd.ENDPOINT in capsys.readouterr().err

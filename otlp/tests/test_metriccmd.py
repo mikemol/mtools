@@ -25,6 +25,7 @@ from mikemol.otlp import cli, metriccmd, sender
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from pathlib import Path
 
     import pytest
 
@@ -113,10 +114,12 @@ def test_a_store_that_refuses_the_sample_is_a_failed_send(
 
 
 def test_no_destination_is_a_usage_refusal(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
 ) -> None:
     """With no --url and no endpoints file the command refuses, naming the endpoint."""
     monkeypatch.delenv("MIKEMOL_ENDPOINTS", raising=False)
+    # The resolver falls back to $HOME/.config/mikemol/endpoints.json (W1528): an empty HOME.
+    monkeypatch.setenv("HOME", str(tmp_path))
     argv = ["metric", "--service", "s", "--namespace", "n", "--name", "x", "--value", "1"]
     assert cli.main(argv) == cli.EXIT_USAGE
     assert metriccmd.ENDPOINT in capsys.readouterr().err
