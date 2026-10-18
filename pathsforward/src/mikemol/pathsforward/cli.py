@@ -17,6 +17,7 @@ edit, bad arguments) · 3 lock held by another · 4 hash divergence (the FILE wi
 import argparse
 import json
 import os
+import shutil
 import socket
 import sys
 import time
@@ -48,6 +49,7 @@ from mikemol.pathsforward import (
     opa_eval,
     ops,
     outcomes,
+    promptwatch,
     refusal_record,
     render,
     selftest,
@@ -58,6 +60,7 @@ from mikemol.pathsforward import (
     triage,
     vtodo,
     warrant,
+    watchdogcmd,
 )
 from mikemol.pathsforward.advice import close_applied as close_advice
 from mikemol.pathsforward.advice import counts as count_advice
@@ -460,6 +463,11 @@ _LEDGER_ARGS = ("SYMBOL", "OUTCOME", "MECHANISM", "NOTE")
 # and is translated to NO_SYMBOL in `_ledger_mode`, so the ledger's own format never changes.
 _QUEUE_SYMBOL = "-"
 _DEFAULT_KIND = "tick"
+# ⚑ THE ONLY STATUSES A BULK CALL SETS (W1520): ready to blocked and blocked to ready, with the
+# blocker named.
+# `done` needs each card's own evidence and `working` comes per card from the mechanical marks, so
+# neither belongs in a call that changes many cards at once.
+_BULK_STATUSES = frozenset({"blocked", "ready"})
 
 # ⚑⚑ EACH MODE NAMES THE FIELD FLAGS IT READS, AND ANY OTHER IS REFUSED (nemik, 2026-09-25).
 # `--update W49 --enables W46 W35` exited 0 and printed "W49 updated" while never reading enables:
@@ -575,10 +583,11 @@ _APPLIES: dict[str, frozenset[str]] = {
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
     "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader", "root"}),
-    # ⚑ THE FIELDS OF `--update` EXCEPT `status` (a status change takes a lease, once per card) and
-    # `attach` (one file pinned to many cards is a different act), plus `--write`.
+    # ⚑ THE FIELDS OF `--update` EXCEPT `attach` (one file pinned to many cards is a different act),
+    # plus `--write`. `status` is here since W1520 but only ready or blocked (`_BULK_STATUSES`).
     "update_many": frozenset(
         {
+            "status",
             "blocked_on",
             "blocked_kind",
             "next",
@@ -920,7 +929,9 @@ def _parser() -> argparse.ArgumentParser:
             "SYMBOL",
             (
                 "W1384: attach a PROV-O warrant to SYMBOL after reading the transcript record it "
-                "cites (--transcript PATH --uuid UUID [--claim operator] [--line N] [--reader CMD])"
+                "cites (--transcript PATH --uuid UUID [--claim operator] [--line N] "
+                "[--reader CMD]). mikemol-transcriptstruct --human REGEX prints each row's uuid "
+                "and timestamp"
             ),
         ),
         (
@@ -1600,6 +1611,10 @@ def _tick_open(ctx: Ctx) -> int:
         _say(said)
     for said in standing.lines(store.load(ctx.path).doc):
         _say(said)
+    _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], Path.home(), shutil.which))
+    seen = root / ".git" / "mtools" / promptwatch.SEEN_NAME
+    for said in promptwatch.notice(promptwatch.prompt_of(root), seen):
+        _say(said)
     _say(f"tick open as {holder}; close: --ledger ..., --render, --check, --unlock {holder}")
     return code
 
@@ -1788,9 +1803,18 @@ def _update_many(ctx: Ctx) -> int:
     Returns:
         EXIT_OK.
 
+    Raises:
+        RefusedError: when `--status` is neither ready nor blocked.
+
     """
     write = bool(ctx.opts.get("write"))
     upd = _fields_of(ctx)
+    if upd.status is not None and upd.status not in _BULK_STATUSES:
+        msg = (
+            f"--update-many sets only {' or '.join(sorted(_BULK_STATUSES))}, not {upd.status}: "
+            "done needs each card's own evidence and working comes per card from the marks"
+        )
+        raise ops.RefusedError(msg)
 
     skipped: dict[str, str] = {}
     for item in ctx.many("exclude") or ():

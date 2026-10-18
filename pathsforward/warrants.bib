@@ -5888,3 +5888,136 @@
   claim  = {The reader is wider than the writer, which keeps one spelling.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_offset.py -k test_the_writer_still_refuses_an_offset_stamp},
 }
+
+@misc{pathsforward-watchdogcmd-watchdog-on-path-is-used-and-names-the-state-and-the-writer,
+  section = {watchdogcmd},
+  title  = {The writer that printed the command is the one the watchdog asks},
+  claim  = {The writer that printed the command is the one the watchdog asks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_a_watchdog_on_path_is_used_and_names_the_state_and_the_writer},
+}
+
+@misc{pathsforward-watchdogcmd-installed-script-in-the-checkout-comes-next,
+  section = {watchdogcmd},
+  title  = {No PATH entry, but the mtools checkout has the console script},
+  claim  = {No PATH entry, but the mtools checkout has the console script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_installed_script_in_the_checkout_comes_next},
+}
+
+@misc{pathsforward-watchdogcmd-checkouts-interpreter-runs-the-module-before-a-venv-is-rebuilt,
+  section = {watchdogcmd},
+  title  = {The form that works while the console script does not exist yet},
+  claim  = {The form that works while the console script does not exist yet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_checkouts_interpreter_runs_the_module_before_a_venv_is_rebuilt},
+}
+
+@misc{pathsforward-watchdogcmd-no-watchdog-anywhere-prints-no-command,
+  section = {watchdogcmd},
+  title  = {A command that cannot run is worse than none},
+  claim  = {A command that cannot run is worse than none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_no_watchdog_anywhere_prints_no_command},
+}
+
+@misc{pathsforward-watchdogcmd-tick-line-names-the-running-writer-resolved,
+  section = {watchdogcmd},
+  title  = {The watchdog asks the copy of the writer that printed the line},
+  claim  = {The watchdog asks the copy of the writer that printed the line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_tick_line_names_the_running_writer_resolved},
+}
+
+@misc{pathsforward-watchdogcmd-tick-line-says-so-when-no-watchdog-is-found,
+  section = {watchdogcmd},
+  title  = {A missing watchdog shows up in the opening output instead of hiding},
+  claim  = {A missing watchdog shows up in the opening output instead of hiding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_tick_line_says_so_when_no_watchdog_is_found},
+}
+
+@misc{pathsforward-watchdogcmd-tick-open-prints-the-watchdog-line-before-its-closing-line,
+  section = {watchdogcmd},
+  title  = {The line a session copies into a background task is part of the opening output},
+  claim  = {The line a session copies into a background task is part of the opening output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_tick_open_prints_the_watchdog_line_before_its_closing_line},
+}
+
+@misc{pathsforward-bulk-status-dry-run-blocks-nothing,
+  section = {bulk_status},
+  title  = {Without --write the call reports and changes no card},
+  claim  = {Without --write the call reports and changes no card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bulk_status.py -k test_a_dry_run_blocks_nothing},
+}
+
+@misc{pathsforward-bulk-status-write-blocks-every-chosen-card-on-the-named-blocker,
+  section = {bulk_status},
+  title  = {Ready to blocked, three cards, one call, and the card they wait on is left alone},
+  claim  = {Ready to blocked, three cards, one call, and the card they wait on is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bulk_status.py -k test_write_blocks_every_chosen_card_on_the_named_blocker},
+}
+
+@misc{pathsforward-bulk-status-write-releases-blocked-cards-back-to-ready,
+  section = {bulk_status},
+  title  = {Blocked to ready is the other half of the form},
+  claim  = {Blocked to ready is the other half of the form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bulk_status.py -k test_write_releases_blocked_cards_back_to_ready},
+}
+
+@misc{pathsforward-bulk-status-done-and-working-are-refused-in-a-bulk-call,
+  section = {bulk_status},
+  title  = {Done needs each card's evidence and working comes per card from the marks},
+  claim  = {Done needs each card's evidence and working comes per card from the marks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bulk_status.py -k test_done_and_working_are_refused_in_a_bulk_call},
+}
+
+@misc{pathsforward-bulk-status-card-that-cannot-take-the-change-stops-the-whole-call,
+  section = {bulk_status},
+  title  = {All or none: blocking with no blocker named is refused and no card changes},
+  claim  = {All or none: blocking with no blocker named is refused and no card changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bulk_status.py -k test_a_card_that_cannot_take_the_change_stops_the_whole_call},
+}
+
+@misc{pathsforward-bulk-status-unmanifested-selector-takes-only-ready-cards-with-no-manifest,
+  section = {bulk_status},
+  title  = {A ready card that cannot be stacked is blocked on the card that atomizes it (W1523)},
+  claim  = {A ready card that cannot be stacked is blocked on the card that atomizes it (W1523).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bulk_status.py -k test_the_unmanifested_selector_takes_only_ready_cards_with_no_manifest},
+}
+
+@misc{pathsforward-promptwatch-absent-prompt-says-nothing-and-records-nothing,
+  section = {promptwatch},
+  title  = {A repo with no canonical prompt has nothing to watch},
+  claim  = {A repo with no canonical prompt has nothing to watch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_an_absent_prompt_says_nothing_and_records_nothing},
+}
+
+@misc{pathsforward-promptwatch-first-reading-is-recorded-and-said-once,
+  section = {promptwatch},
+  title  = {With no earlier text there is nothing to diff},
+  claim  = {With no earlier text there is nothing to diff.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_the_first_reading_is_recorded_and_said_once},
+}
+
+@misc{pathsforward-promptwatch-changed-prompt-names-the-lines-added-and-removed,
+  section = {promptwatch},
+  title  = {The notice is the difference, so the reader need not find it},
+  claim  = {The notice is the difference, so the reader need not find it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_a_changed_prompt_names_the_lines_added_and_removed},
+}
+
+@misc{pathsforward-promptwatch-change-is-said-once-and-then-remembered,
+  section = {promptwatch},
+  title  = {The next tick sees no change unless the file moves again},
+  claim  = {The next tick sees no change unless the file moves again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_a_change_is_said_once_and_then_remembered},
+}
+
+@misc{pathsforward-promptwatch-long-change-lists-a-few-lines-and-counts-the-rest,
+  section = {promptwatch},
+  title  = {A rewrite does not flood the opening output},
+  claim  = {A rewrite does not flood the opening output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_a_long_change_lists_a_few_lines_and_counts_the_rest},
+}
+
+@misc{pathsforward-promptwatch-tick-open-prints-the-notice-from-the-prompt-above-the-repo,
+  section = {promptwatch},
+  title  = {The canonical file lives in the directory above the repo, as it does under ~/github},
+  claim  = {The canonical file lives in the directory above the repo, as it does under ~/github.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_tick_open_prints_the_notice_from_the_prompt_above_the_repo},
+}

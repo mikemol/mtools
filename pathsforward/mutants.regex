@@ -171,3 +171,11 @@ src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witne
 src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode != "ready_count":|    if True:|def=main
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
+src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = which\(SCRIPT\) or |    found = |def=command
+src/mikemol/pathsforward/watchdogcmd.py|interpreter-fallback-dropped|    elif \(venv_bin / "python"\)\.is_file\(\):|    elif False:|def=command
+src/mikemol/pathsforward/watchdogcmd.py|missing-watchdog-prints-a-command|    if found is None:|    if False:|def=tick_line
+src/mikemol/pathsforward/cli.py|bulk-done-or-working-allowed|    if upd\.status is not None and upd\.status not in _BULK_STATUSES:|    if False:|def=_update_many
+src/mikemol/pathsforward/bulkblock.py|unmanifested-takes-cards-with-a-manifest|                if text\(w, "status"\) == "ready" and not strlist\(w, "manifest"\)|                if text(w, "status") == "ready"|def=select_symbols
+src/mikemol/pathsforward/promptwatch.py|unchanged-prompt-noticed-again|    if before == now:|    if False:|def=notice
+src/mikemol/pathsforward/promptwatch.py|first-reading-diffed-against-nothing|    if before is None:|    if False:|def=notice
+src/mikemol/pathsforward/promptwatch.py|changed-lines-not-capped|    shown = changes\[:SHOWN\]|    shown = changes|def=notice
