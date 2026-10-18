@@ -11798,3 +11798,31 @@
   claim  = {The file exists during the watch and is gone after, whatever the watch returned.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_main_holds_the_pid_file_while_it_watches_and_removes_it_on_exit},
 }
+
+@misc{hooks-beat-hook-dead-watchdog-with-ready-cards-is-named-in-the-next-tool-call,
+  section = {heartbeat},
+  title  = {The restart command and the work to do first come back as additionalContext (W1557)},
+  claim  = {The restart command and the work to do first come back as additionalContext (W1557).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_dead_watchdog_with_ready_cards_is_named_in_the_next_tool_call},
+}
+
+@misc{hooks-beat-hook-live-watchdog-or-a-quiet-queue-says-nothing,
+  section = {heartbeat},
+  title  = {A pid file naming a live process, or no ready cards, leaves the hook silent},
+  claim  = {A pid file naming a live process, or no ready cards, leaves the hook silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_live_watchdog_or_a_quiet_queue_says_nothing},
+}
+
+@misc{hooks-beat-hook-notice-is-given-once-per-interval,
+  section = {heartbeat},
+  title  = {A busy session is not nagged on every call, and is told again after the interval},
+  claim  = {A busy session is not nagged on every call, and is told again after the interval.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_notice_is_given_once_per_interval},
+}
+
+@misc{hooks-beat-hook-repo-with-no-writer-or-no-queue-says-nothing,
+  section = {heartbeat},
+  title  = {Nothing to ask means nothing to report},
+  claim  = {Nothing to ask means nothing to report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_repo_with_no_writer_or_no_queue_says_nothing},
+}

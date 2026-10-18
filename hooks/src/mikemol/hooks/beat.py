@@ -13,9 +13,16 @@ fooled by the background-task notifications and peer messages the harness writes
 while the session is idle, which is why this is the primary signal and a transcript check only a
 second opinion before firing.
 
-⚑ IT NEVER BLOCKS AND NEVER SPEAKS. Exit 0 whatever the payload, the project or the file system is:
-a heartbeat that cannot be written is a missed sample (`heartbeat.try_beat`), and a hook that
-refused a tool call over it would stop the work it exists to witness.
+⚑ IT NEVER BLOCKS. Exit 0 whatever the payload, the project or the file system is: a heartbeat that
+cannot be written is a missed sample (`heartbeat.try_beat`), and a hook that refused a tool call
+over it would stop the work it exists to witness.
+
+⚑ IT SPEAKS IN ONE CASE (W1557, github-8f 2026-10-18): the exit-8 rule lived in a prompt, and
+sessions let their watchdog lapse through a long gate wait while ready cards waited. Prompt text did
+not hold, so the next tool call tells the session. When no live watchdog holds this repo's pid file
+(`watchdog.running`) and the writer counts ready cards, the hook returns `additionalContext` naming
+the restart command and the kinds of work to do first. It asks at most once per `NOTICE_EVERY_S`,
+so a session busy elsewhere is not nagged on every call, and a quiet repo costs one file read.
 
 ⚑ THE PROJECT IS THE ONE THE HARNESS NAMES: `CLAUDE_PROJECT_DIR`, then the payload's `cwd`. A
 project whose `.git` is not a directory (a worktree) is skipped, as the writer's beat is.
@@ -25,17 +32,26 @@ CONSUMED BY: the `PostToolUse` and `PostToolUseFailure` entries of a repo's `.cl
 
 import json
 import os
+import shutil
 import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import TextIO, cast
 
-from mikemol.hooks import heartbeat, hook_argv
+from mikemol.hooks import heartbeat, hook_argv, watchdog
 
 PROG = "mikemol-hook-beat"
 PROJECT_ENV = "CLAUDE_PROJECT_DIR"
 UNKNOWN_TOOL = "tool"
+NOTICE_EVERY_S = 120
+NOTICE_MARK = "watchdog.notice"
+_NS_PER_S = 1_000_000_000
+_WRITER = "mikemol-paths-forward"
+_WORK = (
+    "Then do work: prepare the next stack, triage, atomize coarse cards, add manifests, or "
+    "warrant rulings."
+)
 
 
 def _field(raw: object, key: str) -> str | None:
@@ -67,12 +83,80 @@ def project_of(raw: object, env: Mapping[str, str]) -> Path | None:
     return Path(named) if named else None
 
 
+def writer_of(project: Path) -> str | None:
+    """Find the paths-forward writer this repo uses: its own venv, mtools' dist, then PATH.
+
+    Returns:
+        the writer's path, or None when none exists.
+
+    """
+    for candidate in (
+        project / ".venv" / "bin" / _WRITER,
+        project / "pathsforward" / ".venv" / "bin" / _WRITER,
+    ):
+        if candidate.is_file():
+            return str(candidate)
+    return shutil.which(_WRITER)
+
+
+def _due(git_dir: Path, now_ns: int) -> bool:
+    # True when the last notice is older than the interval, and stamps this one.
+    mark = git_dir / "mtools" / NOTICE_MARK
+    try:
+        if now_ns - mark.stat().st_mtime_ns < NOTICE_EVERY_S * _NS_PER_S:
+            return False
+        mark.touch()
+    except FileNotFoundError:
+        mark.parent.mkdir(parents=True, exist_ok=True)
+        mark.touch()
+    except OSError:
+        return False
+    return True
+
+
+def restart_command(writer: str, state: Path) -> str:
+    """Spell the command that starts this repo's watchdog in the background.
+
+    Returns:
+        the same command the writer's `--watchdog-line` prints: the hooks venv's interpreter under
+        the mtools checkout (this interpreter when that is absent), the module, the state file and
+        the writer.
+
+    """
+    venv = Path.home() / "github" / "mtools" / "hooks" / ".venv" / "bin" / "python"
+    python = str(venv) if venv.is_file() else sys.executable
+    return f"{python} -m mikemol.hooks.watchdog --state {state} --writer {writer}"
+
+
+def notice(project: Path, now_ns: int) -> str | None:
+    """Say what the session should do when its watchdog is gone and cards are waiting.
+
+    Returns:
+        the text for `additionalContext`, or None when a watchdog lives, nothing is ready, the
+        notice was given lately or the writer cannot answer.
+
+    """
+    git_dir = project / ".git"
+    state = project / ".claude" / "paths-forward.json"
+    writer = writer_of(project)
+    if writer is None or not state.is_file() or watchdog.running(git_dir):
+        return None
+    if not _due(git_dir, now_ns):
+        return None
+    waiting = watchdog.ready_from(writer, state)
+    if not waiting:
+        return None
+    head = f"No live watchdog holds this repo's pid file and {waiting} cards are ready."
+    return f"{head} Start it in the background: {restart_command(writer, state)}. {_WORK}"
+
+
 def run(
     stdin: TextIO,
     env: Mapping[str, str],
     now_ns: Callable[[], int] = time.time_ns,
+    out: TextIO | None = None,
 ) -> int:
-    """Leave one beat for the tool call the payload reports.
+    """Leave one beat for the tool call the payload reports, and speak if the watchdog is gone.
 
     Returns:
         0 always.
@@ -85,6 +169,11 @@ def run(
     project = project_of(raw, env)
     if project is not None and (project / ".git").is_dir():
         heartbeat.try_beat(project / ".git", f"hook:{tool_of(raw)}", now_ns())
+        said = notice(project, now_ns())
+        if said is not None:
+            event: dict[str, str] = {"hookEventName": "PostToolUse", "additionalContext": said}
+            body: dict[str, dict[str, str]] = {"hookSpecificOutput": event}
+            (out or sys.stdout).write(json.dumps(body) + "\n")
     return 0
 
 

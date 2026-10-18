@@ -4,11 +4,19 @@
 
 import io
 import json
+import os
+import stat
+import time
 from pathlib import Path
+from typing import cast
 
-from mikemol.hooks import beat, heartbeat, hook_argv
+import pytest
+
+from mikemol.hooks import beat, heartbeat, hook_argv, watchdog
 
 _NOW = 5_000_000_000
+_S = 1_000_000_000
+_READY = 4
 
 
 def _project(tmp_path: Path) -> Path:
@@ -80,3 +88,69 @@ def test_an_argument_is_refused_as_every_hook_refuses_it() -> None:
     """A mistyped invocation must not read as one that ran."""
     refused = beat.main(["mikemol-hook-beat", "--help"])
     assert refused == hook_argv.EXIT_REFUSED
+
+
+def _queue(project: Path, ready: int) -> None:
+    # A repo with a queue file and a writer that answers the ready count, as the watchdog asks it.
+    (project / ".claude").mkdir()
+    (project / ".claude" / "paths-forward.json").write_text("{}", encoding="utf-8")
+    writer = project / ".venv" / "bin" / "mikemol-paths-forward"
+    writer.parent.mkdir(parents=True)
+    writer.write_text(f"#!/bin/sh\necho {ready}\n", encoding="utf-8")
+    writer.chmod(writer.stat().st_mode | stat.S_IXUSR)
+
+
+def _spoken(project: Path, clock: int) -> str:
+    out = io.StringIO()
+    beat.run(_payload(tool_name="Bash"), _env(project), lambda: clock, out)
+    return out.getvalue()
+
+
+def test_a_dead_watchdog_with_ready_cards_is_named_in_the_next_tool_call(tmp_path: Path) -> None:
+    """The restart command and the work to do first come back as additionalContext (W1557)."""
+    project = _project(tmp_path)
+    _queue(project, _READY)
+    loaded = cast("dict[str, dict[str, str]]", json.loads(_spoken(project, _NOW)))
+    body = loaded["hookSpecificOutput"]
+    said = body["additionalContext"]
+    assert body["hookEventName"] == "PostToolUse"
+    assert f"{_READY} cards are ready" in said
+    assert "-m mikemol.hooks.watchdog" in said
+    assert str(project / ".claude" / "paths-forward.json") in said
+    assert "atomize coarse cards" in said
+
+
+def test_a_live_watchdog_or_a_quiet_queue_says_nothing(tmp_path: Path) -> None:
+    """A pid file naming a live process, or no ready cards, leaves the hook silent."""
+    alive = _project(tmp_path / "alive")
+    _queue(alive, _READY)
+    watchdog.claim(alive / ".git", os.getpid())
+    assert not _spoken(alive, _NOW)
+    blocked = _project(tmp_path / "blocked")
+    _queue(blocked, 0)
+    assert not _spoken(blocked, _NOW)
+
+
+def test_the_notice_is_given_once_per_interval(tmp_path: Path) -> None:
+    """A busy session is not nagged on every call, and is told again after the interval."""
+    project = _project(tmp_path)
+    _queue(project, _READY)
+    first = _spoken(project, time.time_ns())
+    soon = _spoken(project, time.time_ns() + _S)
+    later = _spoken(project, time.time_ns() + (beat.NOTICE_EVERY_S + 1) * _S)
+    assert first
+    assert not soon
+    assert later
+
+
+def test_a_repo_with_no_writer_or_no_queue_says_nothing(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Nothing to ask means nothing to report."""
+    monkeypatch.setenv("PATH", str(tmp_path / "empty"))
+    bare = _project(tmp_path / "bare")
+    assert not _spoken(bare, _NOW)
+    queued = _project(tmp_path / "queued")
+    (queued / ".claude").mkdir()
+    (queued / ".claude" / "paths-forward.json").write_text("{}", encoding="utf-8")
+    assert not _spoken(queued, _NOW)

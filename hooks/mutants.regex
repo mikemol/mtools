@@ -361,6 +361,9 @@ src/mikemol/hooks/watchdog.py|stale-pid-file-reads-as-running|    return alive\(
 src/mikemol/hooks/watchdog.py|pid-file-outlives-the-watch|        release\(git_dir, os\.getpid\(\)\)|        pass|def=main
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
+src/mikemol/hooks/beat.py|notice-given-on-every-call|        if now_ns - mark\.stat\(\)\.st_mtime_ns < NOTICE_EVERY_S \* _NS_PER_S:|        if False:|def=_due
+src/mikemol/hooks/beat.py|live-watchdog-still-told|    if writer is None or not state\.is_file\(\) or watchdog\.running\(git_dir\):|    if writer is None or not state.is_file():|def=notice
+src/mikemol/hooks/beat.py|quiet-queue-still-told|    if not waiting:|    if False:|def=notice
 src/mikemol/hooks/hold_lift.py|a-verdict-that-is-not-ok-lifts|    if not isinstance\(verdict, dict\) or cast\("dict\[str, object\]", verdict\)\.get\("ok"\) is not True:|    if not isinstance(verdict, dict) or cast("dict[str, object]", verdict).get("ok") is None:|def=verifies
 src/mikemol/hooks/hold_lift.py|symbol-matched-as-a-prefix|    pattern = rf"\\b\{re\.escape\(symbol\)\}\\b"|    pattern = re.escape(symbol)|def=verifies
 src/mikemol/hooks/standing_facts.py|lifted-rows-stay-held|row\.get\("blocked_kind"\) == "human" and not check\(row\):|row.get("blocked_kind") == "human":|def=held_symbols
