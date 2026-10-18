@@ -24,8 +24,14 @@ from typing import cast
 from mikemol.transcriptstruct.memclaims import Claim
 
 OVERLAP = 3
+SHARE = 0.3
+LONG = 2000
+_PASTED = "<pasted_content"
 UNWARRANTED = "UNWARRANTED"
 WARRANTED = "WARRANTED"
+DATED = "DATED"
+RELAYED = "RELAYED"
+_WORDS_KINDS = frozenset({"quote", "relayed"})
 _WORD = re.compile(r"[a-z]{5,}")
 _SPACE = re.compile(r"\s+")
 _STOP = frozenset(
@@ -77,6 +83,14 @@ def _when(utterance: Utterance) -> str:
     return utterance.at
 
 
+def _pasted(utterance: Utterance) -> bool:
+    return _PASTED in utterance.text or len(utterance.text) > LONG
+
+
+def _rank(scored: tuple[float, Utterance]) -> tuple[float, str]:
+    return scored[0], scored[1].at
+
+
 def normal(text: str) -> str:
     """Lower-case text and collapse every run of whitespace to one space.
 
@@ -102,28 +116,44 @@ def warrant_for(claim: Claim, utterances: list[Utterance]) -> Finding:
     """Find the utterance that carries a claimed quote.
 
     ⚑ ONLY A QUOTE CAN BE FOUND BY ITS WORDS: a ruling claim has none of its own, so it is
-    returned UNWARRANTED for the caller to look up by date and subject.
+    DATED for the caller to look up by date and subject, apart from a quote nobody said. A
+    relayed quote (via a peer, paraphrased) is looked up too, and is RELAYED when no record
+    carries it: testimony, not a miss of the operator's own words (W1549).
 
     Returns:
-        WARRANTED with the earliest matching utterance, else UNWARRANTED with none.
+        WARRANTED with the earliest matching utterance; else UNWARRANTED (a quote), RELAYED (a
+        relayed quote) or DATED (a ruling), each with no record.
 
     """
     wanted = normal(claim.text)
-    if claim.kind == "quote":
+    if claim.kind in _WORDS_KINDS:
         for found in sorted(utterances, key=_when):
             if wanted in normal(found.text):
                 return Finding(claim, WARRANTED, found)
-    return Finding(claim, UNWARRANTED, None)
+    status = {"quote": UNWARRANTED, "relayed": RELAYED}.get(claim.kind, DATED)
+    return Finding(claim, status, None)
 
 
 def superseded_by(
     note_terms: frozenset[str], since: str, utterances: list[Utterance]
 ) -> list[Utterance]:
-    """List the later utterances that share the note's subject, newest first.
+    """List the later utterances that share the note's subject, best first.
+
+    ⚑ SCORED BY THE SHARE OF THE NOTE'S TERMS (github-8f, 2026-10-18, W1548): one huge pasted
+    record matched unrelated notes because it contained everything, so an utterance with a
+    `<pasted_content` block or over `LONG` characters is skipped, and the rest must share at least
+    `OVERLAP` terms AND `SHARE` of the note's terms. Best share first, newest breaking a tie.
 
     Returns:
-        the utterances made after `since` that share `OVERLAP` or more of the note's terms.
+        the utterances made after `since` that clear both bars.
 
     """
-    later = [u for u in utterances if u.at > since and len(note_terms & terms(u.text)) >= OVERLAP]
-    return sorted(later, key=_when, reverse=True)
+    if not note_terms:
+        return []
+    scored = [
+        (len(note_terms & terms(u.text)) / len(note_terms), u)
+        for u in utterances
+        if u.at > since and not _pasted(u)
+    ]
+    kept = [pair for pair in scored if pair[0] * len(note_terms) >= OVERLAP and pair[0] >= SHARE]
+    return [u for _share, u in sorted(kept, key=_rank, reverse=True)]
