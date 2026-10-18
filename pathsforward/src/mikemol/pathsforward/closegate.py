@@ -217,6 +217,23 @@ def rank_check(
     return Verdict(refused=True, lines=(*verdict.lines, why), note="")
 
 
+def roll_note(state: State, ledger: Path | None) -> str:
+    """Say how many cards this tick advanced, for the ledger line of a roll (W1589).
+
+    ⚑ A ROLL IS ALWAYS ALLOWED AND NEVER HIDES A STALL (github-8f, 2026-10-18): it is a cycle
+    boundary, not a stop, so it takes no named block and no threshold; the count of cards the tick
+    advanced goes into its line, so a roll that advanced nothing reads `advanced 0`.
+
+    Returns:
+        `rolled; advanced N`, N being the cards a landed commit carried (every touched card when
+        git cannot be asked, as the close counts).
+
+    """
+    since = tick_start(state, ledger)
+    landed = None if ledger is None else landed_since(ledger.parent.parent, since)
+    return f"rolled; advanced {advanced(state, since, landed)}"
+
+
 def judge(
     state: State,
     blocked_by: str | None = None,
@@ -237,7 +254,10 @@ def judge(
     landed = None if ledger is None else landed_since(ledger.parent.parent, since)
     moved = advanced(state, since, landed)
     open_edits = 0 if landed is None else len(touched(state, since) - landed)
-    edits = f"; {open_edits} touched, none landed" if open_edits else ""
+    # ⚑ THE FIGURE IS THE TOUCHED CARDS NO LANDED COMMIT NAMES, NOT "NOTHING LANDED" (W1588,
+    # github-8f and nemik, 2026-10-18): nemik's close read `advanced 85; 39 touched, none landed`,
+    # and the second half was taken to mean that no commit landed, when 85 cards had.
+    edits = f"; {open_edits} more touched, named by no landed commit" if open_edits else ""
     count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {moved}{edits}"
     if not ready:
         return Verdict(refused=False, lines=(count,), note="")

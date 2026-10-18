@@ -65,4 +65,16 @@ def test_the_close_says_how_many_edits_landed_nothing(
     ledger.parent.mkdir()
     ledger.write_text(_START, encoding="utf-8")
     verdict = closegate.judge(_state("W1", "W2", "W3"), ledger=ledger)
-    assert "this tick advanced 1; 2 touched, none landed" in verdict.lines[0]
+    assert "this tick advanced 1; 2 more touched, named by no landed commit" in verdict.lines[0]
+
+
+def test_a_roll_note_carries_the_count_of_cards_a_landed_commit_carried(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The roll's ledger note is `rolled; advanced N`, N from the same landed-commit count."""
+    monkeypatch.setattr(closegate, "landed_since", _only_w1)
+    ledger = tmp_path / ".claude" / "paths-forward.ledger"
+    ledger.parent.mkdir()
+    ledger.write_text(_START, encoding="utf-8")
+    assert closegate.roll_note(_state("W1", "W2", "W3"), ledger) == "rolled; advanced 1"
+    assert closegate.roll_note(_state("W2", "W3"), ledger) == "rolled; advanced 0"
