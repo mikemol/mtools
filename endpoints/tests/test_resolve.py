@@ -45,6 +45,36 @@ def test_a_file_that_is_not_an_object_of_urls_is_no_answer(tmp_path: Path) -> No
     assert resolve.base_url("a", _env(tmp_path, '{"a": 7}')) is None
 
 
+def _home_file(tmp_path: Path, text: str) -> dict[str, str]:
+    path = tmp_path / resolve.HOME_FILE
+    path.parent.mkdir(parents=True)
+    path.write_text(text, encoding="utf-8")
+    return {"HOME": str(tmp_path)}
+
+
+def test_an_unset_variable_falls_back_to_the_file_under_home(tmp_path: Path) -> None:
+    """W1528: a session with no MIKEMOL_ENDPOINTS reads $HOME/.config/mikemol/endpoints.json."""
+    env = _home_file(tmp_path, '{"a": "http://h:1"}')
+    assert resolve.base_url("a", env) == "http://h:1"
+    assert resolve.base_url("a", {**env, resolve.ENV: ""}) == "http://h:1"
+
+
+def test_the_variable_wins_over_the_file_under_home(tmp_path: Path) -> None:
+    """W1528: a named path is never overridden by the default, even when it holds no answer."""
+    env = {
+        **_home_file(tmp_path, '{"a": "http://home:1"}'),
+        **_env(tmp_path, '{"a": "http://v:2"}'),
+    }
+    assert resolve.base_url("a", env) == "http://v:2"
+    assert resolve.base_url("a", {**env, resolve.ENV: str(tmp_path / "absent.json")}) is None
+
+
+def test_no_home_and_no_file_under_it_are_no_answer(tmp_path: Path) -> None:
+    """W1528: an environment without HOME, or with a HOME that has no file, resolves nothing."""
+    assert resolve.endpoints_path({}) is None
+    assert resolve.base_url("a", {"HOME": str(tmp_path)}) is None
+
+
 def test_a_scheme_other_than_http_is_no_answer_so_no_local_file_is_read(tmp_path: Path) -> None:
     """A host-supplied file is still data: file and ftp URLs are refused as None."""
     env = _env(tmp_path, '{"f": "file:///etc/passwd", "g": "ftp://h", "h": "noscheme"}')

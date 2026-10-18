@@ -23,18 +23,38 @@ from typing import cast
 from urllib.parse import urlsplit
 
 ENV = "MIKEMOL_ENDPOINTS"
+HOME_FILE = ".config/mikemol/endpoints.json"
 SCHEMES = frozenset({"http", "https"})
+
+
+def endpoints_path(environ: Mapping[str, str]) -> str | None:
+    """Name the host's endpoints file: the variable's path, else the file luthen publishes (W1528).
+
+    ⚑ A SESSION CARRIES NO `MIKEMOL_ENDPOINTS` (luthen-observability, 2026-10-18: no mikemol.*
+    series reached the store from any session), so an unset variable falls back to
+    `$HOME/.config/mikemol/endpoints.json`, the file the host already writes. `HOME` is read from
+    the environment passed in, never from the process, so a caller with no `HOME` gets no answer.
+
+    Returns:
+        the path, or None when neither the variable nor `HOME` is set.
+
+    """
+    path = environ.get(ENV)
+    if path:
+        return path
+    home = environ.get("HOME")
+    return str(Path(home) / HOME_FILE) if home else None
 
 
 def base_url(name: str, environ: Mapping[str, str]) -> str | None:
     """Resolve an endpoint name through the host's file.
 
     Returns:
-        the base URL, or None when the variable is unset, the file is unreadable, it holds no such
+        the base URL, or None when no endpoints file is named, it is unreadable, it holds no such
         name or the value is not an http(s) URL.
 
     """
-    path = environ.get(ENV)
+    path = endpoints_path(environ)
     if not path:
         return None
     try:

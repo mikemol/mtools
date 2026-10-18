@@ -54,3 +54,24 @@
   claim  = {An unset variable, an empty one and a missing file are no answer from both.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_parity.py -k test_both_copies_answer_alike_when_there_is_nothing_to_read},
 }
+
+@misc{endpoints-resolve-unset-variable-falls-back-to-the-file-under-home,
+  section = {resolve},
+  title  = {W1528: a session with no MIKEMOL_ENDPOINTS reads $HOME/.config/mikemol/endpoints.json},
+  claim  = {W1528: a session with no MIKEMOL_ENDPOINTS reads $HOME/.config/mikemol/endpoints.json.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_an_unset_variable_falls_back_to_the_file_under_home},
+}
+
+@misc{endpoints-resolve-variable-wins-over-the-file-under-home,
+  section = {resolve},
+  title  = {W1528: a named path is never overridden by the default, even when it holds no answer},
+  claim  = {W1528: a named path is never overridden by the default, even when it holds no answer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_the_variable_wins_over_the_file_under_home},
+}
+
+@misc{endpoints-resolve-no-home-and-no-file-under-it-are-no-answer,
+  section = {resolve},
+  title  = {W1528: an environment without HOME, or with a HOME that has no file, resolves nothing},
+  claim  = {W1528: an environment without HOME, or with a HOME that has no file, resolves nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_resolve.py -k test_no_home_and_no_file_under_it_are_no_answer},
+}
