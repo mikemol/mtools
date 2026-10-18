@@ -369,6 +369,16 @@ src/mikemol/hooks/commit_span.py|duplicate-invocation-listed|    return ",".join
 src/mikemol/hooks/commit_span.py|invocations-key-always-present|    return \{\*\*found\[-1\], "invocations": ids\} if ids else found\[-1\]|    return {**found[-1], "invocations": ids}|def=verdict_of
 src/mikemol/hooks/commit_span.py|stack-invocations-dropped|    return \{\*\*event, "invocations": ids\} if ids else event|    return event|def=stack_event
 src/mikemol/hooks/commit_span.py|invocations-field-not-passed|\("entries", "invocations"\)|("entries",)|def=plan
+src/mikemol/hooks/writeguard.py|perl-allowed|    if name in \{"perl", "tee"\}:|    if name in {"tee"}:|def=_reason
+src/mikemol/hooks/writeguard.py|sed-in-place-allowed|        return any\(_SED_IN_PLACE\.match\(arg\) for arg in args\)|        return False|def=_edits_in_place
+src/mikemol/hooks/writeguard.py|awk-in-place-allowed|    return name in \{"awk", "gawk"\} and "inplace" in args|    return False|def=_edits_in_place
+src/mikemol/hooks/writeguard.py|copy-within-the-project-refused|    return _inside\(dest, root, cwd\) and any\(not _inside\(s, root, cwd\) for s in sources\)|    return _inside(dest, root, cwd)|def=_copies_in
+src/mikemol/hooks/writeguard.py|the-root-itself-is-outside|    return path == root or root in path\.parents|    return root in path.parents|def=_inside
+src/mikemol/hooks/writeguard.py|wrapper-hides-the-command|        elif _name\(head\) in _WRAPPERS:|        elif False:|def=_program
+src/mikemol/hooks/writeguard.py|env-assignment-hides-the-command|        if _ASSIGN\.match\(head\):|        if False:|def=_program
+src/mikemol/hooks/writeguard.py|pipe-does-not-split-commands|        if token not in _SEGMENT_END:|        if True:|def=_commands
+src/mikemol/hooks/writeguard.py|any-redirect-refused|        if token in _REDIRECTS and _inside\(tokens\[index \+ 1\], root, cwd\)|        if token in _REDIRECTS|def=findings
+src/mikemol/hooks/writeguard.py|redirect-into-the-project-allowed|        if token in _REDIRECTS and _inside\(tokens\[index \+ 1\], root, cwd\)|        if False|def=findings
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
 src/mikemol/hooks/beat.py|notice-given-on-every-call|        if now_ns - mark\.stat\(\)\.st_mtime_ns < NOTICE_EVERY_S \* _NS_PER_S:|        if False:|def=_due

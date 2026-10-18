@@ -11933,3 +11933,66 @@
   claim  = {The field is how a gate's span is joined to BuildBuddy: it is on all three spans.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_invocations_ride_on_every_span_of_the_trace_as_a_field},
 }
+
+@misc{hooks-writeguard-in-place-edit-is-refused-wherever-it-points,
+  section = {writeguard},
+  title  = {These rewrite their input file, so the location does not matter},
+  claim  = {These rewrite their input file, so the location does not matter.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_an_in_place_edit_is_refused_wherever_it_points},
+}
+
+@misc{hooks-writeguard-reading-commands-and-words-that-only-name-a-tool-pass,
+  section = {writeguard},
+  title  = {A tool named as an argument, or run without writing in place, is not a write},
+  claim  = {A tool named as an argument, or run without writing in place, is not a write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_reading_commands_and_words_that_only_name_a_tool_pass},
+}
+
+@misc{hooks-writeguard-perl-and-tee-are-refused-in-command-position-through-a-wrapper-too,
+  section = {writeguard},
+  title  = {Behind env assignments, `env` and `timeout` they are still the command},
+  claim  = {Behind env assignments, `env` and `timeout` they are still the command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_perl_and_tee_are_refused_in_command_position_through_a_wrapper_too},
+}
+
+@misc{hooks-writeguard-redirect-into-the-project-is-refused,
+  section = {writeguard},
+  title  = {A heredoc append is a redirect: the write lands in the tree without the edit bar},
+  claim  = {A heredoc append is a redirect: the write lands in the tree without the edit bar.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_a_redirect_into_the_project_is_refused},
+}
+
+@misc{hooks-writeguard-redirect-outside-the-project-or-to-a-stream-passes,
+  section = {writeguard},
+  title  = {Scratch space, the null device and stream duplication are not writes into the tree},
+  claim  = {Scratch space, the null device and stream duplication are not writes into the tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_a_redirect_outside_the_project_or_to_a_stream_passes},
+}
+
+@misc{hooks-writeguard-path-through-dot-dot-is-read-as-text-and-never-resolved,
+  section = {writeguard},
+  title  = {`../repo/x` from inside the root names the root again; nothing is looked up on disk},
+  claim  = {`../repo/x` from inside the root names the root again; nothing is looked up on disk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_a_path_through_dot_dot_is_read_as_text_and_never_resolved},
+}
+
+@misc{hooks-writeguard-copy-into-the-project-from-outside-is-refused,
+  section = {writeguard},
+  title  = {Content that arrives from outside the tree never met the edit bar},
+  claim  = {Content that arrives from outside the tree never met the edit bar.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_a_copy_into_the_project_from_outside_is_refused},
+}
+
+@misc{hooks-writeguard-copy-inside-the-project-or-out-of-it-passes,
+  section = {writeguard},
+  title  = {A rename within the tree or an export to scratch adds no unjudged content},
+  claim  = {A rename within the tree or an export to scratch adds no unjudged content.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_a_copy_inside_the_project_or_out_of_it_passes},
+}
+
+@misc{hooks-writeguard-with-no-project-root-only-the-location-free-rules-apply,
+  section = {writeguard},
+  title  = {The guard fails open: a redirect or copy cannot be placed, so it is not a finding},
+  claim  = {The guard fails open: a redirect or copy cannot be placed, so it is not a finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_with_no_project_root_only_the_location_free_rules_apply},
+}

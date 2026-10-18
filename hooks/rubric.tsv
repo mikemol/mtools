@@ -136,4 +136,5 @@ pycheck_mypy_override	Extra Mypy Flags Override a Project's Config for the Mypy 
 pycheck_house_census	The Census Can Judge by the House Mypy Flags, and Only the Census
 preflight_lint	The Preflight Lints Every Distribution's Declared Defects Before a Stack Is Submitted
 subagent_guard	A Second Concurrent Subagent Is Refused Unless the Operator's Latest Words Authorise It
+writeguard	The Write Guard: A Shell Command That Writes Into the Project Past the Edit Bar Is Refused, and Writes Outside It, Reads and Streams Pass
 gate_phase_marks	The Gate Marks Each Stage It Begins in the Grammar the Span Reader Reads, So Where a Gate's Time Went Is Measured

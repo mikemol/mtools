@@ -685,6 +685,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody has looked at — the blast radius a per-responsibility override exists to avoid.
 "tests/test_bar_fires.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_no_chaining.py" = ["assert", "suspicious-subprocess-import"]
+"tests/test_writeguard.py" = ["assert"]
 # ⚑⚑ THE EIGHTH, AND ITS SUBJECT IS EXECUTION ITSELF. `test_reader_guard.py` exists because a
 # guard that tested `is_file()` admitted a script whose shebang interpreter was gone — present,
 # mode 775, and `execve` refused it naming the script. The repaired guard's predicate is an
