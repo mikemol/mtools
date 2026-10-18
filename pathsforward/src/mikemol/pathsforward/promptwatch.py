@@ -16,6 +16,11 @@ replaced whole by a rename.
 ⚑ A PROMPT THAT IS ABSENT SAYS NOTHING. A repo outside `~/github`, or a host without the file, has
 no canonical prompt to watch, and a notice about nothing would train the reader to skip notices.
 
+⚑ A CHANGE REPEATS UNTIL IT IS ACKNOWLEDGED (W1563, github-8f 2026-10-18): printing the lines was
+never a reading, and a notice shown once and ignored was gone at the next tick, which is how a new
+rule was loaded and never noticed. The lines stay at every `--tick-open` until the session records
+that it read them with `--prompt-ack` (`acknowledge`).
+
 ⚑ THE FIRST READING IS RECORDED, NOT DIFFED: with no earlier text there is nothing to compare, and
 the line says so once.
 """
@@ -98,12 +103,15 @@ def notice(prompt: Path, seen: Path) -> list[str]:
         before = None
     if before == now:
         return []
-    remember(seen, now)
     if before is None:
+        remember(seen, now)
         return [f"canonical loop prompt: first reading recorded from {prompt}"]
     changes = _changed(before, now)
     shown = changes[:SHOWN]
     rest = len(changes) - len(shown)
-    head = f"canonical loop prompt changed since your last tick ({len(changes)} lines): re-read it"
+    head = (
+        f"canonical loop prompt changed since your last tick ({len(changes)} lines): re-read it, "
+        "then run --prompt-ack"
+    )
     more = [f"  ... and {rest} more"] if rest else []
     return [head, *(f"  {line}" for line in shown), *more]

@@ -42,13 +42,17 @@ def test_a_changed_prompt_names_the_lines_added_and_removed(tmp_path: Path) -> N
     assert got[1:] == ["  -rule two", "  +rule three"]
 
 
-def test_a_change_is_said_once_and_then_remembered(tmp_path: Path) -> None:
-    """The next tick sees no change unless the file moves again."""
+def test_a_change_repeats_until_it_is_acknowledged(tmp_path: Path) -> None:
+    """Printing the lines is not a reading: every tick says them until --prompt-ack (W1563)."""
     prompt, seen = _files(tmp_path)
     prompt.write_text("a\n", encoding="utf-8")
     promptwatch.notice(prompt, seen)
     prompt.write_text("b\n", encoding="utf-8")
-    assert promptwatch.notice(prompt, seen)
+    first = promptwatch.notice(prompt, seen)
+    assert first
+    assert first[0].endswith("then run --prompt-ack")
+    assert promptwatch.notice(prompt, seen) == first
+    assert promptwatch.acknowledge(prompt, seen) is not None
     assert promptwatch.notice(prompt, seen) == []
 
 
