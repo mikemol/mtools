@@ -414,3 +414,6 @@ src/mikemol/hooks/subagent_guard.py|ended-agent-counted-as-running|        if fr
 src/mikemol/hooks/subagent_guard.py|dead-agent-counted-as-running|            fresh = now - path\.stat\(\)\.st_mtime <= LIVE_S|            fresh = True|def=running
 src/mikemol/hooks/subagent_guard.py|operator-words-never-authorise|    if not others or operator_dispatches\(transcript\):|    if not others:|def=decide
 src/mikemol/hooks/subagent_guard.py|wrapped-notice-read-as-typed|        return "" if content\.lstrip\(\)\.startswith\("<"\) else content|        return content|def=_typed
+src/mikemol/hooks/commit_counts.py|waypoints-never-stored|            if waypoints:|            if False:|def=transition
+src/mikemol/hooks/commit_kata.py|stack-names-only-its-first|",".join\(item\.waypoint for item in items\)|items[0].waypoint|def=named_waypoints
+src/mikemol/hooks/commit_kata.py|trailer-block-split-again|Waypoint: \{request\.waypoint\}\\n\{request\.trailer\}|Waypoint: {request.waypoint}\\n\\n{request.trailer}|def=message_of

@@ -55,8 +55,9 @@ def note(
         the live counts after the change, or None when the map could not be written.
 
     """
+    named = tuple(w for w in env.get(commit_counts.WAYPOINTS_ENV, "").split(",") if w)
     try:
-        counts = commit_counts.transition(ledger / "commit.counts", key, state)
+        counts = commit_counts.transition(ledger / "commit.counts", key, state, waypoints=named)
     except OSError:
         return None
     program = binary(env)

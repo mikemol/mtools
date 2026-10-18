@@ -55,6 +55,15 @@ def test_a_transition_keeps_the_map_and_starts_both_gauges(tmp_path: Path) -> No
     assert _flag(started[0], "--namespace") == "myrepo"
 
 
+def test_the_waypoints_in_the_environment_reach_the_map_entry(tmp_path: Path) -> None:
+    """W1586: the submission's waypoints, named in the environment, are stored in its entry."""
+    ledger = _ledger(tmp_path)
+    named = {**ENV, commit_counts.WAYPOINTS_ENV: "W7,W8"}
+    started: list[Sequence[str]] = []
+    commit_gauge.note(ledger, "k1", commit_counts.QUEUED, named, started.append)
+    assert '"waypoints": ["W7", "W8"]' in (ledger / "commit.counts").read_text(encoding="utf-8")
+
+
 def test_without_a_store_the_map_is_kept_and_nothing_is_started(tmp_path: Path) -> None:
     """No MIKEMOL_ENDPOINTS: the count is right for the next commit, no child is spawned."""
     started: list[Sequence[str]] = []

@@ -33,6 +33,7 @@ from typing import cast
 
 QUEUED = "queued"
 INFLIGHT = "inflight"
+WAYPOINTS_ENV = "MIKEMOL_COMMIT_WAYPOINTS"
 _START_FIELD = 19
 Probe = Callable[[int], str | None]
 
@@ -139,11 +140,18 @@ def ahead_of(path: Path, key: str, probe: Probe = proc_start) -> list[int]:
     return [pid for _stamp, pid in sorted(older)]
 
 
-def transition(path: Path, key: str, state: str | None, probe: Probe = proc_start) -> Counts:
+def transition(
+    path: Path,
+    key: str,
+    state: str | None,
+    probe: Probe = proc_start,
+    waypoints: tuple[str, ...] = (),
+) -> Counts:
     """Record this commit's new state (or, with None, its end) and return the live counts.
 
     Dead entries are dropped in the same locked write, so any transition also cleans up after a
-    commit that was killed. The caller's own pid and start time are what the entry carries.
+    commit that was killed. The caller's own pid and start time are what the entry carries, and
+    the waypoints it names (W1586) when it names any; an entry without them stays readable.
 
     Returns:
         the counts after the change.
@@ -158,6 +166,8 @@ def transition(path: Path, key: str, state: str | None, probe: Probe = proc_star
         start = probe(me)
         if state is not None and start is not None:
             entries[key] = {"state": state, "pid": me, "start": start}
+            if waypoints:
+                entries[key]["waypoints"] = list(waypoints)
         staging = Path(f"{path}.{me}")
         staging.write_text(json.dumps(entries, sort_keys=True), encoding="utf-8")
         staging.replace(path)

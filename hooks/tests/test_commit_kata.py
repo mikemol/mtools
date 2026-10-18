@@ -80,6 +80,19 @@ def test_a_commit_that_lands_ends_with_committed_the_sha_and_the_subject(tmp_pat
     assert commit_kata.DEFAULT_TRAILER in message
 
 
+def test_a_submission_names_the_waypoints_it_carries(tmp_path: Path) -> None:
+    """W1586: a stack names every entry's waypoint in order, a single commit its one, else none."""
+    stack = tmp_path / "stack.json"
+    first = '{"waypoint": "W1", "subject": "s", "paths": ["a"]}'
+    second = '{"waypoint": "W2", "subject": "s", "paths": ["b"]}'
+    stack.write_text(f"[{first}, {second}]", encoding="utf-8")
+    assert commit_kata.named_waypoints((tmp_path, stack), None) == "W1,W2"
+    assert commit_kata.named_waypoints(None, (tmp_path, _request("a.txt"))) == WAYPOINT
+    assert not commit_kata.named_waypoints(None, None)
+    stack.write_text("not json", encoding="utf-8")
+    assert not commit_kata.named_waypoints((tmp_path, stack), None)
+
+
 def test_the_waypoint_and_co_author_lines_are_one_trailer_block(tmp_path: Path) -> None:
     """W1590: git's own trailer parser sees the Waypoint line, not only a regex over the body."""
     _repo(tmp_path)

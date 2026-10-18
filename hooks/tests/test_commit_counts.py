@@ -52,6 +52,20 @@ def test_a_commit_is_one_entry_that_changes_state_and_then_ends(tmp_path: Path) 
     assert commit_counts.transition(path, "k1", None, probe) == commit_counts.Counts(0, 0)
 
 
+def test_an_entry_records_the_waypoints_it_names_and_stays_readable_without_them(
+    tmp_path: Path,
+) -> None:
+    """W1586: waypoints ride in the entry beside state, pid and start; none given, none stored."""
+    path = tmp_path / "commit.counts"
+    probe = _probe({ME: "10"})
+    commit_counts.transition(path, "k1", commit_counts.QUEUED, probe, ("W1", "W2"))
+    commit_counts.transition(path, "k2", commit_counts.QUEUED, probe)
+    entries = _read(path)
+    assert entries["k1"]["waypoints"] == ["W1", "W2"]
+    assert "waypoints" not in entries["k2"]
+    assert entries["k1"]["state"] == commit_counts.QUEUED
+
+
 def test_a_live_peer_is_counted_beside_this_commit(tmp_path: Path) -> None:
     """A peer whose pid and start time both match stays in the count."""
     path = tmp_path / "commit.counts"

@@ -39,6 +39,7 @@ from typing import TextIO
 
 from mikemol.hooks.commit_body import refusal as _body_refusal
 from mikemol.hooks.commit_counts import INFLIGHT, QUEUED
+from mikemol.hooks.commit_counts import WAYPOINTS_ENV as _WAYPOINTS_ENV
 from mikemol.hooks.commit_gauge import note as _note_counts
 from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
@@ -60,6 +61,7 @@ from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
 from mikemol.hooks.verdictlog import ship_text as _ship_text
 
+WAYPOINTS_ENV = _WAYPOINTS_ENV
 body_refusal = _body_refusal
 wait_for_load = _wait_for_load
 add_argv_list = _add_argv_list
@@ -846,6 +848,19 @@ def _take_turn(ledger: Path, key: str) -> None:
         sys.stdout.write(f"commit: waited for {waited} earlier submission(s) to finish\n")
 
 
+def named_waypoints(stacked: tuple[Path, Path] | None, parsed: tuple[Path, Request] | None) -> str:
+    """List the waypoints this submission names, comma-separated, for the live-commit map (W1586).
+
+    Returns:
+        the stack file's waypoints in order, or the single commit's, or "" when neither is readable.
+
+    """
+    if stacked is not None:
+        items = stack_items(stacked[1])
+        return "" if isinstance(items, str) else ",".join(item.waypoint for item in items)
+    return "" if parsed is None else parsed[1].waypoint
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -869,6 +884,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_USAGE
     submitted = submitted_ns(env)
     env[SUBMIT_ENV] = str(submitted)
+    env.setdefault(WAYPOINTS_ENV, named_waypoints(stacked, parsed))
     ledger = ledger_of(root)
     key = str(submitted)
     submit(ledger, key, env)

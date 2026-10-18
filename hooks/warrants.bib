@@ -12095,3 +12095,25 @@
   claim  = {W1590: git's own trailer parser sees the Waypoint line, not only a regex over the body.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_the_waypoint_and_co_author_lines_are_one_trailer_block},
 }
+
+@misc{hooks-commit-counts-entry-records-the-waypoints-it-names-and-stays-readable-without-them,
+  section = {commit-counts},
+  title  = {W1586: waypoints ride in the entry beside state, pid and start; none given, none stored},
+  claim  = {W1586: waypoints ride in the entry beside state, pid and start; none given, none stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_an_entry_records_the_waypoints_it_names_and_stays_readable_without_them},
+}
+
+@misc{hooks-commit-gauge-waypoints-in-the-environment-reach-the-map-entry,
+  section = {commit-gauge},
+  title  = {W1586: the submission's waypoints, named in the environment, are stored in its entry},
+  claim  = {W1586: the submission's waypoints, named in the environment, are stored in its entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_gauge.py -k test_the_waypoints_in_the_environment_reach_the_map_entry},
+}
+
+@misc{hooks-commit-kata-submission-names-the-waypoints-it-carries,
+  section = {commit-kata},
+  title  = {W1586: a stack names every entry's waypoint in order, a single commit its one, else none},
+  claim  = {W1586: a stack names every entry's waypoint in order, a single commit its one, else
+            none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_submission_names_the_waypoints_it_carries},
+}
