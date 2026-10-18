@@ -15,6 +15,7 @@ findings the author cannot act on.
 exemptions they had correctly declared, with nothing to point at.
 """
 
+from collections.abc import Sequence
 from pathlib import Path
 
 
@@ -42,6 +43,23 @@ def mypy_subject(tmp: Path, path: str) -> list[str]:
     if real is not None and real.is_file() and not real.is_symlink():
         return ["--shadow-file", path, str(tmp), path]
     return [str(tmp)]
+
+
+def with_flags(argv: list[str], flags: Sequence[str]) -> list[str]:
+    """Add mypy flags after its own options and before the subject, so they override the config.
+
+    ⚑ THE HOUSE FLAGS RIDE ON THE COMMAND LINE (W1537): mypy lets a flag override the config file,
+    so a project whose own config is weaker is judged by the stricter set while its `files`,
+    `python_version` and `mypy_path` still apply. The edit gate passes none.
+
+    Returns:
+        the argv with the flags inserted after `--pretty`; unchanged when there are none.
+
+    """
+    if not flags:
+        return argv
+    at = argv.index("--pretty") + 1
+    return [*argv[:at], *flags, *argv[at:]]
 
 
 def checker_argv(

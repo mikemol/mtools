@@ -49,6 +49,7 @@ import os
 import re
 import sys
 import tempfile
+from collections.abc import Sequence
 from pathlib import Path
 
 from mikemol.hooks import (
@@ -165,8 +166,11 @@ def before_edit(path: str) -> str:
         return ""
 
 
-def analyze(content: str, path: str) -> Verdict:
+def analyze(content: str, path: str, *, mypy_flags: Sequence[str] = ()) -> Verdict:
     """Return the verdict for post-edit `.py` content at `path`, under ITS project's bar.
+
+    `mypy_flags`, when given, are added to mypy's command line and override the project's config
+    for that run (W1537), so the census can judge by the house flags; the edit gate passes none.
 
     Returns:
         the composed verdict; None names why no verdict could be rendered.
@@ -194,11 +198,12 @@ def analyze(content: str, path: str) -> Verdict:
         mypy_cfg = project_root.mypy_config_for(path)
         roster = checkers.checker_argv(tmp, path, venv_py, cfg, mypy_cfg)
         for name, argv, reads_stdin in roster:
+            command = checkers.with_flags(argv, mypy_flags) if name == "mypy" else argv
             # ⚑ W482: mypy under an atom's `mypy.ini` runs FROM the atom, as the gate's target
             # does, so its sibling imports resolve; ruff keeps the project root.
             cwd = mypy_cfg.parent if name == "mypy" and mypy_cfg is not None else root
             with checker_context.in_project(cwd):
-                ok, report = run_checker(name, argv, content if reads_stdin else None)
+                ok, report = run_checker(name, command, content if reads_stdin else None)
             if ok is False:
                 report = report.replace(str(tmp), path).replace(tmp.name, path)
             outcomes.append((name, (ok, report)))
