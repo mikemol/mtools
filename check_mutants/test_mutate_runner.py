@@ -377,6 +377,74 @@ def test_a_suite_that_leaves_a_child_in_its_group_is_ended_as_hung(
         _launch(_LEAKS, monkeypatch, tmp_path)
 
 
+_LEAKS_DETACHED = """\
+import subprocess
+import sys
+
+subprocess.Popen([sys.executable, "-c", "import time; time.sleep(5)"], start_new_session=True)
+print("suite done")
+"""
+
+
+def test_a_child_in_its_own_session_holding_the_pipe_ends_as_hung_without_a_crash(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The group is empty when the kill comes, so it raised ProcessLookupError out of the pool."""
+    with pytest.raises(subprocess.TimeoutExpired):
+        _launch(_LEAKS_DETACHED, monkeypatch, tmp_path)
+
+
+_GRAPH = """\
+{
+  "modules": {
+    "src/p/a.py": {"imports": [], "reads": []},
+    "src/p/b.py": {"imports": ["src/p/a.py"], "reads": []},
+    "src/p/c.py": {"imports": [], "reads": []}
+  },
+  "tests": {
+    "tests/test_a.py": {"imports": ["src/p/a.py"], "reads": []},
+    "tests/test_b.py": {"imports": ["src/p/b.py"], "reads": []},
+    "tests/test_c.py": {"imports": ["src/p/c.py"], "reads": []},
+    "tests/test_data.py": {"imports": [], "reads": ["src/p/c.py"]}
+  }
+}
+"""
+
+
+def _graph_dist(tmp_path: pathlib.Path, text: str = _GRAPH) -> pathlib.Path:
+    (tmp_path / "graph.json").write_text(text, encoding="utf-8")
+    return tmp_path
+
+
+def test_a_mutant_runs_only_the_tests_whose_import_cone_holds_its_module(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Module a is imported by test_a directly and by test_b through b; test_c never sees it."""
+    got = mutate_runner.selected_tests(_graph_dist(tmp_path), pathlib.Path("src/p/a.py"))
+    assert got == ["tests/test_a.py", "tests/test_b.py"]
+
+
+def test_a_test_that_declares_it_reads_the_module_is_run_for_it(tmp_path: pathlib.Path) -> None:
+    """A read that is not an import is still a way for a test to see a mutation."""
+    got = mutate_runner.selected_tests(_graph_dist(tmp_path), pathlib.Path("src/p/c.py"))
+    assert got == ["tests/test_c.py", "tests/test_data.py"]
+
+
+def test_no_graph_or_a_module_it_does_not_name_runs_everything(tmp_path: pathlib.Path) -> None:
+    """An unknown is never read as no test needs this: the empty list means the whole directory."""
+    assert mutate_runner.selected_tests(tmp_path, pathlib.Path("src/p/a.py")) == []
+    dist = _graph_dist(tmp_path)
+    assert mutate_runner.selected_tests(dist, pathlib.Path("src/p/new.py")) == []
+
+
+def test_a_graph_that_is_not_json_or_not_a_mapping_runs_everything(tmp_path: pathlib.Path) -> None:
+    """A torn or wrongly shaped file is a missing graph, never a narrowing."""
+    dist = _graph_dist(tmp_path, "{not json")
+    assert mutate_runner.selected_tests(dist, pathlib.Path("src/p/a.py")) == []
+    dist = _graph_dist(tmp_path, "[1, 2]")
+    assert mutate_runner.selected_tests(dist, pathlib.Path("src/p/a.py")) == []
+
+
 def test_a_suite_that_leaves_nothing_behind_returns_when_it_exits(
     tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

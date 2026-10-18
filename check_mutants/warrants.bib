@@ -237,3 +237,39 @@
   claim  = {A group with a member reads a number, and a group with none reads None, never 0.0.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_group_cpu_of_a_live_group_is_a_number_and_of_an_empty_one_is_none},
 }
+
+@misc{root-mutate-runner-child-in-its-own-session-holding-the-pipe-ends-as-hung-without-a-crash,
+  section = {mutate_runner},
+  title  = {The group is empty when the kill comes, so it raised ProcessLookupError out of the pool},
+  claim  = {The group is empty when the kill comes, so it raised ProcessLookupError out of the pool.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_child_in_its_own_session_holding_the_pipe_ends_as_hung_without_a_crash},
+}
+
+@misc{root-mutate-runner-mutant-runs-only-the-tests-whose-import-cone-holds-its-module,
+  section = {mutate_runner},
+  title  = {Module a is imported by test_a directly and by test_b through b; test_c never sees it},
+  claim  = {Module a is imported by test_a directly and by test_b through b; test_c never sees it.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_mutant_runs_only_the_tests_whose_import_cone_holds_its_module},
+}
+
+@misc{root-mutate-runner-test-that-declares-it-reads-the-module-is-run-for-it,
+  section = {mutate_runner},
+  title  = {A read that is not an import is still a way for a test to see a mutation},
+  claim  = {A read that is not an import is still a way for a test to see a mutation.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_test_that_declares_it_reads_the_module_is_run_for_it},
+}
+
+@misc{root-mutate-runner-no-graph-or-a-module-it-does-not-name-runs-everything,
+  section = {mutate_runner},
+  title  = {An unknown is never read as no test needs this: the empty list means the whole directory},
+  claim  = {An unknown is never read as no test needs this: the empty list means the whole
+            directory.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_no_graph_or_a_module_it_does_not_name_runs_everything},
+}
+
+@misc{root-mutate-runner-graph-that-is-not-json-or-not-a-mapping-runs-everything,
+  section = {mutate_runner},
+  title  = {A torn or wrongly shaped file is a missing graph, never a narrowing},
+  claim  = {A torn or wrongly shaped file is a missing graph, never a narrowing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_graph_that_is_not_json_or_not_a_mapping_runs_everything},
+}

@@ -34,6 +34,7 @@ import concurrent.futures
 import contextlib
 import dataclasses
 import fnmatch
+import json
 import os
 import pathlib
 import resource
@@ -43,6 +44,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+from typing import cast
 
 # ⚑⚑ THE FENCE SIBLING EDGE (mtools:W619, ruled A+B 2026-10-04). This runs under each
 # distribution's own `.venv`, and only fence's carries `mikemol.fence`, so `mutate_check.sh` names
@@ -357,7 +359,11 @@ def _hung(
         still = still + 1 if seen == last and (cpu is not None or ended) else 0
         last = seen
         if still >= patience:
-            os.killpg(proc.pid, signal.SIGKILL)
+            # ⚑ AN EMPTY GROUP IS THE KILL ALREADY DONE (W1509). The leader can exit and its group
+            # empty while a pipe is still held by a child that started its own session, and
+            # `killpg` then raises ProcessLookupError out of the pool and crashes the whole grid.
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(proc.pid, signal.SIGKILL)
             return True
 
 
@@ -624,6 +630,61 @@ def _report_debug(proc: subprocess.CompletedProcess[str]) -> None:
                 sys.stdout.write(f"      | {ln.strip()[:160]}\n")
 
 
+def selected_tests(dist: pathlib.Path, rel: pathlib.Path) -> list[str]:
+    """Pick the test files that can see a mutation of module `rel`, from the dist's import graph.
+
+    ⚑ EVERY MUTANT USED TO RUN THE WHOLE `tests` DIRECTORY (W1519): `-x` stops at the first failure,
+    so a kill was quick only if the killing test sorted early, and a survivor ran everything. With
+    `graph.json` (importdag, W1503) a test can see a module when the module is in the test's import
+    cone, or the test declares it reads the file; only those files are run.
+
+    ⚑ NO GRAPH, NO NARROWING. A distribution without a readable `graph.json`, or whose graph does
+    not name the module, runs everything exactly as before: an unknown is never read as "no test
+    needs this", because that would turn a kill into a survivor and fail the grid for no defect.
+
+    Returns:
+        the dist-relative test paths, sorted, or an empty list meaning the whole `tests` directory.
+
+    """
+    source = dist / "graph.json"
+    try:
+        doc: object = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    if not isinstance(doc, dict):
+        return []
+    parts = cast("dict[str, object]", doc)
+    modules = _entries(parts, "modules")
+    tests = _entries(parts, "tests")
+    target = str(rel)
+    if target not in modules:
+        return []
+    chosen = [
+        path
+        for path, entry in tests.items()
+        if target in entry.get("reads", []) or target in _cone(entry.get("imports", []), modules)
+    ]
+    return sorted(chosen)
+
+
+def _entries(doc: dict[str, object], key: str) -> dict[str, dict[str, list[str]]]:
+    # One section of the graph file, or an empty one when it is absent or not a mapping.
+    got = doc.get(key)
+    return cast("dict[str, dict[str, list[str]]]", got) if isinstance(got, dict) else {}
+
+
+def _cone(roots: list[str], modules: dict[str, dict[str, list[str]]]) -> set[str]:
+    # Every module reachable from `roots` along import edges, the roots included.
+    seen: set[str] = set()
+    todo = list(roots)
+    while todo:
+        name = todo.pop()
+        if name not in seen:
+            seen.add(name)
+            todo.extend(modules.get(name, {}).get("imports", []))
+    return seen
+
+
 def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
     """Build one mutant in a temp copy of the distribution and run its suite against it.
 
@@ -703,7 +764,7 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         # ⚑⚑ A SUITE THAT OUTLIVES THE LIMIT IS A KILL: it did not pass, and the only code that
         # differs from a clean run is the mutant, so the mutant is what it noticed.
         try:
-            proc = _launch_suite(grid, work, env)
+            proc = _launch_suite(grid, work, env, selected_tests(work, rel))
         except subprocess.TimeoutExpired:
             if debug:
                 sys.stdout.write("      ended with no progress or over its CPU limit\n")
@@ -714,9 +775,9 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
 
 
 def _launch_suite(
-    grid: Grid, work: pathlib.Path, env: dict[str, str]
+    grid: Grid, work: pathlib.Path, env: dict[str, str], tests: list[str]
 ) -> subprocess.CompletedProcess[str]:
-    """Run the distribution's suite inside the mutant's temp tree.
+    """Run the distribution's suite, or the tests chosen for this module, inside the mutant's tree.
 
     Returns:
         the completed suite process.
@@ -734,7 +795,7 @@ def _launch_suite(
             "no:cacheprovider",
             "-c",
             str(work / grid.config.name),
-            "tests",
+            *(tests or ["tests"]),
         ],
         work,
         env,
