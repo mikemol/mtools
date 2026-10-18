@@ -33,7 +33,7 @@ import time
 from collections.abc import Mapping, Sequence
 from typing import TextIO, cast
 
-from mikemol.otlp import endpoints, logs, metriccmd, metrics, sender, tracecmd
+from mikemol.otlp import endpoints, logs, metriccmd, metrics, sender, staleness, tracecmd
 
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
 ENDPOINT = "victorialogs-http"
@@ -180,6 +180,9 @@ def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
 
     """
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
+    warning = staleness.notice()
+    if warning:
+        sys.stderr.write(f"{warning}\n")
     if opts.get("verb") == "trace":
         return _trace(opts, os.environ)
     if opts.get("verb") == "metric":

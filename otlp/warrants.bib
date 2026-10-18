@@ -297,3 +297,24 @@
   claim  = {With no --url and no endpoints file the command refuses, naming the endpoint.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_no_destination_is_a_usage_refusal},
 }
+
+@misc{otlp-staleness-copy-that-differs-from-the-checkouts-is-named-with-the-fix,
+  section = {staleness},
+  title  = {The 2026-10-18 failure: the child kept the old resolver and nothing said so},
+  claim  = {The 2026-10-18 failure: the child kept the old resolver and nothing said so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_staleness.py -k test_a_copy_that_differs_from_the_checkouts_is_named_with_the_fix},
+}
+
+@misc{otlp-staleness-identical-copy-says-nothing,
+  section = {staleness},
+  title  = {The refreshed venv is silent},
+  claim  = {The refreshed venv is silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_staleness.py -k test_an_identical_copy_says_nothing},
+}
+
+@misc{otlp-staleness-no-checkout-above-or-no-installed-file-says-nothing,
+  section = {staleness},
+  title  = {A wheel installed elsewhere has no endpoints source above it, so nothing is compared},
+  claim  = {A wheel installed elsewhere has no endpoints source above it, so nothing is compared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_staleness.py -k test_no_checkout_above_or_no_installed_file_says_nothing},
+}
