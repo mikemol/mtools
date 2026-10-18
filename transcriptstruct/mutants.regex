@@ -9,3 +9,6 @@
 # JSON, never guessed; without the type check a numeric name decodes as text and is read as a name.
 src/mikemol/transcriptstruct/blocks.py|reference-name-type-unchecked|if known and isinstance\(text, str\):|if known:|def=_sub_block
 src/mikemol/transcriptstruct/query.py|uuid-and-timestamp-swapped|    uuid, stamped = fields\.get\("uuid"\), fields\.get\("timestamp"\)|    uuid, stamped = fields.get("timestamp"), fields.get("uuid")|def=_ids
+src/mikemol/transcriptstruct/memclaims.py|dated-line-not-a-ruling|        elif _DATE\.search\(raw\):|        elif False:|def=claims
+src/mikemol/transcriptstruct/memclaims.py|description-quotes-kept|    return stripped\.removeprefix\(_DESCRIPTION\)\.strip\(\)\.strip\('"'\)|    return stripped.removeprefix(_DESCRIPTION).strip()|def=_unwrapped
+src/mikemol/transcriptstruct/memgrants.py|grant-words-keep-their-case|        words = sorted\(\{word\.lower\(\) for word in matched\}\)|        words = sorted(set(matched))|def=grants

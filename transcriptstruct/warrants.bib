@@ -696,3 +696,53 @@
   claim  = {Adding keys breaks no reader of line, kind, text or span.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hit_ids.py -k test_the_old_keys_are_unchanged},
 }
+
+@misc{transcriptstruct-memclaims-quote-on-a-line-naming-the-operator-is-one-claim-with-its-text,
+  section = {memclaims},
+  title  = {The quoted passage is the claim, with the line it sits on},
+  claim  = {The quoted passage is the claim, with the line it sits on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_quote_on_a_line_naming_the_operator_is_one_claim_with_its_text},
+}
+
+@misc{transcriptstruct-memclaims-dated-description-is-a-ruling-not-a-quote-of-itself,
+  section = {memclaims},
+  title  = {The description is quoted whole, so its wrapping quotes come off before the line is read},
+  claim  = {The description is quoted whole, so its wrapping quotes come off before the line is
+            read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_dated_description_is_a_ruling_not_a_quote_of_itself},
+}
+
+@misc{transcriptstruct-memclaims-line-that-only-mentions-the-operator-claims-nothing,
+  section = {memclaims},
+  title  = {No date and no quote is not a claim, and a quote with no operator beside it is not one},
+  claim  = {No date and no quote is not a claim, and a quote with no operator beside it is not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_line_that_only_mentions_the_operator_claims_nothing},
+}
+
+@misc{transcriptstruct-memclaims-line-with-a-quote-and-a-date-is-one-claim-never-two,
+  section = {memclaims},
+  title  = {The quote wins, so the same line is not listed again as a ruling},
+  claim  = {The quote wins, so the same line is not listed again as a ruling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_line_with_a_quote_and_a_date_is_one_claim_never_two},
+}
+
+@misc{transcriptstruct-memgrants-line-that-lifts-a-rule-is-flagged-with-every-word-it-matched,
+  section = {memgrants},
+  title  = {The words are distinct, lower-cased and sorted, so the row is stable},
+  claim  = {The words are distinct, lower-cased and sorted, so the row is stable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_line_that_lifts_a_rule_is_flagged_with_every_word_it_matched},
+}
+
+@misc{transcriptstruct-memgrants-may-and-unattended-are-grant-words,
+  section = {memgrants},
+  title  = {The operator named them, so a line with either is flagged},
+  claim  = {The operator named them, so a line with either is flagged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_may_and_unattended_are_grant_words},
+}
+
+@misc{transcriptstruct-memgrants-line-with-no-grant-word-is-not-flagged-and-words-match-whole,
+  section = {memgrants},
+  title  = {Plain text is skipped, and a word inside another (mayor, allowance) does not match},
+  claim  = {Plain text is skipped, and a word inside another (mayor, allowance) does not match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_line_with_no_grant_word_is_not_flagged_and_words_match_whole},
+}
