@@ -293,3 +293,31 @@
   claim  = {A rewrite leaving unparseable source is a bad declaration: the ValueError propagates.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_declarations.py -k test_plant_lets_a_rewrite_that_breaks_the_source_raise},
 }
+
+@misc{mutation-lint-declaration-that-plants-has-no-problem,
+  section = {lint},
+  title  = {The positive control: a sound line, and a dist with no file at all, are both clean},
+  claim  = {The positive control: a sound line, and a dist with no file at all, are both clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_declaration_that_plants_has_no_problem},
+}
+
+@misc{mutation-lint-bare-percent-is-named-by-the-parser-not-left-to-the-gate,
+  section = {lint},
+  title  = {The 2026-10-18 failure: a % in a pattern that is not %7C or %25 refuses the whole file},
+  claim  = {The 2026-10-18 failure: a % in a pattern that is not %7C or %25 refuses the whole file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_bare_percent_is_named_by_the_parser_not_left_to_the_gate},
+}
+
+@misc{mutation-lint-module-that-is-not-a-file-a-stale-pattern-and-a-broken-rewrite-are-each-named,
+  section = {lint},
+  title  = {Each of the three the grid would report as errored or unapplied has its own line},
+  claim  = {Each of the three the grid would report as errored or unapplied has its own line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_a_module_that_is_not_a_file_a_stale_pattern_and_a_broken_rewrite_are_each_named},
+}
+
+@misc{mutation-lint-main-exits-zero-clean-one-on-a-problem-and-two-on-misuse,
+  section = {lint},
+  title  = {The exit code is the verdict, the lines go to stderr, and misuse is not a verdict},
+  claim  = {The exit code is the verdict, the lines go to stderr, and misuse is not a verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_main_exits_zero_clean_one_on_a_problem_and_two_on_misuse},
+}

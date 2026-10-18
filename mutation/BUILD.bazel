@@ -154,6 +154,7 @@ venv_from_hub(
     # ⚑ THE SAME ENTRIES AS pyproject's [project.scripts].
     console_scripts = {
         "mikemol-mutate": "mikemol.mutation.mutate:main",
+        "mikemol-mutation-lint": "mikemol.mutation.lint:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

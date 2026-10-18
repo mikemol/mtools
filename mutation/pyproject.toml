@@ -24,6 +24,7 @@ dependencies = []
 
 [project.scripts]
 mikemol-mutate = "mikemol.mutation.mutate:main"
+mikemol-mutation-lint = "mikemol.mutation.lint:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -90,3 +91,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_mutate.py" = ["assert"]
 "tests/test_regexop.py" = ["assert"]
 "tests/test_declarations.py" = ["assert"]
+"tests/test_lint.py" = ["assert"]
