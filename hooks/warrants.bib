@@ -11905,3 +11905,31 @@
   claim  = {The prebuild, the bazel suite and the two shared helpers each call `phase`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_phase_marks.py -k test_every_stage_marks_itself_so_a_refactor_cannot_drop_a_stage_silently},
 }
+
+@misc{hooks-commit-span-gates-bazel-invocations-are-named-once-each-in-order,
+  section = {commit-span},
+  title  = {A gate runs the prebuild and the test run: each distinct id once, nothing when none},
+  claim  = {A gate runs the prebuild and the test run: each distinct id once, nothing when none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_gates_bazel_invocations_are_named_once_each_in_order},
+}
+
+@misc{hooks-commit-span-verdict-event-carries-the-invocations-only-when-the-output-prints-any,
+  section = {commit-span},
+  title  = {The key is absent for a gate that printed none, so older panels read the same event},
+  claim  = {The key is absent for a gate that printed none, so older panels read the same event.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_verdict_event_carries_the_invocations_only_when_the_output_prints_any},
+}
+
+@misc{hooks-commit-span-stack-event-carries-the-invocations-too,
+  section = {commit-span},
+  title  = {One gate is one trace, so its bazel invocations ride on the stack's event},
+  claim  = {One gate is one trace, so its bazel invocations ride on the stack's event.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_a_stack_event_carries_the_invocations_too},
+}
+
+@misc{hooks-commit-span-invocations-ride-on-every-span-of-the-trace-as-a-field,
+  section = {commit-span},
+  title  = {The field is how a gate's span is joined to BuildBuddy: it is on all three spans},
+  claim  = {The field is how a gate's span is joined to BuildBuddy: it is on all three spans.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span.py -k test_the_invocations_ride_on_every_span_of_the_trace_as_a_field},
+}

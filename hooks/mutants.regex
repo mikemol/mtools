@@ -365,6 +365,10 @@ src/mikemol/hooks/beat.py|zero-sent-on-every-call| or not _due\(git_dir, now_ns,
 src/mikemol/hooks/beat.py|zero-sent-as-one|watchdog\.armed_publisher\(env, project\.name, spawn, watchdog\.ARMED_DOWN\)\(\)|watchdog.armed_publisher(env, project.name, spawn)()|def=mark_down
 src/mikemol/hooks/beat.py|zero-sent-with-no-spawner|        if spawn is not None:|        if True:|def=run
 src/mikemol/hooks/watchdog.py|publisher-ignores-its-value|"--value", value\]|"--value", ARMED_UP]|def=armed_publisher
+src/mikemol/hooks/commit_span.py|duplicate-invocation-listed|    return ",".join\(seen\)|    return ",".join(m.group(1) for m in _INVOCATION.finditer(text))|def=invocations_of
+src/mikemol/hooks/commit_span.py|invocations-key-always-present|    return \{\*\*found\[-1\], "invocations": ids\} if ids else found\[-1\]|    return {**found[-1], "invocations": ids}|def=verdict_of
+src/mikemol/hooks/commit_span.py|stack-invocations-dropped|    return \{\*\*event, "invocations": ids\} if ids else event|    return event|def=stack_event
+src/mikemol/hooks/commit_span.py|invocations-field-not-passed|\("entries", "invocations"\)|("entries",)|def=plan
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
 src/mikemol/hooks/beat.py|notice-given-on-every-call|        if now_ns - mark\.stat\(\)\.st_mtime_ns < NOTICE_EVERY_S \* _NS_PER_S:|        if False:|def=_due

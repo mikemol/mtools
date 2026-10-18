@@ -22,6 +22,7 @@ REFUSED, NOT COMMITTED and RACED are ERROR. A block with no verdict line gets no
 CONSUMED BY: `commit_kata.main` (W1441).
 """
 
+import re
 import secrets
 import shutil
 from collections.abc import Callable, Mapping, Sequence
@@ -39,6 +40,9 @@ HOME_FILE = ".config/mikemol/endpoints.json"
 SUBMIT_ENV = "MIKEMOL_COMMIT_SUBMITTED_NS"
 SERVICE = "mikemol-commit"
 _OK = "COMMITTED"
+_INVOCATION = re.compile(
+    r"/invocation/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+)
 Spawn = Callable[[Sequence[str]], None]
 
 
@@ -84,17 +88,39 @@ def new_ids() -> Ids:
     )
 
 
+def invocations_of(text: str) -> str:
+    """Name the bazel invocations a gate's output prints, so a span can be joined to BuildBuddy.
+
+    ⚑ THE SPAN CARRIES THE ID BECAUSE NOTHING ELSE PAIRS THE TWO (W1578, github-8f 2026-10-18): a
+    gate runs more than one bazel call (the prebuild, the test run), each printing `Streaming build
+    results to: <host>/invocation/<uuid>` into the output this module already reads, and the search
+    RPC that would list invocations answers PermissionDenied. With the ids on the `commit.gating`
+    span, a gate's wall time and its bazel invocations can be read side by side (W1572's table).
+
+    Returns:
+        each distinct uuid after `/invocation/`, in order, joined with commas; empty when none.
+
+    """
+    seen: dict[str, None] = {}
+    for found in _INVOCATION.finditer(text):
+        seen.setdefault(found.group(1))
+    return ",".join(seen)
+
+
 def verdict_of(text: str) -> dict[str, str] | None:
     """Read the commit's verdict event out of its output.
 
     Returns:
-        the LAST verdict event (verdict, repo and the parts that line has), or None when the
-        output holds none.
+        the LAST verdict event (verdict, repo and the parts that line has) with the output's
+        bazel `invocations` when it prints any, or None when the output holds no verdict.
 
     """
     names = {name for name, _ in verdictlog.VERDICTS}
     found = [e for e in verdictlog.events_of(text) if e["verdict"] in names]
-    return found[-1] if found else None
+    if not found:
+        return None
+    ids = invocations_of(text)
+    return {**found[-1], "invocations": ids} if ids else found[-1]
 
 
 def binary(env: Mapping[str, str]) -> str | None:
@@ -185,7 +211,7 @@ def plan(
     status = "OK" if event["verdict"] == _OK else "ERROR"
     fields = {"repo": repo, "waypoint": waypoint, "sha": event.get("sha", "")}
     fields["verdict"] = event["verdict"]
-    fields.update({key: event[key] for key in ("entries",) if key in event})
+    fields.update({key: event[key] for key in ("entries", "invocations") if key in event})
     shared = ["--service", SERVICE, "--namespace", repo, "--status", status]
     shared += ["--trace-id", ids.trace]
     for key, value in fields.items():
@@ -216,7 +242,9 @@ def stack_event(text: str) -> dict[str, str] | None:
         return None
     bad = next((e["verdict"] for e in found if e["verdict"] != _OK), _OK)
     shas = ",".join(e["sha"] for e in found if "sha" in e)
-    return {"verdict": bad, "repo": found[0]["repo"], "sha": shas, "entries": str(len(found))}
+    event = {"verdict": bad, "repo": found[0]["repo"], "sha": shas, "entries": str(len(found))}
+    ids = invocations_of(text)
+    return {**event, "invocations": ids} if ids else event
 
 
 def _start(

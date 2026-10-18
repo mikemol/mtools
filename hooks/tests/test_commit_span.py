@@ -142,6 +142,48 @@ def test_a_stack_is_one_trace_named_commit_stack_with_its_waypoints_joined() -> 
     assert "entries=2" in fields
 
 
+INV_ONE = "83efeedc-ab75-4cd5-a1d4-8a667410852a"
+INV_TWO = "9761e453-aeb8-47a9-ad60-16f86145de39"
+BUILT = (
+    f"Streaming build results to: http://h:8080/invocation/{INV_ONE}\n"
+    f"Streaming build results to: http://h:8080/invocation/{INV_TWO}\n"
+    f"Streaming build results to: http://h:8080/invocation/{INV_ONE}\n"
+)
+
+
+def test_the_gates_bazel_invocations_are_named_once_each_in_order() -> None:
+    """A gate runs the prebuild and the test run: each distinct id once, nothing when none."""
+    assert commit_span.invocations_of(BUILT) == f"{INV_ONE},{INV_TWO}"
+    assert not commit_span.invocations_of("http://h/invocation/not-a-uuid\n")
+
+
+def test_the_verdict_event_carries_the_invocations_only_when_the_output_prints_any() -> None:
+    """The key is absent for a gate that printed none, so older panels read the same event."""
+    event = commit_span.verdict_of(BUILT + COMMITTED)
+    assert event is not None
+    assert event["invocations"] == f"{INV_ONE},{INV_TWO}"
+    plain = commit_span.verdict_of(COMMITTED)
+    assert plain is not None
+    assert "invocations" not in plain
+
+
+def test_a_stack_event_carries_the_invocations_too() -> None:
+    """One gate is one trace, so its bazel invocations ride on the stack's event."""
+    event = commit_span.stack_event(BUILT + STACK_OK)
+    assert event is not None
+    assert event["invocations"] == f"{INV_ONE},{INV_TWO}"
+    plain = commit_span.stack_event(STACK_OK)
+    assert plain is not None
+    assert "invocations" not in plain
+
+
+def test_the_invocations_ride_on_every_span_of_the_trace_as_a_field() -> None:
+    """The field is how a gate's span is joined to BuildBuddy: it is on all three spans."""
+    for argv in _plan(BUILT + COMMITTED):
+        fields = [argv[i + 1] for i, word in enumerate(argv) if word == "--field"]
+        assert f"invocations={INV_ONE},{INV_TWO}" in fields
+
+
 def test_the_tee_buffer_writes_through_and_keeps_a_copy(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
