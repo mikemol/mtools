@@ -26,6 +26,18 @@ def test_may_and_unattended_are_grant_words() -> None:
     assert third.words == ("may", "unattended")
 
 
+def test_a_grant_word_in_a_restriction_clause_is_not_a_grant() -> None:
+    """The no-swarming note names the same words a grant does, and is not flagged for them."""
+    assert memgrants.grants("NO SWARMING: agents may not swarm, never allowed.\n") == []
+    assert memgrants.grants("Agents don't swarm and are not permitted to.\n") == []
+
+
+def test_a_grant_in_a_clause_of_its_own_survives_a_negation_in_another() -> None:
+    """Clauses split at punctuation, so 'never swarm, but an agent may commit' still flags may."""
+    found = memgrants.grants("Never swarm, but an agent may commit.\n")
+    assert [g.words for g in found] == [("may",)]
+
+
 def test_a_line_with_no_grant_word_is_not_flagged_and_words_match_whole() -> None:
     """Plain text is skipped, and a word inside another (mayor, allowance) does not match."""
     assert memgrants.grants("Plain advice with nothing granted.\n") == []

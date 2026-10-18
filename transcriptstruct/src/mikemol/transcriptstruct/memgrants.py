@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""Flag the lines of a memory file that grant a permission or lift a rule (mtools:W1543, W1541).
+"""Flag the lines of a memory file that grant a permission or lift a rule (mtools:W1543, W1547).
 
 ⚑ A NOTE THAT GRANTS IS THE ONE THAT HURTS WHEN STALE: el-openglo swarmed on a note that said
 swarming was lifted, after a later ruling had withdrawn it. A grant is a line saying something is
@@ -8,6 +8,13 @@ allowed, authorized, lifted or may be done, so these lines go first in a reviewe
 match is a word list the operator named (swarm, unattended, may, allowed) widened by its near
 neighbours; it over-flags on purpose, because a missed grant is the costly error and a reviewer
 reads the row.
+
+⚑ POLARITY (github-8f, 2026-10-18, W1547): the host's no-swarming note drew four GRANT rows from
+bare words, because a restriction names the same words a grant does. A line is read in clauses
+(split at `. ; : ! ? ,`), and a grant word in a clause that also carries a negation (no, not,
+never, nor, without, cannot, or any `n't`) is a RESTRICTION and is not flagged. A clause can
+still hide a grant behind a negation ("never use it unless allowed"); that is the price of a
+word-level reader, and the word is still on the line a reviewer opens.
 CONSUMED BY: the memory audit (`memaudit`).
 """
 
@@ -31,6 +38,8 @@ _WORDS = (
     "may",
 )
 _GRANT = re.compile(r"\b(" + "|".join(_WORDS) + r")\b", re.IGNORECASE)
+_NEGATION = re.compile(r"\b(?:no|not|never|nor|without|cannot)\b|n't\b", re.IGNORECASE)
+_CLAUSE = re.compile(r"[.;:!?,]")
 
 
 @dataclass(frozen=True)
@@ -42,8 +51,22 @@ class Grant:
     text: str
 
 
+def _granted(raw: str) -> list[str]:
+    """Take the grant words of the clauses of a line that carry no negation.
+
+    Returns:
+        the matched words, in order, with repeats.
+
+    """
+    found: list[str] = []
+    for clause in _CLAUSE.split(raw):
+        if not _NEGATION.search(clause):
+            found.extend(cast("list[str]", _GRANT.findall(clause)))
+    return found
+
+
 def grants(text: str) -> list[Grant]:
-    """List the lines of a memory file that carry a grant word, in line order.
+    """List the lines of a memory file that carry an unnegated grant word, in line order.
 
     Returns:
         one `Grant` per matching line with the distinct words it matched, lower-cased and sorted.
@@ -51,8 +74,7 @@ def grants(text: str) -> list[Grant]:
     """
     found: list[Grant] = []
     for number, raw in enumerate(text.splitlines(), start=1):
-        matched = cast("list[str]", _GRANT.findall(raw))
-        words = sorted({word.lower() for word in matched})
+        words = sorted({word.lower() for word in _granted(raw)})
         if words:
             found.append(Grant(number, tuple(words), raw.strip()))
     return found
