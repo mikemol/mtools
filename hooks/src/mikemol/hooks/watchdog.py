@@ -27,17 +27,20 @@ CONSUMED BY: `--tick-open`, which prints the command to start it (W1476).
 """
 
 import argparse
+import contextlib
 import math
 import os
 import shutil
 import subprocess
 import sys
 import time
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
 from mikemol.hooks import heartbeat
+from mikemol.hooks.commit_span import ENDPOINTS_ENV, binary
 from mikemol.hooks.heartbeat import Beat
+from mikemol.hooks.vlogdetach import spawn_detached
 
 EXIT_IDLE = 8
 EXIT_CANNOT_RUN = 7
@@ -45,6 +48,9 @@ MIN_FIRE_S = 300.0
 MAX_FIRE_S = 600.0
 DEFAULT_PHI_FIRE = 1.0
 DEFAULT_POLL_S = 20.0
+ARMED_EVERY_POLLS = 3
+ARMED_NAME = "mikemol.watchdog.armed"
+SERVICE = "mikemol-watchdog"
 _NS_PER_S = 1_000_000_000
 
 Seams = tuple[
@@ -82,7 +88,50 @@ def idle_line(waiting: int, last: Beat, now_ns: int) -> str:
     return f"idle with {waiting} ready cards, last heartbeat {ago}s ago ({last.tool})"
 
 
-def watch(seams: Seams, phi_fire: float, poll_s: float) -> int:
+def _nothing() -> None:
+    # The default announcement: say nothing, for a caller with no store to tell.
+    return None
+
+
+def armed_publisher(
+    env: Mapping[str, str],
+    repo: str,
+    spawn: Callable[[Sequence[str]], None] = spawn_detached,
+) -> Callable[[], None]:
+    """Build the call that tells the store this watchdog is armed for `repo` (W1518).
+
+    ⚑ AN ARMED GAUGE THAT GOES STALE IS THE MONITOR (operator, 2026-10-17: is there a way to see
+    whether the deadman switch is armed for the various sessions?): the watchdog sends
+    `mikemol.watchdog.armed{repo}=1` every few polls while it runs, so when it dies the series stops
+    and a freshness rule over it, with a recent heartbeat beside it, says a session is active
+    and unwatched. The push is a detached `mikemol-otlp metric`, as the commit gauges are.
+
+    ⚑ BEST EFFORT, NEVER RAISING: no `mikemol-otlp`, no `MIKEMOL_ENDPOINTS` or a failed start means
+    the number is not shipped and the watch goes on, exactly as the commit gauges behave.
+
+    Returns:
+        a function that sends one sample, or one that does nothing when there is nowhere to send.
+
+    """
+    program = binary(env)
+    if program is None or not env.get(ENDPOINTS_ENV):
+        return _nothing
+    argv = [program, "metric", "--service", SERVICE, "--namespace", repo]
+    argv += ["--field", f"repo={repo}", "--name", ARMED_NAME, "--value", "1"]
+
+    def publish() -> None:
+        with contextlib.suppress(OSError):
+            spawn(argv)
+
+    return publish
+
+
+def watch(
+    seams: Seams,
+    phi_fire: float,
+    poll_s: float,
+    armed: Callable[[], None] = _nothing,
+) -> int:
     """Watch until the silence passes the limit with work waiting, or the parent goes away.
 
     ⚑ NO HEARTBEAT FILE IS A BEAT AT THE WATCHDOG'S OWN START (github-8f, 2026-10-17). A repo whose
@@ -99,7 +148,11 @@ def watch(seams: Seams, phi_fire: float, poll_s: float) -> int:
     asked_about: int | None = None
     started = Beat("no heartbeat source", now_ns(), ())
     noted = False
+    polls = 0
     while alive():
+        if polls % ARMED_EVERY_POLLS == 0:
+            armed()
+        polls += 1
         last = read()
         if last is None:
             last = started
@@ -175,7 +228,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         time.sleep,
         lambda: os.getppid() == parent,
     )
-    return watch(seams, float(str(opts["phi_fire"])), float(str(opts["poll_s"])))
+    announce = armed_publisher(os.environ, git_dir.parent.name)
+    return watch(seams, float(str(opts["phi_fire"])), float(str(opts["poll_s"])), announce)
 
 
 if __name__ == "__main__":

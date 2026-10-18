@@ -182,3 +182,43 @@ def test_without_a_writer_the_watchdog_cannot_run(
     """No writer on PATH and none named: exit 7, the instrument fault."""
     monkeypatch.setenv("PATH", str(tmp_path / "empty"))
     assert watchdog.main(["--state", str(tmp_path / "q.json")]) == watchdog.EXIT_CANNOT_RUN
+
+
+def test_the_watch_announces_it_is_armed_on_the_first_poll_and_every_few_after() -> None:
+    """The armed gauge goes stale when the watchdog dies, so it is refreshed while it runs."""
+    sent: list[int] = []
+    seams = _seams([_beat(0)], lambda: 0, [0], lives=watchdog.ARMED_EVERY_POLLS * 2 + 1)
+    watchdog.watch(seams, 1.0, _POLL, lambda: sent.append(1))
+    assert len(sent) == len((0, 1, 2))
+
+
+def _env(**extra: str) -> dict[str, str]:
+    return {"MIKEMOL_OTLP_BIN": "/bin/otlp", "MIKEMOL_ENDPOINTS": "/e", **extra}
+
+
+def test_the_publisher_sends_one_armed_sample_naming_the_repo() -> None:
+    """A detached mikemol-otlp metric, as the commit gauges are sent."""
+    spawned: list[list[str]] = []
+    watchdog.armed_publisher(_env(), "myrepo", lambda argv: spawned.append(list(argv)))()
+    argv = spawned[0]
+    assert argv[:2] == ["/bin/otlp", "metric"]
+    assert argv[argv.index("--name") + 1] == watchdog.ARMED_NAME
+    assert "repo=myrepo" in argv
+    assert argv[argv.index("--value") + 1] == "1"
+
+
+def test_without_a_store_the_publisher_sends_nothing() -> None:
+    """No MIKEMOL_ENDPOINTS means nowhere to send, and the watch goes on."""
+    spawned: list[list[str]] = []
+    env = {"MIKEMOL_OTLP_BIN": "/bin/otlp"}
+    watchdog.armed_publisher(env, "myrepo", lambda argv: spawned.append(list(argv)))()
+    assert spawned == []
+
+
+def test_a_publisher_whose_child_cannot_start_never_raises() -> None:
+    """A failed start is a missed sample."""
+
+    def broken(_argv: object) -> None:
+        raise OSError
+
+    watchdog.armed_publisher(_env(), "myrepo", broken)()
