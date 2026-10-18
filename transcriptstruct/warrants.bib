@@ -925,3 +925,68 @@
             miss.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_quote_no_project_carries_stays_unwarranted},
 }
+
+@misc{transcriptstruct-memclaims-quote-spans-pair-marks-by-shape-for-either-mark-and-ignore-apostrophes,
+  section = {memclaims},
+  title  = {An apostrophe inside a word opens nothing; single and double quotes pair the same way},
+  claim  = {An apostrophe inside a word opens nothing; single and double quotes pair the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_quote_spans_pair_marks_by_shape_for_either_mark_and_ignore_apostrophes},
+}
+
+@misc{transcriptstruct-memgrants-short-quoted-phrase-is-mentioned-not-used-and-a-limit-word-restricts,
+  section = {memgrants},
+  title  = {The no-swarming note names the phrases the operator says and limits what they allow},
+  claim  = {The no-swarming note names the phrases the operator says and limits what they allow.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_short_quoted_phrase_is_mentioned_not_used_and_a_limit_word_restricts},
+}
+
+@misc{transcriptstruct-memgrants-long-quoted-grant-is-still-a-grant,
+  section = {memgrants},
+  title  = {A whole quoted utterance is the operator's grant, not a mention of a phrase},
+  claim  = {A whole quoted utterance is the operator's grant, not a mention of a phrase.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_long_quoted_grant_is_still_a_grant},
+}
+
+@misc{transcriptstruct-memgrants-gap-between-two-long-quotes-is-not-a-quoted-mention,
+  section = {memgrants},
+  title  = {Pairing is by shape, so words between two quotes stay outside any quote, then are judged},
+  claim  = {Pairing is by shape, so words between two quotes stay outside any quote, then are
+            judged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_the_gap_between_two_long_quotes_is_not_a_quoted_mention},
+}
+
+@misc{transcriptstruct-memgrants-permission-is-a-grant-only-as-permission-to-and-links-and-names-are-skipped,
+  section = {memgrants},
+  title  = {A noun use, a [[link]] to a note named for a grant word, and a name: line grant nothing},
+  claim  = {A noun use, a [[link]] to a note named for a grant word, and a name: line grant nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_permission_is_a_grant_only_as_permission_to_and_links_and_names_are_skipped},
+}
+
+@misc{transcriptstruct-memfind-nested-quote-kinds-and-apostrophes-do-not-break-a-match,
+  section = {memfind},
+  title  = {The note nests single quotes where the operator typed double ones (github-8f's fixture)},
+  claim  = {The note nests single quotes where the operator typed double ones (github-8f's fixture).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_nested_quote_kinds_and_apostrophes_do_not_break_a_match},
+}
+
+@misc{transcriptstruct-memfind-typo-in-the-operators-message-still-finds-a-long-quote-marked-approximate,
+  section = {memfind},
+  title  = {'proding' in the transcript, 'prodding' in the note: the fuzzy pass finds it and says so},
+  claim  = {'proding' in the transcript, 'prodding' in the note: the fuzzy pass finds it and says
+            so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_typo_in_the_operators_message_still_finds_a_long_quote_marked_approximate},
+}
+
+@misc{transcriptstruct-memfind-fuzzy-pass-does-not-guess-for-a-short-quote-or-an-unrelated-message,
+  section = {memfind},
+  title  = {Under six words, or with most words absent, a miss stays a miss},
+  claim  = {Under six words, or with most words absent, a miss stays a miss.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_the_fuzzy_pass_does_not_guess_for_a_short_quote_or_an_unrelated_message},
+}
+
+@misc{transcriptstruct-memfind-two-typos-are-forgiven-only-by-the-near-match-not-by-the-exact-share,
+  section = {memfind},
+  title  = {Five of seven words exact is under the bar; the two typos bring it to all seven},
+  claim  = {Five of seven words exact is under the bar; the two typos bring it to all seven.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_two_typos_are_forgiven_only_by_the_near_match_not_by_the_exact_share},
+}

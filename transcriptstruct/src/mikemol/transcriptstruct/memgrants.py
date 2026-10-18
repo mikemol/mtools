@@ -13,7 +13,9 @@ reads the row.
 bare words, because a restriction names the same words a grant does. A line is read in clauses
 (split at `. ; ! ?` and at but, however, except, unless), and a grant word in a clause that also
 carries a negation anywhere in it (no, not, never, nor, without, cannot, or any `n't`) is a
-RESTRICTION and is not flagged. Round two (W1553): a grant word that is a NOUN, in `allowed set`,
+RESTRICTION and is not flagged (so are only, exceed and limit). A short quoted phrase of up to forty
+characters is a MENTION, not a use: the note naming the "swarm this" the operator sometimes says
+grants nothing by naming it. Round two (W1553): a grant word that is a NOUN, in `allowed set`,
 `allow-lists` or `permission rule`, names a thing and grants nothing. A clause can still hide a
 grant behind a negation; that is the price of a word-level reader, and the word is still on the
 line a reviewer opens.
@@ -23,6 +25,8 @@ CONSUMED BY: the memory audit (`memaudit`).
 import re
 from dataclasses import dataclass
 from typing import cast
+
+from mikemol.transcriptstruct.memclaims import quote_spans, straight
 
 _WORDS = (
     "swarm",
@@ -34,13 +38,18 @@ _WORDS = (
     "authorized",
     "authorised",
     "permitted",
-    "permission",
     "lifted",
     "lift",
     "may",
 )
-_GRANT = re.compile(r"\b(" + "|".join(_WORDS) + r")\b", re.IGNORECASE)
-_NEGATION = re.compile(r"\b(?:no|not|never|nor|without|cannot)\b|n't\b", re.IGNORECASE)
+_PHRASES = ("permission to", "grant permission", "grants permission", "granted permission")
+_GRANT = re.compile(r"\b(" + "|".join((*_WORDS, *_PHRASES)) + r")\b", re.IGNORECASE)
+_LINK = re.compile(r"\[\[[^\]\n]*\]\]")
+_IDENTIFIER = re.compile(r"^\s*name:")
+_NEGATION = re.compile(
+    r"\b(?:no|not|never|nor|without|cannot|only|exceed|limit)\b|\bat most\b|n't\b", re.IGNORECASE
+)
+_MENTION_MAX = 40
 _CLAUSE = re.compile(r"[.;!?]|\b(?:but|however|except|unless)\b", re.IGNORECASE)
 _NOUN = re.compile(
     r"\b(?:allow(?:ed)?[- ](?:sets?|lists?)|allowlists?|permissions?[- ](?:rules?|prompts?|denials?"
@@ -58,6 +67,27 @@ class Grant:
     text: str
 
 
+def _unmentioned(raw: str) -> str:
+    """Blank the short quoted phrases of a line, which name words and do not use them.
+
+    ⚑ MARKS ARE PAIRED BY SHAPE (W1551), so the gap between one long quote and the next is never
+    mistaken for a quote of its own. A phrase of at most `_MENTION_MAX` characters in double or
+    single quotes is a mention; a long quoted utterance is kept, since it may be the operator's
+    grant.
+
+    Returns:
+        the line with each short quoted phrase replaced by spaces.
+
+    """
+    text = _LINK.sub(" ", straight(raw))
+    hidden = [False] * len(text)
+    for mark in ('"', "'"):
+        for start, end in quote_spans(text, mark):
+            if end - start - 1 <= _MENTION_MAX:
+                hidden[start : end + 1] = [True] * (end + 1 - start)
+    return "".join(" " if gone else char for char, gone in zip(text, hidden, strict=True))
+
+
 def _granted(raw: str) -> list[str]:
     """Take the grant words of the clauses of a line that carry no negation.
 
@@ -66,7 +96,7 @@ def _granted(raw: str) -> list[str]:
 
     """
     found: list[str] = []
-    for clause in _CLAUSE.split(raw):
+    for clause in _CLAUSE.split(_unmentioned(raw)):
         if not _NEGATION.search(clause):
             bare = _NOUN.sub(" ", clause)
             found.extend(cast("list[str]", _GRANT.findall(bare)))
@@ -82,6 +112,8 @@ def grants(text: str) -> list[Grant]:
     """
     found: list[Grant] = []
     for number, raw in enumerate(text.splitlines(), start=1):
+        if _IDENTIFIER.match(raw):
+            continue
         words = sorted({word.lower() for word in _granted(raw)})
         if words:
             found.append(Grant(number, tuple(words), raw.strip()))

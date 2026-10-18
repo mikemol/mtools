@@ -50,6 +50,38 @@ def test_a_grant_word_used_as_a_noun_names_a_thing_and_grants_nothing() -> None:
     assert memgrants.grants("Draft a permission rule for the operator to apply.\n") == []
 
 
+def test_a_short_quoted_phrase_is_mentioned_not_used_and_a_limit_word_restricts() -> None:
+    """The no-swarming note names the phrases the operator says and limits what they allow."""
+    mention = "Exceed the limit only when the operator says 'dispatch a subagent' or 'swarm this'."
+    assert memgrants.grants(mention) == []
+    assert memgrants.grants('Occasionally they dictate "swarm this" (uncommon).\n') == []
+    assert memgrants.grants("At most one subagent is allowed at a time.\n") == []
+
+
+def test_a_long_quoted_grant_is_still_a_grant() -> None:
+    """A whole quoted utterance is the operator's grant, not a mention of a phrase."""
+    said = 'Operator: "Swarm anything actionable, fold as many waypoints as you can per tick."\n'
+    assert [g.words for g in memgrants.grants(said)] == [("swarm",)]
+
+
+def test_the_gap_between_two_long_quotes_is_not_a_quoted_mention() -> None:
+    """Pairing is by shape, so words between two quotes stay outside any quote, then are judged."""
+    line = (
+        'Operator said "That does not mean no subagents, it means no concurrent ones." '
+        'Occasionally they dictate "swarm this" (uncommon).\n'
+    )
+    assert memgrants.grants(line) == []
+
+
+def test_permission_is_a_grant_only_as_permission_to_and_links_and_names_are_skipped() -> None:
+    """A noun use, a [[link]] to a note named for a grant word, and a name: line grant nothing."""
+    assert memgrants.grants("An apply needs a permission and a decision.\n") == []
+    assert memgrants.grants("Related: [[feedback-unattended-deletes-rehearsed]].\n") == []
+    assert memgrants.grants("name: feedback-unattended-deletes\n") == []
+    given = memgrants.grants("The agent was given permission to commit.\n")
+    assert [g.words for g in given] == [("permission to",)]
+
+
 def test_a_contrast_word_starts_a_new_clause() -> None:
     """'but', 'however', 'except' and 'unless' open a clause the earlier negation does not reach."""
     found = memgrants.grants("Never swarm unless allowed.\n")
