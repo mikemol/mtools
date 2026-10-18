@@ -11727,3 +11727,39 @@
   claim  = {The guard comes first and exits 1, the preflight's rule for every tool it relies on.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_preflight_lint.py -k test_a_missing_lint_interpreter_refuses_before_the_call_and_never_skips},
 }
+
+@misc{hooks-subagent-guard-session-with-no-running-subagent-may-dispatch-one,
+  section = {subagent_guard},
+  title  = {The first subagent is fine, and so is one after the earlier one has ended its turn},
+  claim  = {The first subagent is fine, and so is one after the earlier one has ended its turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagent_guard.py -k test_a_session_with_no_running_subagent_may_dispatch_one},
+}
+
+@misc{hooks-subagent-guard-second-concurrent-subagent-is-refused-citing-the-rule,
+  section = {subagent_guard},
+  title  = {One still running (no end mark, written lately): the next dispatch is refused},
+  claim  = {One still running (no end mark, written lately): the next dispatch is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagent_guard.py -k test_a_second_concurrent_subagent_is_refused_citing_the_rule},
+}
+
+@misc{hooks-subagent-guard-agent-that-died-without-ending-its-turn-stops-counting,
+  section = {subagent_guard},
+  title  = {A transcript untouched for longer than LIVE_S would otherwise block the session for ever},
+  claim  = {A transcript untouched for longer than LIVE_S would otherwise block the session for
+            ever.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagent_guard.py -k test_an_agent_that_died_without_ending_its_turn_stops_counting},
+}
+
+@misc{hooks-subagent-guard-operators-latest-words-authorise-and-older-ones-do-not,
+  section = {subagent_guard},
+  title  = {Only the newest typed message counts; tool results and wrapped notices are not typed},
+  claim  = {Only the newest typed message counts; tool results and wrapped notices are not typed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagent_guard.py -k test_the_operators_latest_words_authorise_and_older_ones_do_not},
+}
+
+@misc{hooks-subagent-guard-only-an-agent-call-is-judged-and-main-prints-the-denial,
+  section = {subagent_guard},
+  title  = {Another tool passes untouched; the hook speaks through printed JSON, exit 0},
+  claim  = {Another tool passes untouched; the hook speaks through printed JSON, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagent_guard.py -k test_only_an_agent_call_is_judged_and_main_prints_the_denial},
+}

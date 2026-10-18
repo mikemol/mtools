@@ -138,6 +138,7 @@ mikemol-websubset = "mikemol.hooks.websubset_cli:main"
 mikemol-codon-probe = "mikemol.hooks.codon_probe:main"
 mikemol-watchdog = "mikemol.hooks.watchdog:main"
 mikemol-hook-beat = "mikemol.hooks.beat:main"
+mikemol-hook-subagent-guard = "mikemol.hooks.subagent_guard:main"
 mikemol-wheel = "mikemol.hooks.wheel:main"
 # ⚑ A GIT HOOK, NOT A HARNESS HOOK — hence not `mikemol-hook-…`. Repos install it as a one-line
 # `.githooks/pre-push` stub that execs this script (substrate's operator: "import as packages").

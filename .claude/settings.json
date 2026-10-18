@@ -30,6 +30,15 @@
         ]
       },
       {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-subagent-guard\""
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {

@@ -372,3 +372,7 @@ src/mikemol/hooks/checkers.py|flags-after-the-subject|    return \[\*argv\[:at\]
 src/mikemol/hooks/pycheck.py|flags-given-to-every-checker|    command = checkers\.with_flags\(argv, mypy_flags\) if name == "mypy" else argv|    command = checkers.with_flags(argv, mypy_flags)|def=analyze
 src/mikemol/hooks/pycheck_cli.py|house-flag-on-any-command|    house = args\[:1\] == \[CENSUS_FLAG\] and args\[2:\] == \[HOUSE_FLAG\]|    house = args[2:] == [HOUSE_FLAG]|def=_flag_here
 src/mikemol/hooks/pycheck_cli.py|house-never-used|    if not house:|    if house:|def=analyzer
+src/mikemol/hooks/subagent_guard.py|ended-agent-counted-as-running|        if fresh and not ended:|        if fresh:|def=running
+src/mikemol/hooks/subagent_guard.py|dead-agent-counted-as-running|            fresh = now - path\.stat\(\)\.st_mtime <= LIVE_S|            fresh = True|def=running
+src/mikemol/hooks/subagent_guard.py|operator-words-never-authorise|    if not others or operator_dispatches\(transcript\):|    if not others:|def=decide
+src/mikemol/hooks/subagent_guard.py|wrapped-notice-read-as-typed|        return "" if content\.lstrip\(\)\.startswith\("<"\) else content|        return content|def=_typed

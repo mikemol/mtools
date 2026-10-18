@@ -485,6 +485,7 @@ venv_from_hub(
         "mikemol-codon-probe": "mikemol.hooks.codon_probe:main",
         "mikemol-watchdog": "mikemol.hooks.watchdog:main",
         "mikemol-hook-beat": "mikemol.hooks.beat:main",
+        "mikemol-hook-subagent-guard": "mikemol.hooks.subagent_guard:main",
         "mikemol-wheel": "mikemol.hooks.wheel:main",
     },
     hub_requirements = dev_all_requirements,
