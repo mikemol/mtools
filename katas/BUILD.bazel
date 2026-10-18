@@ -121,7 +121,7 @@ mutants_sharded(
     # 5 s alone and several times that at load 90. One shard reached its 300 s limit, and three did
     # too (measured 2026-10-13: 46 mutants in the first of three); six put about 23 in each, at the
     # same width.
-    shards = 6,
+    shards = 12,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

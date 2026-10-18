@@ -129,7 +129,7 @@ mutants_sharded(
     # grew past 190 mutants as modes were added (W1078, W1079, W1131), each re-running a 911-test
     # suite that is 9 s alone; three shards of about 68 stopped fitting 300 s at load. Nine put about
     # 23 in each, at the same width.
-    shards = 9,
+    shards = 18,
     cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
