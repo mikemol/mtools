@@ -50,11 +50,24 @@ def test_no_watchdog_anywhere_prints_no_command(tmp_path: Path) -> None:
     assert watchdogcmd.command(_STATE, _WRITER, tmp_path, _none) is None
 
 
-def test_the_tick_line_names_the_running_writer_resolved(tmp_path: Path) -> None:
-    """The watchdog asks the copy of the writer that printed the line."""
+def test_the_tick_line_names_the_running_writer_by_the_path_it_was_run_as(tmp_path: Path) -> None:
+    """The watchdog asks the copy that printed the line, a relative path made absolute."""
     line = watchdogcmd.tick_line(_STATE, "relative/writer", tmp_path, lambda _n: "/bin/wd")
     assert line.startswith("watchdog: start it in the background: /bin/wd --state ")
-    assert str(Path("relative/writer").resolve()) in line
+    assert f"--writer {Path.cwd() / 'relative' / 'writer'}" in line
+
+
+def test_the_writer_path_is_not_resolved_so_a_rebuilt_tree_cannot_swap_it() -> None:
+    """A path through `..` stays as typed: resolving would follow links into a bazel output tree."""
+    typed = "/repo/.venv/../.venv/bin/mikemol-paths-forward"
+    assert watchdogcmd.writer_named(typed, _none) == typed
+    assert str(Path(typed).resolve()) != typed
+
+
+def test_a_bare_writer_name_is_looked_up_on_path_and_kept_when_it_is_not_found() -> None:
+    """A name with no slash has no path of its own: PATH answers, else it stays as typed."""
+    assert watchdogcmd.writer_named("mikemol-paths-forward", lambda _n: "/p/writer") == "/p/writer"
+    assert watchdogcmd.writer_named("mikemol-paths-forward", _none) == "mikemol-paths-forward"
 
 
 def test_the_tick_line_says_so_when_no_watchdog_is_found(tmp_path: Path) -> None:
