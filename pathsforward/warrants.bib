@@ -6114,3 +6114,38 @@
   claim  = {The nemik case: the tick was already open, and the skipped open still says how to arm.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_line.py -k test_a_held_lock_still_prints_the_line_before_the_skip},
 }
+
+@misc{pathsforward-ledger-session-line-with-a-session-reads-back-to-the-same-entry-before-the-evidence,
+  section = {ledger_session},
+  title  = {session= sits between the note and evidence=, so the free-text evidence stays last},
+  claim  = {session= sits between the note and evidence=, so the free-text evidence stays last.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_session.py -k test_a_line_with_a_session_reads_back_to_the_same_entry_before_the_evidence},
+}
+
+@misc{pathsforward-ledger-session-line-without-a-session-is-unchanged-and-an-old-line-parses-with-none,
+  section = {ledger_session},
+  title  = {Nothing is added for an empty session, so every line already in a ledger still reads},
+  claim  = {Nothing is added for an empty session, so every line already in a ledger still reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_session.py -k test_a_line_without_a_session_is_unchanged_and_an_old_line_parses_with_none},
+}
+
+@misc{pathsforward-ledger-session-session-that-is-not-a-uuid-is-refused-on-write,
+  section = {ledger_session},
+  title  = {The column is a join key for luthen's label, so a loose string would join nothing},
+  claim  = {The column is a join key for luthen's label, so a loose string would join nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_session.py -k test_a_session_that_is_not_a_uuid_is_refused_on_write},
+}
+
+@misc{pathsforward-ledger-session-own-line-fills-the-session-from-the-environment-and-keeps-an-explicit-one,
+  section = {ledger_session},
+  title  = {The harness's CLAUDE_CODE_SESSION_ID is the id; an entry that names its own keeps it},
+  claim  = {The harness's CLAUDE_CODE_SESSION_ID is the id; an entry that names its own keeps it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_session.py -k test_own_line_fills_the_session_from_the_environment_and_keeps_an_explicit_one},
+}
+
+@misc{pathsforward-ledger-session-own-line-leaves-the-session-empty-when-unset-or-not-a-uuid,
+  section = {ledger_session},
+  title  = {A cron job or a terminal has no session: the field is absent, never a guess},
+  claim  = {A cron job or a terminal has no session: the field is absent, never a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_session.py -k test_own_line_leaves_the_session_empty_when_unset_or_not_a_uuid},
+}

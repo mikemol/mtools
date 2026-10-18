@@ -13,8 +13,10 @@ every later column of the line for a reader splitting on whitespace.
 re-splits the columns itself, and a legacy line comes back as `Unparsed`, never an exception.
 """
 
+import os
 import re
-from dataclasses import dataclass
+from collections.abc import Mapping
+from dataclasses import dataclass, replace
 from datetime import UTC
 from pathlib import Path
 
@@ -83,6 +85,7 @@ class Entry:
     mechanism: str
     note: str
     evidence: str = ""
+    session: str = ""
 
 
 def line_break(text: str) -> str | None:
@@ -122,6 +125,9 @@ def line(entry: Entry, stamp: str) -> str:
     if not is_symbol(entry.symbol):
         msg = f"ledger symbol {entry.symbol!r} is neither {NO_SYMBOL}, W<n> nor repo:W<n>"
         raise MalformedEntryError(msg)
+    if entry.session and not _UUID.fullmatch(entry.session):
+        msg = f"ledger session {entry.session!r} is not a lower-case UUID"
+        raise MalformedEntryError(msg)
     for text in (entry.note, entry.evidence):
         broken = line_break(text)
         if broken is not None:
@@ -131,7 +137,39 @@ def line(entry: Entry, stamp: str) -> str:
     # quote read as escaped (measured 2026-09-25), and no reader could recover the note.
     note = entry.note.replace("\\", "\\\\").replace('"', '\\"')
     out = f'{stamp}  {entry.kind:5} {entry.symbol:4} {entry.outcome:9} {entry.mechanism:9} "{note}"'
+    if entry.session:
+        out = f"{out}  session={entry.session}"
     return f"{out}  evidence={entry.evidence}" if entry.evidence else out
+
+
+SESSION_ENV = "CLAUDE_CODE_SESSION_ID"
+_UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+
+
+def session_id(environ: Mapping[str, str]) -> str:
+    """Read the session's transcript UUID from the environment the harness gives a tool call.
+
+    ⚑ THE LOCK'S HOLDER IS A PROCESS, NOT THIS ID (nemik-84, 2026-10-18, measured): `session.own()`
+    names the `claude` process by pid and start time, while luthen labels a session by its
+    transcript file stem, which the harness exports as `CLAUDE_CODE_SESSION_ID` (it equalled the
+    stem of this session's .jsonl). A value that is not a UUID is no answer.
+
+    Returns:
+        the UUID, or "" when the variable is unset or not a lower-case UUID (cron, a terminal).
+
+    """
+    value = environ.get(SESSION_ENV, "")
+    return value if _UUID.fullmatch(value) else ""
+
+
+def own_line(entry: Entry, stamp: str) -> str:
+    """Format one entry carrying the writing session's id when the entry names none (W1546).
+
+    Returns:
+        the line, as `line` writes it, with `session=<uuid>` when the environment names one.
+
+    """
+    return line(replace(entry, session=entry.session or session_id(os.environ)), stamp)
 
 
 def append(path: Path, text: str) -> None:
@@ -143,7 +181,8 @@ def append(path: Path, text: str) -> None:
 # stamp, four single-token columns, a quoted note (escapes allowed), optional evidence.
 _LINE = re.compile(
     r"^(?P<stamp>\S+)\s+(?P<kind>\S+)\s+(?P<symbol>\S+)\s+(?P<outcome>\S+)\s+(?P<mechanism>\S+)"
-    r'\s+"(?P<note>(?:[^"\\]|\\.)*)"(?:\s+evidence=(?P<evidence>.*))?$'
+    r'\s+"(?P<note>(?:[^"\\]|\\.)*)"(?:\s+session=(?P<session>[0-9a-f-]{36}))?'
+    r"(?:\s+evidence=(?P<evidence>.*))?$"
 )
 _ESCAPE = re.compile(r"\\(.)")
 
@@ -200,6 +239,7 @@ def parse(text: str) -> Parsed | Unparsed:
         _group(match, "mechanism"),
         _ESCAPE.sub(r"\1", _group(match, "note")),
         _group(match, "evidence"),
+        _group(match, "session"),
     )
     return Parsed(stamp, entry)
 

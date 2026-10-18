@@ -187,3 +187,6 @@ src/mikemol/pathsforward/cli.py|held-lock-skips-the-watchdog-line|        _watch
 src/mikemol/pathsforward/cli.py|watchdog-line-mode-prints-nothing|    _say\(watchdogcmd\.tick_line\(ctx\.path, sys\.argv\[0\], Path\.home\(\), shutil\.which\)\)|    pass|def=_watchdog_line
 src/mikemol/pathsforward/suppliers.py|non-citation-supplier-accepted|        if not is_reference\(item\):|        if False:|def=check
 src/mikemol/pathsforward/suppliers.py|empty-list-stored-not-cleared|        out\["acceptable_suppliers"\] = list\(suppliers\) or None|        out["acceptable_suppliers"] = list(suppliers)|def=fields
+src/mikemol/pathsforward/ledger.py|any-environment-value-is-a-session|    return value if _UUID\.fullmatch\(value\) else ""|    return value|def=session_id
+src/mikemol/pathsforward/ledger.py|loose-session-written|    if entry\.session and not _UUID\.fullmatch\(entry\.session\):|    if False:|def=line
+src/mikemol/pathsforward/ledger.py|explicit-session-overridden|    return line\(replace\(entry, session=entry\.session or session_id\(os\.environ\)\), stamp\)|    return line(replace(entry, session=session_id(os.environ)), stamp)|def=own_line

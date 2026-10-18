@@ -86,3 +86,4 @@ promptwatch	Loop Prompt Watch: --tick-open Says What Changed in the Canonical Lo
 suppliers	A Waiting Card Names Other Acceptable Suppliers, as a Fallback and Never a Second Block
 landed	A Card Is Advanced Only When a Landed Commit Carries It, and an Edit Alone Is Shown Apart
 watchdog_line	The Watchdog Start Line Reaches a Session Whose Tick Stays Open
+ledger_session	A Ledger Line Carries the Writing Session's Transcript UUID When the Environment Names One

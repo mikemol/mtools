@@ -77,7 +77,7 @@ from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
-from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, line, read
+from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, own_line, read
 from mikemol.pathsforward.lift import lift as lift_row
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
@@ -1186,7 +1186,7 @@ def _parser() -> argparse.ArgumentParser:
 
 def _ledger(ctx: Ctx, entry: Entry) -> None:
     """Append one structured line to the ledger beside the state file."""
-    append(store.sibling(ctx.path, store.LEDGER), line(entry, ctx.stamp()))
+    append(store.sibling(ctx.path, store.LEDGER), own_line(entry, ctx.stamp()))
 
 
 def _atomize_line(ctx: Ctx, state: State) -> str | None:
@@ -1996,7 +1996,7 @@ def _add(ctx: Ctx) -> int:
         now = ctx.stamp()
         sym = ops.add(state, draft, now)
         mint = state.waypoints[-1]
-        minted = line(
+        minted = own_line(
             Entry(text(mint, "minted_during"), sym, "minted", "-", draft.title, draft.caused_by),
             now,
         )
@@ -2374,7 +2374,7 @@ def _ledger_mode(ctx: Ctx) -> int:
     if refused:
         raise ops.RefusedError(refused)
     entry = Entry(kind, sym, outcome, mechanism, note, ctx.get("evidence") or "")
-    text_line = line(entry, ctx.stamp())
+    text_line = own_line(entry, ctx.stamp())
     append(store.sibling(ctx.path, store.LEDGER), text_line)
     _say(text_line)
     return EXIT_OK
@@ -2724,7 +2724,7 @@ def _mint_residue(ctx: Ctx) -> int:
                 draft.caused_by,
             )
             store.save(ctx.path, state)
-            append(store.sibling(ctx.path, store.LEDGER), line(mint, site.now))
+            append(store.sibling(ctx.path, store.LEDGER), own_line(mint, site.now))
             return said, new
 
     try:
