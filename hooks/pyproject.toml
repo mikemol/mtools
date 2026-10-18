@@ -441,6 +441,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # The preflight witness runs the script itself under an emptied PATH to prove a failed rebuild exits 3.
 # Its witness runs the pre-commit's `build_failure_cause` function under bash with a stub tool.
 "tests/test_precommit_build_failure.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_gate_phase_marks.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
 "tests/test_commit_kata.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hooks_preflight.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

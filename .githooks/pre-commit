@@ -129,6 +129,19 @@ $(sed 's/^/      /' "$2")"
 }
 say() { printf 'pre-commit: %s\n' "$1" >&2; }
 
+# ⚑ A PHASE MARK (W1575, github-8f 2026-10-18, after the operator asked "What's the actual breakdown?"):
+# one line `pre-commit: phase <name> <epoch ns>` at the start of each stage, in the grammar
+# hooks/src/mikemol/hooks/gatephase.py reads, so the commit's spans carry a `commit.gating.<name>` child
+# per stage and the question is answered by measurement. A mark OPENS a phase and the next mark (or the
+# verdict) closes it; nothing here prints an end mark. The name has no space (the reader skips a mark
+# that does), is cut to 48 characters, and the time is the gate's own clock, taken where the stage begins.
+# ⚑ IT NEVER CHANGES A VERDICT: it only prints, and a failed `date` leaves an empty time, which the
+# reader skips as not a whole mark.
+phase() {  # name
+    printf 'pre-commit: phase %s %s\n' \
+        "$(printf '%s' "$1" | tr -c 'a-zA-Z0-9_' '_' | cut -c1-48)" "$(date +%s%N)" >&2
+}
+
 # ⚑ W829 (operator 2026-10-06): ON A FAILED BAZEL CALL, PRINT ITS CAUSE FROM BUILDBUDDY. A commit runs
 # as a background task and fails later as a notification, so the failure hook that serves foreground
 # commands never sees this gate's failures; the gate asks for the cause itself, at the bazel line
@@ -238,6 +251,7 @@ witness() {  # label, then domain_witness.sh's own arguments
     # the scratch tree the refusal was about.** Moving the wipe would fix this ordering and leave
     # the next reordering free to break it again.
     _wlog="$_witness_logs/witness-$(printf '%s' "$_wlabel" | tr -c 'a-zA-Z0-9' '_').log"
+    phase "witness_$_wlabel"
     # ⚑⚑ RUN FROM THE STAGED TREE (W528). From `$root`, every arm planted its probe in the MAIN
     # working tree, and a concurrent bazel run there read it: //hooks:ruff failed on the live probe
     # in cmdparse.py (2026-10-03). The staged copy is the workspace being committed, so the domain
@@ -268,6 +282,7 @@ witness() {  # label, then domain_witness.sh's own arguments
 run_checked() {  # label, then the command
     _rlabel="$1"; shift
     _rclog="$_witness_logs/check-$(printf '%s' "$_rlabel" | tr -c 'a-zA-Z0-9' '_').log"
+    phase "check_$_rlabel"
     if "$@" >"$_rclog" 2>&1; then
         cat "$_rclog" >&2
     else
@@ -518,6 +533,7 @@ fi
 # spelling `Build did NOT complete successfully` does not contain it (`complete`, not `completed`).
 _prebuild=(//ratchet:ratchet_cli)
 for _d in $_dists; do _prebuild+=("//$_d:.venv"); done
+phase prebuild
 if ( cd "$root" && git_scrubbed bazel build --nokeep_going "${_prebuild[@]}" ) \
     >"$staged/.ratchet_cli.log" 2>&1; then
   _prebuild_rc=0
@@ -812,6 +828,7 @@ if ! _gate_explained=$("$_gate_jobs_tool" --explain); then
   exit 1
 fi
 say "$_gate_explained"
+phase bazel_test
 if ( cd "$staged" && git_scrubbed bazel test --nokeep_going "${_gate_jobs[@]}" //... --test_output=errors ) 2>&1 \
     | tee "$staged/.suite.log"; then
     _suite_rc=0

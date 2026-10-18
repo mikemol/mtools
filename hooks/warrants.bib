@@ -11876,3 +11876,32 @@
   claim  = {A caller that names no sender cannot reach the real store.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_run_without_a_spawner_sends_nothing},
 }
+
+@misc{hooks-gate-phase-marks-mark-is-one-whole-line-the-reader-reads-with-the-gates-own-clock,
+  section = {gate_phase_marks},
+  title  = {The gate prints the grammar `gatephase` reads, with a nanosecond time from `date`},
+  claim  = {The gate prints the grammar `gatephase` reads, with a nanosecond time from `date`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_phase_marks.py -k test_a_mark_is_one_whole_line_the_reader_reads_with_the_gates_own_clock},
+}
+
+@misc{hooks-gate-phase-marks-name-with-spaces-and-punctuation-becomes-one-word-the-reader-accepts,
+  section = {gate_phase_marks},
+  title  = {The reader skips a mark whose name has a space, so the gate never prints one},
+  claim  = {The reader skips a mark whose name has a space, so the gate never prints one. `tr` works
+            on bytes, so the three-byte dash in a label becomes three underscores.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_phase_marks.py -k test_a_name_with_spaces_and_punctuation_becomes_one_word_the_reader_accepts},
+}
+
+@misc{hooks-gate-phase-marks-long-name-is-cut-to-forty-eight-characters,
+  section = {gate_phase_marks},
+  title  = {A label that is a whole sentence still makes a span name of a sane length},
+  claim  = {A label that is a whole sentence still makes a span name of a sane length.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_phase_marks.py -k test_a_long_name_is_cut_to_forty_eight_characters},
+}
+
+@misc{hooks-gate-phase-marks-every-stage-marks-itself-so-a-refactor-cannot-drop-a-stage-silently,
+  section = {gate_phase_marks},
+  title  = {The prebuild, the bazel suite and the two shared helpers each call `phase`},
+  claim  = {The prebuild, the bazel suite and the two shared helpers each call `phase`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_phase_marks.py -k test_every_stage_marks_itself_so_a_refactor_cannot_drop_a_stage_silently},
+}
