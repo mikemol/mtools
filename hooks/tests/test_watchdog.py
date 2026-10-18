@@ -29,14 +29,19 @@ def _seams(
     ready: Callable[[], int | None],
     clock_s: list[int],
     lives: int = 100,
+    start_s: int = 0,
 ) -> watchdog.Seams:
-    # Each poll reads the next beat (the last repeats), and the clock steps with it.
-    state = {"poll": 0, "alive": lives}
+    # Each poll reads the next beat (the last repeats), and the clock steps with it. The first
+    # reading of the clock is the watchdog's own start, `start_s`.
+    state = {"poll": 0, "alive": lives, "started": 0}
 
     def read() -> Beat | None:
         return beats[min(state["poll"], len(beats) - 1)]
 
     def now() -> int:
+        if not state["started"]:
+            state["started"] = 1
+            return start_s * _S
         return clock_s[min(state["poll"], len(clock_s) - 1)] * _S
 
     def sleep(_s: float) -> None:
@@ -143,6 +148,28 @@ def test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once(
     seams = _seams([None], lambda: 0, [0, 700, 800], lives=4)
     assert watchdog.watch(seams, 1.0, _POLL) == 0
     assert capsys.readouterr().out.count("no heartbeat file") == 1
+
+
+def test_a_beat_older_than_the_start_does_not_fire_the_first_poll() -> None:
+    """The start counts as a beat: a stale file would otherwise fire at once, on every restart."""
+    asked: list[int] = []
+
+    def ready() -> int | None:
+        asked.append(1)
+        return _FOUR
+
+    seams = _seams([_beat(0)], ready, [1000, 1100], lives=3, start_s=1000)
+    assert watchdog.watch(seams, 1.0, _POLL) == 0
+    assert asked == []
+
+
+def test_a_beat_older_than_the_start_fires_after_the_band_counted_from_the_start(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Silence since the start past the band, with work waiting, is the alarm all the same."""
+    seams = _seams([_beat(0)], lambda: _FOUR, [1000, 1700], start_s=1000)
+    assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
+    assert "last heartbeat 700s ago" in capsys.readouterr().out
 
 
 def test_no_heartbeat_file_inside_the_band_does_not_fire() -> None:

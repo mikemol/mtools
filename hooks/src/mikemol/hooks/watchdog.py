@@ -202,6 +202,11 @@ def watch(
     alarm. So the silence is counted from the start, the alarm fires after the band with work
     waiting, and one line says no heartbeat source exists, so an old pin shows up instead of hiding.
 
+    ⚑ A BEAT OLDER THAN THE START IS NOT A SILENCE TO FIRE ON (luthen via github-8f, 2026-10-18,
+    W1564): the session started this watchdog, which is its own action, so the silence is counted
+    from the start whenever the last beat predates it. Otherwise a stale file fires the first poll,
+    the session restarts it, it fires again, and nothing watches in between.
+
     Returns:
         EXIT_IDLE after printing the idle line; 0 when the parent is gone.
 
@@ -221,6 +226,8 @@ def watch(
             if not noted:
                 sys.stdout.write("mikemol-watchdog: no heartbeat file: counting from my start\n")
                 noted = True
+        elif last.at_ns < started.at_ns:
+            last = started
         if last.at_ns != asked_about:
             silent_s = (now_ns() - last.at_ns) / _NS_PER_S
             if silent_s >= silence_limit_s(last, phi_fire):

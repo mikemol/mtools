@@ -359,6 +359,7 @@ src/mikemol/hooks/watchdog.py|armed-sent-without-a-store|    if program is None 
 src/mikemol/hooks/watchdog.py|any-watchdog-removes-the-pid-file|        if target\.read_text\(encoding="utf-8"\)\.strip\(\) == str\(pid\):|        if True:|def=release
 src/mikemol/hooks/watchdog.py|stale-pid-file-reads-as-running|    return alive\(pid\)|    return True|def=running
 src/mikemol/hooks/watchdog.py|pid-file-outlives-the-watch|        release\(git_dir, os\.getpid\(\)\)|        pass|def=main
+src/mikemol/hooks/watchdog.py|stale-beat-fires-the-first-poll|        elif last\.at_ns < started\.at_ns:|        elif False:|def=watch
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
 src/mikemol/hooks/beat.py|notice-given-on-every-call|        if now_ns - mark\.stat\(\)\.st_mtime_ns < NOTICE_EVERY_S \* _NS_PER_S:|        if False:|def=_due

@@ -11826,3 +11826,17 @@
   claim  = {Nothing to ask means nothing to report.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_repo_with_no_writer_or_no_queue_says_nothing},
 }
+
+@misc{hooks-watchdog-beat-older-than-the-start-does-not-fire-the-first-poll,
+  section = {heartbeat},
+  title  = {The start counts as a beat: a stale file would otherwise fire at once, on every restart},
+  claim  = {The start counts as a beat: a stale file would otherwise fire at once, on every restart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_beat_older_than_the_start_does_not_fire_the_first_poll},
+}
+
+@misc{hooks-watchdog-beat-older-than-the-start-fires-after-the-band-counted-from-the-start,
+  section = {heartbeat},
+  title  = {Silence since the start past the band, with work waiting, is the alarm all the same},
+  claim  = {Silence since the start past the band, with work waiting, is the alarm all the same.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_beat_older_than_the_start_fires_after_the_band_counted_from_the_start},
+}
