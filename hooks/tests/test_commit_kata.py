@@ -80,6 +80,15 @@ def test_a_commit_that_lands_ends_with_committed_the_sha_and_the_subject(tmp_pat
     assert commit_kata.DEFAULT_TRAILER in message
 
 
+def test_the_waypoint_and_co_author_lines_are_one_trailer_block(tmp_path: Path) -> None:
+    """W1590: git's own trailer parser sees the Waypoint line, not only a regex over the body."""
+    _repo(tmp_path)
+    (tmp_path / "a.txt").write_text("two\n", encoding="utf-8")
+    assert commit_kata.commit(tmp_path, _request("a.txt"), io.StringIO()) == 0
+    parsed = _git(tmp_path, "log", "-1", "--format=%(trailers:key=Waypoint,valueonly)")
+    assert parsed.strip() == WAYPOINT
+
+
 def test_a_refused_commit_ends_with_refused_and_head_has_not_moved(tmp_path: Path) -> None:
     """A gate that refuses is REFUSED with its status, its own words above, HEAD unchanged."""
     _repo(tmp_path)

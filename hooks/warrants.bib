@@ -12088,3 +12088,10 @@
   claim  = {The seam's real implementation: success, failure and a program that cannot start.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_the_real_probe_reports_a_command_exit_and_a_program_that_is_missing},
 }
+
+@misc{hooks-commit-kata-waypoint-and-co-author-lines-are-one-trailer-block,
+  section = {commit-kata},
+  title  = {W1590: git's own trailer parser sees the Waypoint line, not only a regex over the body},
+  claim  = {W1590: git's own trailer parser sees the Waypoint line, not only a regex over the body.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_the_waypoint_and_co_author_lines_are_one_trailer_block},
+}

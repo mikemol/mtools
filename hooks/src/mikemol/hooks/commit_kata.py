@@ -248,7 +248,7 @@ def message_of(request: Request) -> str:
 
     """
     head = f"{request.subject}\n\n{request.body}\n\n" if request.body else f"{request.subject}\n\n"
-    return f"{head}Waypoint: {request.waypoint}\n\n{request.trailer}\n"
+    return f"{head}Waypoint: {request.waypoint}\n{request.trailer}\n"
 
 
 def supports_isolation(root: Path) -> bool:
