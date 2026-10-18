@@ -5917,13 +5917,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_no_watchdog_anywhere_prints_no_command},
 }
 
-@misc{pathsforward-watchdogcmd-tick-line-names-the-running-writer-resolved,
-  section = {watchdogcmd},
-  title  = {The watchdog asks the copy of the writer that printed the line},
-  claim  = {The watchdog asks the copy of the writer that printed the line.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_tick_line_names_the_running_writer_resolved},
-}
-
 @misc{pathsforward-watchdogcmd-tick-line-says-so-when-no-watchdog-is-found,
   section = {watchdogcmd},
   title  = {A missing watchdog shows up in the opening output instead of hiding},
@@ -5999,13 +5992,6 @@
   title  = {The notice is the difference, so the reader need not find it},
   claim  = {The notice is the difference, so the reader need not find it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_a_changed_prompt_names_the_lines_added_and_removed},
-}
-
-@misc{pathsforward-promptwatch-change-is-said-once-and-then-remembered,
-  section = {promptwatch},
-  title  = {The next tick sees no change unless the file moves again},
-  claim  = {The next tick sees no change unless the file moves again.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_a_change_is_said_once_and_then_remembered},
 }
 
 @misc{pathsforward-promptwatch-long-change-lists-a-few-lines-and-counts-the-rest,
@@ -6169,4 +6155,82 @@
   title  = {The session says it read the prompt, by name, and the record is where the notice looks},
   claim  = {The session says it read the prompt, by name, and the record is where the notice looks.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_the_prompt_ack_flag_records_the_reading_beside_the_git_directory},
+}
+
+@misc{pathsforward-promptwatch-change-repeats-until-it-is-acknowledged,
+  section = {promptwatch},
+  title  = {Printing the lines is not a reading: every tick says them until --prompt-ack (W1563)},
+  claim  = {Printing the lines is not a reading: every tick says them until --prompt-ack (W1563).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_a_change_repeats_until_it_is_acknowledged},
+}
+
+@misc{pathsforward-watchdogcmd-tick-line-names-the-running-writer-by-the-path-it-was-run-as,
+  section = {watchdogcmd},
+  title  = {The watchdog asks the copy that printed the line, a relative path made absolute},
+  claim  = {The watchdog asks the copy that printed the line, a relative path made absolute.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_tick_line_names_the_running_writer_by_the_path_it_was_run_as},
+}
+
+@misc{pathsforward-watchdogcmd-writer-path-is-not-resolved-so-a-rebuilt-tree-cannot-swap-it,
+  section = {watchdogcmd},
+  title  = {A path through `..` stays as typed: resolving would follow links into a bazel output tree},
+  claim  = {A path through `..` stays as typed: resolving would follow links into a bazel output
+            tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_writer_path_is_not_resolved_so_a_rebuilt_tree_cannot_swap_it},
+}
+
+@misc{pathsforward-watchdogcmd-bare-writer-name-is-looked-up-on-path-and-kept-when-it-is-not-found,
+  section = {watchdogcmd},
+  title  = {A name with no slash has no path of its own: PATH answers, else it stays as typed},
+  claim  = {A name with no slash has no path of its own: PATH answers, else it stays as typed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_a_bare_writer_name_is_looked_up_on_path_and_kept_when_it_is_not_found},
+}
+
+@misc{pathsforward-atomize-verb-each-title-becomes-a-ready-child-that-enables-and-is-caused-by-the-parent,
+  section = {atomize_verb},
+  title  = {The children are the parent's own steps, so each names it twice: the edge and the cause},
+  claim  = {The children are the parent's own steps, so each names it twice: the edge and the cause.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_each_title_becomes_a_ready_child_that_enables_and_is_caused_by_the_parent},
+}
+
+@misc{pathsforward-atomize-verb-parent-becomes-a-blocked-umbrella-on-its-children-keeping-earlier-blockers,
+  section = {atomize_verb},
+  title  = {Agent kind, since a child is this queue's own card; a blocker it already had stays},
+  claim  = {Agent kind, since a child is this queue's own card; a blocker it already had stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_the_parent_becomes_a_blocked_umbrella_on_its_children_keeping_earlier_blockers},
+}
+
+@misc{pathsforward-atomize-verb-no-title-mints-nothing,
+  section = {atomize_verb},
+  title  = {An atomize with nothing to atomize into is refused, and the counter does not move},
+  claim  = {An atomize with nothing to atomize into is refused, and the counter does not move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_no_title_mints_nothing},
+}
+
+@misc{pathsforward-atomize-verb-parent-held-on-a-human-is-refused-not-turned-into-an-agent-block,
+  section = {atomize_verb},
+  title  = {That hold is the operator's to lift (standing rule 5): atomizing cannot rewrite it},
+  claim  = {That hold is the operator's to lift (standing rule 5): atomizing cannot rewrite it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_a_parent_held_on_a_human_is_refused_not_turned_into_an_agent_block},
+}
+
+@misc{pathsforward-atomize-verb-parent-that-is-not-live-is-refused,
+  section = {atomize_verb},
+  title  = {There is nothing to put the children under},
+  claim  = {There is nothing to put the children under.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_a_parent_that_is_not_live_is_refused},
+}
+
+@misc{pathsforward-atomize-verb-verb-writes-the-children-the-parent-block-and-one-minted-line-each,
+  section = {atomize_verb},
+  title  = {End to end: the queue file holds the new cards and the ledger records each mint},
+  claim  = {End to end: the queue file holds the new cards and the ledger records each mint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_the_verb_writes_the_children_the_parent_block_and_one_minted_line_each},
+}
+
+@misc{pathsforward-atomize-verb-bundled-title-leaves-nothing-written,
+  section = {atomize_verb},
+  title  = {A refusal on the second title must not leave the first one minted},
+  claim  = {A refusal on the second title must not leave the first one minted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_a_bundled_title_leaves_nothing_written},
 }

@@ -910,6 +910,47 @@ def add(state: State, draft: Draft, now: str) -> str:
     return sym
 
 
+def atomize(state: State, parent: str, titles: Iterable[str], now: str) -> list[str]:
+    """Mint one child per title under `parent` and block the parent on them (W1089).
+
+    ⚑ THE STANDING REMEDY FOR A CARD TOO COARSE TO LAND, AS ONE VERB: every child is ready, names
+    the parent as the card it enables and as its cause, and the parent becomes a blocked umbrella
+    whose `blocked_on` is its earlier blockers plus the new children (kind `agent`, since a child is
+    this queue's own card). A parent held on a human is refused: that hold is the operator's to lift
+    (standing rule 5), and atomizing must not turn it into an agent block. Nothing is saved when
+    any step refuses, so a bundled title leaves no half-minted set.
+
+    Returns:
+        the children's symbols, in title order.
+
+    Raises:
+        RefusedError: with no title, a parent that is not live or is held on a human, or any
+            child title `add` refuses.
+
+    """
+    names = list(titles)
+    if not names:
+        msg = f"atomize {parent}: no child titles given, nothing minted"
+        raise RefusedError(msg)
+    held = find(state, parent)
+    if text(held, "status") == "blocked" and text(held, "blocked_kind") == "human":
+        msg = f"atomize {parent}: it is held on a human; only the operator lifts that hold"
+        raise RefusedError(msg)
+    # ⚑ `add` READS `State.counter`, a snapshot of the load, so a second mint from the same State
+    # would re-issue the first symbol and be refused as lagging. Each mint gets a State that shares
+    # the document and records the counter the previous mint reached.
+    children: list[str] = []
+    current = state
+    for title in names:
+        sym = add(current, Draft(title, enables=(parent,), caused_by=parent), now)
+        children.append(sym)
+        current = State(state.doc, state.waypoints, state.residue, symbol_number(sym) or 0)
+    blockers = (*strlist(find(state, parent), "blocked_on"), *children)
+    block = Update(status="blocked", blocked_kind="agent", blocked_on=blockers)
+    update(state, parent, block, now)
+    return children
+
+
 def drop(state: State, sym: str, reason: str, now: str, died: dict[str, str] | None = None) -> None:
     """Move a live waypoint to residue (skill section 5); the reason is required.
 

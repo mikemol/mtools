@@ -447,6 +447,7 @@ _VALUED = (
     "reject_advice",
     "outcomes_set",
     "certify",
+    "atomize",
     "mint_residue",
     "skip",
     "gate_red",
@@ -987,13 +988,25 @@ def _parser() -> argparse.ArgumentParser:
         "are symbols, `unscored` or `open` (every card not done; --except SYMBOL[=REASON] skips "
         "cards and prints each reason); a dry run without --write",
     )
-    mode.add_argument(
-        "--certify",
-        nargs="+",
-        metavar="SYMBOL",
-        help="W850: each waypoint's realizability verdict {ref, level, reference_arm, residue}, "
-        "one JSON line each, judged by the pinned opa; reads, never writes",
-    )
+    for flag, metavar, text_help in (
+        (
+            "--certify",
+            "SYMBOL",
+            (
+                "W850: each waypoint's realizability verdict {ref, level, reference_arm, "
+                "residue}, one JSON line each, judged by the pinned opa; reads, never writes"
+            ),
+        ),
+        (
+            "--atomize",
+            "PARENT_THEN_TITLES",
+            (
+                "W1089: PARENT, then one child title per operand: mint each child (ready, "
+                "enabling and caused by PARENT) and block PARENT on them"
+            ),
+        ),
+    ):
+        mode.add_argument(flag, nargs="+", metavar=metavar, help=text_help)
     # ⚑ ONE TABLE FOR THE FIXED-ARITY MODES, for the same reason as the one-value table above:
     # `--tick-close` (W1079) is room made here, never a waiver.
     for flag, names, text_help in (
@@ -2010,6 +2023,34 @@ def _add(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _atomize(ctx: Ctx) -> int:
+    """Mint a child card per title under PARENT and block PARENT on them (W1089).
+
+    Returns:
+        EXIT_OK.
+
+    """
+    parent, *titles = ctx.many("atomize") or ("",)
+    with store.exclusive(ctx.path):
+        state = store.load(ctx.path)
+        now = ctx.stamp()
+        children = ops.atomize(state, parent, titles, now)
+        minted = [
+            own_line(
+                Entry(text(mint, "minted_during"), sym, "minted", "-", text(mint, "title"), parent),
+                now,
+            )
+            for sym, mint in ((s, ops.find(state, s)) for s in children)
+        ]
+        store.save(ctx.path, state)
+        for line in minted:
+            append(store.sibling(ctx.path, store.LEDGER), line)
+    for sym in children:
+        _say(f"{sym} added under {parent}")
+    _say(f"{parent} blocked on {', '.join(children)}; state_hash={v2(state.waypoints)}")
+    return EXIT_OK
+
+
 def _drop(ctx: Ctx) -> int:
     """Move a waypoint to residue; with `--on SURVIVOR` repoint its edges first, dry run first.
 
@@ -2800,6 +2841,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "standing": _standing,
     "watchdog_line": _watchdog_line,
     "prompt_ack": _prompt_ack,
+    "atomize": _atomize,
     "ready_count": _ready_count,
     "standing_set": _standing_set,
     "tick_hooks_set": _tick_hooks_set,

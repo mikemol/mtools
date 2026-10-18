@@ -174,11 +174,22 @@ src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stam
 src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = which\(SCRIPT\) or |    found = |def=command
 src/mikemol/pathsforward/watchdogcmd.py|interpreter-fallback-dropped|    elif \(venv_bin / "python"\)\.is_file\(\):|    elif False:|def=command
 src/mikemol/pathsforward/watchdogcmd.py|missing-watchdog-prints-a-command|    if found is None:|    if False:|def=tick_line
+src/mikemol/pathsforward/watchdogcmd.py|writer-path-resolved|        return str\(Path\(argv0\)\.absolute\(\)\)|        return str(Path(argv0).resolve())|def=writer_named
+src/mikemol/pathsforward/watchdogcmd.py|bare-writer-name-not-looked-up|    return which\(argv0\) or argv0|    return argv0|def=writer_named
+src/mikemol/pathsforward/watchdogcmd.py|unfound-writer-name-lost|    return which\(argv0\) or argv0|    return which(argv0) or ""|def=writer_named
+src/mikemol/pathsforward/watchdogcmd.py|slashed-writer-looked-up-on-path|    if "/" in argv0:|    if False:|def=writer_named
+src/mikemol/pathsforward/ops.py|atomized-children-not-caused-by-the-parent|Draft\(title, enables=\(parent,\), caused_by=parent\)|Draft(title, enables=(parent,))|def=atomize
+src/mikemol/pathsforward/ops.py|atomized-children-do-not-enable-the-parent|Draft\(title, enables=\(parent,\), caused_by=parent\)|Draft(title, caused_by=parent)|def=atomize
+src/mikemol/pathsforward/ops.py|atomize-rewrites-a-human-hold|    if text\(held, "status"\) == "blocked" and text\(held, "blocked_kind"\) == "human":|    if False:|def=atomize
+src/mikemol/pathsforward/ops.py|atomize-drops-earlier-blockers|    blockers = \(\*strlist\(find\(state, parent\), "blocked_on"\), \*children\)|    blockers = tuple(children)|def=atomize
+src/mikemol/pathsforward/ops.py|atomize-with-no-title|    if not names:|    if False:|def=atomize
+src/mikemol/pathsforward/ops.py|atomized-parent-blocked-on-a-human|blocked_kind="agent", blocked_on=blockers|blocked_kind="human", blocked_on=blockers|def=atomize
 src/mikemol/pathsforward/cli.py|bulk-done-or-working-allowed|    if upd\.status is not None and upd\.status not in _BULK_STATUSES:|    if False:|def=_update_many
 src/mikemol/pathsforward/bulkblock.py|unmanifested-takes-cards-with-a-manifest|                if text\(w, "status"\) == "ready" and not strlist\(w, "manifest"\)|                if text(w, "status") == "ready"|def=select_symbols
 src/mikemol/pathsforward/promptwatch.py|unchanged-prompt-noticed-again|    if before == now:|    if False:|def=notice
 src/mikemol/pathsforward/promptwatch.py|first-reading-diffed-against-nothing|    if before is None:|    if False:|def=notice
 src/mikemol/pathsforward/promptwatch.py|changed-lines-not-capped|    shown = changes\[:SHOWN\]|    shown = changes|def=notice
+src/mikemol/pathsforward/promptwatch.py|changed-prompt-forgotten-on-print|    changes = _changed\(before, now\)|    changes = [_changed(before, now), remember(seen, now)][0]|def=notice
 src/mikemol/pathsforward/promptwatch.py|ack-claims-without-reading-back|    return len\(now\.splitlines\(\)\) if taken else None|    return len(now.splitlines())|def=acknowledge
 src/mikemol/pathsforward/promptwatch.py|ack-never-records|    remember\(seen, now\)|    pass|def=acknowledge
 src/mikemol/pathsforward/cli.py|ack-refusal-ignored|    if taken is None:|    if False:|def=_prompt_ack
