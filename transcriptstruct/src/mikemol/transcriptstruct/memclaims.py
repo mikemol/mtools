@@ -32,7 +32,7 @@ from dataclasses import dataclass
 
 _OPERATOR = re.compile(r"\boperator\b", re.IGNORECASE)
 _DATE = re.compile(r"\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b")
-_MARK = re.compile(r'"')
+_STRAIGHT = str.maketrans({chr(0x201C): '"', chr(0x201D): '"', chr(0x2018): "'", chr(0x2019): "'"})
 _RELAYED = re.compile(r"\b(?:relayed|relays?|via|paraphras\w*)\b", re.IGNORECASE)
 _QUOTE_KIND = "quote"
 _RELAYED_KIND = "relayed"
@@ -62,6 +62,40 @@ def _unwrapped(raw: str) -> str:
     return raw.strip().removeprefix(_DESCRIPTION).strip().strip('"')
 
 
+def straight(line: str) -> str:
+    """Read curly quote marks and escaped double quotes as plain ones.
+
+    Returns:
+        the line with only straight quote marks.
+
+    """
+    return line.replace('\\"', '"').translate(_STRAIGHT)
+
+
+def quote_spans(text: str, mark: str = '"') -> list[tuple[int, int]]:
+    """Find the quoted spans of a line, pairing marks by their shape (W1551).
+
+    Returns:
+        the (opening, closing) indexes of each pair, in order; a mark that fits neither role, or a
+        closing mark with nothing open, is skipped. An apostrophe inside a word opens nothing.
+
+    """
+    spans: list[tuple[int, int]] = []
+    opened: int | None = None
+    for at, char in enumerate(text):
+        if char != mark:
+            continue
+        before = text[at - 1] if at else _BLANK
+        after = text[at + 1] if at + 1 < len(text) else _BLANK
+        if opened is None:
+            if not before.isalnum() and not after.isspace():
+                opened = at
+        elif not before.isspace() and not after.isalnum():
+            spans.append((opened, at))
+            opened = None
+    return spans
+
+
 def first_quote(line: str) -> str | None:
     """Take the first long double-quoted passage of a line, pairing marks by their shape.
 
@@ -70,20 +104,10 @@ def first_quote(line: str) -> str | None:
         least twenty characters.
 
     """
-    text = line.replace('\\"', '"').replace("“", '"').replace("”", '"')
-    opened: int | None = None
-    for found in _MARK.finditer(text):
-        at = found.start()
-        before = text[at - 1] if at else _BLANK
-        after = text[at + 1] if at + 1 < len(text) else _BLANK
-        if opened is None:
-            if not before.isalnum() and not after.isspace():
-                opened = at
-        elif not before.isspace() and not after.isalnum():
-            passage = text[opened + 1 : at]
-            if len(passage) >= _MIN_QUOTE:
-                return passage
-            opened = None
+    text = straight(line)
+    for start, end in quote_spans(text):
+        if end - start - 1 >= _MIN_QUOTE:
+            return text[start + 1 : end]
     return None
 
 

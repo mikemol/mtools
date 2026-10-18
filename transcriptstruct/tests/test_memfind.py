@@ -59,6 +59,50 @@ def test_a_quote_is_found_across_curly_marks_backticks_newlines_and_edge_punctua
     assert warrant_for(stop, [bare]).record == bare
 
 
+def test_nested_quote_kinds_and_apostrophes_do_not_break_a_match() -> None:
+    """The note nests single quotes where the operator typed double ones (github-8f's fixture)."""
+    note = Claim(
+        11,
+        "quote",
+        "We're going to need to audit the memory files against the same "
+        "'verify against the transcript/find the operator ruling' principles.",
+    )
+    typed = (
+        "yup. We're going to need to audit the memory files against the same "
+        '"verify against the transcript/find the operator ruling" principles.'
+    )
+    said = Utterance("t.jsonl", 77941, "55e12520", "2026-10-18T09:41:22Z", typed)
+    found = warrant_for(note, [said])
+    assert (found.status, found.record, found.approximate) == (WARRANTED, said, False)
+
+
+def test_a_typo_in_the_operators_message_still_finds_a_long_quote_marked_approximate() -> None:
+    """'proding' in the transcript, 'prodding' in the note: the fuzzy pass finds it and says so."""
+    typed = "But it looks like you need to be poking and proding more consistently. And so on."
+    said = Utterance("t.jsonl", 73631, "e8b73388", "2026-10-17T08:19:50Z", typed)
+    note = Claim(17, "quote", "you need to be poking and prodding more consistently")
+    found = warrant_for(note, [said])
+    assert (found.status, found.record, found.approximate) == (WARRANTED, said, True)
+
+
+def test_two_typos_are_forgiven_only_by_the_near_match_not_by_the_exact_share() -> None:
+    """Five of seven words exact is under the bar; the two typos bring it to all seven."""
+    typed = "you need to be proding and poking more consistently"
+    said = Utterance("t.jsonl", 5, "u5", "2026-10-17T08:30:00Z", typed)
+    claim = Claim(5, "quote", "you need to be prodding and pokeing more")
+    found = warrant_for(claim, [said])
+    assert (found.status, found.approximate) == (WARRANTED, True)
+
+
+def test_the_fuzzy_pass_does_not_guess_for_a_short_quote_or_an_unrelated_message() -> None:
+    """Under six words, or with most words absent, a miss stays a miss."""
+    short = Utterance("t.jsonl", 1, "u1", "2026-10-17T08:00:00Z", "poking and proding it")
+    assert warrant_for(Claim(1, "quote", "poking and prodding it"), [short]).status == UNWARRANTED
+    other = Utterance("t.jsonl", 2, "u2", "2026-10-17T08:01:00Z", "an entirely different message")
+    long_claim = Claim(2, "quote", "you need to be poking and prodding more consistently")
+    assert warrant_for(long_claim, [other]).status == UNWARRANTED
+
+
 def test_normal_and_terms_read_the_text_without_stop_words() -> None:
     """Whitespace collapses, case folds, and short or stop words are not key terms."""
     assert normal("  A   B\nc ") == "a b c"

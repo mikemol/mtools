@@ -149,6 +149,7 @@ def audit_note(name: str, text: str, utterances: list[Utterance]) -> list[Row]:
         where = found.claim.text[:_DETAIL]
         if record is not None:
             where = f"{record.path}:{record.line} uuid={record.uuid}"
+            where += " (approximate)" if found.approximate else ""
         unfound = found.claim.text if found.status in _UNFOUND else ""
         rows.append(Row(name, found.claim.line, found.status, where, unfound))
     since = _latest([c.text for c in claims])

@@ -84,6 +84,15 @@ def test_a_short_quote_is_not_a_claim_and_the_next_long_one_is() -> None:
     assert memclaims.first_quote(line) == "Return to the no-swarm rule please."
 
 
+def test_quote_spans_pair_marks_by_shape_for_either_mark_and_ignore_apostrophes() -> None:
+    """An apostrophe inside a word opens nothing; single and double quotes pair the same way."""
+    text = "it's \"one\" and 'two' and don't \"three\""
+    doubles = [text[a + 1 : b] for a, b in memclaims.quote_spans(text)]
+    singles = [text[a + 1 : b] for a, b in memclaims.quote_spans(text, "'")]
+    assert doubles == ["one", "three"]
+    assert singles == ["two"]
+
+
 def test_a_line_with_a_quote_and_a_date_is_one_claim_never_two() -> None:
     """The quote wins, so the same line is not listed again as a ruling."""
     found = memclaims.claims('operator 2026-10-02: "I do not want one waypoint per tick."\n')

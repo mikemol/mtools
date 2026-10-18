@@ -17,6 +17,7 @@ proof. Terms are the note's own words of five letters or more, minus the stop wo
 CONSUMED BY: the memory audit (`memaudit`).
 """
 
+import difflib
 import re
 from dataclasses import dataclass
 from typing import cast
@@ -25,6 +26,10 @@ from mikemol.transcriptstruct.memclaims import Claim
 
 OVERLAP = 3
 SHARE = 0.3
+COVER = 0.85
+PREFILTER = 0.6
+MIN_TOKENS = 6
+SLACK = 20
 LONG = 2000
 _PASTED = "<pasted_content"
 UNWARRANTED = "UNWARRANTED"
@@ -34,9 +39,9 @@ RELAYED = "RELAYED"
 _WORDS_KINDS = frozenset({"quote", "relayed"})
 _WORD = re.compile(r"[a-z]{5,}")
 _SPACE = re.compile(r"\s+")
-_FOLD = str.maketrans(
-    {chr(0x2018): "'", chr(0x2019): "'", chr(0x201C): '"', chr(0x201D): '"', "`": None, "*": None}
-)
+_TOKEN = re.compile(r"[a-z0-9]+")
+_QUOTE_MARKS = "'\"`*" + "".join(chr(code) for code in (0x2018, 0x2019, 0x201C, 0x201D))
+_FOLD = str.maketrans("", "", _QUOTE_MARKS)
 _EDGE = " .,;:!?\"'"
 _STOP = frozenset(
     {
@@ -81,6 +86,11 @@ class Finding:
     claim: Claim
     status: str
     record: Utterance | None
+    approximate: bool = False
+
+
+def _words(text: str) -> list[str]:
+    return cast("list[str]", _TOKEN.findall(text))
 
 
 def _when(utterance: Utterance) -> str:
@@ -120,6 +130,31 @@ def terms(text: str) -> frozenset[str]:
     return frozenset(w for w in words if w not in _STOP)
 
 
+def _coverage(wanted: list[str], said: list[str]) -> float:
+    """Measure how much of a quote's words an utterance carries, forgiving a typo in a word.
+
+    ⚑ THE OPERATOR TYPES FAST AND THE NOTE WAS TIDIED (github-8f, 2026-10-18, W1552): the
+    utterance says "proding" where the note quotes "prodding", and an exact substring misses it.
+    A word counts when the utterance has it or has one at least `COVER` alike (difflib ratio). The
+    exact share is checked first against `PREFILTER`, so the slow comparison runs only on
+    utterances that already carry most of the words.
+
+    Returns:
+        the share of the quote's words found, 0.0 when the prefilter or the length bound fails.
+
+    """
+    pool = set(said)
+    exact = sum(1 for word in wanted if word in pool)
+    if exact / len(wanted) < PREFILTER or len(said) > SLACK + len(wanted) * 4:
+        return 0.0
+    near = sum(
+        1
+        for word in wanted
+        if word not in pool and difflib.get_close_matches(word, pool, n=1, cutoff=COVER)
+    )
+    return (exact + near) / len(wanted)
+
+
 def warrant_for(claim: Claim, utterances: list[Utterance]) -> Finding:
     """Find the utterance that carries a claimed quote.
 
@@ -138,6 +173,16 @@ def warrant_for(claim: Claim, utterances: list[Utterance]) -> Finding:
         for found in sorted(utterances, key=_when):
             if wanted in normal(found.text):
                 return Finding(claim, WARRANTED, found)
+    if claim.kind in _WORDS_KINDS:
+        tokens = _words(wanted)
+        if len(tokens) >= MIN_TOKENS:
+            for found in sorted(utterances, key=_when):
+                lowered = normal(found.text)
+                if sum(1 for word in tokens if word in lowered) < PREFILTER * len(tokens):
+                    continue
+                said = _words(lowered)
+                if not _pasted(found) and _coverage(tokens, said) >= COVER:
+                    return Finding(claim, WARRANTED, found, approximate=True)
     status = {"quote": UNWARRANTED, "relayed": RELAYED}.get(claim.kind, DATED)
     return Finding(claim, status, None)
 
