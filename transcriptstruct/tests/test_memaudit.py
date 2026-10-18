@@ -119,6 +119,40 @@ def test_a_quote_no_project_carries_stays_unwarranted(tmp_path: Path) -> None:
     assert any(r.status == "UNWARRANTED" and "nobody ever said" in r.detail for r in rows)
 
 
+def _memory(tmp_path: Path, index: str | None, *names: str) -> Path:
+    # A memory directory holding the named notes and, when given, an index text.
+    memory = tmp_path / "proj" / "memory"
+    memory.mkdir(parents=True)
+    for name in names:
+        (memory / name).write_text("---\nname: n\n---\n\nPlain text.\n", encoding="utf-8")
+    if index is not None:
+        (memory / "MEMORY.md").write_text(index, encoding="utf-8")
+    return memory
+
+
+def test_a_note_no_index_line_points_at_is_unindexed_and_an_indexed_one_is_not(
+    tmp_path: Path,
+) -> None:
+    """The el-openglo shape: a note with no MEMORY.md line never loads, so it is reported."""
+    memory = _memory(tmp_path, "- [Seen](seen.md) - indexed\n", "seen.md", "hidden.md")
+    rows = [r for r in memaudit.audit(memory) if r.status == memaudit.UNINDEXED]
+    assert [(r.note, r.line) for r in rows] == [("hidden.md", 0)]
+    assert "MEMORY.md" in rows[0].detail
+
+
+def test_a_directory_with_no_index_has_every_note_unindexed(tmp_path: Path) -> None:
+    """With no MEMORY.md nothing loads at all."""
+    memory = _memory(tmp_path, None, "a.md", "b.md")
+    rows = [r for r in memaudit.audit(memory) if r.status == memaudit.UNINDEXED]
+    assert [r.note for r in rows] == ["a.md", "b.md"]
+
+
+def test_the_index_reader_maps_each_target_to_its_first_line_and_reads_several_per_line() -> None:
+    """A note linked twice reports the earlier line; two links on one line are both read."""
+    text = "- [A](a.md) and [B](b.md)\n- [A again](a.md)\n- [not a note](page.html)\n"
+    assert memaudit.indexed(text) == {"a.md": 1, "b.md": 1}
+
+
 def test_the_mode_prints_one_row_per_line_and_writes_nothing(tmp_path: Path) -> None:
     """`--audit-memory DIR` is a dry run: rows on stdout, every note left as it was."""
     memory = _project(tmp_path)

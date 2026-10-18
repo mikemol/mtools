@@ -33,3 +33,5 @@ src/mikemol/transcriptstruct/memfind.py|typo-never-forgiven|        if word not 
 src/mikemol/transcriptstruct/memfind.py|short-quote-fuzzed|        if len\(tokens\) >= MIN_TOKENS:|        if True:|def=warrant_for
 src/mikemol/transcriptstruct/memgrants.py|long-quote-hidden-as-a-mention|            if end - start - 1 <= _MENTION_MAX:|            if True:|def=_unmentioned
 src/mikemol/transcriptstruct/memgrants.py|name-line-flagged|        if _IDENTIFIER\.match\(raw\):|        if False:|def=grants
+src/mikemol/transcriptstruct/memaudit.py|unindexed-note-not-reported|            if name not in pointed:|            if False:|def=audit
+src/mikemol/transcriptstruct/memaudit.py|index-target-keeps-its-last-line|            found\.setdefault\(target, number\)|            found[target] = number|def=indexed

@@ -990,3 +990,24 @@
   claim  = {Five of seven words exact is under the bar; the two typos bring it to all seven.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_two_typos_are_forgiven_only_by_the_near_match_not_by_the_exact_share},
 }
+
+@misc{transcriptstruct-memaudit-note-no-index-line-points-at-is-unindexed-and-an-indexed-one-is-not,
+  section = {memaudit},
+  title  = {The el-openglo shape: a note with no MEMORY.md line never loads, so it is reported},
+  claim  = {The el-openglo shape: a note with no MEMORY.md line never loads, so it is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_note_no_index_line_points_at_is_unindexed_and_an_indexed_one_is_not},
+}
+
+@misc{transcriptstruct-memaudit-directory-with-no-index-has-every-note-unindexed,
+  section = {memaudit},
+  title  = {With no MEMORY.md nothing loads at all},
+  claim  = {With no MEMORY.md nothing loads at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_directory_with_no_index_has_every_note_unindexed},
+}
+
+@misc{transcriptstruct-memaudit-index-reader-maps-each-target-to-its-first-line-and-reads-several-per-line,
+  section = {memaudit},
+  title  = {A note linked twice reports the earlier line; two links on one line are both read},
+  claim  = {A note linked twice reports the earlier line; two links on one line are both read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_the_index_reader_maps_each_target_to_its_first_line_and_reads_several_per_line},
+}

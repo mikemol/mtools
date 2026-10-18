@@ -7,7 +7,8 @@ memory files are audited against the same "verify against the transcript, find t
 ruling" principles as a card. For each note this prints one row per finding and writes nothing:
 a GRANT row for each line that grants a permission or lifts a rule (priority review), a
 WARRANTED or UNWARRANTED row for each claimed operator quote (WARRANTED names the record), and
-up to `SHOWN` POSSIBLY-SUPERSEDED rows naming the newest later utterances on the note's subject.
+up to `SHOWN` POSSIBLY-SUPERSEDED rows naming the newest later utterances on the note's subject,
+and an UNINDEXED row for a note no line of `MEMORY.md` points at.
 
 ⚑ THE TRANSCRIPTS ARE THE MEMORY DIRECTORY'S PARENT (`~/.claude/projects/<project>/memory`), the
 top-level `*.jsonl` only: a subagent's transcript is not the operator's. Each session reviews its
@@ -32,8 +33,10 @@ SUPERSEDED = "POSSIBLY-SUPERSEDED"
 LINKED_NEWER = "LINKED-NEWER"
 LINK_OVERLAP = 2
 ELSEWHERE = "ELSEWHERE"
+UNINDEXED = "UNINDEXED"
 _UNFOUND = frozenset({memfind.UNWARRANTED, memfind.RELAYED})
 INDEX = "MEMORY.md"
+_INDEXED = re.compile(r"\]\(([^)\s]+\.md)\)")
 _DATE = re.compile(r"\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b")
 _SUBJECT = re.compile(r"^(?:name|description):")
 _LINK = re.compile(r"\[\[([^\]\n]+)\]\]")
@@ -73,6 +76,20 @@ def utterances_of(project: Path) -> list[Utterance]:
     for path in sorted(project.glob("*.jsonl")):
         result = grep_prose(read_path(path), ".", speakers={"human"})
         found.extend(Utterance(str(path), h.line, h.uuid, h.at, h.text) for h in result.hits)
+    return found
+
+
+def indexed(index: str) -> dict[str, int]:
+    """Read which note files the index points at, and the first line that does.
+
+    Returns:
+        each `(file.md)` link target of the index, mapped to its first line number.
+
+    """
+    found: dict[str, int] = {}
+    for number, raw in enumerate(index.splitlines(), start=1):
+        for target in cast("list[str]", _INDEXED.findall(raw)):
+            found.setdefault(target, number)
     return found
 
 
@@ -208,15 +225,23 @@ def _siblings(memory: Path) -> list[Path]:
 def audit(memory: Path) -> list[Row]:
     """Audit every note of a memory directory against its project's transcripts.
 
+    ⚑ A NOTE NO INDEX LINE POINTS AT NEVER LOADS (github-8f, 2026-10-18, W1568, from el-openglo's
+    W686): the superseding no-swarm ruling sat in a file with no `MEMORY.md` line, so only the stale
+    grant was ever read. Every such note gets an UNINDEXED row, and a directory with no index at
+    all has every note unindexed.
+
     Returns:
         the findings, note by note in name order; `MEMORY.md` is the index and is skipped.
 
     """
     utterances = utterances_of(memory.parent)
     notes = {p.name: p.read_text(encoding="utf-8") for p in sorted(memory.glob("*.md"))}
+    pointed = indexed(notes.get(INDEX, ""))
     rows: list[Row] = []
     for name, text in notes.items():
         if name != INDEX:
             rows.extend(audit_note(name, text, utterances))
             rows.extend(linked_newer(name, text, notes))
+            if name not in pointed:
+                rows.append(Row(name, 0, UNINDEXED, f"no line of {INDEX} points at it"))
     return elsewhere(rows, _siblings(memory))
