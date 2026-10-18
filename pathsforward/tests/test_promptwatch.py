@@ -82,3 +82,44 @@ def test_tick_open_prints_the_notice_from_the_prompt_above_the_repo(
     capsys.readouterr()
     assert cli.main(["--state", str(state), "--tick-open", "tester"]) == 0
     assert "canonical loop prompt changed since your last tick" in capsys.readouterr().out
+
+
+def test_an_acknowledgement_records_the_prompt_as_read_and_counts_its_lines(tmp_path: Path) -> None:
+    """After it, the prompt as it stands is the reading the next notice compares against."""
+    prompt, seen = _files(tmp_path)
+    prompt.write_text("a\nb\n", encoding="utf-8")
+    assert promptwatch.acknowledge(prompt, seen) == len(("a", "b"))
+    assert seen.read_text(encoding="utf-8") == "a\nb\n"
+    assert promptwatch.notice(prompt, seen) == []
+
+
+def test_an_acknowledgement_of_no_prompt_or_of_a_record_that_did_not_take_is_none(
+    tmp_path: Path,
+) -> None:
+    """It claims nothing it cannot read back."""
+    prompt, seen = _files(tmp_path)
+    assert promptwatch.acknowledge(prompt, seen) is None
+    prompt.write_text("a\n", encoding="utf-8")
+    blocker = tmp_path / "blocker"
+    blocker.write_text("a file where the directory should be", encoding="utf-8")
+    assert promptwatch.acknowledge(prompt, blocker / "loop-prompt.seen") is None
+
+
+def test_the_prompt_ack_flag_records_the_reading_beside_the_git_directory(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The session says it read the prompt, by name, and the record is where the notice looks."""
+    canonical = tmp_path / ".claude" / promptwatch.PROMPT_NAME
+    canonical.parent.mkdir()
+    canonical.write_text("rule one\n", encoding="utf-8")
+    state = tmp_path / "myrepo" / ".claude" / "paths-forward.json"
+    state.parent.mkdir(parents=True)
+    root = str(tmp_path / "myrepo")
+    doc: dict[str, object] = {"counter": 0, "waypoints": [], "project_root": root}
+    state.write_text(json.dumps(doc), encoding="utf-8")
+    assert cli.main(["--state", str(state), "--prompt-ack"]) == 0
+    assert "loop prompt acknowledged" in capsys.readouterr().out
+    seen = tmp_path / "myrepo" / ".git" / "mtools" / promptwatch.SEEN_NAME
+    assert seen.read_text(encoding="utf-8") == "rule one\n"
+    canonical.unlink()
+    assert cli.main(["--state", str(state), "--prompt-ack"]) != 0

@@ -179,6 +179,9 @@ src/mikemol/pathsforward/bulkblock.py|unmanifested-takes-cards-with-a-manifest| 
 src/mikemol/pathsforward/promptwatch.py|unchanged-prompt-noticed-again|    if before == now:|    if False:|def=notice
 src/mikemol/pathsforward/promptwatch.py|first-reading-diffed-against-nothing|    if before is None:|    if False:|def=notice
 src/mikemol/pathsforward/promptwatch.py|changed-lines-not-capped|    shown = changes\[:SHOWN\]|    shown = changes|def=notice
+src/mikemol/pathsforward/promptwatch.py|ack-claims-without-reading-back|    return len\(now\.splitlines\(\)\) if taken else None|    return len(now.splitlines())|def=acknowledge
+src/mikemol/pathsforward/promptwatch.py|ack-never-records|    remember\(seen, now\)|    pass|def=acknowledge
+src/mikemol/pathsforward/cli.py|ack-refusal-ignored|    if taken is None:|    if False:|def=_prompt_ack
 src/mikemol/pathsforward/refusal_record.py|home-file-not-counted|    return \(Path\(home\) / HOME_FILE\)\.is_file\(\)|    return False|def=store_named
 src/mikemol/pathsforward/refusal_record.py|set-variable-not-enough|    if where\.get\(ENDPOINTS_ENV\):|    if False:|def=store_named
 src/mikemol/pathsforward/landed.py|unreadable-log-read-as-empty|    return None if log is None else trailer_cards\(log\)|    return trailer_cards(log or "")|def=landed_since

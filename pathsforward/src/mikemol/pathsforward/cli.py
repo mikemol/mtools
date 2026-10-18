@@ -419,6 +419,7 @@ _FLAGS = (
     "standing",
     "ready_count",
     "watchdog_line",
+    "prompt_ack",
 )
 _VALUED = (
     "verify",
@@ -2486,6 +2487,26 @@ def _watchdog_line(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _prompt_ack(ctx: Ctx) -> int:
+    """Record that the session has read the canonical loop prompt as it stands (W1562, github-8f).
+
+    ⚑ "THE CRON READS IT EVERY TICK" IS NOT A READING BY THE SESSION: a rule was loaded and never
+    noticed. This is the session saying it read the lines `--tick-open` showed, by name, once.
+
+    Returns:
+        EXIT_OK, or EXIT_REFUSED when there is no prompt to acknowledge or the record did not take.
+
+    """
+    root = ctx.path.parent.parent
+    prompt = promptwatch.prompt_of(root)
+    taken = promptwatch.acknowledge(prompt, root / ".git" / "mtools" / promptwatch.SEEN_NAME)
+    if taken is None:
+        _warn(f"REFUSED: no loop prompt at {prompt}, or the acknowledgement was not recorded")
+        return EXIT_REFUSED
+    _say(f"loop prompt acknowledged: {prompt} ({taken} lines)")
+    return EXIT_OK
+
+
 def _tick_hooks_set(ctx: Ctx) -> int:
     """Store a file's commands as the tick hooks, replacing them whole (W1348, nemik:W450).
 
@@ -2778,6 +2799,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "preamble_set": _preamble_set,
     "standing": _standing,
     "watchdog_line": _watchdog_line,
+    "prompt_ack": _prompt_ack,
     "ready_count": _ready_count,
     "standing_set": _standing_set,
     "tick_hooks_set": _tick_hooks_set,

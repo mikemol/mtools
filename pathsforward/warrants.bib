@@ -6149,3 +6149,24 @@
   claim  = {A cron job or a terminal has no session: the field is absent, never a guess.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger_session.py -k test_own_line_leaves_the_session_empty_when_unset_or_not_a_uuid},
 }
+
+@misc{pathsforward-promptwatch-acknowledgement-records-the-prompt-as-read-and-counts-its-lines,
+  section = {promptwatch},
+  title  = {After it, the prompt as it stands is the reading the next notice compares against},
+  claim  = {After it, the prompt as it stands is the reading the next notice compares against.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_an_acknowledgement_records_the_prompt_as_read_and_counts_its_lines},
+}
+
+@misc{pathsforward-promptwatch-acknowledgement-of-no-prompt-or-of-a-record-that-did-not-take-is-none,
+  section = {promptwatch},
+  title  = {It claims nothing it cannot read back},
+  claim  = {It claims nothing it cannot read back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_an_acknowledgement_of_no_prompt_or_of_a_record_that_did_not_take_is_none},
+}
+
+@misc{pathsforward-promptwatch-prompt-ack-flag-records-the-reading-beside-the-git-directory,
+  section = {promptwatch},
+  title  = {The session says it read the prompt, by name, and the record is where the notice looks},
+  claim  = {The session says it read the prompt, by name, and the record is where the notice looks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_the_prompt_ack_flag_records_the_reading_beside_the_git_directory},
+}

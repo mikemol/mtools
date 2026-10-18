@@ -57,6 +57,29 @@ def remember(seen: Path, text: str) -> None:
         return
 
 
+def acknowledge(prompt: Path, seen: Path) -> int | None:
+    """Record the canonical prompt as read, and confirm the record took (W1562, github-8f).
+
+    ⚑ AN ACKNOWLEDGEMENT THAT CAN FAIL SILENTLY IS NOT ONE: `remember` ignores a failed write,
+    which is right for a notice and wrong here, so the record is read back before it is claimed.
+
+    Returns:
+        the number of lines acknowledged, or None when the prompt is absent or the record did not
+        take.
+
+    """
+    try:
+        now = prompt.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    remember(seen, now)
+    try:
+        taken = seen.read_text(encoding="utf-8") == now
+    except OSError:
+        return None
+    return len(now.splitlines()) if taken else None
+
+
 def notice(prompt: Path, seen: Path) -> list[str]:
     """Compare the canonical prompt with what the previous tick saw, and remember this reading.
 
