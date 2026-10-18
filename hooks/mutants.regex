@@ -366,3 +366,5 @@ src/mikemol/hooks/stackimports.py|head-module-refused|                if later a
 src/mikemol/hooks/stackimports.py|names-from-a-package-not-read|            found\.update\(str\(root / base / \(alias\.name \+ "\.py"\)\) for alias in node\.names\)|            pass|def=candidates
 src/mikemol/hooks/commit_span.py|home-file-not-counted|    return \(Path\(home\) / HOME_FILE\)\.is_file\(\)|    return False|def=store_named
 src/mikemol/hooks/commit_span.py|set-variable-not-enough|    if env\.get\(ENDPOINTS_ENV\):|    if False:|def=store_named
+src/mikemol/hooks/pycheck_house.py|error-codes-dropped|    codes = tuple\(word for code in ERROR_CODES for word in \("--enable-error-code", code\)\)|    codes = ()|def=mypy_flags
+src/mikemol/hooks/pycheck_house.py|underscores-kept-in-flags|    booleans = tuple\("--" \+ key\.replace\("_", "-"\) for key in MYPY_HOUSE_KEYS\)|    booleans = tuple("--" + key for key in MYPY_HOUSE_KEYS)|def=mypy_flags

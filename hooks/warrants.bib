@@ -11642,3 +11642,24 @@
   claim  = {The negative control: an empty environment, and a HOME with no file, send nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_store_named.py -k test_no_variable_and_no_file_name_no_store},
 }
+
+@misc{hooks-pycheck-house-every-house-key-is-one-double-dash-word,
+  section = {pycheck_house},
+  title  = {Each boolean key becomes its own flag, with underscores as hyphens},
+  claim  = {Each boolean key becomes its own flag, with underscores as hyphens.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house.py -k test_every_house_key_is_one_double_dash_word},
+}
+
+@misc{hooks-pycheck-house-each-error-code-follows-its-enable-flag,
+  section = {pycheck_house},
+  title  = {An error code is passed as a pair, so no code is read as a flag of its own},
+  claim  = {An error code is passed as a pair, so no code is read as a flag of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house.py -k test_each_error_code_follows_its_enable_flag},
+}
+
+@misc{hooks-pycheck-house-set-is-stable-and-has-no-repeats,
+  section = {pycheck_house},
+  title  = {The same call gives the same words in the same order, and none twice but the flag name},
+  claim  = {The same call gives the same words in the same order, and none twice but the flag name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house.py -k test_the_set_is_stable_and_has_no_repeats},
+}
