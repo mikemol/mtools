@@ -23,7 +23,7 @@ from enum import StrEnum
 from itertools import starmap
 from typing import cast
 
-from mikemol.pathsforward import attach, lock, realizable, recurrence, timevalue, vector
+from mikemol.pathsforward import attach, lock, realizable, recurrence, suppliers, timevalue, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -184,6 +184,10 @@ class Update:
     # `()` clears. `size_class` is `small`, `medium` or `large` ('' clears).
     manifest: tuple[str, ...] | None = None
     size_class: str | None = None
+    # ⚑ A FALLBACK, NEVER A SECOND BLOCK (W1511, nemik:W343): other acceptable suppliers of what a
+    # waiting card wants, as citations (SET not merged; `()` clears), and a one-line `want`.
+    acceptable_suppliers: tuple[str, ...] | None = None
+    want: str | None = None
 
 
 @dataclass(frozen=True)
@@ -533,6 +537,7 @@ def _set_given(new: Json, upd: Update) -> None:
     if upd.exdates is not None:
         new["exdates"] = list(upd.exdates) or None
     new.update(_manifest_fields(upd))
+    new.update(suppliers.fields(upd.acceptable_suppliers, upd.want))
     for key, item in (
         ("unchanged", upd.unchanged),
         ("rejected", upd.rejected),
@@ -622,6 +627,7 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
 
     """
     _refuse_enums(upd)
+    suppliers.check(sym, upd.acceptable_suppliers, upd.want)
     if upd.caused_by is not None and any(ch.isspace() for ch in upd.caused_by):
         # The same one-token rule --add applies, so the two routes cannot disagree.
         msg = f"{sym}: caused_by {upd.caused_by!r} is not one token"

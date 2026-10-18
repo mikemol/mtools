@@ -517,6 +517,8 @@ _FIELDS = (
     "deferred",
     "manifest",
     "size",
+    "acceptable_suppliers",
+    "want",
     "facts",
     "admit",
     "gate",
@@ -570,6 +572,8 @@ _APPLIES: dict[str, frozenset[str]] = {
             "deferred",
             "manifest",
             "size",
+            "acceptable_suppliers",
+            "want",
             "admit",
             "root",
         }
@@ -796,12 +800,30 @@ def _add_manifest_fields(ap: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_supplier_fields(ap: argparse.ArgumentParser) -> None:
+    """Add the flags for a waiting card's fallback suppliers (W1511); checked in `suppliers`."""
+    ap.add_argument(
+        "--acceptable-suppliers",
+        action="extend",
+        nargs="*",
+        metavar="REF",
+        help="--update: the WHOLE list of other waypoints (W<n> or repo:W<n>) that could supply "
+        "what this card waits for; a fallback, never a second block; bare flag clears",
+    )
+    ap.add_argument(
+        "--want",
+        metavar="TEXT",
+        help="--update: one line naming the asset this card waits for; '' clears",
+    )
+
+
 def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     """Add the flags for the fields the realizability policy reads (W849).
 
     ⚑ FORM IS CHECKED IN `realizable`, NEVER HERE: these only collect the words.
     """
     _add_manifest_fields(ap)
+    _add_supplier_fields(ap)
     for name in ("reference-arm", "command"):
         ap.add_argument(
             f"--{name}", metavar="TEXT", help=f"--update: the realizability {name}; '' clears"
@@ -1790,6 +1812,8 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         deferred=ctx.many("deferred"),
         manifest=ctx.many("manifest"),
         size_class=ctx.get("size"),
+        acceptable_suppliers=ctx.many("acceptable_suppliers"),
+        want=ctx.get("want"),
     )
 
 

@@ -179,3 +179,5 @@ src/mikemol/pathsforward/bulkblock.py|unmanifested-takes-cards-with-a-manifest| 
 src/mikemol/pathsforward/promptwatch.py|unchanged-prompt-noticed-again|    if before == now:|    if False:|def=notice
 src/mikemol/pathsforward/promptwatch.py|first-reading-diffed-against-nothing|    if before is None:|    if False:|def=notice
 src/mikemol/pathsforward/promptwatch.py|changed-lines-not-capped|    shown = changes\[:SHOWN\]|    shown = changes|def=notice
+src/mikemol/pathsforward/suppliers.py|non-citation-supplier-accepted|        if not is_reference\(item\):|        if False:|def=check
+src/mikemol/pathsforward/suppliers.py|empty-list-stored-not-cleared|        out\["acceptable_suppliers"\] = list\(suppliers\) or None|        out["acceptable_suppliers"] = list(suppliers)|def=fields

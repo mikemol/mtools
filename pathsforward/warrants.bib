@@ -6021,3 +6021,38 @@
   claim  = {The canonical file lives in the directory above the repo, as it does under ~/github.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_promptwatch.py -k test_tick_open_prints_the_notice_from_the_prompt_above_the_repo},
 }
+
+@misc{pathsforward-suppliers-suppliers-and-want-are-stored-on-the-card,
+  section = {suppliers},
+  title  = {Both fields are written as given, the suppliers as a list of citations},
+  claim  = {Both fields are written as given, the suppliers as a list of citations.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppliers.py -k test_suppliers_and_want_are_stored_on_the_card},
+}
+
+@misc{pathsforward-suppliers-fields-never-change-status-or-the-block,
+  section = {suppliers},
+  title  = {A fallback is not a second block: a blocked card stays blocked on blocked_on alone},
+  claim  = {A fallback is not a second block: a blocked card stays blocked on blocked_on alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppliers.py -k test_the_fields_never_change_status_or_the_block},
+}
+
+@misc{pathsforward-suppliers-supplier-that-is-not-a-citation-is-refused-and-nothing-is-stored,
+  section = {suppliers},
+  title  = {A bare repo name names no waypoint, so it is refused as blocked_on's form is},
+  claim  = {A bare repo name names no waypoint, so it is refused as blocked_on's form is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppliers.py -k test_a_supplier_that_is_not_a_citation_is_refused_and_nothing_is_stored},
+}
+
+@misc{pathsforward-suppliers-want-of-more-than-one-line-is-refused,
+  section = {suppliers},
+  title  = {The want is a label for the asset, one line, never a place for prose},
+  claim  = {The want is a label for the asset, one line, never a place for prose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppliers.py -k test_a_want_of_more_than_one_line_is_refused},
+}
+
+@misc{pathsforward-suppliers-bare-flag-and-an-empty-want-clear-the-fields,
+  section = {suppliers},
+  title  = {Set, not merged: the bare list flag and '' remove what was stored},
+  claim  = {Set, not merged: the bare list flag and '' remove what was stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppliers.py -k test_a_bare_flag_and_an_empty_want_clear_the_fields},
+}
