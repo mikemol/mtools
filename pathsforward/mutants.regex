@@ -134,8 +134,8 @@ src/mikemol/pathsforward/cli.py|close-writes-through-a-refusal|if verdict\.refus
 
 # A fresh-session reason is an atomize signal, not a block (W1284); the tally counts work (W1285).
 src/mikemol/pathsforward/closegate.py|fresh-session-reason-passes|if FRESH\.search\(reason or ""\):|if False:|def=judge
-src/mikemol/pathsforward/closegate.py|advanced-counts-every-card|text\(w, "last_worked"\) >= since|True|def=advanced
-src/mikemol/pathsforward/closegate.py|dropped-cards-are-not-advanced|if text\(r, "dropped_at"\) >= since|if False|def=advanced
+src/mikemol/pathsforward/closegate.py|advanced-counts-every-card|text\(w, "last_worked"\) >= since|True|def=touched
+src/mikemol/pathsforward/closegate.py|dropped-cards-are-not-advanced|if text\(r, "dropped_at"\) >= since|if False|def=touched
 src/mikemol/pathsforward/triage.py|ready-card-with-a-blocker-is-not-proposed|if text\(w, "status"\) == "ready" else \[\]|if False else []|def=_ready_with_blocker
 src/mikemol/pathsforward/triage.py|a-foreign-wait-is-ignored|or ":" in entry|or False|def=_waiting
 src/mikemol/pathsforward/triage.py|an-operator-ask-is-ignored|or entry\.startswith\(_OPERATOR\)|or False|def=_waiting
@@ -181,5 +181,7 @@ src/mikemol/pathsforward/promptwatch.py|first-reading-diffed-against-nothing|   
 src/mikemol/pathsforward/promptwatch.py|changed-lines-not-capped|    shown = changes\[:SHOWN\]|    shown = changes|def=notice
 src/mikemol/pathsforward/refusal_record.py|home-file-not-counted|    return \(Path\(home\) / HOME_FILE\)\.is_file\(\)|    return False|def=store_named
 src/mikemol/pathsforward/refusal_record.py|set-variable-not-enough|    if where\.get\(ENDPOINTS_ENV\):|    if False:|def=store_named
+src/mikemol/pathsforward/landed.py|unreadable-log-read-as-empty|    return None if log is None else trailer_cards\(log\)|    return trailer_cards(log or "")|def=landed_since
+src/mikemol/pathsforward/closegate.py|every-edit-counts-as-advanced|    return len\(stamped if landed is None else stamped & landed\)|    return len(stamped)|def=advanced
 src/mikemol/pathsforward/suppliers.py|non-citation-supplier-accepted|        if not is_reference\(item\):|        if False:|def=check
 src/mikemol/pathsforward/suppliers.py|empty-list-stored-not-cleared|        out\["acceptable_suppliers"\] = list\(suppliers\) or None|        out["acceptable_suppliers"] = list(suppliers)|def=fields

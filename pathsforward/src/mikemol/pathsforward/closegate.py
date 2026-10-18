@@ -37,6 +37,7 @@ from typing import cast
 
 from mikemol.pathsforward import lock
 from mikemol.pathsforward.behindopen import plan
+from mikemol.pathsforward.landed import landed_since
 from mikemol.pathsforward.ledger import Parsed, read
 from mikemol.pathsforward.model import State, text, workable
 
@@ -99,8 +100,8 @@ def tick_start(state: State, ledger: Path | None) -> str:
     return held[1] if held else ""
 
 
-def advanced(state: State, since: str) -> int:
-    """Count the cards advanced since `since`: worked, finished or dropped.
+def touched(state: State, since: str) -> set[str]:
+    """Name the cards a queue edit stamped since `since`: worked, finished or dropped.
 
     ⚑ A ONE-CARD TICK SHOWS IN ITS OWN OUTPUT: `last_worked` is stamped on every work update
     (a done transition included), and a dropped card leaves the queue for the residue with a
@@ -108,14 +109,29 @@ def advanced(state: State, since: str) -> int:
     strings.
 
     Returns:
-        the number of distinct cards, 0 when `since` is empty.
+        the distinct symbols, empty when `since` is empty.
 
     """
     if not since:
-        return 0
+        return set()
     worked = {text(w, "symbol") for w in state.waypoints if text(w, "last_worked") >= since}
     dropped = {text(r, "symbol") for r in state.residue if text(r, "dropped_at") >= since}
-    return len(worked | dropped)
+    return worked | dropped
+
+
+def advanced(state: State, since: str, landed: set[str] | None = None) -> int:
+    """Count the cards advanced since `since`: those a landed commit carries (W1377).
+
+    ⚑ AN EDIT IS NOT AN ADVANCE: with the symbols of the commits since the tick began, only a
+    touched card some commit carries counts, so one bulk call that unblocked 130 cards no longer
+    reads as 130 advanced. With `landed` None (no git to ask) every touched card counts, as before.
+
+    Returns:
+        the number of distinct cards, 0 when `since` is empty.
+
+    """
+    stamped = touched(state, since)
+    return len(stamped if landed is None else stamped & landed)
 
 
 def _named(state: State, blocked_by: str | None, reason: str | None, worked: str | None) -> str:
@@ -217,8 +233,12 @@ def judge(
     """
     ready = ready_cards(state)
     top = ", ".join(ready[:TOP]) or "none"
-    moved = advanced(state, tick_start(state, ledger))
-    count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {moved}"
+    since = tick_start(state, ledger)
+    landed = None if ledger is None else landed_since(ledger.parent.parent, since)
+    moved = advanced(state, since, landed)
+    open_edits = 0 if landed is None else len(touched(state, since) - landed)
+    edits = f"; {open_edits} touched, none landed" if open_edits else ""
+    count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {moved}{edits}"
     if not ready:
         return Verdict(refused=False, lines=(count,), note="")
     if FRESH.search(reason or ""):

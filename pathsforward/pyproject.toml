@@ -157,6 +157,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
+# ⚑ READING THE COMMIT LOG IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1377): the argv is the git
+# binary and fixed words plus a stamp from the ledger; nothing is run through a shell.
+"src/mikemol/pathsforward/landed.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_landed.py" = ["assert"]
 "tests/test_tickhooks.py" = ["assert"]
 "tests/test_manifests_file.py" = ["assert"]
 "tests/test_rank_from.py" = ["assert"]

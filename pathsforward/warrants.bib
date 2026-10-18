@@ -6071,3 +6071,32 @@
   claim  = {W1529: the negative control: HOME alone, with no file under it, is a silent no-op.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_home_without_the_hosts_file_and_no_variable_ships_nothing},
 }
+
+@misc{pathsforward-landed-waypoint-trailers-of-a-log-name-the-cards-it-landed,
+  section = {landed},
+  title  = {Only a line that is exactly a trailer counts: prose naming a card does not},
+  claim  = {Only a line that is exactly a trailer counts: prose naming a card does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_waypoint_trailers_of_a_log_name_the_cards_it_landed},
+}
+
+@misc{pathsforward-landed-no-answer-is-none-and-never-an-empty-set,
+  section = {landed},
+  title  = {A tick that could not look must not report that nothing landed},
+  claim  = {A tick that could not look must not report that nothing landed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_no_answer_is_none_and_never_an_empty_set},
+}
+
+@misc{pathsforward-landed-only-a-touched-card-a-commit-carries-is-advanced,
+  section = {landed},
+  title  = {Three cards were edited, one landed: one advanced, and the old count is kept without git},
+  claim  = {Three cards were edited, one landed: one advanced, and the old count is kept without
+            git.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_only_a_touched_card_a_commit_carries_is_advanced},
+}
+
+@misc{pathsforward-landed-close-says-how-many-edits-landed-nothing,
+  section = {landed},
+  title  = {The count line names the advanced cards and, apart, those touched with no landed commit},
+  claim  = {The count line names the advanced cards and, apart, those touched with no landed commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_close_says_how_many_edits_landed_nothing},
+}
