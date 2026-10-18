@@ -111,6 +111,35 @@ def test_with_only_the_endpoints_file_set_the_child_starts_without_a_url(tmp_pat
     assert "--url" not in seen[0]
 
 
+def test_the_hosts_file_under_home_configures_it_when_the_variable_is_unset(tmp_path: Path) -> None:
+    """W1529: a session with no MIKEMOL_ENDPOINTS still ships when the host's file is under HOME."""
+    seen: list[list[str]] = []
+
+    def start(argv: object, line: str) -> None:
+        del line
+        seen.append(list(argv) if isinstance(argv, list) else [])
+
+    home = tmp_path / "home"
+    (home / refusal_record.HOME_FILE).parent.mkdir(parents=True)
+    (home / refusal_record.HOME_FILE).write_text("{}", encoding="utf-8")
+    env = {"HOME": str(home), refusal_record.BIN_ENV: "/o/bin"}
+    assert refusal_record.emit("REFUSED: x", [], _state(tmp_path), env, start)
+    assert "--url" not in seen[0]
+
+
+def test_a_home_without_the_hosts_file_and_no_variable_ships_nothing(tmp_path: Path) -> None:
+    """W1529: the negative control: HOME alone, with no file under it, is a silent no-op."""
+    started: list[str] = []
+
+    def start(argv: object, line: str) -> None:
+        del argv
+        started.append(line)
+
+    env = {"HOME": str(tmp_path), refusal_record.BIN_ENV: "/o/bin"}
+    assert not refusal_record.emit("REFUSED: x", [], _state(tmp_path), env, start)
+    assert not started
+
+
 def test_a_child_that_cannot_start_leaves_the_refusal_untouched(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

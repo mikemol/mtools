@@ -34,6 +34,7 @@ from mikemol.pathsforward import foreign
 BIN_ENV = "MIKEMOL_OTLP_BIN"
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
 ENDPOINTS_ENV = "MIKEMOL_ENDPOINTS"
+HOME_FILE = ".config/mikemol/endpoints.json"
 CALLER_ENV = "MIKEMOL_CALLER"
 SERVICE = "mikemol-paths-forward"
 _QUOTED = re.compile(r"'[^']*'|\"[^\"]*\"")
@@ -155,6 +156,26 @@ def caller_of(env: Mapping[str, str], repo: str) -> str:
     return f"{parent}@{repo}" if parent else ""
 
 
+def store_named(where: Mapping[str, str]) -> bool:
+    """Say whether a destination can be named: the variable, or the host's file under HOME.
+
+    ⚑ A SESSION CARRIES NO `MIKEMOL_ENDPOINTS` (mtools:W1528, W1529), so the host's own file at
+    `$HOME/.config/mikemol/endpoints.json` counts, as it does for `mikemol-otlp` itself. The same
+    rule as `mikemol.hooks.commit_span.store_named`, written twice because this dist does not
+    depend on the hooks. The child still fails silent when the file holds no such name.
+
+    Returns:
+        whether a send is worth starting.
+
+    """
+    if where.get(ENDPOINTS_ENV):
+        return True
+    home = where.get("HOME")
+    if not home:
+        return False
+    return (Path(home) / HOME_FILE).is_file()
+
+
 def _ship(record: Record, state: Path, env: Mapping[str, str] | None, start: Spawn | None) -> bool:
     """Hand one record to `mikemol-otlp log`, when a binary and a destination exist.
 
@@ -168,7 +189,7 @@ def _ship(record: Record, state: Path, env: Mapping[str, str] | None, start: Spa
     # ⚑ ENDPOINT BY NAME IS THE ROUTE LUTHEN PREFERS (an address in an environment is an address
     # literal in their tree): with only MIKEMOL_ENDPOINTS set, the child resolves the name itself,
     # so no --url is passed. Neither variable set means nothing is configured: a silent no-op.
-    if (not url and not where.get(ENDPOINTS_ENV)) or program is None:
+    if (not url and not store_named(where)) or program is None:
         return False
     repo = state.parent.parent.name
     fields = (*record.fields, ("caller", caller_of(where, repo)))

@@ -6056,3 +6056,18 @@
   claim  = {Set, not merged: the bare list flag and '' remove what was stored.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_suppliers.py -k test_a_bare_flag_and_an_empty_want_clear_the_fields},
 }
+
+@misc{pathsforward-refusal-record-hosts-file-under-home-configures-it-when-the-variable-is-unset,
+  section = {refusal_record},
+  title  = {W1529: a session with no MIKEMOL_ENDPOINTS still ships when the host's file is under HOME},
+  claim  = {W1529: a session with no MIKEMOL_ENDPOINTS still ships when the host's file is under
+            HOME.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_the_hosts_file_under_home_configures_it_when_the_variable_is_unset},
+}
+
+@misc{pathsforward-refusal-record-home-without-the-hosts-file-and-no-variable-ships-nothing,
+  section = {refusal_record},
+  title  = {W1529: the negative control: HOME alone, with no file under it, is a silent no-op},
+  claim  = {W1529: the negative control: HOME alone, with no file under it, is a silent no-op.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_record.py -k test_a_home_without_the_hosts_file_and_no_variable_ships_nothing},
+}
