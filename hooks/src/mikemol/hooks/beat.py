@@ -46,6 +46,7 @@ PROJECT_ENV = "CLAUDE_PROJECT_DIR"
 UNKNOWN_TOOL = "tool"
 NOTICE_EVERY_S = 120
 NOTICE_MARK = "watchdog.notice"
+DOWN_MARK = "watchdog.down"
 _NS_PER_S = 1_000_000_000
 _WRITER = "mikemol-paths-forward"
 _WORK = (
@@ -99,9 +100,9 @@ def writer_of(project: Path) -> str | None:
     return shutil.which(_WRITER)
 
 
-def _due(git_dir: Path, now_ns: int) -> bool:
-    # True when the last notice is older than the interval, and stamps this one.
-    mark = git_dir / "mtools" / NOTICE_MARK
+def _due(git_dir: Path, now_ns: int, name: str = NOTICE_MARK) -> bool:
+    # True when the last stamp named `name` is older than the interval, and stamps this one.
+    mark = git_dir / "mtools" / name
     try:
         if now_ns - mark.stat().st_mtime_ns < NOTICE_EVERY_S * _NS_PER_S:
             return False
@@ -150,13 +151,42 @@ def notice(project: Path, now_ns: int) -> str | None:
     return f"{head} Start it in the background: {restart_command(writer, state)}. {_WORK}"
 
 
+def mark_down(
+    project: Path,
+    env: Mapping[str, str],
+    now_ns: int,
+    spawn: Callable[[Sequence[str]], None],
+) -> bool:
+    """Tell the store this repo has no live watchdog, at most once per `NOTICE_EVERY_S` (W1558).
+
+    ⚑ THE ZERO IS WHAT GIVES THE ALERT A SERIES (github-8f, 2026-10-18): the watchdog sends
+    `mikemol.watchdog.armed{repo}=1` while it runs, so a repo whose watchdog never started or died
+    sends nothing, and a freshness rule over silence cannot be told from a repo that is not in the
+    fleet. The hook runs on every tool call of a live session, so it is the one place that knows
+    the session is active and unwatched.
+
+    Returns:
+        True when a sample was sent; False when a watchdog lives or the last one was lately.
+
+    """
+    git_dir = project / ".git"
+    if watchdog.running(git_dir) or not _due(git_dir, now_ns, DOWN_MARK):
+        return False
+    watchdog.armed_publisher(env, project.name, spawn, watchdog.ARMED_DOWN)()
+    return True
+
+
 def run(
     stdin: TextIO,
     env: Mapping[str, str],
     now_ns: Callable[[], int] = time.time_ns,
     out: TextIO | None = None,
+    spawn: Callable[[Sequence[str]], None] | None = None,
 ) -> int:
     """Leave one beat for the tool call the payload reports, and speak if the watchdog is gone.
+
+    `spawn` is the sender of the zero sample; with none given nothing is sent, so a test that
+    calls `run` cannot reach the real store. `main` passes the detached spawner.
 
     Returns:
         0 always.
@@ -169,6 +199,8 @@ def run(
     project = project_of(raw, env)
     if project is not None and (project / ".git").is_dir():
         heartbeat.try_beat(project / ".git", f"hook:{tool_of(raw)}", now_ns())
+        if spawn is not None:
+            mark_down(project, env, now_ns(), spawn)
         said = notice(project, now_ns())
         if said is not None:
             event: dict[str, str] = {"hookEventName": "PostToolUse", "additionalContext": said}
@@ -187,7 +219,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = list(sys.argv if argv is None else argv)
     if hook_argv.mode(PROG, args) is not None:
         return hook_argv.EXIT_REFUSED
-    return run(sys.stdin, os.environ)
+    return run(sys.stdin, os.environ, spawn=watchdog.DETACHED)
 
 
 if __name__ == "__main__":

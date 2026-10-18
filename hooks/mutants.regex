@@ -360,6 +360,11 @@ src/mikemol/hooks/watchdog.py|any-watchdog-removes-the-pid-file|        if targe
 src/mikemol/hooks/watchdog.py|stale-pid-file-reads-as-running|    return alive\(pid\)|    return True|def=running
 src/mikemol/hooks/watchdog.py|pid-file-outlives-the-watch|        release\(git_dir, os\.getpid\(\)\)|        pass|def=main
 src/mikemol/hooks/watchdog.py|stale-beat-fires-the-first-poll|        elif last\.at_ns < started\.at_ns:|        elif False:|def=watch
+src/mikemol/hooks/beat.py|zero-sent-while-a-watchdog-lives|    if watchdog\.running\(git_dir\) or not _due\(git_dir, now_ns, DOWN_MARK\):|    if not _due(git_dir, now_ns, DOWN_MARK):|def=mark_down
+src/mikemol/hooks/beat.py|zero-sent-on-every-call| or not _due\(git_dir, now_ns, DOWN_MARK\)||def=mark_down
+src/mikemol/hooks/beat.py|zero-sent-as-one|watchdog\.armed_publisher\(env, project\.name, spawn, watchdog\.ARMED_DOWN\)\(\)|watchdog.armed_publisher(env, project.name, spawn)()|def=mark_down
+src/mikemol/hooks/beat.py|zero-sent-with-no-spawner|        if spawn is not None:|        if True:|def=run
+src/mikemol/hooks/watchdog.py|publisher-ignores-its-value|"--value", value\]|"--value", ARMED_UP]|def=armed_publisher
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
 src/mikemol/hooks/beat.py|notice-given-on-every-call|        if now_ns - mark\.stat\(\)\.st_mtime_ns < NOTICE_EVERY_S \* _NS_PER_S:|        if False:|def=_due

@@ -11840,3 +11840,39 @@
   claim  = {Silence since the start past the band, with work waiting, is the alarm all the same.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_beat_older_than_the_start_fires_after_the_band_counted_from_the_start},
 }
+
+@misc{hooks-watchdog-publisher-sends-the-value-it-is-given-and-one-by-default,
+  section = {heartbeat},
+  title  = {The watchdog sends armed=1; the beat hook sends armed=0 through the same builder (W1558)},
+  claim  = {The watchdog sends armed=1; the beat hook sends armed=0 through the same builder
+            (W1558).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_publisher_sends_the_value_it_is_given_and_one_by_default},
+}
+
+@misc{hooks-beat-hook-repo-with-no-live-watchdog-sends-the-armed-gauge-as-zero,
+  section = {heartbeat},
+  title  = {The hook gives the alert its series: armed=0 naming the repo (W1558)},
+  claim  = {The hook gives the alert its series: armed=0 naming the repo (W1558).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_repo_with_no_live_watchdog_sends_the_armed_gauge_as_zero},
+}
+
+@misc{hooks-beat-hook-live-watchdog-sends-no-zero,
+  section = {heartbeat},
+  title  = {The watchdog itself sends armed=1; the hook says nothing while it lives},
+  claim  = {The watchdog itself sends armed=1; the hook says nothing while it lives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_live_watchdog_sends_no_zero},
+}
+
+@misc{hooks-beat-hook-zero-is-sent-once-per-interval,
+  section = {heartbeat},
+  title  = {A busy session does not flood the store, and the series is refreshed after the interval},
+  claim  = {A busy session does not flood the store, and the series is refreshed after the interval.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_zero_is_sent_once_per_interval},
+}
+
+@misc{hooks-beat-hook-run-without-a-spawner-sends-nothing,
+  section = {heartbeat},
+  title  = {A caller that names no sender cannot reach the real store},
+  claim  = {A caller that names no sender cannot reach the real store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_run_without_a_spawner_sends_nothing},
+}

@@ -154,3 +154,50 @@ def test_a_repo_with_no_writer_or_no_queue_says_nothing(
     (queued / ".claude").mkdir()
     (queued / ".claude" / "paths-forward.json").write_text("{}", encoding="utf-8")
     assert not _spoken(queued, _NOW)
+
+
+def _sent(project: Path, clock: int) -> list[list[str]]:
+    # The samples one tool call sends to the store, with a store named and nothing really spawned.
+    env = {**_env(project), "MIKEMOL_OTLP_BIN": "/bin/otlp", "MIKEMOL_ENDPOINTS": "/e"}
+    spawned: list[list[str]] = []
+    beat.run(
+        _payload(tool_name="Bash"),
+        env,
+        lambda: clock,
+        io.StringIO(),
+        lambda argv: spawned.append(list(argv)),
+    )
+    return spawned
+
+
+def test_a_repo_with_no_live_watchdog_sends_the_armed_gauge_as_zero(tmp_path: Path) -> None:
+    """The hook gives the alert its series: armed=0 naming the repo (W1558)."""
+    project = _project(tmp_path / "myrepo")
+    argv = _sent(project, _NOW)[0]
+    assert argv[argv.index("--name") + 1] == watchdog.ARMED_NAME
+    assert argv[argv.index("--value") + 1] == watchdog.ARMED_DOWN
+    assert "repo=myrepo" in argv
+
+
+def test_a_live_watchdog_sends_no_zero(tmp_path: Path) -> None:
+    """The watchdog itself sends armed=1; the hook says nothing while it lives."""
+    project = _project(tmp_path / "myrepo")
+    watchdog.claim(project / ".git", os.getpid())
+    assert _sent(project, _NOW) == []
+
+
+def test_the_zero_is_sent_once_per_interval(tmp_path: Path) -> None:
+    """A busy session does not flood the store, and the series is refreshed after the interval."""
+    project = _project(tmp_path / "myrepo")
+    first = _sent(project, time.time_ns())
+    soon = _sent(project, time.time_ns() + _S)
+    later = _sent(project, time.time_ns() + (beat.NOTICE_EVERY_S + 1) * _S)
+    assert (len(first), len(soon), len(later)) == (1, 0, 1)
+
+
+def test_run_without_a_spawner_sends_nothing(tmp_path: Path) -> None:
+    """A caller that names no sender cannot reach the real store."""
+    project = _project(tmp_path / "myrepo")
+    env = {**_env(project), "MIKEMOL_OTLP_BIN": "/bin/otlp", "MIKEMOL_ENDPOINTS": "/e"}
+    assert beat.run(_payload(tool_name="Bash"), env, _clock) == 0
+    assert not (project / ".git" / "mtools" / beat.DOWN_MARK).exists()

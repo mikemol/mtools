@@ -244,6 +244,18 @@ def test_without_a_store_the_publisher_sends_nothing() -> None:
     assert spawned == []
 
 
+def test_the_publisher_sends_the_value_it_is_given_and_one_by_default() -> None:
+    """The watchdog sends armed=1; the beat hook sends armed=0 through the same builder (W1558)."""
+    spawned: list[list[str]] = []
+    up = watchdog.armed_publisher(_env(), "r", lambda argv: spawned.append(list(argv)))
+    down = watchdog.armed_publisher(
+        _env(), "r", lambda argv: spawned.append(list(argv)), watchdog.ARMED_DOWN
+    )
+    up()
+    down()
+    assert [a[a.index("--value") + 1] for a in spawned] == [watchdog.ARMED_UP, watchdog.ARMED_DOWN]
+
+
 def test_a_publisher_whose_child_cannot_start_never_raises() -> None:
     """A failed start is a missed sample."""
 

@@ -50,6 +50,10 @@ DEFAULT_PHI_FIRE = 1.0
 DEFAULT_POLL_S = 20.0
 ARMED_EVERY_POLLS = 3
 ARMED_NAME = "mikemol.watchdog.armed"
+ARMED_UP = "1"
+ARMED_DOWN = "0"
+DETACHED: Callable[[Sequence[str]], None] = spawn_detached
+"""The sender of a sample the store does not wait for: a detached `mikemol-otlp metric`."""
 SERVICE = "mikemol-watchdog"
 _NS_PER_S = 1_000_000_000
 _PROBE = 0
@@ -159,14 +163,20 @@ def armed_publisher(
     env: Mapping[str, str],
     repo: str,
     spawn: Callable[[Sequence[str]], None] = spawn_detached,
+    value: str = ARMED_UP,
 ) -> Callable[[], None]:
-    """Build the call that tells the store this watchdog is armed for `repo` (W1518).
+    """Build the call that tells the store whether a watchdog is armed for `repo` (W1518, W1558).
 
     ⚑ AN ARMED GAUGE THAT GOES STALE IS THE MONITOR (operator, 2026-10-17: is there a way to see
     whether the deadman switch is armed for the various sessions?): the watchdog sends
     `mikemol.watchdog.armed{repo}=1` every few polls while it runs, so when it dies the series stops
     and a freshness rule over it, with a recent heartbeat beside it, says a session is active
     and unwatched. The push is a detached `mikemol-otlp metric`, as the commit gauges are.
+
+    ⚑ `value` IS `ARMED_UP` FROM THE WATCHDOG AND `ARMED_DOWN` FROM THE BEAT HOOK (W1558,
+    github-8f 2026-10-18): a repo whose watchdog is gone sends no `armed=1`, and a freshness rule
+    over a series that stopped cannot tell a dead watchdog from a repo that never had one. The hook
+    that notices the absence sends the zero, so the series exists exactly when it matters.
 
     ⚑ BEST EFFORT, NEVER RAISING: no `mikemol-otlp`, no `MIKEMOL_ENDPOINTS` or a failed start means
     the number is not shipped and the watch goes on, exactly as the commit gauges behave.
@@ -179,7 +189,7 @@ def armed_publisher(
     if program is None or not store_named(env):
         return _nothing
     argv = [program, "metric", "--service", SERVICE, "--namespace", repo]
-    argv += ["--field", f"repo={repo}", "--name", ARMED_NAME, "--value", "1"]
+    argv += ["--field", f"repo={repo}", "--name", ARMED_NAME, "--value", value]
 
     def publish() -> None:
         with contextlib.suppress(OSError):
