@@ -46,6 +46,7 @@ from mikemol.hooks import (
     pycheck_clear,
     pycheck_closure,
     pycheck_format,
+    pycheck_house,
     pycheck_install,
 )
 from mikemol.hooks.verdict import Verdict
@@ -59,6 +60,7 @@ FORMAT_FLAG = "--format"
 INSTALL_FLAG = "--install"
 CLEAR_FLAG = "--clear"
 CLEAR_LEDGER_FLAG = "--clear-ledger"
+HOUSE_FLAG = "--house"
 
 # A flag and its one argument: nothing else is accepted, except --install SRC DEST.
 EXPECTED_ARGS = 2
@@ -70,7 +72,8 @@ EXIT_USAGE = 2
 EXIT_NOT_CHECKED = 3
 
 USAGE = (
-    f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT | {REFRESH_FLAG} ROOT"
+    f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT [{HOUSE_FLAG}]"
+    f" | {REFRESH_FLAG} ROOT"
     f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {CLEAR_FLAG} PATH | {CLEAR_LEDGER_FLAG} ROOT"
     f" | {INSTALL_FLAG} SRC DEST)\n"
 )
@@ -291,6 +294,28 @@ def _ledger_names(root: Path) -> list[str] | None:
     return None if ledger is None else sorted(ledger)
 
 
+def analyzer(*, house: bool) -> Callable[[str, str], Verdict]:
+    """Choose the verdict a census judges by: the gate's own, or the house mypy flags over it.
+
+    ⚑ THE HOUSE FLAGS MEASURE TYPING DEBT (operator, 2026-10-17, W1512): a project whose own config
+    is weaker than strict plus `disallow_any_*` reads as having none under the gate's verdict. The
+    flags ride mypy's command line (W1537), so the project's `files`, `python_version` and
+    `mypy_path` still apply and its gate keeps judging by its own config.
+
+    Returns:
+        `pycheck.analyze`, or a wrapper that hands it the house flags.
+
+    """
+    if not house:
+        return pycheck.analyze
+    flags = pycheck_house.mypy_flags()
+
+    def judged(content: str, path: str) -> Verdict:
+        return pycheck.analyze(content, path, mypy_flags=flags)
+
+    return judged
+
+
 def _flag_here(args: list[str]) -> int:
     """Run the one-argument flags.
 
@@ -298,7 +323,10 @@ def _flag_here(args: list[str]) -> int:
         the exit code from `check`, `census`, `refresh` or `check_changed`, or EXIT_USAGE.
 
     """
+    house = args[:1] == [CENSUS_FLAG] and args[2:] == [HOUSE_FLAG]
     known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG}
+    if house:
+        args = args[:EXPECTED_ARGS]
     if len(args) != EXPECTED_ARGS or args[0] not in known:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
@@ -308,7 +336,7 @@ def _flag_here(args: list[str]) -> int:
         changed = pycheck_census.changed_python
         return check_changed(target, changed, _check_here, sys.stdout, sys.stderr)
     if args[0] == CENSUS_FLAG:
-        return census(target, tracked, pycheck.analyze, sys.stdout, sys.stderr)
+        return census(target, tracked, analyzer(house=house), sys.stdout, sys.stderr)
     if args[0] == REFRESH_FLAG:
         write = pycheck_census.write_ledger
         return refresh(target, tracked, pycheck.analyze, write, sys.stderr)
