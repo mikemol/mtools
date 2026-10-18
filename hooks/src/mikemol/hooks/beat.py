@@ -33,6 +33,7 @@ CONSUMED BY: the `PostToolUse` and `PostToolUseFailure` entries of a repo's `.cl
 import json
 import os
 import shutil
+import subprocess
 import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -47,12 +48,36 @@ UNKNOWN_TOOL = "tool"
 NOTICE_EVERY_S = 120
 NOTICE_MARK = "watchdog.notice"
 DOWN_MARK = "watchdog.down"
+HOOK_TOOLS = frozenset({"Edit", "Write", "MultiEdit"})
+HOOK_DIRS = (("hooks", "src"), ("hooks", "bin"))
+ENTRY_MODULE = "mikemol.hooks.entry"
 _NS_PER_S = 1_000_000_000
+_NOT_FOUND = 127
 _WRITER = "mikemol-paths-forward"
 _WORK = (
     "Then do work: prepare the next stack, triage, atomize coarse cards, add manifests, or "
     "warrant rulings."
 )
+
+
+def run_probe(argv: Sequence[str]) -> tuple[int, str]:
+    """Run a command and report its exit code and what it wrote to stderr (W1584).
+
+    Returns:
+        the exit code and stderr text; 127 and the error text when the program cannot start.
+
+    """
+    try:
+        done = subprocess.run(
+            list(argv), capture_output=True, text=True, check=False, stdin=subprocess.DEVNULL
+        )
+    except OSError as err:
+        return _NOT_FOUND, str(err)
+    return done.returncode, done.stderr
+
+
+IMPORT_PROBE: Callable[[Sequence[str]], tuple[int, str]] = run_probe
+"""The seam for the import check: a test replaces it so no interpreter is started."""
 
 
 def _field(raw: object, key: str) -> str | None:
@@ -176,6 +201,72 @@ def mark_down(
     return True
 
 
+def _edited_path(raw: object) -> str | None:
+    # The file path of an Edit or Write payload, or None.
+    inner = cast("dict[str, object]", raw).get("tool_input") if isinstance(raw, dict) else None
+    return _field(inner, "file_path")
+
+
+def edited_hook(raw: object, project: Path) -> str | None:
+    """Name the hook file an Edit or Write touched, relative to the project.
+
+    Returns:
+        the path when the tool is an edit and the file sits under `hooks/src` or `hooks/bin`; None
+        for any other tool or file.
+
+    """
+    path = _edited_path(raw)
+    if tool_of(raw) not in HOOK_TOOLS or path is None:
+        return None
+    try:
+        relative = Path(path).relative_to(project)
+    except ValueError:
+        return None
+    return str(relative) if relative.parts[:2] in HOOK_DIRS else None
+
+
+def import_failure(project: Path) -> str | None:
+    """Import the hook entry module with the built venv's interpreter, as a launcher does.
+
+    ⚑ THE SAME IMPORT THE HARNESS'S LAUNCHERS MAKE (W1584, github-8f 2026-10-18): the Bash guard
+    died with `ImportError` because a module it imports was not in the built venv, and a guard that
+    crashes fails OPEN. `mikemol.hooks.entry` imports every hook module, so one import says whether
+    any hook can start. It uses the built venv (`bazel-bin/hooks/.venv`, resolved as the launchers
+    resolve it), runs without writing bytecode, and starts nothing else.
+
+    Returns:
+        the last stderr line when the import fails; None when it works or no venv is built.
+
+    """
+    python = (project / "bazel-bin" / "hooks" / ".venv").resolve() / "bin" / "python3"
+    if not python.is_file():
+        return None
+    code, err = IMPORT_PROBE([str(python), "-B", "-c", f"import {ENTRY_MODULE}"])
+    if code == 0:
+        return None
+    lines = [line for line in err.splitlines() if line.strip()]
+    return lines[-1] if lines else f"exit {code}"
+
+
+def hook_break(raw: object, project: Path) -> str | None:
+    """Say so when an edit under `hooks/` leaves the hooks unable to import.
+
+    Returns:
+        the message naming the file and the error, or None when the edit was elsewhere or the hooks
+        still import.
+
+    """
+    touched = edited_hook(raw, project)
+    failure = import_failure(project) if touched is not None else None
+    if touched is None or failure is None:
+        return None
+    return (
+        f"A hook module you edited does not import ({touched}): {failure}. Every hook that loads "
+        "it fails, and a guard hook that crashes fails OPEN, so its protection is off until this "
+        f"is fixed. Fix it, or restore the file now: git checkout HEAD -- {touched}"
+    )
+
+
 def run(
     stdin: TextIO,
     env: Mapping[str, str],
@@ -201,8 +292,8 @@ def run(
         heartbeat.try_beat(project / ".git", f"hook:{tool_of(raw)}", now_ns())
         if spawn is not None:
             mark_down(project, env, now_ns(), spawn)
-        said = notice(project, now_ns())
-        if said is not None:
+        said = " ".join(m for m in (notice(project, now_ns()), hook_break(raw, project)) if m)
+        if said:
             event: dict[str, str] = {"hookEventName": "PostToolUse", "additionalContext": said}
             body: dict[str, dict[str, str]] = {"hookSpecificOutput": event}
             (out or sys.stdout).write(json.dumps(body) + "\n")

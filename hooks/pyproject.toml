@@ -355,6 +355,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # the resolved writer, a fixed flag, and the queue path the caller named; nothing runs through a
 # shell, and the count has one definition because the writer is the only thing that answers it.
 "src/mikemol/hooks/watchdog.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ THE BEAT HOOK RUNS ONE CHILD, the built venv's interpreter importing the hook entry module after
+# an edit under hooks/ (W1584); its argv is fixed text and a path the hook built, never a shell.
+"src/mikemol/hooks/beat.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ ASKING THE TRANSCRIPT READER WHETHER A WARRANT'S RECORD HOLDS IS THIS MODULE'S ONE SUBPROCESS
 # (W1525): the argv is the reader this module finds by name and fixed flags, with a path, a uuid
@@ -686,6 +689,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_bar_fires.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_no_chaining.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_writeguard.py" = ["assert"]
+"tests/test_watchdog_exit.py" = ["assert"]
+"tests/test_hook_import_check.py" = ["assert"]
 # ⚑⚑ THE EIGHTH, AND ITS SUBJECT IS EXECUTION ITSELF. `test_reader_guard.py` exists because a
 # guard that tested `is_file()` admitted a script whose shebang interpreter was gone — present,
 # mode 775, and `execve` refused it naming the script. The repaired guard's predicate is an

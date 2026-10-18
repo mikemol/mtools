@@ -11996,3 +11996,95 @@
   claim  = {The guard fails open: a redirect or copy cannot be placed, so it is not a finding.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard.py -k test_with_no_project_root_only_the_location_free_rules_apply},
 }
+
+@misc{hooks-watchdog-exit-exit-eight-sends-armed-zero-where-the-rule-would-read-one-for-five-minutes,
+  section = {heartbeat},
+  title  = {The series ends at 0 the moment the watchdog goes, naming the repo},
+  claim  = {The series ends at 0 the moment the watchdog goes, naming the repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_exit_eight_sends_armed_zero_where_the_rule_would_read_one_for_five_minutes},
+}
+
+@misc{hooks-watchdog-exit-exception-in-the-watch-still-sends-the-zero-and-removes-the-pid-file,
+  section = {heartbeat},
+  title  = {The finally covers a crash: the zero is sent and the pid file is gone as the error leaves},
+  claim  = {The finally covers a crash: the zero is sent and the pid file is gone as the error
+            leaves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_an_exception_in_the_watch_still_sends_the_zero_and_removes_the_pid_file},
+}
+
+@misc{hooks-watchdog-exit-watch-that-ends-because-the-parent-went-still-sends-the-zero,
+  section = {heartbeat},
+  title  = {Exit 0 is an exit too: the session is gone, so the watchdog is no longer armed},
+  claim  = {Exit 0 is an exit too: the session is gone, so the watchdog is no longer armed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_a_watch_that_ends_because_the_parent_went_still_sends_the_zero},
+}
+
+@misc{hooks-watchdog-exit-with-no-store-named-the-exit-sends-nothing-and-raises-nothing,
+  section = {heartbeat},
+  title  = {The publisher is best effort: with nowhere to send, a zero is not spawned},
+  claim  = {The publisher is best effort: with nowhere to send, a zero is not spawned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_with_no_store_named_the_exit_sends_nothing_and_raises_nothing},
+}
+
+@misc{hooks-hook-import-check-edit-or-write-under-hooks-src-or-bin-names-the-file-relative-to-the-project,
+  section = {heartbeat},
+  title  = {Edit, Write and MultiEdit of a hook source or launcher count; the path is made relative},
+  claim  = {Edit, Write and MultiEdit of a hook source or launcher count; the path is made relative.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_an_edit_or_write_under_hooks_src_or_bin_names_the_file_relative_to_the_project},
+}
+
+@misc{hooks-hook-import-check-any-other-tool-or-file-is-not-a-hook-edit,
+  section = {heartbeat},
+  title  = {A read, a doc, a test, a file outside the project and a payload with no path pass},
+  claim  = {A read, a doc, a test, a file outside the project and a payload with no path pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_any_other_tool_or_file_is_not_a_hook_edit},
+}
+
+@misc{hooks-hook-import-check-failing-import-is-named-by-its-last-stderr-line,
+  section = {heartbeat},
+  title  = {The error line is the answer; the probe imports the entry module with -B and -c},
+  claim  = {The error line is the answer; the probe imports the entry module with -B and -c.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_a_failing_import_is_named_by_its_last_stderr_line},
+}
+
+@misc{hooks-hook-import-check-working-import-or-no-built-venv-is-not-a-failure,
+  section = {heartbeat},
+  title  = {Exit 0 (stderr noise and all) says nothing; with no venv the launcher already says so},
+  claim  = {Exit 0 (stderr noise and all) says nothing; with no venv the launcher already says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_a_working_import_or_no_built_venv_is_not_a_failure},
+}
+
+@misc{hooks-hook-import-check-failure-with-no-stderr-still-says-the-exit-code,
+  section = {heartbeat},
+  title  = {A crash that wrote nothing is not read as success},
+  claim  = {A crash that wrote nothing is not read as success.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_a_failure_with_no_stderr_still_says_the_exit_code},
+}
+
+@misc{hooks-hook-import-check-message-names-the-file-the-error-and-how-to-restore-it,
+  section = {heartbeat},
+  title  = {The next call tells the session which file broke the hooks and the one-line recovery},
+  claim  = {The next call tells the session which file broke the hooks and the one-line recovery.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_the_message_names_the_file_the_error_and_how_to_restore_it},
+}
+
+@misc{hooks-hook-import-check-edit-elsewhere-never-starts-the-probe,
+  section = {heartbeat},
+  title  = {The import costs a process, so it runs only after an edit under hooks/},
+  claim  = {The import costs a process, so it runs only after an edit under hooks/.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_an_edit_elsewhere_never_starts_the_probe},
+}
+
+@misc{hooks-hook-import-check-hook-prints-the-break-as-context-on-the-call-after-the-edit,
+  section = {heartbeat},
+  title  = {End to end through run(): the JSON context carries the message, and the exit stays 0},
+  claim  = {End to end through run(): the JSON context carries the message, and the exit stays 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_the_hook_prints_the_break_as_context_on_the_call_after_the_edit},
+}
+
+@misc{hooks-hook-import-check-real-probe-reports-a-command-exit-and-a-program-that-is-missing,
+  section = {heartbeat},
+  title  = {The seam's real implementation: success, failure and a program that cannot start},
+  claim  = {The seam's real implementation: success, failure and a program that cannot start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_the_real_probe_reports_a_command_exit_and_a_program_that_is_missing},
+}

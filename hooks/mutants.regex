@@ -379,6 +379,18 @@ src/mikemol/hooks/writeguard.py|env-assignment-hides-the-command|        if _ASS
 src/mikemol/hooks/writeguard.py|pipe-does-not-split-commands|        if token not in _SEGMENT_END:|        if True:|def=_commands
 src/mikemol/hooks/writeguard.py|any-redirect-refused|        if token in _REDIRECTS and _inside\(tokens\[index \+ 1\], root, cwd\)|        if token in _REDIRECTS|def=findings
 src/mikemol/hooks/writeguard.py|redirect-into-the-project-allowed|        if token in _REDIRECTS and _inside\(tokens\[index \+ 1\], root, cwd\)|        if False|def=findings
+src/mikemol/hooks/watchdog.py|zero-not-sent-on-exit|        gone\(\)|        pass|def=main
+src/mikemol/hooks/watchdog.py|exit-sample-sent-as-armed|    gone = armed_publisher\(os\.environ, repo, spawn, ARMED_DOWN\)|    gone = armed_publisher(os.environ, repo, spawn)|def=main
+src/mikemol/hooks/beat.py|non-hook-edit-checked|    return str\(relative\) if relative\.parts\[:2\] in HOOK_DIRS else None|    return str(relative)|def=edited_hook
+src/mikemol/hooks/beat.py|read-tool-checked|    if tool_of\(raw\) not in HOOK_TOOLS or path is None:|    if path is None:|def=edited_hook
+src/mikemol/hooks/beat.py|working-import-reported|    if code == 0:|    if True:|def=import_failure
+src/mikemol/hooks/beat.py|silent-crash-reads-as-success|    return lines\[-1\] if lines else f"exit \{code\}"|    return lines[-1] if lines else None|def=import_failure
+src/mikemol/hooks/beat.py|first-stderr-line-reported|    return lines\[-1\] if lines else f"exit \{code\}"|    return lines[0] if lines else f"exit {code}"|def=import_failure
+src/mikemol/hooks/beat.py|probe-run-without-a-built-venv|    if not python\.is_file\(\):|    if False:|def=import_failure
+src/mikemol/hooks/beat.py|probe-may-write-bytecode|\[str\(python\), "-B", "-c", f"import \{ENTRY_MODULE\}"\]|[str(python), "-c", f"import {ENTRY_MODULE}"]|def=import_failure
+src/mikemol/hooks/beat.py|probe-run-after-any-edit|    failure = import_failure\(project\) if touched is not None else None|    failure = import_failure(project)|def=hook_break
+src/mikemol/hooks/beat.py|missing-program-reads-as-success|        return _NOT_FOUND, str\(err\)|        return 0, str(err)|def=run_probe
+src/mikemol/hooks/beat.py|break-message-never-printed|        if said:|        if False:|def=run
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run
 src/mikemol/hooks/beat.py|notice-given-on-every-call|        if now_ns - mark\.stat\(\)\.st_mtime_ns < NOTICE_EVERY_S \* _NS_PER_S:|        if False:|def=_due
