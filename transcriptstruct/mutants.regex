@@ -12,3 +12,5 @@ src/mikemol/transcriptstruct/query.py|uuid-and-timestamp-swapped|    uuid, stamp
 src/mikemol/transcriptstruct/memclaims.py|dated-line-not-a-ruling|        elif _DATE\.search\(raw\):|        elif False:|def=claims
 src/mikemol/transcriptstruct/memclaims.py|description-quotes-kept|    return stripped\.removeprefix\(_DESCRIPTION\)\.strip\(\)\.strip\('"'\)|    return stripped.removeprefix(_DESCRIPTION).strip()|def=_unwrapped
 src/mikemol/transcriptstruct/memgrants.py|grant-words-keep-their-case|        words = sorted\(\{word\.lower\(\) for word in matched\}\)|        words = sorted(set(matched))|def=grants
+src/mikemol/transcriptstruct/memfind.py|any-utterance-warrants-a-quote|            if wanted in normal\(found\.text\):|            if True:|def=warrant_for
+src/mikemol/transcriptstruct/memfind.py|oldest-first-not-newest|    return sorted\(later, key=_when, reverse=True\)|    return sorted(later, key=_when, reverse=False)|def=superseded_by

@@ -746,3 +746,31 @@
   claim  = {Plain text is skipped, and a word inside another (mayor, allowance) does not match.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_line_with_no_grant_word_is_not_flagged_and_words_match_whole},
 }
+
+@misc{transcriptstruct-memfind-quote-is-found-whatever-its-case-and-spacing,
+  section = {memfind},
+  title  = {The earliest utterance carrying the words is the record, with where it sits},
+  claim  = {The earliest utterance carrying the words is the record, with where it sits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_quote_is_found_whatever_its_case_and_spacing},
+}
+
+@misc{transcriptstruct-memfind-quote-no-utterance-carries-is-unwarranted-and-a-ruling-is-never-matched,
+  section = {memfind},
+  title  = {Nothing is guessed: no substring, no record, and a dated ruling has no words to match},
+  claim  = {Nothing is guessed: no substring, no record, and a dated ruling has no words to match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_quote_no_utterance_carries_is_unwarranted_and_a_ruling_is_never_matched},
+}
+
+@misc{transcriptstruct-memfind-normal-and-terms-read-the-text-without-stop-words,
+  section = {memfind},
+  title  = {Whitespace collapses, case folds, and short or stop words are not key terms},
+  claim  = {Whitespace collapses, case folds, and short or stop words are not key terms.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_normal_and_terms_read_the_text_without_stop_words},
+}
+
+@misc{transcriptstruct-memfind-later-utterance-sharing-enough-terms-is-listed-newest-first,
+  section = {memfind},
+  title  = {Three shared terms make it evidence, an earlier or unrelated one does not},
+  claim  = {Three shared terms make it evidence, an earlier or unrelated one does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_later_utterance_sharing_enough_terms_is_listed_newest_first},
+}
