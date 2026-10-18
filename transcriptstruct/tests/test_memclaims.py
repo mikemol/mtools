@@ -41,6 +41,27 @@ def test_a_line_that_only_mentions_the_operator_claims_nothing() -> None:
     assert memclaims.claims('He said "a long enough quoted passage to count" once.\n') == []
 
 
+_FRONT = """---
+name: relay
+operator: "a frontmatter line 2026-10-01 that is not the operator's text"
+description: "operator ruling 2026-10-02 - the thing"
+---
+Operator, relayed by github-8f 2026-10-04: "a relayed passage that is long enough to count".
+"""
+
+
+def test_only_the_description_line_of_the_frontmatter_can_claim_anything() -> None:
+    """A quote or any other frontmatter line is skipped; the description reads as a dated ruling."""
+    found = memclaims.claims(_FRONT)
+    assert [(c.line, c.kind) for c in found] == [(4, "ruling"), (6, "relayed")]
+
+
+def test_a_quote_on_a_line_that_says_it_was_relayed_is_a_relayed_claim() -> None:
+    """Testimony is looked up all the same, but it is named for what it is."""
+    found = memclaims.claims(_FRONT)
+    assert found[-1].text == "a relayed passage that is long enough to count"
+
+
 def test_a_line_with_a_quote_and_a_date_is_one_claim_never_two() -> None:
     """The quote wins, so the same line is not listed again as a ruling."""
     found = memclaims.claims('operator 2026-10-02: "I do not want one waypoint per tick."\n')
