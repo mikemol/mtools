@@ -133,6 +133,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_suppliers.py" = ["assert"]
 "tests/test_promptwatch.py" = ["assert"]
 "tests/test_atomize_verb.py" = ["assert"]
+"tests/test_tick_roll.py" = ["assert"]
 # ⚑ RUNNING opa IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W850), as mdstruct's pandoc.py is. The
 # argv is the resolved opa binary, fixed words and the package's own policy path; the queue
 # travels on stdin as data and never becomes a word in the command.

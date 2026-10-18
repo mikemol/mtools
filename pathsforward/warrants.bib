@@ -6234,3 +6234,46 @@
   claim  = {A refusal on the second title must not leave the first one minted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_a_bundled_title_leaves_nothing_written},
 }
+
+@misc{pathsforward-tick-roll-roll-with-ready-cards-and-no-named-block-is-allowed,
+  section = {tick_roll},
+  title  = {The refusal exists to stop a stop; a roll is a boundary, so it needs no block},
+  claim  = {The refusal exists to stop a stop; a roll is a boundary, so it needs no block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_roll.py -k test_a_roll_with_ready_cards_and_no_named_block_is_allowed},
+}
+
+@misc{pathsforward-tick-roll-same-state-still-refuses-a-close,
+  section = {tick_roll},
+  title  = {--tick-close keeps today's refusal while ready cards exist, so the verb split is real},
+  claim  = {--tick-close keeps today's refusal while ready cards exist, so the verb split is real.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_roll.py -k test_the_same_state_still_refuses_a_close},
+}
+
+@misc{pathsforward-tick-roll-roll-writes-its-ledger-line-with-how-many-cards-it-advanced,
+  section = {tick_roll},
+  title  = {A roll that advanced nothing says `advanced 0`, so rolling cannot hide a stalled session},
+  claim  = {A roll that advanced nothing says `advanced 0`, so rolling cannot hide a stalled
+            session.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_roll.py -k test_a_roll_writes_its_ledger_line_with_how_many_cards_it_advanced},
+}
+
+@misc{pathsforward-tick-roll-roll-keeps-the-lock-for-the-same-holder,
+  section = {tick_roll},
+  title  = {The next tick has begun when the roll returns, so the lock is still held, by the roller},
+  claim  = {The next tick has begun when the roll returns, so the lock is still held, by the roller.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_roll.py -k test_a_roll_keeps_the_lock_for_the_same_holder},
+}
+
+@misc{pathsforward-tick-roll-roll-while-another-holder-has-the-lock-is-refused-and-writes-nothing,
+  section = {tick_roll},
+  title  = {Only the holder rolls its tick: a live foreign lock refuses it before any ledger line},
+  claim  = {Only the holder rolls its tick: a live foreign lock refuses it before any ledger line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_roll.py -k test_a_roll_while_another_holder_has_the_lock_is_refused_and_writes_nothing},
+}
+
+@misc{pathsforward-landed-roll-note-carries-the-count-of-cards-a-landed-commit-carried,
+  section = {landed},
+  title  = {The roll's ledger note is `rolled; advanced N`, N from the same landed-commit count},
+  claim  = {The roll's ledger note is `rolled; advanced N`, N from the same landed-commit count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_roll_note_carries_the_count_of_cards_a_landed_commit_carried},
+}

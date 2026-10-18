@@ -72,7 +72,7 @@ from mikemol.pathsforward.advice import upsert as upsert_advice
 from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
-from mikemol.pathsforward.closegate import rank_check, top_ranked
+from mikemol.pathsforward.closegate import rank_check, roll_note, top_ranked
 from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
@@ -96,6 +96,7 @@ from mikemol.pathsforward.unlinked import report as unlinked_report
 
 LIFT_ROW = lift_row
 CLOSE_JUDGE = judge_close
+ROLL_NOTE = roll_note
 REJECT_ADVICE = reject_advice
 EXIT_OK = 0
 EXIT_FAILED = 1
@@ -427,6 +428,7 @@ _VALUED = (
     "unlock",
     "tick_open",
     "tick_close",
+    "tick_roll",
     "armed",
     "update",
     "add",
@@ -621,6 +623,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
     "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote", "rank_from"}),
+    "tick_roll": frozenset({"kind", "evidence"}),
     "close_gate": frozenset({"blocked_by", "reason", "rank_from"}),
     "lift": frozenset({"jwk"}),
     "payload": frozenset({"root"}),
@@ -1028,6 +1031,14 @@ def _parser() -> argparse.ArgumentParser:
             "--tick-close",
             ("HOLDER", "SYMBOL", "OUTCOME", "MECHANISM", "NOTE"),
             "W1079: the --ledger line, then --render, --check and --unlock HOLDER, in one verb",
+        ),
+        (
+            "--tick-roll",
+            ("HOLDER", "SYMBOL", "OUTCOME", "MECHANISM", "NOTE"),
+            (
+                "W1589: close the tick and open the next in one step, always allowed: the "
+                "--tick-close line without the refusal or the unlock, HOLDER keeping the lock"
+            ),
         ),
     ):
         mode.add_argument(flag, nargs=len(names), metavar=names, help=text_help)
@@ -1718,6 +1729,43 @@ def _tick_close(ctx: Ctx) -> int:
     for step in (_promote, _prune_landed, _render, _check, _unlock):
         result = step(closing)
         code = code or result
+    return code
+
+
+def _tick_roll(ctx: Ctx) -> int:
+    """Close this tick and open the next in one step, always allowed (W1589, github-8f).
+
+    ⚑ A ROLL IS A CYCLE BOUNDARY, NOT A STOP. `--tick-close` refuses while a ready card exists
+    because it ends the loop's turn; a session that never stops (nemik held one tick for 26 hours,
+    with 85 cards advanced) could never close it. The roll writes the same ledger line, prunes,
+    renders and checks, but keeps the lock for the same holder (re-acquired first, so another
+    holder's lock refuses it), so the next tick has begun when it returns. No threshold: a typed
+    number is what the autocalibrate rule rules out, and `--tick-close` keeps its refusal. The line
+    carries `rolled; advanced N`, so a roll that advanced nothing reads `advanced 0`.
+
+    Returns:
+        EXIT_OK, EXIT_LOCKED when another holder has the lock, or the first failing step's status.
+
+    """
+    holder, *entry = ctx.many("tick_roll") or ("", "", "", "", "")
+    rolling = replace(ctx, opts={**ctx.opts, "lock": holder})
+    code = _lock(rolling)
+    if code != EXIT_OK:
+        return code
+    state = store.load(ctx.path)
+    ledger = store.sibling(ctx.path, store.LEDGER)
+    for said in CLOSE_JUDGE(state, None, None, entry[0] if entry else None, ledger).lines:
+        _say(said)
+    entry[-1] = f"{entry[-1]} [{ROLL_NOTE(state, ledger)}]"
+    rolling = replace(rolling, opts={**rolling.opts, "ledger": tuple(entry)})
+    try:
+        code = _ledger_mode(rolling)
+    except ops.RefusedError as exc:
+        _warn(f"not ledgered: {exc}")
+        code = EXIT_REFUSED
+    for step in (_prune_landed, _render, _check):
+        code = code or step(rolling)
+    _say(f"rolled: {holder} keeps the lock and the next tick has begun")
     return code
 
 
@@ -2813,6 +2861,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "unlock": _unlock,
     "tick_open": _tick_open,
     "tick_close": _tick_close,
+    "tick_roll": _tick_roll,
     "armed": _armed,
     "update": _update,
     "update_many": _update_many,

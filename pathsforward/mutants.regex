@@ -184,6 +184,11 @@ src/mikemol/pathsforward/ops.py|atomize-rewrites-a-human-hold|    if text\(held,
 src/mikemol/pathsforward/ops.py|atomize-drops-earlier-blockers|    blockers = \(\*strlist\(find\(state, parent\), "blocked_on"\), \*children\)|    blockers = tuple(children)|def=atomize
 src/mikemol/pathsforward/ops.py|atomize-with-no-title|    if not names:|    if False:|def=atomize
 src/mikemol/pathsforward/ops.py|atomized-parent-blocked-on-a-human|blocked_kind="agent", blocked_on=blockers|blocked_kind="human", blocked_on=blockers|def=atomize
+src/mikemol/pathsforward/closegate.py|untouched-wording-says-none-landed|    edits = f"; \{open_edits\} more touched, named by no landed commit" if open_edits else ""|    edits = f"; {open_edits} touched, none landed" if open_edits else ""|def=judge
+src/mikemol/pathsforward/closegate.py|roll-counts-nothing|    return f"rolled; advanced \{advanced\(state, since, landed\)\}"|    return "rolled; advanced 0"|def=roll_note
+src/mikemol/pathsforward/closegate.py|roll-ignores-landed-commits|    landed = None if ledger is None else landed_since\(ledger\.parent\.parent, since\)|    landed = set()|def=roll_note
+src/mikemol/pathsforward/cli.py|roll-ignores-another-holders-lock|    if code != EXIT_OK:|    if False:|def=_tick_roll
+src/mikemol/pathsforward/cli.py|roll-note-dropped|    entry\[-1\] = f"\{entry\[-1\]\} \[\{ROLL_NOTE\(state, ledger\)\}\]"|    pass|def=_tick_roll
 src/mikemol/pathsforward/cli.py|bulk-done-or-working-allowed|    if upd\.status is not None and upd\.status not in _BULK_STATUSES:|    if False:|def=_update_many
 src/mikemol/pathsforward/bulkblock.py|unmanifested-takes-cards-with-a-manifest|                if text\(w, "status"\) == "ready" and not strlist\(w, "manifest"\)|                if text(w, "status") == "ready"|def=select_symbols
 src/mikemol/pathsforward/promptwatch.py|unchanged-prompt-noticed-again|    if before == now:|    if False:|def=notice
