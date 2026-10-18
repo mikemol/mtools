@@ -283,8 +283,17 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(
+    argv: Sequence[str] | None = None, spawn: Callable[[Sequence[str]], None] = DETACHED
+) -> int:
     """Run the watchdog.
+
+    ⚑ EVERY EXIT SAYS IT IS GONE (W1581, github-8f 2026-10-18, from luthen's alert rule): the
+    watchdog sent `armed=1` while it lived and nothing on exit, so `last_over_time(armed[5m])` read
+    a watchdog that had exited 8 a minute ago as armed, and an exit-and-restart cycle kept it
+    looking armed all the time. The `finally` that removes the pid file now sends `armed=0` too, on
+    exit 8, on a parent going away and on an exception alike. `spawn` is the sender, so a test
+    records the samples and cannot reach the store.
 
     Returns:
         EXIT_IDLE when the session went quiet with work waiting, 0 when its parent went away,
@@ -307,12 +316,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         time.sleep,
         lambda: os.getppid() == parent,
     )
-    announce = armed_publisher(os.environ, git_dir.parent.name)
+    repo = git_dir.parent.name
+    announce = armed_publisher(os.environ, repo, spawn)
+    gone = armed_publisher(os.environ, repo, spawn, ARMED_DOWN)
     claim(git_dir, os.getpid())
     try:
         return watch(seams, float(str(opts["phi_fire"])), float(str(opts["poll_s"])), announce)
     finally:
         release(git_dir, os.getpid())
+        gone()
 
 
 if __name__ == "__main__":

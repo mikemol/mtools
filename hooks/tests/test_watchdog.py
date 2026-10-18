@@ -307,7 +307,8 @@ def test_main_holds_the_pid_file_while_it_watches_and_removes_it_on_exit(
 
     monkeypatch.setattr(watchdog, "watch", watching)
     code = watchdog.main(
-        ["--state", str(tmp_path / ".claude" / "q.json"), "--writer", _writer(tmp_path, "echo 0")]
+        ["--state", str(tmp_path / ".claude" / "q.json"), "--writer", _writer(tmp_path, "echo 0")],
+        lambda _argv: None,
     )
     assert code == watchdog.EXIT_IDLE
     assert seen == [True]
