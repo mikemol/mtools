@@ -965,3 +965,53 @@
   claim  = {An OSError from the fetch is exit 3 naming the endpoint, never a traceback.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_main_reports_an_unreachable_service_with_exit_3},
 }
+
+@misc{buildtel-bb-targets-post-page-sends-the-group-status-and-token-to-get-target,
+  section = {bb_targets},
+  title  = {The paging request names the invocation, the group's own status and the token},
+  claim  = {The paging request names the invocation, the group's own status and the token.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_post_page_sends_the_group_status_and_token_to_get_target},
+}
+
+@misc{buildtel-bb-targets-paging-every-page-of-a-group-is-followed-with-the-groups-own-status-and-token,
+  section = {bb_targets},
+  title  = {Page one holds one target of four; the next two pages hold the rest: the report is whole},
+  claim  = {Page one holds one target of four; the next two pages hold the rest: the report is
+            whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_every_page_of_a_group_is_followed_with_the_groups_own_status_and_token},
+}
+
+@misc{buildtel-bb-targets-paging-token-seen-twice-ends-the-walk-as-unreadable-not-forever,
+  section = {bb_targets},
+  title  = {No progress is the witness, not a timer: the same token again stops that group},
+  claim  = {No progress is the witness, not a timer: the same token again stops that group.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_a_token_seen_twice_ends_the_walk_as_unreadable_not_forever},
+}
+
+@misc{buildtel-bb-targets-paging-page-that-cannot-be-fetched-or-read-is-unreadable-and-keeps-what-was-listed,
+  section = {bb_targets},
+  title  = {An OSError or an answer with no group stops that group, counted, with the tests so far},
+  claim  = {An OSError or an answer with no group stops that group, counted, with the tests so far.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_a_page_that_cannot_be_fetched_or_read_is_unreadable_and_keeps_what_was_listed},
+}
+
+@misc{buildtel-bb-targets-paging-group-with-no-status-is-listed-short-and-named-not-followed,
+  section = {bb_targets},
+  title  = {The service does not page it: only its first targets list, and the verdict names it},
+  claim  = {The service does not page it: only its first targets list, and the verdict names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_a_group_with_no_status_is_listed_short_and_named_not_followed},
+}
+
+@misc{buildtel-bb-targets-paging-without-a-page-reader-a-paged-group-stays-incomplete,
+  section = {bb_targets},
+  title  = {Parsing the first response alone never claims the whole invocation},
+  claim  = {Parsing the first response alone never claims the whole invocation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_without_a_page_reader_a_paged_group_stays_incomplete},
+}
+
+@misc{buildtel-bb-targets-paging-incomplete-report-names-no-maximum-and-prints-its-rows-as-observed-only,
+  section = {bb_targets},
+  title  = {github-8f's rule: a partial listing has no `tests` row to read as the slowest},
+  claim  = {github-8f's rule: a partial listing has no `tests` row to read as the slowest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets_paging.py -k test_an_incomplete_report_names_no_maximum_and_prints_its_rows_as_observed_only},
+}

@@ -51,6 +51,15 @@ src/mikemol/buildtel/bb_targets.py|every-test-listed|report\.tests\[:TOP_TESTS\]
 src/mikemol/buildtel/bb_targets.py|flag-taken-as-an-invocation-id| or args\[0\]\.startswith\("-"\)||def=main
 src/mikemol/buildtel/bb_targets.py|unreachable-reported-as-usage|        return EXIT_UNREACHABLE|        return EXIT_USAGE|def=main
 
+# bb_targets.py paging (W1566): every group is followed, a repeated token or an unreadable page ends
+# that group counted, a group with no status is not asked for pages, and a part is no maximum.
+src/mikemol/buildtel/bb_targets.py|repeated-token-not-a-halt|        if token in seen:|        if False:|def=_follow
+src/mikemol/buildtel/bb_targets.py|statusless-group-asked-for-pages|    if more is None or not token or not isinstance\(status, str\):|    if more is None or not token:|def=_follow
+src/mikemol/buildtel/bb_targets.py|failed-page-not-caught|        except OSError:|        except ZeroDivisionError:|def=_follow
+src/mikemol/buildtel/bb_targets.py|short-listing-reads-as-complete|        return self\.unreadable == 0 and self\.listed == self\.total|        return self.unreadable == 0|def=Report.complete
+src/mikemol/buildtel/bb_targets.py|every-group-named-as-short|self\.groups if g\.short\(\)|self.groups if True|def=Report.verdict
+src/mikemol/buildtel/bb_targets.py|partial-rows-under-tests|        "tests" if whole else "observed_only": rows,|        "tests": rows,|def=main
+
 # image_digest.py `digest`: `absent` is a stable answer for everything but an unknown image name.
 src/mikemol/buildtel/image_digest.py|unknown-image-accepted|if image not in IMAGES:|if False:|def=digest
 src/mikemol/buildtel/image_digest.py|missing-query-run-anyway|if not query\.is_file\(\) or not python\.is_file\(\):|if False:|def=digest

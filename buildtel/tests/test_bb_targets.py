@@ -108,6 +108,14 @@ def test_post_asks_for_the_invocation_by_id_and_returns_the_parsed_response(
     assert service.seen == [(bb_targets.RPC, {"lookup": {"invocationId": "inv-1"}})]
 
 
+def test_post_page_sends_the_group_status_and_token_to_get_target(service: _Service) -> None:
+    """The paging request names the invocation, the group's own status and the token."""
+    service.answer = {"targetGroups": []}
+    bb_targets.post_page("inv-1", "BUILT", "tok", host="127.0.0.1", port=service.port)
+    expected = {"invocationId": "inv-1", "status": "BUILT", "pageToken": "tok"}
+    assert service.seen == [(bb_targets.RPC_PAGE, expected)]
+
+
 def test_post_refuses_any_status_but_200(service: _Service) -> None:
     """A 404 is an OSError naming the status, never an empty response."""
     service.status = _NOT_FOUND
@@ -174,9 +182,11 @@ def test_main_prints_the_ranking_with_the_coverage_beside_it(
     assert bb_targets.main(["inv"], lambda _i: page) == 0
     report: object = json.loads(capsys.readouterr().out)
     assert report == {
+        "status": "COMPLETE",
         "listed": 1,
         "total": 1,
         "unreadable": 0,
+        "groups": [{"status": "PASSED", "listed": 1, "total": 1}],
         "tests_found": 1,
         "tests": [{"label": "//b:slow", "status": "PASSED", "millis": _SLOW_MS}],
     }
