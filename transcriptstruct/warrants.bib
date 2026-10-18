@@ -803,3 +803,60 @@
   claim  = {`--audit-memory DIR` is a dry run: rows on stdout, every note left as it was.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_the_mode_prints_one_row_per_line_and_writes_nothing},
 }
+
+@misc{transcriptstruct-memclaims-only-the-description-line-of-the-frontmatter-can-claim-anything,
+  section = {memclaims},
+  title  = {A quote or any other frontmatter line is skipped; the description reads as a dated ruling},
+  claim  = {A quote or any other frontmatter line is skipped; the description reads as a dated
+            ruling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_only_the_description_line_of_the_frontmatter_can_claim_anything},
+}
+
+@misc{transcriptstruct-memclaims-quote-on-a-line-that-says-it-was-relayed-is-a-relayed-claim,
+  section = {memclaims},
+  title  = {Testimony is looked up all the same, but it is named for what it is},
+  claim  = {Testimony is looked up all the same, but it is named for what it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_quote_on_a_line_that_says_it_was_relayed_is_a_relayed_claim},
+}
+
+@misc{transcriptstruct-memgrants-grant-word-in-a-restriction-clause-is-not-a-grant,
+  section = {memgrants},
+  title  = {The no-swarming note names the same words a grant does, and is not flagged for them},
+  claim  = {The no-swarming note names the same words a grant does, and is not flagged for them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_grant_word_in_a_restriction_clause_is_not_a_grant},
+}
+
+@misc{transcriptstruct-memgrants-grant-in-a-clause-of-its-own-survives-a-negation-in-another,
+  section = {memgrants},
+  title  = {Clauses split at punctuation, so 'never swarm, but an agent may commit' still flags may},
+  claim  = {Clauses split at punctuation, so 'never swarm, but an agent may commit' still flags may.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_grant_in_a_clause_of_its_own_survives_a_negation_in_another},
+}
+
+@misc{transcriptstruct-memfind-ruling-is-dated-and-an-unfound-relay-is-relayed-not-unwarranted,
+  section = {memfind},
+  title  = {Three different answers for three different claims, so a reviewer reads them apart},
+  claim  = {Three different answers for three different claims, so a reviewer reads them apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_ruling_is_dated_and_an_unfound_relay_is_relayed_not_unwarranted},
+}
+
+@misc{transcriptstruct-memfind-pasted-or-huge-record-that-contains-every-term-is-skipped,
+  section = {memfind},
+  title  = {One pasted record held everything and matched unrelated notes; it no longer counts},
+  claim  = {One pasted record held everything and matched unrelated notes; it no longer counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_pasted_or_huge_record_that_contains_every_term_is_skipped},
+}
+
+@misc{transcriptstruct-memfind-utterance-must-share-enough-of-a-large-notes-terms,
+  section = {memfind},
+  title  = {Three shared terms out of a dozen are 25%, below the share bar, so no row},
+  claim  = {Three shared terms out of a dozen are 25%, below the share bar, so no row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_an_utterance_must_share_enough_of_a_large_notes_terms},
+}
+
+@misc{transcriptstruct-memaudit-newer-linked-note-that-shares-the-subject-is-reported-from-the-older,
+  section = {memaudit},
+  title  = {The author's own link names a note modified later on the same subject: LINKED-NEWER},
+  claim  = {The author's own link names a note modified later on the same subject: LINKED-NEWER.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_newer_linked_note_that_shares_the_subject_is_reported_from_the_older},
+}

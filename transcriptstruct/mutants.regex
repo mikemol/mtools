@@ -9,11 +9,18 @@
 # JSON, never guessed; without the type check a numeric name decodes as text and is read as a name.
 src/mikemol/transcriptstruct/blocks.py|reference-name-type-unchecked|if known and isinstance\(text, str\):|if known:|def=_sub_block
 src/mikemol/transcriptstruct/query.py|uuid-and-timestamp-swapped|    uuid, stamped = fields\.get\("uuid"\), fields\.get\("timestamp"\)|    uuid, stamped = fields.get("timestamp"), fields.get("uuid")|def=_ids
-src/mikemol/transcriptstruct/memclaims.py|dated-line-not-a-ruling|        elif _DATE\.search\(raw\):|        elif False:|def=claims
-src/mikemol/transcriptstruct/memclaims.py|description-quotes-kept|    return stripped\.removeprefix\(_DESCRIPTION\)\.strip\(\)\.strip\('"'\)|    return stripped.removeprefix(_DESCRIPTION).strip()|def=_unwrapped
-src/mikemol/transcriptstruct/memgrants.py|grant-words-keep-their-case|        words = sorted\(\{word\.lower\(\) for word in matched\}\)|        words = sorted(set(matched))|def=grants
+src/mikemol/transcriptstruct/memclaims.py|dated-line-not-a-ruling|    if _DATE\.search\(line\):|    if False:|def=_claim
+src/mikemol/transcriptstruct/memclaims.py|description-quotes-kept|    return raw\.strip\(\)\.removeprefix\(_DESCRIPTION\)\.strip\(\)\.strip\('"'\)|    return raw.strip().removeprefix(_DESCRIPTION).strip()|def=_unwrapped
+src/mikemol/transcriptstruct/memgrants.py|grant-words-keep-their-case|        words = sorted\(\{word\.lower\(\) for word in _granted\(raw\)\}\)|        words = sorted(set(_granted(raw)))|def=grants
 src/mikemol/transcriptstruct/memfind.py|any-utterance-warrants-a-quote|            if wanted in normal\(found\.text\):|            if True:|def=warrant_for
-src/mikemol/transcriptstruct/memfind.py|oldest-first-not-newest|    return sorted\(later, key=_when, reverse=True\)|    return sorted(later, key=_when, reverse=False)|def=superseded_by
+src/mikemol/transcriptstruct/memfind.py|oldest-first-not-newest|    return \[u for _share, u in sorted\(kept, key=_rank, reverse=True\)\]|    return [u for _share, u in sorted(kept, key=_rank, reverse=False)]|def=superseded_by
 src/mikemol/transcriptstruct/memaudit.py|no-cutoff-no-superseded-rows|    return f"\{max\(dates\)\}\{_END_OF_DAY\}" if dates else ""|    return ""|def=_latest
-src/mikemol/transcriptstruct/memaudit.py|index-audited-as-a-note|        if path\.name != INDEX:|        if True:|def=audit
+src/mikemol/transcriptstruct/memaudit.py|index-audited-as-a-note|        if name != INDEX:|        if True:|def=audit
 src/mikemol/transcriptstruct/cli.py|audit-memory-mode-ignored|    if opts\.get\("audit_memory"\) is True:|    if False:|def=_special
+src/mikemol/transcriptstruct/memgrants.py|negated-clause-still-granted|        if not _NEGATION\.search\(clause\):|        if True:|def=_granted
+src/mikemol/transcriptstruct/memfind.py|share-bar-dropped|    kept = \[pair for pair in scored if pair\[0\] \* len\(note_terms\) >= OVERLAP and pair\[0\] >= SHARE\]|    kept = [pair for pair in scored if pair[0] * len(note_terms) >= OVERLAP]|def=superseded_by
+src/mikemol/transcriptstruct/memfind.py|pasted-record-counted|    return _PASTED in utterance\.text or len\(utterance\.text\) > LONG|    return False|def=_pasted
+src/mikemol/transcriptstruct/memfind.py|every-miss-is-unwarranted|    status = \{"quote": UNWARRANTED, "relayed": RELAYED\}\.get\(claim\.kind, DATED\)|    status = UNWARRANTED|def=warrant_for
+src/mikemol/transcriptstruct/memclaims.py|frontmatter-lines-claim|        if not raw\.strip\(\)\.startswith\(_DESCRIPTION\):|        if False:|def=_claim
+src/mikemol/transcriptstruct/memclaims.py|relay-read-as-the-operator|        kind = _RELAYED_KIND if _RELAYED\.search\(line\) else _QUOTE_KIND|        kind = _QUOTE_KIND|def=_claim
+src/mikemol/transcriptstruct/memaudit.py|older-linked-note-reported|        if other is None or _modified\(other\) <= mine:|        if other is None:|def=linked_newer

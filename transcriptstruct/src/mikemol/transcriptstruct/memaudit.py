@@ -28,9 +28,13 @@ from mikemol.transcriptstruct.records import read_path
 SHOWN = 3
 GRANT = "GRANT"
 SUPERSEDED = "POSSIBLY-SUPERSEDED"
+LINKED_NEWER = "LINKED-NEWER"
+LINK_OVERLAP = 2
 INDEX = "MEMORY.md"
 _DATE = re.compile(r"\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b")
 _SUBJECT = re.compile(r"^(?:name|description):")
+_LINK = re.compile(r"\[\[([^\]\n]+)\]\]")
+_MODIFIED = re.compile(r"^\s*modified:\s*(\S+)", re.MULTILINE)
 _DETAIL = 100
 _END_OF_DAY = "T99"
 
@@ -92,6 +96,41 @@ def _latest(texts: list[str]) -> str:
     return f"{max(dates)}{_END_OF_DAY}" if dates else ""
 
 
+def _modified(text: str) -> str:
+    """Read a note's `modified:` stamp.
+
+    Returns:
+        the stamp, or "" when the note has none.
+
+    """
+    found = _MODIFIED.search(text)
+    return found.group(1) if found is not None else ""
+
+
+def linked_newer(name: str, text: str, notes: dict[str, str]) -> list[Row]:
+    """Report the notes this one links to that are newer and share its subject.
+
+    ⚑ A LINK IS THE AUTHOR'S OWN CLAIM OF RELATEDNESS (github-8f, 2026-10-18, W1550): when a note
+    it points at was modified after it and shares `LINK_OVERLAP` of its key terms, that newer note
+    may contradict it, a stronger signal than term overlap with an utterance. It cannot tell
+    contradiction from agreement, so the row names the pair for a reviewer.
+
+    Returns:
+        one `LINKED-NEWER` row per such link, in link-name order.
+
+    """
+    mine = _modified(text)
+    subject = _subject(text)
+    rows: list[Row] = []
+    for link in sorted(set(cast("list[str]", _LINK.findall(text)))):
+        other = notes.get(f"{link}.md")
+        if other is None or _modified(other) <= mine:
+            continue
+        if len(subject & _subject(other)) >= LINK_OVERLAP:
+            rows.append(Row(name, 0, LINKED_NEWER, f"{link}.md modified {_modified(other)}"))
+    return rows
+
+
 def audit_note(name: str, text: str, utterances: list[Utterance]) -> list[Row]:
     """Audit one note.
 
@@ -125,8 +164,10 @@ def audit(memory: Path) -> list[Row]:
 
     """
     utterances = utterances_of(memory.parent)
+    notes = {p.name: p.read_text(encoding="utf-8") for p in sorted(memory.glob("*.md"))}
     rows: list[Row] = []
-    for path in sorted(memory.glob("*.md")):
-        if path.name != INDEX:
-            rows.extend(audit_note(path.name, path.read_text(encoding="utf-8"), utterances))
+    for name, text in notes.items():
+        if name != INDEX:
+            rows.extend(audit_note(name, text, utterances))
+            rows.extend(linked_newer(name, text, notes))
     return rows

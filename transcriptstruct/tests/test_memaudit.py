@@ -71,6 +71,32 @@ def test_a_later_utterance_on_the_same_subject_is_possibly_superseded(tmp_path: 
     assert "u-later" in later[0].detail
 
 
+def _linked_notes(tmp_path: Path) -> Path:
+    """Write an older note linking a newer one on the same subject, and the newer linking back.
+
+    Returns:
+        the memory directory.
+
+    """
+    memory = tmp_path / "proj" / "memory"
+    memory.mkdir(parents=True)
+    head = 'description: "swarm drafts about symlinks and unsafe links"\nmetadata:\n  modified: '
+    old = f"---\nname: old\n{head}2026-10-04T00:00:00Z\n---\n\nSee [[new]].\n"
+    new = f"---\nname: new\n{head}2026-10-16T00:00:00Z\n---\n\nSee [[old]].\n"
+    (memory / "old.md").write_text(old, encoding="utf-8")
+    (memory / "new.md").write_text(new, encoding="utf-8")
+    return memory
+
+
+def test_a_newer_linked_note_that_shares_the_subject_is_reported_from_the_older(
+    tmp_path: Path,
+) -> None:
+    """The author's own link names a note modified later on the same subject: LINKED-NEWER."""
+    rows = memaudit.audit(_linked_notes(tmp_path))
+    linked = [(r.note, r.detail) for r in rows if r.status == memaudit.LINKED_NEWER]
+    assert linked == [("old.md", "new.md modified 2026-10-16T00:00:00Z")]
+
+
 def test_the_mode_prints_one_row_per_line_and_writes_nothing(tmp_path: Path) -> None:
     """`--audit-memory DIR` is a dry run: rows on stdout, every note left as it was."""
     memory = _project(tmp_path)
