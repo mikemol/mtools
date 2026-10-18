@@ -38,6 +38,24 @@ def test_a_grant_in_a_clause_of_its_own_survives_a_negation_in_another() -> None
     assert [g.words for g in found] == [("may",)]
 
 
+def test_an_imperative_negation_anywhere_in_the_sentence_restricts_the_whole_sentence() -> None:
+    """'Never propose ... a permission rule' and a colon-led 'No swarming: ...' grant nothing."""
+    assert memgrants.grants("Never propose, in a draft, a permission rule that is allowed.\n") == []
+    assert memgrants.grants("No swarming: an agent may only run one subagent at a time.\n") == []
+
+
+def test_a_grant_word_used_as_a_noun_names_a_thing_and_grants_nothing() -> None:
+    """An allowed set, an allow-list and a permission rule are things, not permissions."""
+    assert memgrants.grants("The allowed set and the allow-lists are in settings.\n") == []
+    assert memgrants.grants("Draft a permission rule for the operator to apply.\n") == []
+
+
+def test_a_contrast_word_starts_a_new_clause() -> None:
+    """'but', 'however', 'except' and 'unless' open a clause the earlier negation does not reach."""
+    found = memgrants.grants("Never swarm unless allowed.\n")
+    assert [g.words for g in found] == [("allowed",)]
+
+
 def test_a_line_with_no_grant_word_is_not_flagged_and_words_match_whole() -> None:
     """Plain text is skipped, and a word inside another (mayor, allowance) does not match."""
     assert memgrants.grants("Plain advice with nothing granted.\n") == []

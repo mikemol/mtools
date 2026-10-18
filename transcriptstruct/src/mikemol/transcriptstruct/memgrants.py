@@ -11,10 +11,12 @@ reads the row.
 
 ⚑ POLARITY (github-8f, 2026-10-18, W1547): the host's no-swarming note drew four GRANT rows from
 bare words, because a restriction names the same words a grant does. A line is read in clauses
-(split at `. ; : ! ? ,`), and a grant word in a clause that also carries a negation (no, not,
-never, nor, without, cannot, or any `n't`) is a RESTRICTION and is not flagged. A clause can
-still hide a grant behind a negation ("never use it unless allowed"); that is the price of a
-word-level reader, and the word is still on the line a reviewer opens.
+(split at `. ; ! ?` and at but, however, except, unless), and a grant word in a clause that also
+carries a negation anywhere in it (no, not, never, nor, without, cannot, or any `n't`) is a
+RESTRICTION and is not flagged. Round two (W1553): a grant word that is a NOUN, in `allowed set`,
+`allow-lists` or `permission rule`, names a thing and grants nothing. A clause can still hide a
+grant behind a negation; that is the price of a word-level reader, and the word is still on the
+line a reviewer opens.
 CONSUMED BY: the memory audit (`memaudit`).
 """
 
@@ -39,7 +41,12 @@ _WORDS = (
 )
 _GRANT = re.compile(r"\b(" + "|".join(_WORDS) + r")\b", re.IGNORECASE)
 _NEGATION = re.compile(r"\b(?:no|not|never|nor|without|cannot)\b|n't\b", re.IGNORECASE)
-_CLAUSE = re.compile(r"[.;:!?,]")
+_CLAUSE = re.compile(r"[.;!?]|\b(?:but|however|except|unless)\b", re.IGNORECASE)
+_NOUN = re.compile(
+    r"\b(?:allow(?:ed)?[- ](?:sets?|lists?)|allowlists?|permissions?[- ](?:rules?|prompts?|denials?"
+    r"|classifier|settings?))\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -61,7 +68,8 @@ def _granted(raw: str) -> list[str]:
     found: list[str] = []
     for clause in _CLAUSE.split(raw):
         if not _NEGATION.search(clause):
-            found.extend(cast("list[str]", _GRANT.findall(clause)))
+            bare = _NOUN.sub(" ", clause)
+            found.extend(cast("list[str]", _GRANT.findall(bare)))
     return found
 
 

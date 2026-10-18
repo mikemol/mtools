@@ -24,3 +24,8 @@ src/mikemol/transcriptstruct/memfind.py|every-miss-is-unwarranted|    status = \
 src/mikemol/transcriptstruct/memclaims.py|frontmatter-lines-claim|        if not raw\.strip\(\)\.startswith\(_DESCRIPTION\):|        if False:|def=_claim
 src/mikemol/transcriptstruct/memclaims.py|relay-read-as-the-operator|        kind = _RELAYED_KIND if _RELAYED\.search\(line\) else _QUOTE_KIND|        kind = _QUOTE_KIND|def=_claim
 src/mikemol/transcriptstruct/memaudit.py|older-linked-note-reported|        if other is None or _modified\(other\) <= mine:|        if other is None:|def=linked_newer
+src/mikemol/transcriptstruct/memgrants.py|noun-uses-granted|            bare = _NOUN\.sub\(" ", clause\)|            bare = clause|def=_granted
+src/mikemol/transcriptstruct/memclaims.py|any-mark-opens-a-quote|            if not before\.isalnum\(\) and not after\.isspace\(\):|            if True:|def=first_quote
+src/mikemol/transcriptstruct/memfind.py|curly-marks-not-folded|    return _SPACE\.sub\(" ", text\.lower\(\)\.translate\(_FOLD\)\)\.strip\(\)|    return _SPACE.sub(" ", text.lower()).strip()|def=normal
+src/mikemol/transcriptstruct/memfind.py|edge-punctuation-kept|    wanted = normal\(claim\.text\)\.strip\(_EDGE\)|    wanted = normal(claim.text)|def=warrant_for
+src/mikemol/transcriptstruct/memaudit.py|other-projects-never-searched|    pending = \[i for i, row in enumerate\(out\) if row\.claim\]|    pending: list[int] = []|def=elsewhere

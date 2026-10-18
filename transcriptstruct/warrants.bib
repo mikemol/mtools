@@ -860,3 +860,68 @@
   claim  = {The author's own link names a note modified later on the same subject: LINKED-NEWER.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_newer_linked_note_that_shares_the_subject_is_reported_from_the_older},
 }
+
+@misc{transcriptstruct-memclaims-stray-mark-does-not-turn-the-words-between-two-quotes-into-a-quote,
+  section = {memclaims},
+  title  = {The words BETWEEN a closing mark and the next opening mark are not a quote},
+  claim  = {The words BETWEEN a closing mark and the next opening mark are not a quote.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_stray_mark_does_not_turn_the_words_between_two_quotes_into_a_quote},
+}
+
+@misc{transcriptstruct-memclaims-curly-and-escaped-quote-marks-read-as-plain-ones,
+  section = {memclaims},
+  title  = {A transcript and a note spell the same words with different marks},
+  claim  = {A transcript and a note spell the same words with different marks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_curly_and_escaped_quote_marks_read_as_plain_ones},
+}
+
+@misc{transcriptstruct-memclaims-short-quote-is-not-a-claim-and-the-next-long-one-is,
+  section = {memclaims},
+  title  = {Under twenty characters is a word in quotes, not an utterance; the scan goes on},
+  claim  = {Under twenty characters is a word in quotes, not an utterance; the scan goes on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memclaims.py -k test_a_short_quote_is_not_a_claim_and_the_next_long_one_is},
+}
+
+@misc{transcriptstruct-memgrants-imperative-negation-anywhere-in-the-sentence-restricts-the-whole-sentence,
+  section = {memgrants},
+  title  = {'Never propose ... a permission rule' and a colon-led 'No swarming: ...' grant nothing},
+  claim  = {'Never propose ... a permission rule' and a colon-led 'No swarming: ...' grant nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_an_imperative_negation_anywhere_in_the_sentence_restricts_the_whole_sentence},
+}
+
+@misc{transcriptstruct-memgrants-grant-word-used-as-a-noun-names-a-thing-and-grants-nothing,
+  section = {memgrants},
+  title  = {An allowed set, an allow-list and a permission rule are things, not permissions},
+  claim  = {An allowed set, an allow-list and a permission rule are things, not permissions.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_grant_word_used_as_a_noun_names_a_thing_and_grants_nothing},
+}
+
+@misc{transcriptstruct-memgrants-contrast-word-starts-a-new-clause,
+  section = {memgrants},
+  title  = {'but', 'however', 'except' and 'unless' open a clause the earlier negation does not reach},
+  claim  = {'but', 'however', 'except' and 'unless' open a clause the earlier negation does not
+            reach.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memgrants.py -k test_a_contrast_word_starts_a_new_clause},
+}
+
+@misc{transcriptstruct-memfind-quote-is-found-across-curly-marks-backticks-newlines-and-edge-punctuation,
+  section = {memfind},
+  title  = {The note types plain marks and a full stop; the transcript has curly marks and a break},
+  claim  = {The note types plain marks and a full stop; the transcript has curly marks and a break.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_quote_is_found_across_curly_marks_backticks_newlines_and_edge_punctuation},
+}
+
+@misc{transcriptstruct-memaudit-quote-given-in-another-project-is-elsewhere-not-unwarranted,
+  section = {memaudit},
+  title  = {The ruling sits in a sibling project's transcript, so the row says where it is},
+  claim  = {The ruling sits in a sibling project's transcript, so the row says where it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_quote_given_in_another_project_is_elsewhere_not_unwarranted},
+}
+
+@misc{transcriptstruct-memaudit-quote-no-project-carries-stays-unwarranted,
+  section = {memaudit},
+  title  = {Searching the siblings is not a way to excuse a quote: a miss everywhere is still a miss},
+  claim  = {Searching the siblings is not a way to excuse a quote: a miss everywhere is still a
+            miss.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_quote_no_project_carries_stays_unwarranted},
+}
