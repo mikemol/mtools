@@ -52,6 +52,7 @@ ARMED_EVERY_POLLS = 3
 ARMED_NAME = "mikemol.watchdog.armed"
 SERVICE = "mikemol-watchdog"
 _NS_PER_S = 1_000_000_000
+_PROBE = 0
 
 Seams = tuple[
     Callable[[], Beat | None],
@@ -86,6 +87,67 @@ def idle_line(waiting: int, last: Beat, now_ns: int) -> str:
     """
     ago = max(now_ns - last.at_ns, 0) // _NS_PER_S
     return f"idle with {waiting} ready cards, last heartbeat {ago}s ago ({last.tool})"
+
+
+def pidfile_of(git_dir: Path) -> Path:
+    """Name the file a running watchdog leaves for its repo (W1556).
+
+    Returns:
+        `<git dir>/mtools/watchdog.pid`, beside the heartbeat.
+
+    """
+    return git_dir / "mtools" / "watchdog.pid"
+
+
+def claim(git_dir: Path, pid: int) -> None:
+    """Record that the watchdog with `pid` is watching this repo.
+
+    ⚑ A PGREP IS NOT A READING OF THIS REPO (github-8f, 2026-10-18): a process list names every
+    watchdog on the host, and the one that matters is the one pointed at this state file. The pid
+    file is the repo's own record, checked with a signal-0 probe, so a stale file from a killed
+    process reads as no watchdog.
+    """
+    target = pidfile_of(git_dir)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(f"{pid}\n", encoding="utf-8")
+
+
+def release(git_dir: Path, pid: int) -> None:
+    """Remove the pid file, but only if it still names `pid` (a newer watchdog may own it)."""
+    target = pidfile_of(git_dir)
+    with contextlib.suppress(OSError):
+        if target.read_text(encoding="utf-8").strip() == str(pid):
+            target.unlink()
+
+
+def is_alive(pid: int) -> bool:
+    """Probe a pid with signal zero.
+
+    Returns:
+        True when the process exists (even one this user may not signal), False when it does not.
+
+    """
+    try:
+        os.kill(pid, _PROBE)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def running(git_dir: Path, alive: Callable[[int], bool] = is_alive) -> bool:
+    """Say whether a live watchdog holds this repo's pid file.
+
+    Returns:
+        True when the file names a pid the probe finds; False when absent, unreadable or stale.
+
+    """
+    try:
+        pid = int(pidfile_of(git_dir).read_text(encoding="utf-8").strip())
+    except (OSError, ValueError):
+        return False
+    return alive(pid)
 
 
 def _nothing() -> None:
@@ -229,7 +291,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         lambda: os.getppid() == parent,
     )
     announce = armed_publisher(os.environ, git_dir.parent.name)
-    return watch(seams, float(str(opts["phi_fire"])), float(str(opts["poll_s"])), announce)
+    claim(git_dir, os.getpid())
+    try:
+        return watch(seams, float(str(opts["phi_fire"])), float(str(opts["poll_s"])), announce)
+    finally:
+        release(git_dir, os.getpid())
 
 
 if __name__ == "__main__":

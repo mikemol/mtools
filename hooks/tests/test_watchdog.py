@@ -2,6 +2,7 @@
 # Copyright (c) 2026 Mike Mol
 """The watchdog exits when a session is quiet past its learned limit with ready work waiting."""
 
+import os
 import stat
 from collections.abc import Callable
 from pathlib import Path
@@ -15,6 +16,7 @@ _S = 1_000_000_000
 _POLL = 20.0
 _THREE = 3
 _FOUR = 4
+_PID = 4242
 
 
 def _beat(at_s: int, mean_s: int | None = None) -> Beat:
@@ -222,3 +224,52 @@ def test_a_publisher_whose_child_cannot_start_never_raises() -> None:
         raise OSError
 
     watchdog.armed_publisher(_env(), "myrepo", broken)()
+
+
+def test_a_pid_file_naming_a_live_process_is_a_running_watchdog(tmp_path: Path) -> None:
+    """The record is the repo's own, and the probe is the process, not a process list."""
+    watchdog.claim(tmp_path, _PID)
+    assert watchdog.running(tmp_path, lambda pid: pid == _PID) is True
+    assert watchdog.running(tmp_path, lambda _pid: False) is False
+
+
+def test_no_pid_file_or_an_unreadable_one_is_no_watchdog(tmp_path: Path) -> None:
+    """Absent, empty and garbled all read as not running."""
+    assert watchdog.running(tmp_path, lambda _pid: True) is False
+    watchdog.pidfile_of(tmp_path).parent.mkdir(parents=True)
+    watchdog.pidfile_of(tmp_path).write_text("not a pid\n", encoding="utf-8")
+    assert watchdog.running(tmp_path, lambda _pid: True) is False
+
+
+def test_release_removes_only_its_own_pid_file(tmp_path: Path) -> None:
+    """A newer watchdog that took the file over keeps it when the older one exits."""
+    watchdog.claim(tmp_path, 7)
+    watchdog.release(tmp_path, 8)
+    assert watchdog.pidfile_of(tmp_path).is_file()
+    watchdog.release(tmp_path, 7)
+    assert not watchdog.pidfile_of(tmp_path).exists()
+
+
+def test_the_default_probe_finds_this_process_and_not_a_dead_one() -> None:
+    """Signal zero: this process is alive, and a pid no process holds is not."""
+    assert watchdog.running(Path("/nonexistent")) is False
+    assert watchdog.is_alive(os.getpid()) is True
+
+
+def test_main_holds_the_pid_file_while_it_watches_and_removes_it_on_exit(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The file exists during the watch and is gone after, whatever the watch returned."""
+    seen: list[bool] = []
+
+    def watching(*_args: object) -> int:
+        seen.append(watchdog.pidfile_of(tmp_path / ".git").is_file())
+        return watchdog.EXIT_IDLE
+
+    monkeypatch.setattr(watchdog, "watch", watching)
+    code = watchdog.main(
+        ["--state", str(tmp_path / ".claude" / "q.json"), "--writer", _writer(tmp_path, "echo 0")]
+    )
+    assert code == watchdog.EXIT_IDLE
+    assert seen == [True]
+    assert not watchdog.pidfile_of(tmp_path / ".git").exists()

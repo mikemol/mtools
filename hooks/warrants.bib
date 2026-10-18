@@ -11763,3 +11763,38 @@
   claim  = {Another tool passes untouched; the hook speaks through printed JSON, exit 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagent_guard.py -k test_only_an_agent_call_is_judged_and_main_prints_the_denial},
 }
+
+@misc{hooks-watchdog-pid-file-naming-a-live-process-is-a-running-watchdog,
+  section = {heartbeat},
+  title  = {The record is the repo's own, and the probe is the process, not a process list},
+  claim  = {The record is the repo's own, and the probe is the process, not a process list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_pid_file_naming_a_live_process_is_a_running_watchdog},
+}
+
+@misc{hooks-watchdog-no-pid-file-or-an-unreadable-one-is-no-watchdog,
+  section = {heartbeat},
+  title  = {Absent, empty and garbled all read as not running},
+  claim  = {Absent, empty and garbled all read as not running.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_pid_file_or_an_unreadable_one_is_no_watchdog},
+}
+
+@misc{hooks-watchdog-release-removes-only-its-own-pid-file,
+  section = {heartbeat},
+  title  = {A newer watchdog that took the file over keeps it when the older one exits},
+  claim  = {A newer watchdog that took the file over keeps it when the older one exits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_release_removes_only_its_own_pid_file},
+}
+
+@misc{hooks-watchdog-default-probe-finds-this-process-and-not-a-dead-one,
+  section = {heartbeat},
+  title  = {Signal zero: this process is alive, and a pid no process holds is not},
+  claim  = {Signal zero: this process is alive, and a pid no process holds is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_default_probe_finds_this_process_and_not_a_dead_one},
+}
+
+@misc{hooks-watchdog-main-holds-the-pid-file-while-it-watches-and-removes-it-on-exit,
+  section = {heartbeat},
+  title  = {The file exists during the watch and is gone after, whatever the watch returned},
+  claim  = {The file exists during the watch and is gone after, whatever the watch returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_main_holds_the_pid_file_while_it_watches_and_removes_it_on_exit},
+}
