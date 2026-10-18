@@ -38,7 +38,7 @@ from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
 from mikemol.hooks import heartbeat
-from mikemol.hooks.commit_span import ENDPOINTS_ENV, binary
+from mikemol.hooks.commit_span import binary, store_named
 from mikemol.hooks.heartbeat import Beat
 from mikemol.hooks.vlogdetach import spawn_detached
 
@@ -114,7 +114,7 @@ def armed_publisher(
 
     """
     program = binary(env)
-    if program is None or not env.get(ENDPOINTS_ENV):
+    if program is None or not store_named(env):
         return _nothing
     argv = [program, "metric", "--service", SERVICE, "--namespace", repo]
     argv += ["--field", f"repo={repo}", "--name", ARMED_NAME, "--value", "1"]

@@ -11621,3 +11621,24 @@
   claim  = {Modules first passes, and a stack with no snapshot is left to the gate.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackimports.py -k test_refusal_is_none_for_a_sound_order_or_no_snapshot},
 }
+
+@misc{hooks-store-named-variable-alone-names-a-store,
+  section = {store_named},
+  title  = {The old rule still holds: a set variable is enough, with no HOME at all},
+  claim  = {The old rule still holds: a set variable is enough, with no HOME at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store_named.py -k test_the_variable_alone_names_a_store},
+}
+
+@misc{hooks-store-named-hosts-file-under-home-names-a-store-when-the-variable-is-unset,
+  section = {store_named},
+  title  = {The fix: the file luthen publishes counts, so a session with no variable still sends},
+  claim  = {The fix: the file luthen publishes counts, so a session with no variable still sends.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store_named.py -k test_the_hosts_file_under_home_names_a_store_when_the_variable_is_unset},
+}
+
+@misc{hooks-store-named-no-variable-and-no-file-name-no-store,
+  section = {store_named},
+  title  = {The negative control: an empty environment, and a HOME with no file, send nothing},
+  claim  = {The negative control: an empty environment, and a HOME with no file, send nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_store_named.py -k test_no_variable_and_no_file_name_no_store},
+}

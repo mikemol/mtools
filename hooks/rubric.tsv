@@ -130,3 +130,4 @@ commit_turn	Commit Turns: Queued Commits Take the Lease in Submission Order, Eac
 heartbeat	Session Heartbeat: A Tool Call Leaves a Record, the Gaps Between Records Are Learned, and a Fault Never Fails the Tool
 hold_lift	Hold Lift: A Hold on a Human Is Lifted by a Transcript Record of the Operator's Own Words Naming the Card, Read Again at Lift Time, and Never by a Stored Command
 stackimports	Stack Import Order: A Stack Is Refused at Submit When a Frozen File Imports a Module Only a Later Entry Adds, and Never When the Name Is Not a File
+store_named	A Session With No MIKEMOL_ENDPOINTS Still Names a Store Through the Host's File

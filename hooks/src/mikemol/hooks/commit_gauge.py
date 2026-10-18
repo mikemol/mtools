@@ -21,7 +21,7 @@ from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
 from mikemol.hooks import commit_counts
-from mikemol.hooks.commit_span import ENDPOINTS_ENV, binary
+from mikemol.hooks.commit_span import binary, store_named
 from mikemol.hooks.vlogdetach import spawn_detached
 
 SERVICE = "mikemol-commit"
@@ -60,7 +60,7 @@ def note(
     except OSError:
         return None
     program = binary(env)
-    if program is None or not env.get(ENDPOINTS_ENV):
+    if program is None or not store_named(env):
         return counts
     for argv in plan(program, ledger.parent.parent.name, counts):
         try:

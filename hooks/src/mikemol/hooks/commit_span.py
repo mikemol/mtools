@@ -35,6 +35,7 @@ from mikemol.hooks.vlogdetach import spawn_detached
 
 BIN_ENV = "MIKEMOL_OTLP_BIN"
 ENDPOINTS_ENV = "MIKEMOL_ENDPOINTS"
+HOME_FILE = ".config/mikemol/endpoints.json"
 SUBMIT_ENV = "MIKEMOL_COMMIT_SUBMITTED_NS"
 SERVICE = "mikemol-commit"
 _OK = "COMMITTED"
@@ -111,6 +112,25 @@ def binary(env: Mapping[str, str]) -> str | None:
         return on_path
     checkout = Path.home() / "github" / "mtools" / "otlp" / ".venv" / "bin" / "mikemol-otlp"
     return str(checkout) if checkout.is_file() else None
+
+
+def store_named(env: Mapping[str, str]) -> bool:
+    """Say whether a store can be named: the variable is set, or the host's file is under HOME.
+
+    ⚑ A SESSION CARRIES NO `MIKEMOL_ENDPOINTS` (W1528), so the host's own file at
+    `$HOME/.config/mikemol/endpoints.json` counts, the same fallback `mikemol-otlp` resolves
+    through. This only decides whether to start the child; the child still fails silent.
+
+    Returns:
+        whether a send is worth starting.
+
+    """
+    if env.get(ENDPOINTS_ENV):
+        return True
+    home = env.get("HOME")
+    if not home:
+        return False
+    return (Path(home) / HOME_FILE).is_file()
 
 
 def pieces(
@@ -216,7 +236,7 @@ def _start(
     """
     event, waypoint, root, phases = what
     program = binary(env)
-    if event is None or program is None or not env.get(ENDPOINTS_ENV):
+    if event is None or program is None or not store_named(env):
         return 0
     ids = new_ids()
     started = 0
