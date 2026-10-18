@@ -125,6 +125,15 @@ py_binary(
 )
 
 py_binary(
+    name = "bb_targets",
+    srcs = ["src/mikemol/buildtel/bb_targets.py"],
+    main = "src/mikemol/buildtel/bb_targets.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":buildtel"],
+)
+
+py_binary(
     name = "bb_log",
     srcs = ["src/mikemol/buildtel/bb_log.py"],
     main = "src/mikemol/buildtel/bb_log.py",

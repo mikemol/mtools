@@ -93,6 +93,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. Each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_bb_records.py" = ["assert", "invalid-function-name"]
+"tests/test_bb_targets.py" = ["assert"]
 "tests/test_bb_log.py" = ["assert"]
 "tests/test_bb_log_post.py" = ["assert"]
 "tests/test_buildpulse.py" = ["assert"]

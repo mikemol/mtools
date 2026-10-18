@@ -38,6 +38,19 @@ src/mikemol/buildtel/bb_records.py|unreachable-reported-as-usage|return EXIT_UNR
 src/mikemol/buildtel/bb_records.py|cpu-reported-in-nanoseconds|tally\.cpu_nanos / NANOS|tally.cpu_nanos|def=main
 src/mikemol/buildtel/bb_records.py|every-command-listed|most_common\(TOP_COMMANDS\)|most_common()|def=main
 
+# bb_targets.py: tests rank longest first with ties by label, a built target is not a test, the
+# total sums every group, and what cannot be read is counted unreadable.
+src/mikemol/buildtel/bb_targets.py|ranking-shortest-first|    return \(-test\.millis, test\.label\)|    return (test.millis, test.label)|def=_rank
+src/mikemol/buildtel/bb_targets.py|ties-left-unordered|    return \(-test\.millis, test\.label\)|    return (-test.millis, "")|def=_rank
+src/mikemol/buildtel/bb_targets.py|built-target-ranked|    if summary is None:|    if False:|def=_add
+src/mikemol/buildtel/bb_targets.py|unlabelled-target-read|    if found is None or not isinstance\(label, str\):|    if found is None:|def=_add
+src/mikemol/buildtel/bb_targets.py|total-overwritten-not-summed|        report\.total \+= |        report.total = |def=parse
+src/mikemol/buildtel/bb_targets.py|non-object-group-read|        if found is None:|        if False:|def=parse
+src/mikemol/buildtel/bb_targets.py|any-string-parsed-as-an-int|and value\.isdigit\(\)||def=_int
+src/mikemol/buildtel/bb_targets.py|every-test-listed|report\.tests\[:TOP_TESTS\]|report.tests|def=main
+src/mikemol/buildtel/bb_targets.py|flag-taken-as-an-invocation-id| or args\[0\]\.startswith\("-"\)||def=main
+src/mikemol/buildtel/bb_targets.py|unreachable-reported-as-usage|        return EXIT_UNREACHABLE|        return EXIT_USAGE|def=main
+
 # image_digest.py `digest`: `absent` is a stable answer for everything but an unknown image name.
 src/mikemol/buildtel/image_digest.py|unknown-image-accepted|if image not in IMAGES:|if False:|def=digest
 src/mikemol/buildtel/image_digest.py|missing-query-run-anyway|if not query\.is_file\(\) or not python\.is_file\(\):|if False:|def=digest

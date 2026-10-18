@@ -881,3 +881,87 @@
   claim  = {The control for the removed host default: an unset or empty variable names no directory.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_image_digest.py -k test_with_no_checkout_named_the_digest_is_absent_and_nothing_runs},
 }
+
+@misc{buildtel-bb-targets-post-asks-for-the-invocation-by-id-and-returns-the-parsed-response,
+  section = {bb_targets},
+  title  = {The body is a lookup of the invocation id, the path is GetInvocation},
+  claim  = {The body is a lookup of the invocation id, the path is GetInvocation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_post_asks_for_the_invocation_by_id_and_returns_the_parsed_response},
+}
+
+@misc{buildtel-bb-targets-post-refuses-any-status-but-200,
+  section = {bb_targets},
+  title  = {A 404 is an OSError naming the status, never an empty response},
+  claim  = {A 404 is an OSError naming the status, never an empty response.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_post_refuses_any_status_but_200},
+}
+
+@misc{buildtel-bb-targets-tests-rank-longest-first-and-a-built-target-is-listed-but-not-ranked,
+  section = {bb_targets},
+  title  = {Only a target with a testSummary has a duration; the others count toward `listed`},
+  claim  = {Only a target with a testSummary has a duration; the others count toward `listed`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_tests_rank_longest_first_and_a_built_target_is_listed_but_not_ranked},
+}
+
+@misc{buildtel-bb-targets-report-states-how-many-targets-the-groups-hold-against-how-many-it-listed,
+  section = {bb_targets},
+  title  = {Each group is paged, so `total` sums the groups' counts and `listed` what came back},
+  claim  = {Each group is paged, so `total` sums the groups' counts and `listed` what came back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_the_report_states_how_many_targets_the_groups_hold_against_how_many_it_listed},
+}
+
+@misc{buildtel-bb-targets-equal-durations-order-by-label,
+  section = {bb_targets},
+  title  = {A tie is broken by label so the ranking is stable between runs},
+  claim  = {A tie is broken by label so the ranking is stable between runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_equal_durations_order_by_label},
+}
+
+@misc{buildtel-bb-targets-what-it-cannot-read-is-counted-unreadable-not-dropped,
+  section = {bb_targets},
+  title  = {A target that is no object or has no label, and a group that is no object, each count},
+  claim  = {A target that is no object or has no label, and a group that is no object, each count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_what_it_cannot_read_is_counted_unreadable_not_dropped},
+}
+
+@misc{buildtel-bb-targets-response-with-no-invocation-is-one-unreadable,
+  section = {bb_targets},
+  title  = {Neither an empty list nor a non-object response is a report of zero tests},
+  claim  = {Neither an empty list nor a non-object response is a report of zero tests.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_a_response_with_no_invocation_is_one_unreadable},
+}
+
+@misc{buildtel-bb-targets-duration-that-is-not-digits-reads-as-zero-and-a-missing-status-as-unknown,
+  section = {bb_targets},
+  title  = {A protobuf int64 is a digit string; anything else is 0, and no status is `?`},
+  claim  = {A protobuf int64 is a digit string; anything else is 0, and no status is `?`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_a_duration_that_is_not_digits_reads_as_zero_and_a_missing_status_as_unknown},
+}
+
+@misc{buildtel-bb-targets-main-prints-the-ranking-with-the-coverage-beside-it,
+  section = {bb_targets},
+  title  = {The report carries listed, total, unreadable, the count of tests and the ranked rows},
+  claim  = {The report carries listed, total, unreadable, the count of tests and the ranked rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_main_prints_the_ranking_with_the_coverage_beside_it},
+}
+
+@misc{buildtel-bb-targets-main-lists-only-the-longest-thirty-and-says-how-many-it-found,
+  section = {bb_targets},
+  title  = {Thirty-five tests report as thirty, the slowest first, with the full count stated},
+  claim  = {Thirty-five tests report as thirty, the slowest first, with the full count stated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_main_lists_only_the_longest_thirty_and_says_how_many_it_found},
+}
+
+@misc{buildtel-bb-targets-main-refuses-anything-but-one-invocation-id,
+  section = {bb_targets},
+  title  = {No operand, a flag, or two operands is a usage error: exit 2, the usage line, no fetch},
+  claim  = {No operand, a flag, or two operands is a usage error: exit 2, the usage line, no fetch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_main_refuses_anything_but_one_invocation_id},
+}
+
+@misc{buildtel-bb-targets-main-reports-an-unreachable-service-with-exit-3,
+  section = {bb_targets},
+  title  = {An OSError from the fetch is exit 3 naming the endpoint, never a traceback},
+  claim  = {An OSError from the fetch is exit 3 naming the endpoint, never a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_targets.py -k test_main_reports_an_unreachable_service_with_exit_3},
+}
