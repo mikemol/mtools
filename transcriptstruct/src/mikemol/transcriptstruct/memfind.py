@@ -34,6 +34,10 @@ RELAYED = "RELAYED"
 _WORDS_KINDS = frozenset({"quote", "relayed"})
 _WORD = re.compile(r"[a-z]{5,}")
 _SPACE = re.compile(r"\s+")
+_FOLD = str.maketrans(
+    {chr(0x2018): "'", chr(0x2019): "'", chr(0x201C): '"', chr(0x201D): '"', "`": None, "*": None}
+)
+_EDGE = " .,;:!?\"'"
 _STOP = frozenset(
     {
         "about",
@@ -92,13 +96,17 @@ def _rank(scored: tuple[float, Utterance]) -> tuple[float, str]:
 
 
 def normal(text: str) -> str:
-    """Lower-case text and collapse every run of whitespace to one space.
+    """Lower-case text, fold curly quotes, drop backticks and asterisks, collapse whitespace.
+
+    ⚑ A QUOTE AND AN UTTERANCE SPELL THE SAME WORDS DIFFERENTLY (github-8f, 2026-10-18, W1552):
+    a note types straight quotes where the transcript has curly ones, and wraps a word in
+    backticks or emphasis the speaker never typed.
 
     Returns:
         the normalized text.
 
     """
-    return _SPACE.sub(" ", text.lower()).strip()
+    return _SPACE.sub(" ", text.lower().translate(_FOLD)).strip()
 
 
 def terms(text: str) -> frozenset[str]:
@@ -125,7 +133,7 @@ def warrant_for(claim: Claim, utterances: list[Utterance]) -> Finding:
         relayed quote) or DATED (a ruling), each with no record.
 
     """
-    wanted = normal(claim.text)
+    wanted = normal(claim.text).strip(_EDGE)
     if claim.kind in _WORDS_KINDS:
         for found in sorted(utterances, key=_when):
             if wanted in normal(found.text):

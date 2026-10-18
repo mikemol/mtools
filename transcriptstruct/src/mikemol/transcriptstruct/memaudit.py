@@ -16,6 +16,7 @@ CONSUMED BY: the `--audit-memory` mode of `mikemol-transcriptstruct`.
 """
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
@@ -30,6 +31,8 @@ GRANT = "GRANT"
 SUPERSEDED = "POSSIBLY-SUPERSEDED"
 LINKED_NEWER = "LINKED-NEWER"
 LINK_OVERLAP = 2
+ELSEWHERE = "ELSEWHERE"
+_UNFOUND = frozenset({memfind.UNWARRANTED, memfind.RELAYED})
 INDEX = "MEMORY.md"
 _DATE = re.compile(r"\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b")
 _SUBJECT = re.compile(r"^(?:name|description):")
@@ -47,6 +50,7 @@ class Row:
     line: int
     status: str
     detail: str
+    claim: str = ""
 
     def text(self) -> str:
         """Spell the finding as one line.
@@ -145,7 +149,8 @@ def audit_note(name: str, text: str, utterances: list[Utterance]) -> list[Row]:
         where = found.claim.text[:_DETAIL]
         if record is not None:
             where = f"{record.path}:{record.line} uuid={record.uuid}"
-        rows.append(Row(name, found.claim.line, found.status, where))
+        unfound = found.claim.text if found.status in _UNFOUND else ""
+        rows.append(Row(name, found.claim.line, found.status, where, unfound))
     since = _latest([c.text for c in claims])
     if since:
         later = memfind.superseded_by(_subject(text), since, utterances)
@@ -154,6 +159,49 @@ def audit_note(name: str, text: str, utterances: list[Utterance]) -> list[Row]:
             for u in later[:SHOWN]
         )
     return rows
+
+
+def elsewhere(rows: list[Row], projects: Iterable[Path]) -> list[Row]:
+    """Look each unfound quote up in other projects' transcripts, and say where it was found.
+
+    ⚑ A RULING IS OFTEN GIVEN IN ANOTHER SESSION (github-8f, 2026-10-18, W1552): luthen's or
+    cassian's transcripts hold words a note in this project's memory quotes, so a quote this
+    project's transcripts do not carry is not yet unwarranted. Each project is read only while an
+    unfound quote remains, and a quote found becomes `ELSEWHERE <path>:<line> uuid=<uuid>`.
+
+    Returns:
+        the rows, with each quote found in another project's transcripts re-stated as ELSEWHERE.
+
+    """
+    out = list(rows)
+    pending = [i for i, row in enumerate(out) if row.claim]
+    for project in projects:
+        if not pending:
+            break
+        utterances = utterances_of(project)
+        for i in list(pending):
+            row = out[i]
+            found = memfind.warrant_for(memclaims.Claim(row.line, "quote", row.claim), utterances)
+            if found.record is not None:
+                record = found.record
+                where = f"{record.path}:{record.line} uuid={record.uuid}"
+                out[i] = Row(row.note, row.line, ELSEWHERE, where)
+                pending.remove(i)
+    return out
+
+
+def _siblings(memory: Path) -> list[Path]:
+    """Name the other projects beside this memory directory's project.
+
+    Returns:
+        their directories in name order; empty when the projects directory cannot be listed.
+
+    """
+    try:
+        beside = sorted(memory.parent.parent.iterdir())
+    except OSError:
+        return []
+    return [p for p in beside if p.is_dir() and p != memory.parent]
 
 
 def audit(memory: Path) -> list[Row]:
@@ -170,4 +218,4 @@ def audit(memory: Path) -> list[Row]:
         if name != INDEX:
             rows.extend(audit_note(name, text, utterances))
             rows.extend(linked_newer(name, text, notes))
-    return rows
+    return elsewhere(rows, _siblings(memory))

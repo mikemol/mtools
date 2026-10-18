@@ -47,6 +47,18 @@ def test_a_ruling_is_dated_and_an_unfound_relay_is_relayed_not_unwarranted() -> 
     assert warrant_for(said, [_THEN]).status == WARRANTED
 
 
+def test_a_quote_is_found_across_curly_marks_backticks_newlines_and_edge_punctuation() -> None:
+    """The note types plain marks and a full stop; the transcript has curly marks and a break."""
+    right, left = chr(0x2019), chr(0x2018)
+    curly = f"Shouldn{right}t every `timeseries`\nhave a {left}no new data{right}?"
+    said = Utterance("t.jsonl", 7, "u7", "2026-10-02T09:00:00Z", curly)
+    claim = Claim(4, "quote", "Shouldn't every timeseries have a 'no new data'?.")
+    assert warrant_for(claim, [said]).record == said
+    bare = Utterance("t.jsonl", 8, "u8", "2026-10-02T09:01:00Z", "Please avoid wall-clock timeouts")
+    stop = Claim(5, "quote", "Please avoid wall-clock timeouts.")
+    assert warrant_for(stop, [bare]).record == bare
+
+
 def test_normal_and_terms_read_the_text_without_stop_words() -> None:
     """Whitespace collapses, case folds, and short or stop words are not key terms."""
     assert normal("  A   B\nc ") == "a b c"
