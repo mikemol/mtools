@@ -159,10 +159,18 @@ def _hit(hit: Hit) -> dict[str, object]:
     """Spell a hit as a JSON object.
 
     Returns:
-        its line, kind, whole text and span.
+        its line, kind, whole text, span, and the record's uuid and timestamp (W1521), so a ruling
+        found by `--human` can be warranted from the same row.
 
     """
-    return {"line": hit.line, "kind": hit.kind, "text": hit.text, "span": list(hit.span)}
+    return {
+        "line": hit.line,
+        "kind": hit.kind,
+        "text": hit.text,
+        "span": list(hit.span),
+        "uuid": hit.uuid,
+        "at": hit.at,
+    }
 
 
 def _block(block: Block) -> dict[str, object]:

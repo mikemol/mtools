@@ -45,6 +45,21 @@ def _envelope(record: Record) -> object:
     return None if isinstance(record, MalformedLine) else record.raw
 
 
+def _ids(record: Record) -> tuple[str, str]:
+    """Read a record's uuid and timestamp off its envelope, so a hit can be warranted from.
+
+    Returns:
+        `(uuid, timestamp)`, each an empty string when the record has none or is malformed.
+
+    """
+    envelope = _envelope(record)
+    if not isinstance(envelope, dict):
+        return "", ""
+    fields = cast("dict[str, object]", envelope)
+    uuid, stamped = fields.get("uuid"), fields.get("timestamp")
+    return (uuid if isinstance(uuid, str) else "", stamped if isinstance(stamped, str) else "")
+
+
 def _type_of(envelope: object) -> str:
     """Name an envelope's `type`, as the file spells it.
 
@@ -77,7 +92,7 @@ def raw(
         kind = _type_of(envelope)
         if kind in types:
             text = json.dumps(envelope, ensure_ascii=False)
-            tally.hits.append(Hit(record.line, kind, text, (0, len(text))))
+            tally.hits.append(Hit(record.line, kind, text, (0, len(text)), *_ids(record)))
     return tally.result()
 
 
@@ -87,12 +102,18 @@ Found = tuple[Block, ...] | None
 
 @dataclass(frozen=True, slots=True)
 class Hit:
-    """One matching text: its line, what it is, the whole text, and where the match sits."""
+    """One matching text: its line, what it is, the whole text, where the match sits and its ids.
+
+    ⚑ THE UUID AND TIMESTAMP COME WITH THE ROW (W1521): `--warrant` needs the record's uuid, and a
+    hit that carried only the line made warranting a ruling a second `--raw` call.
+    """
 
     line: int
     kind: str
     text: str
     span: tuple[int, int]
+    uuid: str = ""
+    at: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -178,7 +199,9 @@ def grep_blocks(
         for block in blocks(record):
             match = rx.search(block.text)
             if match and (block_kinds is None or block.kind in block_kinds):
-                tally.hits.append(Hit(record.line, block.kind, block.text, match.span()))
+                tally.hits.append(
+                    Hit(record.line, block.kind, block.text, match.span(), *_ids(record))
+                )
     return tally.result()
 
 
@@ -201,7 +224,7 @@ def grep_prose(
         said = classify(record, scheduled=scheduled)
         match = rx.search(said.text) if said.kind in speakers else None
         if match:
-            tally.hits.append(Hit(record.line, said.kind, said.text, match.span()))
+            tally.hits.append(Hit(record.line, said.kind, said.text, match.span(), *_ids(record)))
     return tally.result()
 
 
@@ -221,7 +244,9 @@ def prose(
     for record in _pass(records, window or Window(), tally):
         said = classify(record, scheduled=scheduled)
         if said.kind in speakers and said.text.strip():
-            tally.hits.append(Hit(record.line, said.kind, said.text, (0, len(said.text))))
+            tally.hits.append(
+                Hit(record.line, said.kind, said.text, (0, len(said.text)), *_ids(record))
+            )
     return tally.result()
 
 

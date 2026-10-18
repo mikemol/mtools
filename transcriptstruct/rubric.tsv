@@ -11,3 +11,4 @@ warrant	warrant
 harvest	harvest
 rulings	rulings
 rulingq	rulingq
+hit_ids	Search Rows: Each Row Carries the Record's Uuid and Timestamp So a Ruling Is Found and Warranted in One Call

@@ -8,3 +8,4 @@
 # W620: a tool_reference whose name is missing or not a string stays UNDECODED and carries the whole
 # JSON, never guessed; without the type check a numeric name decodes as text and is read as a name.
 src/mikemol/transcriptstruct/blocks.py|reference-name-type-unchecked|if known and isinstance\(text, str\):|if known:|def=_sub_block
+src/mikemol/transcriptstruct/query.py|uuid-and-timestamp-swapped|    uuid, stamped = fields\.get\("uuid"\), fields\.get\("timestamp"\)|    uuid, stamped = fields.get("timestamp"), fields.get("uuid")|def=_ids

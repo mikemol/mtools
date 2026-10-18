@@ -668,3 +668,31 @@
   claim  = {`--limit 1` keeps the later ruling; an unmatched pattern is exit 0 with a zero count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq_cli.py -k test_limit_keeps_the_newest_and_a_pattern_that_matches_nothing_prints_only_the_count},
 }
+
+@misc{transcriptstruct-hit-ids-human-row-carries-the-uuid-and-the-timestamp,
+  section = {hit_ids},
+  title  = {The row --warrant needs: the uuid, and when it was said},
+  claim  = {The row --warrant needs: the uuid, and when it was said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hit_ids.py -k test_a_human_row_carries_the_uuid_and_the_timestamp},
+}
+
+@misc{transcriptstruct-hit-ids-grep-row-carries-them-too,
+  section = {hit_ids},
+  title  = {--grep finds blocks, and its rows name the record the same way},
+  claim  = {--grep finds blocks, and its rows name the record the same way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hit_ids.py -k test_a_grep_row_carries_them_too},
+}
+
+@misc{transcriptstruct-hit-ids-record-without-ids-gives-empty-strings-not-a-missing-key,
+  section = {hit_ids},
+  title  = {A consumer reads the keys unconditionally},
+  claim  = {A consumer reads the keys unconditionally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hit_ids.py -k test_a_record_without_ids_gives_empty_strings_not_a_missing_key},
+}
+
+@misc{transcriptstruct-hit-ids-old-keys-are-unchanged,
+  section = {hit_ids},
+  title  = {Adding keys breaks no reader of line, kind, text or span},
+  claim  = {Adding keys breaks no reader of line, kind, text or span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hit_ids.py -k test_the_old_keys_are_unchanged},
+}
