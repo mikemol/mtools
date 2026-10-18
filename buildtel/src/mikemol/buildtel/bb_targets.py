@@ -2,8 +2,11 @@
 # Copyright (c) 2026 Mike Mol
 """W1486, W1566: rank one bazel invocation's test targets by how long they ran, from BuildBuddy.
 
-A gate runs for about thirty-five minutes and bazel is a third of it. To say where the rest goes the
-first question is which targets took the time, and BuildBuddy keeps it per target in the invocation
+A gate is slow and nobody has yet said where its time goes. The only measurement behind any split is
+ONE gate (W1486, the W1482 stack, 2026-10-17): bazel elapsed 787.5 s with a 73 s critical path, and
+the gate's total was estimated, not timed, at about 35 minutes; the other stages are UNMEASURED
+(W1486's remaining step), so no share is claimed here. This module answers one narrow question,
+which test targets took the time inside bazel. BuildBuddy keeps that per target in the invocation
 it already stores: `GetInvocation` answers `invocation[0].targetGroups[].targets[]`, each target
 carrying `metadata.label`, `status` and, for a test, `testSummary.totalRunDurationMillis`. This is
 the one reader of that shape, as `bb_records` is of the execution records.
