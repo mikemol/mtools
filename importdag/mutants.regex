@@ -20,3 +20,5 @@ src/mikemol/importdag/graph.py|from-package-spelling-dropped|            if mod 
 src/mikemol/importdag/graph.py|plain-import-spelling-dropped|                if alias\.name\.startswith\(prefix\) and head in names:|                if False:|def=package_imports
 src/mikemol/importdag/graph.py|self-import-is-an-edge|found = package_imports\(text, set\(index\), package\) - \{Path\(path\)\.stem\}|found = package_imports(text, set(index), package)|def=build
 src/mikemol/importdag/graph.py|read-of-a-missing-file-recorded|        if missing:|        if False:|def=declared_reads
+src/mikemol/importdag/graph.py|bzl-without-its-header|    return BZL_HEADER \+ "GRAPH = " \+ render\(doc\)|    return "GRAPH = " + render(doc)|def=render_bzl
+src/mikemol/importdag/graph.py|absent-file-not-stale|        if not \(dist / name\)\.is_file\(\) or |        if |def=main

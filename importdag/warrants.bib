@@ -1420,3 +1420,17 @@
   claim  = {A self-import is not a dependency, and a cone must not loop on it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_module_that_names_itself_has_no_edge_to_itself},
 }
+
+@misc{importdag-graph-same-graph-is-written-as-a-file-a-build-file-can-load,
+  section = {graph},
+  title  = {dag.bzl is the header plus GRAPH = the document, so the two files cannot disagree},
+  claim  = {dag.bzl is the header plus GRAPH = the document, so the two files cannot disagree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_the_same_graph_is_written_as_a_file_a_build_file_can_load},
+}
+
+@misc{importdag-graph-missing-dag-file-makes-the-check-stale-alone,
+  section = {graph},
+  title  = {Either file going stale or absent fails the check, naming it},
+  claim  = {Either file going stale or absent fails the check, naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_missing_dag_file_makes_the_check_stale_alone},
+}
