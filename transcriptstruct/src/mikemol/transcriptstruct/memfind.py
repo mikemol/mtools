@@ -26,7 +26,7 @@ from mikemol.transcriptstruct.memclaims import Claim
 OVERLAP = 3
 UNWARRANTED = "UNWARRANTED"
 WARRANTED = "WARRANTED"
-_WORD = re.compile(r"[a-z][a-z-]{4,}")
+_WORD = re.compile(r"[a-z]{5,}")
 _SPACE = re.compile(r"\s+")
 _STOP = frozenset(
     {

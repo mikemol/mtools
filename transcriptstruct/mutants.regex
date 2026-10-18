@@ -14,3 +14,6 @@ src/mikemol/transcriptstruct/memclaims.py|description-quotes-kept|    return str
 src/mikemol/transcriptstruct/memgrants.py|grant-words-keep-their-case|        words = sorted\(\{word\.lower\(\) for word in matched\}\)|        words = sorted(set(matched))|def=grants
 src/mikemol/transcriptstruct/memfind.py|any-utterance-warrants-a-quote|            if wanted in normal\(found\.text\):|            if True:|def=warrant_for
 src/mikemol/transcriptstruct/memfind.py|oldest-first-not-newest|    return sorted\(later, key=_when, reverse=True\)|    return sorted(later, key=_when, reverse=False)|def=superseded_by
+src/mikemol/transcriptstruct/memaudit.py|no-cutoff-no-superseded-rows|    return f"\{max\(dates\)\}\{_END_OF_DAY\}" if dates else ""|    return ""|def=_latest
+src/mikemol/transcriptstruct/memaudit.py|index-audited-as-a-note|        if path\.name != INDEX:|        if True:|def=audit
+src/mikemol/transcriptstruct/cli.py|audit-memory-mode-ignored|    if opts\.get\("audit_memory"\) is True:|    if False:|def=_special

@@ -774,3 +774,32 @@
   claim  = {Three shared terms make it evidence, an earlier or unrelated one does not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memfind.py -k test_a_later_utterance_sharing_enough_terms_is_listed_newest_first},
 }
+
+@misc{transcriptstruct-memaudit-each-claimed-quote-is-warranted-by-its-record-or-reported-unwarranted,
+  section = {memaudit},
+  title  = {The quote that was said names its uuid; the invented one is UNWARRANTED},
+  claim  = {The quote that was said names its uuid; the invented one is UNWARRANTED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_each_claimed_quote_is_warranted_by_its_record_or_reported_unwarranted},
+}
+
+@misc{transcriptstruct-memaudit-line-that-grants-is-flagged-and-the-index-is-skipped,
+  section = {memaudit},
+  title  = {The grant words come out as one row for the line, and MEMORY.md is never audited},
+  claim  = {The grant words come out as one row for the line, and MEMORY.md is never audited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_line_that_grants_is_flagged_and_the_index_is_skipped},
+}
+
+@misc{transcriptstruct-memaudit-later-utterance-on-the-same-subject-is-possibly-superseded,
+  section = {memaudit},
+  title  = {The newer record shares three or more of the note's terms, so it is shown, with its uuid},
+  claim  = {The newer record shares three or more of the note's terms, so it is shown, with its
+            uuid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_a_later_utterance_on_the_same_subject_is_possibly_superseded},
+}
+
+@misc{transcriptstruct-memaudit-mode-prints-one-row-per-line-and-writes-nothing,
+  section = {memaudit},
+  title  = {`--audit-memory DIR` is a dry run: rows on stdout, every note left as it was},
+  claim  = {`--audit-memory DIR` is a dry run: rows on stdout, every note left as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_the_mode_prints_one_row_per_line_and_writes_nothing},
+}

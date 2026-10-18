@@ -38,7 +38,7 @@ def test_normal_and_terms_read_the_text_without_stop_words() -> None:
     """Whitespace collapses, case folds, and short or stop words are not key terms."""
     assert normal("  A   B\nc ") == "a b c"
     kept = terms("The operator never swarm-allowed those anything")
-    assert kept == frozenset({"swarm-allowed", "anything"})
+    assert kept == frozenset({"swarm", "allowed", "anything"})
 
 
 def test_a_later_utterance_sharing_enough_terms_is_listed_newest_first() -> None:

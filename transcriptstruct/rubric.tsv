@@ -15,3 +15,4 @@ hit_ids	Search Rows: Each Row Carries the Record's Uuid and Timestamp So a Rulin
 memclaims	A Memory File's Claimed Operator Quotes and Rulings Are Listed, and Nothing Else
 memgrants	Lines That Grant a Permission or Lift a Rule Are Flagged for Review First
 memfind	A Claimed Quote Is Found in the Operator's Utterances or Reported Unwarranted
+memaudit	A Memory Directory Is Audited Against Its Project's Transcripts, Read-Only

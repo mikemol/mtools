@@ -24,6 +24,7 @@ from typing import TextIO, cast
 
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.harvest import harvest
+from mikemol.transcriptstruct.memaudit import audit
 from mikemol.transcriptstruct.query import (
     Hit,
     Result,
@@ -78,6 +79,12 @@ def _parser() -> argparse.ArgumentParser:
         "--verify",
         metavar="UUID",
         help="W1385: read the record a warrant cites; exit 1 and say why when it does not hold",
+    )
+    mode.add_argument(
+        "--audit-memory",
+        action="store_true",
+        help="W1541: the positional is a memory directory; print one row per finding (GRANT, "
+        "WARRANTED, UNWARRANTED, POSSIBLY-SUPERSEDED) against its project's transcripts, read-only",
     )
     mode.add_argument(
         "--harvest",
@@ -305,6 +312,9 @@ def _special(
         return 0
     if opts.get("harvest") is True:
         _harvest(path, scheduled, out)
+        return 0
+    if opts.get("audit_memory") is True:
+        out.writelines(f"{row.text()}\n" for row in audit(path))
         return 0
     return None
 
