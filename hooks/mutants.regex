@@ -368,3 +368,7 @@ src/mikemol/hooks/commit_span.py|home-file-not-counted|    return \(Path\(home\)
 src/mikemol/hooks/commit_span.py|set-variable-not-enough|    if env\.get\(ENDPOINTS_ENV\):|    if False:|def=store_named
 src/mikemol/hooks/pycheck_house.py|error-codes-dropped|    codes = tuple\(word for code in ERROR_CODES for word in \("--enable-error-code", code\)\)|    codes = ()|def=mypy_flags
 src/mikemol/hooks/pycheck_house.py|underscores-kept-in-flags|    booleans = tuple\("--" \+ key\.replace\("_", "-"\) for key in MYPY_HOUSE_KEYS\)|    booleans = tuple("--" + key for key in MYPY_HOUSE_KEYS)|def=mypy_flags
+src/mikemol/hooks/checkers.py|flags-after-the-subject|    return \[\*argv\[:at\], \*flags, \*argv\[at:\]\]|    return [*argv, *flags]|def=with_flags
+src/mikemol/hooks/pycheck.py|flags-given-to-every-checker|    command = checkers\.with_flags\(argv, mypy_flags\) if name == "mypy" else argv|    command = checkers.with_flags(argv, mypy_flags)|def=analyze
+src/mikemol/hooks/pycheck_cli.py|house-flag-on-any-command|    house = args\[:1\] == \[CENSUS_FLAG\] and args\[2:\] == \[HOUSE_FLAG\]|    house = args[2:] == [HOUSE_FLAG]|def=_flag_here
+src/mikemol/hooks/pycheck_cli.py|house-never-used|    if not house:|    if house:|def=analyzer

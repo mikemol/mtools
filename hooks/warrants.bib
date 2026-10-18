@@ -11663,3 +11663,67 @@
   claim  = {The same call gives the same words in the same order, and none twice but the flag name.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house.py -k test_the_set_is_stable_and_has_no_repeats},
 }
+
+@misc{hooks-pycheck-mypy-override-flags-go-after-mypys-own-options-and-before-its-subject,
+  section = {pycheck_mypy_override},
+  title  = {The subject stays last, so a flag is never read as a file to check},
+  claim  = {The subject stays last, so a flag is never read as a file to check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_mypy_override.py -k test_flags_go_after_mypys_own_options_and_before_its_subject},
+}
+
+@misc{hooks-pycheck-mypy-override-no-flags-leave-the-argv-as-it-was,
+  section = {pycheck_mypy_override},
+  title  = {The edit gate passes none, and its argv must not change},
+  claim  = {The edit gate passes none, and its argv must not change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_mypy_override.py -k test_no_flags_leave_the_argv_as_it_was},
+}
+
+@misc{hooks-pycheck-mypy-override-analyze-gives-the-flags-to-mypy-and-to-no-other-checker,
+  section = {pycheck_mypy_override},
+  title  = {Ruff and ruff-format never see a mypy flag; the mypy run does},
+  claim  = {Ruff and ruff-format never see a mypy flag; the mypy run does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_mypy_override.py -k test_analyze_gives_the_flags_to_mypy_and_to_no_other_checker},
+}
+
+@misc{hooks-pycheck-house-census-without-the-flag-the-census-judges-by-the-gates-own-verdict,
+  section = {pycheck_house_census},
+  title  = {The default is unchanged: the very function the edit gate runs},
+  claim  = {The default is unchanged: the very function the edit gate runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house_census.py -k test_without_the_flag_the_census_judges_by_the_gates_own_verdict},
+}
+
+@misc{hooks-pycheck-house-census-with-the-flag-the-house-mypy-flags-reach-the-verdict,
+  section = {pycheck_house_census},
+  title  = {The wrapper hands `analyze` exactly the house flag set, whatever file it is given},
+  claim  = {The wrapper hands `analyze` exactly the house flag set, whatever file it is given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house_census.py -k test_with_the_flag_the_house_mypy_flags_reach_the_verdict},
+}
+
+@misc{hooks-pycheck-house-census-census-house-reads-the-tracked-files-and-prints-the-ledger,
+  section = {pycheck_house_census},
+  title  = {`--census ROOT --house` is accepted and ends in the same JSON ledger as `--census ROOT`},
+  claim  = {`--census ROOT --house` is accepted and ends in the same JSON ledger as `--census ROOT`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house_census.py -k test_census_house_reads_the_tracked_files_and_prints_the_ledger},
+}
+
+@misc{hooks-pycheck-house-census-flag-belongs-to-the-census-alone,
+  section = {pycheck_house_census},
+  title  = {The ledger the closure reads is the gate's verdict, so refresh and check refuse the flag},
+  claim  = {The ledger the closure reads is the gate's verdict, so refresh and check refuse the
+            flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_house_census.py -k test_the_flag_belongs_to_the_census_alone},
+}
+
+@misc{hooks-preflight-lint-preflight-runs-the-mutation-lint-over-each-distribution,
+  section = {preflight_lint},
+  title  = {The call names the lint module and the distribution, and a failure marks the run failed},
+  claim  = {The call names the lint module and the distribution, and a failure marks the run failed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_preflight_lint.py -k test_the_preflight_runs_the_mutation_lint_over_each_distribution},
+}
+
+@misc{hooks-preflight-lint-missing-lint-interpreter-refuses-before-the-call-and-never-skips,
+  section = {preflight_lint},
+  title  = {The guard comes first and exits 1, the preflight's rule for every tool it relies on},
+  claim  = {The guard comes first and exits 1, the preflight's rule for every tool it relies on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_preflight_lint.py -k test_a_missing_lint_interpreter_refuses_before_the_call_and_never_skips},
+}

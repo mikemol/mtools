@@ -205,6 +205,19 @@ for dist in $dists; do
         fail=1; say "$dist: ratchet — a NEW KEY; the gate will refuse this"
     fi
 
+    # ⚑⚑ A DECLARED DEFECT THAT CANNOT BE PLANTED FAILS THE WHOLE `:mutants` GRID, so it is checked
+    # here, in a second (W1531, W1176): `mikemol-mutation-lint` reads each `mutants.regex` line with
+    # the grid's own parser and plants it, naming a bad field count, a bare %, a module that is not
+    # a file, a rewrite that does not parse and a pattern that matches nothing. The same absence
+    # rule as the tools above: a missing interpreter REFUSES, it does not skip.
+    _lint=mutation/.venv/bin/python3
+    if [ ! -x "$_lint" ]; then
+        say "$_lint not found — cannot predict the grid, refusing"
+        exit 1
+    fi
+    git_scrubbed "$_lint" -m mikemol.mutation.lint "$root/$dist" \
+        || { fail=1; say "$dist: mutants.regex — the grid will refuse a declaration that cannot plant"; }
+
     # ⚑ NO COUNT OF WARRANTS AGAINST TESTS HERE (mtools:W839, operator 2026-10-06: the symmetric
     # difference is empty, not counts). The gate's warrant check is the set pairing, which this
     # script already runs for every distribution above (`count_test_functions.py --pairing`), so
