@@ -37,7 +37,10 @@ import shlex
 import sys
 from pathlib import Path
 
-from mikemol.hooks import cmdparse
+from mikemol.hooks import cmdparse, writeguard
+
+FILE_WRITES = writeguard.findings
+"""The finder of shell commands that write a file the edit bar never sees (W1560)."""
 
 # ⚑⚑ NO `sys.path` PRELUDE, AND ITS ABSENCE IS THE POINT OF THE PACKAGE. The origin carries a
 # two-line `sys.path.insert(0, _ROOT)` with a comment explaining that a bare-path invocation puts
@@ -249,7 +252,7 @@ def _scan_tokens(toks: list[str]) -> list[Finding]:
     return found
 
 
-def analyze(cmd: str) -> list[Finding]:
+def analyze(cmd: str, root: Path | None = None, cwd: Path | None = None) -> list[Finding]:
     """Return the composition points in one Bash command string.
 
     Parses rather than scans: a `|` inside quotes is data, a `|` between two words is an operator,
@@ -260,6 +263,12 @@ def analyze(cmd: str) -> list[Finding]:
     reads as an operator, and the hook refuses a single tool call for the content of its own
     argument. The body is stripped BEFORE tokenising, and only the body.
 
+    ⚑ A WRITE INTO THE PROJECT IS A FINDING TOO (W1560, the operator 2026-10-18: "mechanization
+    should not be done in a language we don't have persistent rigor for"): `perl`, `sed -i`, `tee`,
+    a redirect into the project root and a copy into it from outside write a file the edit bar never
+    judges. `root` is the project directory and `cwd` where the command runs; with no root only the
+    location-free tells apply (`writeguard`).
+
     Returns:
         composition points in one Bash command string.
 
@@ -267,6 +276,7 @@ def analyze(cmd: str) -> list[Finding]:
     stripped = cmdparse.strip_heredoc_bodies(cmd)
     toks = _tokenize(stripped)
     found = _scan_tokens(toks)
+    found.extend(FILE_WRITES(toks, root, cwd or Path.cwd()))
     if _command_lines(stripped) > 1:
         found.append((_NEWLINE, _NEWLINE_REASON))
 
@@ -288,6 +298,23 @@ def analyze(cmd: str) -> list[Finding]:
             seen.add(tok)
             out.append((tok, why))
     return out
+
+
+def project_dirs(payload: object) -> tuple[Path | None, Path]:
+    """Read the project root and the working directory a Bash command runs in.
+
+    ⚑ THE ROOT IS THE HARNESS'S OWN VARIABLE (`CLAUDE_PROJECT_DIR`), AND ABSENT MEANS UNKNOWN: with
+    no root `writeguard` applies only its location-free rules, never a guess. The working directory
+    is the payload's `cwd`, else this process's.
+
+    Returns:
+        the project root or None, and the directory relative paths are read against.
+
+    """
+    named = os.environ.get("CLAUDE_PROJECT_DIR")
+    given = payload.get("cwd") if isinstance(payload, dict) else None
+    where = Path(given) if isinstance(given, str) and given else Path.cwd()
+    return (Path(named) if named else None), where
 
 
 def command_of(payload: object) -> str:
@@ -389,7 +416,8 @@ def main() -> int:
     if not cmd.strip():
         return 0
 
-    found = analyze(cmd)
+    root, cwd = project_dirs(payload)
+    found = analyze(cmd, root, cwd)
     if not found:
         return 0
 

@@ -403,7 +403,18 @@ src/mikemol/hooks/watchdog.py|bound-never-named|    return said if bound_s is No
 src/mikemol/hooks/watchdog.py|exit-hides-the-notes-after-the-file|    return "\\n"\.join\(lines\)|    return lines[0]|def=exit_notes
 src/mikemol/hooks/beat.py|pre-event-beats-like-a-post|        if _field\(raw, "hook_event_name"\) == PRE_EVENT:|        if False:|def=run
 src/mikemol/hooks/watchdog.py|ended-call-still-named|    if call is None or \(last is not None and call\.at_ns <= last\.at_ns\):|    if call is None:|def=inside_call
+src/mikemol/hooks/beat.py|notice-drops-the-kept-action|    hint = watchdog\.cached_hint\(git_dir\)|    hint = ""|def=notice
+src/mikemol/hooks/commit_counts.py|queued-entry-stamped-as-begun|            if state == INFLIGHT:|            if True:|def=transition
+src/mikemol/hooks/commit_counts.py|gate-start-never-recorded|                entries\[key\]\["began_ns"\] = NOW\(\)|                pass|def=transition
+src/mikemol/hooks/commit_counts.py|dead-entry-listed-as-live|        if not isinstance\(state, str\) or not _alive\(entry, probe\):|        if not isinstance(state, str):|def=live
+src/mikemol/hooks/commit_kata.py|in-gate-flag-ignored|    if IN_GATE_FLAG in args:|    if False:|def=main
+src/mikemol/hooks/commit_kata.py|in-gate-without-a-repository-reads-one|    if not named:|    if False:|def=in_gate
+src/mikemol/hooks/watchdog.py|exit-forgets-the-action|    remember_hint\(git_dir, hint\)|    pass|def=exit_notes
 src/mikemol/hooks/nemik_check.py|first-stderr-lines-not-last|detail = " / "\.join\(lines\[-STDERR_LINES:\]\)|detail = " / ".join(lines[:STDERR_LINES])|def=run_reader
+src/mikemol/hooks/no_chaining.py|write-findings-dropped|    found\.extend\(FILE_WRITES\(toks, root, cwd or Path\.cwd\(\)\)\)|    pass|def=analyze
+src/mikemol/hooks/no_chaining.py|project-root-ignored|    found = analyze\(cmd, root, cwd\)|    found = analyze(cmd)|def=main
+src/mikemol/hooks/pycheck_census.py|tracked-stub-left-unnamed|    return sorted\(names - tracked\)|    return sorted(names)|def=unmeasured
+src/mikemol/hooks/pycheck_cli.py|omission-never-said|    if skipped:|    if False:|def=measure
 src/mikemol/hooks/stacktree.py|pin-ref-loses-the-stack-key|    ref = f"\{REF_ROOT\}/\{key\}/\{place\}"|    ref = f"{REF_ROOT}/{place}"|def=pin
 src/mikemol/hooks/stacktree.py|release-deletes-nothing|    names = listed\.stdout\.split\(\) if listed\.returncode == 0 else \[\]|    names = []|def=release
 src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not any\(path in present or in_head\(path\) for path in bases\):|                if False:|def=findings
@@ -430,4 +441,49 @@ src/mikemol/hooks/watchdog.py|waiting-row-offered-as-the-stack|if row\[0\] == "S
 src/mikemol/hooks/watchdog.py|hint-never-printed|                    if said:|                    if False:|def=watch
 src/mikemol/hooks/project_root.py|ruff-only-file-ignored|if \(root / name\)\.is_file\(\):|if False:|def=ruff_config_for
 src/mikemol/hooks/project_root.py|ruff-toml-ranked-over-dot-ruff-toml|    for name in RUFF_CONFIGS:|    for name in reversed(RUFF_CONFIGS):|def=ruff_config_for
+src/mikemol/hooks/pycheck.py|width-always-default|    width = found\.group\(1\) if found else "default"|    width = "default"|def=config_note
+src/mikemol/hooks/pycheck.py|missing-config-raises|    except \(OSError, UnicodeDecodeError\):|    except UnicodeDecodeError:|def=config_note
+src/mikemol/hooks/trainbisect.py|bisect-steps-linearly|            low = mid \+ 1|            low = low + 1|def=first_bad
+src/mikemol/hooks/trainbisect.py|bisect-keeps-passing-prefix|        if passes\(mid\):|        if not passes(mid):|def=first_bad
+src/mikemol/hooks/trainland.py|landing-names-itself-as-gate|    return \[Landing\(key, tip\) for key in keys\]|    return [Landing(key, key) for key in keys]|def=land
+src/mikemol/hooks/trainrun.py|refused-key-also-lands|        out.landed \+= trainland\.land\(keys\[start:bad\]\)|        out.landed += trainland.land(keys[start:bad + 1])|def=run
+src/mikemol/hooks/trainrun.py|train-stops-at-first-refusal|        start = bad \+ 1|        break|def=run
+src/mikemol/hooks/traintip.py|empty-submission-borrows-boundary|        if not sub\.entries:|        if False:|def=build
+src/mikemol/hooks/commit_kata.py|build-source-check-not-called|        problem = problem or stack_build_refusal\(root, stacked\[1\], env\[SNAP_ENV\], run_git_in\)|        problem = problem|def=main
+src/mikemol/hooks/commit_kata.py|trees-not-pinned-at-submit|        pin_trees\(root, ledger, key, env\[SNAP_ENV\], run_git_in\)|        pass|def=main
+src/mikemol/hooks/commit_kata.py|trees-not-released-at-end|        release_trees\(root, ledger_of\(root\), str\(started\[0\]\), run_git_in\)|        pass|def=run_stack_mode
+src/mikemol/hooks/stackpin.py|record-kept-after-release|        record_path\(ledger, key\)\.unlink\(missing_ok=True\)|        pass|def=release
+src/mikemol/hooks/stackpin.py|missing-ledger-pinned-anyway|    if ledger is None or loaded is None:|    if loaded is None:|def=pin
+src/mikemol/hooks/trainjoin.py|leader-and-earlier-stacks-join|    behind = sorted\(\(k for k in queued if k\.isdigit\(\) and int\(k\) > int\(key\)\), key=int\)|    behind = sorted((k for k in queued if k.isdigit()), key=int)|def=followers
+src/mikemol/hooks/trainjoin.py|followers-in-text-order|    behind = sorted\(\(k for k in queued if k\.isdigit\(\) and int\(k\) > int\(key\)\), key=int\)|    behind = sorted(k for k in queued if k.isdigit() and int(k) > int(key))|def=followers
+src/mikemol/hooks/trainjoin.py|stale-snapshot-joined|    if isinstance\(items, str\) or loaded is None or len\(loaded\) != len\(items\):|    if isinstance(items, str) or loaded is None:|def=load
+src/mikemol/hooks/stackfreeze.py|items-copy-not-written|        path\.with_suffix\("\.items\.json"\)\.write_text\(|        path.with_suffix(".bak").write_text(|def=at_submit
+src/mikemol/hooks/stackfreeze.py|items-copy-not-forgotten|        Path\(named\)\.with_suffix\("\.items\.json"\)\.unlink\(missing_ok=True\)|        pass|def=forget
+src/mikemol/hooks/stackbuildfiles.py|glob-paths-counted-as-named|    text = re\.sub\(r"\\bglob\\s\*\\\(\[\^\)\]\*\\\)", "", text\)|    text = text|def=named_sources
+src/mikemol/hooks/traindrive.py|green-tip-bisected-anyway|        if self\.green\(last\):|        if False:|def=_Round.first_bad
+src/mikemol/hooks/traindrive.py|empty-prefix-lands-something|    if not groups:|    if False:|def=_land_prefix
+src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(_refused\(remaining\[bad\], rnd\.gate\(bad\), before, name\)\)|        pass|def=drive
+src/mikemol/hooks/traindrive.py|unbuilt-stack-reports-success|    code = \(stack\.failed\.returncode if stack\.failed else 0\) or 1|    code = 0|def=_unbuilt
+src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|        cut = len\(remaining\) if bad is None else bad|        cut = len(remaining)|def=drive
+src/mikemol/hooks/trainverdict.py|boolean-code-read-as-code|    if isinstance\(code, int\) and not isinstance\(code, bool\) and isinstance\(text, str\):|    if isinstance(code, int) and isinstance(text, str):|def=read
+src/mikemol/hooks/trainverdict.py|verdict-not-cleared-when-taken|        verdict_path\(ledger, key\)\.unlink\(missing_ok=True\)|        pass|def=take
+src/mikemol/hooks/trainverdict.py|verdict-never-replaced-into-place|        staging\.replace\(path\)|        pass|def=write
+src/mikemol/hooks/commit_kata.py|follower-ignores-its-verdict|        joined = take_verdict\(ledger, key\)|        joined = None|def=main
+src/mikemol/hooks/commit_kata.py|follower-returns-success-regardless|            return joined\.code|            return 0|def=main
+src/mikemol/hooks/trainlead.py|queued-filter-inverted|    return \[row\.key for row in rows if row\.state == commit_counts\.QUEUED\]|    return [row.key for row in rows if row.state != commit_counts.QUEUED]|def=queued_keys
+src/mikemol/hooks/trainlead.py|off-switch-ignored|    if ledger is None or env\.get\(TRAIN_ENV\) == OFF:|    if ledger is None:|def=_behind
+src/mikemol/hooks/trainlead.py|empty-train-still-runs|    if ledger is None or not followers:|    if ledger is None:|def=lead
+src/mikemol/hooks/trainlead.py|considered-counter-not-ticked|    traintel\.consider\(root\.name, len\(followers\), env\)|    pass|def=lead
+src/mikemol/hooks/traintel.py|counter-sent-without-a-store|    if program is None or not store_named\(env\):|    if False:|def=consider
+src/mikemol/hooks/traintel.py|counter-value-zero|    argv \+= \["--value", "1", "--field", f"repo=\{repo\}", "--field", f"followers=\{followers\}"\]|    argv += ["--value", "0", "--field", f"repo={repo}", "--field", f"followers={followers}"]|def=considered_argv
+src/mikemol/hooks/commit_kata.py|train-never-led|        joined = train_lead\(root, ledger_of\(root\), group, \(seams, env\), tee\)|        joined = None|def=run_stack_mode
+src/mikemol/hooks/traintel.py|refused-train-reads-ok|    status = "ERROR" if stats\.refused or stats\.dropped else "OK"|    status = "OK"|def=argv_for
+src/mikemol/hooks/traintel.py|train-of-one-recorded|    if stats\.joined < MIN_JOINED or program is None or not store_named\(env\):|    if program is None or not store_named(env):|def=emit
+src/mikemol/hooks/traintel.py|spawn-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/hooks/traindrive.py|bisect-steps-not-counted|        self\.stats\.bisect_steps \+= found\.gates|        pass|def=_Round.first_bad
+src/mikemol/hooks/traindrive.py|gates-not-counted|            self\.stats\.gates \+= 1|            pass|def=_Round.gate
+src/mikemol/hooks/traindrive.py|rounds-not-counted|        count\.rounds \+= 1|        pass|def=drive
 src/mikemol/hooks/commit_kata.py|trailer-block-split-again|Waypoint: \{request\.waypoint\}\\n\{request\.trailer\}|Waypoint: {request.waypoint}\\n\\n{request.trailer}|def=message_of
+src/mikemol/hooks/presubmit.py|keep-going-dropped|        "--keep_going",|        "--noshow_progress",|def=plan
+src/mikemol/hooks/presubmit.py|namespace-is-the-gates|    return Plan\(argv, \{NAMESPACE_ENV: f"\{root\}/presubmit"\}\)|    return Plan(argv, {NAMESPACE_ENV: f"{root}"})|def=plan
+src/mikemol/hooks/presubmit.py|no-repo-runs-anyway|        return EXIT_USAGE|        return 0|def=main
