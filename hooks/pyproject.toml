@@ -122,6 +122,8 @@ mikemol-hooks-probe = "mikemol.hooks.probe:main"
 # W845: an immutable tree to gate, at one fixed namespaced path under flock. NOT `mikemol-hook-…`: a
 # gate's caller runs it, no harness wires it.
 mikemol-snapshot = "mikemol.hooks.snapshot:main"
+# W1655: the gate's own bazel test over a snapshot of the working tree, run before the serial gate.
+mikemol-presubmit = "mikemol.hooks.presubmit:main"
 # W836: bazel's own admit-or-wait on the host's resources, run by the generated tools/bazel wrapper
 # (`mikemol-bazel-admit --install DIR`). NOT `mikemol-hook-…`: bazel runs it, no harness wires it.
 mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
@@ -503,6 +505,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/codon_probe.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "suspicious-url-open-usage"]
 "tests/test_codon_probe.py" = ["assert"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
+"src/mikemol/hooks/presubmit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_presubmit.py" = ["assert"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/vlogdetach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/vlogforms.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -546,6 +550,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_stackfreeze.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacksnap.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacktree.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_in_gate.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_census_unmeasured.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_worktree_venv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.

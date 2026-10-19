@@ -131,6 +131,12 @@ def measure(
     if names is None:
         err.write(f"mikemol-pycheck: {root}: git could not name the tracked files; no ledger\n")
         return None
+    skipped = pycheck_census.unmeasured(root)
+    if skipped:
+        shown = ", ".join(skipped[:5])
+        err.write(
+            f"mikemol-pycheck: {len(skipped)} untracked or stub files not in the census: {shown}\n"
+        )
     debt, unchecked = pycheck_census.census(root, names, analyze)
     if unchecked:
         shown = ", ".join(unchecked[:5])

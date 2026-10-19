@@ -114,6 +114,42 @@ def tracked_python(root: Path) -> list[str] | None:
     return sorted(name for name in done.stdout.split("\0") if name.endswith(_PY_SUFFIX))
 
 
+def unmeasured(root: Path) -> list[str]:
+    """Name the Python source files the census does not measure: untracked ones and stubs.
+
+    ⚑ A CENSUS THAT READS 0 FOR A FILE MUST SAY IT DID NOT LOOK (el-openglo-5c, 2026-10-18, W1561):
+    the census takes the files git tracks, so a source not yet added and every `.pyi` stub are
+    absent from the ledger, and a ledger of zero findings for a tree full of them read as clean.
+    The files are named so the omission is seen; whether they belong in the set is a decision for
+    the card, and naming them makes it one that can be taken.
+
+    Returns:
+        the untracked-but-not-ignored `.py` and `.pyi` files and the tracked `.pyi` stubs, sorted;
+        empty when git is absent or refuses.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return []
+    try:
+        done = subprocess.run(
+            [git, "-C", str(root), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
+        return []
+    if done.returncode != 0:
+        return []
+    tracked = set(tracked_python(root) or ())
+    names = {name for name in done.stdout.split("\0") if name.endswith((_PY_SUFFIX, ".pyi"))}
+    return sorted(names - tracked)
+
+
 def _status_paths(porcelain: str) -> list[str]:
     """Read the live paths out of `git status --porcelain=v1 -z`.
 
