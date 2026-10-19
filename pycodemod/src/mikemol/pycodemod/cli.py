@@ -66,6 +66,7 @@ from mikemol.pycodemod.arguments import asserted as run_asserted
 from mikemol.pycodemod.arguments import forwards as run_forwards
 from mikemol.pycodemod.arguments import guarded as run_guarded
 from mikemol.pycodemod.arguments import values as run_values
+from mikemol.pycodemod.cli_annotate import AnnotateFlags, print_annotate
 from mikemol.pycodemod.cli_codonprep import print_codon_prep_tree
 from mikemol.pycodemod.cli_docshape import print_docshape
 from mikemol.pycodemod.cli_futureimport import print_future_import, print_future_import_tree
@@ -164,6 +165,11 @@ def _handle_orempty(ns: argparse.Namespace) -> int:
         list_fn=_str(ns, "list_fn"),
     )
     return print_orempty(_str_list(ns, "paths"), flags)
+
+
+def _handle_annotate(ns: argparse.Namespace) -> int:
+    flags = AnnotateFlags(root=_str(ns, "root"), write=_flag(ns, "write"), seen=_str(ns, "seen"))
+    return print_annotate(_str_list(ns, "paths"), flags)
 
 
 def _handle_futureimport(ns: argparse.Namespace) -> int:
@@ -1192,6 +1198,7 @@ MODES = {
     "atomize-imports": _handle_atomize,
     "typed-args": _handle_typedargs,
     "or-empty": _handle_orempty,
+    "annotate": _handle_annotate,
     "future-import": _handle_futureimport,
     "future-import-tree": _handle_futureimport_tree,
     "codon-prep-tree": _handle_codonprep_tree,
@@ -1477,6 +1484,14 @@ def _add_orempty_mode(make: _Make) -> None:
     emp.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
 
 
+def _add_annotate_mode(make: _Make) -> None:
+    ann = make("annotate", "write observed types into missing annotations, judged by mypy")
+    ann.add_argument("--root", required=True, help="the project whose .venv judges each file")
+    ann.add_argument("--seen", required=True, help="JSON of observed signatures by file::name")
+    ann.add_argument("--write", action="store_true", help="write each file the judge accepts")
+    ann.add_argument("paths", nargs="+", help="the Python files to plan, inside --root")
+
+
 def _add_futureimport_mode(make: _Make) -> None:
     fut = make("future-import", "drop `from __future__ import annotations`, quoting forward refs")
     fut.add_argument("--root", required=True, help="the project whose .venv judges each file")
@@ -1595,6 +1610,7 @@ _FAMILIES: tuple[Callable[[_Make], None], ...] = (
     _add_atomize_mode,
     _add_typedargs_mode,
     _add_orempty_mode,
+    _add_annotate_mode,
     _add_judgedfix_mode,
     _add_docshape_mode,
     _add_nonereturns_mode,
