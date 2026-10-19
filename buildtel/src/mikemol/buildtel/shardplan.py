@@ -35,6 +35,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 EXIT_USAGE = 2
+EXIT_STALE = 3
+APPLY_FLAG = "--apply"
 FRACTION = 0.5
 LIMITS = {"small": 60, "medium": 300, "large": 900}
 DEFAULT_SIZE = "medium"
@@ -156,6 +158,61 @@ def plan(rows: Sequence[Row], read_build: ReadBuild) -> tuple[list[Proposal], li
     return out, findings
 
 
+class StaleDiffError(ValueError):
+    """The BUILD file no longer matches the plan: a grid is gone or its count has moved."""
+
+
+def rewrite(build: str, proposal: Proposal) -> str:
+    """Set one grid's `shards` line to the proposed count, changing nothing else.
+
+    ⚑ THE DIFF MUST STILL MATCH THE FILE (W1574): the plan was drawn from a reading of the BUILD
+    file, so a grid that is gone, or whose count is no longer the one the plan started from, is
+    refused and the caller writes nothing.
+
+    Returns:
+        the BUILD text with only that grid's `shards = N` replaced.
+
+    Raises:
+        StaleDiffError: when no block of that name exists or its count differs from the plan's.
+
+    """
+    for found in _BLOCK.finditer(build):
+        body = found.group("body")
+        if _value(_NAME, body) != proposal.name:
+            continue
+        if _value(_SHARDS, body) != str(proposal.old):
+            msg = f"{proposal.dist}: {proposal.name} no longer has shards = {proposal.old}"
+            raise StaleDiffError(msg)
+        changed = _SHARDS.sub(f"shards = {proposal.new}", body, count=1)
+        return build[: found.start("body")] + changed + build[found.end("body") :]
+    msg = f"{proposal.dist}: no mutants_sharded block named {proposal.name}"
+    raise StaleDiffError(msg)
+
+
+def apply(root: Path, proposals: Sequence[Proposal]) -> list[str]:
+    """Write every proposal into its dist's BUILD.bazel, all or none, one temp file and a replace.
+
+    Returns:
+        one line per rewritten grid: the dist, the grid and the old and new counts.
+
+    Raises:
+        StaleDiffError: before anything is written, when any proposal no longer matches its file.
+
+    """
+    texts: dict[Path, str] = {}
+    for proposal in proposals:
+        build = root / proposal.dist / "BUILD.bazel"
+        if build.is_symlink() or not build.is_file():
+            msg = f"{proposal.dist}: BUILD.bazel is missing or a link"
+            raise StaleDiffError(msg)
+        texts[build] = rewrite(texts.get(build) or build.read_text(encoding="utf-8"), proposal)
+    for build, text in texts.items():
+        staging = build.with_name(f"{build.name}.shardplan.tmp")
+        staging.write_text(text, encoding="utf-8")
+        staging.replace(build)
+    return [f"{p.dist} {p.name}: shards {p.old} -> {p.new}" for p in proposals]
+
+
 def _read_rows(path: Path) -> list[Row]:
     rows: list[Row] = []
     for raw in path.read_text(encoding="utf-8").splitlines():
@@ -168,15 +225,19 @@ def _read_rows(path: Path) -> list[Row]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Print the dry-run plan for a rows file; nothing is written.
+    """Print the plan for a rows file; with `--apply` write it into the BUILD files.
+
+    ⚑ A DRY RUN UNLESS ASKED (W1574): `--apply` rewrites only each grid's `shards` line, all or
+    none, and refuses with exit 3 when a BUILD file no longer matches the plan it was drawn from.
 
     Returns:
-        0, or 2 for a usage error or a rows file that is a link or unreadable.
+        0, 2 for a usage error or a rows file that is a link or unreadable, 3 for a stale plan.
 
     """
     args = sys.argv[1:] if argv is None else list(argv)
-    if len(args) != _ARGC:
-        sys.stderr.write("shardplan <rows.jsonl> <repo-root>\n")
+    applying = args[_ARGC:] == [APPLY_FLAG]
+    if len(args) != _ARGC + int(applying):
+        sys.stderr.write("shardplan <rows.jsonl> <repo-root> [--apply]\n")
         return EXIT_USAGE
     path, root = Path(args[0]), Path(args[1])
     if path.is_symlink():
@@ -199,6 +260,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         sys.stdout.write(f"FINDING {finding}\n")
     left_out = sum(1 for row in rows if row.get("complete") is not True)
     sys.stdout.write(f"{len(proposals)} grid(s) over {FRACTION:.0%}; {left_out} row(s) left out\n")
+    if not applying:
+        return 0
+    try:
+        for said in apply(root, proposals):
+            sys.stdout.write(f"APPLIED {said}\n")
+    except StaleDiffError as err:
+        sys.stderr.write(f"shardplan: nothing written: {err}\n")
+        return EXIT_STALE
     return 0
 
 

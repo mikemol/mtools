@@ -1128,3 +1128,45 @@
   claim  = {The dry run reads a rows file and a repo, prints the line, and leaves BUILD as it was.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_the_command_prints_the_diff_and_writes_nothing},
 }
+
+@misc{buildtel-shardplan-apply-rewrite-changes-only-the-shards-line-of-the-named-grid,
+  section = {shardplan},
+  title  = {Everything else in the file, including the size and tags, is byte-for-byte kept},
+  claim  = {Everything else in the file, including the size and tags, is byte-for-byte kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_rewrite_changes_only_the_shards_line_of_the_named_grid},
+}
+
+@misc{buildtel-shardplan-apply-rewrite-refuses-a-count-that-moved,
+  section = {shardplan},
+  title  = {The diff must still match the file it was drawn from},
+  claim  = {The diff must still match the file it was drawn from.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_rewrite_refuses_a_count_that_moved},
+}
+
+@misc{buildtel-shardplan-apply-rewrite-refuses-a-grid-that-is-gone,
+  section = {shardplan},
+  title  = {A block of another name is not the one planned},
+  claim  = {A block of another name is not the one planned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_rewrite_refuses_a_grid_that_is_gone},
+}
+
+@misc{buildtel-shardplan-apply-apply-is-all-or-none-across-dists,
+  section = {shardplan},
+  title  = {One stale proposal stops the write of the sound one before it},
+  claim  = {One stale proposal stops the write of the sound one before it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_apply_is_all_or_none_across_dists},
+}
+
+@misc{buildtel-shardplan-apply-apply-refuses-a-missing-build-file,
+  section = {shardplan},
+  title  = {A dist with no BUILD.bazel cannot be rewritten},
+  claim  = {A dist with no BUILD.bazel cannot be rewritten.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_apply_refuses_a_missing_build_file},
+}
+
+@misc{buildtel-shardplan-apply-command-writes-only-with-apply,
+  section = {shardplan},
+  title  = {Dry by default; --apply writes the plan; any other third word is a usage error},
+  claim  = {Dry by default; --apply writes the plan; any other third word is a usage error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_the_command_writes_only_with_apply},
+}
