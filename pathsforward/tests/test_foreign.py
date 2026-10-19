@@ -179,7 +179,7 @@ def test_with_no_foreign_blocker_nothing_changes(
     assert _prune(one, tmp_path / "missing-root") == cli.EXIT_OK
     out = capsys.readouterr().out
     cards = _cards(one)
-    assert out == "UNBLOCKED W2 (every local blocker is done)\n"
+    assert out == "UNBLOCKED W2 (every local blocker is done)\nPRUNED W2 <- W1\n"
     assert (cards["W2"]["status"], cards["W3"]["blocked_on"]) == ("ready", ["operator"])
 
 
