@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(rm -rf /home/mikemol/github/mtools/*/src/mikemol/*/__pycache__)",
-      "Bash(/home/mikemol/github/mtools/audiostruct/.venv/bin/mikemol-audio *)"
+      "Bash(/home/mikemol/github/mtools/audiostruct/.venv/bin/mikemol-audio *)",
+      "Bash(/home/mikemol/github/mtools/bazel-bin/hooks/.venv/bin/mikemol-presubmit *)"
     ]
   },
   "env": {
@@ -11,6 +12,14 @@
   },
   "hooks": {
     "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-beat\""
+          }
+        ]
+      },
       {
         "matcher": "Bash|Edit|Write|NotebookEdit",
         "hooks": [
