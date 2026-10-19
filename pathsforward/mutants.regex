@@ -208,4 +208,10 @@ src/mikemol/pathsforward/suppliers.py|non-citation-supplier-accepted|        if 
 src/mikemol/pathsforward/suppliers.py|empty-list-stored-not-cleared|        out\["acceptable_suppliers"\] = list\(suppliers\) or None|        out["acceptable_suppliers"] = list(suppliers)|def=fields
 src/mikemol/pathsforward/ledger.py|any-environment-value-is-a-session|    return value if _UUID\.fullmatch\(value\) else ""|    return value|def=session_id
 src/mikemol/pathsforward/ledger.py|loose-session-written|    if entry\.session and not _UUID\.fullmatch\(entry\.session\):|    if False:|def=line
+src/mikemol/pathsforward/blockerwatch.py|new-edge-read-as-a-change|if old\.get\(edge, now\) != now|if True|def=changes
+src/mikemol/pathsforward/blockerwatch.py|first-reading-compared|    if before is None:|    if False:|def=notice
+src/mikemol/pathsforward/blockerwatch.py|dropped-read-as-missing|        return _DROPPED|        return _MISSING|def=_status_in
+src/mikemol/pathsforward/landedblock.py|held-blocker-judged-again|        if blocker in held:|        if False:|def=refuse_landed
+src/mikemol/pathsforward/landedblock.py|landed-blocker-accepted|        if landed:|        if False:|def=refuse_landed
+src/mikemol/pathsforward/landedblock.py|any-local-card-reads-landed|return "done" if text\(w, "status"\) == "done" else None|return "done"|def=_local
 src/mikemol/pathsforward/ledger.py|explicit-session-overridden|    return line\(replace\(entry, session=entry\.session or session_id\(os\.environ\)\), stamp\)|    return line(replace(entry, session=session_id(os.environ)), stamp)|def=own_line

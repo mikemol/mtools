@@ -6277,3 +6277,110 @@
   claim  = {The roll's ledger note is `rolled; advanced N`, N from the same landed-commit count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_roll_note_carries_the_count_of_cards_a_landed_commit_carried},
 }
+
+@misc{pathsforward-blockerwatch-local-and-a-foreign-blocker-are-read-and-an-ask-is-not,
+  section = {blockerwatch},
+  title  = {Edges are keyed `card <- blocker`; an operator ask is no state to track},
+  claim  = {Edges are keyed `card <- blocker`; an operator ask is no state to track.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_a_local_and_a_foreign_blocker_are_read_and_an_ask_is_not},
+}
+
+@misc{pathsforward-blockerwatch-unreadable-peer-and-a-gone-symbol-read-as-such-and-nothing-raises,
+  section = {blockerwatch},
+  title  = {The change into or out of `unreadable` is a change too},
+  claim  = {The change into or out of `unreadable` is a change too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_an_unreadable_peer_and_a_gone_symbol_read_as_such_and_nothing_raises},
+}
+
+@misc{pathsforward-blockerwatch-blocker-that-only-residue-holds-reads-dropped,
+  section = {blockerwatch},
+  title  = {A dropped card lives in residue; that is a landing the card waiting on it must hear of},
+  claim  = {A dropped card lives in residue; that is a landing the card waiting on it must hear of.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_a_blocker_that_only_residue_holds_reads_dropped},
+}
+
+@misc{pathsforward-blockerwatch-only-an-edge-in-both-readings-with-a-new-state-is-a-change,
+  section = {blockerwatch},
+  title  = {A new edge, a gone edge and an unchanged one say nothing},
+  claim  = {A new edge, a gone edge and an unchanged one say nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_only_an_edge_in_both_readings_with_a_new_state_is_a_change},
+}
+
+@misc{pathsforward-blockerwatch-first-reading-is-silent-and-the-next-one-names-the-change,
+  section = {blockerwatch},
+  title  = {Nothing to compare on the first tick; a blocker that landed since is named on the second},
+  claim  = {Nothing to compare on the first tick; a blocker that landed since is named on the
+            second.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_a_first_reading_is_silent_and_the_next_one_names_the_change},
+}
+
+@misc{pathsforward-blockerwatch-torn-snapshot-is-a-first-reading-and-never-raises,
+  section = {blockerwatch},
+  title  = {An unreadable snapshot only repeats a later notice},
+  claim  = {An unreadable snapshot only repeats a later notice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_a_torn_snapshot_is_a_first_reading_and_never_raises},
+}
+
+@misc{pathsforward-blockerwatch-tick-open-prints-the-change-before-it-prunes-the-landed-blocker,
+  section = {blockerwatch},
+  title  = {The snapshot precedes the prune, so the landing is said even though the edge is then gone},
+  claim  = {The snapshot precedes the prune, so the landing is said even though the edge is then
+            gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockerwatch.py -k test_tick_open_prints_the_change_before_it_prunes_the_landed_blocker},
+}
+
+@misc{pathsforward-landedblock-done-local-blocker-is-refused-and-says-why,
+  section = {landedblock},
+  title  = {The loud failure: the message names the card, the blocker and that it landed},
+  claim  = {The loud failure: the message names the card, the blocker and that it landed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_a_done_local_blocker_is_refused_and_says_why},
+}
+
+@misc{pathsforward-landedblock-dropped-local-blocker-is-refused,
+  section = {landedblock},
+  title  = {A card in residue has landed in the sense that matters: nothing will ever finish it},
+  claim  = {A card in residue has landed in the sense that matters: nothing will ever finish it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_a_dropped_local_blocker_is_refused},
+}
+
+@misc{pathsforward-landedblock-working-blocker-an-ask-and-an-unknown-symbol-are-accepted,
+  section = {landedblock},
+  title  = {Only a landed card is refused; a card not in this queue is not known to have landed},
+  claim  = {Only a landed card is refused; a card not in this queue is not known to have landed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_a_working_blocker_an_ask_and_an_unknown_symbol_are_accepted},
+}
+
+@misc{pathsforward-landedblock-done-foreign-blocker-is-refused-and-a-working-one-is-not,
+  section = {landedblock},
+  title  = {The luthen case: the peer's queue is read, and its landed card cannot be waited on},
+  claim  = {The luthen case: the peer's queue is read, and its landed card cannot be waited on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_a_done_foreign_blocker_is_refused_and_a_working_one_is_not},
+}
+
+@misc{pathsforward-landedblock-peer-that-cannot-be-read-is-no-reason-to-refuse,
+  section = {landedblock},
+  title  = {Nothing is known of a queue that is not there},
+  claim  = {Nothing is known of a queue that is not there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_a_peer_that_cannot_be_read_is_no_reason_to_refuse},
+}
+
+@misc{pathsforward-landedblock-blocker-the-card-already-holds-is-left-to-the-prune,
+  section = {landedblock},
+  title  = {An unrelated update of a card carrying a stale blocker must not fail on it},
+  claim  = {An unrelated update of a card carrying a stale blocker must not fail on it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_a_blocker_the_card_already_holds_is_left_to_the_prune},
+}
+
+@misc{pathsforward-landedblock-update-refuses-a-landed-blocker-and-writes-nothing,
+  section = {landedblock},
+  title  = {Through the CLI: exit 2 and the queue is byte-for-byte what it was},
+  claim  = {Through the CLI: exit 2 and the queue is byte-for-byte what it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_update_refuses_a_landed_blocker_and_writes_nothing},
+}
+
+@misc{pathsforward-landedblock-update-many-refuses-one-landed-blocker-for-all-or-none,
+  section = {landedblock},
+  title  = {The bulk verb is all or nothing: the refusal names the blocker and nothing is written},
+  claim  = {The bulk verb is all or nothing: the refusal names the blocker and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_update_many_refuses_one_landed_blocker_for_all_or_none},
+}
