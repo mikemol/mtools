@@ -162,6 +162,25 @@ src/mikemol/buildtel/targetsend.py|every-call-counted-as-sent|        sent \+= r
 src/mikemol/buildtel/targetsend.py|orphan-row-grouped|        if invocation:|        if True:|def=by_invocation
 src/mikemol/buildtel/targetsend.py|invocation-field-dropped|"--field", f"invocation=\{invocation\}", |"--field", "x=y", |def=argv_for
 src/mikemol/buildtel/proc.py|feed-ignores-the-status|    return done\.returncode|    return 0|def=feed
+src/mikemol/buildtel/bazelprofile.py|instants-summed|if fields.get\("ph"\) == "X" and isinstance\(cat, str\)|if isinstance(cat, str)|def=totals
+src/mikemol/buildtel/bazelprofile.py|no-profile-reads-as-success|    if sums is None:|    if False:|def=main
+src/mikemol/buildtel/bazelprofile.py|other-file-name-accepted|if fields.get\("name"\) == NAME and|if True and|def=profile_uri
+src/mikemol/buildtel/cachebytes.py|nameless-base-called-dead|        live = Path\(space\)\.is_dir\(\) if space else None|        live = Path(space).is_dir()|def=output_rows
+src/mikemol/buildtel/cachebytes.py|smallest-first|    return sorted\(rows, key=_freed_of, reverse=True\)|    return sorted(rows, key=_freed_of)|def=output_rows
+src/mikemol/buildtel/cachebytes.py|repo-rc-wins-over-user|        if hits:|        if hits and found is None:|def=option
+src/mikemol/buildtel/cachebytes.py|install-dir-counted|        if not \(base / "execroot"\)\.is_dir\(\):|        if False:|def=output_rows
+src/mikemol/buildtel/cachebytes.py|shared-column-read-as-exclusive|        return int\(fields\[1\]\)|        return int(fields[0])|def=exclusive_bytes
+src/mikemol/buildtel/cachebytes.py|missing-tool-raises|    except OSError:|    except ValueError:|def=exclusive_bytes
+src/mikemol/buildtel/cachebytes.py|freed-ignores-exclusive|        return self\.size if self\.exclusive is None else self\.exclusive|        return self.size|def=Row.freed
+src/mikemol/buildtel/timeoutdrop.py|grid-over-fraction-dropped|        if slowest <= shardplan\.FRACTION \* limit:|        if True:|def=plan
+src/mikemol/buildtel/timeoutdrop.py|block-without-timeout-dropped|        if block is None or not block\.timeout:|        if block is None:|def=plan
+src/mikemol/buildtel/timeoutdrop.py|moved-timeout-removed|        if line is None or seen != drop\.timeout:|        if line is None:|def=rewrite
+src/mikemol/buildtel/timeoutdrop.py|dry-run-writes|    if not applying:|    if False:|def=main
+src/mikemol/buildtel/expunge.py|live-base-removed|        if row\.live is not False:|        if False:|def=plan
+src/mikemol/buildtel/expunge.py|running-server-ignored|        elif pid is not None and alive\(pid\):|        elif False:|def=plan
+src/mikemol/buildtel/expunge.py|smallest-removed-first|    return step\.action != "remove", -step\.row\.freed\(\)|    return step.action != "remove", step.row.freed()|def=_order
+src/mikemol/buildtel/expunge.py|base-outside-root-removed|        elif path\.parent != root or not \(path / "execroot"\)\.is_dir\(\):|        elif False:|def=run
+src/mikemol/buildtel/expunge.py|read-only-tree-not-unlocked|        here\.chmod\(OWNER_ALL\)|        pass|def=_unlock
 src/mikemol/buildtel/shardplan.py|stale-count-rewritten|        if _value\(_SHARDS, body\) != str\(proposal\.old\):|        if False:|def=rewrite
 src/mikemol/buildtel/shardplan.py|apply-flag-never-writes|    if not applying:|    if True:|def=main
 src/mikemol/buildtel/shardplan.py|under-half-still-proposed|    if slowest <= FRACTION \* limit:|    if False:|def=_proposal

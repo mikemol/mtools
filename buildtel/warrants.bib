@@ -1233,3 +1233,241 @@
   claim  = {The one real child: exit 0 only when stdin held exactly the body.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_feed_puts_the_body_on_a_real_childs_stdin_and_returns_its_status},
 }
+
+@misc{buildtel-bazelprofile-profile-address-is-found-anywhere-in-the-response,
+  section = {bazelprofile},
+  title  = {Nested in lists and dicts; a file with another name does not count},
+  claim  = {Nested in lists and dicts; a file with another name does not count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_the_profile_address_is_found_anywhere_in_the_response},
+}
+
+@misc{buildtel-bazelprofile-request-path-carries-the-file-name-the-uri-and-the-invocation,
+  section = {bazelprofile},
+  title  = {The form the service answered 200 to: the uri keeps its colons and slashes},
+  claim  = {The form the service answered 200 to: the uri keeps its colons and slashes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_the_request_path_carries_the_file_name_the_uri_and_the_invocation},
+}
+
+@misc{buildtel-bazelprofile-only-complete-events-with-a-duration-are-summed-by-category,
+  section = {bazelprofile},
+  title  = {A metadata row, an instant and an event with no dur add nothing},
+  claim  = {A metadata row, an instant and an event with no dur add nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_only_complete_events_with_a_duration_are_summed_by_category},
+}
+
+@misc{buildtel-bazelprofile-split-fetches-the-invocation-then-the-gzipped-profile,
+  section = {bazelprofile},
+  title  = {The profile bytes come from the path the address names},
+  claim  = {The profile bytes come from the path the address names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_the_split_fetches_the_invocation_then_the_gzipped_profile},
+}
+
+@misc{buildtel-bazelprofile-invocation-with-no-profile-is-none-and-the-command-says-so,
+  section = {bazelprofile},
+  title  = {Exit 3 and a sentence, never an empty table},
+  claim  = {Exit 3 and a sentence, never an empty table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_an_invocation_with_no_profile_is_none_and_the_command_says_so},
+}
+
+@misc{buildtel-bazelprofile-command-prints-the-largest-category-first-and-names-the-unit,
+  section = {bazelprofile},
+  title  = {One JSON line per category, thread microseconds, largest first},
+  claim  = {One JSON line per category, thread microseconds, largest first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_the_command_prints_the_largest_category_first_and_names_the_unit},
+}
+
+@misc{buildtel-bazelprofile-unreachable-service-and-a-bad-argument-are-not-a-split,
+  section = {bazelprofile},
+  title  = {A transport error is exit 3 with its reason; a flag is a usage error},
+  claim  = {A transport error is exit 3 with its reason; a flag is a usage error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile.py -k test_an_unreachable_service_and_a_bad_argument_are_not_a_split},
+}
+
+@misc{buildtel-cachebytes-base-whose-workspace-is-gone-is-dead-and-one-that-exists-is-live,
+  section = {cachebytes},
+  title  = {A removed worktree leaves its base behind: its recorded workspace no longer exists},
+  claim  = {A removed worktree leaves its base behind: its recorded workspace no longer exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_a_base_whose_workspace_is_gone_is_dead_and_one_that_exists_is_live},
+}
+
+@misc{buildtel-cachebytes-base-that-names-no-workspace-is-unknown-never-dead,
+  section = {cachebytes},
+  title  = {No name is no verdict: only a base that names a missing workspace is called dead},
+  claim  = {No name is no verdict: only a base that names a missing workspace is called dead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_a_base_that_names_no_workspace_is_unknown_never_dead},
+}
+
+@misc{buildtel-cachebytes-directory-without-an-execroot-is-not-a-base,
+  section = {cachebytes},
+  title  = {The install dir bazel keeps beside the bases is not one of them},
+  claim  = {The install dir bazel keeps beside the bases is not one of them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_a_directory_without_an_execroot_is_not_a_base},
+}
+
+@misc{buildtel-cachebytes-rows-come-largest-first,
+  section = {cachebytes},
+  title  = {The consumer that grew is the first line a reader sees},
+  claim  = {The consumer that grew is the first line a reader sees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_rows_come_largest_first},
+}
+
+@misc{buildtel-cachebytes-bazelrc-option-is-read-with-the-later-file-winning,
+  section = {cachebytes},
+  title  = {The user's file is read last, as bazel resolves it, and a missing file is skipped},
+  claim  = {The user's file is read last, as bazel resolves it, and a missing file is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_the_bazelrc_option_is_read_with_the_later_file_winning},
+}
+
+@misc{buildtel-cachebytes-disk-walk-counts-blocks-under-the-root-only,
+  section = {cachebytes},
+  title  = {A file counts by its blocks, a nested one is reached, a missing path is nothing},
+  claim  = {A file counts by its blocks, a nested one is reached, a missing path is nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_the_disk_walk_counts_blocks_under_the_root_only},
+}
+
+@misc{buildtel-cachebytes-main-prints-a-row-per-consumer-and-the-dead-total,
+  section = {cachebytes},
+  title  = {Rows, then one summary whose bytes are the dead bases only},
+  claim  = {Rows, then one summary whose bytes are the dead bases only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes.py -k test_main_prints_a_row_per_consumer_and_the_dead_total},
+}
+
+@misc{buildtel-bazelprofile-get-get-asks-for-the-path-and-returns-the-bytes-of-a-200,
+  section = {bazelprofile},
+  title  = {The request path reaches the service unchanged and the body comes back byte for byte},
+  claim  = {The request path reaches the service unchanged and the body comes back byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile_get.py -k test_get_asks_for_the_path_and_returns_the_bytes_of_a_200},
+}
+
+@misc{buildtel-bazelprofile-get-get-refuses-any-status-but-200-naming-it,
+  section = {bazelprofile},
+  title  = {A 404 for a profile the cache lost is an OSError with the status, never empty bytes},
+  claim  = {A 404 for a profile the cache lost is an OSError with the status, never empty bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelprofile_get.py -k test_get_refuses_any_status_but_200_naming_it},
+}
+
+@misc{buildtel-cachebytes-exclusive-exclusive-column-is-read-from-the-last-line,
+  section = {cachebytes},
+  title  = {Total, Exclusive, Set shared: the second figure is what no other file shares},
+  claim  = {Total, Exclusive, Set shared: the second figure is what no other file shares.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes_exclusive.py -k test_the_exclusive_column_is_read_from_the_last_line},
+}
+
+@misc{buildtel-cachebytes-exclusive-failed-missing-or-empty-answer-is-unknown-not-zero,
+  section = {cachebytes},
+  title  = {A filesystem the tool cannot ask must read as None, never as nothing to free},
+  claim  = {A filesystem the tool cannot ask must read as None, never as nothing to free.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes_exclusive.py -k test_a_failed_missing_or_empty_answer_is_unknown_not_zero},
+}
+
+@misc{buildtel-cachebytes-exclusive-rows-sort-by-what-deletion-frees-not-by-blocks,
+  section = {cachebytes},
+  title  = {The biggest block count is mostly shared, so the smaller base frees more},
+  claim  = {The biggest block count is mostly shared, so the smaller base frees more.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes_exclusive.py -k test_rows_sort_by_what_deletion_frees_not_by_blocks},
+}
+
+@misc{buildtel-cachebytes-exclusive-row-without-exclusive-falls-back-to-blocks,
+  section = {cachebytes},
+  title  = {Where btrfs cannot answer, the block count stands in and the field says None},
+  claim  = {Where btrfs cannot answer, the block count stands in and the field says None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes_exclusive.py -k test_a_row_without_exclusive_falls_back_to_blocks},
+}
+
+@misc{buildtel-cachebytes-exclusive-dead-summary-sums-what-deletion-frees,
+  section = {cachebytes},
+  title  = {Both a blocks total and a freed total, the freed one over exclusive bytes only},
+  claim  = {Both a blocks total and a freed total, the freed one over exclusive bytes only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cachebytes_exclusive.py -k test_the_dead_summary_sums_what_deletion_frees},
+}
+
+@misc{buildtel-timeoutdrop-grid-whose-slowest-shard-fits-the-default-loses-its-timeout,
+  section = {timeoutdrop},
+  title  = {100 s of a 300 s default is under half: the explicit long can go},
+  claim  = {100 s of a 300 s default is under half: the explicit long can go.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_a_grid_whose_slowest_shard_fits_the_default_loses_its_timeout},
+}
+
+@misc{buildtel-timeoutdrop-grid-still-over-the-fraction-keeps-its-timeout-for-shardplan,
+  section = {timeoutdrop},
+  title  = {200 s is over half of 300 s: resharding comes first, so nothing is dropped here},
+  claim  = {200 s is over half of 300 s: resharding comes first, so nothing is dropped here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_a_grid_still_over_the_fraction_keeps_its_timeout_for_shardplan},
+}
+
+@misc{buildtel-timeoutdrop-grid-with-no-timeout-or-no-block-is-left-out,
+  section = {timeoutdrop},
+  title  = {Nothing to remove from a block without one, and no verdict for a missing block},
+  claim  = {Nothing to remove from a block without one, and no verdict for a missing block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_a_grid_with_no_timeout_or_no_block_is_left_out},
+}
+
+@misc{buildtel-timeoutdrop-rewrite-removes-only-the-timeout-line,
+  section = {timeoutdrop},
+  title  = {Everything else in the block, and outside it, is byte for byte kept},
+  claim  = {Everything else in the block, and outside it, is byte for byte kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_rewrite_removes_only_the_timeout_line},
+}
+
+@misc{buildtel-timeoutdrop-rewrite-refuses-a-timeout-that-changed-or-a-grid-that-is-gone,
+  section = {timeoutdrop},
+  title  = {The plan must still match the file it was drawn from},
+  claim  = {The plan must still match the file it was drawn from.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_rewrite_refuses_a_timeout_that_changed_or_a_grid_that_is_gone},
+}
+
+@misc{buildtel-timeoutdrop-apply-is-all-or-none-across-dists,
+  section = {timeoutdrop},
+  title  = {A stale drop stops the write of the sound one before it},
+  claim  = {A stale drop stops the write of the sound one before it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_apply_is_all_or_none_across_dists},
+}
+
+@misc{buildtel-timeoutdrop-main-is-a-dry-run-unless-apply-and-a-stale-plan-exits-three,
+  section = {timeoutdrop},
+  title  = {Without --apply nothing is written; with it the timeout goes; a usage slip is exit 2},
+  claim  = {Without --apply nothing is written; with it the timeout goes; a usage slip is exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_timeoutdrop.py -k test_main_is_a_dry_run_unless_apply_and_a_stale_plan_exits_three},
+}
+
+@misc{buildtel-expunge-only-dead-bases-with-no-running-server-are-removed-largest-first,
+  section = {expunge},
+  title  = {Live, nameless and server-running bases are kept, each with its reason},
+  claim  = {Live, nameless and server-running bases are kept, each with its reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_only_dead_bases_with_no_running_server_are_removed_largest_first},
+}
+
+@misc{buildtel-expunge-dry-run-names-what-would-go-and-removes-nothing,
+  section = {expunge},
+  title  = {WOULD REMOVE lines and a total, every directory still there},
+  claim  = {WOULD REMOVE lines and a total, every directory still there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_a_dry_run_names_what_would_go_and_removes_nothing},
+}
+
+@misc{buildtel-expunge-write-removes-read-only-trees-and-leaves-the-live-ones,
+  section = {expunge},
+  title  = {A bazel-style read-only tree goes, the live base and the running one stay},
+  claim  = {A bazel-style read-only tree goes, the live base and the running one stay.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_write_removes_read_only_trees_and_leaves_the_live_ones},
+}
+
+@misc{buildtel-expunge-failed-removal-is-said-and-the-rest-go-on,
+  section = {expunge},
+  title  = {One base that cannot be removed does not stop the others},
+  claim  = {One base that cannot be removed does not stop the others.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_a_failed_removal_is_said_and_the_rest_go_on},
+}
+
+@misc{buildtel-expunge-row-that-is-not-a-base-under-the-root-is-never-removed,
+  section = {expunge},
+  title  = {The guard re-checks the path under write, so a stray row cannot reach elsewhere},
+  claim  = {The guard re-checks the path under write, so a stray row cannot reach elsewhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_a_row_that_is_not_a_base_under_the_root_is_never_removed},
+}
+
+@misc{buildtel-expunge-main-reads-the-root-from-bazelrc-and-needs-one,
+  section = {expunge},
+  title  = {A usage error without a root or with a flag; a dry run prints the plan},
+  claim  = {A usage error without a root or with a flag; a dry run prints the plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_main_reads_the_root_from_bazelrc_and_needs_one},
+}

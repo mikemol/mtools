@@ -11,5 +11,9 @@ coord_sample	The Coordinator Sample: One Flushed Line per Interval Until the Pro
 image_digest	The Image Digest: What the Directory Answered, Else a Stable Absent
 probe	The Invalidation Probe: The Marker Lands, the Count Is Read From Bazel, and Nothing Is Stranded
 targetsend	The Target Rows Sent: The Per-Target Run-Time Rows Go to the Log Store Through the Shared Emitter, One Call per Bazel Invocation, and a Missing Emitter or a Refused Call Is Said and Loses Nothing
-shardplan	The Shard Plan: A Grid Whose Slowest Shard Took Over Half Its Size Default Gets a Planned Count, Never Planned Against a Raised Timeout, and a Dry Run Writes Nothing
+bazelprofile	The Bazel Profile Split: An Invocation's Timing Profile Is Read From BuildBuddy and Summed by Category in Thread Microseconds, and an Invocation With No Profile Is Exit 3 and Never an Empty Table
+cachebytes	The Cache Bytes: Each Bazel Output Base and the Disk Cache Is One Row Read From Where Bazel Writes, Sized by Blocks, Named by Its Own Workspace and Called Dead Only When That Workspace Is Gone
+timeoutdrop	The Timeout Drop: An Explicit Timeout Is Removed Only From a Grid Whose Slowest Shard Fits Half the Size Default, All or None, and a Dry Run Writes Nothing
+shardplan	The Shard Plan:A Grid Whose Slowest Shard Took Over Half Its Size Default Gets a Planned Count, Never Planned Against a Raised Timeout, and a Dry Run Writes Nothing
 proc	The Child Process: A Real Child's Status and Output Become Exactly What the Callers Read
+expunge	The Expunge: Only a Bazel Output Base Whose Workspace Is Gone and Whose Server Is Not Running Is Removed, Largest Exclusive Bytes First, Dry by Default, Read-Only Trees Included, and Never a Path Outside the Output Root
