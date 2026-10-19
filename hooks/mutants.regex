@@ -346,7 +346,7 @@ src/mikemol/hooks/scratch_cli.py|scratch-beats-on-a-git-refusal|    if code == 0
 src/mikemol/hooks/scratch_cli.py|scratch-beat-skipped|        try_beat\(Path\(text\.strip\(\)\), BEAT_TOOL, time\.time_ns\(\)\)|        pass|def=beat
 src/mikemol/hooks/watchdog.py|no-history-wakes-early|        return MAX_FIRE_S|        return MIN_FIRE_S|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|limit-not-clamped|return min\(max\(phi_fire \* mean \* math\.log\(10\), MIN_FIRE_S\), MAX_FIRE_S\)|return phi_fire * mean * math.log(10)|def=silence_limit_s
-src/mikemol/hooks/watchdog.py|fires-inside-the-limit|if silent_s >= silence_limit_s\(last, phi_fire\):|if True:|def=watch
+src/mikemol/hooks/watchdog.py|fires-inside-the-limit|if silent_s >= bound_s:|if True:|def=watch
 src/mikemol/hooks/watchdog.py|blocked-session-fired-on|                if waiting:|                if waiting is not None:|def=watch
 src/mikemol/hooks/watchdog.py|same-silence-asked-twice|                asked_about = last\.at_ns|                asked_about = None|def=watch
 src/mikemol/hooks/watchdog.py|unreadable-count-read-as-a-number|return int\(said\) if done\.returncode == 0 and said\.isdecimal\(\) else None|return int(said) if done.returncode == 0 else None|def=ready_from
@@ -399,6 +399,8 @@ src/mikemol/hooks/beat.py|quiet-queue-still-told|    if not waiting:|    if Fals
 src/mikemol/hooks/hold_lift.py|a-verdict-that-is-not-ok-lifts|    if not isinstance\(verdict, dict\) or cast\("dict\[str, object\]", verdict\)\.get\("ok"\) is not True:|    if not isinstance(verdict, dict) or cast("dict[str, object]", verdict).get("ok") is None:|def=verifies
 src/mikemol/hooks/hold_lift.py|symbol-matched-as-a-prefix|    pattern = rf"\\b\{re\.escape\(symbol\)\}\\b"|    pattern = re.escape(symbol)|def=verifies
 src/mikemol/hooks/standing_facts.py|lifted-rows-stay-held|row\.get\("blocked_kind"\) == "human" and not check\(row\):|row.get("blocked_kind") == "human":|def=held_symbols
+src/mikemol/hooks/watchdog.py|bound-never-named|    return said if bound_s is None else f"\{said\}; bound \{bound_s:\.0f\}s"|    return said|def=idle_line
+src/mikemol/hooks/watchdog.py|exit-hides-the-file-it-read|    return f"\{read_from\}\\n\{more\}" if more else read_from|    return more|def=exit_notes
 src/mikemol/hooks/stacktree.py|pin-ref-loses-the-stack-key|    ref = f"\{REF_ROOT\}/\{key\}/\{place\}"|    ref = f"{REF_ROOT}/{place}"|def=pin
 src/mikemol/hooks/stacktree.py|release-deletes-nothing|    names = listed\.stdout\.split\(\) if listed\.returncode == 0 else \[\]|    names = []|def=release
 src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not any\(path in present or in_head\(path\) for path in bases\):|                if False:|def=findings

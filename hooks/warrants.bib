@@ -12271,3 +12271,10 @@
   claim  = {No commit yet: the chain reports the failed step and builds nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_a_repository_without_a_head_fails_without_raising},
 }
+
+@misc{hooks-watchdog-hint-exit-names-the-heartbeat-file-it-read-and-adds-the-hint-when-there-is-one,
+  section = {heartbeat},
+  title  = {W1617: the file read is said first, so a path unlike the hook's shows},
+  claim  = {W1617: the file read is said first, so a path unlike the hook's shows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_the_exit_names_the_heartbeat_file_it_read_and_adds_the_hint_when_there_is_one},
+}

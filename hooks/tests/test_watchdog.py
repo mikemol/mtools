@@ -82,7 +82,7 @@ def test_quiet_past_the_limit_with_ready_cards_prints_one_line_and_exits_idle(
     seams = _seams([_beat(0)], lambda: _THREE, [700])
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
     said = capsys.readouterr().out
-    assert said == "idle with 3 ready cards, last heartbeat 700s ago (mikemol-commit)\n"
+    assert said == "idle with 3 ready cards, last heartbeat 700s ago (mikemol-commit); bound 600s\n"
 
 
 def test_quiet_inside_the_limit_keeps_watching_and_asks_nothing() -> None:
@@ -138,7 +138,9 @@ def test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start(
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
     said = capsys.readouterr().out.splitlines()
     assert said[0] == "mikemol-watchdog: no heartbeat file: counting from my start"
-    assert said[1] == "idle with 4 ready cards, last heartbeat 700s ago (no heartbeat source)"
+    assert said[1] == (
+        "idle with 4 ready cards, last heartbeat 700s ago (no heartbeat source); bound 600s"
+    )
 
 
 def test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once(

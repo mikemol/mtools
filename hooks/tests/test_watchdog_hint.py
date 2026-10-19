@@ -62,6 +62,16 @@ def test_without_nemik_stackable_the_hint_is_empty_and_nothing_is_raised(tmp_pat
     assert not watchdog.hint_from("mtools", {watchdog.STACKABLE_ENV: str(tmp_path / "absent")})
 
 
+def test_the_exit_names_the_heartbeat_file_it_read_and_adds_the_hint_when_there_is_one(
+    tmp_path: Path,
+) -> None:
+    """W1617: the file read is said first, so a path unlike the hook's shows."""
+    git_dir = tmp_path / "repo" / ".git"
+    absent = {watchdog.STACKABLE_ENV: str(tmp_path / "absent")}
+    said = watchdog.exit_notes(git_dir, "repo", absent)
+    assert said == f"heartbeat read: {git_dir}/mtools/heartbeat"
+
+
 def test_a_found_tool_is_asked_twice_and_its_answers_become_the_line(tmp_path: Path) -> None:
     """The plain call gives the rows, the --propose --json call gives the drafts."""
     rows, drafts = tmp_path / "rows", tmp_path / "drafts"

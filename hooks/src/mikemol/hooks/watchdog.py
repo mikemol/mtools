@@ -82,15 +82,20 @@ def silence_limit_s(last: Beat, phi_fire: float) -> float:
     return min(max(phi_fire * mean * math.log(10), MIN_FIRE_S), MAX_FIRE_S)
 
 
-def idle_line(waiting: int, last: Beat, now_ns: int) -> str:
+def idle_line(waiting: int, last: Beat, now_ns: int, bound_s: float | None = None) -> str:
     """Spell the one line the alarm prints.
 
+    ⚑ THE LINE GIVES THE REASON (luthen via github-8f, 2026-10-18, W1617): an exit 8 that said only
+    that cards were waiting could not be told from one that fired on too little silence, so it also
+    names the bound it crossed when it has one.
+
     Returns:
-        `idle with N ready cards, last heartbeat Ts ago (tool)`.
+        `idle with N ready cards, last heartbeat Ts ago (tool)`, then `; bound Bs` when given.
 
     """
     ago = max(now_ns - last.at_ns, 0) // _NS_PER_S
-    return f"idle with {waiting} ready cards, last heartbeat {ago}s ago ({last.tool})"
+    said = f"idle with {waiting} ready cards, last heartbeat {ago}s ago ({last.tool})"
+    return said if bound_s is None else f"{said}; bound {bound_s:.0f}s"
 
 
 def next_action(stackable: str, drafts: str) -> str:
@@ -267,10 +272,11 @@ def watch(
             last = started
         if last.at_ns != asked_about:
             silent_s = (now_ns() - last.at_ns) / _NS_PER_S
-            if silent_s >= silence_limit_s(last, phi_fire):
+            bound_s = silence_limit_s(last, phi_fire)
+            if silent_s >= bound_s:
                 waiting = ready()
                 if waiting:
-                    sys.stdout.write(idle_line(waiting, last, now_ns()) + "\n")
+                    sys.stdout.write(idle_line(waiting, last, now_ns(), bound_s) + "\n")
                     said = hint()
                     if said:
                         sys.stdout.write(said + "\n")
@@ -334,6 +340,18 @@ def hint_from(repo: str, env: Mapping[str, str]) -> str:
     return next_action(heard[0], heard[1])
 
 
+def exit_notes(git_dir: Path, repo: str, env: Mapping[str, str]) -> str:
+    """Spell what follows the idle line: the heartbeat file read, then the next action if any.
+
+    Returns:
+        `heartbeat read: <path>`, and on a second line the next action `hint_from` names.
+
+    """
+    read_from = f"heartbeat read: {heartbeat.path_of(git_dir)}"
+    more = hint_from(repo, env)
+    return f"{read_from}\n{more}" if more else read_from
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mikemol-watchdog")
     parser.add_argument("--state", required=True, help="the queue file the session works from")
@@ -383,7 +401,11 @@ def main(
     try:
         poll = float(str(opts["poll_s"]))
         return watch(
-            seams, float(str(opts["phi_fire"])), poll, announce, lambda: hint_from(repo, os.environ)
+            seams,
+            float(str(opts["phi_fire"])),
+            poll,
+            announce,
+            lambda: exit_notes(git_dir, repo, os.environ),
         )
     finally:
         release(git_dir, os.getpid())
