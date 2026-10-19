@@ -470,6 +470,8 @@ venv_from_hub(
         "mikemol-commit": "mikemol.hooks.commit_kata:main",
         "mikemol-hooks-probe": "mikemol.hooks.probe:main",
         "mikemol-snapshot": "mikemol.hooks.snapshot:main",
+        # W1655: the gate's own bazel test over a snapshot of the working tree, before the gate.
+        "mikemol-presubmit": "mikemol.hooks.presubmit:main",
         "mikemol-bazel-admit": "mikemol.hooks.bazel_admit:main",
         # W818: the PostToolUse closure advisory.
         "mikemol-hook-pycheck-advise": "mikemol.hooks.entry:pycheck_advise_main",
