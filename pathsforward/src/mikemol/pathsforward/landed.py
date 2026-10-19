@@ -60,6 +60,54 @@ def read_log(root: Path, since: str) -> str | None:
     return done.stdout if done.returncode == 0 else None
 
 
+def _run(argv: list[str], env: dict[str, str] | None = None) -> str | None:
+    # The output of a child that exited 0, or None when it is absent, failed or timed out.
+    try:
+        done = subprocess.run(
+            argv,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_S,
+            env=env,
+        )
+    except Exception as caught:
+        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+            raise
+        return None
+    return done.stdout if done.returncode == 0 else None
+
+
+def read_commits(root: Path) -> str | None:
+    """Read the last 500 commits as `sha US UTC-stamp US message RS` records (W1639).
+
+    Returns:
+        the text `reconcilecmd.parse_log` reads, or None when git is absent or refused.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    fmt = "--format=%H%x1f%cd%x1f%B%x1e"
+    date = "--date=format-local:%Y-%m-%dT%H:%M:%SZ"
+    env = {"TZ": "UTC", "PATH": "/usr/bin:/bin"}
+    return _run([git, "-C", str(root), "log", "-n500", date, fmt], env)
+
+
+def read_gate(root: Path) -> str | None:
+    """Read the live-commit map as JSON from `mikemol-commit --in-gate --json` (W1587).
+
+    Returns:
+        the JSON text, or None when the tool is absent or refused.
+
+    """
+    own = root / "hooks" / ".venv" / "bin" / "mikemol-commit"
+    tool = shutil.which("mikemol-commit") or (str(own) if own.is_file() else None)
+    if tool is None:
+        return None
+    return _run([tool, root.name, "--in-gate", "--json"])
+
+
 def landed_since(root: Path, since: str, reader: Reader = read_log) -> set[str] | None:
     """Name the cards a commit carries since `since`.
 
