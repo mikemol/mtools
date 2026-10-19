@@ -158,3 +158,6 @@ src/mikemol/buildtel/buildpulse.py|failure-signature-exits-clean|if trouble:|if 
 src/mikemol/buildtel/buildpulse.py|gone-build-exits-clean|if not is_alive\(\):|if False:|def=main
 src/mikemol/buildtel/buildpulse.py|stall-exits-clean|if held:|if False:|def=main
 src/mikemol/buildtel/buildpulse.py|first-sample-not-recorded|append\(state, now\)|pass|def=main
+src/mikemol/buildtel/shardplan.py|under-half-still-proposed|    if slowest <= FRACTION \* limit:|    if False:|def=_proposal
+src/mikemol/buildtel/shardplan.py|count-may-not-grow|    new = max\(wanted, block\.shards \+ 1\)|    new = wanted|def=_proposal
+src/mikemol/buildtel/shardplan.py|incomplete-row-counted|if row\.get\("complete"\) is not True or not isinstance\(millis, int\):|if not isinstance(millis, int):|def=_shard_times

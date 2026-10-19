@@ -1071,3 +1071,60 @@
   claim  = {No operand, a flag, or two operands is a usage error: exit 2 and the usage line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_main_refuses_anything_but_one_log},
 }
+
+@misc{buildtel-shardplan-block-declares-its-shards-its-size-and-its-timeout,
+  section = {shardplan},
+  title  = {Size defaults to medium when absent; an explicit timeout is carried so it can be flagged},
+  claim  = {Size defaults to medium when absent; an explicit timeout is carried so it can be
+            flagged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_a_block_declares_its_shards_its_size_and_its_timeout},
+}
+
+@misc{buildtel-shardplan-timed-out-shard-is-planned-against-half-the-medium-default,
+  section = {shardplan},
+  title  = {The audiostruct case: 300.3 s against 300 s, total 583 s over 150 s, so four shards},
+  claim  = {The audiostruct case: 300.3 s against 300 s, total 583 s over 150 s, so four shards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_the_timed_out_shard_is_planned_against_half_the_medium_default},
+}
+
+@misc{buildtel-shardplan-count-is-the-total-over-half-the-limit-and-never-less-than-one-more,
+  section = {shardplan},
+  title  = {A total of 600 s over 150 s is four shards; a grid already at four still gets five},
+  claim  = {A total of 600 s over 150 s is four shards; a grid already at four still gets five.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_the_count_is_the_total_over_half_the_limit_and_never_less_than_one_more},
+}
+
+@misc{buildtel-shardplan-grid-under-half-its-limit-is-left-alone,
+  section = {shardplan},
+  title  = {149 s of 300 s is under the fraction: no proposal},
+  claim  = {149 s of 300 s is under the fraction: no proposal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_a_grid_under_half_its_limit_is_left_alone},
+}
+
+@misc{buildtel-shardplan-explicit-timeout-is-not-the-limit-and-is-named-for-removal,
+  section = {shardplan},
+  title  = {The pathsforward shard of 416 s passes at timeout long, but is planned against 300 s},
+  claim  = {The pathsforward shard of 416 s passes at timeout long, but is planned against 300 s.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_an_explicit_timeout_is_not_the_limit_and_is_named_for_removal},
+}
+
+@misc{buildtel-shardplan-incomplete-row-is-not-a-maximum-of-anything,
+  section = {shardplan},
+  title  = {A row from a partial listing is left out, whatever it says},
+  claim  = {A row from a partial listing is left out, whatever it says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_an_incomplete_row_is_not_a_maximum_of_anything},
+}
+
+@misc{buildtel-shardplan-slow-plain-test-and-a-grid-without-a-block-are-findings-not-silence,
+  section = {shardplan},
+  title  = {What this planner cannot reshard is named},
+  claim  = {What this planner cannot reshard is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_a_slow_plain_test_and_a_grid_without_a_block_are_findings_not_silence},
+}
+
+@misc{buildtel-shardplan-command-prints-the-diff-and-writes-nothing,
+  section = {shardplan},
+  title  = {The dry run reads a rows file and a repo, prints the line, and leaves BUILD as it was},
+  claim  = {The dry run reads a rows file and a repo, prints the line, and leaves BUILD as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_the_command_prints_the_diff_and_writes_nothing},
+}
