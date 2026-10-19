@@ -89,7 +89,7 @@ def test_the_built_warrant_is_the_prov_shape_nemik_publishes(tmp_path: Path) -> 
     built = warrant.build("urn:nemik:r/W1", _cited(tmp_path), GOOD, ["reader", "x"])
     record = cast("Rec", built["prov:wasDerivedFrom"])
     assert built["@id"] == "urn:nemik:r/W1"
-    assert str(record["@id"]).endswith(f"/s.jsonl#{UUID}")
+    assert record["@id"] == f"urn:claude:transcript:{tmp_path.name}/s#{UUID}"
     assert cast("Rec", record["prov:wasAttributedTo"])["@id"] == warrant.OPERATOR_AGENT
     assert cast("Rec", record["prov:generatedAtTime"])["@type"] == "xsd:dateTime"
     assert cast("Rec", record["prov:wasGeneratedBy"])["@type"] == "prov:Activity"

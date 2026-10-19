@@ -214,6 +214,28 @@ src/mikemol/pathsforward/blockerwatch.py|dropped-read-as-missing|        return 
 src/mikemol/pathsforward/landedblock.py|held-blocker-judged-again|        if blocker in held:|        if False:|def=refuse_landed
 src/mikemol/pathsforward/landedblock.py|landed-blocker-accepted|        if landed:|        if False:|def=refuse_landed
 src/mikemol/pathsforward/landedblock.py|any-local-card-reads-landed|return "done" if text\(w, "status"\) == "done" else None|return "done"|def=_local
+src/mikemol/pathsforward/warrant.py|old-form-keyed-with-its-extension|    session = head\.rsplit\("/", 1\)\[-1\]\.removesuffix\("\.jsonl"\)|    session = head.rsplit("/", 1)[-1]|def=record_key
+src/mikemol/pathsforward/warrant.py|reader-directory-kept|        words\[0\] = Path\(words\[0\]\)\.name|        words[0] = words[0]|def=portable_reader
+src/mikemol/pathsforward/reconcile.py|gating-card-read-as-landed|        if symbol in gating:|        if False:|def=verdicts
+src/mikemol/pathsforward/reconcile.py|commit-before-working-counted|        if commit\.stamp < since or symbol not in trailer_cards\(commit\.body\):|        if symbol not in trailer_cards(commit.body):|def=_landing
+src/mikemol/pathsforward/reconcile.py|oldest-commit-named|        if newest is None or commit\.stamp > newest\.stamp:|        if newest is None:|def=_landing
+src/mikemol/pathsforward/reconcile.py|deploying-card-proposed-done|    if text\(card, "deploys"\) == "True":|    if False:|def=_proposal
+src/mikemol/pathsforward/reconcile.py|multi-part-card-proposed-done|    return "ready" if text\(card, "next_bounded_step"\) else "done"|    return "done"|def=_proposal
+src/mikemol/pathsforward/reconcile.py|stale-card-never-blocked|        status = "blocked" if _open_blockers\(card, state\) else "ready"|        status = "ready"|def=verdicts
+src/mikemol/pathsforward/pruned.py|added-edge-read-as-removed|    return sorted\(before - edges_of\(state\)\)|    return sorted(edges_of(state) - before)|def=removed
+src/mikemol/pathsforward/pruned.py|prune-line-loses-the-arrow|    return f"PRUNED \{card\} <- \{blocker\}"|    return f"PRUNED {card} {blocker}"|def=said
+src/mikemol/pathsforward/cli.py|removed-edges-never-reported|    for card, blocker in PRUNE_REMOVED\(before, state\):|    for card, blocker in []:|def=_report_pruned
+src/mikemol/pathsforward/transitions.py|minted-card-counted-as-a-transition|for sym in now if sym in before and before\[sym\] != now\[sym\]|for sym in now if before.get(sym) != now[sym]|def=changes
+src/mikemol/pathsforward/transitions.py|outcome-loses-its-direction|Entry\(KIND, sym, f"\{old\}>\{new\}", MECHANISM|Entry(KIND, sym, f"{old}-{new}", MECHANISM|def=lines
+src/mikemol/pathsforward/cli.py|transitions-never-ledgered|            for said in TRANSITION_LINES\(before, state, ctx\.stamp\(\)\):|            for said in []:|def=_mutate
 src/mikemol/pathsforward/homepath.py|rootless-home-refuses-everything|    return bool\(parent\) and f"\{parent\}/" in text|    return f"{parent}/" in text|def=names_home
 src/mikemol/pathsforward/homepath.py|bare-prefix-is-a-path|f"\{parent\}/" in text|parent in text|def=names_home
+src/mikemol/pathsforward/reconcilecmd.py|no-map-judged-anyway|    if gating is None:|    if False:|def=run
+src/mikemol/pathsforward/reconcilecmd.py|landed-proposal-applied|        if verdict\.proposal == LANDED_PROPOSAL:|        if False:|def=apply
+src/mikemol/pathsforward/reconcilecmd.py|dry-run-writes|    changed = apply\(state, found, now\) if write else \[\]|    changed = apply(state, found, now)|def=run
+src/mikemol/pathsforward/reconcilecmd.py|malformed-record-kept|        if len\(parts\) == _FIELDS and parts\[0\]\.strip\(\):|        if True:|def=parse_log
+src/mikemol/pathsforward/cli.py|help-omits-unmanifested|        "are symbols or a selector: `unscored`, `unmanifested` \(every ready card with no "|        "are symbols or a selector: `unscored` (every ready card with no "|def=_parser
+src/mikemol/pathsforward/ops.py|location-never-stored|    for key, value in \(\("dtstart", upd\.dtstart\), \("due", upd\.due\), \("location", upd\.location\)\):|    for key, value in (("dtstart", upd.dtstart), ("due", upd.due)):|def=_set_given
+src/mikemol/pathsforward/ops.py|multi-line-location-accepted|    if upd\.location and any\(ch in upd\.location for ch in "\\r\\n"\):|    if False:|def=update
+src/mikemol/pathsforward/vtodo.py|location-never-projected|    if text\(w, "location"\):|    if False:|def=todo
 src/mikemol/pathsforward/ledger.py|explicit-session-overridden|    return line\(replace\(entry, session=entry\.session or session_id\(os\.environ\)\), stamp\)|    return line(replace(entry, session=session_id(os.environ)), stamp)|def=own_line

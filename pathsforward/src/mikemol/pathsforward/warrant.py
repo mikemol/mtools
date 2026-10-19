@@ -130,6 +130,53 @@ def read(cited: Citation, reader: str = READER, run: Run = run_reader) -> tuple[
     return verdict, argv
 
 
+URN_PREFIX = "urn:claude:transcript:"
+SYMBOLIC_PREFIX = "claude:transcript:"
+
+
+def transcript_name(transcript: Path) -> str:
+    """Name a transcript by its project directory and session, without any home path.
+
+    ⚑ A TRACKED QUEUE HOLDS NO HOME-DIRECTORY PATH (github-8f, 2026-10-18, W1630): the old warrant
+    stored `file:///<home>/.claude/projects/<dir>/<session>.jsonl`, so every warrant in every queue
+    carried the host's home. The project directory's name and the session id are the citation; the
+    file is found again at read time under the reader's own `~/.claude/projects`.
+
+    Returns:
+        `<project dir name>/<session id>`.
+
+    """
+    absolute = transcript.absolute()
+    return f"{absolute.parent.name}/{absolute.stem}"
+
+
+def record_key(record_id: str) -> str:
+    """Reduce a warrant record's id, in the old file form or the new urn form, to its identity.
+
+    Returns:
+        `<session id>#<record uuid>`, the same for both forms of one record.
+
+    """
+    head, _, uuid = record_id.partition("#")
+    session = head.rsplit("/", 1)[-1].removesuffix(".jsonl")
+    return f"{session}#{uuid}"
+
+
+def portable_reader(reader: Sequence[str], transcript: Path) -> str:
+    """Spell the reader's command line without any path of this host.
+
+    Returns:
+        the command with the reader's own name for its path and the transcript's symbolic name for
+        the transcript, every other word as it was.
+
+    """
+    words = list(reader)
+    if words:
+        words[0] = Path(words[0]).name
+    symbolic = f"{SYMBOLIC_PREFIX}{transcript_name(transcript)}"
+    return " ".join(symbolic if word == str(transcript) else word for word in words)
+
+
 def build(card: str, cited: Citation, verdict: Json, reader: Sequence[str]) -> Json:
     """Spell one verified record as the card's PROV-O JSON-LD warrant.
 
@@ -141,7 +188,7 @@ def build(card: str, cited: Citation, verdict: Json, reader: Sequence[str]) -> J
     speaker = OPERATOR_AGENT if text(verdict, "kind") == "human" else None
     agent = speaker or f"urn:nemik:speaker/{text(verdict, 'kind')}"
     record: Json = {
-        "@id": f"{cited.transcript.resolve().as_uri()}#{cited.uuid}",
+        "@id": f"{URN_PREFIX}{transcript_name(cited.transcript)}#{cited.uuid}",
         "@type": "prov:Entity",
         "prov:generatedAtTime": {"@value": text(verdict, "timestamp"), "@type": "xsd:dateTime"},
         "prov:wasAttributedTo": {"@id": agent, "@type": "prov:Agent"},
@@ -150,7 +197,7 @@ def build(card: str, cited: Citation, verdict: Json, reader: Sequence[str]) -> J
             "@type": "prov:Activity",
         },
         "mtools:line": verdict.get("line"),
-        "mtools:reader": " ".join(reader),
+        "mtools:reader": portable_reader(reader, cited.transcript),
     }
     return {"@context": CONTEXT, "@id": card, "prov:wasDerivedFrom": record}
 
@@ -165,12 +212,16 @@ def attach(state: State, symbol: str, warrant: Json) -> bool:
         RefusedError: when the symbol is not a card of this queue.
 
     """
-    wanted = cast("Json", warrant["prov:wasDerivedFrom"])["@id"]
+    wanted = record_key(str(cast("Json", warrant["prov:wasDerivedFrom"])["@id"]))
     for card in state.waypoints:
         if text(card, "symbol") != symbol:
             continue
         held = cast("list[Json]", card.setdefault("warrants", []))
-        if any(cast("Json", w["prov:wasDerivedFrom"])["@id"] == wanted for w in held):
+        # ⚑ BOTH FORMS OF ONE RECORD ARE THE SAME RECORD: a warrant held in the old file form is
+        # not attached again in the urn form.
+        if any(
+            record_key(str(cast("Json", w["prov:wasDerivedFrom"])["@id"])) == wanted for w in held
+        ):
             return False
         held.append(warrant)
         return True

@@ -6412,3 +6412,270 @@
   claim  = {Through the CLI: exit 2, the message names --evidence-redact, the queue is unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_homepath.py -k test_evidence_append_refuses_a_home_path_and_names_the_redact_flag},
 }
+
+@misc{pathsforward-warrant-portable-transcript-is-named-by-its-project-directory-and-session,
+  section = {warrant},
+  title  = {Two words of the path are the citation; the rest is this host's},
+  claim  = {Two words of the path are the citation; the rest is this host's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_portable.py -k test_a_transcript_is_named_by_its_project_directory_and_session},
+}
+
+@misc{pathsforward-warrant-portable-both-forms-of-one-record-reduce-to-one-key,
+  section = {warrant},
+  title  = {The old file URL and the new urn name the same session and record},
+  claim  = {The old file URL and the new urn name the same session and record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_portable.py -k test_both_forms_of_one_record_reduce_to_one_key},
+}
+
+@misc{pathsforward-warrant-portable-reader-command-keeps-its-name-and-the-transcript-by-symbol,
+  section = {warrant},
+  title  = {The reader's directory and the transcript's path are both gone; the other words stay},
+  claim  = {The reader's directory and the transcript's path are both gone; the other words stay.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_portable.py -k test_the_reader_command_keeps_its_name_and_the_transcript_by_symbol},
+}
+
+@misc{pathsforward-warrant-portable-built-warrant-names-no-path-under-the-hosts-home,
+  section = {warrant},
+  title  = {The control is the old shape: it holds the home prefix; the new one does not},
+  claim  = {The control is the old shape: it holds the home prefix; the new one does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_portable.py -k test_a_built_warrant_names_no_path_under_the_hosts_home},
+}
+
+@misc{pathsforward-warrant-portable-warrant-held-in-the-old-form-is-not-attached-again-in-the-new,
+  section = {warrant},
+  title  = {One record, one warrant per card, across the change of form},
+  claim  = {One record, one warrant per card, across the change of form.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_portable.py -k test_a_warrant_held_in_the_old_form_is_not_attached_again_in_the_new},
+}
+
+@misc{pathsforward-status-transitions-changed-status-is-found-and-an-unchanged-one-is-not,
+  section = {status_transitions},
+  title  = {The comparison: blocked to ready is one change; the card that stayed is none},
+  claim  = {The comparison: blocked to ready is one change; the card that stayed is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_a_changed_status_is_found_and_an_unchanged_one_is_not},
+}
+
+@misc{pathsforward-status-transitions-minted-card-and-a-dropped-card-are-not-transitions,
+  section = {status_transitions},
+  title  = {A new card has no earlier status; a card gone from the queue is residue, not a status},
+  claim  = {A new card has no earlier status; a card gone from the queue is residue, not a status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_a_minted_card_and_a_dropped_card_are_not_transitions},
+}
+
+@misc{pathsforward-status-transitions-line-has-the-agreed-shape-and-parses-back,
+  section = {status_transitions},
+  title  = {Kind status, outcome from>to, mechanism writer, and the ledger reader reads it},
+  claim  = {Kind status, outcome from>to, mechanism writer, and the ledger reader reads it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_the_line_has_the_agreed_shape_and_parses_back},
+}
+
+@misc{pathsforward-status-transitions-update-writes-the-transition-through-the-writers-save-point,
+  section = {status_transitions},
+  title  = {Through the CLI: marking a card working leaves one status line for it},
+  claim  = {Through the CLI: marking a card working leaves one status line for it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_update_writes_the_transition_through_the_writers_save_point},
+}
+
+@misc{pathsforward-status-transitions-blocker-landing-leaves-a-blocked-to-ready-line,
+  section = {status_transitions},
+  title  = {The case the card names: the prune that frees a card is ledgered as blocked to ready},
+  claim  = {The case the card names: the prune that frees a card is ledgered as blocked to ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_a_blocker_landing_leaves_a_blocked_to_ready_line},
+}
+
+@misc{pathsforward-status-transitions-edit-that-changes-no-status-writes-no-line,
+  section = {status_transitions},
+  title  = {A title change moves no status, so the ledger is not touched},
+  claim  = {A title change moves no status, so the ledger is not touched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_an_edit_that_changes_no_status_writes_no_line},
+}
+
+@misc{pathsforward-status-transitions-ledger-that-cannot-be-written-never-fails-the-edit,
+  section = {status_transitions},
+  title  = {The ledger path is a directory: the status change is saved and the gap is said},
+  claim  = {The ledger path is a directory: the status change is saved and the gap is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_a_ledger_that_cannot_be_written_never_fails_the_edit},
+}
+
+@misc{pathsforward-pruned-edges-of-a-queue-and-the-ones-a-change-removes,
+  section = {pruned},
+  title  = {Every blocker of every card is an edge; the removed ones are the difference, sorted},
+  claim  = {Every blocker of every card is an edge; the removed ones are the difference, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pruned.py -k test_the_edges_of_a_queue_and_the_ones_a_change_removes},
+}
+
+@misc{pathsforward-pruned-line-and-the-ledger-entry-name-the-card-and-the-blocker,
+  section = {pruned},
+  title  = {PRUNED card <- blocker, and a prune ledger line the reader parses back},
+  claim  = {PRUNED card <- blocker, and a prune ledger line the reader parses back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pruned.py -k test_the_line_and_the_ledger_entry_name_the_card_and_the_blocker},
+}
+
+@misc{pathsforward-pruned-blocker-dropped-from-a-card-that-keeps-others-is-now-said,
+  section = {pruned},
+  title  = {The silent case: W1 waits on W2 (done) and W3 (working); only W2 goes, and it is named},
+  claim  = {The silent case: W1 waits on W2 (done) and W3 (working); only W2 goes, and it is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pruned.py -k test_a_blocker_dropped_from_a_card_that_keeps_others_is_now_said},
+}
+
+@misc{pathsforward-pruned-second-prune-has-nothing-to-say,
+  section = {pruned},
+  title  = {The prune is idempotent: with nothing left to remove no PRUNED line is printed},
+  claim  = {The prune is idempotent: with nothing left to remove no PRUNED line is printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pruned.py -k test_a_second_prune_has_nothing_to_say},
+}
+
+@misc{pathsforward-pruned-ledger-that-cannot-be-written-never-fails-the-prune,
+  section = {pruned},
+  title  = {The ledger path is a directory: the edge is still removed and the gap is said},
+  claim  = {The ledger path is a directory: the edge is still removed and the gap is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pruned.py -k test_a_ledger_that_cannot_be_written_never_fails_the_prune},
+}
+
+@misc{pathsforward-reconcile-only-working-cards-are-judged-and-each-gets-one-verdict,
+  section = {reconcile},
+  title  = {A ready card and a done card get none; a working card gets exactly one},
+  claim  = {A ready card and a done card get none; a working card gets exactly one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_only_working_cards_are_judged_and_each_gets_one_verdict},
+}
+
+@misc{pathsforward-reconcile-card-in-a-queued-stack-is-gating-and-names-the-stack,
+  section = {reconcile},
+  title  = {GATING wins over a landed commit: the gate is the freshest fact about the card},
+  claim  = {GATING wins over a landed commit: the gate is the freshest fact about the card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_card_in_a_queued_stack_is_gating_and_names_the_stack},
+}
+
+@misc{pathsforward-reconcile-commit-naming-the-card-since-it-went-working-is-landed-with-its-sha,
+  section = {reconcile},
+  title  = {The newest naming commit at or after the working stamp; an older one does not count},
+  claim  = {The newest naming commit at or after the working stamp; an older one does not count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_commit_naming_the_card_since_it_went_working_is_landed_with_its_sha},
+}
+
+@misc{pathsforward-reconcile-commit-before-the-card-went-working-does-not-land-it,
+  section = {reconcile},
+  title  = {The window starts when the card went working, so an earlier commit is another story},
+  claim  = {The window starts when the card went working, so an earlier commit is another story.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_commit_before_the_card_went_working_does_not_land_it},
+}
+
+@misc{pathsforward-reconcile-landed-card-with-a-next-step-is-proposed-ready-for-the-next-part,
+  section = {reconcile},
+  title  = {A multi-part card is not done by one landing},
+  claim  = {A multi-part card is not done by one landing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_landed_card_with_a_next_step_is_proposed_ready_for_the_next_part},
+}
+
+@misc{pathsforward-reconcile-card-that-deploys-is-proposed-landed-not-done,
+  section = {reconcile},
+  title  = {A commit is not a deploy: the verdict proposes the landed state},
+  claim  = {A commit is not a deploy: the verdict proposes the landed state.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_card_that_deploys_is_proposed_landed_not_done},
+}
+
+@misc{pathsforward-reconcile-commit-naming-only-another-card-does-not-land-this-one,
+  section = {reconcile},
+  title  = {The match is the exact Waypoint line, not a substring: W12 does not land W1},
+  claim  = {The match is the exact Waypoint line, not a substring: W12 does not land W1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_commit_naming_only_another_card_does_not_land_this_one},
+}
+
+@misc{pathsforward-reconcile-stale-card-is-proposed-ready-or-blocked-by-its-open-blockers,
+  section = {reconcile},
+  title  = {With an open blocker it should be blocked; with none it should be ready},
+  claim  = {With an open blocker it should be blocked; with none it should be ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_a_stale_card_is_proposed_ready_or_blocked_by_its_open_blockers},
+}
+
+@misc{pathsforward-reconcile-gate-map-is-read-from-the-live-commit-entries,
+  section = {reconcile},
+  title  = {Each entry's waypoints name their key; the first entry that names one keeps it},
+  claim  = {Each entry's waypoints name their key; the first entry that names one keeps it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_the_gate_map_is_read_from_the_live_commit_entries},
+}
+
+@misc{pathsforward-reconcilecmd-dry-run-prints-each-verdict-and-changes-nothing,
+  section = {reconcile},
+  title  = {W1 is gating, W2 landed (done: no next step), W3 stale: all three lines, no write},
+  claim  = {W1 is gating, W2 landed (done: no next step), W3 stale: all three lines, no write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcilecmd.py -k test_a_dry_run_prints_each_verdict_and_changes_nothing},
+}
+
+@misc{pathsforward-reconcilecmd-write-sets-the-proposals-and-records-the-verdict-in-evidence,
+  section = {reconcile},
+  title  = {W2 goes done with its sha in evidence, W3 ready; the gating W1 stays working},
+  claim  = {W2 goes done with its sha in evidence, W3 ready; the gating W1 stays working.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcilecmd.py -k test_a_write_sets_the_proposals_and_records_the_verdict_in_evidence},
+}
+
+@misc{pathsforward-reconcilecmd-landed-proposal-is-printed-and-never-applied,
+  section = {reconcile},
+  title  = {A card that deploys is proposed landed; the writer cannot take that, so it stays working},
+  claim  = {A card that deploys is proposed landed; the writer cannot take that, so it stays
+            working.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcilecmd.py -k test_a_landed_proposal_is_printed_and_never_applied},
+}
+
+@misc{pathsforward-reconcilecmd-no-gate-map-refuses-before-judging-anything,
+  section = {reconcile},
+  title  = {Without the map a gating card would read stale and be sent back to ready},
+  claim  = {Without the map a gating card would read stale and be sent back to ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcilecmd.py -k test_no_gate_map_refuses_before_judging_anything},
+}
+
+@misc{pathsforward-reconcilecmd-gate-map-reads-the-list-and-rejects-anything-else,
+  section = {reconcile},
+  title  = {The list of entries maps waypoint to key; text that is not that list is no map},
+  claim  = {The list of entries maps waypoint to key; text that is not that list is no map.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcilecmd.py -k test_the_gate_map_reads_the_list_and_rejects_anything_else},
+}
+
+@misc{pathsforward-reconcilecmd-log-parses-records-and-skips-a-malformed-one,
+  section = {reconcile},
+  title  = {Three fields to a record; a record short of them is dropped, not guessed},
+  claim  = {Three fields to a record; a record short of them is dropped, not guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcilecmd.py -k test_the_log_parses_records_and_skips_a_malformed_one},
+}
+
+@misc{pathsforward-update-many-help-help-names-each-selector-the-writer-accepts,
+  section = {update_many_help},
+  title  = {A selector the writer takes but the help omits is a hand-built list waiting to happen},
+  claim  = {A selector the writer takes but the help omits is a hand-built list waiting to happen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_update_many_help.py -k test_the_help_names_each_selector_the_writer_accepts},
+}
+
+@misc{pathsforward-location-update-sets-the-location-as-written-and-the-empty-string-clears-it,
+  section = {location},
+  title  = {The address is stored verbatim; '' removes it, as it removes a dtstart},
+  claim  = {The address is stored verbatim; '' removes it, as it removes a dtstart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_location.py -k test_update_sets_the_location_as_written_and_the_empty_string_clears_it},
+}
+
+@misc{pathsforward-location-location-over-more-than-one-line-is-refused-and-saves-nothing,
+  section = {location},
+  title  = {An iCalendar LOCATION is one line, so a newline is refused before it is stored},
+  claim  = {An iCalendar LOCATION is one line, so a newline is refused before it is stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_location.py -k test_a_location_over_more_than_one_line_is_refused_and_saves_nothing},
+}
+
+@misc{pathsforward-location-bulk-form-does-not-take-a-location-as-it-takes-no-dates,
+  section = {location},
+  title  = {A place is one card's, like a date: --update-many refuses the flag and saves nothing},
+  claim  = {A place is one card's, like a date: --update-many refuses the flag and saves nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_location.py -k test_the_bulk_form_does_not_take_a_location_as_it_takes_no_dates},
+}
+
+@misc{pathsforward-location-vtodo-carries-the-location-escaped-and-a-card-without-one-has-none,
+  section = {location},
+  title  = {RFC 5545 escapes the comma; no field, no LOCATION line},
+  claim  = {RFC 5545 escapes the comma; no field, no LOCATION line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_location.py -k test_the_vtodo_carries_the_location_escaped_and_a_card_without_one_has_none},
+}
+
+@misc{pathsforward-location-location-is-an-update-field-so-add-refuses-it-by-name,
+  section = {location},
+  title  = {With --add the mode refuses the flag, naming it},
+  claim  = {With --add the mode refuses the flag, naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_location.py -k test_location_is_an_update_field_so_add_refuses_it_by_name},
+}
