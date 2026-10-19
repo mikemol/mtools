@@ -26,6 +26,7 @@ The liveness probe is a seam (`Probe`), so the tests plant dead and recycled pid
 import fcntl
 import json
 import os
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -34,6 +35,8 @@ from typing import cast
 QUEUED = "queued"
 INFLIGHT = "inflight"
 WAYPOINTS_ENV = "MIKEMOL_COMMIT_WAYPOINTS"
+NOW = time.time_ns
+"""The clock a gate's start is read from; a test replaces it (W1653)."""
 _START_FIELD = 19
 Probe = Callable[[int], str | None]
 
@@ -114,6 +117,61 @@ def counts_of(entries: dict[str, dict[str, object]]) -> Counts:
     return Counts(states.count(QUEUED), states.count(INFLIGHT))
 
 
+@dataclass(frozen=True, slots=True)
+class Live:
+    """One live commit of the map: its submission key, its state and the waypoints it names."""
+
+    key: str
+    state: str
+    waypoints: tuple[str, ...]
+    began_ns: int | None = None
+
+
+def live(path: Path, probe: Probe = proc_start) -> list[Live]:
+    """List the commits the map holds that are alive, as `_alive` judges, with their waypoints.
+
+    ⚑ THE READER IS HERE, NOT IN A NEW MODULE (W1587): `commit_kata` is the hot commit path, and
+    this is the module it already imports. An entry with no waypoints (written before W1586) is
+    listed with none; a dead pid, a recycled one and an entry with no state are not listed.
+
+    Returns:
+        the live entries in the file's order.
+
+    """
+    rows: list[Live] = []
+    for key, entry in _load(path).items():
+        state = entry.get("state")
+        if not isinstance(state, str) or not _alive(entry, probe):
+            continue
+        named = entry.get("waypoints")
+        names = (
+            [w for w in cast("list[object]", named) if isinstance(w, str)]
+            if isinstance(named, list)
+            else []
+        )
+        began = entry.get("began_ns")
+        rows.append(Live(key, state, tuple(names), began if isinstance(began, int) else None))
+    return rows
+
+
+def live_json(rows: list[Live]) -> str:
+    """Spell the live entries as one JSON list for `mikemol-commit REPO --in-gate --json`.
+
+    ⚑ `began_ns` IS WHEN THE GATE BEGAN, NOT WHEN THE COMMIT WAS SUBMITTED (W1653): the key is the
+    submission time, and reading it as the gate's age made a queued head look hours stuck. It is
+    null for a queued entry and for one written before it was recorded.
+
+    Returns:
+        a JSON array of {key, state, waypoints, began_ns}, in the order given.
+
+    """
+    body = [
+        {"key": r.key, "state": r.state, "waypoints": list(r.waypoints), "began_ns": r.began_ns}
+        for r in rows
+    ]
+    return json.dumps(body)
+
+
 def ahead_of(path: Path, key: str, probe: Probe = proc_start) -> list[int]:
     """Name the live commits submitted before `key`, oldest first (W1463).
 
@@ -168,6 +226,8 @@ def transition(
             entries[key] = {"state": state, "pid": me, "start": start}
             if waypoints:
                 entries[key]["waypoints"] = list(waypoints)
+            if state == INFLIGHT:
+                entries[key]["began_ns"] = NOW()
         staging = Path(f"{path}.{me}")
         staging.write_text(json.dumps(entries, sort_keys=True), encoding="utf-8")
         staging.replace(path)

@@ -66,6 +66,49 @@ def test_an_entry_records_the_waypoints_it_names_and_stays_readable_without_them
     assert entries["k1"]["state"] == commit_counts.QUEUED
 
 
+def test_live_lists_the_live_entries_with_their_waypoints_and_not_the_dead(tmp_path: Path) -> None:
+    """W1587: a live peer with waypoints, an old entry with none; a dead and a recycled one go."""
+    path = tmp_path / "commit.counts"
+    _plant(
+        path,
+        {
+            "1": {"state": "inflight", "pid": PEER, "start": "7", "waypoints": ["W1", "W2"]},
+            "2": {"state": "queued", "pid": ME, "start": "10"},
+            "3": {"state": "queued", "pid": 99, "start": "5", "waypoints": ["W9"]},
+            "4": {"state": "queued", "pid": ME, "start": "11", "waypoints": ["W8"]},
+            "5": {"pid": PEER, "start": "7"},
+        },
+    )
+    got = commit_counts.live(path, _probe({PEER: "7", ME: "10"}))
+    assert got == [
+        commit_counts.Live("1", "inflight", ("W1", "W2")),
+        commit_counts.Live("2", "queued", ()),
+    ]
+
+
+def test_live_of_a_missing_map_is_empty_and_the_json_has_the_agreed_shape(tmp_path: Path) -> None:
+    """No file, no entries; the list prints key, state and waypoints for each."""
+    assert commit_counts.live(tmp_path / "absent") == []
+    text = commit_counts.live_json([commit_counts.Live("1", "queued", ("W1",))])
+    decoded = cast("list[dict[str, object]]", json.loads(text))
+    assert decoded == [{"key": "1", "state": "queued", "waypoints": ["W1"], "began_ns": None}]
+
+
+def test_a_gate_records_when_it_began_and_a_queued_entry_does_not(tmp_path: Path) -> None:
+    """W1653: the in-flight entry carries the clock at the transition; queued carries none."""
+    path = tmp_path / "commit.counts"
+    probe = _probe({ME: "10"})
+    commit_counts.transition(path, "k1", commit_counts.QUEUED, probe)
+    assert "began_ns" not in _read(path)["k1"]
+    before = commit_counts.NOW()
+    commit_counts.transition(path, "k1", commit_counts.INFLIGHT, probe)
+    after = commit_counts.NOW()
+    began = _read(path)["k1"]["began_ns"]
+    assert isinstance(began, int)
+    assert before <= began <= after
+    assert commit_counts.live(path, probe) == [commit_counts.Live("k1", "inflight", (), began)]
+
+
 def test_a_live_peer_is_counted_beside_this_commit(tmp_path: Path) -> None:
     """A peer whose pid and start time both match stays in the count."""
     path = tmp_path / "commit.counts"
