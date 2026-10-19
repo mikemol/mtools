@@ -52,6 +52,10 @@ def named_sources(text: str) -> list[str]:
 
     """
     found: list[str] = []
+    # ⚑ A PATH INSIDE glob(...) IS OPTIONAL, NEVER NAMED (found at the W1604 wiring, 2026-10-19:
+    # buildtel's glob(["tests/conftest.py"], allow_empty = True) refused every stack carrying that
+    # BUILD file): bazel takes a glob to match nothing, so what it lists is not a missing source.
+    text = re.sub(r"\bglob\s*\([^)]*\)", "", text)
     for match in _QUOTED_PY.finditer(text):
         source = str(match.group(1))
         if source not in found:

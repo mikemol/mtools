@@ -82,6 +82,15 @@ def test_only_build_files_and_bzl_files_are_read() -> None:
     assert not stackbuildfiles.is_build_file("d/BUILDER.py")
 
 
+def test_a_literal_path_inside_a_glob_is_optional_and_never_a_finding() -> None:
+    """A glob with allow_empty names no missing source, as buildtel's conftest glob shows."""
+    optional = 'srcs = [src] + glob(["tests/conftest.py"], allow_empty = True)\n'
+    entries = [("W1", [_frozen("buildtel/BUILD.bazel", "b1")])]
+    assert stackbuildfiles.findings(entries, _blobs(b1=optional), _never) == []
+    assert stackbuildfiles.named_sources(optional) == []
+    assert stackbuildfiles.named_sources(optional + 'x = "real.py"\n') == ["real.py"]
+
+
 def test_a_blob_that_cannot_be_read_is_skipped() -> None:
     """The gate says why; the check never refuses on what it cannot read."""
     entries = [("W1", [_frozen(_BZL, "gone")])]
