@@ -140,4 +140,12 @@ pycheck_house_census	The Census Can Judge by the House Mypy Flags, and Only the 
 preflight_lint	The Preflight Lints Every Distribution's Declared Defects Before a Stack Is Submitted
 subagent_guard	A Second Concurrent Subagent Is Refused Unless the Operator's Latest Words Authorise It
 writeguard	The Write Guard: A Shell Command That Writes Into the Project Past the Edit Bar Is Refused, and Writes Outside It, Reads and Streams Pass
+train	The Merge Train: The Queue's Tip Tree Is Gated Once, a Green Tip Lands Every Submission Under It Naming the Tip as Its Gate, and a Red Tip Is Bisected, Its First Bad Submission Refused and the Rest Landed
+stackpin	Stack Pinned Trees: A Submitted Stack's Entries Get Cumulative Trees Pinned Under Refs and Recorded for a Presubmit, Released When the Run Ends, and a Failure Pins Nothing and Refuses Nothing
+trainjoin	The Train Join: A Lease Holder Reads the Stacks Queued Behind It Back From the Ledger Alone, in Submit Order, and Leaves Out Any Whose Files Are Missing or Stale
 gate_phase_marks	The Gate Marks Each Stage It Begins in the Grammar the Span Reader Reads, So Where a Gate's Time Went Is Measured
+traindrive	The Train Drive: The Joined Tip Is Gated Once, a Red Is Bisected Over Group Boundaries, the Green Prefix Lands, the First Bad Stack Is Refused and Those Behind It Are Judged Anew, and a Stack That Cannot Be Built Is Dropped
+trainverdict	The Train Verdict: A Joined Stack Finds the Verdict Its Leader Left, Prints It and Returns Its Code Without Taking the Lease, Once, and a Torn or Absent File Is No Verdict
+trainlead	The Train Lead: A Lease Holder Joins the Queued Stacks Behind It, Runs One Train, Prints Its Own Verdict and Leaves Each Follower Its Own, and Nobody Behind or the Switch Off Is No Train
+traintel	The Train Telemetry: Each Train Is One Span of Its Own Family With Its Stacks Joined, Gates Run, Bisect Steps, Rounds, Landed, Refused and Dropped as Fields, Sent Only When Something Was Joined and Never Changing a Verdict
+presubmit	The Presubmit: The Gate's Own Bazel Test Planned Inside a Working-Tree Snapshot, in Its Own Namespace, With the Runner's Exit Code Passed Through
