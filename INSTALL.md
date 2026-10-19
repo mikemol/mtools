@@ -11,6 +11,14 @@ not a distribution. A repository that adopts one installs it from git by subdire
 $ uv add "mikemol-hooks @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=hooks"
 ```
 
+A repository that runs `mikemol-commit` needs a second pin, `mikemol-fence`, because the commit takes
+its repository-mutation lease through the fence's `mikemol-membudget`, and a commit that cannot take
+the lease refuses and prints this line:
+
+```console
+$ uv add "mikemol-fence @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=fence"
+```
+
 ## The distributions
 
 Each entry is `directory`, the distribution name, and the console scripts it installs. A distribution
