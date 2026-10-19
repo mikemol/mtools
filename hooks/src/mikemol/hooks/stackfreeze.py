@@ -46,6 +46,11 @@ def at_submit(root: Path, stack_file: Path, ledger: Path | None, key: str, run: 
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         stacksnap.dump(path, entries)
+        # ⚑ W1669: a copy of the entries beside the snapshot, so a lease holder can build this
+        # stack's commits from the ledger alone and join it to its own run.
+        path.with_suffix(".items.json").write_text(
+            stack_file.read_text(encoding="utf-8"), encoding="utf-8"
+        )
     except OSError:
         return ""
     return str(path)
@@ -70,3 +75,4 @@ def forget(env: Mapping[str, str]) -> None:
     named = env.get(SNAP_ENV, "")
     if named:
         Path(named).unlink(missing_ok=True)
+        Path(named).with_suffix(".items.json").unlink(missing_ok=True)

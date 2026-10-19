@@ -40,6 +40,8 @@ from typing import TextIO
 from mikemol.hooks.commit_body import refusal as _body_refusal
 from mikemol.hooks.commit_counts import INFLIGHT, QUEUED
 from mikemol.hooks.commit_counts import WAYPOINTS_ENV as _WAYPOINTS_ENV
+from mikemol.hooks.commit_counts import live as _live
+from mikemol.hooks.commit_counts import live_json as _live_json
 from mikemol.hooks.commit_gauge import note as _note_counts
 from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
@@ -51,17 +53,31 @@ from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
+from mikemol.hooks.stackbuildfiles import refusal as _build_refusal
 from mikemol.hooks.stackdrift import QUEUE as _QUEUE
 from mikemol.hooks.stackdrift import report as _drift_report
 from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit, forget, with_files
 from mikemol.hooks.stackimports import refusal as _stack_refusal
+from mikemol.hooks.stackpin import pin as _pin_trees
+from mikemol.hooks.stackpin import release as _release_trees
 from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
+from mikemol.hooks.trainjoin import Follower as _Follower
+from mikemol.hooks.trainlead import lead as _train_lead
+from mikemol.hooks.trainverdict import take as _take_verdict
 from mikemol.hooks.verdictlog import ship_text as _ship_text
 
+stack_build_refusal = _build_refusal
+take_verdict = _take_verdict
+train_lead = _train_lead
+TrainGroup = _Follower
+pin_trees = _pin_trees
+release_trees = _release_trees
 WAYPOINTS_ENV = _WAYPOINTS_ENV
+live_commits = _live
+live_text = _live_json
 body_refusal = _body_refusal
 wait_for_load = _wait_for_load
 add_argv_list = _add_argv_list
@@ -72,6 +88,7 @@ stack_run = _run_stack
 ship_text = _ship_text
 new_buffer = io.StringIO
 SHIP_FLAG = "--ship"
+IN_GATE_FLAG = "--in-gate"
 BEAT_TOOL = "mikemol-commit"
 """The tool name a submit leaves in the session heartbeat (W1482)."""
 
@@ -94,6 +111,9 @@ TIMED_OUT = 124
 EXIT_USAGE = 2
 EXIT_RACED = 5
 FENCE_ENV = "MIKEMOL_FENCE_BIN"
+FENCE_PIN = (
+    'uv add "mikemol-fence @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=fence"'
+)
 HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
 COMMIT_LIMIT_ENV = "MIKEMOL_COMMIT_TIMEOUT_S"
 TIMEOUT_ENV = "MIKEMOL_COMMIT_LOCK_TIMEOUT"
@@ -575,8 +595,12 @@ def fence_of(env: Mapping[str, str], python: str) -> str:
     beside = here / "mikemol-membudget"
     found = [beside]
     if len(here.parents) > BAZEL_BIN_DEPTH:
-        found.append(
-            here.parents[BAZEL_BIN_DEPTH] / "fence" / ".venv" / "bin" / "mikemol-membudget"
+        top = here.parents[BAZEL_BIN_DEPTH]
+        found.extend(
+            [
+                top / "fence" / ".venv" / "bin" / "mikemol-membudget",
+                top / "bazel-bin" / "fence" / ".venv" / "bin" / "mikemol-membudget",
+            ]
         )
     return str(next((c for c in found if os.access(c, os.X_OK)), beside))
 
@@ -773,9 +797,14 @@ def run_stack_mode(
     )
     tee = TeeBuffer()
     try:
-        code = stack_run(root, items, tee, seams)
+        # ⚑ W1654: the stacks queued behind this one join its run, gated once at the joined tip;
+        # each is told its own verdict, and nobody behind means the stack runs as it always did.
+        group = TrainGroup(str(started[0]), tuple(items))
+        joined = train_lead(root, ledger_of(root), group, (seams, env), tee)
+        code = stack_run(root, items, tee, seams) if joined is None else joined
     finally:
         forget(env)
+        release_trees(root, ledger_of(root), str(started[0]), run_git_in)
     moments = Moments(started[0], started[1], time.time_ns())
     _emit_stack(tee.getvalue(), moments, [item.waypoint for item in items], env)
     return code
@@ -861,6 +890,29 @@ def named_waypoints(stacked: tuple[Path, Path] | None, parsed: tuple[Path, Reque
     return "" if parsed is None else parsed[1].waypoint
 
 
+def in_gate(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> int:
+    """Print the commits the repository's gate holds now, with their waypoints, as one JSON list.
+
+    ⚑ A READ OF THE LIVE-COMMIT MAP, NOTHING MORE (W1587, nemik:W682): it queues nothing, takes no
+    lease and moves no counter, so asking cannot change what it reports. A dead entry is not listed.
+
+    Returns:
+        0; EXIT_USAGE when no repository is named; EXIT_NOT_COMMITTED when git cannot name the
+        repository's directory.
+
+    """
+    named = [a for a in args if not a.startswith("--")]
+    if not named:
+        sys.stderr.write(USAGE)
+        return EXIT_USAGE
+    ledger = ledger_of(resolve_root(named[0], env))
+    if ledger is None:
+        sys.stderr.write(f"mikemol-commit: {named[0]}: git cannot name its directory\n")
+        return EXIT_NOT_COMMITTED
+    out.write(live_text(live_commits(ledger / "commit.counts")) + "\n")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -871,6 +923,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     env = dict(os.environ)
     args = list(sys.argv[1:] if argv is None else argv)
+    if IN_GATE_FLAG in args:
+        return in_gate([a for a in args if a != IN_GATE_FLAG], env, sys.stdout)
     shipping = SHIP_FLAG in args
     bare = [a for a in args if a != SHIP_FLAG]
     stacked = stack_target(bare, env)
@@ -890,16 +944,38 @@ def main(argv: Sequence[str] | None = None) -> int:
     submit(ledger, key, env)
     if stacked is not None and not env.get(HELD_ENV):
         env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
+        # ⚑ W1604: a build file naming a Python source no entry carries is refused here, before the
+        # queue turn, as an unsound import is (W1603's finding, the waiting-for-failure case).
         problem = _stack_refusal(root, stacked[1], env[SNAP_ENV], run_git_in)
+        problem = problem or stack_build_refusal(root, stacked[1], env[SNAP_ENV], run_git_in)
         if problem is not None:
             return unordered(root, ledger, key, env, problem)
+        # ⚑ W1615: each entry's tree is pinned now, so a presubmit can run on it while this stack
+        # waits for the lease; the run releases them. A failure pins nothing and refuses nothing.
+        pin_trees(root, ledger, key, env[SNAP_ENV], run_git_in)
     if ledger is not None and not env.get(HELD_ENV):
         _take_turn(ledger, key)
+        # ⚑ W1671: a train leader that joined this stack into its run left the verdict; print it
+        # and return its code without taking the lease, so the gate that judged it is not rerun.
+        joined = take_verdict(ledger, key)
+        if joined is not None:
+            sys.stdout.write(joined.text)
+            forget(env)
+            release_trees(root, ledger, key, run_git_in)
+            track(ledger, key, None, env)
+            return joined.code
     claim = claim_of(root, env, [sys.executable, sys.argv[0], *args])
     if isinstance(claim, Claim):
         os.execve(claim.argv[0], claim.argv, claim.env)
     if claim:
-        sys.stderr.write(f"mikemol-commit: no commit lock ({claim}); committing unlocked\n")
+        # ⚑ W1696: A COMMIT THAT CANNOT TAKE THE LEASE DOES NOT RUN WITHOUT IT (operator 2026-10-09,
+        # 695f3e0a line 46901: block-until-held is the model). The fence is a second pin, so no
+        # correct install lacks it and "no fence" names a broken one, with the fix on the line.
+        sys.stderr.write(f"mikemol-commit: REFUSED, no commit lock ({claim})\n  {FENCE_PIN}\n")
+        forget(env)
+        release_trees(root, ledger, key, run_git_in)
+        track(ledger, key, None, env)
+        return EXIT_USAGE
     held = Held(env, submitted, time.time_ns(), claim, shipping)
     track(ledger, key, INFLIGHT, env)
     try:
@@ -952,7 +1028,9 @@ def unordered(
         EXIT_NOT_COMMITTED, after printing each finding and taking the submission out of the counts.
 
     """
-    sys.stdout.write(f"NOT COMMITTED {root.name}: a stack entry imports a module added later:\n")
+    sys.stdout.write(
+        f"NOT COMMITTED {root.name}: a stack entry names a file only a later one adds:\n"
+    )
     sys.stdout.write(problem + "\n")
     forget(env)
     track(ledger, key, None, env)
