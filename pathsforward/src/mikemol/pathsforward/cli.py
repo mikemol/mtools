@@ -93,10 +93,22 @@ from mikemol.pathsforward.model import (
 )
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
+from mikemol.pathsforward.pruned import edges_of, ledger_line, removed
+from mikemol.pathsforward.pruned import said as pruned_said
 from mikemol.pathsforward.realizable import GATES
+from mikemol.pathsforward.reconcilecmd import run as reconcile_run
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
+from mikemol.pathsforward.transitions import lines as transition_lines
+from mikemol.pathsforward.transitions import snapshot as status_snapshot
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
+RECONCILE = reconcile_run
+PRUNE_EDGES = edges_of
+PRUNE_REMOVED = removed
+PRUNE_SAID = pruned_said
+PRUNE_LEDGER = ledger_line
+TRANSITION_LINES = transition_lines
+STATUS_SNAPSHOT = status_snapshot
 REFUSE_LANDED = refuse_landed
 BLOCKERS_SEEN = _BLOCKERS_SEEN
 BLOCKER_NOTICE = blocker_notice
@@ -313,6 +325,27 @@ def _close_umbrellas(ctx: "Ctx") -> int:
     return _mutate(ctx, edit)
 
 
+def _reconcile(ctx: "Ctx") -> int:
+    """Judge every working card against the gate and the log; a dry run unless `--write` (W1639).
+
+    ⚑ DRY RUN FIRST, as `--close-umbrellas`: each line says what is true of the card (GATING,
+    LANDED or STALE) and what `--write` would set. A gate map that cannot be read refuses.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+        for line in RECONCILE(state, root, write=write):
+            _say(line)
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _triage(ctx: "Ctx") -> int:
     """Propose the repairs that shrink the ready frontier; a dry run unless `--write` (W1332).
 
@@ -413,6 +446,7 @@ _FLAGS = (
     "prune_landed",
     "block_behind_open",
     "close_umbrellas",
+    "reconcile",
     "triage",
     "inbound",
     "preamble_clear",
@@ -514,6 +548,7 @@ _FIELDS = (
     "vector_source",
     "dtstart",
     "due",
+    "location",
     "alarm",
     "rrule",
     "exdate",
@@ -569,6 +604,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "caused_by",
             "dtstart",
             "due",
+            "location",
             "alarm",
             "rrule",
             "exdate",
@@ -625,6 +661,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "prune_landed": frozenset({"root"}),
     "block_behind_open": frozenset({"write"}),
     "close_umbrellas": frozenset({"write"}),
+    "reconcile": frozenset({"write", "root"}),
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose"}),
@@ -994,8 +1031,9 @@ def _parser() -> argparse.ArgumentParser:
         nargs="+",
         metavar="SYMBOL_OR_SELECTOR",
         help="W974: the --update field flags applied to many waypoints, all or none; operands "
-        "are symbols, `unscored` or `open` (every card not done; --except SYMBOL[=REASON] skips "
-        "cards and prints each reason); a dry run without --write",
+        "are symbols or a selector: `unscored`, `unmanifested` (every ready card with no "
+        "manifest) or `open` (every card not done); --except SYMBOL[=REASON] skips cards and "
+        "prints each reason; a dry run without --write",
     )
     for flag, metavar, text_help in (
         (
@@ -1177,6 +1215,11 @@ def _parser() -> argparse.ArgumentParser:
         help="--update: as --dtstart; a floating time (no Z, no TZID) is refused; '' clears",
     )
     ap.add_argument(
+        "--location",
+        metavar="ADDRESS",
+        help="--update: where the work happens, one line, an iCalendar LOCATION; '' clears",
+    )
+    ap.add_argument(
         "--alarm",
         action="extend",
         nargs="*",
@@ -1335,9 +1378,18 @@ def _mutate(
     """
     with store.exclusive(ctx.path):
         state = store.load(ctx.path)
+        before = STATUS_SNAPSHOT(state)
         code = edit(state)
         if code == EXIT_OK:
             store.save(ctx.path, state)
+            # ⚑ EVERY STATUS A CARD CHANGES IS LEDGERED HERE, whichever verb changed it (W1372); a
+            # ledger that cannot be written never fails an edit that is already saved.
+            ledger_path = store.sibling(ctx.path, store.LEDGER)
+            try:
+                for said in TRANSITION_LINES(before, state, ctx.stamp()):
+                    append(ledger_path, said)
+            except (OSError, MalformedEntryError) as exc:
+                _warn(f"status transitions not ledgered: {exc}")
             if after is not None:
                 after(state)
     return code
@@ -1873,6 +1925,7 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         caused_by=ctx.get("caused_by"),
         dtstart=ctx.get("dtstart"),
         due=ctx.get("due"),
+        location=ctx.get("location"),
         alarms=ctx.many("alarm"),
         rrule=ctx.get("rrule"),
         exdates=ctx.many("exdate"),
@@ -1897,7 +1950,8 @@ def _update_many(ctx: Ctx) -> int:
 
     ⚑ ALL OR NONE (mtools:W974, el-openglo:W484). Every update is applied to a copy of the queue
     first, so a refusal on the last symbol changes nothing and names it, and the dry run reports
-    exactly what `--write` would do. Operands are symbols or the selector `unscored`.
+    exactly what `--write` would do. Operands are symbols or a selector: `unscored`,
+    `unmanifested` or `open`.
 
     Returns:
         EXIT_OK.
@@ -2370,6 +2424,22 @@ def _root(ctx: Ctx) -> Path:
     return Path(ctx.get("root") or foreign.default_root())
 
 
+def _report_pruned(ctx: Ctx, before: set[tuple[str, str]], state: State) -> None:
+    """Print and ledger every blocker edge a prune removed, with the card it was on (W1599).
+
+    ⚑ A BLOCKER REMOVED FROM A CARD THAT KEEPS OTHERS WAS SILENT (operator, 2026-10-18): only a card
+    freed outright was named. Each removed edge is a `PRUNED card <- blocker` line and a `prune`
+    ledger line; a ledger that cannot be written is said and never fails the prune.
+    """
+    ledger_path = store.sibling(ctx.path, store.LEDGER)
+    for card, blocker in PRUNE_REMOVED(before, state):
+        _say(PRUNE_SAID(card, blocker))
+        try:
+            append(ledger_path, PRUNE_LEDGER(card, blocker, ctx.stamp()))
+        except (OSError, MalformedEntryError) as exc:
+            _warn(f"pruned edge not ledgered: {exc}")
+
+
 def _prune_landed(ctx: Ctx) -> int:
     """Drop landed local blockers and say which waypoints that frees, counting nothing.
 
@@ -2386,6 +2456,7 @@ def _prune_landed(ctx: Ctx) -> int:
     root = _root(ctx)
 
     def edit(state: State) -> int:
+        before = PRUNE_EDGES(state)
         for sym in ops.prune_done(state):
             _say(f"UNBLOCKED {sym} (every local blocker is done)")
         pruned = foreign.prune_foreign(state, root)
@@ -2393,6 +2464,7 @@ def _prune_landed(ctx: Ctx) -> int:
             _say(f"UNBLOCKED {sym} (every blocker is done)")
         for note in pruned.kept:
             _say(note)
+        _report_pruned(ctx, before, state)
         return EXIT_OK
 
     return _mutate(ctx, edit)
@@ -2439,10 +2511,12 @@ def _bump_blocked(ctx: Ctx) -> int:
     counting = bool(ctx.opts.get("count_tick"))
 
     def edit(state: State) -> int:
+        before = PRUNE_EDGES(state)
         for sym in ops.prune_done(state):
             _say(f"UNBLOCKED {sym} (every local blocker is done)")
         for sym in foreign.prune_foreign(state, root).freed:
             _say(f"UNBLOCKED {sym} (every blocker is done)")
+        _report_pruned(ctx, before, state)
         if not counting:
             _say("pruned only: no tick was counted (pass --count-tick inside a tick-open)")
             return EXIT_OK
@@ -2892,6 +2966,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
     "close_umbrellas": _close_umbrellas,
+    "reconcile": _reconcile,
     "triage": _triage,
     "lift": _lift,
     "inbound": _inbound,
