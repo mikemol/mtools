@@ -20,6 +20,7 @@ The mapping (life accepted it 2026-09-28, W277):
     CATEGORIES   decide / act from an "operator: decide|act ..." blocker (nemik rule 4),
                  else the blocked_kind
     DTSTART, DUE, COMPLETED   as stored (W300, W301)
+    LOCATION     the waypoint's location, one line, escaped (W1687, nemik:W721)
 
 Recurrence, alarms and per-occurrence overrides are W314's.
 """
@@ -202,6 +203,8 @@ def todo(w: Json, repo: str, host: str, stamp: str) -> list[str]:
     if category:
         lines.append(content_line("CATEGORIES", escape(category)))
     lines.extend(_time(name.upper(), text(w, name)) for name in ("dtstart", "due") if text(w, name))
+    if text(w, "location"):
+        lines.append(content_line("LOCATION", escape(text(w, "location"))))
     if text(w, "completed"):
         lines.append(content_line("COMPLETED", text(w, "completed")))
     lines.extend(_repeats_and_alarms(w))

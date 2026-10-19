@@ -154,6 +154,9 @@ class Update:
     # timevalue.parse, so a floating time is refused before it is stored. "" clears the field.
     dtstart: str | None = None
     due: str | None = None
+    # ⚑ WHERE THE WORK HAPPENS (W1687, nemik:W721, life:W52): one single-line string, stored as
+    # written and carried to a calendar's LOCATION. "" clears the field.
+    location: str | None = None
     # ⚑ VALARM TRIGGERS, SET NOT MERGED (W279, life:W23, nemik:W129): `--alarm` states the whole
     # list, and `--alarm` with no values clears it. Stored and projected here. Firing them is
     # nemik-wake's job (nemik:W129), never this tool's.
@@ -529,7 +532,7 @@ def _set_given(new: Json, upd: Update) -> None:
     if upd.caused_by is not None:
         new["caused_by"] = upd.caused_by or None
     new.update(_realizable_fields(upd))
-    for key, value in (("dtstart", upd.dtstart), ("due", upd.due)):
+    for key, value in (("dtstart", upd.dtstart), ("due", upd.due), ("location", upd.location)):
         if value is not None:
             new[key] = value or None
     if upd.alarms is not None:
@@ -642,6 +645,9 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
     if upd.caused_by is not None and any(ch.isspace() for ch in upd.caused_by):
         # The same one-token rule --add applies, so the two routes cannot disagree.
         msg = f"{sym}: caused_by {upd.caused_by!r} is not one token"
+        raise RefusedError(msg)
+    if upd.location and any(ch in upd.location for ch in "\r\n"):
+        msg = f"{sym}: location {upd.location!r} spans more than one line"
         raise RefusedError(msg)
     for name, value in (("dtstart", upd.dtstart), ("due", upd.due)):
         if value:
