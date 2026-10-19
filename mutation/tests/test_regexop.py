@@ -68,6 +68,22 @@ def test_a_miss_is_unapplied_and_a_missing_scope_is_loud() -> None:
         regexop.apply_regex(SRC, regexop.RegexSpec("l", PATTERN, REPL, lines=(50, 60)))
 
 
+NESTED = """\
+def outer():
+    def inner():
+        return 1
+    return inner
+"""
+
+
+def test_a_nested_def_is_scoped_by_either_spelling_of_its_name() -> None:
+    """The report prints `outer.<locals>.inner`, def_sites yields `outer.inner`: both name it."""
+    expected = NESTED.replace("return 1", "return 2")
+    for name in ("outer.<locals>.inner", "outer.inner"):
+        spec = regexop.RegexSpec("n", "return 1", "return 2", def_name=name)
+        assert regexop.apply_regex(NESTED, spec) == expected
+
+
 def test_a_contradictory_scope_or_an_unparseable_rewrite_is_refused() -> None:
     """A def plus a range, an inverted range, and a rewrite that breaks the syntax all raise."""
     with pytest.raises(ValueError, match="not both"):

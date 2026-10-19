@@ -321,3 +321,10 @@
   claim  = {The exit code is the verdict, the lines go to stderr, and misuse is not a verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lint.py -k test_main_exits_zero_clean_one_on_a_problem_and_two_on_misuse},
 }
+
+@misc{mutation-regexop-nested-def-is-scoped-by-either-spelling-of-its-name,
+  section = {regexop},
+  title  = {The report prints `outer.<locals>.inner`, def_sites yields `outer.inner`: both name it},
+  claim  = {The report prints `outer.<locals>.inner`, def_sites yields `outer.inner`: both name it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_a_nested_def_is_scoped_by_either_spelling_of_its_name},
+}

@@ -21,5 +21,6 @@ src/mikemol/mutation/declarations.py|miss-no-longer-caught|except KeyError:|exce
 # A regex that matches nothing is UNAPPLIED, never a silent no-op: without it the unchanged source is
 # handed back and the suite is asked about a defect that was never planted.
 src/mikemol/mutation/regexop.py|miss-reads-as-applied|if count == 0:|if count < 0:|def=apply_regex
+src/mikemol/mutation/regexop.py|locals-spelling-not-accepted|        wanted = spec\.def_name\.replace\("\.<locals>", ""\)|        wanted = spec.def_name|def=_scope_span
 src/mikemol/mutation/lint.py|missing-module-not-named|        if not module\.is_file\(\):|        if False:|def=problems
 src/mikemol/mutation/lint.py|stale-pattern-not-named|        if planted is None:|        if False:|def=problems

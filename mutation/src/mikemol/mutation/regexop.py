@@ -147,6 +147,11 @@ def parse_regex_spec(text: str) -> RegexSpec:
 def _scope_span(text: str, spec: RegexSpec, total: int) -> tuple[int, int]:
     """Return the 1-based inclusive line span a regex spec is confined to.
 
+    ⚑ A NESTED DEF HAS TWO SPELLINGS (W1005): the runner's report prints Python's own
+    `__qualname__`, `outer.<locals>.inner`, while `def_sites` yields `outer.inner`. A declaration
+    scoped with the name the report printed came back UNAPPLIED, so `.<locals>` is accepted and
+    dropped, and the two spellings name the same def.
+
     Returns:
         The first and last line.
 
@@ -155,8 +160,9 @@ def _scope_span(text: str, spec: RegexSpec, total: int) -> tuple[int, int]:
 
     """
     if spec.def_name is not None:
+        wanted = spec.def_name.replace(".<locals>", "")
         for qn, node in mutate.def_sites(text):
-            if qn == spec.def_name:
+            if qn == wanted:
                 return node.lineno, node.end_lineno or node.lineno
         msg = f"mutant: regex '{spec.name}' names '{spec.def_name}', not a def-site in the module"
         raise KeyError(msg)
