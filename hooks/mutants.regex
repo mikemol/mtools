@@ -418,4 +418,6 @@ src/mikemol/hooks/commit_counts.py|waypoints-never-stored|            if waypoin
 src/mikemol/hooks/commit_kata.py|stack-names-only-its-first|",".join\(item\.waypoint for item in items\)|items[0].waypoint|def=named_waypoints
 src/mikemol/hooks/watchdog.py|waiting-row-offered-as-the-stack|if row\[0\] == "STACK"|if row[0] == "WAITING"|def=next_action
 src/mikemol/hooks/watchdog.py|hint-never-printed|                    if said:|                    if False:|def=watch
+src/mikemol/hooks/project_root.py|ruff-only-file-ignored|if \(root / name\)\.is_file\(\):|if False:|def=ruff_config_for
+src/mikemol/hooks/project_root.py|ruff-toml-ranked-over-dot-ruff-toml|    for name in RUFF_CONFIGS:|    for name in reversed(RUFF_CONFIGS):|def=ruff_config_for
 src/mikemol/hooks/commit_kata.py|trailer-block-split-again|Waypoint: \{request\.waypoint\}\\n\{request\.trailer\}|Waypoint: {request.waypoint}\\n\\n{request.trailer}|def=message_of

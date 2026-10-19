@@ -194,8 +194,10 @@ def analyze(content: str, path: str, *, mypy_flags: Sequence[str] = ()) -> Verdi
             fh.write(content)
         tmp.chmod(_MODE_SCRIPT if content.startswith("#!") else _MODE_MODULE)
         outcomes: list[tuple[str, Verdict]] = []
-        cfg = root / project_root.MARKER
-        mypy_cfg = project_root.mypy_config_for(path)
+        # ⚑ RUFF AND MYPY EACH GET THEIR OWN CONFIG (W1093): ruff's by its own precedence,
+        # mypy's the nearest mypy.ini or else the project's pyproject, never a ruff-only file.
+        cfg = project_root.ruff_config_for(root)
+        mypy_cfg = project_root.mypy_config_for(path) or root / project_root.MARKER
         roster = checkers.checker_argv(tmp, path, venv_py, cfg, mypy_cfg)
         for name, argv, reads_stdin in roster:
             command = checkers.with_flags(argv, mypy_flags) if name == "mypy" else argv

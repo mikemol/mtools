@@ -94,6 +94,29 @@ def config_for(path: str | Path) -> Path | None:
     return (root / MARKER) if root is not None else None
 
 
+RUFF_CONFIGS = (".ruff.toml", "ruff.toml")
+"""The ruff-only config files, in ruff's own precedence, ahead of `pyproject.toml`."""
+
+
+def ruff_config_for(root: Path) -> Path:
+    """Choose the config ruff would use for the project at `root`, by ruff's own precedence (W1093).
+
+    ⚑ A DEFECT, NOT A HOUSE WIDTH (2026-10-13 ruling): the gate passed `root/pyproject.toml` as
+    `--config` whenever it existed, so a project whose width lives in a `ruff.toml` beside a
+    pyproject with no `[tool.ruff]` table was formatted at ruff's default 88 and the gate rewrapped
+    lines the repo's own file keeps at 100 (gcalculus:W262). A `.ruff.toml`, then a `ruff.toml`,
+    beats `pyproject.toml`; a repo that declares no width is obeyed in having none.
+
+    Returns:
+        the first of `.ruff.toml` and `ruff.toml` that exists in `root`, else its `pyproject.toml`.
+
+    """
+    for name in RUFF_CONFIGS:
+        if (root / name).is_file():
+            return root / name
+    return root / MARKER
+
+
 def venv_python_for(path: str | Path) -> Path | None:
     """Return the interpreter of the project governing `path`, when it has one.
 

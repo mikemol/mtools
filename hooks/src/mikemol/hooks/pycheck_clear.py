@@ -57,7 +57,7 @@ def fix_text(path: Path, text: str, err: TextIO) -> str | None:
     if root is None or venv_py is None:
         err.write(f"mikemol-pycheck: {path}: no governing project or interpreter; not fixed\n")
         return None
-    cfg = root / project_root.MARKER
+    cfg = project_root.ruff_config_for(root)
     argv = [str(venv_py), "-m", "ruff", "check", "--fix", "--select", SAFE_RULES]
     argv += ["--config", str(cfg), "--no-cache", "--exit-zero", "--force-exclude"]
     argv += ["--stdin-filename", str(path), "-"]

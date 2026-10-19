@@ -12152,3 +12152,24 @@
   claim  = {The plain call gives the rows, the --propose --json call gives the drafts.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_a_found_tool_is_asked_twice_and_its_answers_become_the_line},
 }
+
+@misc{hooks-project-root-config-ruff-toml-beside-a-pyproject-is-the-config,
+  section = {pycheck-format},
+  title  = {The gcalculus shape: width 100 lives in ruff.toml, the pyproject has no ruff table},
+  claim  = {The gcalculus shape: width 100 lives in ruff.toml, the pyproject has no ruff table.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_project_root_config.py -k test_a_ruff_toml_beside_a_pyproject_is_the_config},
+}
+
+@misc{hooks-project-root-config-dot-ruff-toml-beats-a-ruff-toml,
+  section = {pycheck-format},
+  title  = {Ruff's own order: `.ruff.toml` first, then `ruff.toml`, then `pyproject.toml`},
+  claim  = {Ruff's own order: `.ruff.toml` first, then `ruff.toml`, then `pyproject.toml`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_project_root_config.py -k test_a_dot_ruff_toml_beats_a_ruff_toml},
+}
+
+@misc{hooks-project-root-config-with-no-ruff-only-file-the-pyproject-is-the-config,
+  section = {pycheck-format},
+  title  = {Every mtools dist declares its width in pyproject: nothing changes for them},
+  claim  = {Every mtools dist declares its width in pyproject: nothing changes for them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_project_root_config.py -k test_with_no_ruff_only_file_the_pyproject_is_the_config},
+}

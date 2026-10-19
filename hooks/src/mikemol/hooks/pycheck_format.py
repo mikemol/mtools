@@ -45,7 +45,7 @@ def format_text(path: Path, text: str, err: TextIO) -> str | None:
     if root is None or venv_py is None:
         err.write(f"mikemol-pycheck: {path}: no governing project or interpreter; not formatted\n")
         return None
-    cfg = root / project_root.MARKER
+    cfg = project_root.ruff_config_for(root)
     argv = [str(venv_py), "-m", "ruff", "format", "--config", str(cfg), "--no-cache"]
     argv += ["--force-exclude", "--stdin-filename", str(path), "-"]
     done = subprocess.run(argv, input=text, capture_output=True, text=True, check=False, cwd=root)
