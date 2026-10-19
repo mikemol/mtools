@@ -110,6 +110,10 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             "bin/mikemol-hooks-preflight",
             # W796: the stable launcher for `mikemol-commit`, EXECUTED by test_commit_launcher.
             "bin/mikemol-commit",
+            # W1620: nemik's shared queue fixture, vendored and pinned by blob hash, READ by
+            # test_queue_fixture_pin and by each reader's test against it (W1618).
+            "tests/fixtures/queue/alpha/paths-forward.json",
+            "tests/fixtures/queue/alpha/paths-forward.ledger",
             # ⚑ W1032: THE OTHER EIGHT LAUNCHERS THAT RUN THE bazel-bin VENV, READ by
             # test_bin_launchers_argv's glob so none can escape the no-bytecode rule. Named one by
             # one (a gate never globs its inputs); the test's floor counts them.

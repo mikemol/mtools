@@ -12278,3 +12278,17 @@
   claim  = {W1617: the file read is said first, so a path unlike the hook's shows.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_the_exit_names_the_heartbeat_file_it_read_and_adds_the_hint_when_there_is_one},
 }
+
+@misc{hooks-queue-fixture-pin-blob-hash-of-a-known-content-is-gits,
+  section = {queue-fixture},
+  title  = {The control: git's blob id of empty content and of a short line, computed here},
+  claim  = {The control: git's blob id of empty content and of a short line, computed here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue_fixture_pin.py -k test_the_blob_hash_of_a_known_content_is_gits},
+}
+
+@misc{hooks-queue-fixture-pin-each-vendored-file-is-the-pinned-content,
+  section = {queue-fixture},
+  title  = {A drift between nemik's fixture and this copy fails here, naming the file},
+  claim  = {A drift between nemik's fixture and this copy fails here, naming the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue_fixture_pin.py -k test_each_vendored_file_is_the_pinned_content},
+}

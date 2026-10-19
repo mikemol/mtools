@@ -129,6 +129,7 @@ websubset_builtins	Undefined Builtins: A Builtin Name Codon 0.20.3 Does Not Defi
 commit_turn	Commit Turns: Queued Commits Take the Lease in Submission Order, Each Waiting on the One Ahead, With No Deadline
 heartbeat	Session Heartbeat: A Tool Call Leaves a Record, the Gaps Between Records Are Learned, and a Fault Never Fails the Tool
 hold_lift	Hold Lift: A Hold on a Human Is Lifted by a Transcript Record of the Operator's Own Words Naming the Card, Read Again at Lift Time, and Never by a Stored Command
+queue-fixture	The Shared Queue Fixture: Nemik's Queue and Ledger Are Vendored Byte-for-Byte and Pinned by Git Blob Hash, So a Drift Fails the Copy and Not a Reader
 stacktree	Stack Trees: Each Entry of a Stack Gets a Git Tree Sha at Submit From Its Frozen Bytes Over Head, Cumulative, Content-Addressed and Pinned Under a Ref, With Nothing in the Repo Moved
 stackbuildfiles	Stack Build Sources: A Stack Is Refused at Submit When a Frozen BUILD or .bzl File Names a Python Source That Neither HEAD Nor the Entry's Files Carry, and Never on a Glob, a Label or a Name It Cannot Read
 stackimports	Stack Import Order: A Stack Is Refused at Submit When a Frozen File Imports a Module Only a Later Entry Adds, and Never When the Name Is Not a File
