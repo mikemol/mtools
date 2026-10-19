@@ -79,3 +79,7 @@ kwonly	A bare star marker is dropped so keyword-only parameters become ordinary
 cli_kwonly	The kwonly-drop mode writes a file only when the marker count falls
 ruffignore	A rule the rewrite makes contradict the target is switched off in the dist's pyproject, as text
 mutantslines	mutantslines
+observed	The Observed Types: A Run Under sys.monitoring Records the Types Each Parameter and Return Took, Spelled With Container Elements, Only for Code Under Its Root, Claiming a Free Tool Id and Freeing It
+narrowing	The Narrowing Pass: A Parameter Is Given the Narrowest Form the Body Shows, a TypedDict From Constant Keys, an NDArray From Array Attributes, a Protocol From Other Attributes, and Is Left Unconstrained When the Body Shows Nothing
+annotating	The Annotating Planner: Observed Types Are Written Into the Gaps, a Written Annotation Is Never Replaced, a Type Needing an Import Goes to the Worklist
+cli_annotate	The Annotate Mode: A File Is Written Only Where the Project's Mypy Count Falls, a Dry Run Writes Nothing, and Unreadable Observations Are Exit Two

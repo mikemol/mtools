@@ -96,4 +96,20 @@ src/mikemol/pycodemod/nonereturns.py|annotated-def-reannotated|if original_node\
 src/mikemol/pycodemod/cli_nonereturns.py|worklist-dropped|Plan\(planned\.text, planned\.sites, planned\.worklist\)|Plan(planned.text, planned.sites)|def=plan_none_returns
 src/mikemol/pycodemod/cli_typedargs.py|selftest-not-run|if verdict\.ok and flags\.selftest:|if False:|def=_check_file
 src/mikemol/pycodemod/cli_typedargs.py|selftest-failure-ignored|if code == 0:|if True:|def=_selftest
+src/mikemol/pycodemod/observed.py|self-recorded-as-a-parameter|            if \(place == 0 and name in _SKIPPED\) or name not in values:|            if name not in values:|def=Observer._start
+src/mikemol/pycodemod/observed.py|every-file-watched|        return code\.co_filename\.startswith\(self\.root\)|        return True|def=Observer._watched
+src/mikemol/pycodemod/observed.py|list-elements-dropped|        return f"\{name\}\[\{inner\}\]" if inner else name|        return name|def=type_of
+src/mikemol/pycodemod/observed.py|dict-elements-dropped|        return f"\{name\}\[\{keys\}, \{vals\}\]" if keys else name|        return name|def=type_of
+src/mikemol/pycodemod/observed.py|none-spelled-as-nonetype|        return "None" if value is None else kind\.__qualname__|        return kind.__qualname__|def=_name
+src/mikemol/pycodemod/observed.py|tool-id-never-freed|        monitoring\.free_tool_id\(self\._tool\)|        pass|def=Observer.__exit__
+src/mikemol/pycodemod/narrowing.py|integer-index-read-as-a-key|            if isinstance\(key, ast\.Constant\) and isinstance\(key\.value, str\):|            if isinstance(key, ast.Constant):|def=_Walker.visit_Subscript
+src/mikemol/pycodemod/narrowing.py|self-counted-as-a-parameter|        names = \[n for n in _names\(node\.args\) if n not in _SKIPPED\]|        names = _names(node.args)|def=_Walker._function
+src/mikemol/pycodemod/narrowing.py|comprehension-not-iteration|        self\._iterated\(node\.iter\)|        pass|def=_Walker.visit_comprehension
+src/mikemol/pycodemod/narrowing.py|len-not-sized|                sized\.sized = True|                pass|def=_Walker.visit_Call
+src/mikemol/pycodemod/narrowing.py|class-not-in-the-qualified-name|        self\._scope\.append\(node\.name\)|        pass|def=_Walker.visit_ClassDef
+src/mikemol/pycodemod/narrowing.py|array-attributes-not-recognised|        \(bool\(use\.attrs & _ARRAY_ATTRS\), Narrowed\("ndarray"\)\),|        (bool(use.attrs - _ARRAY_ATTRS), Narrowed("ndarray")),|def=narrow
 src/mikemol/pycodemod/cli_typedargs.py|original-not-restored|path\.write_text\(texts\[0\], encoding="utf-8"\)|pass|def=_selftest
+src/mikemol/pycodemod/annotating.py|import-type-written|    if not seen or any\("\." in name\.partition\("\["\)\[0\] for name in seen\):|    if not seen:|def=_spelling
+src/mikemol/pycodemod/annotating.py|written-annotation-replaced|            if arg\.annotation is not None or arg\.arg in _SELF or arg\.arg not in signature\.params:|            if arg.arg in _SELF or arg.arg not in signature.params:|def=plan
+src/mikemol/pycodemod/annotating.py|edits-applied-first-to-last|    for offset, extra in sorted\(edits, reverse=True\):|    for offset, extra in sorted(edits):|def=plan
+src/mikemol/pycodemod/cli_annotate.py|worst-exit-forgotten|        code = max\(code, print_judged|        code = min(code, print_judged|def=print_annotate

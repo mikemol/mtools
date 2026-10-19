@@ -6844,3 +6844,136 @@
   claim  = {The diagnosis route: exit 2 as before, but the written source stays for reproduction.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_codonprep.py -k test_keep_leaves_the_rewrite_in_place_when_the_bar_refuses_it},
 }
+
+@misc{pycodemod-observed-types-each-call-passed-and-returned-are-collected-per-parameter,
+  section = {observed},
+  title  = {add(1, 2) and add("x", "y") leave int and str on both parameters and on the return},
+  claim  = {add(1, 2) and add("x", "y") leave int and str on both parameters and on the return.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_the_types_each_call_passed_and_returned_are_collected_per_parameter},
+}
+
+@misc{pycodemod-observed-container-is-spelled-with-its-element-types,
+  section = {observed},
+  title  = {A list of ints, a dict of str to float, a tuple and an empty list each read as they are},
+  claim  = {A list of ints, a dict of str to float, a tuple and an empty list each read as they are.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_a_container_is_spelled_with_its_element_types},
+}
+
+@misc{pycodemod-observed-none-a-method-and-varargs-are-named,
+  section = {observed},
+  title  = {None reads None, a method's item is typed, *args and **kw are recorded},
+  claim  = {None reads None, a method's item is typed, *args and **kw are recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_none_a_method_and_varargs_are_named},
+}
+
+@misc{pycodemod-observed-self-is-skipped-and-code-outside-the-root-is-never-recorded,
+  section = {observed},
+  title  = {json.dumps runs in the standard library: nothing from it appears, and no `self` key},
+  claim  = {json.dumps runs in the standard library: nothing from it appears, and no `self` key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_self_is_skipped_and_code_outside_the_root_is_never_recorded},
+}
+
+@misc{pycodemod-observed-observe-runs-a-call-and-returns-what-it-saw,
+  section = {observed},
+  title  = {The one-call form gives the same signatures as the context manager},
+  claim  = {The one-call form gives the same signatures as the context manager.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_observe_runs_a_call_and_returns_what_it_saw},
+}
+
+@misc{pycodemod-observed-held-tool-id-is-refused-by-name-and-the-id-is-freed-after-a-raise,
+  section = {observed},
+  title  = {Every free id taken: NoToolIdError. A block that raises still frees the id it took},
+  claim  = {Every free id taken: NoToolIdError. A block that raises still frees the id it took.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_a_held_tool_id_is_refused_by_name_and_the_id_is_freed_after_a_raise},
+}
+
+@misc{pycodemod-narrowing-constant-string-keys-make-a-typeddict-of-those-keys,
+  section = {narrowing},
+  title  = {Two subscripted keys and a dict method: the keys, sorted, and nothing about get},
+  claim  = {Two subscripted keys and a dict method: the keys, sorted, and nothing about get.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_constant_string_keys_make_a_typeddict_of_those_keys},
+}
+
+@misc{pycodemod-narrowing-array-attributes-make-an-ndarray-and-other-attributes-a-protocol,
+  section = {narrowing},
+  title  = {Reshape and sum are array methods; write and flush are a stream's, named in order},
+  claim  = {Reshape and sum are array methods; write and flush are a stream's, named in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_array_attributes_make_an_ndarray_and_other_attributes_a_protocol},
+}
+
+@misc{pycodemod-narrowing-call-an-index-a-loop-and-a-len-each-name-their-form,
+  section = {narrowing},
+  title  = {Callable, Sequence, Iterable and Sized, in that order of preference},
+  claim  = {Callable, Sequence, Iterable and Sized, in that order of preference.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_call_an_index_a_loop_and_a_len_each_name_their_form},
+}
+
+@misc{pycodemod-narrowing-dict-methods-alone-are-a-mapping-and-a-bare-operand-is-unconstrained,
+  section = {narrowing},
+  title  = {An operand alone shows nothing, so the traced type is kept; items() shows a mapping},
+  claim  = {An operand alone shows nothing, so the traced type is kept; items() shows a mapping.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_dict_methods_alone_are_a_mapping_and_a_bare_operand_is_unconstrained},
+}
+
+@misc{pycodemod-narrowing-self-is-skipped-methods-are-qualified-and-nested-parameters-are-their-own,
+  section = {narrowing},
+  title  = {Box.put has `item` only; `a` in Box.outer is an array, `a` in inner is its own mapping},
+  claim  = {Box.put has `item` only; `a` in Box.outer is an array, `a` in inner is its own mapping.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_self_is_skipped_methods_are_qualified_and_nested_parameters_are_their_own},
+}
+
+@misc{pycodemod-narrowing-async-function-is-read-like-any-other,
+  section = {narrowing},
+  title  = {Awaiting a method of the handle reads that attribute, so the handle is a protocol},
+  claim  = {Awaiting a method of the handle reads that attribute, so the handle is a protocol.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_an_async_function_is_read_like_any_other},
+}
+
+@misc{pycodemod-annotating-gaps-are-filled-in-place-and-comments-stay,
+  section = {annotating},
+  title  = {Parameters with and without defaults and the return get their observed types},
+  claim  = {Parameters with and without defaults and the return get their observed types.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_gaps_are_filled_in_place_and_comments_stay},
+}
+
+@misc{pycodemod-annotating-written-annotation-is-never-replaced,
+  section = {annotating},
+  title  = {`items` already says `list[int]`; a different observation leaves it alone},
+  claim  = {`items` already says `list[int]`; a different observation leaves it alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_a_written_annotation_is_never_replaced},
+}
+
+@misc{pycodemod-annotating-type-that-needs-an-import-goes-to-the-worklist,
+  section = {annotating},
+  title  = {`numpy.ndarray` is not written, and is listed with the parameter's name},
+  claim  = {`numpy.ndarray` is not written, and is listed with the parameter's name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_a_type_that_needs_an_import_goes_to_the_worklist},
+}
+
+@misc{pycodemod-annotating-function-the-run-never-reached-is-untouched,
+  section = {annotating},
+  title  = {No observation, no edit, no worklist entry},
+  claim  = {No observation, no edit, no worklist entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_a_function_the_run_never_reached_is_untouched},
+}
+
+@misc{pycodemod-cli-annotate-dry-run-writes-nothing-and-write-lands-the-improvement,
+  section = {cli_annotate},
+  title  = {Without --write the file is untouched; with it the judged candidate lands},
+  claim  = {Without --write the file is untouched; with it the judged candidate lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_annotate.py -k test_a_dry_run_writes_nothing_and_write_lands_the_improvement},
+}
+
+@misc{pycodemod-cli-annotate-file-whose-count-does-not-fall-is-never-touched,
+  section = {cli_annotate},
+  title  = {The type observed is `str`, so the stand-in judge sees no improvement},
+  claim  = {The type observed is `str`, so the stand-in judge sees no improvement.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_annotate.py -k test_a_file_whose_count_does_not_fall_is_never_touched},
+}
+
+@misc{pycodemod-cli-annotate-observations-that-cannot-be-read-are-exit-two,
+  section = {cli_annotate},
+  title  = {A missing file and a document that is not an object both refuse},
+  claim  = {A missing file and a document that is not an object both refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_annotate.py -k test_observations_that_cannot_be_read_are_exit_two},
+}
