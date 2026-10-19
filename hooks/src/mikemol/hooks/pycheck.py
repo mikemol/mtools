@@ -166,6 +166,24 @@ def before_edit(path: str) -> str:
         return ""
 
 
+_LINE_LENGTH = re.compile(r"^\s*line-length\s*=\s*(\d+)", re.MULTILINE)
+
+
+def config_note(cfg: Path) -> str:
+    """Name the ruff config that drove a refusal and the width it set (W1596).
+
+    Returns:
+        one line naming the file and its line-length, or `default` when it sets none.
+
+    """
+    try:
+        found = _LINE_LENGTH.search(cfg.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError):
+        found = None
+    width = found.group(1) if found else "default"
+    return f"ruff config: {cfg} (line-length {width})"
+
+
 def analyze(content: str, path: str, *, mypy_flags: Sequence[str] = ()) -> Verdict:
     """Return the verdict for post-edit `.py` content at `path`, under ITS project's bar.
 
@@ -208,6 +226,8 @@ def analyze(content: str, path: str, *, mypy_flags: Sequence[str] = ()) -> Verdi
                 ok, report = run_checker(name, command, content if reads_stdin else None)
             if ok is False:
                 report = report.replace(str(tmp), path).replace(tmp.name, path)
+                if name.startswith("ruff"):
+                    report += "\n" + config_note(cfg)
             outcomes.append((name, (ok, report)))
         new = suppressions.added(before_edit(path), content)
         if new:
