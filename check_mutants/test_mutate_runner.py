@@ -299,7 +299,7 @@ import time
 
 for _ in range(30):
     print('tick', flush=True)
-    time.sleep(0.05)
+    time.sleep(0.005)
 print('done')
 """
 _SILENT = "import time\ntime.sleep(60)\n"
