@@ -70,6 +70,8 @@ from mikemol.pathsforward.advice import reason_for as advice_reason
 from mikemol.pathsforward.advice import reject as reject_advice
 from mikemol.pathsforward.advice import upsert as upsert_advice
 from mikemol.pathsforward.atomize import atomize
+from mikemol.pathsforward.blockerwatch import SEEN_NAME as _BLOCKERS_SEEN
+from mikemol.pathsforward.blockerwatch import notice as blocker_notice
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
 from mikemol.pathsforward.closegate import rank_check, roll_note, top_ranked
@@ -77,6 +79,7 @@ from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
+from mikemol.pathsforward.landedblock import refuse_landed
 from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, own_line, read
 from mikemol.pathsforward.lift import lift as lift_row
 from mikemol.pathsforward.model import (
@@ -94,6 +97,9 @@ from mikemol.pathsforward.realizable import GATES
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
+REFUSE_LANDED = refuse_landed
+BLOCKERS_SEEN = _BLOCKERS_SEEN
+BLOCKER_NOTICE = blocker_notice
 LIFT_ROW = lift_row
 CLOSE_JUDGE = judge_close
 ROLL_NOTE = roll_note
@@ -1653,9 +1659,14 @@ def _tick_open(ctx: Ctx) -> int:
     if code != EXIT_OK:
         _watchdog_line(ctx)
         return code
+    root = ctx.path.parent.parent
+    # ⚑ THE BLOCKERS' STATES ARE READ BEFORE THE PRUNE (W1597): a blocker that landed is pruned by
+    # the next step, and its change would go unsaid if the snapshot were taken after.
+    blocker_seen = root / ".git" / "mtools" / BLOCKERS_SEEN
+    for said in BLOCKER_NOTICE(store.load(ctx.path), blocker_seen, _root(ctx)):
+        _say(said)
     for step in (_bump_blocked, _inbound, _check):
         code = max(code, step(held))
-    root = ctx.path.parent.parent
     for said in tickhooks.run_all(tickhooks.stored(store.load(ctx.path).doc), root):
         _say(said)
     for said in standing.lines(store.load(ctx.path).doc):
@@ -1914,6 +1925,7 @@ def _update_many(ctx: Ctx) -> int:
         for sym, reason in skipped.items():
             _say(f"EXCLUDED {sym}" + (f" ({reason})" if reason else ""))
         for sym in chosen:
+            REFUSE_LANDED(state, sym, upd.blocked_on or (), _root(ctx))
             ops.update(state, sym, upd, ctx.stamp())
         verb = "UPDATED" if write else "WOULD UPDATE"
         return [(sym, f"update {sym}", f"{verb} {sym}") for sym in chosen]
@@ -1953,6 +1965,7 @@ def _update(ctx: Ctx) -> int:
         root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
         pinned = _pinned(upd, root, ctx.get("attach"))
         manifest.check(upd.manifest or (), root)
+        REFUSE_LANDED(state, sym, upd.blocked_on or (), _root(ctx))
         ops.update(state, sym, pinned, ctx.stamp())
         code = _lease_for_status(ctx, state, sym, upd.status)
         if code == EXIT_OK and upd.status == "done":
