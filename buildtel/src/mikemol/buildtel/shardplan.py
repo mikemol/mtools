@@ -124,6 +124,29 @@ def _shard_times(rows: Sequence[Row]) -> tuple[dict[tuple[str, str], list[int]],
     return grids, plain
 
 
+shard_times = _shard_times
+
+
+def block_spans(build: str) -> list[re.Match[str]]:
+    """Find every `mutants_sharded(...)` block of a BUILD file's text.
+
+    Returns:
+        the matches, whose `body` group is the text between the parentheses.
+
+    """
+    return list(_BLOCK.finditer(build))
+
+
+def name_of(body: str) -> str:
+    """Read the `name` attribute out of a block's body.
+
+    Returns:
+        the name, or "" when the body names none.
+
+    """
+    return _value(_NAME, body)
+
+
 def _proposal(dist: str, name: str, times: Sequence[int], block: Block) -> Proposal | None:
     # A proposal when the slowest shard is over the fraction of its size default, else None.
     limit = LIMITS.get(block.size, LIMITS[DEFAULT_SIZE])
@@ -222,6 +245,9 @@ def _read_rows(path: Path) -> list[Row]:
         if isinstance(row, dict):
             rows.append({str(k): v for k, v in row.items()})
     return rows
+
+
+read_rows = _read_rows
 
 
 def main(argv: Sequence[str] | None = None) -> int:
