@@ -12342,3 +12342,521 @@
   claim  = {The file read comes first, then the call the silence sat in.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_the_exit_notes_carry_the_call_line_after_the_file_read},
 }
+
+@misc{hooks-work-claims-fixture-fixture-loads-as-a-queue-with-its-five-cards,
+  section = {work_claims_hook},
+  title  = {The positive control: the reader returns a document with the fixture's waypoints},
+  claim  = {The positive control: the reader returns a document with the fixture's waypoints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_fixture.py -k test_the_fixture_loads_as_a_queue_with_its_five_cards},
+}
+
+@misc{hooks-work-claims-fixture-fixtures-one-working-card-has-no-touches-so-it-claims-nothing,
+  section = {work_claims_hook},
+  title  = {W4 is the only working card and declares no touches: the wanted claims are empty},
+  claim  = {W4 is the only working card and declares no touches: the wanted claims are empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_fixture.py -k test_the_fixtures_one_working_card_has_no_touches_so_it_claims_nothing},
+}
+
+@misc{hooks-work-claims-fixture-working-card-with-touches-claims-them-and-a-ready-card-does-not,
+  section = {work_claims_hook},
+  title  = {The fields are read: give W4 a touch and W2 (ready, touches core) stays out of the claims},
+  claim  = {The fields are read: give W4 a touch and W2 (ready, touches core) stays out of the
+            claims.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_fixture.py -k test_a_working_card_with_touches_claims_them_and_a_ready_card_does_not},
+}
+
+@misc{hooks-writeguard-hook-redirect-into-the-project-is-a-finding-and-plain-text-is-not,
+  section = {writeguard},
+  title  = {The positive control and its absence: the same hook, a write and then nothing},
+  claim  = {The positive control and its absence: the same hook, a write and then nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard_hook.py -k test_a_redirect_into_the_project_is_a_finding_and_plain_text_is_not},
+}
+
+@misc{hooks-writeguard-hook-with-no-root-only-the-location-free-tells-apply,
+  section = {writeguard},
+  title  = {An unknown project root is never guessed: perl is refused, a redirect is left alone},
+  claim  = {An unknown project root is never guessed: perl is refused, a redirect is left alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard_hook.py -k test_with_no_root_only_the_location_free_tells_apply},
+}
+
+@misc{hooks-writeguard-hook-main-denies-a-write-into-the-project-and-names-the-way-out,
+  section = {writeguard},
+  title  = {The deny the harness reads: the project tree is named and so is Write or Edit},
+  claim  = {The deny the harness reads: the project tree is named and so is Write or Edit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_writeguard_hook.py -k test_main_denies_a_write_into_the_project_and_names_the_way_out},
+}
+
+@misc{hooks-standing-facts-fixture-fixture-holds-nothing-on-a-human-and-has-no-embargoes,
+  section = {bar-fires},
+  title  = {The positive control: the reader answers a list, not None, for a queue it can read},
+  claim  = {The positive control: the reader answers a list, not None, for a queue it can read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts_fixture.py -k test_the_fixture_holds_nothing_on_a_human_and_has_no_embargoes},
+}
+
+@misc{hooks-standing-facts-fixture-card-blocked-on-a-human-is-held,
+  section = {bar-fires},
+  title  = {The field is read: turn the fixture's peer-blocked W3 into a human block},
+  claim  = {The field is read: turn the fixture's peer-blocked W3 into a human block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts_fixture.py -k test_a_card_blocked_on_a_human_is_held},
+}
+
+@misc{hooks-standing-facts-fixture-embargo-record-is-read-with-its-absolute-path,
+  section = {bar-fires},
+  title  = {The embargoes field is read and made absolute under the project},
+  claim  = {The embargoes field is read and made absolute under the project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts_fixture.py -k test_an_embargo_record_is_read_with_its_absolute_path},
+}
+
+@misc{hooks-standing-facts-fixture-malformed-embargo-voids-the-fact-rather-than-reading-as-free,
+  section = {bar-fires},
+  title  = {One record without a path makes the whole fact None},
+  claim  = {One record without a path makes the whole fact None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts_fixture.py -k test_a_malformed_embargo_voids_the_fact_rather_than_reading_as_free},
+}
+
+@misc{hooks-census-unmeasured-untracked-source-and-the-stubs-are-named-and-an-ignored-file-is-not,
+  section = {pycheck-census},
+  title  = {Tracked a.py is measured; b.py is untracked, both stubs are stubs; ignored.py is ignored},
+  claim  = {Tracked a.py is measured; b.py is untracked, both stubs are stubs; ignored.py is
+            ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_unmeasured.py -k test_an_untracked_source_and_the_stubs_are_named_and_an_ignored_file_is_not},
+}
+
+@misc{hooks-census-unmeasured-outside-a-repository-nothing-is-named,
+  section = {pycheck-census},
+  title  = {With no git to ask, the answer is empty and nothing raises},
+  claim  = {With no git to ask, the answer is empty and nothing raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_unmeasured.py -k test_outside_a_repository_nothing_is_named},
+}
+
+@misc{hooks-census-unmeasured-measure-says-what-it-did-not-look-at,
+  section = {pycheck-census},
+  title  = {The omission is on stderr beside the ledger, so a zero cannot read as clean},
+  claim  = {The omission is on stderr beside the ledger, so a zero cannot read as clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_unmeasured.py -k test_measure_says_what_it_did_not_look_at},
+}
+
+@misc{hooks-census-unmeasured-tree-with-nothing-unmeasured-says-nothing,
+  section = {pycheck-census},
+  title  = {A clean tree adds no line: only the omission is reported},
+  claim  = {A clean tree adds no line: only the omission is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_census_unmeasured.py -k test_a_tree_with_nothing_unmeasured_says_nothing},
+}
+
+@misc{hooks-watchdog-hint-exit-keeps-the-next-action-for-the-hooks-notice,
+  section = {heartbeat},
+  title  = {W1565: what the exit computed is stored beside the heartbeat, and read back as it was},
+  claim  = {W1565: what the exit computed is stored beside the heartbeat, and read back as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_hint.py -k test_the_exit_keeps_the_next_action_for_the_hooks_notice},
+}
+
+@misc{hooks-beat-hook-notice-carries-the-next-action-the-watchdog-kept,
+  section = {heartbeat},
+  title  = {W1565: the line the watchdog stored at its last exit rides at the end of the notice},
+  claim  = {W1565: the line the watchdog stored at its last exit rides at the end of the notice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_notice_carries_the_next_action_the_watchdog_kept},
+}
+
+@misc{hooks-beat-hook-hook-never-runs-nemik-stackable-itself,
+  section = {heartbeat},
+  title  = {The notice only reads the stored line: a tool that would write a marker is never started},
+  claim  = {The notice only reads the stored line: a tool that would write a marker is never
+            started.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_a_hook_never_runs_nemik_stackable_itself},
+}
+
+@misc{hooks-commit-counts-live-lists-the-live-entries-with-their-waypoints-and-not-the-dead,
+  section = {commit-counts},
+  title  = {W1587: a live peer with waypoints, an old entry with none; a dead and a recycled one go},
+  claim  = {W1587: a live peer with waypoints, an old entry with none; a dead and a recycled one go.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_live_lists_the_live_entries_with_their_waypoints_and_not_the_dead},
+}
+
+@misc{hooks-commit-counts-live-of-a-missing-map-is-empty-and-the-json-has-the-agreed-shape,
+  section = {commit-counts},
+  title  = {No file, no entries; the list prints key, state and waypoints for each},
+  claim  = {No file, no entries; the list prints key, state and waypoints for each.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_live_of_a_missing_map_is_empty_and_the_json_has_the_agreed_shape},
+}
+
+@misc{hooks-in-gate-gate-prints-its-live-commits-with-their-waypoints,
+  section = {commit-kata},
+  title  = {A live entry is listed with its waypoints; a dead one is not},
+  claim  = {A live entry is listed with its waypoints; a dead one is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_in_gate.py -k test_the_gate_prints_its_live_commits_with_their_waypoints},
+}
+
+@misc{hooks-in-gate-empty-gate-prints-an-empty-list,
+  section = {commit-kata},
+  title  = {No map at all is not an error: nothing is gating},
+  claim  = {No map at all is not an error: nothing is gating.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_in_gate.py -k test_an_empty_gate_prints_an_empty_list},
+}
+
+@misc{hooks-in-gate-no-repository-named-is-a-usage-error,
+  section = {commit-kata},
+  title  = {A flag alone names nothing to read},
+  claim  = {A flag alone names nothing to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_in_gate.py -k test_no_repository_named_is_a_usage_error},
+}
+
+@misc{hooks-in-gate-main-takes-the-flag-before-anything-is-queued,
+  section = {commit-kata},
+  title  = {Asking leaves no entry behind: the map is as it was after the call},
+  claim  = {Asking leaves no entry behind: the map is as it was after the call.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_in_gate.py -k test_main_takes_the_flag_before_anything_is_queued},
+}
+
+@misc{hooks-commit-counts-gate-records-when-it-began-and-a-queued-entry-does-not,
+  section = {commit-counts},
+  title  = {W1653: the in-flight entry carries the clock at the transition; queued carries none},
+  claim  = {W1653: the in-flight entry carries the clock at the transition; queued carries none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_counts.py -k test_a_gate_records_when_it_began_and_a_queued_entry_does_not},
+}
+
+@misc{hooks-pycheck-config-report-note-names-the-file-and-its-line-length,
+  section = {pycheck},
+  title  = {The gcalculus shape: a ruff.toml at 100 is named with that 100},
+  claim  = {The gcalculus shape: a ruff.toml at 100 is named with that 100.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_config_report.py -k test_the_note_names_the_file_and_its_line_length},
+}
+
+@misc{hooks-pycheck-config-report-file-that-sets-no-width-reads-default,
+  section = {pycheck},
+  title  = {A pyproject with no ruff table gives ruff its own width, and the note says so},
+  claim  = {A pyproject with no ruff table gives ruff its own width, and the note says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_config_report.py -k test_a_file_that_sets_no_width_reads_default},
+}
+
+@misc{hooks-pycheck-config-report-unreadable-file-reads-default-and-does-not-raise,
+  section = {pycheck},
+  title  = {A missing config is a note, not a crash inside a refusal},
+  claim  = {A missing config is a note, not a crash inside a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_config_report.py -k test_an_unreadable_file_reads_default_and_does_not_raise},
+}
+
+@misc{hooks-train-each-submission-ends-on-a-tree-holding-every-earlier-file,
+  section = {train},
+  title  = {Two submissions of two entries and one: the boundaries are the 2nd and 3rd trees},
+  claim  = {Two submissions of two entries and one: the boundaries are the 2nd and 3rd trees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_each_submission_ends_on_a_tree_holding_every_earlier_file},
+}
+
+@misc{hooks-train-submission-with-no-entry-stops-the-tip-build,
+  section = {train},
+  title  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour},
+  claim  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_a_submission_with_no_entry_stops_the_tip_build},
+}
+
+@misc{hooks-train-green-tip-lands-every-key-naming-the-tip-as-its-gate,
+  section = {train},
+  title  = {Each landing names the last key, because only the tip tree was tested},
+  claim  = {Each landing names the last key, because only the tip tree was tested.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_a_green_tip_lands_every_key_naming_the_tip_as_its_gate},
+}
+
+@misc{hooks-train-bisect-finds-the-first-bad-one-in-logarithmic-gates,
+  section = {train},
+  title  = {Eight submissions, the 6th bad: three gates, not six},
+  claim  = {Eight submissions, the 6th bad: three gates, not six.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_the_bisect_finds_the_first_bad_one_in_logarithmic_gates},
+}
+
+@misc{hooks-train-green-queue-is-one-gate-and-lands-all,
+  section = {train},
+  title  = {The point of the train: eight submissions cost one gate},
+  claim  = {The point of the train: eight submissions cost one gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_a_green_queue_is_one_gate_and_lands_all},
+}
+
+@misc{hooks-train-bad-submission-is-refused-and-the-rest-land,
+  section = {train},
+  title  = {The 4th and 7th fail: both are refused, the other six land in order},
+  claim  = {The 4th and 7th fail: both are refused, the other six land in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_a_bad_submission_is_refused_and_the_rest_land},
+}
+
+@misc{hooks-train-submission-that-fails-alone-is-refused-and-the-train-goes-on,
+  section = {train},
+  title  = {The first fails with nothing before it: it is refused, the other seven land},
+  claim  = {The first fails with nothing before it: it is refused, the other seven land.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_a_submission_that_fails_alone_is_refused_and_the_train_goes_on},
+}
+
+@misc{hooks-stackbuildfiles-wired-build-file-naming-a-source-no-entry-carries-is-refused-at-submit,
+  section = {stackbuildfiles},
+  title  = {Exit not-committed, the finding names the file and the source, and HEAD does not move},
+  claim  = {Exit not-committed, the finding names the file and the source, and HEAD does not move.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles_wired.py -k test_a_build_file_naming_a_source_no_entry_carries_is_refused_at_submit},
+}
+
+@misc{hooks-stackbuildfiles-wired-same-stack-with-its-source-carried-is-not-refused-at-submit,
+  section = {stackbuildfiles},
+  title  = {The control: the build file and its source in one entry pass the submit-time check},
+  claim  = {The control: the build file and its source in one entry pass the submit-time check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles_wired.py -k test_the_same_stack_with_its_source_carried_is_not_refused_at_submit},
+}
+
+@misc{hooks-stackpin-pin-records-a-tree-per-entry-and-pins-a-ref-per-tree,
+  section = {stackpin},
+  title  = {Two entries: two trees in the record, two refs under the stack's key},
+  claim  = {Two entries: two trees in the record, two refs under the stack's key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackpin.py -k test_pin_records_a_tree_per_entry_and_pins_a_ref_per_tree},
+}
+
+@misc{hooks-stackpin-release-removes-the-refs-and-the-record,
+  section = {stackpin},
+  title  = {The run's end leaves neither a ref to keep objects alive nor a record to read},
+  claim  = {The run's end leaves neither a ref to keep objects alive nor a record to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackpin.py -k test_release_removes_the_refs_and_the_record},
+}
+
+@misc{hooks-stackpin-no-snapshot-or-no-ledger-pins-nothing-and-raises-nothing,
+  section = {stackpin},
+  title  = {The trees are an accelerator: a stack that cannot be pinned goes on as before},
+  claim  = {The trees are an accelerator: a stack that cannot be pinned goes on as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackpin.py -k test_no_snapshot_or_no_ledger_pins_nothing_and_raises_nothing},
+}
+
+@misc{hooks-stackpin-wired-submit-pins-once-with-the-snapshot-and-the-run-releases-with-the-same-key,
+  section = {stackpin},
+  title  = {One pin at submit with a real snapshot path, one release at the end, both under one key},
+  claim  = {One pin at submit with a real snapshot path, one release at the end, both under one key.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackpin_wired.py -k test_submit_pins_once_with_the_snapshot_and_the_run_releases_with_the_same_key},
+}
+
+@misc{hooks-trainjoin-submit-leaves-a-copy-of-its-entries-beside-the-snapshot-and-forget-removes-both,
+  section = {trainjoin},
+  title  = {The items copy is what lets a leader build the stack from the ledger alone},
+  claim  = {The items copy is what lets a leader build the stack from the ledger alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainjoin.py -k test_a_submit_leaves_a_copy_of_its_entries_beside_the_snapshot_and_forget_removes_both},
+}
+
+@misc{hooks-trainjoin-only-stacks-behind-the-leader-join-in-submit-order,
+  section = {trainjoin},
+  title  = {Keys 100, 200 and 300 queued: the leader 200 takes 300 and neither 100 nor itself},
+  claim  = {Keys 100, 200 and 300 queued: the leader 200 takes 300 and neither 100 nor itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainjoin.py -k test_only_stacks_behind_the_leader_join_in_submit_order},
+}
+
+@misc{hooks-trainjoin-followers-come-in-numeric-order-not-string-order,
+  section = {trainjoin},
+  title  = {9 sorts after 10 as text, before it as numbers: submit time, not spelling, orders them},
+  claim  = {9 sorts after 10 as text, before it as numbers: submit time, not spelling, orders them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainjoin.py -k test_followers_come_in_numeric_order_not_string_order},
+}
+
+@misc{hooks-trainjoin-follower-with-a-missing-file-or-a-stale-snapshot-is-left-out,
+  section = {trainjoin},
+  title  = {Joining is an acceleration: an unreadable follower runs on its own turn, never lost},
+  claim  = {Joining is an acceleration: an unreadable follower runs on its own turn, never lost.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainjoin.py -k test_a_follower_with_a_missing_file_or_a_stale_snapshot_is_left_out},
+}
+
+@misc{hooks-stackbuildfiles-literal-path-inside-a-glob-is-optional-and-never-a-finding,
+  section = {stackbuildfiles},
+  title  = {A glob with allow_empty names no missing source, as buildtel's conftest glob shows},
+  claim  = {A glob with allow_empty names no missing source, as buildtel's conftest glob shows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_literal_path_inside_a_glob_is_optional_and_never_a_finding},
+}
+
+@misc{hooks-traindrive-green-queue-is-one-gate-and-every-stack-lands,
+  section = {traindrive},
+  title  = {Three stacks, one gate run, three COMMITTED verdicts, HEAD three commits ahead},
+  claim  = {Three stacks, one gate run, three COMMITTED verdicts, HEAD three commits ahead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_green_queue_is_one_gate_and_every_stack_lands},
+}
+
+@misc{hooks-traindrive-bad-middle-stack-is-refused-and-the-rest-land-in-four-gates,
+  section = {traindrive},
+  title  = {Tip red, two probes find stack 2, then stacks 1 and 3 land: 1 + 2 + 1 gate runs},
+  claim  = {Tip red, two probes find stack 2, then stacks 1 and 3 land: 1 + 2 + 1 gate runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_bad_middle_stack_is_refused_and_the_rest_land_in_four_gates},
+}
+
+@misc{hooks-traindrive-first-stack-that-fails-alone-is-refused-and-the-others-land,
+  section = {traindrive},
+  title  = {An empty prefix: nothing lands before it, the stacks behind it are judged anew},
+  claim  = {An empty prefix: nothing lands before it, the stacks behind it are judged anew.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_first_stack_that_fails_alone_is_refused_and_the_others_land},
+}
+
+@misc{hooks-traindrive-stack-that-cannot-be-built-is-not-committed-and-the-rest-go-on,
+  section = {traindrive},
+  title  = {A path that is not there drops its stack with NOT COMMITTED; the queue is not refused},
+  claim  = {A path that is not there drops its stack with NOT COMMITTED; the queue is not refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_stack_that_cannot_be_built_is_not_committed_and_the_rest_go_on},
+}
+
+@misc{hooks-trainverdict-written-verdict-reads-back-with-its-code-and-text,
+  section = {trainverdict},
+  title  = {The text a stack would have printed, and its exit code, survive the file},
+  claim  = {The text a stack would have printed, and its exit code, survive the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainverdict.py -k test_a_written_verdict_reads_back_with_its_code_and_text},
+}
+
+@misc{hooks-trainverdict-take-reads-once-and-clears-the-file,
+  section = {trainverdict},
+  title  = {A process re-executed by the claim cannot print the same verdict twice},
+  claim  = {A process re-executed by the claim cannot print the same verdict twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainverdict.py -k test_take_reads_once_and_clears_the_file},
+}
+
+@misc{hooks-trainverdict-missing-or-torn-file-is-no-verdict,
+  section = {trainverdict},
+  title  = {Not an object, no integer code, no text, a boolean code and unreadable text all read none},
+  claim  = {Not an object, no integer code, no text, a boolean code and unreadable text all read
+            none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainverdict.py -k test_a_missing_or_torn_file_is_no_verdict},
+}
+
+@misc{hooks-trainverdict-ledger-that-cannot-be-written-reports-false,
+  section = {trainverdict},
+  title  = {The leader learns the follower will run on its own turn instead},
+  claim  = {The leader learns the follower will run on its own turn instead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainverdict.py -k test_a_ledger_that_cannot_be_written_reports_false},
+}
+
+@misc{hooks-trainverdict-wired-follower-prints-its-leaders-verdict-returns-its-code-and-commits-nothing,
+  section = {trainverdict},
+  title  = {Text on stdout, the leader's code returned, HEAD unmoved, the file taken},
+  claim  = {Text on stdout, the leader's code returned, HEAD unmoved, the file taken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainverdict_wired.py -k test_a_follower_prints_its_leaders_verdict_returns_its_code_and_commits_nothing},
+}
+
+@misc{hooks-trainlead-leader-joins-two-queued-stacks-and-runs-one-gate-for-all-three,
+  section = {trainlead},
+  title  = {One gate run, three commits on HEAD, a code 0 verdict file for each follower},
+  claim  = {One gate run, three commits on HEAD, a code 0 verdict file for each follower.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_a_leader_joins_two_queued_stacks_and_runs_one_gate_for_all_three},
+}
+
+@misc{hooks-trainlead-bad-follower-is-refused-in-its-verdict-and-the-leader-still-lands,
+  section = {trainlead},
+  title  = {The follower with b.txt bad gets a REFUSED verdict; the leader and the third land},
+  claim  = {The follower with b.txt bad gets a REFUSED verdict; the leader and the third land.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_a_bad_follower_is_refused_in_its_verdict_and_the_leader_still_lands},
+}
+
+@misc{hooks-trainlead-stack-command-runs-the-train-when-stacks-are-queued-behind-it,
+  section = {trainlead},
+  title  = {Through `mikemol-commit --stack`: one gate, three commits, and verdict files left behind},
+  claim  = {Through `mikemol-commit --stack`: one gate, three commits, and verdict files left
+            behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_the_stack_command_runs_the_train_when_stacks_are_queued_behind_it},
+}
+
+@misc{hooks-trainlead-nobody-behind-or-the-switch-off-is-no-train,
+  section = {trainlead},
+  title  = {None means the caller runs its stack as before, and nothing is committed here},
+  claim  = {None means the caller runs its stack as before, and nothing is committed here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_nobody_behind_or_the_switch_off_is_no_train},
+}
+
+@misc{hooks-traintel-argv-carries-the-service-window-status-and-every-count-as-a-field,
+  section = {traintel},
+  title  = {A refused stack makes the span an error; the counts are fields a panel can group by},
+  claim  = {A refused stack makes the span an error; the counts are fields a panel can group by.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_the_argv_carries_the_service_window_status_and_every_count_as_a_field},
+}
+
+@misc{hooks-traintel-emit-spawns-once-for-a-joined-train-and-never-for-a-train-of-one,
+  section = {traintel},
+  title  = {A leader that joined nobody is not a train and leaves no record},
+  claim  = {A leader that joined nobody is not a train and leaves no record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_emit_spawns_once_for_a_joined_train_and_never_for_a_train_of_one},
+}
+
+@misc{hooks-traintel-no-store-or-a-failed-spawn-sends-nothing-and-raises-nothing,
+  section = {traintel},
+  title  = {Fire and forget: a missing store or a spawn error never reaches the verdict},
+  claim  = {Fire and forget: a missing store or a spawn error never reaches the verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_no_store_or_a_failed_spawn_sends_nothing_and_raises_nothing},
+}
+
+@misc{hooks-trainlead-green-train-records-one-span-of-three-stacks-one-gate-and-no-bisecting,
+  section = {trainlead},
+  title  = {The panel's saving: joined 3, gates 1, bisect steps 0, landed 3},
+  claim  = {The panel's saving: joined 3, gates 1, bisect steps 0, landed 3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_a_green_train_records_one_span_of_three_stacks_one_gate_and_no_bisecting},
+}
+
+@misc{hooks-trainlead-train-that-bisects-records-its-steps-rounds-and-refusal,
+  section = {trainlead},
+  title  = {A bad middle stack: 4 gates, 2 bisect steps, 2 rounds, 2 landed, 1 refused},
+  claim  = {A bad middle stack: 4 gates, 2 bisect steps, 2 rounds, 2 landed, 1 refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_a_train_that_bisects_records_its_steps_rounds_and_refusal},
+}
+
+@misc{hooks-traintel-considered-counter-is-a-metric-of-one-with-the-followers-found,
+  section = {traintel},
+  title  = {The continuous sibling: name, value 1, namespace the repo, followers as a field},
+  claim  = {The continuous sibling: name, value 1, namespace the repo, followers as a field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_the_considered_counter_is_a_metric_of_one_with_the_followers_found},
+}
+
+@misc{hooks-traintel-consider-ticks-even-when-nobody-was-found-and-is-silent-without-a-store,
+  section = {traintel},
+  title  = {Unlike the train span, the counter is sent for zero followers, so a quiet one is dark},
+  claim  = {Unlike the train span, the counter is sent for zero followers, so a quiet one is dark.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_consider_ticks_even_when_nobody_was_found_and_is_silent_without_a_store},
+}
+
+@misc{hooks-trainlead-every-stack-run-ticks-the-considered-counter-with-the-followers-it-found,
+  section = {trainlead},
+  title  = {Nobody behind ticks 0, the switch off ticks 0, two behind ticks 2: never a dark producer},
+  claim  = {Nobody behind ticks 0, the switch off ticks 0, two behind ticks 2: never a dark
+            producer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_every_stack_run_ticks_the_considered_counter_with_the_followers_it_found},
+}
+
+@misc{hooks-presubmit-plan-wraps-bazel-test-in-a-working-tree-snapshot,
+  section = {presubmit},
+  title  = {The snapshot of the working tree is the command's parent and bazel is its child},
+  claim  = {The snapshot of the working tree is the command's parent and bazel is its child.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_the_plan_wraps_bazel_test_in_a_working_tree_snapshot},
+}
+
+@misc{hooks-presubmit-no-target-means-every-target-and-the-gate-s-job-limits-apply,
+  section = {presubmit},
+  title  = {The default is `//...` and both job limits are the declared constant},
+  claim  = {The default is `//...` and both job limits are the declared constant.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_no_target_means_every_target_and_the_gate_s_job_limits_apply},
+}
+
+@misc{hooks-presubmit-snapshot-namespace-is-its-own-and-never-the-gate-s,
+  section = {presubmit},
+  title  = {The snapshot root is `<root>/presubmit`, apart from the gate's namespace},
+  claim  = {The snapshot root is `<root>/presubmit`, apart from the gate's namespace.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_the_snapshot_namespace_is_its_own_and_never_the_gate_s},
+}
+
+@misc{hooks-presubmit-main-hands-the-plan-to-the-runner-and-passes-its-exit-code-through,
+  section = {presubmit},
+  title  = {The runner's exit code is the presubmit's, unchanged},
+  claim  = {The runner's exit code is the presubmit's, unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_main_hands_the_plan_to_the_runner_and_passes_its_exit_code_through},
+}
+
+@misc{hooks-presubmit-no-repo-is-a-usage-error-and-runs-nothing,
+  section = {presubmit},
+  title  = {A bare call prints usage and never reaches the runner},
+  claim  = {A bare call prints usage and never reaches the runner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_no_repo_is_a_usage_error_and_runs_nothing},
+}
+
+@misc{hooks-commit-claim-commit-that-cannot-take-the-lease-refuses-naming-the-pin,
+  section = {commit_claim},
+  title  = {W1696: no fence is exit 2 with the pin line, and nothing is committed},
+  claim  = {W1696: no fence is exit 2 with the pin line, and nothing is committed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_commit_that_cannot_take_the_lease_refuses_naming_the_pin},
+}
+
+@misc{hooks-commit-claim-checkout-venv-finds-the-fence-in-the-checkouts-bazel-bin,
+  section = {commit_claim},
+  title  = {`<checkout>/hooks/.venv` with no fence of its own uses `<checkout>/bazel-bin/fence/.venv`},
+  claim  = {`<checkout>/hooks/.venv` with no fence of its own uses `<checkout>/bazel-
+            bin/fence/.venv`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_checkout_venv_finds_the_fence_in_the_checkouts_bazel_bin},
+}
