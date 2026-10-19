@@ -51,6 +51,8 @@ READER_ENV = "NEMIK_CHECK"
 STATE_RELATIVE = Path(".claude") / "paths-forward.json"
 EVENTS = ("SessionStart", "UserPromptSubmit")
 READER_TIMEOUT = 60.0
+STDERR_LINES = 3
+"""How many of a failing reader's last stderr lines the reason carries (W1497)."""
 PROJECT_DIR_ENV = "CLAUDE_PROJECT_DIR"
 _SESSION_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
 _STATUSES = ("OK", "VIOLATES")
@@ -128,8 +130,12 @@ def run_reader(reader: str, root: Path, timeout: float) -> tuple[str | None, str
     except OSError as err:
         return None, f"could not start: {err}"
     if done.returncode != 0:
-        detail = done.stderr.strip().splitlines()
-        return done.stdout, f"exited {done.returncode}" + (f": {detail[0]}" if detail else "")
+        # ⚑ THE LAST LINES, NOT THE FIRST (nemik via W1497, luthen-observability's intermittent
+        # "exited 1: Traceback"): a Python traceback begins with the word Traceback and ends with
+        # the exception type and message, so the first line said nothing and the last says it.
+        lines = [line.strip() for line in done.stderr.splitlines() if line.strip()]
+        detail = " / ".join(lines[-STDERR_LINES:])
+        return done.stdout, f"exited {done.returncode}" + (f": {detail}" if detail else "")
     return done.stdout, ""
 
 

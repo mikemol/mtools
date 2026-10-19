@@ -401,6 +401,7 @@ src/mikemol/hooks/hold_lift.py|symbol-matched-as-a-prefix|    pattern = rf"\\b\{
 src/mikemol/hooks/standing_facts.py|lifted-rows-stay-held|row\.get\("blocked_kind"\) == "human" and not check\(row\):|row.get("blocked_kind") == "human":|def=held_symbols
 src/mikemol/hooks/watchdog.py|bound-never-named|    return said if bound_s is None else f"\{said\}; bound \{bound_s:\.0f\}s"|    return said|def=idle_line
 src/mikemol/hooks/watchdog.py|exit-hides-the-file-it-read|    return f"\{read_from\}\\n\{more\}" if more else read_from|    return more|def=exit_notes
+src/mikemol/hooks/nemik_check.py|first-stderr-lines-not-last|detail = " / "\.join\(lines\[-STDERR_LINES:\]\)|detail = " / ".join(lines[:STDERR_LINES])|def=run_reader
 src/mikemol/hooks/stacktree.py|pin-ref-loses-the-stack-key|    ref = f"\{REF_ROOT\}/\{key\}/\{place\}"|    ref = f"{REF_ROOT}/{place}"|def=pin
 src/mikemol/hooks/stacktree.py|release-deletes-nothing|    names = listed\.stdout\.split\(\) if listed\.returncode == 0 else \[\]|    names = []|def=release
 src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not any\(path in present or in_head\(path\) for path in bases\):|                if False:|def=findings

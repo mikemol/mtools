@@ -359,6 +359,24 @@ def test_run_reader_reports_ok_nonzero_timeout_and_unstartable(tmp_path: Path) -
     assert missing[1].startswith("could not start:")
 
 
+def test_a_failing_reader_reports_its_last_stderr_lines_so_the_exception_shows(
+    tmp_path: Path,
+) -> None:
+    """W1497: a traceback's first line is only the word Traceback; its last lines name the error."""
+    body = (
+        "echo 'Traceback (most recent call last):' >&2\n"
+        "echo '  File \"x.py\", line 1, in main' >&2\n"
+        "echo '    raise ValueError(1)' >&2\n"
+        "echo 'ValueError: boom' >&2\n"
+        "exit 1\n"
+    )
+    bad = _script(tmp_path / "trace", body)
+    _out, why = nemik_check.run_reader(str(bad), tmp_path, TIMEOUT)
+    assert why == 'exited 1: File "x.py", line 1, in main / raise ValueError(1) / ValueError: boom'
+    quiet = _script(tmp_path / "quiet", "exit 3\n")
+    assert nemik_check.run_reader(str(quiet), tmp_path, TIMEOUT) == ("", "exited 3")
+
+
 def test_is_header_of_wants_a_status_word_and_exactly_the_repo() -> None:
     """OK and VIOLATES headers of the named repo match; other repos, words and blanks do not."""
     assert nemik_check.is_header_of("OK        r", "r")

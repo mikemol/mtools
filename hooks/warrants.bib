@@ -12292,3 +12292,11 @@
   claim  = {A drift between nemik's fixture and this copy fails here, naming the file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_queue_fixture_pin.py -k test_each_vendored_file_is_the_pinned_content},
 }
+
+@misc{hooks-nemik-check-failing-reader-reports-its-last-stderr-lines-so-the-exception-shows,
+  section = {nemik-check},
+  title  = {W1497: a traceback's first line is only the word Traceback; its last lines name the error},
+  claim  = {W1497: a traceback's first line is only the word Traceback; its last lines name the
+            error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_failing_reader_reports_its_last_stderr_lines_so_the_exception_shows},
+}
