@@ -28,6 +28,7 @@ unlinked	The Unlinked Count: n of m Live Waypoints Linked, an Edge Counted From 
 outcomes	The Declared Outcome Sets: A Queue May Close Its Tick Vocabulary, and Absent Means Unchanged
 foreign	The Foreign Blocker: A Peer Queue Is Read, Never Written, and Every Blocker That Stays Is Named
 blockerwatch	The Blocker Watch: A Tick Says Which Blockers Changed State Since the Last One, Local and Foreign, Before It Prunes
+homepath	The Home Path: An Evidence String Holding a Path Under the Host's Home Directories Is Refused on Write and Names the Redact Flag, and a Bare Prefix or a Relative Citation Is Not
 landedblock	The Landed Blocker: A New Blocker Naming a Done or Dropped Card, Local or Foreign, Is Refused on Write, and One the Card Already Holds Is Left to the Prune
 tick_roll	The Tick Roll: A Cycle Boundary Always Allowed, the Lock Kept for Its Holder, and the Count of Cards It Advanced Written Into Its Line
 atomize_verb	The Atomize Verb: Children Minted Under a Parent That Becomes a Blocked Umbrella, a Human Hold Left to the Operator, and Nothing Written on a Refusal

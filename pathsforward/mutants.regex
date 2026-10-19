@@ -214,4 +214,6 @@ src/mikemol/pathsforward/blockerwatch.py|dropped-read-as-missing|        return 
 src/mikemol/pathsforward/landedblock.py|held-blocker-judged-again|        if blocker in held:|        if False:|def=refuse_landed
 src/mikemol/pathsforward/landedblock.py|landed-blocker-accepted|        if landed:|        if False:|def=refuse_landed
 src/mikemol/pathsforward/landedblock.py|any-local-card-reads-landed|return "done" if text\(w, "status"\) == "done" else None|return "done"|def=_local
+src/mikemol/pathsforward/homepath.py|rootless-home-refuses-everything|    return bool\(parent\) and f"\{parent\}/" in text|    return f"{parent}/" in text|def=names_home
+src/mikemol/pathsforward/homepath.py|bare-prefix-is-a-path|f"\{parent\}/" in text|parent in text|def=names_home
 src/mikemol/pathsforward/ledger.py|explicit-session-overridden|    return line\(replace\(entry, session=entry\.session or session_id\(os\.environ\)\), stamp\)|    return line(replace(entry, session=session_id(os.environ)), stamp)|def=own_line

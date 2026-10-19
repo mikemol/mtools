@@ -6384,3 +6384,31 @@
   claim  = {The bulk verb is all or nothing: the refusal names the blocker and nothing is written.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_update_many_refuses_one_landed_blocker_for_all_or_none},
 }
+
+@misc{pathsforward-homepath-path-under-the-hosts-home-directories-is-named,
+  section = {homepath},
+  title  = {The prefix is read from the running host, so no module writes a user's home},
+  claim  = {The prefix is read from the running host, so no module writes a user's home.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_homepath.py -k test_a_path_under_the_hosts_home_directories_is_named},
+}
+
+@misc{pathsforward-homepath-relative-citation-and-a-bare-prefix-name-nothing,
+  section = {homepath},
+  title  = {Project, session and line is the citation; the parent directory alone is not a path},
+  claim  = {Project, session and line is the citation; the parent directory alone is not a path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_homepath.py -k test_a_relative_citation_and_a_bare_prefix_name_nothing},
+}
+
+@misc{pathsforward-homepath-host-whose-home-has-no-parent-never-refuses,
+  section = {homepath},
+  title  = {With the home at the root there is no prefix to match, so nothing is refused},
+  claim  = {With the home at the root there is no prefix to match, so nothing is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_homepath.py -k test_a_host_whose_home_has_no_parent_never_refuses},
+}
+
+@misc{pathsforward-homepath-evidence-append-refuses-a-home-path-and-names-the-redact-flag,
+  section = {homepath},
+  title  = {Through the CLI: exit 2, the message names --evidence-redact, the queue is unchanged},
+  claim  = {Through the CLI: exit 2, the message names --evidence-redact, the queue is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_homepath.py -k test_evidence_append_refuses_a_home_path_and_names_the_redact_flag},
+}

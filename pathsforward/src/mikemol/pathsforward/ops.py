@@ -24,6 +24,7 @@ from itertools import starmap
 from typing import cast
 
 from mikemol.pathsforward import attach, lock, realizable, recurrence, suppliers, timevalue, vector
+from mikemol.pathsforward.homepath import names_home
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -41,6 +42,7 @@ from mikemol.pathsforward.model import (
 
 # RefusedError moved to model (W256) and is re-exported here for every existing importer.
 __all__ = ["RefusedError"]
+NAMES_HOME = names_home
 
 NUDGE_TICKS: tuple[int, ...] = (1, 2, 4, 8)
 ESCALATE_TICK = 16
@@ -627,6 +629,15 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
 
     """
     _refuse_enums(upd)
+    # ⚑ NO HOME-DIRECTORY PATH IN A TRACKED QUEUE (github-8f, 2026-10-18, W1606): amr-skills' gate
+    # refused a queue commit on its no-home-paths test, because an evidence string cited a
+    # transcript by absolute path. The citation is the project, the session and the line.
+    if upd.evidence_append is not None and NAMES_HOME(upd.evidence_append):
+        msg = (
+            f"{sym}: evidence names a home-directory path; cite the transcript as project, "
+            "session uuid and line, or redact the path with --evidence-redact"
+        )
+        raise RefusedError(msg)
     suppliers.check(sym, upd.acceptable_suppliers, upd.want)
     if upd.caused_by is not None and any(ch.isspace() for ch in upd.caused_by):
         # The same one-token rule --add applies, so the two routes cannot disagree.
