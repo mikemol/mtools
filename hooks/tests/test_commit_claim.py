@@ -185,6 +185,33 @@ def test_the_real_main_commits_under_the_target_repositorys_claim(tmp_path: Path
     assert f"CLAIM=claim:path:{gitdir}/mtools/commit --" in log.read_text(encoding="utf-8")
 
 
+def test_a_commit_that_cannot_take_the_lease_refuses_naming_the_pin(tmp_path: Path) -> None:
+    """W1696: no fence is exit 2 with the pin line, and nothing is committed."""
+    target = _repo(tmp_path, "paperkit")
+    entry = tmp_path / "entry.py"
+    entry.write_text(
+        "from mikemol.hooks.commit_kata import main\nraise SystemExit(main())\n", encoding="utf-8"
+    )
+    env = {
+        "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
+        "PYTHONPATH": os.pathsep.join(sys.path),
+        commit_kata.FENCE_ENV: str(tmp_path / "no-such-fence"),
+        "HOME": str(tmp_path),
+    }
+    done = subprocess.run(
+        [sys.executable, str(entry), str(target), "--waypoint", "W9", "--subject", "s", _QUEUE],
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+        timeout=_TIMEOUT_S,
+    )
+    assert done.returncode == commit_kata.EXIT_USAGE, done.stderr
+    assert "REFUSED, no commit lock" in done.stderr
+    assert commit_kata.FENCE_PIN in done.stderr
+    assert "COMMITTED" not in done.stdout
+
+
 def test_a_named_fence_wins_over_the_one_beside_the_interpreter() -> None:
     """The launcher's choice is kept: the sibling is only a fallback."""
     named = {commit_kata.FENCE_ENV: "/named/fence"}
@@ -240,6 +267,13 @@ def test_the_script_beside_the_interpreter_wins_over_the_bazel_sibling(tmp_path:
     near.write_text(_FENCE, encoding="utf-8")
     near.chmod(_EXECUTABLE)
     assert commit_kata.fence_of({}, python) == str(near)
+
+
+def test_a_checkout_venv_finds_the_fence_in_the_checkouts_bazel_bin(tmp_path: Path) -> None:
+    """`<checkout>/hooks/.venv` with no fence of its own uses `<checkout>/bazel-bin/fence/.venv`."""
+    _, fence = _bazel_bin(tmp_path)
+    python = tmp_path / "hooks" / ".venv" / "bin" / "python3"
+    assert commit_kata.fence_of({}, str(python)) == str(fence)
 
 
 def test_a_shallow_interpreter_path_has_no_bazel_sibling_and_does_not_raise() -> None:

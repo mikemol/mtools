@@ -318,7 +318,8 @@ def test_a_malformed_submission_time_reads_as_now_and_ship_still_ships(
 
 
 def _no_fence(*_args: object) -> str:
-    return "no fence in this test"
+    # The empty reason: no claim to exec and none missing, so the commit queues and runs (W1696).
+    return ""
 
 
 class _Counts:
