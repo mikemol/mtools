@@ -32,6 +32,17 @@ def capture(argv: Sequence[str]) -> tuple[int, str, str]:
     return done.returncode, done.stdout, done.stderr
 
 
+def feed(argv: Sequence[str], body: str) -> int:
+    """Run `argv` with `body` on its stdin and its output discarded (W1579).
+
+    Returns:
+        the exit status; a non-zero status is not raised.
+
+    """
+    done = subprocess.run(list(argv), input=body, text=True, capture_output=True, check=False)
+    return done.returncode
+
+
 def stream(argv: Sequence[str], on_line: Callable[[str], None]) -> int:
     """Run `argv` with stdout discarded, calling `on_line` with each stderr line while it runs.
 

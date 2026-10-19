@@ -158,6 +158,10 @@ src/mikemol/buildtel/buildpulse.py|failure-signature-exits-clean|if trouble:|if 
 src/mikemol/buildtel/buildpulse.py|gone-build-exits-clean|if not is_alive\(\):|if False:|def=main
 src/mikemol/buildtel/buildpulse.py|stall-exits-clean|if held:|if False:|def=main
 src/mikemol/buildtel/buildpulse.py|first-sample-not-recorded|append\(state, now\)|pass|def=main
+src/mikemol/buildtel/targetsend.py|every-call-counted-as-sent|        sent \+= run\(argv_for\(program, repo, invocation\), body\) == 0|        sent += 1|def=send
+src/mikemol/buildtel/targetsend.py|orphan-row-grouped|        if invocation:|        if True:|def=by_invocation
+src/mikemol/buildtel/targetsend.py|invocation-field-dropped|"--field", f"invocation=\{invocation\}", |"--field", "x=y", |def=argv_for
+src/mikemol/buildtel/proc.py|feed-ignores-the-status|    return done\.returncode|    return 0|def=feed
 src/mikemol/buildtel/shardplan.py|stale-count-rewritten|        if _value\(_SHARDS, body\) != str\(proposal\.old\):|        if False:|def=rewrite
 src/mikemol/buildtel/shardplan.py|apply-flag-never-writes|    if not applying:|    if True:|def=main
 src/mikemol/buildtel/shardplan.py|under-half-still-proposed|    if slowest <= FRACTION \* limit:|    if False:|def=_proposal

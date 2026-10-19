@@ -1170,3 +1170,66 @@
   claim  = {Dry by default; --apply writes the plan; any other third word is a usage error.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan_apply.py -k test_the_command_writes_only_with_apply},
 }
+
+@misc{buildtel-targetsend-rows-are-grouped-by-invocation-in-order-and-a-row-without-one-is-left-out,
+  section = {targetsend},
+  title  = {One emitter call per bazel invocation, the first-seen invocation first},
+  claim  = {One emitter call per bazel invocation, the first-seen invocation first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_rows_are_grouped_by_invocation_in_order_and_a_row_without_one_is_left_out},
+}
+
+@misc{buildtel-targetsend-call-names-the-service-the-repo-and-the-invocation,
+  section = {targetsend},
+  title  = {The fields a panel filters on: the invocation id and the kind},
+  claim  = {The fields a panel filters on: the invocation id and the kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_the_call_names_the_service_the_repo_and_the_invocation},
+}
+
+@misc{buildtel-targetsend-send-gives-each-invocation-its-rows-as-json-lines-on-stdin,
+  section = {targetsend},
+  title  = {The body is the group's rows, one JSON line each, and the count is the accepted calls},
+  claim  = {The body is the group's rows, one JSON line each, and the count is the accepted calls.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_send_gives_each_invocation_its_rows_as_json_lines_on_stdin},
+}
+
+@misc{buildtel-targetsend-refused-call-is-not-counted-as-sent,
+  section = {targetsend},
+  title  = {A non-zero status from the emitter means that invocation was not accepted},
+  claim  = {A non-zero status from the emitter means that invocation was not accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_a_refused_call_is_not_counted_as_sent},
+}
+
+@misc{buildtel-targetsend-command-reports-sent-and-exits-zero,
+  section = {targetsend},
+  title  = {Every invocation accepted: exit 0 and the count on stdout},
+  claim  = {Every invocation accepted: exit 0 and the count on stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_the_command_reports_sent_and_exits_zero},
+}
+
+@misc{buildtel-targetsend-unaccepted-invocation-is-exit-three,
+  section = {targetsend},
+  title  = {The rows were already printed by targettimes, so a failed send loses nothing},
+  claim  = {The rows were already printed by targettimes, so a failed send loses nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_an_unaccepted_invocation_is_exit_three},
+}
+
+@misc{buildtel-targetsend-no-emitter-anywhere-is-said-and-sends-nothing,
+  section = {targetsend},
+  title  = {With no named binary, none on PATH and no checkout, nothing is sent and it is said},
+  claim  = {With no named binary, none on PATH and no checkout, nothing is sent and it is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_no_emitter_anywhere_is_said_and_sends_nothing},
+}
+
+@misc{buildtel-targetsend-link-and-a-wrong-argument-count-are-usage-errors,
+  section = {targetsend},
+  title  = {A rows file that is a link is refused as data, as every reader here refuses one},
+  claim  = {A rows file that is a link is refused as data, as every reader here refuses one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_a_link_and_a_wrong_argument_count_are_usage_errors},
+}
+
+@misc{buildtel-targetsend-feed-puts-the-body-on-a-real-childs-stdin-and-returns-its-status,
+  section = {targetsend},
+  title  = {The one real child: exit 0 only when stdin held exactly the body},
+  claim  = {The one real child: exit 0 only when stdin held exactly the body.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targetsend.py -k test_feed_puts_the_body_on_a_real_childs_stdin_and_returns_its_status},
+}
