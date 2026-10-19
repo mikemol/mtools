@@ -12229,3 +12229,45 @@
   claim  = {The gate says why; the check never refuses on what it cannot read.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_blob_that_cannot_be_read_is_skipped},
 }
+
+@misc{hooks-stacktree-each-entry-has-a-tree-holding-the-frozen-bytes-over-head,
+  section = {stacktree},
+  title  = {The control: a.txt is frozen at v1 and edited to v2 after; the tree holds v1},
+  claim  = {The control: a.txt is frozen at v1 and edited to v2 after; the tree holds v1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_each_entry_has_a_tree_holding_the_frozen_bytes_over_head},
+}
+
+@misc{hooks-stacktree-chain-is-cumulative-so-entry-two-holds-entry-ones-file,
+  section = {stacktree},
+  title  = {Entry two's tree is the head with both entries' files placed},
+  claim  = {Entry two's tree is the head with both entries' files placed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_the_chain_is_cumulative_so_entry_two_holds_entry_ones_file},
+}
+
+@misc{hooks-stacktree-same-frozen-entry-always-gets-the-same-tree,
+  section = {stacktree},
+  title  = {A tree sha is content-addressed, which is what makes it an identity a cache can use},
+  claim  = {A tree sha is content-addressed, which is what makes it an identity a cache can use.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_the_same_frozen_entry_always_gets_the_same_tree},
+}
+
+@misc{hooks-stacktree-head-and-the-real-index-are-untouched,
+  section = {stacktree},
+  title  = {Building the trees moves no ref and stages nothing},
+  claim  = {Building the trees moves no ref and stages nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_head_and_the_real_index_are_untouched},
+}
+
+@misc{hooks-stacktree-pinned-commits-are-reachable-and-release-deletes-them,
+  section = {stacktree},
+  title  = {A pin is a ref under refs/mtools/stack/<key>/<n>; release leaves none behind},
+  claim  = {A pin is a ref under refs/mtools/stack/<key>/<n>; release leaves none behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_pinned_commits_are_reachable_and_release_deletes_them},
+}
+
+@misc{hooks-stacktree-repository-without-a-head-fails-without-raising,
+  section = {stacktree},
+  title  = {No commit yet: the chain reports the failed step and builds nothing},
+  claim  = {No commit yet: the chain reports the failed step and builds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktree.py -k test_a_repository_without_a_head_fails_without_raising},
+}
