@@ -363,6 +363,37 @@ def inside_call(git_dir: Path, now_ns: int) -> str:
     )
 
 
+HINT_NAME = "next-action"
+"""The file beside the heartbeat that keeps the last next-action line the watchdog computed."""
+
+
+def remember_hint(git_dir: Path, line: str) -> None:
+    """Keep the next-action line for the beat hook's notice; a refusing file system is no error."""
+    target = git_dir / "mtools" / HINT_NAME
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(line, encoding="utf-8")
+    except OSError:
+        return
+
+
+def cached_hint(git_dir: Path) -> str:
+    """Read the last next-action line the watchdog kept.
+
+    ⚑ THE HOOK ASKS A FILE, NEVER nemik-stackable (W1565): a PostToolUse hook runs inside a tool
+    call, and nemik-stackable measured more than a minute for a repo it did not know, so the notice
+    reads what the watchdog computed when it last exited, where waiting costs the session nothing.
+
+    Returns:
+        the line, or "" when there is none or it cannot be read.
+
+    """
+    try:
+        return (git_dir / "mtools" / HINT_NAME).read_text(encoding="utf-8").strip()
+    except OSError:
+        return ""
+
+
 def exit_notes(git_dir: Path, repo: str, env: Mapping[str, str]) -> str:
     """Spell what follows the idle line: the file read, any call it sat in, the next action.
 
@@ -372,9 +403,9 @@ def exit_notes(git_dir: Path, repo: str, env: Mapping[str, str]) -> str:
 
     """
     lines = [f"heartbeat read: {heartbeat.path_of(git_dir)}"]
-    lines.extend(
-        line for line in (inside_call(git_dir, time.time_ns()), hint_from(repo, env)) if line
-    )
+    hint = hint_from(repo, env)
+    remember_hint(git_dir, hint)
+    lines.extend(line for line in (inside_call(git_dir, time.time_ns()), hint) if line)
     return "\n".join(lines)
 
 

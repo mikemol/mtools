@@ -72,6 +72,19 @@ def test_the_exit_names_the_heartbeat_file_it_read_and_adds_the_hint_when_there_
     assert said == f"heartbeat read: {git_dir}/mtools/heartbeat"
 
 
+def test_the_exit_keeps_the_next_action_for_the_hooks_notice(tmp_path: Path) -> None:
+    """W1565: what the exit computed is stored beside the heartbeat, and read back as it was."""
+    git_dir = tmp_path / "repo" / ".git"
+    assert not watchdog.cached_hint(git_dir)
+    rows = tmp_path / "rows"
+    rows.write_text(_STACKABLE, encoding="utf-8")
+    tool = tmp_path / "nemik-stackable"
+    tool.write_text(f"#!/bin/sh\ncat {rows}\n", encoding="utf-8")
+    tool.chmod(tool.stat().st_mode | stat.S_IXUSR)
+    watchdog.exit_notes(git_dir, "repo", {watchdog.STACKABLE_ENV: str(tool)})
+    assert watchdog.cached_hint(git_dir) == "next: stack W1586"
+
+
 def test_a_found_tool_is_asked_twice_and_its_answers_become_the_line(tmp_path: Path) -> None:
     """The plain call gives the rows, the --propose --json call gives the drafts."""
     rows, drafts = tmp_path / "rows", tmp_path / "drafts"

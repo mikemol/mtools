@@ -120,6 +120,30 @@ def test_a_dead_watchdog_with_ready_cards_is_named_in_the_next_tool_call(tmp_pat
     assert "atomize coarse cards" in said
 
 
+def test_the_notice_carries_the_next_action_the_watchdog_kept(tmp_path: Path) -> None:
+    """W1565: the line the watchdog stored at its last exit rides at the end of the notice."""
+    project = _project(tmp_path)
+    _queue(project, _READY)
+    watchdog.remember_hint(project / ".git", "next: stack W9; atomize W8")
+    loaded = cast("dict[str, dict[str, str]]", json.loads(_spoken(project, _NOW)))
+    assert loaded["hookSpecificOutput"]["additionalContext"].endswith("next: stack W9; atomize W8")
+
+
+def test_a_hook_never_runs_nemik_stackable_itself(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The notice only reads the stored line: a tool that would write a marker is never started."""
+    marker = tmp_path / "ran"
+    tool = tmp_path / "nemik-stackable"
+    tool.write_text(f"#!/bin/sh\ntouch {marker}\n", encoding="utf-8")
+    tool.chmod(tool.stat().st_mode | stat.S_IXUSR)
+    monkeypatch.setenv(watchdog.STACKABLE_ENV, str(tool))
+    project = _project(tmp_path / "proj")
+    _queue(project, _READY)
+    assert _spoken(project, _NOW)
+    assert not marker.exists()
+
+
 def test_a_live_watchdog_or_a_quiet_queue_says_nothing(tmp_path: Path) -> None:
     """A pid file naming a live process, or no ready cards, leaves the hook silent."""
     alive = _project(tmp_path / "alive")

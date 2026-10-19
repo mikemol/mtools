@@ -174,7 +174,11 @@ def notice(project: Path, now_ns: int) -> str | None:
     if not waiting:
         return None
     head = f"No live watchdog holds this repo's pid file and {waiting} cards are ready."
-    return f"{head} Start it in the background: {restart_command(writer, state)}. {_WORK}"
+    said = f"{head} Start it in the background: {restart_command(writer, state)}. {_WORK}"
+    # ⚑ THE NOTICE CARRIES ITS OWN NEXT ACTION (W1565, as the exit line does, W1591): a stackable
+    # card and a leaf to atomize, from nemik-stackable, when it is there to ask.
+    hint = watchdog.cached_hint(git_dir)
+    return f"{said} {hint}" if hint else said
 
 
 def mark_down(
