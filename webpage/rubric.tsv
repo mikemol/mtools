@@ -1,0 +1,6 @@
+# rubric.tsv — the sections of the webpage warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+smoke	The Scaffold Smoke Test: The Package Imports and Documents Itself
+waits	The Wait Rewrite: Every wait_for_function Call Gets timeout=0, Only That Call, Idempotently, With a Dry Run That Prints the Diff and Writes Nothing
+adopt	The Adopt Mode: A File That Imports webpage Has Its Waits Moved Onto webpage.until and Its Pages Watched Before the Goto, and a File That Does Not, or a Wait of Another Shape, Is Left Alone

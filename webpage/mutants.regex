@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# The defect classes this distribution DECLARES (mtools:W629), planted one at a time by the
+# `:mutants` runner: <module>|<name>|<pattern>|<replacement>|<scope>. A line that stops
+# matching is a STALE declaration and fails the grid as UNAPPLIED.
+src/mikemol/webpage/waits.py|trailing-comma-ignored|    text = b" timeout=0," if data\[last - 1 : last\] == b"," else b", timeout=0"|    text = b", timeout=0"|def=add_bound
+src/mikemol/webpage/waits.py|other-calls-rewritten|        if not isinstance\(node\.func, ast\.Attribute\) or node\.func\.attr != CALL:|        if not isinstance(node.func, ast.Attribute) or node.func.attr == CALL:|def=edits
+src/mikemol/webpage/waits.py|wait-with-other-keywords-adopted|    if \[kw\.arg for kw in node\.keywords\] != \["timeout"\]:|    if False:|def=until_edit
+src/mikemol/webpage/waits.py|file-without-webpage-adopted|    if not imported:|    if False:|def=adopt_edits
+src/mikemol/webpage/waits.py|watch-line-loses-its-indent|            found\.append\(\(at, at, watch \+ b" " \* stmt\.col_offset\)\)|            found.append((at, at, watch))|def=watch_edits
+src/mikemol/webpage/waits.py|dry-run-writes|        if write:|        if True:|def=run

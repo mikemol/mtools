@@ -275,6 +275,14 @@ pip.parse(
     requirements_lock = "//pathwalk:requirements.txt",
 )
 
+# ⚑ `mikemol-webpage` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
+# it declares a dependency.
+pip.parse(
+    hub_name = "webpage_deps",
+    python_version = "3.13",
+    requirements_lock = "//webpage:requirements.txt",
+)
+
 # ⚑ `mikemol-endpoints` — scaffolded by mikemol-new-dist (W943). Empty shipping hub until
 # it declares a dependency.
 pip.parse(
@@ -536,6 +544,11 @@ pip.parse(
     uv_lock = "//pathwalk:uv.lock",
 )
 pip.parse(
+    hub_name = "webpage_dev",
+    python_version = "3.13",
+    uv_lock = "//webpage:uv.lock",
+)
+pip.parse(
     hub_name = "endpoints_dev",
     python_version = "3.13",
     uv_lock = "//endpoints:uv.lock",
@@ -642,6 +655,7 @@ use_repo(
     "gradekit_deps",
     "gradekit_dev",
     "pathwalk_deps",
+    "webpage_deps",
     "endpoints_deps",
     "scan_deps",
     "otlp_deps",
@@ -651,6 +665,7 @@ use_repo(
     "rulerseq_deps",
     "htmlstruct_deps",
     "pathwalk_dev",
+    "webpage_dev",
     "endpoints_dev",
     "scan_dev",
     "otlp_dev",

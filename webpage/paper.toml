@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.webpage: Browser-test waits that end on the page's own event and never a wall-clock bound, and the codemod that moves Playwright waits onto them"
+subtitle = "The witnesses behind mikemol.webpage."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "WEBPAGE.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

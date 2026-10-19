@@ -1,0 +1,91 @@
+
+@misc{webpage-smoke-package-imports-and-carries-its-docstring,
+  section = {smoke},
+  title  = {The scaffold compiles, imports and documents itself},
+  claim  = {The scaffold compiles, imports and documents itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
+}
+
+@misc{webpage-waits-timeout-value-becomes-zero,
+  section = {waits},
+  title  = {The bound is replaced in place},
+  claim  = {The bound is replaced in place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_a_timeout_value_becomes_zero},
+}
+
+@misc{webpage-waits-call-without-one-gains-it,
+  section = {waits},
+  title  = {A bare call gets timeout=0 after its last argument},
+  claim  = {A bare call gets timeout=0 after its last argument.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_a_call_without_one_gains_it},
+}
+
+@misc{webpage-waits-multiline-call-keeps-its-arguments,
+  section = {waits},
+  title  = {A call split over lines gains timeout=0 after the trailing comma},
+  claim  = {A call split over lines gains timeout=0 after the trailing comma.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_a_multiline_call_keeps_its_arguments},
+}
+
+@misc{webpage-waits-nothing-else-is-touched,
+  section = {waits},
+  title  = {Other calls and a plain dict with a timeout key stay as written},
+  claim  = {Other calls and a plain dict with a timeout key stay as written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_nothing_else_is_touched},
+}
+
+@misc{webpage-waits-second-run-changes-nothing,
+  section = {waits},
+  title  = {The rewrite is idempotent over every shape},
+  claim  = {The rewrite is idempotent over every shape.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_a_second_run_changes_nothing},
+}
+
+@misc{webpage-waits-dry-run-prints-the-diff-and-writes-nothing,
+  section = {waits},
+  title  = {Without --write the file is as it was, the diff is printed and the count says would},
+  claim  = {Without --write the file is as it was, the diff is printed and the count says would.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_a_dry_run_prints_the_diff_and_writes_nothing},
+}
+
+@misc{webpage-waits-write-rewrites-the-file-and-a-clean-file-is-not-counted,
+  section = {waits},
+  title  = {--write applies the rewrite; a file with nothing to change adds nothing to the count},
+  claim  = {--write applies the rewrite; a file with nothing to change adds nothing to the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_waits.py -k test_write_rewrites_the_file_and_a_clean_file_is_not_counted},
+}
+
+@misc{webpage-adopt-wait-becomes-until-and-the-page-is-watched-first,
+  section = {adopt},
+  title  = {The wait is rewritten and a watch line goes above the goto, at its indent},
+  claim  = {The wait is rewritten and a watch line goes above the goto, at its indent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt.py -k test_a_wait_becomes_until_and_the_page_is_watched_first},
+}
+
+@misc{webpage-adopt-second-run-changes-nothing,
+  section = {adopt},
+  title  = {Once adopted there is nothing left to rewrite},
+  claim  = {Once adopted there is nothing left to rewrite.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt.py -k test_a_second_run_changes_nothing},
+}
+
+@misc{webpage-adopt-file-that-does-not-import-webpage-is-left-alone,
+  section = {adopt},
+  title  = {Without the helper to call, the file is not touched},
+  claim  = {Without the helper to call, the file is not touched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt.py -k test_a_file_that_does_not_import_webpage_is_left_alone},
+}
+
+@misc{webpage-adopt-wait-with-other-arguments-is-left-alone,
+  section = {adopt},
+  title  = {A call that is not (expr, timeout=0) has no safe rewrite, so it stays as written},
+  claim  = {A call that is not (expr, timeout=0) has no safe rewrite, so it stays as written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt.py -k test_a_wait_with_other_arguments_is_left_alone},
+}
+
+@misc{webpage-adopt-adopt-flag-writes-through-main,
+  section = {adopt},
+  title  = {--adopt --write turns a file's waits into webpage.until and says how many files changed},
+  claim  = {--adopt --write turns a file's waits into webpage.until and says how many files changed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt.py -k test_the_adopt_flag_writes_through_main},
+}

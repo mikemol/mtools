@@ -3,7 +3,7 @@
 
 # Installing mtools distributions
 
-Each top-level directory with a `pyproject.toml` is its own distribution. There are 38 of them, listed
+Each top-level directory with a `pyproject.toml` is its own distribution. There are 39 of them, listed
 below. The repository root has a `pyproject.toml` too, but it carries no `[project]` table: the root is
 not a distribution. A repository that adopts one installs it from git by subdirectory:
 
@@ -82,6 +82,7 @@ with no scripts is a library that other distributions import.
 - `treeio` (`mikemol-treeio`): one read/write seam over a working tree and git history. Scripts:
   `mikemol-vfs`, `mikemol-edit-snapshot`.
 - `waldo` (`mikemol-waldo`): Waldo: a narrow tool that holds one privilege and does only a declared action, with a declared allowed set, refuse-with-diff, same-plan apply and witnesses. A library, no scripts.
+- `webpage` (`mikemol-webpage`): Browser-test waits that end on the page's own event and never a wall-clock bound, and the codemod that moves Playwright waits onto them A library, no scripts.
 - `witness` (`mikemol-witness`): the witness contract. A library, no scripts.
 
 ## Running a distribution's own tests from its sdist
