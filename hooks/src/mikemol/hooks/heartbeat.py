@@ -128,6 +128,69 @@ def try_beat(git_dir: Path, tool: str, now_ns: int) -> Beat | None:
         return None
 
 
+CALL_NAME = "call-start"
+"""The file a PreToolUse beat leaves beside the heartbeat while one tool call runs (W1617)."""
+
+
+@dataclass(frozen=True)
+class Call:
+    """A tool call that has started and not yet ended: the tool and when it began (epoch ns)."""
+
+    tool: str
+    at_ns: int
+
+
+def call_path(git_dir: Path) -> Path:
+    """Name the call-start stamp of a repository.
+
+    Returns:
+        `<git dir>/mtools/call-start`.
+
+    """
+    return git_dir / "mtools" / CALL_NAME
+
+
+def mark_call(git_dir: Path, tool: str, now_ns: int) -> None:
+    """Stamp that `tool` has started; a file system that will not take it is not an error."""
+    target = call_path(git_dir)
+    body: dict[str, object] = {"tool": tool, "at_ns": now_ns}
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        staging = target.with_name(f"{target.name}.{os.getpid()}.tmp")
+        staging.write_text(json.dumps(body), encoding="utf-8")
+        staging.replace(target)
+    except OSError:
+        return
+
+
+def clear_call(git_dir: Path) -> None:
+    """Remove the stamp: the call ended. A missing file or a refusing file system is no error."""
+    try:
+        call_path(git_dir).unlink(missing_ok=True)
+    except OSError:
+        return
+
+
+def read_call(git_dir: Path) -> Call | None:
+    """Read the call-start stamp.
+
+    Returns:
+        the call, or None when there is none, it is unreadable or it is not a valid record.
+
+    """
+    try:
+        raw: object = json.loads(call_path(git_dir).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(raw, dict):
+        return None
+    fields = cast("dict[str, object]", raw)
+    tool, at_ns = fields.get("tool"), fields.get("at_ns")
+    if not isinstance(tool, str) or not isinstance(at_ns, int):
+        return None
+    return Call(tool, at_ns)
+
+
 def mean_gap_s(last: Beat) -> float | None:
     """Give the mean gap between recorded beats.
 

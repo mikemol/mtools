@@ -12300,3 +12300,45 @@
             error.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_failing_reader_reports_its_last_stderr_lines_so_the_exception_shows},
 }
+
+@misc{hooks-call-stamp-call-stamp-round-trips-and-clears,
+  section = {heartbeat},
+  title  = {The stamp is the tool and the start; clearing it, or never having one, reads as none},
+  claim  = {The stamp is the tool and the start; clearing it, or never having one, reads as none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_a_call_stamp_round_trips_and_clears},
+}
+
+@misc{hooks-call-stamp-pre-event-stamps-the-call-and-does-not-beat,
+  section = {heartbeat},
+  title  = {A call's start is not activity: no heartbeat is written, only the stamp},
+  claim  = {A call's start is not activity: no heartbeat is written, only the stamp.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_a_pre_event_stamps_the_call_and_does_not_beat},
+}
+
+@misc{hooks-call-stamp-post-event-beats-and-clears-the-stamp,
+  section = {heartbeat},
+  title  = {The call ended: the beat is recorded and the stamp is gone},
+  claim  = {The call ended: the beat is recorded and the stamp is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_a_post_event_beats_and_clears_the_stamp},
+}
+
+@misc{hooks-call-stamp-exit-names-the-call-when-its-start-is-newer-than-the-last-beat,
+  section = {heartbeat},
+  title  = {The luthen shape: one foreground call ran 561 s after the last beat},
+  claim  = {The luthen shape: one foreground call ran 561 s after the last beat.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_the_exit_names_the_call_when_its_start_is_newer_than_the_last_beat},
+}
+
+@misc{hooks-call-stamp-no-stamp-or-a-stamp-older-than-the-beat-says-nothing,
+  section = {heartbeat},
+  title  = {A call that ended, or began before the last beat, is not why the session is silent},
+  claim  = {A call that ended, or began before the last beat, is not why the session is silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_no_stamp_or_a_stamp_older_than_the_beat_says_nothing},
+}
+
+@misc{hooks-call-stamp-exit-notes-carry-the-call-line-after-the-file-read,
+  section = {heartbeat},
+  title  = {The file read comes first, then the call the silence sat in},
+  claim  = {The file read comes first, then the call the silence sat in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_call_stamp.py -k test_the_exit_notes_carry_the_call_line_after_the_file_read},
+}

@@ -45,6 +45,7 @@ from mikemol.hooks import heartbeat, hook_argv, watchdog
 PROG = "mikemol-hook-beat"
 PROJECT_ENV = "CLAUDE_PROJECT_DIR"
 UNKNOWN_TOOL = "tool"
+PRE_EVENT = "PreToolUse"
 NOTICE_EVERY_S = 120
 NOTICE_MARK = "watchdog.notice"
 DOWN_MARK = "watchdog.down"
@@ -289,6 +290,13 @@ def run(
         raw = None
     project = project_of(raw, env)
     if project is not None and (project / ".git").is_dir():
+        # ⚑ A PRE-CALL EVENT STAMPS THE START AND DOES NOT BEAT (github-8f, 2026-10-18, W1617): a
+        # session sitting inside one foreground call is a stall, so the call's start must not look
+        # like activity. The stamp only lets the watchdog's exit say the silence was in a call.
+        if _field(raw, "hook_event_name") == PRE_EVENT:
+            heartbeat.mark_call(project / ".git", tool_of(raw), now_ns())
+            return 0
+        heartbeat.clear_call(project / ".git")
         heartbeat.try_beat(project / ".git", f"hook:{tool_of(raw)}", now_ns())
         if spawn is not None:
             mark_down(project, env, now_ns(), spawn)

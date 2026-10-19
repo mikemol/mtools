@@ -340,16 +340,42 @@ def hint_from(repo: str, env: Mapping[str, str]) -> str:
     return next_action(heard[0], heard[1])
 
 
-def exit_notes(git_dir: Path, repo: str, env: Mapping[str, str]) -> str:
-    """Spell what follows the idle line: the heartbeat file read, then the next action if any.
+def inside_call(git_dir: Path, now_ns: int) -> str:
+    """Say when the silence is one tool call that started after the last beat and has not ended.
+
+    ⚑ A DIAGNOSTIC, NOT A SUPPRESSION (github-8f, 2026-10-18, W1617): a session sitting inside one
+    foreground call, a gate above all, is a stall by the operator's ruling of 2026-10-17, so the
+    watchdog stays right to fire. The line only tells the session why, so it learns to run such a
+    call in the background.
 
     Returns:
-        `heartbeat read: <path>`, and on a second line the next action `hint_from` names.
+        the sentence, or "" when no call-start stamp is newer than the last beat.
 
     """
-    read_from = f"heartbeat read: {heartbeat.path_of(git_dir)}"
-    more = hint_from(repo, env)
-    return f"{read_from}\n{more}" if more else read_from
+    call = heartbeat.read_call(git_dir)
+    last = heartbeat.read(git_dir)
+    if call is None or (last is not None and call.at_ns <= last.at_ns):
+        return ""
+    ran = max(now_ns - call.at_ns, 0) // _NS_PER_S
+    return (
+        f"the silence is inside one call: {call.tool} has run {ran}s; "
+        "a gate in the foreground is a stall, so run it in the background and poll"
+    )
+
+
+def exit_notes(git_dir: Path, repo: str, env: Mapping[str, str]) -> str:
+    """Spell what follows the idle line: the file read, any call it sat in, the next action.
+
+    Returns:
+        `heartbeat read: <path>`, then a line when the silence was inside one call, then the next
+        action `hint_from` names.
+
+    """
+    lines = [f"heartbeat read: {heartbeat.path_of(git_dir)}"]
+    lines.extend(
+        line for line in (inside_call(git_dir, time.time_ns()), hint_from(repo, env)) if line
+    )
+    return "\n".join(lines)
 
 
 def _parser() -> argparse.ArgumentParser:
