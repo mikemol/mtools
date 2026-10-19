@@ -12173,3 +12173,59 @@
   claim  = {Every mtools dist declares its width in pyproject: nothing changes for them.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_project_root_config.py -k test_with_no_ruff_only_file_the_pyproject_is_the_config},
 }
+
+@misc{hooks-stackbuildfiles-listed-source-that-nothing-carries-is-a-finding,
+  section = {stackbuildfiles},
+  title  = {The luthen shape: the .bzl names a test, the file is in no entry and not in HEAD},
+  claim  = {The luthen shape: the .bzl names a test, the file is in no entry and not in HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_listed_source_that_nothing_carries_is_a_finding},
+}
+
+@misc{hooks-stackbuildfiles-source-in-the-same-entry-is-sound,
+  section = {stackbuildfiles},
+  title  = {One commit carries the build file and the test it lists},
+  claim  = {One commit carries the build file and the test it lists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_the_source_in_the_same_entry_is_sound},
+}
+
+@misc{hooks-stackbuildfiles-source-in-an-earlier-entry-or-head-is-sound,
+  section = {stackbuildfiles},
+  title  = {Landing order puts it first, or HEAD already has it},
+  claim  = {Landing order puts it first, or HEAD already has it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_the_source_in_an_earlier_entry_or_head_is_sound},
+}
+
+@misc{hooks-stackbuildfiles-source-carried-by-a-later-entry-is-still-a-finding,
+  section = {stackbuildfiles},
+  title  = {Order matters: the build file's commit would be broken until entry 2 lands},
+  claim  = {Order matters: the build file's commit would be broken until entry 2 lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_source_carried_by_a_later_entry_is_still_a_finding},
+}
+
+@misc{hooks-stackbuildfiles-path-from-the-repository-root-is-read-as-a-second-base,
+  section = {stackbuildfiles},
+  title  = {A macro's paths are relative to its caller's package, so the root spelling counts too},
+  claim  = {A macro's paths are relative to its caller's package, so the root spelling counts too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_path_from_the_repository_root_is_read_as_a_second_base},
+}
+
+@misc{hooks-stackbuildfiles-globs-labels-and-non-python-names-are-never-findings,
+  section = {stackbuildfiles},
+  title  = {Only a plain quoted .py path is a named source},
+  claim  = {Only a plain quoted .py path is a named source.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_globs_labels_and_non_python_names_are_never_findings},
+}
+
+@misc{hooks-stackbuildfiles-only-build-files-and-bzl-files-are-read,
+  section = {stackbuildfiles},
+  title  = {A Python file that happens to quote a path is not a build file},
+  claim  = {A Python file that happens to quote a path is not a build file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_only_build_files_and_bzl_files_are_read},
+}
+
+@misc{hooks-stackbuildfiles-blob-that-cannot-be-read-is-skipped,
+  section = {stackbuildfiles},
+  title  = {The gate says why; the check never refuses on what it cannot read},
+  claim  = {The gate says why; the check never refuses on what it cannot read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_blob_that_cannot_be_read_is_skipped},
+}

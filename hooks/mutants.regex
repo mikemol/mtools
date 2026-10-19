@@ -399,6 +399,9 @@ src/mikemol/hooks/beat.py|quiet-queue-still-told|    if not waiting:|    if Fals
 src/mikemol/hooks/hold_lift.py|a-verdict-that-is-not-ok-lifts|    if not isinstance\(verdict, dict\) or cast\("dict\[str, object\]", verdict\)\.get\("ok"\) is not True:|    if not isinstance(verdict, dict) or cast("dict[str, object]", verdict).get("ok") is None:|def=verifies
 src/mikemol/hooks/hold_lift.py|symbol-matched-as-a-prefix|    pattern = rf"\\b\{re\.escape\(symbol\)\}\\b"|    pattern = re.escape(symbol)|def=verifies
 src/mikemol/hooks/standing_facts.py|lifted-rows-stay-held|row\.get\("blocked_kind"\) == "human" and not check\(row\):|row.get("blocked_kind") == "human":|def=held_symbols
+src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not any\(path in present or in_head\(path\) for path in bases\):|                if False:|def=findings
+src/mikemol/hooks/stackbuildfiles.py|root-spelling-not-a-base|bases = \{str\(here / source\), str\(PurePosixPath\(source\)\)\}|bases = {str(here / source)}|def=findings
+src/mikemol/hooks/stackbuildfiles.py|bzl-not-a-build-file|return name in _BUILD_NAMES or name\.endswith\("\.bzl"\)|return name in _BUILD_NAMES|def=is_build_file
 src/mikemol/hooks/stackimports.py|same-entry-counted-as-later|                later = added\.get\(module, -1\) > place|                later = added.get(module, -1) >= place|def=findings
 src/mikemol/hooks/stackimports.py|head-module-refused|                if later and not in_head\(module\):|                if later:|def=findings
 src/mikemol/hooks/stackimports.py|names-from-a-package-not-read|            found\.update\(str\(root / base / \(alias\.name \+ "\.py"\)\) for alias in node\.names\)|            pass|def=candidates
