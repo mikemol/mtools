@@ -83,3 +83,4 @@ observed	The Observed Types: A Run Under sys.monitoring Records the Types Each P
 narrowing	The Narrowing Pass: A Parameter Is Given the Narrowest Form the Body Shows, a TypedDict From Constant Keys, an NDArray From Array Attributes, a Protocol From Other Attributes, and Is Left Unconstrained When the Body Shows Nothing
 annotating	The Annotating Planner: Observed Types Are Written Into the Gaps, a Written Annotation Is Never Replaced, a Type Needing an Import Goes to the Worklist
 cli_annotate	The Annotate Mode: A File Is Written Only Where the Project's Mypy Count Falls, a Dry Run Writes Nothing, and Unreadable Observations Are Exit Two
+cli_observe	The Observe Driver: A Command Runs in This Process Under the Observer, the Document Keys Are Relative to the Root, a File Outside It Is Left Out, a Red Run Still Writes What Ran and Returns Its Code, and a Missing Option or Root Is Exit Two

@@ -6977,3 +6977,31 @@
   claim  = {A missing file and a document that is not an object both refuse.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_annotate.py -k test_observations_that_cannot_be_read_are_exit_two},
 }
+
+@misc{pycodemod-cli-observe-document-names-each-function-relative-to-the-root,
+  section = {cli_observe},
+  title  = {Keys are `file::qualname` under the root, types sorted, ready for `annotate --seen`},
+  claim  = {Keys are `file::qualname` under the root, types sorted, ready for `annotate --seen`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_observe.py -k test_the_document_names_each_function_relative_to_the_root},
+}
+
+@misc{pycodemod-cli-observe-red-run-still-writes-what-ran-and-returns-its-code,
+  section = {cli_observe},
+  title  = {The types the passing calls showed are kept, and the exit code is the run's own},
+  claim  = {The types the passing calls showed are kept, and the exit code is the run's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_observe.py -k test_a_red_run_still_writes_what_ran_and_returns_its_code},
+}
+
+@misc{pycodemod-cli-observe-file-outside-the-root-is-left-out,
+  section = {cli_observe},
+  title  = {An observation from elsewhere would never match a path annotate was given},
+  claim  = {An observation from elsewhere would never match a path annotate was given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_observe.py -k test_a_file_outside_the_root_is_left_out},
+}
+
+@misc{pycodemod-cli-observe-command-line-splits-options-from-the-runner-arguments,
+  section = {cli_observe},
+  title  = {Everything after `--` goes to the runner; a missing option or root is exit 2},
+  claim  = {Everything after `--` goes to the runner; a missing option or root is exit 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_observe.py -k test_the_command_line_splits_options_from_the_runner_arguments},
+}

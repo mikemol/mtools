@@ -109,6 +109,9 @@ src/mikemol/pycodemod/narrowing.py|len-not-sized|                sized\.sized = 
 src/mikemol/pycodemod/narrowing.py|class-not-in-the-qualified-name|        self\._scope\.append\(node\.name\)|        pass|def=_Walker.visit_ClassDef
 src/mikemol/pycodemod/narrowing.py|array-attributes-not-recognised|        \(bool\(use\.attrs & _ARRAY_ATTRS\), Narrowed\("ndarray"\)\),|        (bool(use.attrs - _ARRAY_ATTRS), Narrowed("ndarray")),|def=narrow
 src/mikemol/pycodemod/cli_typedargs.py|original-not-restored|path\.write_text\(texts\[0\], encoding="utf-8"\)|pass|def=_selftest
+src/mikemol/pycodemod/cli_observe.py|returns-not-recorded|            "returns": sorted\(signature\.returns\),|            "returns": [],|def=seen_document
+src/mikemol/pycodemod/cli_observe.py|runner-arguments-not-split-off|    split = args\.index\("--"\) if "--" in args else len\(args\)|    split = len(args)|def=main
+src/mikemol/pycodemod/cli_observe.py|missing-root-not-refused|    if root is None or out is None or not Path\(root\)\.is_dir\(\):|    if root is None or out is None:|def=main
 src/mikemol/pycodemod/annotating.py|import-type-written|    if not seen or any\("\." in name\.partition\("\["\)\[0\] for name in seen\):|    if not seen:|def=_spelling
 src/mikemol/pycodemod/annotating.py|written-annotation-replaced|            if arg\.annotation is not None or arg\.arg in _SELF or arg\.arg not in signature\.params:|            if arg.arg in _SELF or arg.arg not in signature.params:|def=plan
 src/mikemol/pycodemod/annotating.py|edits-applied-first-to-last|    for offset, extra in sorted\(edits, reverse=True\):|    for offset, extra in sorted(edits):|def=plan
