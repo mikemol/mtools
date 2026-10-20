@@ -4,30 +4,17 @@
 
 from __future__ import annotations
 
-import os
 import sys
-from typing import TYPE_CHECKING
-
-import pytest
+from pathlib import Path
 
 from mikemol.katas import commits, waiter
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 _THREE = "import sys; print('out', flush=True); sys.stderr.write('err\\n'); sys.exit(3)"
 _EXIT_THREE = [sys.executable, "-c", _THREE]
 _OK = [sys.executable, "-c", "print('fine')"]
-# ⚑ IT SAYS WHO IT IS AND THEN SLEEPS FAR PAST ANY TEST: a waiter that does not end the child's tree
-# on the backstop either leaves it alive (the pid check) or waits on it (the suite hangs, which the
-# mutants runner ends as hung). Thirty seconds let both defects pass slowly (W1376).
-_SLEEP = [
-    sys.executable,
-    "-c",
-    "import os, time; print(os.getpid(), flush=True); time.sleep(600)",
-]
 _STATUS = 3
 _SHORT = 0.2
+_PROC = Path("/proc")
 
 
 def test_the_log_gets_the_output_then_an_rc_line(tmp_path: Path) -> None:
@@ -68,16 +55,43 @@ def test_a_removal_that_is_already_gone_is_not_an_error(tmp_path: Path) -> None:
     assert status == 0
 
 
+def _alive_with(token: str) -> list[str]:
+    """List the processes whose command line carries `token`, read from /proc.
+
+    Returns:
+        their pids as text; empty when none is running.
+
+    """
+    found: list[str] = []
+    for entry in _PROC.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            words = (entry / "cmdline").read_bytes()
+        except OSError:
+            continue
+        if token.encode("utf-8") in words:
+            found.append(entry.name)
+    return found
+
+
 def test_a_command_that_outlasts_its_timeout_is_recorded_as_timed_out(tmp_path: Path) -> None:
-    """The child is abandoned, the log says so, and the status is the one `mikemol-commit` uses."""
+    """The child is abandoned, the log says so, and the status is the one `mikemol-commit` uses.
+
+    ⚑ THE CHILD IS FOUND BY A TOKEN ON ITS COMMAND LINE, NOT BY THE PID IT PRINTS: the backstop
+    here is a wall clock, and on a loaded host it fired before the child's interpreter had printed
+    anything, so the log began with the timeout line and the pid parse failed (a flake that refused
+    a gate, 2026-10-20). Whatever the timing, the property is that no process carrying the token
+    is left alive.
+    """
     log = tmp_path / "fx.log"
-    status = waiter.run(log, _SLEEP, timeout=_SHORT)
+    token = f"waiter-probe-{tmp_path.name}"
+    command = [sys.executable, "-c", "import time; time.sleep(600)", token]
+    status = waiter.run(log, command, timeout=_SHORT)
     assert status == waiter.TIMED_OUT
     assert "timed out" in log.read_text(encoding="utf-8")
     assert commits.commit_state(log) == f"FAILED rc={waiter.TIMED_OUT}"
-    child = int(log.read_text(encoding="utf-8").split()[0])
-    with pytest.raises(ProcessLookupError):
-        os.kill(child, 0)
+    assert not _alive_with(token)
 
 
 def test_leading_rm_pairs_are_peeled_off_the_command(tmp_path: Path) -> None:
