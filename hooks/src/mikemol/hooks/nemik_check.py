@@ -53,6 +53,8 @@ EVENTS = ("SessionStart", "UserPromptSubmit")
 READER_TIMEOUT = 60.0
 STDERR_LINES = 3
 """How many of a failing reader's last stderr lines the reason carries (W1497)."""
+USAGE_STATUS = 2
+"""The exit status argparse uses for an argument the reader does not know."""
 PROJECT_DIR_ENV = "CLAUDE_PROJECT_DIR"
 _SESSION_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
 _STATUSES = ("OK", "VIOLATES")
@@ -98,17 +100,24 @@ def find_reader(project: Path) -> str | None:
     return str(sibling) if is_runnable(sibling) else None
 
 
-def reader_argv(reader: str, root: Path) -> list[str]:
+def reader_argv(reader: str, root: Path, since: Path | None = None) -> list[str]:
     """Spell the reader's argv: module constants plus the fleet root as one word.
+
+    ⚑ `--since FILE` MAKES THE READER PRINT ONLY WHAT CHANGED since the digest it saved in FILE, and
+    save this one there (nemik:W766): the full digest is 94 KB on the live root and a repeat is 69
+    bytes, and every prompt carried 20 to 25 KB of it (W1773).
 
     Returns:
         the argv, never passed through a shell.
 
     """
-    return [reader, "--root", str(root), "--digest"]
+    argv = [reader, "--root", str(root), "--digest"]
+    return argv if since is None else [*argv, "--since", str(since)]
 
 
-def run_reader(reader: str, root: Path, timeout: float) -> tuple[str | None, str]:
+def run_reader(
+    reader: str, root: Path, timeout: float, since: Path | None = None
+) -> tuple[str | None, str]:
     """Run the reader once, bounded.
 
     Returns:
@@ -118,7 +127,7 @@ def run_reader(reader: str, root: Path, timeout: float) -> tuple[str | None, str
     """
     try:
         done = subprocess.run(
-            reader_argv(reader, root),
+            reader_argv(reader, root, since),
             capture_output=True,
             text=True,
             timeout=timeout,
@@ -129,6 +138,14 @@ def run_reader(reader: str, root: Path, timeout: float) -> tuple[str | None, str
         return None, f"timed out after {timeout:g} s"
     except OSError as err:
         return None, f"could not start: {err}"
+    if (
+        since is not None
+        and done.returncode == USAGE_STATUS
+        and "unrecognized arguments" in done.stderr
+    ):
+        # ⚑ A READER THAT PREDATES --since (nemik:W766) IS RUN AGAIN WITHOUT IT: the skew
+        # costs the full digest, never a notice that the check could not run.
+        return run_reader(reader, root, timeout)
     if done.returncode != 0:
         # ⚑ THE LAST LINES, NOT THE FIRST (nemik via W1497, luthen-observability's intermittent
         # "exited 1: Traceback"): a Python traceback begins with the word Traceback and ends with
@@ -200,7 +217,7 @@ def failure_notice(why: str) -> str:
     )
 
 
-def build_context(project: Path, timeout: float) -> tuple[str, bool]:
+def build_context(project: Path, timeout: float, since: Path | None = None) -> tuple[str, bool]:
     """Decide what the session should be told for this project.
 
     Returns:
@@ -211,7 +228,7 @@ def build_context(project: Path, timeout: float) -> tuple[str, bool]:
     if reader is None:
         why = f"{READER} is not named by {READER_ENV}, not on PATH, and not in a sibling nemik venv"
         return failure_notice(why), True
-    out, why = run_reader(reader, project.parent, timeout)
+    out, why = run_reader(reader, project.parent, timeout, since)
     block = repo_block(out, project.name) if out is not None else None
     if block is not None:
         return context_for(project.name, *block), False
@@ -230,6 +247,17 @@ def digest_path(session_id: str) -> Path | None:
     if not _SESSION_ID.fullmatch(session_id):
         return None
     return Path(tempfile.gettempdir()) / "mikemol-nemik-check" / session_id
+
+
+def since_path(session_id: str) -> Path | None:
+    """Locate the per-session file the reader keeps its last digest in (W1773).
+
+    Returns:
+        the path beside the emission digest (a dot cannot occur in a session id), or None.
+
+    """
+    path = digest_path(session_id)
+    return None if path is None else path.with_name(path.name + ".since")
 
 
 def digest_of(text: str) -> str:
@@ -351,12 +379,19 @@ def main(timeout: float = READER_TIMEOUT) -> int:
     current = state_digest(project)
     if event == "UserPromptSubmit" and current is not None and state_unchanged(session, current):
         return 0
-    text, failed = build_context(project, timeout)
+    since = since_path(session)
+    if since is not None and event == "SessionStart":
+        # ⚑ A NEW SESSION IS FIRST SIGHT: with no file the reader prints it all and saves it.
+        since.unlink(missing_ok=True)
+    text, failed = build_context(project, timeout, since)
     if current is not None and not failed:
         record_state(session, current)
     if not text:
         return 0
-    if unchanged_since_last(event, session, text):
+    # ⚑ WITH --since THE READER OWNS THE DEDUPE: it prints a finding once, so the same delta text
+    # twice is a finding that went away and came back, and comparing whole emissions would hide it.
+    honoured = since is not None and since.exists()
+    if (not honoured or failed) and unchanged_since_last(event, session, text):
         return 0
     if failed:
         sys.stderr.write(text + "\n")

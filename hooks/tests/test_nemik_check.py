@@ -14,13 +14,12 @@ import io
 import json
 import sys
 import tempfile
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import entry, hook_argv, nemik_check
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     import pytest
 
 REPO = "myrepo"
@@ -75,7 +74,28 @@ def _setup(
         return project
     canned = tmp_path / "report.txt"
     canned.write_text(report, encoding="utf-8")
-    reader = _script(tmp_path / "reader", f"/bin/cat '{canned}'\nexit {exit_code}\n")
+    # ⚑ THE FAKE HONOURS --since LIKE THE REAL READER (nemik:W766): with a saved digest it prints
+    # this repo's header and only the indented rows the digest lacks, then a count; without one it
+    # prints the whole report; either way it saves the report in the file.
+    body = (
+        'since=""\n'
+        'while [ "$#" -gt 0 ]; do\n'
+        '  if [ "$1" = "--since" ]; then since="$2"; fi\n'
+        "  shift\n"
+        "done\n"
+        f"canned='{canned}'\n"
+        'if [ -n "$since" ] && [ -f "$since" ]; then\n'
+        '  new=$(/bin/grep -vxFf "$since" "$canned" | /bin/grep "^ ")\n'
+        f'  if [ -n "$new" ]; then echo "{HEADER}"; echo "$new"; fi\n'
+        '  echo "unchanged lines not shown"\n'
+        "else\n"
+        '  /bin/cat "$canned"\n'
+        "fi\n"
+        'if [ -n "$since" ]; then /bin/mkdir -p "$(/usr/bin/dirname "$since")"; '
+        '/bin/cp "$canned" "$since"; fi\n'
+        f"exit {exit_code}\n"
+    )
+    reader = _script(tmp_path / "reader", body)
     monkeypatch.setenv("NEMIK_CHECK", str(reader))
     return project
 
@@ -178,7 +198,59 @@ def test_the_reader_is_run_with_the_fleet_root_as_one_word(
     argv_file = tmp_path / "argv.txt"
     _script(tmp_path / "reader", f"printf '%s|' \"$@\" > '{argv_file}'\n")
     _run(monkeypatch, capsys, "SessionStart")
-    assert argv_file.read_text(encoding="utf-8") == f"--root|{tmp_path / 'fleet'}|--digest|"
+    since = tmp_path / "tmp" / "mikemol-nemik-check" / "sess-1.since"
+    argv = f"--root|{tmp_path / 'fleet'}|--digest|--since|{since}|"
+    assert argv_file.read_text(encoding="utf-8") == argv
+
+
+def test_a_reader_that_predates_since_is_run_again_without_it_and_nothing_is_failed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1773: argparse's exit 2 on --since degrades to the full digest, as the old hook read it."""
+    _setup(tmp_path, monkeypatch, "")
+    canned = tmp_path / "report.txt"
+    canned.write_text(REPORT, encoding="utf-8")
+    old_reader = (
+        'for arg in "$@"; do\n'
+        '  if [ "$arg" = "--since" ]; then\n'
+        "    echo 'nemik-check: error: unrecognized arguments: --since x' >&2\n"
+        "    exit 2\n"
+        "  fi\n"
+        "done\n"
+        f"/bin/cat '{canned}'\n"
+    )
+    _script(tmp_path / "reader", old_reader)
+    first = _run(monkeypatch, capsys, "SessionStart")
+    assert WARN in _context(first[1])
+    assert "COULD NOT RUN" not in _context(first[1])
+    assert not first[2]
+    assert _run(monkeypatch, capsys, "UserPromptSubmit") == (0, "", "")
+
+
+def test_a_session_without_a_usable_id_gets_no_since_file() -> None:
+    """The guard is the digest's: an id that is not a plain token means the reader is run bare."""
+    assert nemik_check.since_path("../escape") is None
+    assert nemik_check.since_path("") is None
+    assert nemik_check.reader_argv("r", Path("/f"), None) == ["r", "--root", "/f", "--digest"]
+
+
+def test_a_repeated_delta_is_emitted_again_because_the_reader_owns_the_dedupe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A row that appears, goes, and appears again is the same delta text twice: both are shown."""
+    _setup(tmp_path, monkeypatch, REPORT)
+    assert _run(monkeypatch, capsys, "SessionStart")[1]
+    with_new = REPORT.replace(WARN2, WARN2 + "\n" + NEWROW)
+    report = tmp_path / "report.txt"
+    report.write_text(with_new, encoding="utf-8")
+    first = _run(monkeypatch, capsys, "UserPromptSubmit")
+    assert NEWROW in _context(first[1])
+    assert WARN not in _context(first[1])
+    report.write_text(REPORT, encoding="utf-8")
+    assert _run(monkeypatch, capsys, "UserPromptSubmit") == (0, "", "")
+    report.write_text(with_new, encoding="utf-8")
+    again = _run(monkeypatch, capsys, "UserPromptSubmit")
+    assert NEWROW in _context(again[1])
 
 
 def test_absent_reader_says_so_and_does_not_claim_the_queue_is_clean(

@@ -383,7 +383,8 @@ sh_test(
 # rationale; //mdstruct:mutants is the F-arm (real deps).
 mutants_sharded(
     name = "mutants",
-    shards = 48,
+    shards = 52,
+    cpu_budget = 300,
     cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

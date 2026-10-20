@@ -193,12 +193,14 @@ src/mikemol/hooks/commit_kata.py|unpushed-repair-never-printed|if any\(mark in l
 src/mikemol/hooks/commit_kata.py|repair-printed-always|if any\(mark in line for mark in LOCAL_MARKS\):|if True:|def=commit
 
 # W1100: the gate's job count is the free cores, floored, capped, and an unreadable load is an idle host.
-src/mikemol/hooks/gatejobs.py|jobs-ignore-the-load|round\(cores - load1\)|cores|def=jobs
+src/mikemol/hooks/gatejobs.py|jobs-ignore-the-busy-cores|round\(cores - busy\)|cores|def=jobs
 src/mikemol/hooks/gatejobs.py|jobs-have-no-floor|max\(MIN_JOBS, min\(cores, |min(cores, (|def=jobs
 src/mikemol/hooks/gatejobs.py|jobs-have-no-cap|min\(cores, round|(round|def=jobs
-src/mikemol/hooks/gatejobs.py|unreadable-load-is-busy|return 0\.0|return 1000.0|def=load_of
+src/mikemol/hooks/gatejobs.py|iowait-counted-as-work|return sum\(columns\), sum\(columns\[i\] for i in IDLE_FIELDS\)|return sum(columns), columns[3]|def=ticks_of
+src/mikemol/hooks/gatejobs.py|still-clock-divides-by-zero|    if total <= 0:|    if False:|def=busy_cores
+src/mikemol/hooks/gatejobs.py|no-measurement-window|    wait\(SAMPLE_S\)|    pass|def=measured_busy
 src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|def=main
-src/mikemol/hooks/gatejobs.py|explain-never-notes-the-floor|cores - load1 < MIN_JOBS|False|def=explain
+src/mikemol/hooks/gatejobs.py|explain-never-notes-the-floor|cores - busy < MIN_JOBS|False|def=explain
 src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\(\)|parent = head|def=build
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=build
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
@@ -489,6 +491,10 @@ src/mikemol/hooks/commit_kata.py|trailer-block-split-again|Waypoint: \{request\.
 src/mikemol/hooks/presubmit.py|keep-going-dropped|        "--keep_going",|        "--noshow_progress",|def=plan
 src/mikemol/hooks/presubmit.py|namespace-is-the-gates|    return Plan\(argv, \{NAMESPACE_ENV: f"\{root\}/presubmit"\}\)|    return Plan(argv, {NAMESPACE_ENV: f"{root}"})|def=plan
 src/mikemol/hooks/presubmit.py|no-repo-runs-anyway|        return EXIT_USAGE|        return 0|def=main
+src/mikemol/hooks/nemik_check.py|since-never-passed|    return argv if since is None else \[\*argv, "--since", str\(since\)\]|    return argv|def=reader_argv
+src/mikemol/hooks/nemik_check.py|an-old-reader-is-failed-not-retried|        and "unrecognized arguments" in done\.stderr|        and False|def=run_reader
+src/mikemol/hooks/nemik_check.py|session-start-keeps-the-old-digest|        since\.unlink\(missing_ok=True\)|        pass|def=main
+src/mikemol/hooks/nemik_check.py|a-delta-is-deduped-like-a-whole-emission|    if \(not honoured or failed\) and unchanged_since_last\(event, session, text\):|    if unchanged_since_last(event, session, text):|def=main
 src/mikemol/hooks/presubmit.py|missing-snapshot-runs-anyway|        return EXIT_REFUSED|        return 0|def=main
 src/mikemol/hooks/presubmit.py|dot-dir-is-a-dist|if not top\.startswith\("\."\)|if True|def=dists_of
 src/mikemol/hooks/presubmit.py|root-file-is-a-dist|for path in paths if "/" in path|for path in paths if "/" not in path|def=dists_of

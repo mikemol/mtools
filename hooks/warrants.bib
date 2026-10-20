@@ -8669,26 +8669,11 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_idle_host_gets_every_core},
 }
 
-@misc{hooks-gatejobs-count-is-the-free-cores-and-never-below-the-floor,
-  section = {gatejobs},
-  title  = {Half loaded gets about half; a host at load 97 on 24 cores is held to the floor, not zero},
-  claim  = {Half loaded gets about half; a host at load 97 on 24 cores is held to the floor, not
-            zero.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_the_count_is_the_free_cores_and_never_below_the_floor},
-}
-
 @misc{hooks-gatejobs-it-prints-one-flag-per-line-for-the-hook-to-read,
   section = {gatejobs},
   title  = {Two flags, one per line, the same number in both},
   claim  = {Two flags, one per line, the same number in both.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_it_prints_one_flag_per_line_for_the_hook_to_read},
-}
-
-@misc{hooks-gatejobs-unreadable-load-reads-as-an-idle-host,
-  section = {gatejobs},
-  title  = {A missing file and a garbled one both fall back to today's behaviour: every core},
-  claim  = {A missing file and a garbled one both fall back to today's behaviour: every core.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_unreadable_load_reads_as_an_idle_host},
 }
 
 @misc{hooks-gatejobs-argument-is-a-usage-error,
@@ -8908,13 +8893,6 @@
   title  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock},
   claim  = {A failing pre-commit hook refuses: HEAD stays, the peer's staged file stays, no lock.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_staged.py -k test_a_refused_commit_leaves_head_and_the_real_index_as_they_were},
-}
-
-@misc{hooks-gatejobs-explain-states-the-cap-the-cores-and-the-load,
-  section = {gatejobs},
-  title  = {Under load 97 on 24 cores the line says jobs=2, both readings, and that the floor held},
-  claim  = {Under load 97 on 24 cores the line says jobs=2, both readings, and that the floor held.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_explain_states_the_cap_the_cores_and_the_load},
 }
 
 @misc{hooks-gatejobs-explain-does-not-claim-the-floor-on-an-idle-host,
@@ -13308,4 +13286,83 @@
   title  = {W1749: a bare name died with FileNotFoundError; now the refusal is exit 4},
   claim  = {W1749: a bare name died with FileNotFoundError; now the refusal is exit 4.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_snapshot_tool_that_cannot_be_found_refuses_and_runs_nothing},
+}
+
+@misc{hooks-nemik-check-session-without-a-usable-id-gets-no-since-file,
+  section = {nemik-check},
+  title  = {The guard is the digest's: an id that is not a plain token means the reader is run bare},
+  claim  = {The guard is the digest's: an id that is not a plain token means the reader is run bare.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_session_without_a_usable_id_gets_no_since_file},
+}
+
+@misc{hooks-nemik-check-repeated-delta-is-emitted-again-because-the-reader-owns-the-dedupe,
+  section = {nemik-check},
+  title  = {A row that appears, goes, and appears again is the same delta text twice: both are shown},
+  claim  = {A row that appears, goes, and appears again is the same delta text twice: both are
+            shown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_repeated_delta_is_emitted_again_because_the_reader_owns_the_dedupe},
+}
+
+@misc{hooks-nemik-check-reader-that-predates-since-is-run-again-without-it-and-nothing-is-failed,
+  section = {nemik-check},
+  title  = {W1773: argparse's exit 2 on --since degrades to the full digest, as the old hook read it},
+  claim  = {W1773: argparse's exit 2 on --since degrades to the full digest, as the old hook read
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_a_reader_that_predates_since_is_run_again_without_it_and_nothing_is_failed},
+}
+
+@misc{hooks-gatejobs-count-is-the-idle-cores-and-never-below-the-floor,
+  section = {gatejobs},
+  title  = {Half busy gets about half; a host with every core busy is held to the floor, not zero},
+  claim  = {Half busy gets about half; a host with every core busy is held to the floor, not zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_the_count_is_the_idle_cores_and_never_below_the_floor},
+}
+
+@misc{hooks-gatejobs-ticks-count-idle-and-iowait-as-no-work,
+  section = {gatejobs},
+  title  = {Total is every column; idle is the idle and iowait columns only},
+  claim  = {Total is every column; idle is the idle and iowait columns only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_ticks_count_idle_and_iowait_as_no_work},
+}
+
+@misc{hooks-gatejobs-unreadable-or-short-stat-is-none,
+  section = {gatejobs},
+  title  = {A missing file, a garbled line and a line with too few columns all read as unmeasured},
+  claim  = {A missing file, a garbled line and a line with too few columns all read as unmeasured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_an_unreadable_or_short_stat_is_none},
+}
+
+@misc{hooks-gatejobs-busy-cores-is-the-busy-fraction-of-the-ticks-times-the-cores,
+  section = {gatejobs},
+  title  = {A third of the ticks busy is a third of the cores, all idle none, all busy every one},
+  claim  = {A third of the ticks busy is a third of the cores, all idle none, all busy every one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_busy_cores_is_the_busy_fraction_of_the_ticks_times_the_cores},
+}
+
+@misc{hooks-gatejobs-failed-read-or-a-still-clock-reads-as-an-idle-host,
+  section = {gatejobs},
+  title  = {The fallback is today's behaviour: every core, not a throttle},
+  claim  = {The fallback is today's behaviour: every core, not a throttle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_a_failed_read_or_a_still_clock_reads_as_an_idle_host},
+}
+
+@misc{hooks-gatejobs-measured-busy-reads-twice-around-one-window,
+  section = {gatejobs},
+  title  = {The window is SAMPLE_S; the second read sees what the wait let the host do},
+  claim  = {The window is SAMPLE_S; the second read sees what the wait let the host do.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_measured_busy_reads_twice_around_one_window},
+}
+
+@misc{hooks-gatejobs-half-busy-prints-half-the-cores-as-jobs,
+  section = {gatejobs},
+  title  = {The flags follow the busy cores, not the (fake, huge) load1 on the same host},
+  claim  = {The flags follow the busy cores, not the (fake, huge) load1 on the same host.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_half_busy_prints_half_the_cores_as_jobs},
+}
+
+@misc{hooks-gatejobs-explain-states-the-cap-the-load-and-the-busy-cores,
+  section = {gatejobs},
+  title  = {The first line keeps the shape its readers match; the second says what was measured},
+  claim  = {The first line keeps the shape its readers match; the second says what was measured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_explain_states_the_cap_the_load_and_the_busy_cores},
 }
