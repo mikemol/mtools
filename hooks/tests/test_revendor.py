@@ -160,6 +160,16 @@ def test_atomicwrite_corpus_and_waldo_are_vendored_dists_and_move_with_the_rest(
         assert revendor.wheel_name(dist, NEW) in moved
 
 
+def test_cvdcore_is_a_vendored_dist_and_moves_with_the_rest() -> None:
+    """W1787 (nemik:W438): a repo vendoring the colour-blind core gets it listed and moved."""
+    text = "".join(
+        f'mikemol-{d} = {{ path = "vendor/wheels/{revendor.wheel_name(d, OLD)}" }}\n'
+        for d in ("hooks", "cvdcore")
+    )
+    assert revendor.vendored(text) == ("hooks", "cvdcore")
+    assert revendor.wheel_name("cvdcore", NEW) in revendor.move_sources(text, NEW)
+
+
 def test_the_prose_naming_the_old_commit_moves_too() -> None:
     """Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin."""
     text = "# vendored the same way at mtools b5db3c4, one sha\n"

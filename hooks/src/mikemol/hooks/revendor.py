@@ -32,7 +32,7 @@ KNOWN = (*DISTS, "fence")
 # ⚑ MORE MTOOLS DISTS A REPO MAY VENDOR (W1449, nemik): A NAMED LIST,
 # NOT "ANY mikemol_ WHEEL": a wheel of some other project (`mikemol_ledger`) shares the prefix and
 # is not ours to move. A repo that vendors a new mtools dist adds its name here.
-EXTRA = ("icsstruct", "rulerseq", "frontier", "atomicwrite", "corpus", "waldo")
+EXTRA = ("icsstruct", "rulerseq", "frontier", "atomicwrite", "corpus", "waldo", "cvdcore")
 ALL = (*KNOWN, *EXTRA)
 _ALTERNATION = "|".join(ALL)
 VERSION = "0.1.0"

@@ -13501,3 +13501,10 @@
   claim  = {No file after --stack, or a file that is not a stack, runs nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_stack_flag_without_a_readable_stack_is_a_usage_error},
 }
+
+@misc{hooks-revendor-cvdcore-is-a-vendored-dist-and-moves-with-the-rest,
+  section = {revendor},
+  title  = {W1787 (nemik:W438): a repo vendoring the colour-blind core gets it listed and moved},
+  claim  = {W1787 (nemik:W438): a repo vendoring the colour-blind core gets it listed and moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_cvdcore_is_a_vendored_dist_and_moves_with_the_rest},
+}
