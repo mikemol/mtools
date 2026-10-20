@@ -360,3 +360,38 @@
   claim  = {No `vmsingle-http` is exit 3, a partial range is exit 2, and neither asks the network.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_the_verb_needs_an_endpoint_and_all_three_range_bounds_or_none},
 }
+
+@misc{otlp-metriccmd-batch-is-one-post-with-a-metric-per-name-and-each-points-own-time,
+  section = {metriccmd},
+  title  = {W1784: three samples, two names, one request; the times are the lines', not arrival},
+  claim  = {W1784: three samples, two names, one request; the times are the lines', not arrival.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_batch_is_one_post_with_a_metric_per_name_and_each_points_own_time},
+}
+
+@misc{otlp-metriccmd-bad-line-refuses-the-whole-batch-and-names-it,
+  section = {metriccmd},
+  title  = {All or nothing: nothing is posted, and the second line is the one named},
+  claim  = {All or nothing: nothing is posted, and the second line is the one named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_bad_line_refuses_the_whole_batch_and_names_it},
+}
+
+@misc{otlp-metriccmd-line-without-a-time-is-stamped-with-the-arrival-time,
+  section = {metriccmd},
+  title  = {The default: `time_ns` absent means now, which the caller passes in},
+  claim  = {The default: `time_ns` absent means now, which the caller passes in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_line_without_a_time_is_stamped_with_the_arrival_time},
+}
+
+@misc{otlp-metriccmd-boolean-a-string-value-and-a-non-object-are-not-samples,
+  section = {metriccmd},
+  title  = {The controls: True is not 1, a quoted number is not a number, a list is not a row},
+  claim  = {The controls: True is not 1, a quoted number is not a number, a list is not a row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_boolean_a_string_value_and_a_non_object_are_not_samples},
+}
+
+@misc{otlp-metriccmd-empty-batch-sends-nothing-and-succeeds,
+  section = {metriccmd},
+  title  = {Blank lines are skipped; nothing to send is a success with no POST},
+  claim  = {Blank lines are skipped; nothing to send is a success with no POST.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_an_empty_batch_sends_nothing_and_succeeds},
+}

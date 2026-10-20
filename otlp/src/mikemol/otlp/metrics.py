@@ -19,7 +19,7 @@ only when a payload is built, never at a hook's start (measured: 24 ms warm, 79 
 """
 
 import socket
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from opentelemetry.proto.collector.metrics.v1.metrics_service_pb2 import ExportMetricsServiceRequest
@@ -144,6 +144,32 @@ def gauge(resource: Resource, sample: Sample) -> ExportMetricsServiceRequest:
     """
     body = Gauge(data_points=[_point(sample)])
     return _request(resource, Metric(name=sample.name, unit=sample.unit, gauge=body))
+
+
+def gauges(resource: Resource, samples: Sequence[Sample]) -> ExportMetricsServiceRequest:
+    """Build ONE request carrying many gauge points, one Metric per name (W1784).
+
+    ⚑ A BATCH IS ONE REQUEST, NOT ONE PROCESS PER SAMPLE: a gate with a thousand fresh test results
+    would otherwise start a thousand senders. Each point keeps its own `time_ns`, so a number that
+    was true when a test finished is stored at that time and not at the batch's arrival.
+
+    Returns:
+        the request, ready to serialise.
+
+    """
+    groups: dict[str, list[Sample]] = {}
+    for sample in samples:
+        groups.setdefault(sample.name, []).append(sample)
+    made = [
+        Metric(name=name, unit=group[0].unit, gauge=Gauge(data_points=[_point(s) for s in group]))
+        for name, group in groups.items()
+    ]
+    scope = ScopeMetrics(scope=InstrumentationScope(name=SCOPE), metrics=made)
+    return ExportMetricsServiceRequest(
+        resource_metrics=[
+            ResourceMetrics(resource=resource_message(resource), scope_metrics=[scope])
+        ]
+    )
 
 
 def updown_counter(resource: Resource, sample: Sample) -> ExportMetricsServiceRequest:

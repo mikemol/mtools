@@ -87,6 +87,11 @@ def _parser() -> argparse.ArgumentParser:
     metric.add_argument("--value", required=True, type=float, help="the sample's value")
     metric.add_argument("--kind", default="gauge", choices=metriccmd.KINDS)
     metric.add_argument("--field", action="append", metavar="KEY=VALUE")
+    batch = verbs.add_parser("metrics", help="send stdin JSON lines as gauge samples, one request")
+    batch.add_argument("--url", help=f"the metrics base URL (default: ${endpoints.ENV} name)")
+    batch.add_argument("--service", required=True, help="service.name")
+    batch.add_argument("--namespace", required=True, help="service.namespace, the owning repo")
+    batch.add_argument("--version", default="", help="service.version, the commit it runs")
     query = verbs.add_parser("query-metrics", help="run a PromQL query, print JSON lines")
     query.add_argument("promql", help="the PromQL expression")
     query.add_argument("--url", help=f"the metrics base URL (default: ${endpoints.ENV} name)")
@@ -186,6 +191,24 @@ def _metric(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     return metriccmd.run(request, sender.post)
 
 
+def _metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
+    # The `metrics` verb: stdin JSON lines as gauge samples in one request (W1784).
+    base = _text(opts, "url") or endpoints.base_url(metriccmd.ENDPOINT, environ) or ""
+    if not base:
+        sys.stderr.write(
+            f"mikemol-otlp: need --url or ${endpoints.ENV} naming {metriccmd.ENDPOINT}\n"
+        )
+        return EXIT_USAGE
+    request = metriccmd.BatchRequest(
+        base=base,
+        service=_text(opts, "service"),
+        namespace=_text(opts, "namespace"),
+        version=_text(opts, "version"),
+        lines=cast("TextIO", sys.stdin).read().splitlines(),
+    )
+    return metriccmd.run_batch(request, sender.post)
+
+
 def _query_metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     # The `query-metrics` verb: an instant query, or a range one when all three bounds are given.
     base = query_metrics.base_for(_text(opts, "url"), environ)
@@ -207,6 +230,7 @@ def _query_metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
 _VERBS: dict[str, Callable[[dict[str, object], Mapping[str, str]], int]] = {
     "trace": _trace,
     "metric": _metric,
+    "metrics": _metrics,
     "query-metrics": _query_metrics,
 }
 

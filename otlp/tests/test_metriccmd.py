@@ -11,6 +11,8 @@ refuses is exit 1, and no destination is a usage refusal.
 
 from __future__ import annotations
 
+import io
+import sys
 import threading
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -123,3 +125,84 @@ def test_no_destination_is_a_usage_refusal(
     argv = ["metric", "--service", "s", "--namespace", "n", "--name", "x", "--value", "1"]
     assert cli.main(argv) == cli.EXIT_USAGE
     assert metriccmd.ENDPOINT in capsys.readouterr().err
+
+
+_WHEN = 1_700_000_000_000_000_000
+_BATCH = (
+    f'{{"name": "mikemol.gate.target.cpu.seconds", "value": 63.1, "time_ns": {_WHEN}, '
+    '"fields": {"target": "//hooks:mutants_1", "kind": "mutants"}}\n'
+    f'{{"name": "mikemol.gate.target.wall.seconds", "value": 12, "time_ns": {_WHEN + 5}, '
+    '"fields": {"target": "//hooks:mutants_1", "kind": "mutants"}}\n'
+    f'{{"name": "mikemol.gate.target.cpu.seconds", "value": 4, "time_ns": {_WHEN + 9}, '
+    '"fields": {"target": "//ratchet:mutants", "kind": "mutants"}}\n'
+)
+_THREE_POINTS = 3
+_TWO_METRICS = 2
+
+
+def _batch_argv(base: str) -> list[str]:
+    return ["metrics", "--url", base, "--service", "mikemol-gate", "--namespace", "mtools"]
+
+
+def _metrics(body: bytes) -> list[Doc]:
+    doc = MessageToDict(ExportMetricsServiceRequest.FromString(body))
+    resource = cast("list[Doc]", doc["resourceMetrics"])[0]
+    scope = cast("list[Doc]", resource["scopeMetrics"])[0]
+    return cast("list[Doc]", scope["metrics"])
+
+
+def test_a_batch_is_one_post_with_a_metric_per_name_and_each_points_own_time(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1784: three samples, two names, one request; the times are the lines', not arrival."""
+    monkeypatch.setattr(sys, "stdin", io.StringIO(_BATCH))
+    with _store() as (base, posts):
+        assert cli.main(_batch_argv(base)) == metriccmd.EXIT_SENT
+    assert len(posts) == 1
+    assert posts[0][0] == sender.METRICS_PATH
+    sent = _metrics(posts[0][1])
+    assert len(sent) == _TWO_METRICS
+    cpu = next(m for m in sent if m["name"] == "mikemol.gate.target.cpu.seconds")
+    points = cast("list[Doc]", cast("Doc", cpu["gauge"])["dataPoints"])
+    assert [p["timeUnixNano"] for p in points] == [str(_WHEN), str(_WHEN + 9)]
+    counted = sum(len(cast("list[Doc]", cast("Doc", m["gauge"])["dataPoints"])) for m in sent)
+    assert counted == _THREE_POINTS
+    assert "sent 3 gauge samples" in capsys.readouterr().out
+
+
+def test_a_bad_line_refuses_the_whole_batch_and_names_it(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """All or nothing: nothing is posted, and the second line is the one named."""
+    lines = _BATCH.splitlines()[0] + "\nnot json\n" + _BATCH.splitlines()[1] + "\n"
+    monkeypatch.setattr(sys, "stdin", io.StringIO(lines))
+    with _store() as (base, posts):
+        assert cli.main(_batch_argv(base)) == metriccmd.EXIT_FAILED
+    assert not posts
+    assert "line 2" in capsys.readouterr().err
+
+
+def test_a_line_without_a_time_is_stamped_with_the_arrival_time() -> None:
+    """The default: `time_ns` absent means now, which the caller passes in."""
+    samples, why = metriccmd.parse_batch(['{"name": "x", "value": 1}'], _WHEN)
+    assert not why
+    assert samples[0].time_ns == _WHEN
+
+
+def test_a_boolean_a_string_value_and_a_non_object_are_not_samples() -> None:
+    """The controls: True is not 1, a quoted number is not a number, a list is not a row."""
+    for bad in ('{"name": "x", "value": true}', '{"name": "x", "value": "3"}', "[1, 2]"):
+        samples, why = metriccmd.parse_batch([bad], _WHEN)
+        assert not samples
+        assert "line 1" in why
+
+
+def test_an_empty_batch_sends_nothing_and_succeeds(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Blank lines are skipped; nothing to send is a success with no POST."""
+    monkeypatch.setattr(sys, "stdin", io.StringIO("\n\n"))
+    with _store() as (base, posts):
+        assert cli.main(_batch_argv(base)) == metriccmd.EXIT_SENT
+    assert not posts
+    assert "sent 0 gauge samples" in capsys.readouterr().out

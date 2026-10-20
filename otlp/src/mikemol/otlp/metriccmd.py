@@ -14,10 +14,12 @@ caller that does hold the running total; the in-flight commit depth (W1446) send
 The network call is a seam (`Post`), so the tests replace it.
 """
 
+import json
 import sys
 import time
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from typing import cast
 
 from mikemol.otlp import metrics, sender
 
@@ -39,6 +41,90 @@ class Request:
     value: float
     kind: str
     labels: Mapping[str, str]
+
+
+@dataclass(frozen=True, slots=True)
+class BatchRequest:
+    """One `metrics` invocation: where, as whom, and the JSON lines on stdin."""
+
+    base: str
+    service: str
+    namespace: str
+    version: str
+    lines: Iterable[str]
+
+
+def _sample_of(line: str, now_ns: int) -> metrics.Sample | None:
+    """Read one line as a gauge sample.
+
+    Returns:
+        the sample, or None when the line is not an object with a string name and a numeric value.
+
+    """
+    try:
+        raw: object = json.loads(line)
+    except ValueError:
+        return None
+    if not isinstance(raw, dict):
+        return None
+    row = cast("dict[str, object]", raw)
+    name, value = row.get("name"), row.get("value")
+    fields, when = row.get("fields", {}), row.get("time_ns", now_ns)
+    numeric = isinstance(value, (int, float)) and not isinstance(value, bool)
+    if not isinstance(name, str) or not numeric or not isinstance(fields, dict):
+        return None
+    if not isinstance(when, int) or not isinstance(value, (int, float)):
+        return None
+    labels = {str(k): str(v) for k, v in cast("dict[object, object]", fields).items()}
+    return metrics.Sample(name, float(value), when, labels)
+
+
+def parse_batch(lines: Iterable[str], now_ns: int) -> tuple[list[metrics.Sample], str]:
+    """Read one gauge sample per non-empty line: `{"name", "value", "fields", "time_ns"}`.
+
+    ⚑ ALL OR NOTHING: a line that is not an object with a name and a numeric value refuses the
+    whole batch and says which line, so a half-sent batch never reads as a whole one. `time_ns` is
+    when the number was true; absent, it is `now_ns`.
+
+    Returns:
+        the samples and an empty string, or no samples and the reason.
+
+    """
+    samples: list[metrics.Sample] = []
+    for number, line in enumerate(lines, start=1):
+        if not line.strip():
+            continue
+        sample = _sample_of(line, now_ns)
+        if sample is None:
+            return [], f"line {number} is not a gauge sample"
+        samples.append(sample)
+    return samples, ""
+
+
+def run_batch(req: BatchRequest, post: sender.Post) -> int:
+    """Send every sample of a batch in one request.
+
+    Returns:
+        EXIT_SENT when the store accepted it, EXIT_FAILED when a line was refused or the send
+        failed.
+
+    """
+    samples, why = parse_batch(req.lines, time.time_ns())
+    if why:
+        sys.stderr.write(f"mikemol-otlp: {why}\n")
+        return EXIT_FAILED
+    if not samples:
+        sys.stdout.write("sent 0 gauge samples\n")
+        return EXIT_SENT
+    resource = metrics.resource_here(req.service, req.namespace, req.version)
+    payload = metrics.gauges(resource, samples).SerializeToString()
+    try:
+        sender.send(req.base.rstrip("/") + sender.METRICS_PATH, payload, post)
+    except sender.SendError as failed:
+        sys.stderr.write(f"mikemol-otlp: {failed}\n")
+        return EXIT_FAILED
+    sys.stdout.write(f"sent {len(samples)} gauge samples\n")
+    return EXIT_SENT
 
 
 def run(req: Request, post: sender.Post) -> int:
