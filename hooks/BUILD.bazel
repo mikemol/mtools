@@ -474,6 +474,7 @@ venv_from_hub(
         # W1655: the gate's own bazel test over a snapshot of the working tree, before the gate.
         "mikemol-presubmit": "mikemol.hooks.presubmit:main",
         "mikemol-requeue": "mikemol.hooks.requeue:main",
+        "mikemol-gate-targets": "mikemol.hooks.gatetargets:main",
         # W1709: how many lines of a repo's tracked files reach into another checkout.
         "mikemol-siblings": "mikemol.hooks.siblingcensus_cli:main",
         # W1718: each gate phase's median, spread and slope over recent gates.

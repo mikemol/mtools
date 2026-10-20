@@ -13,6 +13,7 @@ file the caller did not have.
 CONSUMED BY: `vlogcli`.
 """
 
+import os
 import subprocess
 import sys
 from collections.abc import Sequence
@@ -46,3 +47,24 @@ def spawn_detached(argv: Sequence[str]) -> None:
         stderr=subprocess.DEVNULL,
         start_new_session=True,
     )
+
+
+def spawn_with_stdin(argv: Sequence[str], text: str) -> None:
+    """Start `argv` detached, give it `text` on stdin, and do not wait for it (W1783).
+
+    ⚑ AN OS PIPE, NOT POPEN'S STDIN OBJECT: `text` is a bounded batch (the caller chunks it well
+    under the pipe buffer), so writing it before the child reads can never block this process.
+    """
+    read_end, write_end = os.pipe()
+    try:
+        subprocess.Popen(
+            list(argv),
+            stdin=read_end,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        os.write(write_end, text.encode("utf-8"))
+    finally:
+        os.close(read_end)
+        os.close(write_end)

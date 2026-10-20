@@ -125,6 +125,7 @@ mikemol-snapshot = "mikemol.hooks.snapshot:main"
 # W1655: the gate's own bazel test over a snapshot of the working tree, run before the serial gate.
 mikemol-presubmit = "mikemol.hooks.presubmit:main"
 mikemol-requeue = "mikemol.hooks.requeue:main"
+mikemol-gate-targets = "mikemol.hooks.gatetargets:main"
 # W1709: how many lines of a repo's tracked files reach into another checkout, resolved, per repo.
 mikemol-siblings = "mikemol.hooks.siblingcensus_cli:main"
 # W1718: each gate phase's median, spread and slope over recent gates, from the commit spans.

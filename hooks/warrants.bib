@@ -13366,3 +13366,102 @@
   claim  = {The first line keeps the shape its readers match; the second says what was measured.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatejobs.py -k test_explain_states_the_cap_the_load_and_the_busy_cores},
 }
+
+@misc{hooks-gatetargets-test-result-gives-its-label-wall-time-and-finish-time,
+  section = {gatetargets},
+  title  = {The build event's fields, converted: milliseconds to seconds, start plus wall to ns},
+  claim  = {The build event's fields, converted: milliseconds to seconds, start plus wall to ns.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_test_result_gives_its_label_wall_time_and_finish_time},
+}
+
+@misc{hooks-gatetargets-replayed-result-is-cached-whether-locally-or-remotely,
+  section = {gatetargets},
+  title  = {Both cache flags mean the measurement is an old one},
+  claim  = {Both cache flags mean the measurement is an old one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_replayed_result_is_cached_whether_locally_or_remotely},
+}
+
+@misc{hooks-gatetargets-noise-in-the-file-is-skipped-and-the-last-attempt-of-a-target-wins,
+  section = {gatetargets},
+  title  = {Not JSON, not a test result, a label that is no label: skipped; a retry replaces},
+  claim  = {Not JSON, not a test result, a label that is no label: skipped; a retry replaces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_noise_in_the_file_is_skipped_and_the_last_attempt_of_a_target_wins},
+}
+
+@misc{hooks-gatetargets-kind-is-mutants-pytest-or-other,
+  section = {gatetargets},
+  title  = {The three kinds the contract names, and the bare target of an unsharded grid},
+  claim  = {The three kinds the contract names, and the bare target of an unsharded grid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_kind_is_mutants_pytest_or_other},
+}
+
+@misc{hooks-gatetargets-shard-line-gives-cpu-seconds-and-children-or-nothing,
+  section = {gatetargets},
+  title  = {W1769's line is read from anywhere in a log; no line, no values},
+  claim  = {W1769's line is read from anywhere in a log; no line, no values.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_the_shard_line_gives_cpu_seconds_and_children_or_nothing},
+}
+
+@misc{hooks-gatetargets-log-is-read-from-the-package-and-target-directory,
+  section = {gatetargets},
+  title  = {`testlogs/<package>/<name>/test.log`; an absent file reads as None},
+  claim  = {`testlogs/<package>/<name>/test.log`; an absent file reads as None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_log_is_read_from_the_package_and_target_directory},
+}
+
+@misc{hooks-gatetargets-fresh-mutants-target-gives-wall-cpu-and-children-rows-at-its-finish-time,
+  section = {gatetargets},
+  title  = {The per-run count leads; the target's rows carry the target and kind and its own time},
+  claim  = {The per-run count leads; the target's rows carry the target and kind and its own time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_fresh_mutants_target_gives_wall_cpu_and_children_rows_at_its_finish_time},
+}
+
+@misc{hooks-gatetargets-cached-target-gives-no-rows-and-a-fully-cached-run-says-zero,
+  section = {gatetargets},
+  title  = {The negative control: nothing from a replayed result, and the count is 0, not absent},
+  claim  = {The negative control: nothing from a replayed result, and the count is 0, not absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_cached_target_gives_no_rows_and_a_fully_cached_run_says_zero},
+}
+
+@misc{hooks-gatetargets-pytest-target-gives-only-its-wall-time-and-a-log-without-the-line-adds-nothing,
+  section = {gatetargets},
+  title  = {CPU and children are mutants-only (nothing else prints the line); no line, no CPU row},
+  claim  = {CPU and children are mutants-only (nothing else prints the line); no line, no CPU row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_pytest_target_gives_only_its_wall_time_and_a_log_without_the_line_adds_nothing},
+}
+
+@misc{hooks-gatetargets-rows-are-chunked-and-every-one-carries-the-repo-label,
+  section = {gatetargets},
+  title  = {One `metrics` child per CHUNK rows, JSON lines on its stdin, `repo` on every row},
+  claim  = {One `metrics` child per CHUNK rows, JSON lines on its stdin, `repo` on every row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_rows_are_chunked_and_every_one_carries_the_repo_label},
+}
+
+@misc{hooks-gatetargets-nothing-is-sent-without-a-binary-or-a-store-and-a-failed-spawn-is-false,
+  section = {gatetargets},
+  title  = {Best effort: no program, no store, an OS error all return False and raise nothing},
+  claim  = {Best effort: no program, no store, an OS error all return False and raise nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_nothing_is_sent_without_a_binary_or_a_store_and_a_failed_spawn_is_false},
+}
+
+@misc{hooks-gatetargets-main-reads-the-files-and-reports-and-a-wrong-call-is-usage,
+  section = {gatetargets},
+  title  = {The entry: three arguments or usage; an unreadable BEP is usage; success prints counts},
+  claim  = {The entry: three arguments or usage; an unreadable BEP is usage; success prints counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_main_reads_the_files_and_reports_and_a_wrong_call_is_usage},
+}
+
+@misc{hooks-vlogdetach-child-is-given-the-text-on-stdin-and-started-in-its-own-session,
+  section = {vlogdetach},
+  title  = {The argv is passed through, the pipe carries exactly the text, and the child is detached},
+  claim  = {The argv is passed through, the pipe carries exactly the text, and the child is
+            detached.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogdetach.py -k test_the_child_is_given_the_text_on_stdin_and_started_in_its_own_session},
+}
+
+@misc{hooks-vlogdetach-neither-end-of-the-pipe-stays-open-in-the-parent,
+  section = {vlogdetach},
+  title  = {The control for a leak: the read end the child got is closed here once it is started},
+  claim  = {The control for a leak: the read end the child got is closed here once it is started.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogdetach.py -k test_neither_end_of_the_pipe_stays_open_in_the_parent},
+}

@@ -159,3 +159,5 @@ commit_verdict	The Commit Verdict Counter: One Bounded Sample per Printed Verdic
 trainround	The Train Round Record: One Span and Two Samples per Round, with the Failed Checks and the Throttle the Gate Was Held To, Never Changing a Verdict
 gated_tree_trailer	The Gated-Tree Trailer: An Isolated Commit Names the Tree Its Gate Ran On, in the Message's Own Trailer Block
 requeue	The Stuck-Train Restart: Reads the Live Map, Refuses What It May Not Stop, Waits for the Group to Be Gone, Then Resubmits as One Stack
+gatetargets	Gate target measurements
+vlogdetach	Detached spawns
