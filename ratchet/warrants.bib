@@ -797,3 +797,24 @@
             chose.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_write_landing.py -k test_a_baseline_that_did_not_land_raises_instead_of_reading_as_written},
 }
+
+@misc{ratchet-mypy-domain-transitive-victim-is-in-the-mypy-domain,
+  section = {mypy_domain},
+  title  = {Arm 1: a change to `state.py` reaches the action, because the graph declares it},
+  claim  = {Arm 1: a change to `state.py` reaches the action, because the graph declares it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_domain.py -k test_the_transitive_victim_is_in_the_mypy_domain},
+}
+
+@misc{ratchet-mypy-domain-file-mypy-does-not-read-is-not-in-the-domain,
+  section = {mypy_domain},
+  title  = {The control: the query holds not every label, so holding the victim means something},
+  claim  = {The control: the query holds not every label, so holding the victim means something.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_domain.py -k test_a_file_mypy_does_not_read_is_not_in_the_domain},
+}
+
+@misc{ratchet-mypy-domain-defect-planted-in-an-imported-module-reaches-the-importers-verdict,
+  section = {mypy_domain},
+  title  = {Arm 2: green over the copy before the plant, red after it, in an imported module},
+  claim  = {Arm 2: green over the copy before the plant, red after it, in an imported module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_domain.py -k test_a_defect_planted_in_an_imported_module_reaches_the_importers_verdict},
+}

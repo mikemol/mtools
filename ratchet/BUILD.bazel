@@ -83,8 +83,41 @@ py_library(
         # binary. The tag makes that dependency visible and filterable rather than ambient.
         tags = ["requires-git"] if src == "tests/test_remap.py" else [],
     )
-    for src in glob(["tests/test_*.py"])
+    for src in glob(["tests/test_*.py"], exclude = ["tests/test_mypy_domain.py"])
 ]
+
+# ⚑⚑ THE mypy DOMAIN WITNESS AS A CACHED TEST (W1711, operator 2026-10-17, 695f3e0a line 76435: declare
+# each action's inputs to maximal granularity and bazel returns a cache hit). The old witness planted
+# bytes in a tracked file and re-ran bazel, which a sandbox cannot do and which reran in full every
+# gate. Its first arm, that the transitive victim reaches the `:mypy` action, is a fact the graph
+# already holds: `deps(:mypy)` lists every file the action declares, and a genquery caches that list
+# and recomputes it only when the graph changes. The test asserts the victim is in it, a file mypy does
+# not read is not, and a defect planted in an imported module reaches the importer's verdict.
+genquery(
+    name = "mypy_domain",
+    expression = "deps(//ratchet:mypy)",
+    scope = ["//ratchet:mypy"],
+)
+
+py_test(
+    name = "test_mypy_domain",
+    srcs = ["tests/test_mypy_domain.py", "@mikemol_rules_py//:pytest_main.py"],
+    main = "@mikemol_rules_py//:pytest_main.py",
+    args = [
+        "$(location tests/test_mypy_domain.py)",
+        "-q",
+        "--strict-markers",
+        "--strict-config",
+        "-c",
+        "$(location pyproject.toml)",
+    ],
+    data = ["pyproject.toml", ":mypy_domain"],
+    env = {"MYPY_DOMAIN": "$(location :mypy_domain)"},
+    size = "small",
+    deps = [dev_requirement("mypy"), dev_requirement("pytest")],
+    imports = ["src"],
+    legacy_create_init = 0,
+)
 
 exports_files(["BUILD.bazel"])
 
