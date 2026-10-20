@@ -558,6 +558,10 @@ src/mikemol/hooks/rootdrop.py|uid-set-before-gid|    ops\.setgid\(owner\.gid\)| 
 src/mikemol/hooks/rootdrop.py|root-sudo-user-has-a-home|    if not name or name == "root":|    if not name:|def=invoker_home
 src/mikemol/hooks/commit_kata.py|sudo-user-chosen-without-the-name|    if invoker is not None and \(invoker / "github" / given\)\.is_dir\(\):|    if invoker is not None:|def=fleet_root
 src/mikemol/hooks/commit_kata.py|identity-changed-for-everyone|    if owner is not None:|    if True:|def=become_owner
+src/mikemol/hooks/bazelstop.py|versioned-client-not-a-client|    return name in _NAMES or name\.startswith\("bazel-"\)|    return name in _NAMES|def=is_client
+src/mikemol/hooks/bazelstop.py|every-descendant-is-a-client|            if is_client\(name\):|            if True:|def=clients_under
+src/mikemol/hooks/bazelstop.py|grandchildren-not-walked|            pending\.append\(pid\)|            pass|def=clients_under
+src/mikemol/hooks/commit_withdraw.py|client-never-interrupted|    sent = bazelstop\.interrupt\(pid, \*stop\)|    sent = []|def=_ask_to_stop
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
 src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
 src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet

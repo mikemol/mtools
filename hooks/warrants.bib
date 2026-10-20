@@ -13888,3 +13888,31 @@
   claim  = {A slash or a leading dot is a path; anything else is a name under the host root.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata_root.py -k test_a_path_is_resolved_as_a_path_and_a_name_under_the_fleet_root},
 }
+
+@misc{hooks-bazelstop-only-bazels-own-names-are-clients,
+  section = {bazelstop},
+  title  = {The launcher, bazelisk and the versioned download count; a shell or the tool does not},
+  claim  = {The launcher, bazelisk and the versioned download count; a shell or the tool does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelstop.py -k test_only_bazels_own_names_are_clients},
+}
+
+@misc{hooks-bazelstop-clients-are-the-descendants-of-the-gate-never-the-server-or-a-stranger,
+  section = {bazelstop},
+  title  = {A detached server and an unrelated client are not under the gate, so they are not named},
+  claim  = {A detached server and an unrelated client are not under the gate, so they are not named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelstop.py -k test_the_clients_are_the_descendants_of_the_gate_never_the_server_or_a_stranger},
+}
+
+@misc{hooks-bazelstop-each-client-is-sent-sigint-and-one-that-already-exited-is-skipped,
+  section = {bazelstop},
+  title  = {Bazel's own cancellation is SIGINT, and a client gone by now is not an error},
+  claim  = {Bazel's own cancellation is SIGINT, and a client gone by now is not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelstop.py -k test_each_client_is_sent_sigint_and_one_that_already_exited_is_skipped},
+}
+
+@misc{hooks-bazelstop-withdrawing-an-in-flight-gate-interrupts-its-client-and-still-writes-the-marker,
+  section = {bazelstop},
+  title  = {The marker stays as the fallback, and the line says which client was interrupted},
+  claim  = {The marker stays as the fallback, and the line says which client was interrupted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelstop.py -k test_withdrawing_an_in_flight_gate_interrupts_its_client_and_still_writes_the_marker},
+}

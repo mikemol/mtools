@@ -16,6 +16,12 @@ mutating the staged tree, the defect this repository has already measured. So a 
 to the submission is written and the gate's `phase()` stops at its next boundary, between stages,
 with no child live.
 
+⚑ THE BAZEL PHASE HAS NO BOUNDARY, SO ITS CLIENT IS INTERRUPTED TOO (W1757): a gate known to be
+dead burned 20 to 36 minutes under load waiting for a boundary that bazel's phase never reaches.
+SIGINT goes to the bazel CLIENT among the submission's descendants (`bazelstop`), bazel's own
+cancellation, never the server and never the process group; the gate then takes its normal release
+path. The marker stays as the fallback for every phase that is not bazel.
+
 ⚑ A LEADER WITH JOINED FOLLOWERS IS REFUSED, NAMING THE COUNT. A train that gates the joined tip
 treats a gate that stops as a red tip and bisects it, so withdrawing the leader would refuse every
 follower that asked for nothing (option (b), carded for when the train has real runs behind it).
@@ -30,6 +36,7 @@ import signal
 from collections.abc import Callable
 from pathlib import Path
 
+from mikemol.hooks import bazelstop
 from mikemol.hooks.commit_counts import INFLIGHT, Live, Probe, live, pid_of, proc_start
 
 Kill = Callable[[int, int], None]
@@ -38,6 +45,7 @@ EXIT_FAILED = 1
 EXIT_REFUSED = 4
 MARKER_PREFIX = "withdraw-"
 STOPS_AT = "its gate stops at the next phase boundary"
+INTERRUPTED = "its bazel client was interrupted (pid {pids}); its gate takes its release path"
 
 
 def marker_path(counts: Path, key: str) -> Path:
@@ -63,17 +71,29 @@ def clear_marker(counts: Path, key: str) -> None:
         return
 
 
-def _ask_to_stop(counts: Path, row: Live) -> tuple[int, str]:
-    # An in-flight submission: a marker for its gate, or a refusal naming the followers it leads.
+def _ask_to_stop(
+    counts: Path, row: Live, pid: int, stop: tuple[Kill, bazelstop.Table]
+) -> tuple[int, str]:
+    # An in-flight submission: a marker for its gate, its bazel client interrupted, or a refusal
+    # naming the followers it leads.
     if row.joined:
         said = f"leads {row.joined} joined stack(s); withdrawing it would refuse them too"
         return EXIT_REFUSED, f"mikemol-commit: {row.key} is in flight and {said}"
     marker_path(counts, row.key).write_text("", encoding="utf-8")
+    sent = bazelstop.interrupt(pid, *stop)
+    if sent:
+        return EXIT_WITHDRAWN, f"WITHDRAW REQUESTED {row.key}: " + INTERRUPTED.format(
+            pids=", ".join(str(each) for each in sent)
+        )
     return EXIT_WITHDRAWN, f"WITHDRAW REQUESTED {row.key}: {STOPS_AT}"
 
 
 def withdraw(
-    path: Path, key: str, probe: Probe = proc_start, kill: Kill = os.kill
+    path: Path,
+    key: str,
+    probe: Probe = proc_start,
+    kill: Kill = os.kill,
+    table: bazelstop.Table = bazelstop.process_table,
 ) -> tuple[int, str]:
     """Withdraw the submission `key`, or say why it cannot be.
 
@@ -88,6 +108,6 @@ def withdraw(
     if row is None or pid is None:
         return EXIT_FAILED, f"mikemol-commit: no live submission {key}"
     if row.state == INFLIGHT:
-        return _ask_to_stop(path, row)
+        return _ask_to_stop(path, row, pid, (kill, table))
     kill(pid, signal.SIGTERM)
     return EXIT_WITHDRAWN, f"WITHDRAWN {key} ({', '.join(row.waypoints) or 'no waypoints'})"
