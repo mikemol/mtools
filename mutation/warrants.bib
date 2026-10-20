@@ -328,3 +328,10 @@
   claim  = {The report prints `outer.<locals>.inner`, def_sites yields `outer.inner`: both name it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_regexop.py -k test_a_nested_def_is_scoped_by_either_spelling_of_its_name},
 }
+
+@misc{mutation-mutate-protocols-methods-are-not-def-sites-but-a-plain-classs-are,
+  section = {mutate},
+  title  = {Bare, subscripted and qualified Protocol bases are skipped; the plain class is kept},
+  claim  = {Bare, subscripted and qualified Protocol bases are skipped; the plain class is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_protocols_methods_are_not_def_sites_but_a_plain_classs_are},
+}

@@ -107,6 +107,34 @@ def _is_str_const(node: ast.expr) -> bool:
     return isinstance(node, ast.Constant) and isinstance(_const_value(node), str)
 
 
+def _names_protocol(base: ast.expr) -> bool:
+    """Say whether a class base is `Protocol`, bare, qualified (`typing.Protocol`) or subscripted.
+
+    Returns:
+        True for `Protocol`, `typing.Protocol`, `Protocol[T]` and `typing.Protocol[T]`.
+
+    """
+    node = base.value if isinstance(base, ast.Subscript) else base
+    if isinstance(node, ast.Attribute):
+        return node.attr == "Protocol"
+    return isinstance(node, ast.Name) and node.id == "Protocol"
+
+
+def is_protocol(node: ast.ClassDef) -> bool:
+    """Say whether a class declares a `typing.Protocol`.
+
+    ⚑ A PROTOCOL'S METHODS ARE NOT DEF-SITES (github-8f, 2026-10-20, after a docstring-bodied stub
+    survived four times in webpage): a Protocol states a shape and implements none of it, so its
+    bodies have no behaviour any test could exercise. Perturbing one changes no verdict whatever the
+    suite holds, and the survivors it produced were a fact about the operator, not about the suite.
+
+    Returns:
+        True when any base names `Protocol`.
+
+    """
+    return any(_names_protocol(base) for base in node.bases)
+
+
 def def_sites(text: str) -> list[DefSite]:
     """Return every def or method in a .py source as (qualname, node), in source order.
 
@@ -133,7 +161,8 @@ def def_sites(text: str) -> list[DefSite]:
                     out.append((prefix + child.name, child))
                 rec(child, prefix + child.name + ".")
             elif isinstance(child, ast.ClassDef):
-                rec(child, prefix + child.name + ".")
+                if not is_protocol(child):
+                    rec(child, prefix + child.name + ".")
             else:
                 rec(child, prefix)
 

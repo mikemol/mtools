@@ -171,6 +171,44 @@ def test_def_sites_name_every_multiline_def_in_source_order() -> None:
     assert mutate.def_sites("def (") == []
 
 
+_PROTOCOLS = '''\
+import typing
+from typing import Protocol
+
+
+class Shape(Protocol):
+    """A docstring-bodied stub: no body any test could exercise."""
+
+    def area(self) -> int:
+        """The area."""
+        ...
+
+
+class Generic(Protocol[int]):
+    def side(self) -> int:
+        """The side."""
+        ...
+
+
+class Qualified(typing.Protocol):
+    def edge(self) -> int:
+        """The edge."""
+        ...
+
+
+class Plain:
+    def real(self) -> int:
+        """Behaviour."""
+        return 1
+'''
+
+
+def test_a_protocols_methods_are_not_def_sites_but_a_plain_classs_are() -> None:
+    """Bare, subscripted and qualified Protocol bases are skipped; the plain class is kept."""
+    names = [qn for qn, _ in mutate.def_sites(_PROTOCOLS)]
+    assert names == ["Plain.real"]
+
+
 def test_branch_sites_number_every_arm_per_def_in_source_order() -> None:
     """Each arm of if/elif/else, for, while, try, with and async forms gets a per-def index."""
     got = [

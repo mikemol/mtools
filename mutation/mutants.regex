@@ -24,3 +24,8 @@ src/mikemol/mutation/regexop.py|miss-reads-as-applied|if count == 0:|if count < 
 src/mikemol/mutation/regexop.py|locals-spelling-not-accepted|        wanted = spec\.def_name\.replace\("\.<locals>", ""\)|        wanted = spec.def_name|def=_scope_span
 src/mikemol/mutation/lint.py|missing-module-not-named|        if not module\.is_file\(\):|        if False:|def=problems
 src/mikemol/mutation/lint.py|stale-pattern-not-named|        if planted is None:|        if False:|def=problems
+src/mikemol/mutation/mutate.py|protocol-methods-kept-as-def-sites|                if not is_protocol\(child\):|                if True:|def=def_sites.rec
+src/mikemol/mutation/mutate.py|bare-protocol-not-named|    return isinstance\(node, ast\.Name\) and node\.id == "Protocol"|    return False|def=_names_protocol
+src/mikemol/mutation/mutate.py|qualified-protocol-not-named|        return node\.attr == "Protocol"|        return False|def=_names_protocol
+src/mikemol/mutation/mutate.py|subscripted-protocol-not-unwrapped|    node = base\.value if isinstance\(base, ast\.Subscript\) else base|    node = base|def=_names_protocol
+src/mikemol/mutation/mutate.py|no-base-counts-as-protocol|    return any\(_names_protocol\(base\) for base in node\.bases\)|    return False|def=is_protocol
