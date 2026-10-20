@@ -132,7 +132,7 @@ sh_test(
 # schedules them independently; `:mutants` is still the name that means all of them.
 mutants_sharded(
     name = "mutants",
-    shards = 12,
+    shards = 24,
     cpus = 4,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
