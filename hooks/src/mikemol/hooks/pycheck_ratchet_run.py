@@ -92,6 +92,11 @@ def disk(path: Path) -> str | None:
         return None
 
 
+def save(path: Path, text: str) -> None:
+    """Write a baseline file."""
+    path.write_text(text, encoding="utf-8")
+
+
 def real() -> Tools:
     """Build the seams from the real tools and the disk.
 

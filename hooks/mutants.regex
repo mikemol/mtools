@@ -557,3 +557,7 @@ src/mikemol/hooks/pycheck_ratchet_run.py|crash-read-as-findings|    if status no
 src/mikemol/hooks/pycheck_ratchet_run.py|absent-tree-named|    return \[str\(root / tree\) for tree in TREES if \(root / tree\)\.is_dir\(\)\]|    return [str(root / tree) for tree in TREES]|def=trees
 src/mikemol/hooks/pycheck_ratchet_run.py|unreadable-file-reads-as-empty|        return None|        return ""|def=disk
 src/mikemol/hooks/pycheck_cli.py|crashed-tool-reads-as-clean|        return pycheck_ratchet\.EXIT_NOT_CHECKED|        return 0|def=_ratchet_here
+src/mikemol/hooks/pycheck_ratchet_write.py|write-despite-a-rise|    if any\(status for status, _lines in judged\):|    if False:|def=lower
+src/mikemol/hooks/pycheck_ratchet_write.py|init-replaces-an-existing-baseline|    if any\(text is not None for text in existing\):|    if False:|def=initial
+src/mikemol/hooks/pycheck_ratchet_write.py|mypy-file-gets-ruffs-counts|encode\(counts\[1\]\)|encode(counts[0])|def=_save
+src/mikemol/hooks/pycheck_ratchet_write.py|one-missing-baseline-lowers-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=lower

@@ -24,3 +24,17 @@ def test_a_crashed_tool_judges_nothing_names_it_and_cannot_run(
     monkeypatch.setattr(pycheck_ratchet_run, "real", lambda: tools)
     assert pycheck_cli.main(["--ratchet", str(tmp_path)]) == pycheck_ratchet.EXIT_NOT_CHECKED
     assert "ruff exited 2; nothing judged" in capsys.readouterr().err
+
+
+def test_init_then_write_through_the_flags_make_and_keep_the_baselines(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`--init` writes both files once, a second `--init` refuses, and `--write` keeps them."""
+    tools = pycheck_ratchet.Tools(lambda _root: "[]", lambda _root: "", pycheck_ratchet_run.disk)
+    monkeypatch.setattr(pycheck_ratchet_run, "real", lambda: tools)
+    root = str(tmp_path)
+    assert pycheck_cli.main(["--ratchet", root, "--init"]) == 0
+    assert (tmp_path / pycheck_ratchet.RUFF_BASELINE).read_text(encoding="utf-8") == "{}\n"
+    assert pycheck_cli.main(["--ratchet", root, "--init"]) == 1
+    assert pycheck_cli.main(["--ratchet", root, "--write"]) == 0
+    assert pycheck_cli.main(["--ratchet", root]) == 0

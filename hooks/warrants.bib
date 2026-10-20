@@ -13678,3 +13678,45 @@
   claim  = {`--ratchet ROOT` on a root with no committed baselines is not checked, never clean.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_ratchet_with_no_baselines_judges_nothing_and_cannot_run},
 }
+
+@misc{hooks-pycheck-ratchet-write-write-lowers-both-baselines-to-the-current-counts,
+  section = {pycheck_ratchet_write},
+  title  = {A count that fell is recorded, sorted and indented, in both files},
+  claim  = {A count that fell is recorded, sorted and indented, in both files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_write.py -k test_write_lowers_both_baselines_to_the_current_counts},
+}
+
+@misc{hooks-pycheck-ratchet-write-write-refuses-a-rise-in-either-tool-and-writes-neither-file,
+  section = {pycheck_ratchet_write},
+  title  = {One tool over its baseline writes nothing: the files never record different moments},
+  claim  = {One tool over its baseline writes nothing: the files never record different moments.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_write.py -k test_write_refuses_a_rise_in_either_tool_and_writes_neither_file},
+}
+
+@misc{hooks-pycheck-ratchet-write-write-without-baselines-judges-nothing-and-writes-nothing,
+  section = {pycheck_ratchet_write},
+  title  = {Lowering needs a baseline to lower: absent is not clean, and nothing is written},
+  claim  = {Lowering needs a baseline to lower: absent is not clean, and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_write.py -k test_write_without_baselines_judges_nothing_and_writes_nothing},
+}
+
+@misc{hooks-pycheck-ratchet-write-init-writes-the-first-baselines-and-counts-them,
+  section = {pycheck_ratchet_write},
+  title  = {With no baseline either way the current counts become both files},
+  claim  = {With no baseline either way the current counts become both files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_write.py -k test_init_writes_the_first_baselines_and_counts_them},
+}
+
+@misc{hooks-pycheck-ratchet-write-init-refuses-when-either-baseline-exists-and-writes-nothing,
+  section = {pycheck_ratchet_write},
+  title  = {A baseline is never replaced by accident with today's measure},
+  claim  = {A baseline is never replaced by accident with today's measure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_write.py -k test_init_refuses_when_either_baseline_exists_and_writes_nothing},
+}
+
+@misc{hooks-pycheck-ratchet-cli-init-then-write-through-the-flags-make-and-keep-the-baselines,
+  section = {pycheck-cli},
+  title  = {`--init` writes both files once, a second `--init` refuses, and `--write` keeps them},
+  claim  = {`--init` writes both files once, a second `--init` refuses, and `--write` keeps them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_cli.py -k test_init_then_write_through_the_flags_make_and_keep_the_baselines},
+}

@@ -50,21 +50,32 @@ from mikemol.hooks import (
     pycheck_install,
     pycheck_ratchet,
     pycheck_ratchet_run,
+    pycheck_ratchet_write,
 )
 from mikemol.hooks.verdict import Verdict
 
 RATCHET_FLAG = "--ratchet"
+WRITE_FLAG = "--write"
+INIT_FLAG = "--init"
+RATCHET_ARGS = 3
 
 
-def _ratchet_here(root: Path) -> int:
-    """Judge a root's ruff and mypy findings against its committed baselines.
+def _ratchet_here(root: Path, mode: str = "") -> int:
+    """Judge a root's findings against its baselines, or lower or first write them.
 
     Returns:
-        the exit code from `pycheck_ratchet.ratchet`, or its not-checked code when a tool crashed.
+        the exit code from `pycheck_ratchet.ratchet`, `lower` (`--write`) or `initial` (`--init`),
+        or the not-checked code when a tool crashed.
 
     """
+    tools = pycheck_ratchet_run.real()
+    save, out, err = pycheck_ratchet_run.save, sys.stdout, sys.stderr
     try:
-        return pycheck_ratchet.ratchet(root, pycheck_ratchet_run.real(), sys.stdout, sys.stderr)
+        if mode == WRITE_FLAG:
+            return pycheck_ratchet_write.lower(root, tools, save, out, err)
+        if mode == INIT_FLAG:
+            return pycheck_ratchet_write.initial(root, tools, save, out, err)
+        return pycheck_ratchet.ratchet(root, tools, out, err)
     except pycheck_ratchet_run.ToolFailedError as failed:
         sys.stderr.write(f"pycheck --ratchet: {failed}; nothing judged\n")
         return pycheck_ratchet.EXIT_NOT_CHECKED
@@ -93,7 +104,7 @@ EXIT_NOT_CHECKED = 3
 USAGE = (
     f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT [{HOUSE_FLAG}]"
     f" | {REFRESH_FLAG} ROOT"
-    f" | {RATCHET_FLAG} ROOT"
+    f" | {RATCHET_FLAG} ROOT [{WRITE_FLAG} | {INIT_FLAG}]"
     f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {CLEAR_FLAG} PATH | {CLEAR_LEDGER_FLAG} ROOT"
     f" | {INSTALL_FLAG} SRC DEST)\n"
 )
@@ -290,6 +301,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _install_here(args)
     if len(args) == EXPECTED_ARGS and args[0] in {FORMAT_FLAG, CLEAR_FLAG, CLEAR_LEDGER_FLAG}:
         return _rewrite_here(args[0], Path(args[1]).resolve())
+    modes = {WRITE_FLAG, INIT_FLAG}
+    if args[:1] == [RATCHET_FLAG] and len(args) == RATCHET_ARGS and args[2] in modes:
+        return _ratchet_here(Path(args[1]).resolve(), args[2])
     return _flag_here(args)
 
 
