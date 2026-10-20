@@ -22,6 +22,7 @@ REFUSED, NOT COMMITTED and RACED are ERROR. A block with no verdict line gets no
 CONSUMED BY: `commit_kata.main` (W1441).
 """
 
+import json
 import re
 import secrets
 import shutil
@@ -32,7 +33,7 @@ from pathlib import Path
 from mikemol.hooks import verdictlog
 from mikemol.hooks.gatephase import Mark
 from mikemol.hooks.gatephase import marks as _marks_of
-from mikemol.hooks.vlogdetach import spawn_detached
+from mikemol.hooks.vlogdetach import spawn_detached, spawn_with_stdin
 
 BIN_ENV = "MIKEMOL_OTLP_BIN"
 ENDPOINTS_ENV = "MIKEMOL_ENDPOINTS"
@@ -43,7 +44,66 @@ _OK = "COMMITTED"
 _INVOCATION = re.compile(
     r"/invocation/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
 )
+_CARD = re.compile(r"^(W\d+)\b")
+NS_PER_S = 1_000_000_000
+NO_CARD = "-"
 Spawn = Callable[[Sequence[str]], None]
+TextSpawn = Callable[[Sequence[str], str], None]
+
+
+def landing_records(text: str, gate_s: float) -> list[dict[str, str]]:
+    """Make one landing record per COMMITTED line of a run's output (W1738).
+
+    ⚑ A LOG RECORD, NOT A METRIC: the card and the sha are unbounded, so neither may be a metric
+    label. `pushed` is the word the line carried in brackets, so a card that is done but not yet
+    pushed reads differently from one that landed on the remote.
+
+    Returns:
+        the records, in order; the card is the subject's leading `W<n>`, or `-` when it has none.
+
+    """
+    records: list[dict[str, str]] = []
+    for event in verdictlog.events_of(text):
+        if event["verdict"] != _OK:
+            continue
+        card = _CARD.match(event.get("subject", ""))
+        records.append(
+            {
+                "event": "landing",
+                "repo": event["repo"],
+                "sha": event["sha"],
+                "card": card.group(1) if card else NO_CARD,
+                "gate_s": f"{gate_s:.0f}",
+                "pushed": event.get("pushed", ""),
+                "verdict": _OK,
+            }
+        )
+    return records
+
+
+def emit_landings(
+    text: str, gate_s: float, env: Mapping[str, str], spawn: TextSpawn = spawn_with_stdin
+) -> int:
+    """Ship each landing record as a log record, when a child and a store exist.
+
+    Returns:
+        how many were started: 0 with no binary or store; a failed start ends the run quietly.
+
+    """
+    program = binary(env)
+    if program is None or not store_named(env):
+        return 0
+    started = 0
+    for record in landing_records(text, gate_s):
+        argv = [program, "log", "--service", SERVICE, "--namespace", record["repo"]]
+        argv += ["--version", record["sha"], "--field", f"card={record['card']}"]
+        argv += ["--field", f"pushed={record['pushed']}", "--field", f"gate_s={record['gate_s']}"]
+        try:
+            spawn(argv, json.dumps(record))
+        except OSError:
+            break
+        started += 1
+    return started
 
 
 @dataclass(frozen=True, slots=True)
@@ -303,10 +363,14 @@ def emit_stack(
 ) -> int:
     """Start the three span children for a finished stack run: `commit.stack` and its phases.
 
+    Each landed card also gets a landing log record (W1738), its gate seconds the time from the
+    lease to the verdict; that is a separate child and does not change the count returned.
+
     Returns:
         how many were started, as `emit`; the waypoint attribute is the entries' joined.
 
     """
+    emit_landings(text, (moments.end_ns - moments.lease_ns) / NS_PER_S, env)
     found = _marks_of(text)
     return _start(
         (stack_event(text), ",".join(waypoints), "commit.stack", found), moments, env, spawn

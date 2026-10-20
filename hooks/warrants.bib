@@ -13755,3 +13755,38 @@
   claim  = {A Bazel sandbox reports /sandbox/src/x.py, whose resolved target is outside the root.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet_links.py -k test_a_path_under_the_root_is_relativised_without_following_links},
 }
+
+@misc{hooks-commit-landing-one-record-per-committed-line-and-none-for-a-refusal,
+  section = {commit-span},
+  title  = {The two COMMITTED lines make two records and the REFUSED line makes none},
+  claim  = {The two COMMITTED lines make two records and the REFUSED line makes none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_one_record_per_committed_line_and_none_for_a_refusal},
+}
+
+@misc{hooks-commit-landing-record-carries-the-gate-seconds-and-the-push-word,
+  section = {commit-span},
+  title  = {A landing that did not push reads differently from one that did},
+  claim  = {A landing that did not push reads differently from one that did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_the_record_carries_the_gate_seconds_and_the_push_word},
+}
+
+@misc{hooks-commit-landing-each-record-is-sent-as-a-log-line-to-the-otlp-child,
+  section = {commit-span},
+  title  = {The argv names the service, repo, sha and card, and the stdin is the record as JSON},
+  claim  = {The argv names the service, repo, sha and card, and the stdin is the record as JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_each_record_is_sent_as_a_log_line_to_the_otlp_child},
+}
+
+@misc{hooks-commit-landing-with-no-store-nothing-is-started,
+  section = {commit-span},
+  title  = {No binary or no store names nothing to send to, and the verdict is already printed},
+  claim  = {No binary or no store names nothing to send to, and the verdict is already printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_with_no_store_nothing_is_started},
+}
+
+@misc{hooks-commit-landing-failed-start-ends-the-run-quietly,
+  section = {commit-span},
+  title  = {A spawn that raises OSError stops the batch without raising into the commit},
+  claim  = {A spawn that raises OSError stops the batch without raising into the commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_failed_start_ends_the_run_quietly},
+}
