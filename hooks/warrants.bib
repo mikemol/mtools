@@ -13466,3 +13466,38 @@
             ignored.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_find_reader_prefers_env_then_path_then_none_and_never_a_sibling_checkout},
 }
+
+@misc{hooks-presubmit-each-touched-dist-with-a-venv-gets-its-whole-pytest-and-others-get-none,
+  section = {presubmit},
+  title  = {W1767: tests/ where the dist has one, the dist directory otherwise; no venv, no step},
+  claim  = {W1767: tests/ where the dist has one, the dist directory otherwise; no venv, no step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_each_touched_dist_with_a_venv_gets_its_whole_pytest_and_others_get_none},
+}
+
+@misc{hooks-presubmit-stack-file-gives-every-path-of-every-entry-or-none-when-malformed,
+  section = {presubmit},
+  title  = {The reader of the stack JSON: all paths in order; anything else is None},
+  claim  = {The reader of the stack JSON: all paths in order; anything else is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_stack_file_gives_every_path_of_every_entry_or_none_when_malformed},
+}
+
+@misc{hooks-presubmit-failing-pytest-ends-the-presubmit-with-its-code-before-bazel-starts,
+  section = {presubmit},
+  title  = {The point of it: the refusal comes from the dist's own tests, and nothing else runs},
+  claim  = {The point of it: the refusal comes from the dist's own tests, and nothing else runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_failing_pytest_ends_the_presubmit_with_its_code_before_bazel_starts},
+}
+
+@misc{hooks-presubmit-passing-pytest-is-followed-by-the-bazel-test,
+  section = {presubmit},
+  title  = {Green steps change nothing about the bazel phase: it runs, targets after the flag},
+  claim  = {Green steps change nothing about the bazel phase: it runs, targets after the flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_passing_pytest_is_followed_by_the_bazel_test},
+}
+
+@misc{hooks-presubmit-stack-flag-without-a-readable-stack-is-a-usage-error,
+  section = {presubmit},
+  title  = {No file after --stack, or a file that is not a stack, runs nothing},
+  claim  = {No file after --stack, or a file that is not a stack, runs nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_stack_flag_without_a_readable_stack_is_a_usage_error},
+}

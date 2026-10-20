@@ -19,6 +19,7 @@ second step to skip. A non-zero exit is the snapshot's or bazel's, passed throug
 output base it keeps warm is its own.
 """
 
+import json
 import os
 import subprocess
 import sys
@@ -37,8 +38,11 @@ SNAPSHOT_ENV = "MIKEMOL_SNAPSHOT_BIN"
 SNAPSHOT = "mikemol-snapshot"
 EXIT_USAGE = 2
 EXIT_REFUSED = 4
+STACK_FLAG = "--stack"
+_PAIR = 2
 Runner = Callable[[Sequence[str], Mapping[str, str]], int]
 Finder = Callable[[str], Path | None]
+Exists = Callable[[str], bool]
 
 
 @dataclass(frozen=True, slots=True)
@@ -87,6 +91,54 @@ def dists_of(paths: Sequence[str]) -> tuple[str, ...]:
     return tuple(sorted(top for top in tops if not top.startswith(".")))
 
 
+def pytest_steps(repo: str, paths: Sequence[str], exists: Exists) -> list[tuple[str, ...]]:
+    """Plan the whole pytest of every distribution a stack touches (W1767).
+
+    ⚑ BEFORE THE BAZEL GATE, IN SECONDS NOT HOURS: a stack that breaks a test in a dist it only
+    touched (the watchdog-clock spin of W1753, found by a gate that ran an hour) is refused here,
+    with pytest's own failing line. One step per dist that has its own `.venv/bin/python`; it runs
+    `tests` when the dist has one and the dist directory itself otherwise. `env -C` sets the
+    directory, so the argv needs no working-directory seam.
+
+    Returns:
+        one argv per touched dist with a venv, in dist order; none for a dist without one.
+
+    """
+    steps: list[tuple[str, ...]] = []
+    for dist in dists_of(paths):
+        home = f"{repo.rstrip('/')}/{dist}"
+        python = f"{home}/.venv/bin/python"
+        if not exists(python):
+            continue
+        target = "tests" if exists(f"{home}/tests") else "."
+        steps.append(
+            ("env", "-C", home, python, "-m", "pytest", "-q", "-p", "no:cacheprovider", target)
+        )
+    return steps
+
+
+def paths_of(stack_text: str) -> list[str] | None:
+    """Read every path a stack file names.
+
+    Returns:
+        the paths of every entry, or None when the text is not a JSON list of entries with paths.
+
+    """
+    try:
+        entries: object = json.loads(stack_text)
+    except ValueError:
+        return None
+    if not isinstance(entries, list):
+        return None
+    found: list[str] = []
+    for entry in entries:
+        paths = entry.get("paths") if isinstance(entry, dict) else None
+        if not isinstance(paths, list):
+            return None
+        found.extend(str(path) for path in paths)
+    return found
+
+
 def _find(repo: str) -> Path | None:
     return find_tool(SNAPSHOT, SNAPSHOT_ENV, Path(repo), os.environ)
 
@@ -95,24 +147,50 @@ def _run(argv: Sequence[str], env: Mapping[str, str]) -> int:
     return subprocess.run(list(argv), env={**os.environ, **env}, check=False).returncode
 
 
-def main(argv: Sequence[str] | None = None, run: Runner = _run, find: Finder = _find) -> int:
-    """Run the presubmit for the repo named first, over the targets that follow.
+def main(
+    argv: Sequence[str] | None = None,
+    run: Runner = _run,
+    find: Finder = _find,
+    exists: Exists = os.path.exists,
+) -> int:
+    """Run the presubmit for the repo named first: each touched dist's pytest, then the bazel test.
+
+    `--stack FILE` names the stack whose paths pick the dists (W1767); without it only the bazel
+    test runs, as before. A dist's pytest that fails ends the presubmit with its exit code, before
+    the snapshot or bazel starts.
 
     Returns:
-        the exit code of the snapshot-wrapped `bazel test`, 2 with no repo, or 4 when
-        `mikemol-snapshot` cannot be found (nothing is run).
+        the first failing pytest's exit code, else the exit code of the snapshot-wrapped `bazel
+        test`; 2 with no repo or an unreadable stack, or 4 when `mikemol-snapshot` cannot be found.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
     if not args:
-        sys.stderr.write("usage: mikemol-presubmit REPO [TARGET...]\n")
+        sys.stderr.write("usage: mikemol-presubmit REPO [--stack FILE] [TARGET...]\n")
         return EXIT_USAGE
-    root = os.environ.get(ROOT_ENV, DEFAULT_ROOT)
-    snapshot = find(args[0])
+    repo, rest = args[0], args[1:]
+    steps: list[tuple[str, ...]] = []
+    if rest[:1] == [STACK_FLAG]:
+        paths = paths_of(Path(rest[1]).read_text(encoding="utf-8")) if len(rest) > 1 else None
+        if paths is None:
+            sys.stderr.write(
+                "mikemol-presubmit: --stack needs a stack file of entries with paths\n"
+            )
+            return EXIT_USAGE
+        steps = pytest_steps(repo, paths, exists)
+        rest = rest[_PAIR:]
+    snapshot = find(repo)
     if snapshot is None:
         sys.stderr.write(f"mikemol-presubmit: {SNAPSHOT} not found; set {SNAPSHOT_ENV}\n")
         return EXIT_REFUSED
-    planned = plan(args[0], args[1:], root, str(snapshot))
+    for step in steps:
+        code = run(step, {})
+        if code != 0:
+            sys.stderr.write(
+                f"mikemol-presubmit: {step[2]} pytest failed (exit {code}); bazel not started\n"
+            )
+            return code
+    planned = plan(repo, rest, os.environ.get(ROOT_ENV, DEFAULT_ROOT), str(snapshot))
     return run(planned.argv, planned.env)
 
 

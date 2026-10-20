@@ -94,3 +94,113 @@ def test_no_repo_is_a_usage_error_and_runs_nothing() -> None:
     seen, run = _recording()
     assert presubmit.main([], run) == presubmit.EXIT_USAGE
     assert seen == []
+
+
+_REPO = "/work/mtools"
+_BEHIND = 3
+_FAILED_PYTEST = 5
+
+
+def _has(*present: str) -> presubmit.Exists:
+    held = set(present)
+
+    def exists(path: str) -> bool:
+        return path in held
+
+    return exists
+
+
+def test_each_touched_dist_with_a_venv_gets_its_whole_pytest_and_others_get_none() -> None:
+    """W1767: tests/ where the dist has one, the dist directory otherwise; no venv, no step."""
+    exists = _has(
+        f"{_REPO}/hooks/.venv/bin/python",
+        f"{_REPO}/hooks/tests",
+        f"{_REPO}/rules_py/.venv/bin/python",
+    )
+    steps = presubmit.pytest_steps(
+        _REPO, ["hooks/a.py", "rules_py/b.py", "otlp/c.py", "README.md"], exists
+    )
+    assert steps == [
+        (
+            "env",
+            "-C",
+            f"{_REPO}/hooks",
+            f"{_REPO}/hooks/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "tests",
+        ),
+        (
+            "env",
+            "-C",
+            f"{_REPO}/rules_py",
+            f"{_REPO}/rules_py/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            ".",
+        ),
+    ]
+
+
+def test_a_stack_file_gives_every_path_of_every_entry_or_none_when_malformed() -> None:
+    """The reader of the stack JSON: all paths in order; anything else is None."""
+    stack = '[{"paths": ["a/x.py", "b/y.py"]}, {"paths": ["c/z.py"]}]'
+    assert presubmit.paths_of(stack) == ["a/x.py", "b/y.py", "c/z.py"]
+    assert presubmit.paths_of("not json") is None
+    assert presubmit.paths_of('{"paths": []}') is None
+    assert presubmit.paths_of('[{"subject": "no paths"}]') is None
+
+
+def _stack(tmp_path: Path) -> str:
+    path = tmp_path / "stack.json"
+    path.write_text('[{"paths": ["hooks/a.py"]}]', encoding="utf-8")
+    return str(path)
+
+
+def test_a_failing_pytest_ends_the_presubmit_with_its_code_before_bazel_starts(
+    tmp_path: Path,
+) -> None:
+    """The point of it: the refusal comes from the dist's own tests, and nothing else runs."""
+    ran: list[Sequence[str]] = []
+
+    def run(argv: Sequence[str], env: Mapping[str, str]) -> int:
+        del env
+        ran.append(argv)
+        return _FAILED_PYTEST if argv[0] == "env" else 0
+
+    exists = _has(f"{_REPO}/hooks/.venv/bin/python", f"{_REPO}/hooks/tests")
+    code = presubmit.main([_REPO, "--stack", _stack(tmp_path)], run, _found, exists)
+    assert code == _FAILED_PYTEST
+    assert [argv[0] for argv in ran] == ["env"]
+
+
+def test_a_passing_pytest_is_followed_by_the_bazel_test(tmp_path: Path) -> None:
+    """Green steps change nothing about the bazel phase: it runs, targets after the flag."""
+    ran: list[Sequence[str]] = []
+
+    def run(argv: Sequence[str], env: Mapping[str, str]) -> int:
+        del env
+        ran.append(argv)
+        return 0
+
+    exists = _has(f"{_REPO}/hooks/.venv/bin/python", f"{_REPO}/hooks/tests")
+    code = presubmit.main([_REPO, "--stack", _stack(tmp_path), "//x:y"], run, _found, exists)
+    assert code == 0
+    assert [argv[0] for argv in ran] == ["env", _SNAPSHOT_PATH]
+    assert ran[1][-1] == "//x:y"
+
+
+def test_a_stack_flag_without_a_readable_stack_is_a_usage_error(tmp_path: Path) -> None:
+    """No file after --stack, or a file that is not a stack, runs nothing."""
+    seen, run = _recording()
+    assert presubmit.main([_REPO, "--stack"], run, _found) == presubmit.EXIT_USAGE
+    bad = tmp_path / "bad.json"
+    bad.write_text("[1]", encoding="utf-8")
+    assert presubmit.main([_REPO, "--stack", str(bad)], run, _found) == presubmit.EXIT_USAGE
+    assert seen == []
