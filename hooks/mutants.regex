@@ -551,6 +551,7 @@ src/mikemol/hooks/pyratchet.py|mypy-notes-counted-as-errors|if row\.get\("severi
 src/mikemol/hooks/pyratchet.py|links-followed-before-relativising|        name = raw\.absolute\(\)\.relative_to\(root\.absolute\(\)\)|        name = raw.resolve().relative_to(root.resolve())|def=_pair
 src/mikemol/hooks/commit_span.py|refusal-recorded-as-a-landing|        if event\["verdict"\] != _OK:|        if False:|def=landing_records
 src/mikemol/hooks/commit_span.py|landings-without-a-store|    if program is None or not store_named\(env\):|    if program is None:|def=emit_landings
+src/mikemol/hooks/vlogdetach.py|journal-wrapper-always-used|    if program is None:|    if False:|def=journaled
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
 src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
 src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet

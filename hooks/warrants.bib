@@ -13790,3 +13790,17 @@
   claim  = {A spawn that raises OSError stops the batch without raising into the commit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_failed_start_ends_the_run_quietly},
 }
+
+@misc{hooks-vlogdetach-journal-with-systemd-cat-the-child-runs-under-it-so-its-output-reaches-the-journal,
+  section = {vlogdetach},
+  title  = {The wrapper names the journal tag and a warning level, then the child's own argv},
+  claim  = {The wrapper names the journal tag and a warning level, then the child's own argv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogdetach_journal.py -k test_with_systemd_cat_the_child_runs_under_it_so_its_output_reaches_the_journal},
+}
+
+@misc{hooks-vlogdetach-journal-without-systemd-cat-the-child-runs-bare-as-before,
+  section = {vlogdetach},
+  title  = {No journal tool to wrap with: the argv is unchanged and nothing is guessed},
+  claim  = {No journal tool to wrap with: the argv is unchanged and nothing is guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogdetach_journal.py -k test_without_systemd_cat_the_child_runs_bare_as_before},
+}

@@ -54,8 +54,13 @@ def test_the_child_is_given_the_text_on_stdin_and_started_in_its_own_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """The argv is passed through, the pipe carries exactly the text, and the child is detached."""
+
+    def no_journal(_name: str) -> None:
+        return None
+
     seen = _Recorder()
     monkeypatch.setattr(_POPEN, seen)
+    monkeypatch.setattr("shutil.which", no_journal)
     vlogdetach.spawn_with_stdin(_ARGV, _TEXT)
     try:
         assert seen.argv == _ARGV
