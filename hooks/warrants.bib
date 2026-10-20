@@ -13557,3 +13557,52 @@
   claim  = {A planted trace of one declared and one undeclared file gives the one MISSING line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_an_audit_traces_the_command_and_compares_the_repo_files_it_opened},
 }
+
+@misc{hooks-pyratchet-ruff-findings-are-counted-per-file-and-rule-relative-to-the-root,
+  section = {pyratchet},
+  title  = {Two findings of one rule in a file are 2, and the file name is relative to the root},
+  claim  = {Two findings of one rule in a file are 2, and the file name is relative to the root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_ruff_findings_are_counted_per_file_and_rule_relative_to_the_root},
+}
+
+@misc{hooks-pyratchet-finding-with-no-code-counts-as-a-syntax-finding,
+  section = {pyratchet},
+  title  = {A file that stopped parsing must not read as clean},
+  claim  = {A file that stopped parsing must not read as clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_a_finding_with_no_code_counts_as_a_syntax_finding},
+}
+
+@misc{hooks-pyratchet-only-mypy-errors-are-counted-not-notes,
+  section = {pyratchet},
+  title  = {A note is not a finding, and an error is counted under its code},
+  claim  = {A note is not a finding, and an error is counted under its code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_only_mypy_errors_are_counted_not_notes},
+}
+
+@misc{hooks-pyratchet-count-above-the-baseline-or-a-new-rule-is-a-regression,
+  section = {pyratchet},
+  title  = {A rule in a file with no baseline entry has a baseline of zero},
+  claim  = {A rule in a file with no baseline entry has a baseline of zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_a_count_above_the_baseline_or_a_new_rule_is_a_regression},
+}
+
+@misc{hooks-pyratchet-count-that-fell-is-not-a-regression,
+  section = {pyratchet},
+  title  = {The baseline only records progress: lower and equal counts pass},
+  claim  = {The baseline only records progress: lower and equal counts pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_a_count_that_fell_is_not_a_regression},
+}
+
+@misc{hooks-pyratchet-rise-exits-four-and-names-each-rise,
+  section = {pyratchet},
+  title  = {The verdict is the ratchet's own exit status, with the lines that explain it},
+  claim  = {The verdict is the ratchet's own exit status, with the lines that explain it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_a_rise_exits_four_and_names_each_rise},
+}
+
+@misc{hooks-pyratchet-no-rise-exits-zero-with-both-totals,
+  section = {pyratchet},
+  title  = {A clean verdict says how many findings remain against how many the baseline allows},
+  claim  = {A clean verdict says how many findings remain against how many the baseline allows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_no_rise_exits_zero_with_both_totals},
+}

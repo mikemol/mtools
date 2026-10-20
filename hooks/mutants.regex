@@ -545,3 +545,7 @@ src/mikemol/hooks/requeue.py|every-process-is-in-the-group|        if int\(stat\
 src/mikemol/hooks/footprint.py|missing-and-unused-swapped|missing = \[f"MISSING \{p\}" for p in sorted\(got - want\)\]|missing = [f"MISSING {p}" for p in sorted(want - got)]|def=findings
 src/mikemol/hooks/footprint.py|directory-counted-as-a-file|        if path\.is_file\(\):|        if True:|def=within
 src/mikemol/hooks/footprint.py|no-strace-reads-as-clean|        return \[DEGRADED\]|        return []|def=audit
+src/mikemol/hooks/pyratchet.py|equal-count-is-a-rise|        if n > base\.get\(name, \{\}\)\.get\(code, 0\)|        if n >= base.get(name, {}).get(code, 0)|def=regressions
+src/mikemol/hooks/pyratchet.py|codeless-finding-loses-its-rule|str\(row\.get\("code"\) or SYNTAX\)|str(row.get("code"))|def=_pair
+src/mikemol/hooks/pyratchet.py|mypy-notes-counted-as-errors|if row\.get\("severity"\) == "error"|if True|def=mypy_counts
+src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict

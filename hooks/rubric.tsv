@@ -162,3 +162,4 @@ requeue	The Stuck-Train Restart: Reads the Live Map, Refuses What It May Not Sto
 gatetargets	Gate target measurements
 vlogdetach	Detached spawns
 footprint	The footprint audit
+pyratchet	The paydown-only ratchet
