@@ -379,24 +379,21 @@ def test_is_runnable_wants_an_executable_file(tmp_path: Path) -> None:
     assert not nemik_check.is_runnable(tmp_path)
 
 
-def test_find_reader_prefers_env_then_path_then_the_sibling_venv_then_none(
+def test_find_reader_prefers_env_then_path_then_none_and_never_a_sibling_checkout(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """The three places in their order, and None when none holds a reader."""
-    project = tmp_path / "fleet" / REPO
-    project.mkdir(parents=True)
+    """W1774: the two places in their order; a runnable reader in a sibling checkout is ignored."""
     sibling = _script(tmp_path / "fleet" / "nemik" / ".venv" / "bin" / "nemik-check", "exit 0\n")
     on_path = _script(tmp_path / "pathbin" / "nemik-check", "exit 0\n")
     named = _script(tmp_path / "named", "exit 0\n")
     monkeypatch.setenv("PATH", str(on_path.parent))
     monkeypatch.setenv("NEMIK_CHECK", str(named))
-    assert nemik_check.find_reader(project) == str(named)
+    assert nemik_check.find_reader() == str(named)
     monkeypatch.delenv("NEMIK_CHECK")
-    assert nemik_check.find_reader(project) == str(on_path)
+    assert nemik_check.find_reader() == str(on_path)
     monkeypatch.setenv("PATH", str(tmp_path / "nothing"))
-    assert nemik_check.find_reader(project) == str(sibling)
-    sibling.chmod(0o644)
-    assert nemik_check.find_reader(project) is None
+    assert sibling.exists()
+    assert nemik_check.find_reader() is None
 
 
 def test_find_reader_skips_a_non_executable_env_file(
@@ -409,7 +406,7 @@ def test_find_reader_skips_a_non_executable_env_file(
     named.chmod(0o644)
     monkeypatch.setenv("NEMIK_CHECK", str(named))
     monkeypatch.setenv("PATH", str(tmp_path / "nothing"))
-    assert nemik_check.find_reader(project) is None
+    assert nemik_check.find_reader() is None
 
 
 def test_reader_argv_is_constants_plus_the_root_as_one_word(tmp_path: Path) -> None:

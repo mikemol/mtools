@@ -83,21 +83,22 @@ def is_runnable(path: Path) -> bool:
     return path.is_file() and os.access(path, os.X_OK)
 
 
-def find_reader(project: Path) -> str | None:
-    """Find the reader: the NEMIK_CHECK env, then PATH, then the sibling nemik checkout's venv.
+def find_reader() -> str | None:
+    """Find the reader: the NEMIK_CHECK env, then PATH, and nothing else.
+
+    ⚑ NO SIBLING CHECKOUT IS LOOKED AT (operator ruling 2026-10-19, line 84035 of the host
+    transcript, via github-8f: repos must not know that sibling paths exist). The reader is a pinned
+    install the host provides, named by `NEMIK_CHECK` or found on PATH, and a host without one is
+    told so by `failure_notice` and never answered from a neighbour's venv.
 
     Returns:
-        the reader path, or None when none of the three holds one.
+        the reader path, or None when neither names one.
 
     """
     named = os.environ.get(READER_ENV, "")
     if named and is_runnable(Path(named)):
         return named
-    found = shutil.which(READER)
-    if found:
-        return found
-    sibling = project.parent / "nemik" / ".venv" / "bin" / READER
-    return str(sibling) if is_runnable(sibling) else None
+    return shutil.which(READER)
 
 
 def reader_argv(reader: str, root: Path, since: Path | None = None) -> list[str]:
@@ -224,9 +225,9 @@ def build_context(project: Path, timeout: float, since: Path | None = None) -> t
         (text, failed): empty text when there is nothing to say; failed marks a notice.
 
     """
-    reader = find_reader(project)
+    reader = find_reader()
     if reader is None:
-        why = f"{READER} is not named by {READER_ENV}, not on PATH, and not in a sibling nemik venv"
+        why = f"{READER} is not named by {READER_ENV} and not on PATH (install a pinned copy)"
         return failure_notice(why), True
     out, why = run_reader(reader, project.parent, timeout, since)
     block = repo_block(out, project.name) if out is not None else None

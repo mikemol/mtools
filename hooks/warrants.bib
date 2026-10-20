@@ -5016,13 +5016,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_is_runnable_wants_an_executable_file},
 }
 
-@misc{hooks-nemik-check-find-reader-prefers-env-then-path-then-the-sibling-venv-then-none,
-  section = {nemik-check},
-  title  = {The three places in their order, and None when none holds a reader},
-  claim  = {The three places in their order, and None when none holds a reader.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_find_reader_prefers_env_then_path_then_the_sibling_venv_then_none},
-}
-
 @misc{hooks-nemik-check-find-reader-skips-a-non-executable-env-file,
   section = {nemik-check},
   title  = {An env-named file without the execute bit is not a reader; the search goes on},
@@ -13464,4 +13457,12 @@
   title  = {The control for a leak: the read end the child got is closed here once it is started},
   claim  = {The control for a leak: the read end the child got is closed here once it is started.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogdetach.py -k test_neither_end_of_the_pipe_stays_open_in_the_parent},
+}
+
+@misc{hooks-nemik-check-find-reader-prefers-env-then-path-then-none-and-never-a-sibling-checkout,
+  section = {nemik-check},
+  title  = {W1774: the two places in their order; a runnable reader in a sibling checkout is ignored},
+  claim  = {W1774: the two places in their order; a runnable reader in a sibling checkout is
+            ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nemik_check.py -k test_find_reader_prefers_env_then_path_then_none_and_never_a_sibling_checkout},
 }
