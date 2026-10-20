@@ -318,3 +318,45 @@
   claim  = {A wheel installed elsewhere has no endpoints source above it, so nothing is compared.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_staleness.py -k test_no_checkout_above_or_no_installed_file_says_nothing},
 }
+
+@misc{otlp-query-metrics-instant-and-a-range-query-build-their-urls,
+  section = {query_metrics},
+  title  = {The expression is URL-encoded; a range carries start, end and step},
+  claim  = {The expression is URL-encoded; a range carries start, end and step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_an_instant_and_a_range_query_build_their_urls},
+}
+
+@misc{otlp-query-metrics-each-series-is-one-json-line,
+  section = {query_metrics},
+  title  = {A successful answer prints its series, exit 0},
+  claim  = {A successful answer prints its series, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_each_series_is_one_json_line},
+}
+
+@misc{otlp-query-metrics-store-that-answered-with-no-series-is-exit-zero-and-no-lines,
+  section = {query_metrics},
+  title  = {No series matched is an answer, not an outage},
+  claim  = {No series matched is an answer, not an outage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_a_store_that_answered_with_no_series_is_exit_zero_and_no_lines},
+}
+
+@misc{otlp-query-metrics-store-that-did-not-answer-is-exit-three-never-empty,
+  section = {query_metrics},
+  title  = {A refused connection and a reply that is not a query answer are both exit 3},
+  claim  = {A refused connection and a reply that is not a query answer are both exit 3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_a_store_that_did_not_answer_is_exit_three_never_empty},
+}
+
+@misc{otlp-query-metrics-query-the-store-rejects-is-exit-four-naming-the-error,
+  section = {query_metrics},
+  title  = {A PromQL typo reads differently from a dead store},
+  claim  = {A PromQL typo reads differently from a dead store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_a_query_the_store_rejects_is_exit_four_naming_the_error},
+}
+
+@misc{otlp-query-metrics-verb-needs-an-endpoint-and-all-three-range-bounds-or-none,
+  section = {query_metrics},
+  title  = {No `vmsingle-http` is exit 3, a partial range is exit 2, and neither asks the network},
+  claim  = {No `vmsingle-http` is exit 3, a partial range is exit 2, and neither asks the network.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_query_metrics.py -k test_the_verb_needs_an_endpoint_and_all_three_range_bounds_or_none},
+}

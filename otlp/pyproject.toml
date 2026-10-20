@@ -113,6 +113,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "stubs/opentelemetry/proto/collector/trace/v1/trace_service_pb2.pyi" = ["invalid-function-name"]
 "stubs/opentelemetry/proto/metrics/v1/metrics_pb2.pyi" = ["builtin-argument-shadowing"]
 "tests/test_cli.py" = ["assert"]
+"tests/test_query_metrics.py" = ["assert"]
 "tests/test_endpoints.py" = ["assert"]
 "tests/test_staleness.py" = ["assert"]
 "tests/test_logs.py" = ["assert"]

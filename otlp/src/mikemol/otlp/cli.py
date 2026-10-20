@@ -30,10 +30,19 @@ import os
 import secrets
 import sys
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from typing import TextIO, cast
 
-from mikemol.otlp import endpoints, logs, metriccmd, metrics, sender, staleness, tracecmd
+from mikemol.otlp import (
+    endpoints,
+    logs,
+    metriccmd,
+    metrics,
+    query_metrics,
+    sender,
+    staleness,
+    tracecmd,
+)
 
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
 ENDPOINT = "victorialogs-http"
@@ -78,6 +87,12 @@ def _parser() -> argparse.ArgumentParser:
     metric.add_argument("--value", required=True, type=float, help="the sample's value")
     metric.add_argument("--kind", default="gauge", choices=metriccmd.KINDS)
     metric.add_argument("--field", action="append", metavar="KEY=VALUE")
+    query = verbs.add_parser("query-metrics", help="run a PromQL query, print JSON lines")
+    query.add_argument("promql", help="the PromQL expression")
+    query.add_argument("--url", help=f"the metrics base URL (default: ${endpoints.ENV} name)")
+    query.add_argument("--start", help="a range query: its start (RFC 3339 or epoch)")
+    query.add_argument("--end", help="a range query: its end")
+    query.add_argument("--step", help="a range query: its step, such as 30s")
     return parser
 
 
@@ -171,6 +186,31 @@ def _metric(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     return metriccmd.run(request, sender.post)
 
 
+def _query_metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
+    # The `query-metrics` verb: an instant query, or a range one when all three bounds are given.
+    base = query_metrics.base_for(_text(opts, "url"), environ)
+    given = (_text(opts, "start"), _text(opts, "end"), _text(opts, "step"))
+    if base is None or any(given) != all(given):
+        sys.stderr.write(
+            f"mikemol-otlp: need --url or ${endpoints.ENV} naming {query_metrics.ENDPOINT}; "
+            "and --start, --end and --step together or none\n"
+        )
+        return EXIT_USAGE if base is not None else query_metrics.EXIT_UNREACHABLE
+    window = given if all(given) else None
+    code, lines, said = query_metrics.run(base, _text(opts, "promql"), window)
+    if said:
+        sys.stderr.write(f"mikemol-otlp: {said}\n")
+    sys.stdout.writelines(f"{line}\n" for line in lines)
+    return code
+
+
+_VERBS: dict[str, Callable[[dict[str, object], Mapping[str, str]], int]] = {
+    "trace": _trace,
+    "metric": _metric,
+    "query-metrics": _query_metrics,
+}
+
+
 def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
     """Send stdin's lines as OTLP log records, one span with `trace`, or one sample with `metric`.
 
@@ -183,10 +223,9 @@ def main(argv: Sequence[str] | None = None, stdin: TextIO | None = None) -> int:
     warning = staleness.notice()
     if warning:
         sys.stderr.write(f"{warning}\n")
-    if opts.get("verb") == "trace":
-        return _trace(opts, os.environ)
-    if opts.get("verb") == "metric":
-        return _metric(opts, os.environ)
+    handler = _VERBS.get(_text(opts, "verb"))
+    if handler is not None:
+        return handler(opts, os.environ)
     url = _destination(_text(opts, "url"), os.environ)
     fields = _fields(opts)
     if not url or fields is None:

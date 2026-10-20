@@ -6,3 +6,6 @@
 # matching is a STALE declaration and fails the grid as UNAPPLIED.
 src/mikemol/otlp/staleness.py|identical-copy-reported|    if installed\.read_bytes\(\) == source\.read_bytes\(\):|    if False:|def=stale
 src/mikemol/otlp/staleness.py|missing-install-compared|    if source is None or not installed\.is_file\(\):|    if source is None:|def=stale
+src/mikemol/otlp/query_metrics.py|outage-read-as-an-empty-answer|        return EXIT_UNREACHABLE, \[\], f"the store did not answer: \{unreachable\}"|        return EXIT_OK, [], ""|def=run
+src/mikemol/otlp/query_metrics.py|rejected-query-not-recognised|    if body is not None and body\.get\("status"\) == "error":|    if False:|def=run
+src/mikemol/otlp/query_metrics.py|range-step-taken-from-the-end|    args = urlencode\(\{"query": query, "start": start, "end": end, "step": step\}\)|    args = urlencode({"query": query, "start": start, "end": end, "step": end})|def=query_url
