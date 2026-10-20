@@ -13508,3 +13508,52 @@
   claim  = {W1787 (nemik:W438): a repo vendoring the colour-blind core gets it listed and moved.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_cvdcore_is_a_vendored_dist_and_moves_with_the_rest},
 }
+
+@misc{hooks-footprint-only-a-successful-open-is-a-read,
+  section = {footprint},
+  title  = {A probe that fails with ENOENT opens nothing, and only a descriptor result counts},
+  claim  = {A probe that fails with ENOENT opens nothing, and only a descriptor result counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_only_a_successful_open_is_a_read},
+}
+
+@misc{hooks-footprint-path-outside-the-root-or-not-a-file-is-not-a-repo-input,
+  section = {footprint},
+  title  = {Only a regular file inside the repo root is named, relative to it},
+  claim  = {Only a regular file inside the repo root is named, relative to it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_a_path_outside_the_root_or_not_a_file_is_not_a_repo_input},
+}
+
+@misc{hooks-footprint-undeclared-read-is-missing-and-an-unread-declaration-is-unused,
+  section = {footprint},
+  title  = {Both directions are findings, the omitted file first},
+  claim  = {Both directions are findings, the omitted file first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_an_undeclared_read_is_missing_and_an_unread_declaration_is_unused},
+}
+
+@misc{hooks-footprint-declaration-matching-the-trace-has-no-finding,
+  section = {footprint},
+  title  = {The audit is clean only when the two sets are equal},
+  claim  = {The audit is clean only when the two sets are equal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_a_declaration_matching_the_trace_has_no_finding},
+}
+
+@misc{hooks-footprint-command-runs-under-strace-following-children-and-tracing-opens,
+  section = {footprint},
+  title  = {The argv names strace, `-f`, the openat trace and the output file before the command},
+  claim  = {The argv names strace, `-f`, the openat trace and the output file before the command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_the_command_runs_under_strace_following_children_and_tracing_opens},
+}
+
+@misc{hooks-footprint-host-without-strace-is-degraded-and-runs-nothing,
+  section = {footprint},
+  title  = {No trace is not a clean trace: the finding is DEGRADED and no process starts},
+  claim  = {No trace is not a clean trace: the finding is DEGRADED and no process starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_a_host_without_strace_is_degraded_and_runs_nothing},
+}
+
+@misc{hooks-footprint-audit-traces-the-command-and-compares-the-repo-files-it-opened,
+  section = {footprint},
+  title  = {A planted trace of one declared and one undeclared file gives the one MISSING line},
+  claim  = {A planted trace of one declared and one undeclared file gives the one MISSING line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_an_audit_traces_the_command_and_compares_the_repo_files_it_opened},
+}

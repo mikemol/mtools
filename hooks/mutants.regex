@@ -542,3 +542,6 @@ src/mikemol/hooks/requeue.py|stack-never-submitted|        world\.submit\(stack\
 src/mikemol/hooks/requeue.py|own-stack-not-recognised|    mine = \[r for r in rows if ours and set\(r\.waypoints\) == ours\]|    mine = []|def=restart
 src/mikemol/hooks/requeue.py|any-process-is-a-commit|    return any\(word\.endswith\(b"mikemol-commit"\) for word in words\)|    return True|def=is_commit
 src/mikemol/hooks/requeue.py|every-process-is-in-the-group|        if int\(stat\.rsplit\("\)", 1\)\[1\]\.split\(\)\[_GROUP_FIELD\]\) == pgid:|        if True:|def=group_members
+src/mikemol/hooks/footprint.py|missing-and-unused-swapped|missing = \[f"MISSING \{p\}" for p in sorted\(got - want\)\]|missing = [f"MISSING {p}" for p in sorted(want - got)]|def=findings
+src/mikemol/hooks/footprint.py|directory-counted-as-a-file|        if path\.is_file\(\):|        if True:|def=within
+src/mikemol/hooks/footprint.py|no-strace-reads-as-clean|        return \[DEGRADED\]|        return []|def=audit
