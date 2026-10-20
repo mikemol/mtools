@@ -13720,3 +13720,31 @@
   claim  = {`--init` writes both files once, a second `--init` refuses, and `--write` keeps them.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_cli.py -k test_init_then_write_through_the_flags_make_and_keep_the_baselines},
 }
+
+@misc{hooks-tick-stop-fixture-fixture-has-a-readable-lock-that-nobody-holds,
+  section = {bar-fires},
+  title  = {The positive control: the reader answers a lock, not None, for a queue it can read},
+  claim  = {The positive control: the reader answers a lock, not None, for a queue it can read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop_fixture.py -k test_the_fixture_has_a_readable_lock_that_nobody_holds},
+}
+
+@misc{hooks-tick-stop-fixture-lock-record-is-read-with-its-holder-and-time,
+  section = {bar-fires},
+  title  = {The field is read: plant a holder and a taken_at in the fixture's lock},
+  claim  = {The field is read: plant a holder and a taken_at in the fixture's lock.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop_fixture.py -k test_a_lock_record_is_read_with_its_holder_and_time},
+}
+
+@misc{hooks-tick-stop-fixture-lock-with-no-holder-is-not-held,
+  section = {bar-fires},
+  title  = {A record that names nobody is a lock nobody holds, not a held lock with an empty name},
+  claim  = {A record that names nobody is a lock nobody holds, not a held lock with an empty name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop_fixture.py -k test_a_lock_with_no_holder_is_not_held},
+}
+
+@misc{hooks-tick-stop-fixture-unreadable-queue-is-unknown-rather-than-unheld,
+  section = {bar-fires},
+  title  = {None is a different fact from 'nobody holds it': the caller must not read it as free},
+  claim  = {None is a different fact from 'nobody holds it': the caller must not read it as free.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop_fixture.py -k test_an_unreadable_queue_is_unknown_rather_than_unheld},
+}
