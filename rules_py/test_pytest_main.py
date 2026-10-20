@@ -9,6 +9,7 @@ tmp_path, with a ceiling small enough that a short sleep crosses it.
 
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING
 
 import pytest_main
@@ -81,6 +82,34 @@ def test_the_default_ceiling_is_a_quarter_of_a_small_targets_timeout_at_most() -
     assert pytest_main.CEILING_S * pytest_main.FRACTION <= _SMALL_TIMEOUT_S
 
 
+_MIXED = (
+    "import pytest\n\n\ndef test_ran():\n    assert True\n\n\n"
+    '@pytest.mark.skip(reason="needs the sandbox")\ndef test_skipped():\n    assert False\n'
+)
+_TWO_CASES = 2
+
+
+def test_the_junit_file_bazel_names_is_passed_to_pytest_and_absent_otherwise() -> None:
+    """XML_OUTPUT_FILE becomes --junitxml; unset or empty adds nothing."""
+    assert pytest_main.xml_args({pytest_main.XML_ENV: "/out/test.xml"}) == [
+        "--junitxml=/out/test.xml"
+    ]
+    assert pytest_main.xml_args({}) == []
+    assert pytest_main.xml_args({pytest_main.XML_ENV: ""}) == []
+
+
+def test_a_run_with_the_junit_file_records_each_test_and_a_skip_with_its_reason(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The point of it: two testcases, not one, and the skip names why it did not run."""
+    out = tmp_path / "result.xml"
+    monkeypatch.setenv(pytest_main.XML_ENV, str(out))
+    assert pytest_main.main([*_ARGS, _module(tmp_path, _MIXED)], _CEILING) == _PASSED
+    text = out.read_text(encoding="utf-8")
+    assert text.count("<testcase") == _TWO_CASES
+    assert 'message="needs the sandbox"' in text
+
+
 def test_the_ceiling_follows_the_targets_timeout_when_bazel_names_it() -> None:
     """A medium target (300s) gets 75s; no timeout, a non-number or a non-positive one gets 15s."""
     env = pytest_main.TIMEOUT_ENV
@@ -89,3 +118,57 @@ def test_the_ceiling_follows_the_targets_timeout_when_bazel_names_it() -> None:
     assert pytest_main.ceiling_from({}) == pytest_main.CEILING_S
     assert pytest_main.ceiling_from({env: "soon"}) == pytest_main.CEILING_S
     assert pytest_main.ceiling_from({env: "0"}) == pytest_main.CEILING_S
+
+
+_SPIN = "def test_spins():\n    while True:\n        pass\n"
+_BUDGET_S = 2
+_CHILD_BROKEN = 70
+
+
+def test_the_budget_is_the_targets_timeout_in_cpu_seconds_times_the_factor() -> None:
+    """A small target (60s) gets 120 CPU seconds; no timeout, a non-number or zero arms nothing."""
+    env = pytest_main.TIMEOUT_ENV
+    assert pytest_main.budget_from({env: "60"}) == 60 * pytest_main.BUDGET_FACTOR
+    assert pytest_main.budget_from({}) is None
+    assert pytest_main.budget_from({env: "soon"}) is None
+    assert pytest_main.budget_from({env: "0"}) is None
+
+
+def _armed_status(tmp_path: Path, body: str) -> int:
+    """Run the entry point over one module in a forked child armed with a `_BUDGET_S` CPU budget.
+
+    ⚑ A FORK, SO THE LIMIT IS LOWERED IN THE CHILD AND NEVER IN THIS PROCESS, and the child ends
+    through `os._exit`. The safety net is the arm's own hard limit `GRACE_S` after the soft one,
+    which is CPU and not a timer, so a handler that failed to run still ends the child.
+
+    Returns:
+        the child's exit status.
+
+    """
+    pid = os.fork()
+    if pid == 0:
+        code = _CHILD_BROKEN
+        try:
+            code = pytest_main.main([*_ARGS, _module(tmp_path, body)], budget=_BUDGET_S)
+        finally:
+            os._exit(code)
+    _, status = os.waitpid(pid, 0)
+    return os.waitstatus_to_exitcode(status)
+
+
+def test_a_spinning_test_is_ended_at_the_cpu_budget_and_named(
+    tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    """The kernel ends the loop at the budget: exit 1 and the running test on stderr."""
+    assert _armed_status(tmp_path, _SPIN) == _FAILED
+    err = capfd.readouterr().err
+    assert "CPU budget of" in err
+    assert "::test_spins" in err
+
+
+def test_the_armed_entry_point_still_passes_a_fast_module(
+    tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    """The control: arming the budget changes nothing for a test that finishes."""
+    assert _armed_status(tmp_path, _FAST) == _PASSED
+    assert "CPU budget of" not in capfd.readouterr().err

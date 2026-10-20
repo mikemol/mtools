@@ -290,3 +290,39 @@
   claim  = {One test is reported as "1 test collected"; that is a collected suite, not a failure.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_venv_check.py -k test_a_suite_of_one_test_collects},
 }
+
+@misc{root-pytest-main-junit-file-bazel-names-is-passed-to-pytest-and-absent-otherwise,
+  section = {pytest_main},
+  title  = {XML_OUTPUT_FILE becomes --junitxml; unset or empty adds nothing},
+  claim  = {XML_OUTPUT_FILE becomes --junitxml; unset or empty adds nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_junit_file_bazel_names_is_passed_to_pytest_and_absent_otherwise},
+}
+
+@misc{root-pytest-main-run-with-the-junit-file-records-each-test-and-a-skip-with-its-reason,
+  section = {pytest_main},
+  title  = {The point of it: two testcases, not one, and the skip names why it did not run},
+  claim  = {The point of it: two testcases, not one, and the skip names why it did not run.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_run_with_the_junit_file_records_each_test_and_a_skip_with_its_reason},
+}
+
+@misc{root-pytest-main-budget-is-the-targets-timeout-in-cpu-seconds-times-the-factor,
+  section = {pytest_main},
+  title  = {A small target (60s) gets 120 CPU seconds; no timeout, a non-number or zero arms nothing},
+  claim  = {A small target (60s) gets 120 CPU seconds; no timeout, a non-number or zero arms
+            nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_budget_is_the_targets_timeout_in_cpu_seconds_times_the_factor},
+}
+
+@misc{root-pytest-main-spinning-test-is-ended-at-the-cpu-budget-and-named,
+  section = {pytest_main},
+  title  = {The kernel ends the loop at the budget: exit 1 and the running test on stderr},
+  claim  = {The kernel ends the loop at the budget: exit 1 and the running test on stderr.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_spinning_test_is_ended_at_the_cpu_budget_and_named},
+}
+
+@misc{root-pytest-main-armed-entry-point-still-passes-a-fast-module,
+  section = {pytest_main},
+  title  = {The control: arming the budget changes nothing for a test that finishes},
+  claim  = {The control: arming the budget changes nothing for a test that finishes.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_armed_entry_point_still_passes_a_fast_module},
+}

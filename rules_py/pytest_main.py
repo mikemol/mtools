@@ -24,12 +24,24 @@ first cut measured the wall clock and refused two healthy tests the first time t
 1.2s alone became 45s under 700 parallel actions, and a wall-clock ceiling cannot tell a heavy test
 from a busy machine. The CPU the test process and its waited-for children consumed does not stretch
 with the load, so it keeps catching the 16.7s sweep and leaves a test that merely waits alone.
+
+⚑⚑ A TEST THAT SPINS NEVER RETURNS TO BE JUDGED, SO THE KERNEL ENDS IT AT A CPU BUDGET (W1775,
+github-8f 2026-10-20 after the watchdog-clock spin cost two gates an hour each; the standing rule is
+RLIMIT_CPU, not a timer). The per-test ceiling above is checked when a test comes back, and a loop
+that does not come back is ended today only by bazel's wall timeout, which is load and not work.
+Run as a script, this arms `RLIMIT_CPU` on its own process: soft limit `BUDGET_FACTOR` times
+`TEST_TIMEOUT` CPU seconds, hard limit `GRACE_S` later. The soft limit's SIGXCPU is caught, names
+the test that was running, and exits 1; the hard limit's SIGKILL backs it for a spin the handler
+cannot reach (a loop inside C). The factor is wide because CPU seconds are not perfectly
+load-free here (SMT siblings and the frequency drop under full load inflated one shard's 41 s to
+70 s), so the budget is the margin and not the measure.
 """
 
 from __future__ import annotations
 
 import os
 import resource
+import signal
 import sys
 from typing import TYPE_CHECKING
 
@@ -37,10 +49,14 @@ import pytest
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+    from types import FrameType
 
 CEILING_S = 15.0
 FRACTION = 4
+BUDGET_FACTOR = 2
+GRACE_S = 10
 TIMEOUT_ENV = "TEST_TIMEOUT"
+XML_ENV = "XML_OUTPUT_FILE"
 _FAILED = 1
 
 
@@ -60,14 +76,15 @@ class Ceiling:
     """A pytest plugin that records every test whose call used more CPU than the ceiling."""
 
     def __init__(self, ceiling: float) -> None:
-        """Hold the ceiling and an empty list of offenders."""
+        """Hold the ceiling, an empty list of offenders and the test now running."""
         self.ceiling = ceiling
         self.slow: list[str] = []
+        self.running = ""
         self._start = 0.0
 
     def pytest_runtest_call(self, item: pytest.Item) -> None:
-        """Note the CPU used so far, as the test's call begins."""
-        del item
+        """Note the CPU used so far, and which test this is, as the call begins."""
+        self.running = item.nodeid
         self._start = cpu_seconds()
 
     def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:
@@ -93,8 +110,63 @@ def ceiling_from(environ: Mapping[str, str]) -> float:
     return timeout / FRACTION if timeout > 0 else CEILING_S
 
 
-def main(argv: list[str], ceiling: float | None = None) -> int:
+def budget_from(environ: Mapping[str, str]) -> int | None:
+    """Choose the whole run's CPU budget: the target's timeout, in CPU seconds, times the factor.
+
+    Returns:
+        whole CPU seconds; None when bazel names no positive timeout (nothing is armed then).
+
+    """
+    try:
+        timeout = float(environ.get(TIMEOUT_ENV, ""))
+    except ValueError:
+        return None
+    return int(timeout * BUDGET_FACTOR) if timeout > 0 else None
+
+
+def arm(budget: int, plugin: Ceiling) -> None:
+    """Have the kernel end this process at `budget` CPU seconds, naming the test that was running.
+
+    The soft limit raises SIGXCPU, caught here; the hard limit, `GRACE_S` later, is SIGKILL.
+    """
+    # ⚑ A COPY OF THE REAL STDERR, TAKEN BEFORE PYTEST STARTS: while a test runs, pytest's capture
+    # owns fd 2, and a line written there dies with the process.
+    real_stderr = os.dup(2)
+
+    def over(signum: int, frame: FrameType | None) -> None:
+        del signum, frame
+        line = (
+            f"pytest_main: the CPU budget of {budget}s was used up (W1775); "
+            f"running: {plugin.running or 'no test yet (collection)'}\n"
+        )
+        os.write(real_stderr, line.encode())
+        os._exit(_FAILED)
+
+    signal.signal(signal.SIGXCPU, over)
+    resource.setrlimit(resource.RLIMIT_CPU, (budget, budget + GRACE_S))
+
+
+def xml_args(environ: Mapping[str, str]) -> list[str]:
+    """Name the junit file bazel asked for, so pytest keeps one record per test.
+
+    ⚑ WITHOUT IT BAZEL SYNTHESIZES ONE TESTCASE FOR THE WHOLE TARGET (`tests="1"`), and a skipped
+    test is invisible to anything reading the result (github-8f, 2026-10-19: the sandbox tests in
+    `//hooks:test_exec_env` could be told from a skip only by parsing a log line). With
+    `XML_OUTPUT_FILE` handed to pytest, each test is a testcase and a skip carries its reason.
+
+    Returns:
+        `--junitxml=<path>` when `XML_OUTPUT_FILE` is set and not empty; nothing otherwise.
+
+    """
+    path = environ.get(XML_ENV, "")
+    return [f"--junitxml={path}"] if path else []
+
+
+def main(argv: list[str], ceiling: float | None = None, budget: int | None = None) -> int:
     """Run pytest over `argv`, failing a green run that held a test over the CPU ceiling.
+
+    `budget` arms the kernel CPU limit on THIS process, so only the script entry passes it: an
+    in-process caller (a test) must never lower its own process's limit.
 
     Returns:
         pytest's exit code; 1 when it was 0 but a test used more CPU than the ceiling.
@@ -102,7 +174,9 @@ def main(argv: list[str], ceiling: float | None = None) -> int:
     """
     limit = ceiling_from(os.environ) if ceiling is None else ceiling
     plugin = Ceiling(limit)
-    code = int(pytest.main([*argv], plugins=[plugin]))
+    if budget is not None:
+        arm(budget, plugin)
+    code = int(pytest.main([*argv, *xml_args(os.environ)], plugins=[plugin]))
     if plugin.slow and code == 0:
         sys.stderr.write(f"pytest_main: tests over the {limit:g}s CPU ceiling (W935):\n")
         sys.stderr.writelines(f"  {line}\n" for line in plugin.slow)
@@ -111,4 +185,4 @@ def main(argv: list[str], ceiling: float | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main(sys.argv[1:], budget=budget_from(os.environ)))
