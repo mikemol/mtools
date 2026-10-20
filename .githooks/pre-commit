@@ -896,7 +896,7 @@ _gate_targets_tool="$root/bazel-bin/hooks/.venv/bin/mikemol-gate-targets"
 if [ -x "$_gate_targets_tool" ] && [ -s "$staged/.bep.json" ]; then
     _gate_testlogs=$(cd "$staged" && git_scrubbed bazel info bazel-testlogs 2>/dev/null) || _gate_testlogs=""
     if [ -n "$_gate_testlogs" ]; then
-        "$_gate_targets_tool" "$(basename "$root")" "$staged/.bep.json" "$_gate_testlogs" || say "mikemol-gate-targets failed; no measurements sent"
+        "$_gate_targets_tool" "$(basename "$tools")" "$staged/.bep.json" "$_gate_testlogs" || say "mikemol-gate-targets failed; no measurements sent"
     fi
 else
     say "mikemol-gate-targets not built or no build events; no measurements sent"
