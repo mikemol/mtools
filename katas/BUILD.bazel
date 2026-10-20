@@ -122,6 +122,7 @@ mutants_sharded(
     # too (measured 2026-10-13: 46 mutants in the first of three); six put about 23 in each, at the
     # same width.
     shards = 12,
+    cpu_budget = 300,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

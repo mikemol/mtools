@@ -97,6 +97,7 @@ sh_test(
 mutants_sharded(
     name = "mutants",
     shards = 8,
+    cpu_budget = 300,
     cpus = 3,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

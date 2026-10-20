@@ -130,6 +130,7 @@ mutants_sharded(
     # suite that is 9 s alone; three shards of about 68 stopped fitting 300 s at load. Nine put about
     # 23 in each, at the same width.
     shards = 36,
+    cpu_budget = 900,
     cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [

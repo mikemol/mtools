@@ -117,6 +117,7 @@ mutants_sharded(
     # (300.1 s, no failing assertion) while the host ran other repos' gates. A timeout under load
     # is a wall-time dependency, and the fix is less work per target.
     shards = 4,
+    cpu_budget = 300,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
