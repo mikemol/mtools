@@ -137,7 +137,19 @@ say() { printf 'pre-commit: %s\n' "$1" >&2; }
 # that does), is cut to 48 characters, and the time is the gate's own clock, taken where the stage begins.
 # ⚑ IT NEVER CHANGES A VERDICT: it only prints, and a failed `date` leaves an empty time, which the
 # reader skips as not a whole mark.
+# ⚑⚑ A PHASE BOUNDARY IS WHERE A WITHDRAW STOPS THE GATE (W1705, github-8f 2026-10-19). `mikemol-commit
+# REPO --withdraw KEY` for an in-flight key writes the file named by MIKEMOL_COMMIT_WITHDRAW_MARKER, keyed
+# to that submission, and this function is the one place a stage begins with no child process live, so an
+# exit here ends the gate without orphaning a bazel or a witness's mutated victim. The marker is removed
+# BEFORE the exit (a stale one cannot meet a later gate, whose name carries a different key) and the exit
+# is 75, which the verdict reports as a refusal at the stage the mark names. The longest stage, the bazel
+# suite, is one phase: a withdraw asked while it runs takes effect only if another phase follows.
 phase() {  # name
+    if [ -n "${MIKEMOL_COMMIT_WITHDRAW_MARKER:-}" ] && [ -e "$MIKEMOL_COMMIT_WITHDRAW_MARKER" ]; then
+        rm -f "$MIKEMOL_COMMIT_WITHDRAW_MARKER"
+        printf 'pre-commit: withdrawn before phase %s\n' "$1" >&2
+        exit 75
+    fi
     printf 'pre-commit: phase %s %s\n' \
         "$(printf '%s' "$1" | tr -c 'a-zA-Z0-9_' '_' | cut -c1-48)" "$(date +%s%N)" >&2
 }
