@@ -48,8 +48,27 @@ from mikemol.hooks import (
     pycheck_format,
     pycheck_house,
     pycheck_install,
+    pycheck_ratchet,
+    pycheck_ratchet_run,
 )
 from mikemol.hooks.verdict import Verdict
+
+RATCHET_FLAG = "--ratchet"
+
+
+def _ratchet_here(root: Path) -> int:
+    """Judge a root's ruff and mypy findings against its committed baselines.
+
+    Returns:
+        the exit code from `pycheck_ratchet.ratchet`, or its not-checked code when a tool crashed.
+
+    """
+    try:
+        return pycheck_ratchet.ratchet(root, pycheck_ratchet_run.real(), sys.stdout, sys.stderr)
+    except pycheck_ratchet_run.ToolFailedError as failed:
+        sys.stderr.write(f"pycheck --ratchet: {failed}; nothing judged\n")
+        return pycheck_ratchet.EXIT_NOT_CHECKED
+
 
 # The flags: the file whose verdict is asked for, the root whose ledger is, or the root to refresh.
 FLAG = "--check-file"
@@ -74,6 +93,7 @@ EXIT_NOT_CHECKED = 3
 USAGE = (
     f"usage: mikemol-pycheck ({FLAG} PATH | {CENSUS_FLAG} ROOT [{HOUSE_FLAG}]"
     f" | {REFRESH_FLAG} ROOT"
+    f" | {RATCHET_FLAG} ROOT"
     f" | {CHANGED_FLAG} ROOT | {FORMAT_FLAG} PATH | {CLEAR_FLAG} PATH | {CLEAR_LEDGER_FLAG} ROOT"
     f" | {INSTALL_FLAG} SRC DEST)\n"
 )
@@ -330,7 +350,7 @@ def _flag_here(args: list[str]) -> int:
 
     """
     house = args[:1] == [CENSUS_FLAG] and args[2:] == [HOUSE_FLAG]
-    known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG}
+    known = {FLAG, CENSUS_FLAG, REFRESH_FLAG, CHANGED_FLAG, RATCHET_FLAG}
     if house:
         args = args[:EXPECTED_ARGS]
     if len(args) != EXPECTED_ARGS or args[0] not in known:
@@ -341,6 +361,8 @@ def _flag_here(args: list[str]) -> int:
     if args[0] == CHANGED_FLAG:
         changed = pycheck_census.changed_python
         return check_changed(target, changed, _check_here, sys.stdout, sys.stderr)
+    if args[0] == RATCHET_FLAG:
+        return _ratchet_here(target)
     if args[0] == CENSUS_FLAG:
         return census(target, tracked, analyzer(house=house), sys.stdout, sys.stderr)
     if args[0] == REFRESH_FLAG:

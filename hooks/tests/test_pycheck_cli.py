@@ -139,3 +139,12 @@ def test_main_accepts_exactly_the_flag_and_a_path(capsys: pytest.CaptureFixture[
     usage = capsys.readouterr().err
     assert "--check-file PATH" in usage
     assert "--census ROOT" in usage
+
+
+def test_ratchet_with_no_baselines_judges_nothing_and_cannot_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--ratchet ROOT` on a root with no committed baselines is not checked, never clean."""
+    cannot_run = 7  # the exit table's CANNOT_RUN, an instrument fault
+    assert pycheck_cli.main(["--ratchet", str(tmp_path)]) == cannot_run
+    assert "none judged" in capsys.readouterr().err

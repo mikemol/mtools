@@ -549,3 +549,11 @@ src/mikemol/hooks/pyratchet.py|equal-count-is-a-rise|        if n > base\.get\(n
 src/mikemol/hooks/pyratchet.py|codeless-finding-loses-its-rule|str\(row\.get\("code"\) or SYNTAX\)|str(row.get("code"))|def=_pair
 src/mikemol/hooks/pyratchet.py|mypy-notes-counted-as-errors|if row\.get\("severity"\) == "error"|if True|def=mypy_counts
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
+src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
+src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet
+src/mikemol/hooks/pycheck_ratchet.py|rise-written-to-stdout|\(err if status else out\)|(out if status else err)|def=ratchet
+src/mikemol/hooks/pycheck_ratchet.py|array-baseline-accepted|return cast\("pyratchet\.Counts", value\) if isinstance\(value, dict\) else None|return cast("pyratchet.Counts", value)|def=baseline
+src/mikemol/hooks/pycheck_ratchet_run.py|crash-read-as-findings|    if status not in CLEAN_OR_FINDINGS:|    if False:|def=run_tool
+src/mikemol/hooks/pycheck_ratchet_run.py|absent-tree-named|    return \[str\(root / tree\) for tree in TREES if \(root / tree\)\.is_dir\(\)\]|    return [str(root / tree) for tree in TREES]|def=trees
+src/mikemol/hooks/pycheck_ratchet_run.py|unreadable-file-reads-as-empty|        return None|        return ""|def=disk
+src/mikemol/hooks/pycheck_cli.py|crashed-tool-reads-as-clean|        return pycheck_ratchet\.EXIT_NOT_CHECKED|        return 0|def=_ratchet_here

@@ -13606,3 +13606,75 @@
   claim  = {A clean verdict says how many findings remain against how many the baseline allows.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet.py -k test_no_rise_exits_zero_with_both_totals},
 }
+
+@misc{hooks-pycheck-ratchet-no-rise-exits-zero-and-reports-both-totals-on-stdout,
+  section = {pycheck_ratchet},
+  title  = {A count at or under its baseline passes, and each tool's totals are said},
+  claim  = {A count at or under its baseline passes, and each tool's totals are said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet.py -k test_no_rise_exits_zero_and_reports_both_totals_on_stdout},
+}
+
+@misc{hooks-pycheck-ratchet-rise-in-either-tool-exits-four-and-names-it-on-stderr,
+  section = {pycheck_ratchet},
+  title  = {One tool over its baseline refuses the whole stage, and the other's verdict still prints},
+  claim  = {One tool over its baseline refuses the whole stage, and the other's verdict still
+            prints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet.py -k test_a_rise_in_either_tool_exits_four_and_names_it_on_stderr},
+}
+
+@misc{hooks-pycheck-ratchet-missing-baseline-judges-nothing-and-runs-neither-tool,
+  section = {pycheck_ratchet},
+  title  = {Absent is not clean: exit 3, a line saying so, and no tool started},
+  claim  = {Absent is not clean: exit 3, a line saying so, and no tool started.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet.py -k test_a_missing_baseline_judges_nothing_and_runs_neither_tool},
+}
+
+@misc{hooks-pycheck-ratchet-unreadable-baseline-is-not-a-baseline,
+  section = {pycheck_ratchet},
+  title  = {Text that is not a JSON object is None, the same as a missing file},
+  claim  = {Text that is not a JSON object is None, the same as a missing file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet.py -k test_an_unreadable_baseline_is_not_a_baseline},
+}
+
+@misc{hooks-pycheck-ratchet-run-only-the-trees-that-exist-are-named-in-the-fixed-order,
+  section = {pycheck_ratchet_run},
+  title  = {A missing tree is skipped, and `src` comes before `tests`},
+  claim  = {A missing tree is skipped, and `src` comes before `tests`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_run.py -k test_only_the_trees_that_exist_are_named_in_the_fixed_order},
+}
+
+@misc{hooks-pycheck-ratchet-run-exit-one-is-findings-and-its-output-is-returned,
+  section = {pycheck_ratchet_run},
+  title  = {Both tools exit 1 when they report, so the output is the answer},
+  claim  = {Both tools exit 1 when they report, so the output is the answer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_run.py -k test_exit_one_is_findings_and_its_output_is_returned},
+}
+
+@misc{hooks-pycheck-ratchet-run-status-that-is-neither-clean-nor-findings-raises,
+  section = {pycheck_ratchet_run},
+  title  = {A crash with empty output must not read as an empty finding list},
+  claim  = {A crash with empty output must not read as an empty finding list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_run.py -k test_a_status_that_is_neither_clean_nor_findings_raises},
+}
+
+@misc{hooks-pycheck-ratchet-run-missing-file-reads-as-none-and-a-present-one-as-its-text,
+  section = {pycheck_ratchet_run},
+  title  = {The reader says absent rather than raising},
+  claim  = {The reader says absent rather than raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_run.py -k test_a_missing_file_reads_as_none_and_a_present_one_as_its_text},
+}
+
+@misc{hooks-pycheck-ratchet-cli-crashed-tool-judges-nothing-names-it-and-cannot-run,
+  section = {pycheck-cli},
+  title  = {A tool that exits neither clean nor with findings is named, and the stage is not checked},
+  claim  = {A tool that exits neither clean nor with findings is named, and the stage is not
+            checked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_ratchet_cli.py -k test_a_crashed_tool_judges_nothing_names_it_and_cannot_run},
+}
+
+@misc{hooks-pycheck-cli-ratchet-with-no-baselines-judges-nothing-and-cannot-run,
+  section = {pycheck-cli},
+  title  = {`--ratchet ROOT` on a root with no committed baselines is not checked, never clean},
+  claim  = {`--ratchet ROOT` on a root with no committed baselines is not checked, never clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_ratchet_with_no_baselines_judges_nothing_and_cannot_run},
+}

@@ -163,3 +163,5 @@ gatetargets	Gate target measurements
 vlogdetach	Detached spawns
 footprint	The footprint audit
 pyratchet	The paydown-only ratchet
+pycheck_ratchet	The ratchet stage
+pycheck_ratchet_run	The ratchet's real tool runs
