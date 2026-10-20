@@ -57,6 +57,9 @@ from mikemol.hooks.heartbeat import try_beat as _try_beat
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
+from mikemol.hooks.rootdrop import drop as _drop
+from mikemol.hooks.rootdrop import invoker_home as _invoker_home
+from mikemol.hooks.rootdrop import owner_of as _owner_of
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackbuildfiles import refusal as _build_refusal
 from mikemol.hooks.stackdrift import QUEUE as _QUEUE
@@ -534,16 +537,47 @@ def commit(
     return done.returncode or EXIT_NOT_COMMITTED
 
 
+def fleet_root(given: str, env: Mapping[str, str]) -> Path:
+    """Find the directory a bare repository name lives under, whatever HOME says (W1752).
+
+    Returns:
+        `ROOT_ENV` when set, else the invoking user's own fleet root when they ran this through
+        sudo and it holds the name, else the effective user's.
+
+    """
+    named = env.get(ROOT_ENV)
+    if named:
+        return Path(named)
+    invoker = _invoker_home(env)
+    if invoker is not None and (invoker / "github" / given).is_dir():
+        return invoker / "github"
+    return Path.home() / "github"
+
+
+def become_owner(root: Path) -> None:
+    """Drop to the repository's owner when run as root, before anything is touched (W1752).
+
+    A root-owned repository, or a process that is not root, changes nothing; the operator's rule
+    is that a user-level tool run as root neither refuses nor leaves root-owned files behind.
+    """
+    owner = _owner_of(root, os.geteuid())
+    if owner is not None:
+        os.environ.update(_drop(owner, os.environ))
+
+
 def resolve_root(given: str, env: Mapping[str, str]) -> Path:
     """Resolve a repository named by path, or by directory name under the host root.
 
     Returns:
-        the repository's directory.
+        the repository's directory; a root process has become its owner by then.
 
     """
     if "/" in given or given.startswith("."):
-        return Path(given).resolve()
-    return Path(env.get(ROOT_ENV) or Path.home() / "github") / given
+        root = Path(given).resolve()
+    else:
+        root = fleet_root(given, env) / given
+    become_owner(root)
+    return root
 
 
 def parse(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Request] | None:

@@ -13804,3 +13804,87 @@
   claim  = {No journal tool to wrap with: the argv is unchanged and nothing is guessed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogdetach_journal.py -k test_without_systemd_cat_the_child_runs_bare_as_before},
 }
+
+@misc{hooks-rootdrop-process-that-is-not-root-never-drops,
+  section = {rootdrop},
+  title  = {Only euid 0 changes identity: an ordinary user's tool runs as itself},
+  claim  = {Only euid 0 changes identity: an ordinary user's tool runs as itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_a_process_that_is_not_root_never_drops},
+}
+
+@misc{hooks-rootdrop-root-over-a-user-owned-path-becomes-that-user,
+  section = {rootdrop},
+  title  = {The owner is the stat uid and gid, with the name and home of its passwd entry},
+  claim  = {The owner is the stat uid and gid, with the name and home of its passwd entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_root_over_a_user_owned_path_becomes_that_user},
+}
+
+@misc{hooks-rootdrop-root-owned-path-changes-nothing,
+  section = {rootdrop},
+  title  = {Root over root's own path runs as root, unchanged},
+  claim  = {Root over root's own path runs as root, unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_a_root_owned_path_changes_nothing},
+}
+
+@misc{hooks-rootdrop-missing-path-has-no-owner-to-drop-to,
+  section = {rootdrop},
+  title  = {Nothing to stat is nothing to become, not a crash},
+  claim  = {Nothing to stat is nothing to become, not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_a_missing_path_has_no_owner_to_drop_to},
+}
+
+@misc{hooks-rootdrop-invoking-user-is-found-through-sudo-user-not-home,
+  section = {rootdrop},
+  title  = {HOME is /root for a root shell; SUDO_USER names the real account and its passwd home},
+  claim  = {HOME is /root for a root shell; SUDO_USER names the real account and its passwd home.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_the_invoking_user_is_found_through_sudo_user_not_home},
+}
+
+@misc{hooks-rootdrop-without-a-usable-sudo-user-there-is-no-invoker-home,
+  section = {rootdrop},
+  title  = {Unset, root itself, or a name with no passwd entry: none, never a guess},
+  claim  = {Unset, root itself, or a name with no passwd entry: none, never a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_without_a_usable_sudo_user_there_is_no_invoker_home},
+}
+
+@misc{hooks-rootdrop-drop-sets-groups-then-gid-then-uid-and-gives-the-owner-environment,
+  section = {rootdrop},
+  title  = {Groups and gid need uid 0, so uid goes last; HOME, USER and LOGNAME are the owner's},
+  claim  = {Groups and gid need uid 0, so uid goes last; HOME, USER and LOGNAME are the owner's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rootdrop.py -k test_the_drop_sets_groups_then_gid_then_uid_and_gives_the_owner_environment},
+}
+
+@misc{hooks-commit-kata-root-named-host-root-wins,
+  section = {commit-kata},
+  title  = {MIKEMOL_ROOT-style override: the environment's root is used as given},
+  claim  = {MIKEMOL_ROOT-style override: the environment's root is used as given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata_root.py -k test_the_named_host_root_wins},
+}
+
+@misc{hooks-commit-kata-root-with-nothing-named-the-effective-users-fleet-root-is-used,
+  section = {commit-kata},
+  title  = {No override and no sudo user: HOME's github directory, as before},
+  claim  = {No override and no sudo user: HOME's github directory, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata_root.py -k test_with_nothing_named_the_effective_users_fleet_root_is_used},
+}
+
+@misc{hooks-commit-kata-root-sudo-user-whose-fleet-root-lacks-the-name-falls-back-to-the-effective-user,
+  section = {commit-kata},
+  title  = {The invoker's directory is chosen only when it holds the name, never on SUDO_USER alone},
+  claim  = {The invoker's directory is chosen only when it holds the name, never on SUDO_USER alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata_root.py -k test_a_sudo_user_whose_fleet_root_lacks_the_name_falls_back_to_the_effective_user},
+}
+
+@misc{hooks-commit-kata-root-process-that-is-not-root-keeps-its-environment,
+  section = {commit-kata},
+  title  = {Becoming the owner is inert for an ordinary user: HOME and the rest are untouched},
+  claim  = {Becoming the owner is inert for an ordinary user: HOME and the rest are untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata_root.py -k test_a_process_that_is_not_root_keeps_its_environment},
+}
+
+@misc{hooks-commit-kata-root-path-is-resolved-as-a-path-and-a-name-under-the-fleet-root,
+  section = {commit-kata},
+  title  = {A slash or a leading dot is a path; anything else is a name under the host root},
+  claim  = {A slash or a leading dot is a path; anything else is a name under the host root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata_root.py -k test_a_path_is_resolved_as_a_path_and_a_name_under_the_fleet_root},
+}

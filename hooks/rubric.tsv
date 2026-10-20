@@ -166,3 +166,4 @@ pyratchet	The paydown-only ratchet
 pycheck_ratchet	The ratchet stage
 pycheck_ratchet_run	The ratchet's real tool runs
 pycheck_ratchet_write	The baselines only record progress
+rootdrop	A tool run as root becomes the owner of its path

@@ -552,6 +552,12 @@ src/mikemol/hooks/pyratchet.py|links-followed-before-relativising|        name =
 src/mikemol/hooks/commit_span.py|refusal-recorded-as-a-landing|        if event\["verdict"\] != _OK:|        if False:|def=landing_records
 src/mikemol/hooks/commit_span.py|landings-without-a-store|    if program is None or not store_named\(env\):|    if program is None:|def=emit_landings
 src/mikemol/hooks/vlogdetach.py|journal-wrapper-always-used|    if program is None:|    if False:|def=journaled
+src/mikemol/hooks/rootdrop.py|non-root-process-drops|    if euid != ROOT_UID:|    if False:|def=owner_of
+src/mikemol/hooks/rootdrop.py|root-owned-path-dropped-to|    if seen\.st_uid == ROOT_UID:|    if False:|def=owner_of
+src/mikemol/hooks/rootdrop.py|uid-set-before-gid|    ops\.setgid\(owner\.gid\)|    ops.setuid(owner.uid)|def=drop
+src/mikemol/hooks/rootdrop.py|root-sudo-user-has-a-home|    if not name or name == "root":|    if not name:|def=invoker_home
+src/mikemol/hooks/commit_kata.py|sudo-user-chosen-without-the-name|    if invoker is not None and \(invoker / "github" / given\)\.is_dir\(\):|    if invoker is not None:|def=fleet_root
+src/mikemol/hooks/commit_kata.py|identity-changed-for-everyone|    if owner is not None:|    if True:|def=become_owner
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
 src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
 src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet
