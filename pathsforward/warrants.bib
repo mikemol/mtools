@@ -6679,3 +6679,136 @@
   claim  = {With --add the mode refuses the flag, naming it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_location.py -k test_location_is_an_update_field_so_add_refuses_it_by_name},
 }
+
+@misc{pathsforward-mutations-changed-status-is-one-event-carrying-the-old-and-the-new-value,
+  section = {mutations},
+  title  = {The control for every other test: a status moves, and exactly that field is reported},
+  claim  = {The control for every other test: a status moves, and exactly that field is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_a_changed_status_is_one_event_carrying_the_old_and_the_new_value},
+}
+
+@misc{pathsforward-mutations-card-nothing-changed-on-emits-nothing,
+  section = {mutations},
+  title  = {No change is no event, so a quiet queue is a quiet feed},
+  claim  = {No change is no event, so a quiet queue is a quiet feed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_a_card_nothing_changed_on_emits_nothing},
+}
+
+@misc{pathsforward-mutations-minted-card-emits-each-non-empty-field-from-empty,
+  section = {mutations},
+  title  = {The starting values: a card never touched since its mint still has a known status},
+  claim  = {The starting values: a card never touched since its mint still has a known status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_a_minted_card_emits_each_non_empty_field_from_empty},
+}
+
+@misc{pathsforward-mutations-long-text-is-a-length-and-a-hash-never-the-text,
+  section = {mutations},
+  title  = {Evidence reports that it changed and by how much; the words stay out of the feed},
+  claim  = {Evidence reports that it changed and by how much; the words stay out of the feed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_long_text_is_a_length_and_a_hash_never_the_text},
+}
+
+@misc{pathsforward-mutations-two-texts-of-one-length-differ-by-their-hash,
+  section = {mutations},
+  title  = {The control for the digest: a same-length rewrite is still a change},
+  claim  = {The control for the digest: a same-length rewrite is still a change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_two_texts_of_one_length_differ_by_their_hash},
+}
+
+@misc{pathsforward-mutations-list-field-is-spelled-as-its-json,
+  section = {mutations},
+  title  = {A blocker added reads as the list before and after, in order},
+  claim  = {A blocker added reads as the list before and after, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_a_list_field_is_spelled_as_its_json},
+}
+
+@misc{pathsforward-mutations-card-that-leaves-the-queue-is-one-queue-event,
+  section = {mutations},
+  title  = {Its fields are no longer the queue's to report; the departure is},
+  claim  = {Its fields are no longer the queue's to report; the departure is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations.py -k test_a_card_that_leaves_the_queue_is_one_queue_event},
+}
+
+@misc{pathsforward-mutations-emit-log-line-carries-the-station-the-values-and-the-mutations-context,
+  section = {mutations_emit},
+  title  = {The station is repo-qualified, and the context rides every line},
+  claim  = {The station is repo-qualified, and the context rides every line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_a_log_line_carries_the_station_the_values_and_the_mutations_context},
+}
+
+@misc{pathsforward-mutations-emit-plan-is-one-log-child-then-one-sample-per-distinct-field,
+  section = {mutations_emit},
+  title  = {Three events of two fields: one log child with three lines, two samples},
+  claim  = {Three events of two fields: one log child with three lines, two samples.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_the_plan_is_one_log_child_then_one_sample_per_distinct_field},
+}
+
+@misc{pathsforward-mutations-emit-sample-is-labelled-by-repo-field-and-via-alone,
+  section = {mutations_emit},
+  title  = {No station, value or session reaches a series: those are unbounded},
+  claim  = {No station, value or session reaches a series: those are unbounded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_a_sample_is_labelled_by_repo_field_and_via_alone},
+}
+
+@misc{pathsforward-mutations-emit-bulk-edit-is-fed-to-the-log-in-chunks,
+  section = {mutations_emit},
+  title  = {The control for the pipe: no child is handed more lines than the chunk},
+  claim  = {The control for the pipe: no child is handed more lines than the chunk.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_a_bulk_edit_is_fed_to_the_log_in_chunks},
+}
+
+@misc{pathsforward-mutations-emit-no-events-start-nothing,
+  section = {mutations_emit},
+  title  = {A mutation that changed nothing sends nothing},
+  claim  = {A mutation that changed nothing sends nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_no_events_start_nothing},
+}
+
+@misc{pathsforward-mutations-emit-emit-starts-every-child-when-a-binary-and-a-store-exist,
+  section = {mutations_emit},
+  title  = {The positive control for the two refusals below},
+  claim  = {The positive control for the two refusals below.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_emit_starts_every_child_when_a_binary_and_a_store_exist},
+}
+
+@misc{pathsforward-mutations-emit-no-store-or-a-failed-start-sends-nothing-and-raises-nothing,
+  section = {mutations_emit},
+  title  = {The queue is already saved: a missing store or a dead child never fails the write},
+  claim  = {The queue is already saved: a missing store or a dead child never fails the write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_no_store_or_a_failed_start_sends_nothing_and_raises_nothing},
+}
+
+@misc{pathsforward-mutations-ship-actor-is-automation-for-an-unattended-mode-whatever-holds-the-lock,
+  section = {mutations_ship},
+  title  = {The control: a prune is automation even under a held tick lock; a plain edit is not},
+  claim  = {The control: a prune is automation even under a held tick lock; a plain edit is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_actor_is_automation_for_an_unattended_mode_whatever_holds_the_lock},
+}
+
+@misc{pathsforward-mutations-ship-context-carries-the-flag-the-clock-the-session-and-a-shared-id,
+  section = {mutations_ship},
+  title  = {One command, one mutation id; the via is the writer flag the command ran},
+  claim  = {One command, one mutation id; the via is the writer flag the command ran.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_the_context_carries_the_flag_the_clock_the_session_and_a_shared_id},
+}
+
+@misc{pathsforward-mutations-ship-update-ships-one-log-line-per-changed-field-through-the-save-point,
+  section = {mutations_ship},
+  title  = {Through the CLI: marking a card working leaves its station, old and new, and the flag},
+  claim  = {Through the CLI: marking a card working leaves its station, old and new, and the flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_update_ships_one_log_line_per_changed_field_through_the_save_point},
+}
+
+@misc{pathsforward-mutations-ship-unattended-mode-is-shipped-as-automation,
+  section = {mutations_ship},
+  title  = {The prune that frees a card ships its change with the actor the writer can know},
+  claim  = {The prune that frees a card ships its change with the actor the writer can know.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_unattended_mode_is_shipped_as_automation},
+}
+
+@misc{pathsforward-mutations-ship-send-that-cannot-start-never-fails-the-edit,
+  section = {mutations_ship},
+  title  = {The queue is saved before the events are sent: a dead child changes nothing visible},
+  claim  = {The queue is saved before the events are sent: a dead child changes nothing visible.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_a_send_that_cannot_start_never_fails_the_edit},
+}

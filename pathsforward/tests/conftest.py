@@ -10,7 +10,20 @@ it itself with `monkeypatch.setenv`.
 """
 
 import os
+from collections.abc import Sequence
+from unittest import mock
 
+from mikemol.pathsforward import refusal_record
 from mikemol.pathsforward.ledger import SESSION_ENV
 
 os.environ.pop(SESSION_ENV, None)
+
+
+def _not_started(_argv: Sequence[str], _line: str) -> None:
+    """Stand in for the detached `mikemol-otlp` start, so a test run never ships to a real store."""
+
+
+# ⚑ NO TEST STARTS A REAL TELEMETRY CHILD (W1742): every saved edit now ships its events, and a run
+# on a host with a store would push each fixture mutation into it. A test that wants the start
+# patches this again and reads what it was handed.
+mock.patch.object(refusal_record, "spawn", _not_started).start()

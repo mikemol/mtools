@@ -91,6 +91,8 @@ from mikemol.pathsforward.model import (
     State,
     text,
 )
+from mikemol.pathsforward.mutations import snapshot as field_snapshot
+from mikemol.pathsforward.mutations_ship import ship as ship_mutation
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 from mikemol.pathsforward.pruned import edges_of, ledger_line, removed
@@ -109,6 +111,8 @@ PRUNE_SAID = pruned_said
 PRUNE_LEDGER = ledger_line
 TRANSITION_LINES = transition_lines
 STATUS_SNAPSHOT = status_snapshot
+FIELD_SNAPSHOT = field_snapshot
+SHIP_MUTATION = ship_mutation
 REFUSE_LANDED = refuse_landed
 BLOCKERS_SEEN = _BLOCKERS_SEEN
 BLOCKER_NOTICE = blocker_notice
@@ -1379,6 +1383,7 @@ def _mutate(
     with store.exclusive(ctx.path):
         state = store.load(ctx.path)
         before = STATUS_SNAPSHOT(state)
+        fields = FIELD_SNAPSHOT(state)
         code = edit(state)
         if code == EXIT_OK:
             store.save(ctx.path, state)
@@ -1390,6 +1395,9 @@ def _mutate(
                     append(ledger_path, said)
             except (OSError, MalformedEntryError) as exc:
                 _warn(f"status transitions not ledgered: {exc}")
+            # ⚑ EVERY FIELD A CARD CHANGES IS SHIPPED HERE TOO, one event per field (W1742); a
+            # send that cannot start never fails an edit that is already saved.
+            SHIP_MUTATION(ctx.path, fields, state, (mode_of(ctx.opts), ctx.now))
             if after is not None:
                 after(state)
     return code

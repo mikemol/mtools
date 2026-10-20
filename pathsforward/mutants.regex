@@ -239,3 +239,19 @@ src/mikemol/pathsforward/ops.py|location-never-stored|    for key, value in \(\(
 src/mikemol/pathsforward/ops.py|multi-line-location-accepted|    if upd\.location and any\(ch in upd\.location for ch in "\\r\\n"\):|    if False:|def=update
 src/mikemol/pathsforward/vtodo.py|location-never-projected|    if text\(w, "location"\):|    if False:|def=todo
 src/mikemol/pathsforward/ledger.py|explicit-session-overridden|    return line\(replace\(entry, session=entry\.session or session_id\(os\.environ\)\), stamp\)|    return line(replace(entry, session=session_id(os.environ)), stamp)|def=own_line
+src/mikemol/pathsforward/mutations.py|long-text-kept-whole|    if field in DIGESTED and body:|    if False:|def=spell
+src/mikemol/pathsforward/mutations.py|null-spelled-as-text|        return ""|        return "None"|def=spell
+src/mikemol/pathsforward/mutations.py|unchanged-field-reported|            if value != old\.get\(field, ""\)|            if True|def=events
+src/mikemol/pathsforward/mutations.py|departed-card-unreported|    found\.extend\(Event\(sym, QUEUE_FIELD, LIVE, RESIDUE\) for sym in before if sym not in now\)|    pass|def=events
+src/mikemol/pathsforward/mutations.py|minted-card-starts-unreported|        old = before\.get\(sym, \{\}\)|        old = fields|def=events
+src/mikemol/pathsforward/mutations_emit.py|station-sent-without-its-repo|        "station": f"\{repo\}:\{event\.station\}",|        "station": event.station,|def=log_line
+src/mikemol/pathsforward/mutations_emit.py|via-not-a-label|    for label in \(\("repo", repo\), \("field", field\), \("via", via\)\):|    for label in (("repo", repo), ("field", field)):|def=metric_argv
+src/mikemol/pathsforward/mutations_emit.py|log-not-chunked|    sends = \[\(log, "\\n"\.join\(lines\[i : i \+ CHUNK\]\)\) for i in range\(0, len\(lines\), CHUNK\)\]|    sends = [(log, "\\n".join(lines))]|def=plan
+src/mikemol/pathsforward/mutations_emit.py|sample-value-always-one|        \(metric_argv\(program, repo, field, \(number, meta\.via\)\), ""\)|        (metric_argv(program, repo, field, (1, meta.via)), "")|def=plan
+src/mikemol/pathsforward/mutations_emit.py|sent-without-a-store|    if program is None or not refusal_record\.store_named\(where\) or not events:|    if program is None or not events:|def=emit
+src/mikemol/pathsforward/mutations_emit.py|start-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/pathsforward/mutations_ship.py|unattended-mode-not-automation|    if mode in AUTOMATIC:|    if False:|def=actor_of
+src/mikemol/pathsforward/mutations_ship.py|held-lock-not-an-agent|    return "agent" if held else "unattributed"|    return "unattributed"|def=actor_of
+src/mikemol/pathsforward/mutations_ship.py|via-not-the-writer-flag|        via=f"--\{mode\.replace\('_', '-'\)\}",|        via=mode,|def=meta_of
+src/mikemol/pathsforward/mutations_ship.py|mutation-id-not-shared-by-the-command|        mutation=f"\{at_ms\}-\{os\.getpid\(\)\}",|        mutation=str(os.urandom(4)),|def=meta_of
+src/mikemol/pathsforward/cli.py|saved-edit-ships-nothing|            SHIP_MUTATION\(ctx\.path, fields, state, \(mode_of\(ctx\.opts\), ctx\.now\)\)|            pass|def=_mutate

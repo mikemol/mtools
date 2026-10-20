@@ -97,3 +97,6 @@ watchdog_line	The Watchdog Start Line Reaches a Session Whose Tick Stays Open
 update_many_help	The Update-Many Help: Every Selector the Writer Accepts Is Named in Its Help, So No Session Builds the List by Hand
 ledger_session	A Ledger Line Carries the Writing Session's Transcript UUID When the Environment Names One
 location	The Waypoint Location: An Optional One-Line Place Is Set With --update --location, Stored as Written, Cleared by the Empty String, Refused Over More Than One Line, Not Bulk, and Projected as an iCalendar LOCATION
+mutations	Mutation Events: One Event per Changed Field with Starting Values, Long Text as a Length and a Hash
+mutations_emit	Mutation Event Emit: One Log Line per Event and One Sample per Field, Labelled Repo, Field and Via, Never Failing the Write
+mutations_ship	Mutation Shipping: Every Saved Edit Sends Its Events From the Single Save Point With the Writer's Own Context and Never Fails the Edit
