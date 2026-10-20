@@ -841,7 +841,10 @@ if ! _gate_explained=$("$_gate_jobs_tool" --explain); then
 fi
 say "$_gate_explained"
 phase bazel_test
-if ( cd "$staged" && git_scrubbed bazel test --nokeep_going "${_gate_jobs[@]}" //... --test_output=errors ) 2>&1 \
+# ⚑ W1785: THE BUILD EVENTS GO TO A LOCAL FILE TOO, for `mikemol-gate-targets` below: they name each
+# target's wall time and whether bazel replayed it from cache, which the console log does not.
+if ( cd "$staged" && git_scrubbed bazel test --nokeep_going "${_gate_jobs[@]}" //... --test_output=errors \
+      --build_event_json_file="$staged/.bep.json" ) 2>&1 \
     | tee "$staged/.suite.log"; then
     _suite_rc=0
 else
@@ -883,6 +886,20 @@ if [ "$_suite_rc" -ne 0 ] && [ "$_suite_green" -eq 1 ]; then
     say "  something after it did (a dead Build Event Protocol sink gives rc=38 over a green suite)"
     sed -n 's/^ERROR: \(.*\)/    bazel said: \1/p' "$staged/.suite.log" | head -2
     _suite_rc=0
+fi
+# ⚑⚑ W1785: EACH FRESH TARGET'S MEASUREMENTS GO TO THE METRICS STORE, BEST EFFORT. Whatever the
+# verdict, a run that executed tests measured them, and a red gate's slow shards are the ones the
+# model most needs. A cached result is skipped by the tool (it would put an old measurement at a new
+# time). NOTHING HERE CAN CHANGE THE VERDICT: an absent tool, an unreadable testlogs path or a
+# failed send is said and ignored, and the tool itself exits 0 once its arguments are right.
+_gate_targets_tool="$root/bazel-bin/hooks/.venv/bin/mikemol-gate-targets"
+if [ -x "$_gate_targets_tool" ] && [ -s "$staged/.bep.json" ]; then
+    _gate_testlogs=$(cd "$staged" && git_scrubbed bazel info bazel-testlogs 2>/dev/null) || _gate_testlogs=""
+    if [ -n "$_gate_testlogs" ]; then
+        "$_gate_targets_tool" "$(basename "$root")" "$staged/.bep.json" "$_gate_testlogs" || say "mikemol-gate-targets failed; no measurements sent"
+    fi
+else
+    say "mikemol-gate-targets not built or no build events; no measurements sent"
 fi
 if [ "$_suite_rc" -ne 0 ]; then
     # ⚑⚑ W184: A LOG NAMING NO `//target` (0 tests executed, an analysis error) MADE THIS LINE
