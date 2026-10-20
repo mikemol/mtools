@@ -104,7 +104,7 @@ sh_test(
 # every function here is executed by a test whose assertion reads its result.
 mutants_sharded(
     name = "mutants",
-    shards = 2,
+    shards = 3,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
