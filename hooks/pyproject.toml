@@ -124,6 +124,11 @@ mikemol-hooks-probe = "mikemol.hooks.probe:main"
 mikemol-snapshot = "mikemol.hooks.snapshot:main"
 # W1655: the gate's own bazel test over a snapshot of the working tree, run before the serial gate.
 mikemol-presubmit = "mikemol.hooks.presubmit:main"
+mikemol-requeue = "mikemol.hooks.requeue:main"
+# W1709: how many lines of a repo's tracked files reach into another checkout, resolved, per repo.
+mikemol-siblings = "mikemol.hooks.siblingcensus_cli:main"
+# W1718: each gate phase's median, spread and slope over recent gates, from the commit spans.
+mikemol-gate-trend = "mikemol.hooks.gatetrend_cli:main"
 # W836: bazel's own admit-or-wait on the host's resources, run by the generated tools/bazel wrapper
 # (`mikemol-bazel-admit --install DIR`). NOT `mikemol-hook-…`: bazel runs it, no harness wires it.
 mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
@@ -447,6 +452,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witness runs the pre-commit's `build_failure_cause` function under bash with a stub tool.
 "tests/test_precommit_build_failure.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_gate_phase_marks.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_gate_withdraw_phase.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
 "tests/test_commit_kata.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hooks_preflight.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -507,6 +513,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/presubmit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_presubmit.py" = ["assert"]
+"tests/test_commit_withdraw.py" = ["assert"]
+"tests/test_refusal_stage.py" = ["assert"]
+"tests/test_siblingcensus.py" = ["assert"]
+"tests/test_siblingratchet.py" = ["assert"]
+"tests/test_gatetrend.py" = ["assert"]
+"src/mikemol/hooks/siblingcensus_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/vlogdetach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/vlogforms.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -544,6 +556,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_scratch_land.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_counts.py" = ["assert"]
 "tests/test_commit_gauge.py" = ["assert"]
+"tests/test_commit_verdict.py" = ["assert"]
+"tests/test_trainround.py" = ["assert"]
+"tests/test_requeue.py" = ["assert"]
 "tests/test_commit_span.py" = ["assert"]
 "tests/test_gateenv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stackdrift.py" = ["assert"]

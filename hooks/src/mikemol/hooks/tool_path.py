@@ -29,6 +29,11 @@ def find(name: str, env_var: str, root: Path, env: Mapping[str, str]) -> Path | 
     named = env.get(env_var)
     candidates = [Path(named)] if named else []
     candidates.append(root / ".venv" / "bin" / name)
+    # ⚑ THE BAZEL-BUILT VENV OF THE DISTRIBUTION THAT OWNS THE SCRIPT (W1714): this repository
+    # builds each distribution's venv under `bazel-bin/<dist>/.venv`, and `mikemol-membudget` lives
+    # in `fence`'s, never in the checkout root's own `.venv` nor on PATH, so bazel-admit and the
+    # commit lease both missed it. Only a root with a `bazel-bin` has any; the match is by name.
+    candidates.extend(sorted((root / "bazel-bin").glob(f"*/.venv/bin/{name}")))
     # The PATH searched is the one in the `env` handed in, never the ambient process one: a caller
     # (or a test) that passes an environment is asking about THAT environment, and a venv another
     # session happens to put on the ambient PATH must not answer for it.

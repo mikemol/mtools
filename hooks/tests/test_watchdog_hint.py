@@ -17,6 +17,10 @@ if TYPE_CHECKING:
 
 _S = 1_000_000_000
 _POLL = 20.0
+# ⚑ THE LATE CLOCK IS THE BAND'S CEILING PLUS A MARGIN, NOT A NUMBER: it was 700, a silence past the
+# old 600 s ceiling, and when the window moved to 1200 s (W1753) the alarm never fired and `watch`
+# looped for an hour in the gate (W1758). A fake clock that must cross a limit names that limit.
+_LATE = int(watchdog.MAX_FIRE_S) + 100
 _STACKABLE = (
     "STACK   mtools:W1586  hooks/a.py\n"
     "WAITING mtools:W1584  hooks/b.py\n"
@@ -26,10 +30,10 @@ _DRAFTS = '[\n {\n  "symbol": "W1493",\n  "manifest": ["hooks/c.py"],\n  "size":
 
 
 def _seams() -> watchdog.Seams:
-    clock = iter([0, 700])
+    clock = iter([0, _LATE])
 
     def now() -> int:
-        return next(clock, 700) * _S
+        return next(clock, _LATE) * _S
 
     return (lambda: Beat("mikemol-commit", 0, ()), lambda: 3, now, lambda _s: None, lambda: True)
 

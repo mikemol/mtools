@@ -125,6 +125,7 @@ class Live:
     state: str
     waypoints: tuple[str, ...]
     began_ns: int | None = None
+    joined: int = 0
 
 
 def live(path: Path, probe: Probe = proc_start) -> list[Live]:
@@ -149,9 +150,51 @@ def live(path: Path, probe: Probe = proc_start) -> list[Live]:
             if isinstance(named, list)
             else []
         )
-        began = entry.get("began_ns")
-        rows.append(Live(key, state, tuple(names), began if isinstance(began, int) else None))
+        began, joined = entry.get("began_ns"), entry.get("joined")
+        rows.append(
+            Live(
+                key,
+                state,
+                tuple(names),
+                began if isinstance(began, int) else None,
+                joined if isinstance(joined, int) else 0,
+            )
+        )
     return rows
+
+
+def note_joined(path: Path, key: str, joined: int, probe: Probe = proc_start) -> None:
+    """Record how many stacks the train leader `key` joined into its run (W1705).
+
+    ⚑ A WITHDRAW READS IT: a leader with followers cannot be withdrawn without refusing them too, so
+    the count is what the refusal names. An entry that is not live, or that is not this process's,
+    is left as it was; a torn or absent file changes nothing and never raises.
+    """
+    with Path(f"{path}.lock").open("a", encoding="utf-8") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        entries = _load(path)
+        entry = entries.get(key)
+        if entry is None or not _alive(entry, probe):
+            return
+        entry["joined"] = joined
+        staging = Path(f"{path}.{os.getpid()}")
+        staging.write_text(json.dumps(entries, sort_keys=True), encoding="utf-8")
+        staging.replace(path)
+
+
+def pid_of(path: Path, key: str, probe: Probe = proc_start) -> int | None:
+    """Name the process a live submission runs as (W1703).
+
+    Returns:
+        the pid of the live entry under `key`, or None when there is none, it is dead, or its pid
+        was taken by another process.
+
+    """
+    entry = _load(path).get(key)
+    pid = entry.get("pid") if entry is not None else None
+    if entry is None or not isinstance(pid, int) or not _alive(entry, probe):
+        return None
+    return pid
 
 
 def live_json(rows: list[Live]) -> str:

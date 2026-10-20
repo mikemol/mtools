@@ -80,15 +80,33 @@ def argv_for(program: str, repo: str, stats: Stats, window: tuple[int, int]) -> 
 CONSIDERED = "mikemol.train.considered"
 
 
-def considered_argv(program: str, repo: str, followers: int) -> list[str]:
+FOLLOWERS = "mikemol.train.followers"
+
+
+def considered_argv(program: str, repo: str) -> list[str]:
     """Build the `mikemol-otlp metric` argv for one stack run that considered leading a train.
 
+    ⚑ THE COUNT IS A VALUE, NOT A LABEL (W1732, luthen-observability 2026-10-19): as a label every
+    distinct follower count was a new series, past the registry's ceiling on this metric's labels.
+
     Returns:
-        the argv; the value is 1 and `followers` says how many stacks it found behind it.
+        the argv; the value is 1 and the only label is the repo.
 
     """
     argv = [program, "metric", "--service", SERVICE, "--namespace", repo, "--name", CONSIDERED]
-    argv += ["--value", "1", "--field", f"repo={repo}", "--field", f"followers={followers}"]
+    argv += ["--value", "1", "--field", f"repo={repo}"]
+    return argv
+
+
+def followers_argv(program: str, repo: str, followers: int) -> list[str]:
+    """Build the `mikemol-otlp metric` argv for how many stacks a run found behind it.
+
+    Returns:
+        the argv; the value is the follower count and the only label is the repo.
+
+    """
+    argv = [program, "metric", "--service", SERVICE, "--namespace", repo, "--name", FOLLOWERS]
+    argv += ["--value", str(followers), "--field", f"repo={repo}"]
     return argv
 
 
@@ -103,14 +121,15 @@ def consider(
     beside a live counter is a repository with nothing queued (luthen's registry, via github-8f).
 
     Returns:
-        whether the child was started; False with no binary or store or a failed spawn.
+        whether the children were started; False with no binary or store or a failed spawn.
 
     """
     program = binary(env)
     if program is None or not store_named(env):
         return False
     try:
-        spawn(considered_argv(program, repo, followers))
+        spawn(considered_argv(program, repo))
+        spawn(followers_argv(program, repo, followers))
     except OSError:
         return False
     return True

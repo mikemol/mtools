@@ -48,6 +48,14 @@ def test_the_path_searched_is_the_envs_not_the_processs(tmp_path: Path) -> None:
     assert tool_path.find(NAME, VAR, tmp_path / "root", {}) is None
 
 
+def test_a_distributions_bazel_built_venv_answers_after_the_projects_own(tmp_path: Path) -> None:
+    """⚑ W1714: `bazel-bin/<dist>/.venv/bin/<name>` is found, and the project's .venv beats it."""
+    built = _script(tmp_path / "root" / "bazel-bin" / "fence" / ".venv" / "bin")
+    assert tool_path.find(NAME, VAR, tmp_path / "root", {"PATH": ""}) == built
+    mine = _script(tmp_path / "root" / ".venv" / "bin")
+    assert tool_path.find(NAME, VAR, tmp_path / "root", {"PATH": ""}) == mine
+
+
 def test_a_missing_tool_is_none_never_a_guess(tmp_path: Path) -> None:
     """⚑ A tool that is not found is None: no fallback to a different tool."""
     assert tool_path.find(NAME, VAR, tmp_path, {"PATH": str(tmp_path)}) is None

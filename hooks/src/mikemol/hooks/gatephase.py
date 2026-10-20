@@ -37,6 +37,53 @@ class Mark:
     at_ns: int
 
 
+SUMMARY = "pre-commit: REFUSED — the following check(s) failed:"
+"""The line that opens the gate's one summary of every check that failed."""
+
+_BULLET = "  - "
+_SHOWN = 3
+_CUT = 60
+
+
+def failed_checks(text: str) -> list[str]:
+    """Read the checks the gate's own summary lists as failed (W1728, which corrects W1661).
+
+    ⚑ THE GATE DOES NOT STOP AT ITS FIRST FAILURE: it records each failed check into one summary and
+    prints it after the last stage, so the last phase mark names only where the output stopped
+    marking, and four refusals named a stage that had not failed. The summary is the gate's own
+    account, one `  - <label>` line per failed check, and this reads it back.
+
+    Returns:
+        the labels in the order printed, empty when the output holds no summary.
+
+    """
+    lines = text.splitlines()
+    if SUMMARY not in lines:
+        return []
+    found: list[str] = []
+    for line in lines[lines.index(SUMMARY) + 1 :]:
+        if not line.startswith(_BULLET):
+            break
+        found.append(line[len(_BULLET) :].strip())
+    return found
+
+
+def stage_note(text: str) -> str:
+    """Name the checks a refused gate listed as failed, for the clause of a REFUSED line (W1728).
+
+    Returns:
+        'failed: <label>; <label>; <label> and N more; ' with each label cut short, or '' when
+        the output holds no summary (an older hook, a refusal before the first check).
+
+    """
+    checks = failed_checks(text)
+    if not checks:
+        return ""
+    shown = "; ".join(label[:_CUT] for label in checks[:_SHOWN])
+    more = f" and {len(checks) - _SHOWN} more" if len(checks) > _SHOWN else ""
+    return f"failed: {shown}{more}; "
+
+
 def marks(text: str) -> list[Mark]:
     """Read the phase marks out of a gate's output, in the order printed.
 

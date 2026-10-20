@@ -54,24 +54,24 @@ def _seams(
     return read, ready, now, sleep, alive
 
 
-def test_a_repo_with_no_history_is_woken_by_the_latest_limit() -> None:
-    """Too few gaps to learn a mean: the band's far edge, ten minutes."""
+def test_a_repo_with_no_history_is_woken_at_the_far_edge_of_the_band() -> None:
+    """Too few gaps to learn a mean: the band's far edge, twenty minutes."""
     assert watchdog.silence_limit_s(_beat(0), 1.0) == watchdog.MAX_FIRE_S
 
 
-def test_a_fast_repo_is_not_woken_sooner_than_the_band_allows() -> None:
-    """Beats ten seconds apart suspect a silence at 23 s, and the band holds it at five minutes."""
+def test_a_fast_repo_is_not_woken_sooner_than_the_floor_of_the_band() -> None:
+    """Beats ten seconds apart suspect a silence at 23 s, and the band holds it at ten minutes."""
     assert watchdog.silence_limit_s(_beat(0, mean_s=10), 1.0) == watchdog.MIN_FIRE_S
 
 
-def test_a_slow_repo_is_woken_inside_the_band_not_at_its_own_pace() -> None:
-    """A mean of 40 minutes would wait an hour and a half; the band caps it at ten minutes."""
+def test_a_slow_repo_is_woken_at_the_ceiling_of_the_band_not_its_own_pace() -> None:
+    """A mean of 40 minutes would wait an hour and a half; the band caps it at twenty minutes."""
     assert watchdog.silence_limit_s(_beat(0, mean_s=2400), 1.0) == watchdog.MAX_FIRE_S
 
 
-def test_a_learned_mean_inside_the_band_picks_the_moment() -> None:
-    """Mean 200 s at one-in-ten suspicion is 200 * ln 10, about 460 s, between the edges."""
-    limit = watchdog.silence_limit_s(_beat(0, mean_s=200), 1.0)
+def test_a_learned_mean_inside_the_band_picks_the_moment_between_its_edges() -> None:
+    """Mean 400 s at one-in-ten suspicion is 400 * ln 10, about 920 s, between the edges."""
+    limit = watchdog.silence_limit_s(_beat(0, mean_s=400), 1.0)
     assert watchdog.MIN_FIRE_S < limit < watchdog.MAX_FIRE_S
 
 
@@ -79,10 +79,12 @@ def test_quiet_past_the_limit_with_ready_cards_prints_one_line_and_exits_idle(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """The exit is the alarm, and its line says how many cards wait and how long it has been."""
-    seams = _seams([_beat(0)], lambda: _THREE, [700])
+    seams = _seams([_beat(0)], lambda: _THREE, [1300])
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
     said = capsys.readouterr().out
-    assert said == "idle with 3 ready cards, last heartbeat 700s ago (mikemol-commit); bound 600s\n"
+    assert (
+        said == "idle with 3 ready cards, last heartbeat 1300s ago (mikemol-commit); bound 1200s\n"
+    )
 
 
 def test_quiet_inside_the_limit_keeps_watching_and_asks_nothing() -> None:
@@ -106,7 +108,7 @@ def test_a_session_with_no_ready_cards_is_asked_once_per_beat_and_never_fired_on
         asked.append(1)
         return 0
 
-    seams = _seams([_beat(0)], ready, [700, 800, 900], lives=4)
+    seams = _seams([_beat(0)], ready, [1300, 1400, 1500], lives=4)
     assert watchdog.watch(seams, 1.0, _POLL) == 0
     assert asked == [1]
 
@@ -119,14 +121,14 @@ def test_a_new_beat_reopens_the_question() -> None:
         asked.append(1)
         return 0
 
-    seams = _seams([_beat(0), _beat(1000)], ready, [700, 1800], lives=4)
+    seams = _seams([_beat(0), _beat(2000)], ready, [1300, 3300], lives=4)
     assert watchdog.watch(seams, 1.0, _POLL) == 0
     assert asked == [1, 1]
 
 
 def test_a_writer_that_cannot_answer_does_not_fire() -> None:
     """An unknown count is not evidence of work."""
-    seams = _seams([_beat(0)], lambda: None, [700], lives=3)
+    seams = _seams([_beat(0)], lambda: None, [1300], lives=3)
     assert watchdog.watch(seams, 1.0, _POLL) == 0
 
 
@@ -134,12 +136,12 @@ def test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """A repo with ready cards and no beat at all is fired on after the band, and says why."""
-    seams = _seams([None], lambda: _FOUR, [0, 700])
+    seams = _seams([None], lambda: _FOUR, [0, 1300])
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
     said = capsys.readouterr().out.splitlines()
     assert said[0] == "mikemol-watchdog: no heartbeat file: counting from my start"
     assert said[1] == (
-        "idle with 4 ready cards, last heartbeat 700s ago (no heartbeat source); bound 600s"
+        "idle with 4 ready cards, last heartbeat 1300s ago (no heartbeat source); bound 1200s"
     )
 
 
@@ -147,7 +149,7 @@ def test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone."""
-    seams = _seams([None], lambda: 0, [0, 700, 800], lives=4)
+    seams = _seams([None], lambda: 0, [0, 1300, 1400], lives=4)
     assert watchdog.watch(seams, 1.0, _POLL) == 0
     assert capsys.readouterr().out.count("no heartbeat file") == 1
 
@@ -169,9 +171,9 @@ def test_a_beat_older_than_the_start_fires_after_the_band_counted_from_the_start
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """Silence since the start past the band, with work waiting, is the alarm all the same."""
-    seams = _seams([_beat(0)], lambda: _FOUR, [1000, 1700], start_s=1000)
+    seams = _seams([_beat(0)], lambda: _FOUR, [1000, 2300], start_s=1000)
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
-    assert "last heartbeat 700s ago" in capsys.readouterr().out
+    assert "last heartbeat 1300s ago" in capsys.readouterr().out
 
 
 def test_no_heartbeat_file_inside_the_band_does_not_fire() -> None:

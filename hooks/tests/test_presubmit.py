@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import presubmit
@@ -17,6 +18,15 @@ if TYPE_CHECKING:
 
 _ROOT = "/cache"
 _PASSED_THROUGH = 7
+_SNAPSHOT_PATH = "/bazel-bin/hooks/.venv/bin/mikemol-snapshot"
+
+
+def _found(_repo: str) -> Path | None:
+    return Path(_SNAPSHOT_PATH)
+
+
+def _missing(_repo: str) -> Path | None:
+    return None
 
 
 def _recording(code: int = 0) -> tuple[list[Call], presubmit.Runner]:
@@ -59,9 +69,24 @@ def test_main_hands_the_plan_to_the_runner_and_passes_its_exit_code_through(
     """The runner's exit code is the presubmit's, unchanged."""
     monkeypatch.setenv(presubmit.ROOT_ENV, _ROOT)
     seen, run = _recording(_PASSED_THROUGH)
-    assert presubmit.main(["mtools", "//x:y"], run) == _PASSED_THROUGH
+    assert presubmit.main(["mtools", "//x:y"], run, _found) == _PASSED_THROUGH
+    assert seen[0][0][0] == _SNAPSHOT_PATH
     assert seen[0][0][-1] == "//x:y"
     assert seen[0][1] == {presubmit.NAMESPACE_ENV: "/cache/presubmit"}
+
+
+def test_a_changed_path_names_its_whole_dist_and_a_root_file_names_none() -> None:
+    """W1766: two files of one dist are one dist; a root file and a dot-directory are no dist."""
+    paths = ["hooks/a.py", "hooks/tests/b.py", "otlp/c.py", "README.md", ".claude/d.json"]
+    assert presubmit.dists_of(paths) == ("hooks", "otlp")
+    assert presubmit.dists_of([]) == ()
+
+
+def test_a_snapshot_tool_that_cannot_be_found_refuses_and_runs_nothing() -> None:
+    """W1749: a bare name died with FileNotFoundError; now the refusal is exit 4."""
+    seen, run = _recording()
+    assert presubmit.main(["mtools"], run, _missing) == presubmit.EXIT_REFUSED
+    assert seen == []
 
 
 def test_no_repo_is_a_usage_error_and_runs_nothing() -> None:

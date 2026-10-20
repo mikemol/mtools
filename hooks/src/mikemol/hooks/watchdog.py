@@ -15,7 +15,12 @@ session is really blocked, the watchdog notes it and goes on watching.
 30m cadence as the fallback"). The suspicion model `phi(t) = t / (mean * ln 10)` picks the moment,
 `phi_fire` being the level (1.0 is a silence that happens one time in ten), and the moment is held
 inside `MIN_FIRE_S` to `MAX_FIRE_S`: a repo whose beats come every ten seconds is not woken after
-twenty-three, and one with no history, or a long mean, is woken by ten minutes at the latest.
+twenty-three, and one with no history, or a long mean, is woken by twenty minutes at the latest.
+
+⚑ THE WINDOW MOVED FROM 5-10 TO 10-20 MINUTES (operator, 2026-10-19, host session 695f3e0a line
+86716, uuid 80e5bd9d: "let's take the watchdog from 10m to 20m, with the loop still at 30m"). The
+floor moved with the ceiling to keep the window's shape (github-8f); the cron loop stays the
+fallback at thirty minutes.
 
 ⚑ NO DEADLINE ON THE WATCH. The poll interval paces the reads and decides nothing. The only ends are
 the alarm, and the parent going away: a watchdog that outlives its session is an orphan.
@@ -44,8 +49,8 @@ from mikemol.hooks.vlogdetach import spawn_detached
 
 EXIT_IDLE = 8
 EXIT_CANNOT_RUN = 7
-MIN_FIRE_S = 300.0
-MAX_FIRE_S = 600.0
+MIN_FIRE_S = 600.0
+MAX_FIRE_S = 1200.0
 DEFAULT_PHI_FIRE = 1.0
 DEFAULT_POLL_S = 20.0
 ARMED_EVERY_POLLS = 3

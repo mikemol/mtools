@@ -11243,35 +11243,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_beat.py -k test_a_checkout_git_cannot_name_beats_nothing_and_raises_nothing},
 }
 
-@misc{hooks-watchdog-repo-with-no-history-is-woken-by-the-latest-limit,
-  section = {heartbeat},
-  title  = {Too few gaps to learn a mean: the band's far edge, ten minutes},
-  claim  = {Too few gaps to learn a mean: the band's far edge, ten minutes.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_repo_with_no_history_is_woken_by_the_latest_limit},
-}
-
-@misc{hooks-watchdog-fast-repo-is-not-woken-sooner-than-the-band-allows,
-  section = {heartbeat},
-  title  = {Beats ten seconds apart suspect a silence at 23 s, and the band holds it at five minutes},
-  claim  = {Beats ten seconds apart suspect a silence at 23 s, and the band holds it at five
-            minutes.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_fast_repo_is_not_woken_sooner_than_the_band_allows},
-}
-
-@misc{hooks-watchdog-slow-repo-is-woken-inside-the-band-not-at-its-own-pace,
-  section = {heartbeat},
-  title  = {A mean of 40 minutes would wait an hour and a half; the band caps it at ten minutes},
-  claim  = {A mean of 40 minutes would wait an hour and a half; the band caps it at ten minutes.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_slow_repo_is_woken_inside_the_band_not_at_its_own_pace},
-}
-
-@misc{hooks-watchdog-learned-mean-inside-the-band-picks-the-moment,
-  section = {heartbeat},
-  title  = {Mean 200 s at one-in-ten suspicion is 200 * ln 10, about 460 s, between the edges},
-  claim  = {Mean 200 s at one-in-ten suspicion is 200 * ln 10, about 460 s, between the edges.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_learned_mean_inside_the_band_picks_the_moment},
-}
-
 @misc{hooks-watchdog-quiet-past-the-limit-with-ready-cards-prints-one-line-and-exits-idle,
   section = {heartbeat},
   title  = {The exit is the alarm, and its line says how many cards wait and how long it has been},
@@ -12789,13 +12760,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainlead.py -k test_a_train_that_bisects_records_its_steps_rounds_and_refusal},
 }
 
-@misc{hooks-traintel-considered-counter-is-a-metric-of-one-with-the-followers-found,
-  section = {traintel},
-  title  = {The continuous sibling: name, value 1, namespace the repo, followers as a field},
-  claim  = {The continuous sibling: name, value 1, namespace the repo, followers as a field.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_the_considered_counter_is_a_metric_of_one_with_the_followers_found},
-}
-
 @misc{hooks-traintel-consider-ticks-even-when-nobody-was-found-and-is-silent-without-a-store,
   section = {traintel},
   title  = {Unlike the train span, the counter is sent for zero followers, so a quiet one is dark},
@@ -12859,4 +12823,489 @@
   claim  = {`<checkout>/hooks/.venv` with no fence of its own uses `<checkout>/bazel-
             bin/fence/.venv`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_a_checkout_venv_finds_the_fence_in_the_checkouts_bazel_bin},
+}
+
+@misc{hooks-commit-withdraw-queued-submission-is-terminated-by-its-own-pid-and-named,
+  section = {commit_withdraw},
+  title  = {The waiting process gets SIGTERM and the line names the key and its waypoints},
+  claim  = {The waiting process gets SIGTERM and the line names the key and its waypoints.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_queued_submission_is_terminated_by_its_own_pid_and_named},
+}
+
+@misc{hooks-commit-withdraw-unknown-or-dead-key-is-not-found-and-nothing-is-signalled,
+  section = {commit_withdraw},
+  title  = {A key nobody holds and a recycled pid (other start time) are both not a live submission},
+  claim  = {A key nobody holds and a recycled pid (other start time) are both not a live submission.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_an_unknown_or_dead_key_is_not_found_and_nothing_is_signalled},
+}
+
+@misc{hooks-commit-withdraw-command-line-mode-names-a-missing-key-and-a-missing-repository,
+  section = {commit_withdraw},
+  title  = {`--withdraw` reaches the live map of the repository it is given, through main},
+  claim  = {`--withdraw` reaches the live map of the repository it is given, through main.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_the_command_line_mode_names_a_missing_key_and_a_missing_repository},
+}
+
+@misc{hooks-gate-withdraw-phase-marker-stops-the-gate-at-the-boundary-and-is-removed,
+  section = {gate_withdraw_phase},
+  title  = {Exit 75 before the phase begins, the marker deleted, nothing after the call runs},
+  claim  = {Exit 75 before the phase begins, the marker deleted, nothing after the call runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_withdraw_phase.py -k test_a_marker_stops_the_gate_at_the_boundary_and_is_removed},
+}
+
+@misc{hooks-gate-withdraw-phase-no-marker-no-variable-or-another-submissions-marker-lets-the-gate-run,
+  section = {gate_withdraw_phase},
+  title  = {The mark prints as before when the file is absent, the variable is unset, or empty},
+  claim  = {The mark prints as before when the file is absent, the variable is unset, or empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_withdraw_phase.py -k test_no_marker_no_variable_or_another_submissions_marker_lets_the_gate_run},
+}
+
+@misc{hooks-gateenv-withdraw-marker-path-reaches-the-gate-and-the-submit-time-does-not,
+  section = {gateenv},
+  title  = {W1705: the gate reads the marker's path, and nothing else of the submission's identity},
+  claim  = {W1705: the gate reads the marker's path, and nothing else of the submission's identity.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateenv.py -k test_the_withdraw_marker_path_reaches_the_gate_and_the_submit_time_does_not},
+}
+
+@misc{hooks-commit-withdraw-in-flight-gate-is-asked-to-stop-through-a-marker-keyed-to-it,
+  section = {commit_withdraw},
+  title  = {No signal: the marker named for the key is written, for the gate's next phase boundary},
+  claim  = {No signal: the marker named for the key is written, for the gate's next phase boundary.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_an_in_flight_gate_is_asked_to_stop_through_a_marker_keyed_to_it},
+}
+
+@misc{hooks-commit-withdraw-in-flight-leader-with-followers-is-refused-naming-the-count,
+  section = {commit_withdraw},
+  title  = {Withdrawing it would refuse the joined stacks too, so no marker is written},
+  claim  = {Withdrawing it would refuse the joined stacks too, so no marker is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_an_in_flight_leader_with_followers_is_refused_naming_the_count},
+}
+
+@misc{hooks-commit-withdraw-joined-count-is-recorded-for-a-live-entry-only,
+  section = {commit_withdraw},
+  title  = {note_joined sets the count the reader returns, and leaves a dead entry as it was},
+  claim  = {note_joined sets the count the reader returns, and leaves a dead entry as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_the_joined_count_is_recorded_for_a_live_entry_only},
+}
+
+@misc{hooks-siblingcensus-dotdot-that-stays-inside-the-repo-is-not-a-reach,
+  section = {siblingcensus},
+  title  = {A distribution beside another under the one checkout is no sibling checkout},
+  claim  = {A distribution beside another under the one checkout is no sibling checkout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingcensus.py -k test_a_dotdot_that_stays_inside_the_repo_is_not_a_reach},
+}
+
+@misc{hooks-siblingcensus-dotdot-that-lands-beside-the-repo-names-the-other-checkout,
+  section = {siblingcensus},
+  title  = {From the repo root one step up is the github root, and the next word is another repo},
+  claim  = {From the repo root one step up is the github root, and the next word is another repo.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingcensus.py -k test_a_dotdot_that_lands_beside_the_repo_names_the_other_checkout},
+}
+
+@misc{hooks-siblingcensus-home-forms-name-another-repo-unless-it-is-this-one,
+  section = {siblingcensus},
+  title  = {Tilde, HOME and absolute spellings count for another repo and not for the repo itself},
+  claim  = {Tilde, HOME and absolute spellings count for another repo and not for the repo itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingcensus.py -k test_the_home_forms_name_another_repo_unless_it_is_this_one},
+}
+
+@misc{hooks-siblingcensus-each-reach-carries-its-file-and-line-number,
+  section = {siblingcensus},
+  title  = {Two lines in two files come back in file and line order},
+  claim  = {Two lines in two files come back in file and line order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingcensus.py -k test_each_reach_carries_its_file_and_line_number},
+}
+
+@misc{hooks-siblingcensus-command-counts-tracked-files-only-and-says-how-many-files,
+  section = {siblingcensus},
+  title  = {An untracked file with a reach is not counted: the line reads N reach(es) in M file(s)},
+  claim  = {An untracked file with a reach is not counted: the line reads N reach(es) in M file(s).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingcensus.py -k test_the_command_counts_tracked_files_only_and_says_how_many_files},
+}
+
+@misc{hooks-tool-path-distributions-bazel-built-venv-answers-after-the-projects-own,
+  section = {tool_path},
+  title  = {⚑ W1714: `bazel-bin/<dist>/.venv/bin/<name>` is found, and the project's .venv beats it},
+  claim  = { W1714: `bazel-bin/<dist>/.venv/bin/<name>` is found, and the project's .venv beats it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tool_path.py -k test_a_distributions_bazel_built_venv_answers_after_the_projects_own},
+}
+
+@misc{hooks-siblingratchet-baseline-is-each-files-count-outside-the-exempt-prefix,
+  section = {siblingratchet},
+  title  = {A measurement per file; the adapter's reaches are not in it},
+  claim  = {A measurement per file; the adapter's reaches are not in it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingratchet.py -k test_the_baseline_is_each_files_count_outside_the_exempt_prefix},
+}
+
+@misc{hooks-siblingratchet-file-at-its-baseline-passes-and-a-file-above-it-is-refused-naming-targets,
+  section = {siblingratchet},
+  title  = {Equal is allowed; one more is a violation that says what the file now reaches},
+  claim  = {Equal is allowed; one more is a violation that says what the file now reaches.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingratchet.py -k test_a_file_at_its_baseline_passes_and_a_file_above_it_is_refused_naming_targets},
+}
+
+@misc{hooks-siblingratchet-file-the-baseline-does-not-hold-has-none-allowed,
+  section = {siblingratchet},
+  title  = {A new file with a reach cannot hide behind slack elsewhere},
+  claim  = {A new file with a reach cannot hide behind slack elsewhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingratchet.py -k test_a_file_the_baseline_does_not_hold_has_none_allowed},
+}
+
+@misc{hooks-siblingratchet-exempt-prefix-is-neither-counted-nor-refused,
+  section = {siblingratchet},
+  title  = {The one allowlisted adapter may reach; nothing else may},
+  claim  = {The one allowlisted adapter may reach; nothing else may.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingratchet.py -k test_the_exempt_prefix_is_neither_counted_nor_refused},
+}
+
+@misc{hooks-siblingratchet-paydown-is-reported-as-slack-not-as-a-violation,
+  section = {siblingratchet},
+  title  = {A file below its baseline is fine, and the slack is what the next write takes},
+  claim  = {A file below its baseline is fine, and the slack is what the next write takes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingratchet.py -k test_a_paydown_is_reported_as_slack_not_as_a_violation},
+}
+
+@misc{hooks-gatetrend-median-is-the-middle-and-empty-is-zero,
+  section = {gatetrend},
+  title  = {Odd counts take the middle, even counts the mean of the two, none is 0.0},
+  claim  = {Odd counts take the middle, even counts the mean of the two, none is 0.0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_the_median_is_the_middle_and_empty_is_zero},
+}
+
+@misc{hooks-gatetrend-one-outlier-does-not-move-the-median-or-the-spread,
+  section = {gatetrend},
+  title  = {A gate that took ten times as long once is one sample, not a new normal},
+  claim  = {A gate that took ten times as long once is one sample, not a new normal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_one_outlier_does_not_move_the_median_or_the_spread},
+}
+
+@misc{hooks-gatetrend-slope-is-seconds-per-gate-and-zero-below-two-samples,
+  section = {gatetrend},
+  title  = {A line of 1, 2, 3, 4 rises 1.0 per gate; a flat or single series has none},
+  claim  = {A line of 1, 2, 3, 4 rises 1.0 per gate; a flat or single series has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_the_slope_is_seconds_per_gate_and_zero_below_two_samples},
+}
+
+@misc{hooks-gatetrend-phase-is-the-name-after-either-gating-prefix,
+  section = {gatetrend},
+  title  = {The stack and single-commit spans name phases alike; any other span is no phase},
+  claim  = {The stack and single-commit spans name phases alike; any other span is no phase.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_a_phase_is_the_name_after_either_gating_prefix},
+}
+
+@misc{hooks-gatetrend-each-phase-takes-its-latest-samples-oldest-first,
+  section = {gatetrend},
+  title  = {Only the last `recent` gates count, in the order they ran, whatever order they arrived},
+  claim  = {Only the last `recent` gates count, in the order they ran, whatever order they arrived.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_each_phase_takes_its_latest_samples_oldest_first},
+}
+
+@misc{hooks-gatetrend-reader-keeps-gating-spans-and-converts-microseconds,
+  section = {gatetrend},
+  title  = {Durations come in microseconds and leave in seconds; other spans are dropped},
+  claim  = {Durations come in microseconds and leave in seconds; other spans are dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_the_reader_keeps_gating_spans_and_converts_microseconds},
+}
+
+@misc{hooks-gatetrend-command-prints-one-line-per-phase,
+  section = {gatetrend},
+  title  = {The store's address comes from the endpoints file, and each phase prints its numbers},
+  claim  = {The store's address comes from the endpoints file, and each phase prints its numbers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_the_command_prints_one_line_per_phase},
+}
+
+@misc{hooks-gatetrend-no-store-an-unanswering-store-and-a-bad-option-are-exits,
+  section = {gatetrend},
+  title  = {Exit 3 with no endpoint or no answer, exit 2 for an option it does not know},
+  claim  = {Exit 3 with no endpoint or no answer, exit 2 for an option it does not know.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_no_store_an_unanswering_store_and_a_bad_option_are_exits},
+}
+
+@misc{hooks-refusal-stage-failed-checks-are-the-bullets-of-the-gates-own-summary,
+  section = {refusal_stage},
+  title  = {Read from the summary line to the first line that is not a bullet, in the order printed},
+  claim  = {Read from the summary line to the first line that is not a bullet, in the order printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_stage.py -k test_the_failed_checks_are_the_bullets_of_the_gates_own_summary},
+}
+
+@misc{hooks-refusal-stage-last-phase-mark-is-not-read-as-the-failing-stage,
+  section = {refusal_stage},
+  title  = {The gate prints marks only for some stages, so the note never names one},
+  claim  = {The gate prints marks only for some stages, so the note never names one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_stage.py -k test_the_last_phase_mark_is_not_read_as_the_failing_stage},
+}
+
+@misc{hooks-refusal-stage-note-names-three-checks-cut-short-and-counts-the-rest,
+  section = {refusal_stage},
+  title  = {Three labels, each cut at sixty characters, then 'and N more'},
+  claim  = {Three labels, each cut at sixty characters, then 'and N more'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_stage.py -k test_the_note_names_three_checks_cut_short_and_counts_the_rest},
+}
+
+@misc{hooks-refusal-stage-output-with-no-summary-names-nothing,
+  section = {refusal_stage},
+  title  = {An older hook, or a refusal before the first check, says nothing it cannot know},
+  claim  = {An older hook, or a refusal before the first check, says nothing it cannot know.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_stage.py -k test_output_with_no_summary_names_nothing},
+}
+
+@misc{hooks-refusal-stage-refused-line-gains-the-note-before-its-cause-and-others-are-unchanged,
+  section = {refusal_stage},
+  title  = {The note sits between the rc and 'the cause is above'; a COMMITTED line is untouched},
+  claim  = {The note sits between the rc and 'the cause is above'; a COMMITTED line is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_stage.py -k test_a_refused_line_gains_the_note_before_its_cause_and_others_are_unchanged},
+}
+
+@misc{hooks-refusal-stage-stack-and-train-culprit-clause-carries-the-note,
+  section = {refusal_stage},
+  title  = {culprit_note, which both REFUSED lines of a stack use, leads with the failed checks},
+  claim  = {culprit_note, which both REFUSED lines of a stack use, leads with the failed checks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_stage.py -k test_the_stack_and_train_culprit_clause_carries_the_note},
+}
+
+@misc{hooks-revendor-atomicwrite-corpus-and-waldo-are-vendored-dists-and-move-with-the-rest,
+  section = {revendor},
+  title  = {W1729 (luthen-observability:W1410): a repo vendoring them gets them listed and moved},
+  claim  = {W1729 (luthen-observability:W1410): a repo vendoring them gets them listed and moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_atomicwrite_corpus_and_waldo_are_vendored_dists_and_move_with_the_rest},
+}
+
+@misc{hooks-traintel-considered-counter-is-a-metric-of-one-labelled-by-repo-alone,
+  section = {traintel},
+  title  = {W1732: name, value 1, namespace the repo, and no followers label to multiply series},
+  claim  = {W1732: name, value 1, namespace the repo, and no followers label to multiply series.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_the_considered_counter_is_a_metric_of_one_labelled_by_repo_alone},
+}
+
+@misc{hooks-traintel-followers-count-is-the-value-of-its-own-metric,
+  section = {traintel},
+  title  = {The control: the count a label used to carry is the sample value, labelled by repo alone},
+  claim  = {The control: the count a label used to carry is the sample value, labelled by repo
+            alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traintel.py -k test_the_followers_count_is_the_value_of_its_own_metric},
+}
+
+@misc{hooks-commit-verdict-each-verdict-line-reads-as-one-of-the-named-kinds,
+  section = {commit_verdict},
+  title  = {The four lines the commit prints, and the control: an unknown line is not a commit},
+  claim  = {The four lines the commit prints, and the control: an unknown line is not a commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_each_verdict_line_reads_as_one_of_the_named_kinds},
+}
+
+@misc{hooks-commit-verdict-refusal-at-the-withdraw-exit-is-withdrawn-and-any-other-is-refused,
+  section = {commit_verdict},
+  title  = {The gate's exit 75 is the withdraw marker read at a phase boundary},
+  claim  = {The gate's exit 75 is the withdraw marker read at a phase boundary.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_a_refusal_at_the_withdraw_exit_is_withdrawn_and_any_other_is_refused},
+}
+
+@misc{hooks-commit-verdict-stage-is-the-last-phase-the-output-marked-or-a-dash,
+  section = {commit_verdict},
+  title  = {The control for the dash: output without a mark names no stage},
+  claim  = {The control for the dash: output without a mark names no stage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_the_stage_is_the_last_phase_the_output_marked_or_a_dash},
+}
+
+@misc{hooks-commit-verdict-sample-is-a-one-labelled-by-repo-verdict-and-stage-alone,
+  section = {commit_verdict},
+  title  = {No subject, sha or check label reaches a series},
+  claim  = {No subject, sha or check label reaches a series.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_the_sample_is_a_one_labelled_by_repo_verdict_and_stage_alone},
+}
+
+@misc{hooks-commit-verdict-emit-sends-one-sample-for-a-printed-verdict,
+  section = {commit_verdict},
+  title  = {The kind and the stage come from the line, the exit and the gate's output},
+  claim  = {The kind and the stage come from the line, the exit and the gate's output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_emit_sends_one_sample_for_a_printed_verdict},
+}
+
+@misc{hooks-commit-verdict-no-store-or-a-failed-spawn-sends-nothing-and-raises-nothing,
+  section = {commit_verdict},
+  title  = {Fire and forget: the verdict is already printed},
+  claim  = {Fire and forget: the verdict is already printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_no_store_or_a_failed_spawn_sends_nothing_and_raises_nothing},
+}
+
+@misc{hooks-trainround-gates-own-output-gives-the-admitted-jobs-the-load-and-the-invocation,
+  section = {trainround},
+  title  = {The throttle is read, not inferred: jobs, cores and load from the admission line},
+  claim  = {The throttle is read, not inferred: jobs, cores and load from the admission line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_the_gates_own_output_gives_the_admitted_jobs_the_load_and_the_invocation},
+}
+
+@misc{hooks-trainround-output-that-says-nothing-gives-empty-facts-not-zeros,
+  section = {trainround},
+  title  = {The control: an older hook's output has no admission line, and that is not 0 jobs},
+  claim  = {The control: an older hook's output has no admission line, and that is not 0 jobs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_output_that_says_nothing_gives_empty_facts_not_zeros},
+}
+
+@misc{hooks-trainround-round-span-carries-the-round-the-verdict-the-failures-and-the-throttle,
+  section = {trainround},
+  title  = {A red round is an ERROR span over its own window, with every question's answer a field},
+  claim  = {A red round is an ERROR span over its own window, with every question's answer a field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_a_round_span_carries_the_round_the_verdict_the_failures_and_the_throttle},
+}
+
+@misc{hooks-trainround-green-round-is-an-ok-span,
+  section = {trainround},
+  title  = {The control for the error status},
+  claim  = {The control for the error status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_a_green_round_is_an_ok_span},
+}
+
+@misc{hooks-trainround-plan-is-the-span-the-round-sample-and-the-jobs-sample,
+  section = {trainround},
+  title  = {Three children when the gate said its jobs; two when it did not},
+  claim  = {Three children when the gate said its jobs; two when it did not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_the_plan_is_the_span_the_round_sample_and_the_jobs_sample},
+}
+
+@misc{hooks-trainround-emit-starts-every-child-and-is-silent-without-a-store-or-on-a-failed-spawn,
+  section = {trainround},
+  title  = {Fire and forget: the record never changes a verdict},
+  claim  = {Fire and forget: the record never changes a verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_emit_starts_every_child_and_is_silent_without_a_store_or_on_a_failed_spawn},
+}
+
+@misc{hooks-traindrive-green-train-records-one-round-with-the-throttle-the-gate-was-held-to,
+  section = {traindrive},
+  title  = {W1715: one round, three members, one gate, and the admission line read from its output},
+  claim  = {W1715: one round, three members, one gate, and the admission line read from its output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_green_train_records_one_round_with_the_throttle_the_gate_was_held_to},
+}
+
+@misc{hooks-traindrive-refusal-records-a-red-round-naming-the-failed-check-then-a-green-one,
+  section = {traindrive},
+  title  = {Tip red and two probes in round one, with the gate's own summary; the rest land in two},
+  claim  = {Tip red and two probes in round one, with the gate's own summary; the rest land in two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_refusal_records_a_red_round_naming_the_failed_check_then_a_green_one},
+}
+
+@misc{hooks-traindrive-unbuildable-stack-is-an-unbuilt-round-and-the-next-round-is-green,
+  section = {traindrive},
+  title  = {The build fails before any gate: no gates, no facts, then the rest go on},
+  claim  = {The build fails before any gate: no gates, no facts, then the rest go on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_an_unbuildable_stack_is_an_unbuilt_round_and_the_next_round_is_green},
+}
+
+@misc{hooks-gated-tree-trailer-commit-names-the-tree-it-holds-as-the-gated-tree,
+  section = {gated_tree_trailer},
+  title  = {The control: the trailer's sha is the tree of the commit that was made},
+  claim  = {The control: the trailer's sha is the tree of the commit that was made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gated_tree_trailer.py -k test_the_commit_names_the_tree_it_holds_as_the_gated_tree},
+}
+
+@misc{hooks-gated-tree-trailer-trailer-joins-the-one-trailer-block-and-is-not-doubled,
+  section = {gated_tree_trailer},
+  title  = {Waypoint, co-author and gated tree are one paragraph, so git reads them as trailers},
+  claim  = {Waypoint, co-author and gated tree are one paragraph, so git reads them as trailers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gated_tree_trailer.py -k test_the_trailer_joins_the_one_trailer_block_and_is_not_doubled},
+}
+
+@misc{hooks-watchdog-repo-with-no-history-is-woken-at-the-far-edge-of-the-band,
+  section = {heartbeat},
+  title  = {Too few gaps to learn a mean: the band's far edge, twenty minutes},
+  claim  = {Too few gaps to learn a mean: the band's far edge, twenty minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_repo_with_no_history_is_woken_at_the_far_edge_of_the_band},
+}
+
+@misc{hooks-watchdog-fast-repo-is-not-woken-sooner-than-the-floor-of-the-band,
+  section = {heartbeat},
+  title  = {Beats ten seconds apart suspect a silence at 23 s, and the band holds it at ten minutes},
+  claim  = {Beats ten seconds apart suspect a silence at 23 s, and the band holds it at ten minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_fast_repo_is_not_woken_sooner_than_the_floor_of_the_band},
+}
+
+@misc{hooks-watchdog-slow-repo-is-woken-at-the-ceiling-of-the-band-not-its-own-pace,
+  section = {heartbeat},
+  title  = {A mean of 40 minutes would wait an hour and a half; the band caps it at twenty minutes},
+  claim  = {A mean of 40 minutes would wait an hour and a half; the band caps it at twenty minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_slow_repo_is_woken_at_the_ceiling_of_the_band_not_its_own_pace},
+}
+
+@misc{hooks-watchdog-learned-mean-inside-the-band-picks-the-moment-between-its-edges,
+  section = {heartbeat},
+  title  = {Mean 400 s at one-in-ten suspicion is 400 * ln 10, about 920 s, between the edges},
+  claim  = {Mean 400 s at one-in-ten suspicion is 400 * ln 10, about 920 s, between the edges.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_learned_mean_inside_the_band_picks_the_moment_between_its_edges},
+}
+
+@misc{hooks-requeue-check-defers-with-no-leader-refuses-a-non-commit-and-passes-a-commit,
+  section = {requeue},
+  title  = {The precondition a declared apply row reads: 3, 4 and 0},
+  claim  = {The precondition a declared apply row reads: 3, 4 and 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_check_defers_with_no_leader_refuses_a_non_commit_and_passes_a_commit},
+}
+
+@misc{hooks-requeue-leader-in-this-commands-own-group-is-refused,
+  section = {requeue},
+  title  = {The control for the group: killing it would kill the command that asked},
+  claim  = {The control for the group: killing it would kill the command that asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_a_leader_in_this_commands_own_group_is_refused},
+}
+
+@misc{hooks-requeue-dry-run-prints-the-plan-and-does-nothing,
+  section = {requeue},
+  title  = {Rehearsal: the withdrawals and the group are named, and no call is made},
+  claim  = {Rehearsal: the withdrawals and the group are named, and no call is made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_a_dry_run_prints_the_plan_and_does_nothing},
+}
+
+@misc{hooks-requeue-run-withdraws-the-queue-stops-the-group-waits-for-it-then-submits,
+  section = {requeue},
+  title  = {The order matters: the new stack must not queue behind a dying lease holder},
+  claim  = {The order matters: the new stack must not queue behind a dying lease holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_a_run_withdraws_the_queue_stops_the_group_waits_for_it_then_submits},
+}
+
+@misc{hooks-requeue-consolidated-stack-already-queued-is-neither-withdrawn-nor-submitted-again,
+  section = {requeue},
+  title  = {Idempotent: a second run finds its own stack in the map and leaves it},
+  claim  = {Idempotent: a second run finds its own stack in the map and leaves it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_the_consolidated_stack_already_queued_is_neither_withdrawn_nor_submitted_again},
+}
+
+@misc{hooks-requeue-with-no-leader-the-queue-is-withdrawn-and-the-stack-submitted,
+  section = {requeue},
+  title  = {Nothing to stop is not an error},
+  claim  = {Nothing to stop is not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_with_no_leader_the_queue_is_withdrawn_and_the_stack_submitted},
+}
+
+@misc{hooks-requeue-leader-that-may-not-be-stopped-blocks-the-submit,
+  section = {requeue},
+  title  = {Refused, nothing stopped and nothing submitted: the new stack would only queue behind it},
+  claim  = {Refused, nothing stopped and nothing submitted: the new stack would only queue behind
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_a_leader_that_may_not_be_stopped_blocks_the_submit},
+}
+
+@misc{hooks-requeue-real-readers-see-this-process-in-its-group-and-know-it-is-no-commit,
+  section = {requeue},
+  title  = {Against /proc: the positive control for the group listing, and a no for a non-commit},
+  claim  = {Against /proc: the positive control for the group listing, and a no for a non-commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_the_real_readers_see_this_process_in_its_group_and_know_it_is_no_commit},
+}
+
+@misc{hooks-requeue-bad-argument-is-a-usage-error,
+  section = {requeue},
+  title  = {No repository named},
+  claim  = {No repository named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_requeue.py -k test_a_bad_argument_is_a_usage_error},
+}
+
+@misc{hooks-presubmit-changed-path-names-its-whole-dist-and-a-root-file-names-none,
+  section = {presubmit},
+  title  = {W1766: two files of one dist are one dist; a root file and a dot-directory are no dist},
+  claim  = {W1766: two files of one dist are one dist; a root file and a dot-directory are no dist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_changed_path_names_its_whole_dist_and_a_root_file_names_none},
+}
+
+@misc{hooks-presubmit-snapshot-tool-that-cannot-be-found-refuses-and-runs-nothing,
+  section = {presubmit},
+  title  = {W1749: a bare name died with FileNotFoundError; now the refusal is exit 4},
+  claim  = {W1749: a bare name died with FileNotFoundError; now the refusal is exit 4.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_presubmit.py -k test_a_snapshot_tool_that_cannot_be_found_refuses_and_runs_nothing},
 }

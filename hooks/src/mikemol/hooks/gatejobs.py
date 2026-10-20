@@ -13,8 +13,14 @@ so a gate under any load still makes progress, and capped at the core count so a
 slower than today. The load average is what a caller can read without a tool of its own; the
 executor's and the other sessions' demand are both already in it.
 
-It prints one flag per line (`--jobs=N`, `--local_test_jobs=N`) for the hook to read with `mapfile`,
-never a word-split string. An unreadable load reads as an idle host, which is today's behaviour.
+It prints one flag per line (`--jobs=N`, `--local_test_jobs=N`) for the hook to read with
+`mapfile`, never a word-split string. An unreadable load reads as an idle host, which is today's
+behaviour.
+
+⚑ A MUTANTS SHARD'S FAN-OUT IS BOUNDED BY ITS OWN RUNNER, NOT HERE (W1764, 2026-10-20). Bazel's
+`cpu:K` tag and `--local_cpu_resources` were measured and do not hold these `sh_test` shards back,
+and capping `--local_test_jobs` by K would starve about 1200 one-core tests. The runner reads the
+load at its start and lowers `MUTATE_JOBS` to the free cores (`mutate_runner.free_cores`).
 """
 
 import os

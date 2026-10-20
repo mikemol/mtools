@@ -29,7 +29,14 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import commit_counts, traindrive, trainjoin, traintel, trainverdict
+from mikemol.hooks import (
+    commit_counts,
+    traindrive,
+    trainjoin,
+    trainround,
+    traintel,
+    trainverdict,
+)
 from mikemol.hooks.stackrun import Seams
 
 TRAIN_ENV = "MIKEMOL_TRAIN"
@@ -77,9 +84,15 @@ def lead(
     traintel.consider(root.name, len(followers), env)
     if ledger is None or not followers:
         return None
+    # ⚑ W1705: THE COUNT IS LEFT IN THE LEDGER so a withdraw of this run names the followers it
+    # would refuse too, and says no.
+    commit_counts.note_joined(ledger / "commit.counts", own.key, len(followers))
     stats = traintel.Stats()
     code: int | None = None
-    for verdict in traindrive.drive(root, [own, *followers], seams, stats):
+    ends = traindrive.drive(
+        root, [own, *followers], seams, stats, lambda rec: trainround.emit(root.name, rec, env)
+    )
+    for verdict in ends:
         if verdict.key == own.key:
             out.write(verdict.text)
             code = verdict.code

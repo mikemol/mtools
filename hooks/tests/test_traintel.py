@@ -44,23 +44,34 @@ def test_emit_spawns_once_for_a_joined_train_and_never_for_a_train_of_one() -> N
     assert len(spawned) == 1
 
 
-def test_the_considered_counter_is_a_metric_of_one_with_the_followers_found() -> None:
-    """The continuous sibling: name, value 1, namespace the repo, followers as a field."""
-    argv = traintel.considered_argv("/bin/otlp", "mtools", 2)
+_SAMPLES = len((traintel.CONSIDERED, traintel.FOLLOWERS))
+
+
+def test_the_considered_counter_is_a_metric_of_one_labelled_by_repo_alone() -> None:
+    """W1732: name, value 1, namespace the repo, and no followers label to multiply series."""
+    argv = traintel.considered_argv("/bin/otlp", "mtools")
     assert argv[:2] == ["/bin/otlp", "metric"]
     assert argv[argv.index("--name") + 1] == "mikemol.train.considered"
     assert argv[argv.index("--value") + 1] == "1"
     assert argv[argv.index("--namespace") + 1] == "mtools"
-    assert "followers=2" in argv
+    assert not any(part.startswith("followers=") for part in argv)
+
+
+def test_the_followers_count_is_the_value_of_its_own_metric() -> None:
+    """The control: the count a label used to carry is the sample value, labelled by repo alone."""
+    argv = traintel.followers_argv("/bin/otlp", "mtools", 5)
+    assert argv[argv.index("--name") + 1] == "mikemol.train.followers"
+    assert argv[argv.index("--value") + 1] == "5"
+    assert [argv[i + 1] for i, a in enumerate(argv) if a == "--field"] == ["repo=mtools"]
 
 
 def test_consider_ticks_even_when_nobody_was_found_and_is_silent_without_a_store() -> None:
-    """Unlike the train span, the counter is sent for zero followers, so a quiet one is dark."""
+    """Unlike the train span, both samples are sent for zero followers, so a quiet one is dark."""
     spawned: list[Sequence[str]] = []
     assert traintel.consider("mtools", 0, _ENV, spawned.append)
-    assert len(spawned) == 1
+    assert len(spawned) == _SAMPLES
     assert not traintel.consider("mtools", 0, _NO_STORE, spawned.append)
-    assert len(spawned) == 1
+    assert len(spawned) == _SAMPLES
 
 
 def test_no_store_or_a_failed_spawn_sends_nothing_and_raises_nothing() -> None:

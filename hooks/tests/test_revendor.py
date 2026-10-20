@@ -144,6 +144,22 @@ def test_the_local_version_and_the_plan_follow_the_repos_tag() -> None:
     assert revendor.wheel_name("frontier", NEW, "") in text
 
 
+LUTHEN_DISTS = ("hooks", "pathsforward", "atomicwrite", "corpus", "waldo")
+LUTHEN = "".join(
+    f'mikemol-{d} = {{ path = "vendor/wheels/{revendor.wheel_name(d, OLD)}" }}\n'
+    for d in LUTHEN_DISTS
+)
+
+
+def test_atomicwrite_corpus_and_waldo_are_vendored_dists_and_move_with_the_rest() -> None:
+    """W1729 (luthen-observability:W1410): a repo vendoring them gets them listed and moved."""
+    assert revendor.vendored(LUTHEN) == LUTHEN_DISTS
+    moved = revendor.move_sources(LUTHEN, NEW)
+    assert revendor.pinned_shorts(moved) == {NEW}
+    for dist in ("atomicwrite", "corpus", "waldo"):
+        assert revendor.wheel_name(dist, NEW) in moved
+
+
 def test_the_prose_naming_the_old_commit_moves_too() -> None:
     """Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin."""
     text = "# vendored the same way at mtools b5db3c4, one sha\n"

@@ -29,11 +29,13 @@ and how many landed, were refused and were dropped, for `traintel` to record as 
 CONSUMED BY: the merge train in `commit_kata` (W1654); `trainjoin` supplies the groups.
 """
 
-from collections.abc import Sequence
+import time
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from mikemol.hooks import trainbisect
+from mikemol.hooks import trainbisect, trainround
+from mikemol.hooks.gatephase import failed_checks
 from mikemol.hooks.isolated import Done
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, Stack, build
@@ -63,6 +65,11 @@ def _ends(groups: Sequence[Group]) -> list[int]:
 
 def _flat(groups: Sequence[Group]) -> list[Item]:
     return [item for group in groups for item in group.items]
+
+
+def _entries(groups: Sequence[Group], seams: Seams) -> list[Entry]:
+    # The stack entries of every group's items, in order, for one build.
+    return [Entry(seams.message_of(i), i.paths, i.files) for i in _flat(groups)]
 
 
 class _Round:
@@ -111,6 +118,19 @@ class _Round:
         found = trainbisect.first_bad(len(self.ends), self.green)
         self.stats.bisect_steps += found.gates
         return found.index
+
+
+def _round_record(
+    shape: tuple[int, int, tuple[int, int]], rnd: _Round | None, bad: int | None, verdict: str
+) -> trainround.RoundRecord:
+    # What one round did: the full-tip gate says how it was run, the culprit's says what failed.
+    number, members, window = shape
+    gates = rnd.gates if rnd is not None else {}
+    first = gates.get(len(rnd.ends) - 1) if rnd is not None else None
+    culprit = gates.get(bad) if bad is not None else None
+    facts = trainround.facts_of(first.stdout + first.stderr) if first else trainround.GateFacts()
+    failed = "; ".join(failed_checks(culprit.stdout + culprit.stderr)) if culprit else ""
+    return trainround.RoundRecord(number, members, verdict, failed, len(gates), facts, window)
 
 
 def _committed(group: Group, shas: Sequence[str], name: str, seams: Seams) -> Verdict:
@@ -164,11 +184,16 @@ def _land_prefix(
 
 
 def drive(
-    root: Path, groups: Sequence[Group], seams: Seams, stats: Stats | None = None
+    root: Path,
+    groups: Sequence[Group],
+    seams: Seams,
+    stats: Stats | None = None,
+    on_round: Callable[[trainround.RoundRecord], object] | None = None,
 ) -> list[Verdict]:
     """Land what the train can and say, per group, what became of it.
 
-    `stats`, when given, is filled with what the train did.
+    `stats`, when given, is filled with what the train did. `on_round`, when given, is called
+    with a record as each round ends (W1715), so a long train is not silent until it is over.
 
     Returns:
         the verdicts, one per group: landed, refused, raced or not committed exactly once.
@@ -179,12 +204,20 @@ def drive(
     count.joined = len(groups)
     verdicts: list[Verdict] = []
     remaining = list(groups)
+    began = time.time_ns()
+
+    def tell(verdict: str, rnd: _Round | None = None, bad: int | None = None) -> None:
+        if on_round is not None:
+            shape = (count.rounds, len(remaining), (began, time.time_ns()))
+            on_round(_round_record(shape, rnd, bad, verdict))
+
     while remaining:
+        began = time.time_ns()
         before = run(["rev-parse", "HEAD"], {}, root).stdout.strip()
-        entries = [Entry(seams.message_of(i), i.paths, i.files) for i in _flat(remaining)]
-        stack = build(root, entries, run, before)
+        stack = build(root, _entries(remaining, seams), run, before)
         count.rounds += 1
         if stack.failed is not None:
+            tell(trainround.UNBUILT)
             at, verdict = _unbuilt(remaining, stack, before, name)
             verdicts.append(verdict)
             count.dropped += 1
@@ -192,11 +225,14 @@ def drive(
             continue
         rnd = _Round(root, remaining, (stack, count), seams)
         bad = rnd.first_bad()
-        cut = len(remaining) if bad is None else bad
-        landed = _land_prefix(root, remaining[:cut], rnd, before)
+        landed = _land_prefix(
+            root, remaining[: len(remaining) if bad is None else bad], rnd, before
+        )
         if landed is None:
-            text = f"RACED {name}: HEAD moved while the train was gated; none of it landed\n"
-            return [*verdicts, *(Verdict(g.key, EXIT_RACED, text) for g in remaining)]
+            tell(trainround.RACED, rnd, bad)
+            said = f"RACED {name}: HEAD moved while the train was gated; none of it landed\n"
+            return [*verdicts, *(Verdict(g.key, EXIT_RACED, said) for g in remaining)]
+        tell(trainround.GREEN if bad is None else trainround.RED, rnd, bad)
         verdicts.extend(landed)
         count.landed += len(landed)
         if bad is None:

@@ -383,7 +383,7 @@ sh_test(
 # rationale; //mdstruct:mutants is the F-arm (real deps).
 mutants_sharded(
     name = "mutants",
-    shards = 24,
+    shards = 48,
     cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
@@ -472,6 +472,11 @@ venv_from_hub(
         "mikemol-snapshot": "mikemol.hooks.snapshot:main",
         # W1655: the gate's own bazel test over a snapshot of the working tree, before the gate.
         "mikemol-presubmit": "mikemol.hooks.presubmit:main",
+        "mikemol-requeue": "mikemol.hooks.requeue:main",
+        # W1709: how many lines of a repo's tracked files reach into another checkout.
+        "mikemol-siblings": "mikemol.hooks.siblingcensus_cli:main",
+        # W1718: each gate phase's median, spread and slope over recent gates.
+        "mikemol-gate-trend": "mikemol.hooks.gatetrend_cli:main",
         "mikemol-bazel-admit": "mikemol.hooks.bazel_admit:main",
         # W818: the PostToolUse closure advisory.
         "mikemol-hook-pycheck-advise": "mikemol.hooks.entry:pycheck_advise_main",

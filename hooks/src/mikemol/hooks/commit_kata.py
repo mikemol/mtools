@@ -47,7 +47,12 @@ from mikemol.hooks.commit_span import SUBMIT_ENV, Moments
 from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.commit_span import emit_stack as _emit_stack
 from mikemol.hooks.commit_turn import wait_turn as _wait_turn
+from mikemol.hooks.commit_verdict import emit as _emit_verdict
+from mikemol.hooks.commit_withdraw import clear_marker as _clear_marker
+from mikemol.hooks.commit_withdraw import marker_path as _marker_path
+from mikemol.hooks.commit_withdraw import withdraw as _withdraw
 from mikemol.hooks.gateenv import child_env
+from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
@@ -64,6 +69,7 @@ from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
+from mikemol.hooks.tool_path import find as _find_tool
 from mikemol.hooks.trainjoin import Follower as _Follower
 from mikemol.hooks.trainlead import lead as _train_lead
 from mikemol.hooks.trainverdict import take as _take_verdict
@@ -89,6 +95,8 @@ ship_text = _ship_text
 new_buffer = io.StringIO
 SHIP_FLAG = "--ship"
 IN_GATE_FLAG = "--in-gate"
+WITHDRAW_FLAG = "--withdraw"
+MARKER_ENV = "MIKEMOL_COMMIT_WITHDRAW_MARKER"
 BEAT_TOOL = "mikemol-commit"
 """The tool name a submit leaves in the session heartbeat (W1482)."""
 
@@ -129,6 +137,7 @@ USAGE = (
     "usage: mikemol-commit REPO --waypoint W --subject S [--body B] [PATH ...]\n"
     "       mikemol-commit REPO --waypoint W --subject S --ship [PATH ...]   (verdicts to vlog)\n"
     "       mikemol-commit REPO --stack FILE\n"
+    "       mikemol-commit REPO --withdraw KEY   (a queued submission leaves the queue)\n"
     "  FILE is a JSON list of waypoint, subject, body, paths: several commits, ONE gate run on\n"
     "  the tip, one verdict each; a refusal lands nothing\n"
     "  REPO is a path, or a directory name under the host root; PATH defaults to the queue files\n"
@@ -450,6 +459,21 @@ def raced(root: Path, before: str, after: str, run: Runner = run_git) -> str:
     )
 
 
+def with_stage(line: str, shown: str) -> str:
+    """Say which stage refused on a REFUSED line, from the phase marks in the gate's output.
+
+    Returns:
+        the line with 'refused in stage <name>; ' before its cause; the line as it was when it
+        is not a REFUSED line or the output carries no marks.
+
+    """
+    marker = "): the cause is above"
+    note = _stage_note(shown)
+    if not note or not line.startswith("REFUSED ") or marker not in line:
+        return line
+    return line.replace(marker, f"): {note}the cause is above", 1)
+
+
 def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git) -> str:
     """Say what a commit did, from HEAD and not from the gate's last stage.
 
@@ -498,10 +522,11 @@ def commit(
     span = f"{before}..{after}" if before else after
     mine = made_by(root, request, span, run) if moved else True
     if mine:
-        line = verdict(root, before, after, done.returncode, run)
+        line = with_stage(verdict(root, before, after, done.returncode, run), shown)
         if any(mark in line for mark in LOCAL_MARKS):
             out.write(f"push not completed: run  git -C {root} push origin HEAD:main\n")
         out.write(f"{line}\n")
+        _emit_verdict(root.name, (line, done.returncode, shown), os.environ)
     else:
         out.write(f"{raced(root, before, after, run)}\n")
     if moved:
@@ -596,12 +621,12 @@ def fence_of(env: Mapping[str, str], python: str) -> str:
     found = [beside]
     if len(here.parents) > BAZEL_BIN_DEPTH:
         top = here.parents[BAZEL_BIN_DEPTH]
-        found.extend(
-            [
-                top / "fence" / ".venv" / "bin" / "mikemol-membudget",
-                top / "bazel-bin" / "fence" / ".venv" / "bin" / "mikemol-membudget",
-            ]
-        )
+        found.append(top / "fence" / ".venv" / "bin" / "mikemol-membudget")
+        # ⚑ THE SHARED RESOLVER (W1714) answers for a source checkout's `bazel-bin` and the PATH,
+        # so the commit lease and bazel-admit cannot disagree about where the fence is.
+        shared = _find_tool("mikemol-membudget", FENCE_ENV, top, env)
+        if shared is not None:
+            found.append(shared)
     return str(next((c for c in found if os.access(c, os.X_OK)), beside))
 
 
@@ -913,6 +938,49 @@ def in_gate(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> int:
     return 0
 
 
+def withdraw_cmd(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> int:
+    """Take a queued submission out of the queue and release the trees it pinned (W1703).
+
+    ⚑ ONLY A QUEUED SUBMISSION, through the live-commit map (`commit_withdraw`): an in-flight
+    gate is refused with the reason, and a key nobody is running is said so.
+
+    Returns:
+        0 when withdrawn; 1 when no live submission has the key; EXIT_USAGE with no repository or
+        no key; 2 when the submission is in flight.
+
+    """
+    at = list(args).index(WITHDRAW_FLAG)
+    key = args[at + 1] if at + 1 < len(args) else ""
+    named = [a for i, a in enumerate(args) if i not in {at, at + 1} and not a.startswith("--")]
+    if not named or not key:
+        sys.stderr.write(USAGE)
+        return EXIT_USAGE
+    root = resolve_root(named[0], env)
+    ledger = ledger_of(root)
+    if ledger is None:
+        sys.stderr.write(f"mikemol-commit: {named[0]}: git cannot name its directory\n")
+        return EXIT_NOT_COMMITTED
+    code, text = _withdraw(ledger / "commit.counts", key)
+    out.write(text + "\n")
+    if code == 0:
+        release_trees(root, ledger, key, run_git_in)
+    return code
+
+
+def admin_mode(args: Sequence[str], env: Mapping[str, str]) -> int | None:
+    """Run the read or maintenance mode the arguments name, if any.
+
+    Returns:
+        the mode's exit code, or None when the arguments name no such mode.
+
+    """
+    if IN_GATE_FLAG in args:
+        return in_gate([a for a in args if a != IN_GATE_FLAG], env, sys.stdout)
+    if WITHDRAW_FLAG in args:
+        return withdraw_cmd(args, env, sys.stdout)
+    return None
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -923,8 +991,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     env = dict(os.environ)
     args = list(sys.argv[1:] if argv is None else argv)
-    if IN_GATE_FLAG in args:
-        return in_gate([a for a in args if a != IN_GATE_FLAG], env, sys.stdout)
+    mode = admin_mode(args, env)
+    if mode is not None:
+        return mode
     shipping = SHIP_FLAG in args
     bare = [a for a in args if a != SHIP_FLAG]
     stacked = stack_target(bare, env)
@@ -941,6 +1010,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     env.setdefault(WAYPOINTS_ENV, named_waypoints(stacked, parsed))
     ledger = ledger_of(root)
     key = str(submitted)
+    env.setdefault(MARKER_ENV, marker_value(ledger, key))
     submit(ledger, key, env)
     if stacked is not None and not env.get(HELD_ENV):
         env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
@@ -1037,10 +1107,22 @@ def unordered(
     return EXIT_NOT_COMMITTED
 
 
+def marker_value(ledger: Path | None, key: str) -> str:
+    """Name the file that asks this submission's gate to stop (W1705), for the gate to read.
+
+    Returns:
+        the marker's path, or empty when there is no ledger to hold one.
+
+    """
+    return "" if ledger is None else str(_marker_path(ledger / "commit.counts", key))
+
+
 def track(ledger: Path | None, key: str, state: str | None, env: Mapping[str, str]) -> None:
     """Move this commit to `state` in the live counts, None ending it; never raises."""
     if ledger is not None:
         _note_counts(ledger, key, state, env)
+        if state is None:
+            _clear_marker(ledger / "commit.counts", key)
 
 
 def run_held(

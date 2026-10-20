@@ -149,3 +149,13 @@ trainverdict	The Train Verdict: A Joined Stack Finds the Verdict Its Leader Left
 trainlead	The Train Lead: A Lease Holder Joins the Queued Stacks Behind It, Runs One Train, Prints Its Own Verdict and Leaves Each Follower Its Own, and Nobody Behind or the Switch Off Is No Train
 traintel	The Train Telemetry: Each Train Is One Span of Its Own Family With Its Stacks Joined, Gates Run, Bisect Steps, Rounds, Landed, Refused and Dropped as Fields, Sent Only When Something Was Joined and Never Changing a Verdict
 presubmit	The Presubmit: The Gate's Own Bazel Test Planned Inside a Working-Tree Snapshot, in Its Own Namespace, With the Runner's Exit Code Passed Through
+commit_withdraw	The Withdraw Mode: A Queued Submission Is Ended by Its Own Pid and Named, an In-Flight One Is Refused, and a Dead or Unknown Key Signals Nothing
+refusal_stage	The Refusing Stage: A REFUSED Line Names the Last Phase the Gate Began, From Its Marks, and Says Nothing When It Has None
+gate_withdraw_phase	The Gate's Withdraw Boundary: A Marker Keyed to the Submission Stops the Gate Between Phases With Exit 75 and Is Removed, and No Marker, an Unset Variable or Another Key's Marker Lets It Run
+siblingcensus	The Sibling Census: A Path Is a Reach Only When It Resolves Into Another Checkout, Not When It Stays in the Repo or Names the Repo Itself, and the Command Counts Tracked Files Only
+siblingratchet	The Sibling-Reach Ratchet: Per File, a Count Above Its Baseline or a New File With a Reach Is Refused Naming the Checkouts, a Paydown Is Slack, and the One Exempt Prefix Is Neither Counted Nor Refused
+gatetrend	The Gate Trend: A Phase's Median and Median-Absolute-Deviation Spread Resist One Outlier, the Slope Is Seconds per Gate, and the Reader Takes the Gating Spans From the Trace Store Named by the Host's Endpoints File
+commit_verdict	The Commit Verdict Counter: One Bounded Sample per Printed Verdict, Labelled by Repo, Kind and Last Stage, Never Changing the Verdict
+trainround	The Train Round Record: One Span and Two Samples per Round, with the Failed Checks and the Throttle the Gate Was Held To, Never Changing a Verdict
+gated_tree_trailer	The Gated-Tree Trailer: An Isolated Commit Names the Tree Its Gate Ran On, in the Message's Own Trailer Block
+requeue	The Stuck-Train Restart: Reads the Live Map, Refuses What It May Not Stop, Waits for the Group to Be Gone, Then Resubmits as One Stack

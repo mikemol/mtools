@@ -407,7 +407,7 @@ src/mikemol/hooks/beat.py|notice-drops-the-kept-action|    hint = watchdog\.cach
 src/mikemol/hooks/commit_counts.py|queued-entry-stamped-as-begun|            if state == INFLIGHT:|            if True:|def=transition
 src/mikemol/hooks/commit_counts.py|gate-start-never-recorded|                entries\[key\]\["began_ns"\] = NOW\(\)|                pass|def=transition
 src/mikemol/hooks/commit_counts.py|dead-entry-listed-as-live|        if not isinstance\(state, str\) or not _alive\(entry, probe\):|        if not isinstance(state, str):|def=live
-src/mikemol/hooks/commit_kata.py|in-gate-flag-ignored|    if IN_GATE_FLAG in args:|    if False:|def=main
+src/mikemol/hooks/commit_kata.py|in-gate-flag-ignored|    if IN_GATE_FLAG in args:|    if False:|def=admin_mode
 src/mikemol/hooks/commit_kata.py|in-gate-without-a-repository-reads-one|    if not named:|    if False:|def=in_gate
 src/mikemol/hooks/watchdog.py|exit-forgets-the-action|    remember_hint\(git_dir, hint\)|    pass|def=exit_notes
 src/mikemol/hooks/nemik_check.py|first-stderr-lines-not-last|detail = " / "\.join\(lines\[-STDERR_LINES:\]\)|detail = " / ".join(lines[:STDERR_LINES])|def=run_reader
@@ -464,7 +464,7 @@ src/mikemol/hooks/traindrive.py|green-tip-bisected-anyway|        if self\.green
 src/mikemol/hooks/traindrive.py|empty-prefix-lands-something|    if not groups:|    if False:|def=_land_prefix
 src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(_refused\(remaining\[bad\], rnd\.gate\(bad\), before, name\)\)|        pass|def=drive
 src/mikemol/hooks/traindrive.py|unbuilt-stack-reports-success|    code = \(stack\.failed\.returncode if stack\.failed else 0\) or 1|    code = 0|def=_unbuilt
-src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|        cut = len\(remaining\) if bad is None else bad|        cut = len(remaining)|def=drive
+src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|            root, remaining\[: len\(remaining\) if bad is None else bad\], rnd, before|            root, remaining[: len(remaining)], rnd, before|def=drive
 src/mikemol/hooks/trainverdict.py|boolean-code-read-as-code|    if isinstance\(code, int\) and not isinstance\(code, bool\) and isinstance\(text, str\):|    if isinstance(code, int) and isinstance(text, str):|def=read
 src/mikemol/hooks/trainverdict.py|verdict-not-cleared-when-taken|        verdict_path\(ledger, key\)\.unlink\(missing_ok=True\)|        pass|def=take
 src/mikemol/hooks/trainverdict.py|verdict-never-replaced-into-place|        staging\.replace\(path\)|        pass|def=write
@@ -475,7 +475,9 @@ src/mikemol/hooks/trainlead.py|off-switch-ignored|    if ledger is None or env\.
 src/mikemol/hooks/trainlead.py|empty-train-still-runs|    if ledger is None or not followers:|    if ledger is None:|def=lead
 src/mikemol/hooks/trainlead.py|considered-counter-not-ticked|    traintel\.consider\(root\.name, len\(followers\), env\)|    pass|def=lead
 src/mikemol/hooks/traintel.py|counter-sent-without-a-store|    if program is None or not store_named\(env\):|    if False:|def=consider
-src/mikemol/hooks/traintel.py|counter-value-zero|    argv \+= \["--value", "1", "--field", f"repo=\{repo\}", "--field", f"followers=\{followers\}"\]|    argv += ["--value", "0", "--field", f"repo={repo}", "--field", f"followers={followers}"]|def=considered_argv
+src/mikemol/hooks/traintel.py|counter-value-zero|    argv \+= \["--value", "1", "--field", f"repo=\{repo\}"\]|    argv += ["--value", "0", "--field", f"repo={repo}"]|def=considered_argv
+src/mikemol/hooks/traintel.py|followers-value-is-a-constant|    argv \+= \["--value", str\(followers\), "--field", f"repo=\{repo\}"\]|    argv += ["--value", "1", "--field", f"repo={repo}"]|def=followers_argv
+src/mikemol/hooks/traintel.py|followers-sample-not-sent|        spawn\(followers_argv\(program, repo, followers\)\)|        pass|def=consider
 src/mikemol/hooks/commit_kata.py|train-never-led|        joined = train_lead\(root, ledger_of\(root\), group, \(seams, env\), tee\)|        joined = None|def=run_stack_mode
 src/mikemol/hooks/traintel.py|refused-train-reads-ok|    status = "ERROR" if stats\.refused or stats\.dropped else "OK"|    status = "OK"|def=argv_for
 src/mikemol/hooks/traintel.py|train-of-one-recorded|    if stats\.joined < MIN_JOINED or program is None or not store_named\(env\):|    if program is None or not store_named(env):|def=emit
@@ -487,3 +489,49 @@ src/mikemol/hooks/commit_kata.py|trailer-block-split-again|Waypoint: \{request\.
 src/mikemol/hooks/presubmit.py|keep-going-dropped|        "--keep_going",|        "--noshow_progress",|def=plan
 src/mikemol/hooks/presubmit.py|namespace-is-the-gates|    return Plan\(argv, \{NAMESPACE_ENV: f"\{root\}/presubmit"\}\)|    return Plan(argv, {NAMESPACE_ENV: f"{root}"})|def=plan
 src/mikemol/hooks/presubmit.py|no-repo-runs-anyway|        return EXIT_USAGE|        return 0|def=main
+src/mikemol/hooks/presubmit.py|missing-snapshot-runs-anyway|        return EXIT_REFUSED|        return 0|def=main
+src/mikemol/hooks/presubmit.py|dot-dir-is-a-dist|if not top\.startswith\("\."\)|if True|def=dists_of
+src/mikemol/hooks/presubmit.py|root-file-is-a-dist|for path in paths if "/" in path|for path in paths if "/" not in path|def=dists_of
+src/mikemol/hooks/commit_withdraw.py|in-flight-withdrawn|    if row\.state == INFLIGHT:|    if False:|def=withdraw
+src/mikemol/hooks/commit_withdraw.py|killed-not-terminated|    kill\(pid, signal\.SIGTERM\)|    kill(pid, signal.SIGKILL)|def=withdraw
+src/mikemol/hooks/gatetrend.py|even-median-takes-the-upper-middle|\(ordered\[middle - 1\] \+ ordered\[middle\]\) / 2|ordered[middle]|def=median
+src/mikemol/hooks/gatetrend.py|spread-is-the-mean-deviation|    return median\(\[abs\(v - centre\) for v in values\]\)|    return sum(abs(v - centre) for v in values) / max(len(values), 1)|def=spread
+src/mikemol/hooks/gatetrend.py|oldest-samples-taken|        latest = sorted\(grouped\[phase\], key=_began\)\[-recent:\]|        latest = sorted(grouped[phase], key=_began)[:recent]|def=stats_by_phase
+src/mikemol/hooks/siblingratchet.py|equal-to-baseline-refused|        if counts\[file\] > allowed:|        if counts[file] >= allowed:|def=violations
+src/mikemol/hooks/siblingratchet.py|new-file-given-slack|        allowed = baseline\.get\(file, 0\)|        allowed = baseline.get(file, 99)|def=violations
+src/mikemol/hooks/siblingcensus.py|own-repo-counted-as-a-reach|        if named != root\.name:|        if True:|def=_line_reaches
+src/mikemol/hooks/siblingcensus.py|inside-dotdot-counted-as-a-reach|        if _lands_in\(root, file, chain\.count\("\.\./"\)\) == root\.parent and name != root\.name:|        if name != root.name:|def=_line_reaches
+src/mikemol/hooks/commit_withdraw.py|leader-with-followers-withdrawn|    if row\.joined:|    if False:|def=_ask_to_stop
+src/mikemol/hooks/commit_counts.py|joined-count-not-recorded|        entry\["joined"\] = joined|        entry["joined"] = 0|def=note_joined
+src/mikemol/hooks/revendor.py|waldo-not-a-vendorable-dist|EXTRA = \("icsstruct", "rulerseq", "frontier", "atomicwrite", "corpus", "waldo"\)|EXTRA = ("icsstruct", "rulerseq", "frontier", "atomicwrite", "corpus")|
+src/mikemol/hooks/gatephase.py|summary-read-past-the-block|        if not line\.startswith\(_BULLET\):|        if False:|def=failed_checks
+src/mikemol/hooks/gatephase.py|bullet-prefix-kept-in-the-label|        found\.append\(line\[len\(_BULLET\) :\]\.strip\(\)\)|        found.append(line)|def=failed_checks
+src/mikemol/hooks/commit_kata.py|stage-never-inserted|    return line\.replace\(marker, f"\): \{note\}the cause is above", 1\)|    return line|def=with_stage
+src/mikemol/hooks/commit_verdict.py|withdraw-exit-read-as-refused|            return "WITHDRAWN" if kind == "REFUSED" and rc == WITHDRAW_RC else kind|            return kind|def=kind_of
+src/mikemol/hooks/commit_verdict.py|stage-is-the-first-mark|    return found\[-1\]\.name if found else NO_STAGE|    return found[0].name if found else NO_STAGE|def=stage_of
+src/mikemol/hooks/commit_verdict.py|verdict-sent-without-a-store|    if program is None or not store_named\(env\):|    if False:|def=emit
+src/mikemol/hooks/commit_verdict.py|verdict-spawn-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/hooks/commit_kata.py|verdict-counter-never-sent|        _emit_verdict\(root\.name, \(line, done\.returncode, shown\), os\.environ\)|        pass|def=commit
+src/mikemol/hooks/trainround.py|red-round-reads-ok|    status = "OK" if rec\.verdict == GREEN else "ERROR"|    status = "OK"|def=span_argv
+src/mikemol/hooks/trainround.py|jobs-sample-always-sent|    if rec\.facts\.jobs:|    if True:|def=plan
+src/mikemol/hooks/trainround.py|admitted-jobs-not-read|        jobs=jobs\.group\(1\) if jobs else "",|        jobs="",|def=facts_of
+src/mikemol/hooks/trainround.py|invocation-not-read|        invocation=invocation\.group\(1\) if invocation else "",|        invocation="",|def=facts_of
+src/mikemol/hooks/trainround.py|round-sent-without-a-store|    if program is None or not store_named\(env\):|    if False:|def=emit
+src/mikemol/hooks/trainround.py|round-spawn-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/hooks/traindrive.py|red-round-reads-green|        tell\(trainround\.GREEN if bad is None else trainround\.RED, rnd, bad\)|        tell(trainround.GREEN, rnd, bad)|def=drive
+src/mikemol/hooks/traindrive.py|unbuilt-round-unreported|            tell\(trainround\.UNBUILT\)|            pass|def=drive
+src/mikemol/hooks/traindrive.py|failed-checks-not-recorded|    failed = "; "\.join\(failed_checks\(culprit\.stdout \+ culprit\.stderr\)\) if culprit else ""|    failed = ""|def=_round_record
+src/mikemol/hooks/isolated.py|gated-tree-never-stamped|        stamped = f"\{message\.rstrip\(\)\}\\nGated-Tree: \{tree\.stdout\.strip\(\)\}\\n"|        stamped = message|def=commit_isolated
+src/mikemol/hooks/isolated.py|gated-tree-splits-the-trailer-block|\{message\.rstrip\(\)\}|{message}|def=commit_isolated
+src/mikemol/hooks/traindrive.py|round-facts-not-read|    facts = trainround\.facts_of\(first\.stdout \+ first\.stderr\) if first else trainround\.GateFacts\(\)|    facts = trainround.GateFacts()|def=_round_record
+src/mikemol/hooks/requeue.py|consolidated-stack-counted-as-the-leader|    flying = \(r for r in rows if r\.state == commit_counts\.INFLIGHT and set\(r\.waypoints\) != ours\)|    flying = (r for r in rows if r.state == commit_counts.INFLIGHT)|def=leader_of
+src/mikemol/hooks/requeue.py|non-commit-leader-stopped|    if pid is None or not world\.is_commit\(pid\):|    if False:|def=refusal
+src/mikemol/hooks/requeue.py|own-group-stopped|    if world\.group_of\(pid\) == world\.own_group:|    if False:|def=refusal
+src/mikemol/hooks/requeue.py|no-leader-is-done-not-deferred|        return EXIT_DEFER|        return EXIT_DONE|def=check
+src/mikemol/hooks/requeue.py|group-not-waited-for|    while world\.members\(group\):|    while False:|def=stop
+src/mikemol/hooks/requeue.py|group-never-signalled|    world\.stop\(group\)|    pass|def=stop
+src/mikemol/hooks/requeue.py|queued-stack-not-withdrawn|            world\.withdraw\(row\.key\)|            pass|def=restart
+src/mikemol/hooks/requeue.py|stack-never-submitted|        world\.submit\(stack\)|        pass|def=restart
+src/mikemol/hooks/requeue.py|own-stack-not-recognised|    mine = \[r for r in rows if ours and set\(r\.waypoints\) == ours\]|    mine = []|def=restart
+src/mikemol/hooks/requeue.py|any-process-is-a-commit|    return any\(word\.endswith\(b"mikemol-commit"\) for word in words\)|    return True|def=is_commit
+src/mikemol/hooks/requeue.py|every-process-is-in-the-group|        if int\(stat\.rsplit\("\)", 1\)\[1\]\.split\(\)\[_GROUP_FIELD\]\) == pgid:|        if True:|def=group_members

@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import TextIO, cast
 
 from mikemol.hooks.commit_body import refusal as body_refusal
+from mikemol.hooks.gatephase import stage_note
 from mikemol.hooks.isolated import EnvRunner
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
@@ -141,11 +142,12 @@ def culprit_note(output: str, items: Sequence[Item]) -> str:
         a clause for the REFUSED line.
 
     """
+    stage = stage_note(output)
     hits = culprits(output, items)
     if not hits:
-        return "culprit: unattributed (the failing check names no path in this stack)"
+        return f"{stage}culprit: unattributed (the failing check names no path in this stack)"
     named = ", ".join(f"entry {p + 1}/{len(items)} ({items[p].waypoint})" for p in hits)
-    return f"culprit: {named}"
+    return f"{stage}culprit: {named}"
 
 
 def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> int:

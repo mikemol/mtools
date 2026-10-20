@@ -48,9 +48,10 @@ def test_the_count_is_the_free_cores_and_never_below_the_floor() -> None:
 
 
 def test_it_prints_one_flag_per_line_for_the_hook_to_read(tmp_path: Path) -> None:
-    """Two flags, one per line, the same number in both."""
+    """Two flags, one per line, the same number in both: the jobs and the test jobs."""
     text = _printed(tmp_path, "97.33 118.78 114.89 66/7877 172797\n")
-    assert text == f"--jobs={gatejobs.MIN_JOBS}\n--local_test_jobs={gatejobs.MIN_JOBS}\n"
+    floor = gatejobs.MIN_JOBS
+    assert text == f"--jobs={floor}\n--local_test_jobs={floor}\n"
 
 
 def test_an_unreadable_load_reads_as_an_idle_host(tmp_path: Path) -> None:

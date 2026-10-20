@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
     import pytest
 
+    from mikemol.hooks import trainround
+
 _EXECUTABLE = 0o755
 _GATE = (
     '#!/bin/sh\necho run >> "$MIKEMOL_REAL_ROOT/runs"\n'
@@ -73,7 +75,10 @@ def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, bad: str = "") -> 
 
 
 def _drive(
-    root: Path, tmp_path: Path, paths: tuple[str, ...] = _NAMES
+    root: Path,
+    tmp_path: Path,
+    paths: tuple[str, ...] = _NAMES,
+    rounds: list[trainround.RoundRecord] | None = None,
 ) -> dict[str, traindrive.Verdict]:
     groups = [
         Follower(key, (stackrun.Item(f"W{key}", f"card {key}", "", (path,)),))
@@ -85,7 +90,8 @@ def _drive(
         message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
         published=lambda _sha: "PUSHED",
     )
-    return {v.key: v for v in traindrive.drive(root, groups, seams)}
+    on_round = rounds.append if rounds is not None else None
+    return {v.key: v for v in traindrive.drive(root, groups, seams, None, on_round)}
 
 
 def _runs(root: Path) -> int:
@@ -146,3 +152,59 @@ def test_a_stack_that_cannot_be_built_is_not_committed_and_the_rest_go_on(
     assert got["1"].code == 0
     assert got["3"].code == 0
     assert _runs(root) == 1
+
+
+_SUMMARY_GATE = (
+    '#!/bin/sh\necho run >> "$MIKEMOL_REAL_ROOT/runs"\n'
+    'echo "gate jobs=2 cores=24 load1=39.4 floor=2 (held at the floor)"\n'
+    "if grep -rq bad --exclude-dir=.git .; then\n"
+    '  echo "pre-commit: REFUSED \u2014 the following check(s) failed:" >&2\n'
+    '  echo "  - check_x" >&2\n  exit 1\nfi\n'
+)
+
+
+def _summary_gate(root: Path) -> None:
+    hook = root / ".git" / "hooks" / "pre-commit"
+    hook.write_text(_SUMMARY_GATE, encoding="utf-8")
+    hook.chmod(_EXECUTABLE)
+
+
+def test_a_green_train_records_one_round_with_the_throttle_the_gate_was_held_to(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1715: one round, three members, one gate, and the admission line read from its output."""
+    root = _repo(tmp_path, monkeypatch)
+    _summary_gate(root)
+    rounds: list[trainround.RoundRecord] = []
+    _drive(root, tmp_path, rounds=rounds)
+    [only] = rounds
+    assert (only.number, only.members, only.verdict, only.gates) == (1, _THREE, "green", 1)
+    assert (only.facts.jobs, only.facts.cores, only.facts.load1) == ("2", "24", "39.4")
+    assert not only.failed
+    assert only.window[0] <= only.window[1]
+
+
+def test_a_refusal_records_a_red_round_naming_the_failed_check_then_a_green_one(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Tip red and two probes in round one, with the gate's own summary; the rest land in two."""
+    root = _repo(tmp_path, monkeypatch, bad="b.txt")
+    _summary_gate(root)
+    rounds: list[trainround.RoundRecord] = []
+    _drive(root, tmp_path, rounds=rounds)
+    shape = [(r.number, r.members, r.verdict, r.gates) for r in rounds]
+    assert shape == [(1, _THREE, "red", _THREE), (2, 1, "green", 1)]
+    assert rounds[0].failed == "check_x"
+    assert not rounds[1].failed
+
+
+def test_an_unbuildable_stack_is_an_unbuilt_round_and_the_next_round_is_green(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The build fails before any gate: no gates, no facts, then the rest go on."""
+    root = _repo(tmp_path, monkeypatch)
+    _summary_gate(root)
+    rounds: list[trainround.RoundRecord] = []
+    _drive(root, tmp_path, ("a.txt", "missing.txt", "c.txt"), rounds)
+    assert [(r.verdict, r.gates) for r in rounds] == [("unbuilt", 0), ("green", 1)]
+    assert not rounds[0].facts.jobs

@@ -74,6 +74,15 @@ def test_scrubbing_keeps_the_gates_own_variables_and_everything_outside_the_name
     assert sorted(gateenv.scrubbed(env)) == kept
 
 
+def test_the_withdraw_marker_path_reaches_the_gate_and_the_submit_time_does_not() -> None:
+    """W1705: the gate reads the marker's path, and nothing else of the submission's identity."""
+    env = {
+        "MIKEMOL_COMMIT_WITHDRAW_MARKER": "/g/withdraw-1",
+        "MIKEMOL_COMMIT_SUBMITTED_NS": "1",
+    }
+    assert sorted(gateenv.scrubbed(env)) == ["MIKEMOL_COMMIT_WITHDRAW_MARKER"]
+
+
 def test_only_the_commands_that_run_a_hook_are_scrubbed(monkeypatch: pytest.MonkeyPatch) -> None:
     """Plumbing with nothing to add inherits as ever; plumbing with extras keeps everything."""
     monkeypatch.setenv("MIKEMOL_ENDPOINTS", "/e.json")

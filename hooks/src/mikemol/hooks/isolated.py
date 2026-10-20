@@ -153,7 +153,11 @@ def commit_isolated(
         refreshed = run(["update-index", "-q", "--refresh"], work, snap.path)
         if _failed(refreshed):
             return refreshed
-        done = run(["commit", "-m", message], work, snap.path)
+        # ⚑ THE TREE THE GATE JUDGED IS NAMED IN THE COMMIT (W1666, nemik:W703): the index's tree is
+        # the one the snapshot materialized and the hook ran on, so the trailer joins the message's
+        # own trailer block and a reader can ask whether a commit's gate ran on what it holds.
+        stamped = f"{message.rstrip()}\nGated-Tree: {tree.stdout.strip()}\n"
+        done = run(["commit", "-m", stamped], work, snap.path)
     if not _failed(done):
         note = refresh_index(root, paths, run)
         done.stdout = f"{done.stdout}{note}\n"
