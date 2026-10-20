@@ -1,0 +1,11 @@
+[paper]
+title = "mikemol.converge: The shared converge loop, a small stdlib-only dist luthen can vendor"
+subtitle = "The witnesses behind mikemol.converge."
+warrants = ["warrants.bib"]
+rubric = "rubric.tsv"
+out = "CONVERGE.md"
+numbered = false
+references = false
+
+[checks.cmd]
+cmd = "{target}"

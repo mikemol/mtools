@@ -1,0 +1,4 @@
+# rubric.tsv — the sections of the converge warrant set, one per test module,
+# in document order.
+# key <TAB> heading title
+converge	The converge loop

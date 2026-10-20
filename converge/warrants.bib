@@ -1,0 +1,49 @@
+
+@misc{converge-converge-clean-first-pass-returns-at-once,
+  section = {converge},
+  title  = {Exit 0 on pass 1: one row, no pause, passes added to the verdict},
+  claim  = {Exit 0 on pass 1: one row, no pause, passes added to the verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_converge.py -k test_a_clean_first_pass_returns_at_once},
+}
+
+@misc{converge-converge-halt-that-clears-is-retried-with-pauses-between,
+  section = {converge},
+  title  = {A halt then a clean pass: two rows, one gap of the policy's pauses},
+  claim  = {A halt then a clean pass: two rows, one gap of the policy's pauses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_converge.py -k test_a_halt_that_clears_is_retried_with_pauses_between},
+}
+
+@misc{converge-converge-same-halt-in-a-row-gives-up,
+  section = {converge},
+  title  = {Three identical halts: HALT with the reason, not five passes},
+  claim  = {Three identical halts: HALT with the reason, not five passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_converge.py -k test_the_same_halt_in_a_row_gives_up},
+}
+
+@misc{converge-converge-changing-halts-run-to-the-ceiling,
+  section = {converge},
+  title  = {Different halts every pass never repeat: the loop stops at the pass ceiling},
+  claim  = {Different halts every pass never repeat: the loop stops at the pass ceiling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_converge.py -k test_changing_halts_run_to_the_ceiling},
+}
+
+@misc{converge-converge-every-row-names-its-trigger-and-pass,
+  section = {converge},
+  title  = {Each recorded row carries trigger, n and exit},
+  claim  = {Each recorded row carries trigger, n and exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_converge.py -k test_every_row_names_its_trigger_and_pass},
+}
+
+@misc{converge-converge-verdict-is-nested-in-the-row,
+  section = {converge},
+  title  = {The run-row reader takes verdict.state from an object, so the verdict is not flattened},
+  claim  = {The run-row reader takes verdict.state from an object, so the verdict is not flattened.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_converge.py -k test_the_verdict_is_nested_in_the_row},
+}
+
+@misc{converge-smoke-package-imports-and-carries-its-docstring,
+  section = {converge},
+  title  = {The scaffold compiles, imports and documents itself},
+  claim  = {The scaffold compiles, imports and documents itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_smoke.py -k test_the_package_imports_and_carries_its_docstring},
+}
