@@ -24,7 +24,7 @@ Usage, in a distribution's BUILD.bazel, in place of its `sh_test(name = "mutants
                     size = "medium", timeout = "long")
 """
 
-def mutants_sharded(name = "mutants", shards = 1, cpus = 0, **kwargs):
+def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, **kwargs):
     """Declare a distribution's mutation grid as `shards` targets and a suite named `name`.
 
     Args:
@@ -33,6 +33,9 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, **kwargs):
         cpus: when above 0, each shard reserves that many CPUs with bazel's `cpu:K` tag and its
             runner starts exactly that many suites (`MUTATE_JOBS=K`), so the scheduler's count of
             a shard is the width it really uses (mtools:W980). 0 leaves both unset.
+        cpu_budget: when above 0, the CPU seconds one shard may use (`MUTATE_SHARD_CPU_S`); a shard
+            over it is refused by the runner with its measured CPU, so the failure threshold is CPU
+            and host load cannot fail a gate (W1772). 0 declares no budget.
         **kwargs: the arguments of the `sh_test` each shard is (srcs, args, data, size, timeout).
     """
     if shards < 1:
@@ -47,6 +50,15 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, **kwargs):
     if cpus:
         kwargs["tags"] = list(kwargs.get("tags", [])) + ["cpu:%d" % cpus]
         reserve = dict(own, MUTATE_JOBS = str(cpus))
+    if cpu_budget < 0:
+        fail("mutants_sharded: cpu_budget must not be negative, got %d" % cpu_budget)
+    if cpu_budget:
+        reserve = dict(reserve, MUTATE_SHARD_CPU_S = str(cpu_budget))
+        # ⚑ THE WALL TIMEOUT BECOMES A BACKSTOP THAT NEVER DECIDES (W1771, operator ruling 695f3e0a
+        # line 87670 plus the standing rule: bound by CPU, never a timer): the verdict is the CPU
+        # budget above, so a host at load 60 slows a shard and cannot fail it. `eternal` is the
+        # longest bazel allows, there only so a shard that hangs without using CPU is still ended.
+        kwargs["timeout"] = "eternal"
     if shards == 1:
         native.sh_test(name = name, env = reserve, **kwargs)
         return

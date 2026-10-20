@@ -739,6 +739,21 @@ def test_the_cpu_line_states_the_idle_host_wall_time_from_cpu_and_children() -> 
     assert "children=1 idle_wall=5.0s" in mutate_runner.cpu_line(5.0, 0)
 
 
+def test_a_shard_over_its_declared_cpu_budget_is_refused_and_one_under_it_is_not() -> None:
+    """W1772: the verdict is CPU seconds against the declared budget, whatever the host load."""
+    over = mutate_runner.budget_verdict(THREE_JOBS + 1.0, str(THREE_JOBS))
+    assert over is not None
+    assert "BUDGET EXCEEDED" in over
+    assert mutate_runner.budget_verdict(float(THREE_JOBS), str(THREE_JOBS)) is None
+
+
+def test_an_unset_or_malformed_cpu_budget_judges_nothing() -> None:
+    """The control: no declaration, a garbled one, and a non-positive one never refuse a shard."""
+    assert mutate_runner.budget_verdict(_CPUS * _SIX, "") is None
+    assert mutate_runner.budget_verdict(_CPUS * _SIX, "soon") is None
+    assert mutate_runner.budget_verdict(_CPUS * _SIX, "0") is None
+
+
 def test_an_unreadable_load_reads_as_an_idle_host(monkeypatch: pytest.MonkeyPatch) -> None:
     """The fallback is today's behaviour: the declared count, not a throttle."""
 

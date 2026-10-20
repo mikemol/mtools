@@ -954,7 +954,7 @@ def main(argv: list[str]) -> int:
     # ⚑ BOTH ARE COMPUTED BEFORE EITHER DECIDES THE EXIT: `code or _regex_section(...)` would skip
     # printing the declared-defect section whenever the def-site grid had already failed.
     regex_code = _regex_section(regex)
-    return 1 if code or regex_code else 0
+    return 1 if any((code, regex_code, _budget_section())) else 0
 
 
 def plan_line(name: str, attempted: list[str], unreachable: list[str], declared: int) -> str:
@@ -1015,6 +1015,45 @@ def cpu_line(cpu_s: float, workers: int) -> str:
     """
     width = max(1, workers)
     return f"shard cpu={cpu_s:.1f}s children={width} idle_wall={cpu_s / width:.1f}s\n"
+
+
+def budget_verdict(cpu_s: float, budget: str) -> str | None:
+    """Judge a shard's CPU seconds against the budget its BUILD declares (W1772).
+
+    ⚑ THE FAILURE THRESHOLD IS CPU, NOT THE WALL CLOCK (operator 2026-09-23/24: bound by CPU
+    time, never a timer; 2026-10-20: the 50% line is measured in the unit of the failure
+    threshold). A shard that needs 90 CPU seconds needs them whether the host is idle or at
+    load 60, so only a shard that really grew can fail. An unset or malformed budget judges
+    nothing.
+
+    Returns:
+        a refusal line when `cpu_s` is over the budget, else None.
+
+    """
+    try:
+        limit = float(budget)
+    except ValueError:
+        return None
+    if limit <= 0 or cpu_s <= limit:
+        return None
+    return f"shard CPU BUDGET EXCEEDED: used {cpu_s:.1f}s, declared {limit:.1f}s; shard it finer\n"
+
+
+def _budget_section() -> int:
+    """Print the budget refusal when this shard's suites used more CPU than `MUTATE_SHARD_CPU_S`.
+
+    Returns:
+        1 when over budget, else 0.
+
+    """
+    used = resource.getrusage(resource.RUSAGE_CHILDREN)
+    refusal = budget_verdict(
+        used.ru_utime + used.ru_stime, os.environ.get("MUTATE_SHARD_CPU_S", "")
+    )
+    if refusal is None:
+        return 0
+    sys.stdout.write(refusal)
+    return 1
 
 
 def free_cores(cpus: int, load1: float) -> int:

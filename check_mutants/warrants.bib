@@ -321,3 +321,17 @@
             load.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_cpu_line_states_the_idle_host_wall_time_from_cpu_and_children},
 }
+
+@misc{root-mutate-runner-shard-over-its-declared-cpu-budget-is-refused-and-one-under-it-is-not,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {W1772: the verdict is CPU seconds against the declared budget, whatever the host load},
+  claim  = {W1772: the verdict is CPU seconds against the declared budget, whatever the host load.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_shard_over_its_declared_cpu_budget_is_refused_and_one_under_it_is_not},
+}
+
+@misc{root-mutate-runner-unset-or-malformed-cpu-budget-judges-nothing,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {The control: no declaration, a garbled one, and a non-positive one never refuse a shard},
+  claim  = {The control: no declaration, a garbled one, and a non-positive one never refuse a shard.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_unset_or_malformed_cpu_budget_judges_nothing},
+}
