@@ -30,10 +30,18 @@ _DRAFTS = '[\n {\n  "symbol": "W1493",\n  "manifest": ["hooks/c.py"],\n  "size":
 
 
 def _seams() -> watchdog.Seams:
-    clock = iter([0, _LATE])
+    # The start, the silence check that fires, and the idle line's own reading.
+    clock = iter([0, _LATE, _LATE])
 
     def now() -> int:
-        return next(clock, _LATE) * _S
+        # ⚑ A CLOCK THAT RUNS OUT RAISES (W1759): it used to repeat its last reading with
+        # `next(clock, _LATE)`, so a wrong expectation about the limit became an infinite loop in
+        # the gate (W1753, W1758) instead of a failure that names itself in milliseconds.
+        reading = next(clock, None)
+        if reading is None:
+            message = "the fake clock ran out: watch read the time more often than the test planned"
+            raise AssertionError(message)
+        return reading * _S
 
     return (lambda: Beat("mikemol-commit", 0, ()), lambda: 3, now, lambda _s: None, lambda: True)
 
