@@ -168,3 +168,26 @@ def test_jwk_without_lift_and_lift_with_a_stray_flag_are_refused(
     key = str(_jwk_file(tmp_path, _PUBLIC_ONE))
     assert _lift(path, jws, "--jwk", key, "--weight", "1") == _REFUSED
     assert "does not apply to --lift" in capsys.readouterr().err
+
+
+def _status_lines(tmp_path: Path) -> list[str]:
+    ledger = (tmp_path / "paths-forward.ledger").read_text(encoding="utf-8")
+    return [row for row in ledger.splitlines() if " status " in row]
+
+
+def test_a_lift_ledgers_its_status_change_as_the_operators_and_a_plain_edit_does_not(
+    tmp_path: Path,
+) -> None:
+    """W1790 (nemik:W770): `actor=operator` follows a verified lift, and no other status line."""
+    path = _state(tmp_path)
+    jws = _sign("W1", _SECRET_ONE, _PUBLIC_ONE)
+    assert _lift(path, jws, "--jwk", str(_jwk_file(tmp_path, _PUBLIC_ONE))) == _OK
+    [lifted] = _status_lines(tmp_path)
+    assert " W1 " in lifted
+    assert "actor=operator" in lifted
+    plain = ["--state", str(path), "--update", "W2", "--status", "blocked"]
+    held = ["--blocked-on", "operator: act y", "--blocked-kind", "human"]
+    assert cli.main([*plain, *held]) == _OK
+    last = _status_lines(tmp_path)[-1]
+    assert " W2 " in last
+    assert "actor=" not in last

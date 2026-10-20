@@ -9,10 +9,12 @@ from typing import TYPE_CHECKING
 import pytest
 
 from mikemol.pathsforward.ledger import (
+    OPERATOR,
     Entry,
     MalformedEntryError,
     Parsed,
     Unparsed,
+    actor_of,
     append,
     line,
     parse,
@@ -147,3 +149,37 @@ def test_append_only_appends(tmp_path: Path) -> None:
     append(path, "one")
     append(path, "two")
     assert path.read_text(encoding="utf-8").splitlines() == ["one", "two"]
+
+
+_SESSION = "0709aae6-1dba-4fe5-bfbe-24d21edd31e0"
+
+
+def test_an_actor_sits_between_the_session_and_the_evidence_and_reads_back() -> None:
+    """W1790 (nemik:W770): the operator is named only by `actor=operator`, in its column."""
+    entry = Entry("status", "W1", "blocked>done", "writer", "n", "ev", _SESSION, OPERATOR)
+    got = line(entry, _STAMP)
+    assert got.endswith(f"  session={_SESSION}  actor=operator  evidence=ev")
+    assert parse(got) == Parsed(_STAMP, entry)
+
+
+def test_a_line_with_no_actor_reads_as_none_and_one_with_no_session_still_parses() -> None:
+    """The control: the old shape is unchanged, and an actor needs no session beside it."""
+    old = Entry("tick", "W7", "advanced", "unblock", "n", "", _SESSION)
+    assert "actor=" not in line(old, _STAMP)
+    assert parse(line(old, _STAMP)) == Parsed(_STAMP, old)
+    bare = Entry("status", "W1", "blocked>done", "writer", "n", actor=OPERATOR)
+    assert parse(line(bare, _STAMP)) == Parsed(_STAMP, bare)
+
+
+@pytest.mark.parametrize("actor", ["Operator", "two words", "9x", "op=erator"])
+def test_an_actor_that_is_not_a_lower_case_word_is_refused(actor: str) -> None:
+    """A spaced, capitalised or odd actor would shift columns for a reader; nothing is written."""
+    with pytest.raises(MalformedEntryError, match="actor"):
+        line(Entry("tick", "W7", "advanced", "unblock", "n", actor=actor), _STAMP)
+
+
+def test_only_a_lift_is_the_operators_act() -> None:
+    """The writer names the operator for a signed lift and for nothing else."""
+    assert actor_of({"lift": "token"}) == OPERATOR
+    assert not actor_of({"update": "W1"})
+    assert not actor_of({"lift": None})

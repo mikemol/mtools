@@ -86,6 +86,7 @@ class Entry:
     note: str
     evidence: str = ""
     session: str = ""
+    actor: str = ""
 
 
 def line_break(text: str) -> str | None:
@@ -128,6 +129,9 @@ def line(entry: Entry, stamp: str) -> str:
     if entry.session and not _UUID.fullmatch(entry.session):
         msg = f"ledger session {entry.session!r} is not a lower-case UUID"
         raise MalformedEntryError(msg)
+    if entry.actor and not _ACTOR.fullmatch(entry.actor):
+        msg = f"ledger actor {entry.actor!r} is not a lower-case word"
+        raise MalformedEntryError(msg)
     for text in (entry.note, entry.evidence):
         broken = line_break(text)
         if broken is not None:
@@ -139,10 +143,15 @@ def line(entry: Entry, stamp: str) -> str:
     out = f'{stamp}  {entry.kind:5} {entry.symbol:4} {entry.outcome:9} {entry.mechanism:9} "{note}"'
     if entry.session:
         out = f"{out}  session={entry.session}"
+    if entry.actor:
+        out = f"{out}  actor={entry.actor}"
     return f"{out}  evidence={entry.evidence}" if entry.evidence else out
 
 
 SESSION_ENV = "CLAUDE_CODE_SESSION_ID"
+OPERATOR = "operator"
+"""The one actor a line names: an act carrying the operator's signature (`--lift JWS`, W1790)."""
+_ACTOR = re.compile(r"[a-z][a-z0-9-]*")
 _UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 
 
@@ -160,6 +169,22 @@ def session_id(environ: Mapping[str, str]) -> str:
     """
     value = environ.get(SESSION_ENV, "")
     return value if _UUID.fullmatch(value) else ""
+
+
+def actor_of(opts: Mapping[str, object]) -> str:
+    """Name who acted, for the lines one invocation writes (W1790, nemik:W770).
+
+    ⚑ THE OPERATOR ONLY WHERE THE WRITER HOLDS PROOF: `--lift` is verified against the operator's
+    public key before anything is saved, so a line written after it is the operator's act. Every
+    other line leaves the actor empty, meaning the session named by `session=`. An act a session
+    performs because the operator ruled something is still the session's; the ruling rides on the
+    card as a warrant, and nemik joins the two.
+
+    Returns:
+        `operator` for a lift, else the empty string.
+
+    """
+    return OPERATOR if opts.get("lift") else ""
 
 
 def own_line(entry: Entry, stamp: str) -> str:
@@ -182,6 +207,7 @@ def append(path: Path, text: str) -> None:
 _LINE = re.compile(
     r"^(?P<stamp>\S+)\s+(?P<kind>\S+)\s+(?P<symbol>\S+)\s+(?P<outcome>\S+)\s+(?P<mechanism>\S+)"
     r'\s+"(?P<note>(?:[^"\\]|\\.)*)"(?:\s+session=(?P<session>[0-9a-f-]{36}))?'
+    r"(?:\s+actor=(?P<actor>[a-z][a-z0-9-]*))?"
     r"(?:\s+evidence=(?P<evidence>.*))?$"
 )
 _ESCAPE = re.compile(r"\\(.)")
@@ -240,6 +266,7 @@ def parse(text: str) -> Parsed | Unparsed:
         _ESCAPE.sub(r"\1", _group(match, "note")),
         _group(match, "evidence"),
         _group(match, "session"),
+        _group(match, "actor"),
     )
     return Parsed(stamp, entry)
 

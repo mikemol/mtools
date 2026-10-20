@@ -227,7 +227,9 @@ src/mikemol/pathsforward/pruned.py|prune-line-loses-the-arrow|    return f"PRUNE
 src/mikemol/pathsforward/cli.py|removed-edges-never-reported|    for card, blocker in PRUNE_REMOVED\(before, state\):|    for card, blocker in []:|def=_report_pruned
 src/mikemol/pathsforward/transitions.py|minted-card-counted-as-a-transition|for sym in now if sym in before and before\[sym\] != now\[sym\]|for sym in now if before.get(sym) != now[sym]|def=changes
 src/mikemol/pathsforward/transitions.py|outcome-loses-its-direction|Entry\(KIND, sym, f"\{old\}>\{new\}", MECHANISM|Entry(KIND, sym, f"{old}-{new}", MECHANISM|def=lines
-src/mikemol/pathsforward/cli.py|transitions-never-ledgered|            for said in TRANSITION_LINES\(before, state, ctx\.stamp\(\)\):|            for said in []:|def=_mutate
+src/mikemol/pathsforward/ledger.py|operator-never-named|    return OPERATOR if opts\.get\("lift"\) else ""|    return ""|def=actor_of
+src/mikemol/pathsforward/ledger.py|actor-never-written|    if entry\.actor:|    if False:|def=line
+src/mikemol/pathsforward/cli.py|transitions-never-ledgered|            for said in TRANSITION_LINES\(before, state, ctx\.stamp\(\), actor_of\(ctx\.opts\)\):|            for said in []:|def=_mutate
 src/mikemol/pathsforward/homepath.py|rootless-home-refuses-everything|    return bool\(parent\) and f"\{parent\}/" in text|    return f"{parent}/" in text|def=names_home
 src/mikemol/pathsforward/homepath.py|bare-prefix-is-a-path|f"\{parent\}/" in text|parent in text|def=names_home
 src/mikemol/pathsforward/reconcilecmd.py|no-map-judged-anyway|    if gating is None:|    if False:|def=run

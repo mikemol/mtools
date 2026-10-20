@@ -47,14 +47,14 @@ def changes(before: dict[str, str], state: State) -> list[tuple[str, str, str]]:
     ]
 
 
-def lines(before: dict[str, str], state: State, stamp: str) -> list[str]:
+def lines(before: dict[str, str], state: State, stamp: str, actor: str = "") -> list[str]:
     """Spell one ledger line per status change.
 
     Returns:
-        the formatted lines, ready to append.
+        the formatted lines, ready to append; each names `actor` when one is given (W1790).
 
     """
     return [
-        own_line(Entry(KIND, sym, f"{old}>{new}", MECHANISM, f"{old} -> {new}"), stamp)
+        own_line(Entry(KIND, sym, f"{old}>{new}", MECHANISM, f"{old} -> {new}", actor=actor), stamp)
         for sym, old, new in changes(before, state)
     ]

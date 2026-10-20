@@ -6812,3 +6812,45 @@
   claim  = {The queue is saved before the events are sent: a dead child changes nothing visible.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_a_send_that_cannot_start_never_fails_the_edit},
 }
+
+@misc{pathsforward-ledger-actor-sits-between-the-session-and-the-evidence-and-reads-back,
+  section = {ledger},
+  title  = {W1790 (nemik:W770): the operator is named only by `actor=operator`, in its column},
+  claim  = {W1790 (nemik:W770): the operator is named only by `actor=operator`, in its column.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_actor_sits_between_the_session_and_the_evidence_and_reads_back},
+}
+
+@misc{pathsforward-ledger-line-with-no-actor-reads-as-none-and-one-with-no-session-still-parses,
+  section = {ledger},
+  title  = {The control: the old shape is unchanged, and an actor needs no session beside it},
+  claim  = {The control: the old shape is unchanged, and an actor needs no session beside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_a_line_with_no_actor_reads_as_none_and_one_with_no_session_still_parses},
+}
+
+@misc{pathsforward-ledger-actor-that-is-not-a-lower-case-word-is-refused,
+  section = {ledger},
+  title  = {A spaced, capitalised or odd actor would shift columns for a reader; nothing is written},
+  claim  = {A spaced, capitalised or odd actor would shift columns for a reader; nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_an_actor_that_is_not_a_lower_case_word_is_refused},
+}
+
+@misc{pathsforward-ledger-only-a-lift-is-the-operators-act,
+  section = {ledger},
+  title  = {The writer names the operator for a signed lift and for nothing else},
+  claim  = {The writer names the operator for a signed lift and for nothing else.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ledger.py -k test_only_a_lift_is_the_operators_act},
+}
+
+@misc{pathsforward-status-transitions-transition-names-the-actor-when-one-is-given,
+  section = {status_transitions},
+  title  = {W1790: every status line of an invocation carries the actor the caller names},
+  claim  = {W1790: every status line of an invocation carries the actor the caller names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_status_transitions.py -k test_a_transition_names_the_actor_when_one_is_given},
+}
+
+@misc{pathsforward-lift-cli-lift-ledgers-its-status-change-as-the-operators-and-a-plain-edit-does-not,
+  section = {lift_cli},
+  title  = {W1790 (nemik:W770): `actor=operator` follows a verified lift, and no other status line},
+  claim  = {W1790 (nemik:W770): `actor=operator` follows a verified lift, and no other status line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_a_lift_ledgers_its_status_change_as_the_operators_and_a_plain_edit_does_not},
+}

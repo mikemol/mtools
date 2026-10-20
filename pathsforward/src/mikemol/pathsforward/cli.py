@@ -80,7 +80,14 @@ from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
 from mikemol.pathsforward.landedblock import refuse_landed
-from mikemol.pathsforward.ledger import Entry, MalformedEntryError, append, own_line, read
+from mikemol.pathsforward.ledger import (
+    Entry,
+    MalformedEntryError,
+    actor_of,
+    append,
+    own_line,
+    read,
+)
 from mikemol.pathsforward.lift import lift as lift_row
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
@@ -1391,7 +1398,7 @@ def _mutate(
             # ledger that cannot be written never fails an edit that is already saved.
             ledger_path = store.sibling(ctx.path, store.LEDGER)
             try:
-                for said in TRANSITION_LINES(before, state, ctx.stamp()):
+                for said in TRANSITION_LINES(before, state, ctx.stamp(), actor_of(ctx.opts)):
                     append(ledger_path, said)
             except (OSError, MalformedEntryError) as exc:
                 _warn(f"status transitions not ledgered: {exc}")

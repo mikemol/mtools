@@ -113,3 +113,11 @@ def test_a_ledger_that_cannot_be_written_never_fails_the_edit(
     cards = cast("list[dict[str, object]]", document["waypoints"])
     assert cards[0]["status"] == "working"
     assert "not ledgered" in capsys.readouterr().err
+
+
+def test_a_transition_names_the_actor_when_one_is_given() -> None:
+    """W1790: every status line of an invocation carries the actor the caller names."""
+    before = {"W1": "blocked"}
+    done = _state(_card("W1", "done"))
+    assert "actor=operator" in transitions.lines(before, done, _STAMP, "operator")[0]
+    assert "actor=" not in transitions.lines(before, done, _STAMP)[0]
