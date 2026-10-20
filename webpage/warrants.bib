@@ -89,3 +89,38 @@
   claim  = {--adopt --write turns a file's waits into webpage.until and says how many files changed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_adopt.py -k test_the_adopt_flag_writes_through_main},
 }
+
+@misc{webpage-page-watch-installs-the-error-and-rejection-record,
+  section = {page},
+  title  = {The init script records both a window error and an unhandled rejection},
+  claim  = {The init script records both a window error and an unhandled rejection.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_page.py -k test_watch_installs_the_error_and_rejection_record},
+}
+
+@misc{webpage-page-wait-has-no-clock-and-rests-on-the-predicate-or-the-record,
+  section = {page},
+  title  = {Timeout zero, and the expression is the record OR the caller's predicate},
+  claim  = {Timeout zero, and the expression is the record OR the caller's predicate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_page.py -k test_the_wait_has_no_clock_and_rests_on_the_predicate_or_the_record},
+}
+
+@misc{webpage-page-page-that-broke-ends-the-wait-with-its-message,
+  section = {page},
+  title  = {`until` raises with the page's error; `until_expecting` returns it},
+  claim  = {`until` raises with the page's error; `until_expecting` returns it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_page.py -k test_a_page_that_broke_ends_the_wait_with_its_message},
+}
+
+@misc{webpage-page-page-that-raised-nothing-passes-until,
+  section = {page},
+  title  = {No record, no raise},
+  claim  = {No record, no raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_page.py -k test_a_page_that_raised_nothing_passes_until},
+}
+
+@misc{webpage-page-load-watches-then-navigates-then-waits,
+  section = {page},
+  title  = {The record must exist before the page loads, so the order is fixed},
+  claim  = {The record must exist before the page loads, so the order is fixed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_page.py -k test_load_watches_then_navigates_then_waits},
+}

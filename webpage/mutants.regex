@@ -10,3 +10,6 @@ src/mikemol/webpage/waits.py|wait-with-other-keywords-adopted|    if \[kw\.arg f
 src/mikemol/webpage/waits.py|file-without-webpage-adopted|    if not imported:|    if False:|def=adopt_edits
 src/mikemol/webpage/waits.py|watch-line-loses-its-indent|            found\.append\(\(at, at, watch \+ b" " \* stmt\.col_offset\)\)|            found.append((at, at, watch))|def=watch_edits
 src/mikemol/webpage/waits.py|dry-run-writes|        if write:|        if True:|def=run
+src/mikemol/webpage/page.py|wait-given-a-clock|timeout=NO_TIMEOUT\)|timeout=30)|def=until_expecting
+src/mikemol/webpage/page.py|broken-page-passes-until|    if broken is not None:|    if False:|def=until
+src/mikemol/webpage/page.py|load-skips-the-record|    watch\(page\)|    pass|def=load
