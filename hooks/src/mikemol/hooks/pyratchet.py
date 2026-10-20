@@ -55,7 +55,11 @@ def _decoded(text: str) -> list[Row]:
 
 
 def _pair(row: Row, name_key: str, root: Path) -> tuple[str, str]:
-    name = Path(str(row[name_key])).resolve().relative_to(root.resolve())
+    raw = Path(str(row[name_key]))
+    try:
+        name = raw.absolute().relative_to(root.absolute())
+    except ValueError:
+        name = raw.resolve().relative_to(root.resolve())
     return str(name), str(row.get("code") or SYNTAX)
 
 

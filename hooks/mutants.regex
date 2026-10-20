@@ -548,6 +548,7 @@ src/mikemol/hooks/footprint.py|no-strace-reads-as-clean|        return \[DEGRADE
 src/mikemol/hooks/pyratchet.py|equal-count-is-a-rise|        if n > base\.get\(name, \{\}\)\.get\(code, 0\)|        if n >= base.get(name, {}).get(code, 0)|def=regressions
 src/mikemol/hooks/pyratchet.py|codeless-finding-loses-its-rule|str\(row\.get\("code"\) or SYNTAX\)|str(row.get("code"))|def=_pair
 src/mikemol/hooks/pyratchet.py|mypy-notes-counted-as-errors|if row\.get\("severity"\) == "error"|if True|def=mypy_counts
+src/mikemol/hooks/pyratchet.py|links-followed-before-relativising|        name = raw\.absolute\(\)\.relative_to\(root\.absolute\(\)\)|        name = raw.resolve().relative_to(root.resolve())|def=_pair
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
 src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
 src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet

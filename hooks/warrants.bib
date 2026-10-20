@@ -13748,3 +13748,10 @@
   claim  = {None is a different fact from 'nobody holds it': the caller must not read it as free.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop_fixture.py -k test_an_unreadable_queue_is_unknown_rather_than_unheld},
 }
+
+@misc{hooks-pyratchet-links-path-under-the-root-is-relativised-without-following-links,
+  section = {pyratchet},
+  title  = {A Bazel sandbox reports /sandbox/src/x.py, whose resolved target is outside the root},
+  claim  = {A Bazel sandbox reports /sandbox/src/x.py, whose resolved target is outside the root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pyratchet_links.py -k test_a_path_under_the_root_is_relativised_without_following_links},
+}
