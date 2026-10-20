@@ -178,6 +178,23 @@ def _not_source(_directory: str, names: list[str]) -> set[str]:
 _ENUM_BASES = frozenset(
     {"enum.Enum", "Enum", "enum.StrEnum", "StrEnum", "enum.IntEnum", "IntEnum"},
 )
+_PROTOCOL_BASES = frozenset({"Protocol", "typing.Protocol"})
+
+
+def _is_protocol(node: ast.ClassDef) -> bool:
+    """Say whether a class declares a `typing.Protocol`, written bare, qualified or subscripted.
+
+    ⚑ A PROTOCOL'S MEMBERS ARE NOT SITES (github-8f, 2026-10-20): a Protocol states a shape and
+    implements none of it, so its bodies have no behaviour any test could exercise, and a stub
+    perturbed there changes no verdict whatever the suite holds. Four docstring-bodied stubs of
+    webpage's `Waitable` came back SURVIVED and refused a gate; that was a fact about the
+    operator, not the suite.
+
+    Returns:
+        True when any base is `Protocol` or `typing.Protocol`, with or without type arguments.
+
+    """
+    return any(ast.unparse(base).split("[", 1)[0] in _PROTOCOL_BASES for base in node.bases)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -469,7 +486,8 @@ def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | 
                 name = child.name if isinstance(child, ast.AsyncFunctionDef) else "<lambda>"
                 visit(child, f"{prefix}{name}.<locals>.", None)
             elif isinstance(child, ast.ClassDef):
-                visit(child, f"{prefix}{child.name}.", child)
+                if not _is_protocol(child):
+                    visit(child, f"{prefix}{child.name}.", child)
             else:
                 visit(child, prefix, owner)
 
@@ -953,7 +971,7 @@ def plan_line(name: str, attempted: list[str], unreachable: list[str], declared:
     return f"{name}: sites={sites} unreachable={len(unreachable)} declared={declared}\n"
 
 
-def pool_size(jobs: str, cpus: int, share: int) -> int:
+def pool_size(jobs: str, cpus: int, share: int, load1: float = 0.0) -> int:
     """Decide how many mutant suites one runner runs at once.
 
     ⚑ A SHARD GETS ITS SHARE OF THE MACHINE, NOT ALL OF IT (mtools:W970). Bazel schedules each
@@ -967,8 +985,51 @@ def pool_size(jobs: str, cpus: int, share: int) -> int:
 
     """
     if jobs:
-        return max(1, int(jobs))
+        return max(1, min(int(jobs), free_cores(cpus, load1)))
     return max(1, cpus // max(1, share))
+
+
+def load_one() -> float:
+    """Read the host's one-minute load.
+
+    Returns:
+        the load, or 0.0 (an idle host) when `/proc/loadavg` cannot be read.
+
+    """
+    try:
+        return float(pathlib.Path("/proc/loadavg").read_text(encoding="utf-8").split()[0])
+    except (OSError, ValueError, IndexError):
+        return 0.0
+
+
+def cpu_line(cpu_s: float, workers: int) -> str:
+    """Say what the grid cost in CPU, which a loaded host cannot inflate (W1769).
+
+    ⚑ WALL TIME CHASES LOAD, CPU TIME DOES NOT: one shard took 35 s alone and 265 s inside a gate at
+    load 59, so sharding by the gate's wall time ratchets without end. The CPU seconds the suites
+    used, divided by the children run at once, is the wall time the shard needs on an idle host.
+
+    Returns:
+        one newline-terminated line: the CPU seconds, the children, and the idle-host wall seconds.
+
+    """
+    width = max(1, workers)
+    return f"shard cpu={cpu_s:.1f}s children={width} idle_wall={cpu_s / width:.1f}s\n"
+
+
+def free_cores(cpus: int, load1: float) -> int:
+    """Say how many cores are idle right now, never below one.
+
+    ⚑ `MUTATE_JOBS` IS THE CEILING, NOT THE COUNT (github-8f, 2026-10-20): 31 shards timed out when
+    each started its declared 8 children on a host already at load 78, and bazel's `cpu:K` tag does
+    not hold these shards back (measured). The runner bounds its own fan-out at start, from what is
+    free, and never waits, so a busy host runs a shard narrower and the wall limit is untouched.
+
+    Returns:
+        `cpus - load1` rounded, at least one.
+
+    """
+    return max(1, round(cpus - load1))
 
 
 def _run_all(
@@ -990,12 +1051,14 @@ def _run_all(
     # already builds in its OWN temp tree with its OWN `HOME`, so they share nothing to race on;
     # results are gathered in SITE ORDER, so the report is the serial report, byte for byte.
     # `MUTATE_JOBS` bounds the pool; `1` restores the serial run; a shard takes its share (above).
-    workers = pool_size(os.environ.get("MUTATE_JOBS", ""), os.cpu_count() or 1, share)
+    workers = pool_size(os.environ.get("MUTATE_JOBS", ""), os.cpu_count() or 1, share, load_one())
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(run, grid, mutant, debug=debug) for mutant in mutants]
         planted = [pool.submit(run_declared, grid, d, debug=debug) for d in declared]
         verdicts = [f.result() for f in futures]
         regex = [(d.label, f.result()) for d, f in zip(declared, planted, strict=True)]
+    used = resource.getrusage(resource.RUSAGE_CHILDREN)
+    sys.stdout.write(cpu_line(used.ru_utime + used.ru_stime, workers))
     return verdicts, regex
 
 

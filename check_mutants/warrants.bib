@@ -15,12 +15,6 @@
   check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_methods_of_two_classes_are_two_sites_and_the_second_mutates_the_second}
 }
 
-@misc{root-mutate-runner-a-protocol-stub-and-a-function-of-its-name-are-separate-sites,
-  section = {mutate_runner},
-  claim   = {A Protocol stub and a same-named function are separate sites, and the function mutates itself. Measured on ratchet: a stub `parse` came back SURVIVED three times because every `parse` mutated the stub},
-  check   = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_protocol_stub_and_a_function_of_its_name_are_separate_sites}
-}
-
 @misc{root-mutate-runner-a-nested-def-is-addressed-through-its-enclosing-function,
   section = {mutate_runner},
   claim   = {A nested def is addressed as `outer.<locals>.inner`, following Python's own qualname, and is distinct from a module-level `inner`},
@@ -286,4 +280,44 @@
   title  = {W1176: a missing module, a stale pattern and an unparsable rewrite are each named},
   claim  = {W1176: a missing module, a stale pattern and an unparsable rewrite are each named.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_lint_mode_names_each_declaration_the_grid_would_error_or_leave_unapplied},
+}
+
+@misc{root-mutate-runner-protocol-stub-is-no-site-and-a-function-of-its-name-is-one,
+  section = {mutate_runner},
+  title  = {A Protocol's stub is not a site; the same-named function is one and mutates itself},
+  claim  = {A Protocol's stub is not a site; the same-named function is one and mutates itself.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_protocol_stub_is_no_site_and_a_function_of_its_name_is_one},
+}
+
+@misc{root-mutate-runner-no-protocol-member-is-a-site-whatever-its-body-or-its-base-spelling,
+  section = {mutate_runner},
+  title  = {Docstring-bodied, subscripted and qualified Protocols are skipped; a plain class is kept},
+  claim  = {Docstring-bodied, subscripted and qualified Protocols are skipped; a plain class is
+            kept.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_no_protocol_member_is_a_site_whatever_its_body_or_its_base_spelling},
+}
+
+@misc{root-mutate-runner-declared-job-count-is-a-ceiling-the-free-cores-can-lower,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {W1764: a shard declaring K children starts fewer on a busy host and never more than K},
+  claim  = {W1764: a shard declaring K children starts fewer on a busy host and never more than K.
+            The idle host is the control: free cores above K leave K alone. A host
+            loaded past its cores still gets one child, so a shard slows under load and
+            is never stopped.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_declared_job_count_is_a_ceiling_the_free_cores_can_lower},
+}
+
+@misc{root-mutate-runner-unreadable-load-reads-as-an-idle-host,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {The fallback is today's behaviour: the declared count, not a throttle},
+  claim  = {The fallback is today's behaviour: the declared count, not a throttle.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_unreadable_load_reads_as_an_idle_host},
+}
+
+@misc{root-mutate-runner-cpu-line-states-the-idle-host-wall-time-from-cpu-and-children,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {W1769: 120 CPU seconds over 4 children is a 30 s shard on an idle host, whatever the load},
+  claim  = {W1769: 120 CPU seconds over 4 children is a 30 s shard on an idle host, whatever the
+            load.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_cpu_line_states_the_idle_host_wall_time_from_cpu_and_children},
 }

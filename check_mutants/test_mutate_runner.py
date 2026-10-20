@@ -106,12 +106,28 @@ def test_methods_of_two_classes_are_two_sites_and_the_second_mutates_the_second(
     assert _body_of(mutant, "First.run") == "return 1"
 
 
-def test_a_protocol_stub_and_a_function_of_its_name_are_separate_sites() -> None:
-    """A Protocol stub and a same-named function are two sites; the function mutates itself."""
-    assert _paths(_PROTOCOL_AND_IMPL) == ["Parser.parse", "parse"]
+def test_a_protocol_stub_is_no_site_and_a_function_of_its_name_is_one() -> None:
+    """A Protocol's stub is not a site; the same-named function is one and mutates itself."""
+    assert _paths(_PROTOCOL_AND_IMPL) == ["parse"]
     mutant = mutate_runner.mutate(_PROTOCOL_AND_IMPL, "parse")
     assert _body_of(mutant, "parse") == _MUTANT
-    assert _body_of(mutant, "Parser.parse") == "..."
+
+
+def test_no_protocol_member_is_a_site_whatever_its_body_or_its_base_spelling() -> None:
+    """Docstring-bodied, subscripted and qualified Protocols are skipped; a plain class is kept."""
+    source = (
+        "import typing\n"
+        "from typing import Protocol\n\n\n"
+        "class Shape(Protocol):\n"
+        '    def area(self) -> int:\n        """The area."""\n        ...\n\n\n'
+        "class Generic(Protocol[int]):\n"
+        '    def side(self) -> int:\n        """The side."""\n        ...\n\n\n'
+        "class Qualified(typing.Protocol):\n"
+        '    def edge(self) -> int:\n        """The edge."""\n        ...\n\n\n'
+        "class Plain:\n"
+        "    def real(self) -> int:\n        return 1\n"
+    )
+    assert _paths(source) == ["Plain.real"]
 
 
 def test_a_nested_def_is_addressed_through_its_enclosing_function() -> None:
@@ -700,6 +716,37 @@ def test_an_explicit_job_count_wins_over_the_share() -> None:
     assert mutate_runner.pool_size("3", 12, 6) == THREE_JOBS
     assert mutate_runner.pool_size("1", 12, 1) == 1
     assert mutate_runner.pool_size("0", 12, 1) == 1
+
+
+def test_the_declared_job_count_is_a_ceiling_the_free_cores_can_lower() -> None:
+    """W1764: a shard declaring K children starts fewer on a busy host and never more than K.
+
+    The idle host is the control: free cores above K leave K alone. A host loaded past its cores
+    still gets one child, so a shard slows under load and is never stopped.
+    """
+    ceiling = str(THREE_JOBS)
+    assert mutate_runner.pool_size(ceiling, _CPUS, 1, 0.0) == THREE_JOBS
+    assert mutate_runner.pool_size(ceiling, _CPUS, 1, _CPUS - 1.0) == 1
+    assert mutate_runner.pool_size(ceiling, _CPUS, 1, _CPUS * _SIX) == 1
+    assert mutate_runner.free_cores(_CPUS, _CPUS - THREE_JOBS) == THREE_JOBS
+    assert mutate_runner.pool_size(ceiling, _CPUS, 1, _CPUS - THREE_JOBS + 1.0) == THREE_JOBS - 1
+
+
+def test_the_cpu_line_states_the_idle_host_wall_time_from_cpu_and_children() -> None:
+    """W1769: 120 CPU seconds over 4 children is a 30 s shard on an idle host, whatever the load."""
+    line = mutate_runner.cpu_line(120.0, 4)
+    assert line == "shard cpu=120.0s children=4 idle_wall=30.0s\n"
+    assert "children=1 idle_wall=5.0s" in mutate_runner.cpu_line(5.0, 0)
+
+
+def test_an_unreadable_load_reads_as_an_idle_host(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The fallback is today's behaviour: the declared count, not a throttle."""
+
+    def refuse(_self: pathlib.Path, *, encoding: str) -> str:
+        raise OSError(encoding)
+
+    monkeypatch.setattr(pathlib.Path, "read_text", refuse)
+    assert not mutate_runner.load_one()
 
 
 def test_plan_mode_prints_the_grid_size_and_runs_no_suite(
