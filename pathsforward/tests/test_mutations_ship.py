@@ -124,3 +124,30 @@ def test_a_send_that_cannot_start_never_fails_the_edit(
     assert cli.main(["--state", str(queue), "--update", "W1", "--status", "working"]) == cli.EXIT_OK
     saved = cast("dict[str, list[dict[str, object]]]", json.loads(queue.read_text("utf-8")))
     assert saved["waypoints"][0]["status"] == "working"
+
+
+def test_an_intervention_ships_a_card_less_event_and_changes_no_card(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The station is fleet:intervention under the repo, the kind is the field, the note the new."""
+    sent = _record(monkeypatch)
+    queue = _queue(tmp_path, _card("W1", "ready"))
+    before = queue.read_text("utf-8")
+    argv = ["--state", str(queue), "--intervention", "atomize", "split W1 in two"]
+    assert cli.main(argv) == cli.EXIT_OK
+    [row] = _lines(sent)
+    assert row["station"] == f"{tmp_path.name}:fleet:intervention"
+    assert (row["field"], row["new"]) == ("atomize", "split W1 in two")
+    assert row["via"] == "--intervention"
+    assert queue.read_text("utf-8") == before
+
+
+def test_an_intervention_kind_outside_the_fixed_set_is_refused_and_sends_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The kind becomes a metric label, so a free-text one would grow the series without bound."""
+    sent = _record(monkeypatch)
+    queue = _queue(tmp_path, _card("W1", "ready"))
+    argv = ["--state", str(queue), "--intervention", "whatever I like", "note"]
+    assert cli.main(argv) == cli.EXIT_REFUSED
+    assert not sent

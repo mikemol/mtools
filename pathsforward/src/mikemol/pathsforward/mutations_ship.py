@@ -93,6 +93,30 @@ def meta_of(
     )
 
 
+STATION = "fleet:intervention"
+KINDS = ("atomize", "stack", "shard", "repin", "other")
+
+
+def ship_intervention(
+    path: Path, said: tuple[str, str], state: State, run: tuple[str, datetime]
+) -> bool:
+    """Send a card-less intervention event: something done to the queue that is no card's field.
+
+    ⚑ THE KIND IS ONE OF A FIXED SET (`KINDS`), because it becomes the `field` label of the metric
+    and a free-text label would grow without bound; the note is free text and rides the log record
+    only. The station is `fleet:intervention`, qualified by the repo as every station is (W1739,
+    asked by nemik-84 for nemik:W743), and the event carries the same context as any mutation's.
+
+    Returns:
+        whether the event was sent; False with no binary or store, or a child that did not start.
+
+    """
+    kind, note = said
+    mode, now = run
+    meta = meta_of(mode, now, os.environ, held=lock.current(state) is not None)
+    return mutations_emit.emit(path, [mutations.Event(STATION, kind, "", note)], meta)
+
+
 def ship(path: Path, before: mutations.Snapshot, state: State, run: tuple[str, datetime]) -> bool:
     """Diff the saved state against the snapshot taken before the edit and send the events.
 

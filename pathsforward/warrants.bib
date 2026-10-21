@@ -6854,3 +6854,18 @@
   claim  = {W1790 (nemik:W770): `actor=operator` follows a verified lift, and no other status line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_lift_cli.py -k test_a_lift_ledgers_its_status_change_as_the_operators_and_a_plain_edit_does_not},
 }
+
+@misc{pathsforward-mutations-ship-intervention-ships-a-card-less-event-and-changes-no-card,
+  section = {mutations_ship},
+  title  = {The station is fleet:intervention under the repo, the kind is the field, the note the new},
+  claim  = {The station is fleet:intervention under the repo, the kind is the field, the note the
+            new.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_intervention_ships_a_card_less_event_and_changes_no_card},
+}
+
+@misc{pathsforward-mutations-ship-intervention-kind-outside-the-fixed-set-is-refused-and-sends-nothing,
+  section = {mutations_ship},
+  title  = {The kind becomes a metric label, so a free-text one would grow the series without bound},
+  claim  = {The kind becomes a metric label, so a free-text one would grow the series without bound.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_intervention_kind_outside_the_fixed_set_is_refused_and_sends_nothing},
+}

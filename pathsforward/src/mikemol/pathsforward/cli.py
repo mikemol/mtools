@@ -99,7 +99,9 @@ from mikemol.pathsforward.model import (
     text,
 )
 from mikemol.pathsforward.mutations import snapshot as field_snapshot
+from mikemol.pathsforward.mutations_ship import KINDS as INTERVENTION_KINDS
 from mikemol.pathsforward.mutations_ship import ship as ship_mutation
+from mikemol.pathsforward.mutations_ship import ship_intervention
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 from mikemol.pathsforward.pruned import edges_of, ledger_line, removed
@@ -120,6 +122,8 @@ TRANSITION_LINES = transition_lines
 STATUS_SNAPSHOT = status_snapshot
 FIELD_SNAPSHOT = field_snapshot
 SHIP_MUTATION = ship_mutation
+SHIP_INTERVENTION = ship_intervention
+INTERVENTIONS = INTERVENTION_KINDS
 REFUSE_LANDED = refuse_landed
 BLOCKERS_SEEN = _BLOCKERS_SEEN
 BLOCKER_NOTICE = blocker_notice
@@ -497,6 +501,7 @@ _VALUED = (
     "commit_message",
     "embargo",
     "lift_embargo",
+    "intervention",
     "reject_advice",
     "outcomes_set",
     "certify",
@@ -1093,6 +1098,15 @@ def _parser() -> argparse.ArgumentParser:
             (
                 "W1589: close the tick and open the next in one step, always allowed: the "
                 "--tick-close line without the refusal or the unlock, HOLDER keeping the lock"
+            ),
+        ),
+        (
+            "--intervention",
+            ("KIND", "NOTE"),
+            (
+                "W1739: send a card-less intervention event (station fleet:intervention), KIND "
+                "one of atomize, stack, shard, repin, other, with the writer's own session, actor "
+                "and clock; changes no card"
             ),
         ),
     ):
@@ -2328,6 +2342,24 @@ def _gate_note(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _intervention(ctx: Ctx) -> int:
+    """Send a card-less intervention event, changing no card (W1739).
+
+    Returns:
+        EXIT_OK; EXIT_REFUSED for a kind outside the fixed set, which would otherwise become an
+        unbounded metric label.
+
+    """
+    kind, note = ctx.many("intervention") or ("", "")
+    if kind not in INTERVENTIONS:
+        _warn(f"--intervention KIND is one of {', '.join(INTERVENTIONS)}, not {kind!r}")
+        return EXIT_REFUSED
+    state = store.load(ctx.path)
+    sent = SHIP_INTERVENTION(ctx.path, (kind, note), state, (mode_of(ctx.opts), ctx.now))
+    _say(f"intervention {kind} {'sent' if sent else 'not sent (no binary or store)'}")
+    return EXIT_OK
+
+
 def _embargo(ctx: Ctx) -> int:
     """Record one embargoed path (W511), and ledger it.
 
@@ -2971,6 +3003,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "drop": _drop,
     "embargo": _embargo,
     "lift_embargo": _lift_embargo,
+    "intervention": _intervention,
     "reject_advice": _reject_advice,
     "outcomes_set": _outcomes_set,
     "outcomes_clear": _outcomes_clear,

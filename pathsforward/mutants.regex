@@ -257,3 +257,5 @@ src/mikemol/pathsforward/mutations_ship.py|held-lock-not-an-agent|    return "ag
 src/mikemol/pathsforward/mutations_ship.py|via-not-the-writer-flag|        via=f"--\{mode\.replace\('_', '-'\)\}",|        via=mode,|def=meta_of
 src/mikemol/pathsforward/mutations_ship.py|mutation-id-not-shared-by-the-command|        mutation=f"\{at_ms\}-\{os\.getpid\(\)\}",|        mutation=str(os.urandom(4)),|def=meta_of
 src/mikemol/pathsforward/cli.py|saved-edit-ships-nothing|            SHIP_MUTATION\(ctx\.path, fields, state, \(mode_of\(ctx\.opts\), ctx\.now\)\)|            pass|def=_mutate
+src/mikemol/pathsforward/cli.py|unknown-kind-sent|    if kind not in INTERVENTIONS:|    if False:|def=_intervention
+src/mikemol/pathsforward/mutations_ship.py|kind-and-note-swapped|mutations\.Event\(STATION, kind, "", note\)|mutations.Event(STATION, note, "", kind)|def=ship_intervention
