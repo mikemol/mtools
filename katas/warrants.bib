@@ -196,13 +196,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_an_inbox_letter_alone_is_not_a_pending_queue},
 }
 
-@misc{katas-fleet-index-lock-means-a-commit-is-in-flight,
-  section = {fleet},
-  title  = {Some commit, from any session, holds the index},
-  claim  = {Some commit, from any session, holds the index.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_an_index_lock_means_a_commit_is_in_flight},
-}
-
 @misc{katas-fleet-status-row-names-the-repo-its-pending-count-and-head,
   section = {fleet},
   title  = {The row carries the name, `pending=` and the HEAD subject},
@@ -925,4 +918,61 @@
   title  = {`--reason` is passed to the gate and recorded with the note when the gate lets it close},
   claim  = {`--reason` is passed to the gate and recorded with the note when the gate lets it close.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_tick_end_with_a_named_block_closes_and_the_note_carries_it},
+}
+
+@misc{katas-fleet-bare-index-lock-that-nothing-accounts-for-is-not-a-commit-in-flight,
+  section = {fleet},
+  title  = {A lock left by a killed git, with no live commit and no git process, reads as idle},
+  claim  = {A lock left by a killed git, with no live commit and no git process, reads as idle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_bare_index_lock_that_nothing_accounts_for_is_not_a_commit_in_flight},
+}
+
+@misc{katas-fleet-live-commit-in-the-repos-own-map-accounts-for-the-lock,
+  section = {fleet},
+  title  = {The lock plus an in-flight row whose pid and start time are a running process: in flight},
+  claim  = {The lock plus an in-flight row whose pid and start time are a running process: in
+            flight.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_live_commit_in_the_repos_own_map_accounts_for_the_lock},
+}
+
+@misc{katas-fleet-row-whose-start-time-is-not-the-process-is-a-recycled-pid-and-accounts-for-nothing,
+  section = {fleet},
+  title  = {A pid that exists but started at another time is not the commit: the lock is stale},
+  claim  = {A pid that exists but started at another time is not the commit: the lock is stale.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_a_row_whose_start_time_is_not_the_process_is_a_recycled_pid_and_accounts_for_nothing},
+}
+
+@misc{katas-fleet-no-lock-is-not-in-flight-whatever-the-map-says,
+  section = {fleet},
+  title  = {The map is consulted only for a lock that exists},
+  claim  = {The map is consulted only for a lock that exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_no_lock_is_not_in_flight_whatever_the_map_says},
+}
+
+@misc{katas-liveness-lock-git-process-working-inside-the-repo-accounts-for-the-lock,
+  section = {liveness},
+  title  = {A process named git whose working directory is under the repo makes the lock live},
+  claim  = {A process named git whose working directory is under the repo makes the lock live.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness_lock.py -k test_a_git_process_working_inside_the_repo_accounts_for_the_lock},
+}
+
+@misc{katas-liveness-lock-process-that-is-not-git-does-not,
+  section = {liveness},
+  title  = {Only git counts: a shell in the repo holds nothing},
+  claim  = {Only git counts: a shell in the repo holds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness_lock.py -k test_a_process_that_is_not_git_does_not},
+}
+
+@misc{katas-liveness-lock-git-process-in-another-directory-does-not,
+  section = {liveness},
+  title  = {A git working elsewhere is not holding this repo's index},
+  claim  = {A git working elsewhere is not holding this repo's index.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness_lock.py -k test_a_git_process_in_another_directory_does_not},
+}
+
+@misc{katas-liveness-lock-with-no-lock-nothing-is-live,
+  section = {liveness},
+  title  = {The process tree is not even read when there is no lock to account for},
+  claim  = {The process tree is not even read when there is no lock to account for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness_lock.py -k test_with_no_lock_nothing_is_live},
 }

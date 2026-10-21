@@ -95,11 +95,14 @@ def queue_pending(fleet: Fleet, repo: str) -> bool:
 def in_flight(fleet: Fleet, repo: str) -> bool:
     """Say whether some commit holds the repo's index right now, from any session.
 
+    ⚑ A LOCK LEFT BY A KILLED GIT IS NOT A COMMIT (W1763): see `liveness.lock_is_live`.
+
     Returns:
-        True when `.git/index.lock` exists.
+        True when `.git/index.lock` exists and a live commit or a git process in the repo accounts
+        for it.
 
     """
-    return (fleet.root / repo / ".git" / "index.lock").exists()
+    return liveness.lock_is_live(fleet.root / repo / ".git")
 
 
 def log_of(fleet: Fleet, repo: str, suffix: str = "") -> Path:

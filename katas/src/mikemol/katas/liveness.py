@@ -112,6 +112,82 @@ def is_red(queue: dict[str, object]) -> bool:
     return False
 
 
+PROC = Path("/proc")
+"""Where a process is read from; a test points it at a made-up tree."""
+
+_START_INDEX = 19
+"""Process start time is field 22 of `/proc/<pid>/stat`; the text after the command starts at 3."""
+
+
+def _start_of(proc: Path, pid: int) -> str | None:
+    # The pid's start time in clock ticks, or None when it is gone or unreadable.
+    try:
+        tail = (proc / str(pid) / "stat").read_text(encoding="utf-8").rsplit(")", 1)[1]
+    except (OSError, IndexError):
+        return None
+    fields = tail.split()
+    return fields[_START_INDEX] if len(fields) > _START_INDEX else None
+
+
+def _inflight_commit(git_dir: Path, proc: Path) -> bool:
+    # A live `mikemol-commit` in flight in the repo's own commit map: its pid exists and is the
+    # same process (the start time matches), so a recycled pid is not a commit.
+    try:
+        text = (git_dir / "mtools" / "commit.counts").read_text(encoding="utf-8")
+        entries = cast("object", json.loads(text))
+    except (OSError, ValueError):
+        return False
+    if not isinstance(entries, dict):
+        return False
+    for each in cast("dict[str, object]", entries).values():
+        row = cast("dict[str, object]", each) if isinstance(each, dict) else {}
+        pid = row.get("pid")
+        if (
+            row.get("state") == "inflight"
+            and isinstance(pid, int)
+            and _start_of(proc, pid) == str(row.get("start"))
+        ):
+            return True
+    return False
+
+
+def _git_in(repo: Path, proc: Path) -> bool:
+    # Any git process whose working directory is inside the repo.
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            named = (entry / "comm").read_text(encoding="utf-8").strip() == "git"
+            inside = (entry / "cwd").resolve().is_relative_to(repo.resolve())
+        except OSError:
+            continue
+        if named and inside:
+            return True
+    return False
+
+
+def lock_is_live(git_dir: Path, proc: Path = PROC) -> bool:
+    """Say whether a repo's `index.lock` is held by something running now (W1763).
+
+    ⚑ A BARE LOCK FILE IS NOT A COMMIT IN FLIGHT: git removes it on a clean exit, but a git killed
+    mid-write leaves it behind, and `status` read that as IN-FLIGHT until someone deleted it
+    (github-8f, 2026-10-20: substrate showed IN-FLIGHT with no session and no commit running). A
+    lock counts when the repo's own commit map holds a live in-flight `mikemol-commit` (its pid
+    and start time) or when a git process is running inside the repo.
+
+    ⚑ MEASURED 2026-10-21 on a throwaway repo: a committing git holds NO open file descriptor on
+    `index.lock` while its hook runs, so the holder cannot be found by scanning descriptors; this
+    asks the two things that can be known.
+
+    Returns:
+        False when there is no lock or nothing live accounts for it; True otherwise.
+
+    """
+    if not (git_dir / "index.lock").exists():
+        return False
+    return _inflight_commit(git_dir, proc) or _git_in(git_dir.parent, proc)
+
+
 def held(root: Path, repos: Iterable[str], now: datetime) -> frozenset[str]:
     """Name the repos a flush must leave alone, live or red.
 

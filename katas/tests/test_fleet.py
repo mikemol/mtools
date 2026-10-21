@@ -9,15 +9,14 @@ prints its argv, so what flush asked for is observed rather than inferred.
 
 from __future__ import annotations
 
+import json
+import os
 import time
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from mikemol.procrun.proc import capture
 
 from mikemol.katas import commits, fleet
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 _DEADLINE_S = 60.0
 _POLL_S = 0.1
@@ -25,6 +24,22 @@ _EXECUTABLE = 0o755
 _FIRST = "first subject"
 _QUEUE_FILES = (".claude/paths-forward.json", ".claude/paths-forward.ledger")
 _TWO_PENDING = 2
+_START_INDEX = 19
+
+
+def _hold_index(repo: Path) -> None:
+    """Hold the repo's index as a live `mikemol-commit` does: the lock, and an in-flight map row.
+
+    The row names THIS process with its real start time, so it is alive and is that process.
+    """
+    git_dir = repo / ".git"
+    (git_dir / "index.lock").touch()
+    stat = Path(f"/proc/{os.getpid()}/stat").read_text(encoding="utf-8")
+    start = stat.rsplit(")", 1)[1].split()[_START_INDEX]
+    row: dict[str, object] = {"state": "inflight", "pid": os.getpid(), "start": start}
+    rows: dict[str, dict[str, object]] = {"1": row}
+    (git_dir / "mtools").mkdir(exist_ok=True)
+    (git_dir / "mtools" / "commit.counts").write_text(json.dumps(rows), encoding="utf-8")
 
 
 def _git(path: Path, *args: str) -> None:
@@ -118,13 +133,45 @@ def test_an_inbox_letter_alone_is_not_a_pending_queue(tmp_path: Path) -> None:
     assert not fleet.queue_pending(host, "alpha")
 
 
-def test_an_index_lock_means_a_commit_is_in_flight(tmp_path: Path) -> None:
-    """Some commit, from any session, holds the index."""
+def test_a_bare_index_lock_that_nothing_accounts_for_is_not_a_commit_in_flight(
+    tmp_path: Path,
+) -> None:
+    """A lock left by a killed git, with no live commit and no git process, reads as idle."""
     host = _fleet(tmp_path)
     repo = _repo(host.root, "alpha")
     assert not fleet.in_flight(host, "alpha")
     (repo / ".git" / "index.lock").touch()
+    assert not fleet.in_flight(host, "alpha")
+
+
+def test_a_live_commit_in_the_repos_own_map_accounts_for_the_lock(tmp_path: Path) -> None:
+    """The lock plus an in-flight row whose pid and start time are a running process: in flight."""
+    host = _fleet(tmp_path)
+    repo = _repo(host.root, "alpha")
+    _hold_index(repo)
     assert fleet.in_flight(host, "alpha")
+
+
+def test_a_row_whose_start_time_is_not_the_process_is_a_recycled_pid_and_accounts_for_nothing(
+    tmp_path: Path,
+) -> None:
+    """A pid that exists but started at another time is not the commit: the lock is stale."""
+    host = _fleet(tmp_path)
+    repo = _repo(host.root, "alpha")
+    _hold_index(repo)
+    counts = repo / ".git" / "mtools" / "commit.counts"
+    said = counts.read_text(encoding="utf-8").replace('"start": "', '"start": "9')
+    counts.write_text(said, encoding="utf-8")
+    assert not fleet.in_flight(host, "alpha")
+
+
+def test_no_lock_is_not_in_flight_whatever_the_map_says(tmp_path: Path) -> None:
+    """The map is consulted only for a lock that exists."""
+    host = _fleet(tmp_path)
+    repo = _repo(host.root, "alpha")
+    _hold_index(repo)
+    (repo / ".git" / "index.lock").unlink()
+    assert not fleet.in_flight(host, "alpha")
 
 
 def test_a_status_row_names_the_repo_its_pending_count_and_head(tmp_path: Path) -> None:
@@ -142,7 +189,7 @@ def test_a_status_row_shows_in_flight_and_a_probe(tmp_path: Path) -> None:
     """A held index shows IN-FLIGHT, and a probe log shows its state beside it."""
     host = _fleet(tmp_path)
     repo = _repo(host.root, "alpha")
-    (repo / ".git" / "index.lock").touch()
+    _hold_index(repo)
     host.logs.mkdir()
     fleet.log_of(host, "alpha", ".probe").write_text("out\n\nrc=1\n", encoding="utf-8")
     row = fleet.status_row(host, "alpha")
@@ -181,7 +228,7 @@ def test_a_repo_with_a_commit_in_flight_is_not_a_target(tmp_path: Path) -> None:
     host = _fleet(tmp_path)
     repo = _repo(host.root, "busy")
     _touch_queue(repo)
-    (repo / ".git" / "index.lock").touch()
+    _hold_index(repo)
     assert not fleet.flush_targets(host)
 
 
