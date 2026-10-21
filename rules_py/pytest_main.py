@@ -43,6 +43,7 @@ import os
 import resource
 import signal
 import sys
+import time
 from typing import TYPE_CHECKING
 
 import pytest
@@ -51,6 +52,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
     from types import FrameType
 
+STARTED = time.monotonic()
 CEILING_S = 15.0
 FRACTION = 4
 BUDGET_FACTOR = 2
@@ -172,6 +174,24 @@ def xml_args(environ: Mapping[str, str]) -> list[str]:
     return [f"--junitxml={path}"] if path else []
 
 
+def cpu_line(wall_s: float) -> str:
+    """Say how much CPU this run used, in the line the gate's per-target emit already reads.
+
+    ⚑ THE MUTANTS RUNNER PRINTS THIS SHAPE (`shard cpu=S children=K idle_wall=W`, W1769) AND
+    `mikemol-gate-targets` PARSES IT, so a py_test that prints it too gets a CPU series of its own
+    (W1798): the per-target figure a CPU budget is derived from. Wall seconds are a measurement
+    here, not a bound.
+
+    Returns:
+        the line; CPU is this process plus its waited-for children.
+
+    """
+    own = resource.getrusage(resource.RUSAGE_SELF)
+    kids = resource.getrusage(resource.RUSAGE_CHILDREN)
+    cpu = own.ru_utime + own.ru_stime + kids.ru_utime + kids.ru_stime
+    return f"shard cpu={cpu:.1f}s children=1 idle_wall={wall_s:.1f}s"
+
+
 def main(argv: list[str], ceiling: float | None = None, budget: int | None = None) -> int:
     """Run pytest over `argv`, failing a green run that held a test over the CPU ceiling.
 
@@ -187,6 +207,8 @@ def main(argv: list[str], ceiling: float | None = None, budget: int | None = Non
     if budget is not None:
         arm(budget, plugin)
     code = int(pytest.main([*argv, *xml_args(os.environ)], plugins=[plugin]))
+    if budget is not None:
+        sys.stdout.write(cpu_line(time.monotonic() - STARTED) + "\n")
     if plugin.slow and code == 0:
         sys.stderr.write(f"pytest_main: tests over the {limit:g}s CPU ceiling (W935):\n")
         sys.stderr.writelines(f"  {line}\n" for line in plugin.slow)

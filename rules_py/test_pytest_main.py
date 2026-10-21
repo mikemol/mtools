@@ -141,6 +141,15 @@ def test_a_budget_the_target_declares_wins_over_the_timeout_derived_one() -> Non
     assert pytest_main.budget_from(env) == declared
 
 
+def test_the_cpu_line_has_the_shape_the_gates_per_target_emit_reads() -> None:
+    """`shard cpu=S children=1 idle_wall=W`, so a py_test gets a CPU series of its own."""
+    head, _, tail = pytest_main.cpu_line(2.34).partition(" children=")
+    assert head.startswith("shard cpu=")
+    assert head.endswith("s")
+    assert tail == "1 idle_wall=2.3s"
+    assert float(head.removeprefix("shard cpu=").removesuffix("s")) >= 0.0
+
+
 def test_a_declared_budget_that_is_not_a_positive_whole_number_is_ignored() -> None:
     """Zero, a word or a fraction falls back to the timeout's budget, never to nothing armed."""
     timeout = {pytest_main.TIMEOUT_ENV: "60"}

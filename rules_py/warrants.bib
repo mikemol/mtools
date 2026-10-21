@@ -340,3 +340,10 @@
   claim  = {Zero, a word or a fraction falls back to the timeout's budget, never to nothing armed.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_declared_budget_that_is_not_a_positive_whole_number_is_ignored},
 }
+
+@misc{root-pytest-main-cpu-line-has-the-shape-the-gates-per-target-emit-reads,
+  section = {pytest_main},
+  title  = {`shard cpu=S children=1 idle_wall=W`, so a py_test gets a CPU series of its own},
+  claim  = {`shard cpu=S children=1 idle_wall=W`, so a py_test gets a CPU series of its own.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_cpu_line_has_the_shape_the_gates_per_target_emit_reads},
+}
