@@ -395,3 +395,52 @@
   claim  = {Blank lines are skipped; nothing to send is a success with no POST.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_an_empty_batch_sends_nothing_and_succeeds},
 }
+
+@misc{otlp-tracequery-search-url-carries-service-window-limit-and-the-name-when-given,
+  section = {tracequery},
+  title  = {An empty name leaves `operation` out, so every span of the service matches},
+  claim  = {An empty name leaves `operation` out, so every span of the service matches.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_the_search_url_carries_service_window_limit_and_the_name_when_given},
+}
+
+@misc{otlp-tracequery-each-span-is-one-flat-json-line-with-its-attributes,
+  section = {tracequery},
+  title  = {A found trace prints its spans' ids, name, times and tags; a malformed tag is skipped},
+  claim  = {A found trace prints its spans' ids, name, times and tags; a malformed tag is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_each_span_is_one_flat_json_line_with_its_attributes},
+}
+
+@misc{otlp-tracequery-store-that-answered-with-no-trace-is-exit-zero-and-no-lines,
+  section = {tracequery},
+  title  = {Nothing matched is an answer, not an outage},
+  claim  = {Nothing matched is an answer, not an outage.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_a_store_that_answered_with_no_trace_is_exit_zero_and_no_lines},
+}
+
+@misc{otlp-tracequery-store-that-did-not-answer-is-exit-three-never-empty,
+  section = {tracequery},
+  title  = {A refused connection, a non-JSON reply and a body with no `data` are all exit 3},
+  claim  = {A refused connection, a non-JSON reply and a body with no `data` are all exit 3.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_a_store_that_did_not_answer_is_exit_three_never_empty},
+}
+
+@misc{otlp-tracequery-search-the-store-rejects-is-exit-four-naming-the-error,
+  section = {tracequery},
+  title  = {A malformed parameter reads differently from a dead store},
+  claim  = {A malformed parameter reads differently from a dead store.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_a_search_the_store_rejects_is_exit_four_naming_the_error},
+}
+
+@misc{otlp-tracequery-verb-needs-an-endpoint-and-asks-no-network-without-one,
+  section = {tracequery},
+  title  = {No `victoriatraces-http` is exit 3 and says which name is missing},
+  claim  = {No `victoriatraces-http` is exit 3 and says which name is missing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_the_verb_needs_an_endpoint_and_asks_no_network_without_one},
+}
+
+@misc{otlp-tracequery-verb-prints-what-the-search-found-and-defaults-to-the-last-day,
+  section = {tracequery},
+  title  = {The window defaults to a day ending at `--end-us`; the lines reach stdout},
+  claim  = {The window defaults to a day ending at `--end-us`; the lines reach stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_the_verb_prints_what_the_search_found_and_defaults_to_the_last_day},
+}

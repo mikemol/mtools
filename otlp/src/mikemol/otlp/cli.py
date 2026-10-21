@@ -42,6 +42,7 @@ from mikemol.otlp import (
     sender,
     staleness,
     tracecmd,
+    tracequery,
 )
 
 URL_ENV = "MIKEMOL_OTLP_LOGS_URL"
@@ -50,7 +51,21 @@ NONCE_FIELD = "otlp_log_nonce"
 EXIT_SENT = 0
 EXIT_FAILED = 1
 EXIT_USAGE = 2
+_NS_PER_US = 1000
+_DAY_US = 86_400_000_000
 _LEVELS = ("ERROR", "INFO", "WARN")
+
+
+def _add_query_traces(verbs: "argparse._SubParsersAction[argparse.ArgumentParser]") -> None:
+    # The `query-traces` verb's options, apart from `_parser` to keep it under the statement
+    # limit.
+    traces = verbs.add_parser("query-traces", help="search spans by service, name and time")
+    traces.add_argument("--url", help=f"the traces base URL (default: ${endpoints.ENV} name)")
+    traces.add_argument("--service", required=True, help="service.name")
+    traces.add_argument("--name", default="", help="the span name; empty matches every span")
+    traces.add_argument("--start-us", dest="start_us", type=int, default=0, help="epoch us")
+    traces.add_argument("--end-us", dest="end_us", type=int, default=0, help="epoch us")
+    traces.add_argument("--limit", type=int, default=100, help="most traces to return")
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -98,6 +113,7 @@ def _parser() -> argparse.ArgumentParser:
     query.add_argument("--start", help="a range query: its start (RFC 3339 or epoch)")
     query.add_argument("--end", help="a range query: its end")
     query.add_argument("--step", help="a range query: its step, such as 30s")
+    _add_query_traces(verbs)
     return parser
 
 
@@ -227,11 +243,30 @@ def _query_metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     return code
 
 
+def _query_traces(opts: dict[str, object], environ: Mapping[str, str]) -> int:
+    # The `query-traces` verb: spans of a service in a window, default the last day (W1799).
+    base = tracequery.base_for(_text(opts, "url"), environ)
+    if base is None:
+        sys.stderr.write(
+            f"mikemol-otlp: need --url or ${endpoints.ENV} naming {tracequery.ENDPOINT}\n"
+        )
+        return tracequery.EXIT_UNREACHABLE
+    end = int(_text(opts, "end_us")) or time.time_ns() // _NS_PER_US
+    start = int(_text(opts, "start_us")) or end - _DAY_US
+    query = (_text(opts, "service"), _text(opts, "name"), int(_text(opts, "limit")))
+    code, lines, said = tracequery.run(base, query, (start, end))
+    if said:
+        sys.stderr.write(f"mikemol-otlp: {said}\n")
+    sys.stdout.writelines(f"{line}\n" for line in lines)
+    return code
+
+
 _VERBS: dict[str, Callable[[dict[str, object], Mapping[str, str]], int]] = {
     "trace": _trace,
     "metric": _metric,
     "metrics": _metrics,
     "query-metrics": _query_metrics,
+    "query-traces": _query_traces,
 }
 
 

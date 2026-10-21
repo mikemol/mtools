@@ -12,3 +12,4 @@ tracecmd	Trace Command: One Span Is Posted to the Named Trace Store and Read Bac
 metriccmd	Metric Command: One Sample Is Posted to the Named Metrics Store as the Kind Asked, and Every Way It Can Fail Has Its Own Exit
 staleness	A Venv Whose Copy of mikemol.endpoints Is Not the Checkout's Says So on Stderr
 query_metrics	The Metrics Reader: Series Print as JSON Lines, a Store That Answered Empty Is Exit Zero, an Unreachable Store Is Exit Three and Never an Empty Result, a Rejected Query Is Exit Four Naming the Error, and a Partial Range Is a Usage Error
+tracequery	The Trace Searcher: Spans Print as Flat JSON Lines, a Store That Answered Empty Is Exit Zero, an Unreachable Store Is Exit Three and Never an Empty Result, a Rejected Search Is Exit Four Naming the Error, and a Missing Endpoint Asks No Network

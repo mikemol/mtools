@@ -9,3 +9,6 @@ src/mikemol/otlp/staleness.py|missing-install-compared|    if source is None or 
 src/mikemol/otlp/query_metrics.py|outage-read-as-an-empty-answer|        return EXIT_UNREACHABLE, \[\], f"the store did not answer: \{unreachable\}"|        return EXIT_OK, [], ""|def=run
 src/mikemol/otlp/query_metrics.py|rejected-query-not-recognised|    if body is not None and body\.get\("status"\) == "error":|    if False:|def=run
 src/mikemol/otlp/query_metrics.py|range-step-taken-from-the-end|    args = urlencode\(\{"query": query, "start": start, "end": end, "step": step\}\)|    args = urlencode({"query": query, "start": start, "end": end, "step": end})|def=query_url
+src/mikemol/otlp/tracequery.py|search-outage-read-as-an-empty-answer|        return EXIT_UNREACHABLE, \[\], f"the store did not answer: \{unreachable\}"|        return EXIT_OK, [], ""|def=run
+src/mikemol/otlp/tracequery.py|rejected-search-not-recognised|    if refusal:|    if False:|def=run
+src/mikemol/otlp/tracequery.py|span-name-dropped-from-the-search|    if name:|    if False:|def=search_url
