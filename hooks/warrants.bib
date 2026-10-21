@@ -14145,3 +14145,38 @@
   claim  = {No status is no claim either way, and a cached result is not this run's.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_result_with_no_status_gives_no_failed_row_and_a_replay_gives_none},
 }
+
+@misc{hooks-trainalert-red-streak-expression-names-the-repo-the-count-and-the-window,
+  section = {trainalert},
+  title  = {N reds and no green in W, as the series' own labels spell them},
+  claim  = {N reds and no green in W, as the series' own labels spell them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_the_red_streak_expression_names_the_repo_the_count_and_the_window},
+}
+
+@misc{hooks-trainalert-landing-gap-expression-reads-the-newest-committed-sample,
+  section = {trainalert},
+  title  = {The newest COMMITTED sample's time against a limit in seconds},
+  claim  = {The newest COMMITTED sample's time against a limit in seconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_the_landing_gap_expression_reads_the_newest_committed_sample},
+}
+
+@misc{hooks-trainalert-ten-reds-in-a-window-fire-and-one-green-among-them-does-not,
+  section = {trainalert},
+  title  = {The 6 h streak of 2026-10-19 pages; a round that went green in between does not},
+  claim  = {The 6 h streak of 2026-10-19 pages; a round that went green in between does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_ten_reds_in_a_window_fire_and_one_green_among_them_does_not},
+}
+
+@misc{hooks-trainalert-too-few-reds-or-reds-outside-the-window-do-not-fire,
+  section = {trainalert},
+  title  = {Three reds is under four, and a red older than the window is not in it},
+  claim  = {Three reds is under four, and a red older than the window is not in it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_too_few_reds_or_reds_outside_the_window_do_not_fire},
+}
+
+@misc{hooks-trainalert-landing-gap-past-the-limit-fires-and-no-landing-at-all-does-not,
+  section = {trainalert},
+  title  = {The newest landing decides; with none the freshness alert's case, not this one},
+  claim  = {The newest landing decides; with none the freshness alert's case, not this one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_a_landing_gap_past_the_limit_fires_and_no_landing_at_all_does_not},
+}
