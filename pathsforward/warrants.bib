@@ -6890,3 +6890,18 @@
   claim  = {The control: no landed blocker, no UNBLOCKED line, and the open still completes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_freed_named.py -k test_a_queue_that_frees_nothing_opens_as_before},
 }
+
+@misc{pathsforward-tick-open-reconcile-plan-for-a-working-card-whose-commit-landed-is-printed-at-open,
+  section = {cli},
+  title  = {A stand-in reconciler returns its plan line, and the open prints it before it closes},
+  claim  = {A stand-in reconciler returns its plan line, and the open prints it before it closes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_open_reconcile.py -k test_the_plan_for_a_working_card_whose_commit_landed_is_printed_at_open},
+}
+
+@misc{pathsforward-tick-open-reconcile-reconciler-that-refuses-is-said-and-the-open-goes-on,
+  section = {cli},
+  title  = {No readable gate map is the reconciler's own refusal; at open it is a line, not a failure},
+  claim  = {No readable gate map is the reconciler's own refusal; at open it is a line, not a
+            failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_open_reconcile.py -k test_a_reconciler_that_refuses_is_said_and_the_open_goes_on},
+}

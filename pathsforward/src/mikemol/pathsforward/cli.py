@@ -1754,6 +1754,15 @@ def _tick_open(ctx: Ctx) -> int:
         _say(said)
     for step in (_bump_blocked, _inbound, _check):
         code = max(code, step(held))
+    # ⚑ THE ACUTE RECONCILER'S PLAN IS PRINTED AT OPEN, DRY (W1640): a working card whose commit has
+    # landed, or whose gate is gone, is said here with what `--reconcile --write` would set, so a
+    # tick does not begin on a card the log already finished. Never written from the open.
+    # A reconciler that cannot read the gate map REFUSES (its own rule, W1639); at open that is said
+    # and the open goes on, because a refusal here must not stop a tick from starting.
+    try:
+        code = max(code, _reconcile(replace(held, opts={**held.opts, "write": False})))
+    except ops.RefusedError as refused:
+        _say(f"reconcile: not run ({refused})")
     for said in tickhooks.run_all(tickhooks.stored(store.load(ctx.path).doc), root):
         _say(said)
     for said in standing.lines(store.load(ctx.path).doc):
