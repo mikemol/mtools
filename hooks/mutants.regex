@@ -583,3 +583,6 @@ src/mikemol/hooks/pycheck_ratchet_write.py|write-despite-a-rise|    if any\(stat
 src/mikemol/hooks/pycheck_ratchet_write.py|init-replaces-an-existing-baseline|    if any\(text is not None for text in existing\):|    if False:|def=initial
 src/mikemol/hooks/pycheck_ratchet_write.py|mypy-file-gets-ruffs-counts|encode\(counts\[1\]\)|encode(counts[0])|def=_save
 src/mikemol/hooks/pycheck_ratchet_write.py|one-missing-baseline-lowers-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=lower
+src/mikemol/hooks/corelimit.py|unlimited-core-read-as-zero|    return value == UNLIMITED or \(value\.isdecimal\(\) and int\(value\) > 0\)|    return value.isdecimal() and int(value) > 0|def=above_zero
+src/mikemol/hooks/corelimit.py|hard-limit-ignored|    if above_zero\(soft\) or above_zero\(hard\):|    if above_zero(soft):|def=report
+src/mikemol/hooks/corelimit.py|missing-line-reads-as-clean|        return EXIT_UNREADABLE, f"core limit of pid \{pid\}: no `Max core file size` line"|        return 0, "clean"|def=report

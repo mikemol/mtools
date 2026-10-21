@@ -169,3 +169,4 @@ pycheck_ratchet_write	The baselines only record progress
 rootdrop	A tool run as root becomes the owner of its path
 bazelstop	A withdrawn gate's bazel client is interrupted
 shardgate	A stack is refused past half of a grid's CPU budget
+corelimit	A core limit above zero is reported

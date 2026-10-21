@@ -492,6 +492,8 @@ venv_from_hub(
         "mikemol-presubmit": "mikemol.hooks.presubmit:main",
         "mikemol-requeue": "mikemol.hooks.requeue:main",
         "mikemol-gate-targets": "mikemol.hooks.gatetargets:main",
+        # W1770: report a process (the gate's bazel server) whose core-file limit is above zero.
+        "mikemol-core-limit": "mikemol.hooks.corelimit:main",
         # W1709: how many lines of a repo's tracked files reach into another checkout.
         "mikemol-siblings": "mikemol.hooks.siblingcensus_cli:main",
         # W1718: each gate phase's median, spread and slope over recent gates.
