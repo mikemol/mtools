@@ -6919,3 +6919,52 @@
   claim  = {Judging nothing is not nothing to judge: W1 and W2 are named, W3 (ready) is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cadence_reconcile.py -k test_a_reconciler_that_cannot_read_the_gate_names_every_working_card_it_left_undecided},
 }
+
+@misc{pathsforward-closeumbrellas-manifest-manifest-file-absent-from-head-keeps-the-card-open,
+  section = {closeumbrellas},
+  title  = {The children are done and the card's own file is not there: kept, naming the file},
+  claim  = {The children are done and the card's own file is not there: kept, naming the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_a_manifest_file_absent_from_head_keeps_the_card_open},
+}
+
+@misc{pathsforward-closeumbrellas-manifest-files-present-but-no-commit-naming-the-card-keeps-it-open,
+  section = {closeumbrellas},
+  title  = {A manifest built by another card's commit is not this card's landing},
+  claim  = {A manifest built by another card's commit is not this card's landing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_files_present_but_no_commit_naming_the_card_keeps_it_open},
+}
+
+@misc{pathsforward-closeumbrellas-manifest-files-present-and-a-commit-naming-the-card-closes-it,
+  section = {closeumbrellas},
+  title  = {The control: every manifest file at HEAD and the card named by a landed commit},
+  claim  = {The control: every manifest file at HEAD and the card named by a landed commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_files_present_and_a_commit_naming_the_card_closes_it},
+}
+
+@misc{pathsforward-closeumbrellas-manifest-unreadable-head-or-log-keeps-a-manifest-card-and-says-it-was-not-checked,
+  section = {closeumbrellas},
+  title  = {No answer is not a yes: with HEAD unreadable the card stays, and the reason says why},
+  claim  = {No answer is not a yes: with HEAD unreadable the card stays, and the reason says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_an_unreadable_head_or_log_keeps_a_manifest_card_and_says_it_was_not_checked},
+}
+
+@misc{pathsforward-closeumbrellas-manifest-card-without-a-manifest-keeps-the-old-rule-whatever-the-evidence-says,
+  section = {closeumbrellas},
+  title  = {Children done and no manifest of its own: closed even with HEAD and the log unreadable},
+  claim  = {Children done and no manifest of its own: closed even with HEAD and the log unreadable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_a_card_without_a_manifest_keeps_the_old_rule_whatever_the_evidence_says},
+}
+
+@misc{pathsforward-closeumbrellas-manifest-directory-that-is-no-repository-reads-as-no-answer-not-an-empty-tree,
+  section = {closeumbrellas},
+  title  = {The real reader gives None for HEAD and the log when git refuses, never an empty set},
+  claim  = {The real reader gives None for HEAD and the log when git refuses, never an empty set.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_a_directory_that_is_no_repository_reads_as_no_answer_not_an_empty_tree},
+}
+
+@misc{pathsforward-closeumbrellas-manifest-without-a-root-a-manifest-card-is-kept-as-unchecked,
+  section = {closeumbrellas},
+  title  = {The plan alone cannot see HEAD, so it never closes a card with its own manifest},
+  claim  = {The plan alone cannot see HEAD, so it never closes a card with its own manifest.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_without_a_root_a_manifest_card_is_kept_as_unchecked},
+}

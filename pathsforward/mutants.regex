@@ -263,5 +263,9 @@ src/mikemol/pathsforward/cli.py|freed-card-named-after-the-blocker-list|    code
 src/mikemol/pathsforward/cli.py|open-writes-the-reconciliation|opts=\{\*\*held\.opts, "write": False\}|opts={**held.opts, "write": True}|def=_tick_open
 src/mikemol/pathsforward/cli.py|roll-writes-the-reconciliation|opts=\{\*\*ctx\.opts, "write": False\}|opts={**ctx.opts, "write": True}|def=_chronic_reconcile
 src/mikemol/pathsforward/cli.py|undecided-cards-not-named|working = \[text\(w, "symbol"\) for w in cards if text\(w, "status"\) == "working"\]|working = []|def=_chronic_reconcile
+src/mikemol/pathsforward/closeumbrellas.py|absent-manifest-file-ignored|    if absent:|    if False:|def=_own_work
+src/mikemol/pathsforward/closeumbrellas.py|landing-commit-not-required|    if text\(card, "symbol"\) not in evidence\.named:|    if False:|def=_own_work
+src/mikemol/pathsforward/closeumbrellas.py|unreadable-head-read-as-empty|    if evidence is None or evidence\.head is None or evidence\.named is None:|    if evidence is None:|def=_own_work
+src/mikemol/pathsforward/closeumbrellas.py|card-without-manifest-checked|    if not manifest:|    if False:|def=_own_work
 src/mikemol/pathsforward/dropto.py|other-blockers-forgotten|        rest = \[entry for entry in waiting if entry != gone\]|        rest = []|def=release
 src/mikemol/pathsforward/dropto.py|freed-card-stays-blocked|            w\["status"\] = "ready"|            pass|def=release

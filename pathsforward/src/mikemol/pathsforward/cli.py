@@ -327,7 +327,8 @@ def _close_umbrellas(ctx: "Ctx") -> int:
     write = bool(ctx.opts.get("write"))
 
     def edit(state: State) -> int:
-        found = close_plan(state)
+        repo = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+        found = close_plan(state, repo)
         verb = "CLOSED" if write else "WOULD CLOSE"
         for sym, kids in found.closed:
             _say(f"{verb} {sym} (all children done: {', '.join(kids)})")

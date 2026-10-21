@@ -94,6 +94,20 @@ def read_commits(root: Path) -> str | None:
     return _run([git, "-C", str(root), "log", "-n500", date, fmt], env)
 
 
+def read_head_files(root: Path) -> frozenset[str] | None:
+    """Name every file HEAD holds, relative to the root (W1717).
+
+    Returns:
+        the paths, or None when git is absent or refused: no answer is not an empty tree.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    listing = _run([git, "-C", str(root), "ls-tree", "-r", "--name-only", "HEAD"])
+    return None if listing is None else frozenset(listing.splitlines())
+
+
 def read_gate(root: Path) -> str | None:
     """Read the live-commit map as JSON from `mikemol-commit --in-gate --json` (W1587).
 
