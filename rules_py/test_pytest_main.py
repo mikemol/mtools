@@ -134,6 +134,21 @@ def test_the_budget_is_the_targets_timeout_in_cpu_seconds_times_the_factor() -> 
     assert pytest_main.budget_from({env: "0"}) is None
 
 
+def test_a_budget_the_target_declares_wins_over_the_timeout_derived_one() -> None:
+    """A declared CPU budget is taken as given, so the wall timeout can be a raised backstop."""
+    declared = 45
+    env = {pytest_main.TIMEOUT_ENV: "900", pytest_main.CPU_ENV: str(declared)}
+    assert pytest_main.budget_from(env) == declared
+
+
+def test_a_declared_budget_that_is_not_a_positive_whole_number_is_ignored() -> None:
+    """Zero, a word or a fraction falls back to the timeout's budget, never to nothing armed."""
+    timeout = {pytest_main.TIMEOUT_ENV: "60"}
+    expected = 60 * pytest_main.BUDGET_FACTOR
+    for declared in ("0", "soon", "1.5", "-3", ""):
+        assert pytest_main.budget_from({**timeout, pytest_main.CPU_ENV: declared}) == expected
+
+
 def _armed_status(tmp_path: Path, body: str) -> int:
     """Run the entry point over one module in a forked child armed with a `_BUDGET_S` CPU budget.
 

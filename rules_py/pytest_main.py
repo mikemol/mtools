@@ -56,6 +56,7 @@ FRACTION = 4
 BUDGET_FACTOR = 2
 GRACE_S = 10
 TIMEOUT_ENV = "TEST_TIMEOUT"
+CPU_ENV = "MIKEMOL_TEST_CPU_S"
 XML_ENV = "XML_OUTPUT_FILE"
 _FAILED = 1
 
@@ -111,12 +112,21 @@ def ceiling_from(environ: Mapping[str, str]) -> float:
 
 
 def budget_from(environ: Mapping[str, str]) -> int | None:
-    """Choose the whole run's CPU budget: the target's timeout, in CPU seconds, times the factor.
+    """Choose the whole run's CPU budget: the target's own, else its timeout times the factor.
+
+    ⚑ THE TARGET'S OWN BUDGET COMES FIRST (W1782, github-8f 2026-10-20, the standing rule: bound by
+    CPU, never by a timer): a target that declares `MIKEMOL_TEST_CPU_S` is ended by the kernel at
+    that many CPU seconds, so its bazel wall timeout can be raised to a backstop that never decides.
+    A target that declares nothing keeps the timeout-derived budget it had.
 
     Returns:
-        whole CPU seconds; None when bazel names no positive timeout (nothing is armed then).
+        whole CPU seconds; None when no budget is declared and bazel names no positive timeout
+        (nothing is armed then).
 
     """
+    declared = environ.get(CPU_ENV, "")
+    if declared.isdecimal() and int(declared) > 0:
+        return int(declared)
     try:
         timeout = float(environ.get(TIMEOUT_ENV, ""))
     except ValueError:

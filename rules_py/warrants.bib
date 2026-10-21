@@ -326,3 +326,17 @@
   claim  = {The control: arming the budget changes nothing for a test that finishes.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_the_armed_entry_point_still_passes_a_fast_module},
 }
+
+@misc{root-pytest-main-budget-the-target-declares-wins-over-the-timeout-derived-one,
+  section = {pytest_main},
+  title  = {A declared CPU budget is taken as given, so the wall timeout can be a raised backstop},
+  claim  = {A declared CPU budget is taken as given, so the wall timeout can be a raised backstop.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_budget_the_target_declares_wins_over_the_timeout_derived_one},
+}
+
+@misc{root-pytest-main-declared-budget-that-is-not-a-positive-whole-number-is-ignored,
+  section = {pytest_main},
+  title  = {Zero, a word or a fraction falls back to the timeout's budget, never to nothing armed},
+  claim  = {Zero, a word or a fraction falls back to the timeout's budget, never to nothing armed.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_pytest_main.py -k test_a_declared_budget_that_is_not_a_positive_whole_number_is_ignored},
+}
