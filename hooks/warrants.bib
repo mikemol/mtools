@@ -14082,3 +14082,52 @@
   claim  = {Usage is exit 2; a pid whose limits cannot be read is exit 7, said on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_corelimit.py -k test_main_refuses_a_bad_command_line_and_names_a_process_that_is_gone},
 }
+
+@misc{hooks-gatehistory-round-is-read-with-its-failed-checks-split-on-the-separator,
+  section = {gatehistory},
+  title  = {Two labels joined by `; ` are two steps, in the order printed},
+  claim  = {Two labels joined by `; ` are two steps, in the order printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_a_round_is_read_with_its_failed_checks_split_on_the_separator},
+}
+
+@misc{hooks-gatehistory-rounds-that-say-nothing-about-steps-are-left-out,
+  section = {gatehistory},
+  title  = {Unbuilt, raced, a red with no label, a green with a label, and junk are not evidence},
+  claim  = {Unbuilt, raced, a red with no label, a green with a label, and junk are not evidence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_rounds_that_say_nothing_about_steps_are_left_out},
+}
+
+@misc{hooks-gatehistory-rounds-are-newest-first-by-start-and-only-the-named-repos,
+  section = {gatehistory},
+  title  = {Round numbers restart each train, so order is the span's own start time},
+  claim  = {Round numbers restart each train, so order is the span's own start time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_rounds_are_newest_first_by_start_and_only_the_named_repos},
+}
+
+@misc{hooks-gatehistory-steps-record-marks-the-rounds-it-failed-in,
+  section = {gatehistory},
+  title  = {A step that failed only in the oldest round reads pass, pass, fail},
+  claim  = {A step that failed only in the oldest round reads pass, pass, fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_a_steps_record_marks_the_rounds_it_failed_in},
+}
+
+@misc{hooks-gatehistory-streak-counts-failures-from-the-newest-round,
+  section = {gatehistory},
+  title  = {A newest pass is streak zero whatever came before; a run of fails is its length},
+  claim  = {A newest pass is streak zero whatever came before; a run of fails is its length.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_the_streak_counts_failures_from_the_newest_round},
+}
+
+@misc{hooks-gatehistory-report-lists-the-failing-now-first-and-says-when-nothing-failed,
+  section = {gatehistory},
+  title  = {Streak first, then label; no failure at all and no usable round each say so},
+  claim  = {Streak first, then label; no failure at all and no usable round each say so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_the_report_lists_the_failing_now_first_and_says_when_nothing_failed},
+}
+
+@misc{hooks-gatehistory-command-reads-stdin-and-a-missing-repo-is-a-usage-error,
+  section = {gatehistory},
+  title  = {The repo is the one argument; the report goes to stdout},
+  claim  = {The repo is the one argument; the report goes to stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_the_command_reads_stdin_and_a_missing_repo_is_a_usage_error},
+}

@@ -170,3 +170,4 @@ rootdrop	A tool run as root becomes the owner of its path
 bazelstop	A withdrawn gate's bazel client is interrupted
 shardgate	A stack is refused past half of a grid's CPU budget
 corelimit	A core limit above zero is reported
+gatehistory	The Gate History Reader: A Step's Record Is Read off the Round Spans Newest First, a Round That Did Not Run a Step Is Not Evidence, the Streak Counts From the Newest Round, and the Report Lists the Failing First
