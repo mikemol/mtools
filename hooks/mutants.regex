@@ -451,7 +451,7 @@ src/mikemol/hooks/trainland.py|landing-names-itself-as-gate|    return \[Landing
 src/mikemol/hooks/trainrun.py|refused-key-also-lands|        out.landed \+= trainland\.land\(keys\[start:bad\]\)|        out.landed += trainland.land(keys[start:bad + 1])|def=run
 src/mikemol/hooks/trainrun.py|train-stops-at-first-refusal|        start = bad \+ 1|        break|def=run
 src/mikemol/hooks/traintip.py|empty-submission-borrows-boundary|        if not sub\.entries:|        if False:|def=build
-src/mikemol/hooks/commit_kata.py|build-source-check-not-called|        problem = problem or stack_build_refusal\(root, stacked\[1\], env\[SNAP_ENV\], run_git_in\)|        problem = problem|def=main
+src/mikemol/hooks/commit_kata.py|build-source-check-not-called|        or stack_build_refusal\(root, stack_file, snap, run_git_in\)|        or None|def=submit_problem
 src/mikemol/hooks/commit_kata.py|trees-not-pinned-at-submit|        pin_trees\(root, ledger, key, env\[SNAP_ENV\], run_git_in\)|        pass|def=main
 src/mikemol/hooks/commit_kata.py|trees-not-released-at-end|        release_trees\(root, ledger_of\(root\), str\(started\[0\]\), run_git_in\)|        pass|def=run_stack_mode
 src/mikemol/hooks/stackpin.py|record-kept-after-release|        record_path\(ledger, key\)\.unlink\(missing_ok=True\)|        pass|def=release
@@ -566,6 +566,10 @@ src/mikemol/hooks/stackland.py|every-commit-claims-the-tip-tree|is_tip=place == 
 src/mikemol/hooks/stackland.py|tip-trailer-swapped|    trailer = f"Gated-Tree: \{tree\}" if is_tip else f"Gated-by: \{tip\}"|    trailer = f"Gated-by: {tip}" if is_tip else f"Gated-Tree: {tree}"|def=stamped
 src/mikemol/hooks/stackland.py|unnamed-tip-crashes|    return \(found\.group\(1\) or found\.group\(2\)\) if found else NO_TIP|    return found.group(1) or found.group(2)|def=tip_name
 src/mikemol/hooks/traindrive.py|prefix-lands-with-the-whole-chains-stamps|    if ends\[-1\] < len\(rnd\.stack\.commits\):|    if False:|def=_land_prefix
+src/mikemol/hooks/shardgate.py|stale-reading-judged|        current = dist in dists and \(changed is None or at > changed\)|        current = dist in dists and (changed is None or at < changed)|def=findings
+src/mikemol/hooks/shardgate.py|under-half-named|        if not budget or not shards or cpu <= FRACTION \* budget:|        if not budget or not shards:|def=findings
+src/mikemol/hooks/shardgate.py|failed-store-query-refuses|    if cpu_status != 0 or time_status != 0:|    if False:|def=refusal
+src/mikemol/hooks/commit_kata.py|shard-check-not-called|        or _shard_refusal\(root, stack_file, env\)|        or None|def=submit_problem
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
 src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
 src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet

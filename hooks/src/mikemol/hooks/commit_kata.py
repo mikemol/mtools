@@ -60,6 +60,7 @@ from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.rootdrop import drop as _drop
 from mikemol.hooks.rootdrop import invoker_home as _invoker_home
 from mikemol.hooks.rootdrop import owner_of as _owner_of
+from mikemol.hooks.shardgate import refusal as _shard_refusal
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackbuildfiles import refusal as _build_refusal
 from mikemol.hooks.stackdrift import QUEUE as _QUEUE
@@ -1015,6 +1016,25 @@ def admin_mode(args: Sequence[str], env: Mapping[str, str]) -> int | None:
     return None
 
 
+def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
+    """Judge a submitted stack by the refusals made before it waits for its turn.
+
+    The first that has something to say wins: an import only a later entry adds (W1527), a build
+    file naming a source no entry carries (W1604), a mutants grid already past half of its CPU
+    budget (W1602).
+
+    Returns:
+        the findings, or None when the stack may wait.
+
+    """
+    snap = env[SNAP_ENV]
+    return (
+        _stack_refusal(root, stack_file, snap, run_git_in)
+        or stack_build_refusal(root, stack_file, snap, run_git_in)
+        or _shard_refusal(root, stack_file, env)
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -1050,8 +1070,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
         # ⚑ W1604: a build file naming a Python source no entry carries is refused here, before the
         # queue turn, as an unsound import is (W1603's finding, the waiting-for-failure case).
-        problem = _stack_refusal(root, stacked[1], env[SNAP_ENV], run_git_in)
-        problem = problem or stack_build_refusal(root, stacked[1], env[SNAP_ENV], run_git_in)
+        problem = submit_problem(root, stacked[1], env)
         if problem is not None:
             return unordered(root, ledger, key, env, problem)
         # ⚑ W1615: each entry's tree is pinned now, so a presubmit can run on it while this stack
@@ -1133,7 +1152,7 @@ def unordered(
 
     """
     sys.stdout.write(
-        f"NOT COMMITTED {root.name}: a stack entry names a file only a later one adds:\n"
+        f"NOT COMMITTED {root.name}: this stack is refused at submit, before it waits:\n"
     )
     sys.stdout.write(problem + "\n")
     forget(env)
