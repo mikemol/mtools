@@ -259,5 +259,6 @@ src/mikemol/pathsforward/mutations_ship.py|mutation-id-not-shared-by-the-command
 src/mikemol/pathsforward/cli.py|saved-edit-ships-nothing|            SHIP_MUTATION\(ctx\.path, fields, state, \(mode_of\(ctx\.opts\), ctx\.now\)\)|            pass|def=_mutate
 src/mikemol/pathsforward/cli.py|unknown-kind-sent|    if kind not in INTERVENTIONS:|    if False:|def=_intervention
 src/mikemol/pathsforward/mutations_ship.py|kind-and-note-swapped|mutations\.Event\(STATION, kind, "", note\)|mutations.Event(STATION, note, "", kind)|def=ship_intervention
+src/mikemol/pathsforward/cli.py|freed-card-named-after-the-blocker-list|    code = max\(code, _prune_landed\(held\)\)|    pass|def=_tick_open
 src/mikemol/pathsforward/dropto.py|other-blockers-forgotten|        rest = \[entry for entry in waiting if entry != gone\]|        rest = []|def=release
 src/mikemol/pathsforward/dropto.py|freed-card-stays-blocked|            w\["status"\] = "ready"|            pass|def=release

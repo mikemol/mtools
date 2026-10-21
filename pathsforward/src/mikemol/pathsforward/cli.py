@@ -1744,7 +1744,13 @@ def _tick_open(ctx: Ctx) -> int:
     # ⚑ THE BLOCKERS' STATES ARE READ BEFORE THE PRUNE (W1597): a blocker that landed is pruned by
     # the next step, and its change would go unsaid if the snapshot were taken after.
     blocker_seen = root / ".git" / "mtools" / BLOCKERS_SEEN
-    for said in BLOCKER_NOTICE(store.load(ctx.path), blocker_seen, _root(ctx)):
+    notices = list(BLOCKER_NOTICE(store.load(ctx.path), blocker_seen, _root(ctx)))
+    # ⚑ A CARD THE PRUNE FREED IS NAMED FIRST, AS READY WORK (W1598, operator ruling via github-8f
+    # 2026-10-18): the idempotent prune runs before anything else is printed, so each `UNBLOCKED
+    # <card>` line opens the output instead of sitting under a long list of blocker changes. The
+    # blockers' states were read above, before the prune, as W1597 needs; only their printing waits.
+    code = max(code, _prune_landed(held))
+    for said in notices:
         _say(said)
     for step in (_bump_blocked, _inbound, _check):
         code = max(code, step(held))

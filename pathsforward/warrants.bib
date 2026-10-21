@@ -6876,3 +6876,17 @@
   claim  = {Only blocked_on is released: a card the dropped one enabled keeps its own edge list.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_plain_drop_leaves_the_enables_edges_alone},
 }
+
+@misc{pathsforward-freed-named-freed-card-is-named-before-the-blocker-changes-and-the-rest-of-the-open,
+  section = {cli},
+  title  = {W2 landing frees W1: `UNBLOCKED W1` precedes the BLOCKER line and the bump line},
+  claim  = {W2 landing frees W1: `UNBLOCKED W1` precedes the BLOCKER line and the bump line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freed_named.py -k test_the_freed_card_is_named_before_the_blocker_changes_and_the_rest_of_the_open},
+}
+
+@misc{pathsforward-freed-named-queue-that-frees-nothing-opens-as-before,
+  section = {cli},
+  title  = {The control: no landed blocker, no UNBLOCKED line, and the open still completes},
+  claim  = {The control: no landed blocker, no UNBLOCKED line, and the open still completes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freed_named.py -k test_a_queue_that_frees_nothing_opens_as_before},
+}
