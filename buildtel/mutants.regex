@@ -186,3 +186,7 @@ src/mikemol/buildtel/shardplan.py|apply-flag-never-writes|    if not applying:| 
 src/mikemol/buildtel/shardplan.py|under-half-still-proposed|    if slowest <= FRACTION \* limit:|    if False:|def=_proposal
 src/mikemol/buildtel/shardplan.py|count-may-not-grow|    new = max\(wanted, block\.shards \+ 1\)|    new = wanted|def=_proposal
 src/mikemol/buildtel/shardplan.py|incomplete-row-counted|if row\.get\("complete"\) is not True or not isinstance\(millis, int\):|if not isinstance(millis, int):|def=_shard_times
+src/mikemol/buildtel/bb_result.py|single-case-xml-trusted|from_xml\.cases\(\) > 1:|from_xml.cases() > 0:|def=choose
+src/mikemol/buildtel/bb_result.py|log-never-preferred|    return from_log if from_log is not None else from_xml|    return from_xml|def=choose
+src/mikemol/buildtel/bb_result.py|skips-and-failures-counted-as-passes|    passed = max\(tests - failures - errors - skipped, 0\)|    passed = tests|def=xml_counts
+src/mikemol/buildtel/bb_result.py|no-summary-line-indexed|    if not lines:|    if False:|def=log_counts

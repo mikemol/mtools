@@ -17,3 +17,4 @@ timeoutdrop	The Timeout Drop: An Explicit Timeout Is Removed Only From a Grid Wh
 shardplan	The Shard Plan:A Grid Whose Slowest Shard Took Over Half Its Size Default Gets a Planned Count, Never Planned Against a Raised Timeout, and a Dry Run Writes Nothing
 proc	The Child Process: A Real Child's Status and Output Become Exactly What the Callers Read
 expunge	The Expunge: Only a Bazel Output Base Whose Workspace Is Gone and Whose Server Is Not Running Is Removed, Largest Exclusive Bytes First, Dry by Default, Read-Only Trees Included, and Never a Path Outside the Output Root
+bb_result	One target's result and its test counts

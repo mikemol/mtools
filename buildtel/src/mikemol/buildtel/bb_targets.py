@@ -119,7 +119,7 @@ class Report:
         return f"INCOMPLETE: listed {self.listed} of {self.total}; short: {short or 'none named'}"
 
 
-def _send(path: str, body: dict[str, object], host: str, port: int) -> object:
+def send(path: str, body: dict[str, object], host: str, port: int) -> object:
     """POST one request to the service and parse the answer.
 
     Returns:
@@ -152,7 +152,7 @@ def post(invocation_id: str, host: str = bb_records.HOST, port: int = bb_records
         the response body, parsed.
 
     """
-    return _send(RPC, {"lookup": {"invocationId": invocation_id}}, host, port)
+    return send(RPC, {"lookup": {"invocationId": invocation_id}}, host, port)
 
 
 def post_page(
@@ -169,7 +169,7 @@ def post_page(
 
     """
     body: dict[str, object] = {"invocationId": invocation_id, "status": status, "pageToken": token}
-    return _send(RPC_PAGE, body, host, port)
+    return send(RPC_PAGE, body, host, port)
 
 
 def _is_dict(value: object) -> bool:

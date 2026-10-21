@@ -1471,3 +1471,94 @@
   claim  = {A usage error without a root or with a flag; a dry run prints the plan.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_expunge.py -k test_main_reads_the_root_from_bazelrc_and_needs_one},
 }
+
+@misc{buildtel-bb-result-xml-tally-is-pass-fail-and-skip-with-errors-counted-as-failures,
+  section = {bb_result},
+  title  = {Seven cases, one failure and two skips leave four passes},
+  claim  = {Seven cases, one failure and two skips leave four passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_the_xml_tally_is_pass_fail_and_skip_with_errors_counted_as_failures},
+}
+
+@misc{buildtel-bb-result-xml-without-its-four-attributes-or-a-suite-reads-as-nothing,
+  section = {bb_result},
+  title  = {A missing attribute is not a zero: it would say the target ran and found nothing},
+  claim  = {A missing attribute is not a zero: it would say the target ran and found nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_an_xml_without_its_four_attributes_or_a_suite_reads_as_nothing},
+}
+
+@misc{buildtel-bb-result-log-summary-line-is-read-whole-or-mixed,
+  section = {bb_result},
+  title  = {The last `N passed` style line wins, with failures, passes and skips},
+  claim  = {The last `N passed` style line wins, with failures, passes and skips.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_the_log_summary_line_is_read_whole_or_mixed},
+}
+
+@misc{buildtel-bb-result-suite-of-many-cases-is-taken-at-its-word-and-a-single-case-yields-to-the-log,
+  section = {bb_result},
+  title  = {tests=1 with a log saying 3 passed means the log has the real tally},
+  claim  = {tests=1 with a log saying 3 passed means the log has the real tally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_a_suite_of_many_cases_is_taken_at_its_word_and_a_single_case_yields_to_the_log},
+}
+
+@misc{buildtel-bb-result-result-carries-status-duration-attempts-and-the-counts-with-their-source,
+  section = {bb_result},
+  title  = {The one-command answer to 'did these run?'},
+  claim  = {The one-command answer to 'did these run?'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_a_result_carries_status_duration_attempts_and_the_counts_with_their_source},
+}
+
+@misc{buildtel-bb-result-target-with-no-outputs-reports-null-counts-not-zeros,
+  section = {bb_result},
+  title  = {A built target has no log: its counts are unknown, and the result says so},
+  claim  = {A built target has no log: its counts are unknown, and the result says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_a_target_with_no_outputs_reports_null_counts_not_zeros},
+}
+
+@misc{buildtel-bb-result-answer-with-no-target-is-none,
+  section = {bb_result},
+  title  = {The service's empty answer is 'no such target', not a crash},
+  claim  = {The service's empty answer is 'no such target', not a crash.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_an_answer_with_no_target_is_none},
+}
+
+@misc{buildtel-bb-result-main-prints-the-result-as-json,
+  section = {bb_result},
+  title  = {The command line: invocation id and label in, one JSON object out},
+  claim  = {The command line: invocation id and label in, one JSON object out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_main_prints_the_result_as_json},
+}
+
+@misc{buildtel-bb-result-main-refuses-a-bad-command-line-and-names-a-missing-target,
+  section = {bb_result},
+  title  = {Usage is exit 2, and an invocation with no such target is exit 1 naming both},
+  claim  = {Usage is exit 2, and an invocation with no such target is exit 1 naming both.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_main_refuses_a_bad_command_line_and_names_a_missing_target},
+}
+
+@misc{buildtel-bb-result-main-says-the-service-did-not-answer,
+  section = {bb_result},
+  title  = {An unknown label gets HTTP 500, and the message says so rather than 'unreachable'},
+  claim  = {An unknown label gets HTTP 500, and the message says so rather than 'unreachable'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result.py -k test_main_says_the_service_did_not_answer},
+}
+
+@misc{buildtel-bb-result-service-post-target-asks-get-target-for-the-invocation-and-the-label,
+  section = {bb_result},
+  title  = {The body names the invocation id and the target label, and the answer is parsed},
+  claim  = {The body names the invocation id and the target label, and the answer is parsed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result_service.py -k test_post_target_asks_get_target_for_the_invocation_and_the_label},
+}
+
+@misc{buildtel-bb-result-service-download-sends-the-uri-the-invocation-and-the-file-name-and-returns-the-text,
+  section = {bb_result},
+  title  = {The three query keys the web UI sends, and the blob's text back},
+  claim  = {The three query keys the web UI sends, and the blob's text back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result_service.py -k test_download_sends_the_uri_the_invocation_and_the_file_name_and_returns_the_text},
+}
+
+@misc{buildtel-bb-result-service-download-the-service-refuses-raises-so-the-command-reports-it,
+  section = {bb_result},
+  title  = {Any status but 200 is an OSError, the way the POST side treats it},
+  claim  = {Any status but 200 is an OSError, the way the POST side treats it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result_service.py -k test_a_download_the_service_refuses_raises_so_the_command_reports_it},
+}
