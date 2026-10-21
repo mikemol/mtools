@@ -14131,3 +14131,17 @@
   claim  = {The repo is the one argument; the report goes to stdout.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehistory.py -k test_the_command_reads_stdin_and_a_missing_repo_is_a_usage_error},
 }
+
+@misc{hooks-gatetargets-target-that-did-not-pass-is-one-and-a-passing-one-is-zero,
+  section = {gatetargets},
+  title  = {The target half of a failure history: 1.0 for any final status but PASSED, else 0.0},
+  claim  = {The target half of a failure history: 1.0 for any final status but PASSED, else 0.0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_target_that_did_not_pass_is_one_and_a_passing_one_is_zero},
+}
+
+@misc{hooks-gatetargets-result-with-no-status-gives-no-failed-row-and-a-replay-gives-none,
+  section = {gatetargets},
+  title  = {No status is no claim either way, and a cached result is not this run's},
+  claim  = {No status is no claim either way, and a cached result is not this run's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_result_with_no_status_gives_no_failed_row_and_a_replay_gives_none},
+}

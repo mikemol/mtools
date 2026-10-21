@@ -9,6 +9,12 @@ series. This is mtools' side, the emit, to the contract luthen fixed on luthen-o
     mikemol.gate.target.cpu.seconds | .wall.seconds | .children
         {target, kind, repo}, kind in mutants|pytest|other, at the time the test finished
     mikemol.gate.run.emitted{repo}   the number of targets emitted in this run, 0 when all cached
+    mikemol.gate.target.failed {target, kind, repo}   1 when the final attempt did not pass, else 0
+
+⚑ THE FAILED SAMPLE IS THE TARGET HALF OF A FAILURE HISTORY (W1800, W1719): a target's record over
+prior runs is then a metrics query, and needs no key to the build event service (a BuildBuddy search
+answers 403 without one, W1715). Every fresh result whose events carry a status is a sample, passing
+ones as 0, because a history with only the failures in it cannot say whether the target ran.
 
 ⚑ A CACHED RESULT IS NOT EMITTED. Bazel replays an old test's result with its old log, so sending it
 would put a measurement from an earlier run at today's time. Only a result that ran in this
@@ -42,6 +48,8 @@ SERVICE = "mikemol-gate"
 CPU = "mikemol.gate.target.cpu.seconds"
 WALL = "mikemol.gate.target.wall.seconds"
 CHILDREN = "mikemol.gate.target.children"
+FAILED = "mikemol.gate.target.failed"
+PASSED = "PASSED"
 EMITTED = "mikemol.gate.run.emitted"
 MUTANTS = "mutants"
 PYTEST = "pytest"
@@ -66,6 +74,7 @@ class Result:
     wall_s: float
     cached: bool
     finished_ns: int
+    status: str = ""
 
 
 def _result_of(event: object) -> Result | None:
@@ -92,7 +101,11 @@ def _result_of(event: object) -> Result | None:
     info = body.get("executionInfo")
     remote = isinstance(info, dict) and bool(info.get("cachedRemotely"))
     cached = bool(body.get("cachedLocally")) or remote
-    return Result(label, wall_ms / 1000.0, cached, (start_ms + wall_ms) * MILLIS)
+    status = body.get("status")
+    finished_ns = (start_ms + wall_ms) * MILLIS
+    return Result(
+        label, wall_ms / 1000.0, cached, finished_ns, status if isinstance(status, str) else ""
+    )
 
 
 def results_of(lines: Iterable[str]) -> list[Result]:
@@ -176,6 +189,9 @@ def _rows_of_result(result: Result, read: Reader) -> list[Row]:
     kind = kind_of(result.label)
     fields = {"target": result.label, "kind": kind}
     rows = [_row(WALL, result.wall_s, result.finished_ns, fields)]
+    if result.status:
+        failed = 0.0 if result.status == PASSED else 1.0
+        rows.append(_row(FAILED, failed, result.finished_ns, fields))
     text = read(result.label) if kind == MUTANTS else None
     shard = shard_line(text) if text else None
     if shard is not None:

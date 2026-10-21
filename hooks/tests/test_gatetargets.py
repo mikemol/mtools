@@ -41,16 +41,22 @@ _TWO = 2
 
 
 def _event(
-    label: str, *, cached: bool = False, remote: bool = False, wall_ms: int = _WALL_MS
+    label: str,
+    *,
+    cached: bool = False,
+    remote: bool = False,
+    wall_ms: int = _WALL_MS,
+    status: str | None = gatetargets.PASSED,
 ) -> str:
     info: dict[str, object] = {"cachedRemotely": remote}
     result: dict[str, object] = {
         "testAttemptDurationMillis": str(wall_ms),
         "testAttemptStartMillisEpoch": str(_START_MS),
         "cachedLocally": cached,
-        "status": "PASSED",
         "executionInfo": info,
     }
+    if status is not None:
+        result["status"] = status
     key: dict[str, object] = {"label": label, "run": 1, "shard": 1, "attempt": 1}
     event: dict[str, object] = {"id": {"testResult": key}, "testResult": result}
     return json.dumps(event)
@@ -70,7 +76,10 @@ def _names(rows: Sequence[gatetargets.Row]) -> list[object]:
 def test_a_test_result_gives_its_label_wall_time_and_finish_time() -> None:
     """The build event's fields, converted: milliseconds to seconds, start plus wall to ns."""
     [result] = gatetargets.results_of([_event(_MUTANT)])
-    assert result == gatetargets.Result(_MUTANT, _WALL_S, cached=False, finished_ns=_FINISHED_NS)
+    expected = gatetargets.Result(
+        _MUTANT, _WALL_S, cached=False, finished_ns=_FINISHED_NS, status=gatetargets.PASSED
+    )
+    assert result == expected
 
 
 def test_a_replayed_result_is_cached_whether_locally_or_remotely() -> None:
@@ -126,12 +135,13 @@ def test_a_fresh_mutants_target_gives_wall_cpu_and_children_rows_at_its_finish_t
     assert _names(rows) == [
         gatetargets.EMITTED,
         gatetargets.WALL,
+        gatetargets.FAILED,
         gatetargets.CPU,
         gatetargets.CHILDREN,
     ]
     assert rows[0]["value"] == _ONE
     assert rows[0]["time_ns"] == _NOW_NS
-    cpu = rows[2]
+    cpu = rows[3]
     assert cpu["value"] == _CPU_S
     assert cpu["time_ns"] == _FINISHED_NS
     assert cpu["fields"] == {"target": _MUTANT, "kind": gatetargets.MUTANTS}
@@ -149,8 +159,32 @@ def test_a_pytest_target_gives_only_its_wall_time_and_a_log_without_the_line_add
     """CPU and children are mutants-only (nothing else prints the line); no line, no CPU row."""
     results = gatetargets.results_of([_event(_PYTEST), _event(_MUTANT)])
     rows = gatetargets.rows_of(results, _reader({_PYTEST: _LOG, _MUTANT: "no line"}), _NOW_NS)
-    assert _names(rows) == [gatetargets.EMITTED, gatetargets.WALL, gatetargets.WALL]
+    wall, failed = gatetargets.WALL, gatetargets.FAILED
+    assert _names(rows) == [gatetargets.EMITTED, wall, failed, wall, failed]
     assert rows[0]["value"] == _TWO
+
+
+def test_a_target_that_did_not_pass_is_one_and_a_passing_one_is_zero() -> None:
+    """The target half of a failure history: 1.0 for any final status but PASSED, else 0.0."""
+    lines = [
+        _event(_MUTANT, status="FAILED"),
+        _event(_PYTEST, status="TIMEOUT"),
+        _event(_OTHER, status=gatetargets.PASSED),
+    ]
+    rows = gatetargets.rows_of(gatetargets.results_of(lines), _reader({}), _NOW_NS)
+    failed = [(row["fields"], row["value"]) for row in rows if row["name"] == gatetargets.FAILED]
+    assert failed == [
+        ({"target": _MUTANT, "kind": gatetargets.MUTANTS}, 1.0),
+        ({"target": _PYTEST, "kind": gatetargets.PYTEST}, 1.0),
+        ({"target": _OTHER, "kind": gatetargets.OTHER}, 0.0),
+    ]
+
+
+def test_a_result_with_no_status_gives_no_failed_row_and_a_replay_gives_none() -> None:
+    """No status is no claim either way, and a cached result is not this run's."""
+    lines = [_event(_MUTANT, status=None), _event(_PYTEST, cached=True, status="FAILED")]
+    rows = gatetargets.rows_of(gatetargets.results_of(lines), _reader({}), _NOW_NS)
+    assert gatetargets.FAILED not in _names(rows)
 
 
 def test_rows_are_chunked_and_every_one_carries_the_repo_label() -> None:

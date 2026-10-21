@@ -586,6 +586,8 @@ src/mikemol/hooks/pycheck_ratchet_write.py|one-missing-baseline-lowers-the-other
 src/mikemol/hooks/corelimit.py|unlimited-core-read-as-zero|    return value == UNLIMITED or \(value\.isdecimal\(\) and int\(value\) > 0\)|    return value.isdecimal() and int(value) > 0|def=above_zero
 src/mikemol/hooks/corelimit.py|hard-limit-ignored|    if above_zero\(soft\) or above_zero\(hard\):|    if above_zero(soft):|def=report
 src/mikemol/hooks/corelimit.py|missing-line-reads-as-clean|        return EXIT_UNREADABLE, f"core limit of pid \{pid\}: no `Max core file size` line"|        return 0, "clean"|def=report
+src/mikemol/hooks/gatetargets.py|failed-status-read-as-passing|        failed = 0\.0 if result\.status == PASSED else 1\.0|        failed = 0.0|def=_rows_of_result
+src/mikemol/hooks/gatetargets.py|statusless-result-given-a-failed-row|    if result\.status:|    if True:|def=_rows_of_result
 src/mikemol/hooks/gatehistory.py|streak-runs-past-a-pass|        if not failed:|        if False:|def=streak
 src/mikemol/hooks/gatehistory.py|verdict-and-labels-not-compared|    if \(verdict == RED\) != bool\(failed\):|    if False:|def=_round_of
 src/mikemol/hooks/gatehistory.py|other-repos-rounds-kept|    return sorted\(\(r for r in found if r\.repo == repo\), key=_started, reverse=True\)|    return sorted((r for r in found), key=_started, reverse=True)|def=rounds_of
