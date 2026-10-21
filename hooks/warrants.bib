@@ -13916,3 +13916,25 @@
   claim  = {The marker stays as the fallback, and the line says which client was interrupted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelstop.py -k test_withdrawing_an_in_flight_gate_interrupts_its_client_and_still_writes_the_marker},
 }
+
+@misc{hooks-stackland-tip-names-its-own-tree-and-every-earlier-commit-names-the-tip,
+  section = {stackland},
+  title  = {A stack gates only its tip: Gated-Tree on the last commit, Gated-by: its waypoint before},
+  claim  = {A stack gates only its tip: Gated-Tree on the last commit, Gated-by: its waypoint
+            before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_the_tip_names_its_own_tree_and_every_earlier_commit_names_the_tip},
+}
+
+@misc{hooks-stackland-one-entry-stack-is-its-own-tip,
+  section = {stackland},
+  title  = {With nothing before it, the only commit carries the tree trailer and no Gated-by},
+  claim  = {With nothing before it, the only commit carries the tree trailer and no Gated-by.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_one_entry_stack_is_its_own_tip},
+}
+
+@misc{hooks-stackland-tip-name-is-the-leading-waypoint-or-a-dash,
+  section = {stackland},
+  title  = {A message that does not open with a waypoint has no name to give, and says so},
+  claim  = {A message that does not open with a waypoint has no name to give, and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_the_tip_name_is_the_leading_waypoint_or_a_dash},
+}

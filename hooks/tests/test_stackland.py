@@ -110,3 +110,38 @@ def test_a_path_git_cannot_add_stops_the_chain_and_returns_what_was_built(
     assert stack.failed is not None
     assert stack.failed.returncode != 0
     assert _git(root, "rev-parse", "HEAD").strip() == head
+
+
+def test_the_tip_names_its_own_tree_and_every_earlier_commit_names_the_tip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A stack gates only its tip: Gated-Tree on the last commit, Gated-by: its waypoint before."""
+    root = _repo(tmp_path, monkeypatch)
+    head = _git(root, "rev-parse", "HEAD").strip()
+    entries = [
+        stackland.Entry("W1: first card\n\nWaypoint: W1\n", ("a.txt",)),
+        stackland.Entry("W2: second card\n\nWaypoint: W2\n", ("b.txt",)),
+    ]
+    stack = stackland.build(root, entries, ck.run_git_in, head)
+    first, second = stack.commits
+    assert "Gated-by: W2" in _git(root, "log", "-1", "--format=%B", first)
+    assert "Gated-Tree" not in _git(root, "log", "-1", "--format=%B", first)
+    tip_message = _git(root, "log", "-1", "--format=%B", second)
+    assert f"Gated-Tree: {stack.trees[-1]}" in tip_message
+    assert "Gated-by" not in tip_message
+
+
+def test_a_one_entry_stack_is_its_own_tip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """With nothing before it, the only commit carries the tree trailer and no Gated-by."""
+    root = _repo(tmp_path, monkeypatch)
+    head = _git(root, "rev-parse", "HEAD").strip()
+    stack = stackland.build(root, [stackland.Entry("W7: only\n", ("a.txt",))], ck.run_git_in, head)
+    only = _git(root, "log", "-1", "--format=%B", stack.commits[0])
+    assert f"Gated-Tree: {stack.trees[0]}" in only
+    assert "Gated-by" not in only
+
+
+def test_the_tip_name_is_the_leading_waypoint_or_a_dash() -> None:
+    """A message that does not open with a waypoint has no name to give, and says so."""
+    assert stackland.tip_name("W1757: withdraw") == "W1757"
+    assert stackland.tip_name("no waypoint here") == stackland.NO_TIP

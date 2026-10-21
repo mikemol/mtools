@@ -562,6 +562,9 @@ src/mikemol/hooks/bazelstop.py|versioned-client-not-a-client|    return name in 
 src/mikemol/hooks/bazelstop.py|every-descendant-is-a-client|            if is_client\(name\):|            if True:|def=clients_under
 src/mikemol/hooks/bazelstop.py|grandchildren-not-walked|            pending\.append\(pid\)|            pass|def=clients_under
 src/mikemol/hooks/commit_withdraw.py|client-never-interrupted|    sent = bazelstop\.interrupt\(pid, \*stop\)|    sent = []|def=_ask_to_stop
+src/mikemol/hooks/stackland.py|every-commit-claims-the-tip-tree|is_tip=place == len\(entries\) - 1|is_tip=True|def=build
+src/mikemol/hooks/stackland.py|tip-trailer-swapped|    trailer = f"Gated-Tree: \{tree\}" if is_tip else f"Gated-by: \{tip\}"|    trailer = f"Gated-by: {tip}" if is_tip else f"Gated-Tree: {tree}"|def=stamped
+src/mikemol/hooks/stackland.py|unnamed-tip-crashes|    return found\.group\(1\) if found else NO_TIP|    return found.group(1)|def=tip_name
 src/mikemol/hooks/pyratchet.py|rise-exits-clean|        return EXIT_RISE, \[head, \*worse\]|        return 0, [head, *worse]|def=verdict
 src/mikemol/hooks/pycheck_ratchet.py|one-missing-baseline-judges-the-other|if ruff_base is None or mypy_base is None:|if ruff_base is None and mypy_base is None:|def=ratchet
 src/mikemol/hooks/pycheck_ratchet.py|worst-status-dropped|return max\(status for status, _lines in judged\)|return 0|def=ratchet
