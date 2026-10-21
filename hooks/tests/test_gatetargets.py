@@ -237,3 +237,53 @@ def test_main_reads_the_files_and_reports_and_a_wrong_call_is_usage(
     assert gatetargets.main(["mtools"]) == gatetargets.EXIT_USAGE
     missing = gatetargets.main(["mtools", str(tmp_path / "absent"), str(tmp_path)])
     assert missing == gatetargets.EXIT_USAGE
+
+
+_RUN_S = 90.0
+
+
+def _build_events(start_ms: int | str, finish_ms: int | str) -> list[str]:
+    started: dict[str, object] = {"id": {"started": {}}, "started": {"startTimeMillis": start_ms}}
+    finished: dict[str, object] = {
+        "id": {"buildFinished": {}},
+        "finished": {"overallSuccess": True, "finishTimeMillis": finish_ms},
+    }
+    return [json.dumps(started), json.dumps(finished)]
+
+
+def test_the_gate_wall_time_is_the_finished_event_minus_the_started_one() -> None:
+    """int64 milliseconds arrive as JSON strings; the difference is seconds."""
+    assert gatetargets.run_seconds(_build_events("1000", "91000")) == _RUN_S
+    assert gatetargets.run_seconds(_build_events(1000, 91000)) == _RUN_S
+
+
+def test_a_gate_wall_time_needs_both_events_in_order_or_it_is_none() -> None:
+    """One event, no event, a finish before the start and a non-number each say nothing."""
+    started, finished = _build_events("1000", "91000")
+    assert gatetargets.run_seconds([started, "not json"]) is None
+    assert gatetargets.run_seconds([finished]) is None
+    assert gatetargets.run_seconds([]) is None
+    assert gatetargets.run_seconds(_build_events("91000", "1000")) is None
+    assert gatetargets.run_seconds(_build_events("soon", "later")) is None
+
+
+def test_main_sends_the_gate_wall_time_beside_the_target_rows(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The run row has no target or kind and rides in the same batch as the others."""
+    bep = tmp_path / "bep.json"
+    lines = [*_build_events("1000", "91000"), _event(_PYTEST)]
+    bep.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    monkeypatch.setenv(commit_span.BIN_ENV, "/bin/otlp")
+    monkeypatch.setenv(commit_span.ENDPOINTS_ENV, "x")
+    sent: list[str] = []
+
+    def record(argv: Sequence[str], text: str) -> None:
+        del argv
+        sent.append(text)
+
+    assert not gatetargets.main(["mtools", str(bep), str(tmp_path)], record)
+    last = sent[-1].splitlines()[-1]
+    assert f'"name": "{gatetargets.RUN_SECONDS}"' in last
+    assert f'"value": {_RUN_S}' in last
+    assert '"fields": {"repo": "mtools"}' in last

@@ -14180,3 +14180,24 @@
   claim  = {The newest landing decides; with none the freshness alert's case, not this one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_a_landing_gap_past_the_limit_fires_and_no_landing_at_all_does_not},
 }
+
+@misc{hooks-gatetargets-gate-wall-time-is-the-finished-event-minus-the-started-one,
+  section = {gatetargets},
+  title  = {int64 milliseconds arrive as JSON strings; the difference is seconds},
+  claim  = {int64 milliseconds arrive as JSON strings; the difference is seconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_the_gate_wall_time_is_the_finished_event_minus_the_started_one},
+}
+
+@misc{hooks-gatetargets-gate-wall-time-needs-both-events-in-order-or-it-is-none,
+  section = {gatetargets},
+  title  = {One event, no event, a finish before the start and a non-number each say nothing},
+  claim  = {One event, no event, a finish before the start and a non-number each say nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_gate_wall_time_needs_both_events_in_order_or_it_is_none},
+}
+
+@misc{hooks-gatetargets-main-sends-the-gate-wall-time-beside-the-target-rows,
+  section = {gatetargets},
+  title  = {The run row has no target or kind and rides in the same batch as the others},
+  claim  = {The run row has no target or kind and rides in the same batch as the others.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_main_sends_the_gate_wall_time_beside_the_target_rows},
+}

@@ -49,6 +49,7 @@ CPU = "mikemol.gate.target.cpu.seconds"
 WALL = "mikemol.gate.target.wall.seconds"
 CHILDREN = "mikemol.gate.target.children"
 FAILED = "mikemol.gate.target.failed"
+RUN_SECONDS = "mikemol.gate.run.seconds"
 PASSED = "PASSED"
 EMITTED = "mikemol.gate.run.emitted"
 MUTANTS = "mutants"
@@ -129,6 +130,43 @@ def results_of(lines: Iterable[str]) -> list[Result]:
         if made is not None:
             found[made.label] = made
     return list(found.values())
+
+
+def _millis(event: object, section: str, field: str) -> int | None:
+    # One int64 millisecond field of a build event's body, which JSON spells as a string.
+    if not isinstance(event, dict):
+        return None
+    body = event.get(section)
+    raw = body.get(field) if isinstance(body, dict) else None
+    try:
+        return int(raw) if isinstance(raw, str | int) else None
+    except ValueError:
+        return None
+
+
+def run_seconds(lines: Iterable[str]) -> float | None:
+    """Read the build's own wall time out of its started and finished events (W1801).
+
+    ⚑ THE WHOLE-GATE SERIES THE MEDIAN AND THE FRESHNESS ALERT NEED (W1748, W1781): per-target
+    samples cannot say how long the gate took. The two events carry the build's start and finish in
+    milliseconds, so the difference is the bazel run, not the hook around it.
+
+    Returns:
+        the seconds between the started and the finished event, or None when either is absent or
+        the finish precedes the start.
+
+    """
+    start = finish = None
+    for line in lines:
+        try:
+            event: object = json.loads(line)
+        except ValueError:
+            continue
+        start = _millis(event, "started", "startTimeMillis") or start
+        finish = _millis(event, "finished", "finishTimeMillis") or finish
+    if start is None or finish is None or finish < start:
+        return None
+    return (finish - start) / 1000.0
 
 
 def kind_of(label: str) -> str:
@@ -282,7 +320,11 @@ def main(argv: Sequence[str] | None = None, spawn: Spawn = spawn_with_stdin) -> 
         sys.stderr.write(f"mikemol-gate-targets: cannot read {bep}: {err}\n")
         return EXIT_USAGE
     results = results_of(lines)
-    rows = rows_of(results, log_reader(Path(testlogs)), time.time_ns())
+    now_ns = time.time_ns()
+    rows = rows_of(results, log_reader(Path(testlogs)), now_ns)
+    elapsed = run_seconds(lines)
+    if elapsed is not None:
+        rows.append(_row(RUN_SECONDS, elapsed, now_ns, {}))
     sent = emit(repo, rows, os.environ, spawn)
     sys.stdout.write(f"gate targets: {rows[0]['value']} fresh of {len(results)}, sent={sent}\n")
     return 0
