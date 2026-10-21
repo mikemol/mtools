@@ -35,7 +35,7 @@ from pathlib import Path
 from mikemol.hooks.isolated import Done, EnvRunner, add_argv_list
 from mikemol.hooks.stacksnap import Frozen, apply_argv
 
-_WAYPOINT = re.compile(r"^(W\d+)\b")
+_WAYPOINT = re.compile(r"^Waypoint: (W\d+)\b|\A(W\d+)\b", re.MULTILINE)
 NO_TIP = "-"
 
 
@@ -69,11 +69,11 @@ def tip_name(message: str) -> str:
     """Name the waypoint a stack's tip commit belongs to.
 
     Returns:
-        the leading `W<n>` of the message, or `-` when it has none.
+        the message's `Waypoint:` trailer, else its leading `W<n>`, or `-` when it has neither.
 
     """
-    found = _WAYPOINT.match(message)
-    return found.group(1) if found else NO_TIP
+    found = _WAYPOINT.search(message)
+    return (found.group(1) or found.group(2)) if found else NO_TIP
 
 
 def stamped(message: str, tree: str, tip: str, *, is_tip: bool) -> str:

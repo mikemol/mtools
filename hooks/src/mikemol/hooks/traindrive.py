@@ -173,12 +173,23 @@ def _land_prefix(
         return []
     ends = rnd.ends[: len(groups)]
     paths = [p for item in _flat(groups) for p in item.paths]
-    landing = land(root, rnd.stack.commits[: ends[-1]], before, paths, rnd.seams.run)
+    chain = rnd.stack.commits[: ends[-1]]
+    if ends[-1] < len(rnd.stack.commits):
+        # ⚑ A PREFIX OF THE BUILT CHAIN WAS GATED AT ITS OWN TIP, NOT AT THE CHAIN'S (W1651, after
+        # W1745): the commits were stamped for the whole chain's tip, which is red and does not
+        # land, so they would name it as the tree that was tested. The prefix is built again, the
+        # same trees (a commit's tree does not depend on its message), so its last commit carries
+        # Gated-Tree for the boundary that was gated and the rest name that tip. A rebuild that
+        # fails or yields other trees leaves the first chain, whose trees are the gated ones.
+        again = build(root, _entries(groups, rnd.seams), rnd.seams.run, before)
+        if again.failed is None and again.trees == rnd.stack.trees[: ends[-1]]:
+            chain = again.commits
+    landing = land(root, chain, before, paths, rnd.seams.run)
     if not landing.moved:
         return None
     out, start = [], 0
     for group, end in zip(groups, ends, strict=True):
-        out.append(_committed(group, rnd.stack.commits[start:end], root.name, rnd.seams))
+        out.append(_committed(group, chain[start:end], root.name, rnd.seams))
         start = end
     return out
 

@@ -208,3 +208,19 @@ def test_an_unbuildable_stack_is_an_unbuilt_round_and_the_next_round_is_green(
     _drive(root, tmp_path, ("a.txt", "missing.txt", "c.txt"), rounds)
     assert [(r.verdict, r.gates) for r in rounds] == [("unbuilt", 0), ("green", 1)]
     assert not rounds[0].facts.jobs
+
+
+def test_a_green_prefix_under_a_red_tip_is_stamped_for_the_tree_it_was_gated_at(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Stacks 1 and 2 land under a red tip: card 2 names its own tree, card 1 names W2, never W3."""
+    root = _repo(tmp_path, monkeypatch, bad="c.txt")
+    got = _drive(root, tmp_path)
+    assert [got[k].code == 0 for k in ("1", "2", "3")] == [True, True, False]
+    top = _git(root, "log", "-1", "--format=%B", "HEAD")
+    below = _git(root, "log", "-1", "--format=%B", "HEAD~1")
+    tree = _git(root, "rev-parse", "HEAD^{tree}").strip()
+    assert f"Gated-Tree: {tree}" in top
+    assert "Gated-by: W2" in below
+    assert "W3" not in top
+    assert "W3" not in below

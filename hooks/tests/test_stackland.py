@@ -144,4 +144,5 @@ def test_a_one_entry_stack_is_its_own_tip(tmp_path: Path, monkeypatch: pytest.Mo
 def test_the_tip_name_is_the_leading_waypoint_or_a_dash() -> None:
     """A message that does not open with a waypoint has no name to give, and says so."""
     assert stackland.tip_name("W1757: withdraw") == "W1757"
+    assert stackland.tip_name("card two\n\nWaypoint: W2\n") == "W2"
     assert stackland.tip_name("no waypoint here") == stackland.NO_TIP
