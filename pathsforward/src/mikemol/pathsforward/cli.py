@@ -1872,8 +1872,31 @@ def _tick_roll(ctx: Ctx) -> int:
         code = EXIT_REFUSED
     for step in (_prune_landed, _render, _check):
         code = code or step(rolling)
+    code = code or _chronic_reconcile(rolling)
     _say(f"rolled: {holder} keeps the lock and the next tick has begun")
     return code
+
+
+def _chronic_reconcile(ctx: Ctx) -> int:
+    """Run the reconciler on a roll's cadence, dry, and name the cards it cannot decide (W1641).
+
+    ⚑ A TICK THAT NEVER STOPS NEVER REOPENS (nemik held one for 26 hours), so the open's pass
+    (W1640) is not enough; the roll is the cadence. The reconciler judges each working card
+    GATING, LANDED or STALE from the live-commit map and the log. When it cannot read the map it
+    refuses, and judging nothing is not the same as there being nothing to judge: the roll says
+    which working cards were left undecided, so none reads as settled by silence. Never written.
+
+    Returns:
+        EXIT_OK, or the reconciler's own status when it ran.
+
+    """
+    try:
+        return _reconcile(replace(ctx, opts={**ctx.opts, "write": False}))
+    except ops.RefusedError as refused:
+        cards = store.load(ctx.path).waypoints
+        working = [text(w, "symbol") for w in cards if text(w, "status") == "working"]
+        _say(f"reconcile: cannot decide {', '.join(working) or 'no working card'} ({refused})")
+        return EXIT_OK
 
 
 def _promote(ctx: Ctx) -> int:

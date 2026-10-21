@@ -6905,3 +6905,17 @@
             failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_open_reconcile.py -k test_a_reconciler_that_refuses_is_said_and_the_open_goes_on},
 }
+
+@misc{pathsforward-cadence-reconcile-roll-prints-the-reconcilers-plan-dry,
+  section = {cli},
+  title  = {The plan line is on the roll's output, and the reconciler was asked with write false},
+  claim  = {The plan line is on the roll's output, and the reconciler was asked with write false.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cadence_reconcile.py -k test_a_roll_prints_the_reconcilers_plan_dry},
+}
+
+@misc{pathsforward-cadence-reconcile-reconciler-that-cannot-read-the-gate-names-every-working-card-it-left-undecided,
+  section = {cli},
+  title  = {Judging nothing is not nothing to judge: W1 and W2 are named, W3 (ready) is not},
+  claim  = {Judging nothing is not nothing to judge: W1 and W2 are named, W3 (ready) is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cadence_reconcile.py -k test_a_reconciler_that_cannot_read_the_gate_names_every_working_card_it_left_undecided},
+}
