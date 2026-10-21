@@ -110,10 +110,24 @@ def test_write_without_a_survivor_is_refused(tmp_path: Path) -> None:
     assert "W1" in _cards(path)
 
 
-def test_a_plain_drop_is_unchanged(tmp_path: Path) -> None:
-    """The control: no --on means the old behaviour, a drop at once and the edges left alone."""
-    path = _file(tmp_path, _card("W1"), _blocked("W3", ["W1"]))
+def test_a_plain_drop_takes_the_card_out_of_blocked_on_and_readies_what_it_alone_held(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W3 waited only on W1 and is ready again; W4 also waits on W9 and keeps that one (W1645)."""
+    path = _file(
+        tmp_path, _card("W1"), _blocked("W3", ["W1"]), _blocked("W4", ["W1", "W9"]), _card("W9")
+    )
     assert cli.main(["--state", str(path), _DROP, "W1", "gone"]) == 0
     cards = _cards(path)
     assert "W1" not in cards
-    assert cards["W3"]["blocked_on"] == ["W1"]
+    assert (cards["W3"]["blocked_on"], cards["W3"]["status"]) == ([], "ready")
+    assert cards["W3"]["blocked_kind"] is None
+    assert (cards["W4"]["blocked_on"], cards["W4"]["status"]) == (["W9"], "blocked")
+    assert "W1 removed from the blocked_on of W3, W4" in capsys.readouterr().out
+
+
+def test_a_plain_drop_leaves_the_enables_edges_alone(tmp_path: Path) -> None:
+    """Only blocked_on is released: a card the dropped one enabled keeps its own edge list."""
+    path = _file(tmp_path, _card("W1"), _card("W2", enables=["W1"]))
+    assert cli.main(["--state", str(path), _DROP, "W1", "gone"]) == 0
+    assert _cards(path)["W2"]["enables"] == ["W1"]

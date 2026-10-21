@@ -70,6 +70,33 @@ def plan(state: State, gone: str, survivor: str) -> list[Repoint]:
     return found
 
 
+def release(state: State, gone: str) -> list[str]:
+    """Take a dropped card out of every `blocked_on`, readying a card it alone held back (W1645).
+
+    ⚑ A PLAIN DROP HAS NO SURVIVOR TO WAIT ON, so a card that waited on the dropped one does not
+    wait on anything for it: the entry is removed, and a blocked card left with no other blocker is
+    ready again (its block kind and tick count cleared), the way a landed blocker frees it. A card
+    still held by another blocker keeps that one. `enables` edges are not touched here.
+
+    Returns:
+        the symbols of the cards that were edited, in queue order.
+
+    """
+    edited: list[str] = []
+    for w in state.waypoints:
+        waiting = strlist(w, "blocked_on")
+        if gone not in waiting:
+            continue
+        rest = [entry for entry in waiting if entry != gone]
+        w["blocked_on"] = rest
+        if not rest and text(w, "status") == "blocked":
+            w["status"] = "ready"
+            w["blocked_kind"] = None
+            w["ticks_blocked"] = 0
+        edited.append(text(w, "symbol"))
+    return edited
+
+
 def apply(state: State, found: list[Repoint], gone: str, survivor: str) -> None:
     """Make each repoint: replace the dropped card with the survivor, or remove the entry."""
     by_symbol = {text(w, "symbol"): w for w in state.waypoints}

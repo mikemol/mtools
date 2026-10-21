@@ -5261,13 +5261,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_write_without_a_survivor_is_refused},
 }
 
-@misc{pathsforward-dropto-plain-drop-is-unchanged,
-  section = {dropto},
-  title  = {The control: no --on means the old behaviour, a drop at once and the edges left alone},
-  claim  = {The control: no --on means the old behaviour, a drop at once and the edges left alone.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_plain_drop_is_unchanged},
-}
-
 @misc{pathsforward-show-many-several-symbols-print-in-the-order-given,
   section = {show_many},
   title  = {Live cards and a residue entry, asked for out of queue order, print in that order},
@@ -6868,4 +6861,18 @@
   title  = {The kind becomes a metric label, so a free-text one would grow the series without bound},
   claim  = {The kind becomes a metric label, so a free-text one would grow the series without bound.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_intervention_kind_outside_the_fixed_set_is_refused_and_sends_nothing},
+}
+
+@misc{pathsforward-dropto-plain-drop-takes-the-card-out-of-blocked-on-and-readies-what-it-alone-held,
+  section = {dropto},
+  title  = {W3 waited only on W1 and is ready again; W4 also waits on W9 and keeps that one (W1645)},
+  claim  = {W3 waited only on W1 and is ready again; W4 also waits on W9 and keeps that one (W1645).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_plain_drop_takes_the_card_out_of_blocked_on_and_readies_what_it_alone_held},
+}
+
+@misc{pathsforward-dropto-plain-drop-leaves-the-enables-edges-alone,
+  section = {dropto},
+  title  = {Only blocked_on is released: a card the dropped one enabled keeps its own edge list},
+  claim  = {Only blocked_on is released: a card the dropped one enabled keeps its own edge list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dropto.py -k test_a_plain_drop_leaves_the_enables_edges_alone},
 }

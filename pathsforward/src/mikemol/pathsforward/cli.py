@@ -2243,6 +2243,9 @@ def _drop(ctx: Ctx) -> int:
                 return EXIT_OK
             dropto.apply(state, found, sym, survivor)
         ops.drop(state, sym, reason, ctx.stamp(), account)
+        released = dropto.release(state, sym) if survivor is None else []
+        if released:
+            _say(f"{sym} removed from the blocked_on of {', '.join(released)}")
         _say(f"{sym} -> residue; state_hash={v2(state.waypoints)}")
         return EXIT_OK
 
