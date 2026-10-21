@@ -14201,3 +14201,17 @@
   claim  = {The run row has no target or kind and rides in the same batch as the others.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_main_sends_the_gate_wall_time_beside_the_target_rows},
 }
+
+@misc{hooks-trainalert-freshness-expression-fires-on-an-old-newest-sample-or-none-at-all,
+  section = {trainalert},
+  title  = {Both silences, in one expression over the whole-gate series},
+  claim  = {Both silences, in one expression over the whole-gate series.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_the_freshness_expression_fires_on_an_old_newest_sample_or_none_at_all},
+}
+
+@misc{hooks-trainalert-stale-series-fires-for-an-old-newest-sample-and-for-no-sample,
+  section = {trainalert},
+  title  = {Unlike the landing gap, an empty series IS the freshness alert's case},
+  claim  = {Unlike the landing gap, an empty series IS the freshness alert's case.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_a_stale_series_fires_for_an_old_newest_sample_and_for_no_sample},
+}

@@ -41,6 +41,22 @@ def test_too_few_reds_or_reds_outside_the_window_do_not_fire() -> None:
     assert not trainalert.red_streak_firing(old, _FOUR, _WINDOW)
 
 
+def test_the_freshness_expression_fires_on_an_old_newest_sample_or_none_at_all() -> None:
+    """Both silences, in one expression over the whole-gate series."""
+    series = 'mikemol.gate.run.seconds{repo="mtools"}[2d]'
+    assert trainalert.stale_expr("mtools", 7200, "2d") == (
+        f"time() - tlast_over_time({series}) > 7200 or absent_over_time({series})"
+    )
+
+
+def test_a_stale_series_fires_for_an_old_newest_sample_and_for_no_sample() -> None:
+    """Unlike the landing gap, an empty series IS the freshness alert's case."""
+    samples = [_NOW - 5 * _HOUR, _NOW - 3 * _HOUR]
+    assert trainalert.stale_firing(samples, _NOW, 2 * _HOUR)
+    assert not trainalert.stale_firing(samples, _NOW, 4 * _HOUR)
+    assert trainalert.stale_firing([], _NOW, 4 * _HOUR)
+
+
 def test_a_landing_gap_past_the_limit_fires_and_no_landing_at_all_does_not() -> None:
     """The newest landing decides; with none the freshness alert's case, not this one."""
     landings = [_NOW - 5 * _HOUR, _NOW - 3 * _HOUR]

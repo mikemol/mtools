@@ -590,6 +590,8 @@ src/mikemol/hooks/gatetargets.py|failed-status-read-as-passing|        failed = 
 src/mikemol/hooks/gatetargets.py|statusless-result-given-a-failed-row|    if result\.status:|    if True:|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|finish-before-start-kept|    if start is None or finish is None or finish < start:|    if start is None or finish is None:|def=run_seconds
 src/mikemol/hooks/gatetargets.py|gate-wall-time-left-in-milliseconds|    return \(finish - start\) / 1000\.0|    return float(finish - start)|def=run_seconds
+src/mikemol/hooks/trainalert.py|empty-series-not-stale|    return not samples or now - max\(samples\) > seconds|    return bool(samples) and now - max(samples) > seconds|def=stale_firing
+src/mikemol/hooks/trainalert.py|absent-arm-dropped|    return f"time\(\) - tlast_over_time\(\{series\}\) > \{seconds\} or absent_over_time\(\{series\}\)"|    return f"time() - tlast_over_time({series}) > {seconds}"|def=stale_expr
 src/mikemol/hooks/trainalert.py|green-round-ignored|    return inside\.count\(RED\) >= rounds and GREEN not in inside|    return inside.count(RED) >= rounds|def=red_streak_firing
 src/mikemol/hooks/trainalert.py|window-not-applied|    inside = \[verdict for time, verdict in samples if window\[0\] <= time <= window\[1\]\]|    inside = [verdict for time, verdict in samples]|def=red_streak_firing
 src/mikemol/hooks/trainalert.py|no-landing-read-as-a-gap|    return bool\(landings\) and now - max\(landings\) > seconds|    return now - max(landings) > seconds|def=no_land_firing

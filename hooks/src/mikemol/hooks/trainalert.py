@@ -62,6 +62,35 @@ def no_land_expr(repo: str, seconds: int, retention: str) -> str:
     return f"time() - {newest} > {seconds}"
 
 
+GATE_RUN = "mikemol.gate.run.seconds"
+
+
+def stale_expr(repo: str, seconds: int, retention: str) -> str:
+    """Build the freshness expression: the gate series has no sample newer than `seconds` (W1781).
+
+    ⚑ BOTH SILENCES FIRE. A series whose newest sample is old is one arm; a series with no sample at
+    all in `retention` is the other, which `tlast_over_time` cannot see (it returns nothing), so
+    `absent_over_time` is OR-ed in. A dead emitter and a day with no gate are different readings
+    only by `mikemol.gate.run.emitted`, which this does not consult.
+
+    Returns:
+        the PromQL text over `mikemol.gate.run.seconds{repo}`.
+
+    """
+    series = f'{GATE_RUN}{{repo="{repo}"}}[{retention}]'
+    return f"time() - tlast_over_time({series}) > {seconds} or absent_over_time({series})"
+
+
+def stale_firing(samples: Sequence[int], now: int, seconds: int) -> bool:
+    """Run the freshness predicate over recorded sample times (epoch seconds).
+
+    Returns:
+        True when there is no sample at all or the newest is more than `seconds` before `now`.
+
+    """
+    return not samples or now - max(samples) > seconds
+
+
 def red_streak_firing(
     samples: Sequence[tuple[int, str]], rounds: int, window: tuple[int, int]
 ) -> bool:
