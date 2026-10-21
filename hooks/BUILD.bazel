@@ -41,6 +41,26 @@ py_library(
 # cases under a full //... run, twice on 2026-10-01.
 _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
 
+# ⚑⚑ THESE FOUR RAN PAST HALF OF THEIR WALL LIMIT, SO THE KERNEL BOUNDS THEM BY CPU AND THE WALL
+# TIMEOUT BECOMES A BACKSTOP (W1798, W1782; the operator's 50% rule, relayed by github-8f
+# 2026-10-21, and the standing rule that a test is bounded by CPU, never by a timer). MEASURED in
+# the metrics store over one day of gates: test_traindrive 44.7 s wall, test_trainlead 44.1 s,
+# test_grade 41.0 s, test_import_cycles 37.4 s, against small's 60 s. Each is mostly serial, so its
+# wall time bounds its CPU from above; the budget is TWICE THE LARGEST WALL SEEN, in CPU seconds, a
+# derivation that W1798's per-target CPU series replaces with the targets' own figures. `medium`
+# lifts the wall timeout to 300 s, where it no longer decides.
+_CPU_BUDGET_S = {
+    "tests/test_traindrive.py": 90,
+    "tests/test_trainlead.py": 90,
+    "tests/test_grade.py": 82,
+    "tests/test_import_cycles.py": 75,
+}
+
+_TEST_ENV = {
+    "RUFF_BIN": "$(location @mikemol_check_ruff//:bin)",
+    "OPA_BIN": "$(location @opa//file)",
+}
+
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The thesis in MODULE.bazel is that a
 # pytest case and a paperkit witness are the same object; this is where that stops being prose. A
 # failing module names itself rather than collapsing into one red suite target.
@@ -254,10 +274,7 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
             # and a list would go stale the next time one is added — the reified population
             # this suite exists to refuse.
         ] + glob(["tests/test_*.py"]),
-        env = {
-            "RUFF_BIN": "$(location @mikemol_check_ruff//:bin)",
-            "OPA_BIN": "$(location @opa//file)",
-        },
+        env = dict(_TEST_ENV, MIKEMOL_TEST_CPU_S = str(_CPU_BUDGET_S[src])) if src in _CPU_BUDGET_S else _TEST_ENV,
 
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: bazel's default of `medium` reserves a timeout
         # budget nothing uses, and an honest size is what lets a genuinely slow witness stand
@@ -269,7 +286,7 @@ _SPAWNS_NESTED_PYTEST = ["tests/test_grade.py"]
         # small's 60 s after 7 cases, twice. Not a hang: slower startup for every nested process.
         # A module that spawns nested pytest gets `medium` (300 s). The operator's rule: no
         # wall-clock-sensitive tests.
-        size = "medium" if src in _SPAWNS_NESTED_PYTEST else "small",
+        size = "medium" if (src in _SPAWNS_NESTED_PYTEST or src in _CPU_BUDGET_S) else "small",
         deps = [
             ":hooks",
             dev_requirement("pytest"),
