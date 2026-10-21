@@ -13938,3 +13938,11 @@
   claim  = {A message that does not open with a waypoint has no name to give, and says so.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_the_tip_name_is_the_leading_waypoint_or_a_dash},
 }
+
+@misc{hooks-commit-lease-wait-second-commit-waits-on-the-held-claim-and-lands-once-it-is-released,
+  section = {commit-kata},
+  title  = {Held: the second says WAITING and is alive. Released: it exits 0, HEAD moved, no refusal},
+  claim  = {Held: the second says WAITING and is alive. Released: it exits 0, HEAD moved, no
+            refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_lease_wait.py -k test_a_second_commit_waits_on_the_held_claim_and_lands_once_it_is_released},
+}
