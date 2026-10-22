@@ -14215,3 +14215,38 @@
   claim  = {Unlike the landing gap, an empty series IS the freshness alert's case.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainalert.py -k test_a_stale_series_fires_for_an_old_newest_sample_and_for_no_sample},
 }
+
+@misc{hooks-launcher-bazel-venv-committing-another-repo-is-noticed-with-the-pin-line,
+  section = {launcher},
+  title  = {Both spellings of a bazel venv's prefix are noticed, naming the repo and the spec},
+  claim  = {Both spellings of a bazel venv's prefix are noticed, naming the repo and the spec.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_a_bazel_venv_committing_another_repo_is_noticed_with_the_pin_line},
+}
+
+@misc{hooks-launcher-repos-own-venv-and-the-mtools-tree-are-not-noticed,
+  section = {launcher},
+  title  = {An installed pin is the sound path, and mtools's own tree is what the launcher follows},
+  claim  = {An installed pin is the sound path, and mtools's own tree is what the launcher follows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_the_repos_own_venv_and_the_mtools_tree_are_not_noticed},
+}
+
+@misc{hooks-launcher-announce-writes-the-notice-and-a-clean-launcher-writes-nothing,
+  section = {launcher},
+  title  = {The line goes to the stream given, newline-terminated; no notice, no write},
+  claim  = {The line goes to the stream given, newline-terminated; no notice, no write.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_announce_writes_the_notice_and_a_clean_launcher_writes_nothing},
+}
+
+@misc{hooks-launcher-resolving-a-repository-notices-the-launcher-on-stderr,
+  section = {launcher},
+  title  = {The commit's own entry runs the notice for each repository it resolves},
+  claim  = {The commit's own entry runs the notice for each repository it resolves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_resolving_a_repository_notices_the_launcher_on_stderr},
+}
+
+@misc{hooks-launcher-bazel-test-is-not-noticed-whatever-its-prefix,
+  section = {launcher},
+  title  = {A test run under bazel sets TEST_SRCDIR; its commits are the gate's, not a user's},
+  claim  = {A test run under bazel sets TEST_SRCDIR; its commits are the gate's, not a user's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_a_bazel_test_is_not_noticed_whatever_its_prefix},
+}

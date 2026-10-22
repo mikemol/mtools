@@ -172,3 +172,4 @@ shardgate	A stack is refused past half of a grid's CPU budget
 corelimit	A core limit above zero is reported
 gatehistory	The Gate History Reader: A Step's Record Is Read off the Round Spans Newest First, a Round That Did Not Run a Step Is Not Evidence, the Streak Counts From the Newest Round, and the Report Lists the Failing First
 trainalert	The Train Alerts: A Red Streak Is N Reds and No Green in a Window, a Landing Gap Is the Newest COMMITTED Sample Past a Limit, and No Landing at All Is the Freshness Alert's Case
+launcher	The Launcher Notice: A Bazel-Bin Venv Committing Another Repo Is Told to Install the Pin, the Repo's Own Venv and the Mtools Tree Are Not Noticed, and Silence Writes Nothing

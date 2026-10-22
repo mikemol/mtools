@@ -56,6 +56,7 @@ from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
+from mikemol.hooks.launcher import announce as _announce_launcher
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.rootdrop import drop as _drop
 from mikemol.hooks.rootdrop import invoker_home as _invoker_home
@@ -578,6 +579,7 @@ def resolve_root(given: str, env: Mapping[str, str]) -> Path:
     else:
         root = fleet_root(given, env) / given
     become_owner(root)
+    _announce_launcher(sys.prefix, root, env, sys.stderr)
     return root
 
 

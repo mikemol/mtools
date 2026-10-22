@@ -592,6 +592,10 @@ src/mikemol/hooks/gatetargets.py|finish-before-start-kept|    if start is None o
 src/mikemol/hooks/gatetargets.py|gate-wall-time-left-in-milliseconds|    return \(finish - start\) / 1000\.0|    return float(finish - start)|def=run_seconds
 src/mikemol/hooks/trainalert.py|empty-series-not-stale|    return not samples or now - max\(samples\) > seconds|    return bool(samples) and now - max(samples) > seconds|def=stale_firing
 src/mikemol/hooks/trainalert.py|absent-arm-dropped|    return f"time\(\) - tlast_over_time\(\{series\}\) > \{seconds\} or absent_over_time\(\{series\}\)"|    return f"time() - tlast_over_time({series}) > {seconds}"|def=stale_expr
+src/mikemol/hooks/launcher.py|mtools-tree-noticed|    if \(root / "hooks" / "pyproject\.toml"\)\.is_file\(\):|    if False:|def=notice
+src/mikemol/hooks/launcher.py|own-venv-noticed|    if TEST_ENV in env or not any\(marker in prefix for marker in MARKERS\):|    if TEST_ENV in env:|def=notice
+src/mikemol/hooks/launcher.py|bazel-test-noticed|    if TEST_ENV in env or not any\(marker in prefix for marker in MARKERS\):|    if not any(marker in prefix for marker in MARKERS):|def=notice
+src/mikemol/hooks/launcher.py|silence-written-as-a-notice|    if said is not None:|    if True:|def=announce
 src/mikemol/hooks/trainalert.py|green-round-ignored|    return inside\.count\(RED\) >= rounds and GREEN not in inside|    return inside.count(RED) >= rounds|def=red_streak_firing
 src/mikemol/hooks/trainalert.py|window-not-applied|    inside = \[verdict for time, verdict in samples if window\[0\] <= time <= window\[1\]\]|    inside = [verdict for time, verdict in samples]|def=red_streak_firing
 src/mikemol/hooks/trainalert.py|no-landing-read-as-a-gap|    return bool\(landings\) and now - max\(landings\) > seconds|    return now - max(landings) > seconds|def=no_land_firing
