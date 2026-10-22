@@ -91,6 +91,10 @@ src/mikemol/hooks/vlogfollow.py|quiet-file-passed-on-every-pause|        while s
 src/mikemol/hooks/vlogfollow.py|size-ignored-by-the-signature|    return stat\.st_ino, stat\.st_size|    return stat.st_ino, 0|def=signature
 src/mikemol/hooks/vlogcli.py|follow-accepted-without-a-file|    if args\.follow and \(args\.from_file is None or args\.command\):|    if False:|def=_prepare
 src/mikemol/hooks/vlogcli.py|ceiling-hidden-from-the-loop|    return code, batcher\.blocked|    return code, False|def=_pass
+src/mikemol/hooks/worktreereap.py|new-checkout-classified-anyway|    if new:|    if False:|def=classify
+src/mikemol/hooks/worktreereap.py|nothing-is-ever-new|        fresh = not wt\.prunable and \(seen is None or wt\.path not in seen\)|        fresh = False|def=report
+src/mikemol/hooks/worktreereap.py|missing-directory-held-as-new|        fresh = not wt\.prunable and \(seen is None or wt\.path not in seen\)|        fresh = seen is None or wt.path not in seen|def=report
+src/mikemol/hooks/worktreereap.py|seen-file-read-as-empty|        return set\(path\.read_text\(encoding="utf-8"\)\.splitlines\(\)\)|        return set()|def=load_seen
 src/mikemol/hooks/worktreereap.py|held-checkout-classified-anyway|    if held:|    if False:|def=classify
 src/mikemol/hooks/worktreereap.py|detached-head-read-as-merged|    risky = not wt\.branch or cherry is None or unmerged_commits\(cherry\)|    risky = cherry is None or unmerged_commits(cherry)|def=classify
 src/mikemol/hooks/worktreereap.py|failed-status-read-as-clean|    if status is None or status\.strip\(\):|    if status.strip():|def=classify

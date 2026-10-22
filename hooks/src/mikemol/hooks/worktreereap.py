@@ -8,6 +8,7 @@ Removing the wrong one loses work, so the first step only CLASSIFIES, and remove
 nothing:
 
     held             a process has this directory as its working directory (never touched)
+    new              an existing worktree no earlier run listed (never a candidate)
     dirty            uncommitted changes in the tree
     unmerged         commits on the branch that `git cherry main BRANCH` says main lacks (or a
                      detached head, which cannot be judged)
@@ -24,8 +25,14 @@ reads as unmerged for `cherry` and as dirty for `status`, never as an empty answ
 ⚑ `/proc/<pid>/cwd` IS A LINK, AND IT IS READ AS ONE: `Path.readlink` returns the path and follows
 nothing, which is the only way to ask a process where it is. No repository link is read.
 
-The two reads over time that tell a live worktree from a just-created one, the `refs/stash-reap`
-save and the removal by exact path are later steps (W1382).
+⚑ TWO READS OVER TIME, ONE RUN APART (W1809): a worktree whose directory exists and which an
+earlier run did not list is `new`, and is never a candidate, because a checkout made a minute
+ago is clean and merged-looking and its owner has not started. The earlier run's listing is
+kept in `<git common dir>/mtools/worktree-reap.seen`, the only thing this command writes (the
+worktrees themselves are never touched). The first run has nothing remembered, so it reports
+every present worktree as new and says so on standard error; a second run is the second read.
+
+The `refs/stash-reap` save and the removal by exact path are later steps (W1382).
 
 CONSUMED BY: the `mikemol-worktree-reap` console script.
 """
@@ -41,11 +48,16 @@ HELD = "held"
 DIRTY = "dirty"
 UNMERGED = "unmerged"
 GONE = "gone"
+NEW = "new"
 CLEAN = "clean-equivalent"
 EXIT_OK = 0
 EXIT_USAGE = 2
 BRANCH_PREFIX = "refs/heads/"
 USAGE = "usage: mikemol-worktree-reap REPO   (read-only: classifies, changes nothing)\n"
+FIRST_RUN = (
+    "mikemol-worktree-reap: first run for this repository, so every present worktree is `new`; "
+    "run it again later and the second read classifies them\n"
+)
 Readlink = Callable[[Path], str | None]
 
 
@@ -124,15 +136,19 @@ def unmerged_commits(cherry: str) -> bool:
     return any(line.startswith("+") for line in cherry.splitlines())
 
 
-def classify(wt: Worktree, cherry: str | None, status: str | None, *, held: bool) -> str:
+def classify(
+    wt: Worktree, cherry: str | None, status: str | None, *, held: bool, new: bool = False
+) -> str:
     """Classify one worktree from what was read about it; None means the read failed.
 
     Returns:
-        `HELD`, `UNMERGED`, `GONE`, `DIRTY` or `CLEAN`, in that order of precedence.
+        `HELD`, `NEW`, `UNMERGED`, `GONE`, `DIRTY` or `CLEAN`, in that order of precedence.
 
     """
     if held:
         return HELD
+    if new:
+        return NEW
     risky = not wt.branch or cherry is None or unmerged_commits(cherry)
     if wt.prunable:
         return UNMERGED if risky else GONE
@@ -147,6 +163,45 @@ def _out(root: Path, argv: Sequence[str]) -> str | None:
     return done.stdout if done.returncode == 0 else None
 
 
+def seen_file(root: Path) -> Path | None:
+    """Name the file that remembers the worktrees an earlier run listed.
+
+    Returns:
+        `<git common dir>/mtools/worktree-reap.seen`, or None when git cannot say.
+
+    """
+    common = _out(root, ["rev-parse", "--git-common-dir"])
+    if common is None:
+        return None
+    return (root / common.strip()).resolve() / "mtools" / "worktree-reap.seen"
+
+
+def load_seen(path: Path | None) -> set[str] | None:
+    """Read the remembered worktree paths.
+
+    Returns:
+        the paths, or None when there is no file (a first run) or it cannot be read.
+
+    """
+    if path is None:
+        return None
+    try:
+        return set(path.read_text(encoding="utf-8").splitlines())
+    except OSError:
+        return None
+
+
+def save_seen(path: Path | None, listed: Sequence[Worktree]) -> None:
+    """Remember this run's worktrees for the next one; a failed write remembers nothing."""
+    if path is None:
+        return
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("".join(f"{wt.path}\n" for wt in listed), encoding="utf-8")
+    except OSError:
+        return
+
+
 def report(root: Path, upstream: str = "main") -> list[str]:
     """Classify every scratch worktree of the repository at `root`.
 
@@ -155,12 +210,16 @@ def report(root: Path, upstream: str = "main") -> list[str]:
 
     """
     listed = parse_worktrees(_out(root, ["worktree", "list", "--porcelain"]) or "")[1:]
+    where = seen_file(root)
+    seen = load_seen(where)
     lines: list[str] = []
     for wt in listed:
         cherry = _out(root, ["cherry", upstream, wt.branch]) if wt.branch else ""
         status = "" if wt.prunable else _out(Path(wt.path), ["status", "--porcelain"])
-        kind = classify(wt, cherry, status, held=bool(holders(wt.path)))
+        fresh = not wt.prunable and (seen is None or wt.path not in seen)
+        kind = classify(wt, cherry, status, held=bool(holders(wt.path)), new=fresh)
         lines.append(f"{kind}\t{wt.path}\t{wt.branch or '(detached)'}")
+    save_seen(where, listed)
     return lines
 
 
@@ -175,7 +234,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     if len(args) != 1:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
-    sys.stdout.writelines(f"{line}\n" for line in report(Path(args[0])))
+    root = Path(args[0])
+    first = load_seen(seen_file(root)) is None
+    lines = report(root)
+    sys.stdout.writelines(f"{line}\n" for line in lines)
+    if first and lines:
+        sys.stderr.write(FIRST_RUN)
     return EXIT_OK
 
 

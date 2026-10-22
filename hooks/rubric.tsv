@@ -177,3 +177,4 @@ commitprogress	The Commit Progress Witness: CPU of the Process Tree or Growth of
 worktreereap	The Worktree Reaper's Classification: Held, Dirty, Unmerged, Gone and Clean-Equivalent in That Precedence, an Unknown Never Read as Clean, and Nothing Changed
 vlogfollow	The Follow Loop: A Pass on the File's Own Change and Never on Elapsed Time, a Held Pass Pausing and Passing Again, a Rotation or a Missing File Counting as a Change, and a Quiet File Only Sampled
 vlogcli_follow	The Follow Flag: Refused Without a File or With a Command, and Each Pass Shipping Only What Is New
+worktreereap_stable	The New Worktree: Not a Candidate Until an Earlier Run Has Listed It, Held Still Winning, a Missing Directory Judged at Once, and the Seen File the Only Thing Written

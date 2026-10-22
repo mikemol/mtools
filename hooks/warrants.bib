@@ -14505,3 +14505,45 @@
   claim  = {Two passes over a file that grows between them: every line once, in order, exit 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli_follow.py -k test_each_pass_the_loop_makes_ships_only_what_is_new},
 }
+
+@misc{hooks-worktreereap-stable-new-comes-after-held-and-before-every-other-class,
+  section = {worktreereap_stable},
+  title  = {A held checkout is held even when new; a new one is not dirty, unmerged or clean yet},
+  claim  = {A held checkout is held even when new; a new one is not dirty, unmerged or clean yet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_new_comes_after_held_and_before_every_other_class},
+}
+
+@misc{hooks-worktreereap-stable-first-run-reports-everything-new-and-the-second-classifies,
+  section = {worktreereap_stable},
+  title  = {Two runs an event apart are the two reads; the seen file is the only thing written},
+  claim  = {Two runs an event apart are the two reads; the seen file is the only thing written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_the_first_run_reports_everything_new_and_the_second_classifies},
+}
+
+@misc{hooks-worktreereap-stable-worktree-made-after-the-last-run-is-new-beside-one-seen-before,
+  section = {worktreereap_stable},
+  title  = {The control: the old worktree is classified, the one created since is not a candidate},
+  claim  = {The control: the old worktree is classified, the one created since is not a candidate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_a_worktree_made_after_the_last_run_is_new_beside_one_seen_before},
+}
+
+@misc{hooks-worktreereap-stable-missing-directory-is-gone-not-new-on-the-first-run,
+  section = {worktreereap_stable},
+  title  = {New is for directories that exist: a prunable record is judged by its commits at once},
+  claim  = {New is for directories that exist: a prunable record is judged by its commits at once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_a_missing_directory_is_gone_not_new_on_the_first_run},
+}
+
+@misc{hooks-worktreereap-stable-unreadable-seen-file-reads-as-a-first-run,
+  section = {worktreereap_stable},
+  title  = {A missing file, a directory in its place and no path at all each give None},
+  claim  = {A missing file, a directory in its place and no path at all each give None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_an_unreadable_seen_file_reads_as_a_first_run},
+}
+
+@misc{hooks-worktreereap-stable-command-says-it-is-a-first-run-once,
+  section = {worktreereap_stable},
+  title  = {The first run explains why everything is new; the second says nothing on stderr},
+  claim  = {The first run explains why everything is new; the second says nothing on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_the_command_says_it_is_a_first_run_once},
+}

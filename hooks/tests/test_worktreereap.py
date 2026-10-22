@@ -122,6 +122,7 @@ def test_each_class_is_reported_for_a_real_repository_and_nothing_is_changed(
     """A temp repo with a clean, a dirty, an ahead and a vanished worktree, listed unchanged."""
     root = _repo_with_each_class(tmp_path)
     before = _git(root, "worktree", "list", "--porcelain")
+    reap.report(root)
     kinds = {line.split("\t")[2]: line.split("\t")[0] for line in reap.report(root)}
     assert kinds == {
         "scratch/clean": reap.CLEAN,
