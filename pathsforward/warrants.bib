@@ -6968,3 +6968,31 @@
   claim  = {The plan alone cannot see HEAD, so it never closes a card with its own manifest.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_closeumbrellas_manifest.py -k test_without_a_root_a_manifest_card_is_kept_as_unchecked},
 }
+
+@misc{pathsforward-landed-status-landed-is-a-status-and-the-check-accepts-it,
+  section = {landed_status},
+  title  = {The vocabulary has five values and a landed card with a witness has no finding},
+  claim  = {The vocabulary has five values and a landed card with a witness has no finding.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_status.py -k test_landed_is_a_status_and_the_check_accepts_it},
+}
+
+@misc{pathsforward-landed-status-landed-card-is-open-and-not-workable,
+  section = {landed_status},
+  title  = {A tick never picks it; a ready card with no witness is still workable},
+  claim  = {A tick never picks it; a ready card with no witness is still workable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_status.py -k test_a_landed_card_is_open_and_not_workable},
+}
+
+@misc{pathsforward-landed-status-landed-card-orders-with-blocked-after-ready-and-before-any-other-status,
+  section = {landed_status},
+  title  = {Working, ready, then blocked and landed in file order, then an unknown status},
+  claim  = {Working, ready, then blocked and landed in file order, then an unknown status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_status.py -k test_a_landed_card_orders_with_blocked_after_ready_and_before_any_other_status},
+}
+
+@misc{pathsforward-landed-status-landed-card-with-no-witness-is-a-finding-and-a-ready-one-is-not,
+  section = {landed_status},
+  title  = {A landed card can only be closed by its witness, so one without it is reported},
+  claim  = {A landed card can only be closed by its witness, so one without it is reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_status.py -k test_a_landed_card_with_no_witness_is_a_finding_and_a_ready_one_is_not},
+}

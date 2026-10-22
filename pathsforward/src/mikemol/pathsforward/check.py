@@ -481,6 +481,25 @@ def witnessed_live(state: State) -> list[str]:
     ]
 
 
+def landed_unwitnessed(state: State) -> list[str]:
+    """Report a landed waypoint that declares no witness (W1806).
+
+    ⚑ DONE FOLLOWS FROM THE WITNESS (agreed with nemik:W702, 2026-10-18): a card in `landed` has
+    shipped its change and waits for its deploy witness to hold, so one with no witness can never
+    become done by anything and would sit open for good.
+
+    Returns:
+        one finding per landed waypoint with no witness.
+
+    """
+    return [
+        f"{text(w, 'symbol')}: landed with no witness; a landed card waits on its witness "
+        "(declare --witness, or mark it done if it deploys nothing)"
+        for w in state.waypoints
+        if text(w, "status") == "landed" and not text(w, "witness")
+    ]
+
+
 def vectors(state: State) -> list[str]:
     """Report a stored vector outside the WV:1 grammar, or one without a valid source (W257).
 
@@ -560,6 +579,7 @@ def check(state: State) -> list[str]:
         *comma_tags(state),
         *tag_grammar(state),
         *witnessed_live(state),
+        *landed_unwitnessed(state),
         *vectors(state),
         *root(state),
         *outcomes.findings(state),

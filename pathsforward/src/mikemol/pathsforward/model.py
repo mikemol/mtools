@@ -17,7 +17,7 @@ from typing import cast
 
 Json = dict[str, object]
 
-STATUSES: tuple[str, ...] = ("ready", "blocked", "working", "done")
+STATUSES: tuple[str, ...] = ("ready", "blocked", "working", "landed", "done")
 BLOCKED_KINDS: tuple[str, ...] = ("agent", "human")
 NO_SYMBOL = "--"
 
@@ -27,7 +27,9 @@ _SYMBOL = re.compile(r"W([1-9][0-9]*)")
 # starts with a letter or digit: `..`, `.hidden`, an empty segment and a leading `/` are not names.
 _SEGMENT = r"[A-Za-z0-9][A-Za-z0-9._-]*"
 _FOREIGN = re.compile(rf"({_SEGMENT}(?:/{_SEGMENT})*):W([1-9][0-9]*)")
-_RANK: dict[str, int] = {"working": 0, "ready": 1, "blocked": 2}
+# ⚑ `landed` (W1806, agreed with nemik 2026-10-18) is open and NOT WORKABLE: its change has landed
+# and its witness, not a tick, closes it, so it ranks with blocked and `workable` already says no.
+_RANK: dict[str, int] = {"working": 0, "ready": 1, "blocked": 2, "landed": 2}
 
 
 class MalformedStateError(ValueError):
