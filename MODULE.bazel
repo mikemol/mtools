@@ -851,6 +851,34 @@ filegroup(
     url = "https://github.com/exaloop/codon/releases/download/v0.20.3/codon-linux-x86_64.tar.gz",
 )
 
+# ⚑⚑ chrome-headless-shell 153.0.8010.12 IS THE BROWSER THE WEBPAGE DIST'S PROBES RUN AGAINST (W1812,
+# nemik:W717, mtools:W1683): the three probe results nemik recorded (a raising pageerror handler
+# does not abort a pending wait; CDP Page.crash ends one in about 6.7 s; closing the page ends it in
+# about 2.1 s) are facts about THIS chromium, so a test of them against a floating browser would
+# measure a different thing. The archive is the one Playwright's own CDN serves for that build
+# (`cdn.playwright.dev/builds/cft/153.0.8010.12/linux64/`); its sha256 was MEASURED on a download
+# of 119,809,080 bytes (2026-10-22), not copied from a page, and nemik's MODULE.bazel names the same
+# URL. Its top level is `chrome-headless-shell-linux64/` (unzip -l read), stripped here. Nothing
+# consumes the repository yet: the probes' bazel tests land with the webpage dist (W1683).
+http_archive(
+    name = "chrome_headless_shell",
+    build_file_content = """exports_files(["chrome-headless-shell"])
+filegroup(
+    name = "bin",
+    srcs = ["chrome-headless-shell"],
+    visibility = ["//visibility:public"],
+)
+filegroup(
+    name = "files",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "a9da028861a0cf789ff25c2fed45f5f1aaf969ed9247835b6a7821a4f7af9d1d",
+    strip_prefix = "chrome-headless-shell-linux64",
+    url = "https://cdn.playwright.dev/builds/cft/153.0.8010.12/linux64/chrome-headless-shell-linux64.zip",
+)
+
 # ⚑⚑⚑ ruff IS AN http_archive AND NOT A pip DEPENDENCY, AND THE REASON RECORDED HERE WENT STALE.
 #
 # ⚑⚑ THE WITHDRAWN PREMISE, KEPT VISIBLE BECAUSE A READER WILL HAVE SPENT IT: this said
