@@ -11193,20 +11193,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_quiet_inside_the_limit_keeps_watching_and_asks_nothing},
 }
 
-@misc{hooks-watchdog-session-with-no-ready-cards-is-asked-once-per-beat-and-never-fired-on,
-  section = {heartbeat},
-  title  = {Really blocked: the check is recorded, quietly, and not repeated until it beats again},
-  claim  = {Really blocked: the check is recorded, quietly, and not repeated until it beats again.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_session_with_no_ready_cards_is_asked_once_per_beat_and_never_fired_on},
-}
-
-@misc{hooks-watchdog-new-beat-reopens-the-question,
-  section = {heartbeat},
-  title  = {The earlier answer was about the earlier silence},
-  claim  = {The earlier answer was about the earlier silence.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_new_beat_reopens_the_question},
-}
-
 @misc{hooks-watchdog-writer-that-cannot-answer-does-not-fire,
   section = {heartbeat},
   title  = {An unknown count is not evidence of work},
@@ -11282,13 +11268,6 @@
   title  = {A repo with ready cards and no beat at all is fired on after the band, and says why},
   claim  = {A repo with ready cards and no beat at all is fired on after the band, and says why.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start},
-}
-
-@misc{hooks-watchdog-no-heartbeat-file-and-no-ready-cards-does-not-fire-and-says-so-once,
-  section = {heartbeat},
-  title  = {The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone},
-  claim  = {The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once},
 }
 
 @misc{hooks-watchdog-no-heartbeat-file-inside-the-band-does-not-fire,
@@ -14802,4 +14781,21 @@
   title  = {Without a named store there is nothing to send to, and nothing is spawned},
   claim  = {Without a named store there is nothing to send to, and nothing is spawned.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sessioncache.py -k test_no_store_sends_nothing_and_says_so},
+}
+
+@misc{hooks-watchdog-session-with-no-ready-cards-is-woken-past-the-band-all-the-same,
+  section = {heartbeat},
+  title  = {A fully blocked queue is woken before the cache goes cold, the count only worded (W1831)},
+  claim  = {A fully blocked queue is woken before the cache goes cold, the count only worded
+            (W1831). The operator's ruling (2026-10-22, host 695f3e0a line 90502): an
+            80-minute silence while the watchdog runs is one of the key reasons it
+            exists. The wake says it has nothing ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_session_with_no_ready_cards_is_woken_past_the_band_all_the_same},
+}
+
+@misc{hooks-watchdog-no-heartbeat-file-and-no-ready-cards-is-woken-and-says-so-once,
+  section = {heartbeat},
+  title  = {The note is for the old pin, said once, and a blocked repo is woken like any other},
+  claim  = {The note is for the old pin, said once, and a blocked repo is woken like any other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_and_no_ready_cards_is_woken_and_says_so_once},
 }

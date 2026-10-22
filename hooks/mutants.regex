@@ -390,9 +390,8 @@ src/mikemol/hooks/scratch_cli.py|scratch-beats-on-a-git-refusal|    if code == 0
 src/mikemol/hooks/scratch_cli.py|scratch-beat-skipped|        try_beat\(Path\(text\.strip\(\)\), BEAT_TOOL, time\.time_ns\(\)\)|        pass|def=beat
 src/mikemol/hooks/watchdog.py|no-history-wakes-early|        return MAX_FIRE_S|        return MIN_FIRE_S|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|limit-not-clamped|return min\(max\(phi_fire \* mean \* math\.log\(10\), MIN_FIRE_S\), MAX_FIRE_S\)|return phi_fire * mean * math.log(10)|def=silence_limit_s
-src/mikemol/hooks/watchdog.py|fires-inside-the-limit|if silent_s >= bound_s:|if True:|def=watch
-src/mikemol/hooks/watchdog.py|blocked-session-fired-on|                if waiting:|                if waiting is not None:|def=watch
-src/mikemol/hooks/watchdog.py|same-silence-asked-twice|                asked_about = last\.at_ns|                asked_about = None|def=watch
+src/mikemol/hooks/watchdog.py|asks-inside-the-limit|waiting = ready\(\) if silent_s >= bound_s else None|waiting = ready()|def=watch
+src/mikemol/hooks/watchdog.py|blocked-session-sleeps-through-the-window|        if waiting is not None:|        if waiting:|def=watch
 src/mikemol/hooks/watchdog.py|unreadable-count-read-as-a-number|return int\(said\) if done\.returncode == 0 and said\.isdecimal\(\) else None|return int(said) if done.returncode == 0 else None|def=ready_from
 src/mikemol/hooks/gatephase.py|a-time-that-is-not-a-number-is-a-mark|if len\(parts\) == _FIELDS and parts\[1\]\.isdecimal\(\):|if len(parts) == _FIELDS:|def=marks
 src/mikemol/hooks/commit_span.py|phase-starts-before-the-lease|start = min\(max\(mark\.at_ns, moments\.lease_ns\), moments\.end_ns\)|start = mark.at_ns|def=phase_pieces
@@ -483,7 +482,7 @@ src/mikemol/hooks/commit_counts.py|waypoints-never-stored|            if waypoin
 src/mikemol/hooks/commit_kata.py|stack-names-only-its-first|",".join\(item\.waypoint for item in items\)|items[0].waypoint|def=named_waypoints
 src/mikemol/hooks/watchdog.py|waiting-row-offered-as-the-stack|if row\[0\] == "STACK"|if row[0] == "WAITING"|def=next_action
 src/mikemol/hooks/watchdog.py|hint-never-printed|    if line:|    if False:|def=_say
-src/mikemol/hooks/watchdog.py|unreadable-count-latches-the-beat|                if waiting is not None:|                if True:|def=watch
+src/mikemol/hooks/watchdog.py|unreadable-count-fires|        if waiting is not None:|        if True:|def=watch
 src/mikemol/hooks/project_root.py|ruff-only-file-ignored|if \(root / name\)\.is_file\(\):|if False:|def=ruff_config_for
 src/mikemol/hooks/project_root.py|ruff-toml-ranked-over-dot-ruff-toml|    for name in RUFF_CONFIGS:|    for name in reversed(RUFF_CONFIGS):|def=ruff_config_for
 src/mikemol/hooks/pycheck.py|width-always-default|    width = found\.group\(1\) if found else "default"|    width = "default"|def=config_note

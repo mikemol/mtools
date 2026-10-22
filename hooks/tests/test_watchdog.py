@@ -104,30 +104,18 @@ def test_quiet_inside_the_limit_keeps_watching_and_asks_nothing() -> None:
     assert asked == []
 
 
-def test_a_session_with_no_ready_cards_is_asked_once_per_beat_and_never_fired_on() -> None:
-    """Really blocked: the check is recorded, quietly, and not repeated until it beats again."""
-    asked: list[int] = []
+def test_a_session_with_no_ready_cards_is_woken_past_the_band_all_the_same(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A fully blocked queue is woken before the cache goes cold, the count only worded (W1831).
 
-    def ready() -> int | None:
-        asked.append(1)
-        return 0
-
-    seams = _seams([_beat(0)], ready, [_LATE, _LATE + 100, _LATE + 200], lives=4)
-    assert watchdog.watch(seams, 1.0, _POLL) == 0
-    assert asked == [1]
-
-
-def test_a_new_beat_reopens_the_question() -> None:
-    """The earlier answer was about the earlier silence."""
-    asked: list[int] = []
-
-    def ready() -> int | None:
-        asked.append(1)
-        return 0
-
-    seams = _seams([_beat(0), _beat(_LATE)], ready, [_LATE, 2 * _LATE], lives=4)
-    assert watchdog.watch(seams, 1.0, _POLL) == 0
-    assert asked == [1, 1]
+    The operator's ruling (2026-10-22, host 695f3e0a line 90502): an 80-minute silence while the
+    watchdog runs is one of the key reasons it exists. The wake says it has nothing ready.
+    """
+    seams = _seams([_beat(0)], lambda: 0, [_LATE, _LATE + 100, _LATE + 200], lives=4)
+    assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
+    expected = f"idle with 0 ready cards, last heartbeat {_LATE}s ago (mikemol-commit); {_BOUND}\n"
+    assert capsys.readouterr().out == expected
 
 
 def test_a_writer_that_cannot_answer_does_not_fire() -> None:
@@ -164,13 +152,15 @@ def test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start(
     )
 
 
-def test_no_heartbeat_file_and_no_ready_cards_does_not_fire_and_says_so_once(
+def test_no_heartbeat_file_and_no_ready_cards_is_woken_and_says_so_once(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    """The note is for the old pin, not a per-poll chatter, and a blocked repo is left alone."""
+    """The note is for the old pin, said once, and a blocked repo is woken like any other."""
     seams = _seams([None], lambda: 0, [0, _LATE, _LATE + 100], lives=4)
-    assert watchdog.watch(seams, 1.0, _POLL) == 0
-    assert capsys.readouterr().out.count("no heartbeat file") == 1
+    assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
+    said = capsys.readouterr().out
+    assert said.count("no heartbeat file") == 1
+    assert "idle with 0 ready cards" in said
 
 
 def test_a_beat_older_than_the_start_does_not_fire_the_first_poll() -> None:

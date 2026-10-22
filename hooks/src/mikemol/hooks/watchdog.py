@@ -261,10 +261,18 @@ def watch(
     from the start whenever the last beat predates it. Otherwise a stale file fires the first poll,
     the session restarts it, it fires again, and nothing watches in between.
 
-    ⚑ A COUNT THAT COULD NOT BE READ IS ASKED AGAIN, NEVER LATCHED (W1829): only a count that was
-    read, and was zero, closes the question for that beat. One failed `--ready-count` (a writer
-    that was busy, a state file mid-write) had silenced the beat for good, and an 81-minute
-    silence with 31 cards ready passed without the alarm, 2026-10-22.
+    ⚑ A SILENCE PAST THE BAND WAKES THE SESSION WHATEVER THE QUEUE HOLDS (W1831, operator ruling
+    2026-10-22, host session 695f3e0a line 90502, uuid 20c00df9-78cf-4c7b-8131-90e2af96a69b: an
+    80-minute silence while the watchdog runs is one of the key reasons it exists): the band's
+    ceiling is under the prompt cache's hour, so a quiet session is woken before its cache goes
+    cold. The ready count only decides what the idle line says, `idle with 0 ready cards` being
+    the wake that tells a fully blocked session to nudge its blockers or disarm. It used to
+    close the question for a beat on a zero, which is how a blocked queue slept through the cache
+    window.
+
+    ⚑ A COUNT THAT COULD NOT BE READ IS ASKED AGAIN, NEVER LATCHED (W1829): an unreadable count
+    (None) fires nothing yet and is asked again on the next poll. One failed `--ready-count` (a
+    writer that was busy, a state file mid-write) once silenced the beat for good.
 
     ⚑ THE ALARM CARRIES ITS OWN NEXT ACTION (W1591): after the idle line, `hint` supplies one line
     naming a stackable card and a leaf to atomize, when it has any.
@@ -274,7 +282,6 @@ def watch(
 
     """
     read, ready, now_ns, sleep, alive = seams
-    asked_about: int | None = None
     started = Beat("no heartbeat source", now_ns(), ())
     noted = False
     polls = 0
@@ -290,17 +297,13 @@ def watch(
                 noted = True
         elif last.at_ns < started.at_ns:
             last = started
-        if last.at_ns != asked_about:
-            silent_s = (now_ns() - last.at_ns) / _NS_PER_S
-            bound_s = silence_limit_s(last, phi_fire)
-            if silent_s >= bound_s:
-                waiting = ready()
-                if waiting:
-                    sys.stdout.write(idle_line(waiting, last, now_ns(), bound_s) + "\n")
-                    _say(hint())
-                    return EXIT_IDLE
-                if waiting is not None:
-                    asked_about = last.at_ns
+        silent_s = (now_ns() - last.at_ns) / _NS_PER_S
+        bound_s = silence_limit_s(last, phi_fire)
+        waiting = ready() if silent_s >= bound_s else None
+        if waiting is not None:
+            sys.stdout.write(idle_line(waiting, last, now_ns(), bound_s) + "\n")
+            _say(hint())
+            return EXIT_IDLE
         sleep(poll_s)
     return 0
 
