@@ -181,3 +181,4 @@ worktreereap_stable	The New Worktree: Not a Candidate Until an Earlier Run Has L
 worktreereap_save	The Worktree Save: Dirty Work Kept With Its Untracked Files in a Commit Under refs/stash-reap, Unmerged Work Kept by Its Branch Tip, the Sha in the Name, a Clean or New Worktree Given No Ref, and Nothing Removed
 worktreereap_remove	The Worktree Removal: Only a Gone or Clean-Equivalent Worktree, by Its Exact Path, Without Force So Git Is the Last Gate, Held Read Again Just Before, and the Branches and Every Other Class Left Alone
 gateclass	The Failing-Step Classifier: New When It Never Failed in the Window, Intermittent When Some Rounds Were Red, Broken When Every One Was, Unknown With No History, and Only the Recent Rounds Counting
+historyfetch	The Gate History Read From the Trace Store: No Answer Is None and Never an Empty History, So a Refusal Never Claims a Regression for Want of a Record

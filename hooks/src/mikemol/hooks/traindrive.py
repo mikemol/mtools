@@ -40,7 +40,7 @@ from mikemol.hooks.isolated import Done
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, Stack, build
 from mikemol.hooks.stacklanding import land
-from mikemol.hooks.stackrun import EXIT_RACED, SHORT, Item, Seams, culprit_note
+from mikemol.hooks.stackrun import EXIT_RACED, SHORT, History, Item, Seams, culprit_note
 from mikemol.hooks.trainjoin import Follower as Group
 from mikemol.hooks.traintel import Stats
 
@@ -154,13 +154,15 @@ def _unbuilt(groups: Sequence[Group], stack: Stack, before: str, name: str) -> t
     return at, Verdict(groups[at].key, code, text)
 
 
-def _refused(group: Group, gate: Done, before: str, name: str) -> Verdict:
+def _refused(
+    group: Group, gate: Done, before: str, name: str, history: History | None = None
+) -> Verdict:
     shown = (gate.stdout + gate.stderr).strip()
     head = f"{shown}\n" if shown else ""
     text = head + (
         f"REFUSED {name} (rc={gate.returncode}): the tip of the train was gated and a bisection "
         f"found this stack the first to fail; none of it landed, HEAD is {before[:SHORT]}; "
-        f"{culprit_note(shown, group.items)}\n"
+        f"{culprit_note(shown, group.items, history)}\n"
     )
     return Verdict(group.key, gate.returncode, text)
 
@@ -248,7 +250,8 @@ def drive(
         count.landed += len(landed)
         if bad is None:
             return verdicts
-        verdicts.append(_refused(remaining[bad], rnd.gate(bad), before, name))
+        refused = _refused(remaining[bad], rnd.gate(bad), before, name, seams.history(name))
+        verdicts.append(refused)
         count.refused += 1
         remaining = remaining[bad + 1 :]
     return verdicts

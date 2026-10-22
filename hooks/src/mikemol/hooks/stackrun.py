@@ -22,13 +22,14 @@ CONSUMED BY: `commit_kata.main` (`--stack FILE`).
 """
 
 import json
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TextIO, cast
 
 from mikemol.hooks.commit_body import refusal as body_refusal
-from mikemol.hooks.gatephase import stage_note
+from mikemol.hooks.gateclass import classify_all
+from mikemol.hooks.gatephase import failed_checks, stage_note
 from mikemol.hooks.isolated import EnvRunner
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
@@ -38,6 +39,9 @@ from mikemol.hooks.stacksnap import Frozen
 BODY_CHECK = body_refusal
 EXIT_RACED = 5
 SHORT = 7
+KINDS_SHOWN = 3
+KIND_CUT = 60
+History = Mapping[str, tuple[bool, ...]]
 
 
 @dataclass(frozen=True)
@@ -54,14 +58,25 @@ class Item:
     files: tuple[Frozen, ...] | None = None
 
 
+def no_history(_repo: str) -> History | None:
+    """Say that no gate history is available.
+
+    Returns:
+        None, so a refusal says nothing about the kind of red.
+
+    """
+    return None
+
+
 @dataclass(frozen=True)
 class Seams:
-    """What a test replaces: the git runner, the snapshot namespace, the message and the publish."""
+    """What a test replaces: the git runner, the namespace, the message, publish and history."""
 
     run: EnvRunner
     namespace: Path
     message_of: Callable[[Item], str]
     published: Callable[[str], str]
+    history: Callable[[str], History | None] = no_history
 
 
 def _item_of(entry: object) -> Item | None:
@@ -135,14 +150,32 @@ def culprits(output: str, items: Sequence[Item]) -> list[int]:
     return hits
 
 
-def culprit_note(output: str, items: Sequence[Item]) -> str:
+def kind_note(output: str, history: History | None) -> str:
+    """Say which kind of red each failed check is against its history (W1721).
+
+    Returns:
+        'kind: <label> is <class>; ...' for the first few failed checks, or '' when the
+        output lists none or no history could be read (nothing is guessed).
+
+    """
+    labels = failed_checks(output)
+    if not labels or history is None:
+        return ""
+    kinds = classify_all(labels, history)
+    shown = "; ".join(
+        f"{label[:KIND_CUT]} is {kind}" for label, kind in list(kinds.items())[:KINDS_SHOWN]
+    )
+    return f"kind: {shown}; "
+
+
+def culprit_note(output: str, items: Sequence[Item], history: History | None = None) -> str:
     """Say which entries the refused gate's output names, or that it names none.
 
     Returns:
-        a clause for the REFUSED line.
+        a clause for the REFUSED line, with the failing steps' kind when `history` is given.
 
     """
-    stage = stage_note(output)
+    stage = stage_note(output) + kind_note(output, history)
     hits = culprits(output, items)
     if not hits:
         return f"{stage}culprit: unattributed (the failing check names no path in this stack)"
@@ -178,7 +211,7 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
         out.write(
             f"REFUSED {name} (rc={gate.returncode}): the tip of a {len(items)}-commit stack was "
             f"gated once and refused; nothing landed, HEAD is still {before[:SHORT]}; "
-            f"{culprit_note(shown, items)}\n"
+            f"{culprit_note(shown, items, seams.history(name))}\n"
         )
         return gate.returncode
     paths = [p for item in items for p in item.paths]

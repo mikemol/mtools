@@ -63,6 +63,7 @@ from mikemol.hooks.commitprogress import watch as _watch
 from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
+from mikemol.hooks.historyfetch import fetch as _fetch_history
 from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.launcher import announce as _announce_launcher
@@ -896,6 +897,7 @@ def run_stack_mode(
             Request(item.waypoint, item.subject, item.body, (), trailer)
         ),
         published=lambda sha: published(root, sha),
+        history=lambda repo: _fetch_history(repo, env),
     )
     tee = TeeBuffer()
     try:

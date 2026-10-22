@@ -250,6 +250,9 @@ src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{b
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-line-number-kept|\{word\.partition\(":"\)\[0\] for word in words\}|set()|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-always-named|if not hits:|if False:|def=culprit_note
+src/mikemol/hooks/stackrun.py|kind-never-in-the-note|stage_note\(output\) \+ kind_note\(output, history\)|stage_note(output)|def=culprit_note
+src/mikemol/hooks/stackrun.py|no-history-still-claims-a-kind|if not labels or history is None:|if not labels:|def=kind_note
+src/mikemol/hooks/stackrun.py|no-failed-check-still-claims-a-kind|if not labels or history is None:|if history is None:|def=kind_note
 src/mikemol/hooks/verdictlog.py|gate-job-line-never-read|if jobs:|if False:|def=gate_event_of
 src/mikemol/hooks/verdictlog.py|bullet-read-outside-a-refusal|if in_refusal else None|if True else None|def=gate_event_of
 src/mikemol/hooks/verdictlog.py|gate-held-always-true|str\(bool\(jobs\["held"\]\)\)\.lower\(\)|"true"|def=gate_event_of
@@ -503,7 +506,7 @@ src/mikemol/hooks/stackfreeze.py|items-copy-not-forgotten|        Path\(named\)\
 src/mikemol/hooks/stackbuildfiles.py|glob-paths-counted-as-named|    text = re\.sub\(r"\\bglob\\s\*\\\(\[\^\)\]\*\\\)", "", text\)|    text = text|def=named_sources
 src/mikemol/hooks/traindrive.py|green-tip-bisected-anyway|        if self\.green\(last\):|        if False:|def=_Round.first_bad
 src/mikemol/hooks/traindrive.py|empty-prefix-lands-something|    if not groups:|    if False:|def=_land_prefix
-src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(_refused\(remaining\[bad\], rnd\.gate\(bad\), before, name\)\)|        pass|def=drive
+src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(refused\)|        pass|def=drive
 src/mikemol/hooks/traindrive.py|unbuilt-stack-reports-success|    code = \(stack\.failed\.returncode if stack\.failed else 0\) or 1|    code = 0|def=_unbuilt
 src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|            root, remaining\[: len\(remaining\) if bad is None else bad\], rnd, before|            root, remaining[: len(remaining)], rnd, before|def=drive
 src/mikemol/hooks/trainverdict.py|boolean-code-read-as-code|    if isinstance\(code, int\) and not isinstance\(code, bool\) and isinstance\(text, str\):|    if isinstance(code, int) and isinstance(text, str):|def=read

@@ -14697,3 +14697,45 @@
   claim  = {The control: carrying pathsforward's BUILD file leaves hooks judged, and refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_another_dists_build_file_does_not_excuse_the_slow_grid},
 }
+
+@misc{hooks-historyfetch-rounds-of-the-repository-become-each-steps-record,
+  section = {historyfetch},
+  title  = {Two red rounds and a green one: the step's record is newest first, True where it failed},
+  claim  = {Two red rounds and a green one: the step's record is newest first, True where it failed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_historyfetch.py -k test_the_rounds_of_the_repository_become_each_steps_record},
+}
+
+@misc{hooks-historyfetch-query-names-the-service-the-span-and-a-limit,
+  section = {historyfetch},
+  title  = {The emitter is asked for the train's round spans, at most `LIMIT` of them},
+  claim  = {The emitter is asked for the train's round spans, at most `LIMIT` of them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_historyfetch.py -k test_the_query_names_the_service_the_span_and_a_limit},
+}
+
+@misc{hooks-historyfetch-no-emitter-no-store-a-failed-query-or-no-round-is-none,
+  section = {historyfetch},
+  title  = {Each way of getting no answer is None; an empty history is never returned},
+  claim  = {Each way of getting no answer is None; an empty history is never returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_historyfetch.py -k test_no_emitter_no_store_a_failed_query_or_no_round_is_none},
+}
+
+@misc{hooks-kind-note-failed-check-is-named-with-its-class-from-the-history,
+  section = {refusal_stage},
+  title  = {A step red in every recent round is broken; one the history never saw red is new},
+  claim  = {A step red in every recent round is broken; one the history never saw red is new.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kind_note.py -k test_a_failed_check_is_named_with_its_class_from_the_history},
+}
+
+@misc{hooks-kind-note-no-history-or-no-failed-check-says-nothing,
+  section = {refusal_stage},
+  title  = {None is no reading, and output with no summary has no check to classify},
+  claim  = {None is no reading, and output with no summary has no check to classify.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kind_note.py -k test_no_history_or_no_failed_check_says_nothing},
+}
+
+@misc{hooks-kind-note-culprit-note-carries-the-kind-after-the-failed-checks,
+  section = {refusal_stage},
+  title  = {The kind sits between the failed list and the culprit clause; none leaves it unchanged},
+  claim  = {The kind sits between the failed list and the culprit clause; none leaves it unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kind_note.py -k test_the_culprit_note_carries_the_kind_after_the_failed_checks},
+}
