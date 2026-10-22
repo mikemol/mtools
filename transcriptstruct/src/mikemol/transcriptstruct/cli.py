@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import TextIO, cast
 
 from mikemol.transcriptstruct.blocks import Block
+from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.harvest import harvest
 from mikemol.transcriptstruct.memaudit import audit
 from mikemol.transcriptstruct.query import (
@@ -85,6 +86,12 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="W1541: the positional is a memory directory; print one row per finding (GRANT, "
         "WARRANTED, UNWARRANTED, POSSIBLY-SUPERSEDED) against its project's transcripts, read-only",
+    )
+    mode.add_argument(
+        "--cache-turns",
+        action="store_true",
+        help="W1830: one row per assistant API call: cache_read, cache_creation, the gap "
+        "to the previous call, the model and what woke it; the cold ones flagged",
     )
     mode.add_argument(
         "--harvest",
@@ -231,6 +238,34 @@ def _extract(path: Path, lines: Sequence[str], out: TextIO) -> None:
         out.write(_line({"line": line, "blocks": body}))
 
 
+def _turn(turn: Turn) -> dict[str, object]:
+    """Spell a turn as a JSON object.
+
+    Returns:
+        its line, time, model, cache read and creation, plain input, gap, waker and whether
+        it was cold.
+
+    """
+    return {
+        "line": turn.line,
+        "at": turn.at,
+        "model": turn.model,
+        "cache_read": turn.cache_read,
+        "cache_creation": turn.cache_creation,
+        "input_tokens": turn.input_tokens,
+        "gap_s": turn.gap_s,
+        "woke": turn.woke,
+        "cold": turn.cold,
+    }
+
+
+def _cache_turns(path: Path, out: TextIO) -> None:
+    """Write each API call of one transcript, then how many there were and how many cold."""
+    found = turns(read_path(path))
+    out.writelines(_line(_turn(turn)) for turn in found)
+    out.write(f"# {len(found)} turn(s), {sum(t.cold for t in found)} cold\n")
+
+
 def _harvest(path: Path, scheduled: Sequence[str], out: TextIO) -> None:
     """Write each operator utterance of one transcript as a JSON-LD line, then the counts."""
     found = harvest(read_path(path), path, scheduled)
@@ -286,6 +321,22 @@ def _verify(opts: dict[str, object], uuid: str, out: TextIO) -> int:
     return 0 if verdict.ok else _REFUSED
 
 
+def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out: TextIO) -> bool:
+    """Run the two modes that list a whole transcript, when one is asked for.
+
+    Returns:
+        True when `--cache-turns` or `--harvest` ran.
+
+    """
+    if opts.get("cache_turns") is True:
+        _cache_turns(path, out)
+    elif opts.get("harvest") is True:
+        _harvest(path, scheduled, out)
+    else:
+        return False
+    return True
+
+
 def _special(
     opts: dict[str, object], path: Path, scheduled: Sequence[str], out: TextIO
 ) -> int | None:
@@ -310,8 +361,7 @@ def _special(
             f"{done.uncitable} human utterance(s) uncitable\n"
         )
         return 0
-    if opts.get("harvest") is True:
-        _harvest(path, scheduled, out)
+    if _listing(opts, path, scheduled, out):
         return 0
     if opts.get("audit_memory") is True:
         out.writelines(f"{row.text()}\n" for row in audit(path))

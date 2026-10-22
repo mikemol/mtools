@@ -1074,3 +1074,45 @@
   claim  = {`operator: decide <q>` and `operator: act <cmd>` are asks, bare `operator` is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_the_ask_is_formed_only_by_decide_or_act_with_something_after},
 }
+
+@misc{transcriptstruct-cacheturns-records-sharing-a-message-id-are-one-turn,
+  section = {cacheturns},
+  title  = {A response of three content blocks repeats its usage on three records: one turn},
+  claim  = {A response of three content blocks repeats its usage on three records: one turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_records_sharing_a_message_id_are_one_turn},
+}
+
+@misc{transcriptstruct-cacheturns-gap-is-to-the-previous-turn-and-the-first-has-none,
+  section = {cacheturns},
+  title  = {The first turn has no gap, the next is seconds after it, and it is never negative},
+  claim  = {The first turn has no gap, the next is seconds after it, and it is never negative.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_the_gap_is_to_the_previous_turn_and_the_first_has_none},
+}
+
+@misc{transcriptstruct-cacheturns-turn-that-rebuilt-most-of-its-context-is-cold,
+  section = {cacheturns},
+  title  = {Large creation with small read is cold, a warm read is not, a small creation is not},
+  claim  = {Large creation with small read is cold, a warm read is not, a small creation is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_a_turn_that_rebuilt_most_of_its_context_is_cold},
+}
+
+@misc{transcriptstruct-cacheturns-what-woke-a-turn-is-read-from-the-user-record-before-it,
+  section = {cacheturns},
+  title  = {A tick prompt, a notification, a peer message and a hook block are named, text is other},
+  claim  = {A tick prompt, a notification, a peer message and a hook block are named, text is other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_what_woke_a_turn_is_read_from_the_user_record_before_it},
+}
+
+@misc{transcriptstruct-cacheturns-sidechain-turn-and-a-record-without-usage-are-not-turns,
+  section = {cacheturns},
+  title  = {A subagent's call is not this session's, and a record with no usage has nothing to read},
+  claim  = {A subagent's call is not this session's, and a record with no usage has nothing to read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_a_sidechain_turn_and_a_record_without_usage_are_not_turns},
+}
+
+@misc{transcriptstruct-cacheturns-mode-prints-a-row-per-turn-and-the-cold-count,
+  section = {cacheturns},
+  title  = {`--cache-turns` ends with '# N turn(s), M cold' so the denominator is on the page},
+  claim  = {`--cache-turns` ends with '# N turn(s), M cold' so the denominator is on the page.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_the_mode_prints_a_row_per_turn_and_the_cold_count},
+}

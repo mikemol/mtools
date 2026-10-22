@@ -44,3 +44,7 @@ src/mikemol/transcriptstruct/memaudit.py|index-target-keeps-its-last-line|      
 src/mikemol/transcriptstruct/standing_stop.py|hold-needs-no-stated-ask|    if not ask_formed\(command\):|    if False:|def=_lack
 src/mikemol/transcriptstruct/standing_stop.py|hold-needs-no-push|    if not _names\(symbol, pushes\):|    if False:|def=_lack
 src/mikemol/transcriptstruct/standing_stop.py|any-push-names-any-card|    return any\(re\.search\(rf"\\b\{symbol\}\\b", t\) for t in texts\)|    return bool(texts)|def=_names
+src/mikemol/transcriptstruct/cacheturns.py|cold-needs-no-big-creation|self\.cache_creation >= COLD_CREATION|True|def=Turn.cold
+src/mikemol/transcriptstruct/cacheturns.py|cold-needs-no-small-read|self\.cache_read < COLD_READ_SHARE \* total|True|def=Turn.cold
+src/mikemol/transcriptstruct/cacheturns.py|negative-gap-kept|max\(_seconds\(stamp\) - _seconds\(previous\.at\), 0\.0\)|_seconds(stamp) - _seconds(previous.at)|def=_turn
+src/mikemol/transcriptstruct/cacheturns.py|repeated-message-counted-again|ident in seen|False|def=turns
