@@ -14597,3 +14597,59 @@
   claim  = {`--save REPO` saves; the ref's name is the branch and the commit's sha seven characters.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_the_command_takes_save_and_prints_the_ref_as_a_fourth_field},
 }
+
+@misc{hooks-worktreereap-remove-gone-and-a-clean-worktree-are-removed-and-every-other-class-stays,
+  section = {worktreereap_remove},
+  title  = {Two removed by exact path; the dirty and the ahead worktree keep their record and files},
+  claim  = {Two removed by exact path; the dirty and the ahead worktree keep their record and files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_a_gone_and_a_clean_worktree_are_removed_and_every_other_class_stays},
+}
+
+@misc{hooks-worktreereap-remove-branches-are-left-alone,
+  section = {worktreereap_remove},
+  title  = {The card is the worktree: the removed ones' branches are still there},
+  claim  = {The card is the worktree: the removed ones' branches are still there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_the_branches_are_left_alone},
+}
+
+@misc{hooks-worktreereap-remove-first-run-removes-nothing-because-every-worktree-is-new,
+  section = {worktreereap_remove},
+  title  = {Removal needs the second read: nothing is removed the first time a worktree is seen},
+  claim  = {Removal needs the second read: nothing is removed the first time a worktree is seen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_a_first_run_removes_nothing_because_every_worktree_is_new},
+}
+
+@misc{hooks-worktreereap-remove-held-clean-worktree-is-kept,
+  section = {worktreereap_remove},
+  title  = {A process inside the directory holds it: the class is held and nothing is removed},
+  claim  = {A process inside the directory holds it: the class is held and nothing is removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_a_held_clean_worktree_is_kept},
+}
+
+@misc{hooks-worktreereap-remove-git-refuses-a-worktree-that-turned-dirty-after-the-classification,
+  section = {worktreereap_remove},
+  title  = {Without --force git is the last gate: a file written since keeps the worktree},
+  claim  = {Without --force git is the last gate: a file written since keeps the worktree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_git_refuses_a_worktree_that_turned_dirty_after_the_classification},
+}
+
+@misc{hooks-worktreereap-remove-only-gone-and-clean-are-ever-removable-and-a-held-one-is-not,
+  section = {worktreereap_remove},
+  title  = {The classes the function refuses are refused before git is asked},
+  claim  = {The classes the function refuses are refused before git is asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_only_gone_and_clean_are_ever_removable_and_a_held_one_is_not},
+}
+
+@misc{hooks-worktreereap-remove-process-that-entered-the-directory-since-the-classification-keeps-it,
+  section = {worktreereap_remove},
+  title  = {Held is read again just before removal, so a late entrant is a reason to leave it},
+  claim  = {Held is read again just before removal, so a late entrant is a reason to leave it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_a_process_that_entered_the_directory_since_the_classification_keeps_it},
+}
+
+@misc{hooks-worktreereap-remove-command-takes-remove-in-any-position,
+  section = {worktreereap_remove},
+  title  = {`--remove REPO` removes the same two and says so on their lines},
+  claim  = {`--remove REPO` removes the same two and says so on their lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_the_command_takes_remove_in_any_position},
+}

@@ -91,6 +91,10 @@ src/mikemol/hooks/vlogfollow.py|quiet-file-passed-on-every-pause|        while s
 src/mikemol/hooks/vlogfollow.py|size-ignored-by-the-signature|    return stat\.st_ino, stat\.st_size|    return stat.st_ino, 0|def=signature
 src/mikemol/hooks/vlogcli.py|follow-accepted-without-a-file|    if args\.follow and \(args\.from_file is None or args\.command\):|    if False:|def=_prepare
 src/mikemol/hooks/vlogcli.py|ceiling-hidden-from-the-loop|    return code, batcher\.blocked|    return code, False|def=_pass
+src/mikemol/hooks/worktreereap.py|every-class-removed|    if kind not in \{GONE, CLEAN\} or holders\(wt\.path\):|    if holders(wt.path):|def=remove
+src/mikemol/hooks/worktreereap.py|late-entrant-not-rechecked|    if kind not in \{GONE, CLEAN\} or holders\(wt\.path\):|    if kind not in {GONE, CLEAN}:|def=remove
+src/mikemol/hooks/worktreereap.py|removal-forced|    return _in\(root, \["worktree", "remove", wt\.path\], \{\}\) is not None|    return _in(root, ["worktree", "remove", "--force", wt.path], {}) is not None|def=remove
+src/mikemol/hooks/worktreereap.py|removal-never-marked|        if removing and remove\(root, wt, kind\):|        if False:|def=report
 src/mikemol/hooks/worktreereap.py|every-class-saved|    if kind not in \{DIRTY, UNMERGED\}:|    if False:|def=save
 src/mikemol/hooks/worktreereap.py|unmerged-saved-as-a-snapshot|    if kind == DIRTY:|    if True:|def=save
 src/mikemol/hooks/worktreereap.py|gone-worktree-read-in-its-missing-directory|    folder = root if wt\.prunable else Path\(wt\.path\)|    folder = Path(wt.path)|def=save

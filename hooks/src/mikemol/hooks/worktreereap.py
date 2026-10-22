@@ -51,13 +51,14 @@ UNMERGED = "unmerged"
 GONE = "gone"
 NEW = "new"
 SAVE_FLAG = "--save"
+REMOVE_FLAG = "--remove"
 CLEAN = "clean-equivalent"
 EXIT_OK = 0
 EXIT_USAGE = 2
 BRANCH_PREFIX = "refs/heads/"
 USAGE = (
-    "usage: mikemol-worktree-reap REPO [--save]   (classifies; --save keeps dirty and unmerged\n"
-    "work under refs/stash-reap/; neither removes anything)\n"
+    "usage: mikemol-worktree-reap REPO [--save] [--remove]   (classifies; --save keeps dirty and\n"
+    "unmerged work under refs/stash-reap/; --remove removes gone and clean-equivalent worktrees)\n"
 )
 FIRST_RUN = (
     "mikemol-worktree-reap: first run for this repository, so every present worktree is `new`; "
@@ -287,6 +288,25 @@ def save(root: Path, wt: Worktree, kind: str) -> str | None:
     return ref if _in(root, ["update-ref", ref, sha], {}) is not None else None
 
 
+def remove(root: Path, wt: Worktree, kind: str) -> bool:
+    """Remove one worktree by its exact path, only when it is gone or clean-equivalent and unheld.
+
+    ⚑ GIT'S OWN REFUSAL IS THE LAST GATE: `git worktree remove PATH` is run WITHOUT `--force`, so a
+    tree that turned dirty or locked since the classification is refused by git and stays. MEASURED
+    2026-10-22 on a scratch repository: the same command, without force, cleanly removes the record
+    of a worktree whose directory is already gone. Held is read again just before, so a session that
+    entered the directory after the classification keeps it. The branch is not touched: the card is
+    the worktree, and a branch holding commits is what `--save` keeps.
+
+    Returns:
+        True when git removed it; False for any other class, a held directory, or git's refusal.
+
+    """
+    if kind not in {GONE, CLEAN} or holders(wt.path):
+        return False
+    return _in(root, ["worktree", "remove", wt.path], {}) is not None
+
+
 def _kind_of(root: Path, wt: Worktree, upstream: str, seen: set[str] | None) -> str:
     # Read what is needed about one worktree and classify it.
     cherry = _out(root, ["cherry", upstream, wt.branch]) if wt.branch else ""
@@ -295,14 +315,18 @@ def _kind_of(root: Path, wt: Worktree, upstream: str, seen: set[str] | None) -> 
     return classify(wt, cherry, status, held=bool(holders(wt.path)), new=fresh)
 
 
-def report(root: Path, upstream: str = "main", *, saving: bool = False) -> list[str]:
+def report(
+    root: Path, upstream: str = "main", *, saving: bool = False, removing: bool = False
+) -> list[str]:
     """Classify every scratch worktree of the repository at `root`.
 
     With `saving`, a dirty or unmerged worktree's work is also kept under `refs/stash-reap/` and
-    the ref is a fourth field on its line. Nothing is removed either way.
+    the ref is a fourth field on its line. With `removing`, a gone or clean-equivalent worktree
+    is removed by its exact path (`remove`) and its line ends in `removed`.
 
     Returns:
-        one `CLASS<TAB>PATH<TAB>BRANCH[<TAB>REF]` line per worktree other than the main one.
+        one `CLASS<TAB>PATH<TAB>BRANCH[<TAB>REF][<TAB>removed]` line per worktree other than
+        the main one.
 
     """
     listed = parse_worktrees(_out(root, ["worktree", "list", "--porcelain"]) or "")[1:]
@@ -313,7 +337,11 @@ def report(root: Path, upstream: str = "main", *, saving: bool = False) -> list[
         kind = _kind_of(root, wt, upstream, seen)
         line = f"{kind}\t{wt.path}\t{wt.branch or '(detached)'}"
         ref = save(root, wt, kind) if saving else None
-        lines.append(f"{line}\t{ref}" if ref else line)
+        if ref:
+            line += f"\t{ref}"
+        if removing and remove(root, wt, kind):
+            line += "\tremoved"
+        lines.append(line)
     save_seen(where, listed)
     return lines
 
@@ -326,13 +354,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     """
     given = sys.argv[1:] if argv is None else list(argv)
-    args = [word for word in given if word != SAVE_FLAG]
+    args = [word for word in given if word not in {SAVE_FLAG, REMOVE_FLAG}]
     if len(args) != 1:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     root = Path(args[0])
     first = load_seen(seen_file(root)) is None
-    lines = report(root, saving=SAVE_FLAG in given)
+    lines = report(root, saving=SAVE_FLAG in given, removing=REMOVE_FLAG in given)
     sys.stdout.writelines(f"{line}\n" for line in lines)
     if first and lines:
         sys.stderr.write(FIRST_RUN)

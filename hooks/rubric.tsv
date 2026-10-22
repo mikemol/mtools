@@ -179,3 +179,4 @@ vlogfollow	The Follow Loop: A Pass on the File's Own Change and Never on Elapsed
 vlogcli_follow	The Follow Flag: Refused Without a File or With a Command, and Each Pass Shipping Only What Is New
 worktreereap_stable	The New Worktree: Not a Candidate Until an Earlier Run Has Listed It, Held Still Winning, a Missing Directory Judged at Once, and the Seen File the Only Thing Written
 worktreereap_save	The Worktree Save: Dirty Work Kept With Its Untracked Files in a Commit Under refs/stash-reap, Unmerged Work Kept by Its Branch Tip, the Sha in the Name, a Clean or New Worktree Given No Ref, and Nothing Removed
+worktreereap_remove	The Worktree Removal: Only a Gone or Clean-Equivalent Worktree, by Its Exact Path, Without Force So Git Is the Last Gate, Held Read Again Just Before, and the Branches and Every Other Class Left Alone
