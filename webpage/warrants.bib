@@ -124,3 +124,10 @@
   claim  = {The record must exist before the page loads, so the order is fixed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_page.py -k test_load_watches_then_navigates_then_waits},
 }
+
+@misc{webpage-chromium-pinned-browser-starts-and-reports-the-pinned-version,
+  section = {chromium},
+  title  = {`chrome-headless-shell --version` names 153.0.8010.12, from the bazel archive},
+  claim  = {`chrome-headless-shell --version` names 153.0.8010.12, from the bazel archive.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_chromium.py -k test_the_pinned_browser_starts_and_reports_the_pinned_version},
+}

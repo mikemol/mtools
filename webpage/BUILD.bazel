@@ -25,6 +25,18 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+# ⚑ A TEST THAT NEEDS THE PINNED BROWSER NAMES IT HERE, AND ONLY THAT TEST CARRIES IT (W1819): the
+# archive is ~270 MB, so no other test takes it as data. `CHROME_RLOCATION` is where the binary sits in
+# the runfiles tree, which the test joins to `RUNFILES_DIR`.
+_BROWSER_DATA = {
+    "tests/test_chromium.py": ["@chrome_headless_shell//:bin", "@chrome_headless_shell//:files"],
+}
+_BROWSER_ENV = {
+    "tests/test_chromium.py": {
+        "CHROME_RLOCATION": "$(rlocationpath @chrome_headless_shell//:bin)",
+    },
+}
+
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
 [
     py_test(
@@ -41,7 +53,8 @@ py_library(
             "-c",
             "$(location pyproject.toml)",
         ],
-        data = ["pyproject.toml"],
+        data = ["pyproject.toml"] + _BROWSER_DATA.get(src, []),
+        env = _BROWSER_ENV.get(src, {}),
         size = "small",
         deps = [
             ":webpage",

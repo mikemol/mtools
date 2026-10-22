@@ -97,3 +97,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_waits.py" = ["assert"]
 "tests/test_adopt.py" = ["assert"]
 "tests/test_page.py" = ["assert"]
+# ⚑ THE ONE MODULE THAT STARTS A PROCESS (W1819): it launches the pinned browser from bazel's own
+# data with a fixed argv and no shell, so the two subprocess rules are exempted for it and no other.
+"tests/test_chromium.py" = [
+    "assert",
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+]
