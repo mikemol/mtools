@@ -175,3 +175,5 @@ trainalert	The Train Alerts: A Red Streak Is N Reds and No Green in a Window, a 
 launcher	The Launcher Notice: A Bazel-Bin Venv Committing Another Repo Is Told to Install the Pin, the Repo's Own Venv and the Mtools Tree Are Not Noticed, and Silence Writes Nothing
 commitprogress	The Commit Progress Witness: CPU of the Process Tree or Growth of Its Output Is Progress, a Run of Flat Looks Is a Stall, and an Unreadable Process Table Is Skipped
 worktreereap	The Worktree Reaper's Classification: Held, Dirty, Unmerged, Gone and Clean-Equivalent in That Precedence, an Unknown Never Read as Clean, and Nothing Changed
+vlogfollow	The Follow Loop: A Pass on the File's Own Change and Never on Elapsed Time, a Held Pass Pausing and Passing Again, a Rotation or a Missing File Counting as a Change, and a Quiet File Only Sampled
+vlogcli_follow	The Follow Flag: Refused Without a File or With a Command, and Each Pass Shipping Only What Is New

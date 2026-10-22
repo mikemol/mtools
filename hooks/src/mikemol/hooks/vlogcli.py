@@ -5,6 +5,7 @@
     tool | mikemol-vlog --stream tool=commit --stream repo=mtools
     mikemol-vlog --stream tool=gate -- some-tool --its --args       (exit status is the tool's)
     mikemol-vlog --stream tool=app --from-file app.log --state app.state    (once, from an offset)
+    mikemol-vlog --stream tool=app --from-file app.log --follow    (then wait for more: W1817)
     mikemol-vlog --drain                                    (send what is spooled, in front)
 
 ⚑ THE CALLER'S WORK IS A LOCAL FILE APPEND. Lines become records (`vlogrecord`), are appended to a
@@ -28,6 +29,7 @@ import argparse
 import datetime as dt
 import json
 import sys
+import time
 from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 from typing import TextIO
@@ -36,6 +38,7 @@ from mikemol.hooks import (
     vlogbatch,
     vlogconfig,
     vlogdetach,
+    vlogfollow,
     vlogforms,
     vlogrecord,
     vlogship,
@@ -46,6 +49,8 @@ EXIT_NO_DESTINATION = 3
 EXIT_REFUSED = 4
 EXIT_BUSY = 5
 EXIT_HELD = 6
+FOLLOW_PERIOD_S = 1.0
+FOLLOW_NEEDS_A_FILE = "--follow needs --from-file: only a file can be followed from an offset"
 UNITS = ("s", "ms", "us", "ns")
 HOLD_NEEDS_A_FILE = (
     "on_full = hold needs --from-file: stdin and a wrapped command cannot be re-read"
@@ -69,6 +74,8 @@ class Args(argparse.Namespace):
     unit: str
     from_file: Path | None
     state: Path | None
+    follow: bool
+    follow_period: float
     drain: bool
     no_drain: bool
     exit_classes: bool
@@ -103,6 +110,17 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--unit", default="s", choices=UNITS)
     parser.add_argument("--from-file", type=Path)
     parser.add_argument("--state", type=Path)
+    parser.add_argument(
+        "--follow",
+        action="store_true",
+        help="with --from-file: after shipping, wait for the file to change and ship again",
+    )
+    parser.add_argument(
+        "--follow-period",
+        type=float,
+        default=FOLLOW_PERIOD_S,
+        help="with --follow: seconds between looks at a quiet file (a sampling period)",
+    )
     parser.add_argument("--drain", action="store_true", help="send the spool now, in front")
     parser.add_argument("--no-drain", action="store_true", help="spool only; start no drainer")
     parser.add_argument(
@@ -236,8 +254,60 @@ def _prepare(
         return config
     if config.on_full == vlogship.HOLD and args.from_file is None and not args.drain:
         return HOLD_NEEDS_A_FILE
+    if args.follow and (args.from_file is None or args.command):
+        return FOLLOW_NEEDS_A_FILE
     how = vlogrecord.FieldMap(args.message_key, args.time_key, args.unit, line_stamp=line_stamp)
     return streams, how, config
+
+
+def _pass(
+    args: Args,
+    stdin: TextIO | None,
+    ready: tuple[dict[str, str], vlogrecord.FieldMap, vlogship.Config],
+    spawn: Spawn,
+) -> tuple[int, bool]:
+    """Run one pass: read the chosen form, spool it, commit the consumed prefix, start the drainer.
+
+    Returns:
+        the producer's status (0 outside the wrapper form) and whether the spool was at its
+        ceiling, so lines were left in the file.
+
+    """
+    streams, how, config = ready
+    batcher = vlogbatch.Batcher(streams, how, config, _now)
+    code, chunk = _produce(args, stdin, batcher.take)
+    batcher.flush()
+    state = _state_of(args)
+    if chunk is not None and state is not None:
+        vlogforms.commit(state, vlogforms.prefix_of(chunk, batcher.consumed))
+    if not args.no_drain:
+        spawn(vlogdetach.drain_argv(config))
+    return code, batcher.blocked
+
+
+def _follow(
+    args: Args,
+    ready: tuple[dict[str, str], vlogrecord.FieldMap, vlogship.Config],
+    spawn: Spawn,
+) -> int:
+    """Pass over the file whenever it changes, for as long as the unit runs (W1817).
+
+    Returns:
+        0 once stopped (only a test stops it; a unit is ended by its signal).
+
+    """
+    path = args.from_file
+    if path is None:
+        return EXIT_USAGE
+
+    def step() -> bool:
+        return _pass(args, None, ready, spawn)[1]
+
+    def pause() -> None:
+        time.sleep(args.follow_period)
+
+    vlogfollow.follow(step, path, pause)
+    return 0
 
 
 def main(
@@ -257,18 +327,12 @@ def main(
     if isinstance(ready, str):
         sys.stderr.write(f"mikemol-vlog: {ready}\n")
         return EXIT_USAGE
-    streams, how, config = ready
     if args.drain:
-        return _drain_now(config)
-    batcher = vlogbatch.Batcher(streams, how, config, _now)
-    code, chunk = _produce(args, stdin, batcher.take)
-    batcher.flush()
-    state = _state_of(args)
-    if chunk is not None and state is not None:
-        vlogforms.commit(state, vlogforms.prefix_of(chunk, batcher.consumed))
-    if not args.no_drain:
-        spawn(vlogdetach.drain_argv(config))
-    if args.exit_classes and batcher.blocked and code == 0:
+        return _drain_now(ready[2])
+    if args.follow:
+        return _follow(args, ready, spawn)
+    code, blocked = _pass(args, stdin, ready, spawn)
+    if args.exit_classes and blocked and code == 0:
         sys.stderr.write("mikemol-vlog: the spool is at its ceiling; the rest stays in the file\n")
         return EXIT_HELD
     return code

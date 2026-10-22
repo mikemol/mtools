@@ -86,6 +86,11 @@ src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) 
 src/mikemol/hooks/commitprogress.py|looks-override-ignored|raw\.isdecimal\(\) and int\(raw\) > 0 else|False else|def=looks_from
 src/mikemol/hooks/commitprogress.py|zero-looks-means-no-bound|int\(raw\) > 0|int(raw) >= 0|def=looks_from
 src/mikemol/hooks/commitprogress.py|period-override-ignored|    return value if value > 0 else DEFAULT_PERIOD_S|    return DEFAULT_PERIOD_S|def=period_from
+src/mikemol/hooks/vlogfollow.py|held-pass-waits-for-growth|        if held:|        if False:|def=follow
+src/mikemol/hooks/vlogfollow.py|quiet-file-passed-on-every-pause|        while signature\(path\) == seen and not stop\(\):|        while False:|def=follow
+src/mikemol/hooks/vlogfollow.py|size-ignored-by-the-signature|    return stat\.st_ino, stat\.st_size|    return stat.st_ino, 0|def=signature
+src/mikemol/hooks/vlogcli.py|follow-accepted-without-a-file|    if args\.follow and \(args\.from_file is None or args\.command\):|    if False:|def=_prepare
+src/mikemol/hooks/vlogcli.py|ceiling-hidden-from-the-loop|    return code, batcher\.blocked|    return code, False|def=_pass
 src/mikemol/hooks/worktreereap.py|held-checkout-classified-anyway|    if held:|    if False:|def=classify
 src/mikemol/hooks/worktreereap.py|detached-head-read-as-merged|    risky = not wt\.branch or cherry is None or unmerged_commits\(cherry\)|    risky = cherry is None or unmerged_commits(cherry)|def=classify
 src/mikemol/hooks/worktreereap.py|failed-status-read-as-clean|    if status is None or status\.strip\(\):|    if status.strip():|def=classify
@@ -242,9 +247,9 @@ src/mikemol/hooks/vlogwatch.py|watch-judges-no-holder|if pid is None:|if False:|
 src/mikemol/hooks/vlogwatch.py|watch-ignores-batches|\("pid", "sent", "batches"\)|("pid",)|def=observe
 src/mikemol/hooks/vlogship.py|drain-busy-not-observed|if result\.busy:|if False:|def=drain_all
 src/mikemol/hooks/vlogcli.py|cli-drain-flag-ignored|if args\.drain:|if False:|def=main
-src/mikemol/hooks/vlogcli.py|cli-always-starts-a-drainer|if not args\.no_drain:|if True:|def=main
+src/mikemol/hooks/vlogcli.py|cli-always-starts-a-drainer|if not args\.no_drain:|if True:|def=_pass
 src/mikemol/hooks/vlogcli.py|cli-wrapper-never-runs|return vlogforms\.run_wrapped\(args\.command, take\), None|return 0, None|def=_produce
-src/mikemol/hooks/vlogcli.py|cli-offset-never-saved|if chunk is not None and state is not None:|if False:|def=main
+src/mikemol/hooks/vlogcli.py|cli-offset-never-saved|if chunk is not None and state is not None:|if False:|def=_pass
 src/mikemol/hooks/vlogconfig.py|config-flag-never-wins|return flag or from_file or default|return default|def=_number
 src/mikemol/hooks/vlogconfig.py|config-accepts-a-bare-stream|if not sep or not key:|if False:|def=streams_of
 src/mikemol/hooks/vlogdetach.py|drainer-loses-the-service|if config\.service:|if False:|def=drain_argv
@@ -349,7 +354,7 @@ src/mikemol/hooks/vlogcli.py|drain-class-no-destination-lost|if reason\.startswi
 src/mikemol/hooks/vlogcli.py|drain-class-busy-lost|if reason\.startswith\("busy"\):|if False:|def=drain_class
 src/mikemol/hooks/vlogcli.py|drain-class-refused-lost|return EXIT_REFUSED if reason else 1|return 1|def=drain_class
 src/mikemol/hooks/vlogcli.py|drain-exit-forgets-the-class|return drain_class\(done\.reason\)|return 1|def=_drain_now
-src/mikemol/hooks/vlogcli.py|held-tail-exits-clean|if args\.exit_classes and batcher\.blocked and code == 0:|if False:|def=main
+src/mikemol/hooks/vlogcli.py|held-tail-exits-clean|if args\.exit_classes and blocked and code == 0:|if False:|def=main
 src/mikemol/hooks/privacy_audit.py|history-ignores-the-flag|history = HISTORY_FLAG in args|history = False|def=run
 
 # The wake-up decision: the boundary is inclusive, a zoneless stamp is UTC, never-nudged is due.

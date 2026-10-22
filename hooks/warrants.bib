@@ -14448,3 +14448,60 @@
   claim  = {Tab-separated class, path and branch; no argument is a usage error.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_the_command_prints_one_line_per_worktree_and_needs_one_argument},
 }
+
+@misc{hooks-vlogfollow-quiet-file-is-sampled-and-never-passed-again,
+  section = {vlogfollow},
+  title  = {One pass at the start, then only pauses while the file does not change},
+  claim  = {One pass at the start, then only pauses while the file does not change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_a_quiet_file_is_sampled_and_never_passed_again},
+}
+
+@misc{hooks-vlogfollow-append-makes-the-next-pass-and-only-then,
+  section = {vlogfollow},
+  title  = {The file grows during a pause; the loop passes again after that pause, not before},
+  claim  = {The file grows during a pause; the loop passes again after that pause, not before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_an_append_makes_the_next_pass_and_only_then},
+}
+
+@misc{hooks-vlogfollow-rotation-to-a-file-of-the-same-size-is-a-change,
+  section = {vlogfollow},
+  title  = {A new inode is a change even when the size is the same: rotation restarts the read},
+  claim  = {A new inode is a change even when the size is the same: rotation restarts the read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_a_rotation_to_a_file_of_the_same_size_is_a_change},
+}
+
+@misc{hooks-vlogfollow-missing-file-waits-and-passes-when-it-returns,
+  section = {vlogfollow},
+  title  = {Between a rotation's rename and its recreation there is no file; that is a signature too},
+  claim  = {Between a rotation's rename and its recreation there is no file; that is a signature
+            too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_a_missing_file_waits_and_passes_when_it_returns},
+}
+
+@misc{hooks-vlogfollow-held-pass-pauses-and-passes-again-without-the-file-changing,
+  section = {vlogfollow},
+  title  = {The spool at its ceiling leaves lines in a file that may never change: pass again},
+  claim  = {The spool at its ceiling leaves lines in a file that may never change: pass again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_a_held_pass_pauses_and_passes_again_without_the_file_changing},
+}
+
+@misc{hooks-vlogfollow-signature-is-none-for-a-missing-file-and-inode-and-size-otherwise,
+  section = {vlogfollow},
+  title  = {The positive control for the reader the loop rests on},
+  claim  = {The positive control for the reader the loop rests on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_the_signature_is_none_for_a_missing_file_and_inode_and_size_otherwise},
+}
+
+@misc{hooks-vlogcli-follow-follow-without-a-file-or-with-a-command-is-a-usage-error,
+  section = {vlogcli_follow},
+  title  = {Only a file can be followed from an offset: stdin and a wrapped command cannot},
+  claim  = {Only a file can be followed from an offset: stdin and a wrapped command cannot.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli_follow.py -k test_follow_without_a_file_or_with_a_command_is_a_usage_error},
+}
+
+@misc{hooks-vlogcli-follow-each-pass-the-loop-makes-ships-only-what-is-new,
+  section = {vlogcli_follow},
+  title  = {Two passes over a file that grows between them: every line once, in order, exit 0},
+  claim  = {Two passes over a file that grows between them: every line once, in order, exit 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogcli_follow.py -k test_each_pass_the_loop_makes_ships_only_what_is_new},
+}
