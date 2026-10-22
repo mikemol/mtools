@@ -181,3 +181,11 @@
   claim  = {Playwright raises TargetClosedError itself, naming the closed page, context or browser.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_page_closed_over_cdp_ends_a_pending_wait_by_itself},
 }
+
+@misc{webpage-browser-browser-runs-with-a-core-size-of-zero,
+  section = {browser},
+  title  = {The fixture sets RLIMIT_CORE to 0 before anything is launched, so a crash leaves no core},
+  claim  = {The fixture sets RLIMIT_CORE to 0 before anything is launched, so a crash leaves no
+            core.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_the_browser_runs_with_a_core_size_of_zero},
+}

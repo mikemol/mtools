@@ -13,6 +13,7 @@ crash and the close are sent by `cdp_poke.py`, a second process, once the wait i
 """
 
 import os
+import resource
 import socket
 import subprocess
 import sys
@@ -56,6 +57,11 @@ def _chrome(monkeypatch: pytest.MonkeyPatch) -> Path:
     scratch = os.environ.get("TEST_TMPDIR")
     if scratch:
         monkeypatch.setenv("TMPDIR", scratch)
+    # ⚑ NO CORE FILE FROM A CRASH THE TEST CAUSES ON PURPOSE (luthen's coredump_loop alert,
+    # 2026-10-22, exe=chrome-headless-shell): the crash probe sends `Page.crash` and the renderer
+    # dumps core. The limit is set in this process, so the browser, the driver and the poker all
+    # inherit it: the standing rule of a core size of 0, as nemik's codon fix applies.
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     return found
 
 
@@ -164,3 +170,9 @@ def test_a_page_closed_over_cdp_ends_a_pending_wait_by_itself(chrome: Path) -> N
         finally:
             poker.kill()
             poker.wait()
+
+
+def test_the_browser_runs_with_a_core_size_of_zero(chrome: Path) -> None:
+    """The fixture sets RLIMIT_CORE to 0 before anything is launched, so a crash leaves no core."""
+    assert chrome.name == "chrome-headless-shell"
+    assert resource.getrlimit(resource.RLIMIT_CORE) == (0, 0)
