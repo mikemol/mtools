@@ -30,11 +30,12 @@ which gate phase it was in. Both numbers come from the environment, for the call
 CONSUMED BY: `commit_kata.run_git_in`.
 """
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
 from mikemol.hooks.gatephase import marks
+from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 
 CPU_FIELDS = (13, 14)  # utime and stime in /proc/<pid>/stat, counted after the command name
 PPID_FIELD = 1
@@ -47,6 +48,8 @@ PERIOD_ENV = "MIKEMOL_COMMIT_LOOK_S"
 DEFAULT_LOOKS = 120
 DEFAULT_PERIOD_S = 30.0
 NO_PHASE = "none marked"
+SERVER_COMM = "bazel("
+WORKSPACE_FLAG = "--workspace_directory="
 
 
 @dataclass(frozen=True, slots=True)
@@ -133,6 +136,63 @@ def tree_ticks(procs: Procs, root: int) -> int:
     return sum(procs[pid][1] for pid in seen)
 
 
+def servers_of(proc: Path = Path("/proc"), read: Read = read_text) -> dict[int, str]:
+    """Find the running bazel servers and the workspace each one serves.
+
+    A bazel server is a daemon, not a child of the client that started it: it renames itself
+    `bazel(<workspace>)` and carries `--workspace_directory=<dir>` in its command line, so the
+    process comm picks the candidates and only those have their command line read.
+
+    Returns:
+        pid to workspace directory for every server whose command line could be read.
+
+    """
+    found: dict[int, str] = {}
+    try:
+        names = [entry.name for entry in proc.iterdir() if entry.name.isdecimal()]
+    except OSError:
+        return found
+    for name in names:
+        comm = read(proc / name / "comm")
+        if comm is None or not comm.startswith(SERVER_COMM):
+            continue
+        line = read(proc / name / "cmdline")
+        for word in (line or "").split("\0"):
+            if word.startswith(WORKSPACE_FLAG):
+                found[int(name)] = word[len(WORKSPACE_FLAG) :]
+    return found
+
+
+def gate_servers(servers: Mapping[int, str], roots: Sequence[Path]) -> list[int]:
+    """Pick the servers whose workspace lies under one of the gate's directories.
+
+    Returns:
+        their pids, in pid order; none when `roots` is empty.
+
+    """
+    return sorted(
+        pid
+        for pid, workspace in servers.items()
+        if any(Path(workspace).is_relative_to(root) for root in roots)
+    )
+
+
+def gate_roots(repo: str, env: Mapping[str, str]) -> list[Path]:
+    """Name the directories a commit's gate builds in: its snapshot and the staged copy.
+
+    ⚑ THE SNAPSHOT NAMESPACE IS NARROWED TO THE REPOSITORY'S OWN DIRECTORY when it is known, so
+    another repository's gate running at the same time is not read as this one's progress. The
+    staged copy is the pre-commit's own `$TMPDIR/mtools-staged`.
+
+    Returns:
+        the namespace (with the repository's name when given) and the staged directory.
+
+    """
+    namespace = Path(env.get(NAMESPACE_ENV, DEFAULT_NAMESPACE))
+    temp = Path(env.get("TMPDIR") or Path.home() / ".cache")
+    return [namespace / repo if repo else namespace, temp / "mtools-staged"]
+
+
 def step(last: Witness, ticks: int, size: int) -> Witness:
     """Fold one look into the witness.
 
@@ -205,18 +265,24 @@ def stall_text(text: str, looks: int, period: float) -> str:
     )
 
 
-def watch(
-    wait: Wait,
-    pid: int,
-    size: Callable[[], int],
-    pace: tuple[int, float],
-    procs: Callable[[], Procs] = snapshot,
-) -> int | None:
+@dataclass(frozen=True, slots=True)
+class Probes:
+    """What a look reads: the output's size, the process table and the gate's other pids.
+
+    `extra` names the pids outside the child's tree whose CPU counts as the gate's progress (the
+    gate's bazel servers: daemons, not children, and where a build spends almost all of its CPU).
+    """
+
+    size: Callable[[], int]
+    procs: Callable[[], Procs] = snapshot
+    extra: Callable[[], Sequence[int]] = tuple
+
+
+def watch(wait: Wait, pid: int, probes: Probes, pace: tuple[int, float]) -> int | None:
     """Wait for the process `pid`, looking at its progress between slices.
 
     `wait(seconds)` waits up to that long and returns the exit code, or None while the
-    process still runs (the caller owns the subprocess); `pace` is (looks, period seconds);
-    `size` reads the output's size so far.
+    process still runs (the caller owns the subprocess); `pace` is (looks, period seconds).
 
     Returns:
         the exit code once the process ends, or None when `looks` consecutive looks showed no
@@ -229,6 +295,8 @@ def watch(
         code = wait(period)
         if code is not None:
             return code
-        seen = step(seen, tree_ticks(procs(), pid), size())
+        table = probes.procs()
+        ticks = tree_ticks(table, pid) + sum(tree_ticks(table, s) for s in probes.extra())
+        seen = step(seen, ticks, probes.size())
         if stalled(seen, looks):
             return None

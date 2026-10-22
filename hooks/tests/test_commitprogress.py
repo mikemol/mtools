@@ -62,6 +62,7 @@ def test_a_stall_is_a_run_of_flat_looks_and_never_for_a_limit_below_one() -> Non
 
 
 _BUSY_LOOKS = 10
+_PACE = (_FLAT_LOOKS, 0.0)
 _EXIT_THREE = 3
 
 
@@ -80,7 +81,7 @@ def _ends_with_three(_seconds: float) -> int | None:
 def test_a_watch_ends_on_a_stall_and_never_on_elapsed_time() -> None:
     """A child that spends nothing and writes nothing is given up on after the looks."""
     table = {5: (1, 7)}
-    got = progress.watch(_never_ends, 5, _zero, (_FLAT_LOOKS, 0.0), lambda: table)
+    got = progress.watch(_never_ends, 5, progress.Probes(_zero, lambda: table), _PACE)
     assert got is None
 
 
@@ -96,13 +97,13 @@ def test_a_watch_keeps_waiting_while_the_tree_spends_cpu_or_writes() -> None:
     def procs() -> progress.Procs:
         return {5: (1, next(ticks))}
 
-    assert progress.watch(wait, 5, _zero, (_FLAT_LOOKS, 0.0), procs) == 0
+    assert progress.watch(wait, 5, progress.Probes(_zero, procs), _PACE) == 0
     assert len(waits) == _BUSY_LOOKS + 1
 
 
 def test_a_watch_returns_the_exit_code_of_a_child_that_ends() -> None:
     """The code comes back as it is, including a failing one."""
-    assert progress.watch(_ends_with_three, 5, _zero, (_FLAT_LOOKS, 0.0)) == _EXIT_THREE
+    assert progress.watch(_ends_with_three, 5, progress.Probes(_zero), _PACE) == _EXIT_THREE
 
 
 def test_the_phase_is_the_last_mark_and_the_stall_text_names_it() -> None:
@@ -133,3 +134,67 @@ def test_an_unreadable_table_or_entry_is_skipped_not_raised(tmp_path: Path) -> N
         return _STAT if path.parent.name == "7" else None
 
     assert progress.snapshot(tmp_path, read) == {7: (17, 42)}
+
+
+def test_a_gate_whose_child_is_idle_while_its_bazel_server_burns_cpu_is_not_stalled() -> None:
+    """github-8f's case: the client in git's tree sits idle, the server (a daemon) does the work."""
+    ticks = iter(range(1, 400))
+    waits: list[int] = []
+
+    def wait(_seconds: float) -> int | None:
+        waits.append(1)
+        return 0 if len(waits) > _BUSY_LOOKS else None
+
+    def procs() -> progress.Procs:
+        return {5: (1, 3), 9: (1, next(ticks)), 10: (9, 0)}
+
+    def with_server() -> list[int]:
+        return [9]
+
+    watched = progress.Probes(_zero, procs, with_server)
+    assert progress.watch(wait, 5, watched, _PACE) == 0
+
+
+def test_the_same_gate_without_the_server_counted_is_the_control_and_stalls() -> None:
+    """The control: counting only git's tree, that gate reads as stalled, which is the defect."""
+    ticks = iter(range(1, 400))
+
+    def procs() -> progress.Procs:
+        return {5: (1, 3), 9: (1, next(ticks))}
+
+    assert progress.watch(_never_ends, 5, progress.Probes(_zero, procs), _PACE) is None
+
+
+def _entry(proc: Path, pid: int, comm: str, args: list[str]) -> None:
+    folder = proc / str(pid)
+    folder.mkdir()
+    (folder / "comm").write_text(comm + "\n", encoding="utf-8")
+    (folder / "cmdline").write_text("\0".join(args) + "\0", encoding="utf-8")
+
+
+def test_a_bazel_server_is_found_by_its_comm_and_its_workspace_directory(tmp_path: Path) -> None:
+    """Only `bazel(...)` processes are read, and the workspace flag gives the directory."""
+    _entry(tmp_path, 11, "bazel(tree)", ["java", "--workspace_directory=/srv/g/mtools/tree"])
+    _entry(tmp_path, 12, "bash", ["bash", "--workspace_directory=/not/a/server"])
+    _entry(tmp_path, 13, "bazel(x)", ["java", "--other=1"])
+    assert progress.servers_of(tmp_path) == {11: "/srv/g/mtools/tree"}
+    assert progress.servers_of(tmp_path / "absent") == {}
+
+
+def test_only_the_servers_under_the_gates_directories_count() -> None:
+    """Another repository's gate running at once is not this gate's progress."""
+    servers = {
+        1: "/srv/g/mtools/tree",
+        2: "/srv/g/paperkit/tree",
+        3: "/srv/mtools-staged",
+    }
+    roots = [Path("/srv/g/mtools"), Path("/srv/mtools-staged")]
+    assert progress.gate_servers(servers, roots) == [1, 3]
+    assert progress.gate_servers(servers, []) == []
+
+
+def test_the_gate_directories_are_the_repos_snapshot_and_the_staged_copy() -> None:
+    """The namespace is narrowed to the repository when it is named, whole when it is not."""
+    env = {"MIKEMOL_SNAPSHOT_ROOT": "/ns", "TMPDIR": "/t"}
+    assert progress.gate_roots("mtools", env) == [Path("/ns/mtools"), Path("/t/mtools-staged")]
+    assert progress.gate_roots("", env)[0] == Path("/ns")

@@ -14348,3 +14348,39 @@
   claim  = {Marks are `pre-commit: phase NAME NS`; none marked is said as such.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_phase_is_the_last_mark_and_the_stall_text_names_it},
 }
+
+@misc{hooks-commitprogress-gate-whose-child-is-idle-while-its-bazel-server-burns-cpu-is-not-stalled,
+  section = {commitprogress},
+  title  = {github-8f's case: the client in git's tree sits idle, the server (a daemon) does the work},
+  claim  = {github-8f's case: the client in git's tree sits idle, the server (a daemon) does the
+            work.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_gate_whose_child_is_idle_while_its_bazel_server_burns_cpu_is_not_stalled},
+}
+
+@misc{hooks-commitprogress-same-gate-without-the-server-counted-is-the-control-and-stalls,
+  section = {commitprogress},
+  title  = {The control: counting only git's tree, that gate reads as stalled, which is the defect},
+  claim  = {The control: counting only git's tree, that gate reads as stalled, which is the defect.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_same_gate_without_the_server_counted_is_the_control_and_stalls},
+}
+
+@misc{hooks-commitprogress-bazel-server-is-found-by-its-comm-and-its-workspace-directory,
+  section = {commitprogress},
+  title  = {Only `bazel(...)` processes are read, and the workspace flag gives the directory},
+  claim  = {Only `bazel(...)` processes are read, and the workspace flag gives the directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_bazel_server_is_found_by_its_comm_and_its_workspace_directory},
+}
+
+@misc{hooks-commitprogress-only-the-servers-under-the-gates-directories-count,
+  section = {commitprogress},
+  title  = {Another repository's gate running at once is not this gate's progress},
+  claim  = {Another repository's gate running at once is not this gate's progress.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_only_the_servers_under_the_gates_directories_count},
+}
+
+@misc{hooks-commitprogress-gate-directories-are-the-repos-snapshot-and-the-staged-copy,
+  section = {commitprogress},
+  title  = {The namespace is narrowed to the repository when it is named, whole when it is not},
+  claim  = {The namespace is narrowed to the repository when it is named, whole when it is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_gate_directories_are_the_repos_snapshot_and_the_staged_copy},
+}

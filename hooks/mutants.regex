@@ -71,7 +71,7 @@ src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] an
 # W928: run_git waits on the git process itself, with its output in files, and bounds the wait.
 # Reading pipes lets an orphan wedge it for as long as the orphan lives; dropping the kill leaves a
 # gate past its limit running; dropping the timeout makes the wait unbounded.
-src/mikemol/hooks/commit_kata.py|wait-without-a-stall-watch|code = _watch\(waiter\(child\), child\.pid, lambda: sized\(out\) \+ sized\(err\), pace\)|code = child.wait()|def=run_git_in
+src/mikemol/hooks/commit_kata.py|wait-without-a-stall-watch|code = _watch\(waiter\(child\), child\.pid, probes, pace\)|code = child.wait()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git_in
 src/mikemol/hooks/shellcheck.py|every-finding-is-old|if budget\.get\(key, 0\) > 0:|if True:|def=added_only
@@ -86,6 +86,10 @@ src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) 
 src/mikemol/hooks/commitprogress.py|looks-override-ignored|raw\.isdecimal\(\) and int\(raw\) > 0 else|False else|def=looks_from
 src/mikemol/hooks/commitprogress.py|zero-looks-means-no-bound|int\(raw\) > 0|int(raw) >= 0|def=looks_from
 src/mikemol/hooks/commitprogress.py|period-override-ignored|    return value if value > 0 else DEFAULT_PERIOD_S|    return DEFAULT_PERIOD_S|def=period_from
+src/mikemol/hooks/commitprogress.py|non-servers-read-as-servers|        if comm is None or not comm\.startswith\(SERVER_COMM\):|        if comm is None:|def=servers_of
+src/mikemol/hooks/commitprogress.py|every-servers-work-is-this-gates|        if any\(Path\(workspace\)\.is_relative_to\(root\) for root in roots\)|        if True|def=gate_servers
+src/mikemol/hooks/commitprogress.py|namespace-not-narrowed-to-the-repo|    return \[namespace / repo if repo else namespace, temp / "mtools-staged"\]|    return [namespace, temp / "mtools-staged"]|def=gate_roots
+src/mikemol/hooks/commitprogress.py|bazel-server-cpu-not-counted|        ticks = tree_ticks\(table, pid\) \+ sum\(tree_ticks\(table, s\) for s in probes\.extra\(\)\)|        ticks = tree_ticks(table, pid)|def=watch
 src/mikemol/hooks/commitprogress.py|watch-never-gives-up|        if stalled\(seen, looks\):|        if False:|def=watch
 src/mikemol/hooks/commitprogress.py|exit-code-lost|            return code|            return 0|def=watch
 src/mikemol/hooks/commit_kata.py|stall-verdict-without-phase|        STALLED, f"stalled in gate phase \{_phase_of\(shown\)\}, no CPU and no output", 1|        STALLED, STALLED, 1|def=with_phase

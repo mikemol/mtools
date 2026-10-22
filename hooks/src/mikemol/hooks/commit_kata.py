@@ -51,9 +51,13 @@ from mikemol.hooks.commit_verdict import emit as _emit_verdict
 from mikemol.hooks.commit_withdraw import clear_marker as _clear_marker
 from mikemol.hooks.commit_withdraw import marker_path as _marker_path
 from mikemol.hooks.commit_withdraw import withdraw as _withdraw
+from mikemol.hooks.commitprogress import Probes as _Probes
+from mikemol.hooks.commitprogress import gate_roots as _gate_roots
+from mikemol.hooks.commitprogress import gate_servers as _gate_servers
 from mikemol.hooks.commitprogress import looks_from as _looks_from
 from mikemol.hooks.commitprogress import period_from as _period_from
 from mikemol.hooks.commitprogress import phase_of as _phase_of
+from mikemol.hooks.commitprogress import servers_of as _servers_of
 from mikemol.hooks.commitprogress import stall_text as _stall_text
 from mikemol.hooks.commitprogress import watch as _watch
 from mikemol.hooks.gateenv import child_env
@@ -253,7 +257,12 @@ def run_git_in(
         )
         merged = {**os.environ, **extra}
         pace = (_looks_from(merged), _period_from(merged))
-        code = _watch(waiter(child), child.pid, lambda: sized(out) + sized(err), pace)
+        roots = _gate_roots(Path(merged.get("MIKEMOL_REAL_ROOT", "")).name, merged)
+        probes = _Probes(
+            size=lambda: sized(out) + sized(err),
+            extra=lambda: _gate_servers(_servers_of(), roots),
+        )
+        code = _watch(waiter(child), child.pid, probes, pace)
         if code is None:
             # ⚑ A GATE THAT MAKES NO PROGRESS IS A VERDICT, NOT A CRASH (mtools:W844, W1804): no
             # CPU in its process tree and no new output for a run of looks, never a wall limit.
