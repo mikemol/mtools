@@ -129,6 +129,7 @@ class _TooSlow:
 
     def __init__(self, *_args: object, **_kwargs: object) -> None:
         self.killed = False
+        self.pid = 0
 
     def wait(self, timeout: float | None = None) -> int:
         if self.killed:
@@ -139,16 +140,29 @@ class _TooSlow:
         self.killed = True
 
 
-def test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback(
+def test_a_gate_that_makes_no_progress_is_a_verdict_not_a_traceback(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises."""
+    """mtools:W844, W1804: a stalled git reads NOT COMMITTED and names the phase, never raises."""
     monkeypatch.setattr(subprocess, "Popen", _TooSlow)
+    monkeypatch.setenv("MIKEMOL_COMMIT_STALL_LOOKS", "2")
+    monkeypatch.setenv("MIKEMOL_COMMIT_LOOK_S", "0.01")
     done = commit_kata.run_git(["commit"])
     assert done.returncode == commit_kata.TIMED_OUT
     line = commit_kata.verdict(Path("/x/repo"), "a" * 40, "a" * 40, done.returncode)
-    assert line.startswith("NOT COMMITTED repo: timed out after")
+    assert line.startswith("NOT COMMITTED repo: stalled, no CPU and no output")
     assert "HEAD is still" in line
+
+
+def test_a_stalled_verdict_names_the_last_gate_phase_and_other_lines_are_untouched() -> None:
+    """W1804: the NOT COMMITTED line says where the gate was; a COMMITTED line is not edited."""
+    stalled = f"NOT COMMITTED repo: {commit_kata.STALLED} (no verdict); HEAD is still aaaaaaa"
+    shown = "pre-commit: phase lint 100\npre-commit: phase bazel 200\n"
+    said = commit_kata.with_phase(stalled, shown)
+    assert "stalled in gate phase bazel, no CPU and no output" in said
+    assert commit_kata.with_phase(stalled, "").count("none marked") == 1
+    landed = "COMMITTED repo aaaaaaa subject [PUSHED]"
+    assert commit_kata.with_phase(landed, shown) == landed
 
 
 def test_a_new_file_is_added_and_committed_by_its_path(tmp_path: Path) -> None:

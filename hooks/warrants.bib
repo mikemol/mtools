@@ -6768,13 +6768,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_the_warrant_check_is_set_equality_and_no_count_comparison_remains},
 }
 
-@misc{hooks-commit-kata-gate-that-runs-past-the-limit-is-a-verdict-not-a-traceback,
-  section = {commit-kata},
-  title  = {mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises},
-  claim  = {mtools:W844: git timing out reads NOT COMMITTED with the limit named, and never raises.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_gate_that_runs_past_the_limit_is_a_verdict_not_a_traceback},
-}
-
 @misc{hooks-pycheck-format-file-the-formatter-changes-is-rewritten-and-said-so,
   section = {pycheck-format},
   title  = {⚑ The formatter's output replaces the file, and the report names the file as formatted},
@@ -7472,13 +7465,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_a_missing_git_is_127_with_the_reason},
 }
 
-@misc{hooks-commit-run-git-git-past-the-limit-is-killed-and-reads-timed-out,
-  section = {commit_run_git},
-  title  = {A gate that runs past the limit is a verdict (W844), and the process is gone},
-  claim  = {A gate that runs past the limit is a verdict (W844), and the process is gone.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_a_git_past_the_limit_is_killed_and_reads_timed_out},
-}
-
 @misc{hooks-isolated-commit-commit-runs-and-head-moves-to-a-tree-without-the-peers-edit,
   section = {isolated_commit},
   title  = {The positive control: HEAD advances, holds this session's edit, and not the peer's},
@@ -7721,27 +7707,6 @@
   title  = {Success exits 0 and names the human steps},
   claim  = {Success exits 0 and names the human steps.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_main_prints_the_remaining_steps},
-}
-
-@misc{hooks-commit-limit-unset-means-the-default,
-  section = {commit_limit},
-  title  = {No variable, no change},
-  claim  = {No variable, no change.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_unset_means_the_default},
-}
-
-@misc{hooks-commit-limit-positive-integer-raises-the-limit,
-  section = {commit_limit},
-  title  = {A cold sweep can ask for more than the default},
-  claim  = {A cold sweep can ask for more than the default.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_a_positive_integer_raises_the_limit},
-}
-
-@misc{hooks-commit-limit-anything-else-is-ignored-not-read-as-no-limit,
-  section = {commit_limit},
-  title  = {Zero or text must not remove the bound that stops a wedged gate},
-  claim  = {Zero or text must not remove the bound that stops a wedged gate.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_anything_else_is_ignored_not_read_as_no_limit},
 }
 
 @misc{hooks-snapshot-file-lost-from-the-path-is-written-back-though-the-stamp-matches,
@@ -14305,4 +14270,81 @@
   title  = {A missing /proc is an empty table; one unreadable stat leaves that pid out},
   claim  = {A missing /proc is an empty table; one unreadable stat leaves that pid out.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_an_unreadable_table_or_entry_is_skipped_not_raised},
+}
+
+@misc{hooks-commit-kata-gate-that-makes-no-progress-is-a-verdict-not-a-traceback,
+  section = {commit-kata},
+  title  = {mtools:W844, W1804: a stalled git reads NOT COMMITTED and names the phase, never raises},
+  claim  = {mtools:W844, W1804: a stalled git reads NOT COMMITTED and names the phase, never raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_gate_that_makes_no_progress_is_a_verdict_not_a_traceback},
+}
+
+@misc{hooks-commit-kata-stalled-verdict-names-the-last-gate-phase-and-other-lines-are-untouched,
+  section = {commit-kata},
+  title  = {W1804: the NOT COMMITTED line says where the gate was; a COMMITTED line is not edited},
+  claim  = {W1804: the NOT COMMITTED line says where the gate was; a COMMITTED line is not edited.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_stalled_verdict_names_the_last_gate_phase_and_other_lines_are_untouched},
+}
+
+@misc{hooks-commit-run-git-git-that-makes-no-progress-is-killed-and-reads-timed-out,
+  section = {commit_run_git},
+  title  = {A gate with no CPU and no output for a run of looks is a verdict (W844, W1804)},
+  claim  = {A gate with no CPU and no output for a run of looks is a verdict (W844, W1804).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_run_git.py -k test_a_git_that_makes_no_progress_is_killed_and_reads_timed_out},
+}
+
+@misc{hooks-commit-limit-unset-means-the-default-looks-and-period,
+  section = {commit_limit},
+  title  = {No variable, no change},
+  claim  = {No variable, no change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_unset_means_the_default_looks_and_period},
+}
+
+@misc{hooks-commit-limit-positive-value-changes-the-looks-and-the-period,
+  section = {commit_limit},
+  title  = {A cold sweep can ask for more looks, a slow host for a longer gap},
+  claim  = {A cold sweep can ask for more looks, a slow host for a longer gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_a_positive_value_changes_the_looks_and_the_period},
+}
+
+@misc{hooks-commit-limit-anything-else-for-the-looks-is-ignored-not-read-as-no-bound,
+  section = {commit_limit},
+  title  = {Zero or text must not remove the bound that stops a wedged gate},
+  claim  = {Zero or text must not remove the bound that stops a wedged gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_anything_else_for_the_looks_is_ignored_not_read_as_no_bound},
+}
+
+@misc{hooks-commit-limit-anything-else-for-the-period-is-ignored,
+  section = {commit_limit},
+  title  = {A zero gap would spin; a negative or text one is not a gap},
+  claim  = {A zero gap would spin; a negative or text one is not a gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_limit.py -k test_anything_else_for_the_period_is_ignored},
+}
+
+@misc{hooks-commitprogress-watch-ends-on-a-stall-and-never-on-elapsed-time,
+  section = {commitprogress},
+  title  = {A child that spends nothing and writes nothing is given up on after the looks},
+  claim  = {A child that spends nothing and writes nothing is given up on after the looks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_watch_ends_on_a_stall_and_never_on_elapsed_time},
+}
+
+@misc{hooks-commitprogress-watch-keeps-waiting-while-the-tree-spends-cpu-or-writes,
+  section = {commitprogress},
+  title  = {Each look that shows growth resets the count, so a busy gate is never ended},
+  claim  = {Each look that shows growth resets the count, so a busy gate is never ended.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_watch_keeps_waiting_while_the_tree_spends_cpu_or_writes},
+}
+
+@misc{hooks-commitprogress-watch-returns-the-exit-code-of-a-child-that-ends,
+  section = {commitprogress},
+  title  = {The code comes back as it is, including a failing one},
+  claim  = {The code comes back as it is, including a failing one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_watch_returns_the_exit_code_of_a_child_that_ends},
+}
+
+@misc{hooks-commitprogress-phase-is-the-last-mark-and-the-stall-text-names-it,
+  section = {commitprogress},
+  title  = {Marks are `pre-commit: phase NAME NS`; none marked is said as such},
+  claim  = {Marks are `pre-commit: phase NAME NS`; none marked is said as such.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_phase_is_the_last_mark_and_the_stall_text_names_it},
 }

@@ -21,18 +21,32 @@ are, belong to the caller (learned from the gate's own history); nothing here re
 ⚑ THE PROCESS TABLE IS A SEAM: `snapshot` reads `/proc` through a reader the tests replace, so the
 tests build a table by hand and the real reader is checked once against this process.
 
-CONSUMED BY: `commit_kata.run_git_in`, in the step after this one (W1803).
+⚑ THE WATCH REPLACES THE WALL WAIT (W1804): `watch` waits on the child in slices of `period`
+seconds, takes a look at each slice's end, and gives up only on a stall. The period is how
+often to look, not how long the gate may run: a gate that keeps spending CPU or writing runs
+as long as it likes, and one that does neither for `looks` looks in a row is ended and says
+which gate phase it was in. Both numbers come from the environment, for the caller to learn.
+
+CONSUMED BY: `commit_kata.run_git_in`.
 """
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+from mikemol.hooks.gatephase import marks
+
 CPU_FIELDS = (13, 14)  # utime and stime in /proc/<pid>/stat, counted after the command name
 PPID_FIELD = 1
 Procs = Mapping[int, tuple[int, int]]
 """pid to (parent pid, CPU ticks)."""
 Read = Callable[[Path], str | None]
+Wait = Callable[[float], int | None]
+LOOKS_ENV = "MIKEMOL_COMMIT_STALL_LOOKS"
+PERIOD_ENV = "MIKEMOL_COMMIT_LOOK_S"
+DEFAULT_LOOKS = 120
+DEFAULT_PERIOD_S = 30.0
+NO_PHASE = "none marked"
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,3 +153,82 @@ def stalled(witness: Witness, looks: int) -> bool:
 
     """
     return looks >= 1 and witness.flat >= looks
+
+
+def looks_from(env: Mapping[str, str]) -> int:
+    """Say how many flat looks in a row make a stall.
+
+    Returns:
+        `MIKEMOL_COMMIT_STALL_LOOKS` when it is a positive integer, else `DEFAULT_LOOKS`; zero or
+        text is ignored and never read as no bound, which would let a wedged gate hold the lease.
+
+    """
+    raw = env.get(LOOKS_ENV, "")
+    return int(raw) if raw.isdecimal() and int(raw) > 0 else DEFAULT_LOOKS
+
+
+def period_from(env: Mapping[str, str]) -> float:
+    """Say how many seconds pass between looks.
+
+    Returns:
+        `MIKEMOL_COMMIT_LOOK_S` when it is a positive number, else `DEFAULT_PERIOD_S`.
+
+    """
+    try:
+        value = float(env.get(PERIOD_ENV, ""))
+    except ValueError:
+        return DEFAULT_PERIOD_S
+    return value if value > 0 else DEFAULT_PERIOD_S
+
+
+def phase_of(text: str) -> str:
+    """Name the gate phase the output had reached.
+
+    Returns:
+        the last phase mark's name, or `NO_PHASE` when the output holds none.
+
+    """
+    found = marks(text)
+    return found[-1].name if found else NO_PHASE
+
+
+def stall_text(text: str, looks: int, period: float) -> str:
+    """Say why a commit was ended, for the process's stderr.
+
+    Returns:
+        one sentence naming the looks, their spacing and the last phase.
+
+    """
+    return (
+        f"git made no progress: no CPU in its process tree and no new output for {looks} looks "
+        f"{period:g} s apart; last gate phase: {phase_of(text)}"
+    )
+
+
+def watch(
+    wait: Wait,
+    pid: int,
+    size: Callable[[], int],
+    pace: tuple[int, float],
+    procs: Callable[[], Procs] = snapshot,
+) -> int | None:
+    """Wait for the process `pid`, looking at its progress between slices.
+
+    `wait(seconds)` waits up to that long and returns the exit code, or None while the
+    process still runs (the caller owns the subprocess); `pace` is (looks, period seconds);
+    `size` reads the output's size so far.
+
+    Returns:
+        the exit code once the process ends, or None when `looks` consecutive looks showed no
+        CPU and no output (the process is left running; the caller ends it).
+
+    """
+    looks, period = pace
+    seen = Witness()
+    while True:
+        code = wait(period)
+        if code is not None:
+            return code
+        seen = step(seen, tree_ticks(procs(), pid), size())
+        if stalled(seen, looks):
+            return None

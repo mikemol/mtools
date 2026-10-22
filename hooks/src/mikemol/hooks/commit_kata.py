@@ -51,6 +51,11 @@ from mikemol.hooks.commit_verdict import emit as _emit_verdict
 from mikemol.hooks.commit_withdraw import clear_marker as _clear_marker
 from mikemol.hooks.commit_withdraw import marker_path as _marker_path
 from mikemol.hooks.commit_withdraw import withdraw as _withdraw
+from mikemol.hooks.commitprogress import looks_from as _looks_from
+from mikemol.hooks.commitprogress import period_from as _period_from
+from mikemol.hooks.commitprogress import phase_of as _phase_of
+from mikemol.hooks.commitprogress import stall_text as _stall_text
+from mikemol.hooks.commitprogress import watch as _watch
 from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
@@ -115,12 +120,12 @@ ROOT_ENV = "MIKEMOL_GITHUB_ROOT"
 ISOLATED_ENV = "MIKEMOL_COMMIT_ISOLATED"
 TRAILER_ENV = "COMMIT_TRAILER"
 DEFAULT_TRAILER = "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
-COMMIT_TIMEOUT_S = 10800  # a cold-cache paperkit gate outlasted 3000 s twice (2026-10-07)
 SHORT = 7
 LOCAL_MARKS = ("[LOCAL:", "[REMOTE-MISMATCH")  # a COMMITTED line whose push did not land (W1097)
 MISMATCH_MARK = "REMOTE-MISMATCH"  # the tracking ref says pushed and the remote disagrees (W1082)
 EXIT_NOT_COMMITTED = 1
 TIMED_OUT = 124
+STALLED = "stalled, no CPU and no output"
 EXIT_USAGE = 2
 EXIT_RACED = 5
 FENCE_ENV = "MIKEMOL_FENCE_BIN"
@@ -128,7 +133,6 @@ FENCE_PIN = (
     'uv add "mikemol-fence @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=fence"'
 )
 HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
-COMMIT_LIMIT_ENV = "MIKEMOL_COMMIT_TIMEOUT_S"
 TIMEOUT_ENV = "MIKEMOL_COMMIT_LOCK_TIMEOUT"
 BUDGET = (
     "MEMBUDGET_FILE",
@@ -179,18 +183,31 @@ def isolated_commit(root: Path, request: Request, paths: Sequence[str]) -> Done:
     return commit_isolated(root, paths, message_of(request), run_git_in, namespace)
 
 
-def commit_limit(env: Mapping[str, str]) -> int:
-    """Say how long a commit may run, in seconds (paperkit:W299).
-
-    A cold engine sweep outlasts the default, so `MIKEMOL_COMMIT_TIMEOUT_S` raises it; anything
-    that is not a positive integer is ignored rather than read as no limit.
+def waiter(child: subprocess.Popen[bytes]) -> Callable[[float], int | None]:
+    """Wrap a child's wait so a slice that runs on reads as None, not as an exception.
 
     Returns:
-        the override when it is a positive integer, else `COMMIT_TIMEOUT_S`.
+        a function from seconds to the exit code, or None while the child is still running.
 
     """
-    raw = env.get(COMMIT_LIMIT_ENV, "")
-    return int(raw) if raw.isdecimal() and int(raw) > 0 else COMMIT_TIMEOUT_S
+
+    def wait(seconds: float) -> int | None:
+        try:
+            return child.wait(timeout=seconds)
+        except subprocess.TimeoutExpired:
+            return None
+
+    return wait
+
+
+def sized(handle: TextIO) -> int:
+    """Say how many bytes a commit's output file holds so far.
+
+    Returns:
+        the file's size.
+
+    """
+    return os.fstat(handle.fileno()).st_size
 
 
 def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
@@ -234,15 +251,17 @@ def run_git_in(
             cwd=cwd,
             env=child_env(argv, extra),
         )
-        limit = commit_limit({**os.environ, **extra})
-        try:
-            code = child.wait(timeout=limit)
-        except subprocess.TimeoutExpired:
-            # ⚑ A GATE THAT RUNS PAST THE LIMIT IS A VERDICT, NOT A CRASH (mtools:W844).
+        merged = {**os.environ, **extra}
+        pace = (_looks_from(merged), _period_from(merged))
+        code = _watch(waiter(child), child.pid, lambda: sized(out) + sized(err), pace)
+        if code is None:
+            # ⚑ A GATE THAT MAKES NO PROGRESS IS A VERDICT, NOT A CRASH (mtools:W844, W1804): no
+            # CPU in its process tree and no new output for a run of looks, never a wall limit.
             child.kill()
             child.wait()
+            err.seek(0)
             return subprocess.CompletedProcess(
-                list(argv), TIMED_OUT, "", f"git timed out after {limit} s"
+                list(argv), TIMED_OUT, "", _stall_text(err.read(), *pace)
             )
         out.seek(0)
         err.seek(0)
@@ -479,6 +498,19 @@ def with_stage(line: str, shown: str) -> str:
     return line.replace(marker, f"): {note}the cause is above", 1)
 
 
+def with_phase(line: str, shown: str) -> str:
+    """Name the gate phase a stalled commit had reached, in its NOT COMMITTED line.
+
+    Returns:
+        the line with `stalled` followed by the last phase mark in `shown`; any other line
+        unchanged.
+
+    """
+    return line.replace(
+        STALLED, f"stalled in gate phase {_phase_of(shown)}, no CPU and no output", 1
+    )
+
+
 def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git) -> str:
     """Say what a commit did, from HEAD and not from the gate's last stage.
 
@@ -491,10 +523,7 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
         subject = run(["-C", str(root), "log", "-1", "--format=%s", after]).stdout.strip()
         return f"COMMITTED {name} {after[:SHORT]} {subject} [{published(root, after, run)}]"
     if rc == TIMED_OUT:
-        return (
-            f"NOT COMMITTED {name}: timed out after {commit_limit(os.environ)} s (no verdict); "
-            f"HEAD is still {before[:SHORT]}"
-        )
+        return f"NOT COMMITTED {name}: {STALLED} (no verdict); HEAD is still {before[:SHORT]}"
     if rc != 0:
         return f"REFUSED {name} (rc={rc}): the cause is above; HEAD is still {before[:SHORT]}"
     return f"NOT COMMITTED {name}: exit 0 but HEAD did not move from {before[:SHORT]}"
@@ -527,7 +556,9 @@ def commit(
     span = f"{before}..{after}" if before else after
     mine = made_by(root, request, span, run) if moved else True
     if mine:
-        line = with_stage(verdict(root, before, after, done.returncode, run), shown)
+        line = with_stage(
+            with_phase(verdict(root, before, after, done.returncode, run), shown), shown
+        )
         if any(mark in line for mark in LOCAL_MARKS):
             out.write(f"push not completed: run  git -C {root} push origin HEAD:main\n")
         out.write(f"{line}\n")

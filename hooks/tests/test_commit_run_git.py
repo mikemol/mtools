@@ -73,16 +73,17 @@ def test_a_missing_git_is_127_with_the_reason(monkeypatch: pytest.MonkeyPatch) -
     assert "not installed" in done.stderr
 
 
-def test_a_git_past_the_limit_is_killed_and_reads_timed_out(
+def test_a_git_that_makes_no_progress_is_killed_and_reads_timed_out(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """A gate that runs past the limit is a verdict (W844), and the process is gone."""
+    """A gate with no CPU and no output for a run of looks is a verdict (W844, W1804)."""
     stub = tmp_path / "bin" / "git"
     stub.parent.mkdir()
     stub.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
     stub.chmod(_EXECUTABLE)
     monkeypatch.setenv("PATH", f"{tmp_path / 'bin'}{os.pathsep}{os.environ['PATH']}")
-    monkeypatch.setattr(commit_kata, "COMMIT_TIMEOUT_S", 1)
+    monkeypatch.setenv("MIKEMOL_COMMIT_STALL_LOOKS", "2")
+    monkeypatch.setenv("MIKEMOL_COMMIT_LOOK_S", "0.05")
     done = commit_kata.run_git(["status"])
     assert done.returncode == commit_kata.TIMED_OUT
-    assert "timed out" in done.stderr
+    assert "no progress" in done.stderr

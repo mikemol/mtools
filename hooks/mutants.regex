@@ -71,7 +71,7 @@ src/mikemol/hooks/probe.py|relative-launcher-not-resolved|if "/" in argv\[0\] an
 # W928: run_git waits on the git process itself, with its output in files, and bounds the wait.
 # Reading pipes lets an orphan wedge it for as long as the orphan lives; dropping the kill leaves a
 # gate past its limit running; dropping the timeout makes the wait unbounded.
-src/mikemol/hooks/commit_kata.py|wait-without-a-limit|child\.wait\(timeout=limit\)|child.wait()|def=run_git_in
+src/mikemol/hooks/commit_kata.py|wait-without-a-stall-watch|code = _watch\(waiter\(child\), child\.pid, lambda: sized\(out\) \+ sized\(err\), pace\)|code = child.wait()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|timed-out-git-left-running|child\.kill\(\)|child.poll()|def=run_git_in
 src/mikemol/hooks/commit_kata.py|status-lost|subprocess\.CompletedProcess\(list\(argv\), code, out\.read\(\), err\.read\(\)\)|subprocess.CompletedProcess(list(argv), 0, out.read(), err.read())|def=run_git_in
 src/mikemol/hooks/shellcheck.py|every-finding-is-old|if budget\.get\(key, 0\) > 0:|if True:|def=added_only
@@ -83,8 +83,12 @@ src/mikemol/hooks/new_dist.py|repeated-anchor-admitted|if count != 1:|if count <
 src/mikemol/hooks/new_dist.py|present-hub-admitted|if f'"\{name\}_deps"' in text:|if False:|def=module_edit
 src/mikemol/hooks/new_dist.py|install-order-reversed|key > name|key < name|def=install_edit
 src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) \+ 1|int(count.group(1))|def=install_edit
-src/mikemol/hooks/commit_kata.py|override-ignored|if raw\.isdecimal\(\) and int\(raw\) > 0 else|if False else|def=commit_limit
-src/mikemol/hooks/commit_kata.py|zero-means-no-limit|int\(raw\) > 0|int(raw) >= 0|def=commit_limit
+src/mikemol/hooks/commitprogress.py|looks-override-ignored|raw\.isdecimal\(\) and int\(raw\) > 0 else|False else|def=looks_from
+src/mikemol/hooks/commitprogress.py|zero-looks-means-no-bound|int\(raw\) > 0|int(raw) >= 0|def=looks_from
+src/mikemol/hooks/commitprogress.py|period-override-ignored|    return value if value > 0 else DEFAULT_PERIOD_S|    return DEFAULT_PERIOD_S|def=period_from
+src/mikemol/hooks/commitprogress.py|watch-never-gives-up|        if stalled\(seen, looks\):|        if False:|def=watch
+src/mikemol/hooks/commitprogress.py|exit-code-lost|            return code|            return 0|def=watch
+src/mikemol/hooks/commit_kata.py|stall-verdict-without-phase|        STALLED, f"stalled in gate phase \{_phase_of\(shown\)\}, no CPU and no output", 1|        STALLED, STALLED, 1|def=with_phase
 src/mikemol/hooks/snapshot.py|lost-files-not-checked|if before == tree and not lost:|if before == tree:|def=Snapshot.materialize
 src/mikemol/hooks/snapshot.py|present-file-reported-lost|not \(self\.path / n\)\.is_file\(\)|(self.path / n).is_file()|def=Snapshot._lost
 src/mikemol/hooks/snapshot.py|carried-link-never-lost|or e\.partition\("\\t"\)\[2\] in carried|or False|def=Snapshot._lost

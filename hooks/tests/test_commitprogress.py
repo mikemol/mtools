@@ -61,6 +61,60 @@ def test_a_stall_is_a_run_of_flat_looks_and_never_for_a_limit_below_one() -> Non
     assert not progress.stalled(seen, 0)
 
 
+_BUSY_LOOKS = 10
+_EXIT_THREE = 3
+
+
+def _never_ends(_seconds: float) -> int | None:
+    return None
+
+
+def _zero() -> int:
+    return 0
+
+
+def _ends_with_three(_seconds: float) -> int | None:
+    return _EXIT_THREE
+
+
+def test_a_watch_ends_on_a_stall_and_never_on_elapsed_time() -> None:
+    """A child that spends nothing and writes nothing is given up on after the looks."""
+    table = {5: (1, 7)}
+    got = progress.watch(_never_ends, 5, _zero, (_FLAT_LOOKS, 0.0), lambda: table)
+    assert got is None
+
+
+def test_a_watch_keeps_waiting_while_the_tree_spends_cpu_or_writes() -> None:
+    """Each look that shows growth resets the count, so a busy gate is never ended."""
+    ticks = iter(range(1, 50))
+    waits: list[int] = []
+
+    def wait(_seconds: float) -> int | None:
+        waits.append(1)
+        return 0 if len(waits) > _BUSY_LOOKS else None
+
+    def procs() -> progress.Procs:
+        return {5: (1, next(ticks))}
+
+    assert progress.watch(wait, 5, _zero, (_FLAT_LOOKS, 0.0), procs) == 0
+    assert len(waits) == _BUSY_LOOKS + 1
+
+
+def test_a_watch_returns_the_exit_code_of_a_child_that_ends() -> None:
+    """The code comes back as it is, including a failing one."""
+    assert progress.watch(_ends_with_three, 5, _zero, (_FLAT_LOOKS, 0.0)) == _EXIT_THREE
+
+
+def test_the_phase_is_the_last_mark_and_the_stall_text_names_it() -> None:
+    """Marks are `pre-commit: phase NAME NS`; none marked is said as such."""
+    text = "x\npre-commit: phase lint 100\nnoise\npre-commit: phase bazel 200\n"
+    assert progress.phase_of(text) == "bazel"
+    assert progress.phase_of("nothing\n") == progress.NO_PHASE
+    said = progress.stall_text(text, _FLAT_LOOKS, 30.0)
+    assert "3 looks 30 s apart" in said
+    assert "last gate phase: bazel" in said
+
+
 def test_the_real_process_table_holds_this_process_with_its_parent() -> None:
     """The positive control: the reader sees the process running the test."""
     table = progress.snapshot()
