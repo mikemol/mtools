@@ -93,9 +93,6 @@ src/mikemol/hooks/gateclass.py|never-failed-not-recognised|    if failures == 0:
 src/mikemol/hooks/gateclass.py|every-red-round-read-as-intermittent|    return BROKEN if failures == len\(window\) else INTERMITTENT|    return INTERMITTENT|def=classify
 src/mikemol/hooks/gateclass.py|zero-window-reads-nothing|    window = record\[: max\(recent, 1\)\]|    window = record[:recent]|def=classify
 src/mikemol/hooks/gateclass.py|absent-step-has-no-record|    unseen = PASSED_ALWAYS if history else \(\)|    unseen = ()|def=classify_all
-src/mikemol/hooks/phasetrend.py|two-points-claim-a-slope|    if len\(seconds\) < MIN_SAMPLES:|    if False:|def=_slope
-src/mikemol/hooks/phasetrend.py|zero-duration-counts-as-a-phase|micros <= 0|micros < 0|def=_sample_of
-src/mikemol/hooks/phasetrend.py|samples-not-taken-oldest-first|for _, value in sorted\(timed\)|for _, value in timed|def=_trend
 src/mikemol/hooks/vlogfollow.py|held-pass-waits-for-growth|        if held:|        if False:|def=follow
 src/mikemol/hooks/vlogfollow.py|quiet-file-passed-on-every-pause|        while signature\(path\) == seen and not stop\(\):|        while False:|def=follow
 src/mikemol/hooks/vlogfollow.py|size-ignored-by-the-signature|    return stat\.st_ino, stat\.st_size|    return stat.st_ino, 0|def=signature
