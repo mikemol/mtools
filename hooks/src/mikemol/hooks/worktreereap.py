@@ -38,6 +38,7 @@ CONSUMED BY: the `mikemol-worktree-reap` console script.
 """
 
 import sys
+import tempfile
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,11 +50,15 @@ DIRTY = "dirty"
 UNMERGED = "unmerged"
 GONE = "gone"
 NEW = "new"
+SAVE_FLAG = "--save"
 CLEAN = "clean-equivalent"
 EXIT_OK = 0
 EXIT_USAGE = 2
 BRANCH_PREFIX = "refs/heads/"
-USAGE = "usage: mikemol-worktree-reap REPO   (read-only: classifies, changes nothing)\n"
+USAGE = (
+    "usage: mikemol-worktree-reap REPO [--save]   (classifies; --save keeps dirty and unmerged\n"
+    "work under refs/stash-reap/; neither removes anything)\n"
+)
 FIRST_RUN = (
     "mikemol-worktree-reap: first run for this repository, so every present worktree is `new`; "
     "run it again later and the second read classifies them\n"
@@ -202,11 +207,102 @@ def save_seen(path: Path | None, listed: Sequence[Worktree]) -> None:
         return
 
 
-def report(root: Path, upstream: str = "main") -> list[str]:
-    """Classify every scratch worktree of the repository at `root`.
+_AUTHOR = {
+    "GIT_AUTHOR_NAME": "mikemol-worktree-reap",
+    "GIT_AUTHOR_EMAIL": "noreply@mikemol.invalid",
+    "GIT_COMMITTER_NAME": "mikemol-worktree-reap",
+    "GIT_COMMITTER_EMAIL": "noreply@mikemol.invalid",
+    # ⚑ A FIXED DATE, SO THE SAME WORK IS THE SAME COMMIT: a commit's sha includes its timestamps,
+    # and a ref named by that sha would differ between two saves a second apart, which broke the
+    # idempotence the name promises (the gate refused W1810's first stack on exactly that).
+    "GIT_AUTHOR_DATE": "1970-01-01T00:00:00Z",
+    "GIT_COMMITTER_DATE": "1970-01-01T00:00:00Z",
+}
+STASH_REF = "refs/stash-reap/"
+SHORT = 7
+
+
+def _in(folder: Path, argv: Sequence[str], env: dict[str, str]) -> str | None:
+    # Run git in `folder` with added environment and return its stripped stdout, None on failure.
+    done = run_git_in(list(argv), env, folder)
+    return done.stdout.strip() if done.returncode == 0 else None
+
+
+def snapshot_commit(wt: Worktree) -> str | None:
+    """Commit everything a worktree holds (tracked changes and untracked files) without touching it.
+
+    ⚑ A TEMPORARY INDEX, NEVER THE WORKTREE'S OWN: `git stash create` leaves untracked files out,
+    and an untracked file is exactly the work a scratch checkout loses. With `GIT_INDEX_FILE`
+    pointing at a scratch file, `read-tree HEAD` and `add -A` build the whole state, `write-tree`
+    names it and `commit-tree` makes a commit on top of HEAD (so the branch's own unmerged commits
+    ride along). The worktree's own index and files are not written or changed.
 
     Returns:
-        one `CLASS<TAB>PATH<TAB>BRANCH` line per worktree other than the main one.
+        the commit's sha, or None when any step failed.
+
+    """
+    folder = Path(wt.path)
+    with tempfile.TemporaryDirectory() as scratch:
+        env = {**_AUTHOR, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
+        for argv in (["read-tree", "HEAD"], ["add", "-A"]):
+            if _in(folder, argv, env) is None:
+                return None
+        tree = _in(folder, ["write-tree"], env)
+        if not tree:
+            return None
+        return _in(folder, ["commit-tree", tree, "-p", "HEAD", "-m", f"stash-reap {wt.path}"], env)
+
+
+def ref_name(wt: Worktree, sha: str) -> str:
+    """Name the ref that keeps a worktree's work: its branch (or directory) and the commit.
+
+    ⚑ THE SHA IS IN THE NAME, so saving the same work twice is the same ref (idempotent) and saving
+    different work never overwrites an earlier save.
+
+    Returns:
+        `refs/stash-reap/<branch with / as ->-<sha7>`.
+
+    """
+    slug = wt.branch.replace("/", "-") if wt.branch else f"detached-{Path(wt.path).name}"
+    return f"{STASH_REF}{slug}-{sha[:SHORT]}"
+
+
+def save(root: Path, wt: Worktree, kind: str) -> str | None:
+    """Keep a dirty or unmerged worktree's work under `refs/stash-reap/`, and report the ref.
+
+    Returns:
+        the ref name; None for any other class, or when the work could not be committed or named.
+
+    """
+    if kind not in {DIRTY, UNMERGED}:
+        return None
+    folder = root if wt.prunable else Path(wt.path)
+    if kind == DIRTY:
+        sha = snapshot_commit(wt)
+    else:
+        sha = _in(folder, ["rev-parse", wt.branch or "HEAD"], {})
+    if not sha:
+        return None
+    ref = ref_name(wt, sha)
+    return ref if _in(root, ["update-ref", ref, sha], {}) is not None else None
+
+
+def _kind_of(root: Path, wt: Worktree, upstream: str, seen: set[str] | None) -> str:
+    # Read what is needed about one worktree and classify it.
+    cherry = _out(root, ["cherry", upstream, wt.branch]) if wt.branch else ""
+    status = "" if wt.prunable else _out(Path(wt.path), ["status", "--porcelain"])
+    fresh = not wt.prunable and (seen is None or wt.path not in seen)
+    return classify(wt, cherry, status, held=bool(holders(wt.path)), new=fresh)
+
+
+def report(root: Path, upstream: str = "main", *, saving: bool = False) -> list[str]:
+    """Classify every scratch worktree of the repository at `root`.
+
+    With `saving`, a dirty or unmerged worktree's work is also kept under `refs/stash-reap/` and
+    the ref is a fourth field on its line. Nothing is removed either way.
+
+    Returns:
+        one `CLASS<TAB>PATH<TAB>BRANCH[<TAB>REF]` line per worktree other than the main one.
 
     """
     listed = parse_worktrees(_out(root, ["worktree", "list", "--porcelain"]) or "")[1:]
@@ -214,11 +310,10 @@ def report(root: Path, upstream: str = "main") -> list[str]:
     seen = load_seen(where)
     lines: list[str] = []
     for wt in listed:
-        cherry = _out(root, ["cherry", upstream, wt.branch]) if wt.branch else ""
-        status = "" if wt.prunable else _out(Path(wt.path), ["status", "--porcelain"])
-        fresh = not wt.prunable and (seen is None or wt.path not in seen)
-        kind = classify(wt, cherry, status, held=bool(holders(wt.path)), new=fresh)
-        lines.append(f"{kind}\t{wt.path}\t{wt.branch or '(detached)'}")
+        kind = _kind_of(root, wt, upstream, seen)
+        line = f"{kind}\t{wt.path}\t{wt.branch or '(detached)'}"
+        ref = save(root, wt, kind) if saving else None
+        lines.append(f"{line}\t{ref}" if ref else line)
     save_seen(where, listed)
     return lines
 
@@ -230,13 +325,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         `EXIT_OK` with the lines printed, `EXIT_USAGE` when the one argument (REPO) is missing.
 
     """
-    args = sys.argv[1:] if argv is None else list(argv)
+    given = sys.argv[1:] if argv is None else list(argv)
+    args = [word for word in given if word != SAVE_FLAG]
     if len(args) != 1:
         sys.stderr.write(USAGE)
         return EXIT_USAGE
     root = Path(args[0])
     first = load_seen(seen_file(root)) is None
-    lines = report(root)
+    lines = report(root, saving=SAVE_FLAG in given)
     sys.stdout.writelines(f"{line}\n" for line in lines)
     if first and lines:
         sys.stderr.write(FIRST_RUN)

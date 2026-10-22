@@ -91,9 +91,14 @@ src/mikemol/hooks/vlogfollow.py|quiet-file-passed-on-every-pause|        while s
 src/mikemol/hooks/vlogfollow.py|size-ignored-by-the-signature|    return stat\.st_ino, stat\.st_size|    return stat.st_ino, 0|def=signature
 src/mikemol/hooks/vlogcli.py|follow-accepted-without-a-file|    if args\.follow and \(args\.from_file is None or args\.command\):|    if False:|def=_prepare
 src/mikemol/hooks/vlogcli.py|ceiling-hidden-from-the-loop|    return code, batcher\.blocked|    return code, False|def=_pass
+src/mikemol/hooks/worktreereap.py|every-class-saved|    if kind not in \{DIRTY, UNMERGED\}:|    if False:|def=save
+src/mikemol/hooks/worktreereap.py|unmerged-saved-as-a-snapshot|    if kind == DIRTY:|    if True:|def=save
+src/mikemol/hooks/worktreereap.py|gone-worktree-read-in-its-missing-directory|    folder = root if wt\.prunable else Path\(wt\.path\)|    folder = Path(wt.path)|def=save
+src/mikemol/hooks/worktreereap.py|untracked-files-left-out-of-the-snapshot|        for argv in \(\["read-tree", "HEAD"\], \["add", "-A"\]\):|        for argv in (["read-tree", "HEAD"],):|def=snapshot_commit
+src/mikemol/hooks/worktreereap.py|full-sha-in-the-ref-name|    return f"\{STASH_REF\}\{slug\}-\{sha\[:SHORT\]\}"|    return f"{STASH_REF}{slug}-{sha}"|def=ref_name
 src/mikemol/hooks/worktreereap.py|new-checkout-classified-anyway|    if new:|    if False:|def=classify
-src/mikemol/hooks/worktreereap.py|nothing-is-ever-new|        fresh = not wt\.prunable and \(seen is None or wt\.path not in seen\)|        fresh = False|def=report
-src/mikemol/hooks/worktreereap.py|missing-directory-held-as-new|        fresh = not wt\.prunable and \(seen is None or wt\.path not in seen\)|        fresh = seen is None or wt.path not in seen|def=report
+src/mikemol/hooks/worktreereap.py|nothing-is-ever-new|    fresh = not wt\.prunable and \(seen is None or wt\.path not in seen\)|    fresh = False|def=_kind_of
+src/mikemol/hooks/worktreereap.py|missing-directory-held-as-new|    fresh = not wt\.prunable and \(seen is None or wt\.path not in seen\)|    fresh = seen is None or wt.path not in seen|def=_kind_of
 src/mikemol/hooks/worktreereap.py|seen-file-read-as-empty|        return set\(path\.read_text\(encoding="utf-8"\)\.splitlines\(\)\)|        return set()|def=load_seen
 src/mikemol/hooks/worktreereap.py|held-checkout-classified-anyway|    if held:|    if False:|def=classify
 src/mikemol/hooks/worktreereap.py|detached-head-read-as-merged|    risky = not wt\.branch or cherry is None or unmerged_commits\(cherry\)|    risky = cherry is None or unmerged_commits(cherry)|def=classify

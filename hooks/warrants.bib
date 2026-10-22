@@ -14547,3 +14547,53 @@
   claim  = {The first run explains why everything is new; the second says nothing on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_stable.py -k test_the_command_says_it_is_a_first_run_once},
 }
+
+@misc{hooks-worktreereap-save-dirty-worktrees-saved-commit-holds-its-tracked-and-untracked-work,
+  section = {worktreereap_save},
+  title  = {The ref's tree has the modified file and the untracked one; the worktree is unchanged},
+  claim  = {The ref's tree has the modified file and the untracked one; the worktree is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_a_dirty_worktrees_saved_commit_holds_its_tracked_and_untracked_work},
+}
+
+@misc{hooks-worktreereap-save-unmerged-worktrees-ref-is-its-branch-tip,
+  section = {worktreereap_save},
+  title  = {The ahead worktree's commits are kept by a ref at the branch tip},
+  claim  = {The ahead worktree's commits are kept by a ref at the branch tip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_an_unmerged_worktrees_ref_is_its_branch_tip},
+}
+
+@misc{hooks-worktreereap-save-clean-worktree-gets-no-ref-and-nothing-is-removed,
+  section = {worktreereap_save},
+  title  = {The control: two refs for two at-risk worktrees, none for the clean one, no worktree gone},
+  claim  = {The control: two refs for two at-risk worktrees, none for the clean one, no worktree
+            gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_a_clean_worktree_gets_no_ref_and_nothing_is_removed},
+}
+
+@misc{hooks-worktreereap-save-saving-the-same-work-twice-is-the-same-ref-and-new-work-is-a-new-one,
+  section = {worktreereap_save},
+  title  = {The sha is in the name: a repeat adds nothing, a changed worktree adds one beside it},
+  claim  = {The sha is in the name: a repeat adds nothing, a changed worktree adds one beside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_saving_the_same_work_twice_is_the_same_ref_and_new_work_is_a_new_one},
+}
+
+@misc{hooks-worktreereap-save-worktree-still-new-is-not-saved,
+  section = {worktreereap_save},
+  title  = {A first-run worktree is not classified, so saving writes no ref for it},
+  claim  = {A first-run worktree is not classified, so saving writes no ref for it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_a_worktree_still_new_is_not_saved},
+}
+
+@misc{hooks-worktreereap-save-gone-worktree-with-unmerged-commits-is-kept-by-its-branch-tip,
+  section = {worktreereap_save},
+  title  = {The record is prunable but the branch holds work main lacks: a ref keeps it},
+  claim  = {The record is prunable but the branch holds work main lacks: a ref keeps it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_a_gone_worktree_with_unmerged_commits_is_kept_by_its_branch_tip},
+}
+
+@misc{hooks-worktreereap-save-command-takes-save-and-prints-the-ref-as-a-fourth-field,
+  section = {worktreereap_save},
+  title  = {`--save REPO` saves; the ref's name is the branch and the commit's sha seven characters},
+  claim  = {`--save REPO` saves; the ref's name is the branch and the commit's sha seven characters.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_save.py -k test_the_command_takes_save_and_prints_the_ref_as_a_fourth_field},
+}
