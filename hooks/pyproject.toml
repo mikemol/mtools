@@ -129,6 +129,7 @@ mikemol-gate-targets = "mikemol.hooks.gatetargets:main"
 # W1770: report a process (the gate's bazel server) whose core-file limit is above zero.
 mikemol-core-limit = "mikemol.hooks.corelimit:main"
 mikemol-gate-history = "mikemol.hooks.gatehistory:main"
+mikemol-phase-trend = "mikemol.hooks.phasetrend:main"
 mikemol-worktree-reap = "mikemol.hooks.worktreereap:main"
 # W1709: how many lines of a repo's tracked files reach into another checkout, resolved, per repo.
 mikemol-siblings = "mikemol.hooks.siblingcensus_cli:main"
