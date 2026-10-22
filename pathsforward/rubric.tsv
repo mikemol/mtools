@@ -103,3 +103,4 @@ mutations_ship	Mutation Shipping: Every Saved Edit Sends Its Events From the Sin
 landed_status	The Landed Status: Open and Not Workable, Ranked With Blocked, Accepted by the Check, and a Landed Card With No Witness Is a Finding
 landed_readers	The Status Readers and Landed: Open for Triage as a Blocker and as a Duplicate Candidate, Done Being the Closed Control
 landed_vtodo	The Landed Task: In Process and Never Completed in the Calendar Projection, Done Being the Completed Control
+landed_at	The Landing Stamp: landed_at Written Once When a Card Enters Landed, Kept Through Done, Cleared on Reopening, and Never Written for a Card That Never Landed

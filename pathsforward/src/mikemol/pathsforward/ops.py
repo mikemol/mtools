@@ -584,6 +584,23 @@ def _completed(w: Json, status: str, now: str) -> str | None:
     return text(w, "completed") or now.replace("-", "").replace(":", "")
 
 
+def _landed_at(w: Json, status: str, now: str) -> str | None:
+    """Compute the LANDED_AT stamp a status change leaves (W1815, agreed with nemik:W702).
+
+    ⚑ Stamped ONCE, at the transition to landed, and not read from `last_worked`, which every
+    update rewrites: the stuck-deploy interval is measured from here. Going on to done keeps the
+    stamp as the record of when the change shipped; reopening to ready, working or blocked
+    clears it.
+
+    Returns:
+        the UTC DATE-TIME for a landed card, the kept stamp for a done one, else None.
+
+    """
+    if status == "landed":
+        return text(w, "landed_at") or now.replace("-", "").replace(":", "")
+    return text(w, "landed_at") or None if status == "done" else None
+
+
 def _applied(w: Json, upd: Update, now: str) -> Json:
     """Compute the waypoint an update produces, without touching the original.
 
@@ -599,6 +616,9 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         if upd.status == "done":
             new["next_bounded_step"] = None
         new["completed"] = _completed(w, upd.status, now)
+        stamp = _landed_at(w, upd.status, now)
+        if stamp is not None or "landed_at" in new:
+            new["landed_at"] = stamp
     _set_given(new, upd)
     # A blank --next is no next step: null, not "" (linux-sources' reconcile check refuses ""
     # on a done waypoint, and patched it by hand four times, W64 W69 W70 W71, 2026-09-26).

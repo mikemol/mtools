@@ -7045,3 +7045,31 @@
   claim  = {Landed shares working's task status; ready stays NEEDS-ACTION.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_vtodo.py -k test_a_working_card_is_in_process_too_and_a_ready_one_needs_action},
 }
+
+@misc{pathsforward-landed-at-landing-stamps-landed-at-once-and-a-second-landing-keeps-it,
+  section = {landed_at},
+  title  = {The stamp is the clock at the transition; landing again does not move it},
+  claim  = {The stamp is the clock at the transition; landing again does not move it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_at.py -k test_landing_stamps_landed_at_once_and_a_second_landing_keeps_it},
+}
+
+@misc{pathsforward-landed-at-going-on-to-done-keeps-the-landing-time-beside-the-completion,
+  section = {landed_at},
+  title  = {Done is the witness holding: landed_at stays as when the change shipped},
+  claim  = {Done is the witness holding: landed_at stays as when the change shipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_at.py -k test_going_on_to_done_keeps_the_landing_time_beside_the_completion},
+}
+
+@misc{pathsforward-landed-at-reopening-a-landed-card-clears-the-stamp,
+  section = {landed_at},
+  title  = {Back to ready, working or blocked is not landed, so the stamp goes},
+  claim  = {Back to ready, working or blocked is not landed, so the stamp goes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_at.py -k test_reopening_a_landed_card_clears_the_stamp},
+}
+
+@misc{pathsforward-landed-at-card-that-never-lands-grows-no-landed-at-key,
+  section = {landed_at},
+  title  = {The control: ready and done changes leave the card without the field},
+  claim  = {The control: ready and done changes leave the card without the field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed_at.py -k test_a_card_that_never_lands_grows_no_landed_at_key},
+}

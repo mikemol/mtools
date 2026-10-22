@@ -269,5 +269,8 @@ src/mikemol/pathsforward/closeumbrellas.py|unreadable-head-read-as-empty|    if 
 src/mikemol/pathsforward/closeumbrellas.py|card-without-manifest-checked|    if not manifest:|    if False:|def=_own_work
 src/mikemol/pathsforward/dropto.py|other-blockers-forgotten|        rest = \[entry for entry in waiting if entry != gone\]|        rest = []|def=release
 src/mikemol/pathsforward/dropto.py|freed-card-stays-blocked|            w\["status"\] = "ready"|            pass|def=release
+src/mikemol/pathsforward/ops.py|second-landing-moves-the-stamp|        return text\(w, "landed_at"\) or now\.replace\("-", ""\)\.replace\(":", ""\)|        return now.replace("-", "").replace(":", "")|def=_landed_at
+src/mikemol/pathsforward/ops.py|done-loses-the-landing-time|    return text\(w, "landed_at"\) or None if status == "done" else None|    return None|def=_landed_at
+src/mikemol/pathsforward/ops.py|every-update-writes-the-field|        if stamp is not None or "landed_at" in new:|        if True:|def=_applied
 src/mikemol/pathsforward/check.py|landed-card-with-witness-flagged|        if text\(w, "status"\) == "landed" and not text\(w, "witness"\)|        if text(w, "status") == "landed"|def=landed_unwitnessed
 src/mikemol/pathsforward/check.py|every-unwitnessed-card-flagged-landed|        if text\(w, "status"\) == "landed" and not text\(w, "witness"\)|        if not text(w, "witness")|def=landed_unwitnessed
