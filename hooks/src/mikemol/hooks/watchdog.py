@@ -235,6 +235,12 @@ def _no_hint() -> str:
     return ""
 
 
+def _say(line: str) -> None:
+    # One line to stdout, nothing for an empty one.
+    if line:
+        sys.stdout.write(line + "\n")
+
+
 def watch(
     seams: Seams,
     phi_fire: float,
@@ -254,6 +260,11 @@ def watch(
     W1564): the session started this watchdog, which is its own action, so the silence is counted
     from the start whenever the last beat predates it. Otherwise a stale file fires the first poll,
     the session restarts it, it fires again, and nothing watches in between.
+
+    ⚑ A COUNT THAT COULD NOT BE READ IS ASKED AGAIN, NEVER LATCHED (W1829): only a count that was
+    read, and was zero, closes the question for that beat. One failed `--ready-count` (a writer
+    that was busy, a state file mid-write) had silenced the beat for good, and an 81-minute
+    silence with 31 cards ready passed without the alarm, 2026-10-22.
 
     ⚑ THE ALARM CARRIES ITS OWN NEXT ACTION (W1591): after the idle line, `hint` supplies one line
     naming a stackable card and a leaf to atomize, when it has any.
@@ -286,11 +297,10 @@ def watch(
                 waiting = ready()
                 if waiting:
                     sys.stdout.write(idle_line(waiting, last, now_ns(), bound_s) + "\n")
-                    said = hint()
-                    if said:
-                        sys.stdout.write(said + "\n")
+                    _say(hint())
                     return EXIT_IDLE
-                asked_about = last.at_ns
+                if waiting is not None:
+                    asked_about = last.at_ns
         sleep(poll_s)
     return 0
 

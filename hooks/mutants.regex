@@ -482,7 +482,8 @@ src/mikemol/hooks/subagent_guard.py|wrapped-notice-read-as-typed|        return 
 src/mikemol/hooks/commit_counts.py|waypoints-never-stored|            if waypoints:|            if False:|def=transition
 src/mikemol/hooks/commit_kata.py|stack-names-only-its-first|",".join\(item\.waypoint for item in items\)|items[0].waypoint|def=named_waypoints
 src/mikemol/hooks/watchdog.py|waiting-row-offered-as-the-stack|if row\[0\] == "STACK"|if row[0] == "WAITING"|def=next_action
-src/mikemol/hooks/watchdog.py|hint-never-printed|                    if said:|                    if False:|def=watch
+src/mikemol/hooks/watchdog.py|hint-never-printed|    if line:|    if False:|def=_say
+src/mikemol/hooks/watchdog.py|unreadable-count-latches-the-beat|                if waiting is not None:|                if True:|def=watch
 src/mikemol/hooks/project_root.py|ruff-only-file-ignored|if \(root / name\)\.is_file\(\):|if False:|def=ruff_config_for
 src/mikemol/hooks/project_root.py|ruff-toml-ranked-over-dot-ruff-toml|    for name in RUFF_CONFIGS:|    for name in reversed(RUFF_CONFIGS):|def=ruff_config_for
 src/mikemol/hooks/pycheck.py|width-always-default|    width = found\.group\(1\) if found else "default"|    width = "default"|def=config_note

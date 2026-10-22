@@ -14747,3 +14747,10 @@
             W1723).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_one_huge_sample_leaves_the_slope_on_the_true_line},
 }
+
+@misc{hooks-watchdog-count-that-could-not-be-read-is-asked-again-and-fires-when-it-answers,
+  section = {heartbeat},
+  title  = {One failed `--ready-count` must not silence the beat for good (W1829, 2026-10-22 gap)},
+  claim  = {One failed `--ready-count` must not silence the beat for good (W1829, 2026-10-22 gap).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_count_that_could_not_be_read_is_asked_again_and_fires_when_it_answers},
+}

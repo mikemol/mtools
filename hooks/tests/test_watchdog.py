@@ -136,6 +136,21 @@ def test_a_writer_that_cannot_answer_does_not_fire() -> None:
     assert watchdog.watch(seams, 1.0, _POLL) == 0
 
 
+def test_a_count_that_could_not_be_read_is_asked_again_and_fires_when_it_answers(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """One failed `--ready-count` must not silence the beat for good (W1829, 2026-10-22 gap)."""
+    answers: list[int | None] = [None, None, _THREE]
+
+    def ready() -> int | None:
+        return answers.pop(0)
+
+    seams = _seams([_beat(0)], ready, [_LATE], lives=_FOUR)
+    assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
+    assert "idle with 3 ready cards" in capsys.readouterr().out
+    assert not answers
+
+
 def test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
