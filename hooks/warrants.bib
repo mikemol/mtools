@@ -14653,3 +14653,47 @@
   claim  = {`--remove REPO` removes the same two and says so on their lines.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap_remove.py -k test_the_command_takes_remove_in_any_position},
 }
+
+@misc{hooks-gateclass-each-history-gives-its-class,
+  section = {gateclass},
+  title  = {Never failed is new, some red is intermittent, every round red is broken, none is unknown},
+  claim  = {Never failed is new, some red is intermittent, every round red is broken, none is
+            unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateclass.py -k test_each_history_gives_its_class},
+}
+
+@misc{hooks-gateclass-only-the-most-recent-rounds-count,
+  section = {gateclass},
+  title  = {A red long ago under green rounds is new; a red run under old green is broken},
+  claim  = {A red long ago under green rounds is new; a red run under old green is broken.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateclass.py -k test_only_the_most_recent_rounds_count},
+}
+
+@misc{hooks-gateclass-window-below-one-still-looks-at-the-newest-round,
+  section = {gateclass},
+  title  = {Zero or a negative window is read as one round, never as an empty record},
+  claim  = {Zero or a negative window is read as one round, never as an empty record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateclass.py -k test_a_window_below_one_still_looks_at_the_newest_round},
+}
+
+@misc{hooks-gateclass-step-absent-from-a-history-that-covers-rounds-is-new-and-from-none-unknown,
+  section = {gateclass},
+  title  = {The history lists only steps that ever failed, so absent means passed every round},
+  claim  = {The history lists only steps that ever failed, so absent means passed every round.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gateclass.py -k test_a_step_absent_from_a_history_that_covers_rounds_is_new_and_from_none_unknown},
+}
+
+@misc{hooks-shardgate-stack-that-carries-the-dists-build-file-is-the-repair-not-refused,
+  section = {shardgate},
+  title  = {The reading is of the committed grid and the shard count of the changed tree: not judged},
+  claim  = {The reading is of the committed grid and the shard count of the changed tree: not
+            judged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_stack_that_carries_the_dists_build_file_is_the_repair_not_refused},
+}
+
+@misc{hooks-shardgate-another-dists-build-file-does-not-excuse-the-slow-grid,
+  section = {shardgate},
+  title  = {The control: carrying pathsforward's BUILD file leaves hooks judged, and refused},
+  claim  = {The control: carrying pathsforward's BUILD file leaves hooks judged, and refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_another_dists_build_file_does_not_excuse_the_slow_grid},
+}

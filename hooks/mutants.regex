@@ -86,6 +86,13 @@ src/mikemol/hooks/new_dist.py|install-count-not-bumped|int\(count\.group\(1\)\) 
 src/mikemol/hooks/commitprogress.py|looks-override-ignored|raw\.isdecimal\(\) and int\(raw\) > 0 else|False else|def=looks_from
 src/mikemol/hooks/commitprogress.py|zero-looks-means-no-bound|int\(raw\) > 0|int(raw) >= 0|def=looks_from
 src/mikemol/hooks/commitprogress.py|period-override-ignored|    return value if value > 0 else DEFAULT_PERIOD_S|    return DEFAULT_PERIOD_S|def=period_from
+src/mikemol/hooks/shardgate.py|carried-build-file-not-excused|    carried = \{path\.removesuffix\("/BUILD\.bazel"\) for path in paths if path\.endswith\("/BUILD\.bazel"\)\}|    carried = set()|def=refusal
+src/mikemol/hooks/shardgate.py|every-build-file-excuses-every-dist|    dists = \[dist for dist in dists_of\(paths\) if dist not in carried\]|    dists = []|def=refusal
+src/mikemol/hooks/gateclass.py|no-history-read-as-new|    if not window:|    if False:|def=classify
+src/mikemol/hooks/gateclass.py|never-failed-not-recognised|    if failures == 0:|    if False:|def=classify
+src/mikemol/hooks/gateclass.py|every-red-round-read-as-intermittent|    return BROKEN if failures == len\(window\) else INTERMITTENT|    return INTERMITTENT|def=classify
+src/mikemol/hooks/gateclass.py|zero-window-reads-nothing|    window = record\[: max\(recent, 1\)\]|    window = record[:recent]|def=classify
+src/mikemol/hooks/gateclass.py|absent-step-has-no-record|    unseen = PASSED_ALWAYS if history else \(\)|    unseen = ()|def=classify_all
 src/mikemol/hooks/vlogfollow.py|held-pass-waits-for-growth|        if held:|        if False:|def=follow
 src/mikemol/hooks/vlogfollow.py|quiet-file-passed-on-every-pause|        while signature\(path\) == seen and not stop\(\):|        while False:|def=follow
 src/mikemol/hooks/vlogfollow.py|size-ignored-by-the-signature|    return stat\.st_ino, stat\.st_size|    return stat.st_ino, 0|def=signature

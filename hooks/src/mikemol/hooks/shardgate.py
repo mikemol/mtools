@@ -174,6 +174,12 @@ def refusal(
     time_status, when = run([program, "query-metrics", query(root.name, "tlast_over_time")], root)
     if cpu_status != 0 or time_status != 0:
         return None
-    dists = dists_of([path for item in items for path in item.paths])
+    paths = [path for item in items for path in item.paths]
+    # ⚑ A STACK THAT CARRIES THE DIST'S BUILD FILE IS THE REPAIR AND IS NOT JUDGED (found by the
+    # first real refusal, 2026-10-22): the reading is about the grid as committed, while the shard
+    # count is read from the tree this stack changes, so the proposal came out against the wrong
+    # count (80 measured, 102 set, 130 demanded). The next gate's measurement judges the new value.
+    carried = {path.removesuffix("/BUILD.bazel") for path in paths if path.endswith("/BUILD.bazel")}
+    dists = [dist for dist in dists_of(paths) if dist not in carried]
     found = findings(readings(cpu, when), dists, (_text_of(root), _changed_at(root, run)))
     return "\n".join(found) if found else None

@@ -113,6 +113,32 @@ def test_a_stack_touching_the_slow_grid_is_refused_with_the_findings(tmp_path: P
     assert "set shards = 126" in said
 
 
+def _stack_of(tmp_path: Path, *paths: str) -> Path:
+    listed = ", ".join(f'"{path}"' for path in paths)
+    body = f'[{{"waypoint": "W1", "subject": "s", "paths": [{listed}]}}]'
+    stack = tmp_path / "other-stack.json"
+    stack.write_text(body, encoding="utf-8")
+    return stack
+
+
+def test_a_stack_that_carries_the_dists_build_file_is_the_repair_not_refused(
+    tmp_path: Path,
+) -> None:
+    """The reading is of the committed grid and the shard count of the changed tree: not judged."""
+    root, _ = _stack(tmp_path)
+    repair = _stack_of(tmp_path, "hooks/src/a.py", "hooks/BUILD.bazel")
+    assert shardgate.refusal(root, repair, _ENV, _store) is None
+
+
+def test_another_dists_build_file_does_not_excuse_the_slow_grid(tmp_path: Path) -> None:
+    """The control: carrying pathsforward's BUILD file leaves hooks judged, and refused."""
+    root, _ = _stack(tmp_path)
+    other = _stack_of(tmp_path, "hooks/src/a.py", "pathsforward/BUILD.bazel")
+    said = shardgate.refusal(root, other, _ENV, _store)
+    assert said is not None
+    assert "hooks/BUILD.bazel" in said
+
+
 def test_nothing_readable_refuses_nothing(tmp_path: Path) -> None:
     """A store that fails, no store at all and no stack all give no refusal."""
     root, stack = _stack(tmp_path)
