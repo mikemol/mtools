@@ -101,3 +101,4 @@ mutations	Mutation Events: One Event per Changed Field with Starting Values, Lon
 mutations_emit	Mutation Event Emit: One Log Line per Event and One Sample per Field, Labelled Repo, Field and Via, Never Failing the Write
 mutations_ship	Mutation Shipping: Every Saved Edit Sends Its Events From the Single Save Point With the Writer's Own Context and Never Fails the Edit
 landed_status	The Landed Status: Open and Not Workable, Ranked With Blocked, Accepted by the Check, and a Landed Card With No Witness Is a Finding
+landed_readers	The Status Readers and Landed: Open for Triage as a Blocker and as a Duplicate Candidate, Done Being the Closed Control

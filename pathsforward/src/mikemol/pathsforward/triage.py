@@ -34,7 +34,9 @@ from mikemol.pathsforward import ops
 from mikemol.pathsforward.model import Json, State, strlist, text
 
 _CLOSED = frozenset({"done", "dropped"})
-_OPEN = frozenset({"ready", "working", "blocked"})
+# ⚑ `landed` IS OPEN (W1807): its change shipped but its witness has not closed it, so it still
+# counts as a card another card can duplicate.
+_OPEN = frozenset({"ready", "working", "blocked", "landed"})
 _WORD = re.compile(r"[a-z0-9]+")
 _NAMING = "/._:#0123456789"
 _MIN_WORDS = 4
