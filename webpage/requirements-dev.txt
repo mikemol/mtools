@@ -2,6 +2,8 @@
 #    uv pip compile --group dev pyproject.toml --output-file requirements-dev.txt
 ast-serialize==0.11.2
     # via mypy
+greenlet==3.5.6
+    # via playwright
 iniconfig==2.3.0
     # via pytest
 librt==0.16.0
@@ -14,8 +16,12 @@ packaging==26.3
     # via pytest
 pathspec==1.1.1
     # via mypy
+playwright==1.63.0
+    # via mikemol-webpage (pyproject.toml:dev)
 pluggy==1.6.0
     # via pytest
+pyee==13.0.1
+    # via playwright
 pygments==2.21.0
     # via pytest
 pytest==9.1.1
@@ -23,4 +29,6 @@ pytest==9.1.1
 ruff==0.16.6
     # via mikemol-webpage (pyproject.toml:dev)
 typing-extensions==4.16.0
-    # via mypy
+    # via
+    #   mypy
+    #   pyee

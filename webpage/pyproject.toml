@@ -28,7 +28,9 @@ mikemol-webpage-waits = "mikemol.webpage.waits:main"
 Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ playwright IS EXACT (W1818, nemik:W717): the probes are facts about one browser driven by one
+# client, and nemik's uv.lock holds 1.63.0, whose wheel expects chromium_headless_shell-1243.
+dev = ["pytest", "mypy", "ruff==0.16.6", "playwright==1.63.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
