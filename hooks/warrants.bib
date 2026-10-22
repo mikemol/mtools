@@ -14250,3 +14250,59 @@
   claim  = {A test run under bazel sets TEST_SRCDIR; its commits are the gate's, not a user's.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_a_bazel_test_is_not_noticed_whatever_its_prefix},
 }
+
+@misc{hooks-commitprogress-stat-line-gives-parent-and-user-plus-system-ticks,
+  section = {commitprogress},
+  title  = {The command name may hold spaces and parentheses; fields count from the last one},
+  claim  = {The command name may hold spaces and parentheses; fields count from the last one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_stat_line_gives_parent_and_user_plus_system_ticks},
+}
+
+@misc{hooks-commitprogress-line-that-is-not-a-stat-line-gives-nothing,
+  section = {commitprogress},
+  title  = {Too few fields, a non-number and text with no parenthesis are all None},
+  claim  = {Too few fields, a non-number and text with no parenthesis are all None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_line_that_is_not_a_stat_line_gives_nothing},
+}
+
+@misc{hooks-commitprogress-tree-adds-the-root-and-every-descendant-and-nobody-else,
+  section = {commitprogress},
+  title  = {A grandchild counts, a sibling tree does not, and a root not in the table is 0},
+  claim  = {A grandchild counts, a sibling tree does not, and a root not in the table is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_tree_adds_the_root_and_every_descendant_and_nobody_else},
+}
+
+@misc{hooks-commitprogress-cpu-or-output-growth-resets-the-witness-and-a-flat-look-adds,
+  section = {commitprogress},
+  title  = {Either kind of progress is progress; a look with neither is flat},
+  claim  = {Either kind of progress is progress; a look with neither is flat.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_cpu_or_output_growth_resets_the_witness_and_a_flat_look_adds},
+}
+
+@misc{hooks-commitprogress-look-that-went-backwards-never-lowers-the-record,
+  section = {commitprogress},
+  title  = {A tree that lost a process reads fewer ticks; that is not progress and not a reset},
+  claim  = {A tree that lost a process reads fewer ticks; that is not progress and not a reset.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_look_that_went_backwards_never_lowers_the_record},
+}
+
+@misc{hooks-commitprogress-stall-is-a-run-of-flat-looks-and-never-for-a-limit-below-one,
+  section = {commitprogress},
+  title  = {Three flat looks stall at three; a limit of zero never fires},
+  claim  = {Three flat looks stall at three; a limit of zero never fires.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_stall_is_a_run_of_flat_looks_and_never_for_a_limit_below_one},
+}
+
+@misc{hooks-commitprogress-real-process-table-holds-this-process-with-its-parent,
+  section = {commitprogress},
+  title  = {The positive control: the reader sees the process running the test},
+  claim  = {The positive control: the reader sees the process running the test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_real_process_table_holds_this_process_with_its_parent},
+}
+
+@misc{hooks-commitprogress-unreadable-table-or-entry-is-skipped-not-raised,
+  section = {commitprogress},
+  title  = {A missing /proc is an empty table; one unreadable stat leaves that pid out},
+  claim  = {A missing /proc is an empty table; one unreadable stat leaves that pid out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_an_unreadable_table_or_entry_is_skipped_not_raised},
+}

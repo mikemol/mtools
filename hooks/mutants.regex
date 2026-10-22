@@ -592,6 +592,10 @@ src/mikemol/hooks/gatetargets.py|finish-before-start-kept|    if start is None o
 src/mikemol/hooks/gatetargets.py|gate-wall-time-left-in-milliseconds|    return \(finish - start\) / 1000\.0|    return float(finish - start)|def=run_seconds
 src/mikemol/hooks/trainalert.py|empty-series-not-stale|    return not samples or now - max\(samples\) > seconds|    return bool(samples) and now - max(samples) > seconds|def=stale_firing
 src/mikemol/hooks/trainalert.py|absent-arm-dropped|    return f"time\(\) - tlast_over_time\(\{series\}\) > \{seconds\} or absent_over_time\(\{series\}\)"|    return f"time() - tlast_over_time({series}) > {seconds}"|def=stale_expr
+src/mikemol/hooks/commitprogress.py|output-growth-not-progress|    if ticks > last\.ticks or size > last\.size:|    if ticks > last.ticks:|def=step
+src/mikemol/hooks/commitprogress.py|record-lowered-by-a-smaller-look|    return Witness\(max\(ticks, last\.ticks\), max\(size, last\.size\), last\.flat \+ 1\)|    return Witness(ticks, size, last.flat + 1)|def=step
+src/mikemol/hooks/commitprogress.py|zero-looks-always-stalled|    return looks >= 1 and witness\.flat >= looks|    return witness.flat >= looks|def=stalled
+src/mikemol/hooks/commitprogress.py|command-name-ended-at-first-paren|    close = text\.rfind\("\)"\)|    close = text.find(")")|def=parse_stat
 src/mikemol/hooks/launcher.py|mtools-tree-noticed|    if \(root / "hooks" / "pyproject\.toml"\)\.is_file\(\):|    if False:|def=notice
 src/mikemol/hooks/launcher.py|own-venv-noticed|    if TEST_ENV in env or not any\(marker in prefix for marker in MARKERS\):|    if TEST_ENV in env:|def=notice
 src/mikemol/hooks/launcher.py|bazel-test-noticed|    if TEST_ENV in env or not any\(marker in prefix for marker in MARKERS\):|    if not any(marker in prefix for marker in MARKERS):|def=notice
