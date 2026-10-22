@@ -883,6 +883,26 @@ def _add_supplier_fields(ap: argparse.ArgumentParser) -> None:
     )
 
 
+def _flag(value: str | None) -> bool | None:
+    """Read a true or false flag word.
+
+    Returns:
+        True or False for those words, None when the flag was not given.
+
+    """
+    return None if value is None else value == "true"
+
+
+def _add_deploys_field(ap: argparse.ArgumentParser) -> None:
+    """Add the flag saying whether a card's change ships as a deployment (W1814)."""
+    ap.add_argument(
+        "--deploys",
+        choices=("true", "false"),
+        help="--update: true when the change ships as a deployment, so landing sends the card to "
+        "landed and only its witness makes it done; false when it deploys nothing",
+    )
+
+
 def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     """Add the flags for the fields the realizability policy reads (W849).
 
@@ -890,6 +910,7 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     """
     _add_manifest_fields(ap)
     _add_supplier_fields(ap)
+    _add_deploys_field(ap)
     for name in ("reference-arm", "command"):
         ap.add_argument(
             f"--{name}", metavar="TEXT", help=f"--update: the realizability {name}; '' clears"
@@ -2010,6 +2031,7 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         size_class=ctx.get("size"),
         acceptable_suppliers=ctx.many("acceptable_suppliers"),
         want=ctx.get("want"),
+        deploys=_flag(ctx.get("deploys")),
     )
 
 

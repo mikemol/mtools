@@ -51,7 +51,7 @@ def _state(root: Path, waypoints: list[Rec]) -> State:
 def test_landed_is_a_status_and_the_check_accepts_it(tmp_path: Path) -> None:
     """The vocabulary has five values and a landed card with a witness has no finding."""
     assert "landed" in model.STATUSES
-    state = _state(tmp_path, [_wp("W1", "landed", witness=_QUERY)])
+    state = _state(tmp_path, [_wp("W1", "landed", witness=_QUERY, deploys=True)])
     assert chk.statuses(state) == []
     assert chk.check(state) == []
 

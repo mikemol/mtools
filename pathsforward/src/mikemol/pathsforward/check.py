@@ -500,6 +500,41 @@ def landed_unwitnessed(state: State) -> list[str]:
     ]
 
 
+def _unproved_deploy(w: Json) -> bool:
+    # A done card that deploys, with no witness or no witness language to have closed it.
+    return (
+        text(w, "status") == "done"
+        and w.get("deploys") is True
+        and (not text(w, "witness") or not text(w, "witness_lang"))
+    )
+
+
+def deploys_rules(state: State) -> list[str]:
+    """Report the two rules `deploys` carries (W1814, agreed with nemik:W702).
+
+    ⚑ A LANDED CARD MUST SAY IT DEPLOYS, and a done card that deploys must carry the witness that
+    made it done. A card that deploys nothing goes working to done, so `landed` with `deploys`
+    false or absent is a card in the wrong state, and `done` with `deploys` true and no witness (or
+    no witness language) was closed by a mind, not by the thing that proves the deploy.
+
+    Returns:
+        one finding per landed card not declaring deploys true, and per deploying done card with
+        no witness or no witness_lang.
+
+    """
+    found: list[str] = []
+    for w in state.waypoints:
+        sym = text(w, "symbol")
+        if text(w, "status") == "landed" and w.get("deploys") is not True:
+            found.append(
+                f"{sym}: landed without deploys true; a card that deploys nothing goes working "
+                "to done (--update --deploys true, or mark it done)"
+            )
+        elif _unproved_deploy(w):
+            found.append(f"{sym}: done with deploys true but no witness and witness_lang")
+    return found
+
+
 def vectors(state: State) -> list[str]:
     """Report a stored vector outside the WV:1 grammar, or one without a valid source (W257).
 
@@ -580,6 +615,7 @@ def check(state: State) -> list[str]:
         *tag_grammar(state),
         *witnessed_live(state),
         *landed_unwitnessed(state),
+        *deploys_rules(state),
         *vectors(state),
         *root(state),
         *outcomes.findings(state),

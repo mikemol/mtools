@@ -193,6 +193,9 @@ class Update:
     # waiting card wants, as citations (SET not merged; `()` clears), and a one-line `want`.
     acceptable_suppliers: tuple[str, ...] | None = None
     want: str | None = None
+    # ⚑ DOES THE CHANGE SHIP AS A DEPLOYMENT (W1814, agreed with nemik:W702): true sends the card
+    # to landed on landing, and to done only when its witness holds; false or absent goes to done.
+    deploys: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -542,6 +545,8 @@ def _set_given(new: Json, upd: Update) -> None:
     if upd.exdates is not None:
         new["exdates"] = list(upd.exdates) or None
     new.update(_manifest_fields(upd))
+    if upd.deploys is not None:
+        new["deploys"] = upd.deploys
     new.update(suppliers.fields(upd.acceptable_suppliers, upd.want))
     for key, item in (
         ("unchanged", upd.unchanged),
