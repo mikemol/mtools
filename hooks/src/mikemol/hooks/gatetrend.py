@@ -78,20 +78,24 @@ def spread(values: Sequence[float]) -> float:
 
 
 def slope(values: Sequence[float]) -> float:
-    """Fit a line through the values by least squares, indexed 0, 1, 2 in the order given.
+    """Take the Theil-Sen slope: the median of the slopes of every pair of values (W1723).
+
+    ⚑ A LEAST-SQUARES LINE IS DRAGGED BY ONE COLD SAMPLE, THE MEDIAN OF PAIRWISE SLOPES IS NOT: a
+    value is indexed 0, 1, 2 in the order given, and one huge value spoils only the pairs it is in,
+    fewer than half of them for four or more values, so the median stays on the true line.
 
     Returns:
         the slope in value per step; 0.0 with fewer than two values.
 
     """
-    count = len(values)
-    if count < MIN_FOR_SLOPE:
+    if len(values) < MIN_FOR_SLOPE:
         return 0.0
-    mean_x = (count - 1) / 2
-    mean_y = sum(values) / count
-    num = sum((i - mean_x) * (v - mean_y) for i, v in enumerate(values))
-    den = sum((i - mean_x) ** 2 for i in range(count))
-    return num / den
+    pairs = [
+        (values[j] - values[i]) / (j - i)
+        for i in range(len(values))
+        for j in range(i + 1, len(values))
+    ]
+    return median(pairs)
 
 
 def phase_of(span_name: str) -> str | None:

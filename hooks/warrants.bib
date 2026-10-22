@@ -14739,3 +14739,11 @@
   claim  = {The kind sits between the failed list and the culprit clause; none leaves it unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_kind_note.py -k test_the_culprit_note_carries_the_kind_after_the_failed_checks},
 }
+
+@misc{hooks-gatetrend-one-huge-sample-leaves-the-slope-on-the-true-line,
+  section = {gatetrend},
+  title  = {A cold gate at the end of a line rising 1.0 per gate does not tilt it (Theil-Sen, W1723)},
+  claim  = {A cold gate at the end of a line rising 1.0 per gate does not tilt it (Theil-Sen,
+            W1723).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetrend.py -k test_one_huge_sample_leaves_the_slope_on_the_true_line},
+}

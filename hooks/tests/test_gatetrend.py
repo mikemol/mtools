@@ -45,6 +45,12 @@ def test_the_slope_is_seconds_per_gate_and_zero_below_two_samples() -> None:
     assert gatetrend.slope([7.0]) == pytest.approx(0.0)
 
 
+def test_one_huge_sample_leaves_the_slope_on_the_true_line() -> None:
+    """A cold gate at the end of a line rising 1.0 per gate does not tilt it (Theil-Sen, W1723)."""
+    assert gatetrend.slope([1.0, 2.0, 3.0, 4.0, _OUTLIER]) == pytest.approx(1.0)
+    assert gatetrend.slope([_OUTLIER, 2.0, 3.0, 4.0, 5.0]) == pytest.approx(1.0)
+
+
 def test_a_phase_is_the_name_after_either_gating_prefix() -> None:
     """The stack and single-commit spans name phases alike; any other span is no phase."""
     assert gatetrend.phase_of("commit.gating.bazel_test") == "bazel_test"
