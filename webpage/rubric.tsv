@@ -6,3 +6,4 @@ waits	The Wait Rewrite: Every wait_for_function Call Gets timeout=0, Only That C
 adopt	The Adopt Mode: A File That Imports webpage Has Its Waits Moved Onto webpage.until and Its Pages Watched Before the Goto, and a File That Does Not, or a Wait of Another Shape, Is Left Alone
 page	The Page Wait: An Error Record Installed Before Navigation, a Wait With No Clock That Ends on the Predicate or the Page's Own Error, and No Browser Needed to Test It
 chromium	The Pinned Chromium: Started From Bazel's Own Archive in the Test Sandbox, Reporting the Pinned Version
+browser	The Browser Probes: A Throwing Page Ends a Clockless Wait With Its Message, a Ready Page Ends It Quietly, a Raising Handler Does Not Abort a Pending Wait, and a Page Crashed or Closed Over CDP Ends It by Itself

@@ -131,3 +131,53 @@
   claim  = {`chrome-headless-shell --version` names 153.0.8010.12, from the bazel archive.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_chromium.py -k test_the_pinned_browser_starts_and_reports_the_pinned_version},
 }
+
+@misc{webpage-browser-page-that-throws-ends-the-wait-with-its-message,
+  section = {browser},
+  title  = {The wait never sees its predicate hold, and fails with the page's own error},
+  claim  = {The wait never sees its predicate hold, and fails with the page's own error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_page_that_throws_ends_the_wait_with_its_message},
+}
+
+@misc{webpage-browser-page-that-raises-its-event-ends-the-wait-quietly,
+  section = {browser},
+  title  = {A page that becomes ready returns without an error},
+  claim  = {A page that becomes ready returns without an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_page_that_raises_its_event_ends_the_wait_quietly},
+}
+
+@misc{webpage-browser-page-that-throws-on-purpose-hands-the-message-back,
+  section = {browser},
+  title  = {The expecting form returns the page's error and leaves the verdict to the test},
+  claim  = {The expecting form returns the page's error and leaves the verdict to the test.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_page_that_throws_on_purpose_hands_the_message_back},
+}
+
+@misc{webpage-browser-unwatched-page-rests-on-its-predicate-alone,
+  section = {browser},
+  title  = {With no error record the wait still ends when the page is ready, and returns no error},
+  claim  = {With no error record the wait still ends when the page is ready, and returns no error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_an_unwatched_page_rests_on_its_predicate_alone},
+}
+
+@misc{webpage-browser-pageerror-handler-that-raises-does-not-abort-a-pending-wait,
+  section = {browser},
+  title  = {The handler fires and raises, the wait still ends on its predicate, the error resurfaces},
+  claim  = {The handler fires and raises, the wait still ends on its predicate, the error
+            resurfaces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_pageerror_handler_that_raises_does_not_abort_a_pending_wait},
+}
+
+@misc{webpage-browser-page-crashed-over-cdp-ends-a-pending-wait-by-itself,
+  section = {browser},
+  title  = {Playwright raises "Target crashed" itself: the helper needs no crash code},
+  claim  = {Playwright raises "Target crashed" itself: the helper needs no crash code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_page_crashed_over_cdp_ends_a_pending_wait_by_itself},
+}
+
+@misc{webpage-browser-page-closed-over-cdp-ends-a-pending-wait-by-itself,
+  section = {browser},
+  title  = {Playwright raises TargetClosedError itself, naming the closed page, context or browser},
+  claim  = {Playwright raises TargetClosedError itself, naming the closed page, context or browser.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_browser.py -k test_a_page_closed_over_cdp_ends_a_pending_wait_by_itself},
+}

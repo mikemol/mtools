@@ -30,11 +30,24 @@ py_library(
 # the runfiles tree, which the test joins to `RUNFILES_DIR`.
 _BROWSER_DATA = {
     "tests/test_chromium.py": ["@chrome_headless_shell//:bin", "@chrome_headless_shell//:files"],
+    "tests/test_browser.py": [
+        "@chrome_headless_shell//:bin",
+        "@chrome_headless_shell//:files",
+        "tests/cdp_poke.py",
+    ],
 }
 _BROWSER_ENV = {
     "tests/test_chromium.py": {
         "CHROME_RLOCATION": "$(rlocationpath @chrome_headless_shell//:bin)",
     },
+    "tests/test_browser.py": {
+        "CHROME_RLOCATION": "$(rlocationpath @chrome_headless_shell//:bin)",
+        "CDP_POKE": "$(rlocationpath tests/cdp_poke.py)",
+    },
+}
+# ⚑ ONLY THE TEST THAT DRIVES THE BROWSER TAKES PLAYWRIGHT (W1820); the rest stay as they were.
+_BROWSER_DEPS = {
+    "tests/test_browser.py": [dev_requirement("playwright")],
 }
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
@@ -60,7 +73,7 @@ _BROWSER_ENV = {
             ":webpage",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
-        ],
+        ] + _BROWSER_DEPS.get(src, []),
         imports = ["src"],
     )
     for src in glob(["tests/test_*.py"])
@@ -140,7 +153,7 @@ sh_test(
     data = [
         "pyproject.toml",
         ":mypy_runner",
-    ] + glob(["src/**/*.py", "tests/**/*.py"], allow_empty = True),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
     size = "small",
     # ⚑ A GENEROUS TIMEOUT, NOT A TIGHT ONE (operator, 2026-09-24: "I hate wallclock-sensitive
     # things"). See //transcriptstruct:mypy for the measurement.

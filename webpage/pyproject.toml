@@ -63,7 +63,9 @@ warn_unused_ignores = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 files = ["src", "tests"]
-mypy_path = "src"
+# ⚑ `stubs` IS THE THIRD-PARTY SURFACE (as in otlp, treeio and mdstruct): the bazel mypy runner
+# cannot see runtime dependencies, so the slice of Playwright the browser tests use is declared there.
+mypy_path = "src:stubs"
 explicit_package_bases = true
 
 [tool.ruff]
@@ -102,6 +104,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE ONE MODULE THAT STARTS A PROCESS (W1819): it launches the pinned browser from bazel's own
 # data with a fixed argv and no shell, so the two subprocess rules are exempted for it and no other.
 "tests/test_chromium.py" = [
+    "assert",
+    "suspicious-subprocess-import",
+    "subprocess-without-shell-equals-true",
+]
+# ⚑ THE BROWSER PROBES (W1820): the same two exemptions for the same reason (the second process is
+# `cdp_poke.py` run with this interpreter and a port, no shell), and the helper that starts it.
+"tests/test_browser.py" = [
     "assert",
     "suspicious-subprocess-import",
     "subprocess-without-shell-equals-true",
