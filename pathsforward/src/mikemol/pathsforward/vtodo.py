@@ -9,7 +9,7 @@ The mapping (life accepted it 2026-09-28, W277):
 
     UID          <repo>:W<n>@<host>, stable across runs on one host
     SUMMARY      the title
-    STATUS       ready, blocked: NEEDS-ACTION · working: IN-PROCESS · done: COMPLETED
+    STATUS       ready, blocked: NEEDS-ACTION · working, landed: IN-PROCESS · done: COMPLETED
     PERCENT-COMPLETE  100 on a done waypoint only (W280); no other status measures progress,
                  so none is invented
     PRIORITY     never (W280): weight is an unbounded relative rank (0-58 across the fleet,
@@ -41,6 +41,9 @@ _STATUS = {
     "ready": "NEEDS-ACTION",
     "blocked": "NEEDS-ACTION",
     "working": "IN-PROCESS",
+    # ⚑ LANDED IS NOT COMPLETED (W1808, agreed with nemik:W702): its change shipped and its witness
+    # has not held yet, so a task app still shows it open, which IN-PROCESS says.
+    "landed": "IN-PROCESS",
     "done": "COMPLETED",
 }
 _TZID = "TZID="
