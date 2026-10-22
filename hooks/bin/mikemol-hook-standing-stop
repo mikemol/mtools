@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
 #
-# W513: standing rule 8 at Stop. A card set blocked_kind human this turn must be asked via
-# AskUserQuestion this turn; mikemol.transcriptstruct.standing_stop reads the transcript and
-# prints {"decision": "block", ...} naming each unpaired card. The module lives in the transcript
+# W513, W1832: standing rule 8 at Stop. A card set blocked_kind human this turn must state its ask
+# (--blocked-on 'operator: decide|act ...') and have a PushNotification naming it; never a blocking
+# AskUserQuestion (operator 2026-10-22, host 695f3e0a line 90544: the card IS the ask).
+# mikemol.transcriptstruct.standing_stop reads the transcript and
+# prints {"decision": "block", ...} naming each unmet card. The module lives in the transcript
 # reader's own distribution (its docstring says why); this launcher stays with the hook launchers.
 #
 # ⚑ CLOSED ONCE PER TURN (operator ruling 2026-10-03). When the check cannot run, BLOCK with the

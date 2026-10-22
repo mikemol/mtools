@@ -434,27 +434,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_records.py -k test_an_undecodable_line_is_reported_not_replaced},
 }
 
-@misc{transcriptstruct-standing-stop-unpaired-hold-blocks-naming-the-card,
-  section = {standing-stop},
-  title  = {A human hold with no AskUserQuestion since the user spoke blocks, naming W7},
-  claim  = {A human hold with no AskUserQuestion since the user spoke blocks, naming W7.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_an_unpaired_hold_blocks_naming_the_card},
-}
-
-@misc{transcriptstruct-standing-stop-paired-hold-does-not-block,
-  section = {standing-stop},
-  title  = {A hold followed by an AskUserQuestion naming the card is paired},
-  claim  = {A hold followed by an AskUserQuestion naming the card is paired.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_paired_hold_does_not_block},
-}
-
-@misc{transcriptstruct-standing-stop-question-naming-another-card-does-not-pair,
-  section = {standing-stop},
-  title  = {An AskUserQuestion about W8 leaves the W7 hold unpaired},
-  claim  = {An AskUserQuestion about W8 leaves the W7 hold unpaired.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_question_naming_another_card_does_not_pair},
-}
-
 @misc{transcriptstruct-standing-stop-hold-before-the-last-user-message-does-not-count,
   section = {standing-stop},
   title  = {A hold set in an earlier turn is outside the span; tool results do not end the span},
@@ -1052,4 +1031,46 @@
   title  = {Only a GRANT note can be the stale rule a newer ruling withdrew},
   claim  = {Only a GRANT note can be the stale rule a newer ruling withdrew.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_memaudit.py -k test_an_indexed_note_with_no_grant_row_does_not_make_an_unindexed_note_urgent},
+}
+
+@misc{transcriptstruct-standing-stop-hold-with-a-stated-ask-and-a-push-naming-it-does-not-block,
+  section = {standing-stop},
+  title  = {The card is the ask and the push carries it: nothing more is required},
+  claim  = {The card is the ask and the push carries it: nothing more is required.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_hold_with_a_stated_ask_and_a_push_naming_it_does_not_block},
+}
+
+@misc{transcriptstruct-standing-stop-hold-with-no-push-blocks-naming-the-card-and-the-push,
+  section = {standing-stop},
+  title  = {An ask nobody was told of waits for the operator to notice it by eye},
+  claim  = {An ask nobody was told of waits for the operator to notice it by eye.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_hold_with_no_push_blocks_naming_the_card_and_the_push},
+}
+
+@misc{transcriptstruct-standing-stop-hold-with-no-stated-ask-blocks-naming-the-ask,
+  section = {standing-stop},
+  title  = {A bare `blocked_kind human` asks for nothing, which nemik files as unstated},
+  claim  = {A bare `blocked_kind human` asks for nothing, which nemik files as unstated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_hold_with_no_stated_ask_blocks_naming_the_ask},
+}
+
+@misc{transcriptstruct-standing-stop-ask-question-never-meets-the-rule-and-the-reason-forbids-it,
+  section = {standing-stop},
+  title  = {A blocking AskUserQuestion naming the card pairs nothing; the reason says never to ask},
+  claim  = {A blocking AskUserQuestion naming the card pairs nothing; the reason says never to ask.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_an_ask_question_never_meets_the_rule_and_the_reason_forbids_it},
+}
+
+@misc{transcriptstruct-standing-stop-push-naming-another-card-does-not-meet-the-hold,
+  section = {standing-stop},
+  title  = {A push about W8 leaves the W7 hold without its push},
+  claim  = {A push about W8 leaves the W7 hold without its push.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_a_push_naming_another_card_does_not_meet_the_hold},
+}
+
+@misc{transcriptstruct-standing-stop-ask-is-formed-only-by-decide-or-act-with-something-after,
+  section = {standing-stop},
+  title  = {`operator: decide <q>` and `operator: act <cmd>` are asks, bare `operator` is not},
+  claim  = {`operator: decide <q>` and `operator: act <cmd>` are asks, bare `operator` is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_stop.py -k test_the_ask_is_formed_only_by_decide_or_act_with_something_after},
 }

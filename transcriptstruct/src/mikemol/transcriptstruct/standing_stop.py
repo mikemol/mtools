@@ -1,12 +1,18 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""W513: standing rule 8 at Stop — a hold on the operator set this turn is asked this turn.
+"""W513, W1832: standing rule 8 at Stop — a hold on the operator set this turn states its ask.
 
 Operator ruling 2026-10-03: "a hold set this turn" is read from the TRANSCRIPT. Since the last
 real user record, every Bash tool_use running `mikemol-paths-forward` with `--blocked-kind human`
-must be paired with an AskUserQuestion tool_use in that same span. A hold is paired when an
-AskUserQuestion in the span names its symbol; a hold whose symbol cannot be read is paired by any
-AskUserQuestion in the span.
+must state its ask and send it. ⚑ THE CARD IS THE ASK (operator ruling 2026-10-22, host session
+695f3e0a line 90544, uuid 3eb4bf82-4b70-47d7-963c-4761fe4dc0b2, "Rule 8 forces a question to you,
+which blocks the session. That doesn't make sense; that's what we have 'blocked on operator'
+for"): a card blocked on `operator: decide|act ...` reaches the operator through nemik-operator,
+the calendar and the phone push, so the hook requires two things and never a blocking question.
+The hold's own command carries a well-formed `--blocked-on 'operator: decide|act <what>'`, and a
+PushNotification in the span names its symbol (an unreadable symbol is met by any push). A pending
+AskUserQuestion froze this session for 84 minutes on 2026-10-22, and the hook that demanded it was
+this one, before W1832.
 
 The transcript is read by `mikemol.transcriptstruct.records`, not re-parsed here. ⚑ IT LIVES
 IN THIS DISTRIBUTION, NOT IN `mikemol.hooks`, because a hooks module importing a sibling
@@ -26,6 +32,7 @@ import json
 import re
 import shlex
 import sys
+from itertools import pairwise
 from pathlib import Path
 from typing import cast
 
@@ -33,6 +40,9 @@ from mikemol.transcriptstruct.records import AssistantRecord, Record, UserRecord
 
 _TOOL = "mikemol-paths-forward"
 _SYMBOL = re.compile(r"\bW\d+\b")
+_ASK = re.compile(r"operator: (decide|act) \S")
+_PUSH = "PushNotification"
+_BLOCKED_ON = "--blocked-on"
 
 
 def _blocks(content: object) -> list[dict[str, object]]:
@@ -113,44 +123,74 @@ def hold_symbol(command: str) -> str | None:
     return found.group(0) if found else ""
 
 
-def _is_paired(symbol: str, asked: list[str]) -> bool:
-    """Return whether a hold is answered by an AskUserQuestion in the span.
+def ask_formed(command: str) -> bool:
+    """Return whether a hold command states its ask: `--blocked-on 'operator: decide|act ...'`.
 
     Returns:
-        True when some question names the symbol, or the symbol is unreadable and any was asked.
+        True when some `--blocked-on` value begins `operator: decide` or `operator: act` and
+        goes on to say what.
+
+    """
+    words = _words(command)
+    values = [nxt for w, nxt in pairwise(words) if w == _BLOCKED_ON]
+    values += [w.partition("=")[2] for w in words if w.startswith(_BLOCKED_ON + "=")]
+    return any(_ASK.match(value) for value in values)
+
+
+def _names(symbol: str, texts: list[str]) -> bool:
+    """Return whether some text names the card, any text counting for a card that is unreadable.
+
+    Returns:
+        True when a text names the symbol, or the symbol is unreadable and there is any text.
 
     """
     if not symbol:
-        return bool(asked)
-    return any(re.search(rf"\b{symbol}\b", a) for a in asked)
+        return bool(texts)
+    return any(re.search(rf"\b{symbol}\b", t) for t in texts)
 
 
-def unpaired_holds(records: list[Record]) -> list[str]:
-    """Return the human holds set since the last real user record with no AskUserQuestion.
+def _lack(symbol: str, command: str, pushes: list[str]) -> str:
+    """Say what a human hold is missing: its stated ask, its push, or both.
 
     Returns:
-        the unpaired symbols in order ('' for a hold whose symbol could not be read).
+        the missing parts joined, or '' for a hold that has both.
+
+    """
+    lacks: list[str] = []
+    if not ask_formed(command):
+        lacks.append("no `--blocked-on 'operator: decide|act ...'` ask")
+    if not _names(symbol, pushes):
+        lacks.append("no PushNotification naming it")
+    return " and ".join(lacks)
+
+
+def unmet_holds(records: list[Record]) -> list[str]:
+    """Return the human holds set since the last real user record that lack an ask or a push.
+
+    Returns:
+        one `<card> (<what is missing>)` per hold, in order; '(unnamed card)' when unreadable.
 
     """
     start = 0
     for index, record in enumerate(records):
         if is_real_user(record):
             start = index + 1
-    holds: list[str] = []
-    asked: list[str] = []
+    holds: list[tuple[str, str]] = []
+    pushes: list[str] = []
     for record in records[start:]:
         for use in _tool_uses(record):
             raw_input = use.get("input")
             body = cast("dict[str, object]", raw_input) if isinstance(raw_input, dict) else {}
-            if use.get("name") == "AskUserQuestion":
-                asked.append(json.dumps(body))
+            if use.get("name") == _PUSH:
+                pushes.append(json.dumps(body))
                 continue
             command = body.get("command")
             if use.get("name") == "Bash" and isinstance(command, str):
                 symbol = hold_symbol(command)
                 if symbol is not None:
-                    holds.append(symbol)
-    return [s for s in holds if not _is_paired(s, asked)]
+                    holds.append((symbol, command))
+    found = [(symbol, _lack(symbol, command, pushes)) for symbol, command in holds]
+    return [f"{symbol or '(unnamed card)'} ({lack})" for symbol, lack in found if lack]
 
 
 def cannot(why: str, active: bool) -> tuple[dict[str, str] | None, str | None]:
@@ -181,13 +221,14 @@ def decide(payload: dict[str, object]) -> tuple[dict[str, str] | None, str | Non
         return cannot(f"transcript {path} is not readable", active=active)
     if active:
         return None, None
-    missing = unpaired_holds(list(read_path(Path(path))))
+    missing = unmet_holds(list(read_path(Path(path))))
     if not missing:
         return None, None
-    named = ", ".join(s or "(unnamed card)" for s in missing)
     reason = (
-        f"Standing rule 8: {named} set blocked_kind human this turn with no AskUserQuestion "
-        "naming it. Ask the operator now via AskUserQuestion, naming each card."
+        f"Standing rule 8: {', '.join(missing)} set blocked_kind human this turn. The card is the "
+        "ask: state it in --blocked-on as 'operator: decide <question and options>' or "
+        "'operator: act <the exact command>', and send a PushNotification naming the card. "
+        "Never AskUserQuestion: a pending question freezes the session (operator 2026-10-22)."
     )
     return {"decision": "block", "reason": reason}, None
 

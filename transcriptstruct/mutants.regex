@@ -41,3 +41,6 @@ src/mikemol/transcriptstruct/memaudit.py|shared-terms-bar-dropped|        if _ne
 src/mikemol/transcriptstruct/memaudit.py|unindexed-ranked-last|    return \[\*first, \*rest\]|    return [*rest, *first]|def=rank_unindexed
 src/mikemol/transcriptstruct/memaudit.py|any-indexed-note-counts-as-a-grant|r\.status == GRANT and r\.note in pointed|r.note in pointed|def=rank_unindexed
 src/mikemol/transcriptstruct/memaudit.py|index-target-keeps-its-last-line|            found\.setdefault\(target, number\)|            found[target] = number|def=indexed
+src/mikemol/transcriptstruct/standing_stop.py|hold-needs-no-stated-ask|    if not ask_formed\(command\):|    if False:|def=_lack
+src/mikemol/transcriptstruct/standing_stop.py|hold-needs-no-push|    if not _names\(symbol, pushes\):|    if False:|def=_lack
+src/mikemol/transcriptstruct/standing_stop.py|any-push-names-any-card|    return any\(re\.search\(rf"\\b\{symbol\}\\b", t\) for t in texts\)|    return bool(texts)|def=_names
