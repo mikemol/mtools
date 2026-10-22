@@ -546,6 +546,10 @@ src/mikemol/hooks/commit_withdraw.py|killed-not-terminated|    kill\(pid, signal
 src/mikemol/hooks/gatetrend.py|even-median-takes-the-upper-middle|\(ordered\[middle - 1\] \+ ordered\[middle\]\) / 2|ordered[middle]|def=median
 src/mikemol/hooks/gatetrend.py|spread-is-the-mean-deviation|    return median\(\[abs\(v - centre\) for v in values\]\)|    return sum(abs(v - centre) for v in values) / max(len(values), 1)|def=spread
 src/mikemol/hooks/gatetrend.py|slope-is-the-mean-of-pairs|    return median\(pairs\)|    return sum(pairs) / len(pairs)|def=slope
+src/mikemol/hooks/sessioncache.py|count-gauge-not-always-sent|    found = \[_line\(COUNT_NAME, float\(len\(paths\)\), \{\}\)\]|    found: list[str] = []|def=collect
+src/mikemol/hooks/sessioncache.py|session-cap-not-applied|    return \[path for _, path in fresh\[:cap\]\]|    return [path for _, path in fresh]|def=recent
+src/mikemol/hooks/sessioncache.py|stale-session-still-read|if now_s - s\[0\] <= max_age_s|if True|def=recent
+src/mikemol/hooks/sessioncache.py|missing-gap-sent-as-a-value|for name, value in values\.items\(\) if value is not None\]|for name, value in values.items()]|def=rows
 src/mikemol/hooks/gatetrend.py|oldest-samples-taken|        latest = sorted\(grouped\[phase\], key=_began\)\[-recent:\]|        latest = sorted(grouped[phase], key=_began)[:recent]|def=stats_by_phase
 src/mikemol/hooks/siblingratchet.py|equal-to-baseline-refused|        if counts\[file\] > allowed:|        if counts[file] >= allowed:|def=violations
 src/mikemol/hooks/siblingratchet.py|new-file-given-slack|        allowed = baseline\.get\(file, 0\)|        allowed = baseline.get(file, 99)|def=violations

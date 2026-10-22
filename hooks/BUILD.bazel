@@ -496,6 +496,7 @@ venv_from_hub(
         "mikemol-core-limit": "mikemol.hooks.corelimit:main",
         # W1719: each gate step's failure history over prior train rounds, read from the round spans.
         "mikemol-gate-history": "mikemol.hooks.gatehistory:main",
+        "mikemol-session-cache": "mikemol.hooks.sessioncache:main",
         # W1382: classify a repository's scratch worktrees (read-only): held, dirty, unmerged, gone.
         "mikemol-worktree-reap": "mikemol.hooks.worktreereap:main",
         # W1709: how many lines of a repo's tracked files reach into another checkout.
