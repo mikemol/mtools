@@ -174,3 +174,4 @@ gatehistory	The Gate History Reader: A Step's Record Is Read off the Round Spans
 trainalert	The Train Alerts: A Red Streak Is N Reds and No Green in a Window, a Landing Gap Is the Newest COMMITTED Sample Past a Limit, and No Landing at All Is the Freshness Alert's Case
 launcher	The Launcher Notice: A Bazel-Bin Venv Committing Another Repo Is Told to Install the Pin, the Repo's Own Venv and the Mtools Tree Are Not Noticed, and Silence Writes Nothing
 commitprogress	The Commit Progress Witness: CPU of the Process Tree or Growth of Its Output Is Progress, a Run of Flat Looks Is a Stall, and an Unreadable Process Table Is Skipped
+worktreereap	The Worktree Reaper's Classification: Held, Dirty, Unmerged, Gone and Clean-Equivalent in That Precedence, an Unknown Never Read as Clean, and Nothing Changed

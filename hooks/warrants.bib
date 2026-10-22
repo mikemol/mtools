@@ -14384,3 +14384,67 @@
   claim  = {The namespace is narrowed to the repository when it is named, whole when it is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_the_gate_directories_are_the_repos_snapshot_and_the_staged_copy},
 }
+
+@misc{hooks-worktreereap-porcelain-gives-path-branch-and-prunable-with-detached-as-empty,
+  section = {worktreereap},
+  title  = {Four blocks: the main tree, a branch, a prunable one and a detached head},
+  claim  = {Four blocks: the main tree, a branch, a prunable one and a detached head.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_the_porcelain_gives_path_branch_and_prunable_with_detached_as_empty},
+}
+
+@misc{hooks-worktreereap-cherry-lists-unmerged-commits-as-plus-lines-only,
+  section = {worktreereap},
+  title  = {`-` is patch-equivalent to something in main; only `+` is work main lacks},
+  claim  = {`-` is patch-equivalent to something in main; only `+` is work main lacks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_cherry_lists_unmerged_commits_as_plus_lines_only},
+}
+
+@misc{hooks-worktreereap-held-wins-then-a-missing-tree-is-judged-by-its-commits-alone,
+  section = {worktreereap},
+  title  = {A live checkout is never a candidate; a gone one is gone only when it holds nothing},
+  claim  = {A live checkout is never a candidate; a gone one is gone only when it holds nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_held_wins_then_a_missing_tree_is_judged_by_its_commits_alone},
+}
+
+@misc{hooks-worktreereap-dirty-then-unmerged-then-clean-in-that-order,
+  section = {worktreereap},
+  title  = {Uncommitted work outranks unmerged commits; only neither is clean-equivalent},
+  claim  = {Uncommitted work outranks unmerged commits; only neither is clean-equivalent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_dirty_then_unmerged_then_clean_in_that_order},
+}
+
+@misc{hooks-worktreereap-unknown-is-never-read-as-clean,
+  section = {worktreereap},
+  title  = {A detached head is unmerged, a failed cherry is unmerged, a failed status is dirty},
+  claim  = {A detached head is unmerged, a failed cherry is unmerged, a failed status is dirty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_an_unknown_is_never_read_as_clean},
+}
+
+@misc{hooks-worktreereap-holder-of-a-directory-is-found-by-where-its-cwd-link-points,
+  section = {worktreereap},
+  title  = {A process inside the directory or below it holds it; a sibling sharing a prefix does not},
+  claim  = {A process inside the directory or below it holds it; a sibling sharing a prefix does
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_the_holder_of_a_directory_is_found_by_where_its_cwd_link_points},
+}
+
+@misc{hooks-worktreereap-real-reader-finds-this-process-in-its-own-directory,
+  section = {worktreereap},
+  title  = {The positive control: a process whose cwd is the directory is held; a stranger's is not},
+  claim  = {The positive control: a process whose cwd is the directory is held; a stranger's is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_the_real_reader_finds_this_process_in_its_own_directory},
+}
+
+@misc{hooks-worktreereap-each-class-is-reported-for-a-real-repository-and-nothing-is-changed,
+  section = {worktreereap},
+  title  = {A temp repo with a clean, a dirty, an ahead and a vanished worktree, listed unchanged},
+  claim  = {A temp repo with a clean, a dirty, an ahead and a vanished worktree, listed unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_each_class_is_reported_for_a_real_repository_and_nothing_is_changed},
+}
+
+@misc{hooks-worktreereap-command-prints-one-line-per-worktree-and-needs-one-argument,
+  section = {worktreereap},
+  title  = {Tab-separated class, path and branch; no argument is a usage error},
+  claim  = {Tab-separated class, path and branch; no argument is a usage error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktreereap.py -k test_the_command_prints_one_line_per_worktree_and_needs_one_argument},
+}
