@@ -1028,3 +1028,87 @@
             step.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planjson.py -k test_a_path_is_followed_through_objects_and_a_broken_step_is_empty},
 }
+
+@misc{waldo-planverdict-untouched-user-record-is-admitted,
+  section = {planverdict},
+  title  = {The control: a sealed passing record under the current policy is returned},
+  claim  = {The control: a sealed passing record under the current policy is returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_an_untouched_user_record_is_admitted},
+}
+
+@misc{waldo-planverdict-untouched-host-record-in-the-root-directory-is-admitted,
+  section = {planverdict},
+  title  = {The control for the root-planned root: the record in the trusted directory is admitted},
+  claim  = {The control for the root-planned root: the record in the trusted directory is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_an_untouched_host_record_in_the_root_directory_is_admitted},
+}
+
+@misc{waldo-planverdict-host-record-copied-into-the-user-directory-is-refused,
+  section = {planverdict},
+  title  = {The planner copying a host record into its own directory does not admit the plan},
+  claim  = {The planner copying a host record into its own directory does not admit the plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_a_host_record_copied_into_the_user_directory_is_refused},
+}
+
+@misc{waldo-planverdict-root-directory-the-planner-can-write-is-refused,
+  section = {planverdict},
+  title  = {A state directory with a group or other write bit is not a root state directory},
+  claim  = {A state directory with a group or other write bit is not a root state directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_a_root_directory_the_planner_can_write_is_refused},
+}
+
+@misc{waldo-planverdict-record-of-another-owner-is-refused,
+  section = {planverdict},
+  title  = {With a different trusted uid the same files are not the trusted user's},
+  claim  = {With a different trusted uid the same files are not the trusted user's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_a_record_of_another_owner_is_refused},
+}
+
+@misc{waldo-planverdict-edited-record-fails-its-seal,
+  section = {planverdict},
+  title  = {Flipping a denied record's exit to 0 without re-sealing does not admit it},
+  claim  = {Flipping a denied record's exit to 0 without re-sealing does not admit it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_an_edited_record_fails_its_seal},
+}
+
+@misc{waldo-planverdict-denied-verdict-is-not-admitted,
+  section = {planverdict},
+  title  = {A correctly sealed record with a non-zero exit is a refusal, not an admission},
+  claim  = {A correctly sealed record with a non-zero exit is a refusal, not an admission.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_a_denied_verdict_is_not_admitted},
+}
+
+@misc{waldo-planverdict-changed-policy-voids-the-verdict,
+  section = {planverdict},
+  title  = {A verdict recorded under another policy digest is not admitted},
+  claim  = {A verdict recorded under another policy digest is not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_a_changed_policy_voids_the_verdict},
+}
+
+@misc{waldo-planverdict-planfile-whose-bytes-moved-has-no-verdict,
+  section = {planverdict},
+  title  = {The record is keyed by the planfile's hash, so moved bytes find nothing},
+  claim  = {The record is keyed by the planfile's hash, so moved bytes find nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_a_planfile_whose_bytes_moved_has_no_verdict},
+}
+
+@misc{waldo-planverdict-unreadable-planfile-is-a-reason-not-a-crash,
+  section = {planverdict},
+  title  = {A planfile that is not there says so},
+  claim  = {A planfile that is not there says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_an_unreadable_planfile_is_a_reason_not_a_crash},
+}
+
+@misc{waldo-planverdict-digest-ignores-rego-tests-only-and-follows-declared-data,
+  section = {planverdict},
+  title  = {A *_test.rego change does not move the digest, a rule or a declared data file does},
+  claim  = {A *_test.rego change does not move the digest, a rule or a declared data file does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_the_digest_ignores_rego_tests_only_and_follows_declared_data},
+}
+
+@misc{waldo-planverdict-with-custody-off-a-host-record-in-the-user-directory-is-a-user-record,
+  section = {planverdict},
+  title  = {The consumer's explicit choice: no root directory, so the root-planned rule is off},
+  claim  = {The consumer's explicit choice: no root directory, so the root-planned rule is off.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_with_custody_off_a_host_record_in_the_user_directory_is_a_user_record},
+}

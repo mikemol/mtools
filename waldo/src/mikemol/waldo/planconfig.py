@@ -46,6 +46,7 @@ class PlanConfig:
     temp_prefix: str = "plan."
     drop_privileges: bool = True
     root_custody: bool = True
+    trusted_uid: int = 0
 
     def plan_query(self) -> str:
         """Name the rego rule set the plan is judged by.

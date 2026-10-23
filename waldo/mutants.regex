@@ -101,3 +101,13 @@ src/mikemol/waldo/planopa.py|ambiguous-version-takes-the-first|    return versio
 src/mikemol/waldo/planopa.py|any-opa-version-admitted|    if found is None or version_of\(tools, found\) != pin:|    if found is None:|def=pinned_opa
 src/mikemol/waldo/planjson.py|non-object-parsed-as-an-object|    return cast\("Json", value\) if isinstance\(value, dict\) else None|    return cast("Json", value)|def=parse_object
 src/mikemol/waldo/planjson.py|path-through-a-non-object-continues|            return None|            continue|def=_walk
+src/mikemol/waldo/planverdict.py|rego-tests-move-the-digest|        if rel\.name\.endswith\("_test\.rego"\):|        if False:|def=policy_digest
+src/mikemol/waldo/planverdict.py|declared-data-not-in-the-digest|        files\[Path\(name\) / "data\.json"\] = config\.root / source|        pass|def=policy_digest
+src/mikemol/waldo/planverdict.py|writable-directory-is-trusted|    return info\.st_uid == uid and not info\.st_mode & GROUP_OTHER_WRITE|    return info.st_uid == uid|def=trusted_dir
+src/mikemol/waldo/planverdict.py|untrusted-record-admitted-as-trusted|    if trusted and not \(trusted_dir\(record\.parent, uid\) and record\.stat\(\)\.st_uid == uid\):|    if False:|def=check_record
+src/mikemol/waldo/planverdict.py|edited-record-keeps-its-seal|    if doc\.get\("seal"\) != seal_of\(doc\):|    if False:|def=check_record
+src/mikemol/waldo/planverdict.py|host-record-in-the-user-directory-admitted|    if config\.root_custody and doc\.get\("root"\) in config\.root_planned and not trusted:|    if False:|def=check_record
+src/mikemol/waldo/planverdict.py|root-directory-never-searched|    if config\.root_custody and config\.root_state is not None:|    if False:|def=read_record
+src/mikemol/waldo/planverdict.py|denied-verdict-admitted|    if doc\.get\("exit"\) != 0:|    if False:|def=load_verdict
+src/mikemol/waldo/planverdict.py|changed-policy-admitted|    if doc\.get\("policy_sha256"\) != policy_digest\(config, declarations\):|    if False:|def=load_verdict
+src/mikemol/waldo/planverdict.py|seal-covers-itself|    body = \{k: v for k, v in doc\.items\(\) if k != "seal"\}|    body = dict(doc)|def=seal_of
