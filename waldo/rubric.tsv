@@ -17,3 +17,4 @@ planconfig	The Plan-Admission Config: luthen's Constants as a Value, the Queries
 planopa	The Pinned Opa Check: Opa Is Accepted Only At the Caller's Pin, and Absent, Failing, Ambiguous and Other Versions Are All Refused
 planjson	The Plan-Admission JSON Boundary: Narrowing Without Raising, With Absent and Wrongly Shaped Paths Reading As Empty
 planverdict	Verdict Custody: A Plan Is Admitted Only By a Record Keyed By Its Own Hash, a Root-Planned Root's Record Must Be the Trusted User's in a Directory Nobody Else Can Write, an Edited Record Fails Its Seal, and a Changed Policy Voids the Verdict
+planeval	Judging a Plan: Every Refusal Stops With Its Reason, the Scope Is Written Where the Policy Reads It, and the Evaluation Returns Deny and Withheld From Opa's Output, Which Is Kept Beside the Plan

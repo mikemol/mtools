@@ -1112,3 +1112,67 @@
   claim  = {The consumer's explicit choice: no root directory, so the root-planned rule is off.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planverdict.py -k test_with_custody_off_a_host_record_in_the_user_directory_is_a_user_record},
 }
+
+@misc{waldo-planeval-with-everything-present-the-two-binaries-come-back,
+  section = {planeval},
+  title  = {The control: tofu and the pinned opa, an initialised root and a policy directory pass},
+  claim  = {The control: tofu and the pinned opa, an initialised root and a policy directory pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_with_everything_present_the_two_binaries_come_back},
+}
+
+@misc{waldo-planeval-each-missing-piece-refuses-with-its-reason,
+  section = {planeval},
+  title  = {No tofu, no opa, the wrong opa, an uninitialised root and no policy directory each stop},
+  claim  = {No tofu, no opa, the wrong opa, an uninitialised root and no policy directory each stop.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_each_missing_piece_refuses_with_its_reason},
+}
+
+@misc{waldo-planeval-root-planned-root-needs-root-unless-custody-is-off,
+  section = {planeval},
+  title  = {The host root run by a non-root user is refused with the rerun hint, the user root is not},
+  claim  = {The host root run by a non-root user is refused with the rerun hint, the user root is
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_a_root_planned_root_needs_root_unless_custody_is_off},
+}
+
+@misc{waldo-planeval-scope-file-lists-the-targets-beside-the-plan,
+  section = {planeval},
+  title  = {An empty target list is written as empty (untargeted), a set is written as given},
+  claim  = {An empty target list is written as empty (untargeted), a set is written as given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_the_scope_file_lists_the_targets_beside_the_plan},
+}
+
+@misc{waldo-planeval-evaluation-returns-deny-and-withheld-and-runs-the-consumers-query,
+  section = {planeval},
+  title  = {Opa gets the plan, the policy, the scope and the extra data, in order, then the query},
+  claim  = {Opa gets the plan, the policy, the scope and the extra data, in order, then the query.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_the_evaluation_returns_deny_and_withheld_and_runs_the_consumers_query},
+}
+
+@misc{waldo-planeval-output-is-kept-beside-the-plan-and-reported-reads-it-back,
+  section = {planeval},
+  title  = {The eval file holds opa's stdout, and `reported` comes from it},
+  claim  = {The eval file holds opa's stdout, and `reported` comes from it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_the_output_is_kept_beside_the_plan_and_reported_reads_it_back},
+}
+
+@misc{waldo-planeval-failed-evaluation-is-a-reason-with-opas-last-line,
+  section = {planeval},
+  title  = {A non-zero opa gives its last stderr line, and its stderr is what is kept},
+  claim  = {A non-zero opa gives its last stderr line, and its stderr is what is kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_a_failed_evaluation_is_a_reason_with_opas_last_line},
+}
+
+@misc{waldo-planeval-output-in-another-shape-is-a-reason-and-reported-is-empty,
+  section = {planeval},
+  title  = {Not JSON, no result and a non-object value are the unexpected shape, never a pass},
+  claim  = {Not JSON, no result and a non-object value are the unexpected shape, never a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_output_in_another_shape_is_a_reason_and_reported_is_empty},
+}
+
+@misc{waldo-planeval-reported-of-a-missing-evaluation-is-empty,
+  section = {planeval},
+  title  = {No eval file reads as no reports},
+  claim  = {No eval file reads as no reports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_reported_of_a_missing_evaluation_is_empty},
+}
