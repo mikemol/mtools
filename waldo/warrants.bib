@@ -1436,3 +1436,123 @@
   claim  = {The file's sha256 when it exists, empty when the consumer has none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_the_destroy_list_digest_is_recorded_when_there_is_one},
 }
+
+@misc{waldo-planflow-clean-plan-is-judged-ok-and-its-verdict-loads,
+  section = {planflow},
+  title  = {The control: no denial, no hold, exit 0, a sealed verdict the apply can read back},
+  claim  = {The control: no denial, no hold, exit 0, a sealed verdict the apply can read back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_clean_plan_is_judged_ok_and_its_verdict_loads},
+}
+
+@misc{waldo-planflow-denial-is-exit-one-with-its-message-and-is-recorded,
+  section = {planflow},
+  title  = {DENY prints the message, records exit 1, and the plan is then refused at apply time},
+  claim  = {DENY prints the message, records exit 1, and the plan is then refused at apply time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_denial_is_exit_one_with_its_message_and_is_recorded},
+}
+
+@misc{waldo-planflow-withheld-check-and-an-unproven-precondition-are-exit-three,
+  section = {planflow},
+  title  = {HELD lines for opa's withheld and for a precondition that is not proven},
+  claim  = {HELD lines for opa's withheld and for a precondition that is not proven.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_withheld_check_and_an_unproven_precondition_are_exit_three},
+}
+
+@misc{waldo-planflow-plan-that-cannot-be-made-is-exit-two-not-a-verdict,
+  section = {planflow},
+  title  = {No planfile: the reason is said and nothing is recorded},
+  claim  = {No planfile: the reason is said and nothing is recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_plan_that_cannot_be_made_is_exit_two_not_a_verdict},
+}
+
+@misc{waldo-planflow-admitted-plan-applies-once-and-a-passing-witness-is-exit-zero,
+  section = {planflow},
+  title  = {The control: judge, apply with assume_yes, witness passes, the ledger holds the apply},
+  claim  = {The control: judge, apply with assume_yes, witness passes, the ledger holds the apply.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_admitted_plan_applies_once_and_a_passing_witness_is_exit_zero},
+}
+
+@misc{waldo-planflow-witness-that-cannot-run-after-a-success-is-exit-four-and-loud,
+  section = {planflow},
+  title  = {No witness declared for the root: the apply happened, and that is said},
+  claim  = {No witness declared for the root: the apply happened, and that is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_witness_that_cannot_run_after_a_success_is_exit_four_and_loud},
+}
+
+@misc{waldo-planflow-failed-apply-is-exit-one-recorded-with-no-witness-run,
+  section = {planflow},
+  title  = {The attempt is in the ledger, the witness is not-run, the exit is DENY},
+  claim  = {The attempt is in the ledger, the witness is not-run, the exit is DENY.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_failed_apply_is_exit_one_recorded_with_no_witness_run},
+}
+
+@misc{waldo-planflow-unwritable-ledger-is-loud-after-a-success,
+  section = {planflow},
+  title  = {The ledger directory cannot be made: NOT WRITTEN, THE APPLY HAPPENED, exit witness},
+  claim  = {The ledger directory cannot be made: NOT WRITTEN, THE APPLY HAPPENED, exit witness.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_unwritable_ledger_is_loud_after_a_success},
+}
+
+@misc{waldo-planflow-no-verdict-or-another-roots-verdict-never-reaches-the-apply,
+  section = {planflow},
+  title  = {A planfile never judged, and one judged for another root, are refused with exit two},
+  claim  = {A planfile never judged, and one judged for another root, are refused with exit two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_no_verdict_or_another_roots_verdict_never_reaches_the_apply},
+}
+
+@misc{waldo-planflow-moved-resource-set-is-refused-before-the-apply,
+  section = {planflow},
+  title  = {If the planfile now acts on other resources than the judged set, nothing is applied},
+  claim  = {If the planfile now acts on other resources than the judged set, nothing is applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_moved_resource_set_is_refused_before_the_apply},
+}
+
+@misc{waldo-planflow-unproven-precondition-at-apply-time-is-exit-three-and-not-applied,
+  section = {planflow},
+  title  = {The precondition may have moved since the plan: it is checked again before applying},
+  claim  = {The precondition may have moved since the plan: it is checked again before applying.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_unproven_precondition_at_apply_time_is_exit_three_and_not_applied},
+}
+
+@misc{waldo-planflow-without-assume-yes-it-needs-a-terminal-and-a-yes,
+  section = {planflow},
+  title  = {No terminal is exit two, a no is exit two, a yes applies; assume_yes replaces the human},
+  claim  = {No terminal is exit two, a no is exit two, a yes applies; assume_yes replaces the human.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_without_assume_yes_it_needs_a_terminal_and_a_yes},
+}
+
+@misc{waldo-planflow-empty-plan-is-nothing-to-apply-and-asks-nothing,
+  section = {planflow},
+  title  = {`No changes.` is exit zero with no apply and no question},
+  claim  = {`No changes.` is exit zero with no apply and no question.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_empty_plan_is_nothing_to_apply_and_asks_nothing},
+}
+
+@misc{waldo-planflow-preflight-returns-the-binaries-or-the-code-that-stops-the-run,
+  section = {planflow},
+  title  = {Tools and a pre-plan check: refused is two, a held pre-plan is its code, none passes},
+  claim  = {Tools and a pre-plan check: refused is two, a held pre-plan is its code, none passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_preflight_returns_the_binaries_or_the_code_that_stops_the_run},
+}
+
+@misc{waldo-planflow-default-seams-run-no-pre-plan-check-and-answer-nothing,
+  section = {planflow},
+  title  = {A consumer that supplies neither gets the binaries from preflight and a no at the prompt},
+  claim  = {A consumer that supplies neither gets the binaries from preflight and a no at the
+            prompt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_the_default_seams_run_no_pre_plan_check_and_answer_nothing},
+}
+
+@misc{waldo-planflow-say-writes-and-flushes-and-survives-a-gone-terminal,
+  section = {planflow},
+  title  = {The apply and its ledger line must not die when stdout is a dead tty or closed pipe},
+  claim  = {The apply and its ledger line must not die when stdout is a dead tty or closed pipe.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_say_writes_and_flushes_and_survives_a_gone_terminal},
+}
+
+@misc{waldo-planprecond-missing-declaration-is-unmet-unless-the-consumer-says-it-has-none,
+  section = {planprecond},
+  title  = {Deleting the file must not switch the rules off; a consumer with no ordering may},
+  claim  = {Deleting the file must not switch the rules off; a consumer with no ordering may.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_a_missing_declaration_is_unmet_unless_the_consumer_says_it_has_none},
+}

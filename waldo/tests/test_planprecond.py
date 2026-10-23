@@ -8,7 +8,7 @@ control is the same requirement proven by a whole ledger and a passing witness.
 """
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from mikemol.waldo import planledger, planprecond
@@ -149,6 +149,22 @@ def test_a_ledger_with_a_broken_chain_proves_nothing(tmp_path: Path) -> None:
     lines[0] = lines[0].replace('"x:create"', '"y:create"')
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     assert "not intact" in str(planprecond.applied_before(config, _REQ_APPLIED))
+
+
+def test_a_missing_declaration_is_unmet_unless_the_consumer_says_it_has_none(
+    tmp_path: Path,
+) -> None:
+    """Deleting the file must not switch the rules off; a consumer with no ordering may."""
+    config = _config(tmp_path)
+    required = planprecond.unmet_preconditions(_Tools(), config, "stage2", ["a:create"])
+    assert len(required) == 1
+    assert "unreadable" in required[0]
+    free = replace(config, preconditions_required=False)
+    assert not planprecond.unmet_preconditions(_Tools(), free, "stage2", ["a:create"])
+    assert planprecond.fired_rules(free, "stage2", ["a:create"]) == []
+    declared = _config(tmp_path / "x", [])
+    still = replace(declared, preconditions_required=False)
+    assert planprecond.fired_rules(still, "stage2", ["a:create"]) == []
 
 
 def test_a_witness_requirement_must_exit_zero_now(tmp_path: Path) -> None:

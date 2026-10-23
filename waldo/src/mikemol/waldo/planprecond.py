@@ -16,6 +16,10 @@ at some time", not "still true", so a state that must hold now is a `witness` re
 
 ⚑ AN UNKNOWN KIND, AN UNREADABLE DECLARATION AND A MISSING TOOL ARE UNMET, NEVER A PASS: each
 returns a message, and `unmet_preconditions` returns one line per requirement not proven.
+
+⚑ A MISSING DECLARATION IS UNMET UNLESS THE CONSUMER SAYS IT HAS NONE: `preconditions_required`
+defaults to True, so deleting the file does not switch the ordering rules off; a consumer with no
+cross-apply ordering sets it False and an absent file then means no rules (W1855, estate).
 """
 
 from pathlib import Path
@@ -61,7 +65,10 @@ def fired_rules(config: PlanConfig, root_name: str, changes: list[str]) -> list[
         the fired rules, or why the declaration could not be read.
 
     """
-    rules = rules_from(config.preconditions_data())
+    declaration = config.preconditions_data()
+    if not config.preconditions_required and not declaration.exists():
+        return []
+    rules = rules_from(declaration)
     if isinstance(rules, str):
         return rules
     addresses = [c.rsplit(":", 1)[0] for c in changes]
