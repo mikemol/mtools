@@ -1176,3 +1176,80 @@
   claim  = {No eval file reads as no reports.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_reported_of_a_missing_evaluation_is_empty},
 }
+
+@misc{waldo-planledger-ledger-lives-beside-the-roots-verdicts,
+  section = {planledger},
+  title  = {A root-planned root's ledger is in the root state, any other root's in the user's},
+  claim  = {A root-planned root's ledger is in the root state, any other root's in the user's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_the_ledger_lives_beside_the_roots_verdicts},
+}
+
+@misc{waldo-planledger-each-entry-carries-the-hash-of-the-line-before-it,
+  section = {planledger},
+  title  = {The first entry's prev is empty, the second's is the sha256 of the first line},
+  claim  = {The first entry's prev is empty, the second's is the sha256 of the first line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_each_entry_carries_the_hash_of_the_line_before_it},
+}
+
+@misc{waldo-planledger-third-entry-chains-to-the-second-not-the-first,
+  section = {planledger},
+  title  = {The link is to the LAST line, so each entry names its immediate predecessor},
+  claim  = {The link is to the LAST line, so each entry names its immediate predecessor.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_a_third_entry_chains_to_the_second_not_the_first},
+}
+
+@misc{waldo-planledger-edited-line-breaks-the-chain,
+  section = {planledger},
+  title  = {Rewriting the first line changes its hash, so the second entry's prev no longer matches},
+  claim  = {Rewriting the first line changes its hash, so the second entry's prev no longer matches.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_an_edited_line_breaks_the_chain},
+}
+
+@misc{waldo-planledger-deleted-first-line-breaks-the-chain,
+  section = {planledger},
+  title  = {The remaining entry names a previous line that is gone},
+  claim  = {The remaining entry names a previous line that is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_a_deleted_first_line_breaks_the_chain},
+}
+
+@misc{waldo-planledger-line-that-is-not-an-object-or-a-missing-file-is-broken,
+  section = {planledger},
+  title  = {Garbage in the chain and an unreadable ledger both read as not intact},
+  claim  = {Garbage in the chain and an unreadable ledger both read as not intact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_a_line_that_is_not_an_object_or_a_missing_file_is_broken},
+}
+
+@misc{waldo-planledger-empty-ledger-has-no-last-line-and-is-vacuously-intact,
+  section = {planledger},
+  title  = {The digest of nothing is empty, and a file of no lines has no broken link},
+  claim  = {The digest of nothing is empty, and a file of no lines has no broken link.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_an_empty_ledger_has_no_last_line_and_is_vacuously_intact},
+}
+
+@misc{waldo-planledger-applier-is-account-names-and-falls-back-to-the-uid,
+  section = {planledger},
+  title  = {The login by uid, sudo's user as given, and `uid<N>` for a uid with no passwd entry},
+  claim  = {The login by uid, sudo's user as given, and `uid<N>` for a uid with no passwd entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_the_applier_is_account_names_and_falls_back_to_the_uid},
+}
+
+@misc{waldo-planledger-current-applier-is-this-process-and-its-sudo-user,
+  section = {planledger},
+  title  = {The real uid's login, and sudo's invoking user from the environment (empty if unset)},
+  claim  = {The real uid's login, and sudo's invoking user from the environment (empty if unset).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_the_current_applier_is_this_process_and_its_sudo_user},
+}
+
+@misc{waldo-planledger-commit-and-whether-the-apply-inputs-are-dirty,
+  section = {planledger},
+  title  = {HEAD from rev-parse, dirty from a porcelain status over terraform and policy},
+  claim  = {HEAD from rev-parse, dirty from a porcelain status over terraform and policy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_the_commit_and_whether_the_apply_inputs_are_dirty},
+}
+
+@misc{waldo-planledger-without-git-or-a-head-the-commit-is-unknown-not-clean,
+  section = {planledger},
+  title  = {No git, or a failing rev-parse, gives an empty commit and an unknown (None) dirty flag},
+  claim  = {No git, or a failing rev-parse, gives an empty commit and an unknown (None) dirty flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_without_git_or_a_head_the_commit_is_unknown_not_clean},
+}

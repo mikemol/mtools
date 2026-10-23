@@ -119,3 +119,9 @@ src/mikemol/waldo/planeval.py|host-root-planned-as-a-user|    if config\.root_cu
 src/mikemol/waldo/planeval.py|targets-never-written|    scope: dict\[str, object\] = \{"targets": list\(targets\)\}|    scope: dict[str, object] = {"targets": []}|def=scope_file
 src/mikemol/waldo/planeval.py|failed-opa-read-as-a-shape|    if proc\.returncode != 0:|    if False:|def=evaluate
 src/mikemol/waldo/planeval.py|extra-data-never-passed|    for directory in evidence\.extra_data:|    for directory in ():|def=evaluate
+src/mikemol/waldo/planledger.py|every-ledger-in-the-user-directory|    return config\.state_dir\(root_name\) / LEDGER_NAME|    return config.user_state / LEDGER_NAME|def=ledger_path
+src/mikemol/waldo/planledger.py|unknown-uid-has-no-name|        user = f"uid\{uid\}"|        user = ""|def=applier
+src/mikemol/waldo/planledger.py|unknown-git-state-reads-clean|        "dirty": bool\(status\.stdout\.strip\(\)\) if ok else None,|        "dirty": bool(status.stdout.strip()) if ok else False,|def=repo_commit
+src/mikemol/waldo/planledger.py|chain-links-to-the-first-line|    return hashlib\.sha256\(lines\[-1\]\.encode\(\)\)\.hexdigest\(\) if lines else ""|    return hashlib.sha256(lines[0].encode()).hexdigest() if lines else ""|def=last_line_digest
+src/mikemol/waldo/planledger.py|broken-link-not-seen|        if record is None or record\.get\("prev"\) != prev:|        if record is None:|def=ledger_intact
+src/mikemol/waldo/planledger.py|chain-forgets-the-line-before|        prev = hashlib\.sha256\(line\.encode\(\)\)\.hexdigest\(\)|        prev = ""|def=ledger_intact
