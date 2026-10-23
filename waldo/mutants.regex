@@ -148,7 +148,9 @@ src/mikemol/waldo/planplan.py|verdict-unsealed|    doc\["seal"\] = seal_of\(doc\
 src/mikemol/waldo/planplan.py|root-state-left-closed|    if config\.root_state is not None and state == config\.root_state:|    if False:|def=record_verdict
 src/mikemol/waldo/planplan.py|destroy-list-never-hashed|    return sha256_of\(path\) if path\.is_file\(\) else ""|    return ""|def=_destroys_digest
 src/mikemol/waldo/planprecond.py|missing-declaration-switches-the-rules-off|    if not config\.preconditions_required and not declaration\.exists\(\):|    if not declaration.exists():|def=fired_rules
-src/mikemol/waldo/planflow.py|every-plan-judged-ok|    code = EXIT_DENY if deny else \(EXIT_WITHHELD if withheld else EXIT_OK\)|    code = EXIT_OK|def=judge
+src/mikemol/waldo/planflow.py|every-plan-judged-ok|    code = seams\.exits\.deny if deny else \(seams\.exits\.withheld if withheld else EXIT_OK\)|    code = EXIT_OK|def=judge
+src/mikemol/waldo/planflow.py|luthens-numbers-for-everyone|        return seams\.exits\.stopped|        return EXIT_STOPPED|def=_confirmed
+src/mikemol/waldo/planflow.py|witness-number-ignored|    return seams\.exits\.witness|    return EXIT_WITNESS|def=after_apply
 src/mikemol/waldo/planflow.py|unmet-preconditions-not-held|    withheld = \[\*withheld, \*unmet_preconditions\(seams\.tools, config, root\.name, changes\)\]|    withheld = withheld|def=judge
 src/mikemol/waldo/planflow.py|another-roots-verdict-applies|    if doc\.get\("root"\) != root\.name:|    if False:|def=refusal
 src/mikemol/waldo/planflow.py|moved-resource-set-applies|    if shown\.returncode == 0 and now == doc\.get\("changes"\):|    if True:|def=changes_match

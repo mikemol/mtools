@@ -113,6 +113,7 @@ class _World:
     interactive: bool = False
     reply: str = "y"
     pre_plan_exit: int | None = None
+    exits: planflow.ExitCodes = planflow.LUTHEN
     tofu: Path = Path("/bin/tofu")
     opa: Path = Path("/bin/opa")
     config: PlanConfig = field(init=False)
@@ -146,6 +147,7 @@ class _World:
             pre_plan=lambda _root: self.pre_plan_exit,
             interactive=self.interactive,
             answer=lambda: self.reply,
+            exits=self.exits,
         )
 
     def binaries(self) -> tuple[Path, Path]:
@@ -213,6 +215,33 @@ def test_a_plan_that_cannot_be_made_is_exit_two_not_a_verdict(tmp_path: Path) ->
     assert world.judge() == planflow.EXIT_STOPPED
     assert "opa_plan A: tofu plan produced no planfile" in world.text()
     assert not (tmp_path / "state").exists()
+
+
+def test_a_consumers_exit_numbers_replace_every_failing_code_and_ok_stays_zero(
+    tmp_path: Path,
+) -> None:
+    """Each failing outcome speaks the consumer's number; success is 0 for everyone (W1858)."""
+    mine = planflow.ExitCodes(deny=40, stopped=70, withheld=60, witness=90)
+    hosts = {
+        "a": _Host(deny=["D1"]),
+        "b": _Host(withheld=["W1"]),
+        "c": _Host(writes_plan=False),
+        "d": _Host(),
+        "e": _Host(apply_exit=1),
+    }
+    worlds: dict[str, _World] = {}
+    for name, host in hosts.items():
+        (tmp_path / name).mkdir()
+        worlds[name] = _world(tmp_path / name, host)
+        worlds[name].exits = mine
+    assert worlds["a"].judge() == mine.deny
+    assert worlds["b"].judge() == mine.withheld
+    assert worlds["c"].judge() == mine.stopped
+    assert worlds["d"].judge() == planflow.EXIT_OK
+    assert worlds["d"].apply(yes=False) == mine.stopped
+    assert worlds["d"].apply() == mine.witness
+    worlds["e"].judge()
+    assert worlds["e"].apply() == mine.deny
 
 
 def test_an_admitted_plan_applies_once_and_a_passing_witness_is_exit_zero(tmp_path: Path) -> None:

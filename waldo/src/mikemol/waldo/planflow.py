@@ -51,6 +51,26 @@ EXIT_WITNESS = 4
 WITNESS_OK = ("pass", "none-declared")
 
 
+@dataclass(frozen=True, slots=True)
+class ExitCodes:
+    """The failing exit numbers of plan admission, as the consumer's tools spell them (W1858).
+
+    Success is 0 for everyone: admission reads a recorded verdict of exit 0, so OK is not here.
+    `deny` is a rule that measured a defect and also a failed apply; `stopped` is a run that
+    could not be judged or was not confirmed; `withheld` is a check that could not be measured
+    or a precondition not proven; `witness` is an apply that happened but whose witness or
+    ledger did not pass.
+    """
+
+    deny: int = EXIT_DENY
+    stopped: int = EXIT_STOPPED
+    withheld: int = EXIT_WITHHELD
+    witness: int = EXIT_WITNESS
+
+
+LUTHEN = ExitCodes()
+
+
 def say(text: str) -> None:
     """Write and flush `text` to stdout, surviving a gone terminal.
 
@@ -106,6 +126,7 @@ class Seams:
     guard: Callable[[], AbstractContextManager[None]] = _no_guard
     interactive: bool = False
     answer: Callable[[], str] = _no_answer
+    exits: ExitCodes = LUTHEN
 
 
 def judge(
@@ -128,12 +149,12 @@ def judge(
     shown_json = plan_and_show(seams.tools, tofu, planfile, root, plan_flags(replace, targets))
     if isinstance(shown_json, str):
         out(f"opa_plan A: {shown_json}\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     with seams.data() as data:
         verdict = evaluate(seams.tools, config, opa, Evidence(shown_json, targets, tuple(data)))
     if isinstance(verdict, str):
         out(f"opa_plan A: {verdict}\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     deny, withheld = verdict
     shown = as_object(parse_object(shown_json.read_text(encoding="utf-8")))
     changes = plan_changes(shown)
@@ -141,7 +162,7 @@ def judge(
     out("".join(f"  DENY  {m}\n" for m in deny) + "".join(f"  HELD  {m}\n" for m in withheld))
     reported = reported_of(shown_json)
     out("".join(f"  NOTE  {m}\n" for m in reported))
-    code = EXIT_DENY if deny else (EXIT_WITHHELD if withheld else EXIT_OK)
+    code = seams.exits.deny if deny else (seams.exits.withheld if withheld else EXIT_OK)
     extra: Json = {
         "root": root.name,
         "changes": changes,
@@ -235,10 +256,10 @@ def after_apply(seams: Seams, root: Path, doc: Json, apply_rc: int) -> int:
         where = append_ledger(config, root.name, ledger_entry(seams, root, doc, apply_rc, witness))
     except OSError as exc:
         out(f"opa_plan ledger: NOT WRITTEN ({exc}) -- THE APPLY HAPPENED\n")
-        return EXIT_DENY if apply_rc != 0 else EXIT_WITNESS
+        return seams.exits.deny if apply_rc != 0 else seams.exits.witness
     out(f"opa_plan ledger: appended to {where}\n")
     if apply_rc != 0:
-        return EXIT_DENY
+        return seams.exits.deny
     status = witness["status"]
     if status in WITNESS_OK:
         out(f"opa_plan witness: {status} {witness.get('why', '')}\n")
@@ -247,18 +268,18 @@ def after_apply(seams: Seams, root: Path, doc: Json, apply_rc: int) -> int:
         f"opa_plan witness: {str(status).upper()} -- THE APPLY HAPPENED but its witness did not "
         f"pass: {witness.get('why') or witness.get('stdout_tail')}\n"
     )
-    return EXIT_WITNESS
+    return seams.exits.witness
 
 
 def _confirmed(seams: Seams) -> int | None:
     # Ask once on a terminal. None when confirmed, else the exit code that stops the run.
     if not seams.interactive:
         seams.out("opa_plan --apply: no terminal to confirm on; not applied\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     seams.out("opa_plan --apply: apply exactly this plan? [y/N] ")
     if seams.answer() != "y":
         seams.out("opa_plan --apply: not applied\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     return None
 
 
@@ -276,14 +297,14 @@ def confirm_and_apply(
     """
     doc = refusal(seams, root, planfile)
     if doc is None or not changes_match(seams, tofu, root, planfile, doc):
-        return EXIT_STOPPED
+        return seams.exits.stopped
     unmet = unmet_preconditions(
         seams.tools, seams.config, root.name, [str(c) for c in list_at(doc, "changes")]
     )
     if unmet:
         seams.out("".join(f"  HELD  {m}\n" for m in unmet))
         seams.out("opa_plan --apply: REFUSED -- a declared precondition is not proven\n")
-        return EXIT_WITHHELD
+        return seams.exits.withheld
     show = seams.tools.run(tofu, f"-chdir={root}", "show", "-no-color", str(planfile))
     seams.out(show.stdout)
     if "No changes." in show.stdout:
@@ -310,6 +331,6 @@ def preflight(seams: Seams, root: Path) -> tuple[Path, Path] | int:
     )
     if isinstance(tools, str):
         seams.out(f"opa_plan S: REFUSED -- {tools}\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     held = seams.pre_plan(root)
     return tools if held is None else held

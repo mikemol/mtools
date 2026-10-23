@@ -31,7 +31,6 @@ from typing import cast
 from mikemol.waldo.planconfig import PlanConfig
 from mikemol.waldo.planflow import (
     EXIT_OK,
-    EXIT_STOPPED,
     Seams,
     confirm_and_apply,
     judge,
@@ -118,7 +117,7 @@ def verify(seams: Seams, planfile: Path) -> int:
     doc = load_verdict(seams.config, planfile, seams.declarations)
     if isinstance(doc, str):
         seams.out(f"opa_plan --verify: {doc}\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     seams.out(f"opa_plan --verify: {planfile} admitted and unchanged\n")
     return EXIT_OK
 
@@ -136,7 +135,7 @@ def plan_flow(seams: Seams, args: argparse.Namespace, root: Path, command: str) 
     planfile = pick_planfile(seams.config, cast("Path | None", args.planfile))
     if isinstance(planfile, str):
         seams.out(f"opa_plan S: REFUSED -- {planfile}\n")
-        return EXIT_STOPPED
+        return seams.exits.stopped
     replace = tuple(cast("list[str] | None", args.replace) or ())
     targets = tuple(cast("list[str] | None", args.target) or ())
     code = judge(seams, pre, root, planfile, (replace, targets))
