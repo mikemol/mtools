@@ -93,3 +93,6 @@ src/mikemol/waldo/cli.py|run-command-never-attached|if code != EXIT_OK and comma
 src/mikemol/waldo/cli.py|shape-matches-a-prefix|SHAPE\.fullmatch\(command\)|SHAPE.match(command)|def=matches_shape
 src/mikemol/waldo/cli.py|relative-path-accepted|if not repo\.is_absolute\(\) or not interpreter\.is_absolute\(\):|if False:|def=invocation
 src/mikemol/waldo/contract.py|advances-not-a-condition|or witness\.advances|or False|def=has_condition
+src/mikemol/waldo/planconfig.py|plan-query-ignores-the-package|    return f"data\.\{self\.rego_package\}\.plan"|    return "data.luthen.plan"|def=PlanConfig.plan_query
+src/mikemol/waldo/planconfig.py|custody-off-still-uses-the-root-state|    held = self\.root_custody and self\.root_state is not None|    held = self.root_state is not None|def=PlanConfig.state_dir
+src/mikemol/waldo/planconfig.py|every-root-held-as-root-planned|        if held and root_name in self\.root_planned and self\.root_state is not None:|        if held and self.root_state is not None:|def=PlanConfig.state_dir

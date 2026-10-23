@@ -935,3 +935,38 @@
   claim  = {Without a witness nothing could tell the act ran or refuse its re-run, so it is unsound.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_act.py -k test_a_phase_with_an_act_and_no_done_witness_is_unsound},
 }
+
+@misc{waldo-planconfig-luthen-config-is-todays-constants-over-the-repo-root,
+  section = {planconfig},
+  title  = {Terraform, policy, state, package, pin, host roots and prefix are opa_plan's constants},
+  claim  = {Terraform, policy, state, package, pin, host roots and prefix are opa_plan's constants.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_the_luthen_config_is_todays_constants_over_the_repo_root},
+}
+
+@misc{waldo-planconfig-queries-are-luthens-for-luthen-and-the-consumers-for-a-consumer,
+  section = {planconfig},
+  title  = {data.luthen.plan and data.luthen.interlocks.<kind>.defer, with the package swapped},
+  claim  = {data.luthen.plan and data.luthen.interlocks.<kind>.defer, with the package swapped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_the_queries_are_luthens_for_luthen_and_the_consumers_for_a_consumer},
+}
+
+@misc{waldo-planconfig-host-root-keeps-its-records-in-the-root-owned-directory,
+  section = {planconfig},
+  title  = {The root-planned root uses the root state, any other root the user's},
+  claim  = {The root-planned root uses the root state, any other root the user's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_a_host_root_keeps_its_records_in_the_root_owned_directory},
+}
+
+@misc{waldo-planconfig-config-that-names-no-switches-has-both-security-rules-on,
+  section = {planconfig},
+  title  = {Fail closed: privilege drop and root custody default ON},
+  claim  = {Fail closed: privilege drop and root custody default ON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_a_config_that_names_no_switches_has_both_security_rules_on},
+}
+
+@misc{waldo-planconfig-custody-off-sends-every-root-to-the-users-state,
+  section = {planconfig},
+  title  = {A consumer without root turns custody off and has no root-owned directory to use},
+  claim  = {A consumer without root turns custody off and has no root-owned directory to use.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_custody_off_sends_every_root_to_the_users_state},
+}
