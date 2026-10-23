@@ -278,6 +278,8 @@ src/mikemol/pathsforward/cli.py|withheld-flag-never-read|        withheld=_flag\
 src/mikemol/pathsforward/export.py|truthy-flag-withholds|        if card\.get\("withheld"\) is not True:|        if not card.get("withheld"):|def=build
 src/mikemol/pathsforward/export.py|published-card-also-cited-as-withheld|            continue|            pass|def=build
 src/mikemol/pathsforward/export.py|card-with-no-symbol-cited|        if ref is not None:|        if True:|def=build
+src/mikemol/pathsforward/cli.py|export-overwrites-the-state|    target = ctx\.path\.with_suffix\(EXPORT_SUFFIX\)|    target = ctx.path|def=_export
+src/mikemol/pathsforward/cli.py|export-names-no-repo|    repo = Path\(text\(state\.doc, "project_root"\) or str\(ctx\.path\.parent\.parent\)\)\.name|    repo = ""|def=_export
 src/mikemol/pathsforward/check.py|landed-without-deploys-passed|        if text\(w, "status"\) == "landed" and w\.get\("deploys"\) is not True:|        if text(w, "status") == "landed" and w.get("deploys") is False:|def=deploys_rules
 src/mikemol/pathsforward/check.py|deploying-done-card-without-language-passed|        and \(not text\(w, "witness"\) or not text\(w, "witness_lang"\)\)|        and not text(w, "witness")|def=_unproved_deploy
 src/mikemol/pathsforward/cli.py|false-word-read-as-true|    return None if value is None else value == "true"|    return None if value is None else value != "true"|def=_flag

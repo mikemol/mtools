@@ -37,6 +37,7 @@ from mikemol.pathsforward import (
     delivered,
     dropto,
     embargo,
+    export,
     foreign,
     gate,
     generated,
@@ -450,6 +451,7 @@ def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
 
 
 _SUMMARY = "summary"
+EXPORT_SUFFIX = ".export.json"
 _FLAGS = (
     "hash",
     "render",
@@ -470,6 +472,7 @@ _FLAGS = (
     "init",
     "overlaps",
     "ics",
+    "export",
     "unlinked",
     "delivered",
     "close_gate",
@@ -1597,6 +1600,30 @@ def _queue(ctx: Ctx) -> int:
 
     """
     _say(render.queue(store.load(ctx.path)))
+    return EXIT_OK
+
+
+def _export(ctx: Ctx) -> int:
+    """Write this repo's version-2 export beside the state file (W1838, nemik:W516).
+
+    ⚑ WITHHELD WHOLE OR NOT AT ALL: the file holds every unflagged live card exactly as it is and
+    only a bare ref for each flagged one (`export.build`), and it replaces the old file atomically,
+    so a reader never sees half an export. The queue and the state file are not touched.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    state = store.load(ctx.path)
+    repo = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent)).name
+    held_cards = state.doc.get("waypoints")
+    cards = cast("list[Mapping[str, object]]", held_cards) if isinstance(held_cards, list) else []
+    built = export.build(repo, ctx.stamp(), cards)
+    target = ctx.path.with_suffix(EXPORT_SUFFIX)
+    store.write_atomic(target, json.dumps(built, indent=2, ensure_ascii=False) + "\n")
+    shown = len(cast("list[object]", built["cards"]))
+    held = len(cast("list[object]", built["withheld"]))
+    _say(f"exported {target}: {shown} card(s), {held} withheld")
     return EXIT_OK
 
 
@@ -3114,6 +3141,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,
+    "export": _export,
     "unlinked": _unlinked,
     "certify": _certify,
     "mint_residue": _mint_residue,

@@ -7150,3 +7150,18 @@
   claim  = {It cannot be cited, so no ref, and it must not leave, so not in cards.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_a_flagged_card_with_no_symbol_leaves_nothing_in_either_list},
 }
+
+@misc{pathsforward-export-mode-export-lands-beside-the-state-and-holds-only-what-may-leave,
+  section = {export_mode},
+  title  = {Version 2, the repo's directory name, the unflagged card whole and the flagged one a ref},
+  claim  = {Version 2, the repo's directory name, the unflagged card whole and the flagged one a
+            ref.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_the_export_lands_beside_the_state_and_holds_only_what_may_leave},
+}
+
+@misc{pathsforward-export-mode-mode-leaves-the-state-file-untouched,
+  section = {export_mode},
+  title  = {Exporting reads the queue and writes no change to it},
+  claim  = {Exporting reads the queue and writes no change to it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_the_mode_leaves_the_state_file_untouched},
+}
