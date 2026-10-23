@@ -60,7 +60,7 @@ def rulings(ledger: Path, pattern: str, limit: int | None = None) -> list[Ruling
         r
         for r in (
             _ruling(cast("dict[str, object]", json.loads(line)))
-            for line in ledger.read_text(encoding="utf-8").splitlines()
+            for line in ledger.read_text(encoding="utf-8").split("\n")
             if line.strip()
         )
         if wanted.search(r.needle)

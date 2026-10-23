@@ -1116,3 +1116,18 @@
   claim  = {`--cache-turns` ends with '# N turn(s), M cold' so the denominator is on the page.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cacheturns.py -k test_the_mode_prints_a_row_per_turn_and_the_cold_count},
 }
+
+@misc{transcriptstruct-rulings-ledger-line-with-a-line-separator-in-its-text-is-read-whole,
+  section = {rulings},
+  title  = {What `append` wrote with a raw separator, `known` reads back as one IRI (W1864)},
+  claim  = {What `append` wrote with a raw separator, `known` reads back as one IRI (W1864).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulings.py -k test_a_ledger_line_with_a_line_separator_in_its_text_is_read_whole},
+}
+
+@misc{transcriptstruct-rulingq-line-separator-inside-a-needle-does-not-split-its-ledger-line,
+  section = {rulingq},
+  title  = {A raw line separator in the operator's words is one ruling, not a crash on half (W1864)},
+  claim  = {A raw line separator in the operator's words is one ruling, not a crash on half (W1864).
+            The control is the line after it, which still reads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_a_line_separator_inside_a_needle_does_not_split_its_ledger_line},
+}

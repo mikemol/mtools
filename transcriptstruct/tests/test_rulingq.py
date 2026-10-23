@@ -51,6 +51,31 @@ def _ledger(tmp_path: Path) -> Path:
     return path
 
 
+def test_a_line_separator_inside_a_needle_does_not_split_its_ledger_line(tmp_path: Path) -> None:
+    """A raw line separator in the operator's words is one ruling, not a crash on half (W1864).
+
+    The control is the line after it, which still reads.
+    """
+    needle = f"split{chr(0x2028)}here and{chr(0x85)}there"
+    entity: dict[str, object] = {
+        "@id": "file:///t.jsonl#odd",
+        "prov:generatedAtTime": {"@value": "2026-10-01T10:00:00.000Z", "@type": "xsd:dateTime"},
+        "mtools:line": 1,
+        "mtools:session": "s",
+        "mtools:needle": needle,
+    }
+    path = tmp_path / "rulings.jsonl"
+    path.write_text(
+        json.dumps(entity, ensure_ascii=False)
+        + "\n"
+        + _entity("next", "2026-10-02T10:00:00.000Z", "after it")
+        + "\n",
+        encoding="utf-8",
+    )
+    assert [r.iri.rsplit("#", 1)[1] for r in rulings(path, "here")] == ["odd"]
+    assert [r.iri.rsplit("#", 1)[1] for r in rulings(path, "after")] == ["next"]
+
+
 def test_matching_rulings_come_newest_first_with_their_citation(tmp_path: Path) -> None:
     """The later word leads; each carries the IRI a warrant cites and its line."""
     got = rulings(_ledger(tmp_path), "gabion")

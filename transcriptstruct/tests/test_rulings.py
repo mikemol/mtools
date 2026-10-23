@@ -45,6 +45,14 @@ def _transcript(root: Path, name: str, *lines: str) -> Path:
     return path
 
 
+def test_a_ledger_line_with_a_line_separator_in_its_text_is_read_whole(tmp_path: Path) -> None:
+    """What `append` wrote with a raw separator, `known` reads back as one IRI (W1864)."""
+    ledger = tmp_path / "rulings.jsonl"
+    entity: dict[str, object] = {"@id": "file:///t.jsonl#odd", "x": f"a{chr(0x2028)}b{chr(0x85)}c"}
+    assert append(ledger, [entity]) == 1
+    assert known(ledger) == {"file:///t.jsonl#odd"}
+
+
 def test_a_second_harvest_of_the_same_tree_adds_nothing_and_reads_nothing(tmp_path: Path) -> None:
     """Idempotent twice over: the lines are not repeated and the unchanged file is spared."""
     _transcript(tmp_path, "a.jsonl", _line("u1", "first ruling"))

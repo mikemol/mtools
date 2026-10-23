@@ -51,7 +51,7 @@ def known(ledger: Path) -> set[str]:
     if not ledger.is_file():
         return set()
     ids: set[str] = set()
-    for line in ledger.read_text(encoding="utf-8").splitlines():
+    for line in ledger.read_text(encoding="utf-8").split("\n"):
         if line.strip():
             entity = cast("dict[str, object]", json.loads(line))
             ids.add(str(entity["@id"]))
