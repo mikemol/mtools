@@ -10,9 +10,16 @@ extra policy data (luthen's `opa_data.materialised()`) comes in as directories t
 refused plan as root is the consumer's `rerun_hint`. Nothing here names luthen.
 
 ⚑ A REFUSAL IS A REASON, AND EVERY ONE OF THEM IS A STOP: no tofu, no pinned opa, a root that was
-never initialised, no policy directory, and a root-planned root run by someone who is not root
-each return the sentence that says why, so an unmeasured plan is never read as a clean one. The
-last rule applies only with `root_custody` on, since a consumer with no root-planned roots has none.
+never initialised, no policy directory, and a root-planned root run by someone who is not the
+trusted principal each return the sentence that says why, so an unmeasured plan is never read as a
+clean one. The last rule applies only with `root_custody` on, since a consumer with no root-planned
+roots has none.
+
+⚑ THE TRUSTED PRINCIPAL IS A UID, NOT ALWAYS ROOT (estate, W1842; the operator's enclave ruling,
+estate session d9d766b9 line 3763): `PlanConfig.trusted_uid` is who may plan a root-planned root
+and who owns its records. Luthen's is 0, so its behaviour and its wording ("Plan it as root") are
+unchanged; a consumer that runs the waldo as a dedicated service identity sets that uid, and root
+is then refused for those roots like any other user.
 
 ⚑ THE -target SET IS WRITTEN WHERE THE POLICY READS IT (W421): tofu's plan JSON records no targets,
 so the gate that passed `-target` is the only witness, and an empty list means UNTARGETED, which the
@@ -61,10 +68,11 @@ def refuse_unless(
         return f"{root} is not initialised (tofu init)"
     if not config.policy.is_dir():
         return f"{config.policy} does not exist"
-    if config.root_custody and root.name in config.root_planned and euid != 0:
+    if config.root_custody and root.name in config.root_planned and euid != config.trusted_uid:
+        who = "root" if config.trusted_uid == 0 else f"uid {config.trusted_uid}"
         return (
             f"{root} reads root-only targets at refresh (an unprivileged plan ERRORS, which the "
-            f"policy refuses). Plan it as root: {rerun_hint}"
+            f"policy refuses). Plan it as {who}: {rerun_hint}"
         )
     return tofu, opa
 

@@ -1620,3 +1620,10 @@
   claim  = {--apply --yes is plan, verify, apply: one command, the same gates.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_apply_plans_then_applies_in_one_command},
 }
+
+@misc{waldo-planeval-service-principal-replaces-root-as-the-trusted-uid,
+  section = {planeval},
+  title  = {With trusted_uid set, that uid plans a root-planned root and root is refused, by name},
+  claim  = {With trusted_uid set, that uid plans a root-planned root and root is refused, by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_a_service_principal_replaces_root_as_the_trusted_uid},
+}

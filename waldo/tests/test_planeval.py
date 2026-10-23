@@ -118,6 +118,17 @@ def test_a_root_planned_root_needs_root_unless_custody_is_off(tmp_path: Path) ->
     assert _refuse(_Tools(), replace(config, root_custody=False), host) == (_TOFU, _OPA)
 
 
+def test_a_service_principal_replaces_root_as_the_trusted_uid(tmp_path: Path) -> None:
+    """With trusted_uid set, that uid plans a root-planned root and root is refused, by name."""
+    base = _config(tmp_path)
+    config = replace(base, trusted_uid=4242)
+    host = _root(tmp_path, "host")
+    assert _refuse(_Tools(), config, host, euid=4242) == (_TOFU, _OPA)
+    got = str(_refuse(_Tools(), config, host, euid=0))
+    assert "Plan it as uid 4242" in got
+    assert "Plan it as root" in str(_refuse(_Tools(), base, host))
+
+
 def test_the_scope_file_lists_the_targets_beside_the_plan(tmp_path: Path) -> None:
     """An empty target list is written as empty (untargeted), a set is written as given."""
     plan = tmp_path / "p.json"

@@ -115,7 +115,7 @@ src/mikemol/waldo/planeval.py|missing-tofu-runs-anyway|    if tofu is None:|    
 src/mikemol/waldo/planeval.py|missing-opa-runs-anyway|    if opa is None:|    if False:|def=refuse_unless
 src/mikemol/waldo/planeval.py|uninitialised-root-runs|    if not \(root / "\.terraform"\)\.is_dir\(\):|    if False:|def=refuse_unless
 src/mikemol/waldo/planeval.py|missing-policy-runs|    if not config\.policy\.is_dir\(\):|    if False:|def=refuse_unless
-src/mikemol/waldo/planeval.py|host-root-planned-as-a-user|    if config\.root_custody and root\.name in config\.root_planned and euid != 0:|    if False:|def=refuse_unless
+src/mikemol/waldo/planeval.py|host-root-planned-as-a-user|    if config\.root_custody and root\.name in config\.root_planned and euid != config\.trusted_uid:|    if False:|def=refuse_unless
 src/mikemol/waldo/planeval.py|targets-never-written|    scope: dict\[str, object\] = \{"targets": list\(targets\)\}|    scope: dict[str, object] = {"targets": []}|def=scope_file
 src/mikemol/waldo/planeval.py|failed-opa-read-as-a-shape|    if proc\.returncode != 0:|    if False:|def=evaluate
 src/mikemol/waldo/planeval.py|extra-data-never-passed|    for directory in evidence\.extra_data:|    for directory in ():|def=evaluate
