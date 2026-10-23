@@ -14834,3 +14834,45 @@
   claim  = {The failures are counted per batch, and the batches that go through still go.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sessioncache.py -k test_every_batch_is_sent_and_counted_when_some_are_lost},
 }
+
+@misc{hooks-stackmutants-dists-are-the-top-directories-once-each-in-first-seen-order,
+  section = {stackmutants},
+  title  = {A stack names a dist by what it touches, not only by carrying its mutants.regex},
+  claim  = {A stack names a dist by what it touches, not only by carrying its mutants.regex.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_the_dists_are_the_top_directories_once_each_in_first_seen_order},
+}
+
+@misc{hooks-stackmutants-no-lint-has-no-problems,
+  section = {stackmutants},
+  title  = {The default seam is silent, so a caller that does not wire the lint is unchanged},
+  claim  = {The default seam is silent, so a caller that does not wire the lint is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_no_lint_has_no_problems},
+}
+
+@misc{hooks-stackmutants-missing-mutation-venv-refuses-and-says-how-to-build-it,
+  section = {stackmutants},
+  title  = {A check that cannot run is not a pass},
+  claim  = {A check that cannot run is not a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_a_missing_mutation_venv_refuses_and_says_how_to_build_it},
+}
+
+@misc{hooks-stackmutants-failing-lint-is-named-per-dist-and-a-passing-one-is-silent,
+  section = {stackmutants},
+  title  = {Each problem line is prefixed with its dist; exit 0 contributes nothing},
+  claim  = {Each problem line is prefixed with its dist; exit 0 contributes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_a_failing_lint_is_named_per_dist_and_a_passing_one_is_silent},
+}
+
+@misc{hooks-stackmutants-failing-lint-with-no-output-still-refuses,
+  section = {stackmutants},
+  title  = {Exit non-zero without a word is a refusal naming the exit, never a pass},
+  claim  = {Exit non-zero without a word is a refusal naming the exit, never a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_a_failing_lint_with_no_output_still_refuses},
+}
+
+@misc{hooks-stackrun-tip-whose-declared-mutants-do-not-plant-is-refused-before-the-gate,
+  section = {stackland},
+  title  = {The lint's problems are printed, nothing lands, and the gate never runs (W1704)},
+  claim  = {The lint's problems are printed, nothing lands, and the gate never runs (W1704).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_tip_whose_declared_mutants_do_not_plant_is_refused_before_the_gate},
+}

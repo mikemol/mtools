@@ -34,6 +34,7 @@ from mikemol.hooks.isolated import EnvRunner
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
 from mikemol.hooks.stacklanding import land
+from mikemol.hooks.stackmutants import Lint, no_lint, refusals
 from mikemol.hooks.stacksnap import Frozen
 
 BODY_CHECK = body_refusal
@@ -77,6 +78,7 @@ class Seams:
     message_of: Callable[[Item], str]
     published: Callable[[str], str]
     history: Callable[[str], History | None] = no_history
+    lint: Lint = no_lint
 
 
 def _item_of(entry: object) -> Item | None:
@@ -203,6 +205,17 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
             f"nothing landed, HEAD is still {before[:SHORT]}\n"
         )
         return stack.failed.returncode or 1
+    broken = refusals(
+        root, stack.trees[-1], seams.namespace, [p for i in items for p in i.paths], seams.lint
+    )
+    if broken:
+        out.writelines(f"{line}\n" for line in broken)
+        out.write(
+            f"REFUSED {name} (rc=1): the tip of a {len(items)}-commit stack declares mutants "
+            f"that cannot be planted (before the gate, W1704); nothing landed, HEAD is still "
+            f"{before[:SHORT]}\n"
+        )
+        return 1
     gate = gate_tip(root, stack.trees[-1], run, seams.namespace)
     shown = (gate.stdout + gate.stderr).strip()
     if shown:

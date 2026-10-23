@@ -20,6 +20,7 @@ from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import stackrun
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
     import pytest
@@ -147,6 +148,42 @@ def test_a_refused_tip_lands_nothing_and_says_so(
     assert _git(root, "rev-parse", "HEAD").strip() == start
     assert _git(remote, "rev-parse", "main").strip() == start
     assert not [line for line in lines if line.startswith("COMMITTED")]
+
+
+def test_a_tip_whose_declared_mutants_do_not_plant_is_refused_before_the_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The lint's problems are printed, nothing lands, and the gate never runs (W1704)."""
+    root, remote = _repo(tmp_path, monkeypatch, _PASSING)
+    start = _git(root, "rev-parse", "HEAD").strip()
+    seen: list[list[str]] = []
+
+    def lint(snapshot: Path, dists: Sequence[str]) -> list[str]:
+        seen.append([snapshot.name, *dists])
+        return ["dist: M1: the pattern matches nothing in its scope"]
+
+    out = io.StringIO()
+    seams = stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path / "gate",
+        message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
+        published=lambda _sha: "PUSHED",
+        lint=lint,
+    )
+    (root / "pkg").mkdir()
+    (root / "pkg" / "a.txt").write_text("a\n", encoding="utf-8")
+    items = [
+        stackrun.Item("W1", "first card", "", ("pkg/a.txt",)),
+        stackrun.Item("W2", "second card", "", ("b.txt",)),
+    ]
+    assert stackrun.run_stack(root, items, out, seams) == 1
+    lines = out.getvalue().splitlines()
+    assert "dist: M1: the pattern matches nothing in its scope" in lines
+    assert any(line.startswith("REFUSED repo (rc=1)") and "W1704" in line for line in lines)
+    assert [found[1:] for found in seen] == [["pkg"]]
+    assert not (root / "runs").exists()
+    assert _git(root, "rev-parse", "HEAD").strip() == start
+    assert _git(remote, "rev-parse", "main").strip() == start
 
 
 def test_a_stack_file_is_read_and_a_malformed_one_is_named(tmp_path: Path) -> None:

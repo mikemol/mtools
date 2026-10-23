@@ -656,3 +656,7 @@ src/mikemol/hooks/trainalert.py|no-landing-read-as-a-gap|    return bool\(landin
 src/mikemol/hooks/gatehistory.py|streak-runs-past-a-pass|        if not failed:|        if False:|def=streak
 src/mikemol/hooks/gatehistory.py|verdict-and-labels-not-compared|    if \(verdict == RED\) != bool\(failed\):|    if False:|def=_round_of
 src/mikemol/hooks/gatehistory.py|other-repos-rounds-kept|    return sorted\(\(r for r in found if r\.repo == repo\), key=_started, reverse=True\)|    return sorted((r for r in found), key=_started, reverse=True)|def=rounds_of
+src/mikemol/hooks/stackmutants.py|root-file-names-a-dist|        if len\(parts\) > 1 and parts\[0\] not in found:|        if parts[0] not in found:|def=dists_of
+src/mikemol/hooks/stackmutants.py|missing-venv-runs-anyway|        if not python\.is_file\(\):|        if False:|def=real_lint
+src/mikemol/hooks/stackmutants.py|silent-failure-passes|            if code != 0 and not lines:|            if False:|def=real_lint
+src/mikemol/hooks/stackrun.py|lint-problems-ignored|    if broken:|    if False:|def=run_stack
