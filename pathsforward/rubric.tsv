@@ -105,3 +105,4 @@ landed_readers	The Status Readers and Landed: Open for Triage as a Blocker and a
 landed_vtodo	The Landed Task: In Process and Never Completed in the Calendar Projection, Done Being the Completed Control
 landed_at	The Landing Stamp: landed_at Written Once When a Card Enters Landed, Kept Through Done, Cleared on Reopening, and Never Written for a Card That Never Landed
 deploys	The Deploys Field: Set by a Flag, Absent on a Card Never Given It, a Landed Card Must Declare It True, and a Deploying Done Card Needs Its Witness and Language
+withheld_flag	The Withheld Flag: A Card Is Kept Out of the Repo's Export Whole or Not At All, a Card Never Given the Flag Is Published and Grows No Key

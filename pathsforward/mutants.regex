@@ -272,7 +272,9 @@ src/mikemol/pathsforward/dropto.py|freed-card-stays-blocked|            w\["stat
 src/mikemol/pathsforward/ops.py|second-landing-moves-the-stamp|        return text\(w, "landed_at"\) or now\.replace\("-", ""\)\.replace\(":", ""\)|        return now.replace("-", "").replace(":", "")|def=_landed_at
 src/mikemol/pathsforward/ops.py|done-loses-the-landing-time|    return text\(w, "landed_at"\) or None if status == "done" else None|    return None|def=_landed_at
 src/mikemol/pathsforward/ops.py|every-update-writes-the-field|        if stamp is not None or "landed_at" in new:|        if True:|def=_applied
-src/mikemol/pathsforward/ops.py|deploys-written-when-not-given|    if upd\.deploys is not None:|    if True:|def=_set_given
+src/mikemol/pathsforward/ops.py|deploys-written-when-not-given|    new\.update\(\{key: flag for key, flag in flags if flag is not None\}\)|    new.update(dict(flags))|def=_set_given
+src/mikemol/pathsforward/ops.py|withheld-flag-never-stored|\("withheld", upd\.withheld\)|("withheld", None)|def=_set_given
+src/mikemol/pathsforward/cli.py|withheld-flag-never-read|        withheld=_flag\(ctx\.get\("withheld"\)\),|        withheld=None,|def=_fields_of
 src/mikemol/pathsforward/check.py|landed-without-deploys-passed|        if text\(w, "status"\) == "landed" and w\.get\("deploys"\) is not True:|        if text(w, "status") == "landed" and w.get("deploys") is False:|def=deploys_rules
 src/mikemol/pathsforward/check.py|deploying-done-card-without-language-passed|        and \(not text\(w, "witness"\) or not text\(w, "witness_lang"\)\)|        and not text(w, "witness")|def=_unproved_deploy
 src/mikemol/pathsforward/cli.py|false-word-read-as-true|    return None if value is None else value == "true"|    return None if value is None else value != "true"|def=_flag

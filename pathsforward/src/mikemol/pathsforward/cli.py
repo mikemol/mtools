@@ -903,6 +903,16 @@ def _add_deploys_field(ap: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_withheld_field(ap: argparse.ArgumentParser) -> None:
+    """Add the flag keeping a card out of this repo's export (W1836, nemik:W516)."""
+    ap.add_argument(
+        "--withheld",
+        choices=("true", "false"),
+        help="--update: true keeps the card out of the repo's export, whole, as a bare ref; "
+        "false (the default) publishes it",
+    )
+
+
 def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     """Add the flags for the fields the realizability policy reads (W849).
 
@@ -911,6 +921,7 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     _add_manifest_fields(ap)
     _add_supplier_fields(ap)
     _add_deploys_field(ap)
+    _add_withheld_field(ap)
     for name in ("reference-arm", "command"):
         ap.add_argument(
             f"--{name}", metavar="TEXT", help=f"--update: the realizability {name}; '' clears"
@@ -2032,6 +2043,7 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         acceptable_suppliers=ctx.many("acceptable_suppliers"),
         want=ctx.get("want"),
         deploys=_flag(ctx.get("deploys")),
+        withheld=_flag(ctx.get("withheld")),
     )
 
 

@@ -196,6 +196,10 @@ class Update:
     # ⚑ DOES THE CHANGE SHIP AS A DEPLOYMENT (W1814, agreed with nemik:W702): true sends the card
     # to landed on landing, and to done only when its witness holds; false or absent goes to done.
     deploys: bool | None = None
+    # ⚑ WITHHELD WHOLE OR NOT AT ALL (W1836, nemik:W516): true keeps the card out of this repo's
+    # export, false (or absent) publishes it. A card is never scrubbed, so the flag is the only
+    # control and the export carries a withheld card as a bare ref.
+    withheld: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -545,8 +549,8 @@ def _set_given(new: Json, upd: Update) -> None:
     if upd.exdates is not None:
         new["exdates"] = list(upd.exdates) or None
     new.update(_manifest_fields(upd))
-    if upd.deploys is not None:
-        new["deploys"] = upd.deploys
+    flags = (("deploys", upd.deploys), ("withheld", upd.withheld))
+    new.update({key: flag for key, flag in flags if flag is not None})
     new.update(suppliers.fields(upd.acceptable_suppliers, upd.want))
     for key, item in (
         ("unchanged", upd.unchanged),
