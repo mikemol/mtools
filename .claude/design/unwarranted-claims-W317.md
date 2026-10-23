@@ -1,0 +1,18 @@
+# Cards that claimed an operator ruling with no record (2026-10-23)
+mtools judged this card's prose as claims of an operator ruling for which no transcript
+record could be found (uuid scan, exact-quote search over 14,285 human utterances; see
+mtools:W1863, W1865). Each card now says `believed operator-directed, no record found; original
+attached` and this file holds the original title, evidence and next step verbatim. If the
+operator supplies a record, attach it with `mikemol-paths-forward --warrant`.
+Rationale: host 695f3e0a line 71593, uuid f305e0fb-03f0-4577-b598-fe4fa7369149 (the operator on
+warrants as provenance), as read by github-8f, not the operator's words.
+
+## W317
+
+**title:** Plan splitting mtools into a GitHub org with one repo per distribution: what moves, what shared infrastructure goes where, migration order
+
+**next_bounded_step:** Umbrella: the org mikemol-tools, each repo with its history, mtools the workstream repo, shared machinery as atomic composed modules. Order per .claude/design/W317-split-plan.md
+
+**evidence:**
+
+2026-10-01: inventory measured: 13 distributions, 0 cross-distribution imports (ast over src and tests; positive control 436 same-distribution imports), so all coupling is shared infra (MODULE.bazel 31 hubs, venv.bzl, check drivers, .githooks, 3 cross-package hooks tests, SKELETON/INSTALL). Plan and order in .claude/design/W317-split-plan.md | 2026-10-01: operator ruling 2026-10-01: one-version rule's PURPOSE (agents stay current) must survive -> pin-bump bot + fleet staleness census, D4 withdrawn; per-repo gates on GitHub Actions (free for public repos); cross-package tests atomized (step 0 minted as W318). mtools is already PUBLIC (gh repo view), so the split publishes nothing new | 2026-10-01: operator 2026-10-01: keep agents current via a meta package and/or >= floors set whenever something is built on a consumer's behalf. Plan takes both (floors = correctness, meta = freshness); both need real semver per module, so release publishing is decision D5 | 2026-10-01: operator 2026-10-01: D5 answered, PyPI with TestPyPI staging (stage -> TestPyPI dev builds, main -> PyPI gated on tests; Trusted Publishing); tests run on a self-hosted runner luthen-observability maintains (W319, with fork-PR fences) | 2026-10-01: operator 2026-10-01: org name 'mikemol_tools' (D1, spelling pending: GitHub allows no underscore; both hyphen and hyphenless forms unclaimed); D2 answered: each repo keeps its git history (git filter-repo per subdirectory) | 2026-10-01: operator 2026-10-01: D3 answered, mtools stays as the workstream repo. 'Tooling repo' was unclear: it meant the shared build and check machinery every module uses; proposed homing it as its own module repo instead | 2026-10-01: operator 2026-10-01: D1 mikemol-tools; shared machinery as its own modules with atomization and composition (W321 decomposes it). All operator decisions answered | 2026-10-01: org created by the operator: mikemol-tools at 2026-10-01T12:04:59Z, verified via gh (free plan, 0 public repos, operator admin/active, default permission read, 2FA requirement OFF). No repo created yet: the first push is the icsstruct pilot after W318/W321 and the tooling atoms | 2026-10-01: all five shared-check atoms done (W323 9ab6a85 rules_py, W324 3ac8ac1 ruff, W325 372ec21 mypy, W326 c07542a mutants, W327 cd61477 ratchet) + W328 gate counts atoms. Remaining before the pilot: W318 (cross-package tests), W319/luthen W257 (runner), W322 (audiostruct profile); then the reusable Actions workflow and the pin-bump bot, then the icsstruct pilot (needs the operator's go to push)
