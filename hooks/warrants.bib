@@ -14876,3 +14876,11 @@
   claim  = {The lint's problems are printed, nothing lands, and the gate never runs (W1704).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_tip_whose_declared_mutants_do_not_plant_is_refused_before_the_gate},
 }
+
+@misc{hooks-stackmutants-repo-that-declares-no-mutants-needs-no-mutation-venv,
+  section = {stackmutants},
+  title  = {Estate has no mutation package and no mutants.regex, so no venv is demanded (W1866)},
+  claim  = {Estate has no mutation package and no mutants.regex, so no venv is demanded (W1866). The
+            dist that does declare is still linted when its neighbour does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_a_repo_that_declares_no_mutants_needs_no_mutation_venv},
+}

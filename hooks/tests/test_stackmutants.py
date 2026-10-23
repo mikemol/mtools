@@ -26,6 +26,12 @@ def _venv(root: Path, script: str) -> None:
     python.chmod(python.stat().st_mode | stat.S_IXUSR)
 
 
+def _declare(root: Path, dist: str) -> None:
+    # A dist that declares mutants: the file the lint reads.
+    (root / dist).mkdir(exist_ok=True)
+    (root / dist / "mutants.regex").write_text("", encoding="utf-8")
+
+
 def test_the_dists_are_the_top_directories_once_each_in_first_seen_order() -> None:
     """A stack names a dist by what it touches, not only by carrying its mutants.regex."""
     paths = ["waldo/src/a.py", "hooks/b.py", "waldo/tests/t.py", "README.md", "waldo/mutants.regex"]
@@ -39,15 +45,30 @@ def test_no_lint_has_no_problems(tmp_path: Path) -> None:
 
 
 def test_a_missing_mutation_venv_refuses_and_says_how_to_build_it(tmp_path: Path) -> None:
-    """A check that cannot run is not a pass."""
+    """A check that cannot run is not a pass, once a dist declares mutants."""
+    _declare(tmp_path, "waldo")
     problems = stackmutants.real_lint(tmp_path)(tmp_path, ["waldo"])
     assert len(problems) == 1
     assert "is missing: build it" in problems[0]
 
 
+def test_a_repo_that_declares_no_mutants_needs_no_mutation_venv(tmp_path: Path) -> None:
+    """Estate has no mutation package and no mutants.regex, so no venv is demanded (W1866).
+
+    The dist that does declare is still linted when its neighbour does not.
+    """
+    (tmp_path / "src").mkdir()
+    assert stackmutants.real_lint(tmp_path)(tmp_path, ["src", "tests"]) == []
+    _venv(tmp_path, "import sys\nsys.stderr.write('bad\\n')\nsys.exit(1)")
+    _declare(tmp_path, "waldo")
+    assert stackmutants.real_lint(tmp_path)(tmp_path, ["src", "waldo"]) == ["waldo: bad"]
+
+
 def test_a_failing_lint_is_named_per_dist_and_a_passing_one_is_silent(tmp_path: Path) -> None:
     """Each problem line is prefixed with its dist; exit 0 contributes nothing."""
     _venv(tmp_path, "import sys\nsys.stderr.write('W1: x is not a file\\n')\nsys.exit(1)")
+    _declare(tmp_path, "waldo")
+    _declare(tmp_path, "hooks")
     lint = stackmutants.real_lint(tmp_path)
     assert lint(tmp_path, ["waldo", "hooks"]) == [
         "waldo: W1: x is not a file",
@@ -60,6 +81,7 @@ def test_a_failing_lint_is_named_per_dist_and_a_passing_one_is_silent(tmp_path: 
 def test_a_failing_lint_with_no_output_still_refuses(tmp_path: Path) -> None:
     """Exit non-zero without a word is a refusal naming the exit, never a pass."""
     _venv(tmp_path, "import sys\nsys.exit(3)")
+    _declare(tmp_path, "waldo")
     assert stackmutants.real_lint(tmp_path)(tmp_path, ["waldo"]) == [
         "waldo: mutation lint exited 3 with no output"
     ]

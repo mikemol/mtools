@@ -659,4 +659,5 @@ src/mikemol/hooks/gatehistory.py|other-repos-rounds-kept|    return sorted\(\(r 
 src/mikemol/hooks/stackmutants.py|root-file-names-a-dist|        if len\(parts\) > 1 and parts\[0\] not in found:|        if parts[0] not in found:|def=dists_of
 src/mikemol/hooks/stackmutants.py|missing-venv-runs-anyway|        if not python\.is_file\(\):|        if False:|def=real_lint
 src/mikemol/hooks/stackmutants.py|silent-failure-passes|            if code != 0 and not lines:|            if False:|def=real_lint
+src/mikemol/hooks/stackmutants.py|undeclared-dist-needs-the-venv|        if not declaring:|        if False:|def=real_lint
 src/mikemol/hooks/stackrun.py|lint-problems-ignored|    if broken:|    if False:|def=run_stack

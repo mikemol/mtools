@@ -14,7 +14,9 @@ preflight cannot disagree about what is well-formed.
 
 ⚑ EVERY DIST THE STACK TOUCHES, NOT ONLY THOSE WHOSE `mutants.regex` IT CARRIES: an edit to a
 source file stales a declared pattern without touching the file that declares it, which is the
-usual case. A dist with no declaration file has nothing to lint and passes.
+usual case. A dist with no declaration file has nothing to lint and passes WITHOUT the venv
+(W1866: a repo with no mutation package, estate, has no declared mutants and is never refused
+for lacking one).
 
 ⚑ A MISSING MUTATION VENV REFUSES, as the preflight does: a check that cannot run is not a pass.
 
@@ -28,6 +30,7 @@ from mikemol.hooks.runproc import run_with_stdin
 from mikemol.hooks.snapshot import Snapshot
 
 LINT_MODULE = "mikemol.mutation.lint"
+DECLARATION_FILE = "mutants.regex"
 Lint = Callable[[Path, Sequence[str]], list[str]]
 
 
@@ -75,11 +78,14 @@ def real_lint(root: Path) -> Lint:
     """
 
     def lint(snapshot: Path, dists: Sequence[str]) -> list[str]:
+        declaring = [d for d in dists if (snapshot / d / DECLARATION_FILE).is_file()]
+        if not declaring:
+            return []
         python = mutation_python(root)
         if not python.is_file():
             return [f"{python} is missing: build it (bazel build //mutation:.venv)"]
         problems: list[str] = []
-        for dist in dists:
+        for dist in declaring:
             code, said = run_with_stdin([str(python), "-m", LINT_MODULE, str(snapshot / dist)], "")
             lines = [line for line in said.splitlines() if line.strip()]
             if code != 0 and not lines:
