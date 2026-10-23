@@ -1373,3 +1373,66 @@
   claim  = {Central, so the policy digest hashes them into every verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_the_witness_and_precondition_declarations_live_under_the_policy},
 }
+
+@misc{waldo-planplan-flags-spell-replace-then-target-in-order,
+  section = {planplan},
+  title  = {Each address becomes its flag, replaces first},
+  claim  = {Each address becomes its flag, replaces first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_the_flags_spell_replace_then_target_in_order},
+}
+
+@misc{waldo-planplan-state-lock-is-skipped-only-for-state-this-user-cannot-write,
+  section = {planplan},
+  title  = {No state, writable state and read-only state},
+  claim  = {No state, writable state and read-only state.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_the_state_lock_is_skipped_only_for_state_this_user_cannot_write},
+}
+
+@misc{waldo-planplan-saved-plan-and-its-json-come-back-with-the-callers-flags,
+  section = {planplan},
+  title  = {The control: plan -out, then show -json, written beside the planfile as .json},
+  claim  = {The control: plan -out, then show -json, written beside the planfile as .json.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_saved_plan_and_its_json_come_back_with_the_callers_flags},
+}
+
+@misc{waldo-planplan-no-planfile-or-an-empty-one-is-a-reason-with-the-last-line,
+  section = {planplan},
+  title  = {A plan that wrote nothing, and one that wrote an empty file, both say why},
+  claim  = {A plan that wrote nothing, and one that wrote an empty file, both say why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_no_planfile_or_an_empty_one_is_a_reason_with_the_last_line},
+}
+
+@misc{waldo-planplan-failed-show-is-a-reason-with-its-tail,
+  section = {planplan},
+  title  = {The last 200 characters of tofu's complaint},
+  claim  = {The last 200 characters of tofu's complaint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_failed_show_is_a_reason_with_its_tail},
+}
+
+@misc{waldo-planplan-changes-are-the-sorted-actions-without-no-ops-or-reads,
+  section = {planplan},
+  title  = {address:action+action, sorted, leaving out no-op, read and actionless changes},
+  claim  = {address:action+action, sorted, leaving out no-op, read and actionless changes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_the_changes_are_the_sorted_actions_without_no_ops_or_reads},
+}
+
+@misc{waldo-planplan-verdict-is-sealed-keyed-by-the-hash-and-readable-back,
+  section = {planplan},
+  title  = {A recorded admission loads through planverdict, a denial is recorded and refused there},
+  claim  = {A recorded admission loads through planverdict, a denial is recorded and refused there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_the_verdict_is_sealed_keyed_by_the_hash_and_readable_back},
+}
+
+@misc{waldo-planplan-root-planned-root-gets-its-record-in-the-root-directory-with-open-modes,
+  section = {planplan},
+  title  = {Under custody the host record lands in the root state and its directories are 0755},
+  claim  = {Under custody the host record lands in the root state and its directories are 0755.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_root_planned_root_gets_its_record_in_the_root_directory_with_open_modes},
+}
+
+@misc{waldo-planplan-destroy-list-digest-is-recorded-when-there-is-one,
+  section = {planplan},
+  title  = {The file's sha256 when it exists, empty when the consumer has none},
+  claim  = {The file's sha256 when it exists, empty when the consumer has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_the_destroy_list_digest_is_recorded_when_there_is_one},
+}

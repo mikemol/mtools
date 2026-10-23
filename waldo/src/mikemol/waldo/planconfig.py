@@ -95,6 +95,15 @@ class PlanConfig:
         """
         return self.policy / "preconditions" / "data.json"
 
+    def allowed_destroys(self) -> Path:
+        """Name the file that lists the destroys the policy allows.
+
+        Returns:
+            `<policy>/allowed_destroys/data.json`; a verdict records its digest when it exists.
+
+        """
+        return self.policy / "allowed_destroys" / "data.json"
+
     def state_dir(self, root_name: str) -> Path:
         """Name the verdict, witness and ledger directory for a terraform root.
 
