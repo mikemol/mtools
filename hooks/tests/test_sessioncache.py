@@ -122,10 +122,11 @@ def test_a_run_with_no_session_still_sends_the_count_of_zero(tmp_path: Path) -> 
     """The continuous sibling is sent with nothing else, so silence means a dead producer."""
     sent: list[tuple[list[str], str]] = []
 
-    def spawn(argv: Sequence[str], text: str) -> None:
+    def send(argv: Sequence[str], text: str) -> tuple[int, str]:
         sent.append((list(argv), text))
+        return 0, ""
 
-    assert sessioncache.main([str(tmp_path)], _ENV, _reply, spawn, _NOW) == 0
+    assert sessioncache.main([str(tmp_path)], _ENV, _reply, send, _NOW) == 0
     ((argv, text),) = sent
     assert argv[:2] == ["/opt/mikemol-otlp", "metrics"]
     assert argv[argv.index("--service") + 1] == sessioncache.SERVICE
@@ -138,10 +139,36 @@ def test_no_store_sends_nothing_and_says_so(tmp_path: Path) -> None:
     """Without a named store there is nothing to send to, and nothing is spawned."""
     sent: list[str] = []
 
-    def spawn(_argv: Sequence[str], text: str) -> None:
+    def send(_argv: Sequence[str], text: str) -> tuple[int, str]:
         sent.append(text)
+        return 0, ""
 
     no_store = {k: v for k, v in _ENV.items() if k != commit_span.ENDPOINTS_ENV}
-    code = sessioncache.main([str(tmp_path)], no_store, _reply, spawn, _NOW)
+    code = sessioncache.main([str(tmp_path)], no_store, _reply, send, _NOW)
     assert code == sessioncache.EXIT_NO_STORE
     assert not sent
+
+
+def test_a_send_the_emitter_refused_is_not_exit_zero_and_says_why(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A lost send (luthen's first live pass: exit 0 and no series) is exit 5 with the cause."""
+
+    def send(_argv: Sequence[str], _text: str) -> tuple[int, str]:
+        return 7, "connection refused\n"
+
+    code = sessioncache.main([str(tmp_path)], _ENV, _reply, send, _NOW)
+    assert code == sessioncache.EXIT_SEND_FAILED
+    assert "send failed (exit 7): connection refused" in capsys.readouterr().err
+
+
+def test_every_batch_is_sent_and_counted_when_some_are_lost() -> None:
+    """The failures are counted per batch, and the batches that go through still go."""
+    seen: list[str] = []
+
+    def send(_argv: Sequence[str], text: str) -> tuple[int, str]:
+        seen.append(text)
+        return (1, "no") if text == "b" else (0, "")
+
+    assert sessioncache.send_all(send, ["x"], ["a", "b", "c"]) == 1
+    assert seen == ["a", "b", "c"]

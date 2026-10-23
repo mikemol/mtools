@@ -549,6 +549,9 @@ src/mikemol/hooks/sessioncache.py|count-gauge-not-always-sent|    found = \[_lin
 src/mikemol/hooks/sessioncache.py|session-cap-not-applied|    return \[path for _, path in fresh\[:cap\]\]|    return [path for _, path in fresh]|def=recent
 src/mikemol/hooks/sessioncache.py|stale-session-still-read|if now_s - s\[0\] <= max_age_s|if True|def=recent
 src/mikemol/hooks/sessioncache.py|missing-gap-sent-as-a-value|for name, value in values\.items\(\) if value is not None\]|for name, value in values.items()]|def=rows
+src/mikemol/hooks/sessioncache.py|lost-send-reads-as-exit-zero|    return EXIT_SEND_FAILED if lost else EXIT_OK|    return EXIT_OK|def=main
+src/mikemol/hooks/sessioncache.py|failed-send-not-counted|        if code != 0:|        if False:|def=send_all
+src/mikemol/hooks/runproc.py|missing-program-says-nothing|        return 127, f"\{argv\[0\]\}: not found"|        return 127, ""|def=run_with_stdin
 src/mikemol/hooks/gatetrend.py|oldest-samples-taken|        latest = sorted\(grouped\[phase\], key=_began\)\[-recent:\]|        latest = sorted(grouped[phase], key=_began)[:recent]|def=stats_by_phase
 src/mikemol/hooks/siblingratchet.py|equal-to-baseline-refused|        if counts\[file\] > allowed:|        if counts[file] >= allowed:|def=violations
 src/mikemol/hooks/siblingratchet.py|new-file-given-slack|        allowed = baseline\.get\(file, 0\)|        allowed = baseline.get(file, 99)|def=violations

@@ -30,6 +30,12 @@ session's last turn would otherwise stay cold in the store for ever.
 SESSION: it is left out of this pass rather than reported as warm, because absence of a reading is
 not a warm cache. A first turn has no gap, and its `gap_s` is left out and not sent as 0.
 
+⚑ THE SEND IS WAITED FOR, AND A LOST ONE IS NOT EXIT 0 (luthen-observability, 2026-10-23,
+first live pass: exit 0 in 28 s and no series in the store): the emitter used to be a
+detached child, which a oneshot unit's cgroup ends when the main process exits, before it
+sent. Each batch now runs to completion; a non-zero exit from the emitter is written to
+stderr and the pass exits `EXIT_SEND_FAILED`, so a lost send shows in the unit's status.
+
 CONSUMED BY: the `mikemol-session-cache` console script (a timer's job, one pass per run).
 """
 
@@ -42,9 +48,8 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import cast
 
-from mikemol.hooks.commit_span import TextSpawn, binary, store_named
-from mikemol.hooks.runproc import run_process
-from mikemol.hooks.vlogdetach import spawn_with_stdin
+from mikemol.hooks.commit_span import binary, store_named
+from mikemol.hooks.runproc import run_process, run_with_stdin
 
 SERVICE = "mikemol-session"
 NAMESPACE = "mtools"
@@ -57,6 +62,9 @@ BATCH = 100
 EXIT_OK = 0
 EXIT_NO_READER = 3
 EXIT_NO_STORE = 4
+EXIT_SEND_FAILED = 5
+SEND_NOTE_CHARS = 200
+Send = Callable[[Sequence[str], str], tuple[int, str]]
 Run = Callable[[Sequence[str], Path], tuple[int, str]]
 
 
@@ -148,11 +156,28 @@ def collect(paths: Sequence[Path], reader: str, run: Run) -> list[str]:
     return found
 
 
+def send_all(send: Send, command: Sequence[str], texts: Iterable[str]) -> int:
+    """Send every batch and say so on stderr for each one that failed.
+
+    Returns:
+        how many batches the emitter did not accept.
+
+    """
+    lost = 0
+    for text in texts:
+        code, said = send(command, text)
+        if code != 0:
+            lost += 1
+            note = said.strip()[-SEND_NOTE_CHARS:]
+            sys.stderr.write(f"mikemol-session-cache: send failed (exit {code}): {note}\n")
+    return lost
+
+
 def main(
     argv: Sequence[str] | None = None,
     env: Mapping[str, str] | None = None,
     run: Run = run_process,
-    spawn: TextSpawn = spawn_with_stdin,
+    send: Send = run_with_stdin,
     now_s: float | None = None,
 ) -> int:
     """Send one pass of every recent session's latest cache turn.
@@ -160,7 +185,7 @@ def main(
     Returns:
         `EXIT_OK` after the pass (the count gauge is sent even when no session was read),
         `EXIT_NO_READER` when the transcript reader cannot be found, `EXIT_NO_STORE` when there
-        is no emitter or store.
+        is no emitter or store, `EXIT_SEND_FAILED` when any batch's send exited non-zero.
 
     """
     args = sys.argv[1:] if argv is None else list(argv)
@@ -173,10 +198,9 @@ def main(
         return EXIT_NO_STORE
     root = Path(args[0]) if args else Path.home() / ".claude" / "projects"
     paths = recent(root, time.time() if now_s is None else now_s)
-    send = [program, "metrics", "--service", SERVICE, "--namespace", NAMESPACE]
-    for text in batches(collect(paths, reader, run)):
-        spawn(send, text)
-    return EXIT_OK
+    command = [program, "metrics", "--service", SERVICE, "--namespace", NAMESPACE]
+    lost = send_all(send, command, batches(collect(paths, reader, run)))
+    return EXIT_SEND_FAILED if lost else EXIT_OK
 
 
 if __name__ == "__main__":

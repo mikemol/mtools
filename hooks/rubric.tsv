@@ -183,3 +183,4 @@ worktreereap_remove	The Worktree Removal: Only a Gone or Clean-Equivalent Worktr
 gateclass	The Failing-Step Classifier: New When It Never Failed in the Window, Intermittent When Some Rounds Were Red, Broken When Every One Was, Unknown With No History, and Only the Recent Rounds Counting
 historyfetch	The Gate History Read From the Trace Store: No Answer Is None and Never an Empty History, So a Refusal Never Claims a Regression for Want of a Record
 sessioncache	The Session Cache Gauges: Each Recent Session's Latest Turn as Gauges Labelled by Session and Model, the Series Count Capped by a Session Count, and a Count Gauge Sent on Every Run So a Dead Producer Is a Missing Series
+run_with_stdin	Running a Command With Stdin To Completion: It Waits, So A Child That Fails Is Seen With Its Exit Code and Stderr, And A Missing Program Is 127 With A Note

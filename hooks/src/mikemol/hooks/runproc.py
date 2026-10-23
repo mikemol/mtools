@@ -27,3 +27,21 @@ def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
     except FileNotFoundError:
         return 127, ""
     return done.returncode, done.stdout
+
+
+def run_with_stdin(argv: Sequence[str], text: str) -> tuple[int, str]:
+    """Run a command to completion with `text` on its standard input.
+
+    ⚑ IT WAITS (W1828, luthen-observability 2026-10-23): a detached child that a oneshot unit's
+    cgroup ends when the main process exits sends nothing, and the pass reported exit 0. Waiting is
+    what lets the caller see the child fail.
+
+    Returns:
+        its exit code and standard error; 127 and a note when the program is missing.
+
+    """
+    try:
+        done = subprocess.run(list(argv), input=text, capture_output=True, text=True, check=False)
+    except FileNotFoundError:
+        return 127, f"{argv[0]}: not found"
+    return done.returncode, done.stderr

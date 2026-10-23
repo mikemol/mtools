@@ -14799,3 +14799,38 @@
   claim  = {The note is for the old pin, said once, and a blocked repo is woken like any other.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_no_heartbeat_file_and_no_ready_cards_is_woken_and_says_so_once},
 }
+
+@misc{hooks-run-with-stdin-command-gets-its-stdin-and-its-exit-code-and-stderr-come-back,
+  section = {run_with_stdin},
+  title  = {The text reaches the child, and the failure is the child's own},
+  claim  = {The text reaches the child, and the failure is the child's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_run_with_stdin.py -k test_the_command_gets_its_stdin_and_its_exit_code_and_stderr_come_back},
+}
+
+@misc{hooks-run-with-stdin-command-that-succeeds-is-zero-with-no-complaint,
+  section = {run_with_stdin},
+  title  = {The control: a child that reads its input and exits clean},
+  claim  = {The control: a child that reads its input and exits clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_run_with_stdin.py -k test_a_command_that_succeeds_is_zero_with_no_complaint},
+}
+
+@misc{hooks-run-with-stdin-missing-program-is-127-and-names-it,
+  section = {run_with_stdin},
+  title  = {Not found is a code and a note, never an exception},
+  claim  = {Not found is a code and a note, never an exception.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_run_with_stdin.py -k test_a_missing_program_is_127_and_names_it},
+}
+
+@misc{hooks-sessioncache-send-the-emitter-refused-is-not-exit-zero-and-says-why,
+  section = {sessioncache},
+  title  = {A lost send (luthen's first live pass: exit 0 and no series) is exit 5 with the cause},
+  claim  = {A lost send (luthen's first live pass: exit 0 and no series) is exit 5 with the cause.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sessioncache.py -k test_a_send_the_emitter_refused_is_not_exit_zero_and_says_why},
+}
+
+@misc{hooks-sessioncache-every-batch-is-sent-and-counted-when-some-are-lost,
+  section = {sessioncache},
+  title  = {The failures are counted per batch, and the batches that go through still go},
+  claim  = {The failures are counted per batch, and the batches that go through still go.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sessioncache.py -k test_every_batch_is_sent_and_counted_when_some_are_lost},
+}
