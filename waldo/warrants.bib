@@ -1655,3 +1655,19 @@
   claim  = {An opa error, empty output and a value that is not a set are each None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planinterlock.py -k test_an_evaluation_that_fails_or_has_another_shape_is_none},
 }
+
+@misc{waldo-planplan-verdict-recorded-with-declarations-loads-with-the-same-declarations,
+  section = {planplan},
+  title  = {The recorded digest covers the consumer's data files, so its own loader admits it (W1859)},
+  claim  = {The recorded digest covers the consumer's data files, so its own loader admits it
+            (W1859).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_verdict_recorded_with_declarations_loads_with_the_same_declarations},
+}
+
+@misc{waldo-plancli-plan-made-under-declarations-verifies-under-them,
+  section = {plancli},
+  title  = {The recorded digest covers the consumer's data files, or its own --verify refuses (W1859)},
+  claim  = {The recorded digest covers the consumer's data files, or its own --verify refuses
+            (W1859).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_a_plan_made_under_declarations_verifies_under_them},
+}

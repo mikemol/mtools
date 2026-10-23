@@ -148,7 +148,7 @@ def judge(
         "targets": list(targets),
         "reported": reported,
     }
-    record_verdict(config, planfile, (code, deny, withheld), extra)
+    record_verdict(config, planfile, (code, deny, withheld), extra, seams.declarations)
     out(f"opa_plan R: {len(deny)} deny, {len(withheld)} withheld over {planfile}\n")
     return code
 

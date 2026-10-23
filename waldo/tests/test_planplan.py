@@ -161,6 +161,22 @@ def test_the_verdict_is_sealed_keyed_by_the_hash_and_readable_back(tmp_path: Pat
     assert "was not admitted (exit 1)" in denied
 
 
+def test_a_verdict_recorded_with_declarations_loads_with_the_same_declarations(
+    tmp_path: Path,
+) -> None:
+    """The recorded digest covers the consumer's data files, so its own loader admits it (W1859)."""
+    config = _config(tmp_path)
+    (tmp_path / "endpoints.json").write_text("{}", encoding="utf-8")
+    declarations = {"endpoints": "endpoints.json"}
+    plan = tmp_path / "p.tfplan"
+    plan.write_bytes(b"PLANBYTES")
+    planplan.record_verdict(config, plan, (0, [], []), {"root": "stage2"}, declarations)
+    doc = planverdict.load_verdict(config, plan, declarations)
+    assert isinstance(doc, dict)
+    assert doc["policy_sha256"] == planverdict.policy_digest(config, declarations)
+    assert doc["policy_sha256"] != planverdict.policy_digest(config)
+
+
 def test_a_root_planned_root_gets_its_record_in_the_root_directory_with_open_modes(
     tmp_path: Path,
 ) -> None:

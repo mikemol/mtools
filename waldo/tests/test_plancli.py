@@ -89,6 +89,7 @@ class _World:
     tmp: Path
     host: _Host = field(default_factory=_Host)
     out: list[str] = field(default_factory=list)
+    declarations: dict[str, str] = field(default_factory=dict)
     config: PlanConfig = field(init=False)
 
     def __post_init__(self) -> None:
@@ -117,6 +118,7 @@ class _World:
             now=lambda: _NOW,
             euid=os.getuid(),
             out=self.out.append,
+            declarations=self.declarations,
         )
 
     def main(self, *argv: str) -> int:
@@ -214,6 +216,17 @@ def test_the_flags_reach_tofu_and_a_planfile_that_holds_a_plan_is_refused(tmp_pa
     assert world.host.planned_flags == [("-replace=a", "-target=b")]
     assert world.main("--root", "stage2", "--planfile", str(plan)) == planflow.EXIT_STOPPED
     assert "already holds a plan" in world.text()
+
+
+def test_a_plan_made_under_declarations_verifies_under_them(tmp_path: Path) -> None:
+    """The recorded digest covers the consumer's data files, or its own --verify refuses (W1859)."""
+    world = _World(tmp_path)
+    (tmp_path / "endpoints.json").write_text("{}", encoding="utf-8")
+    world.declarations["endpoints"] = "endpoints.json"
+    plan = tmp_path / "p.tfplan"
+    assert world.main("--root", "stage2", "--planfile", str(plan)) == planflow.EXIT_OK
+    assert world.main("--verify", str(plan)) == planflow.EXIT_OK
+    assert "admitted and unchanged" in world.text()
 
 
 def test_apply_plan_applies_an_admitted_plan_and_verify_confirms_it(tmp_path: Path) -> None:

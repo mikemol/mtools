@@ -23,6 +23,7 @@ when the consumer has none, where luthen's code required the file.
 
 import json
 import os
+from collections.abc import Mapping
 from pathlib import Path
 
 from mikemol.waldo.planconfig import PlanConfig
@@ -121,11 +122,13 @@ def record_verdict(
     planfile: Path,
     outcome: tuple[int, list[str], list[str]],
     extra: Json | None = None,
+    declarations: Mapping[str, str] | None = None,
 ) -> Path:
     """Write the verdict bound to the planfile's hash, whatever the verdict was.
 
     `outcome` is (exit code, deny messages, withheld messages); `extra` carries what was judged
-    besides: the root, the resource set, the targets.
+    besides: the root, the resource set, the targets. `declarations` is what the loader is
+    given, so the recorded digest is the one `load_verdict` recomputes (W1859).
 
     Returns:
         the record's path, under the state directory of the root named in `extra`.
@@ -139,7 +142,7 @@ def record_verdict(
         "exit": code,
         "deny": deny,
         "withheld": withheld,
-        "policy_sha256": policy_digest(config),
+        "policy_sha256": policy_digest(config, declarations),
         "destroys_sha256": _destroys_digest(config),
         **extra,
     }
