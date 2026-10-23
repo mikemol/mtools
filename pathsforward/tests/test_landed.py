@@ -78,3 +78,21 @@ def test_a_roll_note_carries_the_count_of_cards_a_landed_commit_carried(
     ledger.write_text(_START, encoding="utf-8")
     assert closegate.roll_note(_state("W1", "W2", "W3"), ledger) == "rolled; advanced 1"
     assert closegate.roll_note(_state("W2", "W3"), ledger) == "rolled; advanced 0"
+
+
+def test_the_commit_tool_is_found_beside_the_interpreter_before_path(tmp_path: Path) -> None:
+    """A full-path launch has no .venv/bin on PATH, so the sibling wins, then PATH, then the repo's.
+
+    The control is the absent case: none of the three has it, so no tool, never an empty string.
+    """
+    beside = tmp_path / "venv" / "bin"
+    beside.mkdir(parents=True)
+    own = tmp_path / "hooks" / ".venv" / "bin"
+    own.mkdir(parents=True)
+    found = "/usr/bin/mikemol-commit"
+    assert landed.gate_tool(tmp_path, beside, None) is None
+    (own / "mikemol-commit").write_text("", encoding="utf-8")
+    assert landed.gate_tool(tmp_path, beside, None) == str(own / "mikemol-commit")
+    assert landed.gate_tool(tmp_path, beside, found) == found
+    (beside / "mikemol-commit").write_text("", encoding="utf-8")
+    assert landed.gate_tool(tmp_path, beside, found) == str(beside / "mikemol-commit")

@@ -15,6 +15,7 @@ CONSUMED BY: `closegate.judge`.
 import re
 import shutil
 import subprocess
+import sys
 from collections.abc import Callable
 from pathlib import Path
 from typing import cast
@@ -108,6 +109,24 @@ def read_head_files(root: Path) -> frozenset[str] | None:
     return None if listing is None else frozenset(listing.splitlines())
 
 
+def gate_tool(root: Path, beside: Path, on_path: str | None) -> str | None:
+    """Find `mikemol-commit`: beside the running interpreter, then on PATH, then the repo's own.
+
+    ⚑ A FULL-PATH LAUNCH HAS NO .venv/bin ON PATH (luthen-observability:W1541, W1862): the writer
+    and `mikemol-commit` are installed into one environment, so the directory of the
+    interpreter running the writer is the sibling's home whatever PATH says.
+
+    Returns:
+        the tool's path, or None when none of the three has it.
+
+    """
+    sibling = beside / "mikemol-commit"
+    if sibling.is_file():
+        return str(sibling)
+    own = root / "hooks" / ".venv" / "bin" / "mikemol-commit"
+    return on_path or (str(own) if own.is_file() else None)
+
+
 def read_gate(root: Path) -> str | None:
     """Read the live-commit map as JSON from `mikemol-commit --in-gate --json` (W1587).
 
@@ -115,8 +134,7 @@ def read_gate(root: Path) -> str | None:
         the JSON text, or None when the tool is absent or refused.
 
     """
-    own = root / "hooks" / ".venv" / "bin" / "mikemol-commit"
-    tool = shutil.which("mikemol-commit") or (str(own) if own.is_file() else None)
+    tool = gate_tool(root, Path(sys.executable).parent, shutil.which("mikemol-commit"))
     if tool is None:
         return None
     return _run([tool, root.name, "--in-gate", "--json"])

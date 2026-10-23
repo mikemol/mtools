@@ -218,6 +218,8 @@ src/mikemol/pathsforward/warrant.py|old-form-keyed-with-its-extension|    sessio
 src/mikemol/pathsforward/warrant.py|reader-directory-kept|        words\[0\] = Path\(words\[0\]\)\.name|        words[0] = words[0]|def=portable_reader
 src/mikemol/pathsforward/warrant.py|reason-never-stored|    if reason:|    if False:|def=build
 src/mikemol/pathsforward/cli.py|dry-run-attaches|    if ctx\.opts\.get\("dry_run"\):|    if False:|def=_warrant
+src/mikemol/pathsforward/landed.py|sibling-tool-ignored|    if sibling\.is_file\(\):|    if False:|def=gate_tool
+src/mikemol/pathsforward/landed.py|repo-tool-before-path|    return on_path or \(str\(own\) if own\.is_file\(\) else None\)|    return (str(own) if own.is_file() else None) or on_path|def=gate_tool
 src/mikemol/pathsforward/cli.py|claim-not-required|    if not where or not uuid or not claim:|    if not where or not uuid:|def=_warrant
 src/mikemol/pathsforward/reconcile.py|gating-card-read-as-landed|        if symbol in gating:|        if False:|def=verdicts
 src/mikemol/pathsforward/reconcile.py|commit-before-working-counted|        if commit\.stamp < since or symbol not in trailer_cards\(commit\.body\):|        if symbol not in trailer_cards(commit.body):|def=_landing

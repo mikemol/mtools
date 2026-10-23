@@ -7229,3 +7229,12 @@
   claim  = {A warrant states whose words it rests on: no --claim is refused, even for a good record.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_citation_without_a_claim_is_refused_before_the_reader_runs},
 }
+
+@misc{pathsforward-landed-commit-tool-is-found-beside-the-interpreter-before-path,
+  section = {landed},
+  title  = {A full-path launch has no .venv/bin on PATH, so the sibling wins, then PATH, then the repo's},
+  claim  = {A full-path launch has no .venv/bin on PATH, so the sibling wins, then PATH, then the
+            repo's. The control is the absent case: none of the three has it, so no
+            tool, never an empty string.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_commit_tool_is_found_beside_the_interpreter_before_path},
+}
