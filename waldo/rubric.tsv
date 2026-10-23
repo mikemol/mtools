@@ -14,3 +14,5 @@ runphase	run one phase
 unevaluated	A witness that cannot be evaluated is not a failed witness
 act	Phase Act: A Phase May Carry a Command as Its Act, Run Only While Its Done Witness Is False and Judged by It Afterwards
 planconfig	The Plan-Admission Config: luthen's Constants as a Value, the Queries Named by the Consumer's Rego Package, a Root-Owned State Directory Only Under Custody, and Both Security Switches Defaulting On
+planopa	The Pinned Opa Check: Opa Is Accepted Only At the Caller's Pin, and Absent, Failing, Ambiguous and Other Versions Are All Refused
+planjson	The Plan-Admission JSON Boundary: Narrowing Without Raising, With Absent and Wrongly Shaped Paths Reading As Empty

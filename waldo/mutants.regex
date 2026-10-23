@@ -96,3 +96,8 @@ src/mikemol/waldo/contract.py|advances-not-a-condition|or witness\.advances|or F
 src/mikemol/waldo/planconfig.py|plan-query-ignores-the-package|    return f"data\.\{self\.rego_package\}\.plan"|    return "data.luthen.plan"|def=PlanConfig.plan_query
 src/mikemol/waldo/planconfig.py|custody-off-still-uses-the-root-state|    held = self\.root_custody and self\.root_state is not None|    held = self.root_state is not None|def=PlanConfig.state_dir
 src/mikemol/waldo/planconfig.py|every-root-held-as-root-planned|        if held and root_name in self\.root_planned and self\.root_state is not None:|        if held and self.root_state is not None:|def=PlanConfig.state_dir
+src/mikemol/waldo/planopa.py|failed-version-still-read|    if code != 0:|    if False:|def=parse_version
+src/mikemol/waldo/planopa.py|ambiguous-version-takes-the-first|    return versions\[0\] if len\(versions\) == 1 else None|    return versions[0] if versions else None|def=parse_version
+src/mikemol/waldo/planopa.py|any-opa-version-admitted|    if found is None or version_of\(tools, found\) != pin:|    if found is None:|def=pinned_opa
+src/mikemol/waldo/planjson.py|non-object-parsed-as-an-object|    return cast\("Json", value\) if isinstance\(value, dict\) else None|    return cast("Json", value)|def=parse_object
+src/mikemol/waldo/planjson.py|path-through-a-non-object-continues|            return None|            continue|def=_walk

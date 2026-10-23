@@ -970,3 +970,61 @@
   claim  = {A consumer without root turns custody off and has no root-owned directory to use.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_custody_off_sends_every_root_to_the_users_state},
 }
+
+@misc{waldo-planopa-version-is-the-one-labelled-line,
+  section = {planopa},
+  title  = {One 'Version:' line is read, a failure or an ambiguous output is None},
+  claim  = {One 'Version:' line is read, a failure or an ambiguous output is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planopa.py -k test_the_version_is_the_one_labelled_line},
+}
+
+@misc{waldo-planopa-opa-at-the-pin-is-accepted-after-asking-it-for-its-version,
+  section = {planopa},
+  title  = {The control: the found binary at the pinned version is returned, having run `version`},
+  claim  = {The control: the found binary at the pinned version is returned, having run `version`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planopa.py -k test_opa_at_the_pin_is_accepted_after_asking_it_for_its_version},
+}
+
+@misc{waldo-planopa-opa-at-another-version-or-unreadable-or-absent-is-refused,
+  section = {planopa},
+  title  = {A different checker is not the pinned one, and a binary that cannot say is not admitted},
+  claim  = {A different checker is not the pinned one, and a binary that cannot say is not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planopa.py -k test_opa_at_another_version_or_unreadable_or_absent_is_refused},
+}
+
+@misc{waldo-planopa-absent-opa-is-never-run,
+  section = {planopa},
+  title  = {Nothing to ask: a missing binary is refused before any child starts},
+  claim  = {Nothing to ask: a missing binary is refused before any child starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planopa.py -k test_an_absent_opa_is_never_run},
+}
+
+@misc{waldo-planopa-pin-is-the-callers-not-luthens,
+  section = {planopa},
+  title  = {A consumer pinning another number gets that number accepted and luthen's refused},
+  claim  = {A consumer pinning another number gets that number accepted and luthen's refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planopa.py -k test_the_pin_is_the_callers_not_luthens},
+}
+
+@misc{waldo-planjson-text-is-parsed-only-when-it-is-json-and-an-object-only-when-it-is-one,
+  section = {planjson},
+  title  = {Not JSON is None; JSON that is not an object is None for parse_object, a value for parse},
+  claim  = {Not JSON is None; JSON that is not an object is None for parse_object, a value for
+            parse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planjson.py -k test_a_text_is_parsed_only_when_it_is_json_and_an_object_only_when_it_is_one},
+}
+
+@misc{waldo-planjson-value-is-viewed-as-a-list-or-an-object-or-empty,
+  section = {planjson},
+  title  = {The right shape passes through; any other is the empty one},
+  claim  = {The right shape passes through; any other is the empty one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planjson.py -k test_a_value_is_viewed_as_a_list_or_an_object_or_empty},
+}
+
+@misc{waldo-planjson-path-is-followed-through-objects-and-a-broken-step-is-empty,
+  section = {planjson},
+  title  = {list_at and obj_at follow nested objects and give empty at the first missing or odd step},
+  claim  = {list_at and obj_at follow nested objects and give empty at the first missing or odd
+            step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planjson.py -k test_a_path_is_followed_through_objects_and_a_broken_step_is_empty},
+}
