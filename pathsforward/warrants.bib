@@ -7206,3 +7206,26 @@
   claim  = {The refresh is opt-in by having exported once: a plain update creates nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_a_repo_that_never_exported_gets_no_export_file_from_a_write},
 }
+
+@misc{pathsforward-warrant-reason-is-printed-and-stored-beside-the-verified-record,
+  section = {warrant},
+  title  = {--reason names what the record sanctions: said on the line and kept on the warrant},
+  claim  = {--reason names what the record sanctions: said on the line and kept on the warrant.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_reason_is_printed_and_stored_beside_the_verified_record},
+}
+
+@misc{pathsforward-warrant-dry-run-verifies-and-says-what-it-would-attach-without-saving,
+  section = {warrant},
+  title  = {--dry-run prints WOULD ATTACH from the record's own fields and writes no warrant},
+  claim  = {--dry-run prints WOULD ATTACH from the record's own fields and writes no warrant. A
+            refusing reader still refuses it, which is what makes the dry run a
+            verification.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_dry_run_verifies_and_says_what_it_would_attach_without_saving},
+}
+
+@misc{pathsforward-warrant-citation-without-a-claim-is-refused-before-the-reader-runs,
+  section = {warrant},
+  title  = {A warrant states whose words it rests on: no --claim is refused, even for a good record},
+  claim  = {A warrant states whose words it rests on: no --claim is refused, even for a good record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_citation_without_a_claim_is_refused_before_the_reader_runs},
+}

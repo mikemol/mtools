@@ -177,8 +177,13 @@ def portable_reader(reader: Sequence[str], transcript: Path) -> str:
     return " ".join(symbolic if word == str(transcript) else word for word in words)
 
 
-def build(card: str, cited: Citation, verdict: Json, reader: Sequence[str]) -> Json:
+def build(
+    card: str, cited: Citation, verdict: Json, reader: Sequence[str], reason: str = ""
+) -> Json:
     """Spell one verified record as the card's PROV-O JSON-LD warrant.
+
+    `reason` is the caller's own words for what the record sanctions, kept beside the record
+    (W1860); empty keeps the warrant byte for byte what it was.
 
     Returns:
         the JSON-LD object: the card derived from the record, which carries its time, speaker
@@ -199,7 +204,10 @@ def build(card: str, cited: Citation, verdict: Json, reader: Sequence[str]) -> J
         "mtools:line": verdict.get("line"),
         "mtools:reader": portable_reader(reader, cited.transcript),
     }
-    return {"@context": CONTEXT, "@id": card, "prov:wasDerivedFrom": record}
+    built: Json = {"@context": CONTEXT, "@id": card, "prov:wasDerivedFrom": record}
+    if reason:
+        built["mtools:reason"] = reason
+    return built
 
 
 def attach(state: State, symbol: str, warrant: Json) -> bool:

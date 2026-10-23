@@ -264,18 +264,30 @@ def _warrant(ctx: "Ctx") -> int:
 
     """
     symbol = ctx.get("warrant") or ""
-    where, uuid = ctx.get("transcript"), ctx.get("uuid")
-    if not where or not uuid:
-        msg = "--warrant needs --transcript PATH and --uuid UUID, the record it cites"
+    where, uuid, claim = ctx.get("transcript"), ctx.get("uuid"), ctx.get("claim")
+    if not where or not uuid or not claim:
+        msg = (
+            "--warrant needs --transcript PATH, --uuid UUID and --claim SPEAKER, "
+            "the record it cites and whose words it rests on"
+        )
         raise RefusedError(msg)
-    cited = warrant.Citation(Path(where), uuid, ctx.get("claim"), ctx.number("line"))
+    cited = warrant.Citation(Path(where), uuid, claim, ctx.number("line"))
     reader = warrant.resolve(ctx.get("reader"), _root(ctx), os.environ)
     verdict, argv = warrant.read(cited, reader)
+    reason = ctx.get("reason") or ""
+    said = f" ({reason})" if reason else ""
+    if ctx.opts.get("dry_run"):
+        _say(
+            f"WOULD ATTACH to {symbol}: record {uuid}, speaker {verdict.get('kind')}, "
+            f"line {verdict.get('line')}, at {verdict.get('timestamp')}{said}"
+        )
+        return EXIT_OK
 
     def edit(state: State) -> int:
         card = f"urn:nemik:{ctx.path.resolve().parent.parent.name}/{symbol}"
-        added = warrant.attach(state, symbol, warrant.build(card, cited, verdict, argv))
-        _say(f"WARRANT {'attached to' if added else 'already on'} {symbol}")
+        built = warrant.build(card, cited, verdict, argv, reason)
+        added = warrant.attach(state, symbol, built)
+        _say(f"WARRANT {'attached to' if added else 'already on'} {symbol}{said}")
         return EXIT_OK
 
     return _mutate(ctx, edit)
@@ -598,6 +610,7 @@ _FIELDS = (
     "claim",
     "line",
     "reader",
+    "dry_run",
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -652,7 +665,9 @@ _APPLIES: dict[str, frozenset[str]] = {
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
-    "warrant": frozenset({"transcript", "uuid", "claim", "line", "reader", "root"}),
+    "warrant": frozenset(
+        {"transcript", "uuid", "claim", "line", "reader", "root", "reason", "dry_run"}
+    ),
     # ⚑ THE FIELDS OF `--update` EXCEPT `attach` (one file pinned to many cards is a different act),
     # plus `--write`. `status` is here since W1520 but only ready or blocked (`_BULK_STATUSES`).
     "update_many": frozenset(
@@ -819,7 +834,8 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
     ap.add_argument(
         "--reason",
         metavar="TEXT",
-        help="W1203: --tick-close with ready cards left: why, citing a card of this queue",
+        help="W1203: --tick-close with ready cards left: why, citing a card of this queue; "
+        "W1860: --warrant: the operator record this sanctions, printed and stored",
     )
     ap.add_argument(
         "--rank-from",
@@ -966,6 +982,13 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
     ap.add_argument("--claim", help="--warrant: the speaker claimed (`operator` needs a human)")
     ap.add_argument("--line", type=int, help="--warrant: the line the citation names")
     ap.add_argument("--reader", metavar="CMD", help="--warrant: the transcript reader to run")
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=None,
+        help="W1860: --warrant: verify the cited record and print what would be attached, "
+        "saving nothing",
+    )
     ap.add_argument(
         "--facts",
         metavar="FILE",

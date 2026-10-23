@@ -210,6 +210,46 @@ def test_the_cli_attaches_a_verified_warrant_once_and_check_stays_green(
     assert cli.main(["--state", str(path), "--check"]) == _OK
 
 
+def test_a_reason_is_printed_and_stored_beside_the_verified_record(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--reason names what the record sanctions: said on the line and kept on the warrant."""
+    path = _state(tmp_path)
+    reader = _reader_script(tmp_path, GOOD, 0)
+    said = "the operator's ruling on the allow rule"
+    assert _run(path, reader, "--claim", "operator", "--reason", said) == _OK
+    assert f"WARRANT attached to W1 ({said})" in capsys.readouterr().out
+    assert _warrants(path)[0]["mtools:reason"] == said
+
+
+def test_a_dry_run_verifies_and_says_what_it_would_attach_without_saving(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """--dry-run prints WOULD ATTACH from the record's own fields and writes no warrant.
+
+    A refusing reader still refuses it, which is what makes the dry run a verification.
+    """
+    path = _state(tmp_path)
+    reader = _reader_script(tmp_path, GOOD, 0)
+    assert _run(path, reader, "--claim", "operator", "--reason", "why", "--dry-run") == _OK
+    out = capsys.readouterr().out
+    assert f"WOULD ATTACH to W1: record {UUID}, speaker human, line 7, at {STAMP} (why)" in out
+    assert not _warrants(path)
+    refusing = _reader_script(tmp_path, BAD, 1)
+    assert _run(path, refusing, "--claim", "operator", "--dry-run") == _REFUSED
+    assert not _warrants(path)
+
+
+def test_a_citation_without_a_claim_is_refused_before_the_reader_runs(tmp_path: Path) -> None:
+    """A warrant states whose words it rests on: no --claim is refused, even for a good record."""
+    path = _state(tmp_path)
+    reader = _reader_script(tmp_path, GOOD, 0)
+    assert _run(path, reader) == _REFUSED
+    assert _run(path, reader, "--dry-run") == _REFUSED
+    assert not _warrants(path)
+    assert _run(path, reader, "--claim", "operator") == _OK
+
+
 def test_the_cli_leaves_the_card_alone_when_the_reader_refuses_or_the_citation_is_short(
     tmp_path: Path,
 ) -> None:
