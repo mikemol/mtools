@@ -117,3 +117,19 @@ def test_an_evaluation_that_fails_or_has_another_shape_is_none(tmp_path: Path) -
     assert planinterlock.defer(tools, config, "dns", {}) is None
     tools.reply = _says("not a list")
     assert planinterlock.defer(tools, config, "dns", {}) is None
+
+
+def test_the_ledger_field_hashes_the_facts_and_records_whether_the_gate_was_met() -> None:
+    """Met, deferred and could-not-ask are three records, and the facts are never echoed."""
+    facts: dict[str, object] = {"zone": "example.com", "secret": "hunter2"}
+    field = planinterlock.ledger_field
+    met = planjson.as_object(field("dns", facts, [])["interlock"])
+    held = planjson.as_object(field("dns", facts, ["zone not synced"])["interlock"])
+    unasked = planjson.as_object(field("dns", facts, None)["interlock"])
+    assert (met["met"], held["met"], unasked["met"]) == (True, False, False)
+    assert (met["defer"], held["defer"], unasked["defer"]) == ([], ["zone not synced"], None)
+    assert met["facts_sha256"] == held["facts_sha256"]
+    assert "hunter2" not in json.dumps(met)
+    other: dict[str, object] = {"zone": "example.org"}
+    moved = planjson.as_object(field("dns", other, [])["interlock"])
+    assert moved["facts_sha256"] != met["facts_sha256"]

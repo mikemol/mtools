@@ -1762,3 +1762,17 @@
   claim  = {No reading, no apply: the witness could not be judged afterwards, so nothing is applied.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_reading_that_cannot_be_taken_before_the_apply_stops_it},
 }
+
+@misc{waldo-planinterlock-ledger-field-hashes-the-facts-and-records-whether-the-gate-was-met,
+  section = {planinterlock},
+  title  = {Met, deferred and could-not-ask are three records, and the facts are never echoed},
+  claim  = {Met, deferred and could-not-ask are three records, and the facts are never echoed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planinterlock.py -k test_the_ledger_field_hashes_the_facts_and_records_whether_the_gate_was_met},
+}
+
+@misc{waldo-planflow-interlock-the-consumer-hands-in-is-recorded-beside-the-apply-it-gated,
+  section = {planflow},
+  title  = {The ledger entry carries the gate's kind, a hash of its facts and its result (W1867)},
+  claim  = {The ledger entry carries the gate's kind, a hash of its facts and its result (W1867).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_interlock_the_consumer_hands_in_is_recorded_beside_the_apply_it_gated},
+}

@@ -185,5 +185,7 @@ src/mikemol/waldo/planinterlock.py|bad-kind-asked-anyway|    if opa is None or n
 src/mikemol/waldo/planinterlock.py|facts-never-sent|stdin_text=json\.dumps\(facts\)|stdin_text=None|def=defer
 src/mikemol/waldo/planinterlock.py|other-shape-read-as-met|    if not isinstance\(value, list\):|    if False:|def=defer
 src/mikemol/waldo/planinterlock.py|messages-unsorted|    return sorted\(str\(m\) for m in as_list\(value\)\)|    return [str(m) for m in as_list(value)]|def=defer
+src/mikemol/waldo/planinterlock.py|deferred-gate-reads-met|        "met": messages == \[\],|        "met": messages is not None,|def=ledger_field
+src/mikemol/waldo/planinterlock.py|facts-echoed-into-the-ledger|        "facts_sha256": digest,|        "facts_sha256": json.dumps(facts),|def=ledger_field
 src/mikemol/waldo/planplan.py|digest-recorded-without-declarations|"policy_sha256": policy_digest\(config, declarations\),|"policy_sha256": policy_digest(config),|def=record_verdict
 src/mikemol/waldo/planflow.py|declarations-not-recorded|\(code, deny, withheld\), extra, seams\.declarations\)|(code, deny, withheld), extra)|def=judge

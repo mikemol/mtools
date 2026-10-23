@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from mikemol.waldo import planflow, planjson, planledger, planverdict
+from mikemol.waldo import planflow, planinterlock, planjson, planledger, planverdict
 from mikemol.waldo.planconfig import PlanConfig
 
 _NOW = "2026-10-23T12:00:00Z"
@@ -116,6 +116,7 @@ class _World:
     interactive: bool = False
     reply: str = "y"
     pre_plan_exit: int | None = None
+    fields: dict[str, object] = field(default_factory=dict)
     exits: planflow.ExitCodes = planflow.LUTHEN
     tofu: Path = Path("/bin/tofu")
     opa: Path = Path("/bin/opa")
@@ -151,6 +152,7 @@ class _World:
             interactive=self.interactive,
             answer=lambda: self.reply,
             exits=self.exits,
+            run_fields=lambda: self.fields,
         )
 
     def binaries(self) -> tuple[Path, Path]:
@@ -297,6 +299,23 @@ def test_a_reading_that_cannot_be_taken_before_the_apply_stops_it(tmp_path: Path
     assert world.apply() == planflow.LUTHEN.withheld
     assert world.host.applied == 0
     assert "reading tool 'gone' not found" in world.text()
+
+
+def test_an_interlock_the_consumer_hands_in_is_recorded_beside_the_apply_it_gated(
+    tmp_path: Path,
+) -> None:
+    """The ledger entry carries the gate's kind, a hash of its facts and its result (W1867)."""
+    world = _world(tmp_path)
+    world.declare_witness()
+    facts: dict[str, object] = {"zone": "example.com", "secret": "hunter2"}
+    world.fields = planinterlock.ledger_field("dns_zone", facts, [])
+    world.judge()
+    world.apply()
+    ledger = planledger.ledger_path(world.config, "stage2")
+    entry = planjson.parse_object(ledger.read_text(encoding="utf-8")) or {}
+    recorded = planjson.as_object(entry["interlock"])
+    assert (recorded["kind"], recorded["met"], recorded["defer"]) == ("dns_zone", True, [])
+    assert "hunter2" not in ledger.read_text(encoding="utf-8")
 
 
 def test_a_witness_that_cannot_run_after_a_success_is_exit_four_and_loud(tmp_path: Path) -> None:
