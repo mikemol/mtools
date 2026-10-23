@@ -63,6 +63,18 @@ def test_update_stores_withheld_true_and_false_and_an_untouched_card_has_no_key(
     assert "withheld" not in _waypoints(path)[1]
 
 
+def test_a_withheld_card_stays_withheld_when_it_is_dropped_to_residue(tmp_path: Path) -> None:
+    """Residue is exported too (W1840), so a dropped card must not lose the flag and publish."""
+    path = _file(tmp_path)
+    cli.main(["--state", str(path), "--update", "W1", "--withheld", "true"])
+    assert cli.main(["--state", str(path), "--drop", "W1", "no longer needed"]) == _OK
+    assert cli.main(["--state", str(path), "--drop", "W2", "no longer needed"]) == _OK
+    doc = cast("Rec", json.loads(path.read_text(encoding="utf-8")))
+    withheld, plain = cast("list[Rec]", doc["residue"])
+    assert (withheld["symbol"], withheld["withheld"]) == ("W1", True)
+    assert "withheld" not in plain
+
+
 def test_the_flag_survives_a_later_update_of_another_field(tmp_path: Path) -> None:
     """Setting the next step on a withheld card does not publish it."""
     path = _file(tmp_path)

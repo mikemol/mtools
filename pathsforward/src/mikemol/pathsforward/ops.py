@@ -1012,6 +1012,9 @@ def drop(state: State, sym: str, reason: str, now: str, died: dict[str, str] | N
         raise RefusedError(msg)
     w = find(state, sym)
     state.waypoints.remove(w)
+    # ⚑ A WITHHELD CARD STAYS WITHHELD WHEN DROPPED (W1840): residue is exported too, and an entry
+    # that lost the flag would publish a card its repo withheld.
+    kept = {"withheld": True} if w.get("withheld") is True else {}
     state.residue.append(
         {
             "symbol": sym,
@@ -1019,6 +1022,7 @@ def drop(state: State, sym: str, reason: str, now: str, died: dict[str, str] | N
             "dropped_at": now,
             "reason": reason,
             "recoverable": True,
+            **kept,
             **(died or {}),
         }
     )

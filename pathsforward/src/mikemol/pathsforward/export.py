@@ -27,6 +27,7 @@ CONSUMED BY: the writer's `--export` mode (W1838).
 from collections.abc import Iterable, Mapping
 
 VERSION = 2
+EPOCH = "1970-01-01T00:00:00Z"
 
 Card = Mapping[str, object]
 
@@ -40,6 +41,27 @@ def ref_of(repo: str, card: Card) -> str | None:
     """
     symbol = card.get("symbol")
     return f"{repo}:{symbol}" if isinstance(symbol, str) and symbol else None
+
+
+def stamp_of(cards: Iterable[Card]) -> str:
+    """Say when the queue last changed, from the cards themselves and never the run's clock.
+
+    ⚑ THE EXPORT'S TIME IS THE STATE'S (W1840, nemik:W636): the pod decides whether the exports
+    changed by file mtime, so a time that moved on every run would rewrite an unchanged export and
+    rebuild the pod every loop. The newest `last_worked` of a live card or `dropped_at` of a
+    residue entry only moves when the queue does.
+
+    Returns:
+        the newest such RFC 3339 stamp, or `EPOCH` when no card carries one.
+
+    """
+    stamps: list[str] = [EPOCH]
+    for card in cards:
+        for key in ("last_worked", "dropped_at"):
+            value = card.get(key)
+            if isinstance(value, str) and value:
+                stamps.append(value)
+    return max(stamps)
 
 
 def build(repo: str, as_of: str, cards: Iterable[Card]) -> dict[str, object]:

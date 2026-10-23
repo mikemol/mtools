@@ -7151,17 +7151,44 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_a_flagged_card_with_no_symbol_leaves_nothing_in_either_list},
 }
 
-@misc{pathsforward-export-mode-export-lands-beside-the-state-and-holds-only-what-may-leave,
-  section = {export_mode},
-  title  = {Version 2, the repo's directory name, the unflagged card whole and the flagged one a ref},
-  claim  = {Version 2, the repo's directory name, the unflagged card whole and the flagged one a
-            ref.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_the_export_lands_beside_the_state_and_holds_only_what_may_leave},
-}
-
 @misc{pathsforward-export-mode-mode-leaves-the-state-file-untouched,
   section = {export_mode},
   title  = {Exporting reads the queue and writes no change to it},
   claim  = {Exporting reads the queue and writes no change to it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_the_mode_leaves_the_state_file_untouched},
+}
+
+@misc{pathsforward-export-time-is-the-newest-stamp-on-any-card-and-the-epoch-when-there-is-none,
+  section = {export},
+  title  = {last_worked on a live card and dropped_at on a residue entry both count, newest wins},
+  claim  = {last_worked on a live card and dropped_at on a residue entry both count, newest wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_the_time_is_the_newest_stamp_on_any_card_and_the_epoch_when_there_is_none},
+}
+
+@misc{pathsforward-export-mode-export-holds-only-what-may-leave-residue-included,
+  section = {export_mode},
+  title  = {Version 2, the repo name, unflagged cards and residue whole, flagged ones refs only},
+  claim  = {Version 2, the repo name, unflagged cards and residue whole, flagged ones refs only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_the_export_holds_only_what_may_leave_residue_included},
+}
+
+@misc{pathsforward-export-mode-time-is-the-states-newest-stamp-not-the-run-clock,
+  section = {export_mode},
+  title  = {The newest last_worked or dropped_at, so it moves only when the queue does},
+  claim  = {The newest last_worked or dropped_at, so it moves only when the queue does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_the_time_is_the_states_newest_stamp_not_the_run_clock},
+}
+
+@misc{pathsforward-export-mode-unchanged-queue-leaves-the-file-alone-and-a-changed-one-rewrites-it,
+  section = {export_mode},
+  title  = {Byte-identical and the same mtime on a second run, a new file on a changed queue},
+  claim  = {Byte-identical and the same mtime on a second run, a new file on a changed queue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_an_unchanged_queue_leaves_the_file_alone_and_a_changed_one_rewrites_it},
+}
+
+@misc{pathsforward-withheld-flag-withheld-card-stays-withheld-when-it-is-dropped-to-residue,
+  section = {withheld_flag},
+  title  = {Residue is exported too (W1840), so a dropped card must not lose the flag and publish},
+  claim  = {Residue is exported too (W1840), so a dropped card must not lose the flag and publish.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_withheld_flag.py -k test_a_withheld_card_stays_withheld_when_it_is_dropped_to_residue},
 }

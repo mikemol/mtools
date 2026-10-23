@@ -67,6 +67,15 @@ def test_the_envelope_names_the_version_the_repo_and_the_time() -> None:
     }
 
 
+def test_the_time_is_the_newest_stamp_on_any_card_and_the_epoch_when_there_is_none() -> None:
+    """last_worked on a live card and dropped_at on a residue entry both count, newest wins."""
+    older = _card("W1", last_worked="2026-10-20T00:00:00Z")
+    newer = {"symbol": "W2", "dropped_at": "2026-10-22T00:00:00Z"}
+    assert export.stamp_of([older, newer]) == "2026-10-22T00:00:00Z"
+    assert export.stamp_of([_card("W3")]) == export.EPOCH
+    assert export.stamp_of([]) == export.EPOCH
+
+
 def test_a_flagged_card_with_no_symbol_leaves_nothing_in_either_list() -> None:
     """It cannot be cited, so no ref, and it must not leave, so not in cards."""
     built = export.build("mtools", _AT, [{"title": "t", "withheld": True}])

@@ -1616,11 +1616,12 @@ def _export(ctx: Ctx) -> int:
     """
     state = store.load(ctx.path)
     repo = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent)).name
-    held_cards = state.doc.get("waypoints")
-    cards = cast("list[Mapping[str, object]]", held_cards) if isinstance(held_cards, list) else []
-    built = export.build(repo, ctx.stamp(), cards)
+    cards = [*state.waypoints, *state.residue]
+    built = export.build(repo, export.stamp_of(cards), cards)
     target = ctx.path.with_suffix(EXPORT_SUFFIX)
-    store.write_atomic(target, json.dumps(built, indent=2, ensure_ascii=False) + "\n")
+    body = json.dumps(built, indent=2, ensure_ascii=False) + "\n"
+    if not target.is_file() or target.read_text(encoding="utf-8") != body:
+        store.write_atomic(target, body)
     shown = len(cast("list[object]", built["cards"]))
     held = len(cast("list[object]", built["withheld"]))
     _say(f"exported {target}: {shown} card(s), {held} withheld")
