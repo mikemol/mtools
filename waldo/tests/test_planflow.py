@@ -20,7 +20,7 @@ from mikemol.waldo import planflow, planjson, planledger, planverdict
 from mikemol.waldo.planconfig import PlanConfig
 
 _NOW = "2026-10-23T12:00:00Z"
-_TOOLS = {"tofu", "opa", "git", "probe"}
+_TOOLS = {"tofu", "opa", "git", "probe", "reader"}
 _GONE = "tty gone"
 
 
@@ -64,6 +64,7 @@ class _Host:
     witness_exit: int = 0
     writes_plan: bool = True
     applied: int = 0
+    readings: list[str] = field(default_factory=list)
     calls: list[tuple[str, tuple[str, ...]]] = field(default_factory=list)
 
     def find(self, name: str) -> Path | None:
@@ -97,6 +98,8 @@ class _Host:
             return _Done(0, "abc123\n")
         if tool.name == "tofu":
             return self._tofu(args)
+        if tool.name == "reader":
+            return _Done(0, self.readings.pop(0) if self.readings else "")
         return _Done(self.witness_exit)
 
     def run_bounded(
@@ -161,10 +164,10 @@ class _World:
             self.seams(), self.tofu, self.root, self.plan, assume_yes=yes
         )
 
-    def declare_witness(self) -> None:
+    def declare_witness(self, entry: dict[str, object] | None = None) -> None:
         folder = self.tmp / "policy" / "witnesses"
         folder.mkdir()
-        declared: dict[str, object] = {"roots": {"stage2": {"tool": "probe"}}}
+        declared: dict[str, object] = {"roots": {"stage2": entry or {"tool": "probe"}}}
         (folder / "data.json").write_text(json.dumps(declared), encoding="utf-8")
 
     def text(self) -> str:
@@ -256,6 +259,44 @@ def test_an_admitted_plan_applies_once_and_a_passing_witness_is_exit_zero(tmp_pa
     assert (entry["apply_exit"], entry["root"], entry["commit"]) == (0, "stage2", "abc123")
     assert entry["witness"] == {"status": "pass", "exit": 0, "why": None}
     assert planledger.ledger_intact(ledger)
+
+
+_READING: dict[str, object] = {"tool": "reader", "advances": "digest", "fresh_since": "as_of"}
+
+
+def _reading_json(digest: str, as_of: str = _NOW) -> str:
+    reading: dict[str, object] = {"digest": digest, "as_of": as_of}
+    return json.dumps(reading)
+
+
+def test_a_reading_that_advanced_and_is_fresh_makes_the_witness_pass(tmp_path: Path) -> None:
+    """Taken before the apply and again after, the digest moved and the timestamp is not stale."""
+    world = _world(tmp_path, _Host(readings=[_reading_json("aaa"), _reading_json("bbb")]))
+    world.declare_witness({"tool": "probe", "reading": _READING})
+    assert world.judge() == planflow.EXIT_OK
+    assert world.apply() == planflow.EXIT_OK
+    assert "opa_plan witness: pass" in world.text()
+
+
+def test_a_reading_that_did_not_advance_fails_a_witness_whose_exit_was_zero(
+    tmp_path: Path,
+) -> None:
+    """A no-op or failed apply leaves the digest as it was: exit 0 alone no longer passes."""
+    world = _world(tmp_path, _Host(readings=[_reading_json("aaa"), _reading_json("aaa")]))
+    world.declare_witness({"tool": "probe", "reading": _READING})
+    world.judge()
+    assert world.apply() == planflow.EXIT_WITNESS
+    assert "did not advance" in world.text()
+
+
+def test_a_reading_that_cannot_be_taken_before_the_apply_stops_it(tmp_path: Path) -> None:
+    """No reading, no apply: the witness could not be judged afterwards, so nothing is applied."""
+    world = _world(tmp_path)
+    world.declare_witness({"tool": "probe", "reading": {"tool": "gone", "advances": ""}})
+    world.judge()
+    assert world.apply() == planflow.LUTHEN.withheld
+    assert world.host.applied == 0
+    assert "reading tool 'gone' not found" in world.text()
 
 
 def test_a_witness_that_cannot_run_after_a_success_is_exit_four_and_loud(tmp_path: Path) -> None:

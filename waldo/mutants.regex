@@ -128,7 +128,7 @@ src/mikemol/waldo/planledger.py|chain-forgets-the-line-before|        prev = has
 src/mikemol/waldo/planwitness.py|undeclared-root-has-a-witness|    if root_name not in roots:|    if False:|def=declared_witness
 src/mikemol/waldo/planwitness.py|no-witness-declared-runs-anyway|    if "none" in entry:|    if False:|def=run_witness
 src/mikemol/waldo/planwitness.py|missing-witness-tool-runs|    if tool is None:|    if False:|def=run_witness
-src/mikemol/waldo/planwitness.py|entry-cpu-bound-ignored|    seconds = cpu if isinstance\(cpu, int\) and not isinstance\(cpu, bool\) else WITNESS_CPU_SECONDS|    seconds = WITNESS_CPU_SECONDS|def=run_witness
+src/mikemol/waldo/planreading.py|entry-cpu-bound-ignored|    return cpu if isinstance\(cpu, int\) and not isinstance\(cpu, bool\) else DEFAULT_CPU_SECONDS|    return DEFAULT_CPU_SECONDS|def=cpu_of
 src/mikemol/waldo/planwitness.py|failed-witness-reads-pass|        "status": "pass" if proc\.returncode == 0 else "fail",|        "status": "pass",|def=run_witness
 src/mikemol/waldo/planprecond.py|star-prefix-needs-no-star|address\.startswith\(p\[:-1\]\)|address.startswith(p)|def=address_matches
 src/mikemol/waldo/planprecond.py|other-roots-rule-fires|        if r\.get\("root"\) == root_name|        if True|def=fired_rules
@@ -151,6 +151,16 @@ src/mikemol/waldo/planprecond.py|missing-declaration-switches-the-rules-off|    
 src/mikemol/waldo/planflow.py|every-plan-judged-ok|    code = seams\.exits\.deny if deny else \(seams\.exits\.withheld if withheld else EXIT_OK\)|    code = EXIT_OK|def=judge
 src/mikemol/waldo/planflow.py|luthens-numbers-for-everyone|        return seams\.exits\.stopped|        return EXIT_STOPPED|def=_confirmed
 src/mikemol/waldo/planflow.py|witness-number-ignored|    return seams\.exits\.witness|    return EXIT_WITNESS|def=after_apply
+src/mikemol/waldo/planreading.py|empty-pointer-is-a-path|    if not pointer:|    if False:|def=value
+src/mikemol/waldo/planreading.py|unchanged-reading-advanced|if now == was else None|if False else None|def=_stuck
+src/mikemol/waldo/planreading.py|stale-reading-fresh|if read_at < began else None|if False else None|def=_stale
+src/mikemol/waldo/planreading.py|empty-reading-proves-something|    if "advances" not in spec and "fresh_since" not in spec:|    if False:|def=judge
+src/mikemol/waldo/planreading.py|no-before-reading-judged|    if before is None or before\.get\("status"\) != READ:|    if False:|def=judge
+src/mikemol/waldo/planreading.py|unrunnable-after-judged|    if after\.get\("status"\) != READ:|    if False:|def=judge
+src/mikemol/waldo/planreading.py|failed-reading-exit-read|    if proc\.returncode != 0:|    if False:|def=take
+src/mikemol/waldo/planreading.py|reading-never-fails-a-pass|    if status == "pass":|    if False:|def=verdict
+src/mikemol/waldo/planreading.py|no-reading-still-taken|    if spec is None:|    if False:|def=verdict
+src/mikemol/waldo/planflow.py|unreadable-reading-applies|    if before is not None and before\.get\("status"\) != READ:|    if False:|def=confirm_and_apply
 src/mikemol/waldo/planflow.py|unmet-preconditions-not-held|    withheld = \[\*withheld, \*unmet_preconditions\(seams\.tools, config, root\.name, changes\)\]|    withheld = withheld|def=judge
 src/mikemol/waldo/planflow.py|another-roots-verdict-applies|    if doc\.get\("root"\) != root\.name:|    if False:|def=refusal
 src/mikemol/waldo/planflow.py|moved-resource-set-applies|    if shown\.returncode == 0 and now == doc\.get\("changes"\):|    if True:|def=changes_match

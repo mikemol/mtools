@@ -19,11 +19,16 @@ happened, so a witness that spins must not hold the process after it. The bound 
 ⚑ THE TIME IS THE CALLER'S: `now` is passed in as an RFC 3339 string, so this module reads no
 clock. `python` in a declaration is resolved by the consumer's `Tools.find` like any other tool
 name; luthen maps it to its own interpreter there, as its code did.
+
+⚑ A READING MAKES AN EXIT 0 PROVE MORE (W1871): an entry that declares `reading` is judged by
+`planreading` (advanced since before the apply, fresh since its start) as well as by its exit,
+and a reading that fails turns a passing exit into a `fail` with the reason.
 """
 
 import json
 from pathlib import Path
 
+from mikemol.waldo import planreading
 from mikemol.waldo.planconfig import PlanConfig
 from mikemol.waldo.planjson import Json, as_list, as_object, parse_object
 from mikemol.waldo.plantools import Tools
@@ -64,12 +69,36 @@ def tail_lines(text: str, keep: int = TAIL_LINES) -> list[str]:
     return text.strip().splitlines()[-keep:]
 
 
-def run_witness(tools: Tools, config: PlanConfig, root_name: str, now: str) -> Json:
-    """Run the root's declared post-apply witness.
+def take_reading(tools: Tools, config: PlanConfig, root_name: str) -> Json | None:
+    """Take the reading the root declares, before an apply.
 
     Returns:
-        the result: status `pass` (exit 0), `fail` (non-zero), `cannot-run` (undeclared, unreadable,
-        tool not found, no bounded runner) or `none-declared`, with the evidence of a run.
+        None when the root declares none; else the reading (`read` with its stdout, or
+        `cannot-run` with why), so the caller can refuse an apply it could not judge.
+
+    """
+    entry = declared_witness(config, root_name)
+    if isinstance(entry, str) or "none" in entry or "reading" not in entry:
+        return None
+    return planreading.take(tools, config.root, as_object(entry["reading"]))
+
+
+def run_witness(
+    tools: Tools,
+    config: PlanConfig,
+    root_name: str,
+    now: str,
+    prior: planreading.Prior | None = None,
+) -> Json:
+    """Run the root's declared post-apply witness.
+
+    `prior` is the reading taken before the apply and the apply's start, used only by a root
+    that declares a reading.
+
+    Returns:
+        the result: status `pass` (exit 0), `fail` (non-zero, or a reading that did not advance
+        or is stale), `cannot-run` (undeclared, unreadable, tool not found, no bounded runner)
+        or `none-declared`, with the evidence of a run.
 
     """
     result: Json = {"root": root_name, "as_of": now}
@@ -83,13 +112,13 @@ def run_witness(tools: Tools, config: PlanConfig, root_name: str, now: str) -> J
     tool = tools.find(name)
     if tool is None:
         return {**result, "status": "cannot-run", "why": f"witness tool {name!r} not found"}
-    cpu = entry.get("cpu_seconds", WITNESS_CPU_SECONDS)
-    seconds = cpu if isinstance(cpu, int) and not isinstance(cpu, bool) else WITNESS_CPU_SECONDS
     try:
-        proc = tools.run_bounded(tool, *args, cwd=config.root, cpu_seconds=seconds)
+        proc = tools.run_bounded(
+            tool, *args, cwd=config.root, cpu_seconds=planreading.cpu_of(entry)
+        )
     except OSError as exc:
         return {**result, "status": "cannot-run", "why": f"no CPU-bounded runner: {exc}"}
-    return {
+    result = {
         **result,
         "status": "pass" if proc.returncode == 0 else "fail",
         "argv": [name, *args],
@@ -97,6 +126,8 @@ def run_witness(tools: Tools, config: PlanConfig, root_name: str, now: str) -> J
         "stdout_tail": tail_lines(proc.stdout or ""),
         "stderr_tail": tail_lines(proc.stderr or ""),
     }
+    spec = as_object(entry["reading"]) if "reading" in entry else None
+    return planreading.verdict(tools, config.root, spec, prior or planreading.Prior(), result)
 
 
 def store_witness(config: PlanConfig, root_name: str, digest: str, result: Json) -> Path:

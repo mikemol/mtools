@@ -25,3 +25,4 @@ planplan	Making the Plan: A Saved Plan and Its JSON, a Reason When There Is No P
 planflow	The Plan-Admit-Apply Flow: Every Gate Stops the Apply, Only a Whole Verdict Reaches It, and the Apply Is Recorded and Its Witness Loud Whatever Happened
 plancli	The Plan-Admission Command Line: The Only Apply Line Printed Is the Verified One, an Existing Plan Is Never Overwritten, and SIGHUP Is Held Off an Apply
 planinterlock	Interlocks: The Unmet Preconditions Come Back Sorted, and an Interlock That Cannot Be Evaluated Is Never Read as Met
+planreading	A Reading Taken Before And After An Apply Must Advance And Be Fresh, And Anything That Cannot Be Judged Is A Failure Never A Pass

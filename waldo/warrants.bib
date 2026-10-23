@@ -1678,3 +1678,87 @@
   claim  = {Each failing outcome speaks the consumer's number; success is 0 for everyone (W1858).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_consumers_exit_numbers_replace_every_failing_code_and_ok_stays_zero},
 }
+
+@misc{waldo-planreading-dotted-pointer-picks-a-value-and-the-empty-one-the-trimmed-stdout,
+  section = {planreading},
+  title  = {Strings as they are, other values as sorted JSON, and an absent path is None},
+  claim  = {Strings as they are, other values as sorted JSON, and an absent path is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_dotted_pointer_picks_a_value_and_the_empty_one_the_trimmed_stdout},
+}
+
+@misc{waldo-planreading-reading-that-moved-and-is-fresh-holds,
+  section = {planreading},
+  title  = {The control: the digest differs and the stamp is at or after the apply's start},
+  claim  = {The control: the digest differs and the stamp is at or after the apply's start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_reading_that_moved_and_is_fresh_holds},
+}
+
+@misc{waldo-planreading-reading-that-did-not-move-is-named-with-its-value,
+  section = {planreading},
+  title  = {Inequality only: an unchanged value is the failure, whatever it is},
+  claim  = {Inequality only: an unchanged value is the failure, whatever it is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_reading_that_did_not_move_is_named_with_its_value},
+}
+
+@misc{waldo-planreading-stale-or-unreadable-timestamp-is-a-failure,
+  section = {planreading},
+  title  = {Older than the apply's start, absent, or not a date: none of them is fresh},
+  claim  = {Older than the apply's start, absent, or not a date: none of them is fresh.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_stale_or_unreadable_timestamp_is_a_failure},
+}
+
+@misc{waldo-planreading-absent-advances-pointer-is-a-failure-not-an-equal-pair,
+  section = {planreading},
+  title  = {Two readings that both lack the pointer must not read as unchanged or as moved},
+  claim  = {Two readings that both lack the pointer must not read as unchanged or as moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_an_absent_advances_pointer_is_a_failure_not_an_equal_pair},
+}
+
+@misc{waldo-planreading-reading-with-nothing-before-or-nothing-after-cannot-hold,
+  section = {planreading},
+  title  = {No before-reading, a before that cannot run, and an after that cannot run each fail},
+  claim  = {No before-reading, a before that cannot run, and an after that cannot run each fail.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_reading_with_nothing_before_or_nothing_after_cannot_hold},
+}
+
+@misc{waldo-planreading-reading-that-declares-neither-check-proves-nothing,
+  section = {planreading},
+  title  = {A spec with no advances and no fresh_since is refused, never a pass},
+  claim  = {A spec with no advances and no fresh_since is refused, never a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_reading_that_declares_neither_check_proves_nothing},
+}
+
+@misc{waldo-planreading-taking-a-reading-is-bounded-and-every-way-it-cannot-run-says-so,
+  section = {planreading},
+  title  = {Found and exits 0 gives stdout; a missing tool, a non-zero exit and no runner do not},
+  claim  = {Found and exits 0 gives stdout; a missing tool, a non-zero exit and no runner do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_taking_a_reading_is_bounded_and_every_way_it_cannot_run_says_so},
+}
+
+@misc{waldo-planreading-verdict-folds-a-reading-into-the-result-and-never-softens-a-failure,
+  section = {planreading},
+  title  = {A holding reading adds a mark; a failing one fails a pass; a failed exit stays failed},
+  claim  = {A holding reading adds a mark; a failing one fails a pass; a failed exit stays failed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_the_verdict_folds_a_reading_into_the_result_and_never_softens_a_failure},
+}
+
+@misc{waldo-planflow-reading-that-advanced-and-is-fresh-makes-the-witness-pass,
+  section = {planflow},
+  title  = {Taken before the apply and again after, the digest moved and the timestamp is not stale},
+  claim  = {Taken before the apply and again after, the digest moved and the timestamp is not stale.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_reading_that_advanced_and_is_fresh_makes_the_witness_pass},
+}
+
+@misc{waldo-planflow-reading-that-did-not-advance-fails-a-witness-whose-exit-was-zero,
+  section = {planflow},
+  title  = {A no-op or failed apply leaves the digest as it was: exit 0 alone no longer passes},
+  claim  = {A no-op or failed apply leaves the digest as it was: exit 0 alone no longer passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_reading_that_did_not_advance_fails_a_witness_whose_exit_was_zero},
+}
+
+@misc{waldo-planflow-reading-that-cannot-be-taken-before-the-apply-stops-it,
+  section = {planflow},
+  title  = {No reading, no apply: the witness could not be judged afterwards, so nothing is applied},
+  claim  = {No reading, no apply: the witness could not be judged afterwards, so nothing is applied.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_reading_that_cannot_be_taken_before_the_apply_stops_it},
+}

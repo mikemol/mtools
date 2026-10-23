@@ -39,9 +39,10 @@ from mikemol.waldo.planjson import Json, as_object, list_at, parse_object
 from mikemol.waldo.planledger import append_ledger, current_applier, repo_commit
 from mikemol.waldo.planplan import plan_and_show, plan_changes, plan_flags, record_verdict
 from mikemol.waldo.planprecond import fired_names, unmet_preconditions
+from mikemol.waldo.planreading import READ, Prior
 from mikemol.waldo.plantools import Tools
 from mikemol.waldo.planverdict import load_verdict
-from mikemol.waldo.planwitness import run_witness, store_witness
+from mikemol.waldo.planwitness import run_witness, store_witness, take_reading
 
 EXIT_OK = 0
 EXIT_DENY = 1
@@ -236,7 +237,7 @@ def ledger_entry(seams: Seams, root: Path, doc: Json, apply_rc: int, witness: Js
     }
 
 
-def after_apply(seams: Seams, root: Path, doc: Json, apply_rc: int) -> int:
+def after_apply(seams: Seams, root: Path, doc: Json, apply_rc: int, prior: Prior) -> int:
     """Witness, then write the ledger entry.
 
     A failed apply is DENY, no witness runs (nothing to witness), and the ledger still records the
@@ -250,7 +251,7 @@ def after_apply(seams: Seams, root: Path, doc: Json, apply_rc: int) -> int:
     config, out = seams.config, seams.out
     witness: Json = {"status": "not-run", "why": "the apply failed"}
     if apply_rc == 0:
-        witness = run_witness(seams.tools, config, root.name, seams.now())
+        witness = run_witness(seams.tools, config, root.name, seams.now(), prior)
         store_witness(config, root.name, str(doc["sha256"]), witness)
     try:
         where = append_ledger(config, root.name, ledger_entry(seams, root, doc, apply_rc, witness))
@@ -313,10 +314,15 @@ def confirm_and_apply(
     stopped = None if assume_yes else _confirmed(seams)
     if stopped is not None:
         return stopped
+    before = take_reading(seams.tools, seams.config, root.name)
+    if before is not None and before.get("status") != READ:
+        seams.out(f"opa_plan --apply: not applied -- {before.get('why')}\n")
+        return seams.exits.withheld
+    prior = Prior(before, seams.now())
     with seams.guard():
         done = seams.tools.run(tofu, f"-chdir={root}", "apply", "-no-color", str(planfile))
         seams.out(done.stdout + done.stderr)
-        return after_apply(seams, root, doc, done.returncode)
+        return after_apply(seams, root, doc, done.returncode, prior)
 
 
 def preflight(seams: Seams, root: Path) -> tuple[Path, Path] | int:
