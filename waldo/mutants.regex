@@ -169,3 +169,7 @@ src/mikemol/waldo/plancli.py|hangup-left-ignored|        signal\.signal\(signal\
 src/mikemol/waldo/plancli.py|unadmitted-plan-verified|    if isinstance\(doc, str\):|    if False:|def=verify
 src/mikemol/waldo/plancli.py|apply-flag-ignored|    if cast\("bool", args\.apply\):|    if False:|def=plan_flow
 src/mikemol/waldo/plancli.py|apply-plan-ignored|    if cast\(".*", args\.apply_plan\) is not None:|    if False:|def=main
+src/mikemol/waldo/planinterlock.py|bad-kind-asked-anyway|    if opa is None or not kind\.isidentifier\(\):|    if opa is None:|def=defer
+src/mikemol/waldo/planinterlock.py|facts-never-sent|stdin_text=json\.dumps\(facts\)|stdin_text=None|def=defer
+src/mikemol/waldo/planinterlock.py|other-shape-read-as-met|    if not isinstance\(value, list\):|    if False:|def=defer
+src/mikemol/waldo/planinterlock.py|messages-unsorted|    return sorted\(str\(m\) for m in as_list\(value\)\)|    return [str(m) for m in as_list(value)]|def=defer

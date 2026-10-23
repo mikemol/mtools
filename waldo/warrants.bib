@@ -1627,3 +1627,31 @@
   claim  = {With trusted_uid set, that uid plans a root-planned root and root is refused, by name.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_a_service_principal_replaces_root_as_the_trusted_uid},
 }
+
+@misc{waldo-planinterlock-unmet-preconditions-come-back-sorted,
+  section = {planinterlock},
+  title  = {The messages are sorted, and an empty set is an empty list: every precondition holds},
+  claim  = {The messages are sorted, and an empty set is an empty list: every precondition holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planinterlock.py -k test_the_unmet_preconditions_come_back_sorted},
+}
+
+@misc{waldo-planinterlock-opa-is-asked-the-consumers-rule-over-the-facts-on-stdin,
+  section = {planinterlock},
+  title  = {The query is the config's, the directory is its interlocks, the facts go in as JSON},
+  claim  = {The query is the config's, the directory is its interlocks, the facts go in as JSON.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planinterlock.py -k test_opa_is_asked_the_consumers_rule_over_the_facts_on_stdin},
+}
+
+@misc{waldo-planinterlock-question-that-cannot-be-asked-is-none,
+  section = {planinterlock},
+  title  = {No opa, another version and a kind that is not an identifier never read as met},
+  claim  = {No opa, another version and a kind that is not an identifier never read as met.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planinterlock.py -k test_a_question_that_cannot_be_asked_is_none},
+}
+
+@misc{waldo-planinterlock-evaluation-that-fails-or-has-another-shape-is-none,
+  section = {planinterlock},
+  title  = {An opa error, empty output and a value that is not a set are each None},
+  claim  = {An opa error, empty output and a value that is not a set are each None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planinterlock.py -k test_an_evaluation_that_fails_or_has_another_shape_is_none},
+}
