@@ -107,6 +107,25 @@ def test_an_unchanged_queue_leaves_the_file_alone_and_a_changed_one_rewrites_it(
     assert int(target.stat().st_mtime) != _OLD
 
 
+def test_an_existing_export_follows_every_state_write_without_asking(tmp_path: Path) -> None:
+    """Flagging a card refreshes the export at once, so no flag waits on a stale file (W1841)."""
+    path = _file(tmp_path)
+    target = _export(path)
+    assert cli.main(["--state", str(path), "--update", "W1", "--withheld", "true"]) == _OK
+    doc = cast("Rec", json.loads(target.read_text(encoding="utf-8")))
+    assert "somerepo:W1" in cast("list[str]", doc["withheld"])
+    assert cli.main(["--state", str(path), "--drop", "W2", "gone"]) == _OK
+    dropped = cast("Rec", json.loads(target.read_text(encoding="utf-8")))
+    assert "somerepo:W2" in cast("list[str]", dropped["withheld"])
+
+
+def test_a_repo_that_never_exported_gets_no_export_file_from_a_write(tmp_path: Path) -> None:
+    """The refresh is opt-in by having exported once: a plain update creates nothing."""
+    path = _file(tmp_path)
+    assert cli.main(["--state", str(path), "--update", "W1", "--next", "later"]) == _OK
+    assert not path.with_suffix(cli.EXPORT_SUFFIX).exists()
+
+
 def test_the_mode_leaves_the_state_file_untouched(tmp_path: Path) -> None:
     """Exporting reads the queue and writes no change to it."""
     path = _file(tmp_path)

@@ -7192,3 +7192,17 @@
   claim  = {Residue is exported too (W1840), so a dropped card must not lose the flag and publish.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_withheld_flag.py -k test_a_withheld_card_stays_withheld_when_it_is_dropped_to_residue},
 }
+
+@misc{pathsforward-export-mode-existing-export-follows-every-state-write-without-asking,
+  section = {export_mode},
+  title  = {Flagging a card refreshes the export at once, so no flag waits on a stale file (W1841)},
+  claim  = {Flagging a card refreshes the export at once, so no flag waits on a stale file (W1841).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_an_existing_export_follows_every_state_write_without_asking},
+}
+
+@misc{pathsforward-export-mode-repo-that-never-exported-gets-no-export-file-from-a-write,
+  section = {export_mode},
+  title  = {The refresh is opt-in by having exported once: a plain update creates nothing},
+  claim  = {The refresh is opt-in by having exported once: a plain update creates nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export_mode.py -k test_a_repo_that_never_exported_gets_no_export_file_from_a_write},
+}

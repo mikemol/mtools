@@ -37,7 +37,6 @@ from mikemol.pathsforward import (
     delivered,
     dropto,
     embargo,
-    export,
     foreign,
     gate,
     generated,
@@ -451,7 +450,7 @@ def _pinned(upd: ops.Update, root: Path, path: str | None) -> ops.Update:
 
 
 _SUMMARY = "summary"
-EXPORT_SUFFIX = ".export.json"
+EXPORT_SUFFIX = store.EXPORT
 _FLAGS = (
     "hash",
     "render",
@@ -1614,14 +1613,8 @@ def _export(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    state = store.load(ctx.path)
-    repo = Path(text(state.doc, "project_root") or str(ctx.path.parent.parent)).name
-    cards = [*state.waypoints, *state.residue]
-    built = export.build(repo, export.stamp_of(cards), cards)
+    built = store.write_export(ctx.path, store.load(ctx.path))
     target = ctx.path.with_suffix(EXPORT_SUFFIX)
-    body = json.dumps(built, indent=2, ensure_ascii=False) + "\n"
-    if not target.is_file() or target.read_text(encoding="utf-8") != body:
-        store.write_atomic(target, body)
     shown = len(cast("list[object]", built["cards"]))
     held = len(cast("list[object]", built["withheld"]))
     _say(f"exported {target}: {shown} card(s), {held} withheld")

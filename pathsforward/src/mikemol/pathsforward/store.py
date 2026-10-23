@@ -23,12 +23,13 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import cast
 
-from mikemol.pathsforward import ownership
-from mikemol.pathsforward.model import MalformedStateError, State, validate
+from mikemol.pathsforward import export, ownership
+from mikemol.pathsforward.model import MalformedStateError, State, text, validate
 
 MIRROR = ".md"
 LEDGER = ".ledger"
 FLOCK = ".flock"
+EXPORT = ".export.json"
 
 
 class UnreadableStateError(ValueError):
@@ -84,9 +85,45 @@ def write_atomic(path: Path, body: str) -> None:
     Path(fh.name).replace(path)
 
 
+def write_export(path: Path, state: State) -> dict[str, object]:
+    """Write the repo's version-2 export beside the state file, only when its bytes differ.
+
+    ⚑ AN UNCHANGED EXPORT KEEPS ITS MTIME (nemik:W636): the pod decides whether the exports
+    changed by file mtime, so the file is replaced only when the new bytes differ.
+
+    Returns:
+        the export that was built, written or not.
+
+    """
+    repo = Path(text(state.doc, "project_root") or str(path.parent.parent)).name
+    cards = [*state.waypoints, *state.residue]
+    built = export.build(repo, export.stamp_of(cards), cards)
+    target = path.with_suffix(EXPORT)
+    body = json.dumps(built, indent=2, ensure_ascii=False) + "\n"
+    if not target.is_file() or target.read_text(encoding="utf-8") != body:
+        write_atomic(target, body)
+    return built
+
+
+def refresh_export(path: Path, state: State) -> None:
+    """Rewrite an export that already exists, so a flag is never waiting on a stale file (W1841).
+
+    ⚑ OPT-IN BY HAVING EXPORTED ONCE (nemik:W873): nemik uses a repo's export only when it is no
+    older than the state, so a writer that does not re-export after a change is always stale and
+    falls back to a list that does not know the withheld flag. A repo that never ran `--export`
+    gets no new file.
+    """
+    if path.with_suffix(EXPORT).is_file():
+        write_export(path, state)
+
+
 def save(path: Path, state: State) -> None:
-    """Write the state atomically, two-space indented, UTF-8, newline-terminated."""
+    """Write the state atomically, two-space indented, UTF-8, newline-terminated.
+
+    ⚑ AN EXISTING EXPORT FOLLOWS THE STATE (W1841): every write through here refreshes it.
+    """
     write_atomic(path, json.dumps(state.doc, indent=2, ensure_ascii=False) + "\n")
+    refresh_export(path, state)
 
 
 @contextlib.contextmanager
