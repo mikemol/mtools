@@ -161,3 +161,11 @@ src/mikemol/waldo/planflow.py|nobody-asked|    stopped = None if assume_yes else
 src/mikemol/waldo/planflow.py|no-terminal-applies|    if not seams\.interactive:|    if False:|def=_confirmed
 src/mikemol/waldo/planflow.py|any-answer-applies|    if seams\.answer\(\) != "y":|    if False:|def=_confirmed
 src/mikemol/waldo/planflow.py|pre-plan-hold-ignored|    return tools if held is None else held|    return tools|def=preflight
+src/mikemol/waldo/plancli.py|host-apply-line-without-sudo|    sudo = "sudo " if \(config\.root_custody and root\.name in config\.root_planned\) else ""|    sudo = ""|def=apply_line
+src/mikemol/waldo/plancli.py|apply-line-forgets-the-root|    sub = f" --root \{root\.name\}" if root != config\.terraform else ""|    sub = ""|def=apply_line
+src/mikemol/waldo/plancli.py|existing-plan-overwritten|    if given\.is_file\(\) and given\.stat\(\)\.st_size > 0:|    if False:|def=pick_planfile
+src/mikemol/waldo/plancli.py|hangup-not-ignored|    before = signal\.signal\(signal\.SIGHUP, signal\.SIG_IGN\)|    before = signal.getsignal(signal.SIGHUP)|def=hangup_ignored
+src/mikemol/waldo/plancli.py|hangup-left-ignored|        signal\.signal\(signal\.SIGHUP, before\)|        pass|def=hangup_ignored
+src/mikemol/waldo/plancli.py|unadmitted-plan-verified|    if isinstance\(doc, str\):|    if False:|def=verify
+src/mikemol/waldo/plancli.py|apply-flag-ignored|    if cast\("bool", args\.apply\):|    if False:|def=plan_flow
+src/mikemol/waldo/plancli.py|apply-plan-ignored|    if cast\(".*", args\.apply_plan\) is not None:|    if False:|def=main

@@ -1556,3 +1556,67 @@
   claim  = {Deleting the file must not switch the rules off; a consumer with no ordering may.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_a_missing_declaration_is_unmet_unless_the_consumer_says_it_has_none},
 }
+
+@misc{waldo-plancli-parser-reads-every-flag-the-operator-types,
+  section = {plancli},
+  title  = {Repeatable --replace and --target, the booleans, and the paths as paths},
+  claim  = {Repeatable --replace and --target, the booleans, and the paths as paths.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_the_parser_reads_every_flag_the_operator_types},
+}
+
+@misc{waldo-plancli-apply-line-is-the-verified-form-with-sudo-only-for-a-root-planned-root,
+  section = {plancli},
+  title  = {User root, a sub-root, the host root under custody and the host root without it},
+  claim  = {User root, a sub-root, the host root under custody and the host root without it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_the_apply_line_is_the_verified_form_with_sudo_only_for_a_root_planned_root},
+}
+
+@misc{waldo-plancli-existing-plan-is-never-overwritten-and-a-fresh-name-is-fine,
+  section = {plancli},
+  title  = {No name gives a temp file with the config's prefix; a named plan with content is refused},
+  claim  = {No name gives a temp file with the config's prefix; a named plan with content is
+            refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_an_existing_plan_is_never_overwritten_and_a_fresh_name_is_fine},
+}
+
+@misc{waldo-plancli-sighup-is-ignored-inside-the-guard-and-restored-after,
+  section = {plancli},
+  title  = {A dropped ssh must not cut an apply: the disposition is held, then put back},
+  claim  = {A dropped ssh must not cut an apply: the disposition is held, then put back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_sighup_is_ignored_inside_the_guard_and_restored_after},
+}
+
+@misc{waldo-plancli-plan-is-admitted-and-the-verified-apply-line-is-printed,
+  section = {plancli},
+  title  = {Exit 0, ADMITTED, the apply line with the planfile, the survive hint, and no apply},
+  claim  = {Exit 0, ADMITTED, the apply line with the planfile, the survive hint, and no apply.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_a_plan_is_admitted_and_the_verified_apply_line_is_printed},
+}
+
+@misc{waldo-plancli-flags-reach-tofu-and-a-planfile-that-holds-a-plan-is-refused,
+  section = {plancli},
+  title  = {--replace and --target become tofu flags, and an existing plan is not replaced},
+  claim  = {--replace and --target become tofu flags, and an existing plan is not replaced.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_the_flags_reach_tofu_and_a_planfile_that_holds_a_plan_is_refused},
+}
+
+@misc{waldo-plancli-apply-plan-applies-an-admitted-plan-and-verify-confirms-it,
+  section = {plancli},
+  title  = {--verify admits the planfile, --apply-plan --yes applies exactly it, once},
+  claim  = {--verify admits the planfile, --apply-plan --yes applies exactly it, once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_apply_plan_applies_an_admitted_plan_and_verify_confirms_it},
+}
+
+@misc{waldo-plancli-verify-refuses-a-planfile-whose-bytes-moved,
+  section = {plancli},
+  title  = {The moved planfile has no verdict, so it is not admitted},
+  claim  = {The moved planfile has no verdict, so it is not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_verify_refuses_a_planfile_whose_bytes_moved},
+}
+
+@misc{waldo-plancli-apply-plans-then-applies-in-one-command,
+  section = {plancli},
+  title  = {--apply --yes is plan, verify, apply: one command, the same gates},
+  claim  = {--apply --yes is plan, verify, apply: one command, the same gates.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_apply_plans_then_applies_in_one_command},
+}

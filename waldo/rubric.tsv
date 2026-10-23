@@ -23,3 +23,4 @@ planwitness	The Post-Apply Witness: The Declared Check Runs Bounded By CPU, a Wi
 planprecond	Cross-Apply Ordering: A Plan's Changes Need Earlier Steps Proven By a Whole Witnessed Ledger or a Command That Exits Zero Now, and Anything Unproven, Unknown or Unreadable Is Unmet
 planplan	Making the Plan: A Saved Plan and Its JSON, a Reason When There Is No Planfile or Show Fails, the State Lock Skipped Only for Read-Only State, and a Sealed Verdict Written Whatever It Was
 planflow	The Plan-Admit-Apply Flow: Every Gate Stops the Apply, Only a Whole Verdict Reaches It, and the Apply Is Recorded and Its Witness Loud Whatever Happened
+plancli	The Plan-Admission Command Line: The Only Apply Line Printed Is the Verified One, an Existing Plan Is Never Overwritten, and SIGHUP Is Held Off an Apply

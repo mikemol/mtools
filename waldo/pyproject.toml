@@ -111,3 +111,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_planprecond.py" = ["assert"]
 "tests/test_planplan.py" = ["assert"]
 "tests/test_planflow.py" = ["assert"]
+"tests/test_plancli.py" = ["assert"]
