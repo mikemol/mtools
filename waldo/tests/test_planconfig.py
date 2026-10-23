@@ -45,6 +45,13 @@ def test_the_queries_are_luthens_for_luthen_and_the_consumers_for_a_consumer() -
     assert cfg.interlocks() == _ROOT / "policy" / "interlocks"
 
 
+def test_the_witness_and_precondition_declarations_live_under_the_policy() -> None:
+    """Central, so the policy digest hashes them into every verdict."""
+    cfg = planconfig.luthen(_ROOT)
+    assert cfg.witness_data() == _ROOT / "policy" / "witnesses" / "data.json"
+    assert cfg.preconditions_data() == _ROOT / "policy" / "preconditions" / "data.json"
+
+
 def test_a_host_root_keeps_its_records_in_the_root_owned_directory() -> None:
     """The root-planned root uses the root state, any other root the user's."""
     cfg = planconfig.luthen(_ROOT)

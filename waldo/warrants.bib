@@ -1253,3 +1253,123 @@
   claim  = {No git, or a failing rev-parse, gives an empty commit and an unknown (None) dirty flag.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planledger.py -k test_without_git_or_a_head_the_commit_is_unknown_not_clean},
 }
+
+@misc{waldo-planwitness-declared-check-that-exits-zero-passes-with-its-evidence,
+  section = {planwitness},
+  title  = {The control: status pass, the argv, the exit and the tails, with the caller's time},
+  claim  = {The control: status pass, the argv, the exit and the tails, with the caller's time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_a_declared_check_that_exits_zero_passes_with_its_evidence},
+}
+
+@misc{waldo-planwitness-declared-check-that-exits-nonzero-fails,
+  section = {planwitness},
+  title  = {A non-zero exit is `fail`, with the exit code kept},
+  claim  = {A non-zero exit is `fail`, with the exit code kept.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_a_declared_check_that_exits_nonzero_fails},
+}
+
+@misc{waldo-planwitness-each-way-of-not-running-is-cannot-run-never-a-pass,
+  section = {planwitness},
+  title  = {No declaration file, an undeclared root, a missing tool and no bounded runner},
+  claim  = {No declaration file, an undeclared root, a missing tool and no bounded runner.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_each_way_of_not_running_is_cannot_run_never_a_pass},
+}
+
+@misc{waldo-planwitness-root-that-says-in-words-it-has-no-witness-is-none-declared,
+  section = {planwitness},
+  title  = {The words are kept, and nothing is run},
+  claim  = {The words are kept, and nothing is run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_a_root_that_says_in_words_it_has_no_witness_is_none_declared},
+}
+
+@misc{waldo-planwitness-cpu-bound-is-the-entrys-own-or-the-default,
+  section = {planwitness},
+  title  = {A declared cpu_seconds is used, a bool or absent one falls back to the default},
+  claim  = {A declared cpu_seconds is used, a bool or absent one falls back to the default.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_the_cpu_bound_is_the_entrys_own_or_the_default},
+}
+
+@misc{waldo-planwitness-result-is-kept-beside-the-verdict-it-belongs-to,
+  section = {planwitness},
+  title  = {`<digest>.witness.json` in the root's state directory, readable by others},
+  claim  = {`<digest>.witness.json` in the root's state directory, readable by others.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_the_result_is_kept_beside_the_verdict_it_belongs_to},
+}
+
+@misc{waldo-planwitness-tail-is-the-last-lines-only,
+  section = {planwitness},
+  title  = {Long output is cut to the last lines, short output whole},
+  claim  = {Long output is cut to the last lines, short output whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planwitness.py -k test_the_tail_is_the_last_lines_only},
+}
+
+@misc{waldo-planprecond-declaration-is-read-or-the-reason-it-cannot-be,
+  section = {planprecond},
+  title  = {A missing file, a file with no rules list and a good one},
+  claim  = {A missing file, a file with no rules list and a good one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_the_declaration_is_read_or_the_reason_it_cannot_be},
+}
+
+@misc{waldo-planprecond-address-matches-exactly-or-by-a-star-prefix,
+  section = {planprecond},
+  title  = {`a.b` equals itself, `a.*` covers a.b and a.c, neither covers z},
+  claim  = {`a.b` equals itself, `a.*` covers a.b and a.c, neither covers z.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_an_address_matches_exactly_or_by_a_star_prefix},
+}
+
+@misc{waldo-planprecond-rule-fires-for-its-root-and-a-matching-address-only,
+  section = {planprecond},
+  title  = {The action suffix is stripped, another root's rule and a non-matching address do not fire},
+  claim  = {The action suffix is stripped, another root's rule and a non-matching address do not
+            fire.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_a_rule_fires_for_its_root_and_a_matching_address_only},
+}
+
+@misc{waldo-planprecond-applied-requirement-is-proven-only-by-a-whole-witnessed-successful-ledger,
+  section = {planprecond},
+  title  = {The control passes, then a missing ledger, a failed apply, a failed witness do not},
+  claim  = {The control passes, then a missing ledger, a failed apply, a failed witness do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_an_applied_requirement_is_proven_only_by_a_whole_witnessed_successful_ledger},
+}
+
+@misc{waldo-planprecond-witness-can-be-waived-and-an-alias-proves-the-same-resource,
+  section = {planprecond},
+  title  = {`witness: false` accepts a failed witness, and a moved resource's old address counts},
+  claim  = {`witness: false` accepts a failed witness, and a moved resource's old address counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_the_witness_can_be_waived_and_an_alias_proves_the_same_resource},
+}
+
+@misc{waldo-planprecond-ledger-with-a-broken-chain-proves-nothing,
+  section = {planprecond},
+  title  = {The same good entry, but with its predecessor edited, is not a proof},
+  claim  = {The same good entry, but with its predecessor edited, is not a proof.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_a_ledger_with_a_broken_chain_proves_nothing},
+}
+
+@misc{waldo-planprecond-witness-requirement-must-exit-zero-now,
+  section = {planprecond},
+  title  = {A passing command is met, a failing one says its exit, a missing tool says so},
+  claim  = {A passing command is met, a failing one says its exit, a missing tool says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_a_witness_requirement_must_exit_zero_now},
+}
+
+@misc{waldo-planprecond-each-unproven-requirement-is-one-message-and-nothing-unproven-passes,
+  section = {planprecond},
+  title  = {An unmet applied, an unknown kind and an unreadable declaration all come back as text},
+  claim  = {An unmet applied, an unknown kind and an unreadable declaration all come back as text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_each_unproven_requirement_is_one_message_and_nothing_unproven_passes},
+}
+
+@misc{waldo-planprecond-when-everything-is-proven-nothing-is-unmet,
+  section = {planprecond},
+  title  = {The control: the applied proof and a passing witness leave no message},
+  claim  = {The control: the applied proof and a passing witness leave no message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planprecond.py -k test_when_everything_is_proven_nothing_is_unmet},
+}
+
+@misc{waldo-planconfig-witness-and-precondition-declarations-live-under-the-policy,
+  section = {planconfig},
+  title  = {Central, so the policy digest hashes them into every verdict},
+  claim  = {Central, so the policy digest hashes them into every verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planconfig.py -k test_the_witness_and_precondition_declarations_live_under_the_policy},
+}

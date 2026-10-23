@@ -19,3 +19,5 @@ planjson	The Plan-Admission JSON Boundary: Narrowing Without Raising, With Absen
 planverdict	Verdict Custody: A Plan Is Admitted Only By a Record Keyed By Its Own Hash, a Root-Planned Root's Record Must Be the Trusted User's in a Directory Nobody Else Can Write, an Edited Record Fails Its Seal, and a Changed Policy Voids the Verdict
 planeval	Judging a Plan: Every Refusal Stops With Its Reason, the Scope Is Written Where the Policy Reads It, and the Evaluation Returns Deny and Withheld From Opa's Output, Which Is Kept Beside the Plan
 planledger	The Apply Ledger: A Hash Chain Where Each Entry Names the Sha256 of the Line Before It, So an Edit or a Deletion Breaks Every Later Link, With the Applier Recorded as Account Names Only
+planwitness	The Post-Apply Witness: The Declared Check Runs Bounded By CPU, a Witness That Cannot Run Is a Failure and Never a Pass, and the Result Is Kept Beside the Verdict It Belongs To
+planprecond	Cross-Apply Ordering: A Plan's Changes Need Earlier Steps Proven By a Whole Witnessed Ledger or a Command That Exits Zero Now, and Anything Unproven, Unknown or Unreadable Is Unmet

@@ -75,6 +75,26 @@ class PlanConfig:
         """
         return self.policy / "interlocks"
 
+    def witness_data(self) -> Path:
+        """Name the file that declares each root's post-apply witness.
+
+        ⚑ CENTRAL, UNDER THE POLICY, so the policy digest hashes it into every verdict (W259).
+
+        Returns:
+            `<policy>/witnesses/data.json`.
+
+        """
+        return self.policy / "witnesses" / "data.json"
+
+    def preconditions_data(self) -> Path:
+        """Name the file that declares the cross-apply ordering rules (W263).
+
+        Returns:
+            `<policy>/preconditions/data.json`.
+
+        """
+        return self.policy / "preconditions" / "data.json"
+
     def state_dir(self, root_name: str) -> Path:
         """Name the verdict, witness and ledger directory for a terraform root.
 

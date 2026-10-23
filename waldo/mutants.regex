@@ -125,3 +125,16 @@ src/mikemol/waldo/planledger.py|unknown-git-state-reads-clean|        "dirty": b
 src/mikemol/waldo/planledger.py|chain-links-to-the-first-line|    return hashlib\.sha256\(lines\[-1\]\.encode\(\)\)\.hexdigest\(\) if lines else ""|    return hashlib.sha256(lines[0].encode()).hexdigest() if lines else ""|def=last_line_digest
 src/mikemol/waldo/planledger.py|broken-link-not-seen|        if record is None or record\.get\("prev"\) != prev:|        if record is None:|def=ledger_intact
 src/mikemol/waldo/planledger.py|chain-forgets-the-line-before|        prev = hashlib\.sha256\(line\.encode\(\)\)\.hexdigest\(\)|        prev = ""|def=ledger_intact
+src/mikemol/waldo/planwitness.py|undeclared-root-has-a-witness|    if root_name not in roots:|    if False:|def=declared_witness
+src/mikemol/waldo/planwitness.py|no-witness-declared-runs-anyway|    if "none" in entry:|    if False:|def=run_witness
+src/mikemol/waldo/planwitness.py|missing-witness-tool-runs|    if tool is None:|    if False:|def=run_witness
+src/mikemol/waldo/planwitness.py|entry-cpu-bound-ignored|    seconds = cpu if isinstance\(cpu, int\) and not isinstance\(cpu, bool\) else WITNESS_CPU_SECONDS|    seconds = WITNESS_CPU_SECONDS|def=run_witness
+src/mikemol/waldo/planwitness.py|failed-witness-reads-pass|        "status": "pass" if proc\.returncode == 0 else "fail",|        "status": "pass",|def=run_witness
+src/mikemol/waldo/planprecond.py|star-prefix-needs-no-star|address\.startswith\(p\[:-1\]\)|address.startswith(p)|def=address_matches
+src/mikemol/waldo/planprecond.py|other-roots-rule-fires|        if r\.get\("root"\) == root_name|        if True|def=fired_rules
+src/mikemol/waldo/planprecond.py|broken-ledger-proves|    if not ledger_intact\(path\):|    if False:|def=applied_before
+src/mikemol/waldo/planprecond.py|witness-always-needed|    need_witness = req\.get\("witness", True\) is not False|    need_witness = True|def=applied_before
+src/mikemol/waldo/planprecond.py|failed-apply-proves|    if entry\.get\("apply_exit"\) == 0 and wanted & seen and good:|    if wanted & seen and good:|def=applied_before
+src/mikemol/waldo/planprecond.py|aliases-ignored|    wanted = \{address, \*\(str\(a\) for a in as_list\(req\.get\("aliases"\)\)\)\}|    wanted = {address}|def=applied_before
+src/mikemol/waldo/planprecond.py|failing-command-met|    return None if proc\.returncode == 0 else f"\{name\} \{' '\.join\(args\)\} exited \{proc\.returncode\}"|    return None|def=witness_now
+src/mikemol/waldo/planprecond.py|unknown-kind-met|    return f"unknown requirement kind \{kind!r\}"|    return None|def=_why
