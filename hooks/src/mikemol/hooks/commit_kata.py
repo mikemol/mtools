@@ -78,6 +78,7 @@ from mikemol.hooks.stackdrift import QUEUE as _QUEUE
 from mikemol.hooks.stackdrift import report as _drift_report
 from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit, forget, with_files
 from mikemol.hooks.stackimports import refusal as _stack_refusal
+from mikemol.hooks.stackmutants import chain as _chain_lints
 from mikemol.hooks.stackmutants import real_lint as _real_lint
 from mikemol.hooks.stackpin import pin as _pin_trees
 from mikemol.hooks.stackpin import release as _release_trees
@@ -85,6 +86,7 @@ from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
+from mikemol.hooks.stacktypes import real_types as _real_types
 from mikemol.hooks.tool_path import find as _find_tool
 from mikemol.hooks.trainjoin import Follower as _Follower
 from mikemol.hooks.trainlead import lead as _train_lead
@@ -899,7 +901,7 @@ def run_stack_mode(
         ),
         published=lambda sha: published(root, sha),
         history=lambda repo: _fetch_history(repo, env),
-        lint=_real_lint(root),
+        lint=_chain_lints(_real_lint(root), _real_types(root)),
     )
     tee = TeeBuffer()
     try:
