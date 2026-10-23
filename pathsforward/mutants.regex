@@ -275,6 +275,9 @@ src/mikemol/pathsforward/ops.py|every-update-writes-the-field|        if stamp i
 src/mikemol/pathsforward/ops.py|deploys-written-when-not-given|    new\.update\(\{key: flag for key, flag in flags if flag is not None\}\)|    new.update(dict(flags))|def=_set_given
 src/mikemol/pathsforward/ops.py|withheld-flag-never-stored|\("withheld", upd\.withheld\)|("withheld", None)|def=_set_given
 src/mikemol/pathsforward/cli.py|withheld-flag-never-read|        withheld=_flag\(ctx\.get\("withheld"\)\),|        withheld=None,|def=_fields_of
+src/mikemol/pathsforward/export.py|truthy-flag-withholds|        if card\.get\("withheld"\) is not True:|        if not card.get("withheld"):|def=build
+src/mikemol/pathsforward/export.py|published-card-also-cited-as-withheld|            continue|            pass|def=build
+src/mikemol/pathsforward/export.py|card-with-no-symbol-cited|        if ref is not None:|        if True:|def=build
 src/mikemol/pathsforward/check.py|landed-without-deploys-passed|        if text\(w, "status"\) == "landed" and w\.get\("deploys"\) is not True:|        if text(w, "status") == "landed" and w.get("deploys") is False:|def=deploys_rules
 src/mikemol/pathsforward/check.py|deploying-done-card-without-language-passed|        and \(not text\(w, "witness"\) or not text\(w, "witness_lang"\)\)|        and not text(w, "witness")|def=_unproved_deploy
 src/mikemol/pathsforward/cli.py|false-word-read-as-true|    return None if value is None else value == "true"|    return None if value is None else value != "true"|def=_flag

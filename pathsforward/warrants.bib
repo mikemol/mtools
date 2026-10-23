@@ -7115,3 +7115,38 @@
   claim  = {Setting the next step on a withheld card does not publish it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_withheld_flag.py -k test_the_flag_survives_a_later_update_of_another_field},
 }
+
+@misc{pathsforward-export-flagged-card-is-a-bare-ref-and-absent-from-cards,
+  section = {export},
+  title  = {The withheld card leaves no field behind: its text appears nowhere in the export},
+  claim  = {The withheld card leaves no field behind: its text appears nowhere in the export.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_a_flagged_card_is_a_bare_ref_and_absent_from_cards},
+}
+
+@misc{pathsforward-export-unflagged-card-is-published-exactly-as-it-is,
+  section = {export},
+  title  = {No field is cut and none added: the published card equals the input},
+  claim  = {No field is cut and none added: the published card equals the input.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_an_unflagged_card_is_published_exactly_as_it_is},
+}
+
+@misc{pathsforward-export-only-the-boolean-true-withholds,
+  section = {export},
+  title  = {A false flag, a missing one and a string are all published},
+  claim  = {A false flag, a missing one and a string are all published.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_only_the_boolean_true_withholds},
+}
+
+@misc{pathsforward-export-envelope-names-the-version-the-repo-and-the-time,
+  section = {export},
+  title  = {Version 2, the repo and as_of, and an empty queue gives empty lists},
+  claim  = {Version 2, the repo and as_of, and an empty queue gives empty lists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_the_envelope_names_the_version_the_repo_and_the_time},
+}
+
+@misc{pathsforward-export-flagged-card-with-no-symbol-leaves-nothing-in-either-list,
+  section = {export},
+  title  = {It cannot be cited, so no ref, and it must not leave, so not in cards},
+  claim  = {It cannot be cited, so no ref, and it must not leave, so not in cards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_export.py -k test_a_flagged_card_with_no_symbol_leaves_nothing_in_either_list},
+}
