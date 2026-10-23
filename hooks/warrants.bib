@@ -14884,3 +14884,52 @@
             dist that does declare is still linted when its neighbour does not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackmutants.py -k test_a_repo_that_declares_no_mutants_needs_no_mutation_venv},
 }
+
+@misc{hooks-stacktypes-only-a-dist-with-a-mypy-table-is-checked,
+  section = {stacktypes},
+  title  = {A pyproject without the table, and a dist without a pyproject, are not asked about mypy},
+  claim  = {A pyproject without the table, and a dist without a pyproject, are not asked about mypy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_only_a_dist_with_a_mypy_table_is_checked},
+}
+
+@misc{hooks-stacktypes-repo-with-no-typed-dist-needs-no-mypy,
+  section = {stacktypes},
+  title  = {Estate's layout: nothing declares the table, so nothing is refused for a missing venv},
+  claim  = {Estate's layout: nothing declares the table, so nothing is refused for a missing venv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_a_repo_with_no_typed_dist_needs_no_mypy},
+}
+
+@misc{hooks-stacktypes-declaring-dist-with-no-mypy-refuses-and-says-how-to-build-it,
+  section = {stacktypes},
+  title  = {A check that cannot run is not a pass},
+  claim  = {A check that cannot run is not a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_a_declaring_dist_with_no_mypy_refuses_and_says_how_to_build_it},
+}
+
+@misc{hooks-stacktypes-mypy-lines-are-named-per-dist-and-a-clean-run-is-silent,
+  section = {stacktypes},
+  title  = {The errors come back prefixed by their dist; exit 0 contributes nothing},
+  claim  = {The errors come back prefixed by their dist; exit 0 contributes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_mypy_lines_are_named_per_dist_and_a_clean_run_is_silent},
+}
+
+@misc{hooks-stacktypes-mypy-runs-in-the-snapshot-dist-with-its-cache-beside-the-tree,
+  section = {stacktypes},
+  title  = {The working directory is the tip's dist and the cache is outside the snapshot tree},
+  claim  = {The working directory is the tip's dist and the cache is outside the snapshot tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_mypy_runs_in_the_snapshot_dist_with_its_cache_beside_the_tree},
+}
+
+@misc{hooks-stacktypes-mypy-that-dies-without-output-still-refuses,
+  section = {stacktypes},
+  title  = {Exit non-zero without a word is a refusal naming the exit, never a pass},
+  claim  = {Exit non-zero without a word is a refusal naming the exit, never a pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_a_mypy_that_dies_without_output_still_refuses},
+}
+
+@misc{hooks-stacktypes-chain-keeps-every-lints-problems-in-order,
+  section = {stacktypes},
+  title  = {One lint failing does not hide the next: both sets of problems come back, in order},
+  claim  = {One lint failing does not hide the next: both sets of problems come back, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_chain_keeps_every_lints_problems_in_order},
+}

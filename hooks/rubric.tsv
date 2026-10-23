@@ -185,3 +185,4 @@ historyfetch	The Gate History Read From the Trace Store: No Answer Is None and N
 sessioncache	The Session Cache Gauges: Each Recent Session's Latest Turn as Gauges Labelled by Session and Model, the Series Count Capped by a Session Count, and a Count Gauge Sent on Every Run So a Dead Producer Is a Missing Series
 run_with_stdin	Running a Command With Stdin To Completion: It Waits, So A Child That Fails Is Seen With Its Exit Code and Stderr, And A Missing Program Is 127 With A Note
 stackmutants	The Submit-Time Mutant Lint Names The Dists A Stack Touches, Refuses A Missing Venv And A Failing Lint, And Is Silent Only When Every Declaration Plants
+stacktypes	The Submit-Time Type Check Runs Only A Dist That Declares A Mypy Table, Refuses A Missing Venv And A Failing Or Silently Dead Mypy, And Keeps Its Cache Beside The Snapshot

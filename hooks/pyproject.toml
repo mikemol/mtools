@@ -485,6 +485,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_snaplinks.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_stackrun.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stackmutants.py" = ["assert"]
+"tests/test_stacktypes.py" = ["assert"]
 "tests/test_commit_stack.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_isolated_staged.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_remote.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

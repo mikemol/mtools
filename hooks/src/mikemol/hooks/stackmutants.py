@@ -44,6 +44,20 @@ def no_lint(_snapshot: Path, _dists: Sequence[str]) -> list[str]:
     return []
 
 
+def chain(*lints: Lint) -> Lint:
+    """Join lints into one, each run in turn and none skipped for the failure of another.
+
+    Returns:
+        a lint whose problems are those of every lint, in the order given.
+
+    """
+
+    def joined(snapshot: Path, dists: Sequence[str]) -> list[str]:
+        return [problem for lint in lints for problem in lint(snapshot, dists)]
+
+    return joined
+
+
 def dists_of(paths: Iterable[str]) -> list[str]:
     """Name the top-level directories a stack's paths lie under, once each, in first-seen order.
 
