@@ -15010,3 +15010,38 @@
   claim  = {stop_hook_active no longer ends the turn alone: the count in the transcript does.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_the_stop_hook_blocks_an_idle_end_even_when_a_block_already_happened},
 }
+
+@misc{hooks-ratchet-emit-census-line-with-a-value-is-read-and-unread-and-comment-lines-are-not,
+  section = {ratchet_emit},
+  title  = {UNREAD is not 0: a gauge of 0 for a broken baseline would read as debt paid down},
+  claim  = {UNREAD is not 0: a gauge of 0 for a broken baseline would read as debt paid down.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_a_census_line_with_a_value_is_read_and_unread_and_comment_lines_are_not},
+}
+
+@misc{hooks-ratchet-emit-row-carries-the-ratchets-own-repo-its-path-and-its-kind,
+  section = {ratchet_emit},
+  title  = {The repo label is the ratchet's repository, not the repository whose gate ran},
+  claim  = {The repo label is the ratchet's repository, not the repository whose gate ran.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_a_row_carries_the_ratchets_own_repo_its_path_and_its_kind},
+}
+
+@misc{hooks-ratchet-emit-rows-go-in-chunks-to-one-metrics-child-each,
+  section = {ratchet_emit},
+  title  = {Each chunk is a `metrics` argv with its JSON lines; more than CHUNK rows make two},
+  claim  = {Each chunk is a `metrics` argv with its JSON lines; more than CHUNK rows make two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_rows_go_in_chunks_to_one_metrics_child_each},
+}
+
+@misc{hooks-ratchet-emit-no-binary-or-store-sends-nothing-and-a-failed-spawn-is-false,
+  section = {ratchet_emit},
+  title  = {Best effort: the exit status never depends on the send},
+  claim  = {Best effort: the exit status never depends on the send.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_no_binary_or_store_sends_nothing_and_a_failed_spawn_is_false},
+}
+
+@misc{hooks-ratchet-emit-main-reads-the-census-and-ships-the-values,
+  section = {ratchet_emit},
+  title  = {The tool named by RATCHET_BIN is asked for `census ROOT`; its values are sent},
+  claim  = {The tool named by RATCHET_BIN is asked for `census ROOT`; its values are sent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_main_reads_the_census_and_ships_the_values},
+}

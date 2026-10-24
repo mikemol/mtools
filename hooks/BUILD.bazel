@@ -520,6 +520,7 @@ venv_from_hub(
         "mikemol-websubset": "mikemol.hooks.websubset_cli:main",
         # W1461: compiles one file with the pinned Codon, fetched and hash-verified on first use.
         "mikemol-codon-probe": "mikemol.hooks.codon_probe:main",
+        "mikemol-ratchet-emit": "mikemol.hooks.ratchet_emit:main",
         "mikemol-watchdog": "mikemol.hooks.watchdog:main",
         "mikemol-hook-beat": "mikemol.hooks.beat:main",
         "mikemol-hook-subagent-guard": "mikemol.hooks.subagent_guard:main",

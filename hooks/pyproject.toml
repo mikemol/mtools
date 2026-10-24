@@ -149,6 +149,7 @@ mikemol-websubset = "mikemol.hooks.websubset_cli:main"
 # W1461: compiles one file with the pinned Codon, fetched and hash-verified on first use. NOT
 # `mikemol-hook-…`: a maintainer or a consumer's gate runs it, no harness wires it.
 mikemol-codon-probe = "mikemol.hooks.codon_probe:main"
+mikemol-ratchet-emit = "mikemol.hooks.ratchet_emit:main"
 mikemol-watchdog = "mikemol.hooks.watchdog:main"
 mikemol-hook-beat = "mikemol.hooks.beat:main"
 mikemol-hook-subagent-guard = "mikemol.hooks.subagent_guard:main"
@@ -521,6 +522,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_codon_probe.py" = ["assert"]
 "tests/test_idle_progress.py" = ["assert"]
 "tests/test_idle_stop.py" = ["assert"]
+"tests/test_ratchet_emit.py" = ["assert"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/presubmit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_presubmit.py" = ["assert"]

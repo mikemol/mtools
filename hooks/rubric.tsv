@@ -188,3 +188,4 @@ stackmutants	The Submit-Time Mutant Lint Names The Dists A Stack Touches, Refuse
 stacktypes	The Submit-Time Type Check Runs Only A Dist That Declares A Mypy Table, Refuses A Missing Venv And A Failing Or Silently Dead Mypy, And Keeps Its Cache Beside The Snapshot
 idle_progress	Idle progress (W1901): ready work and no card moved this turn
 idle_stop	Idle stop (W1904): a Stop that leaves ready work and no progress is blocked
+ratchet_emit	Ratchet emit (W1909): the fleet census shipped as one gauge per ratchet per gate run
