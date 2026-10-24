@@ -30,7 +30,9 @@ from pathlib import Path
 from typing import TextIO
 
 from mikemol.hooks.host_facts import HostLock, host_lock
+from mikemol.hooks.idle_stop import TurnReader, idle_reason, read_turn
 from mikemol.hooks.payload import as_record, text_of
+from mikemol.hooks.stamps import parse_time
 
 # The host's queue, relative to the payload's cwd (the session's directory, not the project the
 # hooks were installed from: the host session runs from ~/github with mtools' hooks).
@@ -56,20 +58,6 @@ OWN_REASON = (
     "check), then release it with `mikemol-paths-forward --state {queue} --unlock {holder}` before "
     "ending the turn, so the next tick does not wait out a lock nobody will release"
 )
-
-
-def parse_time(value: str) -> datetime | None:
-    """Parse the queue's lock stamp (`Z` or an offset).
-
-    Returns:
-        the aware time; None when the text is not a timestamp or carries no zone.
-
-    """
-    try:
-        parsed = datetime.fromisoformat(value)
-    except ValueError:
-        return None
-    return parsed if parsed.tzinfo is not None else None
 
 
 def fresh(lock: HostLock | None, now: datetime) -> bool:
@@ -118,7 +106,13 @@ def payload_lock(payload: dict[str, object]) -> HostLock | None:
     return host_lock(payload_dir(payload) / QUEUE)
 
 
-def run(payload: dict[str, object], now: datetime, out: TextIO, err: TextIO) -> int:
+def run(
+    payload: dict[str, object],
+    now: datetime,
+    out: TextIO,
+    err: TextIO,
+    reader: TurnReader = read_turn,
+) -> int:
     """Apply the guard to one Stop payload.
 
     Returns:
@@ -130,6 +124,12 @@ def run(payload: dict[str, object], now: datetime, out: TextIO, err: TextIO) -> 
     if reason is not None and lock is not None and not (payload_dir(payload) / KATAS).is_file():
         reason = OWN_REASON.format(holder=lock.holder, queue=QUEUE)
     if reason is None:
+        # W1904: no lock to release; a turn that ends with ready work and no card moved is blocked,
+        # at most CAP times a turn (counted from the transcript, not from the flag).
+        idle = idle_reason(payload, payload_dir(payload), reader)
+        if idle is not None:
+            verdict: dict[str, str] = {"decision": "block", "reason": idle}
+            out.write(json.dumps(verdict) + "\n")
         return 0
     if payload.get("stop_hook_active") is True:
         err.write(ACTIVE_NOTE)

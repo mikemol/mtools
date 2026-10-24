@@ -14989,3 +14989,24 @@
   claim  = {A reading that did not happen never stops a turn.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_queue_that_is_not_a_document_is_no_reading},
 }
+
+@misc{hooks-idle-stop-ready-work-and-no-card-moved-blocks-with-the-top-card,
+  section = {idle_stop},
+  title  = {The reason names the top ready card and the writer command that takes it},
+  claim  = {The reason names the top ready card and the writer command that takes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_ready_work_and_no_card_moved_blocks_with_the_top_card},
+}
+
+@misc{hooks-idle-stop-cap-a-moved-card-and-a-missing-reading-each-let-the-turn-end,
+  section = {idle_stop},
+  title  = {Two blocks already made, progress made, or no reading at all: no block},
+  claim  = {Two blocks already made, progress made, or no reading at all: no block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_the_cap_a_moved_card_and_a_missing_reading_each_let_the_turn_end},
+}
+
+@misc{hooks-idle-stop-stop-hook-blocks-an-idle-end-even-when-a-block-already-happened,
+  section = {idle_stop},
+  title  = {stop_hook_active no longer ends the turn alone: the count in the transcript does},
+  claim  = {stop_hook_active no longer ends the turn alone: the count in the transcript does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_the_stop_hook_blocks_an_idle_end_even_when_a_block_already_happened},
+}

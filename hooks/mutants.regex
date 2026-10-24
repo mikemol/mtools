@@ -642,6 +642,8 @@ src/mikemol/hooks/gatetargets.py|failed-status-read-as-passing|        failed = 
 src/mikemol/hooks/gatetargets.py|statusless-result-given-a-failed-row|    if result\.status:|    if True:|def=_rows_of_result
 src/mikemol/hooks/idle_progress.py|worked-card-not-progress|    return stamp is not None and stamp >= start|    return False|def=_worked_since
 src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\("status"\) == "ready" and not card\.get\("witness"\):|        if card.get("status") == "ready":|def=idle_card
+src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or not isinstance\(blocks, int\) or blocks >= CAP:|    if start is None or not isinstance(blocks, int):|def=idle_reason
+src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason
 src/mikemol/hooks/gatetargets.py|pytest-log-not-read-for-the-shard-line|    text = read\(result\.label\) if kind in \{MUTANTS, PYTEST\} else None|    text = read(result.label) if kind == MUTANTS else None|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|finish-before-start-kept|    if start is None or finish is None or finish < start:|    if start is None or finish is None:|def=run_seconds
 src/mikemol/hooks/gatetargets.py|gate-wall-time-left-in-milliseconds|    return \(finish - start\) / 1000\.0|    return float(finish - start)|def=run_seconds

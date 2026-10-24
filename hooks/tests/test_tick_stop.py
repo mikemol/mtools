@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.hooks import entry, hook_argv, tick_stop
 from mikemol.hooks.host_facts import HostLock
+from mikemol.hooks.stamps import parse_time
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -86,11 +87,11 @@ def test_a_stamp_that_cannot_be_read_blocks_nothing() -> None:
 
 def test_the_stamp_parses_with_z_or_an_offset_and_refuses_a_zoneless_one() -> None:
     """parse_time reads `Z` and `+00:00` alike and returns None without a zone."""
-    z_form = tick_stop.parse_time("2026-10-06T11:58:00Z")
+    z_form = parse_time("2026-10-06T11:58:00Z")
     assert z_form is not None
-    assert z_form == tick_stop.parse_time("2026-10-06T11:58:00+00:00")
-    assert tick_stop.parse_time("2026-10-06T11:58:00") is None
-    assert tick_stop.parse_time("not a time") is None
+    assert z_form == parse_time("2026-10-06T11:58:00+00:00")
+    assert parse_time("2026-10-06T11:58:00") is None
+    assert parse_time("not a time") is None
 
 
 def test_the_first_stop_with_a_held_lock_prints_the_block(tmp_path: Path) -> None:

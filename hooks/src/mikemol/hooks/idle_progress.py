@@ -22,7 +22,7 @@ reading that did not happen never stops a turn.
 from datetime import datetime
 
 from mikemol.hooks.payload import as_record, text_of
-from mikemol.hooks.tick_stop import parse_time
+from mikemol.hooks.stamps import parse_time
 
 
 def _cards(queue: object) -> list[dict[str, object]]:
