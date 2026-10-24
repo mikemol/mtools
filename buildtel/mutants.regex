@@ -184,6 +184,7 @@ src/mikemol/buildtel/expunge.py|read-only-tree-not-unlocked|        here\.chmod\
 src/mikemol/buildtel/shardplan.py|stale-count-rewritten|        if _value\(_SHARDS, body\) != str\(proposal\.old\):|        if False:|def=rewrite
 src/mikemol/buildtel/shardplan.py|apply-flag-never-writes|    if not applying:|    if True:|def=main
 src/mikemol/buildtel/shardplan.py|under-half-still-proposed|    if slowest <= FRACTION \* limit:|    if False:|def=_proposal
+src/mikemol/buildtel/shardplan.py|low-cpu-plain-test-still-a-finding|        if cpu_s <= limit_s:|        if False:|def=_plain_finding
 src/mikemol/buildtel/shardplan.py|count-may-not-grow|    new = max\(wanted, block\.shards \+ 1\)|    new = wanted|def=_proposal
 src/mikemol/buildtel/shardplan.py|incomplete-row-counted|if row\.get\("complete"\) is not True or not isinstance\(millis, int\):|if not isinstance(millis, int):|def=_shard_times
 src/mikemol/buildtel/bb_result.py|single-case-xml-trusted|from_xml\.cases\(\) > 1:|from_xml.cases() > 0:|def=choose

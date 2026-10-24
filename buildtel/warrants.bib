@@ -1562,3 +1562,10 @@
   claim  = {Any status but 200 is an OSError, the way the POST side treats it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bb_result_service.py -k test_a_download_the_service_refuses_raises_so_the_command_reports_it},
 }
+
+@misc{buildtel-shardplan-plain-test-is-judged-by-its-own-cpu-when-the-row-has-it-else-by-wall,
+  section = {shardplan},
+  title  = {W1894: past half the limit in CPU is a split finding; long wall of low CPU is not},
+  claim  = {W1894: past half the limit in CPU is a split finding; long wall of low CPU is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_a_plain_test_is_judged_by_its_own_cpu_when_the_row_has_it_else_by_wall},
+}

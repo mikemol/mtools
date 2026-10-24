@@ -119,9 +119,24 @@ def _shard_times(rows: Sequence[Row]) -> tuple[dict[tuple[str, str], list[int]],
         parts = _LABEL.match(label)
         if parts is not None:
             grids.setdefault((parts.group("dist"), parts.group("name")), []).append(millis)
-        elif millis > FRACTION * LIMITS[DEFAULT_SIZE] * _MS:
-            plain.append(f"{label}: {millis / _MS:.1f} s is not a numbered shard; not resharded")
+        else:
+            finding = _plain_finding(label, millis, row.get("cpu_s"))
+            if finding:
+                plain.append(finding)
     return grids, plain
+
+
+def _plain_finding(label: str, millis: int, cpu_s: object) -> str:
+    # W1894: a plain test is judged against its own CPU when the row carries it (wall includes
+    # queueing under load); with no CPU sample the wall time is the fallback unit.
+    limit_s = FRACTION * LIMITS[DEFAULT_SIZE]
+    if isinstance(cpu_s, int | float) and not isinstance(cpu_s, bool):
+        if cpu_s <= limit_s:
+            return ""
+        return f"{label}: {cpu_s:.1f} s of its own CPU is past half its limit; split it per test"
+    if millis > limit_s * _MS:
+        return f"{label}: {millis / _MS:.1f} s is not a numbered shard; not resharded"
+    return ""
 
 
 shard_times = _shard_times

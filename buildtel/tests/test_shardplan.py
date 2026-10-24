@@ -100,6 +100,23 @@ def test_a_slow_plain_test_and_a_grid_without_a_block_are_findings_not_silence()
     assert "//e:mutants" in findings[1]
 
 
+_CPU_OVER = 200.0
+_CPU_UNDER = 20.0
+_TWO = 2
+
+
+def test_a_plain_test_is_judged_by_its_own_cpu_when_the_row_has_it_else_by_wall() -> None:
+    """W1894: past half the limit in CPU is a split finding; long wall of low CPU is not."""
+    slow_cpu = {**_row("//d:test_cpu", _FULL), "cpu_s": _CPU_OVER}
+    queued = {**_row("//d:test_queued", _FULL), "cpu_s": _CPU_UNDER}
+    rows = [slow_cpu, queued, _row("//d:test_nocpu", _FULL)]
+    findings = shardplan.plan(rows, _builds(d=_AUDIO))[1]
+    assert len(findings) == _TWO
+    assert "split it per test" in findings[0]
+    assert findings[0].startswith("//d:test_cpu:")
+    assert findings[1].startswith("//d:test_nocpu:")
+
+
 def test_the_command_prints_the_diff_and_writes_nothing(tmp_path: Path) -> None:
     """The dry run reads a rows file and a repo, prints the line, and leaves BUILD as it was."""
     build = tmp_path / "audiostruct" / "BUILD.bazel"
