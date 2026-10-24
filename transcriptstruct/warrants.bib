@@ -1131,3 +1131,31 @@
             The control is the line after it, which still reads.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_a_line_separator_inside_a_needle_does_not_split_its_ledger_line},
 }
+
+@misc{transcriptstruct-turnstart-turn-begins-at-the-last-prompt-not-at-a-tool-result-after-it,
+  section = {turnstart},
+  title  = {A wake starts the turn; the tool result that follows it does not restart it},
+  claim  = {A wake starts the turn; the tool result that follows it does not restart it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnstart.py -k test_the_turn_begins_at_the_last_prompt_not_at_a_tool_result_after_it},
+}
+
+@misc{transcriptstruct-turnstart-each-stop-block-after-the-start-is-counted-and-a-new-turn-resets-the-count,
+  section = {turnstart},
+  title  = {The cap's counter is the Stop-hook records since the turn began},
+  claim  = {The cap's counter is the Stop-hook records since the turn began.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnstart.py -k test_each_stop_block_after_the_start_is_counted_and_a_new_turn_resets_the_count},
+}
+
+@misc{transcriptstruct-turnstart-no-turn-starting-record-answers-none-and-the-command-prints-null,
+  section = {turnstart},
+  title  = {A transcript of only tool results has no start: never a guessed time},
+  claim  = {A transcript of only tool results has no start: never a guessed time.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnstart.py -k test_no_turn_starting_record_answers_none_and_the_command_prints_null},
+}
+
+@misc{transcriptstruct-turnstart-command-prints-the-start-and-its-blocks-as-one-json-line,
+  section = {turnstart},
+  title  = {The reader's answer to a Stop hook: line, time and blocks},
+  claim  = {The reader's answer to a Stop hook: line, time and blocks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnstart.py -k test_the_command_prints_the_start_and_its_blocks_as_one_json_line},
+}

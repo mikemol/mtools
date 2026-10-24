@@ -41,6 +41,7 @@ from mikemol.transcriptstruct.query import (
 from mikemol.transcriptstruct.records import read_path
 from mikemol.transcriptstruct.rulingq import rulings
 from mikemol.transcriptstruct.rulings import harvest_tree
+from mikemol.transcriptstruct.turnstart import turn_start
 from mikemol.transcriptstruct.warrant import verify
 
 _REFUSED = 1
@@ -92,6 +93,13 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="W1830: one row per assistant API call: cache_read, cache_creation, the gap "
         "to the previous call, the model and what woke it; the cold ones flagged",
+    )
+    mode.add_argument(
+        "--turn-start",
+        action="store_true",
+        help="W1903: where the latest turn began (a prompt, a wake, a notification or a peer "
+        "message; not a tool result or a Stop block) and how many Stop blocks it has had, as "
+        "one JSON line",
     )
     mode.add_argument(
         "--harvest",
@@ -266,6 +274,15 @@ def _cache_turns(path: Path, out: TextIO) -> None:
     out.write(f"# {len(found)} turn(s), {sum(t.cold for t in found)} cold\n")
 
 
+def _turn_start(path: Path, out: TextIO) -> None:
+    """Write where the latest turn began and its Stop blocks as one JSON line (null for none)."""
+    found = turn_start(read_path(path))
+    body: dict[str, object] | None = None
+    if found is not None:
+        body = {"line": found.line, "at": found.at, "blocks": found.blocks}
+    out.write(json.dumps(body) + "\n")
+
+
 def _harvest(path: Path, scheduled: Sequence[str], out: TextIO) -> None:
     """Write each operator utterance of one transcript as a JSON-LD line, then the counts."""
     found = harvest(read_path(path), path, scheduled)
@@ -330,6 +347,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
     """
     if opts.get("cache_turns") is True:
         _cache_turns(path, out)
+    elif opts.get("turn_start") is True:
+        _turn_start(path, out)
     elif opts.get("harvest") is True:
         _harvest(path, scheduled, out)
     else:

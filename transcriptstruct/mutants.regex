@@ -49,4 +49,6 @@ src/mikemol/transcriptstruct/cacheturns.py|cold-needs-no-small-read|self\.cache_
 src/mikemol/transcriptstruct/cacheturns.py|negative-gap-kept|max\(_seconds\(stamp\) - _seconds\(previous\.at\), 0\.0\)|_seconds(stamp) - _seconds(previous.at)|def=_turn
 src/mikemol/transcriptstruct/cacheturns.py|repeated-message-counted-again|ident in seen|False|def=turns
 src/mikemol/transcriptstruct/rulingq.py|ledger-split-at-unicode-separators|ledger\.read_text\(encoding="utf-8"\)\.split\("\\n"\)|ledger.read_text(encoding="utf-8").splitlines()|def=rulings
+src/mikemol/transcriptstruct/turnstart.py|stop-block-not-counted|            start = TurnStart\(start\.line, start\.at, start\.blocks \+ 1\)|            start = TurnStart(start.line, start.at, start.blocks)|def=turn_start
+src/mikemol/transcriptstruct/turnstart.py|tool-result-starts-a-turn|        if kind not in _CONTINUES:|        if kind == "stop-hook":|def=turn_start
 src/mikemol/transcriptstruct/rulings.py|known-split-at-unicode-separators|ledger\.read_text\(encoding="utf-8"\)\.split\("\\n"\):|ledger.read_text(encoding="utf-8").splitlines():|def=known

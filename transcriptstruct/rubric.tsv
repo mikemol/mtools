@@ -17,3 +17,4 @@ memgrants	Lines That Grant a Permission or Lift a Rule Are Flagged for Review Fi
 memfind	A Claimed Quote Is Found in the Operator's Utterances or Reported Unwarranted
 memaudit	A Memory Directory Is Audited Against Its Project's Transcripts, Read-Only
 cacheturns	The Cache Turns: One Row per API Call With Its Cache Read and Creation, the Gap Before It and What Woke It, a Cold Turn Flagged by a Stated Threshold
+turnstart	Turn start (W1903): where the latest turn began and its Stop blocks
