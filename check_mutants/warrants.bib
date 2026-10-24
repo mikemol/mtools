@@ -335,3 +335,25 @@
   claim  = {The control: no declaration, a garbled one, and a non-positive one never refuse a shard.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_unset_or_malformed_cpu_budget_judges_nothing},
 }
+
+@misc{root-mutate-runner-selection-is-the-whole-grid-a-shard-or-one-named-site-and-never-two-of-them,
+  section = {mutate_runner},
+  title  = {W1881: unset is everything, a site is exactly its own key, a site and a shard is refused},
+  claim  = {W1881: unset is everything, a site is exactly its own key, a site and a shard is
+            refused.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_selection_is_the_whole_grid_a_shard_or_one_named_site_and_never_two_of_them},
+}
+
+@misc{root-mutate-runner-one-named-declared-defect-is-the-only-cell-a-site-run-runs,
+  section = {mutate_runner},
+  title  = {W1881: MUTATE_SITE names the cell, the header names it, and no def-site suite runs},
+  claim  = {W1881: MUTATE_SITE names the cell, the header names it, and no def-site suite runs.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_one_named_declared_defect_is_the_only_cell_a_site_run_runs},
+}
+
+@misc{root-mutate-runner-site-that-names-nothing-refuses-the-grid-rather-than-passing-an-empty-one,
+  section = {mutate_runner},
+  title  = {W1881: a typo in MUTATE_SITE must not run nothing and succeed},
+  claim  = {W1881: a typo in MUTATE_SITE must not run nothing and succeed.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_site_that_names_nothing_refuses_the_grid_rather_than_passing_an_empty_one},
+}

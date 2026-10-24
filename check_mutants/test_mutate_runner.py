@@ -700,6 +700,54 @@ def test_a_malformed_shard_refuses_the_grid_before_running_anything(
     assert seen == []
 
 
+def test_a_selection_is_the_whole_grid_a_shard_or_one_named_site_and_never_two_of_them() -> None:
+    """W1881: unset is everything, a site is exactly its own key, a site and a shard is refused."""
+    whole = mutate_runner.select("", "")
+    assert (whole.keep("src/mod.py::f"), whole.share) == (True, 1)
+    assert whole.label("dist") == "dist"
+    shard = mutate_runner.select("1/2", "")
+    assert (shard.share, shard.label("dist")) == (2, "dist shard 1/2")
+    one = mutate_runner.select("", "src/mod.py::f")
+    assert (one.keep("src/mod.py::f"), one.keep("src/mod.py::g"), one.share) == (True, False, 1)
+    assert one.label("dist") == "dist site src/mod.py::f"
+    with pytest.raises(ValueError, match="two ways"):
+        mutate_runner.select("0/2", "src/mod.py::f")
+
+
+def test_one_named_declared_defect_is_the_only_cell_a_site_run_runs(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W1881: MUTATE_SITE names the cell, the header names it, and no def-site suite runs."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    seen = _seam(monkeypatch, 1, _FAILED)
+    monkeypatch.setenv("MUTATE_SITE", "src/mod.py::returns-two")
+    assert _run_main(grid) == 0
+    out = capsys.readouterr().out
+    assert "site src/mod.py::returns-two" in out
+    assert "src/mod.py::returns-two -> killed" in out
+    assert len(seen) == 1
+
+
+def test_a_site_that_names_nothing_refuses_the_grid_rather_than_passing_an_empty_one(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W1881: a typo in MUTATE_SITE must not run nothing and succeed."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    seen = _seam(monkeypatch, 1, _FAILED)
+    monkeypatch.setenv("MUTATE_SITE", "src/mod.py::no-such-site")
+    assert _run_main(grid) == 1
+    assert "names no site or defect" in capsys.readouterr().err
+    assert seen == []
+    monkeypatch.setenv("MUTATE_SHARD", "0/2")
+    assert _run_main(grid) == 1
+    assert "two ways" in capsys.readouterr().err
+    assert seen == []
+
+
 def test_an_unsharded_runner_uses_every_cpu_and_a_shard_takes_its_share() -> None:
     """W970: six shards of one distribution must not each start a full machine's worth of suites.
 

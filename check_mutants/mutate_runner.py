@@ -112,6 +112,66 @@ def in_shard(key: str, shard: tuple[int, int] | None) -> bool:
     return digest % shard[1] == shard[0]
 
 
+@dataclasses.dataclass(frozen=True)
+class Selection:
+    """What this run runs: one named site, or this run's share of the grid.
+
+    ⚑ ONE TARGET PER SITE NEEDS A WAY TO NAME THE SITE (mtools:W1881, W1833). `site` is a site's
+    own key as the report prints it (`src/pkg/mod.py::func`, or a declared defect's
+    `src/pkg/mod.py::label`), and the run is exactly that one cell.
+    """
+
+    shard: tuple[int, int] | None = None
+    site: str = ""
+
+    def keep(self, key: str) -> bool:
+        """Say whether a site or declared defect is in this run.
+
+        Returns:
+            equality with the named site when one is set, else membership in the shard.
+
+        """
+        return key == self.site if self.site else in_shard(key, self.shard)
+
+    @property
+    def share(self) -> int:
+        """Say how many runs split the machine.
+
+        Returns:
+            the shard count, one for a whole grid or a single site.
+
+        """
+        return 1 if self.shard is None else self.shard[1]
+
+    def label(self, dist: str) -> str:
+        """Name the run in the report.
+
+        Returns:
+            the dist, with its shard or its site.
+
+        """
+        if self.site:
+            return f"{dist} site {self.site}"
+        return dist if self.shard is None else f"{dist} shard {self.shard[0]}/{self.shard[1]}"
+
+
+def select(raw_shard: str, site: str) -> Selection:
+    """Read `MUTATE_SHARD` and `MUTATE_SITE`.
+
+    Returns:
+        the selection; a site and a shard select the grid two ways, so setting both is refused.
+
+    Raises:
+        ValueError: when both are set, or the shard is malformed.
+
+    """
+    shard = shard_spec(raw_shard)
+    if site and shard is not None:
+        msg = "MUTATE_SITE and MUTATE_SHARD select the grid two ways; set one"
+        raise ValueError(msg)
+    return Selection(shard, site)
+
+
 def read_declared(dist: pathlib.Path) -> list[Declared]:
     """Read the distribution's declared defect classes, none when it has no `mutants.regex`.
 
@@ -925,14 +985,17 @@ def main(argv: list[str]) -> int:
     # ⚑⚑ A MALFORMED `mutants.regex` REFUSES THE WHOLE GRID, naming the line (W629), rather than
     # being read as "declared nothing". A MALFORMED `MUTATE_SHARD` REFUSES IT THE SAME WAY (W970).
     try:
-        shard = shard_spec(os.environ.get("MUTATE_SHARD", ""))
-        declared = [d for d in read_declared(grid.dist) if in_shard(d.label, shard)]
+        chosen = select(os.environ.get("MUTATE_SHARD", ""), os.environ.get("MUTATE_SITE", ""))
+        declared = [d for d in read_declared(grid.dist) if chosen.keep(d.label)]
     except ValueError as exc:
         sys.stderr.write(f"mutate: {exc}\n")
         return 1
-    attempted = [s for s in attempted if in_shard(s, shard)]
-    unreachable = [s for s in unreachable if in_shard(s, shard)]
-    jobs = [(site, mutant) for site, mutant in jobs if in_shard(site, shard)]
+    attempted = [s for s in attempted if chosen.keep(s)]
+    unreachable = [s for s in unreachable if chosen.keep(s)]
+    jobs = [(site, mutant) for site, mutant in jobs if chosen.keep(site)]
+    if chosen.site and not attempted and not declared:
+        sys.stderr.write(f"mutate: MUTATE_SITE {chosen.site!r} names no site or defect\n")
+        return 1
     if os.environ.get("MUTATE_PLAN"):
         sys.stdout.write(plan_line(grid.dist.name, attempted, unreachable, len(declared)))
         return 0
@@ -943,13 +1006,13 @@ def main(argv: list[str]) -> int:
         [m for _site, m in jobs],
         declared,
         debug=debug,
-        share=1 if shard is None else shard[1],
+        share=chosen.share,
     )
     for (site, _mutant), got in zip(jobs, verdicts, strict=True):
         if debug:
             sys.stdout.write(f"    {site} -> {got}\n")
         groups[got].append(site)
-    name = grid.dist.name if shard is None else f"{grid.dist.name} shard {shard[0]}/{shard[1]}"
+    name = chosen.label(grid.dist.name)
     code = _account(name, len(modules), attempted, unreachable, groups)
     # ⚑ BOTH ARE COMPUTED BEFORE EITHER DECIDES THE EXIT: `code or _regex_section(...)` would skip
     # printing the declared-defect section whenever the def-site grid had already failed.
