@@ -263,7 +263,8 @@ def venv_from_hub(
         python_version_short,
         srcs = None,
         src_root = "src",
-        console_scripts = None):
+        console_scripts = None,
+        visibility = None):
     """The templatizable form: one call per distribution, population taken from the hub.
 
     ⚑⚑⚑ THIS IS WHERE "TRIVIALLY TEMPLATIZABLE" LIVES. A distribution says its name, its hub's
@@ -283,9 +284,13 @@ def venv_from_hub(
         srcs: the distribution's own sources, standing in for an editable install.
         src_root: directory under which `srcs` paths become site-packages-relative.
         console_scripts: `entry-name: module:function`, mirroring `[project.scripts]`.
+        visibility: who may depend on the venv; None keeps the package default, so only a
+            distribution that declares a dependencies-only venv for its per-site mutation targets
+            (W1885) opens one.
     """
     venv(
         name = name,
+        visibility = visibility,
         console_scripts = console_scripts or {},
         deps = [r.removesuffix(":pkg") + ":extracted_whl_files" for r in hub_requirements],
         python_version = python_version,

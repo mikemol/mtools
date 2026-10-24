@@ -36,7 +36,13 @@ config="${1:?the config was not passed}"
 runner="${2:?the runner was not passed}"
 
 dist="$(dirname "$config")"
-py="$dist/.venv/bin/python3"
+# ⚑ W1885: THE VENV IS NAMED, NOT ASSUMED. A per-site target (W1833) stages `.venv_deps`, a venv of
+# the third-party dependencies only, because `.venv` carries every source of the distribution as a
+# stand-in for an editable install and a target that stages it reruns whenever any source changes.
+# The runner puts the mutated copy's own `src` first on PYTHONPATH, so the dependencies are all the
+# venv has to supply. Unset means `.venv`, byte for byte what every flat target does.
+venv="${MUTATE_VENV:-.venv}"
+py="$dist/$venv/bin/python3"
 
 # ⚑⚑ THE INTERPRETER IS THE SUBJECT OF ITS OWN PRECONDITION, and this check earned itself on its
 # first real use: `//ratchet:mutants` failed in 0.6s with this exact line, because `.venv` had not
@@ -70,8 +76,8 @@ export MUTATE_MUTATION_SRC
 # toolchain IS staged — at `$RUNFILES_DIR/<repo>/` — and `PYTHONHOME` is the one mechanism that
 # names it without baking a path into an artifact. The repo name is written by `venv.bzl` beside
 # `pyvenv.cfg`; outside a runfiles tree the symlink resolves on its own and nothing is set.
-if [ -n "${RUNFILES_DIR:-}" ] && [ -r "$dist/.venv/pythonhome.runfiles" ]; then
-    PYTHONHOME="$RUNFILES_DIR/$(cat "$dist/.venv/pythonhome.runfiles")"
+if [ -n "${RUNFILES_DIR:-}" ] && [ -r "$dist/$venv/pythonhome.runfiles" ]; then
+    PYTHONHOME="$RUNFILES_DIR/$(cat "$dist/$venv/pythonhome.runfiles")"
     export PYTHONHOME
 fi
 

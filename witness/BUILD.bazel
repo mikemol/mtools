@@ -19,11 +19,11 @@ exports_files([
 ])
 
 # ⚑ W1882, THE FIRST STEP OF ONE MUTATION TARGET PER SITE (W1833): every source and test is
-# exported to the generated packages under //witness/mutants, which live BESIDE src/ and not inside
+# exported to the generated packages under //witness/sites, which live BESIDE src/ and not inside
 # it because a nested BUILD file would make its directory a package and drop it from the globs below.
 exports_files(
-    glob(["src/**/*.py", "tests/**/*.py"]),
-    visibility = ["//witness/mutants:__subpackages__"],
+    glob(["src/**/*.py", "tests/**/*.py"]) + ["mutants.regex"],
+    visibility = ["//witness/sites:__subpackages__"],
 )
 
 py_library(
@@ -153,6 +153,18 @@ venv_from_hub(
     python_version = "3.13.13",
     python_version_short = "3.13",
     srcs = glob(["src/mikemol/witness/**"]),
+)
+
+# ⚑ W1885: THE THIRD-PARTY DEPENDENCIES ONLY, for the per-site mutation targets under
+# //witness/mutants (W1833). `.venv` above carries every source of this distribution as a stand-in
+# for an editable install, so a target that stages it reruns whenever any source changes; the runner
+# puts the mutated copy's own `src` first on PYTHONPATH, so the dependencies are all a site needs.
+venv_from_hub(
+    name = ".venv_deps",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    visibility = ["//witness/sites:__subpackages__"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
