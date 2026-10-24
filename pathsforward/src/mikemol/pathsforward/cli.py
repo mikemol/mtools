@@ -52,6 +52,7 @@ from mikemol.pathsforward import (
     promptwatch,
     refusal_record,
     render,
+    retros,
     selftest,
     session,
     standing,
@@ -511,6 +512,7 @@ _VALUED = (
     "weights_from",
     "vectors_from",
     "manifests_from",
+    "add_retro",
     "repair_counter",
     "scan_literal",
     "commit_message",
@@ -665,6 +667,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "block_matching": frozenset({"on", "write"}),
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
+    "add_retro": frozenset(),
     "warrant": frozenset(
         {"transcript", "uuid", "claim", "line", "reader", "root", "reason", "dry_run"}
     ),
@@ -1020,6 +1023,13 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         metavar="FILE",
         help="W1453: store [{symbol, manifest, size}] from a JSON file, all or nothing; "
         "a dry run unless --write",
+    )
+    mode.add_argument(
+        "--add-retro",
+        metavar="FILE",
+        help="W1918: add the retro record in a JSON file to the queue's retros list, minting "
+        "the next <repo>:R<n>; a finding with no card or certify_change, or a card without "
+        "owner, due date or witness, is refused (nemik:W982)",
     )
 
 
@@ -2937,6 +2947,33 @@ def _manifests_from(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _add_retro(ctx: Ctx) -> int:
+    """Add one retro record from a JSON file, minting its id (W1918, nemik:W982).
+
+    Returns:
+        EXIT_OK; EXIT_REFUSED when the file is not one object or the record fails
+        `retros.retro_refusals`, which is said on stderr and changes nothing.
+
+    """
+    raw = _json_file(Path(ctx.get("add_retro") or ""))
+    if not isinstance(raw, dict):
+        _warn("--add-retro FILE holds one JSON object")
+        return EXIT_REFUSED
+    retro = cast("dict[str, object]", raw)
+    repo = inbound.repo_name(ctx.path)
+
+    def edit(state: State) -> int:
+        try:
+            ident = retros.add_retro(state.doc, repo, retro)
+        except ValueError as refusal:
+            _warn(f"--add-retro refused: {refusal}")
+            return EXIT_REFUSED
+        _say(f"{ident} added")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _repair_counter(ctx: Ctx) -> int:
     """Raise a lagging counter to the highest claimed symbol, and ledger the repair (W355).
 
@@ -3159,6 +3196,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "weights_from": _weights_from,
     "vectors_from": _vectors_from,
     "manifests_from": _manifests_from,
+    "add_retro": _add_retro,
     "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,

@@ -7273,3 +7273,11 @@
   claim  = {The counter only rises; an old document with no list or counter starts at R1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_adding_a_retro_mints_the_next_id_and_a_refused_one_changes_nothing},
 }
+
+@misc{pathsforward-retros-command-adds-a-retro-from-a-file-and-refuses-a-bad-finding,
+  section = {retros},
+  title  = {--add-retro FILE stores the record under its new id; a refusal leaves the queue as it was},
+  claim  = {--add-retro FILE stores the record under its new id; a refusal leaves the queue as it
+            was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_command_adds_a_retro_from_a_file_and_refuses_a_bad_finding},
+}

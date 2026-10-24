@@ -301,4 +301,5 @@ src/mikemol/pathsforward/check.py|every-unwitnessed-card-flagged-landed|        
 src/mikemol/pathsforward/retros.py|finding-without-witness-accepted|        f"a card-finding has no \{key\}" for key in CARD_FINDING_FIELDS if not _filled\(finding, key\)|        f"a card-finding has no {key}" for key in CARD_FINDING_FIELDS if False|def=finding_refusals
 src/mikemol/pathsforward/retros.py|retro-counter-not-raised|    doc\["retro_counter"\] = number|    pass|def=add_retro
 src/mikemol/pathsforward/retros.py|unknown-layer-accepted|    if layer is not None and layer not in LAYERS:|    if False:|def=retro_refusals
+src/mikemol/pathsforward/cli.py|refused-retro-not-caught|        except ValueError as refusal:|        except KeyError as refusal:|def=_add_retro
 src/mikemol/pathsforward/cli.py|intervention-not-ledgered|    _ledger\(ctx, Entry\("intervention", NO_SYMBOL, kind, "intervention", note\)\)|    pass|def=_intervention

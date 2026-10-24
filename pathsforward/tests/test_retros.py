@@ -4,13 +4,16 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import json
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from mikemol.pathsforward import retros
+from mikemol.pathsforward import cli, retros
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from mikemol.pathsforward.model import Json
 
 _CARD: Json = {
@@ -57,3 +60,35 @@ def test_adding_a_retro_mints_the_next_id_and_a_refused_one_changes_nothing() ->
     with pytest.raises(ValueError, match="neither"):
         retros.add_retro(doc, "mtools", {"findings": [{}]})
     assert doc == before
+
+
+def _project(tmp_path: Path) -> Path:
+    queue = tmp_path / ".claude" / "paths-forward.json"
+    queue.parent.mkdir()
+    empty: Json = {"counter": 0, "residue": [], "waypoints": []}
+    queue.write_text(json.dumps(empty), encoding="utf-8")
+    return queue
+
+
+def _saved(queue: Path) -> Json:
+    return cast("Json", json.loads(queue.read_text(encoding="utf-8")))
+
+
+def _file(tmp_path: Path, name: str, record: Json) -> Path:
+    path = tmp_path / name
+    path.write_text(json.dumps(record), encoding="utf-8")
+    return path
+
+
+def test_the_command_adds_a_retro_from_a_file_and_refuses_a_bad_finding(tmp_path: Path) -> None:
+    """--add-retro FILE stores the record under its new id; a refusal leaves the queue as it was."""
+    queue = _project(tmp_path)
+    good = _file(tmp_path, "good.json", {"trigger": "t", "findings": [_CARD]})
+    assert cli.main(["--state", str(queue), "--add-retro", str(good)]) == cli.EXIT_OK
+    saved = _saved(queue)
+    assert saved["retro_counter"] == 1
+    [stored] = cast("list[Json]", saved["retros"])
+    assert stored["id"] == f"{tmp_path.name}:R1"
+    bad = _file(tmp_path, "bad.json", {"findings": [{"finding_card": "x"}]})
+    assert cli.main(["--state", str(queue), "--add-retro", str(bad)]) == cli.EXIT_REFUSED
+    assert _saved(queue) == saved
