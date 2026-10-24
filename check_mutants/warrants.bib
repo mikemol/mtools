@@ -357,3 +357,66 @@
   claim  = {W1881: a typo in MUTATE_SITE must not run nothing and succeed.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_site_that_names_nothing_refuses_the_grid_rather_than_passing_an_empty_one},
 }
+
+@misc{root-mutate-runner-files-a-site-stages-are-its-module-the-cone-of-its-tests-and-those-tests,
+  section = {mutate_runner},
+  title  = {W1883: module a is seen by test_a and test_b (through b), so b's cone joins the files},
+  claim  = {W1883: module a is seen by test_a and test_b (through b), so b's cone joins the files.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_files_a_site_stages_are_its_module_the_cone_of_its_tests_and_those_tests},
+}
+
+@misc{root-mutate-runner-site-the-graph-cannot-narrow-stages-the-whole-distribution,
+  section = {mutate_runner},
+  title  = {W1883: no graph, an unknown module, or a module no test sees is None, never a narrowing},
+  claim  = {W1883: no graph, an unknown module, or a module no test sees is None, never a narrowing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_site_the_graph_cannot_narrow_stages_the_whole_distribution},
+}
+
+@misc{root-mutate-runner-declared-test-list-wins-over-the-graph-and-blank-means-the-graph,
+  section = {mutate_runner},
+  title  = {W1883: MUTATE_TESTS is space-separated paths; unset or blank is the graph's answer},
+  claim  = {W1883: MUTATE_TESTS is space-separated paths; unset or blank is the graph's answer.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_declared_test_list_wins_over_the_graph_and_blank_means_the_graph},
+}
+
+@misc{root-mutate-runner-cell-names-its-target-after-its-own-key-and-a-declared-one-is-prefixed,
+  section = {mutate_runner},
+  title  = {W1883: the name is the key's part after `::`, made safe, never an index},
+  claim  = {W1883: the name is the key's part after `::`, made safe, never an index.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_cell_names_its_target_after_its_own_key_and_a_declared_one_is_prefixed},
+}
+
+@misc{root-mutate-runner-site-stages-its-module-the-cone-of-its-tests-and-those-tests,
+  section = {mutate_runner},
+  title  = {W1883: a is seen by test_a and, through b, test_b; the cone and the inits are staged},
+  claim  = {W1883: a is seen by test_a and, through b, test_b; the cone and the inits are staged.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_site_stages_its_module_the_cone_of_its_tests_and_those_tests},
+}
+
+@misc{root-mutate-runner-generated-package-carries-the-site-its-tests-and-a-suite,
+  section = {mutate_runner},
+  title  = {W1883: one `mutant_site` per cell with MUTATE_TESTS spelled out, and a visible suite},
+  claim  = {W1883: one `mutant_site` per cell with MUTATE_TESTS spelled out, and a visible suite.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_generated_package_carries_the_site_its_tests_and_a_suite},
+}
+
+@misc{root-mutate-runner-def-site-omits-mutants-regex-and-a-declared-defect-stages-it,
+  section = {mutate_runner},
+  title  = {W1883: editing a declaration must rerun no def-site},
+  claim  = {W1883: editing a declaration must rerun no def-site.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_def_site_omits_mutants_regex_and_a_declared_defect_stages_it},
+}
+
+@misc{root-mutate-runner-module-the-graph-cannot-narrow-stages-the-whole-distribution,
+  section = {mutate_runner},
+  title  = {W1883: no graph means every source and the whole tests directory, never a guess},
+  claim  = {W1883: no graph means every source and the whole tests directory, never a guess.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_module_the_graph_cannot_narrow_stages_the_whole_distribution},
+}
+
+@misc{root-mutate-runner-check-names-a-stale-or-orphaned-package-and-write-makes-it-fresh,
+  section = {mutate_runner},
+  title  = {W1883: --check exits 1 on a missing file and on one whose module is gone; --write heals},
+  claim  = {W1883: --check exits 1 on a missing file and on one whose module is gone; --write heals.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_check_names_a_stale_or_orphaned_package_and_write_makes_it_fresh},
+}

@@ -177,6 +177,7 @@ py_test(
     srcs = [
         "@mikemol_check_mutants//:test_mutate_runner.py",
         "@mikemol_check_mutants//:mutate_runner.py",
+        "@mikemol_check_mutants//:mutants_gen.py",
         "@mikemol_rules_py//:pytest_main.py",
     ],
     main = "@mikemol_rules_py//:pytest_main.py",
@@ -428,6 +429,7 @@ _ATOM_PY = [
     "@mikemol_rules_py//:test_pytest_main.py",
     "@mikemol_check_mypy//:mypy_runner.py",
     "@mikemol_check_mutants//:mutate_runner.py",
+    "@mikemol_check_mutants//:mutants_gen.py",
     "@mikemol_check_mutants//:test_mutate_runner.py",
     "@mikemol_check_ruff//:selector_check.py",
     "@mikemol_check_ruff//:test_selector_check.py",
@@ -489,7 +491,7 @@ _ATOM_SCRIPTS = [
         "test_pytest_main.py",
     ]),
     ("check_mypy", ["mypy_runner.py"]),
-    ("check_mutants", ["mutate_runner.py", "test_mutate_runner.py"]),
+    ("check_mutants", ["mutate_runner.py", "mutants_gen.py", "test_mutate_runner.py"]),
     ("check_ruff", [
         "selector_check.py",
         "test_selector_check.py",

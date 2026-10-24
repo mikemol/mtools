@@ -7,6 +7,7 @@ exports_files([
     "defs.bzl",
     "mutate_check.sh",
     "mutate_runner.py",
+    "mutants_gen.py",
     "mypy.ini",
     "test_mutate_runner.py",
 ])

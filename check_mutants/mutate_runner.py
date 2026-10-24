@@ -724,16 +724,10 @@ def selected_tests(dist: pathlib.Path, rel: pathlib.Path) -> list[str]:
         the dist-relative test paths, sorted, or an empty list meaning the whole `tests` directory.
 
     """
-    source = dist / "graph.json"
-    try:
-        doc: object = json.loads(source.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    graph = _graph(dist)
+    if graph is None:
         return []
-    if not isinstance(doc, dict):
-        return []
-    parts = cast("dict[str, object]", doc)
-    modules = _entries(parts, "modules")
-    tests = _entries(parts, "tests")
+    modules, tests = graph
     target = str(rel)
     if target not in modules:
         return []
@@ -743,6 +737,61 @@ def selected_tests(dist: pathlib.Path, rel: pathlib.Path) -> list[str]:
         if target in entry.get("reads", []) or target in _cone(entry.get("imports", []), modules)
     ]
     return sorted(chosen)
+
+
+def chosen_tests(dist: pathlib.Path, rel: pathlib.Path, declared: str) -> list[str]:
+    """Pick the tests a mutation of `rel` runs: the declared list, else the graph's selection.
+
+    ⚑ A PER-SITE TARGET NAMES ITS TESTS AND STAGES NO `graph.json` (W1883). The graph changes
+    whenever any test or module gains an import, and a target that staged it would rerun for
+    every such change; the generator computes the list once and writes it into the target's own
+    BUILD file, so only the targets whose list changed rerun. `MUTATE_TESTS` is that list,
+    space-separated dist-relative paths; unset or blank is the graph's answer as before.
+
+    Returns:
+        the dist-relative test paths, or an empty list meaning the whole `tests` directory.
+
+    """
+    return declared.split() if declared.strip() else selected_tests(dist, rel)
+
+
+def _graph(
+    dist: pathlib.Path,
+) -> tuple[dict[str, dict[str, list[str]]], dict[str, dict[str, list[str]]]] | None:
+    # The dist's modules and tests from `graph.json`, or None when it is absent or not a mapping.
+    try:
+        doc: object = json.loads((dist / "graph.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(doc, dict):
+        return None
+    parts = cast("dict[str, object]", doc)
+    return _entries(parts, "modules"), _entries(parts, "tests")
+
+
+def staged_files(dist: pathlib.Path, rel: pathlib.Path) -> tuple[list[str], list[str]] | None:
+    """Name the files a per-site target must stage to mutate module `rel` (W1883).
+
+    ⚑ EXACTLY WHAT A CHANGE CAN MOVE, NO MORE: the module, the import cone of every test that can
+    see it, and those tests. A target that stages these reruns when one of them changes and hits the
+    cache when anything else does, which is the point of one target per site (W1833).
+
+    ⚑ THE SAME UNKNOWN AS `selected_tests`: no graph, or a module it does not name, is None, and the
+    caller stages the whole distribution rather than guess that nothing else matters.
+
+    Returns:
+        `(sources, tests)`, dist-relative and sorted; None when the graph cannot narrow it.
+
+    """
+    graph = _graph(dist)
+    chosen = selected_tests(dist, rel)
+    if graph is None or not chosen:
+        return None
+    modules, tests = graph
+    cone: set[str] = {str(rel)}
+    for path in chosen:
+        cone |= _cone(tests[path].get("imports", []), modules)
+    return sorted(cone), chosen
 
 
 def _entries(doc: dict[str, object], key: str) -> dict[str, dict[str, list[str]]]:
@@ -842,7 +891,8 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         # ⚑⚑ A SUITE THAT OUTLIVES THE LIMIT IS A KILL: it did not pass, and the only code that
         # differs from a clean run is the mutant, so the mutant is what it noticed.
         try:
-            proc = _launch_suite(grid, work, env, selected_tests(work, rel))
+            tests = chosen_tests(work, rel, os.environ.get("MUTATE_TESTS", ""))
+            proc = _launch_suite(grid, work, env, tests)
         except subprocess.TimeoutExpired:
             if debug:
                 sys.stdout.write("      ended with no progress or over its CPU limit\n")
@@ -1018,6 +1068,22 @@ def main(argv: list[str]) -> int:
     # printing the declared-defect section whenever the def-site grid had already failed.
     regex_code = _regex_section(regex)
     return 1 if any((code, regex_code, _budget_section())) else 0
+
+
+def site_keys(dist: pathlib.Path) -> list[str]:
+    """List the key of every def-site this runner would mutate in a distribution (W1883).
+
+    ⚑ THE GENERATOR ASKS THE RUNNER, NOT A SECOND FINDER: a per-site target that named a site the
+    runner does not count would be refused by `MUTATE_SITE` ("names no site"), and a site the
+    generator missed would never run. Import-time sites are not listed: the operator cannot reach
+    them, so no target could kill them.
+
+    Returns:
+        the keys in source order, `src/pkg/mod.py::func`.
+
+    """
+    _attempted, _unreachable, jobs = _plan(dist, sorted((dist / "src").rglob("*.py")))
+    return [site for site, _mutant in jobs]
 
 
 def plan_line(name: str, attempted: list[str], unreachable: list[str], declared: int) -> str:

@@ -20,6 +20,7 @@ import subprocess
 import sys
 import threading
 
+import mutants_gen
 import mutate_runner
 import pytest
 
@@ -461,6 +462,39 @@ def test_a_graph_that_is_not_json_or_not_a_mapping_runs_everything(tmp_path: pat
     assert mutate_runner.selected_tests(dist, pathlib.Path("src/p/a.py")) == []
 
 
+def test_the_files_a_site_stages_are_its_module_the_cone_of_its_tests_and_those_tests(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: module a is seen by test_a and test_b (through b), so b's cone joins the files."""
+    got = mutate_runner.staged_files(_graph_dist(tmp_path), pathlib.Path("src/p/a.py"))
+    assert got == (["src/p/a.py", "src/p/b.py"], ["tests/test_a.py", "tests/test_b.py"])
+    only = mutate_runner.staged_files(_graph_dist(tmp_path), pathlib.Path("src/p/c.py"))
+    assert only == (["src/p/c.py"], ["tests/test_c.py", "tests/test_data.py"])
+
+
+def test_a_site_the_graph_cannot_narrow_stages_the_whole_distribution(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: no graph, an unknown module, or a module no test sees is None, never a narrowing."""
+    assert mutate_runner.staged_files(tmp_path, pathlib.Path("src/p/a.py")) is None
+    dist = _graph_dist(tmp_path)
+    assert mutate_runner.staged_files(dist, pathlib.Path("src/p/new.py")) is None
+
+
+def test_a_declared_test_list_wins_over_the_graph_and_blank_means_the_graph(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: MUTATE_TESTS is space-separated paths; unset or blank is the graph's answer."""
+    dist = _graph_dist(tmp_path)
+    rel = pathlib.Path("src/p/a.py")
+    assert mutate_runner.chosen_tests(dist, rel, "tests/x.py  tests/y.py") == [
+        "tests/x.py",
+        "tests/y.py",
+    ]
+    assert mutate_runner.chosen_tests(dist, rel, "") == ["tests/test_a.py", "tests/test_b.py"]
+    assert mutate_runner.chosen_tests(dist, rel, "   ") == ["tests/test_a.py", "tests/test_b.py"]
+
+
 def test_a_suite_that_leaves_nothing_behind_returns_when_it_exits(
     tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -868,3 +902,116 @@ def test_plan_line_counts_mutable_sites_without_the_unreachable_ones() -> None:
     """Sites that cannot be mutated do not count toward the cost of a grid."""
     line = mutate_runner.plan_line("d", ["a", "b", "c"], ["c"], 2)
     assert line == "d: sites=2 unreachable=1 declared=2\n"
+
+
+_GEN_SOURCE = "def f() -> int:\n    return 1\n\n\ndef g() -> int:\n    return 2\n"
+_GEN_GRAPH = (
+    '{"modules": {"src/p/__init__.py": {"imports": [], "reads": []},'
+    ' "src/p/a.py": {"imports": [], "reads": []},'
+    ' "src/p/b.py": {"imports": ["src/p/a.py"], "reads": []}},'
+    ' "tests": {"tests/test_a.py": {"imports": ["src/p/a.py"], "reads": []},'
+    ' "tests/test_b.py": {"imports": ["src/p/b.py"], "reads": []}}}'
+)
+
+
+def _gen_dist(tmp_path: pathlib.Path, declaration: str = "") -> pathlib.Path:
+    dist = tmp_path / "d"
+    (dist / "src" / "p").mkdir(parents=True)
+    (dist / "tests").mkdir()
+    for name in ("a", "b"):
+        (dist / "src" / "p" / f"{name}.py").write_text(_GEN_SOURCE, encoding="utf-8")
+        (dist / "tests" / f"test_{name}.py").write_text("", encoding="utf-8")
+    (dist / "src" / "p" / "__init__.py").write_text("", encoding="utf-8")
+    (dist / "graph.json").write_text(_GEN_GRAPH, encoding="utf-8")
+    (dist / "pyproject.toml").write_text("", encoding="utf-8")
+    if declaration:
+        (dist / "mutants.regex").write_text(declaration, encoding="utf-8")
+    return dist
+
+
+def test_a_cell_names_its_target_after_its_own_key_and_a_declared_one_is_prefixed() -> None:
+    """W1883: the name is the key's part after `::`, made safe, never an index."""
+    plain = mutants_gen.Cell("src/p/a.py::K.m", "src/p/a.py", (), ())
+    declared = mutants_gen.Cell("src/p/a.py::a b", "src/p/a.py", (), (), declared=True)
+    assert plain.name == "K.m"
+    assert declared.name == "declared_a_b"
+    assert mutants_gen.package_of("d", "src/p/a.py") == "d/sites/src/p/a"
+    assert mutants_gen.label("d", "src/p/a.py") == "//d:src/p/a.py"
+
+
+def test_a_site_stages_its_module_the_cone_of_its_tests_and_those_tests(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: a is seen by test_a and, through b, test_b; the cone and the inits are staged."""
+    dist = _gen_dist(tmp_path)
+    cells = {c.key: c for c in mutants_gen.cells_of(dist)}
+    only_a = cells["src/p/a.py::f"]
+    assert only_a.tests == ("tests/test_a.py", "tests/test_b.py")
+    assert only_a.sources == ("src/p/__init__.py", "src/p/a.py", "src/p/b.py")
+    assert cells["src/p/b.py::f"].tests == ("tests/test_b.py",)
+
+
+def test_the_generated_package_carries_the_site_its_tests_and_a_suite(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: one `mutant_site` per cell with MUTATE_TESTS spelled out, and a visible suite."""
+    files = mutants_gen.generate(_gen_dist(tmp_path))
+    text = files["d/sites/src/p/a/BUILD.bazel"]
+    assert 'site = "src/p/a.py::f"' in text
+    assert 'tests = "tests/test_a.py tests/test_b.py"' in text
+    assert '"//d:src/p/b.py",' in text
+    assert 'visibility = ["//d/sites:__pkg__"]' in text
+    root = files["d/sites/BUILD.bazel"]
+    assert '"//d/sites/src/p/a:suite",' in root
+    assert '"//d/sites/src/p/b:suite",' in root
+    assert sorted(files) == [
+        "d/sites/BUILD.bazel",
+        "d/sites/src/p/a/BUILD.bazel",
+        "d/sites/src/p/b/BUILD.bazel",
+    ]
+
+
+def test_a_def_site_omits_mutants_regex_and_a_declared_defect_stages_it(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: editing a declaration must rerun no def-site."""
+    dist = _gen_dist(tmp_path, "src/p/a.py|f-two|return 1|return 2|def=f\n")
+    text = mutants_gen.generate(dist)["d/sites/src/p/a/BUILD.bazel"]
+    sites = text.split("mutant_site(")[1:]
+    declared = [s for s in sites if "declared_" in s.split(",")[0]]
+    plain = [s for s in sites if "declared_" not in s.split(",")[0]]
+    assert declared
+    assert all('"//d:mutants.regex"' in s for s in declared)
+    assert not any("mutants.regex" in s for s in plain)
+
+
+def test_a_module_the_graph_cannot_narrow_stages_the_whole_distribution(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1883: no graph means every source and the whole tests directory, never a guess."""
+    dist = _gen_dist(tmp_path)
+    (dist / "graph.json").unlink()
+    text = mutants_gen.generate(dist)["d/sites/src/p/a/BUILD.bazel"]
+    assert 'tests = ""' in text
+    assert '"//d:tests/test_a.py",' in text
+    assert '"//d:tests/test_b.py",' in text
+
+
+def test_check_names_a_stale_or_orphaned_package_and_write_makes_it_fresh(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W1883: --check exits 1 on a missing file and on one whose module is gone; --write heals."""
+    _gen_dist(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    assert mutants_gen.main(["--dist", "d", "--check"]) == 1
+    assert "stale d/sites/BUILD.bazel" in capsys.readouterr().out
+    assert mutants_gen.main(["--dist", "d", "--write"]) == 0
+    assert mutants_gen.main(["--dist", "d", "--check"]) == 0
+    orphan = tmp_path / "d" / "sites" / "src" / "p" / "gone" / "BUILD.bazel"
+    orphan.parent.mkdir(parents=True)
+    orphan.write_text("", encoding="utf-8")
+    assert mutants_gen.main(["--dist", "d", "--check"]) == 1
+    assert "stale d/sites/src/p/gone/BUILD.bazel" in capsys.readouterr().out
+    assert mutants_gen.main(["--dist", "nope", "--check"]) == mutants_gen.EXIT_USAGE
