@@ -14961,3 +14961,31 @@
   claim  = {W1876: a sharded plain test is sampled like a mutants shard; no line, no CPU row.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_pytest_target_with_the_shard_line_gets_cpu_rows_and_a_log_without_it_gets_none},
 }
+
+@misc{hooks-idle-progress-ready-work-and-no-card-worked-this-turn-names-the-top-ready-card,
+  section = {idle_progress},
+  title  = {The first ready card in queue order, when every stamp is before the turn began},
+  claim  = {The first ready card in queue order, when every stamp is before the turn began.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_ready_work_and_no_card_worked_this_turn_names_the_top_ready_card},
+}
+
+@misc{hooks-idle-progress-card-worked-since-the-turn-began-is-progress,
+  section = {idle_progress},
+  title  = {Advancing, blocking or finishing any card moves its stamp past the start: no escalation},
+  claim  = {Advancing, blocking or finishing any card moves its stamp past the start: no escalation.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_card_worked_since_the_turn_began_is_progress},
+}
+
+@misc{hooks-idle-progress-nothing-ready-or-only-a-witnessed-card-is-not-idle,
+  section = {idle_progress},
+  title  = {A queue with no workable ready card does not make a session idle},
+  claim  = {A queue with no workable ready card does not make a session idle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_nothing_ready_or_only_a_witnessed_card_is_not_idle},
+}
+
+@misc{hooks-idle-progress-queue-that-is-not-a-document-is-no-reading,
+  section = {idle_progress},
+  title  = {A reading that did not happen never stops a turn},
+  claim  = {A reading that did not happen never stops a turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_queue_that_is_not_a_document_is_no_reading},
+}
