@@ -11,3 +11,5 @@ cannot_census	Cannot Census: A Checker That Cannot Run Refuses With Its Name, Ne
 render	The Render: Every String a Gate Prints, Nothing It Writes, and a Pointer a Console Script Keeps
 key_lookup	The Key Lookups: A Gate Filename to Its Declared Schema or None, and a Kind Only Where a Key Has One
 mypy_domain	The mypy Domain as a Cached Test: The Transitive Victim Is in the Declared Inputs of the mypy Action, a File mypy Does Not Read Is Not, and a Defect Planted in an Imported Module Reaches the Importer's Verdict
+kinds	Ratchet kinds (W1906): which files are ratchet state and what each records
+fleetcensus	Fleet census (W1907): every ratchet file under a root, with value and floor

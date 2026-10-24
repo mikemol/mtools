@@ -20,6 +20,7 @@ from typing import cast
 
 from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
+from mikemol.ratchet.fleetcensus import census
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.remap import __doc__ as remap_doc
 from mikemol.ratchet.remap import remap_guard
@@ -35,6 +36,7 @@ CANNOT_CENSUS = 2
 
 
 _REMAP = "remap"
+_CENSUS = "census"
 
 
 def _remap_main(argv: list[str]) -> int:
@@ -68,6 +70,27 @@ def _remap_main(argv: list[str]) -> int:
     return code
 
 
+def _census_main(argv: list[str]) -> int:
+    """Run `mikemol-ratchet census ROOT`: list every ratchet file under the root (W1907).
+
+    Returns:
+        0, after one line per ratchet file and a count.
+
+    """
+    parser = argparse.ArgumentParser(prog=f"mikemol-ratchet {_CENSUS}")
+    parser.add_argument("root", type=Path, help="the directory holding the repositories")
+    opts: dict[str, object] = vars(parser.parse_args(argv))
+    rows = census(Path(str(opts["root"])))
+    for row in rows:
+        sys.stdout.write(f"{row.line()}\n")
+    unread = sum(r.value is None for r in rows)
+    sys.stdout.write(f"# {len(rows)} ratchet file(s), {unread} unread\n")
+    return 0
+
+
+_SUBCOMMANDS = {_REMAP: _remap_main, _CENSUS: _census_main}
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the ratchet for one distribution; 0 on pass, 1 on refusal, 2 when it cannot census.
 
@@ -85,8 +108,9 @@ def main(argv: list[str] | None = None) -> int:
 
     """
     args_in = sys.argv[1:] if argv is None else argv
-    if args_in[:1] == [_REMAP]:
-        return _remap_main(args_in[1:])
+    subcommand = _SUBCOMMANDS.get(args_in[0]) if args_in else None
+    if subcommand is not None:
+        return subcommand(args_in[1:])
     parser = argparse.ArgumentParser(
         prog="mikemol-ratchet",
         description=__doc__,
