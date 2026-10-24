@@ -7245,3 +7245,31 @@
   claim  = {W1887: the ledger line cannot fail silently, and the message says started, not sent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_intervention_is_in_the_ledger_whether_or_not_the_send_started},
 }
+
+@misc{pathsforward-retros-card-finding-needs-its-owner-its-due-date-and-its-witness,
+  section = {retros},
+  title  = {The G7 rule: a card without the other three is an intention, not a commitment},
+  claim  = {The G7 rule: a card without the other three is an intention, not a commitment.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_card_finding_needs_its_owner_its_due_date_and_its_witness},
+}
+
+@misc{pathsforward-retros-certify-change-alone-stands-and-a-finding-with-neither-is-refused,
+  section = {retros},
+  title  = {A verdict change needs no card; nothing at all is theater},
+  claim  = {A verdict change needs no card; nothing at all is theater.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_certify_change_alone_stands_and_a_finding_with_neither_is_refused},
+}
+
+@misc{pathsforward-retros-layer-and-the-handoff-operator-are-held-to-their-vocabularies,
+  section = {retros},
+  title  = {The layers run memory to gate; the handoff operator is self or other},
+  claim  = {The layers run memory to gate; the handoff operator is self or other.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_layer_and_the_handoff_operator_are_held_to_their_vocabularies},
+}
+
+@misc{pathsforward-retros-adding-a-retro-mints-the-next-id-and-a-refused-one-changes-nothing,
+  section = {retros},
+  title  = {The counter only rises; an old document with no list or counter starts at R1},
+  claim  = {The counter only rises; an old document with no list or counter starts at R1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_adding_a_retro_mints_the_next_id_and_a_refused_one_changes_nothing},
+}
