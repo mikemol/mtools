@@ -95,3 +95,35 @@ def test_a_blob_that_cannot_be_read_is_skipped() -> None:
     """The gate says why; the check never refuses on what it cannot read."""
     entries = [("W1", [_frozen(_BZL, "gone")])]
     assert stackbuildfiles.findings(entries, _blobs(), _never) == []
+
+
+_ROOT_BUILD = "BUILD.bazel"
+_BARE = 'scripts = ["mutate_runner.py"]\n'
+
+
+def _names(*names: str) -> stackbuildfiles.HeadNames:
+    return lambda: frozenset(names)
+
+
+def test_a_bare_name_is_present_wherever_head_holds_a_file_of_that_name() -> None:
+    """W1886: the root BUILD.bazel lists atoms' scripts by bare name, and they live elsewhere."""
+    entries = [("W1", [_frozen(_ROOT_BUILD, "b1")])]
+    blobs = _blobs(b1=_BARE)
+    assert len(stackbuildfiles.findings(entries, blobs, _never)) == 1
+    assert stackbuildfiles.findings(entries, blobs, _never, _names("mutate_runner.py")) == []
+    assert len(stackbuildfiles.findings(entries, blobs, _never, _names("other.py"))) == 1
+
+
+def test_a_bare_name_is_present_wherever_the_stack_holds_a_file_of_that_name() -> None:
+    """W1886: a file of that basename in any entry counts, in any directory."""
+    carried = [_frozen(_ROOT_BUILD, "b1"), _frozen("check_mutants/mutate_runner.py", "b2")]
+    entries = [("W1", carried)]
+    assert stackbuildfiles.findings(entries, _blobs(b1=_BARE), _never) == []
+
+
+def test_a_name_with_a_directory_is_still_judged_as_a_path() -> None:
+    """W1886: the basename rule is for bare names only, so luthen's finding stands."""
+    entries = [("W1", [_frozen(_BZL, "b1")])]
+    assert stackbuildfiles.findings(
+        entries, _blobs(b1=_LISTED), _never, _names("hook_exec_test.py")
+    ) == [_MISSING]

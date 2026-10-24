@@ -460,8 +460,10 @@ src/mikemol/hooks/pycheck_census.py|tracked-stub-left-unnamed|    return sorted\
 src/mikemol/hooks/pycheck_cli.py|omission-never-said|    if skipped:|    if False:|def=measure
 src/mikemol/hooks/stacktree.py|pin-ref-loses-the-stack-key|    ref = f"\{REF_ROOT\}/\{key\}/\{place\}"|    ref = f"{REF_ROOT}/{place}"|def=pin
 src/mikemol/hooks/stacktree.py|release-deletes-nothing|    names = listed\.stdout\.split\(\) if listed\.returncode == 0 else \[\]|    names = []|def=release
-src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not any\(path in present or in_head\(path\) for path in bases\):|                if False:|def=findings
-src/mikemol/hooks/stackbuildfiles.py|root-spelling-not-a-base|bases = \{str\(here / source\), str\(PurePosixPath\(source\)\)\}|bases = {str(here / source)}|def=findings
+src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not \(known\.path\(here, source\) or known\.name\(source\)\)|                if False|def=findings
+src/mikemol/hooks/stackbuildfiles.py|root-spelling-not-a-base|bases = \{str\(here / source\), str\(PurePosixPath\(source\)\)\}|bases = {str(here / source)}|def=_Known.path
+src/mikemol/hooks/stackbuildfiles.py|directory-name-read-by-basename|        if "/" in source:|        if False:|def=_Known.name
+src/mikemol/hooks/stackbuildfiles.py|head-names-always-asked|        if self\.head_names is None:|        if False:|def=_Known.name
 src/mikemol/hooks/stackbuildfiles.py|bzl-not-a-build-file|return name in _BUILD_NAMES or name\.endswith\("\.bzl"\)|return name in _BUILD_NAMES|def=is_build_file
 src/mikemol/hooks/stackimports.py|same-entry-counted-as-later|                later = added\.get\(module, -1\) > place|                later = added.get(module, -1) >= place|def=findings
 src/mikemol/hooks/stackimports.py|head-module-refused|                if later and not in_head\(module\):|                if later:|def=findings

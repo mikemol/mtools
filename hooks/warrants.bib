@@ -14933,3 +14933,24 @@
   claim  = {One lint failing does not hide the next: both sets of problems come back, in order.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacktypes.py -k test_chain_keeps_every_lints_problems_in_order},
 }
+
+@misc{hooks-stackbuildfiles-bare-name-is-present-wherever-head-holds-a-file-of-that-name,
+  section = {stackbuildfiles},
+  title  = {W1886: the root BUILD.bazel lists atoms' scripts by bare name, and they live elsewhere},
+  claim  = {W1886: the root BUILD.bazel lists atoms' scripts by bare name, and they live elsewhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_bare_name_is_present_wherever_head_holds_a_file_of_that_name},
+}
+
+@misc{hooks-stackbuildfiles-bare-name-is-present-wherever-the-stack-holds-a-file-of-that-name,
+  section = {stackbuildfiles},
+  title  = {W1886: a file of that basename in any entry counts, in any directory},
+  claim  = {W1886: a file of that basename in any entry counts, in any directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_bare_name_is_present_wherever_the_stack_holds_a_file_of_that_name},
+}
+
+@misc{hooks-stackbuildfiles-name-with-a-directory-is-still-judged-as-a-path,
+  section = {stackbuildfiles},
+  title  = {W1886: the basename rule is for bare names only, so luthen's finding stands},
+  claim  = {W1886: the basename rule is for bare names only, so luthen's finding stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_name_with_a_directory_is_still_judged_as_a_path},
+}
