@@ -640,6 +640,7 @@ src/mikemol/hooks/corelimit.py|hard-limit-ignored|    if above_zero\(soft\) or a
 src/mikemol/hooks/corelimit.py|missing-line-reads-as-clean|        return EXIT_UNREADABLE, f"core limit of pid \{pid\}: no `Max core file size` line"|        return 0, "clean"|def=report
 src/mikemol/hooks/gatetargets.py|failed-status-read-as-passing|        failed = 0\.0 if result\.status == PASSED else 1\.0|        failed = 0.0|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|statusless-result-given-a-failed-row|    if result\.status:|    if True:|def=_rows_of_result
+src/mikemol/hooks/gatetargets.py|pytest-log-not-read-for-the-shard-line|    text = read\(result\.label\) if kind in \{MUTANTS, PYTEST\} else None|    text = read(result.label) if kind == MUTANTS else None|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|finish-before-start-kept|    if start is None or finish is None or finish < start:|    if start is None or finish is None:|def=run_seconds
 src/mikemol/hooks/gatetargets.py|gate-wall-time-left-in-milliseconds|    return \(finish - start\) / 1000\.0|    return float(finish - start)|def=run_seconds
 src/mikemol/hooks/trainalert.py|empty-series-not-stale|    return not samples or now - max\(samples\) > seconds|    return bool(samples) and now - max(samples) > seconds|def=stale_firing

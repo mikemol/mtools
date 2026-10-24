@@ -221,7 +221,7 @@ def _rows_of_result(result: Result, read: Reader) -> list[Row]:
     """Turn one fresh result into its gauge rows.
 
     Returns:
-        the wall row, and the CPU and children rows when a mutants log carries the shard line.
+        the wall row, and the CPU and children rows when a mutants or pytest log has the shard line.
 
     """
     kind = kind_of(result.label)
@@ -230,7 +230,7 @@ def _rows_of_result(result: Result, read: Reader) -> list[Row]:
     if result.status:
         failed = 0.0 if result.status == PASSED else 1.0
         rows.append(_row(FAILED, failed, result.finished_ns, fields))
-    text = read(result.label) if kind == MUTANTS else None
+    text = read(result.label) if kind in {MUTANTS, PYTEST} else None
     shard = shard_line(text) if text else None
     if shard is not None:
         rows.extend(

@@ -13360,13 +13360,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_cached_target_gives_no_rows_and_a_fully_cached_run_says_zero},
 }
 
-@misc{hooks-gatetargets-pytest-target-gives-only-its-wall-time-and-a-log-without-the-line-adds-nothing,
-  section = {gatetargets},
-  title  = {CPU and children are mutants-only (nothing else prints the line); no line, no CPU row},
-  claim  = {CPU and children are mutants-only (nothing else prints the line); no line, no CPU row.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_pytest_target_gives_only_its_wall_time_and_a_log_without_the_line_adds_nothing},
-}
-
 @misc{hooks-gatetargets-rows-are-chunked-and-every-one-carries-the-repo-label,
   section = {gatetargets},
   title  = {One `metrics` child per CHUNK rows, JSON lines on its stdin, `repo` on every row},
@@ -14960,4 +14953,11 @@
   title  = {W1892: the child sees `ulimit -c` 1, the only limit a piped coredump handler honours},
   claim  = {W1892: the child sees `ulimit -c` 1, the only limit a piped coredump handler honours.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_the_compiler_child_runs_with_a_core_limit_of_one},
+}
+
+@misc{hooks-gatetargets-pytest-target-with-the-shard-line-gets-cpu-rows-and-a-log-without-it-gets-none,
+  section = {gatetargets},
+  title  = {W1876: a sharded plain test is sampled like a mutants shard; no line, no CPU row},
+  claim  = {W1876: a sharded plain test is sampled like a mutants shard; no line, no CPU row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_pytest_target_with_the_shard_line_gets_cpu_rows_and_a_log_without_it_gets_none},
 }

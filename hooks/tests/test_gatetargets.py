@@ -155,13 +155,15 @@ def test_a_cached_target_gives_no_rows_and_a_fully_cached_run_says_zero() -> Non
     assert not rows[0]["value"]
 
 
-def test_a_pytest_target_gives_only_its_wall_time_and_a_log_without_the_line_adds_nothing() -> None:
-    """CPU and children are mutants-only (nothing else prints the line); no line, no CPU row."""
+def test_a_pytest_target_with_the_shard_line_gets_cpu_rows_and_a_log_without_it_gets_none() -> None:
+    """W1876: a sharded plain test is sampled like a mutants shard; no line, no CPU row."""
     results = gatetargets.results_of([_event(_PYTEST), _event(_MUTANT)])
     rows = gatetargets.rows_of(results, _reader({_PYTEST: _LOG, _MUTANT: "no line"}), _NOW_NS)
     wall, failed = gatetargets.WALL, gatetargets.FAILED
-    assert _names(rows) == [gatetargets.EMITTED, wall, failed, wall, failed]
+    cpu, children = gatetargets.CPU, gatetargets.CHILDREN
+    assert _names(rows) == [gatetargets.EMITTED, wall, failed, cpu, children, wall, failed]
     assert rows[0]["value"] == _TWO
+    assert rows[3]["fields"] == {"target": _PYTEST, "kind": gatetargets.PYTEST}
 
 
 def test_a_target_that_did_not_pass_is_one_and_a_passing_one_is_zero() -> None:
