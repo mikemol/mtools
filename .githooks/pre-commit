@@ -901,15 +901,16 @@ if [ -x "$_gate_targets_tool" ] && [ -s "$staged/.bep.json" ]; then
 else
     say "mikemol-gate-targets not built or no build events; no measurements sent"
 fi
-# ⚑ W1921 (github:W42, the operator's ratchet paydown ruling, host transcript 695f3e0a line 92679):
-# THE FLEET'S RATCHET CENSUS GOES TO THE METRICS STORE ON EACH GATE RUN, BEST EFFORT, so a nonzero
-# ratchet is a series and a paydown rate is computable. The census is the parent of this repository's
-# root (every repository). NOTHING HERE CAN CHANGE THE VERDICT: an absent tool or a failed send is
-# said and ignored, and the tool itself exits 0 once its argument is right.
+# ⚑ W1921, W1923 (github:W42, the operator's ratchet paydown ruling, host transcript 695f3e0a line
+# 92679): THIS REPOSITORY'S OWN RATCHET CENSUS GOES TO THE METRICS STORE ON EACH GATE RUN, BEST
+# EFFORT, so a nonzero ratchet is a series and a paydown rate is computable. ONLY ITS OWN: the
+# operator's ruling (host line 84035) is that a repository must not know sibling checkouts exist, so
+# no gate reads a neighbour; each repository adopts this hook for itself. NOTHING HERE CAN CHANGE THE
+# VERDICT: an absent tool or a failed send is said and ignored, and the tool itself exits 0 once its
+# argument is right.
 _ratchet_emit_tool="$root/bazel-bin/hooks/.venv/bin/mikemol-ratchet-emit"
-_ratchet_fleet_root=$(dirname "$root")
-if [ -x "$_ratchet_emit_tool" ] && [ -d "$_ratchet_fleet_root" ]; then
-    "$_ratchet_emit_tool" "$_ratchet_fleet_root" || say "mikemol-ratchet-emit failed; no ratchet values sent"
+if [ -x "$_ratchet_emit_tool" ] && [ -d "$root" ]; then
+    "$_ratchet_emit_tool" "$(basename "$tools")" "$root" || say "mikemol-ratchet-emit failed; no ratchet values sent"
 else
     say "mikemol-ratchet-emit not built; no ratchet values sent"
 fi

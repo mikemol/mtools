@@ -107,7 +107,7 @@ def test_no_binary_or_store_sends_nothing_and_a_failed_spawn_is_false(
 def test_main_reads_the_census_and_ships_the_values(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """The tool named by RATCHET_BIN is asked for `census ROOT`; its values are sent."""
+    """The census of DIR is read and sent under NAME, never under the directory's basename."""
     tool = tmp_path / "mikemol-ratchet"
     tool.write_text("", encoding="utf-8")
     monkeypatch.setenv("RATCHET_BIN", str(tool))
@@ -123,9 +123,10 @@ def test_main_reads_the_census_and_ships_the_values(
     def spawn(_argv: Sequence[str], text: str) -> None:
         sent.append(text)
 
-    assert ratchet_emit.main(["/root"], spawn, run) == 0
-    assert asked == [[str(tool), "census", "/root"]]
+    assert ratchet_emit.main(["mtools", "/snapshot/tree"], spawn, run) == 0
+    assert asked == [[str(tool), "census", "--repo", "/snapshot/tree"]]
     first = cast("dict[str, object]", json.loads(sent[0].splitlines()[0]))
     assert first["value"] == 0
+    assert cast("dict[str, str]", first["fields"])["repo"] == "mtools"
     assert "3 ratchet(s), sent=True" in capsys.readouterr().out
-    assert ratchet_emit.main([]) == ratchet_emit.EXIT_USAGE
+    assert ratchet_emit.main(["only-one-argument"]) == ratchet_emit.EXIT_USAGE

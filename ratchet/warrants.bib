@@ -874,3 +874,10 @@
   claim  = {W1922: ruff's shape sums its counts; line-number shapes, lists and empty files do not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_kinds.py -k test_only_a_file_rule_count_baseline_has_a_sum},
 }
+
+@misc{ratchet-fleetcensus-gate-censuses-its-own-repository-and-reads-no-sibling,
+  section = {fleetcensus},
+  title  = {W1923: `census --repo DIR` lists DIR alone, never the repositories beside it},
+  claim  = {W1923: `census --repo DIR` lists DIR alone, never the repositories beside it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_a_gate_censuses_its_own_repository_and_reads_no_sibling},
+}

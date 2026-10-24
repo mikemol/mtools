@@ -20,7 +20,7 @@ from typing import cast
 
 from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
-from mikemol.ratchet.fleetcensus import census
+from mikemol.ratchet.fleetcensus import census, census_repo
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.remap import __doc__ as remap_doc
 from mikemol.ratchet.remap import remap_guard
@@ -79,8 +79,12 @@ def _census_main(argv: list[str]) -> int:
     """
     parser = argparse.ArgumentParser(prog=f"mikemol-ratchet {_CENSUS}")
     parser.add_argument("root", type=Path, help="the directory holding the repositories")
+    parser.add_argument(
+        "--repo", action="store_true", help="ROOT is itself one repository: census it alone"
+    )
     opts: dict[str, object] = vars(parser.parse_args(argv))
-    rows = census(Path(str(opts["root"])))
+    where = Path(str(opts["root"]))
+    rows = census_repo(where) if opts["repo"] else census(where)
     for row in rows:
         sys.stdout.write(f"{row.line()}\n")
     unread = sum(r.value is None for r in rows)

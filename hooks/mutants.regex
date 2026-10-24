@@ -644,6 +644,7 @@ src/mikemol/hooks/idle_progress.py|worked-card-not-progress|    return stamp is 
 src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\("status"\) == "ready" and not card\.get\("witness"\):|        if card.get("status") == "ready":|def=idle_card
 src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or not isinstance\(blocks, int\) or blocks >= CAP:|    if start is None or not isinstance(blocks, int):|def=idle_reason
 src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason
+src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\], path, kind, value, total\)|        (_repo, path, kind, value, total)|def=main
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/ratchet_emit.py|census-line-not-matched|        if match is not None:|        if match is None:|def=parse_census
 src/mikemol/hooks/ratchet_emit.py|repo-label-is-the-emitting-repo|        fields = \{"repo": repo, "ratchet": ratchet, "kind": kind\}|        fields = {"repo": "mtools", "ratchet": ratchet, "kind": kind}|def=rows_of

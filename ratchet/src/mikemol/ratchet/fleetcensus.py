@@ -93,6 +93,28 @@ def _files(repo: Path) -> Iterator[Path]:
                 yield Path(here) / name
 
 
+def census_repo(repo: Path) -> list[Row]:
+    """List every ratchet file in ONE repository (W1923).
+
+    ⚑ A GATE CENSUSES ITS OWN REPOSITORY AND NO OTHER. The operator's ruling (host transcript
+    695f3e0a, line 84035): repos must not be aware that sibling checkouts exist. A repository's own
+    gate reports its own ratchets at its own landings, which is also how the pace is keyed; the
+    fleet-wide `census` below is an operator tool and is never called from a gate.
+
+    Returns:
+        one row per file whose name is a ratchet kind, the repository named by its directory.
+
+    """
+    rows: list[Row] = []
+    for path in _files(repo):
+        kind = kinds.kind_of(path.name)
+        if kind is not None:
+            relative = path.relative_to(repo).as_posix()
+            value, total = kinds.value_of(path), kinds.sum_of(path)
+            rows.append(Row(repo.name, relative, kind, value, kinds.FLOOR, total))
+    return rows
+
+
 def census(root: Path) -> list[Row]:
     """List every ratchet file in every repository under a root.
 
@@ -100,12 +122,4 @@ def census(root: Path) -> list[Row]:
         one row per file whose name is a ratchet kind, repository by repository.
 
     """
-    rows: list[Row] = []
-    for repo in repos_under(root):
-        for path in _files(repo):
-            kind = kinds.kind_of(path.name)
-            if kind is not None:
-                relative = path.relative_to(repo).as_posix()
-                value, total = kinds.value_of(path), kinds.sum_of(path)
-                rows.append(Row(repo.name, relative, kind, value, kinds.FLOOR, total))
-    return rows
+    return [row for repo in repos_under(root) for row in census_repo(repo)]

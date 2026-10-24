@@ -1,17 +1,28 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""Ship the fleet ratchet census as a gauge on each gate run (W1909, github:W42 piece (a)).
+"""Ship a repository's own ratchet census as a gauge on each gate run (W1909, W1923).
 
-    mikemol-ratchet-emit ROOT
+    mikemol-ratchet-emit NAME DIR
 
 The operator's ruling (host transcript 695f3e0a, lines 92679 and 93406): a nonzero ratchet is a
 priority marker and a paydown rate needs teeth, so each ratchet's value has to be a series. One
 `mikemol.ratchet.value` gauge per ratchet file per gate run, labelled `{repo, ratchet, kind}`, makes
 the rate computable (nemik:W987, W991).
 
-⚑ THE CENSUS IS READ, NOT RECOMPUTED HERE. `mikemol-ratchet census ROOT` (W1907) owns which files
-are ratchets and what each records; this reads its lines through the transcript reader's pattern
-(`hold_lift.run_reader`), so the hooks distribution does not import the ratchet one.
+⚑ THE LABEL IS THE REPOSITORY'S NAME, NOT ITS DIRECTORY'S BASENAME. The gate runs inside
+mikemol-commit's isolated snapshot, whose directory is named `tree`, so a name taken from the path
+labelled every series `tree` (luthen's reading, 2026-10-24; the same defect the gate-target emit
+had before W1793). The caller passes the name it already has (`basename $tools`) and the census
+directory separately.
+
+⚑ A GATE EMITS ITS OWN REPOSITORY AND NO OTHER (W1923; the operator's ruling, host transcript
+695f3e0a line 84035: repos must not be aware that sibling checkouts exist). The sample then lands
+at that repository's own landing, which is what the pace is keyed to, and nothing here reads a
+sibling. Fleet coverage comes from each repository adopting the hook.
+
+⚑ THE CENSUS IS READ, NOT RECOMPUTED HERE. `mikemol-ratchet census --repo REPO` (W1907) owns which
+files are ratchets and what each records; this reads its lines through the transcript reader's
+pattern (`hold_lift.run_reader`), so the hooks distribution does not import the ratchet one.
 
 ⚑ THE `repo` LABEL IS THE RATCHET'S OWN REPOSITORY, not the repository whose gate ran: a gate in
 mtools reports luthen's baseline as luthen's. (`gatetargets.plan` overwrites that label with the
@@ -39,6 +50,7 @@ VALUE = "mikemol.ratchet.value"
 SUM = "mikemol.ratchet.sum"
 CHUNK = 100
 EXIT_USAGE = 2
+ARGUMENTS = 2
 READER_ENV = "RATCHET_BIN"
 _CHECKOUT = ("github", "mtools", "ratchet", ".venv", "bin", "mikemol-ratchet")
 _LINE = re.compile(
@@ -139,25 +151,29 @@ def main(
     spawn: Spawn = spawn_with_stdin,
     run: Run = run_reader,
 ) -> int:
-    """Read the census under a root and ship its values.
+    """Read the census of one repository directory and ship its values under a name.
 
     Returns:
         0 once the arguments are right (a send that cannot start changes nothing); 2 with usage.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != 1:
-        sys.stderr.write("usage: mikemol-ratchet-emit ROOT\n")
+    if len(args) != ARGUMENTS:
+        sys.stderr.write("usage: mikemol-ratchet-emit NAME DIR\n")
         return EXIT_USAGE
     tool = reader_path(os.environ)
     if tool is None:
         sys.stdout.write("ratchet emit: no mikemol-ratchet found; nothing sent\n")
         return 0
-    code, said = run([tool, "census", args[0]])
+    code, said = run([tool, "census", "--repo", args[1]])
     if code != 0:
         sys.stdout.write(f"ratchet emit: the census exited {code}; nothing sent\n")
         return 0
-    rows = rows_of(parse_census(said), time.time_ns())
+    named = [
+        (args[0], path, kind, value, total)
+        for _repo, path, kind, value, total in parse_census(said)
+    ]
+    rows = rows_of(named, time.time_ns())
     sent = emit(rows, os.environ, spawn)
     sys.stdout.write(f"ratchet emit: {len(rows)} ratchet(s), sent={sent}\n")
     return 0

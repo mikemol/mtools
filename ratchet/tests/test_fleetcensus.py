@@ -53,6 +53,22 @@ def test_clones_worktrees_and_build_trees_are_not_counted_twice(tmp_path: Path) 
     assert not any("worktrees" in p or "bazel-bin" in p or "deep-baseline" in p for p in paths)
 
 
+def test_a_gate_censuses_its_own_repository_and_reads_no_sibling(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1923: `census --repo DIR` lists DIR alone, never the repositories beside it."""
+    _fleet(tmp_path)
+    lines = [row.line() for row in fleetcensus.census_repo(tmp_path / "beta")]
+    assert lines == [
+        "beta broken-baseline.json baseline value=UNREAD floor=0",
+        "beta ratchet-preview.txt preview value=2 floor=0",
+    ]
+    assert cli.main(["census", "--repo", str(tmp_path / "beta")]) == 0
+    out = capsys.readouterr().out.splitlines()
+    assert not any(line.startswith("alpha ") for line in out)
+    assert out[-1] == "# 2 ratchet file(s), 1 unread"
+
+
 def test_the_command_prints_the_rows_and_the_counts(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
