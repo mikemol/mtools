@@ -18,6 +18,14 @@ exports_files([
     "uv.lock",
 ])
 
+# ⚑ W1882, THE FIRST STEP OF ONE MUTATION TARGET PER SITE (W1833): every source and test is
+# exported to the generated packages under //witness/mutants, which live BESIDE src/ and not inside
+# it because a nested BUILD file would make its directory a package and drop it from the globs below.
+exports_files(
+    glob(["src/**/*.py", "tests/**/*.py"]),
+    visibility = ["//witness/mutants:__subpackages__"],
+)
+
 py_library(
     name = "witness",
     srcs = glob(["src/mikemol/witness/**/*.py"]),
