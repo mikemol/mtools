@@ -142,6 +142,29 @@ def test_an_intervention_ships_a_card_less_event_and_changes_no_card(
     assert queue.read_text("utf-8") == before
 
 
+def test_an_intervention_is_in_the_ledger_whether_or_not_the_send_started(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1887: the ledger line cannot fail silently, and the message says started, not sent."""
+    _record(monkeypatch)
+    queue = _queue(tmp_path, _card("W1", "ready"))
+    ledger = queue.with_suffix(".ledger")
+    assert cli.main(["--state", str(queue), "--intervention", "repin", "bumped the pins"]) == 0
+    assert "intervention repin started" in capsys.readouterr().out
+    first = ledger.read_text("utf-8")
+    assert "intervention" in first
+    assert "repin" in first
+    assert "bumped the pins" in first
+
+    def failing(_argv: Sequence[str], _line: str) -> None:
+        raise OSError
+
+    monkeypatch.setattr(refusal_record, "spawn", failing)
+    assert cli.main(["--state", str(queue), "--intervention", "stack", "second one"]) == 0
+    assert "not sent (no binary or store)" in capsys.readouterr().out
+    assert "second one" in ledger.read_text("utf-8")
+
+
 def test_an_intervention_kind_outside_the_fixed_set_is_refused_and_sends_nothing(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

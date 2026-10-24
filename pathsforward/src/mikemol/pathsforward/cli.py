@@ -2475,8 +2475,12 @@ def _intervention(ctx: Ctx) -> int:
         _warn(f"--intervention KIND is one of {', '.join(INTERVENTIONS)}, not {kind!r}")
         return EXIT_REFUSED
     state = store.load(ctx.path)
-    sent = SHIP_INTERVENTION(ctx.path, (kind, note), state, (mode_of(ctx.opts), ctx.now))
-    _say(f"intervention {kind} {'sent' if sent else 'not sent (no binary or store)'}")
+    # ⚑ THE LEDGER LINE IS THE RECORD THAT CANNOT FAIL SILENTLY (W1887, nemik:W750): the event's
+    # children are detached with their output discarded, so "started" is all the writer can say of
+    # them, and a lost send leaves nothing here. The line is written whatever became of the send.
+    _ledger(ctx, Entry("intervention", NO_SYMBOL, kind, "intervention", note))
+    started = SHIP_INTERVENTION(ctx.path, (kind, note), state, (mode_of(ctx.opts), ctx.now))
+    _say(f"intervention {kind} {'started' if started else 'not sent (no binary or store)'}")
     return EXIT_OK
 
 

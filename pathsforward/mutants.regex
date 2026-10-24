@@ -298,3 +298,4 @@ src/mikemol/pathsforward/check.py|deploying-done-card-without-language-passed|  
 src/mikemol/pathsforward/cli.py|false-word-read-as-true|    return None if value is None else value == "true"|    return None if value is None else value != "true"|def=_flag
 src/mikemol/pathsforward/check.py|landed-card-with-witness-flagged|        if text\(w, "status"\) == "landed" and not text\(w, "witness"\)|        if text(w, "status") == "landed"|def=landed_unwitnessed
 src/mikemol/pathsforward/check.py|every-unwitnessed-card-flagged-landed|        if text\(w, "status"\) == "landed" and not text\(w, "witness"\)|        if not text(w, "witness")|def=landed_unwitnessed
+src/mikemol/pathsforward/cli.py|intervention-not-ledgered|    _ledger\(ctx, Entry\("intervention", NO_SYMBOL, kind, "intervention", note\)\)|    pass|def=_intervention

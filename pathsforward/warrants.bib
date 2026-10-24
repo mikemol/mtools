@@ -7238,3 +7238,10 @@
             tool, never an empty string.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_commit_tool_is_found_beside_the_interpreter_before_path},
 }
+
+@misc{pathsforward-mutations-ship-intervention-is-in-the-ledger-whether-or-not-the-send-started,
+  section = {mutations_ship},
+  title  = {W1887: the ledger line cannot fail silently, and the message says started, not sent},
+  claim  = {W1887: the ledger line cannot fail silently, and the message says started, not sent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_ship.py -k test_an_intervention_is_in_the_ledger_whether_or_not_the_send_started},
+}
