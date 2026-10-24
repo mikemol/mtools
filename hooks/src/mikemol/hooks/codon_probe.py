@@ -166,7 +166,11 @@ def run_codon(argv: Sequence[str]) -> tuple[int, str]:
         (exit code, standard output then standard error).
 
     """
-    done = subprocess.run(list(argv), capture_output=True, text=True, check=False)
+    # ⚑ NO CORE FILE, NO JOURNAL ENTRY (W1891, W1892): a rejected construct can abort the compiler,
+    # and systemd-coredump logs the abort, which pages a host watcher. The limit is 1, NOT 0: with
+    # core_pattern piped to the handler the kernel still invokes it at 0 (measured 2026-10-24).
+    quiet = ["/bin/sh", "-c", 'ulimit -Sc 1 2>/dev/null; exec "$@"', "sh", *argv]
+    done = subprocess.run(quiet, capture_output=True, text=True, check=False)
     return done.returncode, done.stdout + done.stderr
 
 

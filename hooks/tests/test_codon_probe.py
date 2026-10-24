@@ -142,6 +142,13 @@ def test_main_runs_the_cached_compiler_on_the_file_and_passes_its_status_through
     assert capsys.readouterr().out == "error: nope\n"
 
 
+def test_the_compiler_child_runs_with_a_core_limit_of_one() -> None:
+    """W1892: the child sees `ulimit -c` 1, the only limit a piped coredump handler honours."""
+    hard = codon_probe.run_codon(["/bin/sh", "-c", "ulimit -Hc"])[1]
+    expected = "0\n" if hard == "0\n" else "1\n"  # a hard limit of 0 cannot be raised
+    assert codon_probe.run_codon(["/bin/sh", "-c", "ulimit -c"]) == (0, expected)
+
+
 def test_main_refuses_a_download_that_is_not_the_pinned_bytes(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

@@ -91,11 +91,14 @@ def cap_cpu(cpu: int) -> None:
     SOFT == HARD. With soft < hard the kernel sends SIGXCPU at the soft limit, whose default
     action is a core dump: each mutant this cap stopped (the EXPECTED outcome) reached
     systemd-coredump as a crash record. With soft == hard the first action is SIGKILL, so a
-    coredump means a real crash. RLIMIT_CORE is zeroed for the same reason: the kill is the
-    signal, the dump is only I/O.
+    coredump means a real crash. RLIMIT_CORE is set to 1 for the same reason: the kill is the
+    signal, the dump is only I/O. NOT 0: with core_pattern piped to systemd-coredump the kernel
+    still invokes the handler at 0 (measured 2026-10-24: a journal entry, no core file); only 1
+    skips the pipe. A hard limit already at 0 cannot be raised, so it stays 0.
     """
     resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu))
-    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    ceiling = 0 if resource.getrlimit(resource.RLIMIT_CORE)[1] == 0 else 1
+    resource.setrlimit(resource.RLIMIT_CORE, (ceiling, ceiling))
 
 
 def cap_mem(mb: int) -> None:

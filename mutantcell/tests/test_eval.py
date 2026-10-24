@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import os
+import resource
 import signal
 import subprocess
 import sys
@@ -462,7 +463,7 @@ def test_an_oom_counter_rise_without_a_flip_is_not_a_deferral(tmp_path: Path) ->
 
 
 def test_the_real_caps_bind_the_check_and_the_core_dump_is_off(tmp_path: Path) -> None:
-    """The check inherits soft==hard CPU and address-space caps from the env knobs, core 0."""
+    """The check inherits soft==hard CPU and address-space caps from the env knobs, core 1."""
     check = _check(
         tmp_path,
         "import resource",
@@ -477,7 +478,8 @@ def test_the_real_caps_bind_the_check_and_the_core_dump_is_off(tmp_path: Path) -
     )
     assert done.returncode == 0, done.stderr
     cap_bytes = _CAP_MEM_MB * _MIB
-    expected = f"({_CAP_CPU}, {_CAP_CPU}) ({cap_bytes}, {cap_bytes}) (0, 0)"
+    core = 0 if resource.getrlimit(resource.RLIMIT_CORE)[1] == 0 else 1
+    expected = f"({_CAP_CPU}, {_CAP_CPU}) ({cap_bytes}, {cap_bytes}) ({core}, {core})"
     assert _record(tmp_path)["why"] == expected
 
 

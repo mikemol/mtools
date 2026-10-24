@@ -60,8 +60,11 @@ def _chrome(monkeypatch: pytest.MonkeyPatch) -> Path:
     # ⚑ NO CORE FILE FROM A CRASH THE TEST CAUSES ON PURPOSE (luthen's coredump_loop alert,
     # 2026-10-22, exe=chrome-headless-shell): the crash probe sends `Page.crash` and the renderer
     # dumps core. The limit is set in this process, so the browser, the driver and the poker all
-    # inherit it: the standing rule of a core size of 0, as nemik's codon fix applies.
-    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    # inherit it. 1, NOT 0: with core_pattern piped to systemd-coredump the kernel still invokes the
+    # handler at 0 (a journal entry, no core file; measured 2026-10-24), and only 1 skips the pipe.
+    # A hard limit already at 0 cannot be raised, so it stays 0.
+    ceiling = 0 if resource.getrlimit(resource.RLIMIT_CORE)[1] == 0 else 1
+    resource.setrlimit(resource.RLIMIT_CORE, (ceiling, ceiling))
     return found
 
 
@@ -172,7 +175,7 @@ def test_a_page_closed_over_cdp_ends_a_pending_wait_by_itself(chrome: Path) -> N
             poker.wait()
 
 
-def test_the_browser_runs_with_a_core_size_of_zero(chrome: Path) -> None:
-    """The fixture sets RLIMIT_CORE to 0 before anything is launched, so a crash leaves no core."""
+def test_the_browser_runs_with_a_core_size_of_one(chrome: Path) -> None:
+    """The fixture sets RLIMIT_CORE to 1 before anything is launched: a crash reaches no handler."""
     assert chrome.name == "chrome-headless-shell"
-    assert resource.getrlimit(resource.RLIMIT_CORE) == (0, 0)
+    assert resource.getrlimit(resource.RLIMIT_CORE) in {(0, 0), (1, 1)}
