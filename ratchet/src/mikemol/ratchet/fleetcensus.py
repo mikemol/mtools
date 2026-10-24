@@ -46,16 +46,19 @@ class Row:
     kind: str
     value: int | None
     floor: int
+    total: int | None = None
 
     def line(self) -> str:
         """Spell the row as one census line.
 
         Returns:
-            the line, with `UNREAD` where the file could not be read.
+            the line, with `UNREAD` where the file could not be read and ` sum=N` after the floor
+            for a file-rule-count baseline (W1922).
 
         """
         said = "UNREAD" if self.value is None else str(self.value)
-        return f"{self.repo} {self.ratchet} {self.kind} value={said} floor={self.floor}"
+        line = f"{self.repo} {self.ratchet} {self.kind} value={said} floor={self.floor}"
+        return line if self.total is None else f"{line} sum={self.total}"
 
 
 def repos_under(root: Path) -> list[Path]:
@@ -103,5 +106,6 @@ def census(root: Path) -> list[Row]:
             kind = kinds.kind_of(path.name)
             if kind is not None:
                 relative = path.relative_to(repo).as_posix()
-                rows.append(Row(repo.name, relative, kind, kinds.value_of(path), kinds.FLOOR))
+                value, total = kinds.value_of(path), kinds.sum_of(path)
+                rows.append(Row(repo.name, relative, kind, value, kinds.FLOOR, total))
     return rows

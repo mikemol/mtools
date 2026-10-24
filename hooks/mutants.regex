@@ -644,8 +644,9 @@ src/mikemol/hooks/idle_progress.py|worked-card-not-progress|    return stamp is 
 src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\("status"\) == "ready" and not card\.get\("witness"\):|        if card.get("status") == "ready":|def=idle_card
 src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or not isinstance\(blocks, int\) or blocks >= CAP:|    if start is None or not isinstance(blocks, int):|def=idle_reason
 src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason
+src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/ratchet_emit.py|census-line-not-matched|        if match is not None:|        if match is None:|def=parse_census
-src/mikemol/hooks/ratchet_emit.py|repo-label-is-the-emitting-repo|            "fields": \{"repo": repo, "ratchet": ratchet, "kind": kind\},|            "fields": {"repo": "mtools", "ratchet": ratchet, "kind": kind},|def=rows_of
+src/mikemol/hooks/ratchet_emit.py|repo-label-is-the-emitting-repo|        fields = \{"repo": repo, "ratchet": ratchet, "kind": kind\}|        fields = {"repo": "mtools", "ratchet": ratchet, "kind": kind}|def=rows_of
 src/mikemol/hooks/ratchet_emit.py|send-without-binary-or-store|    if program is None or not store_named\(env\):|    if False:|def=emit
 src/mikemol/hooks/gatetargets.py|pytest-log-not-read-for-the-shard-line|    text = read\(result\.label\) if kind in \{MUTANTS, PYTEST\} else None|    text = read(result.label) if kind == MUTANTS else None|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|finish-before-start-kept|    if start is None or finish is None or finish < start:|    if start is None or finish is None:|def=run_seconds

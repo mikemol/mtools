@@ -39,5 +39,7 @@ src/mikemol/ratchet/core.py|readback-not-checked|if landed != wanted:|if False:|
 src/mikemol/ratchet/kinds.py|broken-baseline-read-as-clean|        except ValueError:|        except KeyError:|def=value_of
 src/mikemol/ratchet/kinds.py|link-read-through|    if path\.is_symlink\(\):|    if False:|def=value_of
 src/mikemol/ratchet/kinds.py|comment-lines-counted|    return sum\(1 for line in lines if line and not line\.startswith\("#"\)\)|    return sum(1 for line in lines if line)|def=value_of
+src/mikemol/ratchet/kinds.py|negative-count-summed|            if type\(count\) is not int or count < 0:|            if type(count) is not int:|def=_counts
+src/mikemol/ratchet/kinds.py|flat-shape-summed|        if not isinstance\(inner, dict\) or not inner:|        if False:|def=_counts
 src/mikemol/ratchet/fleetcensus.py|clone-counted|        and not _CLONE\.search\(entry\.name\)|        and True|def=repos_under
 src/mikemol/ratchet/fleetcensus.py|depth-unbounded|            and len\(Path\(here\)\.parts\) - base < MAX_DEPTH|            and True|def=_files

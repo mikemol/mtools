@@ -65,3 +65,29 @@ def test_a_file_that_cannot_be_read_is_unread_never_zero(
     assert kinds.value_of(fine) == 0
     monkeypatch.setattr(Path, "is_symlink", _a_link)
     assert kinds.value_of(fine) is None
+
+
+_RUFF_SUM = 3 + 19 + 2
+
+
+def test_only_a_file_rule_count_baseline_has_a_sum(tmp_path: Path) -> None:
+    """W1922: ruff's shape sums its counts; line-number shapes, lists and empty files do not."""
+    shaped = tmp_path / "ruff-baseline.json"
+    shaped.write_text('{"a.py": {"ANN001": 3, "D103": 19}, "b.py": {"E501": 2}}', encoding="utf-8")
+    assert kinds.sum_of(shaped) == _RUFF_SUM
+    refused = {
+        "flat-baseline.json": '{"a.py": 3}',
+        "list-baseline.json": "[1, 2]",
+        "negative-baseline.json": '{"a.py": {"X": -1}}',
+        "boolean-baseline.json": '{"a.py": {"X": true}}',
+        "text-baseline.json": '{"a.py": {"X": "3"}}',
+        "empty-baseline.json": "{}",
+        "hollow-baseline.json": '{"a.py": {}}',
+        "broken-baseline.json": "{nope",
+    }
+    for name, body in refused.items():
+        (tmp_path / name).write_text(body, encoding="utf-8")
+        assert kinds.sum_of(tmp_path / name) is None, name
+    plain = tmp_path / "public_ratchet_baseline.txt"
+    plain.write_text("a::b\n", encoding="utf-8")
+    assert kinds.sum_of(plain) is None

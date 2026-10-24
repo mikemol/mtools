@@ -867,3 +867,10 @@
   claim  = {`census ROOT` lists the rows and ends with how many files and how many were unread.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_the_command_prints_the_rows_and_the_counts},
 }
+
+@misc{ratchet-kinds-only-a-file-rule-count-baseline-has-a-sum,
+  section = {kinds},
+  title  = {W1922: ruff's shape sums its counts; line-number shapes, lists and empty files do not},
+  claim  = {W1922: ruff's shape sums its counts; line-number shapes, lists and empty files do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kinds.py -k test_only_a_file_rule_count_baseline_has_a_sum},
+}

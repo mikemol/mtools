@@ -36,49 +36,59 @@ from mikemol.hooks.vlogdetach import spawn_with_stdin
 
 SERVICE = "mikemol-gate"
 VALUE = "mikemol.ratchet.value"
+SUM = "mikemol.ratchet.sum"
 CHUNK = 100
 EXIT_USAGE = 2
 READER_ENV = "RATCHET_BIN"
 _CHECKOUT = ("github", "mtools", "ratchet", ".venv", "bin", "mikemol-ratchet")
-_LINE = re.compile(r"^(?P<repo>\S+) (?P<path>\S+) (?P<kind>\S+) value=(?P<value>\d+) floor=\d+$")
+_LINE = re.compile(
+    r"^(?P<repo>\S+) (?P<path>\S+) (?P<kind>\S+) value=(?P<value>\d+) floor=\d+"
+    r"(?: sum=(?P<sum>\d+))?$"
+)
 
 type Row = dict[str, object]
+type Entry = tuple[str, str, str, int, int | None]
 type Spawn = Callable[[Sequence[str], str], None]
 type Run = Callable[[Sequence[str]], tuple[int, str]]
 
 
-def parse_census(text: str) -> list[tuple[str, str, str, int]]:
+def parse_census(text: str) -> list[Entry]:
     """Read the census lines that carry a value.
 
     Returns:
-        `(repo, ratchet, kind, value)` for each line; a comment, an UNREAD line and any line of
-        another shape are left out.
+        `(repo, ratchet, kind, value, sum)` for each line, the sum None when the line has none;
+        a comment, an UNREAD line and any line of another shape are left out.
 
     """
-    found: list[tuple[str, str, str, int]] = []
+    found: list[Entry] = []
     for line in text.splitlines():
         match = _LINE.match(line)
         if match is not None:
-            found.append((match["repo"], match["path"], match["kind"], int(match["value"])))
+            total = match["sum"]
+            entry = (match["repo"], match["path"], match["kind"], int(match["value"]))
+            found.append((*entry, None if total is None else int(total)))
     return found
 
 
-def rows_of(census: Sequence[tuple[str, str, str, int]], now_ns: int) -> list[Row]:
-    """Turn census entries into gauge rows, one per ratchet.
+def rows_of(census: Sequence[Entry], now_ns: int) -> list[Row]:
+    """Turn census entries into gauge rows: the entry count, and the sum where there is one.
+
+    ⚑ THE SUM IS A SECOND SERIES (W1922, asked for by nemik:W991): a count falling inside a key
+    leaves the entry count flat, so a baseline of the file-rule-count shape also sends
+    `mikemol.ratchet.sum`; any other baseline sends the entry count alone.
 
     Returns:
-        rows named `mikemol.ratchet.value` with the labels `repo`, `ratchet` and `kind`.
+        rows named `mikemol.ratchet.value`, and `mikemol.ratchet.sum` for entries with a sum,
+        with the labels `repo`, `ratchet` and `kind`.
 
     """
-    return [
-        {
-            "name": VALUE,
-            "value": value,
-            "time_ns": now_ns,
-            "fields": {"repo": repo, "ratchet": ratchet, "kind": kind},
-        }
-        for repo, ratchet, kind, value in census
-    ]
+    rows: list[Row] = []
+    for repo, ratchet, kind, value, total in census:
+        fields = {"repo": repo, "ratchet": ratchet, "kind": kind}
+        rows.append({"name": VALUE, "value": value, "time_ns": now_ns, "fields": fields})
+        if total is not None:
+            rows.append({"name": SUM, "value": total, "time_ns": now_ns, "fields": fields})
+    return rows
 
 
 def plan(program: str, rows: Sequence[Row]) -> list[tuple[list[str], str]]:

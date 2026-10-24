@@ -84,3 +84,41 @@ def value_of(path: Path) -> int | None:
         return _weight(parsed)
     lines = (line.strip() for line in text.splitlines())
     return sum(1 for line in lines if line and not line.startswith("#"))
+
+
+def _counts(node: object) -> list[int] | None:
+    # The integers of an object of objects of non-negative integers, or None for any other shape.
+    if not isinstance(node, dict) or not node:
+        return None
+    found: list[int] = []
+    for inner in cast("dict[str, object]", node).values():
+        if not isinstance(inner, dict) or not inner:
+            return None
+        for count in cast("dict[str, object]", inner).values():
+            if type(count) is not int or count < 0:
+                return None
+            found.append(count)
+    return found
+
+
+def sum_of(path: Path) -> int | None:
+    """Sum the counts of a file-rule-count baseline (W1922).
+
+    ⚑ ONLY THAT SHAPE. An entry count stays flat while a count inside a key falls (5 findings to 2
+    of one rule in one file), so ruff's and mypy's baselines (`{file: {rule: count}}`) also report
+    the sum of their counts. Any other file's numbers may be line numbers or hashes, whose sum is
+    nonsense, so it answers None and keeps the entry count alone.
+
+    Returns:
+        the sum; None when the file is a link, is not JSON, or is not an object of non-empty
+        objects of non-negative integers.
+
+    """
+    if path.suffix != ".json" or path.is_symlink():
+        return None
+    try:
+        parsed: object = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, ValueError):
+        return None
+    counts = _counts(parsed)
+    return None if counts is None else sum(counts)

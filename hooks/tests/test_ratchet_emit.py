@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""The fleet ratchet census is shipped as one gauge per ratchet per gate run (W1909)."""
+"""The fleet ratchet census is shipped as one gauge per ratchet per gate run (W1909, W1922)."""
 
 from __future__ import annotations
 
@@ -20,9 +20,11 @@ _VALUE = 29
 _MANY = 150
 _FULL = ratchet_emit.CHUNK
 _REST = _MANY - ratchet_emit.CHUNK
+_ENTRIES = 24
+_SUM = 61
 _CENSUS = (
     "alpha .claude/debt-ledger.json debt value=0 floor=0\n"
-    "alpha baselines/ruff-baseline.json baseline value=24 floor=0\n"
+    "alpha baselines/ruff-baseline.json baseline value=24 floor=0 sum=61\n"
     "beta broken-baseline.json baseline value=UNREAD floor=0\n"
     "# 3 ratchet file(s), 1 unread\n"
 )
@@ -36,14 +38,14 @@ def test_a_census_line_with_a_value_is_read_and_unread_and_comment_lines_are_not
     """UNREAD is not 0: a gauge of 0 for a broken baseline would read as debt paid down."""
     found = ratchet_emit.parse_census(_CENSUS)
     assert found == [
-        ("alpha", ".claude/debt-ledger.json", "debt", 0),
-        ("alpha", "baselines/ruff-baseline.json", "baseline", 24),
+        ("alpha", ".claude/debt-ledger.json", "debt", 0, None),
+        ("alpha", "baselines/ruff-baseline.json", "baseline", _ENTRIES, _SUM),
     ]
 
 
 def test_a_row_carries_the_ratchets_own_repo_its_path_and_its_kind() -> None:
     """The repo label is the ratchet's repository, not the repository whose gate ran."""
-    census = [("luthen-observability", "exit_baseline.txt", "baseline", _VALUE)]
+    census = [("luthen-observability", "exit_baseline.txt", "baseline", _VALUE, None)]
     [row] = ratchet_emit.rows_of(census, _NOW)
     assert row["name"] == "mikemol.ratchet.value"
     assert row["value"] == _VALUE
@@ -55,10 +57,25 @@ def test_a_row_carries_the_ratchets_own_repo_its_path_and_its_kind() -> None:
     }
 
 
+def test_a_file_rule_count_baseline_also_sends_its_sum_and_no_other_does() -> None:
+    """W1922: a count falling inside a key leaves the entry count flat; the sum shows it."""
+    census = [
+        ("nemik", "ruff-baseline.json", "baseline", _ENTRIES, _SUM),
+        ("nemik", "codon-baseline.json", "baseline", _VALUE, None),
+    ]
+    rows = ratchet_emit.rows_of(census, _NOW)
+    assert [(r["name"], r["value"]) for r in rows] == [
+        ("mikemol.ratchet.value", _ENTRIES),
+        ("mikemol.ratchet.sum", _SUM),
+        ("mikemol.ratchet.value", _VALUE),
+    ]
+    assert rows[0]["fields"] == rows[1]["fields"]
+
+
 def test_rows_go_in_chunks_to_one_metrics_child_each() -> None:
     """Each chunk is a `metrics` argv with its JSON lines; more than CHUNK rows make two."""
-    rows = ratchet_emit.rows_of([("r", f"p{n}", "baseline", n) for n in range(_MANY)], _NOW)
-    children = ratchet_emit.plan("/bin/otlp", rows)
+    census = [("r", f"p{n}", "baseline", n, None) for n in range(_MANY)]
+    children = ratchet_emit.plan("/bin/otlp", ratchet_emit.rows_of(census, _NOW))
     assert [len(text.splitlines()) for _argv, text in children] == [_FULL, _REST]
     assert children[0][0][:2] == ["/bin/otlp", "metrics"]
 
@@ -67,7 +84,7 @@ def test_no_binary_or_store_sends_nothing_and_a_failed_spawn_is_false(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """Best effort: the exit status never depends on the send."""
-    rows = ratchet_emit.rows_of([("r", "p", "baseline", 1)], _NOW)
+    rows = ratchet_emit.rows_of([("r", "p", "baseline", 1, None)], _NOW)
     sent: list[Sequence[str]] = []
 
     def spawn(argv: Sequence[str], _text: str) -> None:
@@ -110,5 +127,5 @@ def test_main_reads_the_census_and_ships_the_values(
     assert asked == [[str(tool), "census", "/root"]]
     first = cast("dict[str, object]", json.loads(sent[0].splitlines()[0]))
     assert first["value"] == 0
-    assert "2 ratchet(s), sent=True" in capsys.readouterr().out
+    assert "3 ratchet(s), sent=True" in capsys.readouterr().out
     assert ratchet_emit.main([]) == ratchet_emit.EXIT_USAGE

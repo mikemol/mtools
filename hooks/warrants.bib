@@ -15045,3 +15045,10 @@
   claim  = {The tool named by RATCHET_BIN is asked for `census ROOT`; its values are sent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_main_reads_the_census_and_ships_the_values},
 }
+
+@misc{hooks-ratchet-emit-file-rule-count-baseline-also-sends-its-sum-and-no-other-does,
+  section = {ratchet_emit},
+  title  = {W1922: a count falling inside a key leaves the entry count flat; the sum shows it},
+  claim  = {W1922: a count falling inside a key leaves the entry count flat; the sum shows it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_a_file_rule_count_baseline_also_sends_its_sum_and_no_other_does},
+}

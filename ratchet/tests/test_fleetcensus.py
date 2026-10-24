@@ -33,7 +33,7 @@ def test_each_ratchet_file_is_listed_with_repo_path_kind_value_and_floor(tmp_pat
     lines = [row.line() for row in fleetcensus.census(tmp_path)]
     assert lines == [
         "alpha .claude/debt-ledger.json debt value=0 floor=0",
-        "alpha baselines/ruff-baseline.json baseline value=1 floor=0",
+        "alpha baselines/ruff-baseline.json baseline value=1 floor=0 sum=2",
         "beta broken-baseline.json baseline value=UNREAD floor=0",
         "beta ratchet-preview.txt preview value=2 floor=0",
     ]
