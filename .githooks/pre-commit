@@ -910,7 +910,7 @@ fi
 # argument is right.
 _ratchet_emit_tool="$root/bazel-bin/hooks/.venv/bin/mikemol-ratchet-emit"
 if [ -x "$_ratchet_emit_tool" ] && [ -d "$root" ]; then
-    "$_ratchet_emit_tool" "$(basename "$tools")" "$root" || say "mikemol-ratchet-emit failed; no ratchet values sent"
+    RATCHET_BIN="$tools/ratchet/.venv/bin/mikemol-ratchet" "$_ratchet_emit_tool" "$(basename "$tools")" "$root" || say "mikemol-ratchet-emit failed; no ratchet values sent"
 else
     say "mikemol-ratchet-emit not built; no ratchet values sent"
 fi

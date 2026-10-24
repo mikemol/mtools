@@ -36,6 +36,7 @@ no binary or store, or a failed spawn, changes nothing and the exit is still 0.
 import json
 import os
 import re
+import shutil
 import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -52,7 +53,6 @@ CHUNK = 100
 EXIT_USAGE = 2
 ARGUMENTS = 2
 READER_ENV = "RATCHET_BIN"
-_CHECKOUT = ("github", "mtools", "ratchet", ".venv", "bin", "mikemol-ratchet")
 _LINE = re.compile(
     r"^(?P<repo>\S+) (?P<path>\S+) (?P<kind>\S+) value=(?P<value>\d+) floor=\d+"
     r"(?: sum=(?P<sum>\d+))?$"
@@ -134,16 +134,20 @@ def emit(rows: Sequence[Row], env: Mapping[str, str], spawn: Spawn = spawn_with_
 
 
 def reader_path(env: Mapping[str, str]) -> str | None:
-    """Find the ratchet tool: the env override, then the mtools checkout.
+    """Find the ratchet tool: the env override, then PATH.
+
+    ⚑ NO SIBLING CHECKOUT (W1927; the operator's ruling, host transcript 695f3e0a line 84035): an
+    adopting repository installs `mikemol-ratchet` as a dependency or names it in RATCHET_BIN, and
+    this knows no path under another checkout.
 
     Returns:
-        its path, or None when neither exists.
+        its path, or None when neither names an existing file.
 
     """
     named = env.get(READER_ENV)
-    candidates = [Path(named)] if named else []
-    candidates.append(Path.home().joinpath(*_CHECKOUT))
-    return next((str(c) for c in candidates if c.is_file()), None)
+    if named and Path(named).is_file():
+        return named
+    return shutil.which("mikemol-ratchet", path=env.get("PATH", ""))
 
 
 def main(

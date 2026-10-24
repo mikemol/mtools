@@ -15052,3 +15052,10 @@
   claim  = {W1922: a count falling inside a key leaves the entry count flat; the sum shows it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_a_file_rule_count_baseline_also_sends_its_sum_and_no_other_does},
 }
+
+@misc{hooks-ratchet-emit-tool-is-found-by-env-then-path-and-never-in-a-sibling-checkout,
+  section = {ratchet_emit},
+  title  = {W1927: RATCHET_BIN, then PATH; with neither, None even when a checkout path would exist},
+  claim  = {W1927: RATCHET_BIN, then PATH; with neither, None even when a checkout path would exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_the_tool_is_found_by_env_then_path_and_never_in_a_sibling_checkout},
+}

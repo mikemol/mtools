@@ -104,6 +104,24 @@ def test_no_binary_or_store_sends_nothing_and_a_failed_spawn_is_false(
     assert ratchet_emit.emit(rows, env, failing) is False
 
 
+def test_the_tool_is_found_by_env_then_path_and_never_in_a_sibling_checkout(
+    tmp_path: Path,
+) -> None:
+    """W1927: RATCHET_BIN, then PATH; with neither, None even when a checkout path would exist."""
+    named = tmp_path / "named" / "mikemol-ratchet"
+    named.parent.mkdir()
+    named.write_text("", encoding="utf-8")
+    on_path = tmp_path / "bin" / "mikemol-ratchet"
+    on_path.parent.mkdir()
+    on_path.write_text("", encoding="utf-8")
+    on_path.chmod(0o755)
+    env = {"RATCHET_BIN": str(named), "PATH": str(on_path.parent)}
+    assert ratchet_emit.reader_path(env) == str(named)
+    assert ratchet_emit.reader_path({"PATH": str(on_path.parent)}) == str(on_path)
+    assert ratchet_emit.reader_path({"HOME": str(tmp_path), "PATH": ""}) is None
+    assert ratchet_emit.reader_path({"RATCHET_BIN": str(tmp_path / "gone"), "PATH": ""}) is None
+
+
 def test_main_reads_the_census_and_ships_the_values(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
