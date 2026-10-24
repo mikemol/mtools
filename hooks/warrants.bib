@@ -15059,3 +15059,14 @@
   claim  = {W1927: RATCHET_BIN, then PATH; with neither, None even when a checkout path would exist.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_the_tool_is_found_by_env_then_path_and_never_in_a_sibling_checkout},
 }
+
+@misc{hooks-stacksnap-queue-file-is-read-at-build-and-a-stale-frozen-blob-cannot-revert-a-card,
+  section = {stacksnap},
+  title  = {W1464: the queue is not frozen at submit, so a card marked done afterwards stays done},
+  claim  = {W1464: the queue is not frozen at submit, so a card marked done afterwards stays done.
+            The control is the defect: with the queue frozen at submit while a card is
+            `working`, then the card marked `done` in the tree, the old behaviour landed
+            `working` over it. Now the commit holds the tree's later queue, while an
+            ordinary file in the same entry still holds its frozen bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_queue_file_is_read_at_build_and_a_stale_frozen_blob_cannot_revert_a_card},
+}

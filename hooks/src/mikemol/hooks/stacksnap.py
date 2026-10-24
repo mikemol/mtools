@@ -97,18 +97,41 @@ def _freeze_one(root: Path, path: str, run: EnvRunner) -> Frozen | None:
     return Frozen(path, _REGULAR, DELETION) if _git_lines(tracked) == [path] else None
 
 
-def freeze(root: Path, paths: Sequence[str], run: EnvRunner) -> list[Frozen]:
-    """Freeze every file the named paths stand for, now.
+QUEUE_FILES = frozenset(
+    {".claude/paths-forward.json", ".claude/paths-forward.ledger", ".claude/paths-forward.md"}
+)
+
+
+def live_paths(paths: Sequence[str]) -> list[str]:
+    """Name the queue files among an entry's paths, which are read at land time and never frozen.
+
+    ⚑ A QUEUE FILE FROZEN AT SUBMIT IS STALE BY THE TIME THE STACK LANDS (W1464; operator, host
+    transcript 695f3e0a lines 94277 and 94310). Every card update after the submit changes it, so a
+    frozen blob would revert a done card, and sessions worked around that by committing the queue in
+    its own plain commit between stacks: nemik's last twelve landings strictly alternated. A queue
+    file is read from the working tree when the stack is built, like a plain commit, and the gate
+    judges the tree built from those bytes, so what is gated is what lands.
 
     Returns:
-        the frozen files in path order, each once; a path that names nothing contributes nothing.
+        the paths that are queue files, in order.
+
+    """
+    return [path for path in paths if path in QUEUE_FILES]
+
+
+def freeze(root: Path, paths: Sequence[str], run: EnvRunner) -> list[Frozen]:
+    """Freeze every file the named paths stand for, now, except the queue files.
+
+    Returns:
+        the frozen files in path order, each once; a path that names nothing contributes nothing,
+        and a queue file (`live_paths`) is left to be read at land time.
 
     """
     seen: set[str] = set()
     out: list[Frozen] = []
     for named in paths:
         for path in _expand(root, named, run):
-            if path in seen:
+            if path in seen or path in QUEUE_FILES:
                 continue
             seen.add(path)
             one = _freeze_one(root, path, run)

@@ -66,6 +66,33 @@ def test_a_frozen_file_keeps_its_bytes_whatever_the_tree_does_next(tmp_path: Pat
     assert _git(root, "show", f"{stack.commits[0]}:a.txt") == "a.txt v1\n"
 
 
+def test_a_queue_file_is_read_at_build_and_a_stale_frozen_blob_cannot_revert_a_card(
+    tmp_path: Path,
+) -> None:
+    """W1464: the queue is not frozen at submit, so a card marked done afterwards stays done.
+
+    The control is the defect: with the queue frozen at submit while a card is `working`, then the
+    card marked `done` in the tree, the old behaviour landed `working` over it. Now the commit holds
+    the tree's later queue, while an ordinary file in the same entry still holds its frozen bytes.
+    """
+    root = _repo(tmp_path)
+    queue = ".claude/paths-forward.json"
+    (root / ".claude").mkdir()
+    (root / queue).write_text('{"W1": "working"}\n', encoding="utf-8")
+    (root / "a.txt").write_text("a.txt v1\n", encoding="utf-8")
+    paths = [queue, "a.txt"]
+    frozen = stacksnap.freeze(root, paths, RUN)
+    assert [f.path for f in frozen] == ["a.txt"]
+    assert stacksnap.live_paths(paths) == [queue]
+    (root / queue).write_text('{"W1": "done"}\n', encoding="utf-8")
+    (root / "a.txt").write_text("a.txt v2 (a peer's later edit)\n", encoding="utf-8")
+    head = _git(root, "rev-parse", "HEAD").strip()
+    stack = stackland.build(root, [stackland.Entry("msg", tuple(paths), tuple(frozen))], RUN, head)
+    assert stack.failed is None
+    assert _git(root, "show", f"{stack.commits[0]}:{queue}") == '{"W1": "done"}\n'
+    assert _git(root, "show", f"{stack.commits[0]}:a.txt") == "a.txt v1\n"
+
+
 def test_head_moving_between_freeze_and_build_keeps_both_changes(tmp_path: Path) -> None:
     """A peer's stack landed first: its change to c.txt is in the new HEAD, ours is on top."""
     root = _repo(tmp_path)

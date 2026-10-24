@@ -28,12 +28,12 @@ See `.claude/design/stack-land.md`. CONSUMED BY: the stack mode of `mikemol-comm
 """
 
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from mikemol.hooks.isolated import Done, EnvRunner, add_argv_list
-from mikemol.hooks.stacksnap import Frozen, apply_argv
+from mikemol.hooks.stacksnap import Frozen, apply_argv, live_paths
 
 _WAYPOINT = re.compile(r"^Waypoint: (W\d+)\b|\A(W\d+)\b", re.MULTILINE)
 NO_TIP = "-"
@@ -87,6 +87,29 @@ def stamped(message: str, tree: str, tip: str, *, is_tip: bool) -> str:
     return f"{message.rstrip()}\n{trailer}\n"
 
 
+def _place(
+    root: Path,
+    entry: Entry,
+    run: EnvRunner,
+    scope: Mapping[str, str],
+    tracked_tree: Mapping[str, str],
+) -> Done | None:
+    # Put one entry's files into the private index; the first git step that fails, else None.
+    #
+    # ⚑ FROZEN BYTES GO IN BY CACHE INFO, QUEUE FILES ARE READ FROM THE TREE NOW (W1464): see
+    # `stacksnap.live_paths`. An entry never frozen reads all of its paths from the tree.
+    if entry.files is None:
+        steps = [(argv, tracked_tree) for argv in add_argv_list(root, entry.paths)]
+    else:
+        steps = [(argv, scope) for argv in apply_argv(entry.files)]
+        steps += [(argv, tracked_tree) for argv in add_argv_list(root, live_paths(entry.paths))]
+    for argv, env in steps:
+        added = run(argv, env, root)
+        if _stopped(added):
+            return added
+    return None
+
+
 def build(root: Path, entries: Sequence[Entry], run: EnvRunner, head: str) -> Stack:
     """Create one commit per entry on top of `head`, running no hook and moving no ref.
 
@@ -113,15 +136,10 @@ def build(root: Path, entries: Sequence[Entry], run: EnvRunner, head: str) -> St
     parent = head
     tip = tip_name(entries[-1].message) if entries else NO_TIP
     for place, entry in enumerate(entries):
-        frozen = entry.files is not None
-        plan = (
-            apply_argv(entry.files) if entry.files is not None else add_argv_list(root, entry.paths)
-        )
-        for argv in plan:
-            added = run(argv, scope if frozen else tracked_tree, root)
-            if _stopped(added):
-                stack.failed = added
-                return stack
+        refused = _place(root, entry, run, scope, tracked_tree)
+        if refused is not None:
+            stack.failed = refused
+            return stack
         tree = run(["write-tree"], scope, root)
         if _stopped(tree):
             stack.failed = tree

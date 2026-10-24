@@ -241,7 +241,7 @@ src/mikemol/hooks/gatejobs.py|no-measurement-window|    wait\(SAMPLE_S\)|    pas
 src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|def=main
 src/mikemol/hooks/gatejobs.py|explain-never-notes-the-floor|cores - busy < MIN_JOBS|False|def=explain
 src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\(\)|parent = head|def=build
-src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=build
+src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=_place
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
 src/mikemol/hooks/commit_kata.py|stack-flag-never-recognised|args\[1\] == "--stack"|args[1] == "--no-stack"|def=stack_target
@@ -646,6 +646,8 @@ src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or no
 src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason
 src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\], path, kind, value, total\)|        (_repo, path, kind, value, total)|def=main
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
+src/mikemol/hooks/stacksnap.py|queue-file-frozen-at-submit|            if path in seen or path in QUEUE_FILES:|            if path in seen:|def=freeze
+src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
 src/mikemol/hooks/ratchet_emit.py|path-lookup-dropped|    return shutil\.which\("mikemol-ratchet", path=env\.get\("PATH", ""\)\)|    return None|def=reader_path
 src/mikemol/hooks/ratchet_emit.py|census-line-not-matched|        if match is not None:|        if match is None:|def=parse_census
 src/mikemol/hooks/ratchet_emit.py|repo-label-is-the-emitting-repo|        fields = \{"repo": repo, "ratchet": ratchet, "kind": kind\}|        fields = {"repo": "mtools", "ratchet": ratchet, "kind": kind}|def=rows_of
