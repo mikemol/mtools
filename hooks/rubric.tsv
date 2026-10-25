@@ -193,3 +193,4 @@ queuecarry	Queue carry (W1941): a stack never leaves the queue behind
 round_check	Round composition (W1942): a round that skips a ready published card is refused
 round_wire	Round wiring (W1942): the published round and the queue read, aged and judged
 ratchet_hook	Ratchet hook (W1928): the ratchet-emit call put into a gate script once
+tick_stop	Tick stop (W1904, W1948): the Stop hook that holds a turn open

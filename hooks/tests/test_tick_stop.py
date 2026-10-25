@@ -170,3 +170,24 @@ def test_the_console_entry_refuses_an_argument_before_reading_stdin(
     monkeypatch.setattr(sys, "argv", ["mikemol-hook-tick-stop", "--help"])
     assert entry.tick_stop_main() == hook_argv.EXIT_REFUSED
     assert "mikemol-hook-tick-stop" in capsys.readouterr().err
+
+
+def test_a_working_set_that_skips_the_published_round_blocks_the_stop_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1948: W1 is in the round and ready while outside W7 is worked; a repeat stop is free."""
+    root = tmp_path / "mtools"
+    root.mkdir()
+    cards = [{"symbol": "W1", "status": "ready"}, {"symbol": "W7", "status": "working"}]
+    _queue(root, {"waypoints": cards})
+    round_file = tmp_path / "round.json"
+    head = '{"as_of": "2026-10-06T11:00:00Z"}\n'
+    row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}\n'
+    round_file.write_text(head + row, encoding="utf-8")
+    monkeypatch.setenv("MIKEMOL_ROUND_FILE", str(round_file))
+    out, err = io.StringIO(), io.StringIO()
+    assert tick_stop.run({"cwd": str(root)}, NOW, out, err) == 0
+    assert "take W1 first" in out.getvalue()
+    again = io.StringIO()
+    assert tick_stop.run({"cwd": str(root), "stop_hook_active": True}, NOW, again, err) == 0
+    assert not again.getvalue()

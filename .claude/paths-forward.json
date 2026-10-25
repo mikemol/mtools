@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1948,
+  "counter": 1949,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -36346,19 +36346,19 @@
     {
       "symbol": "W1692",
       "title": "Concurrency test: two domain_witness runs at once both pass",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1688"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "Add the flock (lock file named by the victim's hash, held to exit, taken before the residue guard) to domain_witness.sh, then the concurrency test with a stub bazel on PATH in a scratch git repo: two runs both exit 0, and one killed mid-window still trips the residue guard. I still need the flock and the test, W1692",
+      "evidence": "2026-10-25: 2026-10-25: READ domain_witness.sh. Two runs at once on one victim in one tree cannot both pass today BY DESIGN: the second finds the first's live probe, trips the residue guard (exit 2) and says why. So the card's test as titled needs a change first: serialize the mutation window with flock keyed on the victim, taken before the residue check, so the second run waits and then passes (W1688's own repair step). A real gate runs this from an isolated snapshot, so contention is a hand-run and a main-tree case",
       "issued_at": "2026-10-19T09:56:14Z",
       "minted_during": "interrupt",
       "caused_by": "W1688",
-      "last_worked": "2026-10-19T11:37:17Z",
+      "last_worked": "2026-10-25T09:12:39Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42378,11 +42378,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Part 1 written (commitledger.py: resolve, record, document, counted; at field on the row): tests in flight. Then mutants, warrants, rubric, stack; then the --ledger mode and the metric emitter. I still need the --ledger mode and the emitter, W1933",
-      "evidence": "2026-10-24: 2026-10-24 metric fixed for luthen-observability:W1598 and nemik:W1007/W1008: mikemol.commitments.open{repo} (house dotted name, gauge, value = the repository's unresolved commitment rows; repo = the repository the statement was made in, the real name and never the snapshot dir); emitter card = this one | 2026-10-24: CONTRACT (2026-10-24, sent to nemik-84, luthen-observability-ab and github-8f): (1) the ledger is commitments.json at the build root, read the way landings.json and ratchet-pace.json are: {as_of, rows:[{repo, session, line, uuid, at, text, names, state, resolved_by}]}; repo = the repository's real name; session = the transcript's session id; line and uuid = the assistant record the statement is in; at = its UTC timestamp; text = the statement; names = the card cites (<repo>:W<n>, or W<n> within the repo) and repo-relative files it names, possibly empty; state = open or resolved; resolved_by = null while open, else a cite {kind: card|stack|evidence, ref} of the durable follow-through. (2) the metric is mikemol.commitments.open{repo}, a gauge, value = the repo's rows with state open. (3) the emitter card is this one (W1933); the extractor is W1931, the Stop hook W1932; all enable github:W44; this card also enables nemik:W1007 and nemik:W1008. A row with empty names stays open until a card cites its uuid | 2026-10-24: CONTRACT ADDITION 2026-10-24 (luthen-observability:W1599 and github-8f, same G9 reading): each row gains layer = the strongest persisted form of its follow-through, from G9's ladder: none (open), memory, instructions, trigger, hook, gate, plus card for a card that is only planned. A recurring class resolved only at memory or instructions is a coverability residue and stays COUNTED. Metric: mikemol.commitments.open{repo,layer} counts rows that are open (layer none) or resolved only at memory or instructions (layer memory or instructions); a sum over layer is the repo's open count. mikemol.commitments.said{repo} unchanged. The layer is inferred from where the follow-through lives (a memory file, an instruction file, a card, a landed card whose manifest touches hook or gate code), and that inference is the part to measure first",
+      "evidence": "2026-10-24: 2026-10-24 metric fixed for luthen-observability:W1598 and nemik:W1007/W1008: mikemol.commitments.open{repo} (house dotted name, gauge, value = the repository's unresolved commitment rows; repo = the repository the statement was made in, the real name and never the snapshot dir); emitter card = this one | 2026-10-24: CONTRACT (2026-10-24, sent to nemik-84, luthen-observability-ab and github-8f): (1) the ledger is commitments.json at the build root, read the way landings.json and ratchet-pace.json are: {as_of, rows:[{repo, session, line, uuid, at, text, names, state, resolved_by}]}; repo = the repository's real name; session = the transcript's session id; line and uuid = the assistant record the statement is in; at = its UTC timestamp; text = the statement; names = the card cites (<repo>:W<n>, or W<n> within the repo) and repo-relative files it names, possibly empty; state = open or resolved; resolved_by = null while open, else a cite {kind: card|stack|evidence, ref} of the durable follow-through. (2) the metric is mikemol.commitments.open{repo}, a gauge, value = the repo's rows with state open. (3) the emitter card is this one (W1933); the extractor is W1931, the Stop hook W1932; all enable github:W44; this card also enables nemik:W1007 and nemik:W1008. A row with empty names stays open until a card cites its uuid | 2026-10-24: CONTRACT ADDITION 2026-10-24 (luthen-observability:W1599 and github-8f, same G9 reading): each row gains layer = the strongest persisted form of its follow-through, from G9's ladder: none (open), memory, instructions, trigger, hook, gate, plus card for a card that is only planned. A recurring class resolved only at memory or instructions is a coverability residue and stays COUNTED. Metric: mikemol.commitments.open{repo,layer} counts rows that are open (layer none) or resolved only at memory or instructions (layer memory or instructions); a sum over layer is the repo's open count. mikemol.commitments.said{repo} unchanged. The layer is inferred from where the follow-through lives (a memory file, an instruction file, a card, a landed card whose manifest touches hook or gate code), and that inference is the part to measure first | 2026-10-25: 2026-10-25: first part landed as b379cc87 (commitledger: resolve, record, document, counted; the row's at field). Still to do: the --ledger mode and the emitter of the open and said metrics",
       "issued_at": "2026-10-24T23:34:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T08:17:30Z",
+      "last_worked": "2026-10-25T08:45:09Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42838,12 +42838,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "round_symbols reads the one-line form; round_path defaults to the luthen export tree; bazel build //hooks:.venv; wire round_reason into tick_stop last; stackrun is the part after. I still need all four, W1948",
-      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree",
+      "next_bounded_step": "Tick-stop wiring written and live on disk (hooks/src/mikemol/hooks/tick_stop.py calls round_reason once per stop); test in flight (bazel test //hooks:test_tick_stop). Then warrant, stack. Stack submit wiring is the part after. I still need the stackrun wiring, W1948",
+      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree | 2026-10-25: 2026-10-25 nemik-84 CORRECTION of the reversal: the one-line form landed in nemik as 7d1fad0 and was pushed; a revert to lines is in nemik's gate, not landed. Which form the host file has depends on the nemik-rank build luthen pins. So round_check keeps accepting BOTH forms (the two-form reader in stack-w1948a is required, not extra) until nemik-84 sends the revert's sha; do not remove the one-line reader before then | 2026-10-25: 2026-10-25 nemik-84: the revert landed in nemik as 0150239; the writer is back to the lines form (head as_of, a card per line) and luthen's gate fails closed on anything else. The one-line reader stays: removing it is churn with no gain, and it is covered by a fixture",
       "issued_at": "2026-10-25T08:29:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1942",
-      "last_worked": "2026-10-25T08:32:59Z",
+      "last_worked": "2026-10-25T09:34:15Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42855,6 +42855,24 @@
         "hooks/tests/test_round_wire.py"
       ],
       "size_class": "medium"
+    },
+    {
+      "symbol": "W1949",
+      "title": "Learn the round file's staleness bound from the as_of spacing luthen's hourly timer actually produces, instead of the chosen three hours",
+      "status": "ready",
+      "enables": [
+        "W1948"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T08:45:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1948",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

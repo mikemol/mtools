@@ -32,6 +32,7 @@ from typing import TextIO
 from mikemol.hooks.host_facts import HostLock, host_lock
 from mikemol.hooks.idle_stop import TurnReader, idle_reason, read_turn
 from mikemol.hooks.payload import as_record, text_of
+from mikemol.hooks.round_wire import round_reason
 from mikemol.hooks.stamps import parse_time
 
 # The host's queue, relative to the payload's cwd (the session's directory, not the project the
@@ -127,6 +128,10 @@ def run(
         # W1904: no lock to release; a turn that ends with ready work and no card moved is blocked,
         # at most CAP times a turn (counted from the transcript, not from the flag).
         idle = idle_reason(payload, payload_dir(payload), reader)
+        # W1948: a working set that skips a ready card of the published round while including
+        # one outside it is blocked too; no round, or a repeat stop, refuses nothing.
+        if idle is None and payload.get("stop_hook_active") is not True:
+            idle = round_reason(payload_dir(payload), now)
         if idle is not None:
             verdict: dict[str, str] = {"decision": "block", "reason": idle}
             out.write(json.dumps(verdict) + "\n")
