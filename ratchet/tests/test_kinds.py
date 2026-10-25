@@ -25,6 +25,7 @@ def test_a_file_name_is_a_ratchet_kind_or_nothing() -> None:
     assert kinds.kind_of("ruff-baseline.json") == "baseline"
     assert kinds.kind_of("public_ratchet_baseline.txt") == "baseline"
     assert kinds.kind_of("debt-ledger.json") == "debt"
+    assert kinds.kind_of("debtplan.json") is None
     assert kinds.kind_of("private_symbol_import_allowlist.txt") == "allowlist"
     assert kinds.kind_of("README.md") is None
     assert kinds.kind_of("baseline.py") is None

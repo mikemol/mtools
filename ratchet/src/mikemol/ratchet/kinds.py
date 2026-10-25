@@ -33,7 +33,9 @@ FLOOR = 0
 _KINDS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("preview", re.compile(r"^ratchet-preview\.txt$")),
     ("baseline", re.compile(r"baseline.*\.(?:json|txt|tsv)$")),
-    ("debt", re.compile(r"debt.*\.json$")),
+    # ⚑ `debtplan.json` is the debt-plan tool's CONFIG (its exclusions), not recorded debt: matched
+    # by the old pattern it read as a ratchet of 3 and made mtools look behind (W1955).
+    ("debt", re.compile(r"debt(?!plan).*\.json$")),
     ("allowlist", re.compile(r"allowlist.*\.txt$")),
 )
 
