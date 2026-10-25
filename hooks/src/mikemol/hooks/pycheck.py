@@ -55,6 +55,7 @@ from pathlib import Path
 from mikemol.hooks import (
     checker_context,
     checkers,
+    mypy_mirror,
     payload,
     project_root,
     shellcheck,
@@ -222,10 +223,19 @@ def analyze(content: str, path: str, *, mypy_flags: Sequence[str] = ()) -> Verdi
             # ⚑ W482: mypy under an atom's `mypy.ini` runs FROM the atom, as the gate's target
             # does, so its sibling imports resolve; ruff keeps the project root.
             cwd = mypy_cfg.parent if name == "mypy" and mypy_cfg is not None else root
-            with checker_context.in_project(cwd):
-                ok, report = run_checker(name, command, content if reads_stdin else None)
+            # ⚑ W1628: a file NEW on disk under a config with mypy overrides is judged through a
+            # mirror at its real relative path, so the override for its module applies.
+            with (
+                mypy_mirror.judged(
+                    command, cwd, path, content, mypy_cfg if name == "mypy" else None
+                ) as (run, where, shown),
+                checker_context.in_project(where),
+            ):
+                ok, report = run_checker(name, run, content if reads_stdin else None)
             if ok is False:
                 report = report.replace(str(tmp), path).replace(tmp.name, path)
+                if shown:
+                    report = report.replace(shown, path)
                 if name.startswith("ruff"):
                     report += "\n" + config_note(cfg)
             outcomes.append((name, (ok, report)))
