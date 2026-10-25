@@ -25,24 +25,15 @@
 # ⚑ REGENERATE BY HAND, NEVER BY PIPE. `--generate-allowlist > this-file` silently launders a new
 # divergence into an allowance, which is the same laundering `--init-absent` refuses on a second
 # run. A new entry must be read and argued before it lands.
-panflute.Caption.__init__
+#
+# ⚑ W1953 (2026-10-25): 18 OF THE 19 ENTRIES ARE PAID DOWN. Each constructor but one, and the two
+# non-constructor entries `Element.walk` (the stub lacked `stop_if`) and `Element.__new__`, is
+# modelled in the stub from `inspect.signature` of the installed library; stubtest then reported
+# those entries unused and nothing else.
+#
+# ⚑ THE ONE LEFT IS COUNTED DEBT, NOT A WAIVER. `Doc.__init__` takes a keyword-only `format`, which
+# shadows the builtin; declaring it in the stub makes the lint ratchet refuse a new key, and the
+# way round that (a per-file exemption in pyproject) would move the debt out of a file the census
+# counts into one it does not, which reads as paydown while the debt merely moved (operator,
+# host line 97317). It stays here, read by the ratchet, until a real fix exists.
 panflute.Doc.__init__
-panflute.Element.__new__
-panflute.Element.walk
-panflute.Header.__init__
-panflute.Para.__init__
-panflute.Plain.__init__
-panflute.Table.__init__
-panflute.TableBody.__init__
-panflute.TableCell.__init__
-panflute.TableFoot.__init__
-panflute.TableHead.__init__
-panflute.TableRow.__init__
-# ⚑ THE LIST CHAIN AND LINK, declared for `items` (W21, 2026-09-21). Constructors only, read
-# and argued: `items` reads these via isinstance and attribute access and constructs none.
-panflute.BlockQuote.__init__
-panflute.BulletList.__init__
-panflute.Div.__init__
-panflute.Link.__init__
-panflute.ListItem.__init__
-panflute.OrderedList.__init__

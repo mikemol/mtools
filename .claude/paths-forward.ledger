@@ -3749,3 +3749,108 @@
 2026-10-25T10:11:17Z  status W1663 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T10:11:17Z  status W1716 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T10:11:43Z  status W1868 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:15:48Z  status W1628 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:17:24Z  interrupt W1950 minted    -         "Idle rung 2 names the top card of the published round (falling back to the rank's top card when there is no round) and judges ADVANCEMENT since the turn began (a commit, evidence or a status change citing the card), not a working mark"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T10:45:27Z  interrupt W1951 minted    -         "Paydown: model whisperx FasterWhisperPipeline.__init__ in audiostruct's stubs and delete its allowlist entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T10:45:29Z  interrupt W1952 minted    -         "Paydown: model the two constructors in icsstruct's stubs and delete their allowlist entries"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T10:45:30Z  interrupt W1953 minted    -         "Paydown: model panflute entries in mdstruct's stubs and delete their allowlist lines, starting with the cheapest"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T10:45:31Z  interrupt W1954 minted    -         "Paydown: retire one entry of corpus/exit-baseline.txt by naming its exit constant in the shared exit-code table"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T10:45:33Z  interrupt W1955 minted    -         "Paydown: drop one of the three exclusions in .claude/debtplan.json once nothing writes there"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T10:46:38Z  status W1955 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:49:10Z  status W1951 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:52:25Z  status W1628 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:52:54Z  status W1628 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:56:11Z  status W1952 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T10:58:06Z  status W1628 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:01:21Z  status W1953 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:10:06Z  status W1918 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:10:07Z  status W1628 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:10:07Z  status W1667 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:10:07Z  status W1692 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:10:07Z  status W1697 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:12:45Z  status W1954 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:16:59Z  interrupt W1956 minted    -         "Census: exclude data and archive files that carry a ratchet-shaped name (resolutions map, session exports, scratch, tmp clones) and fixture each"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:18:32Z  interrupt W1957 minted    -         "A repo declares its ratchets in one fixed file (path and kind per row), read by the census"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:18:34Z  interrupt W1958 minted    -         "Census rows from the name classifier carry guessed=true, declared rows false, and the emitted series carries the flag"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:18:35Z  interrupt W1959 minted    -         "mikemol-ratchet-hook offers to write the starting ratchet declaration from the census with the probable misreads left out"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:18:49Z  status W1958 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:18:51Z  status W1959 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:33:02Z  status W1955 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:33:02Z  status W1951 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:33:02Z  status W1952 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:34:26Z  interrupt W1960 minted    -         "mikemol-otlp honours the standard OTEL_EXPORTER_OTLP_ environment variables, so one variable routes every emitter"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:34:27Z  interrupt W1961 minted    -         "Every metric mikemol-otlp sends is self-describing: description, unit, kind, label set, freshness class and owner card on the wire"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:34:28Z  interrupt W1962 minted    -         "The ratchet declaration carries each ratchet's metric metadata (description, unit, freshness class, owner card)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T11:35:04Z  status W1962 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T11:38:23Z  status W1961 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:10:38Z  status W1960 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:13:54Z  status W1957 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:19:02Z  interrupt W1963 minted    -         "The ratchet declaration keeps a retired list (path, reason, retiring sha) that only grows, like queue residue"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T12:19:04Z  interrupt W1964 minted    -         "The ratchet emitter sends mikemol.ratchet.retired for each listed tombstone on every run, so retired is written and never inferred from silence"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T12:19:05Z  interrupt W1965 minted    -         "Back-fill mtools' first tombstone: .claude/debtplan.json reclassified-not-a-ratchet, retired by 3536ead3"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T12:19:47Z  status W1667 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:21:00Z  status W1963 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:21:02Z  status W1964 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:21:04Z  status W1965 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:27:12Z  status W1628 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T12:41:00Z  interrupt W1966 minted    -         "Share the commitment rows, their fixtures and a labelled sample with amr-skills so its classifier (commitment, done, status, mention) trains against them"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:00:01Z  interrupt W1967 minted    -         "Survey every repo's commit path: who calls mikemol-commit directly, who wraps it, and what each wrapper adds"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:00:03Z  interrupt W1968 minted    -         "Absorb into mikemol-commit what a wrapper adds that the fleet needs (card evidence on landing, push, a declared pre-check), then retire the wrapper"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:00:05Z  interrupt W1969 minted    -         "One landing record, the same for every repo, which nemik's landings.json and round sizing read"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:02:07Z  status W1967 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:03:31Z  interrupt W1970 minted    -         "mikemol-commit reads a per-repo commit declaration: default paths and pre-step commands that must exit 0 before the gate"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1968
+2026-10-25T13:03:31Z  interrupt W1971 minted    -         "mikemol-commit takes --evidence SYMBOL TEXT and a ledger mechanism, written after the sha, a failed write making the exit nonzero"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1968
+2026-10-25T13:03:31Z  interrupt W1972 minted    -         "mikemol-commit pushes after landing when asked, as its own recorded step"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1968
+2026-10-25T13:03:31Z  interrupt W1973 minted    -         "mikemol-commit prints one bounded refusal line and a JSON record per step with the shared exit table and a dry run"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1968
+2026-10-25T13:09:31Z  status W1880 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:09:37Z  status W1667 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:16:49Z  status W1662 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:17:23Z  interrupt W1974 minted    -         "Every bazel invocation a gate makes logs its id and outcome to VictoriaLogs, and a gate never reruns a failed invocation invisibly"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:17:25Z  interrupt W1975 minted    -         "A train leader that started before a stack was submitted leaves it for the next leader, so measure how often that is and what it costs"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:35:55Z  status W1911 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:35:55Z  status W1913 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:35:55Z  status W1918 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T13:43:40Z  interrupt W1976 minted    -         "The census counts lint exemptions (per-file-ignores and the like) as ratchets, so moving debt between files never reads as paydown"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:43:43Z  interrupt W1977 minted    -         "Decide the library-imposed parameter name question at the policy level for every stub alike: panflute Doc.__init__ format shadows a builtin"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T13:46:59Z  interrupt W1978 minted    -         "A dist's local ratchet target names its stubs among its inputs, so the fine-grained target gives the gate's verdict"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T14:11:32Z  status W1978 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:15:05Z  status W1978 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:29:36Z  interrupt W1979 minted    -         "The census counts a JSON leaf that is empty or false as nothing, since a baseline's empty means no debt"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik-84
+2026-10-25T14:29:56Z  status W1979 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:30:42Z  status W1662 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:30:42Z  status W1880 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:30:50Z  status W1667 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:30:51Z  status W1950 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:30:53Z  status W1875 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:31:12Z  status W1854 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:31:12Z  status W1857 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:37:30Z  interrupt W1980 minted    -         "mikemol-ratchet-emit always sends a per-repo census gauge, so clean, not adopted and emitter dark read differently"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T14:40:18Z  interrupt W1981 minted    -         "Measure a full gate invocation's cache-hit share by target and action, and which input invalidated each miss"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T14:40:32Z  interrupt W1982 minted    -         "Shard build targets and actions recursively until each cache miss is one module, one test or one mutant cell"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T14:40:37Z  interrupt W1983 minted    -         "Build as test: the checks are build actions of each target, with no separate test graph (W1978 generalised)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T14:40:45Z  interrupt W1984 minted    -         "Remove whatever makes an unchanged target miss the cache, and show it by the hit count of a one-line change"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T14:43:11Z  status W1981 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:43:44Z  interrupt W1985 minted    -         "Name the input digest that invalidated each cache miss by comparing two gate invocations, W1981's second half"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1981
+2026-10-25T14:45:14Z  interrupt W1986 minted    -         "mikemol-transcriptstruct --resolve ROWS --queue QUEUE --repo NAME resolves Commitment-shaped rows from a file into the ledger document, one row per uuid and line"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=amr-skills
+2026-10-25T14:47:57Z  interrupt W1987 minted    -         "A generator derives hooks' per-module library list and deps from the import graph into a generated bzl file with a check mode"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1982
+2026-10-25T14:47:57Z  interrupt W1988 minted    -         "hooks/BUILD.bazel builds one library per module from the generated file and each test depends on the closure of its imports"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1982
+2026-10-25T14:47:57Z  interrupt W1989 minted    -         "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1982
+2026-10-25T14:47:57Z  interrupt W1990 minted    -         "Witness the split: a one-line change in one hooks module reruns only the targets whose closure holds it, shown by the gate's hit count"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1982
+2026-10-25T14:54:00Z  status W1503 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T14:54:05Z  status W1503 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:21:49Z  interrupt W1991 minted    -         "A declared ratchet names its value expression (rows, sum of named columns, rows where a column is nonzero, file-rule-count), the name census only the fallback"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T15:21:51Z  interrupt W1992 minted    -         "The census counts a tab-separated file's header line as an entry, so a table of 70 rows reads 71"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T15:22:11Z  status W1991 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:22:13Z  status W1992 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:23:39Z  status W1960 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:23:40Z  status W1933 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:23:42Z  status W1628 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:23:43Z  status W1950 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:24:01Z  status W1919 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:24:04Z  status W1969 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:24:07Z  interrupt W1993 minted    -         "A session record of what it created (files its Write tool made and the paths under its scratchpad) that the delete hook can read"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1919
+2026-10-25T15:24:07Z  interrupt W1994 minted    -         "A command parser names the target of rm -r, rm -rf, git clean and find -delete, and refuses a form it cannot read"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1919
+2026-10-25T15:24:07Z  interrupt W1995 minted    -         "The PreToolUse Bash hook refuses a recursive delete whose target the session did not create, with the remedy"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1919
+2026-10-25T15:47:08Z  status W1880 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:47:13Z  status W1667 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T15:47:13Z  status W1875 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
