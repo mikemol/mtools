@@ -150,6 +150,7 @@ mikemol-websubset = "mikemol.hooks.websubset_cli:main"
 # `mikemol-hook-…`: a maintainer or a consumer's gate runs it, no harness wires it.
 mikemol-codon-probe = "mikemol.hooks.codon_probe:main"
 mikemol-ratchet-emit = "mikemol.hooks.ratchet_emit:main"
+mikemol-commitments-emit = "mikemol.hooks.commitments_emit:main"
 mikemol-ratchet-hook = "mikemol.hooks.ratchet_hook:main"
 mikemol-watchdog = "mikemol.hooks.watchdog:main"
 mikemol-hook-beat = "mikemol.hooks.beat:main"
@@ -526,6 +527,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_ratchet_emit.py" = ["assert"]
 "tests/test_round_check.py" = ["assert"]
 "tests/test_round_wire.py" = ["assert"]
+"tests/test_commitments_emit.py" = ["assert"]
+"tests/test_mypy_mirror.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_ratchet_hook.py" = ["assert"]
 "tests/test_queuecarry.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]

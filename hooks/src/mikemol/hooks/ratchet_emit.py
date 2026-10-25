@@ -103,19 +103,26 @@ def rows_of(census: Sequence[Entry], now_ns: int) -> list[Row]:
     return rows
 
 
-def plan(program: str, rows: Sequence[Row]) -> list[tuple[list[str], str]]:
+def plan(
+    program: str, rows: Sequence[Row], namespace: str = "ratchet"
+) -> list[tuple[list[str], str]]:
     """Build the children a run starts, each with the JSON lines for its stdin.
 
     Returns:
         one `mikemol-otlp metrics` argv and its text per chunk of `CHUNK` rows.
 
     """
-    argv = [program, "metrics", "--service", SERVICE, "--namespace", "ratchet"]
+    argv = [program, "metrics", "--service", SERVICE, "--namespace", namespace]
     chunks = [rows[i : i + CHUNK] for i in range(0, len(rows), CHUNK)]
     return [(argv, "".join(json.dumps(row) + "\n" for row in chunk)) for chunk in chunks]
 
 
-def emit(rows: Sequence[Row], env: Mapping[str, str], spawn: Spawn = spawn_with_stdin) -> bool:
+def emit(
+    rows: Sequence[Row],
+    env: Mapping[str, str],
+    spawn: Spawn = spawn_with_stdin,
+    namespace: str = "ratchet",
+) -> bool:
     """Start the children for a census, when a binary and a store exist.
 
     Returns:
@@ -126,7 +133,7 @@ def emit(rows: Sequence[Row], env: Mapping[str, str], spawn: Spawn = spawn_with_
     if program is None or not store_named(env):
         return False
     try:
-        for argv, text in plan(program, rows):
+        for argv, text in plan(program, rows, namespace):
             spawn(argv, text)
     except OSError:
         return False

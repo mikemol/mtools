@@ -15219,3 +15219,115 @@
   claim  = {W1948: W1 is in the round and ready while outside W7 is worked; a repeat stop is free.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_working_set_that_skips_the_published_round_blocks_the_stop_once},
 }
+
+@misc{hooks-round-check-recorded-round-file-of-nemiks-contract-test-reads-as-its-writer-meant,
+  section = {round_check},
+  title  = {A byte-for-byte copy of nemik's fixture (nemik:W1033, fae9d5c); a format change fails},
+  claim  = {A byte-for-byte copy of nemik's fixture (nemik:W1033, fae9d5c); a format change fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_the_recorded_round_file_of_nemiks_contract_test_reads_as_its_writer_meant},
+}
+
+@misc{hooks-round-wire-wall-clock-judgement-reads-a-round-stamped-now,
+  section = {round_wire},
+  title  = {The wall-clock judgement: a round stamped now refuses, a missing one does not},
+  claim  = {The wall-clock judgement: a round stamped now refuses, a missing one does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_wall_clock_judgement_reads_a_round_stamped_now},
+}
+
+@misc{hooks-commitments-emit-document-is-read-and-comment-lines-and-junk-give-nothing-else,
+  section = {commitments_emit},
+  title  = {The rows of the first JSON line; a comment, nothing or a broken line gives none},
+  claim  = {The rows of the first JSON line; a comment, nothing or a broken line gives none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments_emit.py -k test_the_document_is_read_and_comment_lines_and_junk_give_nothing_else},
+}
+
+@misc{hooks-commitments-emit-every-repository-gets-said-and-all-three-counted-layers-with-zeros,
+  section = {commitments_emit},
+  title  = {The open gauge for none, memory and instructions; the said gauge counts every row},
+  claim  = {The open gauge for none, memory and instructions; the said gauge counts every row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments_emit.py -k test_every_repository_gets_said_and_all_three_counted_layers_with_zeros},
+}
+
+@misc{hooks-commitments-emit-main-ships-under-the-commitments-namespace-and-an-unreadable-ledger-sends-nothing,
+  section = {commitments_emit},
+  title  = {The namespace reaches the child; best effort, so the exit is 0 either way},
+  claim  = {The namespace reaches the child; best effort, so the exit is 0 either way.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments_emit.py -k test_main_ships_under_the_commitments_namespace_and_an_unreadable_ledger_sends_nothing},
+}
+
+@misc{hooks-submit-problem-round-card-skipped-for-an-outside-card-is-the-stacks-problem-when-nothing-else-is,
+  section = {shardgate},
+  title  = {W1948: the round is asked last; an earlier finding still wins},
+  claim  = {W1948: the round is asked last; an earlier finding still wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_round_card_skipped_for_an_outside_card_is_the_stacks_problem_when_nothing_else_is},
+}
+
+@misc{hooks-idle-progress-best-ranked-ready-card-of-the-round-is-named-before-the-queue-order,
+  section = {idle_progress},
+  title  = {W1950: a round card wins over an earlier non-round ready card; none ready falls back},
+  claim  = {W1950: a round card wins over an earlier non-round ready card; none ready falls back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_the_best_ranked_ready_card_of_the_round_is_named_before_the_queue_order},
+}
+
+@misc{hooks-idle-stop-published-rounds-top-card-is-named-before-the-first-ready-card,
+  section = {idle_stop},
+  title  = {W1950: W6 is first in the queue, W7 is the round's: the reason names W7; no round, W6},
+  claim  = {W1950: W6 is first in the queue, W7 is the round's: the reason names W7; no round, W6.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_the_published_rounds_top_card_is_named_before_the_first_ready_card},
+}
+
+@misc{hooks-round-order-repositorys-rows-come-back-best-rank-first,
+  section = {round_order},
+  title  = {Only this repository's rows, by rank},
+  claim  = {Only this repository's rows, by rank.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_order.py -k test_the_repositorys_rows_come_back_best_rank_first},
+}
+
+@misc{hooks-round-order-every-way-a-round-is-absent-gives-an-empty-order,
+  section = {round_order},
+  title  = {No file, no stamp, a stale stamp and a repository with no rows are all nothing},
+  claim  = {No file, no stamp, a stale stamp and a repository with no rows are all nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_order.py -k test_every_way_a_round_is_absent_gives_an_empty_order},
+}
+
+@misc{hooks-mypy-mirror-only-a-new-file-under-a-config-with-overrides-needs-a-mirror,
+  section = {mypy_mirror},
+  title  = {The house path is unchanged: an existing file or a config with no overrides is skipped},
+  claim  = {The house path is unchanged: an existing file or a config with no overrides is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_only_a_new_file_under_a_config_with_overrides_needs_a_mirror},
+}
+
+@misc{hooks-mypy-mirror-mirror-copies-the-projects-shape-and-is-removed,
+  section = {mypy_mirror},
+  title  = {Bytes at the real relative path, an __init__ only where the project has one, gone after},
+  claim  = {Bytes at the real relative path, an __init__ only where the project has one, gone after.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_the_mirror_copies_the_projects_shape_and_is_removed},
+}
+
+@misc{hooks-mypy-mirror-path-outside-the-project-has-no-mirror,
+  section = {mypy_mirror},
+  title  = {The caller falls back to the old staged copy rather than guessing a place},
+  claim  = {The caller falls back to the old staged copy rather than guessing a place.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_a_path_outside_the_project_has_no_mirror},
+}
+
+@misc{hooks-mypy-mirror-override-applies-to-the-new-file-and-only-to-it,
+  section = {mypy_mirror},
+  title  = {The quiet file is clean, the same bytes as loud are refused, a sibling import resolves},
+  claim  = {The quiet file is clean, the same bytes as loud are refused, a sibling import resolves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_the_override_applies_to_the_new_file_and_only_to_it},
+}
+
+@misc{hooks-mypy-mirror-judged-changes-nothing-for-an-existing-file-or-a-config-without-overrides,
+  section = {mypy_mirror},
+  title  = {The house path: the same command, the same directory, and no subject to rewrite},
+  claim  = {The house path: the same command, the same directory, and no subject to rewrite.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_judged_changes_nothing_for_an_existing_file_or_a_config_without_overrides},
+}
+
+@misc{hooks-mypy-mirror-judged-runs-a-new-file-from-the-mirror-with-mypypath-in-front,
+  section = {mypy_mirror},
+  title  = {The subject becomes the real relative path, run from the mirror, wrapped in env},
+  claim  = {The subject becomes the real relative path, run from the mirror, wrapped in env.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_judged_runs_a_new_file_from_the_mirror_with_mypypath_in_front},
+}

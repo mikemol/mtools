@@ -35831,7 +35831,7 @@
     {
       "symbol": "W1667",
       "title": "Give a manifest to each unmanifested card W1592 released, in rank order, returning each to ready as it gains one",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
@@ -35841,7 +35841,7 @@
       "issued_at": "2026-10-19T05:58:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T15:47:13Z",
+      "last_worked": "2026-10-25T16:15:01Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -40684,7 +40684,7 @@
     {
       "symbol": "W1875",
       "title": "shardgate refuses a stack touching a per-test target past half its own measured CPU limit",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1872"
       ],
@@ -40696,7 +40696,7 @@
       "issued_at": "2026-10-23T20:46:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1872",
-      "last_worked": "2026-10-25T15:47:13Z",
+      "last_worked": "2026-10-25T16:15:03Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/shardgate.py",
@@ -42845,20 +42845,26 @@
     {
       "symbol": "W1949",
       "title": "Learn the round file's staleness bound from the as_of spacing luthen's hourly timer actually produces, instead of the chosen three hours",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1948"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "Record every stamp the round file shows, over a day, in a small append-only log (by the idle or tick hook, no timer), then set STALE to a multiple of the observed gap with the derivation beside the number, as the operator's autocalibration rule asks. I still need a day of stamps, W1949",
+      "evidence": "2026-10-25: 2026-10-25 first two OBSERVED stamps of the round file under luthen's export tree: as_of 14:05Z (file mtime 10:05 local, seen at about 10:56) and 16:04:42Z (read at 16:14Z): about 2 h apart, not the hourly cadence luthen said, though I may have missed an 11:04 and 13:04 run (one read each, not a series). The chosen 3 h bound is therefore not obviously wrong, and not learned",
       "issued_at": "2026-10-25T08:45:07Z",
       "minted_during": "interrupt",
       "caused_by": "W1948",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-25T16:14:59Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "manifest": [
+        "hooks/src/mikemol/hooks/round_wire.py",
+        "hooks/tests/test_round_wire.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1950",
@@ -43039,7 +43045,7 @@
     {
       "symbol": "W1957",
       "title": "A repo declares its ratchets in one fixed file (path and kind per row), read by the census",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W42",
         "github:W47"
@@ -43049,12 +43055,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Pick the fixed place and the shape with the first adopting repo in view (a file at the repo root naming each ratchet path and kind), write ratchet/declaration.py to read it (a missing file is no declaration, a malformed one is refused loudly and never read as empty), and make census_repo read declared rows when it exists. Tests: declared rows win, an undeclared ratchet-shaped file is not counted when a declaration exists, a malformed declaration refuses. I still need all of it, W1957",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed 0a0228b5",
       "issued_at": "2026-10-25T11:18:32Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T12:13:54Z",
+      "last_worked": "2026-10-25T16:14:45Z",
       "ticks_blocked": 0,
       "manifest": [
         "ratchet/src/mikemol/ratchet/declaration.py",
@@ -43062,22 +43068,20 @@
         "ratchet/tests/test_declaration.py"
       ],
       "size_class": "medium",
-      "completed": null
+      "completed": "20261025T161445Z"
     },
     {
       "symbol": "W1958",
       "title": "Census rows from the name classifier carry guessed=true, declared rows false, and the emitted series carries the flag",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W42"
       ],
       "touches": [
         "file:ratchet/src/mikemol/ratchet/cli.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Row gains guessed (True for the name classifier, False for a declared row), the census line prints guessed=1 or 0, ratchet_emit parses it and sends it as a label on mikemol.ratchet.value, and nemik-84 is told the label so W1920's input carries it (nemik treats a guessed row as advisory, never a refusal). I still need all of it, W1958",
       "evidence": "",
       "issued_at": "2026-10-25T11:18:34Z",
@@ -43098,7 +43102,7 @@
     {
       "symbol": "W1959",
       "title": "mikemol-ratchet-hook offers to write the starting ratchet declaration from the census with the probable misreads left out",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W42",
         "github:W47"
@@ -43106,10 +43110,8 @@
       "touches": [
         "file:hooks/src/mikemol/hooks/ratchet_hook.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "mikemol-ratchet-hook gains an option that writes the starting declaration from the census rows with the probable misreads (resolutions maps, session exports, scratch, tmp) left out, printed unless --write, and the repo session confirms before it is saved; the 13 adoption cards pick it up in the same step. I still need all of it, W1959",
       "evidence": "",
       "issued_at": "2026-10-25T11:18:35Z",
@@ -43241,17 +43243,15 @@
     {
       "symbol": "W1962",
       "title": "The ratchet declaration carries each ratchet's metric metadata (description, unit, freshness class, owner card)",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W47"
       ],
       "touches": [
         "file:ratchet/src/mikemol/ratchet/declaration.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Each declared ratchet row gains description, unit, freshness class (event_driven | continuous) and owner card; ratchet_emit sends them on the row through W1961's fields. A declaration row missing them is refused by the hook that writes the starting declaration (W1959) unless filled. I still need all of it, W1962",
       "evidence": "2026-10-25: 2026-10-25 TOMBSTONE (operator, host line 96701): the declaration's retired list (W1963) is how a retired ratchet's metric family is tombstoned; each retired entry names its reason and retiring sha and is emitted as mikemol.ratchet.retired (W1964), so the registry retires the row instead of alerting on a dark one",
       "issued_at": "2026-10-25T11:34:28Z",
@@ -43298,17 +43298,15 @@
     {
       "symbol": "W1963",
       "title": "The ratchet declaration keeps a retired list (path, reason, retiring sha) that only grows, like queue residue",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W42"
       ],
       "touches": [
         "file:ratchet/src/mikemol/ratchet/declaration.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "ratchets.json gains a retired list: each entry a path, a reason (reclassified-not-a-ratchet, paid-to-zero-and-removed, or renamed-to with the new path) and the sha that retired it; declaration.read returns both lists; a retired entry that is also declared is refused; the list only grows (an entry present at HEAD may not vanish, checked like the queue's regressions). The census omits a retired path from the ratchet rows and lists it as a tombstone row. I still need all of it, W1963",
       "evidence": "",
       "issued_at": "2026-10-25T12:19:02Z",
@@ -43939,17 +43937,15 @@
     {
       "symbol": "W1979",
       "title": "The census counts a JSON leaf that is empty or false as nothing, since a baseline's empty means no debt",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1920"
       ],
       "touches": [
         "file:ratchet/src/mikemol/ratchet/kinds.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "After W1957 lands: _weight returns 0 for an empty string and for false (is False, not == 0, so a numeric 0 keeps its meaning), docstring updated; tests: a map of module to empty and non-empty strings counts only the non-empty, false counts nothing, a numeric 0 still counts one. Tell nemik-84 the rule. I still need the change and the tests, W1979",
       "evidence": "2026-10-25: 2026-10-25 nemik-84: nemik's codon-baseline.json is module -> {mode: first error or empty string}, empty meaning compiles; the census value was 264 = 2 x 132 modules because kinds._weight counts EVERY scalar leaf (str, int, float, bool) as one entry, the empty string and false included, so a module that compiles read as debt and the value rose with every new module. READ and confirmed in kinds._weight. MEASURED the fleet with the census over every JSON ratchet file: no file now has an empty-string or false leaf (nemik has since re-baselined), so this fault is nemik's alone today; three files hold ZERO-valued leaves (gabion test_annotation_drift_baseline 3, gabion test_obsolescence_baseline 6, gcalculus container_baseline 58 of its 180), which may be a count of zero or a line number, so they stay counted until a shape says otherwise. The edit waits on stack-w1957, which carries kinds.py",
       "issued_at": "2026-10-25T14:29:36Z",
@@ -44296,17 +44292,15 @@
     {
       "symbol": "W1991",
       "title": "A declared ratchet names its value expression (rows, sum of named columns, rows where a column is nonzero, file-rule-count), the name census only the fallback",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W42"
       ],
       "touches": [
         "file:ratchet/src/mikemol/ratchet/declaration.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Each declared ratchet row may carry a value expression: rows (the default), sum_of_columns [names], rows_where_nonzero [names], or file_rule_count; the census evaluates it, a name that is not a column is refused loudly, the name census stays the fallback only. Fixture of exactly this file shape (header and rows with four failure columns: some rows all zero, one with a 1), asserting the value is the number of rows with any nonzero failure column and falls when one 1 becomes 0. A change of expression is a declared re-baseline (nemik:W1046). Blocked on the declaration W1957 in the gate. I still need all of it, W1991",
       "evidence": "2026-10-25: 2026-10-25 github-8f from linux-sources' first verdict: findings/letter-quotes-baseline.tsv is a table (header: letter, mismatch, joined, unjudged, freeform; then one row per letter with four 0/1 failure columns) and the census reads value 71, its LINE count, while about 60 rows carry no debt (every failure column 0) and the debt lives in the failure columns; a real paydown (linux-sources W410 flips one unjudged column from 1 to 0) leaves the value at 71, and the verdict would stay behind forever. The same entry-count versus content gap my W1922 sum series fixed for ruff and mypy, but tabular. READ the file head to confirm the shape",
       "issued_at": "2026-10-25T15:21:49Z",
@@ -44326,15 +44320,13 @@
     {
       "symbol": "W1992",
       "title": "The census counts a tab-separated file's header line as an entry, so a table of 70 rows reads 71",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "file:ratchet/src/mikemol/ratchet/kinds.py!w"
       ],
-      "blocked_on": [
-        "W1957"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Same as before plus: send nemik-84 the two declarations (repo, file, old, new, reason) BEFORE the change lands, and land the change only after nemik confirms they are on its W1046 list. I still need the change, the fixture, both declarations and nemik's confirmation, W1992",
       "evidence": "2026-10-25: 2026-10-25 FOUND while reading linux-sources' letter-quotes-baseline.tsv for W1991: kinds.value_of counts every non-blank, non-comment line of a text file as one entry, so the tab-separated file's HEADER line (letter, mismatch, joined, unjudged, freeform) is counted too: github-8f's 71 is 70 rows plus a header. A header is not debt. Blocked on W1957 only because it carries kinds.py in the gate | 2026-10-25: 2026-10-25 github-8f: the drop only earns NO paydown credit if it is DECLARED; otherwise nemik's pace sees 71 to 70 and credits it. So W1992 lands with a declaration on nemik:W1046's list for EVERY repo whose .tsv ratchet changes value (old, new, reason 'census counted the header line'), in the same stack or before the readers repin (writer before reader). Repos with .tsv ratchets in the census read today: linux-sources findings/letter-quotes-baseline.tsv (71 to 70) and substrate scripts/selftest_reach_baseline.tsv (466 to 465); mtools has none",
       "issued_at": "2026-10-25T15:21:51Z",
@@ -44825,15 +44817,6 @@
       "taken_at": "2026-10-25T11:38:23Z",
       "renewed_at": "2026-10-25T11:38:23Z",
       "expires_at": "2026-10-25T12:08:23Z"
-    },
-    {
-      "tag": "file:ratchet/src/mikemol/ratchet/fleetcensus.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1957",
-      "base_sha": "30b014e4fd05e413ba4f26ed1766ca109d7c7901",
-      "taken_at": "2026-10-25T12:13:54Z",
-      "renewed_at": "2026-10-25T12:13:54Z",
-      "expires_at": "2026-10-25T12:43:54Z"
     }
   ],
   "advice": [

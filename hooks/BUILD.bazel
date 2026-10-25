@@ -521,6 +521,7 @@ venv_from_hub(
         # W1461: compiles one file with the pinned Codon, fetched and hash-verified on first use.
         "mikemol-codon-probe": "mikemol.hooks.codon_probe:main",
         "mikemol-ratchet-emit": "mikemol.hooks.ratchet_emit:main",
+        "mikemol-commitments-emit": "mikemol.hooks.commitments_emit:main",
         "mikemol-ratchet-hook": "mikemol.hooks.ratchet_hook:main",
         "mikemol-watchdog": "mikemol.hooks.watchdog:main",
         "mikemol-hook-beat": "mikemol.hooks.beat:main",

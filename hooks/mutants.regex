@@ -642,7 +642,7 @@ src/mikemol/hooks/corelimit.py|missing-line-reads-as-clean|        return EXIT_U
 src/mikemol/hooks/gatetargets.py|failed-status-read-as-passing|        failed = 0\.0 if result\.status == PASSED else 1\.0|        failed = 0.0|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|statusless-result-given-a-failed-row|    if result\.status:|    if True:|def=_rows_of_result
 src/mikemol/hooks/idle_progress.py|worked-card-not-progress|    return stamp is not None and stamp >= start|    return False|def=_worked_since
-src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\("status"\) == "ready" and not card\.get\("witness"\):|        if card.get("status") == "ready":|def=idle_card
+src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\("status"\) == "ready" and not card\.get\("witness"\)|        if card.get("status") == "ready"|def=idle_card
 src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or not isinstance\(blocks, int\) or blocks >= CAP:|    if start is None or not isinstance(blocks, int):|def=idle_reason
 src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason
 src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\], path, kind, value, total\)|        (_repo, path, kind, value, total)|def=main
@@ -658,6 +658,15 @@ src/mikemol/hooks/round_check.py|other-repos-rows-read|        if row\.get\("rep
 src/mikemol/hooks/round_check.py|one-line-document-not-read|    if isinstance\(whole, dict\):|    if False:|def=_rows
 src/mikemol/hooks/tick_stop.py|round-checked-on-a-repeat-stop|        if idle is None and payload\.get\("stop_hook_active"\) is not True:|        if idle is None:|def=run
 src/mikemol/hooks/tick_stop.py|round-never-consulted|            idle = round_reason\(payload_dir\(payload\), now\)|            idle = None|def=run
+src/mikemol/hooks/commit_kata.py|round-not-asked-at-submit|        or _round_refusal\(root\)|        or None|def=submit_problem
+src/mikemol/hooks/round_wire.py|wall-clock-judgement-never-refuses|    return round_reason\(directory, datetime\.now\(UTC\)\)|    return None|def=now_reason
+src/mikemol/hooks/commitments_emit.py|open-count-always-zero|            value = held\[repo\]\[layer\]|            value = 0|def=rows_of
+src/mikemol/hooks/commitments_emit.py|uncounted-layer-counted|        if layer in layers:|        if True:|def=rows_of
+src/mikemol/hooks/idle_progress.py|round-card-not-preferred|        if symbol in ready:|        if False:|def=idle_card
+src/mikemol/hooks/round_order.py|stale-round-still-ordered|    if stamp is None or now - stamp > STALE:|    if stamp is None:|def=order
+src/mikemol/hooks/mypy_mirror.py|existing-file-mirrored|    if real\.exists\(\) or real\.is_symlink\(\):|    if real.is_symlink():|def=needed
+src/mikemol/hooks/mypy_mirror.py|init-added-where-the-project-has-none|            if \(here / "__init__\.py"\)\.is_file\(\):|            if True:|def=mirrored
+src/mikemol/hooks/mypy_mirror.py|existing-file-judged-through-a-mirror|    if config is None or not needed\(path, config\):|    if config is None:|def=judged
 src/mikemol/hooks/round_wire.py|stale-round-still-judged|    if stamp is None or now - stamp > STALE:|    if stamp is None:|def=refusals
 src/mikemol/hooks/round_wire.py|working-read-as-ready|_symbols\(queue, "ready"\), _symbols\(queue, "working"\)|_symbols(queue, "ready"), _symbols(queue, "ready")|def=refusals
 src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now\)|    found = refusals(queue, text, "", now)|def=round_reason
