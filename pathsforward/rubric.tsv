@@ -109,3 +109,4 @@ withheld_flag	The Withheld Flag: A Card Is Kept Out of the Repo's Export Whole o
 export	The Version-2 Export: Flagged Cards Are Bare Refs and Absent From Cards, Unflagged Cards Are Published Exactly As They Are, and Only the Boolean True Withholds
 export_mode	The Export Mode: the Writer Writes the Repo's Version-2 Export Beside the State File Atomically, Holding Only What May Leave, and Never Touches the Queue
 retros	The retro record (W1918): a node beside the waypoints, a finding that commits
+regressions	Queue regressions (W1930): a staged queue may not lose a finished card or evidence

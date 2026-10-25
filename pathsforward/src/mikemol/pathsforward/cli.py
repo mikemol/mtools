@@ -51,6 +51,7 @@ from mikemol.pathsforward import (
     outcomes,
     promptwatch,
     refusal_record,
+    regressions,
     render,
     retros,
     selftest,
@@ -513,6 +514,7 @@ _VALUED = (
     "vectors_from",
     "manifests_from",
     "add_retro",
+    "regressions",
     "repair_counter",
     "scan_literal",
     "commit_message",
@@ -668,6 +670,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
     "add_retro": frozenset(),
+    "regressions": frozenset(),
     "warrant": frozenset(
         {"transcript", "uuid", "claim", "line", "reader", "root", "reason", "dry_run"}
     ),
@@ -1023,6 +1026,12 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         metavar="FILE",
         help="W1453: store [{symbol, manifest, size}] from a JSON file, all or nothing; "
         "a dry run unless --write",
+    )
+    mode.add_argument(
+        "--regressions",
+        metavar="FILE",
+        help="W1930: compare this queue with the queue document in FILE (HEAD's copy) and refuse "
+        "a done card reopened, a residue card gone, or evidence shortened without a redaction",
     )
     mode.add_argument(
         "--add-retro",
@@ -2947,6 +2956,24 @@ def _manifests_from(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _regressions(ctx: Ctx) -> int:
+    """Refuse a queue that lost a finished card or evidence relative to another copy (W1930).
+
+    Returns:
+        EXIT_OK when nothing was lost; EXIT_REFUSED, with each loss on stderr, when something was
+        or when the file is not one queue document.
+
+    """
+    raw = _json_file(Path(ctx.get("regressions") or ""))
+    if not isinstance(raw, dict):
+        _warn("--regressions FILE holds one queue document")
+        return EXIT_REFUSED
+    found = regressions.lost(cast("dict[str, object]", raw), store.load(ctx.path).doc)
+    for line in found:
+        _warn(line)
+    return EXIT_REFUSED if found else EXIT_OK
+
+
 def _add_retro(ctx: Ctx) -> int:
     """Add one retro record from a JSON file, minting its id (W1918, nemik:W982).
 
@@ -3197,6 +3224,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "vectors_from": _vectors_from,
     "manifests_from": _manifests_from,
     "add_retro": _add_retro,
+    "regressions": _regressions,
     "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,

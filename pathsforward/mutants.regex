@@ -302,4 +302,8 @@ src/mikemol/pathsforward/retros.py|finding-without-witness-accepted|        f"a 
 src/mikemol/pathsforward/retros.py|retro-counter-not-raised|    doc\["retro_counter"\] = number|    pass|def=add_retro
 src/mikemol/pathsforward/retros.py|unknown-layer-accepted|    if layer is not None and layer not in LAYERS:|    if False:|def=retro_refusals
 src/mikemol/pathsforward/cli.py|refused-retro-not-caught|        except ValueError as refusal:|        except KeyError as refusal:|def=_add_retro
+src/mikemol/pathsforward/regressions.py|reopened-done-card-admitted|    return now\.get\("status"\) != _FINISHED|    return False|def=_reopened
+src/mikemol/pathsforward/regressions.py|redaction-marker-ignored|    if was and len\(is_now\) < len\(was\) and REDACTED not in is_now:|    if was and len(is_now) < len(was):|def=_shrunk
+src/mikemol/pathsforward/regressions.py|dropped-card-may-vanish|        if symbol not in residue_after|        if False|def=lost
+src/mikemol/pathsforward/cli.py|regressions-found-but-ok|    return EXIT_REFUSED if found else EXIT_OK|    return EXIT_OK|def=_regressions
 src/mikemol/pathsforward/cli.py|intervention-not-ledgered|    _ledger\(ctx, Entry\("intervention", NO_SYMBOL, kind, "intervention", note\)\)|    pass|def=_intervention
