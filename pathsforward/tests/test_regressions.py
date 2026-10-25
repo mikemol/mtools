@@ -14,7 +14,19 @@ if TYPE_CHECKING:
 
     from mikemol.pathsforward.model import Json
 
-_REOPENED = "W1 was done at HEAD and is not done in the staged queue"
+_REOPENED = (
+    "W1 was done at HEAD and is not done in the staged queue: W1 stays done; if what it "
+    "fixed recurred, mint a class card with --caused-by W1 "
+    "(or add this instance to the class card's evidence)"
+)
+_DROPPED = (
+    "W9 was in residue at HEAD and is not in residue now: a dropped card stays dropped, "
+    "so mint a new card with --caused-by W9"
+)
+_SHRUNK = (
+    "W1 lost evidence (26 to 0 characters): evidence only grows, so use --evidence-append, "
+    "or --evidence-redact to take a phrase out"
+)
 
 
 def _doc(*cards: Json, residue: list[Json] | None = None) -> Json:
@@ -43,7 +55,7 @@ def test_a_done_card_that_vanished_is_a_reversion_unless_it_moved_to_residue() -
 def test_a_card_in_residue_at_head_must_stay_there() -> None:
     """A dropped card does not come back by omission."""
     head = _doc(residue=[{"symbol": "W9"}])
-    assert regressions.lost(head, _doc()) == ["W9 was in residue at HEAD and is not in residue now"]
+    assert regressions.lost(head, _doc()) == [_DROPPED]
     assert regressions.lost(head, head) == []
 
 
@@ -51,7 +63,7 @@ def test_evidence_only_grows_except_by_an_explicit_redaction() -> None:
     """Shorter or empty evidence is lost; a [redacted] marker admits the shrink; growth is fine."""
     head = _doc(_card("W1", "ready", "a long note about the card"))
     shrunk = _doc(_card("W1", "ready", ""))
-    assert regressions.lost(head, shrunk) == ["W1 lost evidence (26 to 0 characters)"]
+    assert regressions.lost(head, shrunk) == [_SHRUNK]
     redacted = _doc(_card("W1", "ready", "a [redacted] note"))
     assert regressions.lost(head, redacted) == []
     grown = _doc(_card("W1", "ready", "a long note about the card, and more"))

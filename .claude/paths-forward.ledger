@@ -3691,3 +3691,7 @@
 2026-10-25T00:48:04Z  status W1464 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T00:48:04Z  status W1930 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T00:48:06Z  status W1464 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T00:51:20Z  interrupt W1937 minted    -         "Each regressions refusal names its remedy, so the no-reopen check is not read as a wall"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T00:51:22Z  interrupt W1938 minted    -         "A shape warns when a repository's committed queue counter trails its working queue by more than a learned bound"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T00:51:27Z  status W1937 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T00:54:33Z  interrupt W1939 minted    -         "A writer mode mints a class card from instances: the done cards stay done, and the class card aims at the class fix (a hook or gate) with each instance cited"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
