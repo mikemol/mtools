@@ -1159,3 +1159,46 @@
   claim  = {The reader's answer to a Stop hook: line, time and blocks.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnstart.py -k test_the_command_prints_the_start_and_its_blocks_as_one_json_line},
 }
+
+@misc{transcriptstruct-commitments-canonical-form-and-the-measured-variants-are-found-with-what-they-name,
+  section = {commitments},
+  title  = {I still need to X, plus the three real statements from the measured day},
+  claim  = {I still need to X, plus the three real statements from the measured day.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_the_canonical_form_and_the_measured_variants_are_found_with_what_they_name},
+}
+
+@misc{transcriptstruct-commitments-user-record-a-status-report-and-a-quoted-peer-message-are-not-commitments,
+  section = {commitments},
+  title  = {The measured false positives: speaker, status of other work, and a quoted message},
+  claim  = {The measured false positives: speaker, status of other work, and a quoted message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_a_user_record_a_status_report_and_a_quoted_peer_message_are_not_commitments},
+}
+
+@misc{transcriptstruct-commitments-status-report-a-now-not-later-and-a-quoted-phrase-are-not-commitments,
+  section = {commitments},
+  title  = {Measured on 108 rows of one session: status sentences, 'now, not later', quoted mentions},
+  claim  = {Measured on 108 rows of one session: status sentences, 'now, not later', quoted
+            mentions.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_a_status_report_a_now_not_later_and_a_quoted_phrase_are_not_commitments},
+}
+
+@misc{transcriptstruct-commitments-later-promise-is-still-found,
+  section = {commitments},
+  title  = {The lookbehind drops only 'not later'; a plain deferral stays a row},
+  claim  = {The lookbehind drops only 'not later'; a plain deferral stays a row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_a_later_promise_is_still_found},
+}
+
+@misc{transcriptstruct-commitments-file-a-card-and-a-cross-repo-cite-are-all-names,
+  section = {commitments},
+  title  = {Names are card cites, repo:W cites and repo-relative files, once each, in order},
+  claim  = {Names are card cites, repo:W cites and repo-relative files, once each, in order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_a_file_a_card_and_a_cross_repo_cite_are_all_names},
+}
+
+@misc{transcriptstruct-commitments-command-prints-one-json-line-per-statement-then-the-count,
+  section = {commitments},
+  title  = {The mode's output: every field of the row, the repo from the project directory, a count},
+  claim  = {The mode's output: every field of the row, the repo from the project directory, a count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_the_command_prints_one_json_line_per_statement_then_the_count},
+}

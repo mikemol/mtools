@@ -24,6 +24,7 @@ from typing import TextIO, cast
 
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
+from mikemol.transcriptstruct.commitments import extract as extract_commitments
 from mikemol.transcriptstruct.harvest import harvest
 from mikemol.transcriptstruct.memaudit import audit
 from mikemol.transcriptstruct.query import (
@@ -93,6 +94,12 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="W1830: one row per assistant API call: cache_read, cache_creation, the gap "
         "to the previous call, the model and what woke it; the cold ones flagged",
+    )
+    mode.add_argument(
+        "--commitments",
+        action="store_true",
+        help="W1931: one JSON line per statement of known-needed, unpersisted work the "
+        "assistant made (line, uuid, session, repo, family, text, names), then the count",
     )
     mode.add_argument(
         "--turn-start",
@@ -274,6 +281,28 @@ def _cache_turns(path: Path, out: TextIO) -> None:
     out.write(f"# {len(found)} turn(s), {sum(t.cold for t in found)} cold\n")
 
 
+def _commitments(path: Path, out: TextIO) -> None:
+    """Write each commitment the assistant records of one transcript make, then the count.
+
+    The session is the transcript's file name and the repository the last word of its project
+    directory (`-home-mikemol-github-mtools` is `mtools`), a reading and not a declaration.
+    """
+    repo = path.resolve().parent.name.rsplit("-", 1)[-1]
+    found = extract_commitments(read_path(path), path.stem, repo)
+    for row in found:
+        body: dict[str, object] = {
+            "line": row.line,
+            "uuid": row.uuid,
+            "session": row.session,
+            "repo": row.repo,
+            "family": row.family,
+            "text": row.text,
+            "names": list(row.names),
+        }
+        out.write(_line(body))
+    out.write(f"# {len(found)} commitment(s)\n")
+
+
 def _turn_start(path: Path, out: TextIO) -> None:
     """Write where the latest turn began and its Stop blocks as one JSON line (null for none)."""
     found = turn_start(read_path(path))
@@ -349,6 +378,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
         _cache_turns(path, out)
     elif opts.get("turn_start") is True:
         _turn_start(path, out)
+    elif opts.get("commitments") is True:
+        _commitments(path, out)
     elif opts.get("harvest") is True:
         _harvest(path, scheduled, out)
     else:

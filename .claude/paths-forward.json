@@ -35712,7 +35712,7 @@
     {
       "symbol": "W1662",
       "title": "A REFUSED verdict prints the refusing stage's own FAIL, HOST and HELD lines, not only the gate's last line",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
@@ -35722,7 +35722,7 @@
       "issued_at": "2026-10-19T03:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-24T14:34:28Z",
+      "last_worked": "2026-10-25T06:52:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42601,12 +42601,12 @@
         "nemik:W1025"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "When nemik confirms the round file's path (nemik:W1025), declare the witness as an existence query over that path and wire round_check into the tick-stop hook and the stack submit, hook edit last. I still need that path, W1942",
-      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025",
+      "next_bounded_step": "When nemik's publisher lands and the path is confirmed, wire round_check into the tick-stop hook and the stack submit (read the file, take this repository's rows, ready cards at check time, treat an as_of older than a learned bound as no round). No round file means no refusal. I still need the publisher's landing and the confirmed path, W1942",
+      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that",
       "issued_at": "2026-10-25T02:39:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T04:03:51Z",
+      "last_worked": "2026-10-25T06:46:26Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42724,7 +42724,7 @@
     {
       "symbol": "W1946",
       "title": "mikemol-repin --revendor has a row for the mikemol-ratchet and mikemol-atomicwrite dists, so a consumer needs no hand-built wheel to adopt the ratchet emit",
-      "status": "working",
+      "status": "done",
       "enables": [
         "nemik:W1027",
         "luthen-observability:W1608",
@@ -42744,12 +42744,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read repin_cli to see how a dist's row is declared and how the vendored wheel is built from a git archive of the pinned sha; add rows for ratchet and atomicwrite (the version suffix is the sha, as nemik built it: +57b9f2a), plus the hub requirement and console scripts the consumer's BUILD needs; a test that a revendor of an old pin lists the two new dists",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25: first submit refused before the gate (W1704 mutation lint): reformatting the EXTRA tuple broke two declared mutants that matched the old single line; retargeted both and added ratchet-not-a-vendorable-dist (run singly: killed); manifest corrected to the four files the stack carries; resubmitted, in the gate (bw3iu1sb8) | 2026-10-25: landed 135344fc",
       "issued_at": "2026-10-25T04:41:13Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1027",
-      "last_worked": "2026-10-25T05:25:56Z",
+      "last_worked": "2026-10-25T06:03:48Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/revendor.py",
@@ -42758,7 +42758,7 @@
         "hooks/mutants.regex"
       ],
       "size_class": "small",
-      "completed": null,
+      "completed": "20261025T060348Z",
       "weight": 1000
     }
   ],

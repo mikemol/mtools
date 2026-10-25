@@ -52,3 +52,6 @@ src/mikemol/transcriptstruct/rulingq.py|ledger-split-at-unicode-separators|ledge
 src/mikemol/transcriptstruct/turnstart.py|stop-block-not-counted|            start = TurnStart\(start\.line, start\.at, start\.blocks \+ 1\)|            start = TurnStart(start.line, start.at, start.blocks)|def=turn_start
 src/mikemol/transcriptstruct/turnstart.py|tool-result-starts-a-turn|        if kind not in _CONTINUES:|        if kind == "stop-hook":|def=turn_start
 src/mikemol/transcriptstruct/rulings.py|known-split-at-unicode-separators|ledger\.read_text\(encoding="utf-8"\)\.split\("\\n"\):|ledger.read_text(encoding="utf-8").splitlines():|def=known
+src/mikemol/transcriptstruct/commitments.py|quoted-mention-counted|    if _MENTION\.search\(sentence\):|    if False:|def=_family
+src/mikemol/transcriptstruct/commitments.py|user-record-read|        if not isinstance\(record, AssistantRecord\) or record\.is_sidechain:|        if record.is_sidechain:|def=extract
+src/mikemol/transcriptstruct/commitments.py|quoted-message-kept|                if family is None or _QUOTING in sentence:|                if family is None:|def=extract
