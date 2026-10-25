@@ -54,6 +54,42 @@ class BatchRequest:
     lines: Iterable[str]
 
 
+# ⚑ W1961: a row may describe its metric; each of these is a string or the row is not a sample.
+_DESCRIBES = ("description", "unit", "freshness_class", "freshness_companion", "owner")
+
+
+def _freshness_refusal(klass: str, companion: str) -> bool:
+    """Say whether a freshness declaration is unusable to the registry.
+
+    Returns:
+        True for a class outside the two, an event_driven metric with no companion, or a
+        companion on anything else; False for no declaration or a sound one.
+
+    """
+    if not klass:
+        return bool(companion)
+    if klass not in metrics.CLASSES:
+        return True
+    return (klass == "event_driven") != bool(companion)
+
+
+def _described_by(row: dict[str, object]) -> dict[str, str] | None:
+    """Read the description fields of a row.
+
+    Returns:
+        the fields as strings (empty where absent); None when one is not a string or the
+        freshness declaration is unusable to the registry.
+
+    """
+    given = {key: row.get(key, "") for key in _DESCRIBES}
+    if not all(isinstance(val, str) for val in given.values()):
+        return None
+    strings = {key: str(val) for key, val in given.items()}
+    if _freshness_refusal(strings["freshness_class"], strings["freshness_companion"]):
+        return None
+    return strings
+
+
 def _sample_of(line: str, now_ns: int) -> metrics.Sample | None:
     """Read one line as a gauge sample.
 
@@ -76,7 +112,20 @@ def _sample_of(line: str, now_ns: int) -> metrics.Sample | None:
     if not isinstance(when, int) or not isinstance(value, (int, float)):
         return None
     labels = {str(k): str(v) for k, v in cast("dict[object, object]", fields).items()}
-    return metrics.Sample(name, float(value), when, labels)
+    given = _described_by(row)
+    if given is None:
+        return None
+    return metrics.Sample(
+        name,
+        float(value),
+        when,
+        labels,
+        unit=str(given["unit"]),
+        description=str(given["description"]),
+        freshness_class=str(given["freshness_class"]),
+        freshness_companion=str(given["freshness_companion"]),
+        owner=str(given["owner"]),
+    )
 
 
 def parse_batch(lines: Iterable[str], now_ns: int) -> tuple[list[metrics.Sample], str]:

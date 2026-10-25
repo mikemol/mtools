@@ -30,7 +30,14 @@ class Sum:
 
 class Metric:
     def __init__(
-        self, *, name: str = ..., unit: str = ..., gauge: Gauge = ..., sum: Sum = ...
+        self,
+        *,
+        name: str = ...,
+        description: str = ...,
+        unit: str = ...,
+        gauge: Gauge = ...,
+        sum: Sum = ...,
+        metadata: Iterable[KeyValue] = ...,
     ) -> None: ...
 
 class ScopeMetrics:

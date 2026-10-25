@@ -206,3 +206,36 @@ def test_an_empty_batch_sends_nothing_and_succeeds(
         assert cli.main(_batch_argv(base)) == metriccmd.EXIT_SENT
     assert not posts
     assert "sent 0 gauge samples" in capsys.readouterr().out
+
+
+def test_a_batch_row_may_describe_its_metric() -> None:
+    """W1961: unit, description, freshness class, companion and owner are read from the row."""
+    row = (
+        '{"name": "m.x", "value": 1, "unit": "1", "description": "d", '
+        '"freshness_class": "event_driven", "freshness_companion": "m.alive", '
+        '"owner": "mtools:W1"}'
+    )
+    samples, why = metriccmd.parse_batch([row], 0)
+    assert not why
+    only = samples[0]
+    assert (only.unit, only.description, only.freshness_class) == ("1", "d", "event_driven")
+    assert (only.freshness_companion, only.owner) == ("m.alive", "mtools:W1")
+
+
+def test_an_unusable_description_refuses_the_batch() -> None:
+    """A number, an unknown class, an event-driven row with no companion, a companion alone."""
+    base = '{"name": "m.x", "value": 1, '
+    bad = (
+        base + '"owner": 3}',
+        base + '"freshness_class": "daily"}',
+        base + '"freshness_class": "event_driven"}',
+        base + '"freshness_class": "continuous", "freshness_companion": "m.alive"}',
+        base + '"freshness_companion": "m.alive"}',
+    )
+    for line in bad:
+        refused, reason = metriccmd.parse_batch([line], 0)
+        assert refused == []
+        assert reason
+    fine, why = metriccmd.parse_batch([base + '"freshness_class": "continuous"}'], 0)
+    assert not why
+    assert len(fine) == 1

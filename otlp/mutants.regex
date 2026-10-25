@@ -12,3 +12,6 @@ src/mikemol/otlp/query_metrics.py|range-step-taken-from-the-end|    args = urlen
 src/mikemol/otlp/tracequery.py|search-outage-read-as-an-empty-answer|        return EXIT_UNREACHABLE, \[\], f"the store did not answer: \{unreachable\}"|        return EXIT_OK, [], ""|def=run
 src/mikemol/otlp/tracequery.py|rejected-search-not-recognised|    if refusal:|    if False:|def=run
 src/mikemol/otlp/tracequery.py|span-name-dropped-from-the-search|    if name:|    if False:|def=search_url
+src/mikemol/otlp/metrics.py|empty-facts-sent-as-attributes|    return \{key: val for key, val in given\.items\(\) if val\}|    return {key: val for key, val in given.items() if True}|def=_facts
+src/mikemol/otlp/metriccmd.py|event-driven-without-companion-accepted|    return \(klass == "event_driven"\) != bool\(companion\)|    return False|def=_freshness_refusal
+src/mikemol/otlp/metriccmd.py|unknown-freshness-class-accepted|    if klass not in metrics\.CLASSES:|    if False:|def=_freshness_refusal

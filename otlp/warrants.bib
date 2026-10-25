@@ -444,3 +444,32 @@
   claim  = {The window defaults to a day ending at `--end-us`; the lines reach stdout.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracequery.py -k test_the_verb_prints_what_the_search_found_and_defaults_to_the_last_day},
 }
+
+@misc{otlp-metrics-sample-that-declares-nothing-puts-nothing-extra-on-the-wire,
+  section = {metrics},
+  title  = {The control: no description and no metadata keys, so every existing emitter is unchanged},
+  claim  = {The control: no description and no metadata keys, so every existing emitter is
+            unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_a_sample_that_declares_nothing_puts_nothing_extra_on_the_wire},
+}
+
+@misc{otlp-metriccmd-batch-row-may-describe-its-metric,
+  section = {metriccmd},
+  title  = {W1961: unit, description, freshness class, companion and owner are read from the row},
+  claim  = {W1961: unit, description, freshness class, companion and owner are read from the row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_batch_row_may_describe_its_metric},
+}
+
+@misc{otlp-metriccmd-unusable-description-refuses-the-batch,
+  section = {metriccmd},
+  title  = {A number, an unknown class, an event-driven row with no companion, a companion alone},
+  claim  = {A number, an unknown class, an event-driven row with no companion, a companion alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_an_unusable_description_refuses_the_batch},
+}
+
+@misc{otlp-metrics-described-sample-carries-description-unit-and-facts-on-the-wire,
+  section = {metrics},
+  title  = {W1961: description and unit are the Metric's own fields, the facts its point attributes},
+  claim  = {W1961: description and unit are the Metric's own fields, the facts its point attributes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_a_described_sample_carries_description_unit_and_facts_on_the_wire},
+}

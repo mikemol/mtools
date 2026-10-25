@@ -94,3 +94,41 @@ def test_an_int_is_as_int_a_float_is_as_double_and_a_bool_label_stays_a_bool() -
     assert "asInt" not in part
     assert str(part["asDouble"]) == str(HALF)
     assert _pairs(part["attributes"]) == [("ok", {"boolValue": True})]
+
+
+def test_a_described_sample_carries_description_unit_and_facts_on_the_wire() -> None:
+    """W1961: description and unit are the Metric's own fields, the facts its point attributes."""
+    sample = metrics.Sample(
+        "m.x",
+        1,
+        NOW,
+        {"repo": "mtools"},
+        unit="1",
+        description="a count",
+        freshness_class="event_driven",
+        freshness_companion="m.alive",
+        owner="mtools:W1961",
+    )
+    expected = [
+        ("mikemol.freshness_class", {"stringValue": "event_driven"}),
+        ("mikemol.freshness_companion", {"stringValue": "m.alive"}),
+        ("mikemol.owner", {"stringValue": "mtools:W1961"}),
+        ("repo", {"stringValue": "mtools"}),
+    ]
+    for built, kind in (
+        (metrics.gauge(RESOURCE, sample), "gauge"),
+        (metrics.gauges(RESOURCE, [sample]), "gauge"),
+        (metrics.updown_counter(RESOURCE, sample), "sum"),
+    ):
+        metric = _metric(_wire(built))
+        assert (metric["description"], metric["unit"]) == ("a count", "1")
+        assert _pairs(_point(metric, kind)["attributes"]) == expected
+        assert "metadata" not in metric
+
+
+def test_a_sample_that_declares_nothing_puts_nothing_extra_on_the_wire() -> None:
+    """The control: no description and only its own labels, so existing emitters are unchanged."""
+    bare = _metric(_wire(metrics.gauge(RESOURCE, metrics.Sample("m.y", 1, NOW, {"repo": "r"}))))
+    assert "description" not in bare
+    assert "metadata" not in bare
+    assert _pairs(_point(bare, "gauge")["attributes"]) == [("repo", {"stringValue": "r"})]

@@ -37,6 +37,21 @@ from opentelemetry.proto.resource.v1.resource_pb2 import Resource as ProtoResour
 
 Value = str | int | float | bool
 SCOPE = "mikemol.otlp"
+# ⚑ THE METRIC CONTRACT (W1961; luthen-observability-ab's proposal, github-8f agreed): the
+# description and unit are the OTLP Metric's own fields, the kind is its data type, the labels
+# are its datapoints' attribute keys, and the per-metric facts a registry needs ride as DATAPOINT
+# attributes under these keys, constant for a metric. ⚑ NOT IN Metric.metadata: MEASURED by
+# luthen-observability-ab (2026-10-25, vmsingle 2.24.0, these bytes posted unchanged) that the store
+# keeps a metric's description, unit and type and DROPS Metric.metadata, while a datapoint
+# attribute becomes a series label the registry reads. The resource carries only who is speaking.
+FRESHNESS = "mikemol.freshness_class"
+COMPANION = "mikemol.freshness_companion"
+OWNER = "mikemol.owner"
+# ⚑ THE TWO CLASSES (luthen-observability policy/metric_families, 2026-10-25): `continuous` is
+# sampled on an interval while the process lives; `event_driven` is not sampled while idle, so
+# staleness proves nothing and the registry REQUIRES a companion continuous series (named by
+# COMPANION, in the dotted form) and a reason, which rides in the description.
+CLASSES = ("continuous", "event_driven")
 
 
 @dataclass(frozen=True, slots=True)
@@ -113,17 +128,40 @@ class Sample:
     time_ns: int
     labels: Mapping[str, Value] | None = None
     unit: str = ""
+    description: str = ""
+    freshness_class: str = ""
+    owner: str = ""
+    freshness_companion: str = ""
 
 
 def _point(sample: Sample) -> NumberDataPoint:
     point = NumberDataPoint(
-        time_unix_nano=sample.time_ns, attributes=attributes(sample.labels or {})
+        time_unix_nano=sample.time_ns,
+        attributes=attributes({**(sample.labels or {}), **_facts(sample)}),
     )
     if isinstance(sample.value, int):
         point.as_int = sample.value
     else:
         point.as_double = sample.value
     return point
+
+
+def _facts(sample: Sample) -> dict[str, Value]:
+    """Name the sample's per-metric facts that are set.
+
+    A fact the sample leaves empty is left off the wire, so a metric that declares nothing
+    is byte for byte what it was before.
+
+    Returns:
+        the freshness class, companion and owner that are set, by their attribute keys.
+
+    """
+    given = {
+        FRESHNESS: sample.freshness_class,
+        COMPANION: sample.freshness_companion,
+        OWNER: sample.owner,
+    }
+    return {key: val for key, val in given.items() if val}
 
 
 def _request(resource: Resource, metric: Metric) -> ExportMetricsServiceRequest:
@@ -143,7 +181,13 @@ def gauge(resource: Resource, sample: Sample) -> ExportMetricsServiceRequest:
 
     """
     body = Gauge(data_points=[_point(sample)])
-    return _request(resource, Metric(name=sample.name, unit=sample.unit, gauge=body))
+    made = Metric(
+        name=sample.name,
+        description=sample.description,
+        unit=sample.unit,
+        gauge=body,
+    )
+    return _request(resource, made)
 
 
 def gauges(resource: Resource, samples: Sequence[Sample]) -> ExportMetricsServiceRequest:
@@ -161,7 +205,12 @@ def gauges(resource: Resource, samples: Sequence[Sample]) -> ExportMetricsServic
     for sample in samples:
         groups.setdefault(sample.name, []).append(sample)
     made = [
-        Metric(name=name, unit=group[0].unit, gauge=Gauge(data_points=[_point(s) for s in group]))
+        Metric(
+            name=name,
+            description=group[0].description,
+            unit=group[0].unit,
+            gauge=Gauge(data_points=[_point(s) for s in group]),
+        )
         for name, group in groups.items()
     ]
     scope = ScopeMetrics(scope=InstrumentationScope(name=SCOPE), metrics=made)
@@ -184,4 +233,10 @@ def updown_counter(resource: Resource, sample: Sample) -> ExportMetricsServiceRe
         aggregation_temporality=AGGREGATION_TEMPORALITY_CUMULATIVE,
         is_monotonic=False,
     )
-    return _request(resource, Metric(name=sample.name, unit=sample.unit, sum=total))
+    made = Metric(
+        name=sample.name,
+        description=sample.description,
+        unit=sample.unit,
+        sum=total,
+    )
+    return _request(resource, made)
