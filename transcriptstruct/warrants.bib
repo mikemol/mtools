@@ -1237,3 +1237,45 @@
   claim  = {The mode's output: the document with state and layer per row, and the counted tally.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_the_queue_option_writes_the_resolved_ledger_then_a_tally},
 }
+
+@misc{transcriptstruct-commitrows-one-place-found-twice-is-one-row-naming-both-families,
+  section = {commitrows},
+  title  = {The first row is kept and the families are listed in the order seen},
+  claim  = {The first row is kept and the families are listed in the order seen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_one_place_found_twice_is_one_row_naming_both_families},
+}
+
+@misc{transcriptstruct-commitrows-uncertain-only-when-every-source-said-so,
+  section = {commitrows},
+  title  = {A firm source and an uncertain one agreeing is a firm commitment},
+  claim  = {A firm source and an uncertain one agreeing is a firm commitment.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_uncertain_only_when_every_source_said_so},
+}
+
+@misc{transcriptstruct-commitrows-other-repositories-rows-are-left-out-and-text-is-carried-as-given,
+  section = {commitrows},
+  title  = {Rows are per repository, and an empty text stays empty},
+  claim  = {Rows are per repository, and an empty text stays empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_other_repositories_rows_are_left_out_and_text_is_carried_as_given},
+}
+
+@misc{transcriptstruct-commitrows-bad-line-refuses-the-whole-file-and-names-it,
+  section = {commitrows},
+  title  = {Not JSON, not an object, a bool line and a non-string name each refuse},
+  claim  = {Not JSON, not an object, a bool line and a non-string name each refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_a_bad_line_refuses_the_whole_file_and_names_it},
+}
+
+@misc{transcriptstruct-commitrows-uncertain-row-is-resolved-but-never-counted,
+  section = {commitrows},
+  title  = {The ledger row keeps the flag and the sources, and the metric leaves it out},
+  claim  = {The ledger row keeps the flag and the sources, and the metric leaves it out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_an_uncertain_row_is_resolved_but_never_counted},
+}
+
+@misc{transcriptstruct-commitrows-resolve-mode-writes-the-document-then-a-tally,
+  section = {commitrows},
+  title  = {The mode's output, and its two refusals: no --queue and a bad row},
+  claim  = {The mode's output, and its two refusals: no --queue and a bad row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_the_resolve_mode_writes_the_document_then_a_tally},
+}

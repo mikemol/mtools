@@ -16,7 +16,7 @@ src/mikemol/transcriptstruct/memfind.py|any-utterance-warrants-a-quote|         
 src/mikemol/transcriptstruct/memfind.py|oldest-first-not-newest|    return \[u for _share, u in sorted\(kept, key=_rank, reverse=True\)\]|    return [u for _share, u in sorted(kept, key=_rank, reverse=False)]|def=superseded_by
 src/mikemol/transcriptstruct/memaudit.py|no-cutoff-no-superseded-rows|    return f"\{max\(dates\)\}\{_END_OF_DAY\}" if dates else ""|    return ""|def=_latest
 src/mikemol/transcriptstruct/memaudit.py|index-audited-as-a-note|        if name != INDEX:|        if True:|def=audit
-src/mikemol/transcriptstruct/cli.py|audit-memory-mode-ignored|    if opts\.get\("audit_memory"\) is True:|    if False:|def=_special
+src/mikemol/transcriptstruct/cli.py|audit-memory-mode-ignored|    elif opts\.get\("audit_memory"\) is True:|    elif False:|def=_listing
 src/mikemol/transcriptstruct/memgrants.py|negated-clause-still-granted|        if not _NEGATION\.search\(clause\):|        if True:|def=_granted
 src/mikemol/transcriptstruct/memfind.py|share-bar-dropped|    kept = \[pair for pair in scored if pair\[0\] \* len\(note_terms\) >= OVERLAP and pair\[0\] >= SHARE\]|    kept = [pair for pair in scored if pair[0] * len(note_terms) >= OVERLAP]|def=superseded_by
 src/mikemol/transcriptstruct/memfind.py|pasted-record-counted|    return _PASTED in utterance\.text or len\(utterance\.text\) > LONG|    return False|def=_pasted
@@ -58,5 +58,11 @@ src/mikemol/transcriptstruct/commitments.py|quoted-message-kept|                
 src/mikemol/transcriptstruct/commitledger.py|last-name-wins|        if LAYERS\.index\(found\[0\]\) > LAYERS\.index\(best\[0\]\):|        if True:|def=_follow_through
 src/mikemol/transcriptstruct/commitledger.py|other-repos-card-resolved|    bare = name\.removeprefix\(f"\{repo\}:"\)|    bare = name.rsplit(":", 1)[-1]|def=_own_symbol
 src/mikemol/transcriptstruct/commitledger.py|done-gate-card-only-a-card|    if any\("\.githooks/" in path or path\.endswith\("standing\.rego"\) for path in paths\):|    if False:|def=_card_layer
-src/mikemol/transcriptstruct/commitledger.py|every-layer-counted|        if row\.layer in COUNTED:|        if True:|def=counted
+src/mikemol/transcriptstruct/commitledger.py|every-layer-counted|        if row\.layer in COUNTED and|        if True or|def=counted
+src/mikemol/transcriptstruct/commitledger.py|uncertain-row-counted|COUNTED and not row\.uncertain:|COUNTED:|def=counted
+src/mikemol/transcriptstruct/commitrows.py|uncertain-if-any-source|Incoming\(first, all\(votes\)|Incoming(first, any(votes)|def=read
+src/mikemol/transcriptstruct/commitrows.py|other-repos-rows-kept|        if said\.repo != repo:|        if False:|def=read
+src/mikemol/transcriptstruct/commitrows.py|bad-line-skipped|            return \[\], f"line \{number\} is not a commitment row"|            continue|def=read
+src/mikemol/transcriptstruct/commitrows.py|bool-read-as-a-line|type\(number\) is not int|not isinstance(number, int)|def=_row_of
+src/mikemol/transcriptstruct/cli.py|resolve-without-queue-runs|    if queue is None or repo is None:|    if False:|def=_resolve
 src/mikemol/transcriptstruct/cli.py|queue-option-ignored|    if queue is not None:|    if False:|def=_commitments

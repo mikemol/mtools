@@ -48,6 +48,8 @@ class LedgerRow:
     state: str
     layer: str
     resolved_by: tuple[str, str] | None
+    uncertain: bool = False
+    families: tuple[str, ...] = ()
 
 
 def _strings(value: object) -> list[str]:
@@ -126,7 +128,7 @@ def record(row: LedgerRow) -> dict[str, object]:
     by: dict[str, str] | None = None
     if row.resolved_by is not None:
         by = {"kind": row.resolved_by[0], "ref": row.resolved_by[1]}
-    return {
+    out: dict[str, object] = {
         "repo": said.repo,
         "session": said.session,
         "line": said.line,
@@ -138,6 +140,12 @@ def record(row: LedgerRow) -> dict[str, object]:
         "layer": row.layer,
         "resolved_by": by,
     }
+    # W1986: only a row that came from a rows file names its sources or says it was a guess.
+    if row.uncertain:
+        out["uncertain"] = True
+    if row.families:
+        out["families"] = list(row.families)
+    return out
 
 
 def document(as_of: str, rows: Sequence[LedgerRow]) -> dict[str, object]:
@@ -154,12 +162,23 @@ def counted(rows: Sequence[LedgerRow]) -> dict[str, int]:
     """Count the rows the metric counts, by layer.
 
     Returns:
-        the number of rows at each COUNTED layer that has any; a sum over the values is the
+        the number of rows at each COUNTED layer that has any, an UNCERTAIN row never counted (a
+        flagged guess must not inflate the debt, W1986); a sum over the values is the
         repository's open count.
 
     """
     tally: dict[str, int] = {}
     for row in rows:
-        if row.layer in COUNTED:
+        if row.layer in COUNTED and not row.uncertain:
             tally[row.layer] = tally.get(row.layer, 0) + 1
     return tally
+
+
+def uncertain_count(rows: Sequence[LedgerRow]) -> int:
+    """Count the rows flagged uncertain, which `counted` leaves out.
+
+    Returns:
+        how many of the rows are guesses the classifier was unsure of.
+
+    """
+    return sum(1 for row in rows if row.uncertain)

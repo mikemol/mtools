@@ -23,7 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TextIO, cast
 
-from mikemol.transcriptstruct import commitledger
+from mikemol.transcriptstruct import commitledger, commitrows
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.commitments import Commitment
@@ -49,6 +49,7 @@ from mikemol.transcriptstruct.turnstart import turn_start
 from mikemol.transcriptstruct.warrant import verify
 
 _REFUSED = 1
+_USAGE = 2
 _DEFAULT_SPEAKERS = ("human", "peer", "assistant")
 
 
@@ -105,6 +106,12 @@ def _parser() -> argparse.ArgumentParser:
         "assistant made (line, uuid, session, repo, family, text, names), then the count",
     )
     mode.add_argument(
+        "--resolve",
+        action="store_true",
+        help="W1986: the positional is a JSON-lines file of commitment rows another extractor "
+        "wrote; resolve them against --queue for --repo into the ledger document",
+    )
+    mode.add_argument(
         "--turn-start",
         action="store_true",
         help="W1903: where the latest turn began (a prompt, a wake, a notification or a peer "
@@ -141,6 +148,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--since", type=int, help="first line to search (1-based, inclusive)")
     parser.add_argument("--until", type=int, help="last line to search (inclusive)")
+    parser.add_argument("--repo", help="--resolve: keep only the rows of this repository")
     parser.add_argument(
         "--queue",
         metavar="PATH",
@@ -290,13 +298,41 @@ def _cache_turns(path: Path, out: TextIO) -> None:
     out.write(f"# {len(found)} turn(s), {sum(t.cold for t in found)} cold\n")
 
 
-def _ledger(found: list[Commitment], queue: Path, out: TextIO) -> None:
-    """Write the commitments resolved against a queue as one ledger document, then a tally."""
+def _cards_of(queue: Path) -> list[dict[str, object]]:
+    # The waypoint cards of a paths-forward queue file; a card that is not an object is skipped.
     doc: object = json.loads(queue.read_text(encoding="utf-8"))
     listed = cast("dict[str, object]", doc).get("waypoints") if isinstance(doc, dict) else None
     items = cast("list[object]", listed) if isinstance(listed, list) else []
-    cards = [cast("dict[str, object]", item) for item in items if isinstance(item, dict)]
-    rows = commitledger.resolve(found, cards)
+    return [cast("dict[str, object]", item) for item in items if isinstance(item, dict)]
+
+
+def _resolve(rows_file: Path, queue: str | None, repo: str | None, out: TextIO) -> int:
+    """Resolve the rows of another extractor against a queue and write the ledger document.
+
+    Returns:
+        0 after the document and a tally line (counted layers, then the uncertain count); 2
+        without --queue or --repo; 1 when a line of the file is not a well-typed row.
+
+    """
+    if queue is None or repo is None:
+        sys.stderr.write("mikemol-transcriptstruct: --resolve needs --queue and --repo\n")
+        return _USAGE
+    incoming, why = commitrows.read(rows_file.read_text(encoding="utf-8").splitlines(), repo)
+    if why:
+        sys.stderr.write(f"mikemol-transcriptstruct: {why}\n")
+        return _REFUSED
+    rows = commitrows.resolve(incoming, _cards_of(Path(queue)))
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    out.write(_line(commitledger.document(stamp, rows)))
+    tally = commitledger.counted(rows)
+    said = f"{sum(tally.values())} counted: {tally}, {commitledger.uncertain_count(rows)} uncertain"
+    out.write(f"# {said}\n")
+    return 0
+
+
+def _ledger(found: list[Commitment], queue: Path, out: TextIO) -> None:
+    """Write the commitments resolved against a queue as one ledger document, then a tally."""
+    rows = commitledger.resolve(found, _cards_of(queue))
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     out.write(_line(commitledger.document(stamp, rows)))
     tally = commitledger.counted(rows)
@@ -408,6 +444,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
         _commitments(path, out, _text(opts, "queue"))
     elif opts.get("harvest") is True:
         _harvest(path, scheduled, out)
+    elif opts.get("audit_memory") is True:
+        out.writelines(f"{row.text()}\n" for row in audit(path))
     else:
         return False
     return True
@@ -437,12 +475,9 @@ def _special(
             f"{done.uncitable} human utterance(s) uncitable\n"
         )
         return 0
-    if _listing(opts, path, scheduled, out):
-        return 0
-    if opts.get("audit_memory") is True:
-        out.writelines(f"{row.text()}\n" for row in audit(path))
-        return 0
-    return None
+    if opts.get("resolve") is True:
+        return _resolve(path, _text(opts, "queue"), _text(opts, "repo"), out)
+    return 0 if _listing(opts, path, scheduled, out) else None
 
 
 def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
