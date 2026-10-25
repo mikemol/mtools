@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1939,
+  "counter": 1941,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -42466,19 +42466,19 @@
     {
       "symbol": "W1937",
       "title": "Each regressions refusal names its remedy, so the no-reopen check is not read as a wall",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Done in the working tree: the three refusal lines name drop-and-mint with --caused-by, --evidence-append or --evidence-redact, and a new card for a dropped one; the tests pin the text; stacked as the next entry",
-      "evidence": "2026-10-25: 2026-10-24: the reopen refusal text corrected by the operator (host line 95113, warranted): the done card stays done and a recurrence goes on a class card (--caused-by), not drop-and-mint; stack-w1937.json waits behind the queue stack (bpamgb1z8), bazel test //pathsforward:test_regressions before it goes in; the one-command promotion is W1939",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-24: the reopen refusal text corrected by the operator (host line 95113, warranted): the done card stays done and a recurrence goes on a class card (--caused-by), not drop-and-mint; stack-w1937.json waits behind the queue stack (bpamgb1z8), bazel test //pathsforward:test_regressions before it goes in; the one-command promotion is W1939 | 2026-10-25: landed b8547c44",
       "issued_at": "2026-10-25T00:51:20Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T00:55:20Z",
+      "last_worked": "2026-10-25T01:57:21Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261025T015721Z",
       "manifest": [
         "pathsforward/src/mikemol/pathsforward/regressions.py",
         "pathsforward/tests/test_regressions.py"
@@ -42556,6 +42556,56 @@
         "pathsforward/tests/test_classify.py"
       ],
       "size_class": "medium"
+    },
+    {
+      "symbol": "W1940",
+      "title": "mikemol-commit's launcher notice reads the dist-info the venv imports, so a vendored hooks wheel is not called a link farm into a live mtools tree",
+      "status": "done",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-24: built and tested (notice reads the dist-info), stack-w1940.json written behind the W1937 gate (bx05l7r49); bazel test //hooks:test_launcher before submit | 2026-10-25: landed 77a17d78",
+      "issued_at": "2026-10-25T01:31:25Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1007",
+      "last_worked": "2026-10-25T02:32:30Z",
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/launcher.py",
+        "hooks/tests/test_launcher.py",
+        "hooks/mutants.regex",
+        "hooks/warrants.bib"
+      ],
+      "size_class": "small",
+      "completed": "20261025T023230Z"
+    },
+    {
+      "symbol": "W1941",
+      "title": "A stack submit never leaves the queue behind: when the working queue differs from HEAD and no entry names it, the submit carries it in the last entry or warns",
+      "status": "working",
+      "enables": [
+        "github:W43"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Evidence: nemik's stacks 427 and 428 landed and left its queue changes uncommitted, the way mtools' own HEAD queue went a week stale. Choose with a test: the last entry carries .claude/paths-forward.{json,ledger,md} automatically when they differ from HEAD (default safe), or the submit refuses or warns; fold the learned-lag shape in W1938 as the second line of defence",
+      "evidence": "2026-10-25: 2026-10-24: edge retargeted to github:W43 at github-8f's note (W42 is the paydown rate; W43 is stacks carrying their own queue state); starting on the auto-carry: the last entry of a stack names the three queue files when they differ from HEAD",
+      "issued_at": "2026-10-25T01:31:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-25T01:33:42Z",
+      "ticks_blocked": 0,
+      "weight": 1000,
+      "manifest": [
+        "hooks/src/mikemol/hooks/stackrun.py",
+        "hooks/src/mikemol/hooks/commit_kata.py",
+        "hooks/tests/test_stackrun.py"
+      ],
+      "size_class": "medium",
+      "completed": null
     }
   ],
   "residue": [

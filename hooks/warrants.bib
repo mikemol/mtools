@@ -15077,3 +15077,25 @@
   claim  = {The notice reads the dist-info the venv imports: a vendored wheel is no link farm.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_a_bazel_venv_that_carries_the_hooks_wheel_is_not_noticed},
 }
+
+@misc{hooks-queuecarry-queue-file-that-differs-and-is-named-by-no-entry-rides-in-the-last-entry,
+  section = {queuecarry},
+  title  = {The default is to carry: the first entry is untouched, the last gains the file},
+  claim  = {The default is to carry: the first entry is untouched, the last gains the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queuecarry.py -k test_a_queue_file_that_differs_and_is_named_by_no_entry_rides_in_the_last_entry},
+}
+
+@misc{hooks-queuecarry-queue-file-that-is-unchanged-or-already-named-is-left-alone,
+  section = {queuecarry},
+  title  = {No difference from HEAD, nothing carried; named by an entry, left where the caller put it},
+  claim  = {No difference from HEAD, nothing carried; named by an entry, left where the caller put
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queuecarry.py -k test_a_queue_file_that_is_unchanged_or_already_named_is_left_alone},
+}
+
+@misc{hooks-queuecarry-comparison-that-cannot-be-made-carries-nothing,
+  section = {queuecarry},
+  title  = {Outside a repository git fails; a doubt is not a reason to add a file to a commit},
+  claim  = {Outside a repository git fails; a doubt is not a reason to add a file to a commit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_queuecarry.py -k test_a_comparison_that_cannot_be_made_carries_nothing},
+}

@@ -31,6 +31,7 @@ from mikemol.hooks.commit_body import refusal as body_refusal
 from mikemol.hooks.gateclass import classify_all
 from mikemol.hooks.gatephase import failed_checks, stage_note
 from mikemol.hooks.isolated import EnvRunner
+from mikemol.hooks.queuecarry import carry
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
 from mikemol.hooks.stacklanding import land
@@ -194,6 +195,12 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
 
     """
     name, run = root.name, seams.run
+    items, carried = carry(root, items, run)
+    if carried:
+        out.write(
+            f"stack: carrying {', '.join(carried)} in the last entry (the working queue differs "
+            "from HEAD and no entry named it, W1941)\n"
+        )
     before = run(["rev-parse", "HEAD"], {}, root).stdout.strip()
     entries = [Entry(seams.message_of(item), item.paths, item.files) for item in items]
     stack = build(root, entries, run, before)
