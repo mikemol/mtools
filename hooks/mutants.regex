@@ -561,8 +561,9 @@ src/mikemol/hooks/siblingcensus.py|own-repo-counted-as-a-reach|        if named 
 src/mikemol/hooks/siblingcensus.py|inside-dotdot-counted-as-a-reach|        if _lands_in\(root, file, chain\.count\("\.\./"\)\) == root\.parent and name != root\.name:|        if name != root.name:|def=_line_reaches
 src/mikemol/hooks/commit_withdraw.py|leader-with-followers-withdrawn|    if row\.joined:|    if False:|def=_ask_to_stop
 src/mikemol/hooks/commit_counts.py|joined-count-not-recorded|        entry\["joined"\] = joined|        entry["joined"] = 0|def=note_joined
-src/mikemol/hooks/revendor.py|waldo-not-a-vendorable-dist|"corpus", "waldo", "cvdcore"\)|"corpus", "cvdcore")|
-src/mikemol/hooks/revendor.py|cvdcore-not-a-vendorable-dist|"corpus", "waldo", "cvdcore"\)|"corpus", "waldo")|
+src/mikemol/hooks/revendor.py|waldo-not-a-vendorable-dist|    "waldo",|    "waldo_",|
+src/mikemol/hooks/revendor.py|cvdcore-not-a-vendorable-dist|    "cvdcore",|    "cvdcore_",|
+src/mikemol/hooks/revendor.py|ratchet-not-a-vendorable-dist|    "ratchet",|    "ratchet_",|
 src/mikemol/hooks/gatephase.py|summary-read-past-the-block|        if not line\.startswith\(_BULLET\):|        if False:|def=failed_checks
 src/mikemol/hooks/gatephase.py|bullet-prefix-kept-in-the-label|        found\.append\(line\[len\(_BULLET\) :\]\.strip\(\)\)|        found.append(line)|def=failed_checks
 src/mikemol/hooks/commit_kata.py|stage-never-inserted|    return line\.replace\(marker, f"\): \{note\}the cause is above", 1\)|    return line|def=with_stage

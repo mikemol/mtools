@@ -170,6 +170,18 @@ def test_cvdcore_is_a_vendored_dist_and_moves_with_the_rest() -> None:
     assert revendor.wheel_name("cvdcore", NEW) in revendor.move_sources(text, NEW)
 
 
+def test_ratchet_and_atomicwrite_are_vendored_dists_and_move_with_the_rest() -> None:
+    """W1946 (nemik:W1027): the ratchet census wheel the ratchet emit needs moves with the pair."""
+    text = "".join(
+        f'mikemol-{d} = {{ path = "vendor/wheels/{revendor.wheel_name(d, OLD)}" }}\n'
+        for d in ("hooks", "atomicwrite", "ratchet")
+    )
+    assert revendor.vendored(text) == ("hooks", "atomicwrite", "ratchet")
+    moved = revendor.move_sources(text, NEW)
+    assert revendor.wheel_name("ratchet", NEW) in moved
+    assert revendor.wheel_name("atomicwrite", NEW) in moved
+
+
 def test_the_prose_naming_the_old_commit_moves_too() -> None:
     """Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin."""
     text = "# vendored the same way at mtools b5db3c4, one sha\n"

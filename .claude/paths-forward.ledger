@@ -3720,3 +3720,6 @@
 2026-10-25T04:41:12Z  status W1928 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T04:41:13Z  interrupt W1946 minted    -         "mikemol-repin --revendor has a row for the mikemol-ratchet and mikemol-atomicwrite dists, so a consumer needs no hand-built wheel to adopt the ratchet emit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1027
 2026-10-25T04:47:34Z  status W1928 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T04:49:33Z  status W1628 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T05:23:15Z  status W1928 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T05:25:56Z  status W1946 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -34944,7 +34944,7 @@
     {
       "symbol": "W1628",
       "title": "The edit gate judges a file that is new on disk under its real module name, so a [[tool.mypy.overrides]] for that module applies",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/checkers.py!w",
@@ -34952,12 +34952,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Reproduce on a scratch package: a new file whose module has an override (disable one error code), judged through the edit gate at its real path before and after it exists; record both verdicts; then choose between a mirrored temp tree and refusing with a message that names the gap",
-      "evidence": "2026-10-24: 2026-10-24 read of hooks checkers.py: a file NOT YET ON DISK is judged from the staged temp copy (mypy_subject keeps it, since --shadow-file needs the real path to exist), so mypy names the module by the temp path and a [[tool.mypy.overrides]] keyed to the real module cannot apply to a NEW file; an existing file is shadowed at its real path and does apply. The file's own comments say the house policy carries no mypy overrides at all, so the case is a consumer's config (luthen-observability-d9 asked). Not built: a fix has to give mypy the real module identity for a path that does not exist (a staged copy at a mirrored path under a temp root with mypy_path set), and that needs a measured reproduction first",
+      "next_bounded_step": "Build it for a file not yet on disk: the caller that owns the staged temp file creates a temp root, writes the staged bytes at the real relative path with an empty __init__.py in each directory of that path, and the mypy argv becomes env -C <mirror> MYPYPATH=<project root> python -m mypy --config-file <absolute config> <relative path>; the mirror is removed with the temp file; an existing file keeps --shadow-file; tests with the scratch package shape (override applies to a new file, a loud new file still errors, a sibling import resolves). Find which module creates and cleans the temp file before editing checkers",
+      "evidence": "2026-10-24: 2026-10-24 read of hooks checkers.py: a file NOT YET ON DISK is judged from the staged temp copy (mypy_subject keeps it, since --shadow-file needs the real path to exist), so mypy names the module by the temp path and a [[tool.mypy.overrides]] keyed to the real module cannot apply to a NEW file; an existing file is shadowed at its real path and does apply. The file's own comments say the house policy carries no mypy overrides at all, so the case is a consumer's config (luthen-observability-d9 asked). Not built: a fix has to give mypy the real module identity for a path that does not exist (a staged copy at a mirrored path under a temp root with mypy_path set), and that needs a measured reproduction first | 2026-10-25: 2026-10-25 REPRODUCED with a positive control, on a scratch package whose mypy config has ignore_errors for module pkg.quiet and a file holding X: int = 'not an int'. (1) The file EXISTS and is judged through --shadow-file at its real path: clean, the override applies. (2) The file is NEW and judged from a temp copy (what the edit gate does): error [assignment], the override does NOT apply because mypy names the module by the temp path. (3) The same bytes copied to a MIRRORED tree at the real relative path pkg/quiet.py: clean, the override applies. (4) --shadow-file at a path that does not exist: mypy refuses (Cannot read file), so the shadow route is closed for a new file. Candidate fix: stage a new file at its real relative path under a temp root, run mypy from that root with MYPYPATH naming the real project root so sibling imports resolve; not yet tried, and sibling-import resolution plus a duplicate __init__ module are the risks | 2026-10-25: 2026-10-25 CANDIDATE TRIED and it holds, with controls. A NEW file judged from a temp root that mirrors only it at its real relative path (pkg/quiet.py, with an empty __init__.py in each directory of that path) run from that root with MYPYPATH naming the real project root: the override for pkg.quiet APPLIES (clean), the same bytes as a module with no override (pkg/loud.py) still ERROR as they should, and the control without MYPYPATH fails on the sibling import (Cannot find implementation or library stub for module named pkg.other), so the sibling imports really do resolve through MYPYPATH and nothing else. Without the __init__.py in the mirror the module is named quiet and the override does not apply. So the fix is a mirror, not a refusal",
       "issued_at": "2026-10-18T22:02:26Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-d9",
-      "last_worked": "2026-10-25T02:35:54Z",
+      "last_worked": "2026-10-25T05:13:53Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/checkers.py",
@@ -42022,26 +42022,26 @@
     {
       "symbol": "W1928",
       "title": "mikemol-repin adds the ratchet-emit line to a repository's gate hook from a template, so each repository adopts the ratchet series with one command",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W42"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Write the template from the two shapes now read (mtools' pre-commit block and nemik's gate_staged.sh block): NAME, DIR and RATCHET_BIN are the three inputs, the guard is the tool's presence, the failure is said and ignored; a mikemol-repin mode that inserts the block idempotently into a named gate script, with a test over a script with and without the block; the revendor rows for the two dists are their own card",
-      "evidence": "2026-10-25: 2026-10-25 github-8f: nemik will pilot the ratchet-emit adoption by hand (nemik:W1027) and send its gate hook diff as the first real case for this card. Answering nemik on any fact the pilot needs. The template is written from that diff, not from mtools' own hook, which is the only other shape I have read | 2026-10-25: 2026-10-25 nemik-84 (nemik:W1027 landed as 38b2042): first real case. The whole change to nemik's tools/gate_staged.sh after its ratchet check: emit_tool is the worktree venv's mikemol-ratchet-emit, and if it is executable, RATCHET_BIN names the venv's mikemol-ratchet and the tool runs with the real checkout's basename as NAME and the gated worktree as DIR, a failure saying so on stderr and sending nothing, else it says the tool is not in the gate's venv. Template inputs: NAME is the real checkout's basename (never the snapshot's), DIR the gated worktree, RATCHET_BIN the venv's census. Best effort, cannot change the verdict. GAP: mikemol-repin --revendor has no row for the mikemol-ratchet and mikemol-atomicwrite dists, so nemik hand-built those two wheels from a git archive of 57b9f2ac and added their vendored_wheel rows, hub requirements and the two console scripts in BUILD.bazel. Not yet verified by nemik: repo=nemik in count by (repo) (last_over_time(mikemol.ratchet.value[30m])) | 2026-10-25: 2026-10-25: built (mikemol-ratchet-hook, 5 tests, 3 declared mutants), stack-w1928.json written, bazel test //hooks:test_ratchet_hook running before the submit; W1944 (withdrawn leader requeues followers) is next in this round",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25 github-8f: nemik will pilot the ratchet-emit adoption by hand (nemik:W1027) and send its gate hook diff as the first real case for this card. Answering nemik on any fact the pilot needs. The template is written from that diff, not from mtools' own hook, which is the only other shape I have read | 2026-10-25: 2026-10-25 nemik-84 (nemik:W1027 landed as 38b2042): first real case. The whole change to nemik's tools/gate_staged.sh after its ratchet check: emit_tool is the worktree venv's mikemol-ratchet-emit, and if it is executable, RATCHET_BIN names the venv's mikemol-ratchet and the tool runs with the real checkout's basename as NAME and the gated worktree as DIR, a failure saying so on stderr and sending nothing, else it says the tool is not in the gate's venv. Template inputs: NAME is the real checkout's basename (never the snapshot's), DIR the gated worktree, RATCHET_BIN the venv's census. Best effort, cannot change the verdict. GAP: mikemol-repin --revendor has no row for the mikemol-ratchet and mikemol-atomicwrite dists, so nemik hand-built those two wheels from a git archive of 57b9f2ac and added their vendored_wheel rows, hub requirements and the two console scripts in BUILD.bazel. Not yet verified by nemik: repo=nemik in count by (repo) (last_over_time(mikemol.ratchet.value[30m])) | 2026-10-25: 2026-10-25: built (mikemol-ratchet-hook, 5 tests, 3 declared mutants), stack-w1928.json written, bazel test //hooks:test_ratchet_hook running before the submit; W1944 (withdrawn leader requeues followers) is next in this round | 2026-10-25: landed 5487b92e",
       "issued_at": "2026-10-24T21:56:26Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T04:47:34Z",
+      "last_worked": "2026-10-25T05:23:15Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/repin_cli.py",
         "hooks/tests/test_repin_ratchet_emit.py"
       ],
       "size_class": "medium",
-      "completed": null
+      "completed": "20261025T052315Z"
     },
     {
       "symbol": "W1929",
@@ -42724,9 +42724,22 @@
     {
       "symbol": "W1946",
       "title": "mikemol-repin --revendor has a row for the mikemol-ratchet and mikemol-atomicwrite dists, so a consumer needs no hand-built wheel to adopt the ratchet emit",
-      "status": "ready",
+      "status": "working",
       "enables": [
-        "nemik:W1027"
+        "nemik:W1027",
+        "luthen-observability:W1608",
+        "estate:W50",
+        "linux-sources:W381",
+        "el-openglo:W753",
+        "gcalculus:W275",
+        "summit:W230",
+        "paperkit:W541",
+        "substrate:W344",
+        "rosettapkg:W133",
+        "resumes:W22",
+        "amr-skills:W380",
+        "aeternum:W122",
+        "gabion:W1066"
       ],
       "touches": [],
       "blocked_on": [],
@@ -42736,13 +42749,17 @@
       "issued_at": "2026-10-25T04:41:13Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1027",
-      "last_worked": null,
+      "last_worked": "2026-10-25T05:25:56Z",
       "ticks_blocked": 0,
       "manifest": [
-        "hooks/src/mikemol/hooks/repin_cli.py",
-        "hooks/tests/test_repin_revendor.py"
+        "hooks/src/mikemol/hooks/revendor.py",
+        "hooks/tests/test_revendor.py",
+        "hooks/warrants.bib",
+        "hooks/mutants.regex"
       ],
-      "size_class": "medium"
+      "size_class": "small",
+      "completed": null,
+      "weight": 1000
     }
   ],
   "residue": [
@@ -43123,11 +43140,10 @@
       "tag": "file:hooks/src/mikemol/hooks/checkers.py!w",
       "holder": "(unlocked)",
       "waypoint": "W1628",
-      "base_sha": "7b0696c1a418fed2d8e73a48e04a2e48f91344df",
-      "taken_at": "2026-10-24T21:46:31Z",
-      "renewed_at": "2026-10-24T21:46:31Z",
-      "expires_at": "2026-10-24T22:16:31Z",
-      "lapse_ledgered": true
+      "base_sha": "df0103614ce75077e473efdcb6b7384e6537f354",
+      "taken_at": "2026-10-25T04:49:33Z",
+      "renewed_at": "2026-10-25T04:49:33Z",
+      "expires_at": "2026-10-25T05:19:33Z"
     }
   ],
   "advice": [
