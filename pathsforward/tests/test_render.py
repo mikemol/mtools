@@ -265,3 +265,21 @@ def test_queue_mirror_and_payload_agree_on_order() -> None:
     queue = [sym for sym in _queue_symbols(state) if sym not in done]
     mirror = [sym for sym in _mirror_symbols(state) if sym not in done]
     assert (queue, mirror) == (_payload_symbols(state), _payload_symbols(state))
+
+
+def test_the_mirror_renders_retros_only_when_the_document_has_them() -> None:
+    """A document with a retro gets a retros section; one without renders as it always did."""
+    plain = _state([])
+    assert "## retros" not in render.mirror(plain, _PATH)
+    retro: dict[str, object] = {
+        "id": "mtools:R1",
+        "trigger": "a late catch",
+        "root": "a gate nobody ran",
+        "enforcement_layer": "gate",
+        "findings": [{"finding_card": "W9"}, {"certify_change": "x"}],
+    }
+    doc = dict(plain.doc)
+    doc["retros"] = [retro, "not a retro"]
+    body = render.mirror(validate(doc), _PATH)
+    assert "## retros" in body
+    assert "- **mtools:R1** (gate) a late catch: root a gate nobody ran; 2 finding(s)" in body

@@ -7325,3 +7325,10 @@
   claim  = {--regressions FILE compares the queue with HEAD's copy: exit 0 clean, exit 4 on a loss.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_regressions.py -k test_the_command_refuses_a_queue_that_reopens_a_done_card_and_passes_one_that_does_not},
 }
+
+@misc{pathsforward-render-mirror-renders-retros-only-when-the-document-has-them,
+  section = {render},
+  title  = {A document with a retro gets a retros section; one without renders as it always did},
+  claim  = {A document with a retro gets a retros section; one without renders as it always did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_mirror_renders_retros_only_when_the_document_has_them},
+}

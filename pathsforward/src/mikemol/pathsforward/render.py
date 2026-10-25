@@ -8,6 +8,7 @@ watches the edit vanish stops trusting the loop.
 
 import re
 from pathlib import Path
+from typing import cast
 
 from mikemol.pathsforward.digest import v2
 from mikemol.pathsforward.model import (
@@ -90,6 +91,31 @@ def _entry(index: int, w: Json) -> list[str]:
     return lines
 
 
+def _retro_lines(state: State) -> list[str]:
+    """Render the queue document's retros, when it has any.
+
+    Returns:
+        a `## retros` heading and one item per retro (id, enforcement layer, trigger,
+        root and the number of findings); empty for a document without retros, so an old
+        mirror renders byte for byte as before.
+
+    """
+    raw = state.doc.get("retros")
+    if not isinstance(raw, list) or not raw:
+        return []
+    lines = ["", "## retros", ""]
+    for item in cast("list[object]", raw):
+        if not isinstance(item, dict):
+            continue
+        retro = cast("Json", item)
+        found = retro.get("findings")
+        count = len(cast("list[object]", found)) if isinstance(found, list) else 0
+        head = f"- **{text(retro, 'id')}** ({text(retro, 'enforcement_layer') or '-'})"
+        body = f"{text(retro, 'trigger')}: root {text(retro, 'root')}; {count} finding(s)"
+        lines += wrap(head, body, "  ")
+    return lines
+
+
 def mirror(state: State, state_path: Path) -> str:
     """Render the mirror.
 
@@ -126,6 +152,7 @@ def mirror(state: State, state_path: Path) -> str:
         lines += wrap(head, f"{text(r, 'title')}: {text(r, 'reason')}", "  ")
     if not state.residue:
         lines.append("- (none)")
+    lines += _retro_lines(state)
     return "\n".join(lines) + "\n"
 
 

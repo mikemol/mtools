@@ -307,3 +307,4 @@ src/mikemol/pathsforward/regressions.py|redaction-marker-ignored|    if was and 
 src/mikemol/pathsforward/regressions.py|dropped-card-may-vanish|        if symbol not in residue_after|        if False|def=lost
 src/mikemol/pathsforward/cli.py|regressions-found-but-ok|    return EXIT_REFUSED if found else EXIT_OK|    return EXIT_OK|def=_regressions
 src/mikemol/pathsforward/cli.py|intervention-not-ledgered|    _ledger\(ctx, Entry\("intervention", NO_SYMBOL, kind, "intervention", note\)\)|    pass|def=_intervention
+src/mikemol/pathsforward/render.py|retros-section-for-a-document-without-any|    if not isinstance\(raw, list\) or not raw:|    if False:|def=_retro_lines
