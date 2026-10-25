@@ -13,3 +13,4 @@ key_lookup	The Key Lookups: A Gate Filename to Its Declared Schema or None, and 
 mypy_domain	The mypy Domain as a Cached Test: The Transitive Victim Is in the Declared Inputs of the mypy Action, a File mypy Does Not Read Is Not, and a Defect Planted in an Imported Module Reaches the Importer's Verdict
 kinds	Ratchet kinds (W1906): which files are ratchet state and what each records
 fleetcensus	Fleet census (W1907): every ratchet file under a root, with value and floor
+declaration	Ratchet declaration (W1957): a repository names its ratchets and the census reads that, not filenames

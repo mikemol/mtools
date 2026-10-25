@@ -27,7 +27,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from mikemol.ratchet import kinds
+from mikemol.ratchet import declaration, kinds
 
 MAX_DEPTH = 4
 _SUFFIXES = frozenset({".json", ".txt", ".tsv"})
@@ -93,6 +93,12 @@ def _files(repo: Path) -> Iterator[Path]:
                 yield Path(here) / name
 
 
+def _declared_row(repo: Path, item: declaration.Declared) -> Row:
+    path = repo / item.path
+    value, total = kinds.value_of(path), kinds.sum_of(path)
+    return Row(repo.name, item.path, item.kind, value, kinds.FLOOR, total)
+
+
 def census_repo(repo: Path) -> list[Row]:
     """List every ratchet file in ONE repository (W1923).
 
@@ -101,10 +107,19 @@ def census_repo(repo: Path) -> list[Row]:
     gate reports its own ratchets at its own landings, which is also how the pace is keyed; the
     fleet-wide `census` below is an operator tool and is never called from a gate.
 
+    ⚑ A DECLARATION WINS (W1957): a repository with a `ratchets.json` is read from it and from
+    nothing else, so no file is counted for its name alone; one without falls back to the name
+    classifier.
+
     Returns:
-        one row per file whose name is a ratchet kind, the repository named by its directory.
+        one row per declared ratchet, or else per file whose name is a ratchet kind, the
+        repository named by its directory; a declaration that exists and cannot be trusted
+        raises `declaration.DeclarationError` rather than reading as empty.
 
     """
+    declared = declaration.read(repo)
+    if declared is not None:
+        return [_declared_row(repo, item) for item in declared]
     rows: list[Row] = []
     for path in _files(repo):
         kind = kinds.kind_of(path.name)

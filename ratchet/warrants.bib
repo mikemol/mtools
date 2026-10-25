@@ -881,3 +881,38 @@
   claim  = {W1923: `census --repo DIR` lists DIR alone, never the repositories beside it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_a_gate_censuses_its_own_repository_and_reads_no_sibling},
 }
+
+@misc{ratchet-declaration-declaration-wins-over-names-and-a-missing-one-falls-back,
+  section = {declaration},
+  title  = {Declared rows only when ratchets.json exists; the name classifier when it does not},
+  claim  = {Declared rows only when ratchets.json exists; the name classifier when it does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declaration.py -k test_a_declaration_wins_over_names_and_a_missing_one_falls_back},
+}
+
+@misc{ratchet-declaration-declared-file-that-is-missing-stays-listed-as-unread,
+  section = {declaration},
+  title  = {The declaration says it should exist, so it is UNREAD and never quietly left out},
+  claim  = {The declaration says it should exist, so it is UNREAD and never quietly left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declaration.py -k test_a_declared_file_that_is_missing_stays_listed_as_unread},
+}
+
+@misc{ratchet-declaration-declaration-that-cannot-be-trusted-is-refused-not-read-as-empty,
+  section = {declaration},
+  title  = {Not JSON, not an object with a ratchets list, or a row with a bad path or kind},
+  claim  = {Not JSON, not an object with a ratchets list, or a row with a bad path or kind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declaration.py -k test_a_declaration_that_cannot_be_trusted_is_refused_not_read_as_empty},
+}
+
+@misc{ratchet-declaration-census-command-says-so-and-fails-on-a-bad-declaration,
+  section = {declaration},
+  title  = {A refusal is exit 1 naming the file, so a caller never mistakes it for a clean census},
+  claim  = {A refusal is exit 1 naming the file, so a caller never mistakes it for a clean census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declaration.py -k test_the_census_command_says_so_and_fails_on_a_bad_declaration},
+}
+
+@misc{ratchet-declaration-link-is-never-read-as-a-declaration,
+  section = {declaration},
+  title  = {No link is followed: a declaration that is a link reads as no declaration},
+  claim  = {No link is followed: a declaration that is a link reads as no declaration.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_declaration.py -k test_a_link_is_never_read_as_a_declaration},
+}

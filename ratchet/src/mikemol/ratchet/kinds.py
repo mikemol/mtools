@@ -64,6 +64,9 @@ def _weight(node: object) -> int:
     return 0
 
 
+KIND_NAMES = tuple(name for name, _pattern in _KINDS)
+
+
 def value_of(path: Path) -> int | None:
     """Read how much debt a ratchet file records.
 

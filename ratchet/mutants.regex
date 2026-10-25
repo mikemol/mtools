@@ -44,3 +44,8 @@ src/mikemol/ratchet/kinds.py|flat-shape-summed|        if not isinstance\(inner,
 src/mikemol/ratchet/cli.py|repo-flag-censuses-the-fleet|    rows = census_repo\(where\) if opts\["repo"\] else census\(where\)|    rows = census(where)|def=_census_main
 src/mikemol/ratchet/fleetcensus.py|clone-counted|        and not _CLONE\.search\(entry\.name\)|        and True|def=repos_under
 src/mikemol/ratchet/fleetcensus.py|depth-unbounded|            and len\(Path\(here\)\.parts\) - base < MAX_DEPTH|            and True|def=_files
+src/mikemol/ratchet/declaration.py|link-read-as-a-declaration|    if file\.is_symlink\(\) or not file\.is_file\(\):|    if not file.is_file():|def=read
+src/mikemol/ratchet/declaration.py|path-may-leave-the-repository|    if given\.is_absolute\(\) or "\.\." in given\.parts:|    if False:|def=_row
+src/mikemol/ratchet/declaration.py|unknown-kind-accepted|    if kind not in kinds\.KIND_NAMES:|    if False:|def=_row
+src/mikemol/ratchet/fleetcensus.py|declaration-ignored|    if declared is not None:|    if False:|def=census_repo
+src/mikemol/ratchet/cli.py|bad-declaration-exits-clean|        return 1$|        return 0|def=_census_main
