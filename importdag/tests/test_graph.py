@@ -84,6 +84,17 @@ def test_an_import_also_made_outside_the_guard_is_not_typing_only(tmp_path: Path
     assert entry["typing_only"] == ["src/demo/pkg/gamma.py"]
 
 
+def test_the_conftest_is_support_with_its_own_edges_and_never_a_test(tmp_path: Path) -> None:
+    """Every test loads it, so its imports are held; it is not under tests, and absent is empty."""
+    dist = _dist(tmp_path)
+    assert graph.build(dist, _PKG)["support"] == {}
+    (dist / "tests" / "conftest.py").write_text("from demo.pkg import beta\n", encoding="utf-8")
+    doc = graph.build(dist, _PKG)
+    support = cast("dict[str, graph.Entry]", doc["support"])
+    assert support["tests/conftest.py"]["imports"] == [_BETA]
+    assert "tests/conftest.py" not in cast("dict[str, graph.Entry]", doc["tests"])
+
+
 def test_a_test_lists_the_modules_it_imports(tmp_path: Path) -> None:
     """The graph covers tests as well as modules, since a test is what a change must rerun."""
     doc = graph.build(_dist(tmp_path), _PKG)

@@ -25,6 +25,7 @@ src/mikemol/importdag/cost.py|manifest-test-not-rerun|        if path in changed
 src/mikemol/importdag/cost.py|unmeasured-test-vanishes|        tuple\(path for path in chosen if path not in table\),|        (),|def=price
 src/mikemol/importdag/cost.py|largest-sample-count-reported|min\(\(m\.samples|max((m.samples|def=price
 src/mikemol/importdag/cost.py|enabler-rerun-charged-again|    return card - enabler|    return card|def=after
+src/mikemol/importdag/graph.py|conftest-edges-dropped|        "support": \{path: entry\(path\) for path in support\},|        "support": {},|def=build
 src/mikemol/importdag/graph.py|plain-type-checking-guard-missed|        return test\.id == "TYPE_CHECKING"|        return False|def=_guarded
 src/mikemol/importdag/graph.py|dotted-type-checking-guard-missed|    return isinstance\(test, ast\.Attribute\) and test\.attr == "TYPE_CHECKING"|    return False|def=_guarded
 src/mikemol/importdag/graph.py|import-also-made-outside-the-guard-is-typing-only|\) - _imported\(outside, names, package\)|) - set()|def=typing_only

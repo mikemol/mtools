@@ -1292,6 +1292,15 @@ GRAPH = {
   },
   "package": "mikemol.hooks",
   "schema": 1,
+  "support": {
+    "tests/conftest.py": {
+      "imports": [
+        "src/mikemol/hooks/hosttied.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    }
+  },
   "tests": {
     "tests/test_adopt_launcher.py": {
       "imports": [],

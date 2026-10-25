@@ -25,6 +25,12 @@ one library per module takes `imports` minus `typing_only` as its deps: two modu
 each other for the checker only (hooks' queuecarry and stackrun) are a cycle bazel refuses, and
 not one at run time. An import that also occurs outside the guard is not typing only.
 
+⚑ `support` HOLDS THE FILES EVERY TEST LOADS BUT NO TEST IS (W2010): `tests/conftest.py`, when the
+dist has one. A build rule that gives a test only the libraries of the modules it imports must
+also give it what its conftest imports, or the test fails at collection; the entry is the same
+shape as a module's. It is not under `tests`, so nothing that runs the tests (the mutation grid,
+the cost projection) treats it as one.
+
 ⚑ A DECLARED READ THAT NAMES NO FILE IS REFUSED, not recorded: a graph with a dangling edge sends a
 cone to a file that is not there.
 
@@ -51,6 +57,7 @@ BZL_HEADER = (
     "# REGENERATE: python3 -m mikemol.importdag.graph --dist DIR --package PKG --write\n"
 )
 READS_FILE = "reads.json"
+SUPPORT_FILES = ("tests/conftest.py",)
 EXIT_STALE = 1
 
 Entry = dict[str, list[str]]
@@ -177,8 +184,9 @@ def build(dist: Path, package: str) -> dict[str, object]:
     """
     modules = module_paths(dist, package)
     tests = test_paths(dist)
+    support = [path for path in SUPPORT_FILES if (dist / path).is_file()]
     index = dagderive.stem_index(modules)
-    reads = declared_reads(dist, set(modules) | set(tests))
+    reads = declared_reads(dist, set(modules) | set(tests) | set(support))
 
     def entry(path: str) -> Entry:
         text = (dist / path).read_text(encoding="utf-8")
@@ -196,6 +204,7 @@ def build(dist: Path, package: str) -> dict[str, object]:
         "package": package,
         "modules": {path: entry(path) for path in modules},
         "tests": {path: entry(path) for path in tests},
+        "support": {path: entry(path) for path in support},
     }
 
 

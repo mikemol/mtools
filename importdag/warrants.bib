@@ -1483,3 +1483,11 @@
   claim  = {Test_a is reached by both cards: together prices it once; after removes what ran.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_two_cards_count_an_overlap_once_and_a_card_after_its_enabler_pays_the_rest},
 }
+
+@misc{importdag-graph-conftest-is-support-with-its-own-edges-and-never-a-test,
+  section = {graph},
+  title  = {Every test loads it, so its imports are held; it is not under tests, and absent is empty},
+  claim  = {Every test loads it, so its imports are held; it is not under tests, and absent is
+            empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_the_conftest_is_support_with_its_own_edges_and_never_a_test},
+}
