@@ -3971,3 +3971,7 @@
 2026-10-25T21:05:24Z  interrupt W2019 minted    -         "Sweep: list every repo whose committed gate block passes a relative --dir to the ratchet hook"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
 2026-10-25T21:09:12Z  interrupt W2020 minted    -         "Narrow the four hooks tests that fail in closure mode by declaring what each reads"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1988
 2026-10-25T21:10:31Z  status W2010 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T21:59:33Z  status W2010 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T22:05:58Z  interrupt W2021 minted    -         "Five hooks py_tests outside the graph's tests (ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite) get a closure or a stated reason"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2016
+2026-10-25T22:06:05Z  status W1989 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T22:16:23Z  status W1991 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -4,6 +4,9 @@
 
     <repo>/ratchets.json:   {"ratchets": [{"path": "corpus/exit-baseline.txt", "kind": "baseline"}]}
 
+A row may also name its value expression (W1991): `"expression": "sum_of_columns", "columns":
+["mismatch", "unjudged"]`. See `expression` for the four; the default is `rows`.
+
 github-8f's rule (2026-10-25): a gate must never guess from a filename, the same as "bazel inputs
 named, never globbed". The census classified files by NAME, and a name cannot tell a gate's baseline
 from a measurement or a config that happens to be called one (measured the same day: `debtplan.json`
@@ -26,7 +29,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import cast
 
-from mikemol.ratchet import kinds
+from mikemol.ratchet import expression, kinds
 
 NAME = "ratchets.json"
 
@@ -37,10 +40,29 @@ class DeclarationError(ValueError):
 
 @dataclass(frozen=True)
 class Declared:
-    """One declared ratchet: its path within the repository and its kind."""
+    """One declared ratchet: its path, its kind and how its value is computed."""
 
     path: str
     kind: str
+    expression: str = expression.ROWS
+    columns: tuple[str, ...] = ()
+
+
+def _expression(row: dict[str, object], where: int) -> tuple[str, tuple[str, ...]]:
+    # The expression a row names and its columns, refused unless they fit together.
+    name = row.get("expression", expression.ROWS)
+    raw = row.get("columns", [])
+    columns = cast("list[object]", raw) if isinstance(raw, list) else None
+    if name not in expression.NAMES:
+        msg = f"{NAME}: ratchet {where} expression {name!r} is not one of {expression.NAMES}"
+        raise DeclarationError(msg)
+    if columns is None or not all(isinstance(c, str) and c for c in columns):
+        msg = f"{NAME}: ratchet {where} columns must be a list of column names"
+        raise DeclarationError(msg)
+    if (name in expression.NEEDS_COLUMNS) != bool(columns):
+        msg = f"{NAME}: ratchet {where} expression {name!r} and its columns do not fit"
+        raise DeclarationError(msg)
+    return str(name), tuple(str(c) for c in columns)
 
 
 def _row(item: object, where: int) -> Declared:
@@ -59,7 +81,7 @@ def _row(item: object, where: int) -> Declared:
     if kind not in kinds.KIND_NAMES:
         msg = f"{NAME}: ratchet {where} kind {kind!r} is not one of {kinds.KIND_NAMES}"
         raise DeclarationError(msg)
-    return Declared(path, str(kind))
+    return Declared(path, str(kind), *_expression(row, where))
 
 
 def read(repo: Path) -> list[Declared] | None:

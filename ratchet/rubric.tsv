@@ -14,3 +14,4 @@ mypy_domain	The mypy Domain as a Cached Test: The Transitive Victim Is in the De
 kinds	Ratchet kinds (W1906): which files are ratchet state and what each records
 fleetcensus	Fleet census (W1907): every ratchet file under a root, with value and floor
 declaration	Ratchet declaration (W1957): a repository names its ratchets and the census reads that, not filenames
+expression	Value-expression

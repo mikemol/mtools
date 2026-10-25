@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2020,
+  "counter": 2021,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -43472,12 +43472,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Sampler submitted (stack-w1966: --sample N --seed S --key PATH). Next: draw the real sample from this session's transcript, send the BLIND file to amr-skills, label my own copy from the key-blind text myself without looking at their labels, compute agreement, keep disagreements as fixtures. I still need the labels and the agreement, W1966",
+      "next_bounded_step": "Sampler LANDED 755feb02. Next: the blind rows go to stdout, which for a real transcript is too large for a tool result, so add --out PATH for the blind file (beside --key), then draw N=300 seed=1 from this session's transcript, send the BLIND file path to amr-skills, label my own copy without looking at their labels, compute agreement, keep disagreements as fixtures. I still need --out, the labels and the agreement, W1966",
       "evidence": "2026-10-25: 2026-10-25 github-8f relayed: operator host lines 96863 and 96881 (both verified human) woke amr-skills to build an AMR classifier for 'I haven't done' and 'I still need to' over a rolling window of transcripts; its output feeds W1933's resolver, not a second ledger | 2026-10-25: 2026-10-25 github-8f GUARD on the labelled sample (G4 decorrelation): labelling only my regex's own output leaves recall invisible and puts my reading in the labels. So (1) the sample is RANDOM assistant sentences drawn from the same transcript as well as the regex hits, so a commitment the regex missed can show up (the sampler takes a seed so it is reproducible), and (2) amr-skills labels the SAME sample independently, agreement is reported, and the disagreements are kept as fixtures, neither side being truth",
       "issued_at": "2026-10-25T12:41:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T20:48:25Z",
+      "last_worked": "2026-10-25T21:28:05Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44251,19 +44251,19 @@
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1982"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "MEASURED 2026-10-25 (mutants_gen --dist hooks --write into a scratch state, then removed): 173 generated BUILD files (one package per module plus the root) and 1962 site targets. Next: gate target running mutants_gen --check (as graph_fresh does for the graph), commit hooks/sites, and switch hooks' sharded :mutants targets to the site targets; read the next gate's hit count. Ask paperkit whether per-site targets bit them (staging, target count). I still need the gate target, the committed sites and the switch, W1989",
-      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall",
+      "next_bounded_step": "Give mutant_site a CPU budget like mutants_sharded (size medium, wall a backstop) in check_mutants/defs.bzl, rerun //hooks/sites/..., read the failures that are not timeouts (the first run had 6), then the gate --check target, commit hooks/sites, retire the shards, read the gate's hit count. I still need all of it, W1989",
+      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued.",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T18:46:07Z",
+      "last_worked": "2026-10-25T22:32:37Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44296,7 +44296,7 @@
     {
       "symbol": "W1991",
       "title": "A declared ratchet names its value expression (rows, sum of named columns, rows where a column is nonzero, file-rule-count), the name census only the fallback",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W42"
       ],
@@ -44305,12 +44305,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Each declared ratchet row may carry a value expression: rows (the default), sum_of_columns [names], rows_where_nonzero [names], or file_rule_count; the census evaluates it, a name that is not a column is refused loudly, the name census stays the fallback only. Fixture of exactly this file shape (header and rows with four failure columns: some rows all zero, one with a 1), asserting the value is the number of rows with any nonzero failure column and falls when one 1 becomes 0. A change of expression is a declared re-baseline (nemik:W1046). Blocked on the declaration W1957 in the gate. I still need all of it, W1991",
+      "next_bounded_step": "W1957 landed (0a0228b5) so the block is gone. linux-sources:W411 waits on this (repinned to f5d4ac20, which lacks it). Build in ratchet/: declaration row gains an optional expression; census evaluates rows | sum_of_columns | rows_where_nonzero | file_rule_count; unknown column refused loudly; fixture of the letter-quotes table shape. I still need all of it, W1991",
       "evidence": "2026-10-25: 2026-10-25 github-8f from linux-sources' first verdict: findings/letter-quotes-baseline.tsv is a table (header: letter, mismatch, joined, unjudged, freeform; then one row per letter with four 0/1 failure columns) and the census reads value 71, its LINE count, while about 60 rows carry no debt (every failure column 0) and the debt lives in the failure columns; a real paydown (linux-sources W410 flips one unjudged column from 1 to 0) leaves the value at 71, and the verdict would stay behind forever. The same entry-count versus content gap my W1922 sum series fixed for ruff and mypy, but tabular. READ the file head to confirm the shape",
       "issued_at": "2026-10-25T15:21:49Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T15:22:11Z",
+      "last_worked": "2026-10-25T22:16:23Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44410,11 +44410,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-25: 2026-10-25 instance (luthen-observability-ab): luthen W1645's one-entry stack refused ~19:55Z 'a check measured a defect ... culprit: unattributed', identical content landed on resubmit as 896e3a0f; luthen kept 400 characters and mtools' ledger kept nothing readable: luthen/.git/mtools holds no stack file from that window (stackfreeze.forget unlinks items.json at the end of a run; .snap and .trees are replaced). Second instance for W1662/W1996/W2007.",
       "issued_at": "2026-10-25T16:49:52Z",
       "minted_during": "interrupt",
       "caused_by": "W1662",
-      "last_worked": null,
+      "last_worked": "2026-10-25T21:29:31Z",
       "ticks_blocked": 0
     },
     {
@@ -44654,21 +44654,21 @@
     {
       "symbol": "W2010",
       "title": "graph.json holds tests/conftest.py's imports so a closure test needs no hand-named dependency",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1988"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Submitted as stack-w1988b (first entry). After it lands: mark done and tell github-8f; W2011 (git-ls-files presubmit check) follows. I still need the landing, W2010",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed 1b9fa302",
       "issued_at": "2026-10-25T20:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "W1988",
-      "last_worked": "2026-10-25T21:10:31Z",
+      "last_worked": "2026-10-25T21:59:33Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261025T215933Z"
     },
     {
       "symbol": "W2011",
@@ -44776,12 +44776,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "W1990 was marked done on 81e9a6d7 for a single-test witness (test_round_wire cached on an out-of-cone edit, reran on an in-cone edit); that closed it too early, because its text asks for the gate's hit count over the split. This is the remainder: after the generated switch of all tests lands, make one out-of-cone one-line edit and one in-cone edit, read the gate's cached/executed counts for each, and compare the sum of miss wall with the baseline (the 1.9 to 2.5 s staging floor).",
-      "evidence": "",
+      "evidence": "2026-10-25: 2026-10-25 MEASURED after stack-w1988b landed (2b52dca4, W2010 1b9fa302), bazel test //hooks:all --test_lang_filters=py over 242 py tests: baseline after the BUILD change executed 234 of 242 (all pass); a one-line comment in vlogwatch.py (a module the graph says 75 tests reach, so a central one) executed 81 of 242; the same edit in watchdog.py (6 tests reach it) executed 12 of 242, 4 of them the whole-dist tests (W2020) plus the 6, 242 pass. Before the split every edit to any hooks module missed all of them. Both edits reverted; git status clean. Not yet the gate's own hit count; the next gate run's is the number to read. | 2026-10-25: 2026-10-25 the 2 tests beyond the graph's 6 and W2020's four (github-8f asked which reading): the second reading, not a graph bug. bazel query finds five hooks py_tests that are not test_*.py modules and so are outside GRAPH['tests'] and outside the generated switch: ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite. ruff_suppression was seen running in the sample. I did not identify which two of the five reran, so the graph-undercounts-an-edge reading is not ruled out by a positive control; W2012's input mutation will say. Carded W2021 to put the five on the generated closure or name why not.",
       "issued_at": "2026-10-25T21:04:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1990",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-25T22:05:57Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2017",
@@ -44846,6 +44847,22 @@
       "issued_at": "2026-10-25T21:09:12Z",
       "minted_during": "interrupt",
       "caused_by": "W1988",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2021",
+      "title": "Five hooks py_tests outside the graph's tests (ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite) get a closure or a stated reason",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "bazel query: kind(py_test, //hooks:*) except names test_*. They depend on the dist-wide :hooks, so some rerun on any edit (2 extra of 12 in the watchdog sample). For each: read what it imports and reads, put it in the generated switch, or record why it must stay on :hooks.",
+      "evidence": "",
+      "issued_at": "2026-10-25T22:05:58Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2016",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -45298,6 +45315,15 @@
       "taken_at": "2026-10-25T21:04:42Z",
       "renewed_at": "2026-10-25T21:04:42Z",
       "expires_at": "2026-10-25T21:34:42Z"
+    },
+    {
+      "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1991",
+      "base_sha": "2b52dca4ac2a69387d13699687dcdfd1372a56af",
+      "taken_at": "2026-10-25T22:16:23Z",
+      "renewed_at": "2026-10-25T22:16:23Z",
+      "expires_at": "2026-10-25T22:46:23Z"
     }
   ],
   "advice": [

@@ -47,5 +47,13 @@ src/mikemol/ratchet/fleetcensus.py|depth-unbounded|            and len\(Path\(he
 src/mikemol/ratchet/declaration.py|link-read-as-a-declaration|    if file\.is_symlink\(\) or not file\.is_file\(\):|    if not file.is_file():|def=read
 src/mikemol/ratchet/declaration.py|path-may-leave-the-repository|    if given\.is_absolute\(\) or "\.\." in given\.parts:|    if False:|def=_row
 src/mikemol/ratchet/declaration.py|unknown-kind-accepted|    if kind not in kinds\.KIND_NAMES:|    if False:|def=_row
+src/mikemol/ratchet/expression.py|unknown-column-read-as-zero|    if missing:|    if False:|def=_picked
+src/mikemol/ratchet/expression.py|non-integer-cell-accepted|    if not text\.isdecimal\(\):|    if False:|def=_cell
+src/mikemol/ratchet/expression.py|comment-line-is-the-header|    lines = \[line for line in text\.splitlines\(\) if line\.strip\(\) and not line\.startswith\("#"\)\]|    lines = [line for line in text.splitlines() if line.strip()]|def=_table
+src/mikemol/ratchet/expression.py|sum-counts-rows|        return sum\(sum\(row\) for row in cells\)|        return len(cells)|def=evaluate
+src/mikemol/ratchet/expression.py|nonzero-counts-every-row|    return sum\(1 for row in cells if any\(row\)\)|    return len(cells)|def=evaluate
+src/mikemol/ratchet/declaration.py|unknown-expression-accepted|    if name not in expression\.NAMES:|    if False:|def=_expression
+src/mikemol/ratchet/declaration.py|columns-and-expression-need-not-fit|    if \(name in expression\.NEEDS_COLUMNS\) != bool\(columns\):|    if False:|def=_expression
+src/mikemol/ratchet/fleetcensus.py|declared-expression-ignored|    value = expression\.evaluate\(path, item\.expression, item\.columns\)|    value = kinds.value_of(path)|def=_declared_row
 src/mikemol/ratchet/fleetcensus.py|declaration-ignored|    if declared is not None:|    if False:|def=census_repo
 src/mikemol/ratchet/cli.py|bad-declaration-exits-clean|        return 1$|        return 0|def=_census_main

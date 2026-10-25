@@ -27,7 +27,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from mikemol.ratchet import declaration, kinds
+from mikemol.ratchet import declaration, expression, kinds
 
 MAX_DEPTH = 4
 _SUFFIXES = frozenset({".json", ".txt", ".tsv"})
@@ -95,8 +95,8 @@ def _files(repo: Path) -> Iterator[Path]:
 
 def _declared_row(repo: Path, item: declaration.Declared) -> Row:
     path = repo / item.path
-    value, total = kinds.value_of(path), kinds.sum_of(path)
-    return Row(repo.name, item.path, item.kind, value, kinds.FLOOR, total)
+    value = expression.evaluate(path, item.expression, item.columns)
+    return Row(repo.name, item.path, item.kind, value, kinds.FLOOR, kinds.sum_of(path))
 
 
 def census_repo(repo: Path) -> list[Row]:
