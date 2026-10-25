@@ -32,6 +32,21 @@ def test_a_bazel_venv_committing_another_repo_is_noticed_with_the_pin_line(tmp_p
         assert launcher.SPEC in said
 
 
+def test_a_bazel_venv_that_carries_the_hooks_wheel_is_not_noticed(tmp_path: Path) -> None:
+    """The notice reads the dist-info the venv imports: a vendored wheel is no link farm."""
+    other = tmp_path / "other"
+    other.mkdir()
+    farm = tmp_path / "bazel-bin" / "farm" / ".venv"
+    wheel = tmp_path / "bazel-bin" / "wheel" / ".venv"
+    (farm / "lib" / "python3.13" / "site-packages" / "mikemol").mkdir(parents=True)
+    packages = wheel / "lib" / "python3.13" / "site-packages"
+    (packages / "mikemol_hooks-0.1.0+57b9f2a.dist-info").mkdir(parents=True)
+    assert launcher.notice(str(farm), other, {}) is not None
+    assert launcher.notice(str(wheel), other, {}) is None
+    assert launcher.wheel_installed(str(wheel))
+    assert not launcher.wheel_installed(str(farm))
+
+
 def test_the_repos_own_venv_and_the_mtools_tree_are_not_noticed(tmp_path: Path) -> None:
     """An installed pin is the sound path, and mtools's own tree is what the launcher follows."""
     other = tmp_path / "other"

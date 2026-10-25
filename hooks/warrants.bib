@@ -15070,3 +15070,10 @@
             ordinary file in the same entry still holds its frozen bytes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_queue_file_is_read_at_build_and_a_stale_frozen_blob_cannot_revert_a_card},
 }
+
+@misc{hooks-launcher-bazel-venv-that-carries-the-hooks-wheel-is-not-noticed,
+  section = {launcher},
+  title  = {The notice reads the dist-info the venv imports: a vendored wheel is no link farm},
+  claim  = {The notice reads the dist-info the venv imports: a vendored wheel is no link farm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_launcher.py -k test_a_bazel_venv_that_carries_the_hooks_wheel_is_not_noticed},
+}

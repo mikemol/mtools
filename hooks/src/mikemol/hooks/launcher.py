@@ -31,15 +31,35 @@ TEST_ENV = "TEST_SRCDIR"
 SPEC = "mikemol-hooks @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=hooks"
 
 
+def wheel_installed(prefix: str) -> bool:
+    """Say whether a venv carries the hooks WHEEL (a `mikemol_hooks-*.dist-info`), not a link farm.
+
+    ⚑ THE NOTICE READS WHAT THE VENV ACTUALLY IMPORTS (nemik-84, 2026-10-24). A bazel-bin
+    launcher can be the vendored wheel from bazel's external repository (nemik's, dist-info
+    `mikemol_hooks-0.1.0+57b9f2a`), which no edit in an mtools tree can reach, and the path alone
+    said "live mtools tree" for it. The mtools tree's own launcher has no such dist-info: it is
+    links into the working tree.
+
+    Returns:
+        True when the venv's site-packages holds a `mikemol_hooks` dist-info.
+
+    """
+    pattern = "lib/python*/site-packages/mikemol_hooks-*.dist-info"
+    return any(Path(prefix).glob(pattern))
+
+
 def notice(prefix: str, root: Path, env: Mapping[str, str]) -> str | None:
     """Judge whether a commit into `root` runs through a launcher it should not.
 
     Returns:
-        the notice, or None when the launcher is not a bazel venv, `root` is the mtools tree
-        or this runs inside a bazel test (a test's own commits are not a user's launcher).
+        the notice, or None when the launcher is not a bazel venv, carries the hooks wheel,
+        `root` is the mtools tree or this runs inside a bazel test (a test's own commits are
+        not a user's launcher).
 
     """
     if TEST_ENV in env or not any(marker in prefix for marker in MARKERS):
+        return None
+    if wheel_installed(prefix):
         return None
     if (root / "hooks" / "pyproject.toml").is_file():
         return None

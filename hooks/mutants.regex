@@ -648,6 +648,7 @@ src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/stacksnap.py|queue-file-frozen-at-submit|            if path in seen or path in QUEUE_FILES:|            if path in seen:|def=freeze
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
+src/mikemol/hooks/launcher.py|wheel-launcher-noticed|    if wheel_installed\(prefix\):|    if False:|def=notice
 src/mikemol/hooks/ratchet_emit.py|path-lookup-dropped|    return shutil\.which\("mikemol-ratchet", path=env\.get\("PATH", ""\)\)|    return None|def=reader_path
 src/mikemol/hooks/ratchet_emit.py|census-line-not-matched|        if match is not None:|        if match is None:|def=parse_census
 src/mikemol/hooks/ratchet_emit.py|repo-label-is-the-emitting-repo|        fields = \{"repo": repo, "ratchet": ratchet, "kind": kind\}|        fields = {"repo": "mtools", "ratchet": ratchet, "kind": kind}|def=rows_of
