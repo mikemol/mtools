@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1947,
+  "counter": 1948,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -36323,17 +36323,19 @@
     {
       "symbol": "W1689",
       "title": "//ratchet:ruff and //ratchet:ratchet_gate reported red BEFORE the probe (CONTROL FAILED) in the refused 30-entry gate and are green after: reproduce alone under load and repair the cause",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1692"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "When W1690 names the second writer, decide whether it explains the ratchet:ruff and ratchet_gate reds; if so close this as its consequence with that evidence, otherwise reproduce the two targets alone under load",
-      "evidence": "2026-10-24: 2026-10-24 read: this card's own next step is to see whether the red-before-probe is W1688's victim contention; W1688 is blocked on W1690 (find the second writer), W1691 and W1692, so the cause is the open question there and reproducing it here first would repeat that work. Observation from this session's gate logs: 6 of ~400 background outputs contain 'CONTROL FAILED' or 'probe residue' (not read yet, so not a count of recurrences); gates since 2026-10-23 ran through the isolated snapshot path ('path: isolated')",
+      "evidence": "2026-10-24: 2026-10-24 read: this card's own next step is to see whether the red-before-probe is W1688's victim contention; W1688 is blocked on W1690 (find the second writer), W1691 and W1692, so the cause is the open question there and reproducing it here first would repeat that work. Observation from this session's gate logs: 6 of ~400 background outputs contain 'CONTROL FAILED' or 'probe residue' (not read yet, so not a count of recurrences); gates since 2026-10-23 ran through the isolated snapshot path ('path: isolated') | 2026-10-25: 2026-10-25: W1690 was dropped (unanswerable, W1929 sweep), so the named wait is W1692, the concurrency test of two domain_witness runs: if it shows probe residue under two concurrent runs it explains these reds, otherwise this card reproduces the two targets alone under load. W1692 now has a manifest",
       "issued_at": "2026-10-19T09:22:19Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-24T22:44:28Z",
+      "last_worked": "2026-10-25T08:31:40Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42634,7 +42636,7 @@
     {
       "symbol": "W1942",
       "title": "Refuse a round whose working set skips a card of the published round while including one outside it, naming the skipped card and the writer command that takes it",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W46"
       ],
@@ -42645,12 +42647,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After stack w1942b lands: round_symbols reads the one-line {as_of, rows} form as well as the lines form (fixture of each); round_path defaults to the luthen export tree round.json; then bazel build //hooks:.venv and wire round_reason into tick_stop last. I still need the one-line reader, the default path and the tick_stop wiring, W1942",
-      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that | 2026-10-25: 2026-10-25 nemik-84: the publisher landed (95cebb5): nemik-rank nemik --round-file PATH --landings LANDINGS writes the round file at the nemik cache directory (beside landings.json); head line as_of, then one line per card with repo, symbol, rank, salience (quoted text); no size or n_source. The file does not exist until luthen-observability schedules the run, so the wiring must treat a missing file as no round (it does already). The file lists every repo with ready cards, life included; round_check reads this repository's rows only. Unblocked: wire against a fixture now | 2026-10-25: 2026-10-25 nemik-84 (from luthen-observability W1612, 3951a950): CORRECTIONS. (1) The path is round.json in luthen's nemik-export tree under the luthen data directory, not the nemik cache; luthen's timer starts 18 min after boot and runs hourly, so as_of can be an hour old or more (the 3 h bound holds). (2) luthen's egress gate drops rows for amr- repos and repos outside the tree and then REWRITES the whole file as one-line JSON {as_of, rows: [...]}; a garbled file is removed. So the reader must accept both the lines form and the one-line form, and a missing file is normal. round_symbols skips every line that starts with an as_of object, so it reads NO rows of the one-line form: found by reading, fix and fixture to follow",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that | 2026-10-25: 2026-10-25 nemik-84: the publisher landed (95cebb5): nemik-rank nemik --round-file PATH --landings LANDINGS writes the round file at the nemik cache directory (beside landings.json); head line as_of, then one line per card with repo, symbol, rank, salience (quoted text); no size or n_source. The file does not exist until luthen-observability schedules the run, so the wiring must treat a missing file as no round (it does already). The file lists every repo with ready cards, life included; round_check reads this repository's rows only. Unblocked: wire against a fixture now | 2026-10-25: 2026-10-25 nemik-84 (from luthen-observability W1612, 3951a950): CORRECTIONS. (1) The path is round.json in luthen's nemik-export tree under the luthen data directory, not the nemik cache; luthen's timer starts 18 min after boot and runs hourly, so as_of can be an hour old or more (the 3 h bound holds). (2) luthen's egress gate drops rows for amr- repos and repos outside the tree and then REWRITES the whole file as one-line JSON {as_of, rows: [...]}; a garbled file is removed. So the reader must accept both the lines form and the one-line form, and a missing file is normal. round_symbols skips every line that starts with an as_of object, so it reads NO rows of the one-line form: found by reading, fix and fixture to follow | 2026-10-25: landed e19e28b3",
       "issued_at": "2026-10-25T02:39:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T08:05:46Z",
+      "last_worked": "2026-10-25T08:28:55Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42689,7 +42691,7 @@
         "hooks/tests/test_round_check.py"
       ],
       "size_class": "medium",
-      "completed": null
+      "completed": "20261025T082855Z"
     },
     {
       "symbol": "W1943",
@@ -42825,6 +42827,34 @@
         "transcriptstruct/tests/test_commitments.py"
       ],
       "size_class": "small"
+    },
+    {
+      "symbol": "W1948",
+      "title": "Wire the published round into the tick-stop hook and the stack submit: round_symbols reads the one-line {as_of, rows} form, the default path is luthen's export tree",
+      "status": "working",
+      "enables": [
+        "github:W46"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "round_symbols reads the one-line form; round_path defaults to the luthen export tree; bazel build //hooks:.venv; wire round_reason into tick_stop last; stackrun is the part after. I still need all four, W1948",
+      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree",
+      "issued_at": "2026-10-25T08:29:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1942",
+      "last_worked": "2026-10-25T08:32:59Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "manifest": [
+        "hooks/src/mikemol/hooks/round_check.py",
+        "hooks/src/mikemol/hooks/round_wire.py",
+        "hooks/src/mikemol/hooks/tick_stop.py",
+        "hooks/src/mikemol/hooks/stackrun.py",
+        "hooks/tests/test_round_check.py",
+        "hooks/tests/test_round_wire.py"
+      ],
+      "size_class": "medium"
     }
   ],
   "residue": [
@@ -43209,33 +43239,6 @@
       "taken_at": "2026-10-25T04:49:33Z",
       "renewed_at": "2026-10-25T04:49:33Z",
       "expires_at": "2026-10-25T05:19:33Z"
-    },
-    {
-      "tag": "file:hooks/src/mikemol/hooks/round_check.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1942",
-      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
-      "taken_at": "2026-10-25T07:46:29Z",
-      "renewed_at": "2026-10-25T07:46:29Z",
-      "expires_at": "2026-10-25T08:16:29Z"
-    },
-    {
-      "tag": "file:hooks/src/mikemol/hooks/tick_stop.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1942",
-      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
-      "taken_at": "2026-10-25T07:46:29Z",
-      "renewed_at": "2026-10-25T07:46:29Z",
-      "expires_at": "2026-10-25T08:16:29Z"
-    },
-    {
-      "tag": "file:hooks/src/mikemol/hooks/stackrun.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1942",
-      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
-      "taken_at": "2026-10-25T07:46:29Z",
-      "renewed_at": "2026-10-25T07:46:29Z",
-      "expires_at": "2026-10-25T08:16:29Z"
     },
     {
       "tag": "file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w",

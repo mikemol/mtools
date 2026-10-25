@@ -38,18 +38,38 @@ def round_symbols(text: str, repo: str) -> list[str]:
 
     """
     found: list[tuple[int, str]] = []
-    for line in text.splitlines():
-        stripped = line.strip().rstrip(",")
-        if not stripped.startswith("{") or stripped.startswith('{"as_of"'):
-            continue
+    for row in _rows(text):
         try:
-            row = cast("dict[str, object]", json.loads(stripped))
             rank = int(str(row.get("rank", "")))
         except ValueError:
             continue
         if row.get("repo") == repo and isinstance(row.get("symbol"), str):
             found.append((rank, str(row["symbol"])))
     return [symbol for _rank, symbol in sorted(found)]
+
+
+def _rows(text: str) -> list[dict[str, object]]:
+    # ⚑ TWO FORMS, one reader. luthen's egress gate rewrites a filtered file as ONE document
+    # {as_of, rows: [...]} (W1612, found by github-8f); nemik's writer puts the stamp and each
+    # row on its own line. A whole document is read as JSON first; otherwise line by line.
+    try:
+        whole: object = json.loads(text)
+    except ValueError:
+        whole = None
+    if isinstance(whole, dict):
+        listed = cast("dict[str, object]", whole).get("rows")
+        items = cast("list[object]", listed) if isinstance(listed, list) else []
+        return [cast("dict[str, object]", item) for item in items if isinstance(item, dict)]
+    rows: list[dict[str, object]] = []
+    for line in text.splitlines():
+        stripped = line.strip().rstrip(",")
+        if not stripped.startswith("{") or stripped.startswith('{"as_of"'):
+            continue
+        try:
+            rows.append(cast("dict[str, object]", json.loads(stripped)))
+        except ValueError:
+            continue
+    return rows
 
 
 def composition(

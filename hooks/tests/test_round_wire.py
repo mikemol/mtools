@@ -67,8 +67,8 @@ def test_the_reason_reads_both_files_and_a_missing_one_gives_none(tmp_path: Path
 def test_the_path_is_the_environment_override_else_the_nemik_cache(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """The environment names the file; without it the cache directory's round file."""
+    """The environment names the file; without it luthen's export tree holds it."""
     monkeypatch.setenv(round_wire.ENV, "/x/round.json")
     assert str(round_wire.round_path()) == "/x/round.json"
     monkeypatch.delenv(round_wire.ENV)
-    assert round_wire.round_path().parts[-3:] == (".cache", "nemik", "round.json")
+    assert round_wire.round_path().parts[-3:] == ("luthen", "nemik-export", "round.json")

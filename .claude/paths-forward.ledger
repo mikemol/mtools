@@ -3736,3 +3736,7 @@
 2026-10-25T08:17:30Z  status W1933 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T08:20:36Z  tick  W1933 advanced  collapse  "mutants, warrants and rubric written for commitledger; local grid in flight"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T08:21:48Z  status W1667 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T08:28:55Z  status W1942 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T08:29:01Z  interrupt W1948 minted    -         "Wire the published round into the tick-stop hook and the stack submit: round_symbols reads the one-line {as_of, rows} form, the default path is luthen's export tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1942
+2026-10-25T08:29:05Z  status W1948 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T08:31:40Z  status W1689 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -41,11 +41,12 @@ def round_path() -> Path:
     """Find the round file.
 
     Returns:
-        the path named by MIKEMOL_ROUND_FILE, else `round.json` in the nemik cache directory.
+        the path named by MIKEMOL_ROUND_FILE, else `round.json` in luthen's nemik-export tree
+        (luthen-observability:W1612 writes it there hourly).
 
     """
     named = os.environ.get(ENV)
-    return Path(named) if named else Path.home() / ".cache" / "nemik" / "round.json"
+    return Path(named) if named else Path.home() / ".local/share/luthen/nemik-export/round.json"
 
 
 def published_at(text: str) -> datetime | None:

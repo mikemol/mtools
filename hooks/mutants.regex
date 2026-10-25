@@ -655,6 +655,7 @@ src/mikemol/hooks/ratchet_hook.py|dry-run-writes|    elif write:|    elif True:|
 src/mikemol/hooks/round_check.py|no-outside-card-still-refused|    if not outside:|    if False:|def=composition
 src/mikemol/hooks/round_check.py|blocked-round-card-counted-skipped|        if symbol in available and symbol not in doing|        if symbol not in doing|def=composition
 src/mikemol/hooks/round_check.py|other-repos-rows-read|        if row\.get\("repo"\) == repo and isinstance\(row\.get\("symbol"\), str\):|        if isinstance(row.get("symbol"), str):|def=round_symbols
+src/mikemol/hooks/round_check.py|one-line-document-not-read|    if isinstance\(whole, dict\):|    if False:|def=_rows
 src/mikemol/hooks/round_wire.py|stale-round-still-judged|    if stamp is None or now - stamp > STALE:|    if stamp is None:|def=refusals
 src/mikemol/hooks/round_wire.py|working-read-as-ready|_symbols\(queue, "ready"\), _symbols\(queue, "working"\)|_symbols(queue, "ready"), _symbols(queue, "ready")|def=refusals
 src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now\)|    found = refusals(queue, text, "", now)|def=round_reason

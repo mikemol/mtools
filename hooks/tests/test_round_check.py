@@ -41,6 +41,18 @@ def test_a_repositorys_round_is_read_by_lines_in_rank_order() -> None:
     assert round_check.round_symbols("not a round\n{bad\n", "mtools") == []
 
 
+def test_the_one_line_document_luthens_egress_gate_writes_and_the_lines_form_read_alike() -> None:
+    """A filtered file is rewritten as ONE line; nemik's writer is a head and row lines."""
+    rows = [_row("mtools", "W9", "2"), _row("mtools", "W7", "1"), _row("nemik", "W5", "1")]
+    one_line = f'{{"as_of": "2026-10-25T08:00:00Z", "rows": [{",".join(rows)}]}}'
+    assert "\n" not in one_line
+    assert round_check.round_symbols(one_line, "mtools") == _ROUND
+    assert round_check.round_symbols(one_line, "nemik") == ["W5"]
+    head = '{"as_of": "2026-10-25T08:00:00Z"}\n'
+    lines = head + rows[0] + "\n" + rows[1] + "\n"
+    assert round_check.round_symbols(lines, "mtools") == _ROUND
+
+
 def test_a_fresh_card_worked_while_an_aged_round_card_is_passed_over_is_refused() -> None:
     """The depth-first pattern: W20 is worked, ready round cards W7 and W9 are skipped."""
     refused = round_check.composition(_ROUND, ready={"W7", "W9", "W20"}, working={"W20"})
