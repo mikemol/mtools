@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1943,
+  "counter": 1946,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -36700,17 +36700,20 @@
     {
       "symbol": "W1706",
       "title": "A withdrawn train leader ends only its own group and returns its joined followers to the queue, instead of being refused while it leads any",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1944",
+        "W1945"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-10-25: 2026-10-25 sweep (W1929), the condition the withdraw module itself names is now met ('option (b), carded for when the train has real runs behind it'): over the last 7 days VictoriaTraces holds train spans for service mikemol-train (nemik: one train joined 2 followers, landed 2, green, 1244 s) and the gauge mikemol.train.followers peaked at 9 for mtools, 2 for nemik, 0 for estate. So a withdrawn leader refusing every follower that asked for nothing is a live cost, not a hypothetical. The card is real and too large for one step",
       "issued_at": "2026-10-19T13:04:37Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-19T13:04:43Z",
+      "last_worked": "2026-10-25T04:40:02Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42019,22 +42022,20 @@
     {
       "symbol": "W1928",
       "title": "mikemol-repin adds the ratchet-emit line to a repository's gate hook from a template, so each repository adopts the ratchet series with one command",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "github:W42"
       ],
       "touches": [],
-      "blocked_on": [
-        "nemik:W1027"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Read repin_cli and the shape of an adopting repo's gate hook first (only mtools' pre-commit carries the gate-targets call today, so there is no second hook to copy from); then a mode that inserts the best-effort block with the repository's NAME and the tree DIR, idempotent, with a test over a hook with and without the line",
-      "evidence": "2026-10-25: 2026-10-25 github-8f: nemik will pilot the ratchet-emit adoption by hand (nemik:W1027) and send its gate hook diff as the first real case for this card. Answering nemik on any fact the pilot needs. The template is written from that diff, not from mtools' own hook, which is the only other shape I have read",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Write the template from the two shapes now read (mtools' pre-commit block and nemik's gate_staged.sh block): NAME, DIR and RATCHET_BIN are the three inputs, the guard is the tool's presence, the failure is said and ignored; a mikemol-repin mode that inserts the block idempotently into a named gate script, with a test over a script with and without the block; the revendor rows for the two dists are their own card",
+      "evidence": "2026-10-25: 2026-10-25 github-8f: nemik will pilot the ratchet-emit adoption by hand (nemik:W1027) and send its gate hook diff as the first real case for this card. Answering nemik on any fact the pilot needs. The template is written from that diff, not from mtools' own hook, which is the only other shape I have read | 2026-10-25: 2026-10-25 nemik-84 (nemik:W1027 landed as 38b2042): first real case. The whole change to nemik's tools/gate_staged.sh after its ratchet check: emit_tool is the worktree venv's mikemol-ratchet-emit, and if it is executable, RATCHET_BIN names the venv's mikemol-ratchet and the tool runs with the real checkout's basename as NAME and the gated worktree as DIR, a failure saying so on stderr and sending nothing, else it says the tool is not in the gate's venv. Template inputs: NAME is the real checkout's basename (never the snapshot's), DIR the gated worktree, RATCHET_BIN the venv's census. Best effort, cannot change the verdict. GAP: mikemol-repin --revendor has no row for the mikemol-ratchet and mikemol-atomicwrite dists, so nemik hand-built those two wheels from a git archive of 57b9f2ac and added their vendored_wheel rows, hub requirements and the two console scripts in BUILD.bazel. Not yet verified by nemik: repo=nemik in count by (repo) (last_over_time(mikemol.ratchet.value[30m])) | 2026-10-25: 2026-10-25: built (mikemol-ratchet-hook, 5 tests, 3 declared mutants), stack-w1928.json written, bazel test //hooks:test_ratchet_hook running before the submit; W1944 (withdrawn leader requeues followers) is next in this round",
       "issued_at": "2026-10-24T21:56:26Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T02:53:29Z",
-      "ticks_blocked": 1,
+      "last_worked": "2026-10-25T04:47:34Z",
+      "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/repin_cli.py",
         "hooks/tests/test_repin_ratchet_emit.py"
@@ -42053,11 +42054,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Take the list from nemik-check --repo mtools --ready-neither, oldest first (W1691 W1690 W1697 W1701 W1706 W1716 W1722 W1725 W1734 W1737 then the rest); record each disposition on the card; reply to github-8f with before and after counts (before: 20)",
-      "evidence": "2026-10-24: 2026-10-24 sweep pass 1 (before: 20 past the bound): W1690 dropped (unanswerable, superseded by the isolated gate path); W1701 dropped (premise refuted by measurement: bazel_test 75.4% of gating time over 40 traces, all witnesses about 6%). After: 18. Remaining oldest first: W1691 W1697 W1706 W1716 W1722 W1725 W1734 W1737 W1758 W1761 W1765 W1667 W1746 W1736 W1798 W1823 W1825 W1824 | 2026-10-25: 2026-10-24: the week's queue state landed in a stack (stack-queue-1.json, gate passed, so the queue-in-stack path W1464 and the HEAD comparison W1930 both ran on a real 1.6 MB queue); W1937 waits only on bazel test //pathsforward:test_regressions (byhlmlak0) | 2026-10-25: 2026-10-25 sweep pass 2: W1691 dropped (mis-stated: witnesses run one after another inside a gate and concurrent gates are isolated). Past the bound now 18 by the earlier count of 19. Oldest remaining: W1697 W1706 W1716 W1722 W1725 W1734 W1737. Operator diagnosis (host line 95318): readied aged cards are not pursued while fresh ones are; W1942 is the teeth over nemik's published round",
+      "evidence": "2026-10-24: 2026-10-24 sweep pass 1 (before: 20 past the bound): W1690 dropped (unanswerable, superseded by the isolated gate path); W1701 dropped (premise refuted by measurement: bazel_test 75.4% of gating time over 40 traces, all witnesses about 6%). After: 18. Remaining oldest first: W1691 W1697 W1706 W1716 W1722 W1725 W1734 W1737 W1758 W1761 W1765 W1667 W1746 W1736 W1798 W1823 W1825 W1824 | 2026-10-25: 2026-10-24: the week's queue state landed in a stack (stack-queue-1.json, gate passed, so the queue-in-stack path W1464 and the HEAD comparison W1930 both ran on a real 1.6 MB queue); W1937 waits only on bazel test //pathsforward:test_regressions (byhlmlak0) | 2026-10-25: 2026-10-25 sweep pass 2: W1691 dropped (mis-stated: witnesses run one after another inside a gate and concurrent gates are isolated). Past the bound now 18 by the earlier count of 19. Oldest remaining: W1697 W1706 W1716 W1722 W1725 W1734 W1737. Operator diagnosis (host line 95318): readied aged cards are not pursued while fresh ones are; W1942 is the teeth over nemik's published round | 2026-10-25: 2026-10-25 sweep pass 3: W1706 is real, not stale: the withdraw module's own condition for option (b) (the train has real runs behind it) is met by measurement (train spans for nemik, mikemol.train.followers peak 9 for mtools) so it is atomized into W1944 and W1945. Remaining past the bound: W1716 W1722 W1725 W1734 W1737 and the rest",
       "issued_at": "2026-10-24T23:14:29Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T02:40:41Z",
+      "last_worked": "2026-10-25T04:40:10Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42649,24 +42650,97 @@
     {
       "symbol": "W1943",
       "title": "A witness reading takes an optional when condition, plan_touches, so it applies only when the plan carries those resource addresses",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "luthen-observability:W1550"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read how planflow hands the plan to take_reading and where the plan's resource addresses are available; planreading.judge skips a reading whose when.plan_touches matches no address in the plan (not a failure and not proof), runs it otherwise; the reading's pointer checks unchanged; a test where an apply that does not touch the addresses is not false-refused and one that does is judged; luthen asked in reply to the mtools:W1871 reading, where vm_loaded's digest never advances on an apply that leaves the alert rules alone and its fresh_since is trivially true",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed df010361",
       "issued_at": "2026-10-25T03:17:50Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1550",
-      "last_worked": null,
+      "last_worked": "2026-10-25T04:17:40Z",
       "ticks_blocked": 0,
       "manifest": [
         "waldo/src/mikemol/waldo/planreading.py",
         "waldo/src/mikemol/waldo/planflow.py",
         "waldo/tests/test_planreading.py"
+      ],
+      "size_class": "medium",
+      "completed": "20261025T041740Z"
+    },
+    {
+      "symbol": "W1944",
+      "title": "A withdrawn train leader leaves each joined follower a requeued verdict instead of refusing it, naming that the leader was withdrawn",
+      "status": "working",
+      "enables": [
+        "W1706"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T04:40:02Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1706",
+      "last_worked": "2026-10-25T04:40:08Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "manifest": [
+        "hooks/src/mikemol/hooks/commit_withdraw.py",
+        "hooks/src/mikemol/hooks/trainverdict.py",
+        "hooks/tests/test_commit_withdraw.py"
+      ],
+      "size_class": "medium"
+    },
+    {
+      "symbol": "W1945",
+      "title": "A follower holding a requeued verdict resubmits its own stack at its turn, so its owner does not have to",
+      "status": "ready",
+      "enables": [
+        "W1706"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T04:40:02Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1706",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/requeue.py",
+        "hooks/src/mikemol/hooks/commit_verdict.py",
+        "hooks/tests/test_requeue.py"
+      ],
+      "size_class": "medium"
+    },
+    {
+      "symbol": "W1946",
+      "title": "mikemol-repin --revendor has a row for the mikemol-ratchet and mikemol-atomicwrite dists, so a consumer needs no hand-built wheel to adopt the ratchet emit",
+      "status": "ready",
+      "enables": [
+        "nemik:W1027"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read repin_cli to see how a dist's row is declared and how the vendored wheel is built from a git archive of the pinned sha; add rows for ratchet and atomicwrite (the version suffix is the sha, as nemik built it: +57b9f2a), plus the hub requirement and console scripts the consumer's BUILD needs; a test that a revendor of an old pin lists the two new dists",
+      "evidence": "",
+      "issued_at": "2026-10-25T04:41:13Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1027",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/repin_cli.py",
+        "hooks/tests/test_repin_revendor.py"
       ],
       "size_class": "medium"
     }

@@ -648,6 +648,9 @@ src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/stacksnap.py|queue-file-frozen-at-submit|            if path in seen or path in QUEUE_FILES:|            if path in seen:|def=freeze
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
+src/mikemol/hooks/ratchet_hook.py|block-inserted-twice|    if MARK in text:|    if False:|def=insert
+src/mikemol/hooks/ratchet_hook.py|block-before-the-anchor|    merged = \[\*lines\[: at \+ 1\], \*block\(spec\), \*lines\[at \+ 1 :\]\]|    merged = [*lines[:at], *block(spec), *lines[at:]]|def=insert
+src/mikemol/hooks/ratchet_hook.py|dry-run-writes|    elif write:|    elif True:|def=main
 src/mikemol/hooks/round_check.py|no-outside-card-still-refused|    if not outside:|    if False:|def=composition
 src/mikemol/hooks/round_check.py|blocked-round-card-counted-skipped|        if symbol in available and symbol not in doing|        if symbol not in doing|def=composition
 src/mikemol/hooks/round_check.py|other-repos-rows-read|        if row\.get\("repo"\) == repo and isinstance\(row\.get\("symbol"\), str\):|        if isinstance(row.get("symbol"), str):|def=round_symbols

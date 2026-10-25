@@ -15127,3 +15127,38 @@
   claim  = {A round card blocked or done since publication does not count; an empty round is silent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_a_round_card_no_longer_ready_is_not_skipped_and_no_round_refuses_nothing},
 }
+
+@misc{hooks-ratchet-hook-block-goes-right-after-the-anchor-and-names-the-four-inputs,
+  section = {ratchet_hook},
+  title  = {The lines after the anchor are the block; the rest of the script is as it was},
+  claim  = {The lines after the anchor are the block; the rest of the script is as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_the_block_goes_right_after_the_anchor_and_names_the_four_inputs},
+}
+
+@misc{hooks-ratchet-hook-script-that-already-has-the-block-is-left-alone,
+  section = {ratchet_hook},
+  title  = {Idempotent: the second insert returns the text unchanged},
+  claim  = {Idempotent: the second insert returns the text unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_a_script_that_already_has_the_block_is_left_alone},
+}
+
+@misc{hooks-ratchet-hook-anchor-in-no-line-is-not-guessed-at,
+  section = {ratchet_hook},
+  title  = {Never appended where it might follow an exit: the insert answers None},
+  claim  = {Never appended where it might follow an exit: the insert answers None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_an_anchor_in_no_line_is_not_guessed_at},
+}
+
+@misc{hooks-ratchet-hook-command-prints-a-dry-run-and-writes-only-with-write,
+  section = {ratchet_hook},
+  title  = {Without --write the block is shown and the file is unchanged; with it the file gains it},
+  claim  = {Without --write the block is shown and the file is unchanged; with it the file gains it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_the_command_prints_a_dry_run_and_writes_only_with_write},
+}
+
+@misc{hooks-ratchet-hook-bad-command-line-or-a-missing-anchor-is-refused,
+  section = {ratchet_hook},
+  title  = {Usage is exit 2; an anchor in no line or an unreadable script is exit 4},
+  claim  = {Usage is exit 2; an anchor in no line or an unreadable script is exit 4.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_a_bad_command_line_or_a_missing_anchor_is_refused},
+}
