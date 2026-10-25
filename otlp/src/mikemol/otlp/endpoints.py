@@ -16,7 +16,9 @@ from collections.abc import Mapping
 
 from mikemol.endpoints.resolve import ENV, base_url
 
-__all__ = ["ENV", "base_url", "url_for"]
+__all__ = ["ENV", "base_url", "otel_url", "url_for"]
+
+_SIGNAL_PATHS = {"metrics": "/v1/metrics", "logs": "/v1/logs", "traces": "/v1/traces"}
 
 
 def url_for(name: str, path: str, environ: Mapping[str, str]) -> str | None:
@@ -28,3 +30,24 @@ def url_for(name: str, path: str, environ: Mapping[str, str]) -> str | None:
     """
     base = base_url(name, environ)
     return None if base is None else base.rstrip("/") + path
+
+
+def otel_url(signal: str, environ: Mapping[str, str]) -> str | None:
+    """Read the OpenTelemetry standard variables for one signal (W1960).
+
+    ⚑ STANDARD NAMES ONLY, so any OTel tool and collector honours the same routing (operator,
+    host line 96489; github-8f). The signal-specific variable
+    (`OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`, and LOGS and TRACES) is a COMPLETE URL, used as given;
+    the general variable
+    `OTEL_EXPORTER_OTLP_ENDPOINT` is a base, and the signal's standard path is appended to it.
+    The caller falls back to the endpoints store when this says None.
+
+    Returns:
+        the URL to post the signal to, or None when neither variable is set to something.
+
+    """
+    specific = environ.get(f"OTEL_EXPORTER_OTLP_{signal.upper()}_ENDPOINT", "").strip()
+    if specific:
+        return specific
+    general = environ.get("OTEL_EXPORTER_OTLP_ENDPOINT", "").strip()
+    return general.rstrip("/") + _SIGNAL_PATHS[signal] if general else None

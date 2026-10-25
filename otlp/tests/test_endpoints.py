@@ -50,3 +50,23 @@ def test_a_file_scheme_or_a_non_string_value_is_refused(tmp_path: Path) -> None:
     """The control: a host-supplied file is data, so file: and a number never become a URL."""
     assert endpoints.base_url(NAME, _file(tmp_path, {NAME: "file:///etc/passwd"})) is None
     assert endpoints.base_url(NAME, _file(tmp_path, {NAME: 9428})) is None
+
+
+def test_the_standard_otel_variables_give_a_signal_its_url_by_the_specs_precedence() -> None:
+    """W1960: the signal variable is a complete URL, the general one a base plus the path."""
+    both = {
+        "OTEL_EXPORTER_OTLP_METRICS_ENDPOINT": "http://m:1/custom",
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "http://g:2/",
+    }
+    assert endpoints.otel_url("metrics", both) == "http://m:1/custom"
+    assert endpoints.otel_url("logs", both) == "http://g:2/v1/logs"
+    assert endpoints.otel_url("traces", {"OTEL_EXPORTER_OTLP_ENDPOINT": "http://g:2"}) == (
+        "http://g:2/v1/traces"
+    )
+
+
+def test_unset_or_blank_standard_variables_say_none() -> None:
+    """The control: nothing set, or only whitespace, is not a route, so the store is asked."""
+    assert endpoints.otel_url("metrics", {}) is None
+    blank = {"OTEL_EXPORTER_OTLP_METRICS_ENDPOINT": "  ", "OTEL_EXPORTER_OTLP_ENDPOINT": ""}
+    assert endpoints.otel_url("metrics", blank) is None

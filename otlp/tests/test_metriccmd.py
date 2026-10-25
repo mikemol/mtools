@@ -23,7 +23,7 @@ from opentelemetry.proto.collector.metrics.v1.metrics_service_pb2 import (
     ExportMetricsServiceRequest,
 )
 
-from mikemol.otlp import cli, metriccmd, sender
+from mikemol.otlp import cli, endpoints, metriccmd, sender
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -239,3 +239,24 @@ def test_an_unusable_description_refuses_the_batch() -> None:
     fine, why = metriccmd.parse_batch([base + '"freshness_class": "continuous"}'], 0)
     assert not why
     assert len(fine) == 1
+
+
+def test_the_standard_otel_endpoint_routes_a_metric_and_the_flag_still_wins(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W1960: the signal variable is posted to as given, the general one gets /v1/metrics."""
+    monkeypatch.delenv(endpoints.ENV, raising=False)
+    who = ["--service", "mikemol-commit", "--namespace", "mtools", "--name", "m.x", "--value", "1"]
+    with _store() as (base, posts):
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_METRICS_ENDPOINT", base + "/custom/path")
+        assert cli.main(["metric", *who]) == metriccmd.EXIT_SENT
+        monkeypatch.delenv("OTEL_EXPORTER_OTLP_METRICS_ENDPOINT")
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_ENDPOINT", base)
+        assert cli.main(["metric", *who]) == metriccmd.EXIT_SENT
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://127.0.0.1:1")
+        assert cli.main(["metric", "--url", base, *who]) == metriccmd.EXIT_SENT
+    assert [path for path, _body in posts] == [
+        "/custom/path",
+        "/v1/metrics",
+        sender.METRICS_PATH,
+    ]

@@ -184,11 +184,23 @@ def _trace(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     return tracecmd.run(request, sender.post, sender.get)
 
 
+def _metrics_where(opts: dict[str, object], environ: Mapping[str, str]) -> tuple[str, str]:
+    # W1960: --url (a base) wins, then the OpenTelemetry standard variables (a complete URL),
+    # then the endpoints store (a base). Returns (base, url); both empty is no destination.
+    given = _text(opts, "url") or ""
+    if given:
+        return given, ""
+    standard = endpoints.otel_url("metrics", environ)
+    if standard:
+        return "", standard
+    return endpoints.base_url(metriccmd.ENDPOINT, environ) or "", ""
+
+
 def _metric(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     # The `metric` verb: parse into a request and run it; a missing base or a bad field is usage.
-    base = _text(opts, "url") or endpoints.base_url(metriccmd.ENDPOINT, environ) or ""
+    base, url = _metrics_where(opts, environ)
     fields = _fields(opts)
-    if not base or fields is None:
+    if not (base or url) or fields is None:
         sys.stderr.write(
             f"mikemol-otlp: need --url or ${endpoints.ENV} naming {metriccmd.ENDPOINT}; "
             "and --field KEY=VALUE pairs\n"
@@ -203,16 +215,18 @@ def _metric(opts: dict[str, object], environ: Mapping[str, str]) -> int:
         value=float(_text(opts, "value")),
         kind=_text(opts, "kind"),
         labels=fields,
+        url=url,
     )
     return metriccmd.run(request, sender.post)
 
 
 def _metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     # The `metrics` verb: stdin JSON lines as gauge samples in one request (W1784).
-    base = _text(opts, "url") or endpoints.base_url(metriccmd.ENDPOINT, environ) or ""
-    if not base:
+    base, url = _metrics_where(opts, environ)
+    if not (base or url):
         sys.stderr.write(
-            f"mikemol-otlp: need --url or ${endpoints.ENV} naming {metriccmd.ENDPOINT}\n"
+            f"mikemol-otlp: need --url, OTEL_EXPORTER_OTLP_ENDPOINT or ${endpoints.ENV} naming "
+            f"{metriccmd.ENDPOINT}\n"
         )
         return EXIT_USAGE
     request = metriccmd.BatchRequest(
@@ -221,6 +235,7 @@ def _metrics(opts: dict[str, object], environ: Mapping[str, str]) -> int:
         namespace=_text(opts, "namespace"),
         version=_text(opts, "version"),
         lines=cast("TextIO", sys.stdin).read().splitlines(),
+        url=url,
     )
     return metriccmd.run_batch(request, sender.post)
 

@@ -15,3 +15,6 @@ src/mikemol/otlp/tracequery.py|span-name-dropped-from-the-search|    if name:|  
 src/mikemol/otlp/metrics.py|empty-facts-sent-as-attributes|    return \{key: val for key, val in given\.items\(\) if val\}|    return {key: val for key, val in given.items() if True}|def=_facts
 src/mikemol/otlp/metriccmd.py|event-driven-without-companion-accepted|    return \(klass == "event_driven"\) != bool\(companion\)|    return False|def=_freshness_refusal
 src/mikemol/otlp/metriccmd.py|unknown-freshness-class-accepted|    if klass not in metrics\.CLASSES:|    if False:|def=_freshness_refusal
+src/mikemol/otlp/endpoints.py|signal-endpoint-ignored|    if specific:|    if False:|def=otel_url
+src/mikemol/otlp/metriccmd.py|complete-url-ignored|    return url or base\.rstrip\("/"\) \+ sender\.METRICS_PATH|    return base.rstrip("/") + sender.METRICS_PATH|def=target
+src/mikemol/otlp/cli.py|standard-variables-ignored|    if standard:|    if False:|def=_metrics_where

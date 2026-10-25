@@ -473,3 +473,24 @@
   claim  = {W1961: description and unit are the Metric's own fields, the facts its point attributes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metrics.py -k test_a_described_sample_carries_description_unit_and_facts_on_the_wire},
 }
+
+@misc{otlp-endpoints-standard-otel-variables-give-a-signal-its-url-by-the-specs-precedence,
+  section = {endpoints},
+  title  = {W1960: the signal variable is a complete URL, the general one a base plus the path},
+  claim  = {W1960: the signal variable is a complete URL, the general one a base plus the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_endpoints.py -k test_the_standard_otel_variables_give_a_signal_its_url_by_the_specs_precedence},
+}
+
+@misc{otlp-endpoints-unset-or-blank-standard-variables-say-none,
+  section = {endpoints},
+  title  = {The control: nothing set, or only whitespace, is not a route, so the store is asked},
+  claim  = {The control: nothing set, or only whitespace, is not a route, so the store is asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_endpoints.py -k test_unset_or_blank_standard_variables_say_none},
+}
+
+@misc{otlp-metriccmd-standard-otel-endpoint-routes-a-metric-and-the-flag-still-wins,
+  section = {metriccmd},
+  title  = {W1960: the signal variable is posted to as given, the general one gets /v1/metrics},
+  claim  = {W1960: the signal variable is posted to as given, the general one gets /v1/metrics.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_the_standard_otel_endpoint_routes_a_metric_and_the_flag_still_wins},
+}

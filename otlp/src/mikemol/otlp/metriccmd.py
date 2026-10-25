@@ -41,6 +41,7 @@ class Request:
     value: float
     kind: str
     labels: Mapping[str, str]
+    url: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -52,6 +53,7 @@ class BatchRequest:
     namespace: str
     version: str
     lines: Iterable[str]
+    url: str = ""
 
 
 # ⚑ W1961: a row may describe its metric; each of these is a string or the row is not a sample.
@@ -150,6 +152,17 @@ def parse_batch(lines: Iterable[str], now_ns: int) -> tuple[list[metrics.Sample]
     return samples, ""
 
 
+def target(base: str, url: str) -> str:
+    """Pick where a metrics request is posted.
+
+    Returns:
+        a complete URL as given (the OpenTelemetry standard variables, W1960), else the
+        base joined to the store's metrics path.
+
+    """
+    return url or base.rstrip("/") + sender.METRICS_PATH
+
+
 def run_batch(req: BatchRequest, post: sender.Post) -> int:
     """Send every sample of a batch in one request.
 
@@ -168,7 +181,7 @@ def run_batch(req: BatchRequest, post: sender.Post) -> int:
     resource = metrics.resource_here(req.service, req.namespace, req.version)
     payload = metrics.gauges(resource, samples).SerializeToString()
     try:
-        sender.send(req.base.rstrip("/") + sender.METRICS_PATH, payload, post)
+        sender.send(target(req.base, req.url), payload, post)
     except sender.SendError as failed:
         sys.stderr.write(f"mikemol-otlp: {failed}\n")
         return EXIT_FAILED
@@ -189,7 +202,7 @@ def run(req: Request, post: sender.Post) -> int:
     build = metrics.updown_counter if req.kind == "updown" else metrics.gauge
     payload = build(resource, sample).SerializeToString()
     try:
-        sender.send(req.base.rstrip("/") + sender.METRICS_PATH, payload, post)
+        sender.send(target(req.base, req.url), payload, post)
     except sender.SendError as failed:
         sys.stderr.write(f"mikemol-otlp: {failed}\n")
         return EXIT_FAILED
