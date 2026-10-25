@@ -293,6 +293,7 @@ def _commitments(path: Path, out: TextIO) -> None:
         body: dict[str, object] = {
             "line": row.line,
             "uuid": row.uuid,
+            "at": row.at,
             "session": row.session,
             "repo": row.repo,
             "family": row.family,

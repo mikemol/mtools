@@ -59,6 +59,7 @@ class Commitment:
     family: str
     text: str
     names: tuple[str, ...]
+    at: str = ""
 
 
 def _spans(pattern: re.Pattern[str], text: str) -> list[str]:
@@ -102,6 +103,9 @@ def extract(records: Iterable[Record], session: str, repo: str) -> list[Commitme
                 if family is None or _QUOTING in sentence:
                     continue
                 said = sentence.strip()
-                row = Commitment(record.line, uuid, session, repo, family, said, _names(said))
+                stamp = str(record.raw.get("timestamp", ""))
+                row = Commitment(
+                    record.line, uuid, session, repo, family, said, _names(said), stamp
+                )
                 found.append(row)
     return found

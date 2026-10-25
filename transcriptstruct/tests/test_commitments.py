@@ -106,6 +106,7 @@ def test_the_command_prints_one_json_line_per_statement_then_the_count(tmp_path:
     assert said == {
         "line": 1,
         "uuid": "u1",
+        "at": "",
         "session": "abc",
         "repo": "mtools",
         "family": "canonical",

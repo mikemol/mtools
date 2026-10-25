@@ -35823,17 +35823,17 @@
     {
       "symbol": "W1667",
       "title": "Give a manifest to each unmanifested card W1592 released, in rank order, returning each to ready as it gains one",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "List the ready cards with no manifest (nemik-stackable mtools), block them on this card with --update-many, then --update each with its exact files in rank order starting with the leaves of W1514, W1515 and W1516",
-      "evidence": "",
+      "next_bounded_step": "Manifests still owed to W1736, W1803, W1857, W1863, W1869, W1880, W1914, W1915, W1917: read each card's code to name its files, or block it on what it waits for. I still need those nine manifests, W1667",
+      "evidence": "2026-10-25: 2026-10-25: manifests given (read from the code, paths checked to exist or named as new modules) to W1935, W1936, W1934, W1875; the 19 ready cards without one drop to 15 | 2026-10-25: 2026-10-25: manifests also given to W1692 and W1823 to W1825 (new test files declared as planned; the root BUILD.bazel holds the witness targets, domain_witness.sh the victim of W1692)",
       "issued_at": "2026-10-19T05:58:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-20T12:47:23Z",
+      "last_worked": "2026-10-25T08:23:15Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -36358,7 +36358,12 @@
       "caused_by": "W1688",
       "last_worked": "2026-10-19T11:37:17Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "manifest": [
+        "domain_witness.sh",
+        "hooks/tests/test_domain_witness_concurrency.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1693",
@@ -39527,7 +39532,12 @@
       "minted_during": "interrupt",
       "caused_by": "W1712",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "BUILD.bazel",
+        "hooks/tests/test_witness_mypy.py"
+      ],
+      "size_class": "medium"
     },
     {
       "symbol": "W1824",
@@ -39545,7 +39555,12 @@
       "minted_during": "interrupt",
       "caused_by": "W1712",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "BUILD.bazel",
+        "hooks/tests/test_witness_ruff.py"
+      ],
+      "size_class": "medium"
     },
     {
       "symbol": "W1825",
@@ -39563,7 +39578,12 @@
       "minted_during": "interrupt",
       "caused_by": "W1712",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "BUILD.bazel",
+        "hooks/tests/test_witness_ratchet_gate.py"
+      ],
+      "size_class": "medium"
     },
     {
       "symbol": "W1826",
@@ -40697,7 +40717,12 @@
       "minted_during": "interrupt",
       "caused_by": "W1872",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/shardgate.py",
+        "hooks/tests/test_shardgate.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1876",
@@ -42339,21 +42364,23 @@
     {
       "symbol": "W1933",
       "title": "Resolve a commitment row against durable follow-through, and keep the unresolved rows as a ledger and the metric commitments.open{repo}",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W44",
         "nemik:W1007",
         "nemik:W1008"
       ],
-      "touches": [],
+      "touches": [
+        "file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "As recorded, plus the layer inference and its test: a statement attached only to a memory file is counted as memory, one attached to a landed card that builds a gate is not counted",
+      "next_bounded_step": "Part 1 written (commitledger.py: resolve, record, document, counted; at field on the row): tests in flight. Then mutants, warrants, rubric, stack; then the --ledger mode and the metric emitter. I still need the --ledger mode and the emitter, W1933",
       "evidence": "2026-10-24: 2026-10-24 metric fixed for luthen-observability:W1598 and nemik:W1007/W1008: mikemol.commitments.open{repo} (house dotted name, gauge, value = the repository's unresolved commitment rows; repo = the repository the statement was made in, the real name and never the snapshot dir); emitter card = this one | 2026-10-24: CONTRACT (2026-10-24, sent to nemik-84, luthen-observability-ab and github-8f): (1) the ledger is commitments.json at the build root, read the way landings.json and ratchet-pace.json are: {as_of, rows:[{repo, session, line, uuid, at, text, names, state, resolved_by}]}; repo = the repository's real name; session = the transcript's session id; line and uuid = the assistant record the statement is in; at = its UTC timestamp; text = the statement; names = the card cites (<repo>:W<n>, or W<n> within the repo) and repo-relative files it names, possibly empty; state = open or resolved; resolved_by = null while open, else a cite {kind: card|stack|evidence, ref} of the durable follow-through. (2) the metric is mikemol.commitments.open{repo}, a gauge, value = the repo's rows with state open. (3) the emitter card is this one (W1933); the extractor is W1931, the Stop hook W1932; all enable github:W44; this card also enables nemik:W1007 and nemik:W1008. A row with empty names stays open until a card cites its uuid | 2026-10-24: CONTRACT ADDITION 2026-10-24 (luthen-observability:W1599 and github-8f, same G9 reading): each row gains layer = the strongest persisted form of its follow-through, from G9's ladder: none (open), memory, instructions, trigger, hook, gate, plus card for a card that is only planned. A recurring class resolved only at memory or instructions is a coverability residue and stays COUNTED. Metric: mikemol.commitments.open{repo,layer} counts rows that are open (layer none) or resolved only at memory or instructions (layer memory or instructions); a sum over layer is the repo's open count. mikemol.commitments.said{repo} unchanged. The layer is inferred from where the follow-through lives (a memory file, an instruction file, a card, a landed card whose manifest touches hook or gate code), and that inference is the part to measure first",
       "issued_at": "2026-10-24T23:34:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-24T23:44:21Z",
+      "last_worked": "2026-10-25T08:17:30Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42388,7 +42415,8 @@
         "transcriptstruct/src/mikemol/transcriptstruct/commitledger.py",
         "transcriptstruct/tests/test_commitledger.py"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": null
     },
     {
       "symbol": "W1934",
@@ -42406,7 +42434,12 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "transcriptstruct/src/mikemol/transcriptstruct/intents.py",
+        "transcriptstruct/tests/test_intents.py"
+      ],
+      "size_class": "medium"
     },
     {
       "symbol": "W1935",
@@ -42424,7 +42457,12 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-25T02:36:06Z",
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "pathsforward/src/mikemol/pathsforward/retros.py",
+        "pathsforward/tests/test_retros.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1936",
@@ -42442,7 +42480,12 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "pathsforward/src/mikemol/pathsforward/regressions.py",
+        "pathsforward/tests/test_regressions.py"
+      ],
+      "size_class": "small"
     },
     {
       "symbol": "W1937",
@@ -42602,12 +42645,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "round_wire.py and its tests are written (bazel test //hooks:test_round_wire in flight): run the hooks grid, stack them, then bazel build //hooks:.venv and wire round_reason into tick_stop.run last; stackrun is the next part. I still need the tick_stop wiring and the stackrun wiring, W1942",
-      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that | 2026-10-25: 2026-10-25 nemik-84: the publisher landed (95cebb5): nemik-rank nemik --round-file PATH --landings LANDINGS writes the round file at the nemik cache directory (beside landings.json); head line as_of, then one line per card with repo, symbol, rank, salience (quoted text); no size or n_source. The file does not exist until luthen-observability schedules the run, so the wiring must treat a missing file as no round (it does already). The file lists every repo with ready cards, life included; round_check reads this repository's rows only. Unblocked: wire against a fixture now",
+      "next_bounded_step": "After stack w1942b lands: round_symbols reads the one-line {as_of, rows} form as well as the lines form (fixture of each); round_path defaults to the luthen export tree round.json; then bazel build //hooks:.venv and wire round_reason into tick_stop last. I still need the one-line reader, the default path and the tick_stop wiring, W1942",
+      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that | 2026-10-25: 2026-10-25 nemik-84: the publisher landed (95cebb5): nemik-rank nemik --round-file PATH --landings LANDINGS writes the round file at the nemik cache directory (beside landings.json); head line as_of, then one line per card with repo, symbol, rank, salience (quoted text); no size or n_source. The file does not exist until luthen-observability schedules the run, so the wiring must treat a missing file as no round (it does already). The file lists every repo with ready cards, life included; round_check reads this repository's rows only. Unblocked: wire against a fixture now | 2026-10-25: 2026-10-25 nemik-84 (from luthen-observability W1612, 3951a950): CORRECTIONS. (1) The path is round.json in luthen's nemik-export tree under the luthen data directory, not the nemik cache; luthen's timer starts 18 min after boot and runs hourly, so as_of can be an hour old or more (the 3 h bound holds). (2) luthen's egress gate drops rows for amr- repos and repos outside the tree and then REWRITES the whole file as one-line JSON {as_of, rows: [...]}; a garbled file is removed. So the reader must accept both the lines form and the one-line form, and a missing file is normal. round_symbols skips every line that starts with an as_of object, so it reads NO rows of the one-line form: found by reading, fix and fixture to follow",
       "issued_at": "2026-10-25T02:39:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T07:46:29Z",
+      "last_worked": "2026-10-25T08:05:46Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43193,6 +43236,15 @@
       "taken_at": "2026-10-25T07:46:29Z",
       "renewed_at": "2026-10-25T07:46:29Z",
       "expires_at": "2026-10-25T08:16:29Z"
+    },
+    {
+      "tag": "file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1933",
+      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
+      "taken_at": "2026-10-25T08:17:30Z",
+      "renewed_at": "2026-10-25T08:17:30Z",
+      "expires_at": "2026-10-25T08:47:30Z"
     }
   ],
   "advice": [

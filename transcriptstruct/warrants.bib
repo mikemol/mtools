@@ -1202,3 +1202,31 @@
   claim  = {The mode's output: every field of the row, the repo from the project directory, a count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_the_command_prints_one_json_line_per_statement_then_the_count},
 }
+
+@misc{transcriptstruct-commitledger-each-name-resolves-to-its-layer,
+  section = {commitledger},
+  title  = {Nothing, memory, instructions, open card, gate, hook, plain done card},
+  claim  = {Nothing, memory, instructions, open card, gate, hook, plain done card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_each_name_resolves_to_its_layer},
+}
+
+@misc{transcriptstruct-commitledger-another-repositorys-card-and-a-dropped-or-unknown-card-do-not-resolve,
+  section = {commitledger},
+  title  = {A cite that was not read, or that names nothing live, leaves the row open},
+  claim  = {A cite that was not read, or that names nothing live, leaves the row open.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_another_repositorys_card_and_a_dropped_or_unknown_card_do_not_resolve},
+}
+
+@misc{transcriptstruct-commitledger-strongest-name-wins,
+  section = {commitledger},
+  title  = {A gate card and a memory file after it are a gate; the last name does not win},
+  claim  = {A gate card and a memory file after it are a gate; the last name does not win.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_the_strongest_name_wins},
+}
+
+@misc{transcriptstruct-commitledger-record-is-the-contract-and-counting-keeps-the-weak-layers,
+  section = {commitledger},
+  title  = {The row's JSON fields, and the metric's layers: none, memory, instructions only},
+  claim  = {The row's JSON fields, and the metric's layers: none, memory, instructions only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_the_record_is_the_contract_and_counting_keeps_the_weak_layers},
+}
