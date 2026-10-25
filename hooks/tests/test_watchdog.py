@@ -58,18 +58,59 @@ def _seams(
     return read, ready, now, sleep, alive
 
 
+def test_the_band_is_fifteen_to_twenty_minutes() -> None:
+    """The operator's 2026-10-25 ruling (host line 98969): the window is 900 to 1200 seconds."""
+    assert (watchdog.MIN_FIRE_S, watchdog.MAX_FIRE_S) == (900.0, 1200.0)
+
+
+def test_a_chosen_window_reaches_the_clamp() -> None:
+    """The band given to silence_limit_s replaces the default at both edges and with no history."""
+    band = (60.0, 120.0)
+    assert watchdog.silence_limit_s(_beat(0), 1.0, band) == band[1]
+    assert watchdog.silence_limit_s(_beat(0, mean_s=1), 1.0, band) == band[0]
+    assert watchdog.silence_limit_s(_beat(0, mean_s=2400), 1.0, band) == band[1]
+
+
+def test_the_window_is_a_flag_else_the_environment_else_the_default() -> None:
+    """Flags win over the environment, which wins over the built-in 15 to 20 minutes."""
+    env = {watchdog.MIN_ENV: "100", watchdog.MAX_ENV: "200"}
+    assert watchdog.read_band(None, None, {}) == (watchdog.MIN_FIRE_S, watchdog.MAX_FIRE_S)
+    assert watchdog.read_band(None, None, env) == (100.0, 200.0)
+    assert watchdog.read_band(150.0, None, env) == (150.0, 200.0)
+    assert watchdog.read_band(10.0, 20.0, env) == (10.0, 20.0)
+
+
+def test_a_window_that_is_not_a_window_is_refused() -> None:
+    """Zero, negative, reversed, not a number, and not-a-number all raise instead of clamping."""
+    for low, high in ((0.0, 5.0), (-1.0, 5.0), (9.0, 5.0), ("soon", 5.0), (float("nan"), 5.0)):
+        with pytest.raises(ValueError, match=r"."):
+            watchdog.read_band(low, high, {})
+
+
+def test_a_bad_window_on_the_command_line_stops_the_watchdog_before_it_starts(
+    capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    """A reversed window exits EXIT_CANNOT_RUN naming the window, and claims no pid file."""
+    state = tmp_path / ".claude" / "paths-forward.json"
+    args = ["--state", str(state), "--writer", "/nonexistent", "--min-fire-s", "9"]
+    code = watchdog.main([*args, "--max-fire-s", "5"], lambda _argv: None)
+    assert code == watchdog.EXIT_CANNOT_RUN
+    assert "the window must satisfy" in capsys.readouterr().err
+    assert not (tmp_path / ".git").exists()
+
+
 def test_a_repo_with_no_history_is_woken_at_the_far_edge_of_the_band() -> None:
-    """Too few gaps to learn a mean: the band's far edge, forty minutes."""
+    """Too few gaps to learn a mean: the band's far edge, twenty minutes."""
     assert watchdog.silence_limit_s(_beat(0), 1.0) == watchdog.MAX_FIRE_S
 
 
 def test_a_fast_repo_is_not_woken_sooner_than_the_floor_of_the_band() -> None:
-    """Beats ten seconds apart suspect a silence at 23 s, and the band holds it at twenty."""
+    """Beats ten seconds apart suspect a silence at 23 s; the band holds it at fifteen minutes."""
     assert watchdog.silence_limit_s(_beat(0, mean_s=10), 1.0) == watchdog.MIN_FIRE_S
 
 
 def test_a_slow_repo_is_woken_at_the_ceiling_of_the_band_not_its_own_pace() -> None:
-    """A mean of 40 minutes would wait an hour and a half; the band caps it at forty minutes."""
+    """A mean of 40 minutes would wait an hour and a half; the band caps it at twenty minutes."""
     assert watchdog.silence_limit_s(_beat(0, mean_s=2400), 1.0) == watchdog.MAX_FIRE_S
 
 

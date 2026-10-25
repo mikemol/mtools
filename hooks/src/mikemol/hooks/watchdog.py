@@ -3,6 +3,7 @@
 """`mikemol-watchdog`: exit when a session has gone quiet while it has work to do (W1474, W1476).
 
     mikemol-watchdog --state .claude/paths-forward.json [--writer PATH] [--poll-s S] [--phi-fire P]
+                       [--min-fire-s S] [--max-fire-s S]
 
 Run it as a background task (`run_in_background`): the harness tells the session when a background
 process exits, and that exit is the whole alarm. It reads the heartbeat the tools leave
@@ -25,6 +26,17 @@ fallback at thirty minutes.
 ⚑ THE WINDOW MOVED AGAIN, TO 20-40 MINUTES (operator, 2026-10-20, host session 695f3e0a, relayed
 by github-8f: "Time to push the watchdog back to 40m; I have 9% tokens remaining and ~36 hours for
 those to last"). The floor moved with the ceiling again, the same shape as W1753.
+
+⚑ THE WINDOW CAME BACK TO 15-20 MINUTES (operator, 2026-10-25, host session 695f3e0a line 98969,
+uuid d131123b, relayed by github-8f: "So, let's get the watchdog running 15-20m again, up from the
+current 40m target"). The floor moved with the ceiling a third time.
+
+⚑ THE WINDOW IS A SETTING (operator, 2026-10-25, host line 99058, uuid 2e239f2a: "that needs to
+be a configurable, not a hardcoded constant"). `--min-fire-s` and `--max-fire-s` win, then the
+environment (`MIKEMOL_WATCHDOG_MIN_FIRE_S`, `MIKEMOL_WATCHDOG_MAX_FIRE_S`), then the built-in
+default of `MIN_FIRE_S` and `MAX_FIRE_S`, so changing the window needs no release and no repin.
+A window that is not 0 < min <= max is refused at start with `EXIT_CANNOT_RUN`, never clamped
+into something the operator did not ask for.
 
 ⚑ NO DEADLINE ON THE WATCH. The poll interval paces the reads and decides nothing. The only ends are
 the alarm, and the parent going away: a watchdog that outlives its session is an orphan.
@@ -53,8 +65,10 @@ from mikemol.hooks.vlogdetach import spawn_detached
 
 EXIT_IDLE = 8
 EXIT_CANNOT_RUN = 7
-MIN_FIRE_S = 1200.0
-MAX_FIRE_S = 2400.0
+MIN_FIRE_S = 900.0
+MAX_FIRE_S = 1200.0
+MIN_ENV = "MIKEMOL_WATCHDOG_MIN_FIRE_S"
+MAX_ENV = "MIKEMOL_WATCHDOG_MAX_FIRE_S"
 DEFAULT_PHI_FIRE = 1.0
 DEFAULT_POLL_S = 20.0
 ARMED_EVERY_POLLS = 3
@@ -77,18 +91,39 @@ Seams = tuple[
 """(read the beat, count ready cards, now in ns, sleep, is the parent still alive)."""
 
 
-def silence_limit_s(last: Beat, phi_fire: float) -> float:
+def read_band(low: object, high: object, environ: Mapping[str, str]) -> tuple[float, float]:
+    """Choose the window the alarm may fire in: a flag, else the environment, else the default.
+
+    Returns:
+        the floor and the ceiling in seconds.
+
+    Raises:
+        ValueError: when a value is not a number or the window is not 0 < floor <= ceiling.
+
+    """
+    floor = float(str(low if low is not None else environ.get(MIN_ENV, MIN_FIRE_S)))
+    ceiling = float(str(high if high is not None else environ.get(MAX_ENV, MAX_FIRE_S)))
+    if not 0 < floor <= ceiling:
+        msg = f"the window must satisfy 0 < min <= max, got min={floor} max={ceiling}"
+        raise ValueError(msg)
+    return floor, ceiling
+
+
+def silence_limit_s(
+    last: Beat, phi_fire: float, band: tuple[float, float] = (MIN_FIRE_S, MAX_FIRE_S)
+) -> float:
     """Say how long a silence after `last` may run before the watchdog asks about work.
 
     Returns:
-        the silence at which the suspicion reaches `phi_fire`, held between `MIN_FIRE_S` and
-        `MAX_FIRE_S`; `MAX_FIRE_S` when too few gaps are recorded to learn a mean.
+        the silence at which the suspicion reaches `phi_fire`, held inside `band` (the default
+        is `MIN_FIRE_S` to `MAX_FIRE_S`); the band's ceiling when too few gaps are recorded to
+        learn a mean.
 
     """
     mean = heartbeat.mean_gap_s(last)
     if mean is None:
-        return MAX_FIRE_S
-    return min(max(phi_fire * mean * math.log(10), MIN_FIRE_S), MAX_FIRE_S)
+        return band[1]
+    return min(max(phi_fire * mean * math.log(10), band[0]), band[1])
 
 
 def idle_line(waiting: int, last: Beat, now_ns: int, bound_s: float | None = None) -> str:
@@ -243,12 +278,16 @@ def _say(line: str) -> None:
 
 def watch(
     seams: Seams,
-    phi_fire: float,
+    limit: float | Callable[[Beat], float],
     poll_s: float,
     armed: Callable[[], None] = _nothing,
     hint: Callable[[], str] = _no_hint,
 ) -> int:
     """Watch until the silence passes the limit with work waiting, or the parent goes away.
+
+    `limit` is the suspicion level (a float, judged inside the default window), or a function
+    from the last beat to the silence in seconds that wakes the session, which is how a chosen
+    window reaches the clamp.
 
     ⚑ NO HEARTBEAT FILE IS A BEAT AT THE WATCHDOG'S OWN START (github-8f, 2026-10-17). A repo whose
     tools are too old to beat has ready cards and no beat at all, which is the strongest stall
@@ -298,7 +337,7 @@ def watch(
         elif last.at_ns < started.at_ns:
             last = started
         silent_s = (now_ns() - last.at_ns) / _NS_PER_S
-        bound_s = silence_limit_s(last, phi_fire)
+        bound_s = limit(last) if callable(limit) else silence_limit_s(last, limit)
         waiting = ready() if silent_s >= bound_s else None
         if waiting is not None:
             sys.stdout.write(idle_line(waiting, last, now_ns(), bound_s) + "\n")
@@ -437,6 +476,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--writer", help="the paths-forward writer (default: the one on PATH)")
     parser.add_argument("--poll-s", type=float, default=DEFAULT_POLL_S)
     parser.add_argument("--phi-fire", type=float, default=DEFAULT_PHI_FIRE)
+    parser.add_argument("--min-fire-s", type=float, help="the window's floor in seconds")
+    parser.add_argument("--max-fire-s", type=float, help="the window's ceiling in seconds")
     return parser
 
 
@@ -463,6 +504,11 @@ def main(
     if writer is None:
         sys.stderr.write("mikemol-watchdog: no paths-forward writer found (use --writer)\n")
         return EXIT_CANNOT_RUN
+    try:
+        band = read_band(opts.get("min_fire_s"), opts.get("max_fire_s"), os.environ)
+    except ValueError as caught:
+        sys.stderr.write(f"mikemol-watchdog: {caught}\n")
+        return EXIT_CANNOT_RUN
     state = Path(str(opts["state"])).absolute()
     git_dir = state.parent.parent / ".git"
     parent = os.getppid()
@@ -481,7 +527,7 @@ def main(
         poll = float(str(opts["poll_s"]))
         return watch(
             seams,
-            float(str(opts["phi_fire"])),
+            lambda last: silence_limit_s(last, float(str(opts["phi_fire"])), band),
             poll,
             announce,
             lambda: exit_notes(git_dir, repo, os.environ),
