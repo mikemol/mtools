@@ -11,6 +11,21 @@ from abc import ABC
 # (stubtest: "metaclass differs", W274). Pipeline itself is not declared: audiostruct only
 # calls `transcribe`.
 class FasterWhisperPipeline(ABC):
+    # ⚑ W1951: the constructor as stubtest read it from the installed library (inspect.signature).
+    # Every parameter audiostruct never passes is `object`: `load_model` builds the pipeline.
+    def __init__(
+        self,
+        model: object,
+        vad: object,
+        vad_params: dict[str, object],
+        options: object,
+        tokenizer: object = None,
+        device: object = -1,
+        framework: str = "pt",
+        language: str | None = None,
+        suppress_numerals: bool = False,
+        **kwargs: object,
+    ) -> None: ...
     def transcribe(
         self,
         audio: object,

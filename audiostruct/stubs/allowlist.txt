@@ -2,4 +2,4 @@
 # stubtest's own report (W274), never generated. audiostruct never builds a FasterWhisperPipeline
 # itself: `load_model` does. So its nine-parameter constructor is surface the stubs decline to
 # model.
-whisperx.asr.FasterWhisperPipeline.__init__
+# (W1951: the one entry it held is paid down; the constructor is modelled in whisperx/asr.pyi.)
