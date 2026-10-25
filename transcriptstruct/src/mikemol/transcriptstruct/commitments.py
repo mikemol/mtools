@@ -81,6 +81,29 @@ def _family(sentence: str) -> str | None:
     return next((name for name, pattern in FAMILIES if pattern.search(sentence)), None)
 
 
+QUOTING = _QUOTING
+
+
+def sentence_spans(text: str) -> list[str]:
+    """Split a text block into sentences the way the extractor does.
+
+    Returns:
+        the sentences, a file name such as x.py not being split.
+
+    """
+    return _spans(_SENTENCE, text)
+
+
+def family_of(sentence: str) -> str | None:
+    """Name the regex family a sentence belongs to.
+
+    Returns:
+        the family name, or None when no family matches or the phrase is only mentioned.
+
+    """
+    return _family(sentence)
+
+
 def extract(records: Iterable[Record], session: str, repo: str) -> list[Commitment]:
     """Read the commitments the assistant records of a transcript make.
 

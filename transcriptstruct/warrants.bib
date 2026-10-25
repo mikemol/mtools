@@ -1279,3 +1279,52 @@
   claim  = {The mode's output, and its two refusals: no --queue and a bad row.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitrows.py -k test_the_resolve_mode_writes_the_document_then_a_tally},
 }
+
+@misc{transcriptstruct-sample-population-is-the-assistant-sentences-the-extractor-sees,
+  section = {sample},
+  title  = {Five sentences, one a hit; a sidechain, a quoted peer message and a user record are out},
+  claim  = {Five sentences, one a hit; a sidechain, a quoted peer message and a user record are out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_the_population_is_the_assistant_sentences_the_extractor_sees},
+}
+
+@misc{transcriptstruct-sample-draw-is-reproducible-from-the-seed-and-changes-with-it,
+  section = {sample},
+  title  = {The same seed gives the same sample; another seed gives another},
+  claim  = {The same seed gives the same sample; another seed gives another.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_the_draw_is_reproducible_from_the_seed_and_changes_with_it},
+}
+
+@misc{transcriptstruct-sample-every-regex-hit-is-in-the-sample-once-and-tagged,
+  section = {sample},
+  title  = {A hit is added whether or not the random draw took it, and never listed twice},
+  claim  = {A hit is added whether or not the random draw took it, and never listed twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_every_regex_hit_is_in_the_sample_once_and_tagged},
+}
+
+@misc{transcriptstruct-sample-blind-rows-carry-no-family-and-no-source,
+  section = {sample},
+  title  = {What goes to the other labeller has the text and the place and nothing of this side's},
+  claim  = {What goes to the other labeller has the text and the place and nothing of this side's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_the_blind_rows_carry_no_family_and_no_source},
+}
+
+@misc{transcriptstruct-sample-request-larger-than-the-pool-or-below-zero-does-not-fail,
+  section = {sample},
+  title  = {Asking for more than there is gives everything; asking for none gives only the hits},
+  claim  = {Asking for more than there is gives everything; asking for none gives only the hits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_a_request_larger_than_the_pool_or_below_zero_does_not_fail},
+}
+
+@misc{transcriptstruct-sample-mode-writes-blind-rows-to-stdout-and-labels-to-the-key,
+  section = {sample},
+  title  = {Stdout holds ids, places and text only; the key file holds source and family},
+  claim  = {Stdout holds ids, places and text only; the key file holds source and family.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_the_mode_writes_blind_rows_to_stdout_and_labels_to_the_key},
+}
+
+@misc{transcriptstruct-sample-mode-without-a-key-stops-with-the-usage-code,
+  section = {sample},
+  title  = {The labels have nowhere to go but beside the blind rows, so it refuses},
+  claim  = {The labels have nowhere to go but beside the blind rows, so it refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_the_mode_without_a_key_stops_with_the_usage_code},
+}

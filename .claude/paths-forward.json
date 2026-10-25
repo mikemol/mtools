@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2010,
+  "counter": 2015,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -43463,7 +43463,7 @@
     {
       "symbol": "W1966",
       "title": "Share the commitment rows, their fixtures and a labelled sample with amr-skills so its classifier (commitment, done, status, mention) trains against them",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W44"
       ],
@@ -43472,12 +43472,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a --sample N --seed S mode (or a sampler beside commitments.py) that draws assistant sentences uniformly from a transcript plus the regex hits tagged as such, writes them WITHOUT my labels to a file for amr-skills, and keeps my labels in a separate file so the two are blind to each other; then compute agreement and store the disagreements as fixtures. I still need the sampler, the blind labelling and the agreement, W1966",
+      "next_bounded_step": "Sampler submitted (stack-w1966: --sample N --seed S --key PATH). Next: draw the real sample from this session's transcript, send the BLIND file to amr-skills, label my own copy from the key-blind text myself without looking at their labels, compute agreement, keep disagreements as fixtures. I still need the labels and the agreement, W1966",
       "evidence": "2026-10-25: 2026-10-25 github-8f relayed: operator host lines 96863 and 96881 (both verified human) woke amr-skills to build an AMR classifier for 'I haven't done' and 'I still need to' over a rolling window of transcripts; its output feeds W1933's resolver, not a second ledger | 2026-10-25: 2026-10-25 github-8f GUARD on the labelled sample (G4 decorrelation): labelling only my regex's own output leaves recall invisible and puts my reading in the labels. So (1) the sample is RANDOM assistant sentences drawn from the same transcript as well as the regex hits, so a commitment the regex missed can show up (the sampler takes a seed so it is reproducible), and (2) amr-skills labels the SAME sample independently, agreement is reported, and the disagreements are kept as fixtures, neither side being truth",
       "issued_at": "2026-10-25T12:41:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T12:42:37Z",
+      "last_worked": "2026-10-25T20:48:25Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43511,7 +43511,8 @@
         "transcriptstruct/tests/test_commitments.py",
         "transcriptstruct/src/mikemol/transcriptstruct/commitledger.py"
       ],
-      "size_class": "small"
+      "size_class": "small",
+      "completed": null
     },
     {
       "symbol": "W1967",
@@ -44232,19 +44233,19 @@
     {
       "symbol": "W1988",
       "title": "hooks/BUILD.bazel builds one library per module from the generated file and each test depends on the closure of its imports",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1982"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per-module py_library from GRAPH in hooks/BUILD.bazel, deps = imports minus typing_only (W2006), the two wheels on each; additive first (no test switched); bazel build of every mod_ target; then switch tests to the closure of their own imports, one verified batch at a time. I still need all of it, W1988",
+      "next_bounded_step": "First part submitted (stack-w1988): per-module libraries, _CLOSURE_TESTS = [test_round_wire], witness measured (unrelated edit cached, in-cone edit reran). Next: W2010 (conftest edges), then switch tests in verified batches. I still need those and W1989, W1988",
       "evidence": "",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T20:04:03Z",
+      "last_worked": "2026-10-25T20:35:14Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44654,18 +44655,118 @@
     {
       "symbol": "W2010",
       "title": "graph.json holds tests/conftest.py's imports so a closure test needs no hand-named dependency",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1988"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Measured 2026-10-25: a hooks test switched to its own closure failed at collection, because tests/conftest.py imports hosttied and the graph holds only tests/test_*.py. Emit a support section (or entries) for conftest.py in importdag.graph, regenerate hooks/graph.json and dag.bzl, and read _CONFTEST_DEPS in hooks/BUILD.bazel from it.",
+      "blocked_on": [
+        "W1988"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "BUILT in the tree, not submitted: importdag graph.py support section (tests/conftest.py edges), test, mutant (grid 94 killed 0 survived, REGEX 23 killed), warrant; hooks/graph.json and dag.bzl regenerated. HOLD for stack-w1988 (it freezes hooks/BUILD.bazel): //hooks:graph_fresh goes STALE until its data glob also stages tests/conftest.py (measured), so the BUILD edit rides in the SAME stack: graph_fresh data += tests/conftest.py, and every py_test's deps generated from GRAPH incl. GRAPH['support']['tests/conftest.py'] instead of the hand-named _CONFTEST_DEPS. Then verify by sampling (out-of-cone edit cached, in-cone edit reran), and find which tests fail in closure mode. I still need that stack, W2010",
       "evidence": "",
       "issued_at": "2026-10-25T20:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "W1988",
+      "last_worked": "2026-10-25T20:39:47Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2011",
+      "title": "A pre-commit step runs graph --check over each dist's working tree, so a new module fails before the sandbox could miss it",
+      "status": "ready",
+      "enables": [
+        "W2010"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "AGREED (github-8f 2026-10-25, option a): the names come from git ls-files. Run graph --check over the git ls-files set of each dist with a committed graph, FIRST in mikemol-commit's presubmit (fail-fast ordering, mtools:W1480): a new tracked module fails before the gate, naming the --write to run. graph_fresh stays in the gate for edits to known files, its data generated by name from the graph (modules, tests, support, graph.json, dag.bzl). No glob survives. Needs a git-ls-files reader in importdag.graph (a --files mode), the presubmit step in commit_kata (live hook: dependencies first). I still need all of it, W2011",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:41:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2010",
+      "last_worked": "2026-10-25T20:43:00Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2012",
+      "title": "Input mutation: for each graph-built test target, drop one declared input and expect a failure",
+      "status": "blocked",
+      "enables": [
+        "W1988"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2013",
+        "W2014",
+        "W2015"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Operator 99849 (uuid 87c5560d, verified): membership of an input is proven by mutation, not by glob or graph's say-so; survivors (the target still passes without the input) are over-declared and must be an empty set; an undeclared needed file fails the sandbox build. REUSE READ (paperkit): paperkit/mutate.py mutates CODE and paperkit/footdeps.py is a strace footprint (mtools has hooks footprint.py for that, W1504); neither mutates inputs, so the new part is the generator. Shape to copy: check_mutants/mutants_gen.py (one target per site, build files beside src, --check). Per mutant: a py_test of the same test with exactly one direct dep or support edge removed, wrapped by an inverting test (sh_test running the inner executable, passing only when it FAILS). A direct import edge fails by construction; the informative mutants are an import the test never executes (lazy, function-local) which SURVIVES = over-declared. Atomized: generator, gate check, first consumer.",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:52:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1988",
+      "last_worked": "2026-10-25T20:52:09Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2013",
+      "title": "importdag emits one input-mutant target per test and removable edge, wrapped to pass only on failure",
+      "status": "ready",
+      "enables": [
+        "W2012",
+        "W2014"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Report rule (github-8f 2026-10-25): a SURVIVING input-mutant has two readings, named on each survivor: (1) the edge is over-declared, drop it; (2) the test never exercises the code path that needs it (a lazy or function-local import on an untested branch), a coverage gap: keep the edge and add the test. The report never fixes a survivor by deleting the edge alone; the fix chooses the reading, as with code mutants. Generator: one target per test and removable edge, wrapped to pass only on failure.",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:52:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2012",
+      "last_worked": "2026-10-25T20:53:29Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2014",
+      "title": "A gate target runs the input-mutant generator's --check so the mutant BUILD files cannot go stale",
+      "status": "ready",
+      "enables": [
+        "W2012"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:52:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2012",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2015",
+      "title": "The graph-built hooks tests are the first input-mutation consumer, survivors reported and required empty",
+      "status": "ready",
+      "enables": [
+        "W2012"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:52:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2012",
       "last_worked": null,
       "ticks_blocked": 0
     }

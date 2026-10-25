@@ -23,7 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TextIO, cast
 
-from mikemol.transcriptstruct import commitledger, commitrows
+from mikemol.transcriptstruct import commitledger, commitrows, sample
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.commitments import Commitment
@@ -124,6 +124,13 @@ def _parser() -> argparse.ArgumentParser:
         help="W1386: one PROV-O entity per operator utterance, with its needle, as JSON lines",
     )
     mode.add_argument(
+        "--sample",
+        metavar="N",
+        type=int,
+        help="W1966: draw N random assistant sentences plus every regex hit (a seeded draw); "
+        "write them BLIND (id, place, text) to stdout and this side's labels to --key",
+    )
+    mode.add_argument(
         "--harvest-tree",
         metavar="LEDGER",
         help="W1401/W1402: the positional is a projects directory; append every new operator "
@@ -149,6 +156,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--since", type=int, help="first line to search (1-based, inclusive)")
     parser.add_argument("--until", type=int, help="last line to search (inclusive)")
     parser.add_argument("--repo", help="--resolve: keep only the rows of this repository")
+    parser.add_argument("--seed", type=int, default=0, help="--sample: the draw's seed")
+    parser.add_argument("--key", metavar="PATH", help="--sample: where this side's labels go")
     parser.add_argument(
         "--queue",
         metavar="PATH",
@@ -365,6 +374,26 @@ def _commitments(path: Path, out: TextIO, queue: str | None = None) -> None:
     out.write(f"# {len(found)} commitment(s)\n")
 
 
+def _sample(path: Path, opts: dict[str, object], out: TextIO) -> None:
+    """Write a blind sample of assistant sentences to `out` and the labels to `--key`.
+
+    Raises:
+        SystemExit: with the usage code when `--key` is not given, since the labels would
+            otherwise have nowhere to go but beside the blind rows.
+
+    """
+    keyed = _text(opts, "key")
+    if keyed is None:
+        sys.stderr.write("mikemol-transcriptstruct: --sample needs --key PATH\n")
+        raise SystemExit(_USAGE)
+    chosen = sample.draw(
+        sample.sentences(read_path(path)), _number(opts, "sample") or 0, _number(opts, "seed") or 0
+    )
+    out.writelines(_line(row) for row in sample.blind(chosen))
+    Path(keyed).write_text("".join(_line(row) for row in sample.key(chosen)), encoding="utf-8")
+    out.write(f"# {len(chosen)} sentence(s); labels in {keyed}\n")
+
+
 def _turn_start(path: Path, out: TextIO) -> None:
     """Write where the latest turn began and its Stop blocks as one JSON line (null for none)."""
     found = turn_start(read_path(path))
@@ -444,6 +473,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
         _commitments(path, out, _text(opts, "queue"))
     elif opts.get("harvest") is True:
         _harvest(path, scheduled, out)
+    elif _number(opts, "sample") is not None:
+        _sample(path, opts, out)
     elif opts.get("audit_memory") is True:
         out.writelines(f"{row.text()}\n" for row in audit(path))
     else:

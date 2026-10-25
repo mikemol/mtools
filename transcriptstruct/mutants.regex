@@ -60,6 +60,12 @@ src/mikemol/transcriptstruct/commitledger.py|other-repos-card-resolved|    bare 
 src/mikemol/transcriptstruct/commitledger.py|done-gate-card-only-a-card|    if any\("\.githooks/" in path or path\.endswith\("standing\.rego"\) for path in paths\):|    if False:|def=_card_layer
 src/mikemol/transcriptstruct/commitledger.py|every-layer-counted|        if row\.layer in COUNTED and|        if True or|def=counted
 src/mikemol/transcriptstruct/commitledger.py|uncertain-row-counted|COUNTED and not row\.uncertain:|COUNTED:|def=counted
+src/mikemol/transcriptstruct/sample.py|regex-hit-left-to-chance|    hits = \{index for index, item in enumerate\(pool\) if item\.family is not None\}|    hits: set[int] = set()|def=draw
+src/mikemol/transcriptstruct/sample.py|seed-ignored|sha256\(f"\{seed\}:\{index\}"|sha256(f"{index}"|def=_rank
+src/mikemol/transcriptstruct/sample.py|negative-count-takes-all-but-n|\[: max\(n, 0\)\]|[:n]|def=draw
+src/mikemol/transcriptstruct/sample.py|sidechain-sentence-sampled|\) or record\.is_sidechain:|):|def=sentences
+src/mikemol/transcriptstruct/sample.py|blind-row-carries-the-family|"text": item\.text\}|"text": item.text, "family": item.family}|def=blind
+src/mikemol/transcriptstruct/cli.py|sample-without-key-runs|    if keyed is None:|    if False:|def=_sample
 src/mikemol/transcriptstruct/commitrows.py|uncertain-if-any-source|Incoming\(first, all\(votes\)|Incoming(first, any(votes)|def=read
 src/mikemol/transcriptstruct/commitrows.py|other-repos-rows-kept|        if said\.repo != repo:|        if False:|def=read
 src/mikemol/transcriptstruct/commitrows.py|bad-line-skipped|            return \[\], f"line \{number\} is not a commitment row"|            continue|def=read

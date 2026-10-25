@@ -3953,3 +3953,12 @@
 2026-10-25T20:33:25Z  status W1988 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T20:33:25Z  status W2006 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T20:34:59Z  interrupt W2010 minted    -         "graph.json holds tests/conftest.py's imports so a closure test needs no hand-named dependency"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1988
+2026-10-25T20:35:14Z  status W1988 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T20:36:33Z  status W2010 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T20:39:47Z  status W2010 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T20:41:39Z  interrupt W2011 minted    -         "A pre-commit step runs graph --check over each dist's working tree, so a new module fails before the sandbox could miss it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2010
+2026-10-25T20:42:21Z  status W1966 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T20:52:05Z  interrupt W2012 minted    -         "Input mutation: for each graph-built test target, drop one declared input and expect a failure"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1988
+2026-10-25T20:52:09Z  interrupt W2013 minted    -         "importdag emits one input-mutant target per test and removable edge, wrapped to pass only on failure"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2012
+2026-10-25T20:52:09Z  interrupt W2014 minted    -         "A gate target runs the input-mutant generator's --check so the mutant BUILD files cannot go stale"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2012
+2026-10-25T20:52:09Z  interrupt W2015 minted    -         "The graph-built hooks tests are the first input-mutation consumer, survivors reported and required empty"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2012

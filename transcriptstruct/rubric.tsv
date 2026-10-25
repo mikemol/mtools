@@ -21,3 +21,4 @@ turnstart	Turn start (W1903): where the latest turn began and its Stop blocks
 commitments	Commitments (W1931): statements of known-needed, unpersisted work an assistant made
 commitledger	Commitment ledger (W1933): each statement resolved to the strongest follow-through it names
 commitrows	Commitment-rows
+sample	Blind-sample
