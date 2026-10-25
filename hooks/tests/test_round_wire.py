@@ -72,3 +72,20 @@ def test_the_path_is_the_environment_override_else_the_nemik_cache(
     assert str(round_wire.round_path()) == "/x/round.json"
     monkeypatch.delenv(round_wire.ENV)
     assert round_wire.round_path().parts[-3:] == ("luthen", "nemik-export", "round.json")
+
+
+def test_the_wall_clock_judgement_reads_a_round_stamped_now(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The wall-clock judgement: a round stamped now refuses, a missing one does not."""
+    checkout = tmp_path / "mtools"
+    (checkout / ".claude").mkdir(parents=True)
+    queue_file = checkout / ".claude" / "paths-forward.json"
+    queue_file.write_text(json.dumps(_queue(W1="ready", W7="working")), encoding="utf-8")
+    round_file = tmp_path / "round.json"
+    monkeypatch.setenv(round_wire.ENV, str(round_file))
+    assert round_wire.now_reason(checkout) is None
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}'
+    round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
+    assert "take W1 first" in str(round_wire.now_reason(checkout))

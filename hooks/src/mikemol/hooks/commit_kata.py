@@ -71,6 +71,7 @@ from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
 from mikemol.hooks.rootdrop import drop as _drop
 from mikemol.hooks.rootdrop import invoker_home as _invoker_home
 from mikemol.hooks.rootdrop import owner_of as _owner_of
+from mikemol.hooks.round_wire import now_reason as _round_refusal
 from mikemol.hooks.shardgate import refusal as _shard_refusal
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackbuildfiles import refusal as _build_refusal
@@ -1069,7 +1070,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
 
     The first that has something to say wins: an import only a later entry adds (W1527), a build
     file naming a source no entry carries (W1604), a mutants grid already past half of its CPU
-    budget (W1602).
+    budget (W1602), a ready card of the published round skipped for one outside it (W1948).
 
     Returns:
         the findings, or None when the stack may wait.
@@ -1080,6 +1081,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         _stack_refusal(root, stack_file, snap, run_git_in)
         or stack_build_refusal(root, stack_file, snap, run_git_in)
         or _shard_refusal(root, stack_file, env)
+        or _round_refusal(root)
     )
 
 

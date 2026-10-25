@@ -18,13 +18,13 @@ when the timer's period exists.
 ⚑ THE REPOSITORY IS THE QUEUE DIRECTORY'S NAME (`mtools` for the checkout `mtools`), the same name
 nemik publishes rows under.
 
-CONSUMED BY: the tick-stop hook (W1942); the stack submit is the card's next part.
+CONSUMED BY: the tick-stop hook and the stack submit (`now_reason`, W1948).
 """
 
 import json
 import os
 import re
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from mikemol.hooks.payload import as_record, text_of
@@ -99,3 +99,14 @@ def round_reason(directory: Path, now: datetime, round_file: Path | None = None)
         return None
     found = refusals(queue, text, directory.name, now)
     return " | ".join(found) if found else None
+
+
+def now_reason(directory: Path) -> str | None:
+    """Judge `directory`'s queue against the round as of the wall clock.
+
+    Returns:
+        what `round_reason` says at this moment; the stack submit's seam, since it has no clock
+        of its own.
+
+    """
+    return round_reason(directory, datetime.now(UTC))

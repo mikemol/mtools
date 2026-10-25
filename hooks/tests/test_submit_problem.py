@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""A submitted stack meets the import, build-file and slow-grid refusals in that order (W1602)."""
+"""A submitted stack meets the import, build-file, slow-grid and round refusals in order."""
 
 from pathlib import Path
 
@@ -22,11 +22,16 @@ def _says(text: str | None) -> object:
 
 
 def _set(
-    monkeypatch: pytest.MonkeyPatch, imports: str | None, build: str | None, grid: str | None
+    monkeypatch: pytest.MonkeyPatch,
+    imports: str | None,
+    build: str | None,
+    grid: str | None,
+    skipped: str | None = None,
 ) -> None:
     monkeypatch.setattr(commit_kata, "_stack_refusal", _says(imports))
     monkeypatch.setattr(commit_kata, "stack_build_refusal", _says(build))
     monkeypatch.setattr(commit_kata, "_shard_refusal", _says(grid))
+    monkeypatch.setattr(commit_kata, "_round_refusal", _says(skipped))
 
 
 def test_a_stack_nothing_refuses_may_wait(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -49,3 +54,13 @@ def test_an_earlier_refusal_wins_over_a_later_one(monkeypatch: pytest.MonkeyPatc
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "imports"
     _set(monkeypatch, None, "build", "grid")
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "build"
+
+
+def test_a_round_card_skipped_for_an_outside_card_is_the_stacks_problem_when_nothing_else_is(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W1948: the round is asked last; an earlier finding still wins."""
+    _set(monkeypatch, None, None, None, "W1 is in this repository's round")
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "W1 is in this repository's round"
+    _set(monkeypatch, None, None, "grid", "W1 is in this repository's round")
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "grid"

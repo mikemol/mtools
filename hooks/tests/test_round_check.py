@@ -53,6 +53,19 @@ def test_the_one_line_document_luthens_egress_gate_writes_and_the_lines_form_rea
     assert round_check.round_symbols(lines, "mtools") == _ROUND
 
 
+def test_the_recorded_round_file_of_nemiks_contract_test_reads_as_its_writer_meant() -> None:
+    """A byte-for-byte copy of nemik's fixture (nemik:W1033, fae9d5c); a format change fails."""
+    recorded = (
+        '{"as_of": "2026-10-25T09:00:00Z"}\n'
+        '{"repo": "alpha", "symbol": "W5", "rank": "1", "salience": "9"}\n'
+        '{"repo": "alpha", "symbol": "W2", "rank": "2", "salience": "4.5"}\n'
+        '{"repo": "beta", "symbol": "W1", "rank": "1", "salience": "0.4424"}\n'
+    )
+    assert round_check.round_symbols(recorded, "alpha") == ["W5", "W2"]
+    assert round_check.round_symbols(recorded, "beta") == ["W1"]
+    assert round_check.round_symbols(recorded, "mtools") == []
+
+
 def test_a_fresh_card_worked_while_an_aged_round_card_is_passed_over_is_refused() -> None:
     """The depth-first pattern: W20 is worked, ready round cards W7 and W9 are skipped."""
     refused = round_check.composition(_ROUND, ready={"W7", "W9", "W20"}, working={"W20"})
