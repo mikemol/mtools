@@ -22,11 +22,13 @@ it, not a second way.
 import json
 import os
 from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
 
 from mikemol.hooks.hold_lift import reader_path, run_reader
 from mikemol.hooks.idle_progress import idle_card
 from mikemol.hooks.payload import as_record, text_of
+from mikemol.hooks.round_order import order as round_of
 from mikemol.hooks.stamps import parse_time
 
 CAP = 2
@@ -79,5 +81,6 @@ def idle_reason(
         queue: object = json.loads((root / QUEUE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
-    card = idle_card(queue, start)
+    # W1950: the published round decides which ready card is named; no round is the queue's order.
+    card = idle_card(queue, start, round_of(root, datetime.now(UTC)))
     return None if card is None else REASON.format(card=card, queue=QUEUE)

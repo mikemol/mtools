@@ -19,6 +19,7 @@ does not parse counts as not worked, but a queue that is not a document at all a
 reading that did not happen never stops a turn.
 """
 
+from collections.abc import Sequence
 from datetime import datetime
 
 from mikemol.hooks.payload import as_record, text_of
@@ -37,18 +38,29 @@ def _worked_since(card: dict[str, object], start: datetime) -> bool:
     return stamp is not None and stamp >= start
 
 
-def idle_card(queue: object, turn_start: datetime) -> str | None:
+def idle_card(queue: object, turn_start: datetime, order: Sequence[str] = ()) -> str | None:
     """Name the top ready card when a turn ended with ready work and no card moved.
 
+    ⚑ THE ROUND COMES FIRST (W1950, github-8f 2026-10-25): a hook that names the top READY card
+    had a session take cards to quiet it, and the round check then read those marks as breadth.
+    So when the published round (`order`, this repository's symbols best rank first) holds a
+    ready card, that card is named; with no round, or none of it ready, the first ready card is.
+
     Returns:
-        the symbol of the first ready, unwitnessed card; None when there is none, or when any
-        card was worked at or after `turn_start`.
+        the symbol of the best-ranked ready round card, else of the first ready, unwitnessed
+        card; None when there is none, or when any card was worked at or after `turn_start`.
 
     """
     cards = _cards(queue)
     if any(_worked_since(card, turn_start) for card in cards):
         return None
-    for card in cards:
-        if card.get("status") == "ready" and not card.get("witness"):
-            return text_of(card.get("symbol")) or None
-    return None
+    ready = [
+        text_of(card.get("symbol"))
+        for card in cards
+        if card.get("status") == "ready" and not card.get("witness")
+    ]
+    ready = [symbol for symbol in ready if symbol]
+    for symbol in order:
+        if symbol in ready:
+            return symbol
+    return ready[0] if ready else None

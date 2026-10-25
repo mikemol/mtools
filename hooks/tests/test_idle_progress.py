@@ -29,6 +29,17 @@ def test_ready_work_and_no_card_worked_this_turn_names_the_top_ready_card() -> N
     assert idle_progress.idle_card(queue, START) == "W2"
 
 
+def test_the_best_ranked_ready_card_of_the_round_is_named_before_the_queue_order() -> None:
+    """W1950: a round card wins over an earlier non-round ready card; none ready falls back."""
+    queue = _queue(
+        _card("W2", "ready", BEFORE), _card("W5", "ready", BEFORE), _card("W7", "ready", BEFORE)
+    )
+    assert idle_progress.idle_card(queue, START, ["W7", "W5"]) == "W7"
+    assert idle_progress.idle_card(queue, START, ["W9", "W5"]) == "W5"
+    assert idle_progress.idle_card(queue, START, ["W9"]) == "W2"
+    assert idle_progress.idle_card(queue, START, []) == "W2"
+
+
 def test_a_card_worked_since_the_turn_began_is_progress() -> None:
     """Advancing, blocking or finishing any card moves its stamp past the start: no escalation."""
     queue = _queue(_card("W1", "blocked", AFTER), _card("W2", "ready", BEFORE))

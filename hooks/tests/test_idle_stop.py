@@ -14,6 +14,8 @@ from mikemol.hooks import idle_stop, tick_stop
 if TYPE_CHECKING:
     from pathlib import Path
 
+    import pytest
+
 NOW = datetime(2026, 10, 24, 13, 0, tzinfo=UTC)
 STARTED = "2026-10-24T12:00:00Z"
 BEFORE = "2026-10-24T11:00:00Z"
@@ -78,3 +80,28 @@ def test_the_stop_hook_blocks_an_idle_end_even_when_a_block_already_happened(
     out2 = io.StringIO()
     assert tick_stop.run(payload, NOW, out2, err, _reader(idle_stop.CAP)) == 0
     assert not out2.getvalue()
+
+
+def test_the_published_rounds_top_card_is_named_before_the_first_ready_card(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1950: W6 is first in the queue, W7 is the round's: the reason names W7; no round, W6."""
+    cards = [
+        {"symbol": "W6", "status": "ready", "last_worked": BEFORE},
+        {"symbol": "W7", "status": "ready", "last_worked": BEFORE},
+    ]
+    document: dict[str, object] = {"waypoints": cards}
+    queue = tmp_path / ".claude" / "paths-forward.json"
+    queue.parent.mkdir(exist_ok=True)
+    queue.write_text(json.dumps(document), encoding="utf-8")
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    row = f'{{"repo": "{tmp_path.name}", "symbol": "W7", "rank": "1", "salience": "1"}}'
+    round_file = tmp_path / "round.json"
+    monkeypatch.setenv("MIKEMOL_ROUND_FILE", str(round_file))
+    without = idle_stop.idle_reason(_payload(tmp_path), tmp_path, _reader(0))
+    assert without is not None
+    assert "take W6" in without
+    round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
+    reason = idle_stop.idle_reason(_payload(tmp_path), tmp_path, _reader(0))
+    assert reason is not None
+    assert "take W7" in reason
