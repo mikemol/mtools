@@ -10,6 +10,7 @@ load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@hooks_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
+load(":dag.bzl", "GRAPH")
 
 exports_files([
     "requirements.txt",
@@ -36,6 +37,33 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+# W1988: ONE LIBRARY PER MODULE, deps FROM THE GENERATED IMPORT GRAPH. `dag.bzl` is the committed,
+# `//hooks:graph_fresh`-checked output of `importdag.graph`, so these edges cannot drift from the
+# sources. A target that depends on the libraries of the modules it imports (and so, through their
+# deps, on exactly the cone it can reach) is rebuilt when one of THOSE changes, instead of when any
+# of the ~170 files of `:hooks` does (W1982 measured 97.5 percent of hooks targets missing on any
+# change). An import that exists only under `if TYPE_CHECKING:` is left out of the deps, since it is
+# needed to check types and never to run (W2006; queuecarry and stackrun name each other that way and
+# would otherwise be a cycle bazel refuses). ADDITIVE: `:hooks` stays, and no test is switched by
+# this block. The two requirements are every module's, because the graph holds the dist's own
+# imports and not its wheels.
+[
+    py_library(
+        name = "mod_" + path.removeprefix("src/mikemol/hooks/").removesuffix(".py").replace("/", "__"),
+        srcs = [path],
+        imports = ["src"],
+        deps = [
+            ":mod_" + dep.removeprefix("src/mikemol/hooks/").removesuffix(".py").replace("/", "__")
+            for dep in entry["imports"]
+            if dep not in entry["typing_only"]
+        ] + [
+            requirement("ruff"),
+            requirement("mypy"),
+        ],
+    )
+    for path, entry in GRAPH["modules"].items()
+]
+
 # ⚑ THE TEST MODULES THAT SPAWN NESTED PYTEST PROCESSES, sized `medium` below (W329). Each is
 # listed with its measurement: test_grade, 21 cases in 5.3 s alone, and a 60 s TIMEOUT after 7
 # cases under a full //... run, twice on 2026-10-01.
@@ -55,6 +83,18 @@ _CPU_BUDGET_S = {
     "tests/test_grade.py": 82,
     "tests/test_import_cycles.py": 75,
 }
+
+# W1988: THE TESTS SWITCHED TO THEIR OWN IMPORT CLOSURE, ONE VERIFIED BATCH AT A TIME. A test listed
+# here depends on the per-module libraries of the modules it imports instead of on the dist-wide
+# `:hooks`, so a change to a module outside its cone no longer rebuilds it. A test whose run reads
+# or spawns a module it does not import (a subprocess, a data file) fails here in the sandbox, and
+# stays off the list until its reads are declared in reads.json.
+_CLOSURE_TESTS = ["tests/test_round_wire.py"]
+
+# ⚑ EVERY TEST LOADS `tests/conftest.py`, WHICH THE GRAPH DOES NOT HOLD: it imports `hosttied`, and a
+# closure test without it fails at collection (measured 2026-10-25). Named here until the generator
+# emits the conftest's own edges (W2010), when this list is read from the graph.
+_CONFTEST_DEPS = [":mod_hosttied"]
 
 _TEST_ENV = {
     "RUFF_BIN": "$(location @mikemol_check_ruff//:bin)",
@@ -287,8 +327,11 @@ _TEST_ENV = {
         # A module that spawns nested pytest gets `medium` (300 s). The operator's rule: no
         # wall-clock-sensitive tests.
         size = "medium" if (src in _SPAWNS_NESTED_PYTEST or src in _CPU_BUDGET_S) else "small",
-        deps = [
-            ":hooks",
+        deps = ([
+            ":mod_" + dep.removeprefix("src/mikemol/hooks/").removesuffix(".py").replace("/", "__")
+            for dep in GRAPH["tests"][src]["imports"]
+            if dep not in GRAPH["tests"][src]["typing_only"]
+        ] + _CONFTEST_DEPS if src in _CLOSURE_TESTS else [":hooks"]) + [
             dev_requirement("pytest"),
             # ⚑ ruff IS A DEP SO `test_bar_fires` CAN RUN THE CHECKER IT ASSERTS ABOUT. It ships
             # as a Python package with a bundled binary, so declaring it here puts that binary in

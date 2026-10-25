@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2006,
+  "counter": 2010,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -44232,15 +44232,13 @@
     {
       "symbol": "W1988",
       "title": "hooks/BUILD.bazel builds one library per module from the generated file and each test depends on the closure of its imports",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2006"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Per-module py_library from GRAPH in hooks/BUILD.bazel, deps = imports minus typing_only (W2006), the two wheels on each; additive first (no test switched); bazel build of every mod_ target; then switch tests to the closure of their own imports, one verified batch at a time. I still need all of it, W1988",
       "evidence": "",
       "issued_at": "2026-10-25T14:47:57Z",
@@ -44429,12 +44427,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "First part submitted (stack-w2006: importdag.cost affected, unnamed, price, together, after). Next: the reader that fills the table from luthen's gate:luthen_gate_target_cpu_seconds:median7d, :p90_7d and gate:luthen_gate_target_cpu_samples:count7d once vmalert has loaded them; neighbour projection for low-sample tests; a command line. I still need those three, W1997",
+      "next_bounded_step": "First part LANDED e5dfb92d (importdag.cost). Next: the reader that fills the table from luthen's gate:luthen_gate_target_cpu_seconds:median7d, :p90_7d and gate:luthen_gate_target_cpu_samples:count7d; neighbour projection for low-sample tests; a command line. I still need those three, W1997",
       "evidence": "",
       "issued_at": "2026-10-25T17:05:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1503",
-      "last_worked": "2026-10-25T20:11:08Z",
+      "last_worked": "2026-10-25T20:33:26Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44580,21 +44578,96 @@
     {
       "symbol": "W2006",
       "title": "graph.json marks an import that is only for type checking, so a BUILD library per module has no cycle",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1988"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Submitted as stack-w2006 with W1997's first part. Note: the submitted subject says unnamed returns paths the graph 'names at all'; it means the paths the graph does NOT name. After it lands: W1988 (per-module libraries from imports minus typing_only). I still need the landing and W1988, W2006",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed dc6a4014",
       "issued_at": "2026-10-25T20:03:59Z",
       "minted_during": "interrupt",
       "caused_by": "W1988",
-      "last_worked": "2026-10-25T20:11:06Z",
+      "last_worked": "2026-10-25T20:33:25Z",
+      "ticks_blocked": 0,
+      "completed": "20261025T203325Z"
+    },
+    {
+      "symbol": "W2007",
+      "title": "mikemol-commit records a flake when an identical resubmit passes a tree it refused",
+      "status": "ready",
+      "enables": [
+        "W2008",
+        "W2009"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25; first instance nemik:W1060 (test_incremental_redraw, after test_sources_fetch in stack440 and test_pdf in stack458, landed W1064 by resubmitting identically). Record per verdict: tree hash, refused target(s). On a pass whose tree hash equals an earlier REFUSED verdict's, write a flake record (repo, target, both verdict ids) to the commit ledger. Design may differ; the property: an identical-resubmit pass cannot silently clear a flake. Files: gate verdict log, stackland/stackrun.",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:16:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2008",
+      "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
+      "status": "blocked",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [
+        "W2007"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After a flake record (W2007) the next land in that repo is refused unless a card tagged with the refused target, or a class card citing it, exists in the queue and is in the published round (round_wire reads it). The refusal names the target and the writer command that mints the card. Depends on W2007's record.",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:16:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-25T20:17:19Z",
       "ticks_blocked": 0,
       "completed": null
+    },
+    {
+      "symbol": "W2009",
+      "title": "Flaky passes per repo are a published metric series",
+      "status": "blocked",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [
+        "W2007"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "mikemol.commit.flaky_passes{repo} from the flake records (W2007), sent through mikemol-otlp with description, unit and freshness class (W1961 contract); zero is sent when none, so the series does not vanish. Depends on W2007.",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:17:02Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-25T20:17:23Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2010",
+      "title": "graph.json holds tests/conftest.py's imports so a closure test needs no hand-named dependency",
+      "status": "ready",
+      "enables": [
+        "W1988"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measured 2026-10-25: a hooks test switched to its own closure failed at collection, because tests/conftest.py imports hosttied and the graph holds only tests/test_*.py. Emit a support section (or entries) for conftest.py in importdag.graph, regenerate hooks/graph.json and dag.bzl, and read _CONFTEST_DEPS in hooks/BUILD.bazel from it.",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:34:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1988",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
