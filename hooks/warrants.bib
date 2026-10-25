@@ -15099,3 +15099,31 @@
   claim  = {Outside a repository git fails; a doubt is not a reason to add a file to a commit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_queuecarry.py -k test_a_comparison_that_cannot_be_made_carries_nothing},
 }
+
+@misc{hooks-round-check-repositorys-round-is-read-by-lines-in-rank-order,
+  section = {round_check},
+  title  = {Only this repository's rows, best rank first; the stamp and closing lines are not rows},
+  claim  = {Only this repository's rows, best rank first; the stamp and closing lines are not rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_a_repositorys_round_is_read_by_lines_in_rank_order},
+}
+
+@misc{hooks-round-check-fresh-card-worked-while-an-aged-round-card-is-passed-over-is-refused,
+  section = {round_check},
+  title  = {The depth-first pattern: W20 is worked, ready round cards W7 and W9 are skipped},
+  claim  = {The depth-first pattern: W20 is worked, ready round cards W7 and W9 are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_a_fresh_card_worked_while_an_aged_round_card_is_passed_over_is_refused},
+}
+
+@misc{hooks-round-check-round-worked-in-full-or-wholly-inside-is-admitted,
+  section = {round_check},
+  title  = {No card outside the round, or the whole ready round in the set: nothing is refused},
+  claim  = {No card outside the round, or the whole ready round in the set: nothing is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_the_round_worked_in_full_or_wholly_inside_is_admitted},
+}
+
+@misc{hooks-round-check-round-card-no-longer-ready-is-not-skipped-and-no-round-refuses-nothing,
+  section = {round_check},
+  title  = {A round card blocked or done since publication does not count; an empty round is silent},
+  claim  = {A round card blocked or done since publication does not count; an empty round is silent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_a_round_card_no_longer_ready_is_not_skipped_and_no_round_refuses_nothing},
+}

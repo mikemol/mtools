@@ -3701,3 +3701,12 @@
 2026-10-25T01:33:42Z  status W1941 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T01:57:21Z  status W1937 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T02:32:30Z  status W1940 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T02:35:54Z  status W1628 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T02:35:54Z  status W1928 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T02:35:54Z  status W1929 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T02:35:54Z  status W1931 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T02:39:56Z  interrupt W1942 minted    -         "Refuse a round whose working set skips a card of the published round while including one outside it, naming the skipped card and the writer command that takes it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T02:40:34Z  status W1692 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T02:53:29Z  status W1928 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T03:16:30Z  status W1941 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T03:17:50Z  interrupt W1943 minted    -         "A witness reading takes an optional when condition, plan_touches, so it applies only when the plan carries those resource addresses"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1550

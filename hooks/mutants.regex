@@ -648,6 +648,9 @@ src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/stacksnap.py|queue-file-frozen-at-submit|            if path in seen or path in QUEUE_FILES:|            if path in seen:|def=freeze
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
+src/mikemol/hooks/round_check.py|no-outside-card-still-refused|    if not outside:|    if False:|def=composition
+src/mikemol/hooks/round_check.py|blocked-round-card-counted-skipped|        if symbol in available and symbol not in doing|        if symbol not in doing|def=composition
+src/mikemol/hooks/round_check.py|other-repos-rows-read|        if row\.get\("repo"\) == repo and isinstance\(row\.get\("symbol"\), str\):|        if isinstance(row.get("symbol"), str):|def=round_symbols
 src/mikemol/hooks/queuecarry.py|named-queue-file-carried-again|    added = \[p for p in sorted\(QUEUE_FILES\) if p not in named and _differs\(root, p, run\)\]|    added = [p for p in sorted(QUEUE_FILES) if _differs(root, p, run)]|def=carry
 src/mikemol/hooks/queuecarry.py|git-failure-read-as-difference|    return done\.returncode == 0 and bool\(done\.stdout\.strip\(\)\)|    return bool(done.stdout.strip()) or done.returncode != 0|def=_differs
 src/mikemol/hooks/launcher.py|wheel-launcher-noticed|    if wheel_installed\(prefix\):|    if False:|def=notice
