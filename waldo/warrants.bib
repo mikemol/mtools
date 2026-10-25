@@ -1776,3 +1776,25 @@
   claim  = {The ledger entry carries the gate's kind, a hash of its facts and its result (W1867).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_interlock_the_consumer_hands_in_is_recorded_beside_the_apply_it_gated},
 }
+
+@misc{waldo-planreading-reading-with-a-when-applies-only-to-a-plan-that-touches-its-addresses,
+  section = {planreading},
+  title  = {W1943: an apply that leaves the alert rules alone is not read, so it is not false-refused},
+  claim  = {W1943: an apply that leaves the alert rules alone is not read, so it is not false-
+            refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_reading_with_a_when_applies_only_to_a_plan_that_touches_its_addresses},
+}
+
+@misc{waldo-planreading-reading-without-a-when-or-for-an-unknown-plan-always-applies,
+  section = {planreading},
+  title  = {No condition, or a plan whose addresses are not known, keeps the reading as it was},
+  claim  = {No condition, or a plan whose addresses are not known, keeps the reading as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planreading.py -k test_a_reading_without_a_when_or_for_an_unknown_plan_always_applies},
+}
+
+@misc{waldo-planflow-reading-with-a-when-is-taken-only-for-a-plan-that-touches-its-addresses,
+  section = {planflow},
+  title  = {W1943: a no-advance on an apply that leaves the reading's resources alone is no failure},
+  claim  = {W1943: a no-advance on an apply that leaves the reading's resources alone is no failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_reading_with_a_when_is_taken_only_for_a_plan_that_touches_its_addresses},
+}

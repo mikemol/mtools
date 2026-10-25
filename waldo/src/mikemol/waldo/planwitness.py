@@ -26,6 +26,7 @@ and a reading that fails turns a passing exit into a `fail` with the reason.
 """
 
 import json
+from collections.abc import Sequence
 from pathlib import Path
 
 from mikemol.waldo import planreading
@@ -69,18 +70,24 @@ def tail_lines(text: str, keep: int = TAIL_LINES) -> list[str]:
     return text.strip().splitlines()[-keep:]
 
 
-def take_reading(tools: Tools, config: PlanConfig, root_name: str) -> Json | None:
+def take_reading(
+    tools: Tools, config: PlanConfig, root_name: str, changes: Sequence[str] | None = None
+) -> Json | None:
     """Take the reading the root declares, before an apply.
 
     Returns:
-        None when the root declares none; else the reading (`read` with its stdout, or
-        `cannot-run` with why), so the caller can refuse an apply it could not judge.
+        None when the root declares none or its `when` does not apply to this plan (W1943);
+        else the reading (`read` with its stdout, or `cannot-run` with why), so the caller can
+        refuse an apply it could not judge.
 
     """
     entry = declared_witness(config, root_name)
     if isinstance(entry, str) or "none" in entry or "reading" not in entry:
         return None
-    return planreading.take(tools, config.root, as_object(entry["reading"]))
+    spec = as_object(entry["reading"])
+    if not planreading.applies(spec, changes):
+        return None
+    return planreading.take(tools, config.root, spec)
 
 
 def run_witness(
@@ -93,7 +100,8 @@ def run_witness(
     """Run the root's declared post-apply witness.
 
     `prior` is the reading taken before the apply and the apply's start, used only by a root
-    that declares a reading.
+    that declares a reading, and whose `changes` decide whether a reading's `when` applies
+    (W1943).
 
     Returns:
         the result: status `pass` (exit 0), `fail` (non-zero, or a reading that did not advance
@@ -127,6 +135,8 @@ def run_witness(
         "stderr_tail": tail_lines(proc.stderr or ""),
     }
     spec = as_object(entry["reading"]) if "reading" in entry else None
+    if spec is not None and not planreading.applies(spec, (prior or planreading.Prior()).changes):
+        spec = None
     return planreading.verdict(tools, config.root, spec, prior or planreading.Prior(), result)
 
 

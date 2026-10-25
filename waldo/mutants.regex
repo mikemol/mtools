@@ -188,4 +188,7 @@ src/mikemol/waldo/planinterlock.py|messages-unsorted|    return sorted\(str\(m\)
 src/mikemol/waldo/planinterlock.py|deferred-gate-reads-met|        "met": messages == \[\],|        "met": messages is not None,|def=ledger_field
 src/mikemol/waldo/planinterlock.py|facts-echoed-into-the-ledger|        "facts_sha256": digest,|        "facts_sha256": json.dumps(facts),|def=ledger_field
 src/mikemol/waldo/planplan.py|digest-recorded-without-declarations|"policy_sha256": policy_digest\(config, declarations\),|"policy_sha256": policy_digest(config),|def=record_verdict
+src/mikemol/waldo/planreading.py|when-ignored|    if changes is None or not isinstance\(when, dict\):|    if True:|def=applies
+src/mikemol/waldo/planreading.py|when-always-applies|    return not touches or any\(change in touches for change in changes\)|    return True|def=applies
+src/mikemol/waldo/planflow.py|addresses-keep-the-action|    addresses = tuple\(change\.rpartition\(":"\)\[0\] or change for change in changes\)|    addresses = tuple(changes)|def=confirm_and_apply
 src/mikemol/waldo/planflow.py|declarations-not-recorded|\(code, deny, withheld\), extra, seams\.declarations\)|(code, deny, withheld), extra)|def=judge

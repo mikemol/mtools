@@ -291,6 +291,29 @@ def test_a_reading_that_did_not_advance_fails_a_witness_whose_exit_was_zero(
     assert "did not advance" in world.text()
 
 
+def test_a_reading_with_a_when_is_taken_only_for_a_plan_that_touches_its_addresses(
+    tmp_path: Path,
+) -> None:
+    """W1943: a no-advance on an apply that leaves the reading's resources alone is no failure."""
+    still = [_reading_json("aaa"), _reading_json("aaa")]
+    (tmp_path / "other").mkdir()
+    (tmp_path / "touched").mkdir()
+    other = _world(tmp_path / "other", _Host(readings=list(still)))
+    other.declare_witness(
+        {"tool": "probe", "reading": {**_READING, "when": {"plan_touches": ["module.none"]}}}
+    )
+    other.judge()
+    assert other.apply() == planflow.EXIT_OK
+    assert "did not advance" not in other.text()
+    touched = _world(tmp_path / "touched", _Host(readings=list(still)))
+    touched.declare_witness(
+        {"tool": "probe", "reading": {**_READING, "when": {"plan_touches": ["a.x"]}}}
+    )
+    touched.judge()
+    assert touched.apply() == planflow.EXIT_WITNESS
+    assert "did not advance" in touched.text()
+
+
 def test_a_reading_that_cannot_be_taken_before_the_apply_stops_it(tmp_path: Path) -> None:
     """No reading, no apply: the witness could not be judged afterwards, so nothing is applied."""
     world = _world(tmp_path)

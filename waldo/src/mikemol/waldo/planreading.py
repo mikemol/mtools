@@ -19,6 +19,7 @@ each a failure with the reason.
 """
 
 import json
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -127,12 +128,37 @@ def judge(spec: Json, before: Json | None, after: Json, started: str) -> str | N
     return stuck or (_stale(spec, after, started) if "fresh_since" in spec else None)
 
 
+def applies(spec: Json, changes: Sequence[str] | None) -> bool:
+    """Say whether a reading applies to a plan (W1943).
+
+    ⚑ A READING MAY NAME THE PLAN IT IS ABOUT. `when: {plan_touches: [addresses]}` makes it apply
+    only to an apply whose plan carries one of those resource addresses: a digest that moves only
+    when the alert rules change would otherwise refuse every apply that leaves them alone
+    (luthen-observability:W1550, the forgejo-runner roll). Skipping is neither a failure nor a
+    proof: the reading is simply not taken, before or after.
+
+    Returns:
+        True when the spec has no usable `when`, when the plan's addresses are unknown (None),
+        or when any address in the plan is one the condition names.
+
+    """
+    when = spec.get("when")
+    if changes is None or not isinstance(when, dict):
+        return True
+    touches = [str(a) for a in as_list(as_object(when).get("plan_touches", []))]
+    return not touches or any(change in touches for change in changes)
+
+
 @dataclass(frozen=True)
 class Prior:
-    """What was true before the apply: the reading taken then, and the moment the apply began."""
+    """What was true before the apply: the reading taken then, the moment it began, and the plan.
+
+    `changes` are the plan's resource addresses (None when unknown), for a reading's `when`.
+    """
 
     reading: Json | None = None
     started: str = ""
+    changes: tuple[str, ...] | None = None
 
 
 def verdict(tools: Tools, cwd: Path, spec: Json | None, prior: Prior, result: Json) -> Json:

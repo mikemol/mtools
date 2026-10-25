@@ -3710,3 +3710,5 @@
 2026-10-25T02:53:29Z  status W1928 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T03:16:30Z  status W1941 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T03:17:50Z  interrupt W1943 minted    -         "A witness reading takes an optional when condition, plan_touches, so it applies only when the plan carries those resource addresses"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1550
+2026-10-25T03:19:47Z  status W1942 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T03:48:38Z  status W1942 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

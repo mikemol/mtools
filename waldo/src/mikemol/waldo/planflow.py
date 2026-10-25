@@ -314,11 +314,13 @@ def confirm_and_apply(
     stopped = None if assume_yes else _confirmed(seams)
     if stopped is not None:
         return stopped
-    before = take_reading(seams.tools, seams.config, root.name)
+    changes = [str(c) for c in list_at(doc, "changes")]
+    addresses = tuple(change.rpartition(":")[0] or change for change in changes)
+    before = take_reading(seams.tools, seams.config, root.name, addresses)
     if before is not None and before.get("status") != READ:
         seams.out(f"opa_plan --apply: not applied -- {before.get('why')}\n")
         return seams.exits.withheld
-    prior = Prior(before, seams.now())
+    prior = Prior(before, seams.now(), addresses)
     with seams.guard():
         done = seams.tools.run(tofu, f"-chdir={root}", "apply", "-no-color", str(planfile))
         seams.out(done.stdout + done.stderr)

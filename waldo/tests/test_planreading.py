@@ -161,3 +161,21 @@ def test_the_verdict_folds_a_reading_into_the_result_and_never_softens_a_failure
     assert planreading.verdict(tools, Path(), spec, same, already)["status"] == "fail"
     unrun = planreading.verdict(_Tools(code=1), Path(), spec, same, passed)
     assert unrun["status"] == planreading.CANNOT_RUN
+
+
+_RULES = 'module.vm_alert.kubernetes_config_map_v1.vmalert_rules["vmalert"]'
+_WHEN: Json = {**_SPEC, "when": {"plan_touches": [_RULES]}}
+
+
+def test_a_reading_with_a_when_applies_only_to_a_plan_that_touches_its_addresses() -> None:
+    """W1943: an apply that leaves the alert rules alone is not read, so it is not false-refused."""
+    assert planreading.applies(_WHEN, [_RULES, "module.other.thing"])
+    assert not planreading.applies(_WHEN, ["module.forgejo_runner.deployment"])
+    assert not planreading.applies(_WHEN, [])
+
+
+def test_a_reading_without_a_when_or_for_an_unknown_plan_always_applies() -> None:
+    """No condition, or a plan whose addresses are not known, keeps the reading as it was."""
+    assert planreading.applies(_SPEC, ["anything"])
+    assert planreading.applies(_WHEN, None)
+    assert planreading.applies({**_SPEC, "when": {"plan_touches": []}}, ["anything"])
