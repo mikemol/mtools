@@ -743,6 +743,19 @@ done
 run_checked "every warrant check names a test that exists, and every test is named" \
   "$root/count_test_functions.py" --pairing "${_pairing[@]}"
 
+# ⚑⚑ A STAGED QUEUE FILE MAY NOT LOSE WHAT HEAD HAD (W1930, W1464; operator, host transcript 695f3e0a
+# lines 94277 and 94310). A queue committed from a stale copy reverts the cards other work finished
+# since (the blob overwrite of W1463): a card done at HEAD that is not done now, a card in residue
+# that left it, evidence that got shorter with no redaction. The writer compares the two documents
+# (`--regressions`); this hands it HEAD's copy. A repository whose HEAD has no queue file has
+# nothing to lose. NO WAIVER: reopening a finished card on purpose is done by dropping it and
+# minting a new one, as the writer's own refusals say.
+_head_queue="$_witness_logs/head-paths-forward.json"
+if git -C "$root" show "HEAD:.claude/paths-forward.json" >"$_head_queue" 2>/dev/null; then
+  run_checked "the staged queue loses no finished card or evidence that HEAD had" \
+    "$tools/pathsforward/.venv/bin/mikemol-paths-forward" --state "$staged/.claude/paths-forward.json" --regressions "$_head_queue"
+fi
+
 # ⚑⚑⚑ THE HERMETIC SUITE IS THE ONE THAT PROVES THE DEPENDENCIES ARE DECLARED. The host runs
 # above use each distribution's own `.venv`, which can satisfy an import nobody declared — a
 # green suite there says nothing about whether a consumer installing the wheel gets a working
