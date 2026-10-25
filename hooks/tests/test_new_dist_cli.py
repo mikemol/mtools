@@ -64,7 +64,7 @@ def test_a_refusal_leaves_the_tree_untouched(tmp_path: Path) -> None:
     before = _snapshot(tmp_path)
     assert _run(tmp_path, "Bad", "d") == new_dist_cli.EXIT_REFUSED
     assert _run(tmp_path, "pathwalk", "d") == new_dist_cli.EXIT_REFUSED
-    assert _run(tmp_path, "only") == new_dist_cli.EXIT_REFUSED
+    assert _run(tmp_path, "only") == new_dist_cli.EXIT_USAGE
     assert _snapshot(tmp_path) == before
     (tmp_path / "pathwalk" / "paper.toml").unlink()
     gone = _snapshot(tmp_path)

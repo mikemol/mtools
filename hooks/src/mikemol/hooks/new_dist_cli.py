@@ -14,7 +14,10 @@ from pathlib import Path
 
 from mikemol.hooks import new_dist
 
-EXIT_REFUSED = 2
+# ⚑ W1954: THE FLEET'S EXIT TABLE (corpus/exit-table.json) NAMES 2 USAGE AND 4 REFUSE. This
+# tool returned 2 for BOTH a bad command line and a refusal by name; the two are now apart.
+EXIT_USAGE = 2
+EXIT_REFUSED = 4
 _OPERANDS = 2
 _WITH_ROOT = 2
 
@@ -64,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     """Scaffold a distribution; refuse by name and write nothing on a bad input.
 
     Returns:
-        0 on success, 2 on a refusal.
+        0 on success, 2 on a bad command line, 4 on a refusal.
 
     """
     rest = list(sys.argv[1:] if argv is None else argv)
@@ -76,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
         rest = rest[2:]
     if len(rest) != _OPERANDS:
         sys.stderr.write("usage: mikemol-new-dist [--root DIR] [--no-lock] NAME DESCRIPTION\n")
-        return EXIT_REFUSED
+        return EXIT_USAGE
     try:
         steps = scaffold(root, rest[0], rest[1], lock=lock)
     except ValueError as fault:
