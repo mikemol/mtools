@@ -15331,3 +15331,53 @@
   claim  = {The subject becomes the real relative path, run from the mirror, wrapped in env.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mypy_mirror.py -k test_judged_runs_a_new_file_from_the_mirror_with_mypypath_in_front},
 }
+
+@misc{hooks-watchdog-band-is-fifteen-to-twenty-minutes,
+  section = {heartbeat},
+  title  = {The operator's 2026-10-25 ruling (host line 98969): the window is 900 to 1200 seconds},
+  claim  = {The operator's 2026-10-25 ruling (host line 98969): the window is 900 to 1200 seconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_band_is_fifteen_to_twenty_minutes},
+}
+
+@misc{hooks-watchdog-chosen-window-reaches-the-clamp,
+  section = {heartbeat},
+  title  = {The band given to silence_limit_s replaces the default at both edges and with no history},
+  claim  = {The band given to silence_limit_s replaces the default at both edges and with no
+            history.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_chosen_window_reaches_the_clamp},
+}
+
+@misc{hooks-watchdog-window-is-a-flag-else-the-environment-else-the-default,
+  section = {heartbeat},
+  title  = {Flags win over the environment, which wins over the built-in 15 to 20 minutes},
+  claim  = {Flags win over the environment, which wins over the built-in 15 to 20 minutes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_window_is_a_flag_else_the_environment_else_the_default},
+}
+
+@misc{hooks-watchdog-window-that-is-not-a-window-is-refused,
+  section = {heartbeat},
+  title  = {Zero, negative, reversed, not a number, and not-a-number all raise instead of clamping},
+  claim  = {Zero, negative, reversed, not a number, and not-a-number all raise instead of clamping.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_window_that_is_not_a_window_is_refused},
+}
+
+@misc{hooks-watchdog-bad-window-on-the-command-line-stops-the-watchdog-before-it-starts,
+  section = {heartbeat},
+  title  = {A reversed window exits EXIT_CANNOT_RUN naming the window, and claims no pid file},
+  claim  = {A reversed window exits EXIT_CANNOT_RUN naming the window, and claims no pid file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_a_bad_window_on_the_command_line_stops_the_watchdog_before_it_starts},
+}
+
+@misc{hooks-round-wire-working-card-a-live-submission-names-is-in-progress-not-outside,
+  section = {round_wire},
+  title  = {Cited by a queued or gating stack: exempt; a mark on no stack stays outside},
+  claim  = {Cited by a queued or gating stack: exempt; a mark on no stack stays outside.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_working_card_a_live_submission_names_is_in_progress_not_outside},
+}
+
+@misc{hooks-round-wire-only-live-entries-of-the-queue-map-exempt-a-card,
+  section = {round_wire},
+  title  = {The running test is live; a pid with no process, and a recycled one, are not},
+  claim  = {The running test is live; a pid with no process, and a recycled one, are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_only_live_entries_of_the_queue_map_exempt_a_card},
+}

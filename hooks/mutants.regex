@@ -388,8 +388,8 @@ src/mikemol/hooks/commit_kata.py|submit-leaves-no-beat|        beat\(ledger\)|  
 src/mikemol/hooks/commit_kata.py|beat-in-the-wrong-dir|_try_beat\(ledger\.parent, |_try_beat(ledger, |def=beat
 src/mikemol/hooks/scratch_cli.py|scratch-beats-on-a-git-refusal|    if code == 0:|    if True:|def=beat
 src/mikemol/hooks/scratch_cli.py|scratch-beat-skipped|        try_beat\(Path\(text\.strip\(\)\), BEAT_TOOL, time\.time_ns\(\)\)|        pass|def=beat
-src/mikemol/hooks/watchdog.py|no-history-wakes-early|        return MAX_FIRE_S|        return MIN_FIRE_S|def=silence_limit_s
-src/mikemol/hooks/watchdog.py|limit-not-clamped|return min\(max\(phi_fire \* mean \* math\.log\(10\), MIN_FIRE_S\), MAX_FIRE_S\)|return phi_fire * mean * math.log(10)|def=silence_limit_s
+src/mikemol/hooks/watchdog.py|no-history-wakes-early|        return band\[1\]|        return band[0]|def=silence_limit_s
+src/mikemol/hooks/watchdog.py|limit-not-clamped|return min\(max\(phi_fire \* mean \* math\.log\(10\), band\[0\]\), band\[1\]\)|return phi_fire * mean * math.log(10)|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|asks-inside-the-limit|waiting = ready\(\) if silent_s >= bound_s else None|waiting = ready()|def=watch
 src/mikemol/hooks/watchdog.py|blocked-session-sleeps-through-the-window|        if waiting is not None:|        if waiting:|def=watch
 src/mikemol/hooks/watchdog.py|unreadable-count-read-as-a-number|return int\(said\) if done\.returncode == 0 and said\.isdecimal\(\) else None|return int(said) if done.returncode == 0 else None|def=ready_from
@@ -668,8 +668,15 @@ src/mikemol/hooks/mypy_mirror.py|existing-file-mirrored|    if real\.exists\(\) 
 src/mikemol/hooks/mypy_mirror.py|init-added-where-the-project-has-none|            if \(here / "__init__\.py"\)\.is_file\(\):|            if True:|def=mirrored
 src/mikemol/hooks/mypy_mirror.py|existing-file-judged-through-a-mirror|    if config is None or not needed\(path, config\):|    if config is None:|def=judged
 src/mikemol/hooks/round_wire.py|stale-round-still-judged|    if stamp is None or now - stamp > STALE:|    if stamp is None:|def=refusals
-src/mikemol/hooks/round_wire.py|working-read-as-ready|_symbols\(queue, "ready"\), _symbols\(queue, "working"\)|_symbols(queue, "ready"), _symbols(queue, "ready")|def=refusals
-src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now\)|    found = refusals(queue, text, "", now)|def=round_reason
+src/mikemol/hooks/round_wire.py|working-read-as-ready|for symbol in _symbols\(queue, "working"\)|for symbol in _symbols(queue, "ready")|def=refusals
+src/mikemol/hooks/watchdog.py|ceiling-ignores-the-chosen-window|        return band\[1\]|        return MAX_FIRE_S|def=silence_limit_s
+src/mikemol/hooks/watchdog.py|floor-ignores-the-chosen-window|, band\[0\]\), band\[1\]\)|, MIN_FIRE_S), band[1])|def=silence_limit_s
+src/mikemol/hooks/watchdog.py|environment-beats-the-flag|low if low is not None else environ\.get\(MIN_ENV, MIN_FIRE_S\)|environ.get(MIN_ENV, MIN_FIRE_S)|def=read_band
+src/mikemol/hooks/watchdog.py|reversed-window-accepted|    if not 0 < floor <= ceiling:|    if not 0 < floor:|def=read_band
+src/mikemol/hooks/watchdog.py|bad-window-not-refused-at-start|    except ValueError as caught:|    except KeyError as caught:|def=main
+src/mikemol/hooks/round_wire.py|queued-card-still-outside| if symbol not in cited\]|]|def=refusals
+src/mikemol/hooks/round_wire.py|submission-map-ignored|directory\.name, now, in_gate\(directory\)\)|directory.name, now, frozenset())|def=round_reason
+src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now,|    found = refusals(queue, text, "", now,|def=round_reason
 src/mikemol/hooks/queuecarry.py|named-queue-file-carried-again|    added = \[p for p in sorted\(QUEUE_FILES\) if p not in named and _differs\(root, p, run\)\]|    added = [p for p in sorted(QUEUE_FILES) if _differs(root, p, run)]|def=carry
 src/mikemol/hooks/queuecarry.py|git-failure-read-as-difference|    return done\.returncode == 0 and bool\(done\.stdout\.strip\(\)\)|    return bool(done.stdout.strip()) or done.returncode != 0|def=_differs
 src/mikemol/hooks/launcher.py|wheel-launcher-noticed|    if wheel_installed\(prefix\):|    if False:|def=notice

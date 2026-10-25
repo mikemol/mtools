@@ -27,12 +27,14 @@ import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+from mikemol.hooks.commit_counts import live
 from mikemol.hooks.payload import as_record, text_of
 from mikemol.hooks.round_check import composition, round_symbols
 from mikemol.hooks.stamps import parse_time
 
 STALE = timedelta(hours=3)
 ENV = "MIKEMOL_ROUND_FILE"
+_COUNTS = ".git/mtools/commit.counts"
 _QUEUE = ".claude/paths-forward.json"
 _AS_OF = re.compile(r'"as_of"\s*:\s*"([^"]+)"')
 
@@ -68,20 +70,36 @@ def _symbols(queue: object, status: str) -> list[str]:
     return [text_of(card.get("symbol")) for card in cards if card.get("status") == status]
 
 
-def refusals(queue: object, text: str, repo: str, now: datetime) -> list[str]:
+def in_gate(directory: Path) -> frozenset[str]:
+    """Name the cards a live submission of `directory` cites.
+
+    ⚑ A CARD A QUEUED OR GATING STACK NAMES IS IN PROGRESS BY CONSTRUCTION (github-8f, W2000),
+    and the commit queue knows it: an entry counts only while its pid and start time both match,
+    so a dead stack's leftovers exempt nothing. A mark made just to quiet the hook is on no
+    stack, so it stays outside.
+
+    Returns:
+        the waypoints of every live entry; empty when there is no queue map.
+
+    """
+    return frozenset(w for row in live(directory / _COUNTS) for w in row.waypoints)
+
+
+def refusals(
+    queue: object, text: str, repo: str, now: datetime, cited: frozenset[str] = frozenset()
+) -> list[str]:
     """Judge a queue against a round file's text.
 
     Returns:
-        the refusals of `composition`; empty when the round is stale, unstamped or has no rows
-        for `repo`.
+        the refusals of `composition`, a working card named in `cited` not counted as outside;
+        empty when the round is stale, unstamped or has no rows for `repo`.
 
     """
     stamp = published_at(text)
     if stamp is None or now - stamp > STALE:
         return []
-    return composition(
-        round_symbols(text, repo), _symbols(queue, "ready"), _symbols(queue, "working")
-    )
+    doing = [symbol for symbol in _symbols(queue, "working") if symbol not in cited]
+    return composition(round_symbols(text, repo), _symbols(queue, "ready"), doing)
 
 
 def round_reason(directory: Path, now: datetime, round_file: Path | None = None) -> str | None:
@@ -97,7 +115,7 @@ def round_reason(directory: Path, now: datetime, round_file: Path | None = None)
         queue: object = json.loads((directory / _QUEUE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
-    found = refusals(queue, text, directory.name, now)
+    found = refusals(queue, text, directory.name, now, in_gate(directory))
     return " | ".join(found) if found else None
 
 

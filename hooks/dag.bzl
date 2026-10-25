@@ -610,6 +610,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/round_wire.py": {
       "imports": [
+        "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/round_check.py",
         "src/mikemol/hooks/stamps.py"
@@ -2048,6 +2049,7 @@ GRAPH = {
     },
     "tests/test_round_wire.py": {
       "imports": [
+        "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/round_wire.py"
       ],
       "reads": []

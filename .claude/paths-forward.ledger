@@ -3923,3 +3923,8 @@
 2026-10-25T18:10:02Z  status W2000 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T18:10:02Z  status W2001 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T18:10:06Z  interrupt W2002 minted    -         "Reconcile pass moves a dead submission's stale items.json aside with a tombstone (key, pid, why judged dead)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2000
+2026-10-25T18:19:45Z  status W1986 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:19:47Z  interrupt W2003 minted    -         "The uncertain-row count ships as a metric series beside mikemol.commitments.open"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1986
+2026-10-25T18:38:44Z  interrupt W2004 minted    -         "The watchdog's fire window is a setting (flags, environment, default 15 to 20 minutes), not a constant"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W52
+2026-10-25T18:39:38Z  status W1667 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:39:50Z  status W1667 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

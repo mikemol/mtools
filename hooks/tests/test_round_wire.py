@@ -5,10 +5,12 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import round_wire
+from mikemol.hooks.commit_counts import proc_start
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -16,6 +18,7 @@ if TYPE_CHECKING:
     import pytest
 
 _NOW = datetime(2026, 10, 25, 9, 0, tzinfo=UTC)
+_NO_PID = 4_000_000
 _ROUND = (
     '{"as_of": "2026-10-25T08:00:00Z", "rows": [\n'
     '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "5"},\n'
@@ -48,6 +51,35 @@ def test_another_repository_and_a_round_wholly_inside_refuse_nothing() -> None:
     """Rows of another repository are not this one's; working only round cards is admitted."""
     assert round_wire.refusals(_queue(W1="ready", W7="working"), _ROUND, "elsewhere", _NOW) == []
     assert round_wire.refusals(_queue(W1="ready", W2="working"), _ROUND, "mtools", _NOW) == []
+
+
+def test_a_working_card_a_live_submission_names_is_in_progress_not_outside() -> None:
+    """Cited by a queued or gating stack: exempt; a mark on no stack stays outside."""
+    queue = _queue(W1="ready", W7="working", W8="working")
+    found = round_wire.refusals(queue, _ROUND, "mtools", _NOW, frozenset({"W7"}))
+    assert len(found) == 1
+    assert "W8" in found[0]
+    assert "W7" not in found[0]
+    cited = frozenset({"W7", "W8"})
+    assert round_wire.refusals(queue, _ROUND, "mtools", _NOW, cited) == []
+
+
+def test_only_live_entries_of_the_queue_map_exempt_a_card(tmp_path: Path) -> None:
+    """The running test is live; a pid with no process, and a recycled one, are not."""
+    mapdir = tmp_path / ".git" / "mtools"
+    mapdir.mkdir(parents=True)
+    alive = {
+        "state": "queued",
+        "pid": os.getpid(),
+        "start": proc_start(os.getpid()),
+        "waypoints": ["W7"],
+    }
+    dead = {"state": "queued", "pid": _NO_PID, "start": "1", "waypoints": ["W8"]}
+    recycled = {"state": "queued", "pid": os.getpid(), "start": "0", "waypoints": ["W9"]}
+    body = {"1": alive, "2": dead, "3": recycled}
+    (mapdir / "commit.counts").write_text(json.dumps(body), encoding="utf-8")
+    assert round_wire.in_gate(tmp_path) == frozenset({"W7"})
+    assert round_wire.in_gate(tmp_path / "elsewhere") == frozenset()
 
 
 def test_the_reason_reads_both_files_and_a_missing_one_gives_none(tmp_path: Path) -> None:

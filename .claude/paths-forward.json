@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2002,
+  "counter": 2004,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -35831,17 +35831,19 @@
     {
       "symbol": "W1667",
       "title": "Give a manifest to each unmanifested card W1592 released, in rank order, returning each to ready as it gains one",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Manifests still owed to W1857, W1863, W1914, W1915, W1917: read each card's code or block it on what it waits for. I still need those five manifests, W1667",
+      "blocked_on": [
+        "W1914"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "W1857 and W1863 are done (no manifest needed). Left: W1914, W1915, W1917, each a hook-or-gate home for a failure class with no code to name until the home is designed (W1910 umbrella). Give them manifests when the design names the files. I still need those three manifests, W1667",
       "evidence": "2026-10-25: 2026-10-25: manifests given (read from the code, paths checked to exist or named as new modules) to W1935, W1936, W1934, W1875; the 19 ready cards without one drop to 15 | 2026-10-25: 2026-10-25: manifests also given to W1692 and W1823 to W1825 (new test files declared as planned; the root BUILD.bazel holds the witness targets, domain_witness.sh the victim of W1692) | 2026-10-25: 2026-10-25: manifests also given to W1803, W1880 and W1736 (W1736 and W1803 wait on accumulated DATA, noted on each); the ready cards without a manifest are now W1857, W1863, W1914, W1915, W1917",
       "issued_at": "2026-10-19T05:58:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T17:07:06Z",
+      "last_worked": "2026-10-25T18:39:50Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44199,7 +44201,7 @@
     {
       "symbol": "W1986",
       "title": "mikemol-transcriptstruct --resolve ROWS --queue QUEUE --repo NAME resolves Commitment-shaped rows from a file into the ledger document, one row per uuid and line",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "github:W44"
       ],
@@ -44208,12 +44210,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Build now (transcriptstruct is not in any queued stack): commitrows.py reads the agreed rows (typed fields, repo filter, dedupe by uuid and line keeping the first and all families), commitledger carries uncertain and families on the row and excludes uncertain rows from the counted tally, the CLI mode takes the rows file as its positional with --resolve --queue --repo; tests; then run the real file against mtools' queue and report what resolves. I still need all of it, W1986",
-      "evidence": "2026-10-25: 2026-10-25 amr-skills (W381 to W383), for github:W44, agreed with github-8f: they emit JSON lines in the Commitment shape (line, uuid, session, repo, family, text, names, at) from an AMR classifier over a rolling window of transcripts (7 days about 52,000 sentences, about 10,500 past a lexical gate), their own family labels (amr-commitment, amr-gc), text staying on their machine, and ask for a mode that resolves rows this tool did not extract so both sources go through one resolver and one ledger, a row both find (same uuid and line) counting once. Privacy: nothing AMR-derived reaches the ledger; uncertain rows are flagged, never sent to a person or an agent (no LLM in the loop) | 2026-10-25: 2026-10-25 amr-skills delivered the first rows file for this card (path on this machine only, in their scratchpad): 1,061 rows from 7 days of assistant utterances across the projects (9,985 distinct gated sentences, one row per place said), keys line, uuid, session, repo, family, text (EMPTY on every row, by design), names, at, uncertain (bool), provenance (model, first 16 hex of the weights digest, dtype, beams, max length, classifier version: a change to any is a declared re-baseline, so rows of different provenance are different). Families amr-need 396, amr-not-yet 278, amr-should 39, amr-deferral 9, amr-uncertain 339; 472 rows uncertain, so about 589 firm; by repo nemik 341, luthen-observability 248, mtools 198, amr-skills 95, home-mikemol-github 72, el-openglo 67, estate 23, linux-sources 16, life 1; 503 name at least one card or file. Precision unknown to them (19 of my 26 phrase hits found, 3 flagged uncertain, about 33 they find that my phrases do not). Contract for the mode: carry text through as the empty string, never fill it; rows are per repo (own --queue and --repo)",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25 amr-skills (W381 to W383), for github:W44, agreed with github-8f: they emit JSON lines in the Commitment shape (line, uuid, session, repo, family, text, names, at) from an AMR classifier over a rolling window of transcripts (7 days about 52,000 sentences, about 10,500 past a lexical gate), their own family labels (amr-commitment, amr-gc), text staying on their machine, and ask for a mode that resolves rows this tool did not extract so both sources go through one resolver and one ledger, a row both find (same uuid and line) counting once. Privacy: nothing AMR-derived reaches the ledger; uncertain rows are flagged, never sent to a person or an agent (no LLM in the loop) | 2026-10-25: 2026-10-25 amr-skills delivered the first rows file for this card (path on this machine only, in their scratchpad): 1,061 rows from 7 days of assistant utterances across the projects (9,985 distinct gated sentences, one row per place said), keys line, uuid, session, repo, family, text (EMPTY on every row, by design), names, at, uncertain (bool), provenance (model, first 16 hex of the weights digest, dtype, beams, max length, classifier version: a change to any is a declared re-baseline, so rows of different provenance are different). Families amr-need 396, amr-not-yet 278, amr-should 39, amr-deferral 9, amr-uncertain 339; 472 rows uncertain, so about 589 firm; by repo nemik 341, luthen-observability 248, mtools 198, amr-skills 95, home-mikemol-github 72, el-openglo 67, estate 23, linux-sources 16, life 1; 503 name at least one card or file. Precision unknown to them (19 of my 26 phrase hits found, 3 flagged uncertain, about 33 they find that my phrases do not). Contract for the mode: carry text through as the empty string, never fill it; rows are per repo (own --queue and --repo) | 2026-10-25: landed a84163cd",
       "issued_at": "2026-10-25T14:45:14Z",
       "minted_during": "interrupt",
       "caused_by": "amr-skills",
-      "last_worked": "2026-10-25T17:59:38Z",
+      "last_worked": "2026-10-25T18:19:45Z",
       "ticks_blocked": 0,
       "manifest": [
         "transcriptstruct/src/mikemol/transcriptstruct/cli.py",
@@ -44222,7 +44224,7 @@
         "transcriptstruct/tests/test_commitledger.py"
       ],
       "size_class": "medium",
-      "completed": null
+      "completed": "20261025T181945Z"
     },
     {
       "symbol": "W1988",
@@ -44526,6 +44528,38 @@
       "issued_at": "2026-10-25T18:10:06Z",
       "minted_during": "interrupt",
       "caused_by": "W2000",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2003",
+      "title": "The uncertain-row count ships as a metric series beside mikemol.commitments.open",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "commitledger.uncertain_count(rows) exists (a84163cd) and prints in the --resolve tally; commitments_emit sends open{repo,layer} and said{repo} only. Add the uncertain count (own name, repo label) with a description and freshness class on the W1961 contract.",
+      "evidence": "",
+      "issued_at": "2026-10-25T18:19:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1986",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2004",
+      "title": "The watchdog's fire window is a setting (flags, environment, default 15 to 20 minutes), not a constant",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Operator 98969 (15-20m) and 99058 (configurable, not hardcoded); both verified. Built: read_band, --min-fire-s/--max-fire-s, MIKEMOL_WATCHDOG_MIN_FIRE_S/MAX_FIRE_S, defaults 900/1200; 4 tests, 5 mutants. Stack, land, then tell github-8f the sha.",
+      "evidence": "",
+      "issued_at": "2026-10-25T18:38:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W52",
       "last_worked": null,
       "ticks_blocked": 0
     }
