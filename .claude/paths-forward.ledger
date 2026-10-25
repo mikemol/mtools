@@ -3962,3 +3962,12 @@
 2026-10-25T20:52:09Z  interrupt W2013 minted    -         "importdag emits one input-mutant target per test and removable edge, wrapped to pass only on failure"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2012
 2026-10-25T20:52:09Z  interrupt W2014 minted    -         "A gate target runs the input-mutant generator's --check so the mutant BUILD files cannot go stale"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2012
 2026-10-25T20:52:09Z  interrupt W2015 minted    -         "The graph-built hooks tests are the first input-mutation consumer, survivors reported and required empty"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2012
+2026-10-25T21:03:52Z  status W1990 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T21:04:01Z  interrupt W2016 minted    -         "Witness the split at the gate: after every hooks test is on its closure, one out-of-cone edit shows the gate's hit count"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1990
+2026-10-25T21:04:40Z  status W1988 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T21:04:42Z  status W1933 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T21:05:21Z  interrupt W2017 minted    -         "mikemol-ratchet-hook resolves --dir to an absolute path and refuses an empty repo name loudly"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T21:05:23Z  interrupt W2018 minted    -         "The ratchet emit's sent= counts what was sent, so 0 ratchets cannot read as success"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T21:05:24Z  interrupt W2019 minted    -         "Sweep: list every repo whose committed gate block passes a relative --dir to the ratchet hook"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-25T21:09:12Z  interrupt W2020 minted    -         "Narrow the four hooks tests that fail in closure mode by declaring what each reads"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1988
+2026-10-25T21:10:31Z  status W2010 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

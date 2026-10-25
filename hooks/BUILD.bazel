@@ -10,6 +10,7 @@ load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@hooks_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
+load(":closure.bzl", "deps_of", "lib", "test_deps")
 load(":dag.bzl", "GRAPH")
 
 exports_files([
@@ -49,14 +50,10 @@ py_library(
 # imports and not its wheels.
 [
     py_library(
-        name = "mod_" + path.removeprefix("src/mikemol/hooks/").removesuffix(".py").replace("/", "__"),
+        name = lib(path).removeprefix(":"),
         srcs = [path],
         imports = ["src"],
-        deps = [
-            ":mod_" + dep.removeprefix("src/mikemol/hooks/").removesuffix(".py").replace("/", "__")
-            for dep in entry["imports"]
-            if dep not in entry["typing_only"]
-        ] + [
+        deps = deps_of(entry) + [
             requirement("ruff"),
             requirement("mypy"),
         ],
@@ -84,17 +81,23 @@ _CPU_BUDGET_S = {
     "tests/test_import_cycles.py": 75,
 }
 
-# W1988: THE TESTS SWITCHED TO THEIR OWN IMPORT CLOSURE, ONE VERIFIED BATCH AT A TIME. A test listed
-# here depends on the per-module libraries of the modules it imports instead of on the dist-wide
-# `:hooks`, so a change to a module outside its cone no longer rebuilds it. A test whose run reads
-# or spawns a module it does not import (a subprocess, a data file) fails here in the sandbox, and
-# stays off the list until its reads are declared in reads.json.
-_CLOSURE_TESTS = ["tests/test_round_wire.py"]
-
-# ⚑ EVERY TEST LOADS `tests/conftest.py`, WHICH THE GRAPH DOES NOT HOLD: it imports `hosttied`, and a
-# closure test without it fails at collection (measured 2026-10-25). Named here until the generator
-# emits the conftest's own edges (W2010), when this list is read from the graph.
-_CONFTEST_DEPS = [":mod_hosttied"]
+# W1988: EVERY TEST DEPENDS ON ITS OWN IMPORT CLOSURE, GENERATED FROM THE GRAPH. A test takes the
+# per-module libraries of the modules it imports (minus the typing-only ones) and of what
+# `tests/conftest.py` imports (`GRAPH['support']`, W2010), so a change to a module outside its cone
+# does not rebuild it. The test list itself is the graph's, not a glob: a new test is a stale graph
+# (the git-ls-files check, W2011) until `--write` is run. A test whose run reads or spawns a module
+# it does not import fails in the sandbox, and its read is declared in reads.json, not widened here.
+# ⚑ FOUR TESTS READ FILES THEY DO NOT IMPORT, so their closure is too small (MEASURED 2026-10-25:
+# 238 of 242 pass on it). They stay on the dist-wide `:hooks` until each declares what it reads
+# (W2020): test_bar_fires reads module and launcher files by path, test_import_cycles sweeps every
+# module, test_probe spawns the scripts under hooks/bin, test_commit_lease_wait spawns a child that
+# imports what the test does not.
+_WHOLE_DIST_TESTS = [
+    "tests/test_bar_fires.py",
+    "tests/test_import_cycles.py",
+    "tests/test_probe.py",
+    "tests/test_commit_lease_wait.py",
+]
 
 _TEST_ENV = {
     "RUFF_BIN": "$(location @mikemol_check_ruff//:bin)",
@@ -107,7 +110,7 @@ _TEST_ENV = {
 [
     py_test(
         name = src.removeprefix("tests/").removesuffix(".py"),
-        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + glob(["tests/conftest.py"], allow_empty = True),
+        srcs = [src, "@mikemol_rules_py//:pytest_main.py"] + list(GRAPH["support"]),
         main = "@mikemol_rules_py//:pytest_main.py",
         args = [
             "$(location " + src + ")",
@@ -313,7 +316,7 @@ _TEST_ENV = {
             # ⚑ GLOBBED, because the population is *every test module in this distribution*
             # and a list would go stale the next time one is added — the reified population
             # this suite exists to refuse.
-        ] + glob(["tests/test_*.py"]),
+        ] + list(GRAPH["tests"]),
         env = dict(_TEST_ENV, MIKEMOL_TEST_CPU_S = str(_CPU_BUDGET_S[src])) if src in _CPU_BUDGET_S else _TEST_ENV,
 
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: bazel's default of `medium` reserves a timeout
@@ -327,11 +330,7 @@ _TEST_ENV = {
         # A module that spawns nested pytest gets `medium` (300 s). The operator's rule: no
         # wall-clock-sensitive tests.
         size = "medium" if (src in _SPAWNS_NESTED_PYTEST or src in _CPU_BUDGET_S) else "small",
-        deps = ([
-            ":mod_" + dep.removeprefix("src/mikemol/hooks/").removesuffix(".py").replace("/", "__")
-            for dep in GRAPH["tests"][src]["imports"]
-            if dep not in GRAPH["tests"][src]["typing_only"]
-        ] + _CONFTEST_DEPS if src in _CLOSURE_TESTS else [":hooks"]) + [
+        deps = (test_deps(GRAPH, GRAPH["tests"][src]) if src not in _WHOLE_DIST_TESTS else [":hooks"]) + [
             dev_requirement("pytest"),
             # ⚑ ruff IS A DEP SO `test_bar_fires` CAN RUN THE CHECKER IT ASSERTS ABOUT. It ships
             # as a Python package with a bundled binary, so declaring it here puts that binary in
@@ -340,7 +339,7 @@ _TEST_ENV = {
         ],
         imports = ["src"],
     )
-    for src in glob(["tests/test_*.py"])
+    for src in GRAPH["tests"]
 ]
 
 # W1503: THE COMMITTED IMPORT GRAPH CANNOT GO STALE. `graph.json` and `dag.bzl` list every module and
@@ -359,14 +358,7 @@ sh_test(
         "//importdag:graph",
         "dag.bzl",
         "graph.json",
-    ] + glob(
-        [
-            "src/mikemol/hooks/**/*.py",
-            "tests/test_*.py",
-            "reads.json",
-        ],
-        allow_empty = True,
-    ),
+    ] + list(GRAPH["modules"]) + list(GRAPH["tests"]) + list(GRAPH["support"]),
     size = "small",
 )
 

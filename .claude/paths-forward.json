@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2015,
+  "counter": 2020,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -42356,7 +42356,7 @@
     {
       "symbol": "W1933",
       "title": "Resolve a commitment row against durable follow-through, and keep the unresolved rows as a ledger and the metric commitments.open{repo}",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W44",
         "nemik:W1007",
@@ -42372,7 +42372,7 @@
       "issued_at": "2026-10-24T23:34:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T15:23:40Z",
+      "last_worked": "2026-10-25T21:04:42Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44043,8 +44043,7 @@
       "touches": [],
       "blocked_on": [
         "W1988",
-        "W1989",
-        "W1990"
+        "W1989"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Atomize into: (1) a generator that derives hooks' per-module library list and deps from importdag and writes them to a generated bzl file with a --check mode in the gate (like dagbzl); (2) hooks/BUILD.bazel builds one py_library per module from that file and each py_test depends on the closure of the modules it imports; (3) the mutants shards take as inputs the module they plant in plus the tests whose closure holds it; (4) the witness: a one-line change in one hooks module, the hit count of the next gate. I still need all four, W1982",
@@ -44233,19 +44232,19 @@
     {
       "symbol": "W1988",
       "title": "hooks/BUILD.bazel builds one library per module from the generated file and each test depends on the closure of its imports",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "First part submitted (stack-w1988): per-module libraries, _CLOSURE_TESTS = [test_round_wire], witness measured (unrelated edit cached, in-cone edit reran). Next: W2010 (conftest edges), then switch tests in verified batches. I still need those and W1989, W1988",
+      "next_bounded_step": "Second part submitted as stack-w1988b (generated switch of every test; four whole-dist tests listed with reasons, W2020). After landing: W2016 witness, W2011, W2012 input mutation, then W1989. I still need those, W1988",
       "evidence": "",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T20:35:14Z",
+      "last_worked": "2026-10-25T21:10:32Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44278,21 +44277,21 @@
     {
       "symbol": "W1990",
       "title": "Witness the split: a one-line change in one hooks module reruns only the targets whose closure holds it, shown by the gate's hit count",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1982"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Witness for the split: count the misses AND the staging seconds per miss (the 1.9 to 2.5 s floor as the baseline), and compare the sum of miss wall before and after on a one-line change. Start with W1989 (mutants cells with their cone), where 92 percent of the waste is. I still need the witness, W1990",
-      "evidence": "2026-10-25: 2026-10-25 MEASURED staging cost, as github-8f asked (nemik 3e796f2 W1035 reports about 50 s of runfile staging per one-test target): in the in-flight gate's build events the 234 hooks pytest targets that MISSED took 1.9 s at the fastest, a median of 4.9 s, p90 33.3 s, max 60.3 s, sum 3,081 s; the 20 fastest are 1.9 to 2.5 s, which is the floor for staging plus interpreter start on a tiny test. So the 50 s does NOT reproduce in hooks under today's one-target-per-test-file layout: staging is about 2 s per target. The pytest misses are 3,081 of the 39,110 s of hooks miss wall (8 percent); the other ~36,000 s are the 106 mutants SHARDS (about 340 s each). So the lever is the mutants cells (W1989), not splitting pytest targets further, and a per-test split costs about 2 s of staging per miss against the seconds a hit saves",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25 MEASURED staging cost, as github-8f asked (nemik 3e796f2 W1035 reports about 50 s of runfile staging per one-test target): in the in-flight gate's build events the 234 hooks pytest targets that MISSED took 1.9 s at the fastest, a median of 4.9 s, p90 33.3 s, max 60.3 s, sum 3,081 s; the 20 fastest are 1.9 to 2.5 s, which is the floor for staging plus interpreter start on a tiny test. So the 50 s does NOT reproduce in hooks under today's one-target-per-test-file layout: staging is about 2 s per target. The pytest misses are 3,081 of the 39,110 s of hooks miss wall (8 percent); the other ~36,000 s are the 106 mutants SHARDS (about 340 s each). So the lever is the mutants cells (W1989), not splitting pytest targets further, and a per-test split costs about 2 s of staging per miss against the seconds a hit saves | 2026-10-25: landed 81e9a6d7",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T17:10:20Z",
+      "last_worked": "2026-10-25T21:03:52Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261025T210352Z"
     },
     {
       "symbol": "W1991",
@@ -44655,21 +44654,19 @@
     {
       "symbol": "W2010",
       "title": "graph.json holds tests/conftest.py's imports so a closure test needs no hand-named dependency",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1988"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1988"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "BUILT in the tree, not submitted: importdag graph.py support section (tests/conftest.py edges), test, mutant (grid 94 killed 0 survived, REGEX 23 killed), warrant; hooks/graph.json and dag.bzl regenerated. HOLD for stack-w1988 (it freezes hooks/BUILD.bazel): //hooks:graph_fresh goes STALE until its data glob also stages tests/conftest.py (measured), so the BUILD edit rides in the SAME stack: graph_fresh data += tests/conftest.py, and every py_test's deps generated from GRAPH incl. GRAPH['support']['tests/conftest.py'] instead of the hand-named _CONFTEST_DEPS. Then verify by sampling (out-of-cone edit cached, in-cone edit reran), and find which tests fail in closure mode. I still need that stack, W2010",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Submitted as stack-w1988b (first entry). After it lands: mark done and tell github-8f; W2011 (git-ls-files presubmit check) follows. I still need the landing, W2010",
       "evidence": "",
       "issued_at": "2026-10-25T20:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "W1988",
-      "last_worked": "2026-10-25T20:39:47Z",
+      "last_worked": "2026-10-25T21:10:31Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44767,6 +44764,88 @@
       "issued_at": "2026-10-25T20:52:09Z",
       "minted_during": "interrupt",
       "caused_by": "W2012",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2016",
+      "title": "Witness the split at the gate: after every hooks test is on its closure, one out-of-cone edit shows the gate's hit count",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "W1990 was marked done on 81e9a6d7 for a single-test witness (test_round_wire cached on an out-of-cone edit, reran on an in-cone edit); that closed it too early, because its text asks for the gate's hit count over the split. This is the remainder: after the generated switch of all tests lands, make one out-of-cone one-line edit and one in-cone edit, read the gate's cached/executed counts for each, and compare the sum of miss wall with the baseline (the 1.9 to 2.5 s staging floor).",
+      "evidence": "",
+      "issued_at": "2026-10-25T21:04:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1990",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2017",
+      "title": "mikemol-ratchet-hook resolves --dir to an absolute path and refuses an empty repo name loudly",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25 (summit 355d22a, host W42/W47): --dir '.' names the repo by basename('.') = empty; the emit's parser drops the line and still prints sent=True; 0 ratchets with '.', 1 with the absolute path. Fix: resolve --dir absolute before naming the repo; an empty name exits nonzero naming the flag. Files: ratchet hook (ratchet_hook), ratchet census cli.",
+      "evidence": "",
+      "issued_at": "2026-10-25T21:05:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2018",
+      "title": "The ratchet emit's sent= counts what was sent, so 0 ratchets cannot read as success",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: '0 ratchet(s), sent=True' reads as success while nothing was published. sent must count the series actually sent, and a plan of zero ratchets for a repo that has declared ones exits nonzero. Files: hooks ratchet_emit.py.",
+      "evidence": "",
+      "issued_at": "2026-10-25T21:05:23Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2019",
+      "title": "Sweep: list every repo whose committed gate block passes a relative --dir to the ratchet hook",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: read each ~/github repo's committed gate block (the generated mikemol-ratchet-hook block) for --dir with a relative value; list the repos so their owners regenerate. Read-only sweep, with a positive control (summit 355d22a is the known instance).",
+      "evidence": "",
+      "issued_at": "2026-10-25T21:05:24Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2020",
+      "title": "Narrow the four hooks tests that fail in closure mode by declaring what each reads",
+      "status": "ready",
+      "enables": [
+        "W1988"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "MEASURED 2026-10-25, bazel test //hooks:all --test_lang_filters=py in closure mode: 238 of 242 pass; FAIL test_bar_fires (reads src/mikemol/hooks/structural_query.py and the hook launchers by path), test_import_cycles (sweeps every module: sees 1 of 50+), test_probe (spawns the hook scripts under hooks/bin; 6 FAIL lines), test_commit_lease_wait (a spawned child prints a Traceback). Each reads files it does not import. Interim: they stay on the dist-wide :hooks (a _WHOLE_DIST_TESTS list with these reasons). Narrow each by declaring its reads in reads.json (files it spawns or sweeps), then take it off the list; input mutation (W2012) verifies the declarations.",
+      "evidence": "",
+      "issued_at": "2026-10-25T21:09:12Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1988",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -45210,6 +45289,15 @@
       "taken_at": "2026-10-25T17:12:26Z",
       "renewed_at": "2026-10-25T17:12:26Z",
       "expires_at": "2026-10-25T17:42:26Z"
+    },
+    {
+      "tag": "file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1933",
+      "base_sha": "81e9a6d70dbc94b484c626d2f7467c00b9facf46",
+      "taken_at": "2026-10-25T21:04:42Z",
+      "renewed_at": "2026-10-25T21:04:42Z",
+      "expires_at": "2026-10-25T21:34:42Z"
     }
   ],
   "advice": [
