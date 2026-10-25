@@ -15,10 +15,19 @@ src/mikemol/importdag/resolve.py|eager-import-counted-deferred|eager\.update\(_s
 src/mikemol/importdag/resolve.py|deferred-import-counted-eager|deferred\.update\(_statement_references\(inner\)\)|eager.update(_statement_references(inner))|def=_sort
 src/mikemol/importdag/resolve.py|halves-swapped|Split\(frozenset\(eager\), frozenset\(deferred\)\)|Split(frozenset(deferred), frozenset(eager))|def=split
 src/mikemol/importdag/resolve.py|import-level-invented|Reference\(0, alias\.name\) for alias in node\.names\}$|Reference(1, alias.name) for alias in node.names}|def=_statement_references
-src/mikemol/importdag/graph.py|from-module-spelling-dropped|            elif mod\.startswith\(prefix\):|            elif False:|def=package_imports
-src/mikemol/importdag/graph.py|from-package-spelling-dropped|            if mod == package:|            if False:|def=package_imports
-src/mikemol/importdag/graph.py|plain-import-spelling-dropped|                if alias\.name\.startswith\(prefix\) and head in names:|                if False:|def=package_imports
-src/mikemol/importdag/graph.py|self-import-is-an-edge|found = package_imports\(text, set\(index\), package\) - \{Path\(path\)\.stem\}|found = package_imports(text, set(index), package)|def=build
+src/mikemol/importdag/graph.py|from-module-spelling-dropped|            elif mod\.startswith\(prefix\):|            elif False:|def=_imported
+src/mikemol/importdag/graph.py|from-package-spelling-dropped|            if mod == package:|            if False:|def=_imported
+src/mikemol/importdag/graph.py|plain-import-spelling-dropped|                if alias\.name\.startswith\(prefix\) and head in names:|                if False:|def=_imported
+src/mikemol/importdag/graph.py|self-import-is-an-edge|found = package_imports\(text, set\(index\), package\) - own|found = package_imports(text, set(index), package)|def=build
+src/mikemol/importdag/cost.py|chain-of-imports-cut-short|    while grew:|    while False:|def=affected
+src/mikemol/importdag/cost.py|declared-reads-ignored|        or changed\.intersection\(entry\.get\("reads", \[\]\)\)|        or False|def=affected
+src/mikemol/importdag/cost.py|manifest-test-not-rerun|        if path in changed$|        if False|def=affected
+src/mikemol/importdag/cost.py|unmeasured-test-vanishes|        tuple\(path for path in chosen if path not in table\),|        (),|def=price
+src/mikemol/importdag/cost.py|largest-sample-count-reported|min\(\(m\.samples|max((m.samples|def=price
+src/mikemol/importdag/cost.py|enabler-rerun-charged-again|    return card - enabler|    return card|def=after
+src/mikemol/importdag/graph.py|plain-type-checking-guard-missed|        return test\.id == "TYPE_CHECKING"|        return False|def=_guarded
+src/mikemol/importdag/graph.py|dotted-type-checking-guard-missed|    return isinstance\(test, ast\.Attribute\) and test\.attr == "TYPE_CHECKING"|    return False|def=_guarded
+src/mikemol/importdag/graph.py|import-also-made-outside-the-guard-is-typing-only|\) - _imported\(outside, names, package\)|) - set()|def=typing_only
 src/mikemol/importdag/graph.py|read-of-a-missing-file-recorded|        if missing:|        if False:|def=declared_reads
 src/mikemol/importdag/graph.py|bzl-without-its-header|    return BZL_HEADER \+ "GRAPH = " \+ render\(doc\)|    return "GRAPH = " + render(doc)|def=render_bzl
 src/mikemol/importdag/graph.py|absent-file-not-stale|        if not \(dist / name\)\.is_file\(\) or |        if |def=main

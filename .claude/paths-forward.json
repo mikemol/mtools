@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2004,
+  "counter": 2006,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -31577,7 +31577,7 @@
     {
       "symbol": "W1503",
       "title": "a generated, check-verified dag.bzl of imports per dist, with one target per module carrying that module's cone",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1498",
         "nemik:W613"
@@ -31588,12 +31588,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Steps 1 (stack-w1503a) and 2 and 3 (stack-w1503b: //hooks:graph_fresh, graph_check.sh, committed graph.json and dag.bzl) submitted. After they land: tell nemik-84 the path (hooks/graph.json) and schema 1; then step 4 = W1988. I still need step 4 and the nemik message, W1503",
-      "evidence": "2026-10-17: 2026-10-17 operator, relayed by github-8f verbatim: that input graph is the precise same class of information needed for automating grouping parallel-workable and streaming sequentially-dependent cards. So the same generator and the same --check also emit a machine-readable JSON beside dag.bzl (the per-dist import graph and each test's declared reads) that nemik can read, so nemik:W613 computes card conflicts from dependency cones instead of bare path matches. One graph, three consumers: bazel's cache, nemik's stack grouping, the gate-cost prediction. | 2026-10-17: 2026-10-17 nemik:W643 consumes the JSON. When this lands, tell nemik-84 the path and the schema. | 2026-10-17: 2026-10-17 nemik:W643 step 0 (via github-8f): importdag finds 161 of 161 of nemik's import edges, 0 missing; the gap is data a module reads without importing (shapes.ttl, baselines, queue files). So the JSON carries two edge kinds in one graph: import edges and per-module declared reads, the same reads W1501's per-test declarations and the W1504 footprint audit need. Send nemik-84 the path and schema when it lands. | 2026-10-17: 2026-10-17 stack submitted: importdag graph.py (graph.json: per-module and per-test import edges in all three spellings plus reads.json declared reads, byte-compare --check, atomic --write), 9 tests, 6 mutants. Hooks' own graph.json not committed: it needs a freshness gate target first, or it goes stale as modules land. Remaining after landing: a graph.json and reads.json per dist with a --check gate, then tell nemik-84 the path (<dist>/graph.json) and the schema (schema 1; package; modules and tests, each {imports: [paths], reads: [paths]}). | 2026-10-17: 2026-10-17 generator landed as e1607be and pushed (importdag graph.py, 9 tests, 6 mutants). Not done: no dist has a committed graph.json or reads.json yet, and nothing checks one for freshness. | 2026-10-25: 2026-10-25 UNBLOCKED from W1667: the block on the grooming umbrella was a parked-behind-grooming instance (github-8f's cone search found the generator landed as e1607be on 2026-10-17 and nothing generates or checks a dist's graph, and W1982's 97.5 percent miss measurement now makes the hooks graph the first thing to build). Reuse, per github-8f: importdag.graph (this card), check_mutants selected_tests/staged_files/_cone (the reverse-cone query), mutants_gen W1883, hooks footprint.py (strace audit), and paperkit's BUILD.bazel lines 87 to 97 (one pyc target per module, deps from a generated --check-gated dag.bzl) as the template; ask paperkit for lessons before copying | 2026-10-25: 2026-10-25 RAN the landed generator on hooks: graph --check said both hooks/graph.json and hooks/dag.bzl absent (STALE), graph --write wrote them (68,121 bytes dag.bzl and 67,851 bytes graph.json, atomic), with no reads.json yet (reads are optional and empty). NOT committed: they list every module and test at this moment and go stale with the next hooks change, which is the reason the card named a freshness gate first. The files sit untracked in the tree until the gate target exists. There is no py_binary for importdag.graph in importdag/BUILD.bazel (dagbzl and others have one), so the gate cannot run it yet",
+      "next_bounded_step": null,
+      "evidence": "2026-10-17: 2026-10-17 operator, relayed by github-8f verbatim: that input graph is the precise same class of information needed for automating grouping parallel-workable and streaming sequentially-dependent cards. So the same generator and the same --check also emit a machine-readable JSON beside dag.bzl (the per-dist import graph and each test's declared reads) that nemik can read, so nemik:W613 computes card conflicts from dependency cones instead of bare path matches. One graph, three consumers: bazel's cache, nemik's stack grouping, the gate-cost prediction. | 2026-10-17: 2026-10-17 nemik:W643 consumes the JSON. When this lands, tell nemik-84 the path and the schema. | 2026-10-17: 2026-10-17 nemik:W643 step 0 (via github-8f): importdag finds 161 of 161 of nemik's import edges, 0 missing; the gap is data a module reads without importing (shapes.ttl, baselines, queue files). So the JSON carries two edge kinds in one graph: import edges and per-module declared reads, the same reads W1501's per-test declarations and the W1504 footprint audit need. Send nemik-84 the path and schema when it lands. | 2026-10-17: 2026-10-17 stack submitted: importdag graph.py (graph.json: per-module and per-test import edges in all three spellings plus reads.json declared reads, byte-compare --check, atomic --write), 9 tests, 6 mutants. Hooks' own graph.json not committed: it needs a freshness gate target first, or it goes stale as modules land. Remaining after landing: a graph.json and reads.json per dist with a --check gate, then tell nemik-84 the path (<dist>/graph.json) and the schema (schema 1; package; modules and tests, each {imports: [paths], reads: [paths]}). | 2026-10-17: 2026-10-17 generator landed as e1607be and pushed (importdag graph.py, 9 tests, 6 mutants). Not done: no dist has a committed graph.json or reads.json yet, and nothing checks one for freshness. | 2026-10-25: 2026-10-25 UNBLOCKED from W1667: the block on the grooming umbrella was a parked-behind-grooming instance (github-8f's cone search found the generator landed as e1607be on 2026-10-17 and nothing generates or checks a dist's graph, and W1982's 97.5 percent miss measurement now makes the hooks graph the first thing to build). Reuse, per github-8f: importdag.graph (this card), check_mutants selected_tests/staged_files/_cone (the reverse-cone query), mutants_gen W1883, hooks footprint.py (strace audit), and paperkit's BUILD.bazel lines 87 to 97 (one pyc target per module, deps from a generated --check-gated dag.bzl) as the template; ask paperkit for lessons before copying | 2026-10-25: 2026-10-25 RAN the landed generator on hooks: graph --check said both hooks/graph.json and hooks/dag.bzl absent (STALE), graph --write wrote them (68,121 bytes dag.bzl and 67,851 bytes graph.json, atomic), with no reads.json yet (reads are optional and empty). NOT committed: they list every module and test at this moment and go stale with the next hooks change, which is the reason the card named a freshness gate first. The files sit untracked in the tree until the gate target exists. There is no py_binary for importdag.graph in importdag/BUILD.bazel (dagbzl and others have one), so the gate cannot run it yet | 2026-10-25: landed 9d9bbb02",
       "issued_at": "2026-10-17T22:22:48Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T18:06:01Z",
+      "last_worked": "2026-10-25T18:40:50Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -31623,7 +31623,7 @@
           }
         }
       ],
-      "completed": null,
+      "completed": "20261025T184050Z",
       "manifest": [
         "importdag/BUILD.bazel",
         "hooks/BUILD.bazel",
@@ -41629,20 +41629,23 @@
     {
       "symbol": "W1914",
       "title": "Relayed claim unchecked: a hook or gate home for the class where a peer's claim is acted on without a reading",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1910"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
+      "blocked_on": [
+        "W1966"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "No home can be named before the class is measured. Candidate homes: (a) a standing.rego rule over a commit or evidence text that quotes a peer ('per github-8f', 'X says') with no --verify or file:line reading beside it; (b) an amr-skills family for relayed claims in the commitments rows. Both need a labelled sample of instances first (W1966, the blind sample shared with amr-skills): find the turns where a peer's claim was acted on and later found wrong (the --ship claim, the bb_log entry-point claim, the W1942 premature mark_done). Then name the home and its files. I still need the sample and the home, W1914",
       "evidence": "",
       "issued_at": "2026-10-24T17:31:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1910",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-25T19:11:46Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1915",
@@ -44235,36 +44238,34 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W1503"
+        "W2006"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "",
+      "next_bounded_step": "Per-module py_library from GRAPH in hooks/BUILD.bazel, deps = imports minus typing_only (W2006), the two wheels on each; additive first (no test switched); bazel build of every mod_ target; then switch tests to the closure of their own imports, one verified batch at a time. I still need all of it, W1988",
       "evidence": "",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T17:10:20Z",
+      "last_worked": "2026-10-25T20:04:03Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1503"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "After W1503 commits hooks/graph.json: run mutants_gen --dist hooks --check to see what it would write (count the packages and targets first, it may be thousands), then --write behind a gate target running --check, then switch the gate from the sharded mutants targets to the site targets for hooks only, and read the next gate's hit count. Ask paperkit whether per-site targets bit them (staging, target count limits). I still need all of it, W1989",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "MEASURED 2026-10-25 (mutants_gen --dist hooks --write into a scratch state, then removed): 173 generated BUILD files (one package per module plus the root) and 1962 site targets. Next: gate target running mutants_gen --check (as graph_fresh does for the graph), commit hooks/sites, and switch hooks' sharded :mutants targets to the site targets; read the next gate's hit count. Ask paperkit whether per-site targets bit them (staging, target count). I still need the gate target, the committed sites and the switch, W1989",
       "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T17:10:20Z",
+      "last_worked": "2026-10-25T18:46:07Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44278,15 +44279,13 @@
     {
       "symbol": "W1990",
       "title": "Witness the split: a one-line change in one hooks module reruns only the targets whose closure holds it, shown by the gate's hit count",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1503"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Witness for the split: count the misses AND the staging seconds per miss (the 1.9 to 2.5 s floor as the baseline), and compare the sum of miss wall before and after on a one-line change. Start with W1989 (mutants cells with their cone), where 92 percent of the waste is. I still need the witness, W1990",
       "evidence": "2026-10-25: 2026-10-25 MEASURED staging cost, as github-8f asked (nemik 3e796f2 W1035 reports about 50 s of runfile staging per one-test target): in the in-flight gate's build events the 234 hooks pytest targets that MISSED took 1.9 s at the fastest, a median of 4.9 s, p90 33.3 s, max 60.3 s, sum 3,081 s; the 20 fastest are 1.9 to 2.5 s, which is the floor for staging plus interpreter start on a tiny test. So the 50 s does NOT reproduce in hooks under today's one-target-per-test-file layout: staging is about 2 s per target. The pytest misses are 3,081 of the 39,110 s of hooks miss wall (8 percent); the other ~36,000 s are the 106 mutants SHARDS (about 340 s each). So the lever is the mutants cells (W1989), not splitting pytest targets further, and a per-test split costs about 2 s of staging per miss against the seconds a hit saves",
       "issued_at": "2026-10-25T14:47:57Z",
@@ -44423,21 +44422,19 @@
     {
       "symbol": "W1997",
       "title": "Project a card's landing cost: manifest cone over graph.json, rerun targets, measured CPU seconds",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "github:W50"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1503"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Costs come from luthen W1645 recording rules gate:luthen_gate_target_cpu_seconds:median7d (expected), :p90_7d (cautious), gate:luthen_gate_target_cpu_samples:count7d (confidence): CPU not wall, median of about 5 samples, 786 mtools targets have CPU series, 105 series sit under repo=tree. Carry the sample count with every projected cost; a target with too few samples is projected from its cone's measured neighbours and flagged low-confidence; unknown stays unknown (nemik W1056). Read the names once vmalert has loaded them. Needs W1503's committed graph.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "First part submitted (stack-w2006: importdag.cost affected, unnamed, price, together, after). Next: the reader that fills the table from luthen's gate:luthen_gate_target_cpu_seconds:median7d, :p90_7d and gate:luthen_gate_target_cpu_samples:count7d once vmalert has loaded them; neighbour projection for low-sample tests; a command line. I still need those three, W1997",
       "evidence": "",
       "issued_at": "2026-10-25T17:05:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1503",
-      "last_worked": "2026-10-25T17:10:25Z",
+      "last_worked": "2026-10-25T20:11:08Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44550,18 +44547,54 @@
     {
       "symbol": "W2004",
       "title": "The watchdog's fire window is a setting (flags, environment, default 15 to 20 minutes), not a constant",
+      "status": "done",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed 0da2caff",
+      "issued_at": "2026-10-25T18:38:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W52",
+      "last_worked": "2026-10-25T20:09:09Z",
+      "ticks_blocked": 0,
+      "completed": "20261025T200909Z"
+    },
+    {
+      "symbol": "W2005",
+      "title": "round_wire.refusals does not call a ready round card skipped while a live submission names it",
       "status": "ready",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Operator 98969 (15-20m) and 99058 (configurable, not hardcoded); both verified. Built: read_band, --min-fire-s/--max-fire-s, MIKEMOL_WATCHDOG_MIN_FIRE_S/MAX_FIRE_S, defaults 900/1200; 4 tests, 5 mutants. Stack, land, then tell github-8f the sha.",
+      "next_bounded_step": "nemik-84 2026-10-25: a card whose status is still ready but whose stack is queued or gating is in progress. W2000's first part (stack-w2004) exempts a WORKING card a live stack cites from the outside set; this is the other half: drop a cited card from the ready set the check demands be taken. One line in round_wire.refusals plus a test and a mutant; rides behind stack-w2004 (its files are frozen in the queue).",
       "evidence": "",
-      "issued_at": "2026-10-25T18:38:44Z",
+      "issued_at": "2026-10-25T19:10:51Z",
       "minted_during": "interrupt",
-      "caused_by": "github:W52",
+      "caused_by": "W2000",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2006",
+      "title": "graph.json marks an import that is only for type checking, so a BUILD library per module has no cycle",
+      "status": "working",
+      "enables": [
+        "W1988"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Submitted as stack-w2006 with W1997's first part. Note: the submitted subject says unnamed returns paths the graph 'names at all'; it means the paths the graph does NOT name. After it lands: W1988 (per-module libraries from imports minus typing_only). I still need the landing and W1988, W2006",
+      "evidence": "",
+      "issued_at": "2026-10-25T20:03:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1988",
+      "last_worked": "2026-10-25T20:11:06Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

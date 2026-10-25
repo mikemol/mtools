@@ -1434,3 +1434,52 @@
   claim  = {Either file going stale or absent fails the check, naming it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_a_missing_dag_file_makes_the_check_stale_alone},
 }
+
+@misc{importdag-graph-import-only-under-type-checking-is-marked-typing-only,
+  section = {graph},
+  title  = {The edge stays in imports, and typing_only names it, in both spellings of the guard},
+  claim  = {The edge stays in imports, and typing_only names it, in both spellings of the guard.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_an_import_only_under_type_checking_is_marked_typing_only},
+}
+
+@misc{importdag-graph-import-also-made-outside-the-guard-is-not-typing-only,
+  section = {graph},
+  title  = {A real import elsewhere makes the edge a run-time one, whatever the guard says},
+  claim  = {A real import elsewhere makes the edge a run-time one, whatever the guard says.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_an_import_also_made_outside_the_guard_is_not_typing_only},
+}
+
+@misc{importdag-cost-change-reaches-the-tests-through-a-chain-of-imports,
+  section = {cost},
+  title  = {Gamma is two edges below test_a, so a change to it reruns test_a and not test_b},
+  claim  = {Gamma is two edges below test_a, so a change to it reruns test_a and not test_b.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_a_change_reaches_the_tests_through_a_chain_of_imports},
+}
+
+@misc{importdag-cost-declared-read-and-a-manifest-test-are-reached,
+  section = {cost},
+  title  = {A test that reads a changed file, and a changed test itself, are both rerun},
+  claim  = {A test that reads a changed file, and a changed test itself, are both rerun.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_a_declared_read_and_a_manifest_test_are_reached},
+}
+
+@misc{importdag-cost-path-the-graph-does-not-name-is-reported-not-read-as-nothing,
+  section = {cost},
+  title  = {The caller learns the set is a floor: the unnamed path comes back},
+  claim  = {The caller learns the set is a floor: the unnamed path comes back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_a_path_the_graph_does_not_name_is_reported_not_read_as_nothing},
+}
+
+@misc{importdag-cost-price-adds-the-measured-and-names-the-rest,
+  section = {cost},
+  title  = {Sums over the measured tests, the smallest sample count, and the unmeasured ones listed},
+  claim  = {Sums over the measured tests, the smallest sample count, and the unmeasured ones listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_the_price_adds_the_measured_and_names_the_rest},
+}
+
+@misc{importdag-cost-two-cards-count-an-overlap-once-and-a-card-after-its-enabler-pays-the-rest,
+  section = {cost},
+  title  = {Test_a is reached by both cards: together prices it once; after removes what ran},
+  claim  = {Test_a is reached by both cards: together prices it once; after removes what ran.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_two_cards_count_an_overlap_once_and_a_card_after_its_enabler_pays_the_rest},
+}
