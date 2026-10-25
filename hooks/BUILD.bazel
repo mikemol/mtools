@@ -300,6 +300,33 @@ _TEST_ENV = {
     for src in glob(["tests/test_*.py"])
 ]
 
+# W1503: THE COMMITTED IMPORT GRAPH CANNOT GO STALE. `graph.json` and `dag.bzl` list every module and
+# test of this distribution and the imports between them (the cone a change reruns, the operator's
+# cache ruling, host line 97611); `importdag.graph --check` regenerates both from the sources below
+# and refuses on any byte of difference, so a new module or import fails here until `--write` is run.
+sh_test(
+    name = "graph_fresh",
+    srcs = ["graph_check.sh"],
+    args = [
+        "$(location //importdag:graph)",
+        "hooks",
+        "mikemol.hooks",
+    ],
+    data = [
+        "//importdag:graph",
+        "dag.bzl",
+        "graph.json",
+    ] + glob(
+        [
+            "src/mikemol/hooks/**/*.py",
+            "tests/test_*.py",
+            "reads.json",
+        ],
+        allow_empty = True,
+    ),
+    size = "small",
+)
+
 # W238: the standing policy's own witnesses and controls (policy/standing_test.rego), run by the
 # pinned opa. Before this target they ran only when someone typed `opa test` by hand.
 sh_test(

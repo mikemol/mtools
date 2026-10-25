@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1995,
+  "counter": 2002,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -31577,7 +31577,7 @@
     {
       "symbol": "W1503",
       "title": "a generated, check-verified dag.bzl of imports per dist, with one target per module carrying that module's cone",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1498",
         "nemik:W613"
@@ -31588,12 +31588,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Step 1: py_binary graph in importdag/BUILD.bazel like dagbzl. Step 2: a hooks gate target that runs graph --check over hooks (data: its src, tests, reads.json, graph.json, dag.bzl) so a committed graph cannot go stale. Step 3: commit hooks/graph.json and dag.bzl, regenerated at the batch tip. Step 4 is W1988: the BUILD comprehension over dag.bzl on paperkit's pattern (ask paperkit for lessons first). Then tell nemik-84 the path and the schema. I still need all four steps, W1503",
+      "next_bounded_step": "Steps 1 (stack-w1503a) and 2 and 3 (stack-w1503b: //hooks:graph_fresh, graph_check.sh, committed graph.json and dag.bzl) submitted. After they land: tell nemik-84 the path (hooks/graph.json) and schema 1; then step 4 = W1988. I still need step 4 and the nemik message, W1503",
       "evidence": "2026-10-17: 2026-10-17 operator, relayed by github-8f verbatim: that input graph is the precise same class of information needed for automating grouping parallel-workable and streaming sequentially-dependent cards. So the same generator and the same --check also emit a machine-readable JSON beside dag.bzl (the per-dist import graph and each test's declared reads) that nemik can read, so nemik:W613 computes card conflicts from dependency cones instead of bare path matches. One graph, three consumers: bazel's cache, nemik's stack grouping, the gate-cost prediction. | 2026-10-17: 2026-10-17 nemik:W643 consumes the JSON. When this lands, tell nemik-84 the path and the schema. | 2026-10-17: 2026-10-17 nemik:W643 step 0 (via github-8f): importdag finds 161 of 161 of nemik's import edges, 0 missing; the gap is data a module reads without importing (shapes.ttl, baselines, queue files). So the JSON carries two edge kinds in one graph: import edges and per-module declared reads, the same reads W1501's per-test declarations and the W1504 footprint audit need. Send nemik-84 the path and schema when it lands. | 2026-10-17: 2026-10-17 stack submitted: importdag graph.py (graph.json: per-module and per-test import edges in all three spellings plus reads.json declared reads, byte-compare --check, atomic --write), 9 tests, 6 mutants. Hooks' own graph.json not committed: it needs a freshness gate target first, or it goes stale as modules land. Remaining after landing: a graph.json and reads.json per dist with a --check gate, then tell nemik-84 the path (<dist>/graph.json) and the schema (schema 1; package; modules and tests, each {imports: [paths], reads: [paths]}). | 2026-10-17: 2026-10-17 generator landed as e1607be and pushed (importdag graph.py, 9 tests, 6 mutants). Not done: no dist has a committed graph.json or reads.json yet, and nothing checks one for freshness. | 2026-10-25: 2026-10-25 UNBLOCKED from W1667: the block on the grooming umbrella was a parked-behind-grooming instance (github-8f's cone search found the generator landed as e1607be on 2026-10-17 and nothing generates or checks a dist's graph, and W1982's 97.5 percent miss measurement now makes the hooks graph the first thing to build). Reuse, per github-8f: importdag.graph (this card), check_mutants selected_tests/staged_files/_cone (the reverse-cone query), mutants_gen W1883, hooks footprint.py (strace audit), and paperkit's BUILD.bazel lines 87 to 97 (one pyc target per module, deps from a generated --check-gated dag.bzl) as the template; ask paperkit for lessons before copying | 2026-10-25: 2026-10-25 RAN the landed generator on hooks: graph --check said both hooks/graph.json and hooks/dag.bzl absent (STALE), graph --write wrote them (68,121 bytes dag.bzl and 67,851 bytes graph.json, atomic), with no reads.json yet (reads are optional and empty). NOT committed: they list every module and test at this moment and go stale with the next hooks change, which is the reason the card named a freshness gate first. The files sit untracked in the tree until the gate target exists. There is no py_binary for importdag.graph in importdag/BUILD.bazel (dagbzl and others have one), so the gate cannot run it yet",
       "issued_at": "2026-10-17T22:22:48Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T14:54:53Z",
+      "last_worked": "2026-10-25T18:06:01Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -34950,22 +34950,20 @@
     {
       "symbol": "W1628",
       "title": "The edit gate judges a file that is new on disk under its real module name, so a [[tool.mypy.overrides]] for that module applies",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/checkers.py!w",
         "hooks"
       ],
-      "blocked_on": [
-        "W1948"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Write the analyze-level test (a scratch dist with a venv-less stub is hard: use the seam, assert analyze calls judged for mypy only), mutants, warrants, rubric, then stack with the W1933 emitter stack since hooks/pyproject.toml is shared. I still need those, W1628",
-      "evidence": "2026-10-24: 2026-10-24 read of hooks checkers.py: a file NOT YET ON DISK is judged from the staged temp copy (mypy_subject keeps it, since --shadow-file needs the real path to exist), so mypy names the module by the temp path and a [[tool.mypy.overrides]] keyed to the real module cannot apply to a NEW file; an existing file is shadowed at its real path and does apply. The file's own comments say the house policy carries no mypy overrides at all, so the case is a consumer's config (luthen-observability-d9 asked). Not built: a fix has to give mypy the real module identity for a path that does not exist (a staged copy at a mirrored path under a temp root with mypy_path set), and that needs a measured reproduction first | 2026-10-25: 2026-10-25 REPRODUCED with a positive control, on a scratch package whose mypy config has ignore_errors for module pkg.quiet and a file holding X: int = 'not an int'. (1) The file EXISTS and is judged through --shadow-file at its real path: clean, the override applies. (2) The file is NEW and judged from a temp copy (what the edit gate does): error [assignment], the override does NOT apply because mypy names the module by the temp path. (3) The same bytes copied to a MIRRORED tree at the real relative path pkg/quiet.py: clean, the override applies. (4) --shadow-file at a path that does not exist: mypy refuses (Cannot read file), so the shadow route is closed for a new file. Candidate fix: stage a new file at its real relative path under a temp root, run mypy from that root with MYPYPATH naming the real project root so sibling imports resolve; not yet tried, and sibling-import resolution plus a duplicate __init__ module are the risks | 2026-10-25: 2026-10-25 CANDIDATE TRIED and it holds, with controls. A NEW file judged from a temp root that mirrors only it at its real relative path (pkg/quiet.py, with an empty __init__.py in each directory of that path) run from that root with MYPYPATH naming the real project root: the override for pkg.quiet APPLIES (clean), the same bytes as a module with no override (pkg/loud.py) still ERROR as they should, and the control without MYPYPATH fails on the sibling import (Cannot find implementation or library stub for module named pkg.other), so the sibling imports really do resolve through MYPYPATH and nothing else. Without the __init__.py in the mirror the module is named quiet and the override does not apply. So the fix is a mirror, not a refusal | 2026-10-25: 2026-10-25: READ the owner: pycheck.analyze (hooks/src/mikemol/hooks/pycheck.py) makes the temp file with mkstemp in the project root, builds the roster with checkers.checker_argv and runs each checker with cwd = the mypy config's directory (checker_context.in_project) and no per-checker environment; the temp file is unlinked in its finally. So the mirror belongs in analyze (a context manager creating the temp root, writing the staged bytes at the real relative path, removing it in the finally), with MYPYPATH given through an env wrapper in the argv because run_checker has no environment argument. RISK NOT YET MEASURED, and why I stopped: the candidate was proven on a flat package (pkg/quiet.py at the project root). The real dists use a src layout with mypy_path=src and explicit_package_bases, and mikemol/ is a PEP 420 namespace package with NO __init__.py shared by sibling dists, so 'an empty __init__.py in each directory of the path' would make mikemol/ a regular package in the mirror and could shadow the real namespace. pycheck.analyze judges every edit of every session, so a wrong mirror locks all edits: measure on a src-layout scratch package (and on hooks itself) with controls before editing it | 2026-10-25: 2026-10-25 MEASURED the src-layout risk (scratch project, mypy_path=src, explicit_package_bases and namespace_packages, an override for ns.pkg.quiet, ns a PEP 420 namespace with no __init__.py in the project, pkg with one). New file mirrored at src/ns/pkg/<name>.py under a temp root, run from that root with MYPYPATH naming the project's src and the real config by absolute path, both a module WITH the override (quiet) and WITHOUT it (loud), each with and without an __init__.py in the mirror's ns/: quiet is clean (rc 0) in BOTH shapes, loud is rejected with the assignment error (rc 1) in BOTH shapes, and loud's only finding is that assignment (the sibling import 'from ns.pkg import other' resolved through MYPYPATH). So the namespace parent needs NO __init__.py in the mirror: write one only for the packages that have one in the project (pkg), and leave a namespace directory bare. The risk named on 2026-10-25 does not materialize in this shape; hooks itself (src/mikemol/hooks) still to be tried | 2026-10-25: 2026-10-25: mypy_mirror.py built and tested against the REAL mypy on a src-layout scratch project with a namespace parent: a new file with an override is clean, the same bytes with no override fail, a sibling import resolves through MYPYPATH only; the mirror copies an __init__.py only where the project has one and is removed on exit; judged() is the seam (command, cwd and the subject to rewrite). Still to do: the wiring into pycheck.analyze, last, then mutants, warrants and the stack (hooks/pyproject.toml is shared with the held W1933 stack) | 2026-10-25: 2026-10-25 MISTAKE, caught by the post-edit import check within seconds: I wired mypy_mirror into the live pycheck.analyze before the bazel-built hooks venv held the new module (the dev venv is not what the hooks run from), so the live edit gate failed to import for a moment. Restored from my copy (git diff of pycheck.py is empty), then started bazel build //hooks:.venv. The rule I already had written down: module and venv build first, the importing live file last. Re-wire only after the live venv imports mikemol.hooks.mypy_mirror | 2026-10-25: 2026-10-25: re-wired after the live venv imported mikemol.hooks.mypy_mirror (bazel-bin python -m import clean): pycheck.analyze runs the mypy command through mypy_mirror.judged, inlined to stay within the locals limit; the gate admits its own edit. Regression tests (test_pycheck, test_checkers, test_mypy_mirror) in flight; an analyze-level test for a new file under a config with overrides still to write | 2026-10-25: 2026-10-25: built, wired and tested; in stack-hooks-batch, waiting for W1948's stack to land",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-24: 2026-10-24 read of hooks checkers.py: a file NOT YET ON DISK is judged from the staged temp copy (mypy_subject keeps it, since --shadow-file needs the real path to exist), so mypy names the module by the temp path and a [[tool.mypy.overrides]] keyed to the real module cannot apply to a NEW file; an existing file is shadowed at its real path and does apply. The file's own comments say the house policy carries no mypy overrides at all, so the case is a consumer's config (luthen-observability-d9 asked). Not built: a fix has to give mypy the real module identity for a path that does not exist (a staged copy at a mirrored path under a temp root with mypy_path set), and that needs a measured reproduction first | 2026-10-25: 2026-10-25 REPRODUCED with a positive control, on a scratch package whose mypy config has ignore_errors for module pkg.quiet and a file holding X: int = 'not an int'. (1) The file EXISTS and is judged through --shadow-file at its real path: clean, the override applies. (2) The file is NEW and judged from a temp copy (what the edit gate does): error [assignment], the override does NOT apply because mypy names the module by the temp path. (3) The same bytes copied to a MIRRORED tree at the real relative path pkg/quiet.py: clean, the override applies. (4) --shadow-file at a path that does not exist: mypy refuses (Cannot read file), so the shadow route is closed for a new file. Candidate fix: stage a new file at its real relative path under a temp root, run mypy from that root with MYPYPATH naming the real project root so sibling imports resolve; not yet tried, and sibling-import resolution plus a duplicate __init__ module are the risks | 2026-10-25: 2026-10-25 CANDIDATE TRIED and it holds, with controls. A NEW file judged from a temp root that mirrors only it at its real relative path (pkg/quiet.py, with an empty __init__.py in each directory of that path) run from that root with MYPYPATH naming the real project root: the override for pkg.quiet APPLIES (clean), the same bytes as a module with no override (pkg/loud.py) still ERROR as they should, and the control without MYPYPATH fails on the sibling import (Cannot find implementation or library stub for module named pkg.other), so the sibling imports really do resolve through MYPYPATH and nothing else. Without the __init__.py in the mirror the module is named quiet and the override does not apply. So the fix is a mirror, not a refusal | 2026-10-25: 2026-10-25: READ the owner: pycheck.analyze (hooks/src/mikemol/hooks/pycheck.py) makes the temp file with mkstemp in the project root, builds the roster with checkers.checker_argv and runs each checker with cwd = the mypy config's directory (checker_context.in_project) and no per-checker environment; the temp file is unlinked in its finally. So the mirror belongs in analyze (a context manager creating the temp root, writing the staged bytes at the real relative path, removing it in the finally), with MYPYPATH given through an env wrapper in the argv because run_checker has no environment argument. RISK NOT YET MEASURED, and why I stopped: the candidate was proven on a flat package (pkg/quiet.py at the project root). The real dists use a src layout with mypy_path=src and explicit_package_bases, and mikemol/ is a PEP 420 namespace package with NO __init__.py shared by sibling dists, so 'an empty __init__.py in each directory of the path' would make mikemol/ a regular package in the mirror and could shadow the real namespace. pycheck.analyze judges every edit of every session, so a wrong mirror locks all edits: measure on a src-layout scratch package (and on hooks itself) with controls before editing it | 2026-10-25: 2026-10-25 MEASURED the src-layout risk (scratch project, mypy_path=src, explicit_package_bases and namespace_packages, an override for ns.pkg.quiet, ns a PEP 420 namespace with no __init__.py in the project, pkg with one). New file mirrored at src/ns/pkg/<name>.py under a temp root, run from that root with MYPYPATH naming the project's src and the real config by absolute path, both a module WITH the override (quiet) and WITHOUT it (loud), each with and without an __init__.py in the mirror's ns/: quiet is clean (rc 0) in BOTH shapes, loud is rejected with the assignment error (rc 1) in BOTH shapes, and loud's only finding is that assignment (the sibling import 'from ns.pkg import other' resolved through MYPYPATH). So the namespace parent needs NO __init__.py in the mirror: write one only for the packages that have one in the project (pkg), and leave a namespace directory bare. The risk named on 2026-10-25 does not materialize in this shape; hooks itself (src/mikemol/hooks) still to be tried | 2026-10-25: 2026-10-25: mypy_mirror.py built and tested against the REAL mypy on a src-layout scratch project with a namespace parent: a new file with an override is clean, the same bytes with no override fail, a sibling import resolves through MYPYPATH only; the mirror copies an __init__.py only where the project has one and is removed on exit; judged() is the seam (command, cwd and the subject to rewrite). Still to do: the wiring into pycheck.analyze, last, then mutants, warrants and the stack (hooks/pyproject.toml is shared with the held W1933 stack) | 2026-10-25: 2026-10-25 MISTAKE, caught by the post-edit import check within seconds: I wired mypy_mirror into the live pycheck.analyze before the bazel-built hooks venv held the new module (the dev venv is not what the hooks run from), so the live edit gate failed to import for a moment. Restored from my copy (git diff of pycheck.py is empty), then started bazel build //hooks:.venv. The rule I already had written down: module and venv build first, the importing live file last. Re-wire only after the live venv imports mikemol.hooks.mypy_mirror | 2026-10-25: 2026-10-25: re-wired after the live venv imported mikemol.hooks.mypy_mirror (bazel-bin python -m import clean): pycheck.analyze runs the mypy command through mypy_mirror.judged, inlined to stay within the locals limit; the gate admits its own edit. Regression tests (test_pycheck, test_checkers, test_mypy_mirror) in flight; an analyze-level test for a new file under a config with overrides still to write | 2026-10-25: 2026-10-25: built, wired and tested; in stack-hooks-batch, waiting for W1948's stack to land | 2026-10-25: landed f2368be",
       "issued_at": "2026-10-18T22:02:26Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-d9",
-      "last_worked": "2026-10-25T15:23:42Z",
+      "last_worked": "2026-10-25T17:59:34Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/checkers.py",
@@ -34974,7 +34972,7 @@
         "hooks/mutants.regex"
       ],
       "size_class": "small",
-      "completed": null
+      "completed": "20261025T175934Z"
     },
     {
       "symbol": "W1629",
@@ -35720,17 +35718,19 @@
     {
       "symbol": "W1662",
       "title": "A REFUSED verdict prints the refusing stage's own FAIL, HOST and HELD lines, not only the gate's last line",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1996"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 (checks.land reports the hook's findings, already landed there) is the same need in luthen's own land tool; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-24: 2026-10-23: looked at it and it is under-specified for mtools: FAIL/HOST/HELD are luthen's hermetic-runner tokens, mtools' gate prints no such structured lines. What mtools prints is a flat list of every dist's counts with the failing finding in the middle, then a REFUSED line carrying only the failed check's label. Needs a decision on what a refusing stage's 'own lines' are before it is buildable; measure the last few REFUSED outputs first | 2026-10-24: 2026-10-24 measured case: the W1891 gate refusal (hooks pytest, the warrant-pairing test) ended in one REFUSED line naming the check's label and 'culprit: unattributed'; the failing test and its message were far above it among ~40 per-dist count lines. A candidate reading of 'own lines': the failing check's captured output, last N lines, printed after the REFUSED line. Not built; the choice of N and of where the gate stores each check's output is the open part (stackrun.py refuses at gate_tip, which returns one merged stdout)",
       "issued_at": "2026-10-19T03:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T14:30:42Z",
+      "last_worked": "2026-10-25T17:59:46Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -35755,7 +35755,7 @@
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T10:11:17Z",
+      "last_worked": "2026-10-25T17:59:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -35831,7 +35831,7 @@
     {
       "symbol": "W1667",
       "title": "Give a manifest to each unmanifested card W1592 released, in rank order, returning each to ready as it gains one",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [],
       "blocked_on": [],
@@ -35841,7 +35841,7 @@
       "issued_at": "2026-10-19T05:58:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T16:15:01Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -36366,7 +36366,7 @@
       "issued_at": "2026-10-19T09:56:14Z",
       "minted_during": "interrupt",
       "caused_by": "W1688",
-      "last_worked": "2026-10-25T11:10:07Z",
+      "last_worked": "2026-10-25T17:59:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -36483,7 +36483,7 @@
       "issued_at": "2026-10-19T10:55:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T11:10:07Z",
+      "last_worked": "2026-10-25T17:59:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -40684,7 +40684,7 @@
     {
       "symbol": "W1875",
       "title": "shardgate refuses a stack touching a per-test target past half its own measured CPU limit",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1872"
       ],
@@ -40696,7 +40696,7 @@
       "issued_at": "2026-10-23T20:46:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1872",
-      "last_worked": "2026-10-25T16:15:03Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/shardgate.py",
@@ -40772,7 +40772,7 @@
     {
       "symbol": "W1880",
       "title": "Gate metrics and shardgate treat a mutation site as a target, within luthen's label-cardinality ceiling",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1833"
       ],
@@ -40784,7 +40784,7 @@
       "issued_at": "2026-10-24T00:38:06Z",
       "minted_during": "interrupt",
       "caused_by": "W1833",
-      "last_worked": "2026-10-25T15:47:48Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -41074,13 +41074,14 @@
       "issued_at": "2026-10-24T15:51:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1894",
-      "last_worked": null,
+      "last_worked": "2026-10-25T18:06:01Z",
       "ticks_blocked": 0,
       "manifest": [
         "buildtel/src/mikemol/buildtel/targettimes.py",
         "buildtel/tests/test_targettimes.py"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": null
     },
     {
       "symbol": "W1896",
@@ -42350,7 +42351,7 @@
     {
       "symbol": "W1933",
       "title": "Resolve a commitment row against durable follow-through, and keep the unresolved rows as a ledger and the metric commitments.open{repo}",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W44",
         "nemik:W1007",
@@ -42359,10 +42360,8 @@
       "touches": [
         "file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w"
       ],
-      "blocked_on": [
-        "W1948"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "When stack w1948c has landed, submit stack-w1933c (commitments_emit, ratchet_emit, tests, pyproject, BUILD, mutants, rubric, warrants). Then the home of commitments.json for luthen and nemik, and the layer inference measured on real transcripts. I still need both, W1933",
       "evidence": "2026-10-24: 2026-10-24 metric fixed for luthen-observability:W1598 and nemik:W1007/W1008: mikemol.commitments.open{repo} (house dotted name, gauge, value = the repository's unresolved commitment rows; repo = the repository the statement was made in, the real name and never the snapshot dir); emitter card = this one | 2026-10-24: CONTRACT (2026-10-24, sent to nemik-84, luthen-observability-ab and github-8f): (1) the ledger is commitments.json at the build root, read the way landings.json and ratchet-pace.json are: {as_of, rows:[{repo, session, line, uuid, at, text, names, state, resolved_by}]}; repo = the repository's real name; session = the transcript's session id; line and uuid = the assistant record the statement is in; at = its UTC timestamp; text = the statement; names = the card cites (<repo>:W<n>, or W<n> within the repo) and repo-relative files it names, possibly empty; state = open or resolved; resolved_by = null while open, else a cite {kind: card|stack|evidence, ref} of the durable follow-through. (2) the metric is mikemol.commitments.open{repo}, a gauge, value = the repo's rows with state open. (3) the emitter card is this one (W1933); the extractor is W1931, the Stop hook W1932; all enable github:W44; this card also enables nemik:W1007 and nemik:W1008. A row with empty names stays open until a card cites its uuid | 2026-10-24: CONTRACT ADDITION 2026-10-24 (luthen-observability:W1599 and github-8f, same G9 reading): each row gains layer = the strongest persisted form of its follow-through, from G9's ladder: none (open), memory, instructions, trigger, hook, gate, plus card for a card that is only planned. A recurring class resolved only at memory or instructions is a coverability residue and stays COUNTED. Metric: mikemol.commitments.open{repo,layer} counts rows that are open (layer none) or resolved only at memory or instructions (layer memory or instructions); a sum over layer is the repo's open count. mikemol.commitments.said{repo} unchanged. The layer is inferred from where the follow-through lives (a memory file, an instruction file, a card, a landed card whose manifest touches hook or gate code), and that inference is the part to measure first | 2026-10-25: 2026-10-25: first part landed as b379cc87 (commitledger: resolve, record, document, counted; the row's at field). Still to do: the --ledger mode and the emitter of the open and said metrics | 2026-10-25: 2026-10-25: second part built: mikemol-transcriptstruct LOG --commitments --queue QUEUE writes the resolved ledger document and a counted tally; bazel tests pass, local grid in flight | 2026-10-25: 2026-10-25: second part landed as 6ae67972 (--commitments --queue writes the resolved ledger document and a counted tally). Left: the emitter of mikemol.commitments.open{repo,layer} and mikemol.commitments.said{repo}, the home of commitments.json for luthen and nemik, and the layer inference measured on real transcripts | 2026-10-25: 2026-10-25: third part built (emitter): mikemol-commitments-emit LEDGER ships mikemol.commitments.open{repo,layer} for none, memory and instructions (zeros included) and mikemol.commitments.said{repo}; ratchet_emit.plan/emit take the namespace; bazel tests pass, mutants lint clean, warrants written. HELD until stack w1948c lands: hooks/mutants.regex and warrants.bib are shared with it, and its now_reason mutant lines would be UNAPPLIED at the lint if this went first | 2026-10-25: 2026-10-25: the emitter is in stack-hooks-batch, which waits for W1948's stack to land (shared mutants and warrants files)",
       "issued_at": "2026-10-24T23:34:02Z",
@@ -42817,21 +42816,21 @@
     {
       "symbol": "W1948",
       "title": "Wire the published round into the tick-stop hook and the stack submit: round_symbols reads the one-line {as_of, rows} form, the default path is luthen's export tree",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W46"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Wire round_check into stackrun's submit (the stack's entries are the working set; refuse a stack that skips a ready round card for an outside one, naming the writer command); stack the nemik fixture test. I still need the stackrun wiring, W1948",
-      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree | 2026-10-25: 2026-10-25 nemik-84 CORRECTION of the reversal: the one-line form landed in nemik as 7d1fad0 and was pushed; a revert to lines is in nemik's gate, not landed. Which form the host file has depends on the nemik-rank build luthen pins. So round_check keeps accepting BOTH forms (the two-form reader in stack-w1948a is required, not extra) until nemik-84 sends the revert's sha; do not remove the one-line reader before then | 2026-10-25: 2026-10-25 nemik-84: the revert landed in nemik as 0150239; the writer is back to the lines form (head as_of, a card per line) and luthen's gate fails closed on anything else. The one-line reader stays: removing it is churn with no gain, and it is covered by a fixture | 2026-10-25: 2026-10-25 nemik-84: the shared round.json contract test landed in nemik as fae9d5c (nemik:W1033); its recorded fixture is a head as_of line and one card per line. Answered with a byte-for-byte copy of the fixture in hooks/tests/test_round_check.py, so a format change on either side fails a test | 2026-10-25: 2026-10-25: tick-stop wiring landed as 29883314 (round_reason called once per stop, a repeat stop never blocked on the round); it bit this session the same afternoon, naming W1868 as the skipped round card. Left: the stack-submit wiring, the existence witness once luthen's timer has run, W1949 for the bound | 2026-10-25: 2026-10-25 FIRST REAL INSTANCE of the round check (operator host line 95318). The block line, verbatim: 'W1868 is in this repository's round and ready, but the working set includes W1628, W1662, W1663, W1667, W1692, W1697, W1716, W1933, W1948, which is not: take W1868 first with mikemol-paths-forward --state .claude/paths-forward.json --update W1868 --status working'. What I did next: took W1868 (status working) as named; returned W1662, W1663 and W1716 to ready, because I had parked them in working only to satisfy the idle hook's 'take card X' demand and had not advanced them, which is how the working set came to hold nine outside cards; then read W1868 and found it could not be built (it waits on estate's pick between W1868 and W1869, estate closed estate:W3 without one); asked luthen-observability-ab, who said luthen needs neither; dropped W1868 and W1869 to residue. So the check did what it was for, and it also exposed a pattern the idle hook induces: taking a card to quiet a Stop block inflates the working set, which the round check then reads as breadth. The idle hook's remedy and the round's are not independent | 2026-10-25: 2026-10-25: stack-submit wiring written: commit_kata.submit_problem asks round_wire.now_reason last (after imports, build files, slow grid); test_submit_problem covers its order; the idle-rung fix github-8f asked for is carded as W1950; bazel tests in flight | 2026-10-25: 2026-10-25: stack-w1948c refused by the gate: test_bar_fires' pairing check found one UNWARRANTED test (the new test_submit_problem case, which I had left without a warrant); warrant added under shardgate, test_bar_fires rerun in flight, resubmit next. Also submitted stack-w1953 (mdstruct panflute) whose mdstruct tests all pass",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree | 2026-10-25: 2026-10-25 nemik-84 CORRECTION of the reversal: the one-line form landed in nemik as 7d1fad0 and was pushed; a revert to lines is in nemik's gate, not landed. Which form the host file has depends on the nemik-rank build luthen pins. So round_check keeps accepting BOTH forms (the two-form reader in stack-w1948a is required, not extra) until nemik-84 sends the revert's sha; do not remove the one-line reader before then | 2026-10-25: 2026-10-25 nemik-84: the revert landed in nemik as 0150239; the writer is back to the lines form (head as_of, a card per line) and luthen's gate fails closed on anything else. The one-line reader stays: removing it is churn with no gain, and it is covered by a fixture | 2026-10-25: 2026-10-25 nemik-84: the shared round.json contract test landed in nemik as fae9d5c (nemik:W1033); its recorded fixture is a head as_of line and one card per line. Answered with a byte-for-byte copy of the fixture in hooks/tests/test_round_check.py, so a format change on either side fails a test | 2026-10-25: 2026-10-25: tick-stop wiring landed as 29883314 (round_reason called once per stop, a repeat stop never blocked on the round); it bit this session the same afternoon, naming W1868 as the skipped round card. Left: the stack-submit wiring, the existence witness once luthen's timer has run, W1949 for the bound | 2026-10-25: 2026-10-25 FIRST REAL INSTANCE of the round check (operator host line 95318). The block line, verbatim: 'W1868 is in this repository's round and ready, but the working set includes W1628, W1662, W1663, W1667, W1692, W1697, W1716, W1933, W1948, which is not: take W1868 first with mikemol-paths-forward --state .claude/paths-forward.json --update W1868 --status working'. What I did next: took W1868 (status working) as named; returned W1662, W1663 and W1716 to ready, because I had parked them in working only to satisfy the idle hook's 'take card X' demand and had not advanced them, which is how the working set came to hold nine outside cards; then read W1868 and found it could not be built (it waits on estate's pick between W1868 and W1869, estate closed estate:W3 without one); asked luthen-observability-ab, who said luthen needs neither; dropped W1868 and W1869 to residue. So the check did what it was for, and it also exposed a pattern the idle hook induces: taking a card to quiet a Stop block inflates the working set, which the round check then reads as breadth. The idle hook's remedy and the round's are not independent | 2026-10-25: 2026-10-25: stack-submit wiring written: commit_kata.submit_problem asks round_wire.now_reason last (after imports, build files, slow grid); test_submit_problem covers its order; the idle-rung fix github-8f asked for is carded as W1950; bazel tests in flight | 2026-10-25: 2026-10-25: stack-w1948c refused by the gate: test_bar_fires' pairing check found one UNWARRANTED test (the new test_submit_problem case, which I had left without a warrant); warrant added under shardgate, test_bar_fires rerun in flight, resubmit next. Also submitted stack-w1953 (mdstruct panflute) whose mdstruct tests all pass | 2026-10-25: landed 769f819",
       "issued_at": "2026-10-25T08:29:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1942",
-      "last_worked": "2026-10-25T11:08:54Z",
+      "last_worked": "2026-10-25T17:59:33Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261025T175933Z",
       "manifest": [
         "hooks/src/mikemol/hooks/round_check.py",
         "hooks/src/mikemol/hooks/round_wire.py",
@@ -42845,7 +42844,7 @@
     {
       "symbol": "W1949",
       "title": "Learn the round file's staleness bound from the as_of spacing luthen's hourly timer actually produces, instead of the chosen three hours",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1948"
       ],
@@ -42857,7 +42856,7 @@
       "issued_at": "2026-10-25T08:45:07Z",
       "minted_during": "interrupt",
       "caused_by": "W1948",
-      "last_worked": "2026-10-25T16:14:59Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42869,15 +42868,13 @@
     {
       "symbol": "W1950",
       "title": "Idle rung 2 names the top card of the published round (falling back to the rank's top card when there is no round) and judges ADVANCEMENT since the turn began (a commit, evidence or a status change citing the card), not a working mark",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1898"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1948"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "When //hooks:.venv is rebuilt and the live venv imports mikemol.hooks.round_order, wire idle_stop.idle_reason to pass round_order.order(root, now) to idle_card (one codemod, a rollback copy kept), test in test_idle_stop with a round file via MIKEMOL_ROUND_FILE; then part 2 (judge advancement, not a working mark) needs a design: evidence timestamps. I still need the wiring and part 2, W1950",
       "evidence": "2026-10-25: 2026-10-25: part 1 built: idle_progress.idle_card takes an optional round order and names the best-ranked READY round card before the first ready card of the queue (backwards compatible default); round_order.order reads this repository's published round, best rank first, empty in every way a round can be absent; tests pass under bazel (test_idle_progress, test_round_order). The hook still names the first ready card, W1662 among them, until idle_stop passes the order: venv rebuild in flight, then the wiring last | 2026-10-25: 2026-10-25: part 1 built, wired and tested; in stack-hooks-batch, waiting for W1948's stack to land",
       "issued_at": "2026-10-25T10:17:24Z",
@@ -42948,21 +42945,21 @@
     {
       "symbol": "W1953",
       "title": "Paydown: model panflute entries in mdstruct's stubs and delete their allowlist lines, starting with the cheapest",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "file:mdstruct/stubs/panflute-allowlist.txt!w"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Resubmit stack-w1953 (rewritten) and read the gate's mdstruct ratchet line; fix the local ratchet target's data to include stubs/** if the gate refuses on a stub key again. I still need the resubmit, W1953",
-      "evidence": "2026-10-25: 2026-10-25: 17 constructors, Element.__new__ and Element.walk (stop_if) modelled from inspect.signature; stubtest reported all 19 allowlist entries unused and nothing else; allowlist emptied and the non-empty assertion dropped; stack-w1953 written, held for the stub test and mdstruct mypy | 2026-10-25: 2026-10-25: first gate attempt REFUSED by the mdstruct ratchet (one new key, builtin-argument-shadowing on the stub: panflute Doc.__init__'s keyword-only format). My first fix, a per-file exemption in pyproject, was a WAIVER that moved debt to a file the census does not count: operator line 97317 'that just cheats the ratchet'. Reverted, stack withdrawn. Now: 18 of 19 entries modelled, Doc.__init__ left unmodelled and its entry kept in the counted allowlist (19 to 1); stubtest passes in this shape. Coverage gap noted: the local //mdstruct:ratchet target does not include the .pyi stub in its inputs, so only the gate saw the key; W1977 carries the policy question, W1976 the census counting exemptions",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25: 17 constructors, Element.__new__ and Element.walk (stop_if) modelled from inspect.signature; stubtest reported all 19 allowlist entries unused and nothing else; allowlist emptied and the non-empty assertion dropped; stack-w1953 written, held for the stub test and mdstruct mypy | 2026-10-25: 2026-10-25: first gate attempt REFUSED by the mdstruct ratchet (one new key, builtin-argument-shadowing on the stub: panflute Doc.__init__'s keyword-only format). My first fix, a per-file exemption in pyproject, was a WAIVER that moved debt to a file the census does not count: operator line 97317 'that just cheats the ratchet'. Reverted, stack withdrawn. Now: 18 of 19 entries modelled, Doc.__init__ left unmodelled and its entry kept in the counted allowlist (19 to 1); stubtest passes in this shape. Coverage gap noted: the local //mdstruct:ratchet target does not include the .pyi stub in its inputs, so only the gate saw the key; W1977 carries the policy question, W1976 the census counting exemptions | 2026-10-25: landed 03044256",
       "issued_at": "2026-10-25T10:45:30Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T13:46:16Z",
+      "last_worked": "2026-10-25T16:28:24Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261025T162824Z",
       "manifest": [
         "mdstruct/stubs/panflute/__init__.pyi",
         "mdstruct/stubs/panflute-allowlist.txt",
@@ -42973,7 +42970,7 @@
     {
       "symbol": "W1954",
       "title": "Paydown: retire one entry of corpus/exit-baseline.txt by naming its exit constant in the shared exit-code table",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "file:corpus/exit-baseline.txt!w"
@@ -42985,7 +42982,7 @@
       "issued_at": "2026-10-25T10:45:31Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T13:35:56Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -43087,7 +43084,7 @@
       "issued_at": "2026-10-25T11:18:34Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T11:18:49Z",
+      "last_worked": "2026-10-25T18:06:01Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -43129,23 +43126,21 @@
     {
       "symbol": "W1960",
       "title": "mikemol-otlp honours the standard OTEL_EXPORTER_OTLP_ environment variables, so one variable routes every emitter",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W47"
       ],
       "touches": [
         "file:otlp/src/mikemol/otlp/cli.py!w"
       ],
-      "blocked_on": [
-        "W1961"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Read endpoints.py and metriccmd.py for how a base URL is resolved today (MIKEMOL_ENDPOINTS store, --url). Add the precedence the ask names: signal-specific OTEL_EXPORTER_OTLP_METRICS_ENDPOINT (and LOGS, TRACES), then OTEL_EXPORTER_OTLP_ENDPOINT, then the store; honour OTEL_EXPORTER_OTLP_PROTOCOL, OTEL_SERVICE_NAME and OTEL_RESOURCE_ATTRIBUTES (the spec's comma-separated key=value form) where the sender builds the resource. Standard names only, no MIKEMOL_ twin. Tests per precedence step, the spec's path suffix rule (the general endpoint gets /v1/metrics appended, the signal-specific one is used as given), and a malformed value refused loudly. I still need all of it, W1960",
-      "evidence": "2026-10-25: 2026-10-25: routing step written and tested (metrics verbs honour the standard OTEL_EXPORTER_OTLP endpoints); waits to be stacked behind W1961's queued stack, which carries the same otlp files",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After it lands: the logs and traces verbs through otel_url, OTEL_EXPORTER_OTLP_PROTOCOL refused when not http/protobuf, OTEL_SERVICE_NAME and OTEL_RESOURCE_ATTRIBUTES for the resource. I still need those, W1960",
+      "evidence": "2026-10-25: 2026-10-25: routing step written and tested (metrics verbs honour the standard OTEL_EXPORTER_OTLP endpoints); waits to be stacked behind W1961's queued stack, which carries the same otlp files | 2026-10-25: 2026-10-25: W1961 landed (1d4c8106), so the otlp files are free; mutants lint clean, warrants written, the otlp grid clean under its own interpreter; stack-w1960 submitted",
       "issued_at": "2026-10-25T11:34:26Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T15:23:39Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43187,7 +43182,7 @@
     {
       "symbol": "W1961",
       "title": "Every metric mikemol-otlp sends is self-describing: description, unit, kind, label set, freshness class and owner card on the wire",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "github:W47"
       ],
@@ -43196,12 +43191,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After step 1 lands: a Sample-level tombstone helper in metrics (name mikemol.metric.retired, value 1, attributes metric, reason, owner, freshness event_driven with the companion the caller names) and a test that a tombstone for a family still emitting is NOT refused by the emitter. The ratchet tombstone (W1964) uses the same shape with ratchet in place of metric and repo as a label. I still need both, W1961",
-      "evidence": "2026-10-25: 2026-10-25 CONTRACT (adopting luthen-observability-ab's proposal, github-8f agreed 'fix names against luthen's'): (1) description and unit are the OTLP Metric's own fields 2 and 3 (UCUM unit); (2) kind is the OTLP data type (Gauge, Sum with is_monotonic true = counter and false = updown, Histogram), no custom attribute; (3) labels are the datapoint attributes and the registry's label set is the keys seen, so there is NO separate declared-labels attribute (github-8f's mikemol.metric.labels is not adopted: it would duplicate the keys, can drift from them, and luthen reads the keys); (4) freshness class and owner ride in Metric.metadata (field 12, a KeyValue list) under mikemol.freshness_class (luthen sends the exact enum, replacing my event_driven | continuous) and mikemol.owner (a repo:W<n> card or a repo name); the resource carries only service.name, job and host. MEASURED here: the installed opentelemetry-proto Metric message has fields name(1) description(2) unit(3) gauge(5) sum(7) histogram(9) exponential_histogram(10) summary(11) and metadata(12), so mikemol-otlp can emit all of it; it sends protobuf (victoria refuses a JSON body with 400, metrics.py) and today sets name, unit and the data type only. NOT KNOWN: whether VictoriaMetrics' OTLP ingest keeps Metric.metadata; luthen is probing the live store, and that probe needs an emitter that WRITES metadata, so the first code step is to emit it from mikemol-otlp so the probe has something to send | 2026-10-25: 2026-10-25: step 1 built: Sample gains description, freshness_class, freshness_companion, owner; Metric.description and Metric.metadata set from them (empty ones left off the wire); batch rows may carry them and a bad freshness declaration (class outside continuous|event_driven, event_driven without a companion, a companion on anything else) refuses the batch; local stub gains the Metric fields; luthen sent probe_request.bin and .json; luthen found VictoriaMetrics 2.24.0 keeps description (help), unit and type in /api/v1/metadata but DROPS Metric.metadata keys, so placement of freshness and owner is HELD until luthen's probe of constant per-metric attributes reports. Tests and the otlp mypy pass; grid in flight | 2026-10-25: 2026-10-25 PLACEMENT SETTLED (luthen-observability-ab, W1625 probe 2): vmsingle 2.24.0 keeps a metric's description (as help), unit and type in /api/v1/metadata and DROPS Metric.metadata keys, confirmed with our own bytes posted unchanged; mikemol.freshness_class, mikemol.freshness_companion and mikemol.owner therefore ride as DATAPOINT attributes, constant per family, which the store keeps as series labels. Moved: metrics._facts replaces _metadata and _point merges the facts into its attributes; Metric.metadata is no longer written. Refusals unchanged. Tests and the otlp mypy pass; the grid reruns under the otlp venv's python (the first run errored all 52 because it used the hooks interpreter, which has no opentelemetry wheel) | 2026-10-25: 2026-10-25 TOMBSTONE CONCEPT (operator, host line 96701, verified human; github-8f): a retired metric family is TOMBSTONED, never just silent, so luthen's self-registration (luthen W1625) retires a registry row instead of alerting on a dark one. Retirement is written, not inferred from silence. Shape proposed for luthen to accept or rename: a series mikemol.metric.retired with labels metric (the dotted family name) and reason, value 1, sent by the emitter that owns the family at least once on the run that retires it and on every run while it is listed. The ratchet case is carded (W1963 retired list in the declaration, W1964 the mikemol.ratchet.retired emission, W1965 mtools' first tombstone); the generic family tombstone shares its shape | 2026-10-25: 2026-10-25 luthen-observability-ab ACCEPTED the family tombstone: mikemol.metric.retired = 1 on every run while listed, datapoint attributes metric (the dotted family name, matching the registry key), reason and owner (repo or repo:W<n>, checked against the registry row's owner), riding the settled freshness rules (event_driven with a companion: the emitter's liveness series; a tombstone whose emitter has no live companion is reported unproven, not retired). Edge for tests: a tombstone for a family that still has a live series is a CONFLICT luthen reports as 'tombstoned but still emitting', never an error on our side. luthen cards W1628 (alerts honour ratchet tombstones) and W1629 (registry retirement)",
+      "next_bounded_step": "Step 2: ratchet_emit declares these facts for mikemol.ratchet.value, taking description, unit, freshness class and owner from the ratchet declaration (W1962, unblocked by W1957 landing). I still need step 2, W1961",
+      "evidence": "2026-10-25: 2026-10-25 CONTRACT (adopting luthen-observability-ab's proposal, github-8f agreed 'fix names against luthen's'): (1) description and unit are the OTLP Metric's own fields 2 and 3 (UCUM unit); (2) kind is the OTLP data type (Gauge, Sum with is_monotonic true = counter and false = updown, Histogram), no custom attribute; (3) labels are the datapoint attributes and the registry's label set is the keys seen, so there is NO separate declared-labels attribute (github-8f's mikemol.metric.labels is not adopted: it would duplicate the keys, can drift from them, and luthen reads the keys); (4) freshness class and owner ride in Metric.metadata (field 12, a KeyValue list) under mikemol.freshness_class (luthen sends the exact enum, replacing my event_driven | continuous) and mikemol.owner (a repo:W<n> card or a repo name); the resource carries only service.name, job and host. MEASURED here: the installed opentelemetry-proto Metric message has fields name(1) description(2) unit(3) gauge(5) sum(7) histogram(9) exponential_histogram(10) summary(11) and metadata(12), so mikemol-otlp can emit all of it; it sends protobuf (victoria refuses a JSON body with 400, metrics.py) and today sets name, unit and the data type only. NOT KNOWN: whether VictoriaMetrics' OTLP ingest keeps Metric.metadata; luthen is probing the live store, and that probe needs an emitter that WRITES metadata, so the first code step is to emit it from mikemol-otlp so the probe has something to send | 2026-10-25: 2026-10-25: step 1 built: Sample gains description, freshness_class, freshness_companion, owner; Metric.description and Metric.metadata set from them (empty ones left off the wire); batch rows may carry them and a bad freshness declaration (class outside continuous|event_driven, event_driven without a companion, a companion on anything else) refuses the batch; local stub gains the Metric fields; luthen sent probe_request.bin and .json; luthen found VictoriaMetrics 2.24.0 keeps description (help), unit and type in /api/v1/metadata but DROPS Metric.metadata keys, so placement of freshness and owner is HELD until luthen's probe of constant per-metric attributes reports. Tests and the otlp mypy pass; grid in flight | 2026-10-25: 2026-10-25 PLACEMENT SETTLED (luthen-observability-ab, W1625 probe 2): vmsingle 2.24.0 keeps a metric's description (as help), unit and type in /api/v1/metadata and DROPS Metric.metadata keys, confirmed with our own bytes posted unchanged; mikemol.freshness_class, mikemol.freshness_companion and mikemol.owner therefore ride as DATAPOINT attributes, constant per family, which the store keeps as series labels. Moved: metrics._facts replaces _metadata and _point merges the facts into its attributes; Metric.metadata is no longer written. Refusals unchanged. Tests and the otlp mypy pass; the grid reruns under the otlp venv's python (the first run errored all 52 because it used the hooks interpreter, which has no opentelemetry wheel) | 2026-10-25: 2026-10-25 TOMBSTONE CONCEPT (operator, host line 96701, verified human; github-8f): a retired metric family is TOMBSTONED, never just silent, so luthen's self-registration (luthen W1625) retires a registry row instead of alerting on a dark one. Retirement is written, not inferred from silence. Shape proposed for luthen to accept or rename: a series mikemol.metric.retired with labels metric (the dotted family name) and reason, value 1, sent by the emitter that owns the family at least once on the run that retires it and on every run while it is listed. The ratchet case is carded (W1963 retired list in the declaration, W1964 the mikemol.ratchet.retired emission, W1965 mtools' first tombstone); the generic family tombstone shares its shape | 2026-10-25: 2026-10-25 luthen-observability-ab ACCEPTED the family tombstone: mikemol.metric.retired = 1 on every run while listed, datapoint attributes metric (the dotted family name, matching the registry key), reason and owner (repo or repo:W<n>, checked against the registry row's owner), riding the settled freshness rules (event_driven with a companion: the emitter's liveness series; a tombstone whose emitter has no live companion is reported unproven, not retired). Edge for tests: a tombstone for a family that still has a live series is a CONFLICT luthen reports as 'tombstoned but still emitting', never an error on our side. luthen cards W1628 (alerts honour ratchet tombstones) and W1629 (registry retirement) | 2026-10-25: 2026-10-25: step 1 landed as 1d4c8106 and VERIFIED END TO END by luthen-observability-ab reading the store after my one real probe: /api/v1/metadata carries type gauge, unit 1 and the description as help; the series carries mikemol.freshness_class, mikemol.freshness_companion, mikemol.owner and repo as labels (plus host.name, scope.* and service.*) and the instant query returns it; the companion mikemol.probe.alive has no series, so their generator reports the family as unproven, the expected branch (their probe 5 on W1625)",
       "issued_at": "2026-10-25T11:34:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T12:22:44Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43312,7 +43307,7 @@
       "issued_at": "2026-10-25T12:19:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T12:21:00Z",
+      "last_worked": "2026-10-25T18:06:01Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43617,7 +43612,7 @@
     {
       "symbol": "W1969",
       "title": "One landing record, the same for every repo, which nemik's landings.json and round sizing read",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "github:W48"
       ],
@@ -43629,7 +43624,7 @@
       "issued_at": "2026-10-25T13:00:05Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T15:24:51Z",
+      "last_worked": "2026-10-25T17:07:06Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44213,12 +44208,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add --resolve ROWS_JSONL (a file or stdin) with --queue and --repo: read Commitment-shaped rows (extra keys such as uncertain are kept on the row, unknown families allowed), dedupe by (uuid, line) keeping the first and recording every family that found it, resolve with commitledger.resolve, write commitledger.document. An uncertain row resolves like any other but is carried with uncertain true and EXCLUDED from the counted tally (a separate uncertain count), so a flagged guess never inflates the debt metric. Tests: a row from each source through one ledger, a duplicate counted once with both families kept, an uncertain row carried and not counted, a malformed line refused by number. I still need all of it, W1986",
-      "evidence": "2026-10-25: 2026-10-25 amr-skills (W381 to W383), for github:W44, agreed with github-8f: they emit JSON lines in the Commitment shape (line, uuid, session, repo, family, text, names, at) from an AMR classifier over a rolling window of transcripts (7 days about 52,000 sentences, about 10,500 past a lexical gate), their own family labels (amr-commitment, amr-gc), text staying on their machine, and ask for a mode that resolves rows this tool did not extract so both sources go through one resolver and one ledger, a row both find (same uuid and line) counting once. Privacy: nothing AMR-derived reaches the ledger; uncertain rows are flagged, never sent to a person or an agent (no LLM in the loop)",
+      "next_bounded_step": "Build now (transcriptstruct is not in any queued stack): commitrows.py reads the agreed rows (typed fields, repo filter, dedupe by uuid and line keeping the first and all families), commitledger carries uncertain and families on the row and excludes uncertain rows from the counted tally, the CLI mode takes the rows file as its positional with --resolve --queue --repo; tests; then run the real file against mtools' queue and report what resolves. I still need all of it, W1986",
+      "evidence": "2026-10-25: 2026-10-25 amr-skills (W381 to W383), for github:W44, agreed with github-8f: they emit JSON lines in the Commitment shape (line, uuid, session, repo, family, text, names, at) from an AMR classifier over a rolling window of transcripts (7 days about 52,000 sentences, about 10,500 past a lexical gate), their own family labels (amr-commitment, amr-gc), text staying on their machine, and ask for a mode that resolves rows this tool did not extract so both sources go through one resolver and one ledger, a row both find (same uuid and line) counting once. Privacy: nothing AMR-derived reaches the ledger; uncertain rows are flagged, never sent to a person or an agent (no LLM in the loop) | 2026-10-25: 2026-10-25 amr-skills delivered the first rows file for this card (path on this machine only, in their scratchpad): 1,061 rows from 7 days of assistant utterances across the projects (9,985 distinct gated sentences, one row per place said), keys line, uuid, session, repo, family, text (EMPTY on every row, by design), names, at, uncertain (bool), provenance (model, first 16 hex of the weights digest, dtype, beams, max length, classifier version: a change to any is a declared re-baseline, so rows of different provenance are different). Families amr-need 396, amr-not-yet 278, amr-should 39, amr-deferral 9, amr-uncertain 339; 472 rows uncertain, so about 589 firm; by repo nemik 341, luthen-observability 248, mtools 198, amr-skills 95, home-mikemol-github 72, el-openglo 67, estate 23, linux-sources 16, life 1; 503 name at least one card or file. Precision unknown to them (19 of my 26 phrase hits found, 3 flagged uncertain, about 33 they find that my phrases do not). Contract for the mode: carry text through as the empty string, never fill it; rows are per repo (own --queue and --repo)",
       "issued_at": "2026-10-25T14:45:14Z",
       "minted_during": "interrupt",
       "caused_by": "amr-skills",
-      "last_worked": "2026-10-25T14:45:32Z",
+      "last_worked": "2026-10-25T17:59:38Z",
       "ticks_blocked": 0,
       "manifest": [
         "transcriptstruct/src/mikemol/transcriptstruct/cli.py",
@@ -44226,42 +44221,48 @@
         "transcriptstruct/src/mikemol/transcriptstruct/commitments.py",
         "transcriptstruct/tests/test_commitledger.py"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": null
     },
     {
       "symbol": "W1988",
       "title": "hooks/BUILD.bazel builds one library per module from the generated file and each test depends on the closure of its imports",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1982"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1503"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-25T17:10:20Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1982"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1503"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W1503 commits hooks/graph.json: run mutants_gen --dist hooks --check to see what it would write (count the packages and targets first, it may be thousands), then --write behind a gate target running --check, then switch the gate from the sharded mutants targets to the site targets for hooks only, and read the next gate's hit count. Ask paperkit whether per-site targets bit them (staging, target count limits). I still need all of it, W1989",
       "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T15:47:43Z",
+      "last_worked": "2026-10-25T17:10:20Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44269,25 +44270,29 @@
         "hooks/BUILD.bazel",
         "hooks/graph.json"
       ],
-      "size_class": "large"
+      "size_class": "large",
+      "completed": null
     },
     {
       "symbol": "W1990",
       "title": "Witness the split: a one-line change in one hooks module reruns only the targets whose closure holds it, shown by the gate's hit count",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1982"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1503"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Witness for the split: count the misses AND the staging seconds per miss (the 1.9 to 2.5 s floor as the baseline), and compare the sum of miss wall before and after on a one-line change. Start with W1989 (mutants cells with their cone), where 92 percent of the waste is. I still need the witness, W1990",
       "evidence": "2026-10-25: 2026-10-25 MEASURED staging cost, as github-8f asked (nemik 3e796f2 W1035 reports about 50 s of runfile staging per one-test target): in the in-flight gate's build events the 234 hooks pytest targets that MISSED took 1.9 s at the fastest, a median of 4.9 s, p90 33.3 s, max 60.3 s, sum 3,081 s; the 20 fastest are 1.9 to 2.5 s, which is the floor for staging plus interpreter start on a tiny test. So the 50 s does NOT reproduce in hooks under today's one-target-per-test-file layout: staging is about 2 s per target. The pytest misses are 3,081 of the 39,110 s of hooks miss wall (8 percent); the other ~36,000 s are the 106 mutants SHARDS (about 340 s each). So the lever is the mutants cells (W1989), not splitting pytest targets further, and a per-test split costs about 2 s of staging per miss against the seconds a hit saves",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T15:45:42Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-25T17:10:20Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W1991",
@@ -44392,6 +44397,135 @@
       "issued_at": "2026-10-25T15:24:07Z",
       "minted_during": "interrupt",
       "caused_by": "W1919",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1996",
+      "title": "Read stackrun.gate_tip and gatephase: where does each check's captured output live when a stack is REFUSED, and can the last 40 lines of the failing check follow the REFUSED line",
+      "status": "ready",
+      "enables": [
+        "W1662"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T16:49:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1662",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W1997",
+      "title": "Project a card's landing cost: manifest cone over graph.json, rerun targets, measured CPU seconds",
+      "status": "blocked",
+      "enables": [
+        "github:W50"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W1503"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Costs come from luthen W1645 recording rules gate:luthen_gate_target_cpu_seconds:median7d (expected), :p90_7d (cautious), gate:luthen_gate_target_cpu_samples:count7d (confidence): CPU not wall, median of about 5 samples, 786 mtools targets have CPU series, 105 series sit under repo=tree. Carry the sample count with every projected cost; a target with too few samples is projected from its cone's measured neighbours and flagged low-confidence; unknown stays unknown (nemik W1056). Read the names once vmalert has loaded them. Needs W1503's committed graph.",
+      "evidence": "",
+      "issued_at": "2026-10-25T17:05:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1503",
+      "last_worked": "2026-10-25T17:10:25Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1998",
+      "title": "Pairwise landing cost: two cards together with overlapping cones counted once, and a card after its enabler lands",
+      "status": "blocked",
+      "enables": [
+        "github:W50"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W1997"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Union of the two cones, summed once; the after-enabler form removes the enabler's cone from the card's. Needs W1997's single-card projection.",
+      "evidence": "",
+      "issued_at": "2026-10-25T17:06:01Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1997",
+      "last_worked": "2026-10-25T17:06:07Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W1999",
+      "title": "mikemol-commit --status lists queued submissions, the lease holder, its gate phase and the followers a train will join",
+      "status": "done",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed 8aac70fe",
+      "issued_at": "2026-10-25T17:09:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1503",
+      "last_worked": "2026-10-25T18:10:01Z",
+      "ticks_blocked": 0,
+      "completed": "20261025T181001Z"
+    },
+    {
+      "symbol": "W2000",
+      "title": "round_check treats a card the queue marks working as in-round, so it never blocks a stop for work already in progress",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "The live-queue reader EXISTS: commit_counts.live(path) lists live submissions (pid plus start time both match, so a dead or recycled pid is not listed) with their waypoints, printed by mikemol-commit REPO --in-gate --json (8aac70fe). So: round_wire.refusals reads <git dir>/mtools/commit.counts through commit_counts.live and treats a working card named by a live entry's waypoints as in progress (exempt), and only those. A test with a planted map (live, dead, recycled pid) and a mutant. The stale 10-17..20 items.json files are a separate leftover: a reconcile pass that moves a dead key's items.json aside with a tombstone (key, pid, why) is its own card. I still need the exemption and the tombstone pass, W2000",
+      "evidence": "",
+      "issued_at": "2026-10-25T17:13:06Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1942",
+      "last_worked": "2026-10-25T18:10:04Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2001",
+      "title": "A live-queue reader answers which stack submissions are live, by a held lease or a live submit pid",
+      "status": "done",
+      "enables": [
+        "W1999"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: landed 8aac70fe",
+      "issued_at": "2026-10-25T18:09:24Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2000",
+      "last_worked": "2026-10-25T18:10:02Z",
+      "ticks_blocked": 0,
+      "completed": "20261025T181002Z"
+    },
+    {
+      "symbol": "W2002",
+      "title": "Reconcile pass moves a dead submission's stale items.json aside with a tombstone (key, pid, why judged dead)",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: items.json files from 2026-10-17..20 remain in .git/mtools from runs that aborted before stackfreeze.forget. A dead key (no live entry in commit_counts.live) has its items.json moved aside with a tombstone line, not deleted, so each gets a recorded end.",
+      "evidence": "",
+      "issued_at": "2026-10-25T18:10:06Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2000",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -44792,15 +44926,6 @@
       "lapse_ledgered": true
     },
     {
-      "tag": "file:mdstruct/stubs/panflute-allowlist.txt!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1953",
-      "base_sha": "6ae6797228cb8fa04d264f95bc11eb95a7201145",
-      "taken_at": "2026-10-25T11:01:21Z",
-      "renewed_at": "2026-10-25T11:01:21Z",
-      "expires_at": "2026-10-25T11:31:21Z"
-    },
-    {
       "tag": "file:corpus/exit-baseline.txt!w",
       "holder": "(unlocked)",
       "waypoint": "W1954",
@@ -44817,6 +44942,33 @@
       "taken_at": "2026-10-25T11:38:23Z",
       "renewed_at": "2026-10-25T11:38:23Z",
       "expires_at": "2026-10-25T12:08:23Z"
+    },
+    {
+      "tag": "file:otlp/src/mikemol/otlp/cli.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1960",
+      "base_sha": "03044256fa578da1798ee20f14a450335feb08a9",
+      "taken_at": "2026-10-25T16:30:31Z",
+      "renewed_at": "2026-10-25T16:30:31Z",
+      "expires_at": "2026-10-25T17:00:31Z"
+    },
+    {
+      "tag": "file:ratchet/src/mikemol/ratchet/cli.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1958",
+      "base_sha": "03044256fa578da1798ee20f14a450335feb08a9",
+      "taken_at": "2026-10-25T17:07:46Z",
+      "renewed_at": "2026-10-25T17:07:46Z",
+      "expires_at": "2026-10-25T17:37:46Z"
+    },
+    {
+      "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1963",
+      "base_sha": "03044256fa578da1798ee20f14a450335feb08a9",
+      "taken_at": "2026-10-25T17:12:26Z",
+      "renewed_at": "2026-10-25T17:12:26Z",
+      "expires_at": "2026-10-25T17:42:26Z"
     }
   ],
   "advice": [

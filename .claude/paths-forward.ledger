@@ -3865,3 +3865,61 @@
 2026-10-25T16:14:59Z  status W1949 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T16:15:01Z  status W1667 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T16:15:03Z  status W1875 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T16:28:24Z  status W1953 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T16:30:31Z  status W1960 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T16:41:15Z  status W1986 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T16:49:46Z  status W1662 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T16:49:52Z  interrupt W1996 minted    -         "Read stackrun.gate_tip and gatephase: where does each check's captured output live when a stack is REFUSED, and can the last 40 lines of the failing check follow the REFUSED line"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1662
+2026-10-25T16:49:54Z  status W1662 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T16:59:54Z  status W1663 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:00:01Z  status W1663 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:02:35Z  status W1692 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:02:41Z  status W1692 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:04:45Z  status W1697 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:04:49Z  status W1697 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:05:56Z  interrupt W1997 minted    -         "Project a card's landing cost: manifest cone over graph.json, rerun targets, measured CPU seconds"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1503
+2026-10-25T17:06:01Z  interrupt W1998 minted    -         "Pairwise landing cost: two cards together with overlapping cones counted once, and a card after its enabler lands"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1997
+2026-10-25T17:06:06Z  status W1997 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:06:07Z  status W1998 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1667 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1875 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1880 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1948 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1949 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1954 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1960 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1961 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:06Z  status W1969 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:07:46Z  status W1958 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:09:34Z  interrupt W1999 minted    -         "mikemol-commit --status lists queued submissions, the lease holder, its gate phase and the followers a train will join"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1503
+2026-10-25T17:10:20Z  status W1988 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:10:20Z  status W1989 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:10:20Z  status W1990 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:12:22Z  status W1986 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:12:26Z  status W1963 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:13:06Z  interrupt W2000 minted    -         "round_check treats a card the queue marks working as in-round, so it never blocks a stop for work already in progress"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1942
+2026-10-25T17:13:12Z  status W2000 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1628 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1663 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1692 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1697 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1933 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1948 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1950 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W1986 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:33Z  status W2000 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:34Z  status W1628 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:38Z  status W1662 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T17:59:46Z  status W1662 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:05:09Z  status W1895 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:06:01Z  status W1503 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:06:01Z  status W1895 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:06:01Z  status W1958 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:06:01Z  status W1963 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:09:24Z  interrupt W2001 minted    -         "A live-queue reader answers which stack submissions are live, by a held lease or a live submit pid"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2000
+2026-10-25T18:09:29Z  status W2000 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:09:31Z  status W1999 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:10:01Z  status W1999 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:10:02Z  status W2000 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:10:02Z  status W2001 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-25T18:10:06Z  interrupt W2002 minted    -         "Reconcile pass moves a dead submission's stale items.json aside with a tombstone (key, pid, why judged dead)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2000
