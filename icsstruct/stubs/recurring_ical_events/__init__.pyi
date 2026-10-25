@@ -14,6 +14,15 @@ import datetime
 from icalendar import Component
 
 class CalendarQuery:
+    # ⚑ W1952: the constructor as inspect.signature reads it from the installed library; `of` builds
+    # the query, so the parameters icsstruct never passes keep the stub's own looser types.
+    def __init__(
+        self,
+        calendar: Component,
+        keep_recurrence_attributes: bool = False,
+        components: tuple[str, ...] = ...,
+        skip_bad_series: bool = False,
+    ) -> None: ...
     def between(
         self,
         start: datetime.date,

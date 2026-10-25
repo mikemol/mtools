@@ -16,6 +16,9 @@ from typing import Literal, overload
 
 class Component:
     name: str | None
+    # ⚑ W1952: the constructor as inspect.signature reads it from the installed library; `from_ical`
+    # builds components, so nothing here is icsstruct's to type beyond `object`.
+    def __init__(self, *args: object, **kwargs: object) -> None: ...
     def walk(
         self,
         name: str | None = None,

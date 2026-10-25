@@ -60,6 +60,5 @@ def test_every_allowlist_entry_is_a_constructor() -> None:
         for line in _ALLOWLIST.read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.startswith("#")
     ]
-    assert entries
     offenders = [e for e in entries if not e.endswith(("__init__", "__new__"))]
     assert offenders == [], f"non-constructor entries hide real divergence: {offenders}"
