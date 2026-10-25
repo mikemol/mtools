@@ -191,4 +191,5 @@ idle_stop	Idle stop (W1904): a Stop that leaves ready work and no progress is bl
 ratchet_emit	Ratchet emit (W1909): the fleet census shipped as one gauge per ratchet per gate run
 queuecarry	Queue carry (W1941): a stack never leaves the queue behind
 round_check	Round composition (W1942): a round that skips a ready published card is refused
+round_wire	Round wiring (W1942): the published round and the queue read, aged and judged
 ratchet_hook	Ratchet hook (W1928): the ratchet-emit call put into a gate script once

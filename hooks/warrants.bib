@@ -15170,3 +15170,38 @@
             pair.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_ratchet_and_atomicwrite_are_vendored_dists_and_move_with_the_rest},
 }
+
+@misc{hooks-round-wire-ready-round-card-skipped-for-an-outside-card-is-refused,
+  section = {round_wire},
+  title  = {The composition refusal, through the file reader},
+  claim  = {The composition refusal, through the file reader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_ready_round_card_skipped_for_an_outside_card_is_refused},
+}
+
+@misc{hooks-round-wire-stale-or-unstamped-round-refuses-nothing,
+  section = {round_wire},
+  title  = {Older than STALE, or no stamp: no round},
+  claim  = {Older than STALE, or no stamp: no round.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_stale_or_unstamped_round_refuses_nothing},
+}
+
+@misc{hooks-round-wire-another-repository-and-a-round-wholly-inside-refuse-nothing,
+  section = {round_wire},
+  title  = {Rows of another repository are not this one's; working only round cards is admitted},
+  claim  = {Rows of another repository are not this one's; working only round cards is admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_another_repository_and_a_round_wholly_inside_refuse_nothing},
+}
+
+@misc{hooks-round-wire-reason-reads-both-files-and-a-missing-one-gives-none,
+  section = {round_wire},
+  title  = {The reason joins the refusals; an unreadable round or queue gives None},
+  claim  = {The reason joins the refusals; an unreadable round or queue gives None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_reason_reads_both_files_and_a_missing_one_gives_none},
+}
+
+@misc{hooks-round-wire-path-is-the-environment-override-else-the-nemik-cache,
+  section = {round_wire},
+  title  = {The environment names the file; without it the cache directory's round file},
+  claim  = {The environment names the file; without it the cache directory's round file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_path_is_the_environment_override_else_the_nemik_cache},
+}

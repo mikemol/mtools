@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 1946,
+  "counter": 1947,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -35734,17 +35734,20 @@
     {
       "symbol": "W1663",
       "title": "A REFUSED verdict gives the one command that reproduces only the refusing rung",
-      "status": "ready",
+      "status": "working",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "file:hooks/src/mikemol/hooks/gatephase.py!w",
+        "file:hooks/src/mikemol/hooks/commit_kata.py!w"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
+      "next_bounded_step": "Read gatephase.py and commit_kata.py to find where a REFUSED verdict is printed and which rung it names; add the one reproducing command for that rung only; one test",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23)",
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-23T19:28:03Z",
+      "last_worked": "2026-10-25T06:57:24Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42121,19 +42124,19 @@
     {
       "symbol": "W1931",
       "title": "transcriptstruct --commitments extracts assistant statements of known-needed, unpersisted work as rows (line, uuid, session, repo, text, named object), with precision measured on today's transcripts and false positives kept as a fixture",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "github:W44"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Build the extractor module with the speaker filter first (assistant records, text blocks), then the canonical form, then the variants and the G0, G5 and G8 families; the six measured lines in the evidence are the first fixtures (3 expected, 6 refused with their reasons); then measure the rest on a second day's transcripts",
-      "evidence": "2026-10-24: 2026-10-24 github-8f study (retro-ritual-as-continuous-ledger, host 695f3e0a line 94599): two further families. (i) G0 intent anchors: next I will, I expect, should land, this will. (ii) G5 and G8 anchors: affect narration with no card (I was careless, I keep doing this) and a handoff with no executed probe (needs the operator, can only be checked externally). Precision for each is measured on a day's transcripts before use; false positives are fixtures | 2026-10-25: 2026-10-24 first precision reading, by hand, on this session's transcript from line 350000 (14,069 text records) with --grep 'I still need to|I have not yet|not yet (done|built|started)|next I will|still to do|remains open' --kinds text: 9 hits. The canonical form 'I still need to' had ZERO hits (the loop prompt only began to encourage it today). Of the 9: 3 are genuine unpersisted statements by the assistant (lines 355110 'I haven't yet told estate-dd', 356792 '...is still to do' and 'I did not re-run nemik-check', 361624 'The rest of W1918 is still to do'); 4 are FALSE POSITIVES because the record is a user-role record quoting a peer (363719, 363815, 363892, 363907: the grep sees cross-session messages and their quoted statements); 2 are assistant summaries that report ANOTHER card's state ('Nothing is built for any of them yet', 363872 and 363951), which are not commitments. So three things the extractor needs that a phrase list cannot give: (1) assistant records only, by speaker; (2) no quoted text from a user-role message; (3) a statement that reports status of named work already carded is attached by the cite and should not count as a new debt. These 6 lines are the first fixtures. Not yet measured: the intent family (next I will, I expect) and the other families on a second day's transcripts",
+      "next_bounded_step": null,
+      "evidence": "2026-10-24: 2026-10-24 github-8f study (retro-ritual-as-continuous-ledger, host 695f3e0a line 94599): two further families. (i) G0 intent anchors: next I will, I expect, should land, this will. (ii) G5 and G8 anchors: affect narration with no card (I was careless, I keep doing this) and a handoff with no executed probe (needs the operator, can only be checked externally). Precision for each is measured on a day's transcripts before use; false positives are fixtures | 2026-10-25: 2026-10-24 first precision reading, by hand, on this session's transcript from line 350000 (14,069 text records) with --grep 'I still need to|I have not yet|not yet (done|built|started)|next I will|still to do|remains open' --kinds text: 9 hits. The canonical form 'I still need to' had ZERO hits (the loop prompt only began to encourage it today). Of the 9: 3 are genuine unpersisted statements by the assistant (lines 355110 'I haven't yet told estate-dd', 356792 '...is still to do' and 'I did not re-run nemik-check', 361624 'The rest of W1918 is still to do'); 4 are FALSE POSITIVES because the record is a user-role record quoting a peer (363719, 363815, 363892, 363907: the grep sees cross-session messages and their quoted statements); 2 are assistant summaries that report ANOTHER card's state ('Nothing is built for any of them yet', 363872 and 363951), which are not commitments. So three things the extractor needs that a phrase list cannot give: (1) assistant records only, by speaker; (2) no quoted text from a user-role message; (3) a statement that reports status of named work already carded is attached by the cite and should not count as a new debt. These 6 lines are the first fixtures. Not yet measured: the intent family (next I will, I expect) and the other families on a second day's transcripts | 2026-10-25: landed fa331978",
       "issued_at": "2026-10-24T23:33:53Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T02:36:05Z",
+      "last_worked": "2026-10-25T07:06:44Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42224,7 +42227,7 @@
         "transcriptstruct/tests/test_commitments.py"
       ],
       "size_class": "medium",
-      "completed": null
+      "completed": "20261025T070644Z"
     },
     {
       "symbol": "W1932",
@@ -42588,7 +42591,7 @@
     {
       "symbol": "W1942",
       "title": "Refuse a round whose working set skips a card of the published round while including one outside it, naming the skipped card and the writer command that takes it",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "github:W46"
       ],
@@ -42597,16 +42600,14 @@
         "file:hooks/src/mikemol/hooks/tick_stop.py!w",
         "file:hooks/src/mikemol/hooks/stackrun.py!w"
       ],
-      "blocked_on": [
-        "nemik:W1025"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "When nemik's publisher lands and the path is confirmed, wire round_check into the tick-stop hook and the stack submit (read the file, take this repository's rows, ready cards at check time, treat an as_of older than a learned bound as no round). No round file means no refusal. I still need the publisher's landing and the confirmed path, W1942",
-      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "round_wire.py and its tests are written (bazel test //hooks:test_round_wire in flight): run the hooks grid, stack them, then bazel build //hooks:.venv and wire round_reason into tick_stop.run last; stackrun is the next part. I still need the tick_stop wiring and the stackrun wiring, W1942",
+      "evidence": "2026-10-25: CONTRACT from nemik-84 (nemik:W1024), 2026-10-25. File round.json at the build root, read like ratchet-pace.json and landings.json. Line one is an as_of stamp in UTC plus the opening of the rows list, then one flat object per line with repo, symbol, rank, size, salience and n_source (all quoted text, rank from 1, size is that repo's round size and repeats per row, n_source says how the size was derived, for example stacks_queued or throughput), closed by the end of the list. All repos in one file. A card in the round that has been blocked or done since publication is NOT skipped, only cards still ready at check time count. round.json does not exist yet and nemik will message when it is in the export tree. Until then the check is built against a fixture file. | 2026-10-25: 2026-10-25: first part (round_check, pure judgement, 4 tests, 3 declared mutants) submitted after bazel test //hooks:test_round_check passed, in the gate (bmw11x8xi). I still need nemik's message that round.json exists before wiring it into the tick-stop hook and the stack submit, W1942 | 2026-10-25: 2026-10-25 github-8f: input.file's exact shape is unknown to both of us. nemik-84 owns the observers and will send the document shape, an example Rego line and the round file's path. Until then this card has no witness and waits on nemik, which is the honest state. The first part (round_check) is in the gate | 2026-10-25: 2026-10-25 nemik-84: input.file is keyed by path, each value a document with one field, exists (os.path.exists), no mtime, as_of or size. Example: input.file[PATH].exists. The round file's path is NOT final: nemik:W1024 has only the rank command so far and publishing the file is a later slice, nemik:W1025, so no witness is declared until the path is confirmed. Existence is enough for this card's step: the check reads the file's own as_of itself, so no observer change is wanted | 2026-10-25: First part landed as 53c0a490 (round_check, the pure judgement). The wiring waits on nemik:W1025 | 2026-10-25: 2026-10-25 github-8f: nemik landed the round file writer (ffa5623, nemik:W1025). Asked nemik-84 for the final path, the row shape and the refresh cadence before wiring. The pure judgement round_check landed as 53c0a490 | 2026-10-25: 2026-10-25 nemik-84: ffa5623 landed only the WRITER of the round file (roundfile.py: round_text, metric_lines) and nothing calls it, so no round file exists on any disk yet. The publisher is nemik:W1025 and is not written. Path proposed, not final: the nemik cache directory beside landings.json and ratchet-pace.json. Row shape as the writer produces it: a head line with as_of, then one flat line per round card with repo, symbol, rank and salience (all quoted text), no size and no n_source. round_check reads repo, symbol and rank only, so it is compatible. Staleness: the file is rewritten on the host job's timer, and its own as_of dates it, so the wiring reads as_of and treats the age as the staleness. Do NOT build a check that expects the file before the publisher lands. Blocked on that | 2026-10-25: 2026-10-25 nemik-84: the publisher landed (95cebb5): nemik-rank nemik --round-file PATH --landings LANDINGS writes the round file at the nemik cache directory (beside landings.json); head line as_of, then one line per card with repo, symbol, rank, salience (quoted text); no size or n_source. The file does not exist until luthen-observability schedules the run, so the wiring must treat a missing file as no round (it does already). The file lists every repo with ready cards, life included; round_check reads this repository's rows only. Unblocked: wire against a fixture now",
       "issued_at": "2026-10-25T02:39:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T06:46:26Z",
+      "last_worked": "2026-10-25T07:46:29Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42675,7 +42676,7 @@
     {
       "symbol": "W1944",
       "title": "A withdrawn train leader leaves each joined follower a requeued verdict instead of refusing it, naming that the leader was withdrawn",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1706"
       ],
@@ -42687,7 +42688,7 @@
       "issued_at": "2026-10-25T04:40:02Z",
       "minted_during": "interrupt",
       "caused_by": "W1706",
-      "last_worked": "2026-10-25T04:40:08Z",
+      "last_worked": "2026-10-25T07:36:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42760,6 +42761,27 @@
       "size_class": "small",
       "completed": "20261025T060348Z",
       "weight": 1000
+    },
+    {
+      "symbol": "W1947",
+      "title": "transcriptstruct --commitments honors --since (the window is ignored today)",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-10-25T07:06:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1931",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "transcriptstruct/src/mikemol/transcriptstruct/cli.py",
+        "transcriptstruct/tests/test_commitments.py"
+      ],
+      "size_class": "small"
     }
   ],
   "residue": [
@@ -43144,6 +43166,33 @@
       "taken_at": "2026-10-25T04:49:33Z",
       "renewed_at": "2026-10-25T04:49:33Z",
       "expires_at": "2026-10-25T05:19:33Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/round_check.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1942",
+      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
+      "taken_at": "2026-10-25T07:46:29Z",
+      "renewed_at": "2026-10-25T07:46:29Z",
+      "expires_at": "2026-10-25T08:16:29Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/tick_stop.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1942",
+      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
+      "taken_at": "2026-10-25T07:46:29Z",
+      "renewed_at": "2026-10-25T07:46:29Z",
+      "expires_at": "2026-10-25T08:16:29Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/stackrun.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1942",
+      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
+      "taken_at": "2026-10-25T07:46:29Z",
+      "renewed_at": "2026-10-25T07:46:29Z",
+      "expires_at": "2026-10-25T08:16:29Z"
     }
   ],
   "advice": [
