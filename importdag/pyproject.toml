@@ -32,6 +32,7 @@ mikemol-closure-census = "mikemol.importdag.closure_census:main"
 mikemol-closure = "mikemol.importdag.closure:main"
 mikemol-imports = "mikemol.importdag.imports:main"
 mikemol-dagbzl = "mikemol.importdag.dagbzl:main"
+mikemol-graph = "mikemol.importdag.graph:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"

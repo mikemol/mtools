@@ -177,6 +177,16 @@ py_binary(
 )
 
 py_binary(
+    name = "graph",
+    srcs = ["src/mikemol/importdag/graph.py"],
+    main = "src/mikemol/importdag/graph.py",
+    imports = ["src"],
+    visibility = ["//visibility:public"],
+    deps = [":importdag"],
+    legacy_create_init = 0,  # as for closure_census above
+)
+
+py_binary(
     name = "mypy_runner",
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
@@ -214,6 +224,7 @@ venv_from_hub(
         "mikemol-closure": "mikemol.importdag.closure:main",
         "mikemol-imports": "mikemol.importdag.imports:main",
         "mikemol-dagbzl": "mikemol.importdag.dagbzl:main",
+        "mikemol-graph": "mikemol.importdag.graph:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
