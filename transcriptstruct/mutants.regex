@@ -59,3 +59,4 @@ src/mikemol/transcriptstruct/commitledger.py|last-name-wins|        if LAYERS\.i
 src/mikemol/transcriptstruct/commitledger.py|other-repos-card-resolved|    bare = name\.removeprefix\(f"\{repo\}:"\)|    bare = name.rsplit(":", 1)[-1]|def=_own_symbol
 src/mikemol/transcriptstruct/commitledger.py|done-gate-card-only-a-card|    if any\("\.githooks/" in path or path\.endswith\("standing\.rego"\) for path in paths\):|    if False:|def=_card_layer
 src/mikemol/transcriptstruct/commitledger.py|every-layer-counted|        if row\.layer in COUNTED:|        if True:|def=counted
+src/mikemol/transcriptstruct/cli.py|queue-option-ignored|    if queue is not None:|    if False:|def=_commitments

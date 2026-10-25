@@ -35712,7 +35712,7 @@
     {
       "symbol": "W1662",
       "title": "A REFUSED verdict prints the refusing stage's own FAIL, HOST and HELD lines, not only the gate's last line",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [],
       "blocked_on": [],
@@ -35722,7 +35722,7 @@
       "issued_at": "2026-10-19T03:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T06:52:27Z",
+      "last_worked": "2026-10-25T10:11:17Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -35734,7 +35734,7 @@
     {
       "symbol": "W1663",
       "title": "A REFUSED verdict gives the one command that reproduces only the refusing rung",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/gatephase.py!w",
@@ -35747,7 +35747,7 @@
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T06:57:24Z",
+      "last_worked": "2026-10-25T10:11:17Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -36465,17 +36465,17 @@
     {
       "symbol": "W1697",
       "title": "mikemol-repin bumps a sibling git pin (mikemol-fence inside mikemol-hooks' dependencies) after each fence change, then hooks declares fence as a dependency",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read repin_cli for how it bumps the sibling pin of mikemol-hooks, then: hooks declares mikemol-fence as a git-pinned dependency in its pyproject, mikemol-repin bumps that pin whenever it bumps the hooks pin (one sha across the specs), and commit_kata.fence_of finds the installed dependency's mikemol-membudget first (it now searches beside python and in a sibling mtools tree, which a repo that only has the wheel does not have); tests over the repin bump and the lookup order",
-      "evidence": "2026-10-25: 2026-10-25 sweep (W1929): the card is real, not stale: commit_kata.fence_of finds mikemol-membudget beside the interpreter or under a sibling fence/.venv, and hooks/pyproject.toml declares no fence dependency, so a repo installed from the wheel alone needs the fence pin by hand (its own refusal says add mikemol-fence). Given a bounded next step; not built",
+      "next_bounded_step": "Add mikemol-fence as a git-pinned dependency of hooks (pyproject row, uv.lock, requirements), then reorder commit_kata.fence_of to find the installed dependency's mikemol-membudget first; a test of the lookup order; a repin test that one hooks bump moves the fence pin too. I still need the dependency row and the lookup change, W1697",
+      "evidence": "2026-10-25: 2026-10-25 sweep (W1929): the card is real, not stale: commit_kata.fence_of finds mikemol-membudget beside the interpreter or under a sibling fence/.venv, and hooks/pyproject.toml declares no fence dependency, so a repo installed from the wheel alone needs the fence pin by hand (its own refusal says add mikemol-fence). Given a bounded next step; not built | 2026-10-25: 2026-10-25: READ repin.py: it already moves EVERY git pin of one repository to one sha (module docstring: ONE SHA, MANY DISTS; rewrite takes dists or all), so the card's repin half needs no code once hooks declares fence: the pin it declares is bumped with the hooks pin. What is left is two edits: the dependency row in hooks/pyproject.toml (with its lock and the bazel requirements regenerated) and commit_kata.fence_of searching the installed dependency first",
       "issued_at": "2026-10-19T10:55:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T02:40:57Z",
+      "last_worked": "2026-10-25T09:36:26Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -37020,7 +37020,7 @@
       "issued_at": "2026-10-19T16:07:50Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-19T16:07:55Z",
+      "last_worked": "2026-10-25T10:11:17Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -40555,19 +40555,21 @@
     {
       "symbol": "W1868",
       "title": "A state-continuity fact for the ledger chain: the last entry's after-state hash is the next transition's expected before-state",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "waldo"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "luthen-observability:W1548"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Asked estate by letter in its inbox (dated 2026-10-23, mtools lattice cards decision) which of (a) the observed after-state hash in the ledger plus a baseline-hash-equals-last-ledger-after-hash check (this card) and (b) the Rego before/after judgement (W1869) it wants, both or neither; estate's apply.run already holds continuity in its baseline file. Build only what it picks; neither means drop W1868 and W1869 and tell luthen (W1549 and W1548 block on them)",
-      "evidence": "",
+      "evidence": "2026-10-25: 2026-10-25: estate:W3 closed 2026-10-23 without picking either of W1868 and W1869 (its apply.run holds continuity in its own baseline file) and no estate session is live; asked luthen-observability-ab whether luthen's W1548 and W1549, which wait on these, still need them. Build exactly what luthen names; if neither, drop both with that reason",
       "issued_at": "2026-10-23T19:16:46Z",
       "minted_during": "interrupt",
       "caused_by": "estate:W3",
-      "last_worked": "2026-10-24T02:34:43Z",
+      "last_worked": "2026-10-25T10:11:43Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42377,12 +42379,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Part 1 written (commitledger.py: resolve, record, document, counted; at field on the row): tests in flight. Then mutants, warrants, rubric, stack; then the --ledger mode and the metric emitter. I still need the --ledger mode and the emitter, W1933",
-      "evidence": "2026-10-24: 2026-10-24 metric fixed for luthen-observability:W1598 and nemik:W1007/W1008: mikemol.commitments.open{repo} (house dotted name, gauge, value = the repository's unresolved commitment rows; repo = the repository the statement was made in, the real name and never the snapshot dir); emitter card = this one | 2026-10-24: CONTRACT (2026-10-24, sent to nemik-84, luthen-observability-ab and github-8f): (1) the ledger is commitments.json at the build root, read the way landings.json and ratchet-pace.json are: {as_of, rows:[{repo, session, line, uuid, at, text, names, state, resolved_by}]}; repo = the repository's real name; session = the transcript's session id; line and uuid = the assistant record the statement is in; at = its UTC timestamp; text = the statement; names = the card cites (<repo>:W<n>, or W<n> within the repo) and repo-relative files it names, possibly empty; state = open or resolved; resolved_by = null while open, else a cite {kind: card|stack|evidence, ref} of the durable follow-through. (2) the metric is mikemol.commitments.open{repo}, a gauge, value = the repo's rows with state open. (3) the emitter card is this one (W1933); the extractor is W1931, the Stop hook W1932; all enable github:W44; this card also enables nemik:W1007 and nemik:W1008. A row with empty names stays open until a card cites its uuid | 2026-10-24: CONTRACT ADDITION 2026-10-24 (luthen-observability:W1599 and github-8f, same G9 reading): each row gains layer = the strongest persisted form of its follow-through, from G9's ladder: none (open), memory, instructions, trigger, hook, gate, plus card for a card that is only planned. A recurring class resolved only at memory or instructions is a coverability residue and stays COUNTED. Metric: mikemol.commitments.open{repo,layer} counts rows that are open (layer none) or resolved only at memory or instructions (layer memory or instructions); a sum over layer is the repo's open count. mikemol.commitments.said{repo} unchanged. The layer is inferred from where the follow-through lives (a memory file, an instruction file, a card, a landed card whose manifest touches hook or gate code), and that inference is the part to measure first | 2026-10-25: 2026-10-25: first part landed as b379cc87 (commitledger: resolve, record, document, counted; the row's at field). Still to do: the --ledger mode and the emitter of the open and said metrics",
+      "next_bounded_step": "Stack the --queue mode; then the emitter of mikemol.commitments.open{repo,layer} and mikemol.commitments.said{repo} through mikemol-otlp from the ledger document. I still need the emitter, W1933",
+      "evidence": "2026-10-24: 2026-10-24 metric fixed for luthen-observability:W1598 and nemik:W1007/W1008: mikemol.commitments.open{repo} (house dotted name, gauge, value = the repository's unresolved commitment rows; repo = the repository the statement was made in, the real name and never the snapshot dir); emitter card = this one | 2026-10-24: CONTRACT (2026-10-24, sent to nemik-84, luthen-observability-ab and github-8f): (1) the ledger is commitments.json at the build root, read the way landings.json and ratchet-pace.json are: {as_of, rows:[{repo, session, line, uuid, at, text, names, state, resolved_by}]}; repo = the repository's real name; session = the transcript's session id; line and uuid = the assistant record the statement is in; at = its UTC timestamp; text = the statement; names = the card cites (<repo>:W<n>, or W<n> within the repo) and repo-relative files it names, possibly empty; state = open or resolved; resolved_by = null while open, else a cite {kind: card|stack|evidence, ref} of the durable follow-through. (2) the metric is mikemol.commitments.open{repo}, a gauge, value = the repo's rows with state open. (3) the emitter card is this one (W1933); the extractor is W1931, the Stop hook W1932; all enable github:W44; this card also enables nemik:W1007 and nemik:W1008. A row with empty names stays open until a card cites its uuid | 2026-10-24: CONTRACT ADDITION 2026-10-24 (luthen-observability:W1599 and github-8f, same G9 reading): each row gains layer = the strongest persisted form of its follow-through, from G9's ladder: none (open), memory, instructions, trigger, hook, gate, plus card for a card that is only planned. A recurring class resolved only at memory or instructions is a coverability residue and stays COUNTED. Metric: mikemol.commitments.open{repo,layer} counts rows that are open (layer none) or resolved only at memory or instructions (layer memory or instructions); a sum over layer is the repo's open count. mikemol.commitments.said{repo} unchanged. The layer is inferred from where the follow-through lives (a memory file, an instruction file, a card, a landed card whose manifest touches hook or gate code), and that inference is the part to measure first | 2026-10-25: 2026-10-25: first part landed as b379cc87 (commitledger: resolve, record, document, counted; the row's at field). Still to do: the --ledger mode and the emitter of the open and said metrics | 2026-10-25: 2026-10-25: second part built: mikemol-transcriptstruct LOG --commitments --queue QUEUE writes the resolved ledger document and a counted tally; bazel tests pass, local grid in flight",
       "issued_at": "2026-10-24T23:34:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T08:45:09Z",
+      "last_worked": "2026-10-25T10:08:15Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -42839,11 +42841,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Tick-stop wiring written and live on disk (hooks/src/mikemol/hooks/tick_stop.py calls round_reason once per stop); test in flight (bazel test //hooks:test_tick_stop). Then warrant, stack. Stack submit wiring is the part after. I still need the stackrun wiring, W1948",
-      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree | 2026-10-25: 2026-10-25 nemik-84 CORRECTION of the reversal: the one-line form landed in nemik as 7d1fad0 and was pushed; a revert to lines is in nemik's gate, not landed. Which form the host file has depends on the nemik-rank build luthen pins. So round_check keeps accepting BOTH forms (the two-form reader in stack-w1948a is required, not extra) until nemik-84 sends the revert's sha; do not remove the one-line reader before then | 2026-10-25: 2026-10-25 nemik-84: the revert landed in nemik as 0150239; the writer is back to the lines form (head as_of, a card per line) and luthen's gate fails closed on anything else. The one-line reader stays: removing it is churn with no gain, and it is covered by a fixture",
+      "evidence": "2026-10-25: 2026-10-25: W1942 landed as e19e28b3 (round_wire: reader, staleness, judgement) and was marked done by mistake with the wiring still to do; the remainder is this card, per the no-reopen rule (W1930) | 2026-10-25: 2026-10-25: first part (two-form reader, luthen export path) built, bazel test passed, stack submitted (stack-w1948a) | 2026-10-25: 2026-10-25 nemik-84 REVERSAL (from luthen-observability W1613): luthen's egress gate rules the file line by line and keeps the JSON-lines form, so there is no one-line rewrite; the real form is the head line and one row per line, and round_symbols' line reading was right. The one-line reader in stack-w1948a stays as harmless extra coverage, a fixture of the form; a missing file is real until luthen's next hourly run and already means no refusal. Path unchanged: luthen's export tree | 2026-10-25: 2026-10-25 nemik-84 CORRECTION of the reversal: the one-line form landed in nemik as 7d1fad0 and was pushed; a revert to lines is in nemik's gate, not landed. Which form the host file has depends on the nemik-rank build luthen pins. So round_check keeps accepting BOTH forms (the two-form reader in stack-w1948a is required, not extra) until nemik-84 sends the revert's sha; do not remove the one-line reader before then | 2026-10-25: 2026-10-25 nemik-84: the revert landed in nemik as 0150239; the writer is back to the lines form (head as_of, a card per line) and luthen's gate fails closed on anything else. The one-line reader stays: removing it is churn with no gain, and it is covered by a fixture | 2026-10-25: 2026-10-25 nemik-84: the shared round.json contract test landed in nemik as fae9d5c (nemik:W1033); its recorded fixture is a head as_of line and one card per line. Answered with a byte-for-byte copy of the fixture in hooks/tests/test_round_check.py, so a format change on either side fails a test",
       "issued_at": "2026-10-25T08:29:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1942",
-      "last_worked": "2026-10-25T09:34:15Z",
+      "last_worked": "2026-10-25T10:10:08Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -43262,10 +43264,10 @@
       "tag": "file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w",
       "holder": "(unlocked)",
       "waypoint": "W1933",
-      "base_sha": "fa33197856dafddb535169706ee4be39f1572f38",
-      "taken_at": "2026-10-25T08:17:30Z",
-      "renewed_at": "2026-10-25T08:17:30Z",
-      "expires_at": "2026-10-25T08:47:30Z"
+      "base_sha": "31a161988c7a72d51467d32bbbfba2fcee7ca80e",
+      "taken_at": "2026-10-25T10:08:15Z",
+      "renewed_at": "2026-10-25T10:08:15Z",
+      "expires_at": "2026-10-25T10:38:15Z"
     }
   ],
   "advice": [
@@ -44734,7 +44736,7 @@
       "action": "update W1513",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44743,7 +44745,7 @@
       "action": "update W1667",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44752,7 +44754,7 @@
       "action": "update W1736",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44761,7 +44763,7 @@
       "action": "update W1803",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44770,7 +44772,7 @@
       "action": "update W1823",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44779,7 +44781,7 @@
       "action": "update W1824",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44788,7 +44790,7 @@
       "action": "update W1825",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44797,7 +44799,7 @@
       "action": "update W1857",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44806,7 +44808,7 @@
       "action": "update W1863",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44815,7 +44817,7 @@
       "action": "update W1869",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44824,7 +44826,7 @@
       "action": "update W1874",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44833,7 +44835,7 @@
       "action": "update W1875",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44842,7 +44844,7 @@
       "action": "update W1880",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44851,7 +44853,7 @@
       "action": "update W1895",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44860,7 +44862,7 @@
       "action": "update W1898",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44869,7 +44871,7 @@
       "action": "update W1899",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44878,7 +44880,7 @@
       "action": "update W1900",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44887,7 +44889,7 @@
       "action": "update W1907",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44896,7 +44898,7 @@
       "action": "update W1908",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44905,7 +44907,7 @@
       "action": "update W1909",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44914,7 +44916,7 @@
       "action": "update W1912",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44923,7 +44925,7 @@
       "action": "update W1914",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44932,7 +44934,7 @@
       "action": "update W1915",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44941,7 +44943,7 @@
       "action": "update W1916",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44950,7 +44952,7 @@
       "action": "update W1917",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44959,7 +44961,7 @@
       "action": "update W1918",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44968,7 +44970,7 @@
       "action": "update W1919",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -44977,7 +44979,34 @@
       "action": "update W1920",
       "first_run": "2026-10-24T19:14:22Z",
       "last_run": "2026-10-24T19:14:22Z",
-      "status": "open"
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1662",
+      "action": "update W1662",
+      "first_run": "2026-10-25T10:10:42Z",
+      "last_run": "2026-10-25T10:10:42Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1663",
+      "action": "update W1663",
+      "first_run": "2026-10-25T10:10:42Z",
+      "last_run": "2026-10-25T10:10:42Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1716",
+      "action": "update W1716",
+      "first_run": "2026-10-25T10:10:42Z",
+      "last_run": "2026-10-25T10:10:42Z",
+      "status": "applied"
     }
   ]
 }

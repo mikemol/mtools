@@ -1230,3 +1230,10 @@
   claim  = {The row's JSON fields, and the metric's layers: none, memory, instructions only.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_the_record_is_the_contract_and_counting_keeps_the_weak_layers},
 }
+
+@misc{transcriptstruct-commitledger-queue-option-writes-the-resolved-ledger-then-a-tally,
+  section = {commitledger},
+  title  = {The mode's output: the document with state and layer per row, and the counted tally},
+  claim  = {The mode's output: the document with state and layer per row, and the counted tally.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitledger.py -k test_the_queue_option_writes_the_resolved_ledger_then_a_tally},
+}

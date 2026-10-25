@@ -19,11 +19,14 @@ import argparse
 import json
 import sys
 from collections.abc import Sequence
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import TextIO, cast
 
+from mikemol.transcriptstruct import commitledger
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
+from mikemol.transcriptstruct.commitments import Commitment
 from mikemol.transcriptstruct.commitments import extract as extract_commitments
 from mikemol.transcriptstruct.harvest import harvest
 from mikemol.transcriptstruct.memaudit import audit
@@ -138,6 +141,12 @@ def _parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--since", type=int, help="first line to search (1-based, inclusive)")
     parser.add_argument("--until", type=int, help="last line to search (inclusive)")
+    parser.add_argument(
+        "--queue",
+        metavar="PATH",
+        help="--commitments: resolve each statement against this paths-forward queue and "
+        "write the ledger document (as_of and rows with state, layer, resolved_by)",
+    )
     return parser
 
 
@@ -281,7 +290,20 @@ def _cache_turns(path: Path, out: TextIO) -> None:
     out.write(f"# {len(found)} turn(s), {sum(t.cold for t in found)} cold\n")
 
 
-def _commitments(path: Path, out: TextIO) -> None:
+def _ledger(found: list[Commitment], queue: Path, out: TextIO) -> None:
+    """Write the commitments resolved against a queue as one ledger document, then a tally."""
+    doc: object = json.loads(queue.read_text(encoding="utf-8"))
+    listed = cast("dict[str, object]", doc).get("waypoints") if isinstance(doc, dict) else None
+    items = cast("list[object]", listed) if isinstance(listed, list) else []
+    cards = [cast("dict[str, object]", item) for item in items if isinstance(item, dict)]
+    rows = commitledger.resolve(found, cards)
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    out.write(_line(commitledger.document(stamp, rows)))
+    tally = commitledger.counted(rows)
+    out.write(f"# {sum(tally.values())} counted: {tally}\n")
+
+
+def _commitments(path: Path, out: TextIO, queue: str | None = None) -> None:
     """Write each commitment the assistant records of one transcript make, then the count.
 
     The session is the transcript's file name and the repository the last word of its project
@@ -289,6 +311,9 @@ def _commitments(path: Path, out: TextIO) -> None:
     """
     repo = path.resolve().parent.name.rsplit("-", 1)[-1]
     found = extract_commitments(read_path(path), path.stem, repo)
+    if queue is not None:
+        _ledger(found, Path(queue), out)
+        return
     for row in found:
         body: dict[str, object] = {
             "line": row.line,
@@ -380,7 +405,7 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
     elif opts.get("turn_start") is True:
         _turn_start(path, out)
     elif opts.get("commitments") is True:
-        _commitments(path, out)
+        _commitments(path, out, _text(opts, "queue"))
     elif opts.get("harvest") is True:
         _harvest(path, scheduled, out)
     else:
