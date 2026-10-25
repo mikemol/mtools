@@ -19,6 +19,12 @@ existence here. The strace footprint audit (W1504) is what holds a declaration t
 the third, because the engine it was written for imported flat; this package's modules are written
 `from mikemol.hooks.heartbeat import Beat`, and reading only the others would drop most edges.
 
+⚑ `typing_only` IS THE SUBSET OF `imports` THAT EXISTS ONLY UNDER `if TYPE_CHECKING:` (W2006).
+Such an edge is needed to check types and never to run the module, so a build rule that makes
+one library per module takes `imports` minus `typing_only` as its deps: two modules that name
+each other for the checker only (hooks' queuecarry and stackrun) are a cycle bazel refuses, and
+not one at run time. An import that also occurs outside the guard is not typing only.
+
 ⚑ A DECLARED READ THAT NAMES NO FILE IS REFUSED, not recorded: a graph with a dangling edge sends a
 cone to a file that is not there.
 
@@ -29,6 +35,7 @@ import argparse
 import ast
 import json
 import sys
+from collections.abc import Iterable
 from pathlib import Path
 
 from mikemol.atomicwrite.durable import write_atomic
@@ -49,20 +56,11 @@ EXIT_STALE = 1
 Entry = dict[str, list[str]]
 
 
-def package_imports(text: str, names: set[str], package: str) -> set[str]:
-    """Collect the package modules `text` imports, in any of the three spellings.
-
-    Returns:
-        the stems in `names` that `text` imports; a text that does not parse yields the empty set.
-
-    """
-    try:
-        tree = ast.parse(text)
-    except SyntaxError:
-        return set()
+def _imported(nodes: Iterable[ast.AST], names: set[str], package: str) -> set[str]:
+    # The stems in `names` that these syntax nodes import, in any of the three spellings.
     found: set[str] = set()
     prefix = package + "."
-    for node in ast.walk(tree):
+    for node in nodes:
         if isinstance(node, ast.Import):
             for alias in node.names:
                 head = alias.name[len(prefix) :].split(".")[0]
@@ -77,6 +75,51 @@ def package_imports(text: str, names: set[str], package: str) -> set[str]:
                 if head in names:
                     found.add(head)
     return found
+
+
+def package_imports(text: str, names: set[str], package: str) -> set[str]:
+    """Collect the package modules `text` imports, in any of the three spellings.
+
+    Returns:
+        the stems in `names` that `text` imports; a text that does not parse yields the empty set.
+
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return set()
+    return _imported(ast.walk(tree), names, package)
+
+
+def _guarded(test: ast.expr) -> bool:
+    # Whether an `if` test is TYPE_CHECKING or typing.TYPE_CHECKING.
+    if isinstance(test, ast.Name):
+        return test.id == "TYPE_CHECKING"
+    return isinstance(test, ast.Attribute) and test.attr == "TYPE_CHECKING"
+
+
+def typing_only(text: str, names: set[str], package: str) -> set[str]:
+    """Collect the package modules `text` imports only under `if TYPE_CHECKING:`.
+
+    Returns:
+        the stems in `names` imported inside such a block and nowhere outside one; empty for a
+        text that does not parse.
+
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return set()
+    inside = [
+        child
+        for node in ast.walk(tree)
+        if isinstance(node, ast.If) and _guarded(node.test)
+        for stmt in node.body
+        for child in ast.walk(stmt)
+    ]
+    marked = {id(child) for child in inside}
+    outside = [node for node in ast.walk(tree) if id(node) not in marked]
+    return _imported(inside, names, package) - _imported(outside, names, package)
 
 
 def module_paths(dist: Path, package: str) -> list[str]:
@@ -139,8 +182,14 @@ def build(dist: Path, package: str) -> dict[str, object]:
 
     def entry(path: str) -> Entry:
         text = (dist / path).read_text(encoding="utf-8")
-        found = package_imports(text, set(index), package) - {Path(path).stem}
-        return {"imports": sorted(index[stem] for stem in found), "reads": reads.get(path, [])}
+        own = {Path(path).stem}
+        found = package_imports(text, set(index), package) - own
+        typing = typing_only(text, set(index), package) - own
+        return {
+            "imports": sorted(index[stem] for stem in found),
+            "reads": reads.get(path, []),
+            "typing_only": sorted(index[stem] for stem in typing),
+        }
 
     return {
         "schema": SCHEMA,

@@ -5,7 +5,8 @@ GRAPH = {
   "modules": {
     "src/mikemol/hooks/__init__.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/after_compaction.py": {
       "imports": [
@@ -14,18 +15,21 @@ GRAPH = {
         "src/mikemol/hooks/tick_gate.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/bazel_admit.py": {
       "imports": [
         "src/mikemol/hooks/host_facts.py",
         "src/mikemol/hooks/tool_path.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/bazelstop.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/beat.py": {
       "imports": [
@@ -33,42 +37,51 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/watchdog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/build_failure.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/tool_path.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/checker_context.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/checkers.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/claude_code_census.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/cmdparse.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/codon_probe.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_body.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_counts.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_gauge.py": {
       "imports": [
@@ -76,7 +89,8 @@ GRAPH = {
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_kata.py": {
       "imports": [
@@ -113,7 +127,8 @@ GRAPH = {
         "src/mikemol/hooks/trainverdict.py",
         "src/mikemol/hooks/verdictlog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_span.py": {
       "imports": [
@@ -121,13 +136,15 @@ GRAPH = {
         "src/mikemol/hooks/verdictlog.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_turn.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_verdict.py": {
       "imports": [
@@ -135,32 +152,37 @@ GRAPH = {
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commit_withdraw.py": {
       "imports": [
         "src/mikemol/hooks/bazelstop.py",
         "src/mikemol/hooks/commit_counts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commitments_emit.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_emit.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/commitprogress.py": {
       "imports": [
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/corelimit.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/entry.py": {
       "imports": [
@@ -182,87 +204,105 @@ GRAPH = {
         "src/mikemol/hooks/tick_stop.py",
         "src/mikemol/hooks/work_claims_hook.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/flag_contract.py": {
       "imports": [
         "src/mikemol/hooks/refusal_log.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/footprint.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gate_ledger.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gateclass.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gateenv.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gatehistory.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gatejobs.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gatephase.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gatetargets.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gatetrend.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gatetrend_cli.py": {
       "imports": [
         "src/mikemol/hooks/gatetrend.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/gen_warrants.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/warrant_crosscheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/githook_post_commit.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/githook_pre_push.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/githook_prepare_commit_msg.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/grade.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/heartbeat.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/historyfetch.py": {
       "imports": [
@@ -270,33 +310,39 @@ GRAPH = {
         "src/mikemol/hooks/gatehistory.py",
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/hold_lift.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/hook_argv.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/host_facts.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/standing_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/hosttied.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/idle_progress.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/stamps.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/idle_stop.py": {
       "imports": [
@@ -306,102 +352,121 @@ GRAPH = {
         "src/mikemol/hooks/round_order.py",
         "src/mikemol/hooks/stamps.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/inbound_asks.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/isolated.py": {
       "imports": [
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/launcher.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/loadwait.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/musthave.py": {
       "imports": [
         "src/mikemol/hooks/repin.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/musthave_cli.py": {
       "imports": [
         "src/mikemol/hooks/musthave.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/mypy_mirror.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/nemik_check.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/new_dist.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/new_dist_cli.py": {
       "imports": [
         "src/mikemol/hooks/new_dist.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/no_chaining.py": {
       "imports": [
         "src/mikemol/hooks/cmdparse.py",
         "src/mikemol/hooks/writeguard.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/no_verify.py": {
       "imports": [
         "src/mikemol/hooks/cmdparse.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/payload.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/presubmit.py": {
       "imports": [
         "src/mikemol/hooks/tool_path.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/privacy_audit.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/privacy_shipped.py": {
       "imports": [
         "src/mikemol/hooks/privacy_audit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/probe.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/project_root.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck.py": {
       "imports": [
@@ -416,7 +481,8 @@ GRAPH = {
         "src/mikemol/hooks/verdict.py",
         "src/mikemol/hooks/worktree_venv.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_advise.py": {
       "imports": [
@@ -424,20 +490,23 @@ GRAPH = {
         "src/mikemol/hooks/project_root.py",
         "src/mikemol/hooks/pycheck_closure.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_census.py": {
       "imports": [
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_clear.py": {
       "imports": [
         "src/mikemol/hooks/project_root.py",
         "src/mikemol/hooks/worktree_venv.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_cli.py": {
       "imports": [
@@ -454,59 +523,69 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_ratchet_write.py",
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_closure.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/tool_path.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_format.py": {
       "imports": [
         "src/mikemol/hooks/project_root.py",
         "src/mikemol/hooks/worktree_venv.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_house.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_install.py": {
       "imports": [
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_message.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_ratchet.py": {
       "imports": [
         "src/mikemol/hooks/pyratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_ratchet_run.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_ratchet.py",
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pycheck_ratchet_write.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_ratchet.py",
         "src/mikemol/hooks/pyratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/pyratchet.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/queuecarry.py": {
       "imports": [
@@ -514,7 +593,11 @@ GRAPH = {
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": [
+        "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/stackrun.py"
+      ]
     },
     "src/mikemol/hooks/ratchet_emit.py": {
       "imports": [
@@ -522,25 +605,30 @@ GRAPH = {
         "src/mikemol/hooks/hold_lift.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/ratchet_hook.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/read_guard.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/refusal_log.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/repin.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/repin_cli.py": {
       "imports": [
@@ -552,61 +640,72 @@ GRAPH = {
         "src/mikemol/hooks/revendor_cli.py",
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/repin_metrics.py": {
       "imports": [
         "src/mikemol/hooks/repin_row.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/repin_row.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/requeue.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/revendor.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/revendor_apply.py": {
       "imports": [
         "src/mikemol/hooks/revendor.py",
         "src/mikemol/hooks/wheel.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/revendor_cli.py": {
       "imports": [
         "src/mikemol/hooks/revendor.py",
         "src/mikemol/hooks/revendor_apply.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/rewake.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/rootdrop.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/round_check.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/round_order.py": {
       "imports": [
         "src/mikemol/hooks/round_check.py",
         "src/mikemol/hooks/round_wire.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/round_wire.py": {
       "imports": [
@@ -615,19 +714,23 @@ GRAPH = {
         "src/mikemol/hooks/round_check.py",
         "src/mikemol/hooks/stamps.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/routing_table.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/runproc.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/scratch.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/scratch_cli.py": {
       "imports": [
@@ -635,20 +738,23 @@ GRAPH = {
         "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/scratch_land.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/scratch_land.py": {
       "imports": [
         "src/mikemol/hooks/scratch.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/sessioncache.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/shardgate.py": {
       "imports": [
@@ -657,7 +763,8 @@ GRAPH = {
         "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/shellcheck.py": {
       "imports": [
@@ -666,39 +773,46 @@ GRAPH = {
         "src/mikemol/hooks/project_root.py",
         "src/mikemol/hooks/structural_query.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/shellcheck_cli.py": {
       "imports": [
         "src/mikemol/hooks/shellcheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/siblingcensus.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/siblingcensus_cli.py": {
       "imports": [
         "src/mikemol/hooks/siblingcensus.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/siblingratchet.py": {
       "imports": [
         "src/mikemol/hooks/siblingcensus.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/snaplinks.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/snapshot.py": {
       "imports": [
         "src/mikemol/hooks/snaplinks.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackbuildfiles.py": {
       "imports": [
@@ -706,13 +820,15 @@ GRAPH = {
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackdrift.py": {
       "imports": [
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackfreeze.py": {
       "imports": [
@@ -720,14 +836,16 @@ GRAPH = {
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackgate.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackimports.py": {
       "imports": [
@@ -735,27 +853,31 @@ GRAPH = {
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackland.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stacklanding.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackmutants.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackpin.py": {
       "imports": [
@@ -763,7 +885,8 @@ GRAPH = {
         "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stackrun.py": {
       "imports": [
@@ -778,13 +901,15 @@ GRAPH = {
         "src/mikemol/hooks/stackmutants.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stacksnap.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stacktree.py": {
       "imports": [
@@ -792,25 +917,29 @@ GRAPH = {
         "src/mikemol/hooks/stackland.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stacktypes.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stackmutants.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/stamps.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/standing_facts.py": {
       "imports": [
         "src/mikemol/hooks/hold_lift.py",
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/structural_query.py": {
       "imports": [
@@ -818,17 +947,20 @@ GRAPH = {
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/routing_table.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/subagent_guard.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/suppressions.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/tick_gate.py": {
       "imports": [
@@ -836,14 +968,16 @@ GRAPH = {
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/tick_release.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/tick_stop.py": {
       "imports": [
@@ -853,19 +987,23 @@ GRAPH = {
         "src/mikemol/hooks/round_wire.py",
         "src/mikemol/hooks/stamps.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/tool_path.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainalert.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainbisect.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/traindrive.py": {
       "imports": [
@@ -880,18 +1018,21 @@ GRAPH = {
         "src/mikemol/hooks/trainround.py",
         "src/mikemol/hooks/traintel.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainjoin.py": {
       "imports": [
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainland.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainlead.py": {
       "imports": [
@@ -903,28 +1044,32 @@ GRAPH = {
         "src/mikemol/hooks/traintel.py",
         "src/mikemol/hooks/trainverdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainround.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainrun.py": {
       "imports": [
         "src/mikemol/hooks/trainbisect.py",
         "src/mikemol/hooks/trainland.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/traintel.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/traintip.py": {
       "imports": [
@@ -933,19 +1078,22 @@ GRAPH = {
         "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/trainverdict.py": {
       "imports": [
         "src/mikemol/hooks/traindrive.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/verdict.py": {
       "imports": [
         "src/mikemol/hooks/checker_context.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/verdictlog.py": {
       "imports": [
@@ -954,14 +1102,16 @@ GRAPH = {
         "src/mikemol/hooks/vlogrecord.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogbatch.py": {
       "imports": [
         "src/mikemol/hooks/vlogrecord.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogcli.py": {
       "imports": [
@@ -973,32 +1123,38 @@ GRAPH = {
         "src/mikemol/hooks/vlogrecord.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogconfig.py": {
       "imports": [
         "src/mikemol/hooks/vlogrecord.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogdetach.py": {
       "imports": [
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogfollow.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogforms.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogrecord.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogship.py": {
       "imports": [
@@ -1007,23 +1163,28 @@ GRAPH = {
         "src/mikemol/hooks/vlogspool.py",
         "src/mikemol/hooks/vlogwatch.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogsink.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogspool.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/vlogwatch.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/warrant_crosscheck.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/watchdog.py": {
       "imports": [
@@ -1031,21 +1192,25 @@ GRAPH = {
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/waypoint_trailer.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset.py": {
       "imports": [
         "src/mikemol/hooks/websubset_codon.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset_builtins.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset_cli.py": {
       "imports": [
@@ -1054,64 +1219,75 @@ GRAPH = {
         "src/mikemol/hooks/websubset_prom.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset_codon.py": {
       "imports": [
         "src/mikemol/hooks/websubset_builtins.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset_list.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset_prom.py": {
       "imports": [
         "src/mikemol/hooks/websubset.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/websubset_tree.py": {
       "imports": [
         "src/mikemol/hooks/websubset.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/wheel.py": {
       "imports": [
         "src/mikemol/hooks/revendor.py",
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/work_claims.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/work_claims_hook.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/work_claims.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/worktree_venv.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/worktreereap.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "src/mikemol/hooks/writeguard.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     }
   },
   "package": "mikemol.hooks",
@@ -1119,14 +1295,16 @@ GRAPH = {
   "tests": {
     "tests/test_adopt_launcher.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_adoption.py": {
       "imports": [
         "src/mikemol/hooks/routing_table.py",
         "src/mikemol/hooks/structural_query.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_after_compaction.py": {
       "imports": [
@@ -1136,18 +1314,21 @@ GRAPH = {
         "src/mikemol/hooks/host_facts.py",
         "src/mikemol/hooks/tick_gate.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_bar_fires.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_bazel_admit.py": {
       "imports": [
         "src/mikemol/hooks/bazel_admit.py",
         "src/mikemol/hooks/host_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_bazelstop.py": {
       "imports": [
@@ -1155,7 +1336,8 @@ GRAPH = {
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_withdraw.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_beat_hook.py": {
       "imports": [
@@ -1164,11 +1346,13 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/watchdog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_bin_launchers_argv.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_build_failure.py": {
       "imports": [
@@ -1176,13 +1360,15 @@ GRAPH = {
         "src/mikemol/hooks/entry.py",
         "src/mikemol/hooks/hook_argv.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_build_failure_note.py": {
       "imports": [
         "src/mikemol/hooks/build_failure.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_call_stamp.py": {
       "imports": [
@@ -1190,7 +1376,8 @@ GRAPH = {
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/watchdog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_census_unmeasured.py": {
       "imports": [
@@ -1198,198 +1385,232 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_cli.py",
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": [
+        "src/mikemol/hooks/verdict.py"
+      ]
     },
     "tests/test_checkers.py": {
       "imports": [
         "src/mikemol/hooks/checkers.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_claude_code_census.py": {
       "imports": [
         "src/mikemol/hooks/claude_code_census.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_cmdparse.py": {
       "imports": [
         "src/mikemol/hooks/cmdparse.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_codon_probe.py": {
       "imports": [
         "src/mikemol/hooks/codon_probe.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_beat.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/heartbeat.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_body.py": {
       "imports": [
         "src/mikemol/hooks/commit_body.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_claim.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_counts.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_gauge.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_gauge.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_isolated.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_isolated_hooks.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_isolated_ignored.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_isolated_new.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_isolated_routing.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_isolated_staged.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_kata.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_kata_root.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_landing.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_launcher.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_launcher_fence.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_lease_wait.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_limit.py": {
       "imports": [
         "src/mikemol/hooks/commitprogress.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_published.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_raced.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_remote.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_run_git.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_span.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/commit_span.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_stack.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_turn.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_turn.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_unpushed.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_verdict.py": {
       "imports": [
         "src/mikemol/hooks/commit_verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commit_withdraw.py": {
       "imports": [
@@ -1397,185 +1618,215 @@ GRAPH = {
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/commit_withdraw.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commitments_emit.py": {
       "imports": [
         "src/mikemol/hooks/commitments_emit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_commitprogress.py": {
       "imports": [
         "src/mikemol/hooks/commitprogress.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_corelimit.py": {
       "imports": [
         "src/mikemol/hooks/corelimit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_exec_env.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_flag_contract.py": {
       "imports": [
         "src/mikemol/hooks/flag_contract.py",
         "src/mikemol/hooks/refusal_log.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_footprint.py": {
       "imports": [
         "src/mikemol/hooks/footprint.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gate_ledger.py": {
       "imports": [
         "src/mikemol/hooks/gate_ledger.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gate_ledger_stamp.py": {
       "imports": [
         "src/mikemol/hooks/gate_ledger.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gate_phase_marks.py": {
       "imports": [
         "src/mikemol/hooks/gatephase.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gate_suite.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gate_withdraw_phase.py": {
       "imports": [
         "src/mikemol/hooks/gatephase.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gateclass.py": {
       "imports": [
         "src/mikemol/hooks/gateclass.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gated_tree_trailer.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/isolated.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gateenv.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/gateenv.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gatehistory.py": {
       "imports": [
         "src/mikemol/hooks/gatehistory.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gatejobs.py": {
       "imports": [
         "src/mikemol/hooks/gatejobs.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gatephase.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/gatephase.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gatetargets.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/gatetargets.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gatetrend.py": {
       "imports": [
         "src/mikemol/hooks/gatetrend.py",
         "src/mikemol/hooks/gatetrend_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gen_warrants.py": {
       "imports": [
         "src/mikemol/hooks/gen_warrants.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gen_warrants_rubric.py": {
       "imports": [
         "src/mikemol/hooks/gen_warrants.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_gen_warrants_write.py": {
       "imports": [
         "src/mikemol/hooks/gen_warrants.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_githook_post_commit.py": {
       "imports": [
         "src/mikemol/hooks/githook_post_commit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_githook_pre_push.py": {
       "imports": [
         "src/mikemol/hooks/githook_pre_push.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_githook_prepare_commit_msg.py": {
       "imports": [
         "src/mikemol/hooks/githook_prepare_commit_msg.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_grade.py": {
       "imports": [
         "src/mikemol/hooks/grade.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_heartbeat.py": {
       "imports": [
         "src/mikemol/hooks/heartbeat.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_historyfetch.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/historyfetch.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_hold_lift.py": {
       "imports": [
         "src/mikemol/hooks/hold_lift.py",
         "src/mikemol/hooks/standing_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_hook_argv.py": {
       "imports": [
@@ -1583,53 +1834,62 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/routing_table.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_hook_import_check.py": {
       "imports": [
         "src/mikemol/hooks/beat.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_hooks_preflight.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_host_facts.py": {
       "imports": [
         "src/mikemol/hooks/host_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_hosttied.py": {
       "imports": [
         "src/mikemol/hooks/hosttied.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_idle_progress.py": {
       "imports": [
         "src/mikemol/hooks/idle_progress.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_idle_stop.py": {
       "imports": [
         "src/mikemol/hooks/idle_stop.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_import_cycles.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_in_gate.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_kata.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_inbound_asks.py": {
       "imports": [
@@ -1637,11 +1897,13 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/inbound_asks.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_inbound_launcher_root.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_index_refresh.py": {
       "imports": [
@@ -1649,30 +1911,35 @@ GRAPH = {
         "src/mikemol/hooks/isolated.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_isolated_commit.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_kind_note.py": {
       "imports": [
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_launcher.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/launcher.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_loadwait.py": {
       "imports": [
         "src/mikemol/hooks/loadwait.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_musthave.py": {
       "imports": [
@@ -1680,13 +1947,15 @@ GRAPH = {
         "src/mikemol/hooks/musthave_cli.py",
         "src/mikemol/hooks/repin_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_mypy_mirror.py": {
       "imports": [
         "src/mikemol/hooks/mypy_mirror.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_nemik_check.py": {
       "imports": [
@@ -1694,93 +1963,109 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/nemik_check.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_new_dist.py": {
       "imports": [
         "src/mikemol/hooks/new_dist.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_new_dist_cli.py": {
       "imports": [
         "src/mikemol/hooks/new_dist.py",
         "src/mikemol/hooks/new_dist_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_no_chaining.py": {
       "imports": [
         "src/mikemol/hooks/cmdparse.py",
         "src/mikemol/hooks/no_chaining.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_no_verify.py": {
       "imports": [
         "src/mikemol/hooks/no_verify.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pairing_sections.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_payload.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_post_commit_census.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_precommit_build_failure.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_preflight_lint.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_presubmit.py": {
       "imports": [
         "src/mikemol/hooks/presubmit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_privacy_audit.py": {
       "imports": [
         "src/mikemol/hooks/privacy_audit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_privacy_shipped.py": {
       "imports": [
         "src/mikemol/hooks/privacy_audit.py",
         "src/mikemol/hooks/privacy_shipped.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_probe.py": {
       "imports": [
         "src/mikemol/hooks/probe.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_project_root_config.py": {
       "imports": [
         "src/mikemol/hooks/project_root.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck.py": {
       "imports": [
         "src/mikemol/hooks/pycheck.py",
         "src/mikemol/hooks/pycheck_message.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_advise.py": {
       "imports": [
@@ -1789,7 +2074,8 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_advise.py",
         "src/mikemol/hooks/pycheck_closure.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_census.py": {
       "imports": [
@@ -1797,59 +2083,72 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_cli.py",
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": [
+        "src/mikemol/hooks/verdict.py"
+      ]
     },
     "tests/test_pycheck_changed.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_census.py",
         "src/mikemol/hooks/pycheck_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_clear.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_clear.py",
         "src/mikemol/hooks/pycheck_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_clear_ledger.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_clear.py",
         "src/mikemol/hooks/pycheck_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_cli.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_cli.py",
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": [
+        "src/mikemol/hooks/verdict.py"
+      ]
     },
     "tests/test_pycheck_closure.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_closure.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_config_report.py": {
       "imports": [
         "src/mikemol/hooks/pycheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_format.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_format.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_house.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_house.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_house_census.py": {
       "imports": [
@@ -1859,28 +2158,32 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_house.py",
         "src/mikemol/hooks/verdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_install.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_cli.py",
         "src/mikemol/hooks/pycheck_install.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_mypy_override.py": {
       "imports": [
         "src/mikemol/hooks/checkers.py",
         "src/mikemol/hooks/pycheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_ratchet.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_ratchet.py",
         "src/mikemol/hooks/pyratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_ratchet_cli.py": {
       "imports": [
@@ -1888,13 +2191,15 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_ratchet.py",
         "src/mikemol/hooks/pycheck_ratchet_run.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_ratchet_run.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_ratchet_run.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pycheck_ratchet_write.py": {
       "imports": [
@@ -1902,23 +2207,27 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_ratchet_write.py",
         "src/mikemol/hooks/pyratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pyratchet.py": {
       "imports": [
         "src/mikemol/hooks/pyratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_pyratchet_links.py": {
       "imports": [
         "src/mikemol/hooks/pyratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_queue_fixture_pin.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_queuecarry.py": {
       "imports": [
@@ -1926,19 +2235,22 @@ GRAPH = {
         "src/mikemol/hooks/queuecarry.py",
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_ratchet_emit.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_emit.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_ratchet_hook.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_hook.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_read_guard.py": {
       "imports": [
@@ -1946,17 +2258,20 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/read_guard.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_reader_guard.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_refusal_log.py": {
       "imports": [
         "src/mikemol/hooks/refusal_log.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_refusal_stage.py": {
       "imports": [
@@ -1964,19 +2279,22 @@ GRAPH = {
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_repin.py": {
       "imports": [
         "src/mikemol/hooks/repin.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_repin_cli.py": {
       "imports": [
         "src/mikemol/hooks/repin_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_repin_measure.py": {
       "imports": [
@@ -1984,34 +2302,39 @@ GRAPH = {
         "src/mikemol/hooks/repin_cli.py",
         "src/mikemol/hooks/repin_metrics.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_repin_metrics.py": {
       "imports": [
         "src/mikemol/hooks/repin_cli.py",
         "src/mikemol/hooks/repin_metrics.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_requeue.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/requeue.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_revendor.py": {
       "imports": [
         "src/mikemol/hooks/revendor.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_revendor_apply.py": {
       "imports": [
         "src/mikemol/hooks/revendor.py",
         "src/mikemol/hooks/revendor_apply.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_revendor_cli.py": {
       "imports": [
@@ -2020,59 +2343,68 @@ GRAPH = {
         "src/mikemol/hooks/revendor_apply.py",
         "src/mikemol/hooks/revendor_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_rewake.py": {
       "imports": [
         "src/mikemol/hooks/rewake.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_rootdrop.py": {
       "imports": [
         "src/mikemol/hooks/rootdrop.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_round_check.py": {
       "imports": [
         "src/mikemol/hooks/round_check.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_round_order.py": {
       "imports": [
         "src/mikemol/hooks/round_order.py",
         "src/mikemol/hooks/round_wire.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_round_wire.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/round_wire.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_routing_table.py": {
       "imports": [
         "src/mikemol/hooks/routing_table.py",
         "src/mikemol/hooks/structural_query.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_run_with_stdin.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_scratch.py": {
       "imports": [
         "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/scratch_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_scratch_beat.py": {
       "imports": [
@@ -2080,7 +2412,8 @@ GRAPH = {
         "src/mikemol/hooks/scratch_cli.py",
         "src/mikemol/hooks/scratch_land.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_scratch_land.py": {
       "imports": [
@@ -2088,44 +2421,51 @@ GRAPH = {
         "src/mikemol/hooks/scratch_cli.py",
         "src/mikemol/hooks/scratch_land.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_sessioncache.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/sessioncache.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_shardgate.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/shardgate.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_shell_pipefail_race.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_shellcheck.py": {
       "imports": [
         "src/mikemol/hooks/shellcheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_shellcheck_added.py": {
       "imports": [
         "src/mikemol/hooks/shellcheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_shellcheck_cli.py": {
       "imports": [
         "src/mikemol/hooks/shellcheck.py",
         "src/mikemol/hooks/shellcheck_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_siblingcensus.py": {
       "imports": [
@@ -2133,48 +2473,55 @@ GRAPH = {
         "src/mikemol/hooks/siblingcensus.py",
         "src/mikemol/hooks/siblingcensus_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_siblingratchet.py": {
       "imports": [
         "src/mikemol/hooks/siblingcensus.py",
         "src/mikemol/hooks/siblingratchet.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_snaplinks.py": {
       "imports": [
         "src/mikemol/hooks/snaplinks.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_snapshot.py": {
       "imports": [
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackbuildfiles.py": {
       "imports": [
         "src/mikemol/hooks/stackbuildfiles.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackbuildfiles_wired.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackdrift.py": {
       "imports": [
         "src/mikemol/hooks/stackdrift.py",
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackfreeze.py": {
       "imports": [
@@ -2182,7 +2529,8 @@ GRAPH = {
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackgate.py": {
       "imports": [
@@ -2190,7 +2538,8 @@ GRAPH = {
         "src/mikemol/hooks/stackgate.py",
         "src/mikemol/hooks/stackland.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackimports.py": {
       "imports": [
@@ -2198,14 +2547,16 @@ GRAPH = {
         "src/mikemol/hooks/stackimports.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackland.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/stackland.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stacklanding.py": {
       "imports": [
@@ -2213,13 +2564,15 @@ GRAPH = {
         "src/mikemol/hooks/stackland.py",
         "src/mikemol/hooks/stacklanding.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackmutants.py": {
       "imports": [
         "src/mikemol/hooks/stackmutants.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackpin.py": {
       "imports": [
@@ -2227,21 +2580,24 @@ GRAPH = {
         "src/mikemol/hooks/stackpin.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackpin_wired.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/snapshot.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stackrun.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/stackrun.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stacksnap.py": {
       "imports": [
@@ -2249,7 +2605,8 @@ GRAPH = {
         "src/mikemol/hooks/stackland.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stacktree.py": {
       "imports": [
@@ -2257,36 +2614,42 @@ GRAPH = {
         "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_stacktypes.py": {
       "imports": [
         "src/mikemol/hooks/stackmutants.py",
         "src/mikemol/hooks/stacktypes.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_standing_facts.py": {
       "imports": [
         "src/mikemol/hooks/standing_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_standing_facts_fixture.py": {
       "imports": [
         "src/mikemol/hooks/standing_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_standing_stop_launcher.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_store_named.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_structural_query.py": {
       "imports": [
@@ -2295,27 +2658,31 @@ GRAPH = {
         "src/mikemol/hooks/routing_table.py",
         "src/mikemol/hooks/structural_query.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_subagent_guard.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/subagent_guard.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_submit_problem.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/stackfreeze.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_suppressions.py": {
       "imports": [
         "src/mikemol/hooks/suppressions.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_tick_gate.py": {
       "imports": [
@@ -2324,7 +2691,8 @@ GRAPH = {
         "src/mikemol/hooks/host_facts.py",
         "src/mikemol/hooks/tick_gate.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_tick_release.py": {
       "imports": [
@@ -2332,7 +2700,8 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/tick_release.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_tick_stop.py": {
       "imports": [
@@ -2342,19 +2711,22 @@ GRAPH = {
         "src/mikemol/hooks/stamps.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_tick_stop_fixture.py": {
       "imports": [
         "src/mikemol/hooks/host_facts.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_tool_path.py": {
       "imports": [
         "src/mikemol/hooks/tool_path.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_train.py": {
       "imports": [
@@ -2365,13 +2737,15 @@ GRAPH = {
         "src/mikemol/hooks/trainrun.py",
         "src/mikemol/hooks/traintip.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_trainalert.py": {
       "imports": [
         "src/mikemol/hooks/trainalert.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_traindrive.py": {
       "imports": [
@@ -2381,7 +2755,10 @@ GRAPH = {
         "src/mikemol/hooks/trainjoin.py",
         "src/mikemol/hooks/trainround.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": [
+        "src/mikemol/hooks/trainround.py"
+      ]
     },
     "tests/test_trainjoin.py": {
       "imports": [
@@ -2389,7 +2766,8 @@ GRAPH = {
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/trainjoin.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_trainlead.py": {
       "imports": [
@@ -2402,26 +2780,30 @@ GRAPH = {
         "src/mikemol/hooks/traintel.py",
         "src/mikemol/hooks/trainverdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_trainround.py": {
       "imports": [
         "src/mikemol/hooks/trainround.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_traintel.py": {
       "imports": [
         "src/mikemol/hooks/traintel.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_trainverdict.py": {
       "imports": [
         "src/mikemol/hooks/traindrive.py",
         "src/mikemol/hooks/trainverdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_trainverdict_wired.py": {
       "imports": [
@@ -2431,11 +2813,13 @@ GRAPH = {
         "src/mikemol/hooks/traindrive.py",
         "src/mikemol/hooks/trainverdict.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_venv_artifact.py": {
       "imports": [],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_verdictlog.py": {
       "imports": [
@@ -2444,7 +2828,8 @@ GRAPH = {
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/verdictlog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogbatch.py": {
       "imports": [
@@ -2452,7 +2837,8 @@ GRAPH = {
         "src/mikemol/hooks/vlogrecord.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogcli.py": {
       "imports": [
@@ -2461,63 +2847,73 @@ GRAPH = {
         "src/mikemol/hooks/vlogdetach.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogcli_follow.py": {
       "imports": [
         "src/mikemol/hooks/vlogcli.py",
         "src/mikemol/hooks/vlogfollow.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogdetach.py": {
       "imports": [
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogdetach_journal.py": {
       "imports": [
         "src/mikemol/hooks/vlogdetach.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogfollow.py": {
       "imports": [
         "src/mikemol/hooks/vlogfollow.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogforms.py": {
       "imports": [
         "src/mikemol/hooks/vlogforms.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogrecord.py": {
       "imports": [
         "src/mikemol/hooks/vlogrecord.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogship.py": {
       "imports": [
         "src/mikemol/hooks/vlogrecord.py",
         "src/mikemol/hooks/vlogship.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogsink.py": {
       "imports": [
         "src/mikemol/hooks/vlogsink.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogspool.py": {
       "imports": [
         "src/mikemol/hooks/vlogspool.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_vlogwatch.py": {
       "imports": [
@@ -2525,71 +2921,82 @@ GRAPH = {
         "src/mikemol/hooks/vlogship.py",
         "src/mikemol/hooks/vlogwatch.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_warrant_crosscheck.py": {
       "imports": [
         "src/mikemol/hooks/gen_warrants.py",
         "src/mikemol/hooks/warrant_crosscheck.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_watchdog.py": {
       "imports": [
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/watchdog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_watchdog_exit.py": {
       "imports": [
         "src/mikemol/hooks/watchdog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_watchdog_hint.py": {
       "imports": [
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/watchdog.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_waypoint_trailer.py": {
       "imports": [
         "src/mikemol/hooks/waypoint_trailer.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset.py": {
       "imports": [
         "src/mikemol/hooks/websubset.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_builtins.py": {
       "imports": [
         "src/mikemol/hooks/websubset_builtins.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_cli.py": {
       "imports": [
         "src/mikemol/hooks/websubset_cli.py",
         "src/mikemol/hooks/websubset_list.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_codon.py": {
       "imports": [
         "src/mikemol/hooks/websubset.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_list.py": {
       "imports": [
         "src/mikemol/hooks/websubset_list.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_prom.py": {
       "imports": [
@@ -2598,47 +3005,54 @@ GRAPH = {
         "src/mikemol/hooks/websubset_prom.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_target.py": {
       "imports": [
         "src/mikemol/hooks/websubset.py",
         "src/mikemol/hooks/websubset_cli.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_websubset_tree.py": {
       "imports": [
         "src/mikemol/hooks/websubset_cli.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_wheel.py": {
       "imports": [
         "src/mikemol/hooks/revendor.py",
         "src/mikemol/hooks/wheel.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_work_claims.py": {
       "imports": [
         "src/mikemol/hooks/work_claims.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_work_claims_fixture.py": {
       "imports": [
         "src/mikemol/hooks/work_claims.py",
         "src/mikemol/hooks/work_claims_hook.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_work_claims_hook.py": {
       "imports": [
         "src/mikemol/hooks/work_claims_hook.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_worktree_venv.py": {
       "imports": [
@@ -2647,47 +3061,54 @@ GRAPH = {
         "src/mikemol/hooks/pycheck_format.py",
         "src/mikemol/hooks/worktree_venv.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_worktreereap.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/worktreereap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_worktreereap_remove.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/worktreereap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_worktreereap_save.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/worktreereap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_worktreereap_stable.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/worktreereap.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_writeguard.py": {
       "imports": [
         "src/mikemol/hooks/writeguard.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     },
     "tests/test_writeguard_hook.py": {
       "imports": [
         "src/mikemol/hooks/no_chaining.py"
       ],
-      "reads": []
+      "reads": [],
+      "typing_only": []
     }
   }
 }

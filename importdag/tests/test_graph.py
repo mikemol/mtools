@@ -57,6 +57,33 @@ def test_a_module_that_names_itself_has_no_edge_to_itself(tmp_path: Path) -> Non
     assert mods["src/demo/pkg/gamma.py"]["imports"] == []
 
 
+def _typed(dist: Path, body: str) -> graph.Entry:
+    (dist / "src" / "demo" / "pkg" / "delta.py").write_text(body, encoding="utf-8")
+    return _modules(graph.build(dist, _PKG))["src/demo/pkg/delta.py"]
+
+
+def test_an_import_only_under_type_checking_is_marked_typing_only(tmp_path: Path) -> None:
+    """The edge stays in imports, and typing_only names it, in both spellings of the guard."""
+    guard = "if TYPE_CHECKING:\n    from demo.pkg import beta\n"
+    plain = _typed(_dist(tmp_path / "a"), "from typing import TYPE_CHECKING\n" + guard)
+    assert plain["imports"] == [_BETA]
+    assert plain["typing_only"] == [_BETA]
+    dotted = "import typing\nif typing.TYPE_CHECKING:\n    from demo.pkg import beta\n"
+    assert _typed(_dist(tmp_path / "b"), dotted)["typing_only"] == [_BETA]
+
+
+def test_an_import_also_made_outside_the_guard_is_not_typing_only(tmp_path: Path) -> None:
+    """A real import elsewhere makes the edge a run-time one, whatever the guard says."""
+    body = (
+        "from typing import TYPE_CHECKING\n"
+        "from demo.pkg import beta\n"
+        "if TYPE_CHECKING:\n    from demo.pkg import beta, gamma\n"
+    )
+    entry = _typed(_dist(tmp_path), body)
+    assert entry["imports"] == [_BETA, "src/demo/pkg/gamma.py"]
+    assert entry["typing_only"] == ["src/demo/pkg/gamma.py"]
+
+
 def test_a_test_lists_the_modules_it_imports(tmp_path: Path) -> None:
     """The graph covers tests as well as modules, since a test is what a change must rerun."""
     doc = graph.build(_dist(tmp_path), _PKG)
