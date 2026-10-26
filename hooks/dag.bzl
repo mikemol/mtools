@@ -121,6 +121,7 @@ GRAPH = {
         "src/mikemol/hooks/stackpin.py",
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacktypes.py",
+        "src/mikemol/hooks/testgate.py",
         "src/mikemol/hooks/tool_path.py",
         "src/mikemol/hooks/trainjoin.py",
         "src/mikemol/hooks/trainlead.py",
@@ -975,6 +976,15 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/testgate.py": {
+      "imports": [
+        "src/mikemol/hooks/presubmit.py",
+        "src/mikemol/hooks/stackrun.py",
+        "src/mikemol/hooks/tool_path.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/tick_gate.py": {
       "imports": [
         "src/mikemol/hooks/host_facts.py",
@@ -1727,6 +1737,13 @@ GRAPH = {
     "tests/test_gate_phase_marks.py": {
       "imports": [
         "src/mikemol/hooks/gatephase.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_gate_series.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_span.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2757,6 +2774,20 @@ GRAPH = {
     "tests/test_suppressions.py": {
       "imports": [
         "src/mikemol/hooks/suppressions.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_testgate.py": {
+      "imports": [
+        "src/mikemol/hooks/testgate.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_testgate_run.py": {
+      "imports": [
+        "src/mikemol/hooks/testgate.py"
       ],
       "reads": [],
       "typing_only": []

@@ -15590,3 +15590,75 @@
             pair.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_transcriptstruct_is_a_vendored_dist_and_moves_with_the_rest},
 }
+
+@misc{hooks-testgate-only-test-files-become-targets-once-and-in-order,
+  section = {testgate},
+  title  = {A test file of a dist is its bazel target; sources, dot-directories and repeats are not},
+  claim  = {A test file of a dist is its bazel target; sources, dot-directories and repeats are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_only_test_files_become_targets_once_and_in_order},
+}
+
+@misc{hooks-testgate-failing-target-refuses-with-its-tail-and-the-reproduce-command,
+  section = {testgate},
+  title  = {The reason carries bazel's last lines and the one command that reproduces only the run},
+  claim  = {The reason carries bazel's last lines and the one command that reproduces only the run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_a_failing_target_refuses_with_its_tail_and_the_reproduce_command},
+}
+
+@misc{hooks-testgate-passing-run-no-test-and-no-snapshot-tool-refuse-nothing,
+  section = {testgate},
+  title  = {Quiet in every way the check cannot or need not judge},
+  claim  = {Quiet in every way the check cannot or need not judge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_a_passing_run_no_test_and_no_snapshot_tool_refuse_nothing},
+}
+
+@misc{hooks-submit-problem-stacks-own-failing-test-is-asked-after-the-cheap-refusals,
+  section = {shardgate},
+  title  = {W2055: the sandbox test run is last, because it runs bazel; an earlier finding wins},
+  claim  = {W2055: the sandbox test run is last, because it runs bazel; an earlier finding wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_stacks_own_failing_test_is_asked_after_the_cheap_refusals},
+}
+
+@misc{hooks-testgate-run-real-runner-returns-the-exit-code-and-both-streams-with-the-extra-env,
+  section = {testgate},
+  title  = {A command run through `run_command` gives its status, stdout and stderr, and sees the env},
+  claim  = {A command run through `run_command` gives its status, stdout and stderr, and sees the
+            env.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate_run.py -k test_the_real_runner_returns_the_exit_code_and_both_streams_with_the_extra_env},
+}
+
+@misc{hooks-gate-series-wait-is-submit-to-lease-and-the-run-is-lease-to-verdict,
+  section = {commit-span},
+  title  = {Submitted at 10 s, leased at 70 s, done at 100 s: a wait of 60 and a run of 30},
+  claim  = {Submitted at 10 s, leased at 70 s, done at 100 s: a wait of 60 and a run of 30.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_series.py -k test_the_wait_is_submit_to_lease_and_the_run_is_lease_to_verdict},
+}
+
+@misc{hooks-gate-series-clock-that-stepped-back-reads-zero-not-negative,
+  section = {commit-span},
+  title  = {A lease earlier than the submit, or a verdict earlier than the lease, is 0},
+  claim  = {A lease earlier than the submit, or a verdict earlier than the lease, is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_series.py -k test_a_clock_that_stepped_back_reads_zero_not_negative},
+}
+
+@misc{hooks-gate-series-each-figure-starts-one-metric-child-naming-the-repo,
+  section = {commit-span},
+  title  = {With a binary and a store, two children start, each with the repo as namespace and field},
+  claim  = {With a binary and a store, two children start, each with the repo as namespace and
+            field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_series.py -k test_each_figure_starts_one_metric_child_naming_the_repo},
+}
+
+@misc{hooks-gate-series-no-store-or-no-binary-starts-nothing,
+  section = {commit-span},
+  title  = {The metric is best effort: without a place to send it, nothing runs},
+  claim  = {The metric is best effort: without a place to send it, nothing runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_series.py -k test_no_store_or_no_binary_starts_nothing},
+}
+
+@misc{hooks-testgate-snapshot-that-could-not-be-taken-is-not-a-failing-test,
+  section = {testgate},
+  title  = {The first real run died in `git add -A` (a scratch file vanished) and refused the stack},
+  claim  = {The first real run died in `git add -A` (a scratch file vanished) and refused the stack.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_a_snapshot_that_could_not_be_taken_is_not_a_failing_test},
+}

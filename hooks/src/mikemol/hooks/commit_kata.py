@@ -88,6 +88,7 @@ from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
 from mikemol.hooks.stacktypes import real_types as _real_types
+from mikemol.hooks.testgate import refusal as _test_refusal
 from mikemol.hooks.tool_path import find as _find_tool
 from mikemol.hooks.trainjoin import Follower as _Follower
 from mikemol.hooks.trainlead import lead as _train_lead
@@ -1070,7 +1071,9 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
 
     The first that has something to say wins: an import only a later entry adds (W1527), a build
     file naming a source no entry carries (W1604), a mutants grid already past half of its CPU
-    budget (W1602), a ready card of the published round skipped for one outside it (W1948).
+    budget (W1602), a ready card of the published round skipped for one outside it (W1948), a
+    test file of the stack that fails as its bazel target in the sandbox (W2055; last, because
+    it runs bazel and the others cost nothing).
 
     Returns:
         the findings, or None when the stack may wait.
@@ -1082,6 +1085,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         or stack_build_refusal(root, stack_file, snap, run_git_in)
         or _shard_refusal(root, stack_file, env)
         or _round_refusal(root)
+        or _test_refusal(root, stack_file, env)
     )
 
 

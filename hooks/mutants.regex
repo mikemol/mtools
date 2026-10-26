@@ -652,6 +652,13 @@ src/mikemol/hooks/ratchet_pace.py|unpayable-requirement-owed|        if held is 
 src/mikemol/hooks/ratchet_pace.py|another-repos-row-owed|        if row\.repo != repo or row\.state != BEHIND:|        if row.state != BEHIND:|def=owed
 src/mikemol/hooks/ratchet_pace.py|comment-line-counted-as-an-entry| and not line\.startswith\("#"\)||def=entries_in
 src/mikemol/hooks/ratchet_pace.py|torn-line-not-counted|            unread \+= 1|            pass|def=read_rows
+src/mikemol/hooks/testgate.py|repeated-test-file-run-twice|        if label and label not in found:|        if label:|def=targets_of
+src/mikemol/hooks/testgate.py|passing-run-refused|    if status == 0 or out\.lstrip|    if status == 99 or out.lstrip|def=refusal
+src/mikemol/hooks/testgate.py|snapshot-failure-refuses-the-stack|    if status == 0 or out\.lstrip\(\)\.startswith\(SNAPSHOT_VOICE\):|    if status == 0:|def=refusal
+src/mikemol/hooks/testgate.py|no-snapshot-tool-runs-anyway|    if not targets or snapshot is None:|    if not targets:|def=refusal
+src/mikemol/hooks/commit_kata.py|test-refusal-never-asked|        or _test_refusal\(root, stack_file, env\)||def=submit_problem
+src/mikemol/hooks/commit_span.py|wait-read-to-the-verdict|    wait = max\(moments\.lease_ns - moments\.submit_ns, 0\) / NS_PER_S|    wait = max(moments.end_ns - moments.submit_ns, 0) / NS_PER_S|def=gate_series
+src/mikemol/hooks/commit_span.py|run-time-not-clamped|    run = max\(moments\.end_ns - moments\.lease_ns, 0\) / NS_PER_S|    run = (moments.end_ns - moments.lease_ns) / NS_PER_S|def=gate_series
 src/mikemol/hooks/stacksnap.py|heads-files-not-listed-under-a-directory|        held = run\(\[\*_HELD, path\], \{\}, root\)|        held = run([*_GONE, path], {}, root)|def=_expand
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
 src/mikemol/hooks/ratchet_hook.py|block-inserted-twice|    if MARK in text:|    if False:|def=insert

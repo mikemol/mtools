@@ -203,3 +203,4 @@ commit_dir_deletion	A Directory in Paths Carries Its Deletions
 ratchet_pace	Ratchet Pace: Owed Ratchets Read From nemik's File, Unpayable Ones Ignored
 watchdog_evidence	The Watchdog's Exit Carries the Beats It Saw
 repro_rungs	Each Refusing Rung Says the One Command That Reproduces Only It
+testgate	A Stack's Own Tests Run in the Sandbox Before It Can Queue
