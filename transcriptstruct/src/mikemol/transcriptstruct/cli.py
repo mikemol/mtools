@@ -23,7 +23,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TextIO, cast
 
-from mikemol.transcriptstruct import authfail, commitledger, commitrows, sample
+from mikemol.transcriptstruct import (
+    authfail,
+    commitexport,
+    commitledger,
+    commitrows,
+    sample,
+)
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.commitments import Commitment
@@ -119,6 +125,14 @@ def _parser() -> argparse.ArgumentParser:
         "newest; read from record metadata only, never message content",
     )
     mode.add_argument(
+        "--commitments-tree",
+        action="store_true",
+        help="W2048: the positional is a projects directory; resolve every repository's "
+        "commitments against its own queue and write ONE document of the exported keys only "
+        "(repo, session, at, names, state, layer, resolved_by: never the sentence, uuid or "
+        "line) to --out whole or not at all, or to stdout",
+    )
+    mode.add_argument(
         "--turn-start",
         action="store_true",
         help="W1903: where the latest turn began (a prompt, a wake, a notification or a peer "
@@ -163,6 +177,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--since", type=int, help="first line to search (1-based, inclusive)")
     parser.add_argument("--until", type=int, help="last line to search (inclusive)")
     parser.add_argument("--repo", help="--resolve: keep only the rows of this repository")
+    parser.add_argument(
+        "--root", metavar="DIR", help="--commitments-tree: where the repositories live (~/github)"
+    )
     parser.add_argument("--seed", type=int, default=0, help="--sample: the draw's seed")
     parser.add_argument("--key", metavar="PATH", help="--sample: where this side's labels go")
     parser.add_argument(
@@ -410,6 +427,21 @@ def _sample(path: Path, opts: dict[str, object], out: TextIO) -> None:
     out.write(f"# {len(chosen)} sentence(s); {where}labels in {keyed}\n")
 
 
+def _commitments_tree(path: Path, opts: dict[str, object], out: TextIO) -> None:
+    """Write the fleet's commitments as one exported document, and say what was not read."""
+    root = Path(_text(opts, "root") or Path.home() / "github")
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    document, unread = commitexport.export(path, root, stamp)
+    target = _text(opts, "out")
+    if target is None:
+        out.write(_line(document))
+    else:
+        commitexport.write_whole(Path(target), document)
+    out.write(f"# {commitexport.summary(document, unread)}\n")
+    for name in unread:
+        sys.stderr.write(f"mikemol-transcriptstruct: unread {name}\n")
+
+
 def _auth_failed(path: Path, out: TextIO) -> None:
     """Write the failed-authentication summary of one transcript as one JSON line."""
     found = authfail.summarize(read_path(path), path.resolve().parent.name)
@@ -496,6 +528,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
     """
     if opts.get("cache_turns") is True:
         _cache_turns(path, out)
+    elif opts.get("commitments_tree") is True:
+        _commitments_tree(path, opts, out)
     elif opts.get("auth_failed") is True:
         _auth_failed(path, out)
     elif opts.get("turn_start") is True:

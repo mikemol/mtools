@@ -76,4 +76,7 @@ src/mikemol/transcriptstruct/cli.py|out-option-ignored|    if blind_to is None:|
 src/mikemol/transcriptstruct/authfail.py|lookalike-model-counted| and model == SYNTHETIC||def=_meta
 src/mikemol/transcriptstruct/authfail.py|recovery-keeps-the-run|            tail = 0|            pass|def=summarize
 src/mikemol/transcriptstruct/authfail.py|newest-failure-not-kept|            newest = stamp or newest|            newest = None|def=summarize
+src/mikemol/transcriptstruct/commitexport.py|export-keeps-every-key|    return \{key: record\[key\] for key in EXPORT_KEYS\}|    return dict(record)|def=exported
+src/mikemol/transcriptstruct/commitexport.py|repo-is-the-last-word|    name = project\.removeprefix\(prefix\) if project\.startswith\(prefix\) else ""|    name = project.rsplit("-", 1)[-1]|def=repo_of
+src/mikemol/transcriptstruct/commitexport.py|unreadable-queue-not-named|            unread\.append\(f"\{project\.name\}/\{QUEUE\[-1\]\}"\)|            pass|def=export
 src/mikemol/transcriptstruct/cli.py|project-named-by-the-path|path\.resolve\(\)\.parent\.name|str(path)|def=_auth_failed

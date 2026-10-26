@@ -1350,3 +1350,24 @@
             count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_authfail.py -k test_a_recovery_is_not_a_tail_run_and_a_lookalike_is_not_a_failure},
 }
+
+@misc{transcriptstruct-commitexport-export-holds-only-the-ruled-keys-and-none-of-the-sentence,
+  section = {commitexport},
+  title  = {A hyphenated repository keeps its name, and the sentence, uuid and line are gone},
+  claim  = {A hyphenated repository keeps its name, and the sentence, uuid and line are gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitexport.py -k test_the_export_holds_only_the_ruled_keys_and_none_of_the_sentence},
+}
+
+@misc{transcriptstruct-commitexport-directory-outside-the-root-or-without-a-queue-is-skipped-and-a-bad-queue-named,
+  section = {commitexport},
+  title  = {Skipped quietly are the strangers; an unreadable queue is listed as unread},
+  claim  = {Skipped quietly are the strangers; an unreadable queue is listed as unread.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitexport.py -k test_a_directory_outside_the_root_or_without_a_queue_is_skipped_and_a_bad_queue_named},
+}
+
+@misc{transcriptstruct-commitexport-mode-writes-whole-and-leaves-no-temp-file,
+  section = {commitexport},
+  title  = {`--out` holds the document, its directory holds nothing else, and stdout says the count},
+  claim  = {`--out` holds the document, its directory holds nothing else, and stdout says the count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitexport.py -k test_the_mode_writes_whole_and_leaves_no_temp_file},
+}

@@ -23,3 +23,4 @@ commitledger	Commitment ledger (W1933): each statement resolved to the strongest
 commitrows	Commitment-rows
 sample	Blind-sample
 authfail	Authentication Failures: Counted From Record Metadata Alone
+commitexport	The Fleet's Commitments Exported as One Document of the Ruled Keys
