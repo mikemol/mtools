@@ -672,6 +672,10 @@ src/mikemol/hooks/round_wire.py|working-read-as-ready|for symbol in _symbols\(qu
 src/mikemol/hooks/watchdog.py|explanation-said-again-and-again|    target\.unlink\(missing_ok=True\)|    pass|def=take_last
 src/mikemol/hooks/beat.py|exit-explanation-never-read|    explained = watchdog\.take_last\(project / "\.git"\)|    explained = ""|def=notice
 src/mikemol/hooks/beat.py|explanation-follows-the-restart-notice|\(explained, rest\)|(rest, explained)|def=notice
+src/mikemol/hooks/flakes.py|another-trees-refusal-is-this-trees|if row\.get\("tree"\) == tree and row\.get\("kind"\) == REFUSED|if row.get("kind") == REFUSED|def=earlier_refusal
+src/mikemol/hooks/flakes.py|a-refusal-is-judged-like-a-pass| if kind == PASSED else None| if True else None|def=record
+src/mikemol/hooks/flakes.py|flake-line-not-kept|    if before is not None:|    if False:|def=record
+src/mikemol/hooks/stackrun.py|flake-passes-unspoken|    if before is None:|    if True:|def=_judged
 src/mikemol/hooks/watchdog.py|every-exit-explained|    if code not in \{EXIT_IDLE, EXIT_CANNOT_RUN\}:|    if False:|def=remember_exit
 src/mikemol/hooks/watchdog.py|cannot-run-worded-as-the-wake|    if code == EXIT_IDLE:|    if True:|def=exit_meaning
 src/mikemol/hooks/watchdog.py|restart-command-left-out|f"with: \{restart\}"|"with: "|def=exit_meaning

@@ -27,6 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TextIO, cast
 
+from mikemol.hooks import flakes
 from mikemol.hooks.commit_body import refusal as body_refusal
 from mikemol.hooks.gateclass import classify_all
 from mikemol.hooks.gatephase import failed_checks, stage_note
@@ -186,6 +187,24 @@ def culprit_note(output: str, items: Sequence[Item], history: History | None = N
     return f"{stage}culprit: {named}"
 
 
+def _judged(root: Path, tree: str, shown: str, code: int, seams: Seams) -> str:
+    # Keep this tip's verdict (W2007); the line a pass on an already-refused tree prints, else "".
+    where = seams.run(["rev-parse", "--absolute-git-dir"], {}, root)
+    if where.returncode != 0:
+        return ""
+    kind = flakes.PASSED if code == 0 else flakes.REFUSED
+    failed = [] if code == 0 else failed_checks(shown)
+    before = flakes.record(Path(where.stdout.strip()), tree, kind, failed)
+    if before is None:
+        return ""
+    named = "; ".join(before) or "no check named"
+    return (
+        f"FLAKE {root.name}: this exact tree was refused before ({named}) and passes now. The "
+        "code did not change and the verdict did: a nondeterminism, recorded in "
+        "gate-verdicts.jsonl (W2007). It is a blocker to deconstruct, not luck.\n"
+    )
+
+
 def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> int:
     """Build, gate once, land, and report.
 
@@ -227,6 +246,7 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
     shown = (gate.stdout + gate.stderr).strip()
     if shown:
         out.write(f"{shown}\n")
+    out.write(_judged(root, stack.trees[-1], shown, gate.returncode, seams))
     if gate.returncode != 0:
         out.write(
             f"REFUSED {name} (rc={gate.returncode}): the tip of a {len(items)}-commit stack was "

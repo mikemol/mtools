@@ -15448,3 +15448,39 @@
   claim  = {A dead watchdog with ready cards: why it exited first, then what to start.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_explanation_leads_the_restart_notice_when_both_are_due},
 }
+
+@misc{hooks-flakes-pass-on-a-tree-refused-before-returns-the-checks-that-refused-it,
+  section = {flakes},
+  title  = {The refusal is kept, the pass is judged against it, and a flake line is written},
+  claim  = {The refusal is kept, the pass is judged against it, and a flake line is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakes.py -k test_a_pass_on_a_tree_refused_before_returns_the_checks_that_refused_it},
+}
+
+@misc{hooks-flakes-tree-never-refused-and-another-trees-refusal-are-not-flakes,
+  section = {flakes},
+  title  = {A clean pass, and a pass beside a refusal of a different tree, both say nothing},
+  claim  = {A clean pass, and a pass beside a refusal of a different tree, both say nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakes.py -k test_a_tree_never_refused_and_another_trees_refusal_are_not_flakes},
+}
+
+@misc{hooks-flakes-refusal-alone-is-not-a-flake-and-a-second-pass-still-is,
+  section = {flakes},
+  title  = {Refused twice is no flake; once it passes, each later pass of that tree is one too},
+  claim  = {Refused twice is no flake; once it passes, each later pass of that tree is one too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakes.py -k test_a_refusal_alone_is_not_a_flake_and_a_second_pass_still_is},
+}
+
+@misc{hooks-flakes-torn-line-and-an-unwritable-directory-change-no-verdict,
+  section = {flakes},
+  title  = {A foreign line in the log is skipped; a directory that cannot hold the log raises nothing},
+  claim  = {A foreign line in the log is skipped; a directory that cannot hold the log raises
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakes.py -k test_a_torn_line_and_an_unwritable_directory_change_no_verdict},
+}
+
+@misc{hooks-stackrun-pass-on-a-tree-that-was-refused-is-named-a-flake-and-recorded,
+  section = {stackland},
+  title  = {W2007: the same files, a refusing hook then a passing one: the second run says FLAKE},
+  claim  = {W2007: the same files, a refusing hook then a passing one: the second run says FLAKE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_pass_on_a_tree_that_was_refused_is_named_a_flake_and_recorded},
+}

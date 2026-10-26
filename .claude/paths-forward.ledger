@@ -3998,3 +3998,33 @@
 2026-10-26T01:23:52Z  interrupt W2033 minted    -         "Writer lists ready cards whose symbol leads a commit subject, with the subject's open markers, so a ghost is read not guessed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
 2026-10-26T01:24:37Z  status W1722 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-26T01:24:44Z  status W1722 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:34:11Z  status W1688 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:34:11Z  status W1689 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:34:11Z  status W1692 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:34:11Z  status W1697 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:35:39Z  status W2025 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:35:40Z  status W2005 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:38:25Z  status W2025 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:39:57Z  status W2025 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:39:59Z  interrupt W2034 minted    -         "The four tests under a CPU budget with size medium (W1798) wait on events, not a longer bazel timeout"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T01:44:44Z  interrupt W2035 minted    -         "commit_kata.waiter waits on the child's pidfd instead of a wait(timeout) slice loop"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T01:48:03Z  status W1688 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:48:10Z  status W1688 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T02:13:43Z  status W2026 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T02:13:44Z  status W2028 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T02:40:21Z  status W2027 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T03:00:48Z  status W2031 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T03:28:07Z  interrupt W2036 minted    -         "The submit-time round refusal names every skipped round card in one message"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T03:28:14Z  interrupt W2037 minted    -         "mikemol-repin never hides uv's stderr, and the exit-2 flake of its final sync is found"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T03:29:13Z  status W2007 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:05Z  status W2025 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:05Z  status W2026 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:05Z  status W2028 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:06Z  status W2027 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:06Z  status W2005 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:20Z  status W1663 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:20Z  status W1933 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:20Z  status W1966 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:28:20Z  status W1997 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:29:02Z  status W2016 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:29:22Z  status W1989 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

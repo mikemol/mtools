@@ -214,6 +214,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/flakes.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/footprint.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py"
@@ -891,6 +896,7 @@ GRAPH = {
     "src/mikemol/hooks/stackrun.py": {
       "imports": [
         "src/mikemol/hooks/commit_body.py",
+        "src/mikemol/hooks/flakes.py",
         "src/mikemol/hooks/gateclass.py",
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/isolated.py",
@@ -1672,6 +1678,13 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/flag_contract.py",
         "src/mikemol/hooks/refusal_log.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_flakes.py": {
+      "imports": [
+        "src/mikemol/hooks/flakes.py"
       ],
       "reads": [],
       "typing_only": []

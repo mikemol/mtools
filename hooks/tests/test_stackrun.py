@@ -150,6 +150,25 @@ def test_a_refused_tip_lands_nothing_and_says_so(
     assert not [line for line in lines if line.startswith("COMMITTED")]
 
 
+def test_a_pass_on_a_tree_that_was_refused_is_named_a_flake_and_recorded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2007: the same files, a refusing hook then a passing one: the second run says FLAKE."""
+    root, _remote = _repo(tmp_path, monkeypatch, _REFUSING)
+    code, lines = _run(root, tmp_path)
+    assert code == 1
+    assert not [line for line in lines if line.startswith("FLAKE")]
+    (root / ".git" / "hooks" / "pre-commit").write_text(_PASSING, encoding="utf-8")
+    code, lines = _run(root, tmp_path)
+    assert code == 0
+    flake = [line for line in lines if line.startswith("FLAKE repo:")]
+    assert len(flake) == 1
+    assert "refused before" in flake[0]
+    kept = (root / ".git" / "mtools" / "gate-verdicts.jsonl").read_text(encoding="utf-8")
+    kinds = [line for line in kept.splitlines() if '"kind"' in line]
+    assert ['"refused"' in kinds[0], '"passed"' in kinds[1], '"flake"' in kinds[2]] == [True] * 3
+
+
 def test_a_tip_whose_declared_mutants_do_not_plant_is_refused_before_the_gate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

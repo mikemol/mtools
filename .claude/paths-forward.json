@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2033,
+  "counter": 2037,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -35742,7 +35742,7 @@
     {
       "symbol": "W1663",
       "title": "A REFUSED verdict gives the one command that reproduces only the refusing rung",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/gatephase.py!w",
@@ -35755,7 +35755,7 @@
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T00:35:23Z",
+      "last_worked": "2026-10-26T10:28:20Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -36309,21 +36309,19 @@
     {
       "symbol": "W1688",
       "title": "domain_witness refuses with 'already carries probe residue' on cmdparse.py and state.py in a gate that then leaves both clean: find what left the residue and make the check repeatable under load",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W1692"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Reproduce alone under load: run domain_witness.sh for two witnesses at once against the same five victims in one tree; if it refuses with probe residue, serialize the mutation window with a flock keyed on the victim list and test two concurrent runs.",
-      "evidence": "",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 62dc7214",
       "issued_at": "2026-10-19T09:22:18Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-19T09:56:14Z",
-      "ticks_blocked": 8,
-      "completed": null,
+      "last_worked": "2026-10-26T01:48:10Z",
+      "ticks_blocked": 0,
+      "completed": "20261026T014810Z",
       "manifest": [
         "domain_witness.sh",
         "hooks/tests/test_bar_fires.py"
@@ -36333,13 +36331,11 @@
     {
       "symbol": "W1689",
       "title": "//ratchet:ruff and //ratchet:ratchet_gate reported red BEFORE the probe (CONTROL FAILED) in the refused 30-entry gate and are green after: reproduce alone under load and repair the cause",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W1692"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "When W1690 names the second writer, decide whether it explains the ratchet:ruff and ratchet_gate reds; if so close this as its consequence with that evidence, otherwise reproduce the two targets alone under load",
       "evidence": "2026-10-24: 2026-10-24 read: this card's own next step is to see whether the red-before-probe is W1688's victim contention; W1688 is blocked on W1690 (find the second writer), W1691 and W1692, so the cause is the open question there and reproducing it here first would repeat that work. Observation from this session's gate logs: 6 of ~400 background outputs contain 'CONTROL FAILED' or 'probe residue' (not read yet, so not a count of recurrences); gates since 2026-10-23 ran through the isolated snapshot path ('path: isolated') | 2026-10-25: 2026-10-25: W1690 was dropped (unanswerable, W1929 sweep), so the named wait is W1692, the concurrency test of two domain_witness runs: if it shows probe residue under two concurrent runs it explains these reds, otherwise this card reproduces the two targets alone under load. W1692 now has a manifest",
       "issued_at": "2026-10-19T09:22:19Z",
@@ -36356,21 +36352,21 @@
     {
       "symbol": "W1692",
       "title": "Concurrency test: two domain_witness runs at once both pass",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W1688"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add the flock (lock file named by the victim's hash, held to exit, taken before the residue guard) to domain_witness.sh, then the concurrency test with a stub bazel on PATH in a scratch git repo: two runs both exit 0, and one killed mid-window still trips the residue guard. I still need the flock and the test, W1692",
-      "evidence": "2026-10-25: 2026-10-25: READ domain_witness.sh. Two runs at once on one victim in one tree cannot both pass today BY DESIGN: the second finds the first's live probe, trips the residue guard (exit 2) and says why. So the card's test as titled needs a change first: serialize the mutation window with flock keyed on the victim, taken before the residue check, so the second run waits and then passes (W1688's own repair step). A real gate runs this from an isolated snapshot, so contention is a hand-run and a main-tree case",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25: READ domain_witness.sh. Two runs at once on one victim in one tree cannot both pass today BY DESIGN: the second finds the first's live probe, trips the residue guard (exit 2) and says why. So the card's test as titled needs a change first: serialize the mutation window with flock keyed on the victim, taken before the residue check, so the second run waits and then passes (W1688's own repair step). A real gate runs this from an isolated snapshot, so contention is a hand-run and a main-tree case | 2026-10-26: landed 62dc7214",
       "issued_at": "2026-10-19T09:56:14Z",
       "minted_during": "interrupt",
       "caused_by": "W1688",
-      "last_worked": "2026-10-26T01:18:24Z",
+      "last_worked": "2026-10-26T01:34:11Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261026T013411Z",
       "manifest": [
         "domain_witness.sh",
         "hooks/tests/test_domain_witness_concurrency.py"
@@ -36475,13 +36471,11 @@
     {
       "symbol": "W1697",
       "title": "mikemol-repin bumps a sibling git pin (mikemol-fence inside mikemol-hooks' dependencies) after each fence change, then hooks declares fence as a dependency",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W1692"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "hooks/pyproject.toml is carried by queued stack-w1692 (and the dependency row needs uv.lock and requirements regenerated). After it lands: add mikemol-fence as a git-pinned dependency, regenerate lock and requirements, reorder commit_kata.fence_of to find the installed dependency's mikemol-membudget first (live hook: module and venv first), a lookup-order test and a repin test. I still need all of it, W1697",
       "evidence": "2026-10-25: 2026-10-25 sweep (W1929): the card is real, not stale: commit_kata.fence_of finds mikemol-membudget beside the interpreter or under a sibling fence/.venv, and hooks/pyproject.toml declares no fence dependency, so a repo installed from the wheel alone needs the fence pin by hand (its own refusal says add mikemol-fence). Given a bounded next step; not built | 2026-10-25: 2026-10-25: READ repin.py: it already moves EVERY git pin of one repository to one sha (module docstring: ONE SHA, MANY DISTS; rewrite takes dists or all), so the card's repin half needs no code once hooks declares fence: the pin it declares is bumped with the hooks pin. What is left is two edits: the dependency row in hooks/pyproject.toml (with its lock and the bazel requirements regenerated) and commit_kata.fence_of searching the installed dependency first",
       "issued_at": "2026-10-19T10:55:39Z",
@@ -42362,7 +42356,7 @@
     {
       "symbol": "W1933",
       "title": "Resolve a commitment row against durable follow-through, and keep the unresolved rows as a ledger and the metric commitments.open{repo}",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "github:W44",
         "nemik:W1007",
@@ -42378,7 +42372,7 @@
       "issued_at": "2026-10-24T23:34:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T21:04:42Z",
+      "last_worked": "2026-10-26T10:28:20Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43469,7 +43463,7 @@
     {
       "symbol": "W1966",
       "title": "Share the commitment rows, their fixtures and a labelled sample with amr-skills so its classifier (commitment, done, status, mention) trains against them",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "github:W44"
       ],
@@ -43483,7 +43477,7 @@
       "issued_at": "2026-10-25T12:41:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T21:28:05Z",
+      "last_worked": "2026-10-26T10:28:20Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44259,7 +44253,7 @@
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
@@ -44273,7 +44267,7 @@
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-26T00:04:08Z",
+      "last_worked": "2026-10-26T10:29:22Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44430,7 +44424,7 @@
     {
       "symbol": "W1997",
       "title": "Project a card's landing cost: manifest cone over graph.json, rerun targets, measured CPU seconds",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "github:W50"
       ],
@@ -44444,7 +44438,7 @@
       "issued_at": "2026-10-25T17:05:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1503",
-      "last_worked": "2026-10-25T20:33:26Z",
+      "last_worked": "2026-10-26T10:28:20Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44576,22 +44570,23 @@
     {
       "symbol": "W2005",
       "title": "round_wire.refusals does not call a ready round card skipped while a live submission names it",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "nemik-84 2026-10-25: a card whose status is still ready but whose stack is queued or gating is in progress. W2000's first part (stack-w2004) exempts a WORKING card a live stack cites from the outside set; this is the other half: drop a cited card from the ready set the check demands be taken. One line in round_wire.refusals plus a test and a mutant; rides behind stack-w2004 (its files are frozen in the queue).",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 537d38ef",
       "issued_at": "2026-10-25T19:10:51Z",
       "minted_during": "interrupt",
       "caused_by": "W2000",
-      "last_worked": null,
+      "last_worked": "2026-10-26T10:28:06Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/round_wire.py",
         "hooks/tests/test_round_wire.py"
-      ]
+      ],
+      "completed": "20261026T102806Z"
     },
     {
       "symbol": "W2006",
@@ -44615,7 +44610,7 @@
     {
       "symbol": "W2007",
       "title": "mikemol-commit records a flake when an identical resubmit passes a tree it refused",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2008",
         "W2009"
@@ -44625,19 +44620,20 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "github-8f 2026-10-25; first instance nemik:W1060 (test_incremental_redraw, after test_sources_fetch in stack440 and test_pdf in stack458, landed W1064 by resubmitting identically). Record per verdict: tree hash, refused target(s). On a pass whose tree hash equals an earlier REFUSED verdict's, write a flake record (repo, target, both verdict ids) to the commit ledger. Design may differ; the property: an identical-resubmit pass cannot silently clear a flake. Files: gate verdict log, stackland/stackrun.",
+      "next_bounded_step": "Queued as stack-w2007 (flakes module, stackrun wired, FLAKE line, gate-verdicts.jsonl). Next: W2008 refuses the next land until a ranked card cites the flaky target (reads the flake lines); W2009 publishes flaky passes per repo. I still need the landing, W2008, W2009, W2007",
       "evidence": "",
       "issued_at": "2026-10-25T20:16:52Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
+      "last_worked": "2026-10-26T10:29:23Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackrun.py",
         "hooks/src/mikemol/hooks/verdictlog.py",
         "hooks/tests/test_stackrun.py",
         "hooks/tests/test_verdictlog.py"
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W2008",
@@ -44808,19 +44804,19 @@
     {
       "symbol": "W2016",
       "title": "Witness the split at the gate: after every hooks test is on its closure, one out-of-cone edit shows the gate's hit count",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "W1990 was marked done on 81e9a6d7 for a single-test witness (test_round_wire cached on an out-of-cone edit, reran on an in-cone edit); that closed it too early, because its text asks for the gate's hit count over the split. This is the remainder: after the generated switch of all tests lands, make one out-of-cone one-line edit and one in-cone edit, read the gate's cached/executed counts for each, and compare the sum of miss wall with the baseline (the 1.9 to 2.5 s staging floor).",
-      "evidence": "2026-10-25: 2026-10-25 MEASURED after stack-w1988b landed (2b52dca4, W2010 1b9fa302), bazel test //hooks:all --test_lang_filters=py over 242 py tests: baseline after the BUILD change executed 234 of 242 (all pass); a one-line comment in vlogwatch.py (a module the graph says 75 tests reach, so a central one) executed 81 of 242; the same edit in watchdog.py (6 tests reach it) executed 12 of 242, 4 of them the whole-dist tests (W2020) plus the 6, 242 pass. Before the split every edit to any hooks module missed all of them. Both edits reverted; git status clean. Not yet the gate's own hit count; the next gate run's is the number to read. | 2026-10-25: 2026-10-25 the 2 tests beyond the graph's 6 and W2020's four (github-8f asked which reading): the second reading, not a graph bug. bazel query finds five hooks py_tests that are not test_*.py modules and so are outside GRAPH['tests'] and outside the generated switch: ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite. ruff_suppression was seen running in the sample. I did not identify which two of the five reran, so the graph-undercounts-an-edge reading is not ruled out by a positive control; W2012's input mutation will say. Carded W2021 to put the five on the generated closure or name why not.",
+      "next_bounded_step": "One more gate hit count from a central module's change (contrast with this leaf), then close with both. I still need that, W2016",
+      "evidence": "2026-10-25: 2026-10-25 MEASURED after stack-w1988b landed (2b52dca4, W2010 1b9fa302), bazel test //hooks:all --test_lang_filters=py over 242 py tests: baseline after the BUILD change executed 234 of 242 (all pass); a one-line comment in vlogwatch.py (a module the graph says 75 tests reach, so a central one) executed 81 of 242; the same edit in watchdog.py (6 tests reach it) executed 12 of 242, 4 of them the whole-dist tests (W2020) plus the 6, 242 pass. Before the split every edit to any hooks module missed all of them. Both edits reverted; git status clean. Not yet the gate's own hit count; the next gate run's is the number to read. | 2026-10-25: 2026-10-25 the 2 tests beyond the graph's 6 and W2020's four (github-8f asked which reading): the second reading, not a graph bug. bazel query finds five hooks py_tests that are not test_*.py modules and so are outside GRAPH['tests'] and outside the generated switch: ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite. ruff_suppression was seen running in the sample. I did not identify which two of the five reran, so the graph-undercounts-an-edge reading is not ruled out by a positive control; W2012's input mutation will say. Carded W2021 to put the five on the generated closure or name why not. | 2026-10-26: 2026-10-26 FIRST REAL GATE HIT COUNT over the split (stack-w2031's gate, read from its own output): 'Executed 379 out of 1495 tests: 1495 tests pass' = 25 percent executed, 1,116 cached; '402 processes: 138201 action cache hit, 47 disk cache hit, 4 remote cache hit, 510 linux-sandbox' = 99.7 percent of actions hit (the W1982 measurement before the split was 67 percent of targets hitting, ~99 percent of hooks targets missing on any change); elapsed 4,650 s wall for a 314 s critical path (the 77 minutes is the load, the queue and the mutation shards, not rebuilding). The change was stackgate.py plus test_stackgate.py, a leaf with a small cone. The other three stacks' outputs carry commit lines only, so no second figure. Next: a central-module change's gate for the contrast, and W1989 for the 1,495-test remainder.",
       "issued_at": "2026-10-25T21:04:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1990",
-      "last_worked": "2026-10-25T22:05:57Z",
+      "last_worked": "2026-10-26T10:29:21Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44984,28 +44980,29 @@
     {
       "symbol": "W2025",
       "title": "test_commit_remote and test_train time out at 60 s wall under load; bound them by CPU like the other slow hooks tests",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "2026-10-25: stack-w1692's gate was refused with exactly two failures, //hooks:test_commit_remote TIMEOUT in 60.1s and //hooks:test_train TIMEOUT in 60.7s, while I was running bazel site tests on the same host (load, not logic). Standing repair (operator 2026-10-10/15): not exclusive, not a longer timeout; put each in hooks/BUILD.bazel _CPU_BUDGET_S with its measured CPU (twice the largest wall seen) so MIKEMOL_TEST_CPU_S bounds it and medium lifts the wall backstop. Measure each test's CPU first (the per-target CPU series, luthen W1645, once loaded). The resubmit of stack-w1692 is an identical-tree resubmit after a refusal, which W2007 says must have a ranked card: this is it.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-25 READ AND MEASURED both tests (github-8f's ruling: name what they block on). No lock, lease, remote, sleep or race found. test_commit_remote: 5 tests of 1.2 to 2.7 s each (pytest --durations: 2.74, 2.66, 2.04, 1.47, 1.19) = 13 s wall for 2.5 s CPU, every test running real commit_kata.commit() against bare repos under tmp_path (no network); test_train: 2 tests of 2.7 s and 1.0 s, 5.9 s wall, 1.8 s CPU. strace of one commit shows no sleep in the code: only a child-wait poll loop (exponential clock_nanosleep 1 to 50 ms) while git and helper subprocesses run. hooks has two isolated.py/loadwait.py sleeps (isolated.REFRESH_PAUSE_S 2 s on a failed index reset, loadwait POLL_S, opt-in by MIKEMOL_COMMIT_MAXLOAD) and neither is on this path. So the 60 s TIMEOUTs were these tests running in a host saturated by my own 24-way site runs: many short process chains queueing for CPU, which wall time counts and CPU time does not. Per the ruling the remedy is FINER SHARDS: one test module per target, so split test_commit_remote (5 tests) and test_train by responsibility. | 2026-10-26: landed 290b0dac",
       "issued_at": "2026-10-26T00:25:33Z",
       "minted_during": "interrupt",
       "caused_by": "W1692",
-      "last_worked": null,
+      "last_worked": "2026-10-26T10:28:05Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/BUILD.bazel"
-      ]
+      ],
+      "completed": "20261026T102805Z"
     },
     {
       "symbol": "W2026",
       "title": "The watchdog's exit writes its idle line and its meaning to <git dir>/mtools/watchdog.last",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W2027"
       ],
@@ -45014,60 +45011,60 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "github-8f 2026-10-25: exit 8 was ignored or misread by amr-skills (first instance) and luthen-observability (second) because the harness shows only 'Background command ... failed with exit code 8'. READ FIRST: watchdog.py already keeps the next-action line (HINT_NAME next-action, remember_hint/cached_hint) and beat.py already speaks when no watchdog lives and cards are ready, but neither says WHY it exited. In watchdog.main's finally, write watchdog.last: exit code, the idle line, the meaning (8: idle with N ready cards, this is the wake not a failure; 7: cannot run), the restart command, a stamp. Optionally print the meaning as the LAST stdout line.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 6cf5e326",
       "issued_at": "2026-10-26T00:50:49Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
+      "last_worked": "2026-10-26T10:28:05Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/watchdog.py",
         "hooks/tests/test_watchdog.py"
-      ]
+      ],
+      "completed": "20261026T102805Z"
     },
     {
       "symbol": "W2027",
       "title": "The beat hook injects a fresh watchdog.last once as context: exited 8 is the wake, not a failure",
-      "status": "blocked",
-      "enables": [],
-      "touches": [
-        "velocity"
-      ],
-      "blocked_on": [
-        "W2026"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "beat.py already returns additionalContext when no live watchdog holds the pid file and cards are ready (the restart command is there). When a FRESH watchdog.last exists, lead with it: 'watchdog exited 8: idle with N ready cards ...: this is the wake, not a failure; do <hint>; restart with <exact command>', once (stamp consumed), so the harness's bare 'failed with exit code 8' is explained at the next tool call. Needs the writer card. Live hook: module first.",
-      "evidence": "",
-      "issued_at": "2026-10-26T00:50:52Z",
-      "minted_during": "interrupt",
-      "caused_by": "github-8f",
-      "last_worked": "2026-10-26T00:51:03Z",
-      "ticks_blocked": 0,
-      "completed": null
-    },
-    {
-      "symbol": "W2028",
-      "title": "Watchdog exit 7 (cannot run) has its own wording: fix the writer or the window",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "github-8f 2026-10-25: exit 7 means the watchdog could not run (no writer found, or now a refused window from W2004). Its watchdog.last text says so: fix the writer path or the window flags; not the wake. Rides with the writer card.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 0814f162",
+      "issued_at": "2026-10-26T00:50:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-26T10:28:06Z",
+      "ticks_blocked": 0,
+      "completed": "20261026T102806Z"
+    },
+    {
+      "symbol": "W2028",
+      "title": "Watchdog exit 7 (cannot run) has its own wording: fix the writer or the window",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 6cf5e326",
       "issued_at": "2026-10-26T00:51:09Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
+      "last_worked": "2026-10-26T10:28:05Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/watchdog.py",
         "hooks/tests/test_watchdog.py"
-      ]
+      ],
+      "completed": "20261026T102805Z"
     },
     {
       "symbol": "W2029",
@@ -45092,46 +45089,23 @@
       ]
     },
     {
-      "symbol": "W2030",
-      "title": "Mutation sites are grouped by input set: one target per distinct (module, tests, staged files) class, its sites run inside it",
-      "status": "blocked",
-      "enables": [
-        "W1989"
-      ],
-      "touches": [
-        "velocity"
-      ],
-      "blocked_on": [
-        "W1989"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "WITHDRAWN grouping (operator 100811, uuid 248e19ca, relayed by github-8f; not yet verified by me): 290 input sets for 1,789 sites is a finding that the SOURCE is too coarse, not a reason to collapse targets (targets may depend on targets, and that is proper). Do not contort targets to the current granularity. Kept as the measurement; superseded by the re-plan on W1989: site targets depend on W1988's per-module py_library and test targets instead of staging the cone, and the module-atomizing card below.",
-      "evidence": "",
-      "issued_at": "2026-10-26T01:05:42Z",
-      "minted_during": "interrupt",
-      "caused_by": "W1989",
-      "last_worked": "2026-10-26T01:16:21Z",
-      "ticks_blocked": 0,
-      "completed": null
-    },
-    {
       "symbol": "W2031",
       "title": "gate_tip uses a private index per run, so two gates in one repository cannot read each other's tree",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Built and tested (red on the old gate_tip, green on the private index): files stackgate.py, test_stackgate.py, warrants.bib, graph.json, dag.bzl in stack-w2031.json. Its submit was REFUSED because hooks/dag.bzl names test_domain_witness_concurrency.py, which only the in-flight stack-w1692 carries. Submit the moment stack-w1692 lands (or fold it into that stack). Then send luthen and github-8f the sha. I still need the landing, W2031",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 94149f78",
       "issued_at": "2026-10-26T01:08:17Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability-ab",
-      "last_worked": "2026-10-26T01:18:27Z",
+      "last_worked": "2026-10-26T03:00:48Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261026T030048Z",
       "manifest": [
         "hooks/src/mikemol/hooks/stackgate.py",
         "hooks/tests/test_stackgate.py"
@@ -45170,6 +45144,78 @@
       "next_bounded_step": "github-8f 2026-10-25 ghost sweep. MEASURED on mtools: --prune-landed only prunes blocker edges. A scratch sweep (symbol leads a git log subject) over 97 ready cards found 10 with a landing commit, and 0 true ghosts: W1798 ('step one'), W1803 ('step one, the measuring half'), W1854 ('first slice') and W1950/W1954/W1960/W1961/W1988/W2000 ('first part', 'NOT DONE') are all open, W1929 is a recurring sweep. The open markers a subject uses vary ('step one', 'first slice', 'NOT DONE', 'remain'), so the mode must LIST candidates with the subject, never close; the reader decides. Files: pathsforward cli, a new module.",
       "evidence": "",
       "issued_at": "2026-10-26T01:23:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2034",
+      "title": "The four tests under a CPU budget with size medium (W1798) wait on events, not a longer bazel timeout",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: the operator ruled 2026-10-17 'No, shard finer only' to a longer bazel timeout even as a backstop behind RLIMIT_CPU, so test_traindrive, test_trainlead, test_grade and test_import_cycles (hooks/BUILD.bazel _CPU_BUDGET_S, size medium) contradict it. For each: name what it waits on, make the wait event-bound or shard it finer, then drop it from _CPU_BUDGET_S's medium. The CPU rlimit itself stays as the bound.",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:39:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2035",
+      "title": "commit_kata.waiter waits on the child's pidfd instead of a wait(timeout) slice loop",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: Popen.wait(timeout=...) is a polling loop (1 to 50 ms backoff, seen in strace of a commit) and so a wall-clock sync point under load. commit_kata.waiter (line ~194) wraps child.wait(timeout=seconds) for the W1803 progress looks; wait on the event instead (os.pidfd_open + select, or a blocking waitpid on a thread) so a slice costs no wakeups. Note the slice length is the progress witness's look interval, so the looks stay.",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:44:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2036",
+      "title": "The submit-time round refusal names every skipped round card in one message",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25 (luthen hit three refusals in a row: W1672, W1467, W1653). READ: round_check.composition already returns one refusal per skipped ready round card and round_wire.round_reason joins them with ' | ' (I saw three in one refusal at stack-w1503b, 2026-10-25), so within one published round every skipped card is named; the loop luthen saw is the round CHANGING between submits (the file is republished hourly). Still worth doing: one message, not N sentences each repeating the outside card list, and a single writer line per card to run together; the writer's --update-many cannot set working, so it stays one --update per card. Measure the repeated refusals against round.json's as_of before changing anything.",
+      "evidence": "",
+      "issued_at": "2026-10-26T03:28:07Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2037",
+      "title": "mikemol-repin never hides uv's stderr, and the exit-2 flake of its final sync is found",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25 (luthen 8368613e): the final uv sync exited 2 with NO message once and passed on a hand rerun: a nondeterminism, a blocker to deconstruct, not rerun. READ: hooks/src/mikemol/hooks/repin_cli.py line 185 runs SYNC = uv sync --inexact through a runner and keeps only the exit code (index 0 of its result), so uv's output is dropped by construction: the wrapper hides stderr. Step 1: carry uv's stderr and stdout in the runner's result and print them on a nonzero exit with the repo's name. Step 2: with the message visible, find the cause; suspects: a concurrent uv on the same cache or venv (uv's cache lock), a lockfile racing the revendor's write, the revendor still holding the tree. A sync-failed RESULT line must carry the last stderr line.",
+      "evidence": "",
+      "issued_at": "2026-10-26T03:28:14Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
@@ -45551,6 +45597,13 @@
       "title": "A generator derives hooks' per-module library list and deps from the import graph into a generated bzl file with a check mode",
       "dropped_at": "2026-10-25T14:53:58Z",
       "reason": "Duplicate of W1503, found by github-8f's cone search 2026-10-25: importdag.graph (W1503, landed e1607be) already derives per-module and per-test import edges in all three spellings into graph.json and dag.bzl with a --check mode, and paperkit's BUILD/dagbzl pattern is the template to copy. Building a second generator would be exactly the reinvention the fleet rule forbids",
+      "recoverable": true
+    },
+    {
+      "symbol": "W2030",
+      "title": "Mutation sites are grouped by input set: one target per distinct (module, tests, staged files) class, its sites run inside it",
+      "dropped_at": "2026-10-26T10:28:19Z",
+      "reason": "A measurement, not work: 1,789 mutation sites share 290 input sets. The operator (host line 100811, uuid 248e19ca) ruled that targets are not contorted to the current granularity; the finding drives W2032 (split the modules) and W1989's per-module-library dependencies instead. Grouping withdrawn.",
       "recoverable": true
     }
   ],

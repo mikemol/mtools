@@ -198,3 +198,4 @@ tick_stop	Tick stop (W1904, W1948): the Stop hook that holds a turn open
 round_order	Round order (W1950): the repository's published round, best rank first, for the idle rung
 mypy_mirror	Mypy mirror (W1628): a new file judged under its real module name so an override applies
 domain_witness	Domain-witness
+flakes	Gate-flakes
