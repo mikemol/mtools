@@ -66,6 +66,16 @@ def test_a_path_from_the_repository_root_is_read_as_a_second_base() -> None:
     assert stackbuildfiles.findings(entries, _blobs(b1=_LISTED), _never) == []
 
 
+def test_a_path_from_a_directory_between_the_build_file_and_the_root_is_a_base() -> None:
+    """A generated site names `tests/x.py` from its dist, two levels above the site's package."""
+    site = "luthen/sites/src/pkg/mod/BUILD.bazel"
+    entries = [("W1", [_frozen(site, "b1"), _frozen("luthen/tests/x_test.py", "b2")])]
+    listed = _blobs(b1='tests = "tests/x_test.py"\n')
+    assert stackbuildfiles.findings(entries, listed, _never) == []
+    elsewhere = [("W1", [_frozen(site, "b1"), _frozen("other/tests/x_test.py", "b2")])]
+    assert len(stackbuildfiles.findings(elsewhere, listed, _never)) == 1
+
+
 def test_globs_labels_and_non_python_names_are_never_findings() -> None:
     """Only a plain quoted .py path is a named source."""
     entries = [("W1", [_frozen("d/BUILD.bazel", "b1")])]

@@ -10,8 +10,10 @@ source the stack does not carry runs a full gate to fail on a file that was neve
 ⚑ THE SAME RULE AS THE IMPORT CHECK (W1527): it can refuse only what is surely broken. A quoted
 `.py` path with no wildcard, no label (`@repo//`, `//pkg:`) and no leading colon is a named source;
 it counts as present when HEAD or any frozen file of this entry or an earlier one carries it under
-EITHER of the two bases a build file can mean: beside itself, or from the repository root (a `.bzl`
-macro's paths are relative to the package that calls it, which the file alone does not say).
+ANY base a build file can mean: beside itself, from the repository root, or from a directory
+between (a `.bzl` macro's paths are relative to the package that calls it, and a generated site
+under `hooks/sites/...` names `tests/x.py` from its dist, `hooks/`, which the file alone does not
+say; found at W1989's submit, 2026-10-26).
 
 ⚑ THE BYTES ARE THE FROZEN BLOBS, as for the import check; a blob that cannot be read is skipped.
 
@@ -88,7 +90,7 @@ class _Known:
             True when either spelling is carried by the stack so far or by HEAD.
 
         """
-        bases = {str(here / source), str(PurePosixPath(source))}
+        bases = {str(base / source) for base in (here, *here.parents)}
         return any(path in self.present or self.in_head(path) for path in bases)
 
     def name(self, source: str) -> bool:

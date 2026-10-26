@@ -461,8 +461,7 @@ src/mikemol/hooks/pycheck_cli.py|omission-never-said|    if skipped:|    if Fals
 src/mikemol/hooks/stacktree.py|pin-ref-loses-the-stack-key|    ref = f"\{REF_ROOT\}/\{key\}/\{place\}"|    ref = f"{REF_ROOT}/{place}"|def=pin
 src/mikemol/hooks/stacktree.py|release-deletes-nothing|    names = listed\.stdout\.split\(\) if listed\.returncode == 0 else \[\]|    names = []|def=release
 src/mikemol/hooks/stackbuildfiles.py|missing-source-accepted|                if not \(known\.path\(here, source\) or known\.name\(source\)\)|                if False|def=findings
-src/mikemol/hooks/stackbuildfiles.py|root-spelling-not-a-base|bases = \{str\(here / source\), str\(PurePosixPath\(source\)\)\}|bases = {str(here / source)}|def=_Known.path
-src/mikemol/hooks/stackbuildfiles.py|directory-name-read-by-basename|        if "/" in source:|        if False:|def=_Known.name
+src/mikemol/hooks/stackbuildfiles.py|root-spelling-not-a-base|bases = \{str\(base / source\) for base in \(here, \*here\.parents\)\}|bases = {str(here / source)}|def=_Known.path
 src/mikemol/hooks/stackbuildfiles.py|head-names-always-asked|        if self\.head_names is None:|        if False:|def=_Known.name
 src/mikemol/hooks/stackbuildfiles.py|bzl-not-a-build-file|return name in _BUILD_NAMES or name\.endswith\("\.bzl"\)|return name in _BUILD_NAMES|def=is_build_file
 src/mikemol/hooks/stackimports.py|same-entry-counted-as-later|                later = added\.get\(module, -1\) > place|                later = added.get(module, -1) >= place|def=findings
@@ -659,6 +658,11 @@ src/mikemol/hooks/testgate.py|no-snapshot-tool-runs-anyway|    if not targets or
 src/mikemol/hooks/commit_kata.py|test-refusal-never-asked|        or _test_refusal\(root, stack_file, env\)||def=submit_problem
 src/mikemol/hooks/commit_span.py|wait-read-to-the-verdict|    wait = max\(moments\.lease_ns - moments\.submit_ns, 0\) / NS_PER_S|    wait = max(moments.end_ns - moments.submit_ns, 0) / NS_PER_S|def=gate_series
 src/mikemol/hooks/commit_span.py|run-time-not-clamped|    run = max\(moments\.end_ns - moments\.lease_ns, 0\) / NS_PER_S|    run = (moments.end_ns - moments.lease_ns) / NS_PER_S|def=gate_series
+src/mikemol/hooks/ratchet_pace.py|debt-with-no-card-held|    return bool\(open_cards\) and all\(|    return all(|def=operator_held
+src/mikemol/hooks/ratchet_pace.py|one-human-card-holds-a-payable-debt|    return bool\(open_cards\) and all\(|    return bool(open_cards) and any(|def=operator_held
+src/mikemol/hooks/ratchet_pace.py|held-row-still-refused|        o for o in owed\(rows, directory\.name, directory\) if not operator_held\(queue, o\.ratchet\)|        o for o in owed(rows, directory.name, directory) if True|def=stack_reason
+src/mikemol/hooks/commit_kata.py|pace-refusal-never-asked|        or _pace_refusal\(root, stack_file, env\)||def=submit_problem
+src/mikemol/hooks/ratchet_pace.py|named-pace-file-ignored|Path\(named\) if named else None|None|def=refusal
 src/mikemol/hooks/stacksnap.py|heads-files-not-listed-under-a-directory|        held = run\(\[\*_HELD, path\], \{\}, root\)|        held = run([*_GONE, path], {}, root)|def=_expand
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
 src/mikemol/hooks/ratchet_hook.py|block-inserted-twice|    if MARK in text:|    if False:|def=insert

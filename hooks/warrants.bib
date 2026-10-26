@@ -15662,3 +15662,67 @@
   claim  = {The first real run died in `git add -A` (a scratch file vanished) and refused the stack.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_a_snapshot_that_could_not_be_taken_is_not_a_failing_test},
 }
+
+@misc{hooks-ratchet-pace-held-every-open-paydown-card-blocked-on-a-human-holds-the-row,
+  section = {ratchet_pace},
+  title  = {Only blocked-on-human cards: the row awaits the operator and is not refusable},
+  claim  = {Only blocked-on-human cards: the row awaits the operator and is not refusable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_held.py -k test_every_open_paydown_card_blocked_on_a_human_holds_the_row},
+}
+
+@misc{hooks-ratchet-pace-held-ready-or-agent-blocked-card-or-no-card-leaves-the-debt-owed,
+  section = {ratchet_pace},
+  title  = {A payable debt, a debt waiting on an agent and a debt with no card are all still owed},
+  claim  = {A payable debt, a debt waiting on an agent and a debt with no card are all still owed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_held.py -k test_a_ready_or_agent_blocked_card_or_no_card_leaves_the_debt_owed},
+}
+
+@misc{hooks-ratchet-pace-held-submit-judgement-does-not-refuse-a-debt-held-by-the-operator,
+  section = {ratchet_pace},
+  title  = {With the only paydown card blocked on a human, a stack that lowers nothing may wait},
+  claim  = {With the only paydown card blocked on a human, a stack that lowers nothing may wait.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_held.py -k test_the_submit_judgement_does_not_refuse_a_debt_held_by_the_operator},
+}
+
+@misc{hooks-ratchet-pace-wired-stack-that-lowers-nothing-is-refused-and-one-touching-the-ratchet-is-not,
+  section = {ratchet_pace},
+  title  = {The stack file's paths are what is judged, against the pace file the env names},
+  claim  = {The stack file's paths are what is judged, against the pace file the env names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_stack_that_lowers_nothing_is_refused_and_one_touching_the_ratchet_is_not},
+}
+
+@misc{hooks-ratchet-pace-wired-queue-only-and-an-unreadable-stack-file-refuse-nothing,
+  section = {ratchet_pace},
+  title  = {Queue-state commits are admitted; a missing or torn stack file cannot be judged},
+  claim  = {Queue-state commits are admitted; a missing or torn stack file cannot be judged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_queue_only_and_an_unreadable_stack_file_refuse_nothing},
+}
+
+@misc{hooks-submit-problem-paydown-pace-is-asked-after-the-round-and-before-the-test-run,
+  section = {shardgate},
+  title  = {W1920: a behind repository's stack that lowers nothing is refused before bazel runs},
+  claim  = {W1920: a behind repository's stack that lowers nothing is refused before bazel runs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_the_paydown_pace_is_asked_after_the_round_and_before_the_test_run},
+}
+
+@misc{hooks-stackbuildfiles-path-from-a-directory-between-the-build-file-and-the-root-is-a-base,
+  section = {stackbuildfiles},
+  title  = {A generated site names `tests/x.py` from its dist, two levels above the site's package},
+  claim  = {A generated site names `tests/x.py` from its dist, two levels above the site's package.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_path_from_a_directory_between_the_build_file_and_the_root_is_a_base},
+}
+
+@misc{hooks-sites-gate-step-is-guarded-by-the-sites-directory-and-checks-never-writes,
+  section = {sites_gate},
+  title  = {Guarded by `[ -d hooks/sites ]`, and the generator is asked to `--check` only},
+  claim  = {Guarded by `[ -d hooks/sites ]`, and the generator is asked to `--check` only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites_gate.py -k test_the_step_is_guarded_by_the_sites_directory_and_checks_never_writes},
+}
+
+@misc{hooks-sites-gate-step-runs-through-the-captured-runner-from-the-tools-root,
+  section = {sites_gate},
+  title  = {The generator needs fence and mutation on the path and the hooks interpreter of the tools},
+  claim  = {The generator needs fence and mutation on the path and the hooks interpreter of the
+            tools.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites_gate.py -k test_the_step_runs_through_the_captured_runner_from_the_tools_root},
+}
