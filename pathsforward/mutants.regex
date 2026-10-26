@@ -315,3 +315,6 @@ src/mikemol/pathsforward/ops.py|self-symbol-next-step-accepted|    if not step o
 src/mikemol/pathsforward/ops.py|empty-next-step-accepted|    if not step or step == sym:|    if step == sym:|def=_refuse_empty_next
 src/mikemol/pathsforward/ops.py|unset-next-step-refused|    if text\(new, "status"\) not in \{"ready", "working"\} or upd\.next_step is None:|    if text(new, "status") not in {"ready", "working"}:|def=_refuse_empty_next
 src/mikemol/pathsforward/cli.py|blank-blocker-accepted|    if blockers is not None and not all\(b\.strip\(\) for b in blockers\):|    if False:|def=_fields_of
+src/mikemol/pathsforward/ghosts.py|any-led-symbol-listed|        if lead is not None and lead\.group\(1\) in wanted:|        if lead is not None:|def=candidates
+src/mikemol/pathsforward/ghosts.py|markers-case-sensitive|    return tuple\(m for m in _MARKERS if m\.lower\(\) in lowered\)|    return tuple(m for m in _MARKERS if m in subject)|def=markers_in
+src/mikemol/pathsforward/ghosts.py|unreadable-log-is-no-ghosts|    if raw is None:|    if False:|def=report

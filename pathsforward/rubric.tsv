@@ -111,3 +111,4 @@ export_mode	The Export Mode: the Writer Writes the Repo's Version-2 Export Besid
 retros	The retro record (W1918): a node beside the waypoints, a finding that commits
 regressions	Queue regressions (W1930): a staged queue may not lose a finished card or evidence
 open_line	Tick open: ready cards named
+ghosts	Ready cards that lead a landed commit's subject are listed, never closed (W2033)

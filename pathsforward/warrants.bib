@@ -7367,3 +7367,52 @@
   claim  = {W2046: `--next ""` and `--next W1` on W1 are refused; a real step is accepted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_ready_or_working_card_is_refused_an_empty_or_self_symbol_next_step},
 }
+
+@misc{pathsforward-ghosts-open-markers-a-subject-uses-are-named-in-table-order,
+  section = {ghosts},
+  title  = {`NOT DONE` and `first part` are found without regard to case; a plain subject has none},
+  claim  = {`NOT DONE` and `first part` are found without regard to case; a plain subject has none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_the_open_markers_a_subject_uses_are_named_in_table_order},
+}
+
+@misc{pathsforward-ghosts-only-a-commit-that-leads-with-the-symbol-of-a-ready-card-is-a-candidate,
+  section = {ghosts},
+  title  = {A later mention, a card that is not ready and a longer symbol (W10 for W1) are not},
+  claim  = {A later mention, a card that is not ready and a longer symbol (W10 for W1) are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_only_a_commit_that_leads_with_the_symbol_of_a_ready_card_is_a_candidate},
+}
+
+@misc{pathsforward-ghosts-subject-with-no-marker-is-listed-and-says-so,
+  section = {ghosts},
+  title  = {The reader decides: no marker is still a candidate, rendered as such with a short sha},
+  claim  = {The reader decides: no marker is still a candidate, rendered as such with a short sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_a_subject_with_no_marker_is_listed_and_says_so},
+}
+
+@misc{pathsforward-ghosts-long-subject-is-cut-for-the-reader,
+  section = {ghosts},
+  title  = {One line per candidate, not a whole commit message},
+  claim  = {One line per candidate, not a whole commit message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_a_long_subject_is_cut_for_the_reader},
+}
+
+@misc{pathsforward-ghosts-report-counts-the-ready-cards-that-lead-a-commit-and-changes-nothing,
+  section = {ghosts},
+  title  = {Two commits for W1 and none for W3 count one card of two ready; the queue is untouched},
+  claim  = {Two commits for W1 and none for W3 count one card of two ready; the queue is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_the_report_counts_the_ready_cards_that_lead_a_commit_and_changes_nothing},
+}
+
+@misc{pathsforward-ghosts-log-that-could-not-be-read-is-a-refusal-never-no-ghosts,
+  section = {ghosts},
+  title  = {No answer is not an empty list},
+  claim  = {No answer is not an empty list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_a_log_that_could_not_be_read_is_a_refusal_never_no_ghosts},
+}
+
+@misc{pathsforward-ghosts-mode-is-wired-and-ends-with-the-count-line,
+  section = {ghosts},
+  title  = {`--ghosts` ends with the count line whether or not git could be read; it never raises},
+  claim  = {`--ghosts` ends with the count line whether or not git could be read; it never raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ghosts.py -k test_the_mode_is_wired_and_ends_with_the_count_line},
+}

@@ -43092,11 +43092,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Row gains guessed (True for the name classifier, False for a declared row), the census line prints guessed=1 or 0, ratchet_emit parses it and sends it as a label on mikemol.ratchet.value, and nemik-84 is told the label so W1920's input carries it (nemik treats a guessed row as advisory, never a refusal). I still need all of it, W1958",
-      "evidence": "",
+      "evidence": "2026-10-26: 2026-10-26: waited because the hooks half (ratchet_emit.py) shares the serial hooks stack lane, held all day by W1603/W1989/W1920 (landed 2e418ed2..7b43b8c5). The lane is free now; it is next after W2033 (pathsforward, in tests), as one stack with the ratchet half.",
       "issued_at": "2026-10-25T11:18:34Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T18:06:01Z",
+      "last_worked": "2026-10-26T20:15:48Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44274,12 +44274,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Cited by live stack-next-3 (W1603, W1989, W1920, W1997). After it lands: retire the sharded :mutants targets, flip the sites off manual, record counts for W1880. I still need the landing, W1989",
-      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504",
+      "next_bounded_step": "Retire the sharded :mutants targets in favour of the per-site suites, flip the sites off manual, then record the counts for W1880. Run the whole grid for one dist first and measure.",
+      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504 | 2026-10-26: sites committed 1ee738d8; stack-next-3 landed (W1603 2e418ed2, W1920 wired e53edaf5)",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-26T18:48:10Z",
+      "last_worked": "2026-10-26T20:09:33Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44437,7 +44437,7 @@
     {
       "symbol": "W1997",
       "title": "Project a card's landing cost: manifest cone over graph.json, rerun targets, measured CPU seconds",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W50"
       ],
@@ -44446,36 +44446,34 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Land the command (it rides the next stack as an importdag entry), then the neighbour projection for tests with few samples and W1998's pairwise form. I still need those, W1997",
-      "evidence": "2026-10-26: second part landed bbed6103 (importdag.series: luthen's three series into the Measured table) | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767 | 2026-10-26: 2026-10-26 third part built (in the tree): mikemol-landing-cost --dist hooks --repo mtools --otlp PATH FILE... (importdag.costcli) reads the dist's graph.json, asks luthen's store through mikemol-otlp query-metrics for the three series, and prints tests rerun, the manifest paths the graph does not name, the summed median and p90 CPU seconds over the measured tests with the fewest samples, and the unmeasured tests. RAN FOR REAL on a manifest of round_wire.py and test_round_wire.py: 66 tests rerun, median 100.8 s and p90 111.0 s CPU over 63 measured (fewest samples 3), and the 3 unmeasured are exactly the three new ratchet_pace tests no gate has run yet, so the unknown stayed unknown. Four tests, three declared mutants and warrants; the dist's bazel run is in flight. NOT DONE: the neighbour projection for a test with too few samples, and the pairwise form over two cards' manifests (W1998). | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: second part landed bbed6103 (importdag.series: luthen's three series into the Measured table) | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767 | 2026-10-26: 2026-10-26 third part built (in the tree): mikemol-landing-cost --dist hooks --repo mtools --otlp PATH FILE... (importdag.costcli) reads the dist's graph.json, asks luthen's store through mikemol-otlp query-metrics for the three series, and prints tests rerun, the manifest paths the graph does not name, the summed median and p90 CPU seconds over the measured tests with the fewest samples, and the unmeasured tests. RAN FOR REAL on a manifest of round_wire.py and test_round_wire.py: 66 tests rerun, median 100.8 s and p90 111.0 s CPU over 63 measured (fewest samples 3), and the 3 unmeasured are exactly the three new ratchet_pace tests no gate has run yet, so the unknown stayed unknown. Four tests, three declared mutants and warrants; the dist's bazel run is in flight. NOT DONE: the neighbour projection for a test with too few samples, and the pairwise form over two cards' manifests (W1998). | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767 | 2026-10-26: landed 4dce525f and 7b43b8c5 (neighbour projection); the pairwise form is W1998",
       "issued_at": "2026-10-25T17:05:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1503",
-      "last_worked": "2026-10-26T18:00:09Z",
+      "last_worked": "2026-10-26T19:49:39Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T194939Z"
     },
     {
       "symbol": "W1998",
       "title": "Pairwise landing cost: two cards together with overlapping cones counted once, and a card after its enabler lands",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W50"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W1997"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Union of the two cones, summed once; the after-enabler form removes the enabler's cone from the card's. Needs W1997's single-card projection.",
       "evidence": "",
       "issued_at": "2026-10-25T17:06:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1997",
       "last_worked": "2026-10-25T17:06:07Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -45145,7 +45143,7 @@
     {
       "symbol": "W2033",
       "title": "Writer lists ready cards whose symbol leads a commit subject, with the subject's open markers, so a ghost is read not guessed",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "velocity"
@@ -45157,9 +45155,14 @@
       "issued_at": "2026-10-26T01:23:52Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T13:09:28Z",
+      "last_worked": "2026-10-26T19:34:32Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "manifest": [
+        "pathsforward/src/mikemol/pathsforward/ghosts.py",
+        "pathsforward/src/mikemol/pathsforward/cli.py",
+        "pathsforward/tests/test_ghosts.py"
+      ]
     },
     {
       "symbol": "W2034",
@@ -45575,7 +45578,7 @@
     {
       "symbol": "W2055",
       "title": "mikemol-commit's submit path runs the bazel test target of every test file a stack adds or changes, in the sandbox, before the stack can queue",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -45585,14 +45588,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Submit stack-next-1.json when the eight-entry stack (key 1793030472959274837) lands; until then nothing queues. Card the graph-serial-file class if it recurs. I still need the landing, W2055",
-      "evidence": "2026-10-26: 2026-10-26 bazel: test_testgate, test_testgate_run, test_submit_problem, graph_fresh and the 11 testgate sites all PASS. SUBMIT of stack-next-1.json REFUSED before queueing: hooks/dag.bzl and graph.json (regenerated from the tree) name seven files that only the in-gate eight-entry stack adds (ratchet_pace.py and three of its tests, test_commit_dir_deletion, test_repro_rungs, test_watchdog_evidence), and a stack may name only what HEAD or its own entries carry. THE CLASS: hooks/graph.json and dag.bzl are one shared serial file, so every hooks stack built while another is gating can land only after it; two hooks stacks cannot queue in parallel by file, which the one-next-stack rule hits whenever the first is mid-gate. Options: (a) wait for the gate and submit then (taken), (b) build the next stack from the committed graph plus only its own entries by regenerating dag/graph against HEAD in a scratch worktree (the mechanism W2020/W2021 need anyway).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 bazel: test_testgate, test_testgate_run, test_submit_problem, graph_fresh and the 11 testgate sites all PASS. SUBMIT of stack-next-1.json REFUSED before queueing: hooks/dag.bzl and graph.json (regenerated from the tree) name seven files that only the in-gate eight-entry stack adds (ratchet_pace.py and three of its tests, test_commit_dir_deletion, test_repro_rungs, test_watchdog_evidence), and a stack may name only what HEAD or its own entries carry. THE CLASS: hooks/graph.json and dag.bzl are one shared serial file, so every hooks stack built while another is gating can land only after it; two hooks stacks cannot queue in parallel by file, which the one-next-stack rule hits whenever the first is mid-gate. Options: (a) wait for the gate and submit then (taken), (b) build the next stack from the committed graph plus only its own entries by regenerating dag/graph against HEAD in a scratch worktree (the mechanism W2020/W2021 need anyway). | 2026-10-26: landed c5fce7f5; NOT DONE parts (a real-snapshot path test, a bound) are not carded: no stable signal yet",
       "issued_at": "2026-10-26T16:01:48Z",
       "minted_during": "interrupt",
       "caused_by": "github:W50",
-      "last_worked": "2026-10-26T16:40:52Z",
+      "last_worked": "2026-10-26T19:49:37Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T194937Z"
     }
   ],
   "residue": [

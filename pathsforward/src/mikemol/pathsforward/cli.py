@@ -40,6 +40,7 @@ from mikemol.pathsforward import (
     foreign,
     gate,
     generated,
+    ghosts,
     idle,
     inbound,
     lease,
@@ -491,6 +492,7 @@ _FLAGS = (
     "close_gate",
     "standing",
     "ready_count",
+    "ghosts",
     "watchdog_line",
     "prompt_ack",
 )
@@ -2826,6 +2828,28 @@ def _standing_set(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _ghosts(ctx: Ctx) -> int:
+    """Print each ready card whose symbol leads a landed commit's subject, with its markers (W2033).
+
+    ⚑ A LIST FOR THE READER, NEVER A CLOSE: the markers a subject uses to say a part is still open
+    vary, so a card with a landing commit is a candidate and nothing here changes it.
+
+    Returns:
+        EXIT_OK, or EXIT_REFUSED when the git log cannot be read.
+
+    """
+    state = store.load(ctx.path)
+    root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
+    try:
+        lines = ghosts.report(state, root)
+    except RefusedError as caught:
+        _warn(f"REFUSED: {caught}")
+        return EXIT_REFUSED
+    for found in lines:
+        _say(found)
+    return EXIT_OK
+
+
 def _ready_count(ctx: Ctx) -> int:
     """Print how many unblocked ready cards the queue holds, for the idle watchdog (W1474).
 
@@ -3227,6 +3251,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "prompt_ack": _prompt_ack,
     "atomize": _atomize,
     "ready_count": _ready_count,
+    "ghosts": _ghosts,
     "standing_set": _standing_set,
     "tick_hooks_set": _tick_hooks_set,
     "preamble_clear": _preamble_clear,
