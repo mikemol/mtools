@@ -8655,13 +8655,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated_new.py -k test_the_same_gate_refuses_when_the_new_file_is_not_named},
 }
 
-@misc{hooks-commit-remote-commit-the-remote-holds-is-pushed,
-  section = {commit_remote},
-  title  = {The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED]},
-  claim  = {The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED].},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_a_commit_the_remote_holds_is_pushed},
-}
-
 @misc{hooks-commit-remote-tracking-ref-that-lies-is-a-remote-mismatch-naming-the-remote,
   section = {commit_remote},
   title  = {The tracking ref is moved by hand to HEAD, nothing is pushed: the remote's sha is named},
@@ -8674,14 +8667,6 @@
   title  = {Nothing pushed and the tracking ref honest: the old LOCAL verdict, unchanged},
   claim  = {Nothing pushed and the tracking ref honest: the old LOCAL verdict, unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_an_unpushed_commit_over_an_honest_tracking_ref_is_local},
-}
-
-@misc{hooks-commit-remote-peer-pushing-on-top-does-not-unpush-the-commit,
-  section = {commit_remote},
-  title  = {The remote moved past the commit to a sha this clone lacks: still PUSHED, after one fetch},
-  claim  = {The remote moved past the commit to a sha this clone lacks: still PUSHED, after one
-            fetch.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_a_peer_pushing_on_top_does_not_unpush_the_commit},
 }
 
 @misc{hooks-commit-remote-unreachable-remote-is-unverified-not-pushed,
@@ -12421,20 +12406,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_config_report.py -k test_an_unreadable_file_reads_default_and_does_not_raise},
 }
 
-@misc{hooks-train-each-submission-ends-on-a-tree-holding-every-earlier-file,
-  section = {train},
-  title  = {Two submissions of two entries and one: the boundaries are the 2nd and 3rd trees},
-  claim  = {Two submissions of two entries and one: the boundaries are the 2nd and 3rd trees.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_each_submission_ends_on_a_tree_holding_every_earlier_file},
-}
-
-@misc{hooks-train-submission-with-no-entry-stops-the-tip-build,
-  section = {train},
-  title  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour},
-  claim  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train.py -k test_a_submission_with_no_entry_stops_the_tip_build},
-}
-
 @misc{hooks-train-green-tip-lands-every-key-naming-the-tip-as-its-gate,
   section = {train},
   title  = {Each landing names the last key, because only the tip tree was tested},
@@ -15412,4 +15383,33 @@
   title  = {Its status is stale (the stack is queued or gating), so taking it is not owed (W2005)},
   claim  = {Its status is stale (the stack is queued or gating), so taking it is not owed (W2005).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_ready_round_card_a_live_submission_names_is_not_demanded},
+}
+
+@misc{hooks-commit-remote-pushed-commit-the-remote-holds-is-pushed,
+  section = {commit_remote},
+  title  = {The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED]},
+  claim  = {The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED].},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote_pushed.py -k test_a_commit_the_remote_holds_is_pushed},
+}
+
+@misc{hooks-commit-remote-pushed-peer-pushing-on-top-does-not-unpush-the-commit,
+  section = {commit_remote},
+  title  = {The remote moved past the commit to a sha this clone lacks: still PUSHED, after one fetch},
+  claim  = {The remote moved past the commit to a sha this clone lacks: still PUSHED, after one
+            fetch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote_pushed.py -k test_a_peer_pushing_on_top_does_not_unpush_the_commit},
+}
+
+@misc{hooks-train-tips-each-submission-ends-on-a-tree-holding-every-earlier-file,
+  section = {train},
+  title  = {Two submissions of two entries and one: the boundaries are the 2nd and 3rd trees},
+  claim  = {Two submissions of two entries and one: the boundaries are the 2nd and 3rd trees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_tips.py -k test_each_submission_ends_on_a_tree_holding_every_earlier_file},
+}
+
+@misc{hooks-train-tips-submission-with-no-entry-stops-the-tip-build,
+  section = {train},
+  title  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour},
+  claim  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_tips.py -k test_a_submission_with_no_entry_stops_the_tip_build},
 }

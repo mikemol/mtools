@@ -1576,6 +1576,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_commit_remote_pushed.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_commit_run_git.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
@@ -2747,11 +2754,17 @@ GRAPH = {
     },
     "tests/test_train.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py",
-        "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/trainbisect.py",
         "src/mikemol/hooks/trainland.py",
-        "src/mikemol/hooks/trainrun.py",
+        "src/mikemol/hooks/trainrun.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_train_tips.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/traintip.py"
       ],
       "reads": [],

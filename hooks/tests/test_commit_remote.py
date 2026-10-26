@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 GIT = shutil.which("git") or "git"
-EXECUTABLE = 0o755
 SHORT = 7
 
 
@@ -53,24 +52,11 @@ def _repo(tmp_path: Path) -> Path:
     return root
 
 
-def _pushing(root: Path) -> None:
-    hook = root / ".git" / "hooks" / "post-commit"
-    hook.write_text("#!/bin/sh\ngit push -q origin HEAD:main\n", encoding="utf-8")
-    hook.chmod(EXECUTABLE)
-
-
 def _last(root: Path) -> str:
     out = io.StringIO()
     request = commit_kata.Request(waypoint="W1", subject="the work", paths=("a.txt",))
     assert commit_kata.commit(root, request, out) == 0
     return out.getvalue().strip().splitlines()[-1]
-
-
-def test_a_commit_the_remote_holds_is_pushed(tmp_path: Path) -> None:
-    """The positive control: the hook pushed, ls-remote shows the sha, the line ends [PUSHED]."""
-    root = _repo(tmp_path)
-    _pushing(root)
-    assert _last(root).endswith("[PUSHED]")
 
 
 def test_a_tracking_ref_that_lies_is_a_remote_mismatch_naming_the_remote(tmp_path: Path) -> None:
@@ -91,24 +77,6 @@ def test_an_unpushed_commit_over_an_honest_tracking_ref_is_local(tmp_path: Path)
     """Nothing pushed and the tracking ref honest: the old LOCAL verdict, unchanged."""
     root = _repo(tmp_path)
     assert "[LOCAL: not on origin/main]" in _last(root)
-
-
-def test_a_peer_pushing_on_top_does_not_unpush_the_commit(tmp_path: Path) -> None:
-    """The remote moved past the commit to a sha this clone lacks: still PUSHED, after one fetch."""
-    root = _repo(tmp_path)
-    _pushing(root)
-    request = commit_kata.Request(waypoint="W1", subject="the work", paths=("a.txt",))
-    assert commit_kata.commit(root, request, io.StringIO()) == 0
-    mine = _git(root, "rev-parse", "HEAD").strip()
-    peer = tmp_path / "peer"
-    _git(tmp_path, "clone", "-q", str(tmp_path / "remote.git"), str(peer))
-    (peer / "b.txt").write_text("peer\n", encoding="utf-8")
-    _git(peer, "add", ".")
-    _git(peer, "commit", "-q", "-m", "peer on top")
-    _git(peer, "push", "-q", "origin", "main")
-    line = commit_kata.verdict(root, _git(root, "rev-parse", "HEAD~1").strip(), mine, 0)
-    assert line.endswith("[PUSHED]")
-    assert commit_kata.on_remote(root, mine, _git(peer, "rev-parse", "HEAD").strip())
 
 
 def test_an_unreachable_remote_is_unverified_not_pushed(tmp_path: Path) -> None:
