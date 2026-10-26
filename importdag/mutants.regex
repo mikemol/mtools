@@ -32,3 +32,6 @@ src/mikemol/importdag/graph.py|import-also-made-outside-the-guard-is-typing-only
 src/mikemol/importdag/graph.py|read-of-a-missing-file-recorded|        if missing:|        if False:|def=declared_reads
 src/mikemol/importdag/graph.py|bzl-without-its-header|    return BZL_HEADER \+ "GRAPH = " \+ render\(doc\)|    return "GRAPH = " + render(doc)|def=render_bzl
 src/mikemol/importdag/graph.py|absent-file-not-stale|        if not \(dist / name\)\.is_file\(\) or |        if |def=main
+src/mikemol/importdag/series.py|another-repos-row-taken|labels\.get\("repo"\) != repo or ||def=_row
+src/mikemol/importdag/series.py|non-test-label-mapped-to-a-test|    if not target\.startswith\("//"\) or not name\.startswith\("test_"\):|    if not target.startswith("//"):|def=test_path
+src/mikemol/importdag/series.py|sample-count-dropped|int\(count\[target\]\)|0|def=table

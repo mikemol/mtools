@@ -12,3 +12,4 @@ resolve_init	The Implicit Package Edge: Importing a Module Also Imports the __in
 split	The Split: Imports That Run With the Module Are Told Apart From Those That Run Only When a Function Is Called
 graph	Distribution Graph: Import Edges Are Derived in All Three Spellings, Reads Are Declared and Checked, and One Byte-Stable File Serves Three Consumers
 cost	Landing-cost
+series	Landing-cost series

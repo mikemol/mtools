@@ -115,6 +115,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_split.py" = ["assert"]
 "tests/test_graph.py" = ["assert"]
 "tests/test_cost.py" = ["assert"]
+"tests/test_series.py" = ["assert"]
 # ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
 # by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
 "tests/test_closure.py" = [
