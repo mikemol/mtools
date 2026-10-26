@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2025,
+  "counter": 2033,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -35750,12 +35750,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "First rung submitted (stack-w1663): the hermetic suite's refusal replays 'bazel test <targets>' as a separate detail block. Untested except bash -n; first refusal by the suite is its evidence. Other rungs (ratchet, shellcheck domain, warrant ledger, mdstruct linter) each need their own command; W1662 (print the refusing check's own output) is the sibling. I still need the other rungs, W1663",
-      "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-25: 2026-10-25 first submit REFUSED by its own gate: test_bar_fires scans .githooks/pre-commit for any line launching bazel without the GIT_* scrub, and read my reproduce text ('bazel test <targets>') as a launch. Fixed by spelling it through a variable. The refusal itself printed the new '--- reproduce only the refusing rung' block, so the feature was seen working on its first real refusal. Resubmitted.",
+      "next_bounded_step": "First rung landed 7423770f. Remaining rungs each need their own reproduce command: the ratchet, the shellcheck domain witness, the warrant ledger, the mdstruct shape linter; W1662 is the sibling. I still need those rungs, W1663",
+      "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-25: 2026-10-25 first submit REFUSED by its own gate: test_bar_fires scans .githooks/pre-commit for any line launching bazel without the GIT_* scrub, and read my reproduce text ('bazel test <targets>') as a launch. Fixed by spelling it through a variable. The refusal itself printed the new '--- reproduce only the refusing rung' block, so the feature was seen working on its first real refusal. Resubmitted. | 2026-10-26: 2026-10-25 first rung LANDED 7423770f (the hermetic suite's refusal replays the reproduce command as its own detail block).",
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T23:23:27Z",
+      "last_worked": "2026-10-26T00:35:23Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -36368,7 +36368,7 @@
       "issued_at": "2026-10-19T09:56:14Z",
       "minted_during": "interrupt",
       "caused_by": "W1688",
-      "last_worked": "2026-10-25T23:06:19Z",
+      "last_worked": "2026-10-26T01:18:24Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -37022,17 +37022,19 @@
     {
       "symbol": "W1716",
       "title": "A train leader says so on stderr as each round ends: which groups it gated, red or green, which prefix it landed, and what it rebuilds next",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After W1715 records each round to the services: print one stderr line per round as it ends (groups gated, red or green, the prefix landed, what is rebuilt next), so a long train does not read as a hang; the same fields as the record.",
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Held behind the velocity work (operator 100702, uuid 7a3e66f2: velocity improvements before the things they carry; W1716 is train transparency, not a velocity lever). Resume after W1989. Original step: one stderr line per train round as it ends (groups gated, red or green, the prefix landed, what is rebuilt next), the same fields as W1715's record; check W1715 is done first.",
       "evidence": "",
       "issued_at": "2026-10-19T16:07:50Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T10:11:17Z",
+      "last_worked": "2026-10-26T01:03:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -37166,19 +37168,21 @@
     {
       "symbol": "W1722",
       "title": "Per-phase median, spread and slope are published as registered series in Victoria with freshness rules, for a panel and a learned-baseline alert",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1699"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After W1718: send each phase's median, spread and slope through the emitter traintel already uses (mikemol-otlp, vmsingle), registering the metric names and their freshness rules the way mikemol.train.considered is registered, so a panel and a learned-baseline alert read the series. Read the cited ruling and attach its warrant before building.",
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Held behind the velocity work (operator 100702: velocity improvements before the things they carry); after W1718 per the original step. Original step: send each gate phase's median, spread and slope through the emitter traintel uses (mikemol-otlp), registered with freshness rules as mikemol.train.considered is, for a panel and a learned-baseline alert. W2029 (landings and gate CPU per landing) is the velocity series that comes first.",
       "evidence": "2026-10-19: relayed by github-8f 2026-10-19 citing the operator's 'metrics, not spot measurements'; that line is not yet read by me, so no warrant is attached until I read it | 2026-10-19: warrant attached 2026-10-19 after I read the record: line 54496, uuid 8dc4fee2-a2cf-448e-8824-84a97f0a2c62, origin human, 2026-10-11T00:58:45Z (2026-10-10 local), phrase 'mechanized into victoria' present: measurements are meant to be mechanized into victoria and grafana. The record's text is longer than the line github-8f quoted and I did not read beyond the phrase",
       "issued_at": "2026-10-19T16:18:21Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-19T16:19:47Z",
+      "last_worked": "2026-10-26T01:24:44Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44238,7 +44242,9 @@
       "enables": [
         "W1982"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Second part submitted as stack-w1988b (generated switch of every test; four whole-dist tests listed with reasons, W2020). After landing: W2016 witness, W2011, W2012 input mutation, then W1989. I still need those, W1988",
@@ -44257,7 +44263,9 @@
       "enables": [
         "W1982"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Submit the round_wire test fix after stack-w1692 lands; then rerun the other module sites in batches to find the survivors/errors the shards hid; then the gate --check target, commit hooks/sites, retire the shards. I still need all of that, W1989",
@@ -44426,7 +44434,9 @@
       "enables": [
         "github:W50"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "First part LANDED e5dfb92d (importdag.cost). Next: the reader that fills the table from luthen's gate:luthen_gate_target_cpu_seconds:median7d, :p90_7d and gate:luthen_gate_target_cpu_samples:count7d; neighbour projection for low-sample tests; a command line. I still need those three, W1997",
@@ -44445,7 +44455,9 @@
       "enables": [
         "github:W50"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [
         "W1997"
       ],
@@ -44575,7 +44587,11 @@
       "minted_during": "interrupt",
       "caused_by": "W2000",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/round_wire.py",
+        "hooks/tests/test_round_wire.py"
+      ]
     },
     {
       "symbol": "W2006",
@@ -44604,7 +44620,9 @@
         "W2008",
         "W2009"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "github-8f 2026-10-25; first instance nemik:W1060 (test_incremental_redraw, after test_sources_fetch in stack440 and test_pdf in stack458, landed W1064 by resubmitting identically). Record per verdict: tree hash, refused target(s). On a pass whose tree hash equals an earlier REFUSED verdict's, write a flake record (repo, target, both verdict ids) to the commit ledger. Design may differ; the property: an identical-resubmit pass cannot silently clear a flake. Files: gate verdict log, stackland/stackrun.",
@@ -44613,14 +44631,22 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/stackrun.py",
+        "hooks/src/mikemol/hooks/verdictlog.py",
+        "hooks/tests/test_stackrun.py",
+        "hooks/tests/test_verdictlog.py"
+      ]
     },
     {
       "symbol": "W2008",
       "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
       "status": "blocked",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [
         "W2007"
       ],
@@ -44639,7 +44665,9 @@
       "title": "Flaky passes per repo are a published metric series",
       "status": "blocked",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [
         "W2007"
       ],
@@ -44679,7 +44707,9 @@
       "enables": [
         "W2010"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "AGREED (github-8f 2026-10-25, option a): the names come from git ls-files. Run graph --check over the git ls-files set of each dist with a committed graph, FIRST in mikemol-commit's presubmit (fail-fast ordering, mtools:W1480): a new tracked module fails before the gate, naming the --write to run. graph_fresh stays in the gate for edits to known files, its data generated by name from the graph (modules, tests, support, graph.json, dag.bzl). No glob survives. Needs a git-ls-files reader in importdag.graph (a --files mode), the presubmit step in commit_kata (live hook: dependencies first). I still need all of it, W2011",
@@ -44689,7 +44719,13 @@
       "caused_by": "W2010",
       "last_worked": "2026-10-25T20:43:00Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "manifest": [
+        "importdag/src/mikemol/importdag/graph.py",
+        "importdag/tests/test_graph.py",
+        "hooks/src/mikemol/hooks/presubmit.py",
+        "hooks/tests/test_presubmit.py"
+      ]
     },
     {
       "symbol": "W2012",
@@ -44774,7 +44810,9 @@
       "title": "Witness the split at the gate: after every hooks test is on its closure, one out-of-cone edit shows the gate's hit count",
       "status": "ready",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "W1990 was marked done on 81e9a6d7 for a single-test witness (test_round_wire cached on an out-of-cone edit, reran on an in-cone edit); that closed it too early, because its text asks for the gate's hit count over the split. This is the remainder: after the generated switch of all tests lands, make one out-of-cone one-line edit and one in-cone edit, read the gate's cached/executed counts for each, and compare the sum of miss wall with the baseline (the 1.9 to 2.5 s staging floor).",
@@ -44841,7 +44879,9 @@
       "enables": [
         "W1988"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "MEASURED 2026-10-25, bazel test //hooks:all --test_lang_filters=py in closure mode: 238 of 242 pass; FAIL test_bar_fires (reads src/mikemol/hooks/structural_query.py and the hook launchers by path), test_import_cycles (sweeps every module: sees 1 of 50+), test_probe (spawns the hook scripts under hooks/bin; 6 FAIL lines), test_commit_lease_wait (a spawned child prints a Traceback). Each reads files it does not import. Interim: they stay on the dist-wide :hooks (a _WHOLE_DIST_TESTS list with these reasons). Narrow each by declaring its reads in reads.json (files it spawns or sweeps), then take it off the list; input mutation (W2012) verifies the declarations.",
@@ -44850,14 +44890,20 @@
       "minted_during": "interrupt",
       "caused_by": "W1988",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/BUILD.bazel",
+        "hooks/reads.json"
+      ]
     },
     {
       "symbol": "W2021",
       "title": "Five hooks py_tests outside the graph's tests (ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite) get a closure or a stated reason",
       "status": "ready",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "bazel query: kind(py_test, //hooks:*) except names test_*. They depend on the dist-wide :hooks, so some rerun on any edit (2 extra of 12 in the watchdog sample). For each: read what it imports and reads, put it in the generated switch, or record why it must stay on :hooks.",
@@ -44866,14 +44912,19 @@
       "minted_during": "interrupt",
       "caused_by": "W2016",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/BUILD.bazel"
+      ]
     },
     {
       "symbol": "W2022",
       "title": "footprint.audit probes a known footprint before trusting an empty trace",
       "status": "ready",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Drained from cassian-observability tools/trace-inputs.py (read with tar -xO, github-8f 2026-10-25): before deriving any input set it strace-traces a fixture with a KNOWN footprint (one file opened, one only stat'd) and REFUSES to emit if the tracer did not see both, since a blind tracer yields a minimal, wrong set that gets cached as correct. hooks footprint.py already marks no-strace as DEGRADED but has no known-footprint probe, so ptrace blocked or a tracer that sees opens and not stats reads as a clean empty set. Add the probe, with a test that a blind tracer is DEGRADED.",
@@ -44882,7 +44933,11 @@
       "minted_during": "interrupt",
       "caused_by": "W2020",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/footprint.py",
+        "hooks/tests/test_footprint.py"
+      ]
     },
     {
       "symbol": "W2023",
@@ -44891,7 +44946,9 @@
       "enables": [
         "W2020"
       ],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Drained as DESIGN (not code: it is bash-arm specific) from cassian-observability tools/reads-vs-traced.py. Two independent statements exist, DECLARED (reads.json) and OBSERVED (footprint strace); neither is authoritative and the comparison is not symmetric: traced-but-not-declared is STRONG evidence of an incomplete declaration (the tracer reports only opens that happened), declared-but-not-traced is WEAK (the tracer under-reports). Output only the strong direction, so the audit is not buried; subtract what is true of the whole population by construction (the harness: conftest, pytest_main) and DERIVE that subtraction, never retype it (their first draft retyped a list and silenced the one finding it existed to find); print the FULL list, never a head plus '+N more'; an unanswering tracer is UNEVALUABLE, never 'nothing undeclared'. It is the converse of W2012 input mutation. Needs footprint probe-first (sibling card).",
@@ -44900,7 +44957,13 @@
       "minted_during": "interrupt",
       "caused_by": "W2020",
       "last_worked": null,
-      "ticks_blocked": 0
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/footprint.py",
+        "hooks/tests/test_footprint.py",
+        "hooks/src/mikemol/hooks/readsaudit.py",
+        "hooks/tests/test_readsaudit.py"
+      ]
     },
     {
       "symbol": "W2024",
@@ -44923,7 +44986,9 @@
       "title": "test_commit_remote and test_train time out at 60 s wall under load; bound them by CPU like the other slow hooks tests",
       "status": "ready",
       "enables": [],
-      "touches": [],
+      "touches": [
+        "velocity"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "2026-10-25: stack-w1692's gate was refused with exactly two failures, //hooks:test_commit_remote TIMEOUT in 60.1s and //hooks:test_train TIMEOUT in 60.7s, while I was running bazel site tests on the same host (load, not logic). Standing repair (operator 2026-10-10/15): not exclusive, not a longer timeout; put each in hooks/BUILD.bazel _CPU_BUDGET_S with its measured CPU (twice the largest wall seen) so MIKEMOL_TEST_CPU_S bounds it and medium lifts the wall backstop. Measure each test's CPU first (the per-target CPU series, luthen W1645, once loaded). The resubmit of stack-w1692 is an identical-tree resubmit after a refusal, which W2007 says must have a ranked card: this is it.",
@@ -44931,6 +44996,182 @@
       "issued_at": "2026-10-26T00:25:33Z",
       "minted_during": "interrupt",
       "caused_by": "W1692",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/BUILD.bazel"
+      ]
+    },
+    {
+      "symbol": "W2026",
+      "title": "The watchdog's exit writes its idle line and its meaning to <git dir>/mtools/watchdog.last",
+      "status": "ready",
+      "enables": [
+        "W2027"
+      ],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: exit 8 was ignored or misread by amr-skills (first instance) and luthen-observability (second) because the harness shows only 'Background command ... failed with exit code 8'. READ FIRST: watchdog.py already keeps the next-action line (HINT_NAME next-action, remember_hint/cached_hint) and beat.py already speaks when no watchdog lives and cards are ready, but neither says WHY it exited. In watchdog.main's finally, write watchdog.last: exit code, the idle line, the meaning (8: idle with N ready cards, this is the wake not a failure; 7: cannot run), the restart command, a stamp. Optionally print the meaning as the LAST stdout line.",
+      "evidence": "",
+      "issued_at": "2026-10-26T00:50:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/watchdog.py",
+        "hooks/tests/test_watchdog.py"
+      ]
+    },
+    {
+      "symbol": "W2027",
+      "title": "The beat hook injects a fresh watchdog.last once as context: exited 8 is the wake, not a failure",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [
+        "W2026"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "beat.py already returns additionalContext when no live watchdog holds the pid file and cards are ready (the restart command is there). When a FRESH watchdog.last exists, lead with it: 'watchdog exited 8: idle with N ready cards ...: this is the wake, not a failure; do <hint>; restart with <exact command>', once (stamp consumed), so the harness's bare 'failed with exit code 8' is explained at the next tool call. Needs the writer card. Live hook: module first.",
+      "evidence": "",
+      "issued_at": "2026-10-26T00:50:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-26T00:51:03Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2028",
+      "title": "Watchdog exit 7 (cannot run) has its own wording: fix the writer or the window",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25: exit 7 means the watchdog could not run (no writer found, or now a refused window from W2004). Its watchdog.last text says so: fix the writer path or the window flags; not the wake. Rides with the writer card.",
+      "evidence": "",
+      "issued_at": "2026-10-26T00:51:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/watchdog.py",
+        "hooks/tests/test_watchdog.py"
+      ]
+    },
+    {
+      "symbol": "W2029",
+      "title": "mikemol.commit.landings{repo} per landing and gate CPU seconds per landing are published series",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Operator 100702 (uuid 7a3e66f2, verified): velocity is key; read it from Victoria, not git counts. Per landing: mikemol.commit.landings{repo} (counter or one sample per landing) and mikemol.commit.gate_cpu_seconds{repo} (CPU of the gate run that landed it, divided over its stack entries or per stack, say which). Built on the W1969 landing record (the one record every path writes) and the W1961 metric contract (description, unit, freshness class). Velocity band; ranked with the velocity work.",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:02:39Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/commit_gauge.py",
+        "hooks/tests/test_commit_gauge.py"
+      ]
+    },
+    {
+      "symbol": "W2030",
+      "title": "Mutation sites are grouped by input set: one target per distinct (module, tests, staged files) class, its sites run inside it",
+      "status": "blocked",
+      "enables": [
+        "W1989"
+      ],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "WITHDRAWN grouping (operator 100811, uuid 248e19ca, relayed by github-8f; not yet verified by me): 290 input sets for 1,789 sites is a finding that the SOURCE is too coarse, not a reason to collapse targets (targets may depend on targets, and that is proper). Do not contort targets to the current granularity. Kept as the measurement; superseded by the re-plan on W1989: site targets depend on W1988's per-module py_library and test targets instead of staging the cone, and the module-atomizing card below.",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:05:42Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1989",
+      "last_worked": "2026-10-26T01:16:21Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2031",
+      "title": "gate_tip uses a private index per run, so two gates in one repository cannot read each other's tree",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Built and tested (red on the old gate_tip, green on the private index): files stackgate.py, test_stackgate.py, warrants.bib, graph.json, dag.bzl in stack-w2031.json. Its submit was REFUSED because hooks/dag.bzl names test_domain_witness_concurrency.py, which only the in-flight stack-w1692 carries. Submit the moment stack-w1692 lands (or fold it into that stack). Then send luthen and github-8f the sha. I still need the landing, W2031",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:08:17Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability-ab",
+      "last_worked": "2026-10-26T01:18:27Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "manifest": [
+        "hooks/src/mikemol/hooks/stackgate.py",
+        "hooks/tests/test_stackgate.py"
+      ]
+    },
+    {
+      "symbol": "W2032",
+      "title": "Split the hooks modules whose sites collapse into few input sets along their function clusters",
+      "status": "ready",
+      "enables": [
+        "W1989"
+      ],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Operator 100811 (uuid 248e19ca, verified): 'more sharding is needed; perhaps there's too much stuffed in each module... We shouldn't have to contort to get linear correspondences. And targets can depend on other targets, and that is proper.' MEASURED: 1,789 hooks mutation sites share only 290 input sets over 172 modules; the biggest classes: commit_kata (53 and 48 sites), watchdog 28, gen_warrants 25, cmdparse 24. Rank the modules by sites per input set (the scratch input_classes.py logic), split the largest along their function clusters (an edit to one cluster then invalidates only its sites and its importers), regenerate the graph. Also: a site target depends on W1988's per-module libraries and the test targets instead of staging the cone.",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:18:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1989",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2033",
+      "title": "Writer lists ready cards whose symbol leads a commit subject, with the subject's open markers, so a ghost is read not guessed",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25 ghost sweep. MEASURED on mtools: --prune-landed only prunes blocker edges. A scratch sweep (symbol leads a git log subject) over 97 ready cards found 10 with a landing commit, and 0 true ghosts: W1798 ('step one'), W1803 ('step one, the measuring half'), W1854 ('first slice') and W1950/W1954/W1960/W1961/W1988/W2000 ('first part', 'NOT DONE') are all open, W1929 is a recurring sweep. The open markers a subject uses vary ('step one', 'first slice', 'NOT DONE', 'remain'), so the mode must LIST candidates with the subject, never close; the reader decides. Files: pathsforward cli, a new module.",
+      "evidence": "",
+      "issued_at": "2026-10-26T01:23:52Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -47066,7 +47307,7 @@
       "subject": "W1915",
       "action": "update W1915",
       "first_run": "2026-10-24T19:14:22Z",
-      "last_run": "2026-10-24T19:14:22Z",
+      "last_run": "2026-10-26T01:17:17Z",
       "status": "applied"
     },
     {
@@ -47084,7 +47325,7 @@
       "subject": "W1917",
       "action": "update W1917",
       "first_run": "2026-10-24T19:14:22Z",
-      "last_run": "2026-10-24T19:14:22Z",
+      "last_run": "2026-10-26T01:17:17Z",
       "status": "applied"
     },
     {
@@ -47140,6 +47381,348 @@
       "first_run": "2026-10-25T10:10:42Z",
       "last_run": "2026-10-25T10:10:42Z",
       "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1854",
+      "action": "update W1854",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1911",
+      "action": "update W1911",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1913",
+      "action": "update W1913",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1969",
+      "action": "update W1969",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1970",
+      "action": "update W1970",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1971",
+      "action": "update W1971",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1972",
+      "action": "update W1972",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1973",
+      "action": "update W1973",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1977",
+      "action": "update W1977",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1983",
+      "action": "update W1983",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1984",
+      "action": "update W1984",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1988",
+      "action": "update W1988",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1993",
+      "action": "update W1993",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1994",
+      "action": "update W1994",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1995",
+      "action": "update W1995",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W1996",
+      "action": "update W1996",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2000",
+      "action": "update W2000",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2002",
+      "action": "update W2002",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2003",
+      "action": "update W2003",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2005",
+      "action": "update W2005",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2007",
+      "action": "update W2007",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2011",
+      "action": "update W2011",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2013",
+      "action": "update W2013",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2014",
+      "action": "update W2014",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2015",
+      "action": "update W2015",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2016",
+      "action": "update W2016",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2017",
+      "action": "update W2017",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2018",
+      "action": "update W2018",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2019",
+      "action": "update W2019",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2020",
+      "action": "update W2020",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2021",
+      "action": "update W2021",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2022",
+      "action": "update W2022",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2023",
+      "action": "update W2023",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2024",
+      "action": "update W2024",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2025",
+      "action": "update W2025",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2026",
+      "action": "update W2026",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2028",
+      "action": "update W2028",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2029",
+      "action": "update W2029",
+      "first_run": "2026-10-26T01:17:17Z",
+      "last_run": "2026-10-26T01:17:17Z",
+      "status": "open"
     }
   ]
 }

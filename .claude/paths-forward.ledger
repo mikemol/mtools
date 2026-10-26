@@ -3983,3 +3983,18 @@
 2026-10-25T23:16:38Z  interrupt W2024 minted    -         "ratchets.json carries each ratchet's re-baselines, and the census refuses a changed expression without one"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
 2026-10-26T00:25:33Z  interrupt W2025 minted    -         "test_commit_remote and test_train time out at 60 s wall under load; bound them by CPU like the other slow hooks tests"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1692
 2026-10-26T00:26:59Z  status W1697 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T00:50:49Z  interrupt W2026 minted    -         "The watchdog's exit writes its idle line and its meaning to <git dir>/mtools/watchdog.last"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T00:50:52Z  interrupt W2027 minted    -         "The beat hook injects a fresh watchdog.last once as context: exited 8 is the wake, not a failure"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T00:51:03Z  status W2027 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T00:51:09Z  interrupt W2028 minted    -         "Watchdog exit 7 (cannot run) has its own wording: fix the writer or the window"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T01:02:39Z  interrupt W2029 minted    -         "mikemol.commit.landings{repo} per landing and gate CPU seconds per landing are published series"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T01:03:28Z  status W1716 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:03:36Z  status W1716 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:05:42Z  interrupt W2030 minted    -         "Mutation sites are grouped by input set: one target per distinct (module, tests, staged files) class, its sites run inside it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1989
+2026-10-26T01:08:17Z  interrupt W2031 minted    -         "gate_tip uses a private index per run, so two gates in one repository cannot read each other's tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability-ab
+2026-10-26T01:08:22Z  status W2031 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:16:21Z  status W2030 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:18:30Z  interrupt W2032 minted    -         "Split the hooks modules whose sites collapse into few input sets along their function clusters"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1989
+2026-10-26T01:23:52Z  interrupt W2033 minted    -         "Writer lists ready cards whose symbol leads a commit subject, with the subject's open markers, so a ghost is read not guessed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T01:24:37Z  status W1722 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T01:24:44Z  status W1722 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

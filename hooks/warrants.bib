@@ -15395,3 +15395,14 @@
   claim  = {Through round_reason: the same queue refuses without a live entry and admits with one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_reason_exempts_a_working_card_a_live_submission_names},
 }
+
+@misc{hooks-stackgate-second-gate-in-the-same-repository-cannot-replace-the-first-gates-index,
+  section = {stackland},
+  title  = {luthen-observability:W1653, forced: gate A's hook is held; gate B reads ITS tree; A resumes},
+  claim  = {luthen-observability:W1653, forced: gate A's hook is held; gate B reads ITS tree; A
+            resumes. A judges the two-entry tip (a.txt and b.txt differ from HEAD); B
+            judges HEAD's own tree (nothing differs). With one shared index file, B's
+            read-tree replaces A's and A's hook lists nothing, which is the
+            `unattributed` refusal on a tree that passes alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_second_gate_in_the_same_repository_cannot_replace_the_first_gates_index},
+}

@@ -2549,11 +2549,14 @@ GRAPH = {
     "tests/test_stackgate.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/isolated.py",
         "src/mikemol/hooks/stackgate.py",
         "src/mikemol/hooks/stackland.py"
       ],
       "reads": [],
-      "typing_only": []
+      "typing_only": [
+        "src/mikemol/hooks/isolated.py"
+      ]
     },
     "tests/test_stackimports.py": {
       "imports": [

@@ -13,15 +13,19 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import threading
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import stackgate, stackland
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
     from pathlib import Path
 
     import pytest
+
+    from mikemol.hooks.isolated import Done
 
 _EXECUTABLE = 0o755
 _HOOK = (
@@ -33,6 +37,16 @@ _HOOK = (
     '[ "$(cat c.txt)" = "original" ] || exit 1\n'
 )
 _REFUSING = "#!/bin/sh\necho refused >&2\nexit 1\n"
+# The FIRST hook run blocks until released and then writes what its index differs from HEAD by;
+# any later run (the second gate) passes at once. Order is by FIFOs and an event, never a clock.
+_BLOCKING = (
+    "#!/bin/sh\n"
+    '[ -e "$WITNESS/first" ] && exit 0\n'
+    'touch "$WITNESS/first"\n'
+    'echo go > "$WITNESS/started"\n'
+    'read -r go < "$WITNESS/release"\n'
+    'git diff --cached --name-only > "$WITNESS/seen"\n'
+)
 
 
 def _git(root: Path, *args: str) -> str:
@@ -115,3 +129,43 @@ def test_a_refusing_hook_is_returned_as_the_gate_verdict(
     done = stackgate.gate_tip(root, _tip(root), ck.run_git_in, tmp_path / "gate")
     assert done.returncode != 0
     assert "refused" in done.stderr
+
+
+def test_a_second_gate_in_the_same_repository_cannot_replace_the_first_gates_index(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """luthen-observability:W1653, forced: gate A's hook is held; gate B reads ITS tree; A resumes.
+
+    A judges the two-entry tip (a.txt and b.txt differ from HEAD); B judges HEAD's own tree
+    (nothing differs). With one shared index file, B's read-tree replaces A's and A's hook lists
+    nothing, which is the `unattributed` refusal on a tree that passes alone.
+    """
+    root = _repo(tmp_path, monkeypatch, _BLOCKING)
+    witness = tmp_path / "witness"
+    witness.mkdir()
+    os.mkfifo(witness / "started")
+    os.mkfifo(witness / "release")
+    monkeypatch.setenv("WITNESS", str(witness))
+    tip, head_tree = _tip(root), _git(root, "rev-parse", "HEAD^{tree}").strip()
+    reached = threading.Event()
+
+    def second(args: Sequence[str], env: Mapping[str, str], cwd: Path) -> Done:
+        done = ck.run_git_in(args, env, cwd)
+        if args[0] == "read-tree":
+            reached.set()
+        return done
+
+    gate_a = threading.Thread(
+        target=stackgate.gate_tip, args=(root, tip, ck.run_git_in, tmp_path / "gate")
+    )
+    gate_a.start()
+    (witness / "started").read_text(encoding="utf-8")
+    gate_b = threading.Thread(
+        target=stackgate.gate_tip, args=(root, head_tree, second, tmp_path / "gate")
+    )
+    gate_b.start()
+    reached.wait()
+    (witness / "release").write_text("go\n", encoding="utf-8")
+    gate_a.join()
+    gate_b.join()
+    assert (witness / "seen").read_text(encoding="utf-8").split() == ["a.txt", "b.txt"]

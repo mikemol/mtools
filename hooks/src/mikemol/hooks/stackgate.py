@@ -8,9 +8,20 @@ gives the hook (GIT_DIR the real repository, GIT_WORK_TREE the snapshot, GIT_IND
 index holding the tip tree, MIKEMOL_REAL_ROOT the real checkout), so the hook sees a worktree equal
 to the index, as it does for a single commit.
 
+⚑ THE INDEX IS PRIVATE TO ONE RUN (W2031, luthen-observability:W1653, operator-directed, proven by a
+forced interleaving). It used to be the FIXED file `<git dir>/mtools/gate.index`, unlinked and
+re-read BEFORE the snapshot's lock was taken, so a second gate in the same repository (another
+stack, a leader and a joiner, a single commit) replaced the index a running gate's hook was
+reading: the first gate selected by the OTHER tree over its own worktree, named no path of its
+own stack, and refused `unattributed` on a tree that passes alone. Each run now takes its own
+directory under `<git dir>/mtools/` and removes it when it ends, so no two runs share a
+`GIT_INDEX_FILE`.
+
 See `.claude/design/stack-land.md`. CONSUMED BY: the stack mode of `mikemol-commit` (W1161).
 """
 
+import shutil
+import tempfile
 from pathlib import Path
 
 from mikemol.hooks.isolated import Done, EnvRunner
@@ -33,17 +44,19 @@ def gate_tip(root: Path, tree: str, run: EnvRunner, namespace: Path) -> Done:
     if _stopped(gitdir):
         return gitdir
     git_dir = Path(gitdir.stdout.strip())
-    index = git_dir / "mtools" / "gate.index"
-    index.parent.mkdir(parents=True, exist_ok=True)
-    index.unlink(missing_ok=True)
-    scope = {"GIT_DIR": str(git_dir), "GIT_INDEX_FILE": str(index)}
-    read = run(["read-tree", tree], scope, root)
-    if _stopped(read):
-        return read
-    with Snapshot(root.name, namespace) as snap:
-        snap.materialize(root, tree)
-        work = {**scope, "GIT_WORK_TREE": str(snap.path), "MIKEMOL_REAL_ROOT": str(root)}
-        refreshed = run(["update-index", "-q", "--refresh"], work, snap.path)
-        if _stopped(refreshed):
-            return refreshed
-        return run(["hook", "run", "--ignore-missing", "pre-commit"], work, snap.path)
+    (git_dir / "mtools").mkdir(parents=True, exist_ok=True)
+    private = Path(tempfile.mkdtemp(prefix="gate-", dir=git_dir / "mtools"))
+    try:
+        scope = {"GIT_DIR": str(git_dir), "GIT_INDEX_FILE": str(private / "index")}
+        read = run(["read-tree", tree], scope, root)
+        if _stopped(read):
+            return read
+        with Snapshot(root.name, namespace) as snap:
+            snap.materialize(root, tree)
+            work = {**scope, "GIT_WORK_TREE": str(snap.path), "MIKEMOL_REAL_ROOT": str(root)}
+            refreshed = run(["update-index", "-q", "--refresh"], work, snap.path)
+            if _stopped(refreshed):
+                return refreshed
+            return run(["hook", "run", "--ignore-missing", "pre-commit"], work, snap.path)
+    finally:
+        shutil.rmtree(private, ignore_errors=True)
