@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 _DIRTY = "import b\nimport a\n"
 _CLEAN = "import a\nimport b\n"
 _REFUSED = 1
-_NOT_RUN = 3
+_NOT_RUN = pycheck_clear.EXIT_NOT_RUN
 
 
 class _World:

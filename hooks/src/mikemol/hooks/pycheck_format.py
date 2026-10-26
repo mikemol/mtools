@@ -24,7 +24,7 @@ from typing import TextIO
 from mikemol.hooks import project_root, worktree_venv
 
 EXIT_FORMATTED = 0
-EXIT_NOT_RUN = 3
+EXIT_NOT_RUN = 7
 
 
 def format_text(path: Path, text: str, err: TextIO) -> str | None:

@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 _ADMITTED = 0
 _REFUSED = pycheck_cli.EXIT_REFUSED
-_NOT_RUN = 3
+_NOT_RUN = pycheck_cli.EXIT_NOT_CHECKED
 _ROOT = "/repo"
 
 

@@ -32,7 +32,7 @@ from mikemol.hooks.verdict import Verdict
 
 EXIT_INSTALLED = 0
 EXIT_REFUSED = 4
-EXIT_NOT_CHECKED = 3
+EXIT_NOT_CHECKED = 7
 PYTHON = ".py"
 
 

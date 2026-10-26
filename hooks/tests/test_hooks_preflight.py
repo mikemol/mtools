@@ -9,11 +9,11 @@ import subprocess
 from pathlib import Path
 
 SCRIPT = Path(__file__).parent.parent / "bin" / "mikemol-hooks-preflight"
-NOT_CHECKED = 3
+NOT_CHECKED = 7
 
 
 def test_a_rebuild_that_cannot_run_is_not_checked_and_never_a_clean_exit(tmp_path: Path) -> None:
-    """With no bazel on PATH the script exits 3 and says the venv did not build."""
+    """With no bazel on PATH the script exits 7 and says the venv did not build."""
     bash = shutil.which("bash") or "bash"
     done = subprocess.run(
         [bash, str(SCRIPT)],

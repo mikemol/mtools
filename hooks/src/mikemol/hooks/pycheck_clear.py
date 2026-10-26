@@ -30,7 +30,7 @@ SAFE_RULES = "I,W,COM812"
 """The ruff rules whose autofix is applied: import order, whitespace, a trailing comma."""
 
 EXIT_REFUSED = 4
-EXIT_NOT_RUN = 3
+EXIT_NOT_RUN = 7
 
 
 @dataclass(frozen=True)
@@ -82,7 +82,7 @@ def clear_ledger(
     one, which outranks a clean run, so the exit never softens.
 
     Returns:
-        1 if any file was refused, else 3 if any went unjudged or the ledger could not be read,
+        4 if any file was refused, else 7 if any went unjudged or the ledger could not be read,
         else 0 (also when the ledger names nothing).
 
     """
@@ -105,7 +105,7 @@ def clear(path: Path, steps: Steps, out: TextIO, err: TextIO) -> int:
     """Rewrite `path` formatted, safely fixed and formatted again, then judge it.
 
     Returns:
-        the status of the check that follows (0 admitted, 1 refused, 3 not checked), or
+        the status of the check that follows (0 admitted, 4 refused, 7 not checked), or
         EXIT_NOT_RUN when the file could not be read or a rewriting step could not run.
 
     """

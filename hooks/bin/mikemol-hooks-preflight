@@ -22,13 +22,13 @@
 set -uo pipefail
 
 root="$(cd "$(dirname "$0")/../.." && pwd -P)"
-cd "$root" || exit 3
+cd "$root" || exit 7
 
 if ! built="$(bazel build //hooks:.venv --ui_event_filters=-debug,-warning --show_result=0 \
     --noshow_progress 2>&1)"; then
     printf '%s\n' "$built" | tail -n 20 >&2
     echo "mikemol-hooks-preflight: the hooks venv did not build; not checked" >&2
-    exit 3
+    exit 7
 fi
 
 "$(realpath "$root/bazel-bin/hooks/.venv")/bin/mikemol-pycheck" --changed "$root"
