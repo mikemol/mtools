@@ -669,6 +669,9 @@ src/mikemol/hooks/mypy_mirror.py|init-added-where-the-project-has-none|         
 src/mikemol/hooks/mypy_mirror.py|existing-file-judged-through-a-mirror|    if config is None or not needed\(path, config\):|    if config is None:|def=judged
 src/mikemol/hooks/round_wire.py|stale-round-still-judged|    if stamp is None or now - stamp > STALE:|    if stamp is None:|def=refusals
 src/mikemol/hooks/round_wire.py|working-read-as-ready|for symbol in _symbols\(queue, "working"\)|for symbol in _symbols(queue, "ready")|def=refusals
+src/mikemol/hooks/watchdog.py|every-exit-explained|    if code not in \{EXIT_IDLE, EXIT_CANNOT_RUN\}:|    if False:|def=remember_exit
+src/mikemol/hooks/watchdog.py|cannot-run-worded-as-the-wake|    if code == EXIT_IDLE:|    if True:|def=exit_meaning
+src/mikemol/hooks/watchdog.py|restart-command-left-out|f"with: \{restart\}"|"with: "|def=exit_meaning
 src/mikemol/hooks/watchdog.py|ceiling-ignores-the-chosen-window|        return band\[1\]|        return MAX_FIRE_S|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|floor-ignores-the-chosen-window|, band\[0\]\), band\[1\]\)|, MIN_FIRE_S), band[1])|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|environment-beats-the-flag|low if low is not None else environ\.get\(MIN_ENV, MIN_FIRE_S\)|environ.get(MIN_ENV, MIN_FIRE_S)|def=read_band

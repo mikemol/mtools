@@ -96,7 +96,7 @@ def test_a_bad_window_on_the_command_line_stops_the_watchdog_before_it_starts(
     code = watchdog.main([*args, "--max-fire-s", "5"], lambda _argv: None)
     assert code == watchdog.EXIT_CANNOT_RUN
     assert "the window must satisfy" in capsys.readouterr().err
-    assert not (tmp_path / ".git").exists()
+    assert not watchdog.pidfile_of(tmp_path / ".git").exists()
 
 
 def test_a_repo_with_no_history_is_woken_at_the_far_edge_of_the_band() -> None:

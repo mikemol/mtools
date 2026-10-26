@@ -4,8 +4,10 @@
 
 from __future__ import annotations
 
+import json
+import shutil
 import stat
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
@@ -91,3 +93,54 @@ def test_with_no_store_named_the_exit_sends_nothing_and_raises_nothing(
     sent: list[Sequence[str]] = []
     watchdog.armed_publisher({}, tmp_path.name, sent.append, watchdog.ARMED_DOWN)()
     assert not sent
+
+
+def _no_writer_on_path(_name: str) -> None:
+    return None
+
+
+def _last(tmp_path: Path) -> dict[str, object]:
+    kept = tmp_path / ".git" / "mtools" / watchdog.LAST_NAME
+    return cast("dict[str, object]", json.loads(kept.read_text(encoding="utf-8")))
+
+
+def test_exit_eight_leaves_the_wake_explained_with_the_exact_restart_command(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """watchdog.last says exit 8 is the wake and not a failure, and spells the restart."""
+    _store(monkeypatch)
+    monkeypatch.setattr(watchdog, "watch", _idle)
+    argv = _argv(tmp_path)
+    assert watchdog.main(argv, lambda _c: None) == watchdog.EXIT_IDLE
+    kept = _last(tmp_path)
+    text = str(kept["text"])
+    assert kept["code"] == watchdog.EXIT_IDLE
+    assert "WAKE, not a failure" in text
+    assert f"--state {argv[1]} --writer {argv[3]}" in text
+
+
+def test_exit_seven_says_it_cannot_run_and_what_to_fix(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """No writer found, and a window that is not one, each leave the CANNOT RUN wording."""
+    monkeypatch.setattr(shutil, "which", _no_writer_on_path)
+    state = ["--state", str(tmp_path / ".claude" / "q.json")]
+    assert watchdog.main(state, lambda _c: None) == watchdog.EXIT_CANNOT_RUN
+    kept = _last(tmp_path)
+    assert kept["code"] == watchdog.EXIT_CANNOT_RUN
+    assert "CANNOT RUN" in str(kept["text"])
+    assert "--min-fire-s" in str(kept["text"])
+    (tmp_path / ".git" / "mtools" / watchdog.LAST_NAME).unlink()
+    bad = [*_argv(tmp_path), "--min-fire-s", "9", "--max-fire-s", "5"]
+    assert watchdog.main(bad, lambda _c: None) == watchdog.EXIT_CANNOT_RUN
+    assert "CANNOT RUN" in str(_last(tmp_path)["text"])
+
+
+def test_a_parent_that_went_away_leaves_nothing_to_explain(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Exit 0 is not a wake and not a failure, so no file is written."""
+    _store(monkeypatch)
+    monkeypatch.setattr(watchdog, "watch", _parent_gone)
+    assert watchdog.main(_argv(tmp_path), lambda _c: None) == 0
+    assert not (tmp_path / ".git" / "mtools" / watchdog.LAST_NAME).exists()

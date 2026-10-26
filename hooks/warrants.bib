@@ -15413,3 +15413,24 @@
   claim  = {Nothing to end on is a failed build, not a boundary borrowed from a neighbour.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_tips.py -k test_a_submission_with_no_entry_stops_the_tip_build},
 }
+
+@misc{hooks-watchdog-exit-exit-eight-leaves-the-wake-explained-with-the-exact-restart-command,
+  section = {heartbeat},
+  title  = {watchdog.last says exit 8 is the wake and not a failure, and spells the restart},
+  claim  = {watchdog.last says exit 8 is the wake and not a failure, and spells the restart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_exit_eight_leaves_the_wake_explained_with_the_exact_restart_command},
+}
+
+@misc{hooks-watchdog-exit-exit-seven-says-it-cannot-run-and-what-to-fix,
+  section = {heartbeat},
+  title  = {No writer found, and a window that is not one, each leave the CANNOT RUN wording},
+  claim  = {No writer found, and a window that is not one, each leave the CANNOT RUN wording.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_exit_seven_says_it_cannot_run_and_what_to_fix},
+}
+
+@misc{hooks-watchdog-exit-parent-that-went-away-leaves-nothing-to-explain,
+  section = {heartbeat},
+  title  = {Exit 0 is not a wake and not a failure, so no file is written},
+  claim  = {Exit 0 is not a wake and not a failure, so no file is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_a_parent_that_went_away_leaves_nothing_to_explain},
+}

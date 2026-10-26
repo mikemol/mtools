@@ -49,6 +49,7 @@ CONSUMED BY: `--tick-open`, which prints the command to start it (W1476).
 
 import argparse
 import contextlib
+import json
 import math
 import os
 import shutil
@@ -470,6 +471,51 @@ def exit_notes(git_dir: Path, repo: str, env: Mapping[str, str]) -> str:
     return "\n".join(lines)
 
 
+LAST_NAME = "watchdog.last"
+"""The file beside the heartbeat that keeps why the watchdog last exited, and what to do."""
+
+
+def exit_meaning(code: int, restart: str) -> str:
+    """Say what an exit code means to the session that reads it.
+
+    ⚑ THE HARNESS SHOWS ONLY `Background command ... failed with exit code 8` (github-8f
+    2026-10-25: amr-skills, then luthen-observability, ignored or misread it and neither read the
+    output file). Exit 8 is the WAKE, not a failure; exit 7 is the one that needs fixing.
+
+    Returns:
+        the sentence for the code, with the exact command that starts the watchdog again.
+
+    """
+    if code == EXIT_IDLE:
+        return (
+            "watchdog exited 8: this session was quiet past the window while cards were waiting. "
+            "This is the WAKE, not a failure: take the top ready card, then restart the watchdog "
+            f"with: {restart}"
+        )
+    return (
+        "watchdog exited 7: it CANNOT RUN (no paths-forward writer was found, or the window it "
+        "was given is not 0 < min <= max). Fix the writer path or the --min-fire-s and "
+        f"--max-fire-s flags, then start it with: {restart}"
+    )
+
+
+def remember_exit(git_dir: Path, code: int, restart: str) -> None:
+    """Keep the meaning of an exit 7 or 8 where the next hook of this session can read it.
+
+    A file system that refuses is no error: the exit code is the contract and this is the
+    explanation beside it. Any other code (a parent that went away) leaves nothing to explain.
+    """
+    if code not in {EXIT_IDLE, EXIT_CANNOT_RUN}:
+        return
+    body = {"code": code, "text": exit_meaning(code, restart), "at_ns": time.time_ns()}
+    try:
+        target = git_dir / "mtools" / LAST_NAME
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(body), encoding="utf-8")
+    except OSError:
+        return
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mikemol-watchdog")
     parser.add_argument("--state", required=True, help="the queue file the session works from")
@@ -499,18 +545,21 @@ def main(
 
     """
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
+    state = Path(str(opts["state"])).absolute()
+    git_dir = state.parent.parent / ".git"
     named = opts.get("writer")
     writer = str(named) if named else shutil.which("mikemol-paths-forward")
+    restart = f"{sys.executable} -m mikemol.hooks.watchdog --state {state} --writer {writer}"
     if writer is None:
         sys.stderr.write("mikemol-watchdog: no paths-forward writer found (use --writer)\n")
+        remember_exit(git_dir, EXIT_CANNOT_RUN, restart)
         return EXIT_CANNOT_RUN
     try:
         band = read_band(opts.get("min_fire_s"), opts.get("max_fire_s"), os.environ)
     except ValueError as caught:
         sys.stderr.write(f"mikemol-watchdog: {caught}\n")
+        remember_exit(git_dir, EXIT_CANNOT_RUN, restart)
         return EXIT_CANNOT_RUN
-    state = Path(str(opts["state"])).absolute()
-    git_dir = state.parent.parent / ".git"
     parent = os.getppid()
     seams: Seams = (
         lambda: heartbeat.read(git_dir),
@@ -525,13 +574,15 @@ def main(
     claim(git_dir, os.getpid())
     try:
         poll = float(str(opts["poll_s"]))
-        return watch(
+        code = watch(
             seams,
             lambda last: silence_limit_s(last, float(str(opts["phi_fire"])), band),
             poll,
             announce,
             lambda: exit_notes(git_dir, repo, os.environ),
         )
+        remember_exit(git_dir, code, restart)
+        return code
     finally:
         release(git_dir, os.getpid())
         gone()
