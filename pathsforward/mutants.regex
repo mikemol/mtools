@@ -311,4 +311,7 @@ src/mikemol/pathsforward/render.py|retros-section-for-a-document-without-any|   
 src/mikemol/pathsforward/closegate.py|every-ready-card-marked-velocity|\{'\*' if marked\.get\(sym\) else ''\}|{'*'}|def=open_line
 src/mikemol/pathsforward/closegate.py|open-line-names-no-cards|for sym in ready\[:TOP\]\)|for sym in ready[:0])|def=open_line
 src/mikemol/pathsforward/closegate.py|no-ready-card-said-as-a-count-of-one|        return "ready 0"|        return "ready 1"|def=open_line
+src/mikemol/pathsforward/ops.py|self-symbol-next-step-accepted|    if not step or step == sym:|    if not step:|def=_refuse_empty_next
+src/mikemol/pathsforward/ops.py|empty-next-step-accepted|    if not step or step == sym:|    if step == sym:|def=_refuse_empty_next
+src/mikemol/pathsforward/ops.py|unset-next-step-refused|    if text\(new, "status"\) not in \{"ready", "working"\} or upd\.next_step is None:|    if text(new, "status") not in {"ready", "working"}:|def=_refuse_empty_next
 src/mikemol/pathsforward/cli.py|blank-blocker-accepted|    if blockers is not None and not all\(b\.strip\(\) for b in blockers\):|    if False:|def=_fields_of

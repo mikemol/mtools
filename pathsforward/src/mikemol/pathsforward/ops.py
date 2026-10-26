@@ -649,6 +649,30 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
     return new
 
 
+def _refuse_empty_next(sym: str, new: Json, upd: Update) -> None:
+    """Refuse an update that leaves a ready or working card with no real next step (W2046).
+
+    ⚑ A CARD WHOSE NEXT STEP IS ITS OWN SYMBOL, OR NOTHING, SERVES AS A NAMED BLOCK AND TEACHES
+    NOBODY ANYTHING (github-8f 2026-10-26, the host: W2 sat `working` three weeks with a next
+    step of literally `W2`, was cited as the named block in about 25 tick-closes, and W61 had an
+    empty one). The check applies to an update that SETS the step, so an unrelated edit to an old
+    card that already has none (a weight, a touches tag), a bulk release to ready and a reopening
+    are not refused for a defect they did not make; a card moved to ready or working carries the
+    step it had.
+
+    Raises:
+        RefusedError: when such an update leaves the step empty or equal to the card's own symbol.
+
+    """
+    if text(new, "status") not in {"ready", "working"} or upd.next_step is None:
+        return
+    step = text(new, "next_bounded_step").strip()
+    if not step or step == sym:
+        what = "empty" if not step else "its own symbol"
+        msg = f"{sym}: a {text(new, 'status')} card needs a next step, and {what} is none"
+        raise RefusedError(msg)
+
+
 def update(state: State, sym: str, upd: Update, now: str) -> Json:
     """Apply typed fields to a live waypoint, all or nothing.
 
@@ -687,6 +711,7 @@ def update(state: State, sym: str, upd: Update, now: str) -> Json:
                 raise RefusedError(msg) from None
     w = find(state, sym)
     new = _applied(w, upd, now)
+    _refuse_empty_next(sym, new, upd)
     if upd.complete_occurrence is not None or upd.reopen_occurrence is not None:
         _apply_occurrence(sym, new, upd, now)
     _refuse_unanchored(sym, new)

@@ -2034,13 +2034,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_empty_next_is_null},
 }
 
-@misc{pathsforward-ops-empty-next-on-a-live-waypoint-is-null,
-  section = {ops},
-  title  = {Clearing the step without closing the waypoint is the same absence},
-  claim  = {Clearing the step without closing the waypoint is the same absence.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_empty_next_on_a_live_waypoint_is_null},
-}
-
 @misc{pathsforward-vector-complete-vector-parses-in-order,
   section = {vector},
   title  = {The W218 example parses to every metric, in the grammar's fixed order},
@@ -7359,4 +7352,18 @@
   title  = {The refusal is only for blank values},
   claim  = {The refusal is only for blank values.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocked_on_blank.py -k test_a_real_blocker_is_still_stored},
+}
+
+@misc{pathsforward-ops-empty-next-on-a-blocked-waypoint-is-null,
+  section = {ops},
+  title  = {Clearing the step of a card that is neither ready nor working is the same absence},
+  claim  = {Clearing the step of a card that is neither ready nor working is the same absence.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_empty_next_on_a_blocked_waypoint_is_null},
+}
+
+@misc{pathsforward-ops-ready-or-working-card-is-refused-an-empty-or-self-symbol-next-step,
+  section = {ops},
+  title  = {W2046: `--next ""` and `--next W1` on W1 are refused; a real step is accepted},
+  claim  = {W2046: `--next ""` and `--next W1` on W1 are refused; a real step is accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_ready_or_working_card_is_refused_an_empty_or_self_symbol_next_step},
 }

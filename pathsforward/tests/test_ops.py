@@ -164,10 +164,20 @@ def test_a_vector_without_its_source_is_refused() -> None:
         ops.update(_state(), "W1", ops.Update(vector=_VECTOR), _NOW)
 
 
-def test_empty_next_on_a_live_waypoint_is_null() -> None:
-    """Clearing the step without closing the waypoint is the same absence."""
-    w = ops.update(_state(), "W1", ops.Update(next_step=""), _NOW)
-    assert (w["status"], w["next_bounded_step"]) == ("ready", None)
+def test_empty_next_on_a_blocked_waypoint_is_null() -> None:
+    """Clearing the step of a card that is neither ready nor working is the same absence."""
+    block = ops.Update(status="blocked", blocked_on=("W9",), blocked_kind="agent", next_step="")
+    w = ops.update(_state(), "W1", block, _NOW)
+    assert (w["status"], w["next_bounded_step"]) == ("blocked", None)
+
+
+def test_a_ready_or_working_card_is_refused_an_empty_or_self_symbol_next_step() -> None:
+    """W2046: `--next ""` and `--next W1` on W1 are refused; a real step is accepted."""
+    for blank in ("", "  ", "W1"):
+        with pytest.raises(ops.RefusedError, match="needs a next step"):
+            ops.update(_state(), "W1", ops.Update(next_step=blank), _NOW)
+    w = ops.update(_state(), "W1", ops.Update(next_step="read the writer"), _NOW)
+    assert w["next_bounded_step"] == "read the writer"
 
 
 def test_blocking_resets_the_count() -> None:
