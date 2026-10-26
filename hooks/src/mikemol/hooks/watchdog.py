@@ -476,7 +476,35 @@ LAST_NAME = "watchdog.last"
 """The file beside the heartbeat that keeps why the watchdog last exited, and what to do."""
 
 
-def exit_meaning(code: int, restart: str) -> str:
+def evidence_of(git_dir: Path, started_ns: int | None, now_ns: int) -> str:
+    """Say what the watchdog saw, so an exit shows whether the silence was real (W2043).
+
+    ⚑ A FALSE WAKE AND A REAL ONE READ ALIKE (luthen-observability, 2026-10-26: five exits, each
+    'last heartbeat ~900s ago', which it could not tell from active use). The exit now says when
+    this watch began, which tool left the last beat and how long ago, and the five gaps before
+    it, newest last, in whole seconds. The heartbeat file keeps the last beat's tool and the
+    recent gaps, not a tool per earlier beat, so the earlier beats are their gaps.
+
+    Returns:
+        one sentence; `no heartbeat was read` when the file holds none.
+
+    """
+    began = "" if started_ns is None else f"This watch began {_secs(now_ns - started_ns)}s ago. "
+    last = heartbeat.read(git_dir)
+    if last is None:
+        return f"{began}No heartbeat was read."
+    gaps = ", ".join(str(_secs(g)) for g in last.gaps_ns[-5:]) or "none kept"
+    return (
+        f"{began}The last beat was {last.tool}, {_secs(now_ns - last.at_ns)}s ago; "
+        f"the gaps before it in seconds, newest last: {gaps}."
+    )
+
+
+def _secs(ns: int) -> int:
+    return max(ns, 0) // _NS_PER_S
+
+
+def exit_meaning(code: int, restart: str, evidence: str = "") -> str:
     """Say what an exit code means to the session that reads it.
 
     ⚑ THE HARNESS SHOWS ONLY `Background command ... failed with exit code 8` (github-8f
@@ -491,7 +519,7 @@ def exit_meaning(code: int, restart: str) -> str:
         return (
             "watchdog exited 8: this session was quiet past the window while cards were waiting. "
             "This is the WAKE, not a failure: take the top ready card, then restart the watchdog "
-            f"with: {restart}"
+            f"with: {restart}. {evidence}".rstrip()
         )
     return (
         "watchdog exited 7: it CANNOT RUN (no paths-forward writer was found, or the window it "
@@ -500,7 +528,7 @@ def exit_meaning(code: int, restart: str) -> str:
     )
 
 
-def remember_exit(git_dir: Path, code: int, restart: str) -> None:
+def remember_exit(git_dir: Path, code: int, restart: str, started_ns: int | None = None) -> None:
     """Keep the meaning of an exit 7 or 8 where the next hook of this session can read it.
 
     A file system that refuses is no error: the exit code is the contract and this is the
@@ -508,7 +536,9 @@ def remember_exit(git_dir: Path, code: int, restart: str) -> None:
     """
     if code not in {EXIT_IDLE, EXIT_CANNOT_RUN}:
         return
-    body = {"code": code, "text": exit_meaning(code, restart), "at_ns": time.time_ns()}
+    now = time.time_ns()
+    seen = evidence_of(git_dir, started_ns, now) if code == EXIT_IDLE else ""
+    body = {"code": code, "text": exit_meaning(code, restart, seen), "at_ns": now}
     try:
         target = git_dir / "mtools" / LAST_NAME
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -595,6 +625,7 @@ def main(
     announce = armed_publisher(os.environ, repo, spawn)
     gone = armed_publisher(os.environ, repo, spawn, ARMED_DOWN)
     claim(git_dir, os.getpid())
+    began = time.time_ns()
     try:
         poll = float(str(opts["poll_s"]))
         code = watch(
@@ -604,7 +635,7 @@ def main(
             announce,
             lambda: exit_notes(git_dir, repo, os.environ),
         )
-        remember_exit(git_dir, code, restart)
+        remember_exit(git_dir, code, restart, began)
         return code
     finally:
         release(git_dir, os.getpid())
