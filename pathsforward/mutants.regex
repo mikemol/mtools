@@ -308,3 +308,6 @@ src/mikemol/pathsforward/regressions.py|dropped-card-may-vanish|        if symbo
 src/mikemol/pathsforward/cli.py|regressions-found-but-ok|    return EXIT_REFUSED if found else EXIT_OK|    return EXIT_OK|def=_regressions
 src/mikemol/pathsforward/cli.py|intervention-not-ledgered|    _ledger\(ctx, Entry\("intervention", NO_SYMBOL, kind, "intervention", note\)\)|    pass|def=_intervention
 src/mikemol/pathsforward/render.py|retros-section-for-a-document-without-any|    if not isinstance\(raw, list\) or not raw:|    if False:|def=_retro_lines
+src/mikemol/pathsforward/closegate.py|every-ready-card-marked-velocity|\{'\*' if marked\.get\(sym\) else ''\}|{'*'}|def=open_line
+src/mikemol/pathsforward/closegate.py|open-line-names-no-cards|for sym in ready\[:TOP\]\)|for sym in ready[:0])|def=open_line
+src/mikemol/pathsforward/closegate.py|no-ready-card-said-as-a-count-of-one|        return "ready 0"|        return "ready 1"|def=open_line

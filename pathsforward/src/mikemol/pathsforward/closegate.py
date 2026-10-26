@@ -39,7 +39,7 @@ from mikemol.pathsforward import lock
 from mikemol.pathsforward.behindopen import plan
 from mikemol.pathsforward.landed import landed_since
 from mikemol.pathsforward.ledger import Parsed, read
-from mikemol.pathsforward.model import State, text, workable
+from mikemol.pathsforward.model import State, strlist, text, workable
 
 SYMBOL = re.compile(r"\bW\d+\b")
 FOREIGN = re.compile(r"[\w-]+:W\d+")
@@ -73,6 +73,25 @@ def ready_cards(state: State) -> list[str]:
         for w in state.waypoints
         if text(w, "status") == "ready" and workable(w) and text(w, "symbol") not in behind
     ]
+
+
+def open_line(state: State) -> str:
+    """Spell the line `--tick-open` prints beside the claim and nudge lines (W2038).
+
+    ⚑ A QUIET OPEN READ AS "NOTHING TO DO" (github-8f 2026-10-26: nemik ended a tick on "found
+    nothing to claim, no nudges due" with a band of ready cards). The ready count and the top
+    cards, a velocity card marked `*`, are said where the session reads the claim lines.
+
+    Returns:
+        `ready N; take them: W1, W2* (* velocity)` in queue order, or `ready 0` with none.
+
+    """
+    ready = ready_cards(state)
+    if not ready:
+        return "ready 0"
+    marked = {text(w, "symbol"): "velocity" in strlist(w, "touches") for w in state.waypoints}
+    top = ", ".join(f"{sym}{'*' if marked.get(sym) else ''}" for sym in ready[:TOP])
+    return f"ready {len(ready)}; take them: {top} (* velocity)"
 
 
 def tick_start(state: State, ledger: Path | None) -> str:

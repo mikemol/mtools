@@ -7332,3 +7332,17 @@
   claim  = {A document with a retro gets a retros section; one without renders as it always did.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_render.py -k test_the_mirror_renders_retros_only_when_the_document_has_them},
 }
+
+@misc{pathsforward-open-line-ready-cards-are-counted-and-the-top-three-named-with-velocity-marked,
+  section = {open_line},
+  title  = {Five ready cards say five and name the first three, the velocity one starred},
+  claim  = {Five ready cards say five and name the first three, the velocity one starred.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_open_line.py -k test_ready_cards_are_counted_and_the_top_three_named_with_velocity_marked},
+}
+
+@misc{pathsforward-open-line-blocked-and-done-cards-are-not-counted-and-none-ready-says-zero,
+  section = {open_line},
+  title  = {Only a ready card counts; a queue with none says `ready 0`},
+  claim  = {Only a ready card counts; a queue with none says `ready 0`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_open_line.py -k test_blocked_and_done_cards_are_not_counted_and_none_ready_says_zero},
+}

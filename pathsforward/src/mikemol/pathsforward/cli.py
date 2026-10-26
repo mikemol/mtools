@@ -76,7 +76,7 @@ from mikemol.pathsforward.blockerwatch import SEEN_NAME as _BLOCKERS_SEEN
 from mikemol.pathsforward.blockerwatch import notice as blocker_notice
 from mikemol.pathsforward.check import check, evidence_findings, unscored
 from mikemol.pathsforward.closegate import judge as judge_close
-from mikemol.pathsforward.closegate import rank_check, roll_note, top_ranked
+from mikemol.pathsforward.closegate import open_line, rank_check, roll_note, top_ranked
 from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
@@ -1850,6 +1850,7 @@ def _tick_open(ctx: Ctx) -> int:
         _say(said)
     for step in (_bump_blocked, _inbound, _check):
         code = max(code, step(held))
+    _say(open_line(store.load(ctx.path)))
     # ⚑ THE ACUTE RECONCILER'S PLAN IS PRINTED AT OPEN, DRY (W1640): a working card whose commit has
     # landed, or whose gate is gone, is said here with what `--reconcile --write` would set, so a
     # tick does not begin on a card the log already finished. Never written from the open.
