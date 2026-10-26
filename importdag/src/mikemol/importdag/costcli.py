@@ -102,6 +102,13 @@ def report(graph: dict[str, object], manifest: Sequence[str], repo: str, query: 
     )
     if priced.unknown:
         lines.append(f"unmeasured ({len(priced.unknown)}): {', '.join(priced.unknown)}")
+        guesses = [cost.neighbour(path, table) for path in priced.unknown]
+        found = [g for g in guesses if g is not None]
+        if found:
+            lines.append(
+                f"projected, NOT measured: about {sum(m for m, _ in found):.1f} s more for "
+                f"{len(found)} of them, each from its measured siblings"
+            )
     return lines
 
 

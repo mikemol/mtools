@@ -114,6 +114,40 @@ def price(tests: Iterable[str], table: Mapping[str, Measured]) -> Price:
     )
 
 
+def neighbour(path: str, table: Mapping[str, Measured]) -> tuple[float, int] | None:
+    """Project an unmeasured test from the measured tests that share its name (W1997).
+
+    ⚑ A PROJECTION IS NOT A MEASUREMENT AND IS NEVER ADDED TO ONE: `price` leaves an unmeasured test
+    out so its sums are a floor, and this gives the caller a SEPARATE figure to show beside the
+    floor, labelled as an estimate with the number of tests it rests on. A test is a neighbour when
+    its stem starts with this test's stem cut back one `_` word at a time, never below two words
+    (`test_ratchet` is a neighbour of `test_ratchet_pace_held`; `test` alone matches everything and
+    says nothing). The nearest cut that has any measured neighbour answers, so a closer sibling is
+    never averaged with a distant one.
+
+    Returns:
+        the mean of the neighbours' median CPU seconds and how many there were; None when no cut
+        with at least two words has a measured neighbour.
+
+    """
+    stem = path.rsplit("/", 1)[-1].removesuffix(".py")
+    words = stem.split("_")
+    for keep in range(len(words) - 1, 1, -1):
+        prefix = "_".join(words[:keep])
+        near = [
+            m
+            for p, m in table.items()
+            if p != path and (_stem(p) == prefix or _stem(p).startswith(prefix + "_"))
+        ]
+        if near:
+            return sum(m.median_s for m in near) / len(near), len(near)
+    return None
+
+
+def _stem(path: str) -> str:
+    return path.rsplit("/", 1)[-1].removesuffix(".py")
+
+
 def together(first: frozenset[str], second: frozenset[str]) -> frozenset[str]:
     """Join two cards' test sets so a test both reach is priced once.
 

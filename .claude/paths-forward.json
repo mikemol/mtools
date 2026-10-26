@@ -35742,20 +35742,22 @@
     {
       "symbol": "W1663",
       "title": "A REFUSED verdict gives the one command that reproduces only the refusing rung",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/gatephase.py!w",
         "file:hooks/src/mikemol/hooks/commit_kata.py!w"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After stack-w2043 lands, submit .githooks/pre-commit, tests/test_repro_rungs.py, pyproject, rubric, warrants, graph.json and dag.bzl as one stack; then the remaining rungs: shellcheck domain witness, warrant ledger, mdstruct shape linter. I still need all of those, W1663",
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Remaining rungs (shellcheck domain witness, warrant ledger, mdstruct shape linter) edit hooks files; take them after W1989 lands hooks/sites, since hooks stacks cannot overlap. I still need W1989 landed, W1663",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-25: 2026-10-25 first submit REFUSED by its own gate: test_bar_fires scans .githooks/pre-commit for any line launching bazel without the GIT_* scrub, and read my reproduce text ('bazel test <targets>') as a launch. Fixed by spelling it through a variable. The refusal itself printed the new '--- reproduce only the refusing rung' block, so the feature was seen working on its first real refusal. Resubmitted. | 2026-10-26: 2026-10-25 first rung LANDED 7423770f (the hermetic suite's refusal replays the reproduce command as its own detail block). | 2026-10-26: 2026-10-26 second rung built in the tree, NOT yet submitted: .githooks/pre-commit adds a reproduce block for the ratchet census beside its two refusal branches (a detail block, never the label), spelled so test_bar_fires reads it as text; test_repro_rungs (2 tests, warrants) pins it; test_bar_fires passes (151 locally, and //hooks:test_bar_fires, graph_fresh and test_repro_rungs under bazel). It is held back only because hooks/graph.json and dag.bzl now carry entries from the queued stacks (w2040/w2042/w1920a/w2043), which a submit check refuses until they land. | 2026-10-26: reconciled LANDED 706b1dd85861c3c2a03b9b4dc8e54d6a36a10a59",
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T14:11:32Z",
+      "last_worked": "2026-10-26T18:11:01Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -36331,17 +36333,19 @@
     {
       "symbol": "W1689",
       "title": "//ratchet:ruff and //ratchet:ratchet_gate reported red BEFORE the probe (CONTROL FAILED) in the refused 30-entry gate and are green after: reproduce alone under load and repair the cause",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Watch the next gate for CONTROL FAILED or probe residue after W1692 (flock) landed; if none appears across the next ten gates, close this as W1692's consequence, citing the gate outputs. I still need ten gates without it, W1689",
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Watch the next ten gate logs for CONTROL FAILED, then close as W1692's consequence; the gates accumulate as stacks land, starting with the in-gate stack-next-3 (cited by W1989). I still need ten gate logs, W1689",
       "evidence": "2026-10-24: 2026-10-24 read: this card's own next step is to see whether the red-before-probe is W1688's victim contention; W1688 is blocked on W1690 (find the second writer), W1691 and W1692, so the cause is the open question there and reproducing it here first would repeat that work. Observation from this session's gate logs: 6 of ~400 background outputs contain 'CONTROL FAILED' or 'probe residue' (not read yet, so not a count of recurrences); gates since 2026-10-23 ran through the isolated snapshot path ('path: isolated') | 2026-10-25: 2026-10-25: W1690 was dropped (unanswerable, W1929 sweep), so the named wait is W1692, the concurrency test of two domain_witness runs: if it shows probe residue under two concurrent runs it explains these reds, otherwise this card reproduces the two targets alone under load. W1692 now has a manifest | 2026-10-26: 2026-10-26: W1692 landed (domain_witness advisory flock keyed by victim, taken before the residue guard) and its forced-interleaving test passes. Both targets run ALONE on an idle bazel invocation: 'Executed 2 out of 2 tests: 2 tests pass' (//ratchet:ruff, //ratchet:ratchet_gate, 6.8 s). So alone they are green, which fits the original reading (red BEFORE the probe only under a concurrent victim writer) but does not prove it: the load reproduction has not been made. | 2026-10-26: reconciled STALE",
       "issued_at": "2026-10-19T09:22:19Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T12:40:51Z",
+      "last_worked": "2026-10-26T19:23:59Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -41775,12 +41779,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In ratchet_pace add the operator-blocked exemption to owed() (it needs the queue, so stack_reason passes the cards in), with a test of a blocked-human card dropping the row and a ready card keeping it; then wire stack_reason into commit_kata.submit_problem after the in-gate stack lands. I still need both, W1920",
-      "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d",
+      "next_bounded_step": "Land this with the next hooks stack (it waits for the queued one: dag.bzl names the testgate files that stack adds), then wire stack_reason into commit_kata.submit_problem as the last-but-one refusal (before testgate, because it is free) with a test, and the standing.rego rule. I still need those, W1920",
+      "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d | 2026-10-26: 2026-10-26 built in the tree, NOT landed: operator_held(queue, ratchet) in ratchet_pace (True only when there are open cards touching file:<ratchet> and EVERY one is blocked with kind human) and stack_reason drops such rows before it judges, per github-8f. Three tests (all-human-blocked holds; a ready card, an agent-blocked card, no card and a done card do not; the submit judgement does not refuse a held debt and does refuse once a ready card exists), three declared mutants (debt-with-no-card-held, one-human-card-holds-a-payable-debt, held-row-still-refused) and warrants; pytest passes; the ratchet_pace sites and tests run under bazel.",
       "issued_at": "2026-10-24T18:47:07Z",
       "minted_during": "interrupt",
       "caused_by": "github:W42",
-      "last_worked": "2026-10-26T17:33:20Z",
+      "last_worked": "2026-10-26T17:56:04Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44261,7 +44265,7 @@
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1982"
       ],
@@ -44270,12 +44274,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "The --check gate target. mutants_gen --check compares generated site BUILD files with the committed ones; a bazel test cannot glob across the 174 sub-packages, so name them: each site package exports its BUILD.bazel (exports_files in the generated file) and //hooks:sites_fresh takes them as data from the same list the generator writes, so a graph change that lags the sites FAILS the gate (the stale-sites run errored all 13 round_wire sites). Then commit hooks/sites (one stack, no gate target runs //hooks/sites/... yet, so the untracked-dist rule is not tripped), then point the gate at the sites and retire the sharded :mutants. I still need all three, W1989",
+      "next_bounded_step": "Cited by live stack-next-3 (W1603, W1989, W1920, W1997). After it lands: retire the sharded :mutants targets, flip the sites off manual, record counts for W1880. I still need the landing, W1989",
       "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-26T13:10:32Z",
+      "last_worked": "2026-10-26T18:48:10Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44433,7 +44437,7 @@
     {
       "symbol": "W1997",
       "title": "Project a card's landing cost: manifest cone over graph.json, rerun targets, measured CPU seconds",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W50"
       ],
@@ -44447,7 +44451,7 @@
       "issued_at": "2026-10-25T17:05:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1503",
-      "last_worked": "2026-10-26T16:53:55Z",
+      "last_worked": "2026-10-26T18:00:09Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45074,19 +45078,21 @@
     {
       "symbol": "W2029",
       "title": "mikemol.commit.landings{repo} per landing and gate CPU seconds per landing are published series",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Operator 100702 (uuid 7a3e66f2, verified): velocity is key; read it from Victoria, not git counts. Per landing: mikemol.commit.landings{repo} (counter or one sample per landing) and mikemol.commit.gate_cpu_seconds{repo} (CPU of the gate run that landed it, divided over its stack entries or per stack, say which). Built on the W1969 landing record (the one record every path writes) and the W1961 metric contract (description, unit, freshness class). Velocity band; ranked with the velocity work.",
-      "evidence": "2026-10-26: reconciled STALE",
+      "evidence": "2026-10-26: reconciled STALE | 2026-10-26: 2026-10-26: manifest is hooks files; hooks stacks cannot overlap, so it waits on the in-gate stack-next-3 (cited by W1989)",
       "issued_at": "2026-10-26T01:02:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T12:26:33Z",
+      "last_worked": "2026-10-26T19:05:33Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_gauge.py",
@@ -45508,40 +45514,42 @@
     {
       "symbol": "W2052",
       "title": "Compute the agreement between the two labellings and keep the disagreements as fixtures",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1966"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Wait for amr-skills' labels file (letter in amr-skills/inbox/2026-10-26-mtools-blind-commitment-sample.md); then compute agreement between the two labellings and keep the disagreements as fixtures under transcriptstruct/tests; separately add the 29 missed rows' shapes to the regex or to the classifier brief. I still need amr-skills' labels, W2052",
+      "blocked_on": [
+        "amr-skills"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "amr-skills labels the 300-row blind sample (letter inbox/2026-10-26-mtools-blind-commitment-sample.md, mtools:W2052); then compute agreement and write fixtures. I still need the labels, W2052",
       "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": "2026-10-26T16:37:53Z",
+      "last_worked": "2026-10-26T18:04:58Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2053",
       "title": "Each gate publishes its admission wait (submit to gate start) and run time (start to verdict) as separate per-repo series, mikemol.gate.admission_wait_seconds and mikemol.gate.run_seconds",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Run the commit_span mutation sites and the new test as bazel targets (running), then add this as an entry to the one next stack (stack-next-1 waits for the in-gate stack to land because dag.bzl is a shared serial file); then luthen registers the two families and a freshness rule. I still need the bazel result and the landing, W2053",
-      "evidence": "2026-10-26: 2026-10-26 READ: the commit path already records the two moments: Held.submitted (when the stack was submitted) and Held.lease (when the repository claim was held), and run_held hands both to Moments(submit, lease, end) for the commit.stack spans, which already carry a wait span and a gating span per trace. So the series need no new stamp: gate_series(Moments) gives admission_wait = lease - submit and run = end - lease, and emit_series sends each as a mikemol-otlp metric (service mikemol-commit, namespace and field repo) at the end of emit and emit_stack. CAVEAT, which the series will settle: the stack-w2039b gate showed about 110 min between the queue entry going inflight and the gate's pre-commit starting; whether that was the claim wait (inside admission_wait_seconds), wait_for_load (inside run_seconds) or the lease itself is not known from the code, so run_seconds includes the load wait and a third series may split it. Built in the tree: gate_series, emit_series, test_gate_series (4 tests), two declared mutants, warrants; commit_span's own 335 tests still pass. | 2026-10-26: reconciled STALE",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 READ: the commit path already records the two moments: Held.submitted (when the stack was submitted) and Held.lease (when the repository claim was held), and run_held hands both to Moments(submit, lease, end) for the commit.stack spans, which already carry a wait span and a gating span per trace. So the series need no new stamp: gate_series(Moments) gives admission_wait = lease - submit and run = end - lease, and emit_series sends each as a mikemol-otlp metric (service mikemol-commit, namespace and field repo) at the end of emit and emit_stack. CAVEAT, which the series will settle: the stack-w2039b gate showed about 110 min between the queue entry going inflight and the gate's pre-commit starting; whether that was the claim wait (inside admission_wait_seconds), wait_for_load (inside run_seconds) or the lease itself is not known from the code, so run_seconds includes the load wait and a third series may split it. Built in the tree: gate_series, emit_series, test_gate_series (4 tests), two declared mutants, warrants; commit_span's own 335 tests still pass. | 2026-10-26: reconciled STALE | 2026-10-26: landed f2acc425; NOT DONE part is luthen registering the families (luthen-observability)",
       "issued_at": "2026-10-26T15:07:44Z",
       "minted_during": "interrupt",
       "caused_by": "github:W50",
-      "last_worked": "2026-10-26T16:44:05Z",
+      "last_worked": "2026-10-26T18:22:30Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T182230Z"
     },
     {
       "symbol": "W2054",
@@ -46037,26 +46045,6 @@
       "taken_at": "2026-10-25T17:12:26Z",
       "renewed_at": "2026-10-25T17:12:26Z",
       "expires_at": "2026-10-25T17:42:26Z",
-      "lapse_ledgered": true
-    },
-    {
-      "tag": "file:hooks/src/mikemol/hooks/gatephase.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1663",
-      "base_sha": "760ce3a5420d5d8e3d13d228e8c1602a0c056218",
-      "taken_at": "2026-10-26T14:05:45Z",
-      "renewed_at": "2026-10-26T14:05:45Z",
-      "expires_at": "2026-10-26T14:35:45Z",
-      "lapse_ledgered": true
-    },
-    {
-      "tag": "file:hooks/src/mikemol/hooks/commit_kata.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1663",
-      "base_sha": "760ce3a5420d5d8e3d13d228e8c1602a0c056218",
-      "taken_at": "2026-10-26T14:05:45Z",
-      "renewed_at": "2026-10-26T14:05:45Z",
-      "expires_at": "2026-10-26T14:35:45Z",
       "lapse_ledgered": true
     }
   ],

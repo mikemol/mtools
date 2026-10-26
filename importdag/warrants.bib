@@ -1533,3 +1533,24 @@
   claim  = {No graph.json is exit 2 and nothing on stdout.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli.py -k test_an_unreadable_graph_is_a_usage_failure_that_prints_nothing},
 }
+
+@misc{importdag-neighbour-nearest-cut-with-a-measured-sibling-answers,
+  section = {cost},
+  title  = {test_ratchet_pace_held is near the two test_ratchet_pace tests, not test_ratchet},
+  claim  = {test_ratchet_pace_held is near the two test_ratchet_pace tests, not test_ratchet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_neighbour.py -k test_the_nearest_cut_with_a_measured_sibling_answers},
+}
+
+@misc{importdag-neighbour-wider-cut-answers-only-when-no-closer-sibling-exists,
+  section = {cost},
+  title  = {test_ratchet_zzz has no closer sibling, so test_ratchet answers; test_ratchetx is none},
+  claim  = {test_ratchet_zzz has no closer sibling, so test_ratchet answers; test_ratchetx is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_neighbour.py -k test_a_wider_cut_answers_only_when_no_closer_sibling_exists},
+}
+
+@misc{importdag-neighbour-nothing-in-common-beyond-test-is-no-projection,
+  section = {cost},
+  title  = {A test sharing only `test_` is None; so is a test whose only match is itself},
+  claim  = {A test sharing only `test_` is None; so is a test whose only match is itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_neighbour.py -k test_nothing_in_common_beyond_test_is_no_projection},
+}
