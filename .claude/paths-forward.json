@@ -37272,24 +37272,27 @@
     {
       "symbol": "W1725",
       "title": "A submit refuses a stack entry whose frozen blob of a file differs from HEAD plus the entries ahead of it, unless the entry deliberately changes that file",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "At submit, for each entry's frozen files, compare the blob with the file as HEAD plus the entries ahead of it leaves it: a difference the entry did not ask for (its diff against that predecessor touches lines no card of the entry names) is refused naming the file and the entry, as stackimports refuses a later module. The W1603 family; the case it would have caught is mega's cli.py carrying location= before W1687's ops.py.",
+      "blocked_on": [
+        "W1958"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Still real (the gap is names added to an existing module, which stackimports does not check). Hooks lane, after W1958 and W1724: at submit compare each entry's frozen blob with HEAD plus earlier entries and refuse an unasked difference, naming file and entry, in stackblobs.py. I still need W1958 landed, W1725",
       "evidence": "2026-10-19: 2026-10-19 evidence, read from BES invocation 0c127912-b5e6-4389-8860-faed0c54bbf1 (bb_log --failures, no key): a leader round over the queued stacks failed at collection with ImportError: cannot import name stage_note from mikemol.hooks.gatephase, because a stack froze commit_kata.py importing W1661's new name while its tip lacked W1661's gatephase.py. stackimports checks new MODULES a later entry adds, not new NAMES in an existing module, which is the gap",
       "issued_at": "2026-10-19T16:52:12Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-19T17:11:12Z",
+      "last_worked": "2026-10-26T21:24:31Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackblobs.py",
         "hooks/tests/test_stackblobs.py",
         "hooks/src/mikemol/hooks/commit_kata.py"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": null
     },
     {
       "symbol": "W1726",
@@ -41781,12 +41784,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Two parts, no new card (github-8f pass 5, built is not deployed): (a) the standing.rego rule that keeps the pace refusal from being weakened; (b) a control card is not closable until every consumer's pin holds the landing sha: have mikemol-repin --check list the repos whose pin lacks a given sha (it knows the pins), and have the close of a card tagged fleet-control print the consumers that lack it. Measured case: e53edaf5 landed, nemik pins 65b7491b, so nemik landed non-paydown stacks unrefused. Read repin's pin reader first. I still need both, W1920",
+      "next_bounded_step": "Two parts, no new card (github-8f pass 5): (a) the standing.rego rule that keeps the pace refusal from being weakened; (b) a control card is not closable until every consumer's pin holds the landing sha: have mikemol-repin --check list the repos whose pin lacks a given sha (it knows the pins), and have the close of a card tagged fleet-control print the consumers that lack it. Measured case: e53edaf5 landed, nemik pins 65b7491b, so nemik landed non-paydown stacks unrefused (landed but not installed there). Read repin's pin reader first. I still need both, W1920",
       "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d | 2026-10-26: 2026-10-26 built in the tree, NOT landed: operator_held(queue, ratchet) in ratchet_pace (True only when there are open cards touching file:<ratchet> and EVERY one is blocked with kind human) and stack_reason drops such rows before it judges, per github-8f. Three tests (all-human-blocked holds; a ready card, an agent-blocked card, no card and a done card do not; the submit judgement does not refuse a held debt and does refuse once a ready card exists), three declared mutants (debt-with-no-card-held, one-human-card-holds-a-payable-debt, held-row-still-refused) and warrants; pytest passes; the ratchet_pace sites and tests run under bazel. | 2026-10-26: 2026-10-26 github-8f: W1920's refusal (e53edaf5) is not in nemik's pin (65b7491b), so the teeth were not live there; host W61 closed unchecked.",
       "issued_at": "2026-10-24T18:47:07Z",
       "minted_during": "interrupt",
       "caused_by": "github:W42",
-      "last_worked": "2026-10-26T20:59:20Z",
+      "last_worked": "2026-10-26T22:00:14Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43084,7 +43087,7 @@
     {
       "symbol": "W1958",
       "title": "Census rows from the name classifier carry guessed=true, declared rows false, and the emitted series carries the flag",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W42"
       ],
@@ -43098,7 +43101,7 @@
       "issued_at": "2026-10-25T11:18:34Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T20:15:48Z",
+      "last_worked": "2026-10-26T22:00:15Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -43373,11 +43376,11 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "ratchet_emit sends mikemol.ratchet.retired with labels repo, ratchet and reason = 1 for every tombstone the census prints, on every run while it is listed (so at least once by the retiring run), through the same spawn path; nemik's verdict and luthen's dark alert read it. Tell nemik-84 and luthen-observability-ab the metric name and labels first so both can build against it. I still need all of it, W1964",
-      "evidence": "2026-10-25: 2026-10-25 luthen-observability-ab: ratchet tombstones carry the same shape as the family one (metric, reason, owner as datapoint attributes, event_driven freshness with a liveness companion); luthen W1628 makes alerts honour them. For the ratchet series the labels stay repo, ratchet and reason as told to nemik-84, plus owner and the freshness facts",
+      "evidence": "2026-10-25: 2026-10-25 luthen-observability-ab: ratchet tombstones carry the same shape as the family one (metric, reason, owner as datapoint attributes, event_driven freshness with a liveness companion); luthen W1628 makes alerts honour them. For the ratchet series the labels stay repo, ratchet and reason as told to nemik-84, plus owner and the freshness facts | 2026-10-26: 2026-10-26 why nemik:W1040 waits: W1964 needs the tombstone list W1963 adds to the ratchet declaration (W1963 is ready, ratchet/declaration.py), and both it and W1958 edit hooks ratchet_emit.py on the serial hooks lane. Order: W1958 now (working), then W1963, then W1964; the metric name and labels (repo, ratchet, reason) were already told to nemik-84.",
       "issued_at": "2026-10-25T12:19:04Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T12:22:46Z",
+      "last_worked": "2026-10-26T22:01:02Z",
       "ticks_blocked": 1,
       "warrants": [
         {
@@ -44460,7 +44463,7 @@
     {
       "symbol": "W1998",
       "title": "Pairwise landing cost: two cards together with overlapping cones counted once, and a card after its enabler lands",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W50"
       ],
@@ -44469,14 +44472,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Union of the two cones, summed once; the after-enabler form removes the enabler's cone from the card's. Needs W1997's single-card projection.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed 5b42502f",
       "issued_at": "2026-10-25T17:06:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1997",
-      "last_worked": "2026-10-26T20:20:55Z",
+      "last_worked": "2026-10-26T21:27:51Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261026T212751Z",
       "manifest": [
         "importdag/src/mikemol/importdag/costcli.py",
         "importdag/tests/test_costcli_pair.py",
@@ -46042,16 +46045,6 @@
       "lapse_ledgered": true
     },
     {
-      "tag": "file:ratchet/src/mikemol/ratchet/cli.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1958",
-      "base_sha": "03044256fa578da1798ee20f14a450335feb08a9",
-      "taken_at": "2026-10-25T17:07:46Z",
-      "renewed_at": "2026-10-25T17:07:46Z",
-      "expires_at": "2026-10-25T17:37:46Z",
-      "lapse_ledgered": true
-    },
-    {
       "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
       "holder": "(unlocked)",
       "waypoint": "W1963",
@@ -46060,6 +46053,15 @@
       "renewed_at": "2026-10-25T17:12:26Z",
       "expires_at": "2026-10-25T17:42:26Z",
       "lapse_ledgered": true
+    },
+    {
+      "tag": "file:ratchet/src/mikemol/ratchet/cli.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1958",
+      "base_sha": "5b42502f8c683de64ab46f81fbb1904493af7428",
+      "taken_at": "2026-10-26T22:00:15Z",
+      "renewed_at": "2026-10-26T22:00:15Z",
+      "expires_at": "2026-10-26T22:30:15Z"
     }
   ],
   "advice": [

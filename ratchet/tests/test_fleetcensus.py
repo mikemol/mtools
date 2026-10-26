@@ -32,10 +32,10 @@ def test_each_ratchet_file_is_listed_with_repo_path_kind_value_and_floor(tmp_pat
     _fleet(tmp_path)
     lines = [row.line() for row in fleetcensus.census(tmp_path)]
     assert lines == [
-        "alpha .claude/debt-ledger.json debt value=0 floor=0",
-        "alpha baselines/ruff-baseline.json baseline value=1 floor=0 sum=2",
-        "beta broken-baseline.json baseline value=UNREAD floor=0",
-        "beta ratchet-preview.txt preview value=2 floor=0",
+        "alpha .claude/debt-ledger.json debt value=0 floor=0 guessed=1",
+        "alpha baselines/ruff-baseline.json baseline value=1 floor=0 sum=2 guessed=1",
+        "beta broken-baseline.json baseline value=UNREAD floor=0 guessed=1",
+        "beta ratchet-preview.txt preview value=2 floor=0 guessed=1",
     ]
 
 
@@ -60,8 +60,8 @@ def test_a_gate_censuses_its_own_repository_and_reads_no_sibling(
     _fleet(tmp_path)
     lines = [row.line() for row in fleetcensus.census_repo(tmp_path / "beta")]
     assert lines == [
-        "beta broken-baseline.json baseline value=UNREAD floor=0",
-        "beta ratchet-preview.txt preview value=2 floor=0",
+        "beta broken-baseline.json baseline value=UNREAD floor=0 guessed=1",
+        "beta ratchet-preview.txt preview value=2 floor=0 guessed=1",
     ]
     assert cli.main(["census", "--repo", str(tmp_path / "beta")]) == 0
     out = capsys.readouterr().out.splitlines()
@@ -77,4 +77,4 @@ def test_the_command_prints_the_rows_and_the_counts(
     assert cli.main(["census", str(tmp_path)]) == 0
     out = capsys.readouterr().out.splitlines()
     assert out[-1] == "# 4 ratchet file(s), 1 unread"
-    assert "beta ratchet-preview.txt preview value=2 floor=0" in out
+    assert "beta ratchet-preview.txt preview value=2 floor=0 guessed=1" in out

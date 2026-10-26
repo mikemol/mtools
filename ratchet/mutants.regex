@@ -57,3 +57,6 @@ src/mikemol/ratchet/declaration.py|columns-and-expression-need-not-fit|    if \(
 src/mikemol/ratchet/fleetcensus.py|declared-expression-ignored|    value = expression\.evaluate\(path, item\.expression, item\.columns\)|    value = kinds.value_of(path)|def=_declared_row
 src/mikemol/ratchet/fleetcensus.py|declaration-ignored|    if declared is not None:|    if False:|def=census_repo
 src/mikemol/ratchet/cli.py|bad-declaration-exits-clean|        return 1$|        return 0|def=_census_main
+src/mikemol/ratchet/fleetcensus.py|declared-row-called-guessed|kinds\.sum_of\(path\), guessed=False|kinds.sum_of(path), guessed=True|def=_declared_row
+src/mikemol/ratchet/fleetcensus.py|classifier-row-called-declared|kinds\.FLOOR, total, guessed=True\)|kinds.FLOOR, total, guessed=False)|def=census_repo
+src/mikemol/ratchet/fleetcensus.py|guessed-flag-not-printed|        return line if self\.guessed is None else f"\{line\} guessed=\{int\(self\.guessed\)\}"|        return line|def=Row.line

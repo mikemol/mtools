@@ -41,12 +41,12 @@ def test_a_declaration_wins_over_names_and_a_missing_one_falls_back(tmp_path: Pa
     _put(declared / "notes" / "emissions-baseline.json", '{"x": 1}')
     _declare(declared, [{"path": "gate/pace.txt", "kind": "baseline"}])
     assert [r.line() for r in fleetcensus.census_repo(declared)] == [
-        "declared gate/pace.txt baseline value=2 floor=0"
+        "declared gate/pace.txt baseline value=2 floor=0 guessed=0"
     ]
     guessed = tmp_path / "guessed"
     _put(guessed / "notes" / "emissions-baseline.json", '{"x": 1}')
     assert [r.line() for r in fleetcensus.census_repo(guessed)] == [
-        "guessed notes/emissions-baseline.json baseline value=1 floor=0"
+        "guessed notes/emissions-baseline.json baseline value=1 floor=0 guessed=1"
     ]
 
 
@@ -54,7 +54,8 @@ def test_a_declared_file_that_is_missing_stays_listed_as_unread(tmp_path: Path) 
     """The declaration says it should exist, so it is UNREAD and never quietly left out."""
     _declare(tmp_path, [{"path": "gone.txt", "kind": "allowlist"}])
     rows = fleetcensus.census_repo(tmp_path)
-    assert [r.line() for r in rows] == [f"{tmp_path.name} gone.txt allowlist value=UNREAD floor=0"]
+    said = f"{tmp_path.name} gone.txt allowlist value=UNREAD floor=0 guessed=0"
+    assert [r.line() for r in rows] == [said]
 
 
 @pytest.mark.parametrize(

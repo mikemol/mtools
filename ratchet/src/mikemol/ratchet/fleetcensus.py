@@ -47,18 +47,22 @@ class Row:
     value: int | None
     floor: int
     total: int | None = None
+    guessed: bool | None = None
 
     def line(self) -> str:
         """Spell the row as one census line.
 
         Returns:
-            the line, with `UNREAD` where the file could not be read and ` sum=N` after the floor
-            for a file-rule-count baseline (W1922).
+            the line, with `UNREAD` where the file could not be read, ` sum=N` after the floor
+            for a file-rule-count baseline (W1922), and ` guessed=1` when the name classifier
+            found the file or ` guessed=0` when the repository declared it (W1958).
 
         """
         said = "UNREAD" if self.value is None else str(self.value)
         line = f"{self.repo} {self.ratchet} {self.kind} value={said} floor={self.floor}"
-        return line if self.total is None else f"{line} sum={self.total}"
+        if self.total is not None:
+            line = f"{line} sum={self.total}"
+        return line if self.guessed is None else f"{line} guessed={int(self.guessed)}"
 
 
 def repos_under(root: Path) -> list[Path]:
@@ -96,7 +100,9 @@ def _files(repo: Path) -> Iterator[Path]:
 def _declared_row(repo: Path, item: declaration.Declared) -> Row:
     path = repo / item.path
     value = expression.evaluate(path, item.expression, item.columns)
-    return Row(repo.name, item.path, item.kind, value, kinds.FLOOR, kinds.sum_of(path))
+    return Row(
+        repo.name, item.path, item.kind, value, kinds.FLOOR, kinds.sum_of(path), guessed=False
+    )
 
 
 def census_repo(repo: Path) -> list[Row]:
@@ -126,7 +132,7 @@ def census_repo(repo: Path) -> list[Row]:
         if kind is not None:
             relative = path.relative_to(repo).as_posix()
             value, total = kinds.value_of(path), kinds.sum_of(path)
-            rows.append(Row(repo.name, relative, kind, value, kinds.FLOOR, total))
+            rows.append(Row(repo.name, relative, kind, value, kinds.FLOOR, total, guessed=True))
     return rows
 
 
