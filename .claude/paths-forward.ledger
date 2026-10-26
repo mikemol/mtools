@@ -4028,3 +4028,72 @@
 2026-10-26T10:28:20Z  status W1997 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-26T10:29:02Z  status W2016 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-26T10:29:22Z  status W1989 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:33:03Z  status W1997 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T10:33:51Z  interrupt W2038 minted    -         "--tick-open and --tick-close print the ready count and the round's top cards beside the claim and nudge lines, and --tick-close flags a quiet close while ready round cards exist and nothing of this session's is gating or building"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W50
+2026-10-26T10:37:13Z  status W2038 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T11:06:44Z  status W1966 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T11:15:09Z  status W2007 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T11:15:09Z  status W2008 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T11:15:09Z  status W2009 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T11:34:44Z  interrupt W2039 minted    -         "mikemol-commit with a directory in --paths commits the new files under it but not the deletions, so the old files stay in HEAD and a repin then refuses over the uncommitted deletions"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W50
+2026-10-26T11:51:50Z  interrupt W2040 minted    -         "Detect a session whose turns fail authentication (two or more in a row) and publish mikemol.session.auth_failed{session} with a freshness rule, pushing the operator by phone"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W59
+2026-10-26T11:52:28Z  interrupt W2041 minted    -         "mikemol-paths-forward --update W --blocked-on with an empty or whitespace value is refused, naming the flag, and a bare --blocked-on clears"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W52
+2026-10-26T11:53:10Z  status W2041 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T11:56:00Z  status W2039 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:00:36Z  status W2038 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:00:37Z  status W1997 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:24:40Z  status W2032 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:26:31Z  status W1997 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:26:33Z  status W2029 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:26:36Z  status W1933 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:26:37Z  status W2033 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:26:39Z  status W2040 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:34:47Z  status W1663 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:40:34Z  status W1689 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T12:56:06Z  status W1920 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:00:06Z  interrupt W2042 minted    -         "corpus/exit-baseline.txt paydown: the pycheck family's not-checked exit (cli, clear, format, install) moves from 3 to 7, the exit table's CANNOT_RUN"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W42
+2026-10-26T13:00:16Z  status W2042 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:07:04Z  status W2041 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:09:27Z  status W1663 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:09:28Z  status W2033 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:09:30Z  status W1880 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:10:21Z  status W1880 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:10:32Z  status W1989 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:33:11Z  interrupt W2043 minted    -         "A watchdog exit 8 in luthen-observability named a last heartbeat 911s ago (mikemol-commit) after a dozen Bash, Edit, Write and SendMessage calls: the hook beats did not fire or wrote another file than the watchdog reads"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W55
+2026-10-26T13:33:12Z  interrupt W2044 minted    -         "<gitdir>/mtools/watchdog.last does not exist in luthen-observability after three exit-8s under the 0814f162 pin, so W2026's explanation file is not written from the repinned venv entry point"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W55
+2026-10-26T13:38:31Z  status W2044 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T13:59:17Z  status W2043 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T14:05:14Z  interrupt W2045 minted    -         "Retire the .claude/debtplan.json ratchet series with a written tombstone: the file is the debtplan tool's config, not a ratchet, but nemik's pace still reads it as unknown with a standing requirement of 1"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1107
+2026-10-26T14:05:45Z  status W1663 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T14:13:38Z  status W1697 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T14:13:54Z  status W1697 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T14:24:13Z  interrupt W2046 minted    -         "The writer refuses an empty next_bounded_step, or the card's own symbol, on a ready or working card"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W2
+2026-10-26T14:24:15Z  interrupt W2047 minted    -         "--close-gate and --tick-close flag a working card idle past a bound learned from the repo's own landing intervals"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W2
+2026-10-26T14:41:32Z  status W2046 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1954 lapsed    --        "lease on file:corpus/exit-baseline.txt!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1961 lapsed    --        "lease on file:otlp/src/mikemol/otlp/cli.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1960 lapsed    --        "lease on file:otlp/src/mikemol/otlp/cli.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1958 lapsed    --        "lease on file:ratchet/src/mikemol/ratchet/cli.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1963 lapsed    --        "lease on file:ratchet/src/mikemol/ratchet/declaration.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1933 lapsed    --        "lease on file:transcriptstruct/src/mikemol/transcriptstruct/commitledger.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1663 lapsed    --        "lease on file:hooks/src/mikemol/hooks/gatephase.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:00Z  lease W1663 lapsed    --        "lease on file:hooks/src/mikemol/hooks/commit_kata.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W1689 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W1933 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W1966 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W1989 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W1997 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W2016 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W2029 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:07Z  status W2032 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:21Z  tick  W2048 minted    -         "Run the commitments extractor and emitter on a host timer and publish commitments.json where luthen and nemik read it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1933
+2026-10-26T15:03:22Z  tick  W2049 minted    -         "Measure the commitment layer inference (none, memory, instructions, card, trigger, hook, gate) on real transcripts and report its agreement"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1933
+2026-10-26T15:03:26Z  status W1933 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:03:30Z  tick  W2050 minted    -         "Draw the blind sample (N=300, seed 1) from this session's transcript and send the blind file to amr-skills"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1966
+2026-10-26T15:03:30Z  tick  W2051 minted    -         "Label my own copy of the sample without reading amr-skills' labels"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1966
+2026-10-26T15:03:30Z  tick  W2052 minted    -         "Compute the agreement between the two labellings and keep the disagreements as fixtures"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1966
+2026-10-26T15:06:37Z  status W2048 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T15:07:44Z  interrupt W2053 minted    -         "Each gate publishes its admission wait (submit to gate start) and run time (start to verdict) as separate per-repo series, mikemol.gate.admission_wait_seconds and mikemol.gate.run_seconds"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W50
+2026-10-26T15:08:24Z  interrupt W2054 minted    -         "mikemol-repin --revendor builds mikemol-transcriptstruct as an eighth wheel, so luthen's commitments unit runs a pinned install and not a working tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2048
+2026-10-26T15:26:20Z  status W2054 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:01:10Z  status W2039 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
