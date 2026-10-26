@@ -1554,3 +1554,31 @@
   claim  = {A test sharing only `test_` is None; so is a test whose only match is itself.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_neighbour.py -k test_nothing_in_common_beyond_test_is_no_projection},
 }
+
+@misc{importdag-costcli-pair-two-cards-together-count-a-test-both-reach-once,
+  section = {cost},
+  title  = {Card x reruns test_x and test_xz, card z reruns test_xz and test_z: 3 tests, 111 s},
+  claim  = {Card x reruns test_x and test_xz, card z reruns test_xz and test_z: 3 tests, 111 s.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli_pair.py -k test_two_cards_together_count_a_test_both_reach_once},
+}
+
+@misc{importdag-costcli-pair-second-card-after-the-first-pays-only-for-what-the-first-did-not-rerun,
+  section = {cost},
+  title  = {After x lands, z still reruns test_z alone: 1 test, 100 s},
+  claim  = {After x lands, z still reruns test_z alone: 1 test, 100 s.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli_pair.py -k test_the_second_card_after_the_first_pays_only_for_what_the_first_did_not_rerun},
+}
+
+@misc{importdag-costcli-pair-single-card-report-has-no-pair-lines,
+  section = {cost},
+  title  = {Without a second manifest the output is the single-card report, unchanged},
+  claim  = {Without a second manifest the output is the single-card report, unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli_pair.py -k test_a_single_card_report_has_no_pair_lines},
+}
+
+@misc{importdag-costcli-pair-command-takes-the-second-manifest-after-then,
+  section = {cost},
+  title  = {`FILE... --then FILE...` strips the dist prefix from both and prints the pair lines},
+  claim  = {`FILE... --then FILE...` strips the dist prefix from both and prints the pair lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli_pair.py -k test_the_command_takes_the_second_manifest_after_then},
+}

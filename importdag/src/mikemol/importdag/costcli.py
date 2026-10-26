@@ -75,40 +75,75 @@ def run_query(otlp: str) -> Query:
     return ask
 
 
-def report(graph: dict[str, object], manifest: Sequence[str], repo: str, query: Query) -> list[str]:
+def _price_lines(
+    tests: frozenset[str], table: dict[str, cost.Measured], label: str = ""
+) -> list[str]:
+    """Price a set of tests: the measured sums, the unmeasured and the projection.
+
+    Returns:
+        the lines, each led by `label: ` when one is given.
+
+    """
+    lead = f"{label}: " if label else ""
+    priced = cost.price(tests, table)
+    measured = len(tests) - len(priced.unknown)
+    fewest = priced.fewest if priced.fewest is not None else "none"
+    lines = [
+        (
+            f"{lead}cpu: median {priced.median_s:.1f} s, p90 {priced.p90_s:.1f} s over "
+            f"{measured} measured test(s); fewest samples {fewest}"
+        )
+    ]
+    if priced.unknown:
+        lines.append(f"{lead}unmeasured ({len(priced.unknown)}): {', '.join(priced.unknown)}")
+        guesses = [cost.neighbour(path, table) for path in priced.unknown]
+        found = [g for g in guesses if g is not None]
+        if found:
+            lines.append(
+                f"{lead}projected, NOT measured: about {sum(m for m, _ in found):.1f} s more for "
+                f"{len(found)} of them, each from its measured siblings"
+            )
+    return lines
+
+
+def report(
+    graph: dict[str, object],
+    manifest: Sequence[str],
+    repo: str,
+    query: Query,
+    then: Sequence[str] = (),
+) -> list[str]:
     """Price a manifest against the graph and the store's three series.
+
+    `then` is a second card's manifest: the report adds the two cards together (a test both
+    reach counted once) and the second card after the first has landed (only the tests the first
+    did not already rerun), by `cost.together` and `cost.after`.
 
     Returns:
         the lines of the report.
 
     """
     tests = cost.affected(graph, manifest)
-    gaps = cost.unnamed(graph, manifest)
+    gaps = cost.unnamed(graph, [*manifest, *then])
     table = series.table(
         repo,
         response_of(query(MEDIAN.format(repo=repo))),
         response_of(query(P90.format(repo=repo))),
         response_of(query(SAMPLES.format(repo=repo))),
     )
-    priced = cost.price(tests, table)
     lines = [f"tests rerun: {len(tests)}"]
     if gaps:
         lines.append(f"not in the graph (the count is a floor): {', '.join(gaps)}")
-    measured = len(tests) - len(priced.unknown)
-    fewest = priced.fewest if priced.fewest is not None else "none"
-    lines.append(
-        f"cpu: median {priced.median_s:.1f} s, p90 {priced.p90_s:.1f} s over {measured} measured "
-        f"test(s); fewest samples {fewest}"
-    )
-    if priced.unknown:
-        lines.append(f"unmeasured ({len(priced.unknown)}): {', '.join(priced.unknown)}")
-        guesses = [cost.neighbour(path, table) for path in priced.unknown]
-        found = [g for g in guesses if g is not None]
-        if found:
-            lines.append(
-                f"projected, NOT measured: about {sum(m for m, _ in found):.1f} s more for "
-                f"{len(found)} of them, each from its measured siblings"
-            )
+    lines += _price_lines(tests, table)
+    if then:
+        second = cost.affected(graph, then)
+        both = cost.together(tests, second)
+        later = cost.after(tests, second)
+        shared = len(tests & second)
+        lines.append(f"together: {len(both)} tests; the {shared} both reach count once")
+        lines += _price_lines(both, table, "together")
+        lines.append(f"second card after the first lands: {len(later)} tests")
+        lines += _price_lines(later, table, "after")
     return lines
 
 
@@ -119,6 +154,7 @@ def _options(argv: Sequence[str] | None) -> dict[str, object]:
     parser.add_argument("--otlp", default="mikemol-otlp", help="the mikemol-otlp binary")
     parser.add_argument("--root", default=".", help="the checkout holding the dist")
     parser.add_argument("manifest", nargs="+", help="the files the card will edit")
+    parser.add_argument("--then", nargs="+", default=None, help="a second card's files, priced too")
     opts: dict[str, object] = vars(parser.parse_args(list(sys.argv[1:] if argv is None else argv)))
     return opts
 
@@ -142,8 +178,11 @@ def main(
         return 2
     named = cast("list[str]", opts["manifest"])
     manifest = [m.removeprefix(f"{dist}/") for m in named if m.startswith(f"{dist}/")]
+    later = cast("list[str] | None", opts["then"]) or []
+    second = [m.removeprefix(f"{dist}/") for m in later]
     asker = query or run_query(str(opts["otlp"]))
-    out.writelines(f"{line}\n" for line in report(graph, manifest, str(opts["repo"]), asker))
+    lines = report(graph, manifest, str(opts["repo"]), asker, then=second)
+    out.writelines(f"{line}\n" for line in lines)
     return 0
 
 

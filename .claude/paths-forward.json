@@ -37245,19 +37245,21 @@
     {
       "symbol": "W1724",
       "title": "Each gate's duration is recorded beside its executed-test count, cache-hit share and the host's load, so the suite's slope is split into its causes",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1699"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After W1715's per-round record exists: add to it the executed-test count and the cache-hit share (from the invocation's BES summary, 'N tests, M cached') and the host's one-minute load at the gate's start and end, so each gate's duration sits beside its causes; then the trend reader can fit duration on tests, cache misses and load and report the unexplained residual, which is all the alert fires on.",
+      "blocked_on": [
+        "W1958"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Hooks files (traintel, gatefacts) share the serial hooks stack lane with W1958 (ratchet_emit), which is taken first; then add executed-test count, cache-hit share and host load to the per-round record. I still need W1958 landed, W1724",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1457 (load share of non-gate processes during a gate) separates 'gate slow' from 'host busy'; luthen lists it as enabling this card. NOT made a block here: this card records the host's one-minute load itself, so it can proceed, and W1457's series can be joined later (overlap audit 2026-10-23)",
       "issued_at": "2026-10-19T16:26:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-23T19:28:04Z",
+      "last_worked": "2026-10-26T20:24:09Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -41779,12 +41781,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Land this with the next hooks stack (it waits for the queued one: dag.bzl names the testgate files that stack adds), then wire stack_reason into commit_kata.submit_problem as the last-but-one refusal (before testgate, because it is free) with a test, and the standing.rego rule. I still need those, W1920",
-      "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d | 2026-10-26: 2026-10-26 built in the tree, NOT landed: operator_held(queue, ratchet) in ratchet_pace (True only when there are open cards touching file:<ratchet> and EVERY one is blocked with kind human) and stack_reason drops such rows before it judges, per github-8f. Three tests (all-human-blocked holds; a ready card, an agent-blocked card, no card and a done card do not; the submit judgement does not refuse a held debt and does refuse once a ready card exists), three declared mutants (debt-with-no-card-held, one-human-card-holds-a-payable-debt, held-row-still-refused) and warrants; pytest passes; the ratchet_pace sites and tests run under bazel.",
+      "next_bounded_step": "Two parts, no new card (github-8f pass 5, built is not deployed): (a) the standing.rego rule that keeps the pace refusal from being weakened; (b) a control card is not closable until every consumer's pin holds the landing sha: have mikemol-repin --check list the repos whose pin lacks a given sha (it knows the pins), and have the close of a card tagged fleet-control print the consumers that lack it. Measured case: e53edaf5 landed, nemik pins 65b7491b, so nemik landed non-paydown stacks unrefused. Read repin's pin reader first. I still need both, W1920",
+      "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d | 2026-10-26: 2026-10-26 built in the tree, NOT landed: operator_held(queue, ratchet) in ratchet_pace (True only when there are open cards touching file:<ratchet> and EVERY one is blocked with kind human) and stack_reason drops such rows before it judges, per github-8f. Three tests (all-human-blocked holds; a ready card, an agent-blocked card, no card and a done card do not; the submit judgement does not refuse a held debt and does refuse once a ready card exists), three declared mutants (debt-with-no-card-held, one-human-card-holds-a-payable-debt, held-row-still-refused) and warrants; pytest passes; the ratchet_pace sites and tests run under bazel. | 2026-10-26: 2026-10-26 github-8f: W1920's refusal (e53edaf5) is not in nemik's pin (65b7491b), so the teeth were not live there; host W61 closed unchecked.",
       "issued_at": "2026-10-24T18:47:07Z",
       "minted_during": "interrupt",
       "caused_by": "github:W42",
-      "last_worked": "2026-10-26T17:56:04Z",
+      "last_worked": "2026-10-26T20:59:20Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44458,7 +44460,7 @@
     {
       "symbol": "W1998",
       "title": "Pairwise landing cost: two cards together with overlapping cones counted once, and a card after its enabler lands",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W50"
       ],
@@ -44472,9 +44474,16 @@
       "issued_at": "2026-10-25T17:06:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1997",
-      "last_worked": "2026-10-25T17:06:07Z",
+      "last_worked": "2026-10-26T20:20:55Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "manifest": [
+        "importdag/src/mikemol/importdag/costcli.py",
+        "importdag/tests/test_costcli_pair.py",
+        "importdag/mutants.regex",
+        "importdag/warrants.bib",
+        "importdag/pyproject.toml"
+      ]
     },
     {
       "symbol": "W1999",
@@ -44649,19 +44658,21 @@
     {
       "symbol": "W2008",
       "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After a flake record (W2007) the next land in that repo is refused unless a card tagged with the refused target, or a class card citing it, exists in the queue and is in the published round (round_wire reads it). The refusal names the target and the writer command that mints the card. Depends on W2007's record.",
+      "blocked_on": [
+        "W1958"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "W2007's record landed (7861893e). The refusal edits commit_kata.py, the serial hooks lane, so it follows W1958 (ratchet_emit) and W1724. Then: refuse the next land while a recorded flake has no ranked card in the round, naming the target and the writer command that mints the card. I still need W1958 landed, W2008",
       "evidence": "",
       "issued_at": "2026-10-25T20:16:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T20:17:19Z",
+      "last_worked": "2026-10-26T20:55:03Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45143,21 +45154,21 @@
     {
       "symbol": "W2033",
       "title": "Writer lists ready cards whose symbol leads a commit subject, with the subject's open markers, so a ghost is read not guessed",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "github-8f 2026-10-25 ghost sweep. MEASURED on mtools: --prune-landed only prunes blocker edges. A scratch sweep (symbol leads a git log subject) over 97 ready cards found 10 with a landing commit, and 0 true ghosts: W1798 ('step one'), W1803 ('step one, the measuring half'), W1854 ('first slice') and W1950/W1954/W1960/W1961/W1988/W2000 ('first part', 'NOT DONE') are all open, W1929 is a recurring sweep. The open markers a subject uses vary ('step one', 'first slice', 'NOT DONE', 'remain'), so the mode must LIST candidates with the subject, never close; the reader decides. Files: pathsforward cli, a new module.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: landed f62e40e5",
       "issued_at": "2026-10-26T01:23:52Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T19:34:32Z",
+      "last_worked": "2026-10-26T21:12:43Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261026T211243Z",
       "manifest": [
         "pathsforward/src/mikemol/pathsforward/ghosts.py",
         "pathsforward/src/mikemol/pathsforward/cli.py",

@@ -37,6 +37,8 @@ src/mikemol/importdag/series.py|non-test-label-mapped-to-a-test|    if not targe
 src/mikemol/importdag/series.py|sample-count-dropped|int\(count\[target\]\)|0|def=table
 src/mikemol/importdag/cost.py|neighbour-word-boundary-ignored|            if p != path and \(_stem\(p\) == prefix or _stem\(p\)\.startswith\(prefix \+ "_"\)\)|            if p != path and _stem(p).startswith(prefix)|def=neighbour
 src/mikemol/importdag/cost.py|a-test-is-its-own-neighbour|            if p != path and |            if |def=neighbour
-src/mikemol/importdag/costcli.py|unmeasured-tests-hidden|    if priced\.unknown:|    if False:|def=report
+src/mikemol/importdag/costcli.py|unmeasured-tests-hidden|    if priced\.unknown:|    if False:|def=_price_lines
 src/mikemol/importdag/costcli.py|graph-gap-unsaid|    if gaps:|    if False:|def=report
+src/mikemol/importdag/costcli.py|second-card-left-out-of-the-pair|        both = cost\.together\(tests, second\)|        both = tests|def=report
+src/mikemol/importdag/costcli.py|second-card-not-reduced-by-the-first|        later = cost\.after\(tests, second\)|        later = second|def=report
 src/mikemol/importdag/costcli.py|dist-prefix-left-on|    manifest = \[m\.removeprefix\(f"\{dist\}/"\) for m in named if m\.startswith\(f"\{dist\}/"\)\]|    manifest = list(named)|def=main
