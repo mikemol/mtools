@@ -159,6 +159,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--seed", type=int, default=0, help="--sample: the draw's seed")
     parser.add_argument("--key", metavar="PATH", help="--sample: where this side's labels go")
     parser.add_argument(
+        "--out", metavar="PATH", help="--sample: write the blind rows here, not to stdout"
+    )
+    parser.add_argument(
         "--queue",
         metavar="PATH",
         help="--commitments: resolve each statement against this paths-forward queue and "
@@ -389,9 +392,15 @@ def _sample(path: Path, opts: dict[str, object], out: TextIO) -> None:
     chosen = sample.draw(
         sample.sentences(read_path(path)), _number(opts, "sample") or 0, _number(opts, "seed") or 0
     )
-    out.writelines(_line(row) for row in sample.blind(chosen))
+    blind = "".join(_line(row) for row in sample.blind(chosen))
+    blind_to = _text(opts, "out")
+    if blind_to is None:
+        out.write(blind)
+    else:
+        Path(blind_to).write_text(blind, encoding="utf-8")
     Path(keyed).write_text("".join(_line(row) for row in sample.key(chosen)), encoding="utf-8")
-    out.write(f"# {len(chosen)} sentence(s); labels in {keyed}\n")
+    where = "" if blind_to is None else f"blind rows in {blind_to}; "
+    out.write(f"# {len(chosen)} sentence(s); {where}labels in {keyed}\n")
 
 
 def _turn_start(path: Path, out: TextIO) -> None:

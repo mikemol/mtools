@@ -112,6 +112,21 @@ def test_the_mode_writes_blind_rows_to_stdout_and_labels_to_the_key(tmp_path: Pa
     assert "canonical" not in "".join(rows)
 
 
+def test_out_sends_the_blind_rows_to_a_file_and_leaves_stdout_to_the_tally(tmp_path: Path) -> None:
+    """With `--out` the blind rows are in the file, the same rows stdout would have held."""
+    log = tmp_path / "abc.jsonl"
+    log.write_text(_assistant(_FIVE) + "\n", encoding="utf-8")
+    plain, filed = io.StringIO(), io.StringIO()
+    base = [str(log), "--sample", "2", "--seed", "3"]
+    assert main([*base, "--key", str(tmp_path / "k1")], plain) == 0
+    blind = tmp_path / "blind.jsonl"
+    assert main([*base, "--key", str(tmp_path / "k2"), "--out", str(blind)], filed) == 0
+    *rows, _tally = plain.getvalue().splitlines()
+    assert blind.read_text(encoding="utf-8").splitlines() == rows
+    assert filed.getvalue().startswith("# ")
+    assert str(blind) in filed.getvalue()
+
+
 def test_the_mode_without_a_key_stops_with_the_usage_code(tmp_path: Path) -> None:
     """The labels have nowhere to go but beside the blind rows, so it refuses."""
     log = tmp_path / "abc.jsonl"

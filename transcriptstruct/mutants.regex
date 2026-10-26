@@ -72,3 +72,4 @@ src/mikemol/transcriptstruct/commitrows.py|bad-line-skipped|            return \
 src/mikemol/transcriptstruct/commitrows.py|bool-read-as-a-line|type\(number\) is not int|not isinstance(number, int)|def=_row_of
 src/mikemol/transcriptstruct/cli.py|resolve-without-queue-runs|    if queue is None or repo is None:|    if False:|def=_resolve
 src/mikemol/transcriptstruct/cli.py|queue-option-ignored|    if queue is not None:|    if False:|def=_commitments
+src/mikemol/transcriptstruct/cli.py|out-option-ignored|    if blind_to is None:|    if True:|def=_sample

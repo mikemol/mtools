@@ -1328,3 +1328,10 @@
   claim  = {The labels have nowhere to go but beside the blind rows, so it refuses.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_the_mode_without_a_key_stops_with_the_usage_code},
 }
+
+@misc{transcriptstruct-sample-out-sends-the-blind-rows-to-a-file-and-leaves-stdout-to-the-tally,
+  section = {sample},
+  title  = {With `--out` the blind rows are in the file, the same rows stdout would have held},
+  claim  = {With `--out` the blind rows are in the file, the same rows stdout would have held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_out_sends_the_blind_rows_to_a_file_and_leaves_stdout_to_the_tally},
+}
