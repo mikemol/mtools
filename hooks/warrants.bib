@@ -15406,3 +15406,10 @@
             `unattributed` refusal on a tree that passes alone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_second_gate_in_the_same_repository_cannot_replace_the_first_gates_index},
 }
+
+@misc{hooks-round-wire-ready-round-card-a-live-submission-names-is-not-demanded,
+  section = {round_wire},
+  title  = {Its status is stale (the stack is queued or gating), so taking it is not owed (W2005)},
+  claim  = {Its status is stale (the stack is queued or gating), so taking it is not owed (W2005).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_ready_round_card_a_live_submission_names_is_not_demanded},
+}

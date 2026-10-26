@@ -99,7 +99,10 @@ def refusals(
     if stamp is None or now - stamp > STALE:
         return []
     doing = [symbol for symbol in _symbols(queue, "working") if symbol not in cited]
-    return composition(round_symbols(text, repo), _symbols(queue, "ready"), doing)
+    # W2005: a READY card a live submission names is in progress too (its status was not updated),
+    # so the round does not demand it be taken (nemik-84).
+    waiting = [symbol for symbol in _symbols(queue, "ready") if symbol not in cited]
+    return composition(round_symbols(text, repo), waiting, doing)
 
 
 def round_reason(directory: Path, now: datetime, round_file: Path | None = None) -> str | None:

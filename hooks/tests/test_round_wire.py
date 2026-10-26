@@ -64,6 +64,14 @@ def test_a_working_card_a_live_submission_names_is_in_progress_not_outside() -> 
     assert round_wire.refusals(queue, _ROUND, "mtools", _NOW, cited) == []
 
 
+def test_a_ready_round_card_a_live_submission_names_is_not_demanded() -> None:
+    """Its status is stale (the stack is queued or gating), so taking it is not owed (W2005)."""
+    queue = _queue(W1="ready", W7="working")
+    assert len(round_wire.refusals(queue, _ROUND, "mtools", _NOW)) == 1
+    named = frozenset({"W1", "W7"})
+    assert round_wire.refusals(queue, _ROUND, "mtools", _NOW, named) == []
+
+
 def test_only_live_entries_of_the_queue_map_exempt_a_card(tmp_path: Path) -> None:
     """The running test is live; a pid with no process, and a recycled one, are not."""
     mapdir = tmp_path / ".git" / "mtools"

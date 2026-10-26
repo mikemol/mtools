@@ -674,6 +674,7 @@ src/mikemol/hooks/watchdog.py|floor-ignores-the-chosen-window|, band\[0\]\), ban
 src/mikemol/hooks/watchdog.py|environment-beats-the-flag|low if low is not None else environ\.get\(MIN_ENV, MIN_FIRE_S\)|environ.get(MIN_ENV, MIN_FIRE_S)|def=read_band
 src/mikemol/hooks/watchdog.py|reversed-window-accepted|    if not 0 < floor <= ceiling:|    if not 0 < floor:|def=read_band
 src/mikemol/hooks/watchdog.py|bad-window-not-refused-at-start|    except ValueError as caught:|    except KeyError as caught:|def=main
+src/mikemol/hooks/round_wire.py|ready-card-in-the-gate-still-demanded|    waiting = \[symbol for symbol in _symbols\(queue, "ready"\) if symbol not in cited\]|    waiting = [symbol for symbol in _symbols(queue, "ready")]|def=refusals
 src/mikemol/hooks/round_wire.py|queued-card-still-outside| if symbol not in cited\]|]|def=refusals
 src/mikemol/hooks/round_wire.py|submission-map-ignored|directory\.name, now, in_gate\(directory\)\)|directory.name, now, frozenset())|def=round_reason
 src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now,|    found = refusals(queue, text, "", now,|def=round_reason
