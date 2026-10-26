@@ -15726,3 +15726,17 @@
             tools.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites_gate.py -k test_the_step_runs_through_the_captured_runner_from_the_tools_root},
 }
+
+@misc{hooks-ratchet-emit-guessed-flag-is-read-when-the-line-says-it-and-is-none-when-it-does-not,
+  section = {ratchet_emit},
+  title  = {W1958: guessed=1 is the name classifier's, guessed=0 is declared, no flag is unknown},
+  claim  = {W1958: guessed=1 is the name classifier's, guessed=0 is declared, no flag is unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_the_guessed_flag_is_read_when_the_line_says_it_and_is_none_when_it_does_not},
+}
+
+@misc{hooks-ratchet-emit-guessed-is-a-label-only-where-the-census-said-so,
+  section = {ratchet_emit},
+  title  = {W1958: nemik treats a guessed row as advisory; an unknown flag is not sent as false},
+  claim  = {W1958: nemik treats a guessed row as advisory; an unknown flag is not sent as false.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_guessed_is_a_label_only_where_the_census_said_so},
+}

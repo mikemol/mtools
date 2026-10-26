@@ -55,11 +55,11 @@ ARGUMENTS = 2
 READER_ENV = "RATCHET_BIN"
 _LINE = re.compile(
     r"^(?P<repo>\S+) (?P<path>\S+) (?P<kind>\S+) value=(?P<value>\d+) floor=\d+"
-    r"(?: sum=(?P<sum>\d+))?$"
+    r"(?: sum=(?P<sum>\d+))?(?: guessed=(?P<guessed>[01]))?$"
 )
 
 type Row = dict[str, object]
-type Entry = tuple[str, str, str, int, int | None]
+type Entry = tuple[str, str, str, int, int | None, bool | None]
 type Spawn = Callable[[Sequence[str], str], None]
 type Run = Callable[[Sequence[str]], tuple[int, str]]
 
@@ -68,17 +68,19 @@ def parse_census(text: str) -> list[Entry]:
     """Read the census lines that carry a value.
 
     Returns:
-        `(repo, ratchet, kind, value, sum)` for each line, the sum None when the line has none;
-        a comment, an UNREAD line and any line of another shape are left out.
+        `(repo, ratchet, kind, value, sum, guessed)` for each line, the sum None when the line
+        has none and guessed None when it does not say (an older census); a comment, an UNREAD
+        line and any line of another shape are left out.
 
     """
     found: list[Entry] = []
     for line in text.splitlines():
         match = _LINE.match(line)
         if match is not None:
-            total = match["sum"]
+            total, flag = match["sum"], match["guessed"]
             entry = (match["repo"], match["path"], match["kind"], int(match["value"]))
-            found.append((*entry, None if total is None else int(total)))
+            guessed = None if flag is None else str(flag) == "1"
+            found.append((*entry, None if total is None else int(total), guessed))
     return found
 
 
@@ -91,12 +93,15 @@ def rows_of(census: Sequence[Entry], now_ns: int) -> list[Row]:
 
     Returns:
         rows named `mikemol.ratchet.value`, and `mikemol.ratchet.sum` for entries with a sum,
-        with the labels `repo`, `ratchet` and `kind`.
+        with the labels `repo`, `ratchet` and `kind`, and `guessed` (true when the row came from
+        the name classifier, false when declared) only where the census said so (W1958).
 
     """
     rows: list[Row] = []
-    for repo, ratchet, kind, value, total in census:
+    for repo, ratchet, kind, value, total, guessed in census:
         fields = {"repo": repo, "ratchet": ratchet, "kind": kind}
+        if guessed is not None:
+            fields["guessed"] = "true" if guessed else "false"
         rows.append({"name": VALUE, "value": value, "time_ns": now_ns, "fields": fields})
         if total is not None:
             rows.append({"name": SUM, "value": total, "time_ns": now_ns, "fields": fields})
@@ -181,8 +186,8 @@ def main(
         sys.stdout.write(f"ratchet emit: the census exited {code}; nothing sent\n")
         return 0
     named = [
-        (args[0], path, kind, value, total)
-        for _repo, path, kind, value, total in parse_census(said)
+        (args[0], path, kind, value, total, guessed)
+        for _repo, path, kind, value, total, guessed in parse_census(said)
     ]
     rows = rows_of(named, time.time_ns())
     sent = emit(rows, os.environ, spawn)

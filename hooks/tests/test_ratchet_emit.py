@@ -28,6 +28,10 @@ _CENSUS = (
     "beta broken-baseline.json baseline value=UNREAD floor=0\n"
     "# 3 ratchet file(s), 1 unread\n"
 )
+_FLAGGED = (
+    "alpha a.json baseline value=1 floor=0 guessed=1\n"
+    "alpha b.json baseline value=2 floor=0 sum=5 guessed=0\n"
+)
 
 
 def _no_binary(_name: str) -> None:
@@ -38,14 +42,22 @@ def test_a_census_line_with_a_value_is_read_and_unread_and_comment_lines_are_not
     """UNREAD is not 0: a gauge of 0 for a broken baseline would read as debt paid down."""
     found = ratchet_emit.parse_census(_CENSUS)
     assert found == [
-        ("alpha", ".claude/debt-ledger.json", "debt", 0, None),
-        ("alpha", "baselines/ruff-baseline.json", "baseline", _ENTRIES, _SUM),
+        ("alpha", ".claude/debt-ledger.json", "debt", 0, None, None),
+        ("alpha", "baselines/ruff-baseline.json", "baseline", _ENTRIES, _SUM, None),
+    ]
+
+
+def test_the_guessed_flag_is_read_when_the_line_says_it_and_is_none_when_it_does_not() -> None:
+    """W1958: guessed=1 is the name classifier's, guessed=0 is declared, no flag is unknown."""
+    assert ratchet_emit.parse_census(_FLAGGED) == [
+        ("alpha", "a.json", "baseline", 1, None, True),
+        ("alpha", "b.json", "baseline", 2, 5, False),
     ]
 
 
 def test_a_row_carries_the_ratchets_own_repo_its_path_and_its_kind() -> None:
     """The repo label is the ratchet's repository, not the repository whose gate ran."""
-    census = [("luthen-observability", "exit_baseline.txt", "baseline", _VALUE, None)]
+    census = [("luthen-observability", "exit_baseline.txt", "baseline", _VALUE, None, None)]
     [row] = ratchet_emit.rows_of(census, _NOW)
     assert row["name"] == "mikemol.ratchet.value"
     assert row["value"] == _VALUE
@@ -57,11 +69,23 @@ def test_a_row_carries_the_ratchets_own_repo_its_path_and_its_kind() -> None:
     }
 
 
+def test_guessed_is_a_label_only_where_the_census_said_so() -> None:
+    """W1958: nemik treats a guessed row as advisory; an unknown flag is not sent as false."""
+    census = [
+        ("r", "a.json", "baseline", 1, None, True),
+        ("r", "b.json", "baseline", 1, None, False),
+        ("r", "c.json", "baseline", 1, None, None),
+    ]
+    rows = ratchet_emit.rows_of(census, _NOW)
+    labels = [cast("dict[str, str]", row["fields"]).get("guessed") for row in rows]
+    assert labels == ["true", "false", None]
+
+
 def test_a_file_rule_count_baseline_also_sends_its_sum_and_no_other_does() -> None:
     """W1922: a count falling inside a key leaves the entry count flat; the sum shows it."""
     census = [
-        ("nemik", "ruff-baseline.json", "baseline", _ENTRIES, _SUM),
-        ("nemik", "codon-baseline.json", "baseline", _VALUE, None),
+        ("nemik", "ruff-baseline.json", "baseline", _ENTRIES, _SUM, None),
+        ("nemik", "codon-baseline.json", "baseline", _VALUE, None, None),
     ]
     rows = ratchet_emit.rows_of(census, _NOW)
     assert [(r["name"], r["value"]) for r in rows] == [
@@ -74,7 +98,7 @@ def test_a_file_rule_count_baseline_also_sends_its_sum_and_no_other_does() -> No
 
 def test_rows_go_in_chunks_to_one_metrics_child_each() -> None:
     """Each chunk is a `metrics` argv with its JSON lines; more than CHUNK rows make two."""
-    census = [("r", f"p{n}", "baseline", n, None) for n in range(_MANY)]
+    census = [("r", f"p{n}", "baseline", n, None, None) for n in range(_MANY)]
     children = ratchet_emit.plan("/bin/otlp", ratchet_emit.rows_of(census, _NOW))
     assert [len(text.splitlines()) for _argv, text in children] == [_FULL, _REST]
     assert children[0][0][:2] == ["/bin/otlp", "metrics"]
@@ -84,7 +108,7 @@ def test_no_binary_or_store_sends_nothing_and_a_failed_spawn_is_false(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """Best effort: the exit status never depends on the send."""
-    rows = ratchet_emit.rows_of([("r", "p", "baseline", 1, None)], _NOW)
+    rows = ratchet_emit.rows_of([("r", "p", "baseline", 1, None, None)], _NOW)
     sent: list[Sequence[str]] = []
 
     def spawn(argv: Sequence[str], _text: str) -> None:

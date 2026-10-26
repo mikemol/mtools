@@ -180,6 +180,58 @@ mutant_site(
 )
 
 mutant_site(
+    name = "declared_unknown-guessed-sent-as-false",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::unknown-guessed-sent-as-false",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_guessed-flag-read-inverted",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::guessed-flag-read-inverted",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
     name = "declared_sum-sent-for-every-baseline",
     dist = "hooks",
     site = "src/mikemol/hooks/ratchet_emit.py::sum-sent-for-every-baseline",
@@ -319,6 +371,8 @@ test_suite(
         ":reader_path",
         ":main",
         ":declared_label-is-the-directory-name",
+        ":declared_unknown-guessed-sent-as-false",
+        ":declared_guessed-flag-read-inverted",
         ":declared_sum-sent-for-every-baseline",
         ":declared_path-lookup-dropped",
         ":declared_census-line-not-matched",
