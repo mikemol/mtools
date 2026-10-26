@@ -958,3 +958,54 @@
   claim  = {The census value is the expression's; an unknown column is exit 1 naming the column.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_expression.py -k test_the_census_uses_the_declared_expression_and_the_command_refuses_a_typo},
 }
+
+@misc{ratchet-retired-all-three-reasons-are-read-and-a-rename-carries-its-new-path,
+  section = {declaration},
+  title  = {The list comes back in file order with each entry's path, reason, sha and target},
+  claim  = {The list comes back in file order with each entry's path, reason, sha and target.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_all_three_reasons_are_read_and_a_rename_carries_its_new_path},
+}
+
+@misc{ratchet-retired-no-declaration-or-no-retired-list-is-an-empty-list,
+  section = {declaration},
+  title  = {Absent is none; a declaration that lists none is none},
+  claim  = {Absent is none; a declaration that lists none is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_no_declaration_or_no_retired_list_is_an_empty_list},
+}
+
+@misc{ratchet-retired-untrustworthy-retired-entry-is-a-refusal,
+  section = {declaration},
+  title  = {An unknown reason, no sha, a path leaving the repo, a rename without a target is refused},
+  claim  = {An unknown reason, no sha, a path leaving the repo, a rename without a target is
+            refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_an_untrustworthy_retired_entry_is_a_refusal},
+}
+
+@misc{ratchet-retired-retired-list-that-is-not-a-list-is-a-refusal,
+  section = {declaration},
+  title  = {Reading it as empty would show every retirement as never written},
+  claim  = {Reading it as empty would show every retirement as never written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_a_retired_list_that_is_not_a_list_is_a_refusal},
+}
+
+@misc{ratchet-retired-path-both-declared-and-retired-is-a-refusal,
+  section = {declaration},
+  title  = {One file cannot be a live ratchet and a tombstone},
+  claim  = {One file cannot be a live ratchet and a tombstone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_a_path_both_declared_and_retired_is_a_refusal},
+}
+
+@misc{ratchet-retired-tombstone-line-has-no-value-and-a-rename-ends-with-its-target,
+  section = {declaration},
+  title  = {No `value=` so an older reader of ratchet rows skips it; the census prints it after them},
+  claim  = {No `value=` so an older reader of ratchet rows skips it; the census prints it after
+            them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_a_tombstone_line_has_no_value_and_a_rename_ends_with_its_target},
+}
+
+@misc{ratchet-retired-census-prints-tombstones-after-the-rows-and-a-retired-file-is-no-row,
+  section = {declaration},
+  title  = {A retired file still on disk is not counted; its tombstone is printed once},
+  claim  = {A retired file still on disk is not counted; its tombstone is printed once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_the_census_prints_tombstones_after_the_rows_and_a_retired_file_is_no_row},
+}

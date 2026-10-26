@@ -136,6 +136,41 @@ def census_repo(repo: Path) -> list[Row]:
     return rows
 
 
+def tombstone_line(repo: str, item: declaration.Retired) -> str:
+    """Spell one retired ratchet as a census line (W1963).
+
+    ⚑ THE LINE HAS NO `value=`, SO A READER OF RATCHET ROWS SKIPS IT: a tombstone is a different
+    fact from a ratchet's value, and an older `ratchet_emit` must not mistake one for the other.
+
+    Returns:
+        `<repo> <path> retired reason=<reason> sha=<sha>`, with ` to=<path>` after a rename.
+
+    """
+    line = f"{repo} {item.path} retired reason={item.reason} sha={item.sha}"
+    return f"{line} to={item.to}" if item.to else line
+
+
+def tombstones(repo: Path) -> list[str]:
+    """List the tombstone lines of ONE repository, in declaration order.
+
+    Returns:
+        one line per retired entry; empty when the repository declares none; a declaration that
+        cannot be trusted raises `declaration.DeclarationError`, as `census_repo` does.
+
+    """
+    return [tombstone_line(repo.name, item) for item in declaration.read_retired(repo)]
+
+
+def tombstones_under(root: Path) -> list[str]:
+    """List the tombstone lines of every repository under a root.
+
+    Returns:
+        the lines, repository by repository in name order.
+
+    """
+    return [line for repo in repos_under(root) for line in tombstones(repo)]
+
+
 def census(root: Path) -> list[Row]:
     """List every ratchet file in every repository under a root.
 

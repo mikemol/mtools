@@ -37245,15 +37245,13 @@
     {
       "symbol": "W1724",
       "title": "Each gate's duration is recorded beside its executed-test count, cache-hit share and the host's load, so the suite's slope is split into its causes",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1699"
       ],
       "touches": [],
-      "blocked_on": [
-        "W1958"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Hooks files (traintel, gatefacts) share the serial hooks stack lane with W1958 (ratchet_emit), which is taken first; then add executed-test count, cache-hit share and host load to the per-round record. I still need W1958 landed, W1724",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1457 (load share of non-gate processes during a gate) separates 'gate slow' from 'host busy'; luthen lists it as enabling this card. NOT made a block here: this card records the host's one-minute load itself, so it can proceed, and W1457's series can be joined later (overlap audit 2026-10-23)",
       "issued_at": "2026-10-19T16:26:59Z",
@@ -37272,13 +37270,11 @@
     {
       "symbol": "W1725",
       "title": "A submit refuses a stack entry whose frozen blob of a file differs from HEAD plus the entries ahead of it, unless the entry deliberately changes that file",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W1958"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Still real (the gap is names added to an existing module, which stackimports does not check). Hooks lane, after W1958 and W1724: at submit compare each entry's frozen blob with HEAD plus earlier entries and refuse an unasked difference, naming file and entry, in stackblobs.py. I still need W1958 landed, W1725",
       "evidence": "2026-10-19: 2026-10-19 evidence, read from BES invocation 0c127912-b5e6-4389-8860-faed0c54bbf1 (bb_log --failures, no key): a leader round over the queued stacks failed at collection with ImportError: cannot import name stage_note from mikemol.hooks.gatephase, because a stack froze commit_kata.py importing W1661's new name while its tip lacked W1661's gatephase.py. stackimports checks new MODULES a later entry adds, not new NAMES in an existing module, which is the gap",
       "issued_at": "2026-10-19T16:52:12Z",
@@ -37475,22 +37471,23 @@
     {
       "symbol": "W1734",
       "title": "Retire MIKEMOL_COMMIT_LOCK_TIMEOUT, a wall-clock bound on the commit lease wait",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In mtools only commit_kata.TIMEOUT_ENV (line 126) and the gateenv KEEP list name it; no tracked caller sets it. Census other repos' callers (git grep across ~/github), give each an event exit (holder pid gone, or mikemol-commit --withdraw), then remove the knob. Operator rule 2026-09-23, relayed by github-8f 2026-10-19.",
-      "evidence": "",
+      "next_bounded_step": "Census done: no other caller. Remove commit_kata.TIMEOUT_ENV and the gateenv KEEP entry (and the wait it bounds, replaced by the event exit: holder pid gone or --withdraw). Hooks lane, after W1958. I still need W1958 landed, W1734",
+      "evidence": "2026-10-26: 2026-10-26 census (grep of ~/github for MIKEMOL_COMMIT_LOCK_TIMEOUT in py, sh, service, bzl, toml, bazel, excluding .venv and .git; luthen-observability/.kube unreadable): only mtools names it, in hooks gateenv.py and commit_kata.py. No other repo sets it.",
       "issued_at": "2026-10-19T19:55:30Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-retire-lock-timeout",
-      "last_worked": null,
+      "last_worked": "2026-10-26T22:53:23Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_kata.py"
       ],
-      "size_class": "small"
+      "size_class": "small",
+      "completed": null
     },
     {
       "symbol": "W1735",
@@ -43087,7 +43084,7 @@
     {
       "symbol": "W1958",
       "title": "Census rows from the name classifier carry guessed=true, declared rows false, and the emitted series carries the flag",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W42"
       ],
@@ -43096,14 +43093,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Row gains guessed (True for the name classifier, False for a declared row), the census line prints guessed=1 or 0, ratchet_emit parses it and sends it as a label on mikemol.ratchet.value, and nemik-84 is told the label so W1920's input carries it (nemik treats a guessed row as advisory, never a refusal). I still need all of it, W1958",
-      "evidence": "2026-10-26: 2026-10-26: waited because the hooks half (ratchet_emit.py) shares the serial hooks stack lane, held all day by W1603/W1989/W1920 (landed 2e418ed2..7b43b8c5). The lane is free now; it is next after W2033 (pathsforward, in tests), as one stack with the ratchet half.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26: waited because the hooks half (ratchet_emit.py) shares the serial hooks stack lane, held all day by W1603/W1989/W1920 (landed 2e418ed2..7b43b8c5). The lane is free now; it is next after W2033 (pathsforward, in tests), as one stack with the ratchet half. | 2026-10-26: landed a5e68c04 (reader) and 88d4664e (writer); label guessed=true|false on mikemol.ratchet.value and .sum, absent when the census does not say",
       "issued_at": "2026-10-25T11:18:34Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T22:00:15Z",
+      "last_worked": "2026-10-26T22:50:15Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261026T225015Z",
       "manifest": [
         "ratchet/src/mikemol/ratchet/fleetcensus.py",
         "ratchet/src/mikemol/ratchet/cli.py",
@@ -43324,7 +43321,7 @@
       "issued_at": "2026-10-25T12:19:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T18:06:01Z",
+      "last_worked": "2026-10-26T22:53:22Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44279,12 +44276,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Retire the sharded :mutants targets in favour of the per-site suites, flip the sites off manual, then record the counts for W1880. Run the whole grid for one dist first and measure.",
-      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504 | 2026-10-26: sites committed 1ee738d8; stack-next-3 landed (W1603 2e418ed2, W1920 wired e53edaf5)",
+      "next_bounded_step": "Find, for each of the five commit_kata survivors, the test that kills it under the whole-dist shard (run the shard's selection against the site) and add the missing graph edge or strengthen the test; then retire the shards. I still need the five attributions, W1989",
+      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504 | 2026-10-26: sites committed 1ee738d8; stack-next-3 landed (W1603 2e418ed2, W1920 wired e53edaf5) | 2026-10-26: 2026-10-26 FIRST FULL RUN of a site suite (hooks commit_kata, 108 sites): 103 killed, 5 declared mutants SURVIVE under the graph-selected tests: restore-and-removal-swapped, ship-flag-reaches-parse, unverified-reads-pushed, verdict-counter-never-sent, waypoint-alone-identifies. The sharded :mutants runs every test of the dist and kills them, so the selection leaves out a killer test or a test is weak. Before the shards are retired, each of the five needs the killing test found (a missing graph edge, or a test that asserts too little); recorded for W1880.",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-26T20:09:33Z",
+      "last_worked": "2026-10-26T23:01:12Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44661,15 +44658,13 @@
     {
       "symbol": "W2008",
       "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W1958"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "W2007's record landed (7861893e). The refusal edits commit_kata.py, the serial hooks lane, so it follows W1958 (ratchet_emit) and W1724. Then: refuse the next land while a recorded flake has no ranked card in the round, naming the target and the writer command that mints the card. I still need W1958 landed, W2008",
       "evidence": "",
       "issued_at": "2026-10-25T20:16:59Z",
@@ -44689,12 +44684,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "mikemol.commit.flaky_passes{repo} from the flake records (W2007), sent through mikemol-otlp with description, unit and freshness class (W1961 contract); zero is sent when none, so the series does not vanish. Depends on W2007.",
+      "next_bounded_step": "W2007's flake record landed (7861893e). Emitting mikemol.commit.flaky_passes{repo} touches hooks (commit_span/verdictlog), the serial lane in W1958's stack now; take it right after, with W2029's landing series since both ride the same emit path. Zero is sent when none. I still need W1958 landed, W2009",
       "evidence": "",
       "issued_at": "2026-10-25T20:17:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T20:17:23Z",
+      "last_worked": "2026-10-26T22:09:34Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -46043,25 +46038,6 @@
       "renewed_at": "2026-10-25T16:30:31Z",
       "expires_at": "2026-10-25T17:00:31Z",
       "lapse_ledgered": true
-    },
-    {
-      "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1963",
-      "base_sha": "03044256fa578da1798ee20f14a450335feb08a9",
-      "taken_at": "2026-10-25T17:12:26Z",
-      "renewed_at": "2026-10-25T17:12:26Z",
-      "expires_at": "2026-10-25T17:42:26Z",
-      "lapse_ledgered": true
-    },
-    {
-      "tag": "file:ratchet/src/mikemol/ratchet/cli.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1958",
-      "base_sha": "5b42502f8c683de64ab46f81fbb1904493af7428",
-      "taken_at": "2026-10-26T22:00:15Z",
-      "renewed_at": "2026-10-26T22:00:15Z",
-      "expires_at": "2026-10-26T22:30:15Z"
     }
   ],
   "advice": [

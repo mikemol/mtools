@@ -48,6 +48,61 @@ class Declared:
     columns: tuple[str, ...] = ()
 
 
+REASONS = ("reclassified-not-a-ratchet", "paid-to-zero-and-removed", "renamed-to")
+RENAMED = "renamed-to"
+
+
+@dataclass(frozen=True)
+class Retired:
+    """A ratchet that was retired on purpose: its path, why, the sha that retired it, and where."""
+
+    path: str
+    reason: str
+    sha: str
+    to: str = ""
+
+
+def _relative(value: object, what: str) -> str:
+    # A repository-relative path, refused when it is empty, absolute or climbs out.
+    if not isinstance(value, str) or not value:
+        msg = f"{NAME}: {what} has no path"
+        raise DeclarationError(msg)
+    given = PurePosixPath(value)
+    if given.is_absolute() or ".." in given.parts:
+        msg = f"{NAME}: {what} path {value!r} leaves the repository"
+        raise DeclarationError(msg)
+    return value
+
+
+def _retired_row(item: object, where: int) -> Retired:
+    if not isinstance(item, dict):
+        msg = f"{NAME}: retired {where} is not an object"
+        raise DeclarationError(msg)
+    row = cast("dict[str, object]", item)
+    path = _relative(row.get("path"), f"retired {where}")
+    reason, sha, to = row.get("reason"), row.get("sha"), row.get("to", "")
+    if reason not in REASONS:
+        msg = f"{NAME}: retired {where} reason {reason!r} is not one of {REASONS}"
+        raise DeclarationError(msg)
+    if not isinstance(sha, str) or not sha:
+        msg = f"{NAME}: retired {where} names no retiring sha"
+        raise DeclarationError(msg)
+    if (reason == RENAMED) != bool(to):
+        msg = f"{NAME}: retired {where} must give `to` exactly when its reason is {RENAMED}"
+        raise DeclarationError(msg)
+    return Retired(path, str(reason), sha, _relative(to, f"retired {where} to") if to else "")
+
+
+def _retired_list(doc: object) -> list[Retired]:
+    # The `retired` list of a parsed declaration, empty when it has none.
+    listed = cast("dict[str, object]", doc).get("retired", []) if isinstance(doc, dict) else []
+    if not isinstance(listed, list):
+        msg = f"{NAME}: `retired` is not a list"
+        raise DeclarationError(msg)
+    items = cast("list[object]", listed)
+    return [_retired_row(item, where) for where, item in enumerate(items, start=1)]
+
+
 def _expression(row: dict[str, object], where: int) -> tuple[str, tuple[str, ...]]:
     # The expression a row names and its columns, refused unless they fit together.
     name = row.get("expression", expression.ROWS)
@@ -84,16 +139,8 @@ def _row(item: object, where: int) -> Declared:
     return Declared(path, str(kind), *_expression(row, where))
 
 
-def read(repo: Path) -> list[Declared] | None:
-    """Read a repository's declaration.
-
-    Returns:
-        the declared ratchets in file order; None when the repository declares none.
-
-    Raises:
-        DeclarationError: when the file exists (and is no link) but cannot be trusted.
-
-    """
+def _parsed(repo: Path) -> dict[str, object] | None:
+    # The declaration as an object, None when there is no file (a link is no file).
     file = repo / NAME
     if file.is_symlink() or not file.is_file():
         return None
@@ -102,9 +149,49 @@ def read(repo: Path) -> list[Declared] | None:
     except (OSError, UnicodeDecodeError, ValueError) as fault:
         msg = f"{NAME}: cannot be read as JSON: {fault}"
         raise DeclarationError(msg) from fault
-    listed = cast("dict[str, object]", doc).get("ratchets") if isinstance(doc, dict) else None
+    if not isinstance(doc, dict):
+        msg = f"{NAME}: no `ratchets` list"
+        raise DeclarationError(msg)
+    return cast("dict[str, object]", doc)
+
+
+def read(repo: Path) -> list[Declared] | None:
+    """Read a repository's declaration.
+
+    ⚑ A PATH BOTH DECLARED AND RETIRED IS A REFUSAL (W1963): one file cannot be a live ratchet and
+    a tombstone, and reading it as either would hide the other.
+
+    Returns:
+        the declared ratchets in file order; None when the repository declares none.
+
+    Raises:
+        DeclarationError: when the file exists (and is no link) but cannot be trusted.
+
+    """
+    doc = _parsed(repo)
+    if doc is None:
+        return None
+    listed = doc.get("ratchets")
     if not isinstance(listed, list):
         msg = f"{NAME}: no `ratchets` list"
         raise DeclarationError(msg)
     items = cast("list[object]", listed)
-    return [_row(item, where) for where, item in enumerate(items, start=1)]
+    declared = [_row(item, where) for where, item in enumerate(items, start=1)]
+    clash = sorted({r.path for r in _retired_list(doc)} & {d.path for d in declared})
+    if clash:
+        msg = f"{NAME}: {clash[0]} is both declared and retired"
+        raise DeclarationError(msg)
+    return declared
+
+
+def read_retired(repo: Path) -> list[Retired]:
+    """Read a repository's tombstones: the ratchets it retired on purpose (W1963).
+
+    Returns:
+        the retired entries in file order; empty when the repository has no declaration or lists
+        none. A declaration that cannot be trusted is refused by the same `DeclarationError` as
+        `read`.
+
+    """
+    doc = _parsed(repo)
+    return [] if doc is None else _retired_list(doc)

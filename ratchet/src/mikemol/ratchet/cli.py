@@ -22,7 +22,7 @@ from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
 from mikemol.ratchet.declaration import DeclarationError
 from mikemol.ratchet.expression import ExpressionError
-from mikemol.ratchet.fleetcensus import census, census_repo
+from mikemol.ratchet.fleetcensus import census, census_repo, tombstones, tombstones_under
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.remap import __doc__ as remap_doc
 from mikemol.ratchet.remap import remap_guard
@@ -88,11 +88,14 @@ def _census_main(argv: list[str]) -> int:
     where = Path(str(opts["root"]))
     try:
         rows = census_repo(where) if opts["repo"] else census(where)
+        dead = tombstones(where) if opts["repo"] else tombstones_under(where)
     except (DeclarationError, ExpressionError) as fault:
         sys.stderr.write(f"mikemol-ratchet census: {fault}\n")
         return 1
     for row in rows:
         sys.stdout.write(f"{row.line()}\n")
+    for line in dead:
+        sys.stdout.write(f"{line}\n")
     unread = sum(r.value is None for r in rows)
     sys.stdout.write(f"# {len(rows)} ratchet file(s), {unread} unread\n")
     return 0
