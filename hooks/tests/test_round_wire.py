@@ -82,6 +82,29 @@ def test_only_live_entries_of_the_queue_map_exempt_a_card(tmp_path: Path) -> Non
     assert round_wire.in_gate(tmp_path / "elsewhere") == frozenset()
 
 
+def test_the_reason_exempts_a_working_card_a_live_submission_names(tmp_path: Path) -> None:
+    """Through round_reason: the same queue refuses without a live entry and admits with one."""
+    checkout = tmp_path / "mtools"
+    (checkout / ".claude").mkdir(parents=True)
+    (checkout / ".claude" / "paths-forward.json").write_text(
+        json.dumps(_queue(W1="ready", W7="working")), encoding="utf-8"
+    )
+    round_file = tmp_path / "round.json"
+    round_file.write_text(_ROUND, encoding="utf-8")
+    assert round_wire.round_reason(checkout, _NOW, round_file) is not None
+    mapdir = checkout / ".git" / "mtools"
+    mapdir.mkdir(parents=True)
+    live: dict[str, object] = {
+        "state": "queued",
+        "pid": os.getpid(),
+        "start": proc_start(os.getpid()),
+        "waypoints": ["W7"],
+    }
+    body: dict[str, object] = {"1": live}
+    (mapdir / "commit.counts").write_text(json.dumps(body), encoding="utf-8")
+    assert round_wire.round_reason(checkout, _NOW, round_file) is None
+
+
 def test_the_reason_reads_both_files_and_a_missing_one_gives_none(tmp_path: Path) -> None:
     """The reason joins the refusals; an unreadable round or queue gives None."""
     checkout = tmp_path / "mtools"

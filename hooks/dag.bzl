@@ -1651,6 +1651,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_domain_witness_concurrency.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_exec_env.py": {
       "imports": [],
       "reads": [],

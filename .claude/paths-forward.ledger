@@ -3981,3 +3981,5 @@
 2026-10-25T23:05:36Z  interrupt W2023 minted    -         "A reads audit compares a test's declared reads with its strace footprint, asymmetrically"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2020
 2026-10-25T23:06:19Z  status W1692 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-25T23:16:38Z  interrupt W2024 minted    -         "ratchets.json carries each ratchet's re-baselines, and the census refuses a changed expression without one"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-26T00:25:33Z  interrupt W2025 minted    -         "test_commit_remote and test_train time out at 60 s wall under load; bound them by CPU like the other slow hooks tests"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1692
+2026-10-26T00:26:59Z  status W1697 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

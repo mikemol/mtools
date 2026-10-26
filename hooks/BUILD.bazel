@@ -13,7 +13,13 @@ load("@rules_python//python:defs.bzl", "py_library", "py_test")
 load(":closure.bzl", "deps_of", "lib", "test_deps")
 load(":dag.bzl", "GRAPH")
 
+# W1989: THE FILES THE GENERATED MUTATION SITES STAGE, exported by the graph's own names (modules,
+# tests, support), so a per-site package under `hooks/sites/` can name them as `//hooks:<path>`.
+exports_files(list(GRAPH["modules"]) + list(GRAPH["tests"]) + list(GRAPH["support"]))
+
 exports_files([
+    "mutants.regex",
+    "pyproject.toml",
     "requirements.txt",
     "requirements-dev.txt",
     # ⚑ THE DEV HUB IS FED FROM uv.lock (W10), so the host venv and the bazel venv resolve one
@@ -99,6 +105,12 @@ _WHOLE_DIST_TESTS = [
     "tests/test_commit_lease_wait.py",
 ]
 
+# ⚑ A FILE ONE TEST RUNS, staged for that test alone (never in the list every test shares, which
+# would rerun all of them when it changed): the domain witness script its concurrency test starts.
+_TEST_DATA = {
+    "tests/test_domain_witness_concurrency.py": ["//:domain_witness.sh", "//:git_env.sh"],
+}
+
 _TEST_ENV = {
     "RUFF_BIN": "$(location @mikemol_check_ruff//:bin)",
     "OPA_BIN": "$(location @opa//file)",
@@ -123,7 +135,7 @@ _TEST_ENV = {
         # ⚑⚑ ruff IS STAGED AND NAMED, because `test_bar_fires` runs the checker to prove each
         # rule fires. Reading `.venv/bin/ruff` made those arms pass only where a developer venv
         # existed — measured from a fresh clone, that target was the one failure in 25.
-        data = [
+        data = _TEST_DATA.get(src, []) + [
             "pyproject.toml",
             "requirements.txt",
             # ⚑⚑⚑ AND THE RATCHET BASELINE, WHICH IS THE SAME LESSON A THIRD TIME IN THIS LIST.
@@ -516,6 +528,19 @@ mutants_sharded(
 # invokes all three as PreToolUse hooks. A missing one FAILS OPEN — measured: rc=0, empty stdout,
 # no decision, which the harness reads as *allow*. `hooks/bin/` holds tracked launchers that
 # refuse loudly instead.
+# ⚑ W1989: THE THIRD-PARTY DEPENDENCIES ONLY, for the per-site mutation targets under //hooks/sites
+# (W1833, as //witness's `.venv_deps`). `.venv` below carries every source of this distribution as a
+# stand-in for an editable install, so a target that staged it would rerun whenever any source
+# changes; the runner puts the mutated copy's own `src` first on PYTHONPATH, so the dependencies are
+# all a site needs.
+venv_from_hub(
+    name = ".venv_deps",
+    hub_requirements = dev_all_requirements,
+    python_version = "3.13.13",
+    python_version_short = "3.13",
+    visibility = ["//hooks/sites:__subpackages__"],
+)
+
 venv_from_hub(
     name = ".venv",
     console_scripts = {

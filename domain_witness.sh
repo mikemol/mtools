@@ -75,6 +75,21 @@ fi
 # git. Checking contents first gives the more specific diagnosis — and it also makes the guard
 # reachable by a fixture, where the tracked check would have refused first and a test could not
 # tell which guard fired.
+# ⚑⚑ W1692/W1688: TWO RUNS ON ONE VICTIM TAKE TURNS, AND THE SECOND WAITS (it does not refuse). The
+# residue guard below cannot tell a peer's LIVE probe from an abandoned one, so two gates reaching the
+# same fixed victim list made the second fail with exit 2 while the first was behaving correctly.
+# An advisory lock keyed by the victim's path, held on fd 9 until this process exits (the kernel
+# releases it even on SIGKILL, so a killed holder cannot wedge it), makes the second wait for the
+# first's EXIT trap to finish and then run. It is taken BEFORE the residue guard, so residue seen
+# after the lock is a killed predecessor's and the guard's second cause. There is no timeout: a wait
+# bounded by a timer is a wall-clock bound (standing rule), and the holder always ends. Outside a git
+# repository there is nothing to contend over (the tracked check below refuses), so no lock is taken.
+if _gitdir="$(git rev-parse --git-dir 2>/dev/null)"; then
+    command -v flock >/dev/null 2>&1 || { echo "domain_witness: flock is not installed — cannot serialize witnesses" >&2; exit 2; }
+    mkdir -p "$_gitdir/mtools"
+    exec 9>"$_gitdir/mtools/domain-witness-$(printf '%s' "$victim" | git hash-object --stdin).lock"
+    flock 9
+fi
 if grep -q "transient domain probe" "$victim" 2>/dev/null; then
     echo "domain_witness: $victim already carries probe residue — refusing" >&2
     echo "  TWO CAUSES, and the remedy differs. This guard cannot tell them apart." >&2

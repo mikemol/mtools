@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2024,
+  "counter": 2025,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -36475,17 +36475,19 @@
     {
       "symbol": "W1697",
       "title": "mikemol-repin bumps a sibling git pin (mikemol-fence inside mikemol-hooks' dependencies) after each fence change, then hooks declares fence as a dependency",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Add mikemol-fence as a git-pinned dependency of hooks (pyproject row, uv.lock, requirements), then reorder commit_kata.fence_of to find the installed dependency's mikemol-membudget first; a test of the lookup order; a repin test that one hooks bump moves the fence pin too. I still need the dependency row and the lookup change, W1697",
+      "blocked_on": [
+        "W1692"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "hooks/pyproject.toml is carried by queued stack-w1692 (and the dependency row needs uv.lock and requirements regenerated). After it lands: add mikemol-fence as a git-pinned dependency, regenerate lock and requirements, reorder commit_kata.fence_of to find the installed dependency's mikemol-membudget first (live hook: module and venv first), a lookup-order test and a repin test. I still need all of it, W1697",
       "evidence": "2026-10-25: 2026-10-25 sweep (W1929): the card is real, not stale: commit_kata.fence_of finds mikemol-membudget beside the interpreter or under a sibling fence/.venv, and hooks/pyproject.toml declares no fence dependency, so a repo installed from the wheel alone needs the fence pin by hand (its own refusal says add mikemol-fence). Given a bounded next step; not built | 2026-10-25: 2026-10-25: READ repin.py: it already moves EVERY git pin of one repository to one sha (module docstring: ONE SHA, MANY DISTS; rewrite takes dists or all), so the card's repin half needs no code once hooks declares fence: the pin it declares is bumped with the hooks pin. What is left is two edits: the dependency row in hooks/pyproject.toml (with its lock and the bazel requirements regenerated) and commit_kata.fence_of searching the installed dependency first",
       "issued_at": "2026-10-19T10:55:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T17:59:38Z",
+      "last_worked": "2026-10-26T00:26:59Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44913,6 +44915,22 @@
       "issued_at": "2026-10-25T23:16:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2025",
+      "title": "test_commit_remote and test_train time out at 60 s wall under load; bound them by CPU like the other slow hooks tests",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "2026-10-25: stack-w1692's gate was refused with exactly two failures, //hooks:test_commit_remote TIMEOUT in 60.1s and //hooks:test_train TIMEOUT in 60.7s, while I was running bazel site tests on the same host (load, not logic). Standing repair (operator 2026-10-10/15): not exclusive, not a longer timeout; put each in hooks/BUILD.bazel _CPU_BUDGET_S with its measured CPU (twice the largest wall seen) so MIKEMOL_TEST_CPU_S bounds it and medium lifts the wall backstop. Measure each test's CPU first (the per-target CPU series, luthen W1645, once loaded). The resubmit of stack-w1692 is an identical-tree resubmit after a refusal, which W2007 says must have a ranked card: this is it.",
+      "evidence": "",
+      "issued_at": "2026-10-26T00:25:33Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1692",
       "last_worked": null,
       "ticks_blocked": 0
     }

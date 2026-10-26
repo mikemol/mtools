@@ -15381,3 +15381,17 @@
   claim  = {The running test is live; a pid with no process, and a recycled one, are not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_only_live_entries_of_the_queue_map_exempt_a_card},
 }
+
+@misc{hooks-domain-witness-concurrency-second-witness-waits-on-the-first-and-then-runs,
+  section = {domain_witness},
+  title  = {Blocked while the lock is held; after release it reaches the residue guard and exits 2},
+  claim  = {Blocked while the lock is held; after release it reaches the residue guard and exits 2.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_domain_witness_concurrency.py -k test_a_second_witness_waits_on_the_first_and_then_runs},
+}
+
+@misc{hooks-round-wire-reason-exempts-a-working-card-a-live-submission-names,
+  section = {round_wire},
+  title  = {Through round_reason: the same queue refuses without a live entry and admits with one},
+  claim  = {Through round_reason: the same queue refuses without a live entry and admits with one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_reason_exempts_a_working_card_a_live_submission_names},
+}
