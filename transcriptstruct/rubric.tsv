@@ -22,3 +22,4 @@ commitments	Commitments (W1931): statements of known-needed, unpersisted work an
 commitledger	Commitment ledger (W1933): each statement resolved to the strongest follow-through it names
 commitrows	Commitment-rows
 sample	Blind-sample
+authfail	Authentication Failures: Counted From Record Metadata Alone

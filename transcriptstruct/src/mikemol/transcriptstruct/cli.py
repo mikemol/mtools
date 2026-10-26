@@ -23,7 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TextIO, cast
 
-from mikemol.transcriptstruct import commitledger, commitrows, sample
+from mikemol.transcriptstruct import authfail, commitledger, commitrows, sample
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.commitments import Commitment
@@ -110,6 +110,13 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="W1986: the positional is a JSON-lines file of commitment rows another extractor "
         "wrote; resolve them against --queue for --repo into the ledger document",
+    )
+    mode.add_argument(
+        "--auth-failed",
+        action="store_true",
+        help="W2040: one JSON line for the transcript: session id, project (the directory "
+        "name, never a path), failed-authentication turns, the run of them at the tail and the "
+        "newest; read from record metadata only, never message content",
     )
     mode.add_argument(
         "--turn-start",
@@ -403,6 +410,19 @@ def _sample(path: Path, opts: dict[str, object], out: TextIO) -> None:
     out.write(f"# {len(chosen)} sentence(s); {where}labels in {keyed}\n")
 
 
+def _auth_failed(path: Path, out: TextIO) -> None:
+    """Write the failed-authentication summary of one transcript as one JSON line."""
+    found = authfail.summarize(read_path(path), path.resolve().parent.name)
+    body = {
+        "session": found.session,
+        "project": found.project,
+        "failed": found.failed,
+        "tail_run": found.tail_run,
+        "newest": found.newest,
+    }
+    out.write(json.dumps(body) + "\n")
+
+
 def _turn_start(path: Path, out: TextIO) -> None:
     """Write where the latest turn began and its Stop blocks as one JSON line (null for none)."""
     found = turn_start(read_path(path))
@@ -476,6 +496,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
     """
     if opts.get("cache_turns") is True:
         _cache_turns(path, out)
+    elif opts.get("auth_failed") is True:
+        _auth_failed(path, out)
     elif opts.get("turn_start") is True:
         _turn_start(path, out)
     elif opts.get("commitments") is True:

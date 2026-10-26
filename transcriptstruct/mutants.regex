@@ -73,3 +73,7 @@ src/mikemol/transcriptstruct/commitrows.py|bool-read-as-a-line|type\(number\) is
 src/mikemol/transcriptstruct/cli.py|resolve-without-queue-runs|    if queue is None or repo is None:|    if False:|def=_resolve
 src/mikemol/transcriptstruct/cli.py|queue-option-ignored|    if queue is not None:|    if False:|def=_commitments
 src/mikemol/transcriptstruct/cli.py|out-option-ignored|    if blind_to is None:|    if True:|def=_sample
+src/mikemol/transcriptstruct/authfail.py|lookalike-model-counted| and model == SYNTHETIC||def=_meta
+src/mikemol/transcriptstruct/authfail.py|recovery-keeps-the-run|            tail = 0|            pass|def=summarize
+src/mikemol/transcriptstruct/authfail.py|newest-failure-not-kept|            newest = stamp or newest|            newest = None|def=summarize
+src/mikemol/transcriptstruct/cli.py|project-named-by-the-path|path\.resolve\(\)\.parent\.name|str(path)|def=_auth_failed

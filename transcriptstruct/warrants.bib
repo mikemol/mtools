@@ -1335,3 +1335,18 @@
   claim  = {With `--out` the blind rows are in the file, the same rows stdout would have held.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sample.py -k test_out_sends_the_blind_rows_to_a_file_and_leaves_stdout_to_the_tally},
 }
+
+@misc{transcriptstruct-authfail-two-failed-turns-at-the-tail-are-a-run-labelled-by-session-and-project,
+  section = {authfail},
+  title  = {Two failed turns: failed 2, a run of 2, the newest stamp, a session id and a project},
+  claim  = {Two failed turns: failed 2, a run of 2, the newest stamp, a session id and a project.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_authfail.py -k test_two_failed_turns_at_the_tail_are_a_run_labelled_by_session_and_project},
+}
+
+@misc{transcriptstruct-authfail-recovery-is-not-a-tail-run-and-a-lookalike-is-not-a-failure,
+  section = {authfail},
+  title  = {A failed turn then a good one has a run of 0; the same error on a real model is no count},
+  claim  = {A failed turn then a good one has a run of 0; the same error on a real model is no
+            count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_authfail.py -k test_a_recovery_is_not_a_tail_run_and_a_lookalike_is_not_a_failure},
+}
