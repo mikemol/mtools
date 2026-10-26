@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2054,
+  "counter": 2055,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -35742,7 +35742,7 @@
     {
       "symbol": "W1663",
       "title": "A REFUSED verdict gives the one command that reproduces only the refusing rung",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/gatephase.py!w",
@@ -35751,7 +35751,7 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After stack-w2043 lands, submit .githooks/pre-commit, tests/test_repro_rungs.py, pyproject, rubric, warrants, graph.json and dag.bzl as one stack; then the remaining rungs: shellcheck domain witness, warrant ledger, mdstruct shape linter. I still need all of those, W1663",
-      "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-25: 2026-10-25 first submit REFUSED by its own gate: test_bar_fires scans .githooks/pre-commit for any line launching bazel without the GIT_* scrub, and read my reproduce text ('bazel test <targets>') as a launch. Fixed by spelling it through a variable. The refusal itself printed the new '--- reproduce only the refusing rung' block, so the feature was seen working on its first real refusal. Resubmitted. | 2026-10-26: 2026-10-25 first rung LANDED 7423770f (the hermetic suite's refusal replays the reproduce command as its own detail block). | 2026-10-26: 2026-10-26 second rung built in the tree, NOT yet submitted: .githooks/pre-commit adds a reproduce block for the ratchet census beside its two refusal branches (a detail block, never the label), spelled so test_bar_fires reads it as text; test_repro_rungs (2 tests, warrants) pins it; test_bar_fires passes (151 locally, and //hooks:test_bar_fires, graph_fresh and test_repro_rungs under bazel). It is held back only because hooks/graph.json and dag.bzl now carry entries from the queued stacks (w2040/w2042/w1920a/w2043), which a submit check refuses until they land.",
+      "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-25: 2026-10-25 first submit REFUSED by its own gate: test_bar_fires scans .githooks/pre-commit for any line launching bazel without the GIT_* scrub, and read my reproduce text ('bazel test <targets>') as a launch. Fixed by spelling it through a variable. The refusal itself printed the new '--- reproduce only the refusing rung' block, so the feature was seen working on its first real refusal. Resubmitted. | 2026-10-26: 2026-10-25 first rung LANDED 7423770f (the hermetic suite's refusal replays the reproduce command as its own detail block). | 2026-10-26: 2026-10-26 second rung built in the tree, NOT yet submitted: .githooks/pre-commit adds a reproduce block for the ratchet census beside its two refusal branches (a detail block, never the label), spelled so test_bar_fires reads it as text; test_repro_rungs (2 tests, warrants) pins it; test_bar_fires passes (151 locally, and //hooks:test_bar_fires, graph_fresh and test_repro_rungs under bazel). It is held back only because hooks/graph.json and dag.bzl now carry entries from the queued stacks (w2040/w2042/w1920a/w2043), which a submit check refuses until they land. | 2026-10-26: reconciled LANDED 706b1dd85861c3c2a03b9b4dc8e54d6a36a10a59",
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
@@ -41765,7 +41765,7 @@
     {
       "symbol": "W1920",
       "title": "While a repo is behind its required ratchet paydown rate, the commit gate refuses a commit that lowers no ratchet, admitting queue-state commits and gate-red repairs, and the refusal names the ratchet, the required and observed fall, and the paydown cards to take",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "github:W42"
       ],
@@ -41775,12 +41775,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Write ratchet_pace.stack_reason (pure, with the pace-file path and clock injected), test it, then add _pace_refusal to submit_problem after the stack-w2042 and stack-w1920a gates have landed (they are queued and must not meet a refusal). I still need all of that, W1920",
-      "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays.",
+      "next_bounded_step": "In ratchet_pace add the operator-blocked exemption to owed() (it needs the queue, so stack_reason passes the cards in), with a test of a blocked-human card dropping the row and a ready card keeping it; then wire stack_reason into commit_kata.submit_problem after the in-gate stack lands. I still need both, W1920",
+      "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d",
       "issued_at": "2026-10-24T18:47:07Z",
       "minted_during": "interrupt",
       "caused_by": "github:W42",
-      "last_worked": "2026-10-26T14:24:57Z",
+      "last_worked": "2026-10-26T17:33:20Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43474,8 +43474,6 @@
         "file:transcriptstruct/tests/test_commitments.py"
       ],
       "blocked_on": [
-        "W2050",
-        "W2051",
         "W2052"
       ],
       "blocked_kind": "agent",
@@ -43845,19 +43843,21 @@
     {
       "symbol": "W1977",
       "title": "Decide the library-imposed parameter name question at the policy level for every stub alike: panflute Doc.__init__ format shadows a builtin",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "file:mdstruct/stubs/panflute-allowlist.txt!w"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After stack w1953 lands: measure (a) (change the stub's Doc.__init__ to take **kwargs, drop the allowlist entry, run test_stub_authority); if it passes the last entry is paid with no exception at all; if not, build (b). Then write the general rule for every stub. I still need the measurement and the rule, W1977",
-      "evidence": "2026-10-25: 2026-10-25 OPERATOR RULING, host line 97399 (uuid 86e023a4, verified human), via github-8f: 'the adapter pattern is what applies here; an intermediate that encapsulates the required exception. It's important to isolate noncompliant code, even when it's necessary.' So library-imposed noncompliance is ISOLATED behind an adapter, for every stub alike, never spread or waived: one small named module is the only place that touches the noncompliant surface, takes a compliant parameter and passes the library's own name inside, and every other module calls the adapter; the unavoidable exception is one counted entry scoped to that adapter. MY READING FOR panflute Doc.__init__ format (to test, not assume): mdstruct never constructs a panflute element (its allowlist header says so), so no call site needs an adapter; the noncompliant name appears only in the STUB's signature. Two honest shapes to try once W1953 lands: (a) declare Doc.__init__ in the stub as (self, *args: Block, **kwargs: object) so the stub has no parameter named format at all, if stubtest accepts a stub kwargs as covering the runtime's keyword-only names (to be measured, not assumed); (b) if it does not, a one-purpose adapter module in mdstruct that is the only constructor of Doc, and the one counted key on it. Do NOT re-add a per-file exemption",
+      "blocked_on": [
+        "operator: decide the panflute Doc.__init__ format shadow, measured: (1) declare the TRUE signature (metadata, format, api_version), which stubtest accepts with an empty allowlist but ruff A002 flags as one NEW key in the lint ratchet, so the debt moves from the allowlist to the ratchet (net zero, and a ratchet rise is refused); (2) declare Doc.__init__: object, net minus one, but an opaque boundary the operator ruled out ('types from consumers, not casts'); (3) a project-level ruff builtins-ignorelist for format, one policy for every stub alike, which uncounts the key. Pick one."
+      ],
+      "blocked_kind": "human",
+      "next_bounded_step": "Land it in the next stack (stack-next-1, entry W1977 over mdstruct/stubs/panflute/__init__.pyi, stubs/panflute-allowlist.txt, tests/test_stub_authority.py, warrants.bib); then write the general rule for every stub (declare an unmodellable library constructor as an object attribute, never an exemption). I still need the landing and the general rule, W1977",
+      "evidence": "2026-10-25: 2026-10-25 OPERATOR RULING, host line 97399 (uuid 86e023a4, verified human), via github-8f: 'the adapter pattern is what applies here; an intermediate that encapsulates the required exception. It's important to isolate noncompliant code, even when it's necessary.' So library-imposed noncompliance is ISOLATED behind an adapter, for every stub alike, never spread or waived: one small named module is the only place that touches the noncompliant surface, takes a compliant parameter and passes the library's own name inside, and every other module calls the adapter; the unavoidable exception is one counted entry scoped to that adapter. MY READING FOR panflute Doc.__init__ format (to test, not assume): mdstruct never constructs a panflute element (its allowlist header says so), so no call site needs an adapter; the noncompliant name appears only in the STUB's signature. Two honest shapes to try once W1953 lands: (a) declare Doc.__init__ in the stub as (self, *args: Block, **kwargs: object) so the stub has no parameter named format at all, if stubtest accepts a stub kwargs as covering the runtime's keyword-only names (to be measured, not assumed); (b) if it does not, a one-purpose adapter module in mdstruct that is the only constructor of Doc, and the one counted key on it. Do NOT re-add a per-file exemption | 2026-10-26: 2026-10-26 MEASURED (a) and a third shape. (a) FAILS: stubtest on Doc.__init__(self, *args: Block, **kwargs: object) names 'stub does not have parameter api_version, format, metadata' and 'runtime does not have **kwargs parameter kwargs', so a stub kwargs does not cover the runtime's keyword-only names. (c) PASSES: declaring Doc.__init__: object in the stub (an attribute, not a signature) satisfies stubtest with an EMPTY allowlist (--allowlist /dev/null, no output, exit 0). It says in the stub what the allowlist header said (the constructor is surface the stub declines to model; mdstruct never constructs a Doc) and is stronger: mypy now refuses any construction because object is not callable. No per-file exemption and no new key. The panflute allowlist is empty; test_every_allowlist_entry_is_a_constructor lost its 'assert entries' vacuity guard (now false) and gained a positive control (_offenders names panflute.load and passes a constructor). //mdstruct:all runs (30 targets) before the stack: 29 pass, the one failure was that vacuity guard, fixed; a second run is in flight. | 2026-10-26: 2026-10-26 github-8f's check on the object shape (correct: an object boundary hides the signature and is the pattern the operator ruled out) led to the honest shape, MEASURED: the true signature (*args: Block, metadata: Mapping[str, object], format: str, api_version: tuple[int, ...], read from panflute/elements.py line 56) makes stubtest PASS with an EMPTY allowlist and ruff report builtin-argument-shadowing on format at the stub: one new lint key. So paying the allowlist entry costs a lint-ratchet key: net zero, and standing 2 forbids a ratchet rise. Reverted my tree to the original stub and allowlist (git status clean for mdstruct). No shape pays the debt honestly without an operator decision; the three choices are the ask.",
       "issued_at": "2026-10-25T13:43:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T14:15:02Z",
+      "last_worked": "2026-10-26T17:31:06Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43886,7 +43886,8 @@
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 86e023a4-20d0-40f4-9b60-4b6388929d1e --claim Operator, host line 97399: the adapter pattern is what applies here, an intermediate that encapsulates the required exception, and it is important to isolate noncompliant code even when it is necessary --line 97399"
           }
         }
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W1978",
@@ -44441,12 +44442,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Fetch the three responses from the query endpoint; neighbour projection for a low-sample test; a command line. I still need those, W1997",
-      "evidence": "2026-10-26: second part landed bbed6103 (importdag.series: luthen's three series into the Measured table) | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767",
+      "next_bounded_step": "Land the command (it rides the next stack as an importdag entry), then the neighbour projection for tests with few samples and W1998's pairwise form. I still need those, W1997",
+      "evidence": "2026-10-26: second part landed bbed6103 (importdag.series: luthen's three series into the Measured table) | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767 | 2026-10-26: 2026-10-26 third part built (in the tree): mikemol-landing-cost --dist hooks --repo mtools --otlp PATH FILE... (importdag.costcli) reads the dist's graph.json, asks luthen's store through mikemol-otlp query-metrics for the three series, and prints tests rerun, the manifest paths the graph does not name, the summed median and p90 CPU seconds over the measured tests with the fewest samples, and the unmeasured tests. RAN FOR REAL on a manifest of round_wire.py and test_round_wire.py: 66 tests rerun, median 100.8 s and p90 111.0 s CPU over 63 measured (fewest samples 3), and the 3 unmeasured are exactly the three new ratchet_pace tests no gate has run yet, so the unknown stayed unknown. Four tests, three declared mutants and warrants; the dist's bazel run is in flight. NOT DONE: the neighbour projection for a test with too few samples, and the pairwise form over two cards' manifests (W1998). | 2026-10-26: reconciled LANDED bbed610369dff34e97bf2d49318799171f6f0767",
       "issued_at": "2026-10-25T17:05:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1503",
-      "last_worked": "2026-10-26T12:26:31Z",
+      "last_worked": "2026-10-26T16:53:55Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45120,20 +45121,18 @@
       "symbol": "W2032",
       "title": "Split the hooks modules whose sites collapse into few input sets along their function clusters",
       "status": "ready",
-      "enables": [
-        "W1989"
-      ],
+      "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Rerun all of round_wire's 13 and watchdog's 28 sites on the regenerated sites for the cold and warm figure; then the --check gate target and commit hooks/sites. I still need those, W2032",
-      "evidence": "2026-10-26: 2026-10-26 DESIGN FINDING before any split: a mutation site's test list is the REVERSE cone (tests whose imports reach the module), so splitting a module into LEAF clusters that commit_kata still imports narrows nothing: every test that imports commit_kata still reaches every cluster. The narrowing comes from peeling the TOP of the module, the part few tests import, into its own module that commit_kata does NOT import. commit_kata.py (1,300 lines, 101 sites over two input classes) holds the library half (run_git_in, commit, verdict, prepare, tracked, published, ... lines 1-585, imported by the stack/train modules and most tests) and the CLI half (resolve_root, parse, Claim, fence_of, claim_of, routing_line, stack_target, run_stack_mode, in_gate, withdraw_cmd, main, run_held, lines 587-1250). Peeling the CLI half to a module the library never imports (the console script points at it) makes its ~50 sites run only the CLI tests (test_commit_claim, test_commit_kata_root, test_in_gate, test_commit_withdraw, test_submit_problem, test_commit_launcher_fence, test_launcher, test_commit_stack, test_commit_lease_wait). Cost: 26 files name commit_kata.<cli name> (src: stackpin, commit_gauge, stackrun, requeue, stackfreeze, shardgate, launcher, verdictlog, trainverdict, stackimports, stacktree, stackbuildfiles, trainlead, commit_span, fence guard_cli; the rest tests), each repointed, and the live hook order applies (new module first, build the venv, then the importers). | 2026-10-26: 2026-10-26 MEASURED (importdag.cost.affected over hooks/graph.json): reverse cone of commit_kata is 50 tests, 49 importing it directly; watchdog 6 tests; gen_warrants 4; cmdparse 33 (3 direct). So the test COUNT per site is already small for most modules, and a CLI peel of commit_kata would cut 50 tests to about 9, not the cost the first site run showed (3-8 minutes per site cold). That cost was STAGING a 100-module cone per site, which the per-module libraries (W1988, landed) remove if mutant_site depends on //hooks:<module lib> and the test targets instead of copying files. So the split is the second lever, not the first: the first is mutant_site taking deps. Order revised: (1) mutants_gen emits site targets whose deps are the module's own library plus its tests' libraries (check_mutants/mutants_gen.py, defs.bzl); (2) measure one site cold and warm; (3) split only the modules whose measured sites are still slow. | 2026-10-26: 2026-10-26 MEASURED after stack-w1988b: with hooks/sites regenerated from the CURRENT graph, round_wire's in_gate site PASSES in 33 s wall (critical path 33.1 s, 2056 action cache hits, 2 sandbox processes), against the 490 s of the first sample: the per-module libraries already carry the cost. WITH STALE SITES (generated before the graph gained flakes, series and others) all 13 round_wire sites ERRORED ('the suite did NOT run'), which is exactly what the gate's mutants_gen --check target must refuse: a committed hooks/sites that lags the graph is not a smaller grid, it is no grid. So the split is not the first lever; the --check gate target and committing sites are. | 2026-10-26: reconciled STALE",
+      "next_bounded_step": "Hold. W1989 carries the lever: the sites_fresh gate target (mutants_gen --check over the committed sites), committing hooks/sites, then retiring the sharded mutants. Reopen this card only if a module's measured sites stay slow after that. I still need W1989's first two steps, W2032",
+      "evidence": "2026-10-26: 2026-10-26 DESIGN FINDING before any split: a mutation site's test list is the REVERSE cone (tests whose imports reach the module), so splitting a module into LEAF clusters that commit_kata still imports narrows nothing: every test that imports commit_kata still reaches every cluster. The narrowing comes from peeling the TOP of the module, the part few tests import, into its own module that commit_kata does NOT import. commit_kata.py (1,300 lines, 101 sites over two input classes) holds the library half (run_git_in, commit, verdict, prepare, tracked, published, ... lines 1-585, imported by the stack/train modules and most tests) and the CLI half (resolve_root, parse, Claim, fence_of, claim_of, routing_line, stack_target, run_stack_mode, in_gate, withdraw_cmd, main, run_held, lines 587-1250). Peeling the CLI half to a module the library never imports (the console script points at it) makes its ~50 sites run only the CLI tests (test_commit_claim, test_commit_kata_root, test_in_gate, test_commit_withdraw, test_submit_problem, test_commit_launcher_fence, test_launcher, test_commit_stack, test_commit_lease_wait). Cost: 26 files name commit_kata.<cli name> (src: stackpin, commit_gauge, stackrun, requeue, stackfreeze, shardgate, launcher, verdictlog, trainverdict, stackimports, stacktree, stackbuildfiles, trainlead, commit_span, fence guard_cli; the rest tests), each repointed, and the live hook order applies (new module first, build the venv, then the importers). | 2026-10-26: 2026-10-26 MEASURED (importdag.cost.affected over hooks/graph.json): reverse cone of commit_kata is 50 tests, 49 importing it directly; watchdog 6 tests; gen_warrants 4; cmdparse 33 (3 direct). So the test COUNT per site is already small for most modules, and a CLI peel of commit_kata would cut 50 tests to about 9, not the cost the first site run showed (3-8 minutes per site cold). That cost was STAGING a 100-module cone per site, which the per-module libraries (W1988, landed) remove if mutant_site depends on //hooks:<module lib> and the test targets instead of copying files. So the split is the second lever, not the first: the first is mutant_site taking deps. Order revised: (1) mutants_gen emits site targets whose deps are the module's own library plus its tests' libraries (check_mutants/mutants_gen.py, defs.bzl); (2) measure one site cold and warm; (3) split only the modules whose measured sites are still slow. | 2026-10-26: 2026-10-26 MEASURED after stack-w1988b: with hooks/sites regenerated from the CURRENT graph, round_wire's in_gate site PASSES in 33 s wall (critical path 33.1 s, 2056 action cache hits, 2 sandbox processes), against the 490 s of the first sample: the per-module libraries already carry the cost. WITH STALE SITES (generated before the graph gained flakes, series and others) all 13 round_wire sites ERRORED ('the suite did NOT run'), which is exactly what the gate's mutants_gen --check target must refuse: a committed hooks/sites that lags the graph is not a smaller grid, it is no grid. So the split is not the first lever; the --check gate target and committing sites are. | 2026-10-26: reconciled STALE | 2026-10-26: 2026-10-26 MEASURED per-site cost on the regenerated sites, while a gate and two other sessions were loading the host: ratchet_pace's 11 sites 89 s wall (critical path 84 s); testgate's 11 sites 89 s; commit_span plus its tests, 30 targets, 367 s wall (critical path 334 s); watchdog plus ratchet_pace plus commit_span's neighbours, 75 targets, 485 s wall with a 191 s critical path. Amortized that is about 6 to 12 s of wall per site with 24 jobs, and one site alone is 30 to 90 s, against the 490 s of the first sample. The whole 1,789-site grid would be about 3 h of wall at that rate on a loaded host, and the sharded :mutants it replaces cost about 36,000 s of miss wall per run on any hooks change; the lever is the per-site cache (an edit reruns only that module's sites and its importers' sites), not smaller modules. So splitting modules is NOT the first lever and is not needed to make a site cheap; revisit it only for a module whose measured site is still slow (none found yet).",
       "issued_at": "2026-10-26T01:18:30Z",
       "minted_during": "interrupt",
       "caused_by": "W1989",
-      "last_worked": "2026-10-26T12:29:16Z",
+      "last_worked": "2026-10-26T16:58:57Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45262,7 +45261,9 @@
       "status": "ready",
       "enables": [],
       "touches": [
-        "velocity"
+        "hooks",
+        "velocity",
+        "file:hooks/tests/test_commit_dir_deletion.py!w"
       ],
       "blocked_on": [],
       "blocked_kind": null,
@@ -45278,21 +45279,21 @@
     {
       "symbol": "W2040",
       "title": "Detect a session whose turns fail authentication (two or more in a row) and publish mikemol.session.auth_failed{session} with a freshness rule, pushing the operator by phone",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Add a transcriptstruct mode that counts error=authentication_failed assistant records per session file with the newest timestamp and the run of consecutive ones at the tail (two or more is page-worthy), so luthen can publish mikemol.session.auth_failed{session} and push the operator. Witness: a synthetic failed record produces the count. I still need that mode, W2040",
-      "evidence": "2026-10-26: 2026-10-26 READ the host transcript 695f3e0a: a failed-auth turn is RECORDED as a synthetic assistant record: model '<synthetic>', content 'Failed to authenticate: OAuth session expired and could not be refreshed', top-level fields error='authentication_failed' and isApiErrorMessage=true, usage all zero (first at line 101332, 2026-10-26T03:44:33Z; 22 occurrences by this read). So an OUTSIDE detector can count records with error=authentication_failed per session file and needs no model call. NOT YET KNOWN: whether any hook (Stop, PostToolUse) fires on such a turn; a session whose every turn fails likely runs no hook, so detection belongs outside the session (luthen reading transcripts, or the harness exit status). | 2026-10-26: 2026-10-26 SETTLED from lines 101326-101337 of the host transcript: after the first failed-auth record the harness enqueued the next scheduled prompt, dequeued it, wrote the user record and an environment attachment, and the assistant failed again 0.7 s later; NO hook record (no Stop, PostToolUse or hook_success attachment) sits between them. So a failing session runs no hook, and the detector CANNOT live in a hook: it is outside the session, reading transcripts for error=authentication_failed (or the harness exit status), as luthen's reader.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 READ the host transcript 695f3e0a: a failed-auth turn is RECORDED as a synthetic assistant record: model '<synthetic>', content 'Failed to authenticate: OAuth session expired and could not be refreshed', top-level fields error='authentication_failed' and isApiErrorMessage=true, usage all zero (first at line 101332, 2026-10-26T03:44:33Z; 22 occurrences by this read). So an OUTSIDE detector can count records with error=authentication_failed per session file and needs no model call. NOT YET KNOWN: whether any hook (Stop, PostToolUse) fires on such a turn; a session whose every turn fails likely runs no hook, so detection belongs outside the session (luthen reading transcripts, or the harness exit status). | 2026-10-26: 2026-10-26 SETTLED from lines 101326-101337 of the host transcript: after the first failed-auth record the harness enqueued the next scheduled prompt, dequeued it, wrote the user record and an environment attachment, and the assistant failed again 0.7 s later; NO hook record (no Stop, PostToolUse or hook_success attachment) sits between them. So a failing session runs no hook, and the detector CANNOT live in a hook: it is outside the session, reading transcripts for error=authentication_failed (or the harness exit status), as luthen's reader. | 2026-10-26: reconciled LANDED 92835d07a4128a85b8c01b8e603c638051911e81 | 2026-10-26: landed 92835d07: mikemol-transcriptstruct --auth-failed, metadata only; luthen publishes the series and the push (luthen-observability:W1681)",
       "issued_at": "2026-10-26T11:51:50Z",
       "minted_during": "interrupt",
       "caused_by": "github:W59",
-      "last_worked": "2026-10-26T12:29:30Z",
+      "last_worked": "2026-10-26T17:36:29Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T173629Z"
     },
     {
       "symbol": "W2041",
@@ -45316,40 +45317,40 @@
     {
       "symbol": "W2042",
       "title": "corpus/exit-baseline.txt paydown: the pycheck family's not-checked exit (cli, clear, format, install) moves from 3 to 7, the exit table's CANNOT_RUN",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "file:corpus/exit-baseline.txt"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Resubmit stack-w2042 with hooks/bin/mikemol-hooks-preflight and tests/test_hooks_preflight.py added; tell github-8f the host note needs 3 to 7 (refused is 4 in pycheck, not 1). I still need the resubmit, W2042",
-      "evidence": "2026-10-26: 2026-10-26 READERS of pycheck's exit 3, searched (github-8f's ask; stack withdrawn from the queue first): (a) mtools: hooks/bin/mikemol-hooks-preflight passes pycheck's code through (it tests only 4, refused) and exits 3 itself for 'venv did not build; not checked': CHANGED to 7 in the same stack, with test_hooks_preflight's constant. .githooks/post-commit runs --refresh-ledger detached and ignores the code. katas names the tool in strings only. pycodemod cli_codonprep tests code != 0. (b) fleet, read-only grep over ~/github excluding mtools (.sh .py .rego .service .nix .toml): el-openglo annotate_selftest_helpers tests returncode == 0; census_compare and substrate schema_* name it in prose; amr-skills debt_clear.py counts findings from the report text, ignores the code; nemik gate_staged.sh runs --ratchet and tests only a failure (its -eq 3 lines are other tools); nemik test_ruff_ratchet asserts 0. NO fleet reader branches on 3. (c) NOT READABLE from here: the host's own after-compaction note text ('exit 1 refused, 3 not checked'), which is prose in the host's settings, not a branch; github-8f owns that text.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 READERS of pycheck's exit 3, searched (github-8f's ask; stack withdrawn from the queue first): (a) mtools: hooks/bin/mikemol-hooks-preflight passes pycheck's code through (it tests only 4, refused) and exits 3 itself for 'venv did not build; not checked': CHANGED to 7 in the same stack, with test_hooks_preflight's constant. .githooks/post-commit runs --refresh-ledger detached and ignores the code. katas names the tool in strings only. pycodemod cli_codonprep tests code != 0. (b) fleet, read-only grep over ~/github excluding mtools (.sh .py .rego .service .nix .toml): el-openglo annotate_selftest_helpers tests returncode == 0; census_compare and substrate schema_* name it in prose; amr-skills debt_clear.py counts findings from the report text, ignores the code; nemik gate_staged.sh runs --ratchet and tests only a failure (its -eq 3 lines are other tools); nemik test_ruff_ratchet asserts 0. NO fleet reader branches on 3. (c) NOT READABLE from here: the host's own after-compaction note text ('exit 1 refused, 3 not checked'), which is prose in the host's settings, not a branch; github-8f owns that text. | 2026-10-26: reconciled LANDED 44ab4a038f990b2bab4990785fafa58f98081d71 | 2026-10-26: landed 44ab4a03 (the merged eight-entry stack, 2026-10-26): the pycheck family's not-checked exit is 7, four exit-baseline lines gone",
       "issued_at": "2026-10-26T13:00:06Z",
       "minted_during": "interrupt",
       "caused_by": "github:W42",
-      "last_worked": "2026-10-26T13:03:28Z",
+      "last_worked": "2026-10-26T17:36:25Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T173625Z"
     },
     {
       "symbol": "W2043",
       "title": "The watchdog's exit explains itself with evidence: its own start time and the last five beats (tool, at_ns) in watchdog.last, so a false wake can be told from a real silence",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In watchdog.remember_exit put the watch's start time and the last five beats (tool, at_ns) from the heartbeat file into watchdog.last, and have exit_meaning print them in the wake text; test with a fixture heartbeat. I still need that, W2043",
-      "evidence": "2026-10-26: 2026-10-26 READINGS in luthen-observability (read-only): .claude/settings.json runs $CLAUDE_PROJECT_DIR/.venv/bin/mikemol-hook-beat (its own venv, a launcher importing mikemol.hooks.beat.main, rewritten 07:09) on PostToolUse and PostToolUseFailure with matcher '' (every tool). Its .git/mtools/heartbeat read tool 'mikemol-paths-forward' at one read and 'hook:Read' at the next minutes later, so beats ARE written by the hook there now, to the same <project>/.git/mtools the watchdog reads. beat.py stamps a PRE-call event and does NOT beat (W1617), so a session inside one long foreground call (a mikemol-commit waiting through a gate) reads as a stall until the call returns; that fits 'last heartbeat 911s ago (mikemol-commit)' but not 'a dozen calls in the window'. UNKNOWN: whether those calls were in a subagent or sidechain (which may not run project hooks) and what the exit text said about a call in progress. | 2026-10-26: 2026-10-26 luthen-observability-ab PROBE (2 messages): with a checks.land (mikemol-commit --stack) in flight as a background call, .git/mtools/heartbeat read hook:SendMessage then hook:Bash seconds later, mtime matching now, gaps up to 65 s during gating: hook beats DO write while a commit is in flight, so the 'a gate-waiting commit reads as silence' hypothesis is NOT supported, and the false wake is UNPROVEN. Likely truth: each exit came while its turn had ended (waiting on a background gate), so the 900 s was real, and its 'dozen calls' were in a turn before the window or after it. Lines seen: 'idle with 127-129 ready cards, last heartbeat 900-918s ago (mikemol-commit; once hook:SendMessage); bound 900s'. What would settle it, and is worth doing either way: watchdog.last carries the watchdog's own start time and the last 5 beats.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 READINGS in luthen-observability (read-only): .claude/settings.json runs $CLAUDE_PROJECT_DIR/.venv/bin/mikemol-hook-beat (its own venv, a launcher importing mikemol.hooks.beat.main, rewritten 07:09) on PostToolUse and PostToolUseFailure with matcher '' (every tool). Its .git/mtools/heartbeat read tool 'mikemol-paths-forward' at one read and 'hook:Read' at the next minutes later, so beats ARE written by the hook there now, to the same <project>/.git/mtools the watchdog reads. beat.py stamps a PRE-call event and does NOT beat (W1617), so a session inside one long foreground call (a mikemol-commit waiting through a gate) reads as a stall until the call returns; that fits 'last heartbeat 911s ago (mikemol-commit)' but not 'a dozen calls in the window'. UNKNOWN: whether those calls were in a subagent or sidechain (which may not run project hooks) and what the exit text said about a call in progress. | 2026-10-26: 2026-10-26 luthen-observability-ab PROBE (2 messages): with a checks.land (mikemol-commit --stack) in flight as a background call, .git/mtools/heartbeat read hook:SendMessage then hook:Bash seconds later, mtime matching now, gaps up to 65 s during gating: hook beats DO write while a commit is in flight, so the 'a gate-waiting commit reads as silence' hypothesis is NOT supported, and the false wake is UNPROVEN. Likely truth: each exit came while its turn had ended (waiting on a background gate), so the 900 s was real, and its 'dozen calls' were in a turn before the window or after it. Lines seen: 'idle with 127-129 ready cards, last heartbeat 900-918s ago (mikemol-commit; once hook:SendMessage); bound 900s'. What would settle it, and is worth doing either way: watchdog.last carries the watchdog's own start time and the last 5 beats. | 2026-10-26: reconciled LANDED ab3f93a3089f07a780851a47edba9587f4763a62 | 2026-10-26: landed ab3f93a3: the watchdog's exit carries when the watch began, the last beat and its age and the gaps before it",
       "issued_at": "2026-10-26T13:33:11Z",
       "minted_during": "interrupt",
       "caused_by": "github:W55",
-      "last_worked": "2026-10-26T13:59:17Z",
+      "last_worked": "2026-10-26T17:36:26Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T173626Z"
     },
     {
       "symbol": "W2044",
@@ -45392,21 +45393,21 @@
     {
       "symbol": "W2046",
       "title": "The writer refuses an empty next_bounded_step, or the card's own symbol, on a ready or working card",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In the writer's --update and --add refuse an empty next step and one equal to the card's own symbol on a ready or working card; test --next W2 on W2 is refused. I still need that, W2046",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: reconciled LANDED 8a2152e789e6e6e67acbe8964c39b416cf147908 | 2026-10-26: landed 8a2152e7: an empty or self-symbol --next on a ready or working card is refused; --add and the stale-working flag (W2047) remain",
       "issued_at": "2026-10-26T14:24:13Z",
       "minted_during": "interrupt",
       "caused_by": "github:W2",
-      "last_worked": "2026-10-26T14:41:32Z",
+      "last_worked": "2026-10-26T17:36:27Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T173627Z"
     },
     {
       "symbol": "W2047",
@@ -45429,7 +45430,7 @@
     {
       "symbol": "W2048",
       "title": "Run the commitments extractor and emitter on a host timer and publish commitments.json where luthen and nemik read it",
-      "status": "working",
+      "status": "done",
       "enables": [
         "nemik:W1007",
         "nemik:W1008"
@@ -45439,14 +45440,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Design: a --commitments-tree PROJECTS_DIR mode (one document, every repo, each resolved against that repo's queue), as_of in the header, whole-or-nothing write, and the row WITHOUT its text by default (the only free-text field; nemik's metric needs counts, layer and state) so nothing of the conversation can reach the public view; then measure CPU seconds and peak RSS on the real projects tree and give luthen a sample. I still need the mode, the sample and the measurement, W2048",
-      "evidence": "2026-10-26: 2026-10-26 luthen-observability-ab (luthen-observability:W1684, enables W2048): a NEW user timer+service in luthen's user apply set, modelled on luthen-nemik-round and luthen-nemik-pace: ExecStart the host's PUSHED install argv exactly, whole-or-nothing file into %h/.local/share/luthen/nemik-export/, ExecStartPost checks.nemik_egress, LimitCPU by CPU. It needs from me: (1) the entry point and which PINNED install carries it, (2) a real sample commitments.json with an as_of header, (3) which row fields are free text (the export tree reaches nemik's PUBLIC static view; egress withholds a whole file on a key, address or amr- content), (4) CPU seconds and peak RSS measured. READ of what exists: the extractor and resolver work on ONE transcript (mikemol-transcriptstruct LOG --commitments --queue QUEUE writes the document to stdout); there is NO tree mode that walks every repo's transcripts and writes the whole commitments.json, and the free-text field is each row's text (the assistant's own sentence); names are card cites and repo-relative paths.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 luthen-observability-ab (luthen-observability:W1684, enables W2048): a NEW user timer+service in luthen's user apply set, modelled on luthen-nemik-round and luthen-nemik-pace: ExecStart the host's PUSHED install argv exactly, whole-or-nothing file into %h/.local/share/luthen/nemik-export/, ExecStartPost checks.nemik_egress, LimitCPU by CPU. It needs from me: (1) the entry point and which PINNED install carries it, (2) a real sample commitments.json with an as_of header, (3) which row fields are free text (the export tree reaches nemik's PUBLIC static view; egress withholds a whole file on a key, address or amr- content), (4) CPU seconds and peak RSS measured. READ of what exists: the extractor and resolver work on ONE transcript (mikemol-transcriptstruct LOG --commitments --queue QUEUE writes the document to stdout); there is NO tree mode that walks every repo's transcripts and writes the whole commitments.json, and the free-text field is each row's text (the assistant's own sentence); names are card cites and repo-relative paths. | 2026-10-26: reconciled LANDED 934ec334ffd358ac7e7dae8644bcc1ce263962d9 | 2026-10-26: landed 934ec334: --commitments-tree, ruled keys only, whole-or-nothing write; sample and cost sent to luthen; the eighth wheel is W2054 (landed 65b7491b); the layer inference is W2049",
       "issued_at": "2026-10-26T15:03:21Z",
       "minted_during": "tick",
       "caused_by": "W1933",
-      "last_worked": "2026-10-26T15:09:00Z",
+      "last_worked": "2026-10-26T17:36:30Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261026T173630Z"
     },
     {
       "symbol": "W2049",
@@ -45469,38 +45470,40 @@
     {
       "symbol": "W2050",
       "title": "Draw the blind sample (N=300, seed 1) from this session's transcript and send the blind file to amr-skills",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1966"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 drawn with mikemol-transcriptstruct SESSION.jsonl --sample 300 --seed 1 --out blind --key key: 395 sentences (300 random plus every regex hit) from this session's transcript; blind rows in ~/.local/share/mikemol/commitment-sample/blind-300-seed1.jsonl, my key beside it (mtools-ad-key-300-seed1.jsonl, not shared). No amr-skills session is live (ListAgents), so the request is a letter in amr-skills/inbox/2026-10-26-mtools-blind-commitment-sample.md giving the path, the four labels (commitment, done, status, mention) and the answer format {id, label}.",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-26T16:33:42Z",
+      "ticks_blocked": 0,
+      "completed": "20261026T163342Z"
     },
     {
       "symbol": "W2051",
       "title": "Label my own copy of the sample without reading amr-skills' labels",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W1966"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 labelled all 395 rows blind (key unread while labelling) into ~/.local/share/mikemol/commitment-sample/mtools-ad-labels-300-seed1.jsonl: commitment 106, status 225, done 50, mention 14. Rules I used (so a disagreement can be read): commitment = states work still to do and not persisted (I still need to, I have not yet, still to do, I'll X once Y, an imperative plan); a bare 'I did not re-run X' or 'I haven't started' with no 'yet' is status; a quoted phrase is mention. One known bias: the sample's later rows are this session's own text, rich in 'still to do'.",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-26T16:37:52Z",
+      "ticks_blocked": 0,
+      "completed": "20261026T163752Z"
     },
     {
       "symbol": "W2052",
@@ -45512,13 +45515,14 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "Wait for amr-skills' labels file (letter in amr-skills/inbox/2026-10-26-mtools-blind-commitment-sample.md); then compute agreement between the two labellings and keep the disagreements as fixtures under transcriptstruct/tests; separately add the 29 missed rows' shapes to the regex or to the classifier brief. I still need amr-skills' labels, W2052",
+      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-26T16:37:53Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2053",
@@ -45530,18 +45534,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read what the commit queue already stamps (submit, began_ns in commit.counts, the verdict time in gate-verdicts.jsonl) and the existing mikemol.commit.landings emitter (W2029); add the two figures there, one sample per verdict, with a freshness rule on each. Note CAUTION: began_ns marks when the queue entry went inflight, and the gate's own pre-commit began later, after the admission lease; the series needs the second stamp (the pre-commit start), which I have to find. I still need that stamp, W2053",
-      "evidence": "",
+      "next_bounded_step": "Run the commit_span mutation sites and the new test as bazel targets (running), then add this as an entry to the one next stack (stack-next-1 waits for the in-gate stack to land because dag.bzl is a shared serial file); then luthen registers the two families and a freshness rule. I still need the bazel result and the landing, W2053",
+      "evidence": "2026-10-26: 2026-10-26 READ: the commit path already records the two moments: Held.submitted (when the stack was submitted) and Held.lease (when the repository claim was held), and run_held hands both to Moments(submit, lease, end) for the commit.stack spans, which already carry a wait span and a gating span per trace. So the series need no new stamp: gate_series(Moments) gives admission_wait = lease - submit and run = end - lease, and emit_series sends each as a mikemol-otlp metric (service mikemol-commit, namespace and field repo) at the end of emit and emit_stack. CAVEAT, which the series will settle: the stack-w2039b gate showed about 110 min between the queue entry going inflight and the gate's pre-commit starting; whether that was the claim wait (inside admission_wait_seconds), wait_for_load (inside run_seconds) or the lease itself is not known from the code, so run_seconds includes the load wait and a third series may split it. Built in the tree: gate_series, emit_series, test_gate_series (4 tests), two declared mutants, warrants; commit_span's own 335 tests still pass. | 2026-10-26: reconciled STALE",
       "issued_at": "2026-10-26T15:07:44Z",
       "minted_during": "interrupt",
       "caused_by": "github:W50",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-26T16:44:05Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2054",
       "title": "mikemol-repin --revendor builds mikemol-transcriptstruct as an eighth wheel, so luthen's commitments unit runs a pinned install and not a working tree",
-      "status": "working",
+      "status": "done",
       "enables": [
         "luthen-observability:W1684"
       ],
@@ -45550,12 +45555,34 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Ride the next stack with the test, then tell luthen the sha that carries it so its repin vendors the eighth wheel. I still need the landing and the sha, W2054",
-      "evidence": "2026-10-26: 2026-10-26 READ hooks/src/mikemol/hooks/revendor.py: the wheels a repo vendors are a NAMED list (KNOWN plus EXTRA), moved together by --revendor; a repo adds a dist by naming its wheel path in its pyproject and the tool moves it with the set. So the change is one name, 'transcriptstruct', in EXTRA (and a test beside the cvdcore and ratchet ones); transcriptstruct has no runtime dependency and builds with setuptools, so uv build --wheel needs nothing more. Tests: test_revendor 40 pass with the new one. It is in the tree and rides the next stack, a revendor still needs luthen to name the wheel path in ITS pyproject (its side, luthen-observability:W1683/W1684).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 READ hooks/src/mikemol/hooks/revendor.py: the wheels a repo vendors are a NAMED list (KNOWN plus EXTRA), moved together by --revendor; a repo adds a dist by naming its wheel path in its pyproject and the tool moves it with the set. So the change is one name, 'transcriptstruct', in EXTRA (and a test beside the cvdcore and ratchet ones); transcriptstruct has no runtime dependency and builds with setuptools, so uv build --wheel needs nothing more. Tests: test_revendor 40 pass with the new one. It is in the tree and rides the next stack, a revendor still needs luthen to name the wheel path in ITS pyproject (its side, luthen-observability:W1683/W1684). | 2026-10-26: reconciled LANDED 65b7491b49b774759555e7967f90b609e868da78 | 2026-10-26: landed 65b7491b: transcriptstruct is a vendored dist for mikemol-repin --revendor; luthen names the wheel path and repins at that sha (luthen-observability:W1683/W1684)",
       "issued_at": "2026-10-26T15:08:24Z",
       "minted_during": "interrupt",
       "caused_by": "W2048",
-      "last_worked": "2026-10-26T15:26:57Z",
+      "last_worked": "2026-10-26T17:36:32Z",
+      "ticks_blocked": 0,
+      "completed": "20261026T173632Z"
+    },
+    {
+      "symbol": "W2055",
+      "title": "mikemol-commit's submit path runs the bazel test target of every test file a stack adds or changes, in the sandbox, before the stack can queue",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity",
+        "file:hooks/src/mikemol/hooks/testgate.py!w",
+        "file:hooks/src/mikemol/hooks/commit_kata.py!w"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Submit stack-next-1.json when the eight-entry stack (key 1793030472959274837) lands; until then nothing queues. Card the graph-serial-file class if it recurs. I still need the landing, W2055",
+      "evidence": "2026-10-26: 2026-10-26 bazel: test_testgate, test_testgate_run, test_submit_problem, graph_fresh and the 11 testgate sites all PASS. SUBMIT of stack-next-1.json REFUSED before queueing: hooks/dag.bzl and graph.json (regenerated from the tree) name seven files that only the in-gate eight-entry stack adds (ratchet_pace.py and three of its tests, test_commit_dir_deletion, test_repro_rungs, test_watchdog_evidence), and a stack may name only what HEAD or its own entries carry. THE CLASS: hooks/graph.json and dag.bzl are one shared serial file, so every hooks stack built while another is gating can land only after it; two hooks stacks cannot queue in parallel by file, which the one-next-stack rule hits whenever the first is mid-gate. Options: (a) wait for the gate and submit then (taken), (b) build the next stack from the committed graph plus only its own entries by regenerating dag/graph against HEAD in a scratch worktree (the mechanism W2020/W2021 need anyway).",
+      "issued_at": "2026-10-26T16:01:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W50",
+      "last_worked": "2026-10-26T16:40:52Z",
       "ticks_blocked": 0,
       "completed": null
     }

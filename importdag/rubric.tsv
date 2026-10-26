@@ -13,3 +13,4 @@ split	The Split: Imports That Run With the Module Are Told Apart From Those That
 graph	Distribution Graph: Import Edges Are Derived in All Three Spellings, Reads Are Declared and Checked, and One Byte-Stable File Serves Three Consumers
 cost	Landing-cost
 series	Landing-cost series
+costcli	The Landing-Cost Command Joins the Graph's Cone With luthen's Series

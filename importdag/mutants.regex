@@ -35,3 +35,6 @@ src/mikemol/importdag/graph.py|absent-file-not-stale|        if not \(dist / nam
 src/mikemol/importdag/series.py|another-repos-row-taken|labels\.get\("repo"\) != repo or ||def=_row
 src/mikemol/importdag/series.py|non-test-label-mapped-to-a-test|    if not target\.startswith\("//"\) or not name\.startswith\("test_"\):|    if not target.startswith("//"):|def=test_path
 src/mikemol/importdag/series.py|sample-count-dropped|int\(count\[target\]\)|0|def=table
+src/mikemol/importdag/costcli.py|unmeasured-tests-hidden|    if priced\.unknown:|    if False:|def=report
+src/mikemol/importdag/costcli.py|graph-gap-unsaid|    if gaps:|    if False:|def=report
+src/mikemol/importdag/costcli.py|dist-prefix-left-on|    manifest = \[m\.removeprefix\(f"\{dist\}/"\) for m in named if m\.startswith\(f"\{dist\}/"\)\]|    manifest = list(named)|def=main

@@ -4097,3 +4097,33 @@
 2026-10-26T15:08:24Z  interrupt W2054 minted    -         "mikemol-repin --revendor builds mikemol-transcriptstruct as an eighth wheel, so luthen's commitments unit runs a pinned install and not a working tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2048
 2026-10-26T15:26:20Z  status W2054 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-26T16:01:10Z  status W2039 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:01:48Z  interrupt W2055 minted    -         "mikemol-commit's submit path runs the bazel test target of every test file a stack adds or changes, in the sandbox, before the stack can queue"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W50
+2026-10-26T16:28:41Z  status W2055 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:32:55Z  status W2055 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:32:56Z  status W2050 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:33:42Z  status W2050 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:33:53Z  status W2051 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:37:52Z  status W2051 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:37:53Z  status W2052 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:41:15Z  status W2053 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:50:57Z  status W1997 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:58:44Z  status W2032 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T16:58:57Z  status W2032 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:31:06Z  status W1977 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W1663 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W1920 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W1997 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2040 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2042 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2043 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2046 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2048 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2052 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2053 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:34:05Z  status W2054 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:36:25Z  status W2042 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:36:26Z  status W2043 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:36:27Z  status W2046 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:36:29Z  status W2040 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:36:30Z  status W2048 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T17:36:32Z  status W2054 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -33,6 +33,7 @@ mikemol-closure = "mikemol.importdag.closure:main"
 mikemol-imports = "mikemol.importdag.imports:main"
 mikemol-dagbzl = "mikemol.importdag.dagbzl:main"
 mikemol-graph = "mikemol.importdag.graph:main"
+mikemol-landing-cost = "mikemol.importdag.costcli:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -116,6 +117,12 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_graph.py" = ["assert"]
 "tests/test_cost.py" = ["assert"]
 "tests/test_series.py" = ["assert"]
+"tests/test_costcli.py" = ["assert"]
+# ⚑ THE ONE PLACE `mikemol-landing-cost` asks the store: `mikemol-otlp query-metrics` as a child.
+"src/mikemol/importdag/costcli.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 # ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
 # by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
 "tests/test_closure.py" = [

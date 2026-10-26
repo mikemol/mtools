@@ -1505,3 +1505,31 @@
   claim  = {Each way a row can lie leaves the target out of the table.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_series.py -k test_missing_series_other_repo_non_test_and_torn_rows_are_left_out},
 }
+
+@misc{importdag-costcli-report-prices-the-measured-and-names-the-unmeasured,
+  section = {costcli},
+  title  = {test_x is measured (2.5 s, 4.0 s, 7 samples); test_y is not and is listed},
+  claim  = {test_x is measured (2.5 s, 4.0 s, 7 samples); test_y is not and is listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli.py -k test_the_report_prices_the_measured_and_names_the_unmeasured},
+}
+
+@misc{importdag-costcli-store-that-answers-nothing-prices-nothing-and-lists-every-test,
+  section = {costcli},
+  title  = {No series means every test is unmeasured and the sums are 0, not an invented average},
+  claim  = {No series means every test is unmeasured and the sums are 0, not an invented average.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli.py -k test_a_store_that_answers_nothing_prices_nothing_and_lists_every_test},
+}
+
+@misc{importdag-costcli-command-reads-the-dists-graph-and-strips-the-dist-prefix,
+  section = {costcli},
+  title  = {`--dist d` reads <root>/d/graph.json and a manifest path `d/src/x.py` names `src/x.py`},
+  claim  = {`--dist d` reads <root>/d/graph.json and a manifest path `d/src/x.py` names `src/x.py`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli.py -k test_the_command_reads_the_dists_graph_and_strips_the_dist_prefix},
+}
+
+@misc{importdag-costcli-unreadable-graph-is-a-usage-failure-that-prints-nothing,
+  section = {costcli},
+  title  = {No graph.json is exit 2 and nothing on stdout},
+  claim  = {No graph.json is exit 2 and nothing on stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_costcli.py -k test_an_unreadable_graph_is_a_usage_failure_that_prints_nothing},
+}
