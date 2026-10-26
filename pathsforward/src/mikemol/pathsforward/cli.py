@@ -2066,13 +2066,23 @@ def _armed(ctx: Ctx) -> int:
 def _fields_of(ctx: Ctx) -> ops.Update:
     """Read the field flags of an `--update` or `--update-many` into one Update.
 
+    ⚑ AN EMPTY BLOCKER IS NOT A BLOCKER (W2041, the host's W52 carried `blocked_on [""]`): a blank
+    or whitespace-only `--blocked-on` value is refused; a bare `--blocked-on` clears.
+
     Returns:
         the Update the flags describe.
 
+    Raises:
+        RefusedError: when a `--blocked-on` value is empty or only whitespace.
+
     """
+    blockers = ctx.many("blocked_on")
+    if blockers is not None and not all(b.strip() for b in blockers):
+        msg = "--blocked-on: an empty or whitespace blocker is refused; a bare --blocked-on clears"
+        raise ops.RefusedError(msg)
     return ops.Update(
         status=ctx.get("status"),
-        blocked_on=ctx.many("blocked_on"),
+        blocked_on=blockers,
         blocked_kind=ctx.get("blocked_kind"),
         next_step=ctx.get("next"),
         evidence_append=ctx.get("evidence_append"),

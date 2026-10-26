@@ -7346,3 +7346,17 @@
   claim  = {Only a ready card counts; a queue with none says `ready 0`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_open_line.py -k test_blocked_and_done_cards_are_not_counted_and_none_ready_says_zero},
 }
+
+@misc{pathsforward-blocked-on-blank-empty-or-whitespace-blocker-is-refused-and-stores-nothing,
+  section = {open_line},
+  title  = {Both spellings of a blank blocker are refused and leave the card as it was},
+  claim  = {Both spellings of a blank blocker are refused and leave the card as it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocked_on_blank.py -k test_an_empty_or_whitespace_blocker_is_refused_and_stores_nothing},
+}
+
+@misc{pathsforward-blocked-on-blank-real-blocker-is-still-stored,
+  section = {open_line},
+  title  = {The refusal is only for blank values},
+  claim  = {The refusal is only for blank values.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocked_on_blank.py -k test_a_real_blocker_is_still_stored},
+}
