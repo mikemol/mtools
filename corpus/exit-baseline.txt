@@ -1,3 +1,2 @@
-hooks/src/mikemol/hooks/flag_contract.py EXIT_REFUSED 2
 hooks/src/mikemol/hooks/vlogcli.py EXIT_BUSY 5
 pathsforward/src/mikemol/pathsforward/cli.py EXIT_REFUSED 2

@@ -29,7 +29,7 @@ from dataclasses import dataclass
 
 from mikemol.hooks.refusal_log import Refusal, log_fallthrough
 
-EXIT_REFUSED = 2
+EXIT_USAGE = 2
 
 
 def rest(argv: object) -> list[str]:
@@ -87,9 +87,9 @@ def check_flags(
         "unknown-flag",
         destination,
         typed=" ".join(unknown),
-        refusal=Refusal(names, args, EXIT_REFUSED),
+        refusal=Refusal(names, args, EXIT_USAGE),
     )
-    return EXIT_REFUSED
+    return EXIT_USAGE
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,7 +138,7 @@ def exactly_one(argv: object, label: str, choice: Choice, destination: str | Non
             f"⚑ {label}: BOTH {first} and {second} given — mutually exclusive. "
             "Refusing rather than picking one.\n"
         )
-        return EXIT_REFUSED
+        return EXIT_USAGE
     remedy = f"\n  {choice.remedy}" if choice.remedy else ""
     sys.stderr.write(
         f"⚑ {label}: neither {first} nor {second} was given.\n"
@@ -147,7 +147,7 @@ def exactly_one(argv: object, label: str, choice: Choice, destination: str | Non
     log_fallthrough(
         label,
         choice.reason,
-        refusal=Refusal(list(choice.flags), args, EXIT_REFUSED),
+        refusal=Refusal(list(choice.flags), args, EXIT_USAGE),
         destination=destination,
     )
-    return EXIT_REFUSED
+    return EXIT_USAGE

@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     import pytest
 
 _KNOWN = ("--quiet", "--list")
-_REFUSED = flag_contract.EXIT_REFUSED
+_REFUSED = flag_contract.EXIT_USAGE
 _DEST = "http://logs.invalid/insert/jsonline"
 
 # A caller-built pair, standing in for substrate's tenant choice: the MECHANISM is the package's.
