@@ -58,6 +58,7 @@ import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
+from typing import cast
 
 from mikemol.hooks import heartbeat
 from mikemol.hooks.commit_span import binary, store_named
@@ -514,6 +515,28 @@ def remember_exit(git_dir: Path, code: int, restart: str) -> None:
         target.write_text(json.dumps(body), encoding="utf-8")
     except OSError:
         return
+
+
+def take_last(git_dir: Path) -> str:
+    """Read why the watchdog last exited and consume it, so it is said once.
+
+    ⚑ THE HOOK READS A FILE, NEVER ASKS (W2027, as `cached_hint`): the next tool call of the
+    session that saw `failed with exit code 8` gets the explanation `remember_exit` kept, then
+    the file is removed. A file that cannot be read or removed gives "" or leaves the file;
+    neither raises.
+
+    Returns:
+        the kept text, or "" when there is none or it is not the shape `remember_exit` writes.
+
+    """
+    target = git_dir / "mtools" / LAST_NAME
+    try:
+        body: object = json.loads(target.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    target.unlink(missing_ok=True)
+    said = cast("dict[str, object]", body).get("text") if isinstance(body, dict) else None
+    return said if isinstance(said, str) else ""
 
 
 def _parser() -> argparse.ArgumentParser:

@@ -156,13 +156,25 @@ def restart_command(writer: str, state: Path) -> str:
 
 
 def notice(project: Path, now_ns: int) -> str | None:
-    """Say what the session should do when its watchdog is gone and cards are waiting.
+    """Say why the watchdog exited, once, then what to do when it is gone and cards wait.
+
+    ⚑ THE EXIT EXPLAINS ITSELF HERE (W2027, github-8f 2026-10-25): the harness shows only
+    `failed with exit code 8`, and two sessions ignored or misread it. The watchdog keeps its
+    meaning (the WAKE, not a failure; or CANNOT RUN) in `watchdog.last`, and the next tool call
+    says it first and consumes it, whether or not a restart notice is also due.
 
     Returns:
-        the text for `additionalContext`, or None when a watchdog lives, nothing is ready, the
-        notice was given lately or the writer cannot answer.
+        the text for `additionalContext`, or None when there is neither an exit to explain nor
+        a restart to ask for.
 
     """
+    explained = watchdog.take_last(project / ".git")
+    rest = _gone_notice(project, now_ns)
+    return " ".join(m for m in (explained, rest) if m) or None
+
+
+def _gone_notice(project: Path, now_ns: int) -> str | None:
+    # The restart notice: a watchdog that is gone while cards wait, given once per interval.
     git_dir = project / ".git"
     state = project / ".claude" / "paths-forward.json"
     writer = writer_of(project)

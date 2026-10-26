@@ -15434,3 +15434,17 @@
   claim  = {Exit 0 is not a wake and not a failure, so no file is written.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_exit.py -k test_a_parent_that_went_away_leaves_nothing_to_explain},
 }
+
+@misc{hooks-beat-hook-next-tool-call-explains-the-watchdogs-exit-once,
+  section = {heartbeat},
+  title  = {W2027: exit 8 is told as the wake, with the restart command, then not said again},
+  claim  = {W2027: exit 8 is told as the wake, with the restart command, then not said again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_next_tool_call_explains_the_watchdogs_exit_once},
+}
+
+@misc{hooks-beat-hook-explanation-leads-the-restart-notice-when-both-are-due,
+  section = {heartbeat},
+  title  = {A dead watchdog with ready cards: why it exited first, then what to start},
+  claim  = {A dead watchdog with ready cards: why it exited first, then what to start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat_hook.py -k test_the_explanation_leads_the_restart_notice_when_both_are_due},
+}

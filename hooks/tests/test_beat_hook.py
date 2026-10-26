@@ -129,6 +129,28 @@ def test_the_notice_carries_the_next_action_the_watchdog_kept(tmp_path: Path) ->
     assert loaded["hookSpecificOutput"]["additionalContext"].endswith("next: stack W9; atomize W8")
 
 
+def test_the_next_tool_call_explains_the_watchdogs_exit_once(tmp_path: Path) -> None:
+    """W2027: exit 8 is told as the wake, with the restart command, then not said again."""
+    project = _project(tmp_path)
+    _queue(project, 0)
+    watchdog.remember_exit(project / ".git", watchdog.EXIT_IDLE, "RESTART-COMMAND")
+    loaded = cast("dict[str, dict[str, str]]", json.loads(_spoken(project, _NOW)))
+    said = loaded["hookSpecificOutput"]["additionalContext"]
+    assert "WAKE, not a failure" in said
+    assert "RESTART-COMMAND" in said
+    assert not _spoken(project, _NOW)
+
+
+def test_the_explanation_leads_the_restart_notice_when_both_are_due(tmp_path: Path) -> None:
+    """A dead watchdog with ready cards: why it exited first, then what to start."""
+    project = _project(tmp_path)
+    _queue(project, _READY)
+    watchdog.remember_exit(project / ".git", watchdog.EXIT_CANNOT_RUN, "RESTART-COMMAND")
+    loaded = cast("dict[str, dict[str, str]]", json.loads(_spoken(project, _NOW)))
+    said = loaded["hookSpecificOutput"]["additionalContext"]
+    assert said.index("CANNOT RUN") < said.index(f"{_READY} cards are ready")
+
+
 def test_a_hook_never_runs_nemik_stackable_itself(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
