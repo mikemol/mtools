@@ -109,6 +109,7 @@ GRAPH = {
         "src/mikemol/hooks/isolated.py",
         "src/mikemol/hooks/launcher.py",
         "src/mikemol/hooks/loadwait.py",
+        "src/mikemol/hooks/ratchet_pace.py",
         "src/mikemol/hooks/rootdrop.py",
         "src/mikemol/hooks/round_wire.py",
         "src/mikemol/hooks/shardgate.py",
@@ -621,7 +622,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/ratchet_pace.py": {
       "imports": [
-        "src/mikemol/hooks/round_wire.py"
+        "src/mikemol/hooks/round_wire.py",
+        "src/mikemol/hooks/stackrun.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2324,6 +2326,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_ratchet_pace_held.py": {
+      "imports": [
+        "src/mikemol/hooks/ratchet_pace.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_ratchet_pace_path.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_pace.py"
@@ -2332,6 +2341,13 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_ratchet_pace_reason.py": {
+      "imports": [
+        "src/mikemol/hooks/ratchet_pace.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_ratchet_pace_wired.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_pace.py"
       ],
@@ -2572,6 +2588,11 @@ GRAPH = {
         "src/mikemol/hooks/siblingcensus.py",
         "src/mikemol/hooks/siblingratchet.py"
       ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_sites_gate.py": {
+      "imports": [],
       "reads": [],
       "typing_only": []
     },

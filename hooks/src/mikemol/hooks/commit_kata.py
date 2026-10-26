@@ -68,6 +68,7 @@ from mikemol.hooks.isolated import Done, commit_isolated
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.launcher import announce as _announce_launcher
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
+from mikemol.hooks.ratchet_pace import refusal as _pace_refusal
 from mikemol.hooks.rootdrop import drop as _drop
 from mikemol.hooks.rootdrop import invoker_home as _invoker_home
 from mikemol.hooks.rootdrop import owner_of as _owner_of
@@ -1085,6 +1086,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         or stack_build_refusal(root, stack_file, snap, run_git_in)
         or _shard_refusal(root, stack_file, env)
         or _round_refusal(root)
+        or _pace_refusal(root, stack_file, env)
         or _test_refusal(root, stack_file, env)
     )
 

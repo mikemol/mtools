@@ -19,13 +19,14 @@ lines it could not read, so a caller can say the file was partly unread.
 
 import json
 import os
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
 from mikemol.hooks.round_wire import STALE, published_at
+from mikemol.hooks.stackrun import items_of
 
 BEHIND = "behind"
 ENV = "MIKEMOL_PACE_FILE"
@@ -189,6 +190,36 @@ def paydown_cards(queue: object, ratchet: str) -> list[str]:
     return out
 
 
+def operator_held(queue: object, ratchet: str) -> bool:
+    """Say whether a ratchet's paydown waits only on an operator decision (github-8f, W1920).
+
+    ⚑ A ROW AWAITING AN OPERATOR IS NOT REFUSABLE: panflute's last allowlist entry cannot be paid
+    without a policy the operator has not chosen (W1977, github:W63), and refusing every commit on
+    a debt nobody but the operator can move traps a turn on something the session cannot fix. The
+    hold is real only when there IS a paydown card, it is open, and EVERY such card is blocked on
+    a human; one ready or working card means the debt is payable and the row stays owed.
+
+    Returns:
+        True when the open cards touching `file:<ratchet>` are all blocked with kind `human`.
+
+    """
+    raw = cast("dict[str, object]", queue).get("waypoints") if isinstance(queue, dict) else None
+    cards = cast("list[object]", raw) if isinstance(raw, list) else []
+    tag = f"file:{ratchet}"
+    open_cards: list[dict[str, object]] = []
+    for card in cards:
+        if not isinstance(card, dict):
+            continue
+        fields = cast("dict[str, object]", card)
+        touches = fields.get("touches")
+        held = cast("list[object]", touches) if isinstance(touches, list) else []
+        if fields.get("status") in _OPEN and tag in [str(t).removesuffix("!w") for t in held]:
+            open_cards.append(fields)
+    return bool(open_cards) and all(
+        c.get("status") == "blocked" and c.get("blocked_kind") == "human" for c in open_cards
+    )
+
+
 def stack_reason(
     directory: Path, stack_paths: Iterable[str], now: datetime, pace_file: Path | None = None
 ) -> str | None:
@@ -215,7 +246,9 @@ def stack_reason(
     if stamp is None or now - stamp > STALE:
         return None
     rows, _ = read_rows(text)
-    behind = owed(rows, directory.name, directory)
+    behind = [
+        o for o in owed(rows, directory.name, directory) if not operator_held(queue, o.ratchet)
+    ]
     paths = list(stack_paths)
     if not behind or (paths and all(p in _QUEUE_FILES for p in paths)):
         return None
@@ -232,3 +265,20 @@ def stack_reason(
         f"{directory.name} is behind its ratchet paydown and this stack lowers none of the "
         f"ratchets it owes ({'; '.join(lines)}): land a stack that touches one"
     )
+
+
+def refusal(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
+    """Judge a submitted stack file against the paydown pace, as the other submit refusals do.
+
+    Returns:
+        what `stack_reason` says for the paths of every entry, now; None when the stack file cannot
+        be read or the pace asks nothing (MIKEMOL_PACE_FILE names the pace file, as the round's
+        variable names the round).
+
+    """
+    items = items_of(stack_file)
+    if isinstance(items, str):
+        return None
+    named = env.get(ENV)
+    paths = [path for item in items for path in item.paths]
+    return stack_reason(root, paths, datetime.now(UTC), Path(named) if named else None)

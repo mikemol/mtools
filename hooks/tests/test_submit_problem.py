@@ -66,6 +66,18 @@ def test_a_round_card_skipped_for_an_outside_card_is_the_stacks_problem_when_not
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "grid"
 
 
+def test_the_paydown_pace_is_asked_after_the_round_and_before_the_test_run(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W1920: a behind repository's stack that lowers nothing is refused before bazel runs."""
+    _set(monkeypatch, None, None, None)
+    monkeypatch.setattr(commit_kata, "_pace_refusal", _says("behind its ratchet paydown"))
+    monkeypatch.setattr(commit_kata, "_test_refusal", _says("tests fail"))
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "behind its ratchet paydown"
+    _set(monkeypatch, None, None, None, "round")
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "round"
+
+
 def test_a_stacks_own_failing_test_is_asked_after_the_cheap_refusals(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
