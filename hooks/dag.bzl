@@ -618,6 +618,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/ratchet_pace.py": {
+      "imports": [
+        "src/mikemol/hooks/round_wire.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/read_guard.py": {
       "imports": [
         "src/mikemol/hooks/payload.py"
@@ -1462,6 +1469,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_commit_dir_deletion.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_commit_gauge.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
@@ -2286,6 +2300,27 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_ratchet_pace.py": {
+      "imports": [
+        "src/mikemol/hooks/ratchet_pace.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_ratchet_pace_path.py": {
+      "imports": [
+        "src/mikemol/hooks/ratchet_pace.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_ratchet_pace_reason.py": {
+      "imports": [
+        "src/mikemol/hooks/ratchet_pace.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_read_guard.py": {
       "imports": [
         "src/mikemol/hooks/entry.py",
@@ -2344,6 +2379,11 @@ GRAPH = {
         "src/mikemol/hooks/repin_cli.py",
         "src/mikemol/hooks/repin_metrics.py"
       ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_repro_rungs.py": {
+      "imports": [],
       "reads": [],
       "typing_only": []
     },
@@ -2976,6 +3016,14 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_watchdog.py": {
+      "imports": [
+        "src/mikemol/hooks/heartbeat.py",
+        "src/mikemol/hooks/watchdog.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_watchdog_evidence.py": {
       "imports": [
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/watchdog.py"

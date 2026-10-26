@@ -648,6 +648,10 @@ src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is
 src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\], path, kind, value, total\)|        (_repo, path, kind, value, total)|def=main
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/stacksnap.py|queue-file-frozen-at-submit|            if path in seen or path in QUEUE_FILES:|            if path in seen:|def=freeze
+src/mikemol/hooks/ratchet_pace.py|unpayable-requirement-owed|        if held is not None and row\.required > held:|        if False:|def=owed
+src/mikemol/hooks/ratchet_pace.py|another-repos-row-owed|        if row\.repo != repo or row\.state != BEHIND:|        if row.state != BEHIND:|def=owed
+src/mikemol/hooks/ratchet_pace.py|comment-line-counted-as-an-entry| and not line\.startswith\("#"\)||def=entries_in
+src/mikemol/hooks/ratchet_pace.py|torn-line-not-counted|            unread \+= 1|            pass|def=read_rows
 src/mikemol/hooks/stacksnap.py|heads-files-not-listed-under-a-directory|        held = run\(\[\*_HELD, path\], \{\}, root\)|        held = run([*_GONE, path], {}, root)|def=_expand
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
 src/mikemol/hooks/ratchet_hook.py|block-inserted-twice|    if MARK in text:|    if False:|def=insert
@@ -679,7 +683,9 @@ src/mikemol/hooks/flakes.py|flake-line-not-kept|    if before is not None:|    i
 src/mikemol/hooks/stackrun.py|flake-passes-unspoken|    if before is None:|    if True:|def=_judged
 src/mikemol/hooks/watchdog.py|every-exit-explained|    if code not in \{EXIT_IDLE, EXIT_CANNOT_RUN\}:|    if False:|def=remember_exit
 src/mikemol/hooks/watchdog.py|cannot-run-worded-as-the-wake|    if code == EXIT_IDLE:|    if True:|def=exit_meaning
-src/mikemol/hooks/watchdog.py|restart-command-left-out|f"with: \{restart\}"|"with: "|def=exit_meaning
+src/mikemol/hooks/watchdog.py|restart-command-left-out|f"with: \{restart\}\. \{evidence\}"|"with: "|def=exit_meaning
+src/mikemol/hooks/watchdog.py|exit-says-no-gaps|    gaps = ", "\.join\(str\(_secs\(g\)\) for g in last\.gaps_ns\[-5:\]\) or "none kept"|    gaps = "none kept"|def=evidence_of
+src/mikemol/hooks/watchdog.py|beat-age-read-from-the-epoch|\{_secs\(now_ns - last\.at_ns\)\}s ago;|{_secs(now_ns)}s ago;|def=evidence_of
 src/mikemol/hooks/watchdog.py|ceiling-ignores-the-chosen-window|        return band\[1\]|        return MAX_FIRE_S|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|floor-ignores-the-chosen-window|, band\[0\]\), band\[1\]\)|, MIN_FIRE_S), band[1])|def=silence_limit_s
 src/mikemol/hooks/watchdog.py|environment-beats-the-flag|low if low is not None else environ\.get\(MIN_ENV, MIN_FIRE_S\)|environ.get(MIN_ENV, MIN_FIRE_S)|def=read_band

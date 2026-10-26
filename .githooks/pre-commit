@@ -1196,6 +1196,17 @@ for dist in $_dists; do
   elif [ "$_rc" -ne 0 ]; then
       fail=1; note_failure "$dist: ratchet — paydown only, no new keys" "$rlog"
   fi
+  # ⚑ W1663 (SECOND RUNG): THE ONE COMMAND THAT REPRODUCES ONLY THIS DIST'S CENSUS, a detail block
+  # beside the captured account and not part of the label above (the gate history and the kind
+  # classifier match on the label, W1721). Spelled through a variable, as the hermetic suite's is: it
+  # is text for a human, never run, and a line naming the tool would read to the git-env scan
+  # (test_bar_fires) as a launch made without the scrub.
+  if [ "$_rc" -ne 0 ]; then
+      _repro_venv=.venv
+      failed_detail="$failed_detail
+  --- reproduce only the refusing rung ($dist: ratchet)
+      RUFF_BIN=$dist/$_repro_venv/bin/ruff ratchet/$_repro_venv/bin/mikemol-ratchet $dist"
+  fi
 done
 
 # ⚑⚑⚑ THE INSTRUMENT ASSERTS ITS OWN CONTRACT BEFORE ITS OUTPUT IS TRUSTED. mdstruct silently

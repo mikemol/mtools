@@ -15495,3 +15495,98 @@
             listing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_directory_carries_a_deletion_that_is_already_staged},
 }
+
+@misc{hooks-commit-dir-deletion-directory-in-paths-carries-a-staged-deletion-and-a-new-file,
+  section = {commit_dir_deletion},
+  title  = {The commit holds the new file and no longer holds the file `git rm` removed},
+  claim  = {The commit holds the new file and no longer holds the file `git rm` removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_dir_deletion.py -k test_a_directory_in_paths_carries_a_staged_deletion_and_a_new_file},
+}
+
+@misc{hooks-ratchet-pace-head-is-skipped-and-a-torn-line-is-counted-not-read-as-ok,
+  section = {ratchet_pace},
+  title  = {Three rows are read; the head and a half-written line are not rows, the latter is counted},
+  claim  = {Three rows are read; the head and a half-written line are not rows, the latter is
+            counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace.py -k test_the_head_is_skipped_and_a_torn_line_is_counted_not_read_as_ok},
+}
+
+@misc{hooks-ratchet-pace-owed-keeps-behind-rows-of-this-repo-and-drops-the-unpayable,
+  section = {ratchet_pace},
+  title  = {Behind and payable is owed; ok, another repo's, and required above the entries are not},
+  claim  = {Behind and payable is owed; ok, another repo's, and required above the entries are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace.py -k test_owed_keeps_behind_rows_of_this_repo_and_drops_the_unpayable},
+}
+
+@misc{hooks-ratchet-pace-entries-skip-comments-and-blanks-and-are-unknown-for-a-missing-or-json-file,
+  section = {ratchet_pace},
+  title  = {A comment and a blank line are no entry; a missing file and a JSON document are unknown},
+  claim  = {A comment and a blank line are no entry; a missing file and a JSON document are unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace.py -k test_entries_skip_comments_and_blanks_and_are_unknown_for_a_missing_or_json_file},
+}
+
+@misc{hooks-watchdog-evidence-wake-names-the-last-beat-its-age-and-the-gaps-before-it,
+  section = {watchdog_evidence},
+  title  = {Beats 10 s and 30 s apart, then 900 s of quiet: the text says so},
+  claim  = {Beats 10 s and 30 s apart, then 900 s of quiet: the text says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_evidence.py -k test_the_wake_names_the_last_beat_its_age_and_the_gaps_before_it},
+}
+
+@misc{hooks-watchdog-evidence-no-heartbeat-is-said-and-an-exit-seven-carries-no-evidence,
+  section = {watchdog_evidence},
+  title  = {A repo with no beat file says none was read; the cannot-run exit watched nothing},
+  claim  = {A repo with no beat file says none was read; the cannot-run exit watched nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog_evidence.py -k test_no_heartbeat_is_said_and_an_exit_seven_carries_no_evidence},
+}
+
+@misc{hooks-repro-rungs-ratchet-census-names-the-command-that-reproduces-only-it,
+  section = {repro_rungs},
+  title  = {The block names the dist and carries the tool's own invocation under the refusing branch},
+  claim  = {The block names the dist and carries the tool's own invocation under the refusing
+            branch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repro_rungs.py -k test_the_ratchet_census_names_the_command_that_reproduces_only_it},
+}
+
+@misc{hooks-repro-rungs-reproduce-blocks-go-to-the-detail-and-never-to-the-label,
+  section = {repro_rungs},
+  title  = {Every block follows an append to failed_detail, the text replayed, not a note_failure},
+  claim  = {Every block follows an append to failed_detail, the text replayed, not a note_failure.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repro_rungs.py -k test_the_reproduce_blocks_go_to_the_detail_and_never_to_the_label},
+}
+
+@misc{hooks-ratchet-pace-reason-stack-that-lowers-nothing-is-refused-naming-the-ratchet-and-the-cards,
+  section = {ratchet_pace},
+  title  = {The reason names the owed ratchet, required against observed, and the open paydown card},
+  claim  = {The reason names the owed ratchet, required against observed, and the open paydown card.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_reason.py -k test_a_stack_that_lowers_nothing_is_refused_naming_the_ratchet_and_the_cards},
+}
+
+@misc{hooks-ratchet-pace-reason-stack-touching-the-ratchet-or-holding-queue-files-alone-is-admitted,
+  section = {ratchet_pace},
+  title  = {The paydown itself, a directory holding it, and a queue-state stack all wait},
+  claim  = {The paydown itself, a directory holding it, and a queue-state stack all wait.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_reason.py -k test_a_stack_touching_the_ratchet_or_holding_queue_files_alone_is_admitted},
+}
+
+@misc{hooks-ratchet-pace-reason-no-fresh-pace-and-no-payable-debt-refuse-nothing,
+  section = {ratchet_pace},
+  title  = {Absent, stale and unpayable (required above the entries the file holds) are all quiet},
+  claim  = {Absent, stale and unpayable (required above the entries the file holds) are all quiet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_reason.py -k test_no_fresh_pace_and_no_payable_debt_refuse_nothing},
+}
+
+@misc{hooks-ratchet-pace-path-named-file-wins-and-the-default-is-the-export-tree,
+  section = {ratchet_pace},
+  title  = {The variable names the file; unset, it is `ratchet-pace.json` under luthen's export tree},
+  claim  = {The variable names the file; unset, it is `ratchet-pace.json` under luthen's export
+            tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_path.py -k test_the_named_file_wins_and_the_default_is_the_export_tree},
+}
+
+@misc{hooks-revendor-transcriptstruct-is-a-vendored-dist-and-moves-with-the-rest,
+  section = {revendor},
+  title  = {W2054 (luthen-observability:W1684): the commitments exporter's wheel moves with the pair},
+  claim  = {W2054 (luthen-observability:W1684): the commitments exporter's wheel moves with the
+            pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_transcriptstruct_is_a_vendored_dist_and_moves_with_the_rest},
+}

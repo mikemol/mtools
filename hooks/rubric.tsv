@@ -199,3 +199,7 @@ round_order	Round order (W1950): the repository's published round, best rank fir
 mypy_mirror	Mypy mirror (W1628): a new file judged under its real module name so an override applies
 domain_witness	Domain-witness
 flakes	Gate-flakes
+commit_dir_deletion	A Directory in Paths Carries Its Deletions
+ratchet_pace	Ratchet Pace: Owed Ratchets Read From nemik's File, Unpayable Ones Ignored
+watchdog_evidence	The Watchdog's Exit Carries the Beats It Saw
+repro_rungs	Each Refusing Rung Says the One Command That Reproduces Only It
