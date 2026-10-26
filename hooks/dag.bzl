@@ -2312,6 +2312,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_ratchet_emit_retired.py": {
+      "imports": [
+        "src/mikemol/hooks/ratchet_emit.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_ratchet_hook.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_hook.py"

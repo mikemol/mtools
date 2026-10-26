@@ -15743,3 +15743,32 @@
             `MEMBUDGET_TIMEOUT` does not reach the wait either.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_has_no_deadline_whatever_the_caller_sets},
 }
+
+@misc{hooks-ratchet-emit-retired-tombstone-line-is-read-and-a-ratchet-row-or-comment-is-not,
+  section = {ratchet_emit},
+  title  = {Both reasons are read, the rename's target is not part of the row, and nothing else is},
+  claim  = {Both reasons are read, the rename's target is not part of the row, and nothing else is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit_retired.py -k test_a_tombstone_line_is_read_and_a_ratchet_row_or_comment_is_not},
+}
+
+@misc{hooks-ratchet-emit-retired-tombstone-becomes-a-retired-row-of-value-one-with-three-labels,
+  section = {ratchet_emit},
+  title  = {The series is `mikemol.ratchet.retired`, 1 per tombstone, labelled repo, ratchet, reason},
+  claim  = {The series is `mikemol.ratchet.retired`, 1 per tombstone, labelled repo, ratchet,
+            reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit_retired.py -k test_a_tombstone_becomes_a_retired_row_of_value_one_with_three_labels},
+}
+
+@misc{hooks-ratchet-emit-retired-main-sends-each-tombstone-under-the-callers-name,
+  section = {ratchet_emit},
+  title  = {The census directory's basename (`snap`) is never the label; two retired rows are sent},
+  claim  = {The census directory's basename (`snap`) is never the label; two retired rows are sent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit_retired.py -k test_main_sends_each_tombstone_under_the_callers_name},
+}
+
+@misc{hooks-ratchet-emit-retired-census-with-no-tombstone-sends-no-retired-row,
+  section = {ratchet_emit},
+  title  = {Retired is present only while a declaration lists it},
+  claim  = {Retired is present only while a declaration lists it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit_retired.py -k test_a_census_with_no_tombstone_sends_no_retired_row},
+}

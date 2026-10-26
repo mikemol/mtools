@@ -58,7 +58,13 @@ _LINE = re.compile(
     r"(?: sum=(?P<sum>\d+))?(?: guessed=(?P<guessed>[01]))?$"
 )
 
+RETIRED = "mikemol.ratchet.retired"
+_TOMBSTONE = re.compile(
+    r"^(?P<repo>\S+) (?P<path>\S+) retired reason=(?P<reason>\S+) sha=\S+(?: to=\S+)?$"
+)
+
 type Row = dict[str, object]
+type Tombstone = tuple[str, str, str]
 type Entry = tuple[str, str, str, int, int | None, bool | None]
 type Spawn = Callable[[Sequence[str], str], None]
 type Run = Callable[[Sequence[str]], tuple[int, str]]
@@ -82,6 +88,44 @@ def parse_census(text: str) -> list[Entry]:
             guessed = None if flag is None else str(flag) == "1"
             found.append((*entry, None if total is None else int(total), guessed))
     return found
+
+
+def parse_tombstones(text: str) -> list[Tombstone]:
+    """Read the census lines that say a ratchet was retired (W1963).
+
+    Returns:
+        `(repo, ratchet, reason)` for each tombstone line; a ratchet row, a comment and any line of
+        another shape are left out.
+
+    """
+    found: list[Tombstone] = []
+    for line in text.splitlines():
+        match = _TOMBSTONE.match(line)
+        if match is not None:
+            found.append((str(match["repo"]), str(match["path"]), str(match["reason"])))
+    return found
+
+
+def retired_rows(tombstones: Sequence[Tombstone], now_ns: int) -> list[Row]:
+    """Turn tombstones into gauge rows: `mikemol.ratchet.retired` is 1 for each, every run.
+
+    ⚑ RETIRED IS WRITTEN, NEVER INFERRED FROM SILENCE (the operator, host line 96701; W1964): a
+    series that stops reporting could be a ratchet paid off, a rename or a broken census, so a
+    retirement is sent as its own series for as long as the declaration lists it.
+
+    Returns:
+        rows named `mikemol.ratchet.retired`, value 1, with the labels `repo`, `ratchet`, `reason`.
+
+    """
+    return [
+        {
+            "name": RETIRED,
+            "value": 1,
+            "time_ns": now_ns,
+            "fields": {"repo": repo, "ratchet": ratchet, "reason": reason},
+        }
+        for repo, ratchet, reason in tombstones
+    ]
 
 
 def rows_of(census: Sequence[Entry], now_ns: int) -> list[Row]:
@@ -189,7 +233,9 @@ def main(
         (args[0], path, kind, value, total, guessed)
         for _repo, path, kind, value, total, guessed in parse_census(said)
     ]
-    rows = rows_of(named, time.time_ns())
+    now = time.time_ns()
+    dead = [(args[0], path, reason) for _repo, path, reason in parse_tombstones(said)]
+    rows = [*rows_of(named, now), *retired_rows(dead, now)]
     sent = emit(rows, os.environ, spawn)
     sys.stdout.write(f"ratchet emit: {len(rows)} ratchet(s), sent={sent}\n")
     return 0

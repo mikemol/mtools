@@ -37471,23 +37471,23 @@
     {
       "symbol": "W1734",
       "title": "Retire MIKEMOL_COMMIT_LOCK_TIMEOUT, a wall-clock bound on the commit lease wait",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Census done: no other caller. Remove commit_kata.TIMEOUT_ENV and the gateenv KEEP entry (and the wait it bounds, replaced by the event exit: holder pid gone or --withdraw). Hooks lane, after W1958. I still need W1958 landed, W1734",
-      "evidence": "2026-10-26: 2026-10-26 census (grep of ~/github for MIKEMOL_COMMIT_LOCK_TIMEOUT in py, sh, service, bzl, toml, bazel, excluding .venv and .git; luthen-observability/.kube unreadable): only mtools names it, in hooks gateenv.py and commit_kata.py. No other repo sets it.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-26: 2026-10-26 census (grep of ~/github for MIKEMOL_COMMIT_LOCK_TIMEOUT in py, sh, service, bzl, toml, bazel, excluding .venv and .git; luthen-observability/.kube unreadable): only mtools names it, in hooks gateenv.py and commit_kata.py. No other repo sets it. | 2026-10-26: landed bd49be9e",
       "issued_at": "2026-10-19T19:55:30Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-retire-lock-timeout",
-      "last_worked": "2026-10-26T22:53:23Z",
+      "last_worked": "2026-10-26T23:38:44Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_kata.py"
       ],
       "size_class": "small",
-      "completed": null
+      "completed": "20261026T233844Z"
     },
     {
       "symbol": "W1735",
@@ -42991,12 +42991,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Next entry: vlogcli EXIT_BUSY 5 to 3 (the table already lists BUSY under DEFER): read each caller that tests the vlog drain status, change the constant, run vlogcli tests and the exit gate, remove the baseline line. I still need that entry and the six after it, W1954",
-      "evidence": "2026-10-25: 2026-10-25: first entry paid (new_dist_cli: usage 2 stays, refusals move to 4; callers read, none in this checkout); stack-w1954a submitted. Seven entries left: flag_contract and pathsforward cli EXIT_REFUSED 2 (table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (table wants 7), vlogcli EXIT_BUSY 5 (table wants 3). Each needs its scripted callers read before its number moves | 2026-10-25: 2026-10-25: first entry (mikemol-new-dist) landed as 853a7e0c in the joined run with W1918 (2ef82466), both at 09:22:56 after W1953 failed alone. Seven exit-baseline entries remain: flag_contract and pathsforward cli EXIT_REFUSED 2 (the table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (7), vlogcli EXIT_BUSY 5 (the table lists BUSY under DEFER 3)",
+      "next_bounded_step": "Two entries left: vlogcli EXIT_BUSY 5 (table wants 3, taken by NO_DESTINATION: decide which meaning keeps 3, or a new table row) and pathsforward cli EXIT_REFUSED 2 (table wants 4; census consumers of the writer's exit 2 first). Ask github-8f which. I still need that ruling, W1954",
+      "evidence": "2026-10-25: 2026-10-25: first entry paid (new_dist_cli: usage 2 stays, refusals move to 4; callers read, none in this checkout); stack-w1954a submitted. Seven entries left: flag_contract and pathsforward cli EXIT_REFUSED 2 (table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (table wants 7), vlogcli EXIT_BUSY 5 (table wants 3). Each needs its scripted callers read before its number moves | 2026-10-25: 2026-10-25: first entry (mikemol-new-dist) landed as 853a7e0c in the joined run with W1918 (2ef82466), both at 09:22:56 after W1953 failed alone. Seven exit-baseline entries remain: flag_contract and pathsforward cli EXIT_REFUSED 2 (the table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (7), vlogcli EXIT_BUSY 5 (the table lists BUSY under DEFER 3) | 2026-10-26: 2026-10-26: second entry paid, flag_contract EXIT_REFUSED to EXIT_USAGE (value 2), landed 55ec4e56. Two entries remain, both a decision (vlogcli 5 vs 3 collides with NO_DESTINATION; pathsforward cli 2 vs 4 changes every consumer).",
       "issued_at": "2026-10-25T10:45:31Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T17:07:06Z",
+      "last_worked": "2026-10-26T23:38:47Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -43316,12 +43316,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "ratchets.json gains a retired list: each entry a path, a reason (reclassified-not-a-ratchet, paid-to-zero-and-removed, or renamed-to with the new path) and the sha that retired it; declaration.read returns both lists; a retired entry that is also declared is refused; the list only grows (an entry present at HEAD may not vanish, checked like the queue's regressions). The census omits a retired path from the ratchet rows and lists it as a tombstone row. I still need all of it, W1963",
-      "evidence": "",
+      "next_bounded_step": "Reader side is W1964 (ratchet_emit sends mikemol.ratchet.retired for each tombstone line). Left here: the retired list only grows, an entry present at HEAD may not vanish, checked like the queue's regressions. I still need that check, W1963",
+      "evidence": "2026-10-26: first slice landed 40710750 (retired list, refusals, tombstone lines). Left: the grow-only check",
       "issued_at": "2026-10-25T12:19:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T22:53:22Z",
+      "last_worked": "2026-10-26T23:38:46Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43361,24 +43361,22 @@
     {
       "symbol": "W1964",
       "title": "The ratchet emitter sends mikemol.ratchet.retired for each listed tombstone on every run, so retired is written and never inferred from silence",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W42"
       ],
       "touches": [
         "file:hooks/src/mikemol/hooks/ratchet_emit.py!w"
       ],
-      "blocked_on": [
-        "W1963"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "ratchet_emit sends mikemol.ratchet.retired with labels repo, ratchet and reason = 1 for every tombstone the census prints, on every run while it is listed (so at least once by the retiring run), through the same spawn path; nemik's verdict and luthen's dark alert read it. Tell nemik-84 and luthen-observability-ab the metric name and labels first so both can build against it. I still need all of it, W1964",
-      "evidence": "2026-10-25: 2026-10-25 luthen-observability-ab: ratchet tombstones carry the same shape as the family one (metric, reason, owner as datapoint attributes, event_driven freshness with a liveness companion); luthen W1628 makes alerts honour them. For the ratchet series the labels stay repo, ratchet and reason as told to nemik-84, plus owner and the freshness facts | 2026-10-26: 2026-10-26 why nemik:W1040 waits: W1964 needs the tombstone list W1963 adds to the ratchet declaration (W1963 is ready, ratchet/declaration.py), and both it and W1958 edit hooks ratchet_emit.py on the serial hooks lane. Order: W1958 now (working), then W1963, then W1964; the metric name and labels (repo, ratchet, reason) were already told to nemik-84.",
+      "evidence": "2026-10-25: 2026-10-25 luthen-observability-ab: ratchet tombstones carry the same shape as the family one (metric, reason, owner as datapoint attributes, event_driven freshness with a liveness companion); luthen W1628 makes alerts honour them. For the ratchet series the labels stay repo, ratchet and reason as told to nemik-84, plus owner and the freshness facts | 2026-10-26: 2026-10-26 why nemik:W1040 waits: W1964 needs the tombstone list W1963 adds to the ratchet declaration (W1963 is ready, ratchet/declaration.py), and both it and W1958 edit hooks ratchet_emit.py on the serial hooks lane. Order: W1958 now (working), then W1963, then W1964; the metric name and labels (repo, ratchet, reason) were already told to nemik-84. | 2026-10-26: 2026-10-26: W1963's tombstone lines landed 40710750, which is all this reader needs; the grow-only check stays on W1963.",
       "issued_at": "2026-10-25T12:19:04Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T22:01:02Z",
-      "ticks_blocked": 1,
+      "last_worked": "2026-10-26T23:40:51Z",
+      "ticks_blocked": 0,
       "warrants": [
         {
           "@context": {
@@ -44658,19 +44656,19 @@
     {
       "symbol": "W2008",
       "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "velocity"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "W2007's record landed (7861893e). The refusal edits commit_kata.py, the serial hooks lane, so it follows W1958 (ratchet_emit) and W1724. Then: refuse the next land while a recorded flake has no ranked card in the round, naming the target and the writer command that mints the card. I still need W1958 landed, W2008",
+      "next_bounded_step": "Refuse the next land while a recorded flake has no ranked card in the round, naming the target and the writer command that mints the card. Edits commit_kata.py, which stack-next-7 holds in the gate (cited by W1734); take it when that lands. I still need that landing, W2008",
       "evidence": "",
       "issued_at": "2026-10-25T20:16:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T20:55:03Z",
+      "last_worked": "2026-10-26T23:40:53Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44684,12 +44682,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "W2007's flake record landed (7861893e). Emitting mikemol.commit.flaky_passes{repo} touches hooks (commit_span/verdictlog), the serial lane in W1958's stack now; take it right after, with W2029's landing series since both ride the same emit path. Zero is sent when none. I still need W1958 landed, W2009",
+      "next_bounded_step": "Emits mikemol.commit.flaky_passes{repo} from the flake records (W2007, landed 7861893e); touches hooks, which stack-next-7 holds in the gate (cited by W1734). Take it when that lands. I still need that landing, W2009",
       "evidence": "",
       "issued_at": "2026-10-25T20:17:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T22:09:34Z",
+      "last_worked": "2026-10-26T23:04:15Z",
       "ticks_blocked": 0,
       "completed": null
     },
