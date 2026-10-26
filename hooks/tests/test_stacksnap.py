@@ -137,6 +137,32 @@ def test_a_directory_expands_to_tracked_and_new_files_but_not_ignored_or_links(
     assert _git(root, "cat-file", "-p", by_path["src/kept.py"].blob) == "kept\n"
 
 
+def test_a_directory_carries_a_deletion_that_is_already_staged(tmp_path: Path) -> None:
+    """W2039: `git rm` takes the file out of the index too, and the directory still drops it.
+
+    ⚑ THE DEFECT, TWICE IN ONE DAY IN ONE REPOSITORY (luthen, 2026-10-26): the old wheels, then the
+    old -r4 ebuild, stayed in HEAD beside the new files because a path that is in neither the index
+    nor the tree is in neither `ls-files` listing.
+    """
+    root = _repo(tmp_path)
+    (root / "pkg").mkdir()
+    (root / "pkg" / "old.whl").write_text("old\n", encoding="utf-8")
+    _git(root, "add", "pkg")
+    _git(root, *IDENTITY, "commit", "-q", "-m", "pkg")
+    _git(root, "rm", "-q", "pkg/old.whl")
+    (root / "pkg").mkdir(exist_ok=True)
+    (root / "pkg" / "new.whl").write_text("new\n", encoding="utf-8")
+    frozen = stacksnap.freeze(root, ["pkg"], RUN)
+    assert {f.path: f.blob == stacksnap.DELETION for f in frozen} == {
+        "pkg/old.whl": True,
+        "pkg/new.whl": False,
+    }
+    stack = _build(root, frozen)
+    assert stack.failed is None
+    kept = _git(root, "ls-tree", "-r", "--name-only", stack.commits[0], "--", "pkg")
+    assert kept == "pkg/new.whl\n"
+
+
 def test_a_path_that_names_nothing_contributes_nothing(tmp_path: Path) -> None:
     """Never tracked and not on disk: not a deletion, just nothing."""
     root = _repo(tmp_path)

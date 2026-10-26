@@ -40,6 +40,10 @@ _EXECUTABLE = "100755"
 _FIELDS = 3
 _LIVE = ["ls-files", "--cached", "--others", "--exclude-standard", "-z", "--"]
 _GONE = ["ls-files", "--deleted", "-z", "--"]
+# ⚑ W2039: A FILE `git rm` TOOK OUT OF THE INDEX IS IN NEITHER LISTING ABOVE, and HEAD still holds
+# it, so a directory named in a stack dropped every staged deletion under it (luthen, twice on
+# 2026-10-26: the old wheels, then the -r4 ebuild, left in HEAD beside the new ones).
+_HELD = ["ls-tree", "-r", "--name-only", "-z", "HEAD", "--"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,7 +77,8 @@ def _expand(root: Path, path: str, run: EnvRunner) -> list[str]:
     if target.is_dir():
         live = run([*_LIVE, path], {}, root)
         gone = run([*_GONE, path], {}, root)
-        return sorted({*_git_lines(live), *_git_lines(gone)})
+        held = run([*_HELD, path], {}, root)
+        return sorted({*_git_lines(live), *_git_lines(gone), *_git_lines(held)})
     return [path]
 
 

@@ -15484,3 +15484,14 @@
   claim  = {W2007: the same files, a refusing hook then a passing one: the second run says FLAKE.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_pass_on_a_tree_that_was_refused_is_named_a_flake_and_recorded},
 }
+
+@misc{hooks-stacksnap-directory-carries-a-deletion-that-is-already-staged,
+  section = {stacksnap},
+  title  = {W2039: `git rm` takes the file out of the index too, and the directory still drops it},
+  claim  = {W2039: `git rm` takes the file out of the index too, and the directory still drops it.
+            THE DEFECT, TWICE IN ONE DAY IN ONE REPOSITORY (luthen, 2026-10-26): the old
+            wheels, then the old -r4 ebuild, stayed in HEAD beside the new files because
+            a path that is in neither the index nor the tree is in neither `ls-files`
+            listing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacksnap.py -k test_a_directory_carries_a_deletion_that_is_already_staged},
+}
