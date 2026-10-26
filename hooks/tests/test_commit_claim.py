@@ -78,18 +78,25 @@ def test_two_repositories_get_two_different_claims(tmp_path: Path) -> None:
     assert one.argv[3] != two.argv[3]
 
 
-def test_the_load_gate_is_off_and_the_wait_has_no_deadline_unless_asked(tmp_path: Path) -> None:
-    """A busy host must not stall a commit, and the lease wait has no timer of its own (W1463)."""
+def test_the_load_gate_is_off_and_the_wait_has_no_deadline_whatever_the_caller_sets(
+    tmp_path: Path,
+) -> None:
+    """A busy host must not stall a commit, and the lease wait has no timer, none asked for (W1734).
+
+    ⚑ THE KNOB IS RETIRED: `MIKEMOL_COMMIT_LOCK_TIMEOUT` was a wall-clock bound a caller could set,
+    and no caller did. A caller's own `MEMBUDGET_TIMEOUT` does not reach the wait either.
+    """
     target = _repo(tmp_path, "r")
     env = {commit_kata.FENCE_ENV: str(_fence(tmp_path))}
     got = commit_kata.claim_of(target, env, ["x"])
     assert isinstance(got, commit_kata.Claim)
     assert got.env["MEMBUDGET_MAXLOAD"] == "0"
     assert "MEMBUDGET_TIMEOUT" not in got.env
-    env[commit_kata.TIMEOUT_ENV] = "90"
+    env["MIKEMOL_COMMIT_LOCK_TIMEOUT"] = "90"
+    env["MEMBUDGET_TIMEOUT"] = "90"
     again = commit_kata.claim_of(target, env, ["x"])
     assert isinstance(again, commit_kata.Claim)
-    assert again.env["MEMBUDGET_TIMEOUT"] == "90"
+    assert "MEMBUDGET_TIMEOUT" not in again.env
 
 
 def test_the_commands_own_budget_variables_are_put_back_or_removed(tmp_path: Path) -> None:

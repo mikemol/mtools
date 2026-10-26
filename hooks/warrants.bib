@@ -11108,13 +11108,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_heartbeat.py -k test_a_beat_that_cannot_be_written_returns_none_and_raises_nothing},
 }
 
-@misc{hooks-commit-claim-load-gate-is-off-and-the-wait-has-no-deadline-unless-asked,
-  section = {commit_claim},
-  title  = {A busy host must not stall a commit, and the lease wait has no timer of its own (W1463)},
-  claim  = {A busy host must not stall a commit, and the lease wait has no timer of its own (W1463).},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_has_no_deadline_unless_asked},
-}
-
 @misc{hooks-commit-beat-submit-leaves-a-beat-naming-the-commit-tool,
   section = {heartbeat},
   title  = {The record sits beside the commit ledger, under the git dir},
@@ -15739,4 +15732,14 @@
   title  = {W1958: nemik treats a guessed row as advisory; an unknown flag is not sent as false},
   claim  = {W1958: nemik treats a guessed row as advisory; an unknown flag is not sent as false.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_guessed_is_a_label_only_where_the_census_said_so},
+}
+
+@misc{hooks-commit-claim-load-gate-is-off-and-the-wait-has-no-deadline-whatever-the-caller-sets,
+  section = {commit_claim},
+  title  = {A busy host must not stall a commit, and the lease wait has no timer, none asked for (W1734)},
+  claim  = {A busy host must not stall a commit, and the lease wait has no timer, none asked for
+            (W1734). THE KNOB IS RETIRED: `MIKEMOL_COMMIT_LOCK_TIMEOUT` was a wall-clock
+            bound a caller could set, and no caller did. A caller's own
+            `MEMBUDGET_TIMEOUT` does not reach the wait either.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_claim.py -k test_the_load_gate_is_off_and_the_wait_has_no_deadline_whatever_the_caller_sets},
 }

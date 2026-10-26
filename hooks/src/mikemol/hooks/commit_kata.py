@@ -144,7 +144,6 @@ FENCE_PIN = (
     'uv add "mikemol-fence @ git+https://github.com/mikemol/mtools.git@<sha>#subdirectory=fence"'
 )
 HELD_ENV = "MIKEMOL_COMMIT_LOCK_HELD"
-TIMEOUT_ENV = "MIKEMOL_COMMIT_LOCK_TIMEOUT"
 BUDGET = (
     "MEMBUDGET_FILE",
     "MEMBUDGET_MAXLOAD",
@@ -734,8 +733,9 @@ def claim_of(
     ⚑ THE WAIT HAS NO DEADLINE (W1463, github-8f 2026-10-17): it ended after an hour, and with
     35-minute gates a stack three back in the queue expired with no verdict, three of them in one
     day. A wall-clock give-up is what the fleet rule forbids. The wait ends when the holder does,
-    and the fence reaps a holder that died; only a caller that sets MIKEMOL_COMMIT_LOCK_TIMEOUT
-    gets a bound, and that is its own choice.
+    and the fence reaps a holder that died. The one knob that bounded it (the lock-timeout
+    variable) is retired (W1734): no caller set it, and a caller's own MEMBUDGET_TIMEOUT is
+    dropped here.
 
     ⚑⚑ NOTHING OF THAT CONFIGURATION REACHES THE COMMAND. `hold` hands its environment to what it
     runs, and the gate beneath leases from the HOST ledger with the HOST's ceilings, so each
@@ -781,10 +781,7 @@ def claim_of(
     held["MEMBUDGET_FILE"] = str(ledger / "commit.ledger")
     held["MEMBUDGET_MAXLOAD"] = "0"
     held["MEMBUDGET_ZRAM_MAX"] = "0"
-    if env.get(TIMEOUT_ENV):
-        held["MEMBUDGET_TIMEOUT"] = env[TIMEOUT_ENV]
-    else:
-        held.pop("MEMBUDGET_TIMEOUT", None)
+    held.pop("MEMBUDGET_TIMEOUT", None)
     return Claim(argv, held)
 
 
