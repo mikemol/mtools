@@ -40,6 +40,8 @@ ENDPOINTS_ENV = "MIKEMOL_ENDPOINTS"
 HOME_FILE = ".config/mikemol/endpoints.json"
 SUBMIT_ENV = "MIKEMOL_COMMIT_SUBMITTED_NS"
 SERVICE = "mikemol-commit"
+ADMISSION_NAME = "mikemol.gate.admission_wait_seconds"
+RUN_NAME = "mikemol.gate.run_seconds"
 _OK = "COMMITTED"
 _INVOCATION = re.compile(
     r"/invocation/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
@@ -337,6 +339,46 @@ def _start(
     return started
 
 
+def gate_series(moments: Moments) -> list[tuple[str, float]]:
+    """Name the two figures of one gate: the wait for its turn and the run itself (W2053).
+
+    ⚑ ADMISSION WAIT AND RUN TIME ARE DIFFERENT TERMS OF TIME-TO-LAND (github-8f 2026-10-26: a gate
+    that took 116 minutes spent about 110 of them before its pre-commit started, and nothing
+    measured it). The wait is the submit to the lease, the run is the lease to the verdict, both
+    in seconds and neither below zero, so a clock that stepped back reads 0 and not a negative.
+
+    Returns:
+        `(mikemol.gate.admission_wait_seconds, wait)` and `(mikemol.gate.run_seconds, run)`.
+
+    """
+    wait = max(moments.lease_ns - moments.submit_ns, 0) / NS_PER_S
+    run = max(moments.end_ns - moments.lease_ns, 0) / NS_PER_S
+    return [(ADMISSION_NAME, wait), (RUN_NAME, run)]
+
+
+def emit_series(
+    repo: str, moments: Moments, env: Mapping[str, str], spawn: Spawn = spawn_detached
+) -> int:
+    """Start one `mikemol-otlp metric` child for each of the gate's two figures.
+
+    Returns:
+        how many were started: 0 with no binary or store; a failed start ends the run quietly.
+
+    """
+    program = binary(env)
+    if program is None or not store_named(env):
+        return 0
+    shared = ["--service", SERVICE, "--namespace", repo, "--field", f"repo={repo}"]
+    started = 0
+    for name, value in gate_series(moments):
+        try:
+            spawn([program, "metric", *shared, "--name", name, "--value", f"{value:.3f}"])
+        except OSError:
+            break
+        started += 1
+    return started
+
+
 def emit(
     text: str,
     moments: Moments,
@@ -351,7 +393,10 @@ def emit(
         the first start failed; a failure never propagates.
 
     """
-    return _start((verdict_of(text), waypoint, "commit", _marks_of(text)), moments, env, spawn)
+    event = verdict_of(text)
+    if event is not None:
+        emit_series(event["repo"], moments, env)
+    return _start((event, waypoint, "commit", _marks_of(text)), moments, env, spawn)
 
 
 def emit_stack(
@@ -372,6 +417,7 @@ def emit_stack(
     """
     emit_landings(text, (moments.end_ns - moments.lease_ns) / NS_PER_S, env)
     found = _marks_of(text)
-    return _start(
-        (stack_event(text), ",".join(waypoints), "commit.stack", found), moments, env, spawn
-    )
+    event = stack_event(text)
+    if event is not None:
+        emit_series(event["repo"], moments, env)
+    return _start((event, ",".join(waypoints), "commit.stack", found), moments, env, spawn)
