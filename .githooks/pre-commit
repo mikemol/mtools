@@ -1114,6 +1114,20 @@ say "claude-code census: is any untracked code living under .claude/?"
 run_checked "no untracked code (.py .rego .sh) under .claude/" \
   "$tools/hooks/.venv/bin/python3" -m mikemol.hooks.claude_code_census .
 
+# ⚑⚑ W1989: THE COMMITTED PER-SITE MUTATION PACKAGES FOLLOW THE GRAPH, OR THEY ARE NO GRID. Measured
+# 2026-10-26: with `hooks/sites` generated before the graph gained a module, all 13 sites of
+# `round_wire` ERRORED ("the suite did NOT run"), and a clean site list over sites that never ran is
+# a claim about a population nobody measured. `mutants_gen --check` names every generated file that
+# differs from what the current source, tests and graph would produce, and every package whose
+# module is gone. It is cheap (seconds, no bazel), so it runs here and not as a target that would
+# need every sub-package's BUILD file as a declared input. ⚑ ONLY WHERE THE SITES ARE COMMITTED: a
+# repository (or a snapshot of one) with no `hooks/sites` has nothing to follow.
+if [ -d hooks/sites ]; then
+  run_checked "hooks/sites follow the graph (mutants_gen --check)" \
+    git_scrubbed env PYTHONPATH="$tools/fence/src:$tools/mutation/src" \
+      "$tools/hooks/.venv/bin/python3" check_mutants/mutants_gen.py --dist hooks --check
+fi
+
 # ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
 # rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
 # `apropos` search for "text" returns 86 hits and MISSES all six readers added by hand, because

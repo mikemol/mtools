@@ -158,7 +158,7 @@ def render_module(dist: str, cells: list[Cell], everything_tests: list[str]) -> 
         out
         + '\ntest_suite(\n    name = "suite",\n    tests = [\n'
         + names
-        + f'    ],\n    visibility = ["//{dist}/{SITES}:__pkg__"],\n)\n'
+        + f'    ],\n    tags = ["manual"],\n    visibility = ["//{dist}/{SITES}:__pkg__"],\n)\n'
     )
 
 
@@ -174,7 +174,7 @@ def render_root(dist: str, modules: list[str]) -> str:
         HEADER.format(dist=dist)
         + '\ntest_suite(\n    name = "suite",\n    tests = [\n'
         + inner
-        + '    ],\n    visibility = ["//visibility:public"],\n)\n'
+        + '    ],\n    tags = ["manual"],\n    visibility = ["//visibility:public"],\n)\n'
     )
 
 

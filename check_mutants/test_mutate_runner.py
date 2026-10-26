@@ -971,6 +971,18 @@ def test_the_generated_package_carries_the_site_its_tests_and_a_suite(
     ]
 
 
+def test_every_generated_suite_is_manual_so_a_wildcard_never_runs_the_sites(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W1989: both levels of suite carry `manual`, because a suite lists its tests explicitly.
+
+    A `manual` site named by an un-tagged `test_suite` is still run by `//...`.
+    """
+    files = mutants_gen.generate(_gen_dist(tmp_path))
+    for name in ("d/sites/BUILD.bazel", "d/sites/src/p/a/BUILD.bazel"):
+        assert 'tags = ["manual"]' in files[name].split("test_suite(")[1]
+
+
 def test_a_def_site_omits_mutants_regex_and_a_declared_defect_stages_it(
     tmp_path: pathlib.Path,
 ) -> None:

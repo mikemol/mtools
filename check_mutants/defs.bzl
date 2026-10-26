@@ -73,7 +73,7 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, **kw
         names.append(shard)
     native.test_suite(name = name, tests = names)
 
-def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = "small"):
+def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = "small", cpu_budget = 120, tags = ["manual"]):
     """Declare ONE mutation cell as a test target (mtools:W1883, W1833).
 
     ⚑ EXHAUSTIVE, NOT FLAT: the operator ruled that flat sharding kills caching and that thousands of
@@ -90,7 +90,23 @@ def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = 
             the whole `tests` directory.
         venv: the dependencies-only venv (`MUTATE_VENV`), not `.venv`, which carries every source.
         size: bazel's test size.
+        cpu_budget: the CPU seconds the site may use (`MUTATE_SHARD_CPU_S`); over it the runner
+            refuses with its measured CPU. ⚑ THE WALL TIMEOUT IS A BACKSTOP THAT NEVER DECIDES
+            (W1989, measured: 171 of 177 failures in a first run of 1,153 sites were `Test timed
+            out` at `small`'s 60 s with 24 sites in parallel, waiting and not working; the
+            standing rule is CPU, never a timer, as `mutants_sharded` already does, W1771).
+            0 declares no budget and keeps the wall timeout.
+        tags: bazel tags. ⚑ `manual` BY DEFAULT (W1989): a committed site is NOT part of `//...`
+            until the dist retires its sharded `:mutants` targets, so committing the sites does not
+            run 1,789 new tests in the next gate; a site is run by naming it, by a package pattern,
+            or by the dist's own gate target. The dist drops `manual` in the commit that retires
+            its shards.
     """
+    env = {"MUTATE_SITE": site, "MUTATE_TESTS": tests, "MUTATE_VENV": venv}
+    extra = {}
+    if cpu_budget:
+        env["MUTATE_SHARD_CPU_S"] = str(cpu_budget)
+        extra["timeout"] = "eternal"
     native.sh_test(
         name = name,
         srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
@@ -98,7 +114,7 @@ def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = 
             "$(location //%s:pyproject.toml)" % dist,
             "$(location @mikemol_check_mutants//:mutate_runner.py)",
         ],
-        env = {"MUTATE_SITE": site, "MUTATE_TESTS": tests, "MUTATE_VENV": venv},
+        env = env,
         data = data + [
             "//%s:pyproject.toml" % dist,
             "//%s:%s" % (dist, venv),
@@ -107,4 +123,6 @@ def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = 
             "@mikemol_check_mutants//:mutate_runner.py",
         ],
         size = size,
+        tags = tags,
+        **extra
     )

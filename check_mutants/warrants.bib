@@ -420,3 +420,11 @@
   claim  = {W1883: --check exits 1 on a missing file and on one whose module is gone; --write heals.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_check_names_a_stale_or_orphaned_package_and_write_makes_it_fresh},
 }
+
+@misc{root-mutate-runner-every-generated-suite-is-manual-so-a-wildcard-never-runs-the-sites,
+  section = {mutate_runner},
+  title  = {W1989: both levels of suite carry `manual`, because a suite lists its tests explicitly},
+  claim  = {W1989: both levels of suite carry `manual`, because a suite lists its tests explicitly.
+            A `manual` site named by an un-tagged `test_suite` is still run by `//...`.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_every_generated_suite_is_manual_so_a_wildcard_never_runs_the_sites},
+}
