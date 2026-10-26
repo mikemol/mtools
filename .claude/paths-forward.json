@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2021,
+  "counter": 2024,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -35742,7 +35742,7 @@
     {
       "symbol": "W1663",
       "title": "A REFUSED verdict gives the one command that reproduces only the refusing rung",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/gatephase.py!w",
@@ -35750,12 +35750,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read gatephase.py and commit_kata.py to find where a REFUSED verdict is printed and which rung it names; add the one reproducing command for that rung only; one test",
-      "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23)",
+      "next_bounded_step": "First rung submitted (stack-w1663): the hermetic suite's refusal replays 'bazel test <targets>' as a separate detail block. Untested except bash -n; first refusal by the suite is its evidence. Other rungs (ratchet, shellcheck domain, warrant ledger, mdstruct linter) each need their own command; W1662 (print the refusing check's own output) is the sibling. I still need the other rungs, W1663",
+      "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 asks luthen's land tool for the same reproduce command; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-25: 2026-10-25 first submit REFUSED by its own gate: test_bar_fires scans .githooks/pre-commit for any line launching bazel without the GIT_* scrub, and read my reproduce text ('bazel test <targets>') as a launch. Fixed by spelling it through a variable. The refusal itself printed the new '--- reproduce only the refusing rung' block, so the feature was seen working on its first real refusal. Resubmitted.",
       "issued_at": "2026-10-19T03:35:03Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T17:59:38Z",
+      "last_worked": "2026-10-25T23:23:27Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -36356,7 +36356,7 @@
     {
       "symbol": "W1692",
       "title": "Concurrency test: two domain_witness runs at once both pass",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1688"
       ],
@@ -36368,7 +36368,7 @@
       "issued_at": "2026-10-19T09:56:14Z",
       "minted_during": "interrupt",
       "caused_by": "W1688",
-      "last_worked": "2026-10-25T17:59:38Z",
+      "last_worked": "2026-10-25T23:06:19Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44258,12 +44258,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Give mutant_site a CPU budget like mutants_sharded (size medium, wall a backstop) in check_mutants/defs.bzl, rerun //hooks/sites/..., read the failures that are not timeouts (the first run had 6), then the gate --check target, commit hooks/sites, retire the shards, read the gate's hit count. I still need all of it, W1989",
-      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued.",
+      "next_bounded_step": "Submit the round_wire test fix after stack-w1692 lands; then rerun the other module sites in batches to find the survivors/errors the shards hid; then the gate --check target, commit hooks/sites, retire the shards. I still need all of that, W1989",
+      "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib).",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-25T22:32:37Z",
+      "last_worked": "2026-10-26T00:04:08Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44296,7 +44296,7 @@
     {
       "symbol": "W1991",
       "title": "A declared ratchet names its value expression (rows, sum of named columns, rows where a column is nonzero, file-rule-count), the name census only the fallback",
-      "status": "working",
+      "status": "done",
       "enables": [
         "github:W42"
       ],
@@ -44305,14 +44305,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "W1957 landed (0a0228b5) so the block is gone. linux-sources:W411 waits on this (repinned to f5d4ac20, which lacks it). Build in ratchet/: declaration row gains an optional expression; census evaluates rows | sum_of_columns | rows_where_nonzero | file_rule_count; unknown column refused loudly; fixture of the letter-quotes table shape. I still need all of it, W1991",
-      "evidence": "2026-10-25: 2026-10-25 github-8f from linux-sources' first verdict: findings/letter-quotes-baseline.tsv is a table (header: letter, mismatch, joined, unjudged, freeform; then one row per letter with four 0/1 failure columns) and the census reads value 71, its LINE count, while about 60 rows carry no debt (every failure column 0) and the debt lives in the failure columns; a real paydown (linux-sources W410 flips one unjudged column from 1 to 0) leaves the value at 71, and the verdict would stay behind forever. The same entry-count versus content gap my W1922 sum series fixed for ruff and mypy, but tabular. READ the file head to confirm the shape",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25 github-8f from linux-sources' first verdict: findings/letter-quotes-baseline.tsv is a table (header: letter, mismatch, joined, unjudged, freeform; then one row per letter with four 0/1 failure columns) and the census reads value 71, its LINE count, while about 60 rows carry no debt (every failure column 0) and the debt lives in the failure columns; a real paydown (linux-sources W410 flips one unjudged column from 1 to 0) leaves the value at 71, and the verdict would stay behind forever. The same entry-count versus content gap my W1922 sum series fixed for ruff and mypy, but tabular. READ the file head to confirm the shape | 2026-10-25: landed b94d3869",
       "issued_at": "2026-10-25T15:21:49Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T22:16:23Z",
+      "last_worked": "2026-10-25T22:55:42Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261025T225542Z",
       "manifest": [
         "ratchet/src/mikemol/ratchet/declaration.py",
         "ratchet/src/mikemol/ratchet/kinds.py",
@@ -44865,6 +44865,56 @@
       "caused_by": "W2016",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2022",
+      "title": "footprint.audit probes a known footprint before trusting an empty trace",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Drained from cassian-observability tools/trace-inputs.py (read with tar -xO, github-8f 2026-10-25): before deriving any input set it strace-traces a fixture with a KNOWN footprint (one file opened, one only stat'd) and REFUSES to emit if the tracer did not see both, since a blind tracer yields a minimal, wrong set that gets cached as correct. hooks footprint.py already marks no-strace as DEGRADED but has no known-footprint probe, so ptrace blocked or a tracer that sees opens and not stats reads as a clean empty set. Add the probe, with a test that a blind tracer is DEGRADED.",
+      "evidence": "",
+      "issued_at": "2026-10-25T23:05:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2020",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2023",
+      "title": "A reads audit compares a test's declared reads with its strace footprint, asymmetrically",
+      "status": "ready",
+      "enables": [
+        "W2020"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Drained as DESIGN (not code: it is bash-arm specific) from cassian-observability tools/reads-vs-traced.py. Two independent statements exist, DECLARED (reads.json) and OBSERVED (footprint strace); neither is authoritative and the comparison is not symmetric: traced-but-not-declared is STRONG evidence of an incomplete declaration (the tracer reports only opens that happened), declared-but-not-traced is WEAK (the tracer under-reports). Output only the strong direction, so the audit is not buried; subtract what is true of the whole population by construction (the harness: conftest, pytest_main) and DERIVE that subtraction, never retype it (their first draft retyped a list and silenced the one finding it existed to find); print the FULL list, never a head plus '+N more'; an unanswering tracer is UNEVALUABLE, never 'nothing undeclared'. It is the converse of W2012 input mutation. Needs footprint probe-first (sibling card).",
+      "evidence": "",
+      "issued_at": "2026-10-25T23:05:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2020",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2024",
+      "title": "ratchets.json carries each ratchet's re-baselines, and the census refuses a changed expression without one",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "github-8f 2026-10-25 (host W42): linux-sources re-baselined letter-quotes-baseline.tsv 71 to 18 (linux-sources:W411, via W1991's expression) and the record had to travel by message to nemik's hand-kept DECLARED list (nemik:W1071). The declaration gains a rebaselines list per ratchet: old value, new value, reason, and the commit whose change alters the count, written in the SAME commit as the change. The census refuses a commit that changes a declared ratchet's value expression (or columns) without a new entry. nemik derives its DECLARED list from these (nemik side carded by github-8f's ask). Files: ratchet/declaration.py, expression change detection against HEAD (the --regressions pattern of the queue writer).",
+      "evidence": "",
+      "issued_at": "2026-10-25T23:16:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -45317,13 +45367,22 @@
       "expires_at": "2026-10-25T21:34:42Z"
     },
     {
-      "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
+      "tag": "file:hooks/src/mikemol/hooks/gatephase.py!w",
       "holder": "(unlocked)",
-      "waypoint": "W1991",
+      "waypoint": "W1663",
       "base_sha": "2b52dca4ac2a69387d13699687dcdfd1372a56af",
-      "taken_at": "2026-10-25T22:16:23Z",
-      "renewed_at": "2026-10-25T22:16:23Z",
-      "expires_at": "2026-10-25T22:46:23Z"
+      "taken_at": "2026-10-25T22:36:54Z",
+      "renewed_at": "2026-10-25T22:36:54Z",
+      "expires_at": "2026-10-25T23:06:54Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/commit_kata.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1663",
+      "base_sha": "2b52dca4ac2a69387d13699687dcdfd1372a56af",
+      "taken_at": "2026-10-25T22:36:54Z",
+      "renewed_at": "2026-10-25T22:36:54Z",
+      "expires_at": "2026-10-25T23:06:54Z"
     }
   ],
   "advice": [

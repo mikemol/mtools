@@ -977,6 +977,20 @@ if [ "$_suite_rc" -ne 0 ]; then
     # not capture an account into the summary, by decision, and the log path is named in the
     # fallback label so a reader knows where the account is.
     note_failure "the hermetic suite: ${failed_targets:-no target named — see the log above}${suite_infra}"
+    # ⚑ W1663: THE ONE COMMAND THAT REPRODUCES ONLY THIS RUNG, replayed under the verdict beside the
+    # other captured accounts. It is a SEPARATE detail block and NOT part of the label above: the
+    # label is the key the gate history and the kind classifier match on (W1721), and the operator's
+    # 2026-09-11 ruling keeps the log out of the replay; this is one line, derived from the targets
+    # the label already names, so it asks for no filter over bazel's output.
+    # The command is spelled through a variable on purpose: a line reading `bazel test` here would be
+    # taken by the git-env scan (test_bar_fires) for a LAUNCH made without the scrub, and this one is
+    # text for a human, never run.
+    if [ -n "$failed_targets" ]; then
+        _repro_tool=bazel
+        failed_detail="$failed_detail
+  --- reproduce only the refusing rung
+      $_repro_tool test $failed_targets"
+    fi
 fi
 
 # ⚑⚑⚑ THE DOMAIN WITNESS RUNS HERE AND NOT AS A BAZEL ACTION, DELIBERATELY. It probes whether a
