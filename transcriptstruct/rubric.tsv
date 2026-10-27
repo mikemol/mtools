@@ -24,3 +24,4 @@ commitrows	Commitment-rows
 sample	Blind-sample
 authfail	Authentication Failures: Counted From Record Metadata Alone
 commitexport	The Fleet's Commitments Exported as One Document of the Ruled Keys
+labelcompare	Two labellers' labels are compared per kind over rows nobody fitted (W2052)

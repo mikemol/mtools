@@ -80,3 +80,7 @@ src/mikemol/transcriptstruct/commitexport.py|export-keeps-every-key|    return \
 src/mikemol/transcriptstruct/commitexport.py|repo-is-the-last-word|    name = project\.removeprefix\(prefix\) if project\.startswith\(prefix\) else ""|    name = project.rsplit("-", 1)[-1]|def=repo_of
 src/mikemol/transcriptstruct/commitexport.py|unreadable-queue-not-named|            unread\.append\(f"\{project\.name\}/\{QUEUE\[-1\]\}"\)|            pass|def=export
 src/mikemol/transcriptstruct/cli.py|project-named-by-the-path|path\.resolve\(\)\.parent\.name|str(path)|def=_auth_failed
+src/mikemol/transcriptstruct/labelcompare.py|excluded-id-counted|    shared = \(set\(mine\) & set\(theirs\)\) - exclude|    shared = set(mine) & set(theirs)|def=confusion
+src/mikemol/transcriptstruct/labelcompare.py|recall-and-precision-swapped|recall \{both\} of \{mine\}, precision \{both\} of \{theirs\}|recall {both} of {theirs}, precision {both} of {mine}|def=kind_line
+src/mikemol/transcriptstruct/labelcompare.py|foreign-line-read-as-a-label|            if "id" in fields and "label" in fields:|            if True:|def=read_labels
+src/mikemol/transcriptstruct/labelcompare.py|unreadable-file-exits-zero|        return 2$|        return 0|def=main

@@ -1371,3 +1371,59 @@
   claim  = {`--out` holds the document, its directory holds nothing else, and stdout says the count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitexport.py -k test_the_mode_writes_whole_and_leaves_no_temp_file},
 }
+
+@misc{transcriptstruct-labelcompare-label-file-is-read-by-id-and-a-torn-or-foreign-line-is-skipped,
+  section = {labelcompare},
+  title  = {Ids come back as text; a line that is not an object with both keys is left out},
+  claim  = {Ids come back as text; a line that is not an object with both keys is left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_a_label_file_is_read_by_id_and_a_torn_or_foreign_line_is_skipped},
+}
+
+@misc{transcriptstruct-labelcompare-confusion-counts-only-ids-both-carry-and-not-the-excluded,
+  section = {labelcompare},
+  title  = {Id 5 is excluded, id 6 is only mine, id 7 only theirs: none of them is a cell},
+  claim  = {Id 5 is excluded, id 6 is only mine, id 7 only theirs: none of them is a cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_the_confusion_counts_only_ids_both_carry_and_not_the_excluded},
+}
+
+@misc{transcriptstruct-labelcompare-recall-is-over-my-rows-and-precision-over-theirs-as-counts,
+  section = {labelcompare},
+  title  = {Commitment: I gave it to 2, they to 2, both to 1; each figure is `k of n`},
+  claim  = {Commitment: I gave it to 2, they to 2, both to 1; each figure is `k of n`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_recall_is_over_my_rows_and_precision_over_theirs_as_counts},
+}
+
+@misc{transcriptstruct-labelcompare-kind-nobody-used-scores-zero-of-zero-not-a-division,
+  section = {labelcompare},
+  title  = {No rows of the kind: `0 of 0`, never a ratio that raises or reads as 100 percent},
+  claim  = {No rows of the kind: `0 of 0`, never a ratio that raises or reads as 100 percent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_a_kind_nobody_used_scores_zero_of_zero_not_a_division},
+}
+
+@misc{transcriptstruct-labelcompare-word-only-one-side-uses-stays-in-the-confusion,
+  section = {labelcompare},
+  title  = {Their `other` has no counterpart in my words: it is a cell, not folded into status},
+  claim  = {Their `other` has no counterpart in my words: it is a cell, not folded into status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_a_word_only_one_side_uses_stays_in_the_confusion},
+}
+
+@misc{transcriptstruct-labelcompare-command-reads-two-files-and-an-exclude-list,
+  section = {labelcompare},
+  title  = {Exit 0, the excluded id left out, the default kinds scored},
+  claim  = {Exit 0, the excluded id left out, the default kinds scored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_the_command_reads_two_files_and_an_exclude_list},
+}
+
+@misc{transcriptstruct-labelcompare-unreadable-file-is-exit-two-with-a-line-on-stderr,
+  section = {labelcompare},
+  title  = {A missing label file is a usage failure and prints nothing on stdout},
+  claim  = {A missing label file is a usage failure and prints nothing on stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_an_unreadable_file_is_exit_two_with_a_line_on_stderr},
+}
+
+@misc{transcriptstruct-labelcompare-recall-and-precision-are-not-interchangeable,
+  section = {labelcompare},
+  title  = {I gave commitment to 3 rows, they to 1, both to 1: recall 1 of 3, precision 1 of 1},
+  claim  = {I gave commitment to 3 rows, they to 1, both to 1: recall 1 of 3, precision 1 of 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_recall_and_precision_are_not_interchangeable},
+}

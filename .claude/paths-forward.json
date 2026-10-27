@@ -44702,7 +44702,7 @@
     {
       "symbol": "W2009",
       "title": "Flaky passes per repo are a published metric series",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "velocity"
@@ -44714,9 +44714,14 @@
       "issued_at": "2026-10-25T20:17:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T23:04:15Z",
+      "last_worked": "2026-10-27T03:28:20Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "manifest": [
+        "hooks/src/mikemol/hooks/flakes.py",
+        "hooks/src/mikemol/hooks/flakemetric.py",
+        "hooks/tests/test_flakemetric.py"
+      ]
     },
     {
       "symbol": "W2010",
@@ -45387,11 +45392,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "In hooks/watchdog.py watch(): label the two branches differently: no file reads 'no heartbeat file (counting from watch start)'; a stale file reads 'watch start; last beat <tool> <N>s before it'. One test per branch. The host rolls the beat hook into summit's settings, the real cause there. I still need the two labels and tests, W2043",
-      "evidence": "2026-10-26: 2026-10-26 READINGS in luthen-observability (read-only): .claude/settings.json runs $CLAUDE_PROJECT_DIR/.venv/bin/mikemol-hook-beat (its own venv, a launcher importing mikemol.hooks.beat.main, rewritten 07:09) on PostToolUse and PostToolUseFailure with matcher '' (every tool). Its .git/mtools/heartbeat read tool 'mikemol-paths-forward' at one read and 'hook:Read' at the next minutes later, so beats ARE written by the hook there now, to the same <project>/.git/mtools the watchdog reads. beat.py stamps a PRE-call event and does NOT beat (W1617), so a session inside one long foreground call (a mikemol-commit waiting through a gate) reads as a stall until the call returns; that fits 'last heartbeat 911s ago (mikemol-commit)' but not 'a dozen calls in the window'. UNKNOWN: whether those calls were in a subagent or sidechain (which may not run project hooks) and what the exit text said about a call in progress. | 2026-10-26: 2026-10-26 luthen-observability-ab PROBE (2 messages): with a checks.land (mikemol-commit --stack) in flight as a background call, .git/mtools/heartbeat read hook:SendMessage then hook:Bash seconds later, mtime matching now, gaps up to 65 s during gating: hook beats DO write while a commit is in flight, so the 'a gate-waiting commit reads as silence' hypothesis is NOT supported, and the false wake is UNPROVEN. Likely truth: each exit came while its turn had ended (waiting on a background gate), so the 900 s was real, and its 'dozen calls' were in a turn before the window or after it. Lines seen: 'idle with 127-129 ready cards, last heartbeat 900-918s ago (mikemol-commit; once hook:SendMessage); bound 900s'. What would settle it, and is worth doing either way: watchdog.last carries the watchdog's own start time and the last 5 beats. | 2026-10-26: reconciled LANDED ab3f93a3089f07a780851a47edba9587f4763a62 | 2026-10-26: landed ab3f93a3: the watchdog's exit carries when the watch began, the last beat and its age and the gaps before it | 2026-10-27: 2026-10-27 github-8f (summit): the idle line says 'no heartbeat source' both when the heartbeat file is absent and when it exists but predates the watch (watch() substitutes Beat('no heartbeat source', now_ns(), ()) in both cases: read() is None, or last.at_ns < started.at_ns). summit's exit read 'idle with 0 ready cards, last heartbeat 1200s ago (no heartbeat source); bound 1200s', and summit took a stale file for a missing one and stopped restarting.",
+      "evidence": "2026-10-26: 2026-10-26 READINGS in luthen-observability (read-only): .claude/settings.json runs $CLAUDE_PROJECT_DIR/.venv/bin/mikemol-hook-beat (its own venv, a launcher importing mikemol.hooks.beat.main, rewritten 07:09) on PostToolUse and PostToolUseFailure with matcher '' (every tool). Its .git/mtools/heartbeat read tool 'mikemol-paths-forward' at one read and 'hook:Read' at the next minutes later, so beats ARE written by the hook there now, to the same <project>/.git/mtools the watchdog reads. beat.py stamps a PRE-call event and does NOT beat (W1617), so a session inside one long foreground call (a mikemol-commit waiting through a gate) reads as a stall until the call returns; that fits 'last heartbeat 911s ago (mikemol-commit)' but not 'a dozen calls in the window'. UNKNOWN: whether those calls were in a subagent or sidechain (which may not run project hooks) and what the exit text said about a call in progress. | 2026-10-26: 2026-10-26 luthen-observability-ab PROBE (2 messages): with a checks.land (mikemol-commit --stack) in flight as a background call, .git/mtools/heartbeat read hook:SendMessage then hook:Bash seconds later, mtime matching now, gaps up to 65 s during gating: hook beats DO write while a commit is in flight, so the 'a gate-waiting commit reads as silence' hypothesis is NOT supported, and the false wake is UNPROVEN. Likely truth: each exit came while its turn had ended (waiting on a background gate), so the 900 s was real, and its 'dozen calls' were in a turn before the window or after it. Lines seen: 'idle with 127-129 ready cards, last heartbeat 900-918s ago (mikemol-commit; once hook:SendMessage); bound 900s'. What would settle it, and is worth doing either way: watchdog.last carries the watchdog's own start time and the last 5 beats. | 2026-10-26: reconciled LANDED ab3f93a3089f07a780851a47edba9587f4763a62 | 2026-10-26: landed ab3f93a3: the watchdog's exit carries when the watch began, the last beat and its age and the gaps before it | 2026-10-27: 2026-10-27 github-8f (summit): the idle line says 'no heartbeat source' both when the heartbeat file is absent and when it exists but predates the watch (watch() substitutes Beat('no heartbeat source', now_ns(), ()) in both cases: read() is None, or last.at_ns < started.at_ns). summit's exit read 'idle with 0 ready cards, last heartbeat 1200s ago (no heartbeat source); bound 1200s', and summit took a stale file for a missing one and stopped restarting. | 2026-10-27: 2026-10-27 github-8f: the host's --tick-open printed a watchdog start line naming a SIBLING repo's install (amr-skills .venv, mikemol-watchdog) for the host queue, against the no-sibling-paths ruling of 2026-10-19; probably the first install found under the github root. The host has no venv; its writer is the one in mtools pathsforward. Witness: for the host queue, tick-open prints a watchdog path inside mtools' own build, the same build as the writer it was given.",
       "issued_at": "2026-10-26T13:33:11Z",
       "minted_during": "interrupt",
       "caused_by": "github:W55",
-      "last_worked": "2026-10-27T02:29:53Z",
+      "last_worked": "2026-10-27T03:28:58Z",
       "ticks_blocked": 0,
       "completed": "20261026T173626Z"
     },
@@ -45551,19 +45556,21 @@
     {
       "symbol": "W2052",
       "title": "Compute the agreement between the two labellings and keep the disagreements as fixtures",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1966"
       ],
-      "touches": [],
+      "touches": [
+        "file:transcriptstruct/src/mikemol/transcriptstruct/labelcompare.py!w"
+      ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Write the fixtures from the seed-3 and seed-2 misses (announce openers by shape, owed by frame) and commit the comparison scripts; then re-draw after amr-skills' next classifier change. I still need the fixtures and the committed scripts, W2052",
+      "next_bounded_step": "Commit the comparison as a tracked module, mikemol.transcriptstruct.labelcompare (two label files and the exclude-ids file in, per-kind precision and recall and the confusion out, with tests on a synthetic pair), replacing my scratch scripts; then the fixtures from the seed-2 and seed-3 misses. I still need the module, its tests and the fixtures, W2052",
       "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7.",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": "2026-10-27T02:42:11Z",
+      "last_worked": "2026-10-27T03:02:34Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -46081,6 +46088,15 @@
       "renewed_at": "2026-10-25T16:30:31Z",
       "expires_at": "2026-10-25T17:00:31Z",
       "lapse_ledgered": true
+    },
+    {
+      "tag": "file:transcriptstruct/src/mikemol/transcriptstruct/labelcompare.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W2052",
+      "base_sha": "10ca127506f31febdbdd1a16d55f24be508c1a5b",
+      "taken_at": "2026-10-27T03:02:34Z",
+      "renewed_at": "2026-10-27T03:02:34Z",
+      "expires_at": "2026-10-27T03:32:34Z"
     }
   ],
   "advice": [
