@@ -32,13 +32,24 @@ class Ruling:
     needle: str
 
 
+def _said_at(entity: dict[str, object]) -> str:
+    """Read when the entity was said; an entity with no usable stamp is unknown, not an error.
+
+    Returns:
+        the stamp's value, or the empty string, which sorts oldest.
+
+    """
+    stamp = entity.get("prov:generatedAtTime")
+    value = cast("dict[str, object]", stamp).get("@value") if isinstance(stamp, dict) else None
+    return value if isinstance(value, str) else ""
+
+
 def _ruling(entity: dict[str, object]) -> Ruling:
-    stamp = cast("dict[str, object]", entity["prov:generatedAtTime"])
     line = entity.get("mtools:line")
     session = entity.get("mtools:session")
     return Ruling(
         str(entity["@id"]),
-        str(stamp["@value"]),
+        _said_at(entity),
         line if isinstance(line, int) else None,
         session if isinstance(session, str) else None,
         str(entity.get("mtools:needle", "")),

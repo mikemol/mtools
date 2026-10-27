@@ -1499,3 +1499,11 @@
   claim  = {The result sits between line 2 and the call at line 4: still one turn, still discharged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_a_tool_result_between_the_sentence_and_the_call_does_not_end_the_turn},
 }
+
+@misc{transcriptstruct-rulingq-entity-with-no-stamp-is-a-ruling-of-unknown-time-listed-last,
+  section = {rulingq},
+  title  = {A missing or malformed `prov:generatedAtTime` is unknown, not a KeyError (W2052)},
+  claim  = {A missing or malformed `prov:generatedAtTime` is unknown, not a KeyError (W2052). The
+            control is the stamped entity beside it, which still leads.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_an_entity_with_no_stamp_is_a_ruling_of_unknown_time_listed_last},
+}

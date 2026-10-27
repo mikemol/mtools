@@ -42989,7 +42989,7 @@
     {
       "symbol": "W1954",
       "title": "Paydown: retire one entry of corpus/exit-baseline.txt by naming its exit constant in the shared exit-code table",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:corpus/exit-baseline.txt!w"
@@ -43001,7 +43001,7 @@
       "issued_at": "2026-10-25T10:45:31Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T08:44:10Z",
+      "last_worked": "2026-10-27T12:02:41Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44981,45 +44981,51 @@
     {
       "symbol": "W2021",
       "title": "Five hooks py_tests outside the graph's tests (ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite) get a closure or a stated reason",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "bazel query: kind(py_test, //hooks:*) except names test_*. They depend on the dist-wide :hooks, so some rerun on any edit (2 extra of 12 in the watchdog sample). For each: read what it imports and reads, put it in the generated switch, or record why it must stay on :hooks.",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks-lane stack; every hooks stack is held behind the Bash permission rule (W2057)",
       "issued_at": "2026-10-25T22:05:58Z",
       "minted_during": "interrupt",
       "caused_by": "W2016",
-      "last_worked": null,
+      "last_worked": "2026-10-27T09:46:19Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/BUILD.bazel"
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W2022",
       "title": "footprint.audit probes a known footprint before trusting an empty trace",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Drained from cassian-observability tools/trace-inputs.py (read with tar -xO, github-8f 2026-10-25): before deriving any input set it strace-traces a fixture with a KNOWN footprint (one file opened, one only stat'd) and REFUSES to emit if the tracer did not see both, since a blind tracer yields a minimal, wrong set that gets cached as correct. hooks footprint.py already marks no-strace as DEGRADED but has no known-footprint probe, so ptrace blocked or a tracer that sees opens and not stats reads as a clean empty set. Add the probe, with a test that a blind tracer is DEGRADED.",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27: edits hooks/src/mikemol/hooks/footprint.py, a hooks-lane stack; held behind the Bash permission rule (W2057)",
       "issued_at": "2026-10-25T23:05:35Z",
       "minted_during": "interrupt",
       "caused_by": "W2020",
-      "last_worked": null,
+      "last_worked": "2026-10-27T10:52:01Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/footprint.py",
         "hooks/tests/test_footprint.py"
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W2023",
@@ -45747,25 +45753,51 @@
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 4f855db8-0ee0-48f7-8177-879b41068a56 --claim operator --line 106222"
           },
           "mtools:reason": "operator granted W2057"
+        },
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W2057",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#aebb23cb-f48f-444b-87c2-5cb0de45796a",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T10:37:19.820Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/aebb23cb-f48f-444b-87c2-5cb0de45796a",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 107063,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify aebb23cb-f48f-444b-87c2-5cb0de45796a --claim operator --line 107063"
+          }
         }
       ]
     },
     {
       "symbol": "W2058",
       "title": "every whole-list setter of the writer (--standing-set, --preamble-set, --tick-hooks-set, --outcomes-set) refuses a dropped line without '# replaces:'",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "file:pathsforward/src/mikemol/pathsforward/ops.py!w"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "--outcomes-set: refuse a stored outcome word absent from the new operands unless a repeatable --retires WORD declares it; witness: --outcomes-set with a word dropped exits non-zero and names it. I still need the flag and its wiring, W2058",
-      "evidence": "2026-10-27: 2026-10-27 CLASS CARD promoting two done cards (github-8f, host-reviewer pass 7, github:R15, due 2026-10-30; loop-prompt rule: a finished card is never reopened, the class gets a card citing each instance, operator 2026-10-25, host line 95113, uuid 465460bd): instance 1 W1930 (--tick-hooks-set refuses a dropped hook, landed 266e51fd), instance 2 W862 (the standing-list setter, which has the same whole-list shape: a rule left out of the file is silently gone). This is warranted growth over the mint pace (it promotes two done cards). | 2026-10-27: 2026-10-27 PROBE (github-8f asked whether 266e51fd already guards all four setters): git grep wholelist at HEAD finds nothing, so HEAD guards --tick-hooks-set ONLY (266e51fd). The refusals github-8f saw from --standing-set and --preamble-set came from the live working-tree venv of pathsforward, which carries this card's uncommitted wholelist check (the stack is in the gate). --outcomes-set on a scratch copy of the queue: first set 'advanced,landed,done | idle,blocked', then 'advanced | idle': both exit 0 with 'ledger outcomes declared', so two outcome words were dropped silently. So the card is NOT already built at HEAD; --standing-set and --preamble-set are guarded only once this stack lands, and --outcomes-set is still unguarded (no file to carry a declaration). | 2026-10-27: 2026-10-27 first part LANDED 9066cce7: --standing-set and --preamble-set refuse a dropped line (shared wholelist check; the live venv had been running it from the tree).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-27 CLASS CARD promoting two done cards (github-8f, host-reviewer pass 7, github:R15, due 2026-10-30; loop-prompt rule: a finished card is never reopened, the class gets a card citing each instance, operator 2026-10-25, host line 95113, uuid 465460bd): instance 1 W1930 (--tick-hooks-set refuses a dropped hook, landed 266e51fd), instance 2 W862 (the standing-list setter, which has the same whole-list shape: a rule left out of the file is silently gone). This is warranted growth over the mint pace (it promotes two done cards). | 2026-10-27: 2026-10-27 PROBE (github-8f asked whether 266e51fd already guards all four setters): git grep wholelist at HEAD finds nothing, so HEAD guards --tick-hooks-set ONLY (266e51fd). The refusals github-8f saw from --standing-set and --preamble-set came from the live working-tree venv of pathsforward, which carries this card's uncommitted wholelist check (the stack is in the gate). --outcomes-set on a scratch copy of the queue: first set 'advanced,landed,done | idle,blocked', then 'advanced | idle': both exit 0 with 'ledger outcomes declared', so two outcome words were dropped silently. So the card is NOT already built at HEAD; --standing-set and --preamble-set are guarded only once this stack lands, and --outcomes-set is still unguarded (no file to carry a declaration). | 2026-10-27: 2026-10-27 first part LANDED 9066cce7: --standing-set and --preamble-set refuse a dropped line (shared wholelist check; the live venv had been running it from the tree). | 2026-10-27: 2026-10-27: landed b49c4e6c (--outcomes-set refuses a dropped word unless --retires names it; fleet par lists 266e51fd and 9066cce7); the three setters share wholelist/_refuse_dropped (266e51fd tick hooks, 9066cce7 standing and preamble, b49c4e6c outcomes). The optional queue-file check (work evidence newer than a done card's completed) is not built here",
       "issued_at": "2026-10-27T04:49:54Z",
       "minted_during": "interrupt",
       "caused_by": "W1930",
-      "last_worked": "2026-10-27T08:04:07Z",
+      "last_worked": "2026-10-27T12:03:18Z",
       "ticks_blocked": 0,
       "manifest": [
         "pathsforward/src/mikemol/pathsforward/tickhooks.py",
@@ -45801,7 +45833,8 @@
           },
           "mtools:reason": "operator 2026-10-25: a finished card is never reopened; the class gets a card citing each instance"
         }
-      ]
+      ],
+      "completed": "20261027T120318Z"
     }
   ],
   "residue": [
@@ -46207,16 +46240,6 @@
       "lapse_ledgered": true
     },
     {
-      "tag": "file:corpus/exit-baseline.txt!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1954",
-      "base_sha": "6ae6797228cb8fa04d264f95bc11eb95a7201145",
-      "taken_at": "2026-10-25T11:12:45Z",
-      "renewed_at": "2026-10-25T11:12:45Z",
-      "expires_at": "2026-10-25T11:42:45Z",
-      "lapse_ledgered": true
-    },
-    {
       "tag": "file:otlp/src/mikemol/otlp/cli.py!w",
       "holder": "(unlocked)",
       "waypoint": "W1961",
@@ -46244,6 +46267,15 @@
       "taken_at": "2026-10-27T03:02:34Z",
       "renewed_at": "2026-10-27T03:02:34Z",
       "expires_at": "2026-10-27T03:32:34Z"
+    },
+    {
+      "tag": "file:corpus/exit-baseline.txt!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1954",
+      "base_sha": "b49c4e6c435ea226533f2b65f0baf9c19aa93770",
+      "taken_at": "2026-10-27T12:02:41Z",
+      "renewed_at": "2026-10-27T12:02:41Z",
+      "expires_at": "2026-10-27T12:32:41Z"
     }
   ],
   "advice": [

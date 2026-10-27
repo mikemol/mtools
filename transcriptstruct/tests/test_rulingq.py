@@ -76,6 +76,31 @@ def test_a_line_separator_inside_a_needle_does_not_split_its_ledger_line(tmp_pat
     assert [r.iri.rsplit("#", 1)[1] for r in rulings(path, "after")] == ["next"]
 
 
+def test_an_entity_with_no_stamp_is_a_ruling_of_unknown_time_listed_last(tmp_path: Path) -> None:
+    """A missing or malformed `prov:generatedAtTime` is unknown, not a KeyError (W2052).
+
+    The control is the stamped entity beside it, which still leads.
+    """
+    bare: dict[str, object] = {"@id": "file:///t.jsonl#bare", "mtools:needle": "gabion"}
+    broken: dict[str, object] = {
+        "@id": "file:///t.jsonl#broken",
+        "prov:generatedAtTime": "yesterday",
+        "mtools:needle": "gabion",
+    }
+    path = tmp_path / "rulings.jsonl"
+    path.write_text(
+        "\n".join([json.dumps(bare), _entity("dated", "2026-10-01T10:00:00.000Z", "gabion")])
+        + "\n"
+        + json.dumps(broken)
+        + "\n",
+        encoding="utf-8",
+    )
+    got = [r.iri.rsplit("#", 1)[1] for r in rulings(path, "gabion")]
+    assert got[0] == "dated"
+    assert sorted(got) == ["bare", "broken", "dated"]
+    assert {r.said_at for r in rulings(path, "gabion")[1:]} == {""}
+
+
 def test_matching_rulings_come_newest_first_with_their_citation(tmp_path: Path) -> None:
     """The later word leads; each carries the IRI a warrant cites and its line."""
     got = rulings(_ledger(tmp_path), "gabion")
