@@ -23,6 +23,7 @@ _FIVE = 5
 _FOUR = 4
 _FAILED = cli.EXIT_FAILED
 _REFUSED = cli.EXIT_REFUSED
+_USAGE = 2
 _LOCKED = cli.EXIT_LOCKED
 _DIVERGED = cli.EXIT_DIVERGED
 _COUNTER = 3
@@ -308,7 +309,7 @@ def test_a_bogus_status_is_refused_before_anything_is_read(tmp_path: Path) -> No
     before = path.read_bytes()
     with pytest.raises(SystemExit) as exc:
         _run(path, "--update", "W1", "--status", "bogus")
-    assert (exc.value.code, path.read_bytes() == before) == (_REFUSED, True)
+    assert (exc.value.code, path.read_bytes() == before) == (_USAGE, True)
 
 
 def test_update_sets_typed_fields(tmp_path: Path) -> None:
@@ -688,7 +689,7 @@ def test_an_unknown_flag_is_refused(tmp_path: Path) -> None:
     """An unknown flag beside a valid mode exits 2, not run."""
     with pytest.raises(SystemExit) as exc:
         _run(_file(tmp_path), "--hash", "--queit")
-    assert exc.value.code == _REFUSED
+    assert exc.value.code == _USAGE
 
 
 def test_main_reads_sys_argv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

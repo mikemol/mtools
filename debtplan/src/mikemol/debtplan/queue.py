@@ -24,7 +24,7 @@ from mikemol.pathsforward.store import load
 
 Runner = Callable[[list[str]], int]
 
-EXIT_REFUSED = 2
+EXIT_REFUSED = 4
 """The code a writer that exited without one is read as: refused."""
 
 

@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 Rec = dict[str, object]
 
 _OK = cli.EXIT_OK
-_REFUSED = 2
+_REFUSED = 4
 
 
 def _card(symbol: str, status: str = "ready", blocked_on: list[str] | None = None) -> Rec:

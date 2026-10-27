@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 Rec = dict[str, object]
 _TOOL = "--block-matching"
 _RULE = "blocks-on"
-_REFUSED = 2
+_REFUSED = 4
 
 
 def _queue(tmp_path: Path) -> Path:

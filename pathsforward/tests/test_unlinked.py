@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
     from mikemol.pathsforward.model import Json
 
-_REFUSED = 2
+_REFUSED = 4
 
 
 def _w(sym: str, status: str = "ready", **fields: object) -> Json:
