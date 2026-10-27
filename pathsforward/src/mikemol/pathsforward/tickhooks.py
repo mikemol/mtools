@@ -57,6 +57,43 @@ def lines_of(text: str) -> list[str]:
     return found
 
 
+DECLARES = ("# replaces:", "# retires:")
+
+
+def declared_gone(text: str) -> set[str]:
+    """Pick the hook lines a file says it replaces or retires, by comment.
+
+    Returns:
+        the lines named after `# replaces:` or `# retires:`, stripped.
+
+    """
+    gone: set[str] = set()
+    for raw in text.splitlines():
+        line = raw.strip()
+        for mark in DECLARES:
+            if line.startswith(mark):
+                gone.add(line[len(mark) :].strip())
+    return gone
+
+
+def dropped(prior: Sequence[str], text: str) -> list[str]:
+    """Name the stored hook lines a new file loses without saying so (W1930).
+
+    ⚑ A HOOK LEFT OUT IS A SENSOR DROPPED, AND SETTING THE LIST WHOLE MADE THAT SILENT (github-8f,
+    2026-10-27: a measured per-repo landings hook went while another was widened, and a retro's
+    witness went false with no refusal). A prior line missing from the new file is refused unless
+    the file declares it with `# replaces: <line>` or `# retires: <line>`. The prior list is the
+    writer's own stored one, because the host's queue is not under git.
+
+    Returns:
+        the prior lines absent from the file's commands and not declared gone, in stored order.
+
+    """
+    kept = set(lines_of(text))
+    gone = declared_gone(text)
+    return [line for line in prior if line not in kept and line not in gone]
+
+
 def stored(doc: dict[str, object]) -> list[str]:
     """Read the stored commands out of a state document.
 

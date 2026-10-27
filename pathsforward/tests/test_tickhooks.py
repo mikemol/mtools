@@ -97,13 +97,13 @@ def test_the_real_runner_captures_output_and_reports_a_missing_command(tmp_path:
 
 
 def test_set_stores_whole_and_an_empty_file_clears(tmp_path: Path) -> None:
-    """`--tick-hooks-set` replaces the list; an empty file is the decision to have none."""
+    """`--tick-hooks-set` replaces the list; a file with no commands that retires each is none."""
     state = _repo(tmp_path)
     source = tmp_path / "hooks.txt"
     source.write_text("echo one\n# c\necho two\n", encoding="utf-8")
     assert cli.main(["--state", str(state), "--tick-hooks-set", str(source)]) == 0
     assert _doc(state)[tickhooks.KEY] == ["echo one", "echo two"]
-    source.write_text("", encoding="utf-8")
+    source.write_text("# retires: echo one\n# retires: echo two\n", encoding="utf-8")
     assert cli.main(["--state", str(state), "--tick-hooks-set", str(source)]) == 0
     assert _doc(state)[tickhooks.KEY] == []
 

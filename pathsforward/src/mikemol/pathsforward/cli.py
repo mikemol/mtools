@@ -2915,9 +2915,16 @@ def _tick_hooks_set(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    lines = tickhooks.lines_of(Path(ctx.get("tick_hooks_set") or "").read_text(encoding="utf-8"))
+    text = Path(ctx.get("tick_hooks_set") or "").read_text(encoding="utf-8")
+    lines = tickhooks.lines_of(text)
 
     def edit(state: State) -> int:
+        lost = tickhooks.dropped(tickhooks.stored(state.doc), text)
+        if lost:
+            for line in lost:
+                _warn(f"REFUSED: the new list drops the tick hook {line!r}")
+            _warn("declare each with '# replaces: <line>' (or '# retires: <line>') in the file")
+            return EXIT_REFUSED
         state.doc[tickhooks.KEY] = lines
         _say(f"tick hooks set: {len(lines)} command(s)")
         return EXIT_OK
