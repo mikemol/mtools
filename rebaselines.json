@@ -1,0 +1,11 @@
+{
+  "rebaselines": [
+    {
+      "ratchet": "mdstruct/ratchet-preview.txt",
+      "old": 0,
+      "new": 1,
+      "reason": "upstream-dictated name, operator chose (a): panflute Doc.__init__ keyword-only `format` shadows a builtin (A002) and stubtest checks the name; W1977",
+      "warrant": "bde02714-1533-475a-b934-d2ce58024a15:104181"
+    }
+  ]
+}

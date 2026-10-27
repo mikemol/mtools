@@ -31,9 +31,9 @@
 # modelled in the stub from `inspect.signature` of the installed library; stubtest then reported
 # those entries unused and nothing else.
 #
-# ⚑ THE ONE LEFT IS COUNTED DEBT, NOT A WAIVER. `Doc.__init__` takes a keyword-only `format`, which
-# shadows the builtin; declaring it in the stub makes the lint ratchet refuse a new key, and the
-# way round that (a per-file exemption in pyproject) would move the debt out of a file the census
-# counts into one it does not, which reads as paydown while the debt merely moved (operator,
-# host line 97317). It stays here, read by the ratchet, until a real fix exists.
-panflute.Doc.__init__
+# ⚑ W1977 (2026-10-26): THE LAST ENTRY IS PAID, AND THIS LIST IS EMPTY. `Doc.__init__` takes a
+# keyword-only `format`, which shadows the builtin. The operator chose (host line 104181, "(a)") to
+# declare the true signature in the stub and COUNT the one lint key it brings (ruff A002) in the
+# lint ratchet, as a declared re-baseline in `rebaselines.json` (W2024) with the reason
+# "upstream-dictated name, operator chose (a)". The debt is counted honestly in ruff instead of
+# hidden here, and a per-file exemption is still refused (operator, host line 97317).

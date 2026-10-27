@@ -129,7 +129,7 @@ sh_test(
         "ratchet-preview.txt",
         "//ratchet:ratchet_cli",
         "@mikemol_check_ruff//:bin",
-    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**/*.pyi"]),
     size = "small",
 )
 

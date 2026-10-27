@@ -75,6 +75,23 @@ def test_every_allowlist_entry_is_a_constructor() -> None:
         for line in _ALLOWLIST.read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.startswith("#")
     ]
-    assert entries
-    offenders = [e for e in entries if not e.endswith(("__init__", "__new__", ".walk"))]
+    offenders = _offenders(entries)
     assert offenders == [], f"non-constructor entries hide real divergence: {offenders}"
+
+
+def _offenders(entries: list[str]) -> list[str]:
+    # The entries that are not a constructor (or `walk`): each would hide a divergence in a
+    # function this package calls.
+    return [e for e in entries if not e.endswith(("__init__", "__new__", ".walk"))]
+
+
+def test_the_constructor_check_names_a_called_function_and_passes_a_constructor() -> None:
+    """The positive control, now that the allowlist is empty and the check above is vacuous.
+
+    ⚑ AN EMPTY LIST CANNOT PROVE THE CHECK WORKS (W1977: the last entry was paid and the old
+    `assert entries` guard became false). So the check is run on lists of known shape: a called
+    function is named and a constructor passes, which is the difference between a gate that sees
+    and one that is silent over nothing.
+    """
+    assert _offenders(["panflute.load"]) == ["panflute.load"]
+    assert _offenders(["panflute.Doc.__init__", "panflute.Element.walk"]) == []

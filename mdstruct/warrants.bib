@@ -1576,3 +1576,15 @@
   claim  = {A path-shaped entry yields the refusal text naming it, and no files.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_directory_operand.py -k test_resolve_refuses_a_bad_exclude_entry_by_name},
 }
+
+@misc{mdstruct-stub-authority-constructor-check-names-a-called-function-and-passes-a-constructor,
+  section = {stub-authority},
+  title  = {The positive control, now that the allowlist is empty and the check above is vacuous},
+  claim  = {The positive control, now that the allowlist is empty and the check above is vacuous. AN
+            EMPTY LIST CANNOT PROVE THE CHECK WORKS (W1977: the last entry was paid and
+            the old `assert entries` guard became false). So the check is run on lists
+            of known shape: a called function is named and a constructor passes, which
+            is the difference between a gate that sees and one that is silent over
+            nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stub_authority.py -k test_the_constructor_check_names_a_called_function_and_passes_a_constructor},
+}

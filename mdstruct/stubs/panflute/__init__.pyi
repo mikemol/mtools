@@ -53,14 +53,22 @@ class Element:
 class Block(Element): ...
 class Inline(Element): ...
 
-# ⚑ `Doc.__init__` IS NOT MODELLED, ON PURPOSE (W1953, operator 2026-10-25 "that just cheats the
-# ratchet"): its real keyword-only parameter is `format`, which shadows the builtin, and stubtest
-# checks the name, so declaring it here makes the lint rule fire in this file. Moving that finding
-# into a per-file exemption would have moved debt out of a file the census counts into one it does
-# not. So the entry STAYS in the allowlist, counted, until the real question is decided at the
-# policy level for every stub alike.
+# ⚑ `Doc.__init__` IS MODELLED WITH THE LIBRARY'S OWN NAMES, AND THE ONE LINT KEY IT COSTS IS
+# COUNTED (W1977, operator 2026-10-26, host line 104181, choosing "(a) the true signature plus a
+# counted lint entry"): the real keyword-only parameter is `format`, which shadows a builtin
+# (ruff A002), and stubtest checks the name, so the stub must spell it. The key is recorded as
+# a DECLARED re-baseline (`rebaselines.json`, W2024), not moved into a per-file exemption, which
+# would have moved debt out of a file the census counts into one it does not (operator, host
+# line 97317). Read from panflute/elements.py line 56.
 class Doc(Element):
     content: Sequence[Block]
+    def __init__(
+        self,
+        *args: Block,
+        metadata: Mapping[str, object] = ...,
+        format: str = ...,
+        api_version: tuple[int, ...] = ...,
+    ) -> None: ...
 
 class Header(Block):
     level: int
