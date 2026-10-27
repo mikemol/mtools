@@ -63,7 +63,8 @@ def test_the_cli_reads_a_file_stores_it_and_the_payload_emits_it(
     }
     path.write_text(json.dumps(doc), encoding="utf-8")
     rules = tmp_path / "rules.txt"
-    rules.write_text("keep this rule\n\nand this one\n", encoding="utf-8")
+    retired = "# retires: run the old script\n# retires: never do the other thing\n"
+    rules.write_text(retired + "keep this rule\n\nand this one\n", encoding="utf-8")
     assert cli.main(["--state", str(path), "--standing-set", str(rules)]) == cli.EXIT_OK
     assert "standing set: 2 rule(s)" in capsys.readouterr().out
     stored = cast("Rec", json.loads(path.read_text(encoding="utf-8")))["standing"]

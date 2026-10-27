@@ -318,6 +318,10 @@ src/mikemol/pathsforward/cli.py|blank-blocker-accepted|    if blockers is not No
 src/mikemol/pathsforward/tickhooks.py|declared-gone-still-refused|    return \[line for line in prior if line not in kept and line not in gone\]|    return [line for line in prior if line not in kept]|def=dropped
 src/mikemol/pathsforward/tickhooks.py|retires-comment-unread|        for mark in DECLARES:|        for mark in DECLARES[:1]:|def=declared_gone
 src/mikemol/pathsforward/cli.py|dropped-hook-admitted|        if lost:|        if False:|def=_tick_hooks_set
+src/mikemol/pathsforward/wholelist.py|declared-gone-line-still-lost|    return \[p for p in prior if p\.strip\(\) and p\.strip\(\) not in present and p\.strip\(\) not in gone\]|    return [p for p in prior if p.strip() and p.strip() not in present]|def=lost
+src/mikemol/pathsforward/wholelist.py|declaration-comment-stored-as-content|        if mark is None:|        if True:|def=split
+src/mikemol/pathsforward/cli.py|dropped-standing-rule-admitted|        lost = wholelist\.lost\(wholelist\.stored\(state\.doc, "standing"\), text\) if keeps else \[\]|        lost = []|def=_standing_set
+src/mikemol/pathsforward/cli.py|dropped-preamble-line-admitted|        lost = wholelist\.lost\(wholelist\.stored\(state\.doc, "preamble"\), text\)|        lost = []|def=_preamble_set
 src/mikemol/pathsforward/ghosts.py|any-led-symbol-listed|        if lead is not None and lead\.group\(1\) in wanted:|        if lead is not None:|def=candidates
 src/mikemol/pathsforward/ghosts.py|markers-case-sensitive|    return tuple\(m for m in _MARKERS if m\.lower\(\) in lowered\)|    return tuple(m for m in _MARKERS if m in subject)|def=markers_in
 src/mikemol/pathsforward/ghosts.py|unreadable-log-is-no-ghosts|    if raw is None:|    if False:|def=report

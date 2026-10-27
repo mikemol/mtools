@@ -64,6 +64,7 @@ from mikemol.pathsforward import (
     vtodo,
     warrant,
     watchdogcmd,
+    wholelist,
 )
 from mikemol.pathsforward.advice import close_applied as close_advice
 from mikemol.pathsforward.advice import counts as count_advice
@@ -2802,9 +2803,13 @@ def _preamble_set(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    lines = Path(ctx.get("preamble_set") or "").read_text(encoding="utf-8").splitlines()
+    text = Path(ctx.get("preamble_set") or "").read_text(encoding="utf-8")
+    lines, _gone = wholelist.split(text)
 
     def edit(state: State) -> int:
+        lost = wholelist.lost(wholelist.stored(state.doc, "preamble"), text)
+        if lost:
+            return _refuse_dropped(lost, "preamble line")
         ops.set_preamble(state, lines)
         _say(f"preamble set: {len(lines)} line(s)")
         return EXIT_OK
@@ -2819,9 +2824,15 @@ def _standing_set(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    lines = Path(ctx.get("standing_set") or "").read_text(encoding="utf-8").splitlines()
+    text = Path(ctx.get("standing_set") or "").read_text(encoding="utf-8")
+    lines, _gone = wholelist.split(text)
 
     def edit(state: State) -> int:
+        # An empty file is `set_standing`'s own refusal (0 non-blank lines), not a drop to name.
+        keeps = any(line.strip() for line in lines)
+        lost = wholelist.lost(wholelist.stored(state.doc, "standing"), text) if keeps else []
+        if lost:
+            return _refuse_dropped(lost, "standing rule")
         _say(f"standing set: {ops.set_standing(state, lines)} rule(s)")
         return EXIT_OK
 
@@ -2908,6 +2919,19 @@ def _prompt_ack(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _refuse_dropped(lost: list[str], what: str) -> int:
+    """Refuse a whole-list setter that drops stored lines, naming each (W2058, of W1930 and W862).
+
+    Returns:
+        EXIT_REFUSED after one REFUSED line per dropped line and how to declare it.
+
+    """
+    for line in lost:
+        _warn(f"REFUSED: the new list drops the {what} {line!r}")
+    _warn("declare each with '# replaces: <line>' (or '# retires: <line>') in the file")
+    return EXIT_REFUSED
+
+
 def _tick_hooks_set(ctx: Ctx) -> int:
     """Store a file's commands as the tick hooks, replacing them whole (W1348, nemik:W450).
 
@@ -2921,10 +2945,7 @@ def _tick_hooks_set(ctx: Ctx) -> int:
     def edit(state: State) -> int:
         lost = tickhooks.dropped(tickhooks.stored(state.doc), text)
         if lost:
-            for line in lost:
-                _warn(f"REFUSED: the new list drops the tick hook {line!r}")
-            _warn("declare each with '# replaces: <line>' (or '# retires: <line>') in the file")
-            return EXIT_REFUSED
+            return _refuse_dropped(lost, "tick hook")
         state.doc[tickhooks.KEY] = lines
         _say(f"tick hooks set: {len(lines)} command(s)")
         return EXIT_OK

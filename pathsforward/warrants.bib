@@ -7444,3 +7444,32 @@
   claim  = {Nothing stored is admitted; so is a drop the file declares.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks_dropped.py -k test_the_command_admits_a_declared_replacement_and_a_first_set},
 }
+
+@misc{pathsforward-setters-dropped-pure-check-names-lines-the-file-loses-and-honours-declarations,
+  section = {tickhooks},
+  title  = {Compared stripped; `# replaces:` and `# retires:` both declare a line gone},
+  claim  = {Compared stripped; `# replaces:` and `# retires:` both declare a line gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_the_pure_check_names_lines_the_file_loses_and_honours_declarations},
+}
+
+@misc{pathsforward-setters-dropped-declaration-comments-are-not-content,
+  section = {tickhooks},
+  title  = {`split` keeps every other line, including ordinary comments, and drops the declarations},
+  claim  = {`split` keeps every other line, including ordinary comments, and drops the declarations.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_the_declaration_comments_are_not_content},
+}
+
+@misc{pathsforward-setters-dropped-dropped-line-is-refused-named-and-the-list-is-left-alone,
+  section = {tickhooks},
+  title  = {The witness: a file missing a current line exits non-zero and names it},
+  claim  = {The witness: a file missing a current line exits non-zero and names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_a_dropped_line_is_refused_named_and_the_list_is_left_alone},
+}
+
+@misc{pathsforward-setters-dropped-declared-replacement-is-admitted-and-the-declaration-is-not-stored,
+  section = {tickhooks},
+  title  = {The first set is admitted; a declared drop is admitted; no declaration lands in the list},
+  claim  = {The first set is admitted; a declared drop is admitted; no declaration lands in the
+            list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_a_declared_replacement_is_admitted_and_the_declaration_is_not_stored},
+}

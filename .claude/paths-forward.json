@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2057,
+  "counter": 2058,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -43921,6 +43921,33 @@
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify bde02714-1533-475a-b934-d2ce58024a15 --claim operator --line 104181"
           },
           "mtools:reason": "operator chose (a) for the panflute stub: true Doc signature plus the counted A002 ruff key"
+        },
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1977",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#0afcd13c-bc08-4eaf-bac5-6a29304b0faa",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T06:53:47.005Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/0afcd13c-bc08-4eaf-bac5-6a29304b0faa",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 106208,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 0afcd13c-bc08-4eaf-bac5-6a29304b0faa --claim operator --line 106208"
+          },
+          "mtools:reason": "operator chose option (2) for W1977: teach the standing-4 hook to admit a rise only with a matching rebaselines entry"
         }
       ],
       "completed": null
@@ -44297,21 +44324,23 @@
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W1982"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Find, for each of the five commit_kata survivors, the test that kills it under the whole-dist shard (run the shard's selection against the site) and add the missing graph edge or strengthen the test; then retire the shards. I still need the five attributions, W1989",
       "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504 | 2026-10-26: sites committed 1ee738d8; stack-next-3 landed (W1603 2e418ed2, W1920 wired e53edaf5) | 2026-10-26: 2026-10-26 FIRST FULL RUN of a site suite (hooks commit_kata, 108 sites): 103 killed, 5 declared mutants SURVIVE under the graph-selected tests: restore-and-removal-swapped, ship-flag-reaches-parse, unverified-reads-pushed, verdict-counter-never-sent, waypoint-alone-identifies. The sharded :mutants runs every test of the dist and kills them, so the selection leaves out a killer test or a test is weak. Before the shards are retired, each of the five needs the killing test found (a missing graph edge, or a test that asserts too little); recorded for W1880.",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-26T23:01:12Z",
+      "last_worked": "2026-10-27T06:08:14Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44688,38 +44717,42 @@
     {
       "symbol": "W2008",
       "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
-      "status": "working",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Refuse the next land while a recorded flake has no ranked card in the round, naming the target and the writer command that mints the card. Edits commit_kata.py, which stack-next-7 holds in the gate (cited by W1734); take it when that lands. I still need that landing, W2008",
       "evidence": "",
       "issued_at": "2026-10-25T20:16:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T23:40:53Z",
+      "last_worked": "2026-10-27T06:08:14Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2009",
       "title": "Flaky passes per repo are a published metric series",
-      "status": "working",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Emits mikemol.commit.flaky_passes{repo} from the flake records (W2007, landed 7861893e); touches hooks, which stack-next-7 holds in the gate (cited by W1734). Take it when that lands. I still need that landing, W2009",
       "evidence": "",
       "issued_at": "2026-10-25T20:17:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T03:28:20Z",
+      "last_worked": "2026-10-27T06:08:14Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44989,28 +45022,31 @@
     {
       "symbol": "W2023",
       "title": "A reads audit compares a test's declared reads with its strace footprint, asymmetrically",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2020"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Drained as DESIGN (not code: it is bash-arm specific) from cassian-observability tools/reads-vs-traced.py. Two independent statements exist, DECLARED (reads.json) and OBSERVED (footprint strace); neither is authoritative and the comparison is not symmetric: traced-but-not-declared is STRONG evidence of an incomplete declaration (the tracer reports only opens that happened), declared-but-not-traced is WEAK (the tracer under-reports). Output only the strong direction, so the audit is not buried; subtract what is true of the whole population by construction (the harness: conftest, pytest_main) and DERIVE that subtraction, never retype it (their first draft retyped a list and silenced the one finding it existed to find); print the FULL list, never a head plus '+N more'; an unanswering tracer is UNEVALUABLE, never 'nothing undeclared'. It is the converse of W2012 input mutation. Needs footprint probe-first (sibling card).",
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Design drained from the cassian reads audit: output only traced-but-not-declared (strong), subtract the harness by derivation, print the full list, an unanswering tracer is UNEVALUABLE. Needs the footprint probe first (a sibling card). Hooks files: they land after W2057 (the operator's allowance of the hold-lift widening) because of the shared hooks registries. I still need W2057, W2023",
       "evidence": "",
       "issued_at": "2026-10-25T23:05:36Z",
       "minted_during": "interrupt",
       "caused_by": "W2020",
-      "last_worked": null,
+      "last_worked": "2026-10-27T04:48:46Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/footprint.py",
         "hooks/tests/test_footprint.py",
         "hooks/src/mikemol/hooks/readsaudit.py",
         "hooks/tests/test_readsaudit.py"
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W2024",
@@ -45570,12 +45606,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Two parts. (a) Add the turn-boundary layer to --resolve: a discharged/unattached split for announce rows; witness: on seed 3's 6 announce rows it prints the split and my seed-3 labels join to it. (b) Fixtures from the seed-2 and seed-3 misses, and the console script for labelcompare (needs the venv mirror). Gates amr-skills' step 3. I still need both, W2052",
-      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7. | 2026-10-27: 2026-10-27 the turn-boundary layer for transcriptstruct --resolve (github-8f, from amr-skills' a84163cd run over 14 seed-3 rows) is carried HERE because W1986 is done: --resolve attaches only by card and artifact name, so every announce reads open at layer none; an announce is discharged when a later tool_use, or later text, in the SAME assistant turn carries it out (the next tool_use after the sentence, before the turn's end); only rows still unattached when the turn ends are debt. Rows from a blind sample carry session '' and at ''.",
+      "next_bounded_step": "The owed kind needs a different instrument from a name-based resolver: a nameless owed statement has no card to attach to, so the debt is a COUNT of such statements per turn, not a join; decide with github-8f whether the count is the metric. Left on this card: fixtures, the labelcompare console script, committing the seed scripts. I still need that decision, W2052",
+      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7. | 2026-10-27: 2026-10-27 the turn-boundary layer for transcriptstruct --resolve (github-8f, from amr-skills' a84163cd run over 14 seed-3 rows) is carried HERE because W1986 is done: --resolve attaches only by card and artifact name, so every announce reads open at layer none; an announce is discharged when a later tool_use, or later text, in the SAME assistant turn carries it out (the next tool_use after the sentence, before the turn's end); only rows still unattached when the turn ends are debt. Rows from a blind sample carry session '' and at ''. | 2026-10-27: 2026-10-27 part (a) LANDED 9b777ed1 (turnlayer, rows kind, --resolve --turns). amr-skills told; their rerun over the 14 seed-3 rows gives the unattached set to join to my seed-3 labels. | 2026-10-27: 2026-10-27 THE WITNESS (amr-skills ran --resolve --turns, 9b777ed1, on seed 3's 300 new rows): over MY labels, 65 announces: 56 discharged at layer turn, 9 unattached (open at none); my 15 owed open. Over their classifier's 6 announce rows: 5 discharged, 1 open. So 86 percent of announces are carried out by their own turn, and the debt is the 9 (14 percent). They built an I'll/I will announce rule (5 of the 9 unattached carry it, 4 of the 56 discharged; commit gating, amr-skills) and ask for a FOURTH draw (another seed) after that commit lands: they label first, I label blind, the turn layer runs over both. | 2026-10-27: 2026-10-27 amr-skills v9 landed (3be3dc4, the I'll/I will announce rule). SEED 4 DRAWN: 396 rows, 292 new (104 repeat earlier draws, ids listed). They label first; I label the 292 blind after they say so. | 2026-10-27: 2026-10-27 SEED 4 (292 new rows, five words, mine blind to v9): mine status 190, announce 53, done 31, owed 18; v9: other 203, status 69, announce 17, owed 3. Per kind: announce recall 15 of 53, precision 15 of 17 (seed 3, v7: 4 of 65 and 4 of 6): the I'll/I will rule holds on the first draw after it was built; owed recall 1 of 18, precision 1 of 3 (unsolved). Turn layer over my rows: 40 of 53 announces discharged, 13 unattached (25 percent; seed 3: 9 of 65, 14 percent). | 2026-10-27: 2026-10-27 the join (amr-skills, rows resolved both ways with --turns): of my 53 seed-4 announces, 40 discharged, 13 unattached (matches mine); v9 calls announce 6 of the 40 and 9 of the 13 unattached (all by the lexical I'll/I will rule), misses 4 of the 13 (3 other, 1 status). Its 17 announce rows: 15 are my announces, 2 my status (let-01, both open). So the debt-bearing announces are caught at 9 of 13. | 2026-10-27: 2026-10-27 SEED 5 (289 new rows, five words, mine blind to v11; amr-skills' classifier 01c1930): mine status 174, announce 60, done 30, owed 25; v11: other 204, status 68, announce 15, owed 2. Announce recall 15 of 60, precision 15 of 15; owed recall 2 of 25, precision 2 of 2. Turn layer over my rows: 48 of 60 announces discharged, 12 unattached (20 percent); 25 owed open. The owed-impersonal route (kind owed-impersonal, uncertain true: --resolve counts an unknown kind like owed unless uncertain, then leaves it out) is amr-skills' to compute; counts to come. | 2026-10-27: 2026-10-27 owed-impersonal route (amr-skills, seed 5, my 289 new rows): of my 25 owed rows the route OFFERS 0 (it offered 2 named rows, both my status). Resolving my 25 owed rows by name: 15 attached (12 at layer card, 3 at hook), 10 open (9 name nothing, 1 names something no card carries); v11 labelled owed 2 of the 10 open and 0 of the 15 attached. So the resolver attaches owed statements only by names, 9 of 10 open owed rows have none, and a nameless unattached owed statement is only ever visible as a count.",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": "2026-10-27T03:44:46Z",
+      "last_worked": "2026-10-27T06:33:54Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45644,7 +45680,7 @@
     {
       "symbol": "W2056",
       "title": "Re-card of dropped W1868 for estate:W52: record an apply's after-state hash in the waldo apply ledger without a planfile, and check a baseline's hash against the last entry before an apply",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "estate:W52"
       ],
@@ -45653,13 +45689,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Build in waldo: planledger.record_after_state(config, root, before, after, plan) and planledger.baseline_ok(config, root, baseline_sha, imported) returning None or one of four module constants (HASH_MISMATCH, NO_ENTRY_NOT_IMPORTED, CHAIN_BROKEN, TRUNCATED_BELOW_MARK), each a fixed machine-readable string; the mark (entry count, last-line digest) in a side file written at each append. Tests and mutants per kind. estate repins and wires it as estate:W52. I still need the build, W2056",
-      "evidence": "2026-10-27: 2026-10-26 estate-6d fixed the shape: entry {kind: after_state, root (the domain name, one chain per zone), before_sha256, after_sha256, plan_sha256, applier, at}; the chain shows each before equals the previous after. Check: refuse unless the baseline hash equals the last after_sha256 for that root; no entry yet is a first apply only when the baseline was written by the read-only import; a ledger_intact failure or a ledger shorter than a previous one is a refusal. estate:W52 waits on this. | 2026-10-27: 2026-10-26 estate-6d agreed: the high-water mark is a side file next to apply-ledger.jsonl; baseline_ok returns a DISTINCT code per refusal kind so estate's interlock prints which without parsing prose.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-26 estate-6d fixed the shape: entry {kind: after_state, root (the domain name, one chain per zone), before_sha256, after_sha256, plan_sha256, applier, at}; the chain shows each before equals the previous after. Check: refuse unless the baseline hash equals the last after_sha256 for that root; no entry yet is a first apply only when the baseline was written by the read-only import; a ledger_intact failure or a ledger shorter than a previous one is a refusal. estate:W52 waits on this. | 2026-10-27: 2026-10-26 estate-6d agreed: the high-water mark is a side file next to apply-ledger.jsonl; baseline_ok returns a DISTINCT code per refusal kind so estate's interlock prints which without parsing prose. | 2026-10-27: landed f195beb1: record_after_state, baseline_ok with four fixed refusals, the apply-ledger.mark high-water mark; estate:W52 calls both after it repins",
       "issued_at": "2026-10-27T00:22:48Z",
       "minted_during": "interrupt",
       "caused_by": "estate:W52",
-      "last_worked": "2026-10-27T00:26:46Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-27T05:02:11Z",
+      "ticks_blocked": 0,
+      "completed": "20261027T050211Z"
     },
     {
       "symbol": "W2057",
@@ -45674,13 +45711,95 @@
       ],
       "blocked_kind": "human",
       "next_bounded_step": "On the operator's allowance: submit stack-next-13 (W1525 widening, then W1898's label fix), then lift W1977's hold by its existing warrant, and put nemik:W1113 and luthen's W633 on the same lift. I still need the operator's allowance, W2057",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27 VERBATIM STEP (nemik G8): env -C ~/github/mtools ~/github/mtools/hooks/.venv/bin/mikemol-commit ~/github/mtools --stack ~/mtools-stacks/stack-next-13.json ; EXPECTED: the gate runs once on the tip of the 2-entry stack (W1525 widening, W1898 label fix) and prints COMMITTED with each entry's sha, exit 0. EXECUTED PROBE: the same command (stack-next-9, which held the W1525 entry) was run here and the Claude Code auto-mode classifier DENIED it: 'Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken]'; I did not work around it. DONE WHEN: git log shows a W1525 subject and hold_lift.py has answers_ask.",
       "issued_at": "2026-10-27T03:41:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T03:42:07Z",
+      "last_worked": "2026-10-27T06:08:58Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W2057",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#4f855db8-0ee0-48f7-8177-879b41068a56",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T06:54:24.923Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/4f855db8-0ee0-48f7-8177-879b41068a56",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 106222,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 4f855db8-0ee0-48f7-8177-879b41068a56 --claim operator --line 106222"
+          },
+          "mtools:reason": "operator granted W2057"
+        }
+      ]
+    },
+    {
+      "symbol": "W2058",
+      "title": "every whole-list setter of the writer (--standing-set, --preamble-set, --tick-hooks-set, --outcomes-set) refuses a dropped line without '# replaces:'",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "file:pathsforward/src/mikemol/pathsforward/ops.py!w"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Land the in-gate stack (--standing-set, --preamble-set). Then --outcomes-set: refuse a stored outcome word absent from the new operands unless a flag --retires WORD (repeatable) declares it; witness: --outcomes-set with a word dropped exits non-zero and names it. I still need the flag and its wiring, W2058",
+      "evidence": "2026-10-27: 2026-10-27 CLASS CARD promoting two done cards (github-8f, host-reviewer pass 7, github:R15, due 2026-10-30; loop-prompt rule: a finished card is never reopened, the class gets a card citing each instance, operator 2026-10-25, host line 95113, uuid 465460bd): instance 1 W1930 (--tick-hooks-set refuses a dropped hook, landed 266e51fd), instance 2 W862 (the standing-list setter, which has the same whole-list shape: a rule left out of the file is silently gone). This is warranted growth over the mint pace (it promotes two done cards). | 2026-10-27: 2026-10-27 PROBE (github-8f asked whether 266e51fd already guards all four setters): git grep wholelist at HEAD finds nothing, so HEAD guards --tick-hooks-set ONLY (266e51fd). The refusals github-8f saw from --standing-set and --preamble-set came from the live working-tree venv of pathsforward, which carries this card's uncommitted wholelist check (the stack is in the gate). --outcomes-set on a scratch copy of the queue: first set 'advanced,landed,done | idle,blocked', then 'advanced | idle': both exit 0 with 'ledger outcomes declared', so two outcome words were dropped silently. So the card is NOT already built at HEAD; --standing-set and --preamble-set are guarded only once this stack lands, and --outcomes-set is still unguarded (no file to carry a declaration).",
+      "issued_at": "2026-10-27T04:49:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1930",
+      "last_worked": "2026-10-27T06:20:12Z",
+      "ticks_blocked": 0,
+      "manifest": [
+        "pathsforward/src/mikemol/pathsforward/tickhooks.py",
+        "pathsforward/src/mikemol/pathsforward/cli.py",
+        "pathsforward/tests/test_setters_dropped.py"
+      ],
+      "size_class": "medium",
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W2058",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#465460bd-d487-429e-a73c-2a42e4c249b7",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-25T00:52:16.751Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/465460bd-d487-429e-a73c-2a42e4c249b7",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 95113,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 465460bd-d487-429e-a73c-2a42e4c249b7 --claim operator --line 95113"
+          },
+          "mtools:reason": "operator 2026-10-25: a finished card is never reopened; the class gets a card citing each instance"
+        }
+      ]
     }
   ],
   "residue": [

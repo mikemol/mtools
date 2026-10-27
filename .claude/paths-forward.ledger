@@ -4181,3 +4181,9 @@
 2026-10-27T03:42:07Z  status W2057 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-27T03:43:06Z  status W1898 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-27T04:22:10Z  status W1724 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T04:48:46Z  status W2023 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T04:49:54Z  interrupt W2058 minted    -         "every whole-list setter of the writer (--standing-set, --preamble-set, --tick-hooks-set, --outcomes-set) refuses a dropped line without '# replaces:'"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1930
+2026-10-27T05:02:11Z  status W2056 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T06:08:14Z  status W1989 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T06:08:14Z  status W2008 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T06:08:14Z  status W2009 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
