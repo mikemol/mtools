@@ -43884,7 +43884,7 @@
     {
       "symbol": "W1977",
       "title": "Decide the library-imposed parameter name question at the policy level for every stub alike: panflute Doc.__init__ format shadows a builtin",
-      "status": "blocked",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:mdstruct/stubs/panflute-allowlist.txt!w"
@@ -43898,7 +43898,7 @@
       "issued_at": "2026-10-25T13:43:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T07:21:27Z",
+      "last_worked": "2026-10-27T16:11:50Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -46336,6 +46336,15 @@
       "taken_at": "2026-10-27T03:02:34Z",
       "renewed_at": "2026-10-27T03:02:34Z",
       "expires_at": "2026-10-27T03:32:34Z"
+    },
+    {
+      "tag": "file:mdstruct/stubs/panflute-allowlist.txt!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1977",
+      "base_sha": "eb1697cfdc0777e60e3cfa5537611f1eb2817e36",
+      "taken_at": "2026-10-27T16:11:50Z",
+      "renewed_at": "2026-10-27T16:11:50Z",
+      "expires_at": "2026-10-27T16:41:50Z"
     }
   ],
   "advice": [

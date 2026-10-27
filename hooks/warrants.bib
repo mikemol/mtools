@@ -15835,3 +15835,17 @@
   claim  = {Two distinctive words are needed, and `decide`, `question` and `options` are not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_generic_words_and_a_single_shared_word_are_not_a_quotation},
 }
+
+@misc{hooks-standing-facts-baseline-edit-carries-its-path-and-the-declared-rises,
+  section = {bar-fires},
+  title  = {The door's facts (W1977): the file's path under the project and each declared rise},
+  claim  = {The door's facts (W1977): the file's path under the project and each declared rise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_a_baseline_edit_carries_its_path_and_the_declared_rises},
+}
+
+@misc{hooks-standing-facts-declared-rises-read-absent-empty-malformed-and-unreadable-apart,
+  section = {bar-fires},
+  title  = {No file is no rise; a malformed entry is skipped; an unreadable file is no fact},
+  claim  = {No file is no rise; a malformed entry is skipped; an unreadable file is no fact.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_declared_rises_read_absent_empty_malformed_and_unreadable_apart},
+}

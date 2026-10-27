@@ -128,7 +128,34 @@ def test_a_baseline_write_carries_the_files_current_size(tmp_path: Path) -> None
     other: dict[str, object] = {"tool_name": "Write", "tool_input": {"file_path": rubric}}
     assert "target_lines" not in gather(other, tmp_path)
     edit: dict[str, object] = {"tool_name": "Edit", "tool_input": {"file_path": str(baseline)}}
-    assert "target_lines" not in gather(edit, tmp_path)
+    assert gather(edit, tmp_path)["target_lines"] == len(keys)
+    read: dict[str, object] = {"tool_name": "Read", "tool_input": {"file_path": str(baseline)}}
+    assert "target_lines" not in gather(read, tmp_path)
+
+
+def test_a_baseline_edit_carries_its_path_and_the_declared_rises(tmp_path: Path) -> None:
+    """The door's facts (W1977): the file's path under the project and each declared rise."""
+    baseline = tmp_path / "mdstruct" / "ratchet-preview.txt"
+    baseline.parent.mkdir()
+    baseline.write_text("a:1\n", encoding="utf-8")
+    rise = '{"ratchet": "mdstruct/ratchet-preview.txt", "old": 1, "new": 2, "reason": "r"}'
+    (tmp_path / "rebaselines.json").write_text(f"[{rise}]", encoding="utf-8")
+    edit: dict[str, object] = {"tool_name": "Edit", "tool_input": {"file_path": str(baseline)}}
+    facts = gather(edit, tmp_path)
+    assert facts["target_rel"] == "mdstruct/ratchet-preview.txt"
+    assert facts["rebaselines"] == [{"ratchet": "mdstruct/ratchet-preview.txt", "old": 1, "new": 2}]
+
+
+def test_declared_rises_read_absent_empty_malformed_and_unreadable_apart(tmp_path: Path) -> None:
+    """No file is no rise; a malformed entry is skipped; an unreadable file is no fact."""
+    assert standing_facts.declared_rises(tmp_path) == []
+    path = tmp_path / "rebaselines.json"
+    path.write_text('[{"ratchet": "x", "old": "1", "new": 2}, "junk"]', encoding="utf-8")
+    assert standing_facts.declared_rises(tmp_path) == []
+    path.write_text("{not json", encoding="utf-8")
+    assert standing_facts.declared_rises(tmp_path) is None
+    path.write_text('{"ratchet": "x"}', encoding="utf-8")
+    assert standing_facts.declared_rises(tmp_path) is None
 
 
 def test_an_unwritten_baseline_has_size_zero(tmp_path: Path) -> None:

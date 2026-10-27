@@ -442,6 +442,8 @@ src/mikemol/hooks/beat.py|quiet-queue-still-told|    if not waiting:|    if Fals
 src/mikemol/hooks/hold_lift.py|a-verdict-that-is-not-ok-lifts|    if not isinstance\(verdict, dict\) or cast\("dict\[str, object\]", verdict\)\.get\("ok"\) is not True:|    if not isinstance(verdict, dict) or cast("dict[str, object]", verdict).get("ok") is None:|def=verifies
 src/mikemol/hooks/hold_lift.py|symbol-matched-as-a-prefix|    pattern = rf"\\b\{re\.escape\(symbol\)\}\\b"|    pattern = re.escape(symbol)|def=verifies
 src/mikemol/hooks/standing_facts.py|lifted-rows-stay-held|row\.get\("blocked_kind"\) == "human" and not check\(row\):|row.get("blocked_kind") == "human":|def=held_symbols
+src/mikemol/hooks/standing_facts.py|malformed-rise-entry-declared|if isinstance\(ratchet, str\) and isinstance\(old, int\) and isinstance\(new, int\):|if isinstance(ratchet, str):|def=declared_rises
+src/mikemol/hooks/standing_facts.py|non-list-rebaselines-read-as-none-declared|if not isinstance\(raw, list\):|if False:|def=declared_rises
 src/mikemol/hooks/watchdog.py|bound-never-named|    return said if bound_s is None else f"\{said\}; bound \{bound_s:\.0f\}s"|    return said|def=idle_line
 src/mikemol/hooks/watchdog.py|exit-hides-the-notes-after-the-file|    return "\\n"\.join\(lines\)|    return lines[0]|def=exit_notes
 src/mikemol/hooks/beat.py|pre-event-beats-like-a-post|        if _field\(raw, "hook_event_name"\) == PRE_EVENT:|        if False:|def=run

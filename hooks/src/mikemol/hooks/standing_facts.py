@@ -28,14 +28,46 @@ import subprocess
 import sys
 from collections.abc import Callable, Mapping
 from pathlib import Path
+from typing import cast
 
 from mikemol.hooks.payload import as_record, text_of
 
 # The project's queue, relative to CLAUDE_PROJECT_DIR.
 QUEUE = Path(".claude") / "paths-forward.json"
 
-# The ratchet baseline's file name (rule 4).
+# The ratchet baseline's file name (rule 4), and the file that declares a rise it may take.
 BASELINE = "ratchet-preview.txt"
+REBASELINES = "rebaselines.json"
+
+
+def declared_rises(project: Path) -> list[dict[str, object]] | None:
+    """Return the baseline rises `rebaselines.json` declares, each as {ratchet, old, new}.
+
+    ⚑ THE DOOR IS A DECLARATION, NOT AN EXEMPTION (W1977 option 2, operator-chosen 2026-10-26): rule
+    4 still refuses a rise, except one an entry names by the file's current size and its resulting
+    size. The entry's warrant is checked by `mikemol-ratchet rebaselines`, not here.
+
+    Returns:
+        the declared rises; [] when the file is absent or holds none; None when it cannot be read.
+
+    """
+    try:
+        raw: object = json.loads((project / REBASELINES).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return []
+    except Exception as caught:
+        if not isinstance(caught, (OSError, ValueError)):
+            raise
+        return None
+    if not isinstance(raw, list):
+        return None
+    rises: list[dict[str, object]] = []
+    for item in cast("list[object]", raw):
+        entry = as_record(item)
+        ratchet, old, new = entry.get("ratchet"), entry.get("old"), entry.get("new")
+        if isinstance(ratchet, str) and isinstance(old, int) and isinstance(new, int):
+            rises.append({"ratchet": ratchet, "old": old, "new": new})
+    return rises
 
 
 def _git(cwd: Path, *args: str) -> str | None:
@@ -196,10 +228,14 @@ def gather(payload: dict[str, object], project: Path) -> dict[str, object]:
     if embargoed is not None:
         facts["embargoes"] = embargoed
     target = text_of(as_record(payload.get("tool_input")).get("file_path"))
-    if payload.get("tool_name") == "Write" and Path(target).name == BASELINE:
+    if payload.get("tool_name") in {"Write", "Edit"} and Path(target).name == BASELINE:
         lines = baseline_lines(Path(cwd) / target)
         if lines is not None:
             facts["target_lines"] = lines
+        rises = declared_rises(project)
+        if rises is not None:
+            facts["rebaselines"] = rises
+        facts["target_rel"] = os.path.relpath(Path(cwd) / target, project)
     return facts
 
 

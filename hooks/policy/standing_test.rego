@@ -249,6 +249,28 @@ test_4_write_lower_control if not denies(baseline_write("a:1\n", {"target_lines"
 
 test_4_write_same_control if not denies(baseline_write("a:1\nb:2\n", {"target_lines": 2}), 4)
 
+door_facts(rises) := {"target_lines": 1, "target_rel": "hooks/ratchet-preview.txt", "rebaselines": rises}
+
+door_edit(rises) := object.union(baseline_edit("a:1\n", "a:1\nb:2\n"), {"facts": door_facts(rises)})
+
+declared := {"ratchet": "hooks/ratchet-preview.txt", "old": 1, "new": 2}
+
+# the door (W1977 option 2): a rise an entry names by current and resulting size is admitted
+test_4_door_edit_witness if not denies(door_edit([declared]), 4)
+
+test_4_door_write_witness if not denies(baseline_write("a:1\nb:2\n", door_facts([declared])), 4)
+
+# each wrong field closes it again
+test_4_door_wrong_old_control if denies(door_edit([object.union(declared, {"old": 2})]), 4)
+
+test_4_door_wrong_new_control if denies(door_edit([object.union(declared, {"new": 3})]), 4)
+
+test_4_door_wrong_file_control if denies(door_edit([object.union(declared, {"ratchet": "mdstruct/ratchet-preview.txt"})]), 4)
+
+test_4_door_no_entries_control if denies(door_edit([]), 4)
+
+test_4_door_write_wrong_new_control if denies(baseline_write("a:1\nb:2\nc:3\n", door_facts([declared])), 4)
+
 test_read_is_never_denied if {
 	count(hook.deny) == 0 with input as {"tool_name": "Read", "tool_input": {"file_path": "findings/CENSUS-paperkit-use.md"}}
 }

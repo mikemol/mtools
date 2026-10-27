@@ -221,16 +221,31 @@ is_baseline if edited == "ratchet-preview.txt"
 
 rule_4 := "standing 4: never expand the ratchet baseline (ratchet-preview.txt); lowering it is an operator decision"
 
+# THE DOOR (W1977 option 2, operator-chosen 2026-10-26): a rise is admitted ONLY when
+# `rebaselines.json` (facts.rebaselines) holds an entry for this very file (facts.target_rel) whose
+# `old` is the file's current size and whose `new` is the size this write leaves. A declaration, not
+# an exemption: the entry's warrant is checked by `mikemol-ratchet rebaselines`.
+declared_rise(resulting) if {
+	some r in object.get(input, ["facts", "rebaselines"], [])
+	r.ratchet == object.get(input, ["facts", "target_rel"], "")
+	r.old == object.get(input, ["facts", "target_lines"], -1)
+	r.new == resulting
+}
+
 deny contains rule_4 if {
 	is_baseline
 	input.tool_name == "Edit"
-	nonblank(object.get(input.tool_input, "new_string", "")) > nonblank(object.get(input.tool_input, "old_string", ""))
+	old_n := nonblank(object.get(input.tool_input, "old_string", ""))
+	new_n := nonblank(object.get(input.tool_input, "new_string", ""))
+	new_n > old_n
+	not declared_rise((object.get(input, ["facts", "target_lines"], -1) - old_n) + new_n)
 }
 
 deny contains rule_4 if {
 	is_baseline
 	input.tool_name == "Write"
 	nonblank(object.get(input.tool_input, "content", "")) > object.get(input, ["facts", "target_lines"], -1)
+	not declared_rise(nonblank(object.get(input.tool_input, "content", "")))
 }
 
 # rule 6 (W511): a paperkit freeze's embargo. The record is the queue field `embargoes`
