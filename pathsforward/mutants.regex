@@ -322,6 +322,9 @@ src/mikemol/pathsforward/wholelist.py|declared-gone-line-still-lost|    return \
 src/mikemol/pathsforward/wholelist.py|declaration-comment-stored-as-content|        if mark is None:|        if True:|def=split
 src/mikemol/pathsforward/cli.py|dropped-standing-rule-admitted|        lost = wholelist\.lost\(wholelist\.stored\(state\.doc, "standing"\), text\) if keeps else \[\]|        lost = []|def=_standing_set
 src/mikemol/pathsforward/cli.py|dropped-preamble-line-admitted|        lost = wholelist\.lost\(wholelist\.stored\(state\.doc, "preamble"\), text\)|        lost = []|def=_preamble_set
+src/mikemol/pathsforward/outcomes.py|dropped-outcome-word-never-named|    return \[word for word in \(\*stored\[0\], \*stored\[1\]\) if word not in kept\]|    return []|def=dropped
+src/mikemol/pathsforward/outcomes.py|retires-ignored|    kept = \{\*_words\(advance_csv\), \*_words\(other_csv\), \*retires\}|    kept = {*_words(advance_csv), *_words(other_csv)}|def=dropped
+src/mikemol/pathsforward/cli.py|dropped-outcome-word-admitted|        lost = outcomes\.dropped\(state, advance, other, retired\)|        lost = []|def=_outcomes_set
 src/mikemol/pathsforward/ghosts.py|any-led-symbol-listed|        if lead is not None and lead\.group\(1\) in wanted:|        if lead is not None:|def=candidates
 src/mikemol/pathsforward/ghosts.py|markers-case-sensitive|    return tuple\(m for m in _MARKERS if m\.lower\(\) in lowered\)|    return tuple(m for m in _MARKERS if m in subject)|def=markers_in
 src/mikemol/pathsforward/ghosts.py|unreadable-log-is-no-ghosts|    if raw is None:|    if False:|def=report

@@ -9,6 +9,14 @@
   },
   {
     "dists": [
+      "pathsforward"
+    ],
+    "reason": "W1930: --tick-hooks-set refuses a stored hook the file drops unless it says # replaces: or # retires:",
+    "requires": [],
+    "sha": "266e51fdd142b41f8badef027b93e6e246a50385"
+  },
+  {
+    "dists": [
       "hooks"
     ],
     "reason": "mikemol-commit says RACED, not COMMITTED, when HEAD moved to a commit it did not make",
@@ -32,6 +40,16 @@
     "reason": "mikemol-repin --revendor takes --no-sync and its plan says the sync removes packages",
     "requires": [],
     "sha": "440fef4fd8f9393eebac6f6b4f20ef86948ca87e"
+  },
+  {
+    "dists": [
+      "pathsforward"
+    ],
+    "reason": "W2058: --standing-set and --preamble-set refuse a dropped line unless declared, and store no # replaces: comment as a rule",
+    "requires": [
+      "266e51fdd142b41f8badef027b93e6e246a50385"
+    ],
+    "sha": "9066cce72fa54f3eb5b0adbe710c486865856df4"
   },
   {
     "dists": [

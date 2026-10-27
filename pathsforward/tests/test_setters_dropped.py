@@ -69,6 +69,39 @@ def test_a_dropped_line_is_refused_named_and_the_list_is_left_alone(
     assert _stored(state, key) == ["keep this", "lose this"]
 
 
+def _outcomes(state: Path, advance: str, other: str, *extra: str) -> int:
+    return cli.main(["--state", str(state), "--outcomes-set", advance, other, *extra])
+
+
+def test_a_dropped_outcome_word_is_refused_named_and_the_sets_are_left_alone(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--outcomes-set` has no file for a `# replaces:` line: the words go in `--retires`."""
+    state = _repo(tmp_path)
+    assert _outcomes(state, "advanced,landed", "idle,blocked") == 0
+    capsys.readouterr()
+    assert _outcomes(state, "advanced", "idle") == cli.EXIT_REFUSED
+    said = capsys.readouterr().err
+    assert "'landed'" in said
+    assert "'blocked'" in said
+    assert "--retires" in said
+    assert _stored(state, "ledger_outcomes") == {
+        "advance": ["advanced", "landed"],
+        "other": ["idle", "blocked"],
+    }
+
+
+def test_a_retired_outcome_word_a_kept_one_and_a_first_declaration_are_admitted(
+    tmp_path: Path,
+) -> None:
+    """Retiring declares the drop; a word moved between the sets is kept, not dropped."""
+    state = _repo(tmp_path)
+    assert _outcomes(state, "advanced,landed", "idle") == 0
+    assert _outcomes(state, "advanced", "idle,landed") == 0
+    assert _outcomes(state, "advanced", "idle", "--retires", "landed") == 0
+    assert _stored(state, "ledger_outcomes") == {"advance": ["advanced"], "other": ["idle"]}
+
+
 @pytest.mark.parametrize(("mode", "key"), _SETTERS)
 def test_a_declared_replacement_is_admitted_and_the_declaration_is_not_stored(
     tmp_path: Path, mode: str, key: str

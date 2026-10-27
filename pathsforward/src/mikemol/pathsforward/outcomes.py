@@ -87,6 +87,24 @@ def _words(csv: str) -> list[str]:
     return [w.strip() for w in csv.split(",") if w.strip()]
 
 
+def dropped(state: State, advance_csv: str, other_csv: str, retires: list[str]) -> list[str]:
+    """Name the stored outcome words a new declaration loses without retiring them (W2058).
+
+    ⚑ AN OUTCOME WORD LEFT OUT IS A WORD RETIRED SILENTLY (the class of W1930 and W862): the
+    operands are two comma lists with no file to carry a `# replaces:` line, so the declaration is a
+    repeatable `--retires WORD`. Nothing stored (or a malformed field) means nothing can be lost.
+
+    Returns:
+        the stored words, advance then other, that neither operand names nor `retires` lists.
+
+    """
+    stored = declared(state)
+    if stored is None:
+        return []
+    kept = {*_words(advance_csv), *_words(other_csv), *retires}
+    return [word for word in (*stored[0], *stored[1]) if word not in kept]
+
+
 def set_sets(state: State, advance_csv: str, other_csv: str) -> None:
     """Store the declared sets.
 

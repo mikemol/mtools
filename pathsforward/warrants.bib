@@ -7473,3 +7473,17 @@
             list.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_a_declared_replacement_is_admitted_and_the_declaration_is_not_stored},
 }
+
+@misc{pathsforward-setters-dropped-dropped-outcome-word-is-refused-named-and-the-sets-are-left-alone,
+  section = {tickhooks},
+  title  = {`--outcomes-set` has no file for a `# replaces:` line: the words go in `--retires`},
+  claim  = {`--outcomes-set` has no file for a `# replaces:` line: the words go in `--retires`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_a_dropped_outcome_word_is_refused_named_and_the_sets_are_left_alone},
+}
+
+@misc{pathsforward-setters-dropped-retired-outcome-word-a-kept-one-and-a-first-declaration-are-admitted,
+  section = {tickhooks},
+  title  = {Retiring declares the drop; a word moved between the sets is kept, not dropped},
+  claim  = {Retiring declares the drop; a word moved between the sets is kept, not dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_a_retired_outcome_word_a_kept_one_and_a_first_declaration_are_admitted},
+}

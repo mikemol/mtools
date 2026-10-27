@@ -803,6 +803,12 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
     """
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
     ap.add_argument(
+        "--retires",
+        nargs="+",
+        metavar="WORD",
+        help="--outcomes-set: stored outcome words this declaration drops on purpose (W2058)",
+    )
+    ap.add_argument(
         "--root",
         metavar="PATH",
         help="--prune-landed, --inbound, --payload: the directory holding the repos "
@@ -2591,8 +2597,12 @@ def _outcomes_set(ctx: Ctx) -> int:
 
     """
     advance, other = ctx.many("outcomes_set") or ("", "")
+    retired = list(ctx.many("retires") or ())
 
     def edit(state: State) -> int:
+        lost = outcomes.dropped(state, advance, other, retired)
+        if lost:
+            return _refuse_dropped(lost, "outcome word", "declare each with --retires WORD")
         outcomes.set_sets(state, advance, other)
         _ledger(ctx, Entry("outcomes", NO_SYMBOL, "set", "outcomes", f"{advance} | {other}"))
         _say("ledger outcomes declared")
@@ -2919,16 +2929,17 @@ def _prompt_ack(ctx: Ctx) -> int:
     return EXIT_OK
 
 
-def _refuse_dropped(lost: list[str], what: str) -> int:
+def _refuse_dropped(lost: list[str], what: str, how: str = "") -> int:
     """Refuse a whole-list setter that drops stored lines, naming each (W2058, of W1930 and W862).
 
     Returns:
-        EXIT_REFUSED after one REFUSED line per dropped line and how to declare it.
+        EXIT_REFUSED after one REFUSED line per dropped line and how to declare it (`how`, else
+        the `# replaces:` comment a file can carry).
 
     """
     for line in lost:
         _warn(f"REFUSED: the new list drops the {what} {line!r}")
-    _warn("declare each with '# replaces: <line>' (or '# retires: <line>') in the file")
+    _warn(how or "declare each with '# replaces: <line>' (or '# retires: <line>') in the file")
     return EXIT_REFUSED
 
 
