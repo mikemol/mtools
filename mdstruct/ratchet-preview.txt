@@ -1,1 +1,0 @@
-stubs/panflute/__init__.pyi:builtin-argument-shadowing

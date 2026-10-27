@@ -37,7 +37,7 @@
 #
 
 from collections.abc import Callable, Mapping, Sequence
-from typing import IO, Self
+from typing import IO, Self, TypedDict, Unpack
 
 class Element:
     identifier: str
@@ -53,22 +53,22 @@ class Element:
 class Block(Element): ...
 class Inline(Element): ...
 
-# ⚑ `Doc.__init__` IS MODELLED WITH THE LIBRARY'S OWN NAMES, AND THE ONE LINT KEY IT COSTS IS
-# COUNTED (W1977, operator 2026-10-26, host line 104181, choosing "(a) the true signature plus a
-# counted lint entry"): the real keyword-only parameter is `format`, which shadows a builtin
-# (ruff A002), and stubtest checks the name, so the stub must spell it. The key is recorded as
-# a DECLARED re-baseline (`rebaselines.json`, W2024), not moved into a per-file exemption, which
-# would have moved debt out of a file the census counts into one it does not (operator, host
-# line 97317). Read from panflute/elements.py line 56.
+# ⚑ `Doc.__init__` TAKES ITS KEYWORDS AS A TYPED DICT, SO NO PARAMETER IS NAMED `format` (W1977,
+# operator 2026-10-27, host line 109815: "mtools is going to use a TypedDict **kwargs to work
+# around the `format` name"). The library's keyword-only parameters are `metadata`, `format` and
+# `api_version` (panflute/elements.py line 56); a parameter named `format` shadows a builtin (ruff
+# A002), which first cost one counted key under ruling (a) (host line 104181) and now costs
+# nothing: `**options: Unpack[_DocOptions]` keeps every keyword typed, checked and defaulted, and
+# the name is a dictionary key, not an argument. No per-file exemption and no ignore list: that
+# would only have moved the debt out of a file the census counts (operator, host line 97317).
+class _DocOptions(TypedDict, total=False):
+    metadata: Mapping[str, object]
+    format: str
+    api_version: tuple[int, ...]
+
 class Doc(Element):
     content: Sequence[Block]
-    def __init__(
-        self,
-        *args: Block,
-        metadata: Mapping[str, object] = ...,
-        format: str = ...,
-        api_version: tuple[int, ...] = ...,
-    ) -> None: ...
+    def __init__(self, *args: Block, **options: Unpack[_DocOptions]) -> None: ...
 
 class Header(Block):
     level: int
