@@ -1256,6 +1256,38 @@ mutant_site(
 )
 
 mutant_site(
+    name = "declared_stale-beat-labelled-as-missing",
+    dist = "hooks",
+    site = "src/mikemol/hooks/watchdog.py::stale-beat-labelled-as-missing",
+    tests = "tests/test_beat_hook.py tests/test_call_stamp.py tests/test_hook_import_check.py tests/test_watchdog.py tests/test_watchdog_evidence.py tests/test_watchdog_exit.py tests/test_watchdog_hint.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/beat.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/heartbeat.py",
+        "//hooks:src/mikemol/hooks/hook_argv.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:src/mikemol/hooks/watchdog.py",
+        "//hooks:tests/test_beat_hook.py",
+        "//hooks:tests/test_call_stamp.py",
+        "//hooks:tests/test_hook_import_check.py",
+        "//hooks:tests/test_watchdog.py",
+        "//hooks:tests/test_watchdog_evidence.py",
+        "//hooks:tests/test_watchdog_exit.py",
+        "//hooks:tests/test_watchdog_hint.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
     name = "declared_stale-beat-fires-the-first-poll",
     dist = "hooks",
     site = "src/mikemol/hooks/watchdog.py::stale-beat-fires-the-first-poll",
@@ -2002,6 +2034,7 @@ test_suite(
         ":declared_any-watchdog-removes-the-pid-file",
         ":declared_stale-pid-file-reads-as-running",
         ":declared_pid-file-outlives-the-watch",
+        ":declared_stale-beat-labelled-as-missing",
         ":declared_stale-beat-fires-the-first-poll",
         ":declared_publisher-ignores-its-value",
         ":declared_zero-not-sent-on-exit",

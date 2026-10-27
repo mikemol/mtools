@@ -1895,6 +1895,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_hold_lift_numbered.py": {
+      "imports": [
+        "src/mikemol/hooks/hold_lift.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_hook_argv.py": {
       "imports": [
         "src/mikemol/hooks/entry.py",

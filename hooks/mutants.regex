@@ -401,6 +401,7 @@ src/mikemol/hooks/watchdog.py|armed-sent-without-a-store|    if program is None 
 src/mikemol/hooks/watchdog.py|any-watchdog-removes-the-pid-file|        if target\.read_text\(encoding="utf-8"\)\.strip\(\) == str\(pid\):|        if True:|def=release
 src/mikemol/hooks/watchdog.py|stale-pid-file-reads-as-running|    return alive\(pid\)|    return True|def=running
 src/mikemol/hooks/watchdog.py|pid-file-outlives-the-watch|        release\(git_dir, os\.getpid\(\)\)|        pass|def=main
+src/mikemol/hooks/watchdog.py|stale-beat-labelled-as-missing|            last = Beat\(f"watch start; last beat \{last\.tool\} \{before_s\}s before it", began, \(\)\)|            last = started|def=watch
 src/mikemol/hooks/watchdog.py|stale-beat-fires-the-first-poll|        elif last\.at_ns < started\.at_ns:|        elif False:|def=watch
 src/mikemol/hooks/beat.py|zero-sent-while-a-watchdog-lives|    if watchdog\.running\(git_dir\) or not _due\(git_dir, now_ns, DOWN_MARK\):|    if not _due(git_dir, now_ns, DOWN_MARK):|def=mark_down
 src/mikemol/hooks/beat.py|zero-sent-on-every-call| or not _due\(git_dir, now_ns, DOWN_MARK\)||def=mark_down
@@ -644,6 +645,11 @@ src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\(
 src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or not isinstance\(blocks, int\) or blocks >= CAP:|    if start is None or not isinstance(blocks, int):|def=idle_reason
 src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason
 src/mikemol/hooks/ratchet_emit.py|label-is-the-directory-name|        \(args\[0\], path, kind, value, total, guessed\)|        (_repo, path, kind, value, total, guessed)|def=main
+src/mikemol/hooks/hold_lift.py|one-shared-word-quotes-the-ask|    return len\(_words\(item\) & _words\(ask\)\) >= _SHARED_NEEDED|    return len(_words(item) & _words(ask)) >= 1|def=quotes_ask
+src/mikemol/hooks/hold_lift.py|generic-words-counted|    return \{str\(m\[0\]\)\.lower\(\) for m in _WORD\.finditer\(text\)\} - _GENERIC|    return {str(m[0]).lower() for m in _WORD.finditer(text)}|def=_words
+src/mikemol/hooks/hold_lift.py|unanswered-items-read|for n in given if n in questions\)|for n in questions)|def=answers_ask
+src/mikemol/hooks/hold_lift.py|oldest-question-read|numbered\(str\(asked\[-1\]\.get|numbered(str(asked[0].get|def=answers_ask
+src/mikemol/hooks/hold_lift.py|urn-warrant-unread|    if ident\.startswith\(_URN_PREFIX\):|    if False:|def=cited
 src/mikemol/hooks/ratchet_emit.py|tombstone-reason-dropped|found\.append\(\(str\(match\["repo"\]\), str\(match\["path"\]\), str\(match\["reason"\]\)\)\)|found.append((str(match["repo"]), str(match["path"]), ""))|def=parse_tombstones
 src/mikemol/hooks/ratchet_emit.py|retired-value-not-one|            "value": 1,|            "value": 0,|def=retired_rows
 src/mikemol/hooks/ratchet_emit.py|retired-labelled-by-the-directory|    dead = \[\(args\[0\], path, reason\) for _repo, path, reason in parse_tombstones\(said\)\]|    dead = [(_repo, path, reason) for _repo, path, reason in parse_tombstones(said)]|def=main

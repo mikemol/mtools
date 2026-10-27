@@ -38,7 +38,16 @@ Run = Callable[[Sequence[str]], tuple[int, str]]
 READER_ENV = "TRANSCRIPTSTRUCT_BIN"
 READER_NAME = "mikemol-transcriptstruct"
 _FILE_PREFIX = "file://"
+_URN_PREFIX = "urn:claude:transcript:"
 _FRAGMENT = "#"
+_ITEM = re.compile(r"^[ \t]*(\d+)[.)][ \t]*", re.MULTILINE)
+_WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]{5,}")
+_GENERIC = frozenset(
+    {"decide", "question", "options", "operator", "should", "whether", "because", "between"}
+    | {"before", "after", "which", "there", "their", "about", "would", "could", "being", "using"}
+)
+_SHARED_NEEDED = 2
+_WINDOW = 400
 _CHECKOUT = ("github", "mtools", "transcriptstruct", ".venv", "bin", READER_NAME)
 
 
@@ -86,17 +95,101 @@ def cited(warrant: object) -> tuple[str, str, int] | None:
     ident, line = fields.get("@id"), fields.get("mtools:line")
     if not isinstance(ident, str) or not isinstance(line, int):
         return None
+    if ident.startswith(_URN_PREFIX):
+        # The form the writer writes now: `urn:claude:transcript:<project>/<session>#<uuid>`.
+        where, _, found = ident[len(_URN_PREFIX) :].partition(_FRAGMENT)
+        home = Path.home() / ".claude" / "projects" / f"{where}.jsonl"
+        return (str(home), found, line) if where and found else None
     if not ident.startswith(_FILE_PREFIX):
         return None
     path, _, uuid = ident[len(_FILE_PREFIX) :].partition(_FRAGMENT)
     return (path, uuid, line) if path and uuid else None
 
 
-def verifies(reader: str, warrant: object, symbol: str, run: Run) -> bool:
-    """Say whether a warrant's record is the operator's own words and names `symbol`.
+def numbered(text: str) -> dict[int, str]:
+    """Split a message into its numbered items.
 
     Returns:
-        True when the record verifies as origin human and its line matches the card's symbol.
+        item number to the item's whole text, up to the next numbered line; the first use of a
+        number wins.
+
+    """
+    marks = list(_ITEM.finditer(text))
+    items: dict[int, str] = {}
+    for at, mark in enumerate(marks):
+        end = marks[at + 1].start() if at + 1 < len(marks) else len(text)
+        items.setdefault(int(str(mark[1])), text[mark.end() : end])
+    return items
+
+
+def _words(text: str) -> set[str]:
+    return {str(m[0]).lower() for m in _WORD.finditer(text)} - _GENERIC
+
+
+def quotes_ask(item: str, ask: str) -> bool:
+    """Say whether a numbered question quotes a card's ask.
+
+    ⚑ QUOTING IS SHARED DISTINCTIVE WORDS, NOT A PARAPHRASE JUDGED BY EYE (the operator, host line
+    104311: "an answer to a numbered question quoting a card's ask counts as naming it"). Words of
+    six letters or more, without the generic ones, that the question and the ask both use; two are
+    needed, so a list that merely mentions "ratchet" does not release a card about a stub.
+
+    Returns:
+        True when at least two such words are shared.
+
+    """
+    return len(_words(item) & _words(ask)) >= _SHARED_NEEDED
+
+
+def _rows(said: str) -> list[dict[str, object]]:
+    # The JSON objects among the reader's lines; its `#` footer and any torn line are skipped.
+    rows: list[dict[str, object]] = []
+    for raw in said.splitlines():
+        if not raw.startswith("{"):
+            continue
+        try:
+            row: object = json.loads(raw)
+        except ValueError:
+            continue
+        if isinstance(row, dict):
+            rows.append(cast("dict[str, object]", row))
+    return rows
+
+
+def answers_ask(reader: str, path: str, line: int, ask: str, run: Run) -> bool:
+    """Say whether the human record at `line` answers a numbered question that quotes the ask.
+
+    ⚑ THE QUESTION IS THE ASSISTANT MESSAGE IMMEDIATELY BEFORE THE ANSWER, and only the items the
+    answer numbers are read: "2. (a)" answers item 2 of that message and no other.
+
+    Returns:
+        True when some item the record answers quotes `ask`; False when the reader fails, the
+        record is not found, or no assistant message precedes it within the window.
+
+    """
+    start = max(1, line - _WINDOW)
+    code, said = run([reader, path, "--prose", "--since", str(start), "--until", str(line)])
+    if code != 0:
+        return False
+    rows = _rows(said)
+    answer = next((r for r in rows if r.get("line") == line and r.get("kind") == "human"), None)
+    asked = [r for r in rows if r.get("kind") == "assistant" and int(str(r.get("line"))) < line]
+    if answer is None or not asked:
+        return False
+    questions = numbered(str(asked[-1].get("text", "")))
+    given = numbered(str(answer.get("text", "")))
+    return any(quotes_ask(questions[n], ask) for n in given if n in questions)
+
+
+def verifies(reader: str, warrant: object, symbol: str, run: Run, ask: str = "") -> bool:
+    """Say whether a warrant's record is the operator's own words and names `symbol`.
+
+    With `ask` (the card's title and blocked-on text), a record that answers a numbered question
+    quoting it counts as naming the card too (W1525, widened once by the operator, 2026-10-26).
+
+    Returns:
+        True when the record verifies as origin human and either its line matches the card's symbol
+        or it answers a numbered question that quotes the ask.
 
     """
     got = cited(warrant)
@@ -116,7 +209,8 @@ def verifies(reader: str, warrant: object, symbol: str, run: Run) -> bool:
     _code, hits = run(
         [reader, "--human", pattern, "--since", str(line), "--until", str(line), path]
     )
-    return any(row.startswith("{") for row in hits.splitlines())
+    named = any(row.startswith("{") for row in hits.splitlines())
+    return named or (bool(ask) and answers_ask(reader, path, line, ask, run))
 
 
 def lifted(
@@ -135,4 +229,9 @@ def lifted(
     reader = reader_path(os.environ if env is None else env)
     if reader is None or not isinstance(warrants, list) or not isinstance(symbol, str):
         return False
-    return any(verifies(reader, w, symbol, run) for w in cast("list[object]", warrants))
+    held_on = row.get("blocked_on")
+    waits = (
+        " ".join(str(b) for b in cast("list[object]", held_on)) if isinstance(held_on, list) else ""
+    )
+    ask = f"{row.get('title', '')} {waits}"
+    return any(verifies(reader, w, symbol, run, ask) for w in cast("list[object]", warrants))

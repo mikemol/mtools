@@ -15772,3 +15772,66 @@
   claim  = {Retired is present only while a declaration lists it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit_retired.py -k test_a_census_with_no_tombstone_sends_no_retired_row},
 }
+
+@misc{hooks-hold-lift-numbered-writers-urn-warrant-cites-the-session-file-under-the-projects-directory,
+  section = {hold_lift},
+  title  = {The form the writer writes now is read; before, no current warrant could lift anything},
+  claim  = {The form the writer writes now is read; before, no current warrant could lift anything.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_the_writers_urn_warrant_cites_the_session_file_under_the_projects_directory},
+}
+
+@misc{hooks-hold-lift-numbered-answer-to-the-numbered-item-that-quotes-the-ask-lifts-the-hold,
+  section = {hold_lift},
+  title  = {The answer `2. (a)` numbers item 2, the panflute stub, which shares several words},
+  claim  = {The answer `2. (a)` numbers item 2, the panflute stub, which shares several words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_an_answer_to_the_numbered_item_that_quotes_the_ask_lifts_the_hold},
+}
+
+@misc{hooks-hold-lift-numbered-answer-to-an-item-that-does-not-quote-the-ask-does-not-lift,
+  section = {hold_lift},
+  title  = {Only item 1 (the ratchet question) is answered: one shared word, ratchet, is not enough},
+  claim  = {Only item 1 (the ratchet question) is answered: one shared word, ratchet, is not enough.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_an_answer_to_an_item_that_does_not_quote_the_ask_does_not_lift},
+}
+
+@misc{hooks-hold-lift-numbered-unnumbered-answer-or-unnumbered-question-lifts-nothing,
+  section = {hold_lift},
+  title  = {The rule is about numbered answers, so prose neither releases nor is released},
+  claim  = {The rule is about numbered answers, so prose neither releases nor is released.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_an_unnumbered_answer_or_unnumbered_question_lifts_nothing},
+}
+
+@misc{hooks-hold-lift-numbered-no-assistant-message-before-the-answer-lifts-nothing,
+  section = {hold_lift},
+  title  = {The question is the message immediately before; with none in the window there is none},
+  claim  = {The question is the message immediately before; with none in the window there is none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_no_assistant_message_before_the_answer_lifts_nothing},
+}
+
+@misc{hooks-hold-lift-numbered-reader-that-fails-leaves-the-card-held,
+  section = {hold_lift},
+  title  = {A hook that cannot read the record must not lift on faith},
+  claim  = {A hook that cannot read the record must not lift on faith.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_a_reader_that_fails_leaves_the_card_held},
+}
+
+@misc{hooks-hold-lift-numbered-question-is-the-assistant-message-nearest-before-the-answer,
+  section = {hold_lift},
+  title  = {An older numbered message that happens to quote the ask is not the question asked},
+  claim  = {An older numbered message that happens to quote the ask is not the question asked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_the_question_is_the_assistant_message_nearest_before_the_answer},
+}
+
+@misc{hooks-hold-lift-numbered-without-an-ask-the-prose-is-never-read,
+  section = {hold_lift},
+  title  = {The widening needs the card's ask; a caller that gives none keeps the old rule},
+  claim  = {The widening needs the card's ask; a caller that gives none keeps the old rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_without_an_ask_the_prose_is_never_read},
+}
+
+@misc{hooks-hold-lift-numbered-generic-words-and-a-single-shared-word-are-not-a-quotation,
+  section = {hold_lift},
+  title  = {Two distinctive words are needed, and `decide`, `question` and `options` are not},
+  claim  = {Two distinctive words are needed, and `decide`, `question` and `options` are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift_numbered.py -k test_generic_words_and_a_single_shared_word_are_not_a_quotation},
+}
