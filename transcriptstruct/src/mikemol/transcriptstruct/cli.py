@@ -29,6 +29,7 @@ from mikemol.transcriptstruct import (
     commitledger,
     commitrows,
     sample,
+    turnlayer,
 )
 from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
@@ -177,6 +178,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--since", type=int, help="first line to search (1-based, inclusive)")
     parser.add_argument("--until", type=int, help="last line to search (inclusive)")
     parser.add_argument("--repo", help="--resolve: keep only the rows of this repository")
+    parser.add_argument(
+        "--turns",
+        help="--resolve: the transcript the rows' lines point into; an announce row whose "
+        "assistant turn goes on to make a tool call is discharged (layer turn), not debt",
+    )
     parser.add_argument(
         "--root", metavar="DIR", help="--commitments-tree: where the repositories live (~/github)"
     )
@@ -342,7 +348,9 @@ def _cards_of(queue: Path) -> list[dict[str, object]]:
     return [cast("dict[str, object]", item) for item in items if isinstance(item, dict)]
 
 
-def _resolve(rows_file: Path, queue: str | None, repo: str | None, out: TextIO) -> int:
+def _resolve(
+    rows_file: Path, queue: str | None, repo: str | None, out: TextIO, turns_file: str | None = None
+) -> int:
     """Resolve the rows of another extractor against a queue and write the ledger document.
 
     Returns:
@@ -357,7 +365,13 @@ def _resolve(rows_file: Path, queue: str | None, repo: str | None, out: TextIO) 
     if why:
         sys.stderr.write(f"mikemol-transcriptstruct: {why}\n")
         return _REFUSED
-    rows = commitrows.resolve(incoming, _cards_of(Path(queue)))
+    announces = {r.commitment.line for r in incoming if r.kind == commitrows.ANNOUNCE}
+    done = (
+        turnlayer.discharged(read_path(Path(turns_file)), announces)
+        if turns_file is not None
+        else set[int]()
+    )
+    rows = commitrows.resolve(incoming, _cards_of(Path(queue)), done)
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     out.write(_line(commitledger.document(stamp, rows)))
     tally = commitledger.counted(rows)
@@ -572,7 +586,7 @@ def _special(
         )
         return 0
     if opts.get("resolve") is True:
-        return _resolve(path, _text(opts, "queue"), _text(opts, "repo"), out)
+        return _resolve(path, _text(opts, "queue"), _text(opts, "repo"), out, _text(opts, "turns"))
     return 0 if _listing(opts, path, scheduled, out) else None
 
 

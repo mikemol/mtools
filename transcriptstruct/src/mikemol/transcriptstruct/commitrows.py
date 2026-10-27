@@ -29,12 +29,15 @@ CONSUMED BY: the `--resolve` mode of `mikemol-transcriptstruct` (W1986).
 """
 
 import json
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from typing import cast
 
 from mikemol.transcriptstruct import commitledger
 from mikemol.transcriptstruct.commitments import Commitment
+
+OWED = "owed"
+ANNOUNCE = "announce"
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,9 +47,10 @@ class Incoming:
     commitment: Commitment
     uncertain: bool
     families: tuple[str, ...]
+    kind: str = OWED
 
 
-def _row_of(line: str) -> tuple[Commitment, bool] | None:
+def _row_of(line: str) -> tuple[Commitment, bool, str] | None:
     try:
         parsed: object = json.loads(line)
     except ValueError:
@@ -57,16 +61,16 @@ def _row_of(line: str) -> tuple[Commitment, bool] | None:
     number, names = row.get("line"), row.get("names")
     words = [row.get(key) for key in ("uuid", "session", "repo", "family", "text", "at")]
     listed = cast("list[object]", names) if isinstance(names, list) else None
-    unsure = row.get("uncertain", False)
+    unsure, kind = row.get("uncertain", False), row.get("kind", OWED)
     if type(number) is not int or listed is None or not isinstance(unsure, bool):
         return None
-    if not all(isinstance(word, str) for word in words):
+    if not all(isinstance(word, str) for word in words) or not isinstance(kind, str):
         return None
     if not all(isinstance(name, str) for name in listed):
         return None
     uuid, session, repo, family, text, at = (str(word) for word in words)
     found = Commitment(number, uuid, session, repo, family, text, tuple(map(str, listed)), at)
-    return found, unsure
+    return found, unsure, kind
 
 
 def read(lines: Iterable[str], repo: str) -> tuple[list[Incoming], str]:
@@ -74,40 +78,63 @@ def read(lines: Iterable[str], repo: str) -> tuple[list[Incoming], str]:
 
     Returns:
         the deduplicated rows in first-seen order and an empty string; no rows and the reason
-        (naming the 1-based line) when a line is not a well-typed row.
+        (naming the 1-based line) when a line is not a well-typed row. A row's `kind` (`owed` or
+        `announce`, default `owed`) is the first one seen for its place.
 
     """
-    kept: dict[tuple[str, int], tuple[Commitment, list[str], list[bool]]] = {}
+    kept: dict[tuple[str, int], tuple[Commitment, str, list[str], list[bool]]] = {}
     for number, line in enumerate(lines, start=1):
         if not line.strip():
             continue
         got = _row_of(line)
         if got is None:
             return [], f"line {number} is not a commitment row"
-        said, unsure = got
+        said, unsure, kind = got
         if said.repo != repo:
             continue
-        entry = kept.setdefault((said.uuid, said.line), (said, [], []))
-        if said.family not in entry[1]:
-            entry[1].append(said.family)
-        entry[2].append(unsure)
+        entry = kept.setdefault((said.uuid, said.line), (said, kind, [], []))
+        if said.family not in entry[2]:
+            entry[2].append(said.family)
+        entry[3].append(unsure)
     rows = [
-        Incoming(first, all(votes), tuple(families)) for first, families, votes in kept.values()
+        Incoming(first, all(votes), tuple(families), kind)
+        for first, kind, families, votes in kept.values()
     ]
     return rows, ""
 
 
+def _turned(
+    row: commitledger.LedgerRow, found: Incoming, discharged: Collection[int]
+) -> commitledger.LedgerRow:
+    # An announce the same turn went on to carry out is discharged: layer `turn`, not counted.
+    if found.kind == ANNOUNCE and found.commitment.line in discharged:
+        return replace(
+            row, state="resolved", layer=commitledger.TURN, resolved_by=("turn", "tool_use")
+        )
+    return row
+
+
 def resolve(
-    incoming: Sequence[Incoming], cards: Sequence[Mapping[str, object]]
+    incoming: Sequence[Incoming],
+    cards: Sequence[Mapping[str, object]],
+    discharged: Collection[int] = (),
 ) -> list[commitledger.LedgerRow]:
     """Resolve rows from a file against a queue, keeping who found them and how sure they were.
 
+    `discharged` is the lines of the announce rows whose assistant turn went on to make a tool call
+    (`turnlayer.discharged`): such an announce reads as layer `turn`, resolved, and is not counted
+    (W2052). With none given, no row is discharged and the answer is what it was.
+
     Returns:
-        one ledger row per incoming row, in order, with `uncertain` and `families` set.
+        one ledger row per incoming row, in order, with `uncertain`, `families` and `kind` set.
 
     """
     resolved = commitledger.resolve([row.commitment for row in incoming], cards)
     return [
-        replace(row, uncertain=found.uncertain, families=found.families)
+        _turned(
+            replace(row, uncertain=found.uncertain, families=found.families, kind=found.kind),
+            found,
+            discharged,
+        )
         for row, found in zip(resolved, incoming, strict=True)
     ]

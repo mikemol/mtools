@@ -4177,3 +4177,7 @@
 2026-10-27T01:17:55Z  status W1964 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-27T03:02:34Z  status W2052 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-27T03:28:20Z  status W2009 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T03:41:02Z  interrupt W2057 minted    -         "Operator act: allow landing the hold-lift widening you authorised at host line 104311 (stack-next-13: W1525 widening plus W1898's watchdog label fix)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-8f
+2026-10-27T03:42:07Z  status W2057 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T03:43:06Z  status W1898 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T04:22:10Z  status W1724 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -36,6 +36,17 @@ class TurnStart:
     blocks: int
 
 
+def begins_turn(record: UserRecord) -> bool:
+    """Say whether a user-role record starts a turn instead of continuing one.
+
+    Returns:
+        False for a tool result and a Stop block's feedback, True for a prompt, a wake, a
+        notification or a peer message.
+
+    """
+    return waker(record) not in _CONTINUES
+
+
 def turn_start(records: Iterable[Record]) -> TurnStart | None:
     """Find where the latest turn began and count its Stop blocks.
 

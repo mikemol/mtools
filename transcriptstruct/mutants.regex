@@ -80,6 +80,11 @@ src/mikemol/transcriptstruct/commitexport.py|export-keeps-every-key|    return \
 src/mikemol/transcriptstruct/commitexport.py|repo-is-the-last-word|    name = project\.removeprefix\(prefix\) if project\.startswith\(prefix\) else ""|    name = project.rsplit("-", 1)[-1]|def=repo_of
 src/mikemol/transcriptstruct/commitexport.py|unreadable-queue-not-named|            unread\.append\(f"\{project\.name\}/\{QUEUE\[-1\]\}"\)|            pass|def=export
 src/mikemol/transcriptstruct/cli.py|project-named-by-the-path|path\.resolve\(\)\.parent\.name|str(path)|def=_auth_failed
+src/mikemol/transcriptstruct/turnlayer.py|tool-result-ends-the-turn|        if isinstance\(record, UserRecord\) and begins_turn\(record\):|        if isinstance(record, UserRecord):|def=discharged
+src/mikemol/transcriptstruct/turnlayer.py|sidechain-call-discharges|        elif isinstance\(record, AssistantRecord\) and not record\.is_sidechain:|        elif isinstance(record, AssistantRecord):|def=discharged
+src/mikemol/transcriptstruct/turnlayer.py|same-record-call-ignored|                    found\.add\(record\.line\)|                    pass|def=discharged
+src/mikemol/transcriptstruct/commitrows.py|owed-row-turned|    if found\.kind == ANNOUNCE and found\.commitment\.line in discharged:|    if found.commitment.line in discharged:|def=_turned
+src/mikemol/transcriptstruct/cli.py|turns-file-ignored|        turnlayer\.discharged\(read_path\(Path\(turns_file\)\), announces\)|        set[int]()|def=_resolve
 src/mikemol/transcriptstruct/labelcompare.py|excluded-id-counted|    shared = \(set\(mine\) & set\(theirs\)\) - exclude|    shared = set(mine) & set(theirs)|def=confusion
 src/mikemol/transcriptstruct/labelcompare.py|recall-and-precision-swapped|recall \{both\} of \{mine\}, precision \{both\} of \{theirs\}|recall {both} of {theirs}, precision {both} of {mine}|def=kind_line
 src/mikemol/transcriptstruct/labelcompare.py|foreign-line-read-as-a-label|            if "id" in fields and "label" in fields:|            if True:|def=read_labels

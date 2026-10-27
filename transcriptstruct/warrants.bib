@@ -1427,3 +1427,75 @@
   claim  = {I gave commitment to 3 rows, they to 1, both to 1: recall 1 of 3, precision 1 of 1.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_labelcompare.py -k test_recall_and_precision_are_not_interchangeable},
 }
+
+@misc{transcriptstruct-turnlayer-announce-followed-by-a-tool-call-in-the-same-turn-is-discharged,
+  section = {turnlayer},
+  title  = {Line 2 says it, line 3 does it, before the turn ends},
+  claim  = {Line 2 says it, line 3 does it, before the turn ends.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_an_announce_followed_by_a_tool_call_in_the_same_turn_is_discharged},
+}
+
+@misc{transcriptstruct-turnlayer-announce-that-ends-the-turn-is-not-discharged,
+  section = {turnlayer},
+  title  = {The next tool call is the NEXT turn's, after a new prompt: the sentence stays debt},
+  claim  = {The next tool call is the NEXT turn's, after a new prompt: the sentence stays debt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_an_announce_that_ends_the_turn_is_not_discharged},
+}
+
+@misc{transcriptstruct-turnlayer-tool-result-does-not-end-the-turn,
+  section = {turnlayer},
+  title  = {A call, its result, then an announce and another call: all one turn},
+  claim  = {A call, its result, then an announce and another call: all one turn.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_a_tool_result_does_not_end_the_turn},
+}
+
+@misc{transcriptstruct-turnlayer-subagents-tool-call-does-not-discharge-the-sessions-announce,
+  section = {turnlayer},
+  title  = {Sidechain records are another agent's work},
+  claim  = {Sidechain records are another agent's work.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_a_subagents_tool_call_does_not_discharge_the_sessions_announce},
+}
+
+@misc{transcriptstruct-turnlayer-record-holding-both-the-sentence-and-the-call-is-discharged-by-itself,
+  section = {turnlayer},
+  title  = {The announcement and the call in one record},
+  claim  = {The announcement and the call in one record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_a_record_holding_both_the_sentence_and_the_call_is_discharged_by_itself},
+}
+
+@misc{transcriptstruct-turnlayer-line-that-is-not-an-assistant-record-is-never-discharged,
+  section = {turnlayer},
+  title  = {Asking about the prompt's own line answers nothing},
+  claim  = {Asking about the prompt's own line answers nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_a_line_that_is_not_an_assistant_record_is_never_discharged},
+}
+
+@misc{transcriptstruct-turnlayer-rows-file-carries-a-kind-that-defaults-to-owed,
+  section = {turnlayer},
+  title  = {`announce` is read; an absent kind is owed; a non-string kind refuses the file},
+  claim  = {`announce` is read; an absent kind is owed; a non-string kind refuses the file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_the_rows_file_carries_a_kind_that_defaults_to_owed},
+}
+
+@misc{transcriptstruct-turnlayer-only-a-discharged-announce-is-turned-and-it-is-not-counted,
+  section = {turnlayer},
+  title  = {An owed row on the same line stays open; a discharged announce naming memory is not debt},
+  claim  = {An owed row on the same line stays open; a discharged announce naming memory is not
+            debt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_only_a_discharged_announce_is_turned_and_it_is_not_counted},
+}
+
+@misc{transcriptstruct-turnlayer-command-reads-the-transcript-and-prints-the-discharged-split,
+  section = {turnlayer},
+  title  = {`--resolve --turns T` marks the announce the turn carried out; the other stays unattached},
+  claim  = {`--resolve --turns T` marks the announce the turn carried out; the other stays
+            unattached.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_the_command_reads_the_transcript_and_prints_the_discharged_split},
+}
+
+@misc{transcriptstruct-turnlayer-tool-result-between-the-sentence-and-the-call-does-not-end-the-turn,
+  section = {turnlayer},
+  title  = {The result sits between line 2 and the call at line 4: still one turn, still discharged},
+  claim  = {The result sits between line 2 and the call at line 4: still one turn, still discharged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_turnlayer.py -k test_a_tool_result_between_the_sentence_and_the_call_does_not_end_the_turn},
+}

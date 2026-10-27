@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2056,
+  "counter": 2057,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -37245,19 +37245,21 @@
     {
       "symbol": "W1724",
       "title": "Each gate's duration is recorded beside its executed-test count, cache-hit share and the host's load, so the suite's slope is split into its causes",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1699"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Add executed-test count, cache-hit share and host load to the per-round record (traintel, gatefacts). Hooks lane: stack-next-8 (W1964) holds it in the gate, and W2008 is queued ahead of this; take it after both. I still need W1964 landed, W1724",
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Add executed-test count, cache-hit share and host load to the per-round record (traintel, gatefacts). Hooks files: they land after W2057 (the operator's allowance of the hold-lift widening), because that widening sits uncommitted in the shared hooks registries. I still need W2057, W1724",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1457 (load share of non-gate processes during a gate) separates 'gate slow' from 'host busy'; luthen lists it as enabling this card. NOT made a block here: this card records the host's one-minute load itself, so it can proceed, and W1457's series can be joined later (overlap audit 2026-10-23)",
       "issued_at": "2026-10-19T16:26:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T23:49:31Z",
+      "last_worked": "2026-10-27T04:22:10Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -41169,25 +41171,28 @@
     {
       "symbol": "W1898",
       "title": "Rung 3: after a stop that rung 2 did not prevent, the watchdog's next wake comes early with an explicit idle-after-refusal prompt naming the top ready card, leaving a ledger line",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1896"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "blocked_on": [
+        "W2057"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Rung 3 and the two watchdog findings (label fix written, sibling-install path unbuilt) are hooks work: they wait behind the operator act W2057 because the uncommitted hold-lift widening shares hooks/mutants.regex and hooks/sites with them. I still need W2057, W1898",
+      "evidence": "2026-10-27: 2026-10-27 github-8f: carries two watchdog findings that W2043 (done) cannot: (1) the idle line's 'no heartbeat source' for both a missing and a stale file (fix written and tested, in the stack waiting on the operator act below); (2) the host's --tick-open prints a watchdog start line naming a SIBLING repo's install for the host queue, against the no-sibling-paths ruling of 2026-10-19, probably the first install found under the github root; the host has no venv and its writer is mtools' pathsforward. Witness (2): for the host queue, tick-open prints a watchdog path inside mtools' own build, the same build as the writer it was given. Not built yet.",
       "issued_at": "2026-10-24T15:53:30Z",
       "minted_during": "interrupt",
       "caused_by": "W1896",
-      "last_worked": null,
+      "last_worked": "2026-10-27T03:43:06Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/watchdog.py",
         "hooks/tests/test_watchdog.py"
       ],
-      "size_class": "medium"
+      "size_class": "medium",
+      "completed": null
     },
     {
       "symbol": "W1899",
@@ -42132,12 +42137,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Extend --regressions to tick_hooks: a hook line present in the writer's STORED prior list and absent from the new file is refused, naming the line, unless the new file declares its replacement with a '# replaces: <old line>' comment. Compare against the writer's own stored prior hook list (the host queue is not under git). Witness: --tick-hooks-set with a file missing a current line exits non-zero and names it. Files: pathsforward tickhooks.py, cli.py, a test. I still need that check, W1930",
-      "evidence": "2026-10-24: 2026-10-24: first part built (regressions.lost, --regressions FILE, 6 tests, 4 declared mutants), stack-w1930a.json written and waiting behind the W1464 gate; bazel test //pathsforward:test_regressions runs once the gate is clear (standing 8). Remaining: the pre-commit call (HEAD copy to a temp file, run against the staged queue), done last because a mistake refuses every commit | 2026-10-25: landed 94485940 | 2026-10-25: First part landed as 94485940 (regressions.lost and --regressions FILE). Marked done by the stack tool in error: the pre-commit wiring, the half that makes it a gate, is still to do | 2026-10-25: 2026-10-24: pre-commit wiring submitted (stack-w1930b.json, in the gate) after bazel test //hooks:test_bar_fires //:shellcheck_githooks passed; on landing W1930 closes and W1464 unblocks | 2026-10-25: landed e688ad67 | 2026-10-27: 2026-10-27 github-8f (host 2nd-order review): --tick-hooks-set replaces the whole hook list with no regression check; a measured sensor (per-repo landings) was dropped while another was widened, and a retro witness went false. EXTEND, no new card.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-24: 2026-10-24: first part built (regressions.lost, --regressions FILE, 6 tests, 4 declared mutants), stack-w1930a.json written and waiting behind the W1464 gate; bazel test //pathsforward:test_regressions runs once the gate is clear (standing 8). Remaining: the pre-commit call (HEAD copy to a temp file, run against the staged queue), done last because a mistake refuses every commit | 2026-10-25: landed 94485940 | 2026-10-25: First part landed as 94485940 (regressions.lost and --regressions FILE). Marked done by the stack tool in error: the pre-commit wiring, the half that makes it a gate, is still to do | 2026-10-25: 2026-10-24: pre-commit wiring submitted (stack-w1930b.json, in the gate) after bazel test //hooks:test_bar_fires //:shellcheck_githooks passed; on landing W1930 closes and W1464 unblocks | 2026-10-25: landed e688ad67 | 2026-10-27: 2026-10-27 github-8f (host 2nd-order review): --tick-hooks-set replaces the whole hook list with no regression check; a measured sensor (per-repo landings) was dropped while another was widened, and a retro witness went false. EXTEND, no new card. | 2026-10-27: landed 266e51fd: --tick-hooks-set refuses to drop a stored hook without a replaces/retires declaration",
       "issued_at": "2026-10-24T23:25:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1464",
-      "last_worked": "2026-10-27T01:29:45Z",
+      "last_worked": "2026-10-27T03:35:21Z",
       "ticks_blocked": 0,
       "weight": 1000,
       "manifest": [
@@ -45565,12 +45570,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Commit the comparison as a tracked module, mikemol.transcriptstruct.labelcompare (two label files and the exclude-ids file in, per-kind precision and recall and the confusion out, with tests on a synthetic pair), replacing my scratch scripts; then the fixtures from the seed-2 and seed-3 misses. I still need the module, its tests and the fixtures, W2052",
-      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7.",
+      "next_bounded_step": "Two parts. (a) Add the turn-boundary layer to --resolve: a discharged/unattached split for announce rows; witness: on seed 3's 6 announce rows it prints the split and my seed-3 labels join to it. (b) Fixtures from the seed-2 and seed-3 misses, and the console script for labelcompare (needs the venv mirror). Gates amr-skills' step 3. I still need both, W2052",
+      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7. | 2026-10-27: 2026-10-27 the turn-boundary layer for transcriptstruct --resolve (github-8f, from amr-skills' a84163cd run over 14 seed-3 rows) is carried HERE because W1986 is done: --resolve attaches only by card and artifact name, so every announce reads open at layer none; an announce is discharged when a later tool_use, or later text, in the SAME assistant turn carries it out (the next tool_use after the sentence, before the turn's end); only rows still unattached when the turn ends are debt. Rows from a blind sample carry session '' and at ''.",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": "2026-10-27T03:02:34Z",
+      "last_worked": "2026-10-27T03:44:46Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45655,6 +45660,27 @@
       "caused_by": "estate:W52",
       "last_worked": "2026-10-27T00:26:46Z",
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2057",
+      "title": "Operator act: allow landing the hold-lift widening you authorised at host line 104311 (stack-next-13: W1525 widening plus W1898's watchdog label fix)",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "hold-lift"
+      ],
+      "blocked_on": [
+        "operator: act allow the Bash command 'mikemol-commit ~/github/mtools --stack ~/mtools-stacks/stack-next-13.json' (the auto-mode classifier denied the earlier equivalent as a guard weakening). It lands hooks/src/mikemol/hooks/hold_lift.py: a hold lifts when a human answer to a numbered question quotes the card's ask (your words at host line 104311, 'This is the way'), plus a fix so current urn warrants can lift at all. Allow it with a Bash permission rule, or run it yourself."
+      ],
+      "blocked_kind": "human",
+      "next_bounded_step": "On the operator's allowance: submit stack-next-13 (W1525 widening, then W1898's label fix), then lift W1977's hold by its existing warrant, and put nemik:W1113 and luthen's W633 on the same lift. I still need the operator's allowance, W2057",
+      "evidence": "",
+      "issued_at": "2026-10-27T03:41:02Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-8f",
+      "last_worked": "2026-10-27T03:42:07Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [

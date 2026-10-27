@@ -33,7 +33,11 @@ from typing import cast
 
 from mikemol.transcriptstruct.commitments import Commitment
 
-LAYERS = ("none", "memory", "instructions", "card", "trigger", "hook", "gate")
+TURN = "turn"
+# ⚑ `turn` IS LAST ON PURPOSE (W2052): an announce the same assistant turn went on to carry out is
+# discharged whatever else the sentence names, so it must outrank a memory or instruction file that
+# would otherwise leave it counted. It is not in COUNTED.
+LAYERS = ("none", "memory", "instructions", "card", "trigger", "hook", "gate", TURN)
 COUNTED = frozenset({"none", "memory", "instructions"})
 _OPEN = frozenset({"ready", "working", "blocked"})
 _DONE = frozenset({"done", "landed"})
@@ -50,6 +54,7 @@ class LedgerRow:
     resolved_by: tuple[str, str] | None
     uncertain: bool = False
     families: tuple[str, ...] = ()
+    kind: str = "owed"
 
 
 def _strings(value: object) -> list[str]:
@@ -145,6 +150,8 @@ def record(row: LedgerRow) -> dict[str, object]:
         out["uncertain"] = True
     if row.families:
         out["families"] = list(row.families)
+    if row.kind != "owed":
+        out["kind"] = row.kind
     return out
 
 
