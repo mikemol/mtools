@@ -14,7 +14,7 @@ _NOT_SOURCES = (
 )
 _MISSING = (
     f"W1: {_BZL} names checks/hook_exec_test.py, which neither HEAD nor this entry's or an "
-    "earlier entry's files carry"
+    "earlier entry's or a stack ahead's files carry"
 )
 
 
@@ -52,6 +52,18 @@ def test_the_source_in_an_earlier_entry_or_head_is_sound() -> None:
     assert stackbuildfiles.findings(later, _blobs(b1=_LISTED), _never) == []
     only = [("W1", [_frozen(_BZL, "b1")])]
     assert stackbuildfiles.findings(only, _blobs(b1=_LISTED), _in(_TEST)) == []
+
+
+def test_a_source_a_stack_queued_ahead_carries_is_sound_and_otherwise_a_finding() -> None:
+    """W1746: what a stack queued ahead holds explains a name.
+
+    This stack lands on a HEAD that includes the stack ahead; the same stack with nothing ahead is
+    the control and is still refused.
+    """
+    entries = [("W1", [_frozen(_BZL, "b1")])]
+    assert stackbuildfiles.findings(entries, _blobs(b1=_LISTED), _never, None, [_TEST]) == []
+    assert stackbuildfiles.findings(entries, _blobs(b1=_LISTED), _never, None, []) == [_MISSING]
+    assert stackbuildfiles.findings(entries, _blobs(b1=_LISTED), _never) == [_MISSING]
 
 
 def test_a_source_carried_by_a_later_entry_is_still_a_finding() -> None:

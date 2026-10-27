@@ -102,6 +102,7 @@ GRAPH = {
         "src/mikemol/hooks/commit_verdict.py",
         "src/mikemol/hooks/commit_withdraw.py",
         "src/mikemol/hooks/commitprogress.py",
+        "src/mikemol/hooks/flakegate.py",
         "src/mikemol/hooks/flakemetric.py",
         "src/mikemol/hooks/gateenv.py",
         "src/mikemol/hooks/gatephase.py",
@@ -213,6 +214,14 @@ GRAPH = {
     "src/mikemol/hooks/flag_contract.py": {
       "imports": [
         "src/mikemol/hooks/refusal_log.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "src/mikemol/hooks/flakegate.py": {
+      "imports": [
+        "src/mikemol/hooks/flakes.py",
+        "src/mikemol/hooks/round_order.py"
       ],
       "reads": [],
       "typing_only": []
@@ -839,9 +848,18 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/stackahead.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_counts.py",
+        "src/mikemol/hooks/stacksnap.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/stackbuildfiles.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/stackahead.py",
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
@@ -1714,6 +1732,14 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/flag_contract.py",
         "src/mikemol/hooks/refusal_log.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_flakegate.py": {
+      "imports": [
+        "src/mikemol/hooks/flakegate.py",
+        "src/mikemol/hooks/flakes.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2639,6 +2665,15 @@ GRAPH = {
     "tests/test_snapshot.py": {
       "imports": [
         "src/mikemol/hooks/snapshot.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_stackahead.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_counts.py",
+        "src/mikemol/hooks/stackahead.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []

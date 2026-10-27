@@ -15909,3 +15909,82 @@
             refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_flake_tells_the_metric_seam_and_a_plain_pass_does_not},
 }
+
+@misc{hooks-flakegate-done-card-a-ranked-card-and-an-open-card-with-no-round-cover-the-flake,
+  section = {flakes},
+  title  = {The three covers: the flake was dealt with, it is ranked, or no round says otherwise},
+  claim  = {The three covers: the flake was dealt with, it is ranked, or no round says otherwise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakegate.py -k test_a_done_card_a_ranked_card_and_an_open_card_with_no_round_cover_the_flake},
+}
+
+@misc{hooks-flakegate-untagged-wrong-tagged-dropped-or-unranked-card-does-not-cover-it,
+  section = {flakes},
+  title  = {The controls: each way a card can be near the flake and not own it},
+  claim  = {The controls: each way a card can be near the flake and not own it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakegate.py -k test_an_untagged_wrong_tagged_dropped_or_unranked_card_does_not_cover_it},
+}
+
+@misc{hooks-flakegate-uncovered-names-only-the-flakes-no-card-owns-in-order,
+  section = {flakes},
+  title  = {Two recorded flakes, one owned: the other is the whole answer},
+  claim  = {Two recorded flakes, one owned: the other is the whole answer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakegate.py -k test_uncovered_names_only_the_flakes_no_card_owns_in_order},
+}
+
+@misc{hooks-flakegate-flake-with-no-card-refuses-and-names-the-tree-the-check-and-the-commands,
+  section = {flakes},
+  title  = {The witness: the message names what was flaky and the writer commands that fix it},
+  claim  = {The witness: the message names what was flaky and the writer commands that fix it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakegate.py -k test_a_flake_with_no_card_refuses_and_names_the_tree_the_check_and_the_commands},
+}
+
+@misc{hooks-flakegate-ranked-tagged-card-admits-the-land-and-an-unranked-one-does-not,
+  section = {flakes},
+  title  = {The same repository: W9 is in the round and owns the flake; W8 is not and does not},
+  claim  = {The same repository: W9 is in the round and owns the flake; W8 is not and does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakegate.py -k test_a_ranked_tagged_card_admits_the_land_and_an_unranked_one_does_not},
+}
+
+@misc{hooks-flakegate-nothing-recorded-or-nothing-readable-is-no-refusal,
+  section = {flakes},
+  title  = {No flakes, no git directory of its own, and an unreadable queue each let the land go},
+  claim  = {No flakes, no git directory of its own, and an unreadable queue each let the land go.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakegate.py -k test_nothing_recorded_or_nothing_readable_is_no_refusal},
+}
+
+@misc{hooks-flakes-recorded-lists-each-flaked-tree-once-with-the-checks-that-refused-it,
+  section = {flakes},
+  title  = {W2008: two flakes of one tree are one entry; a refused-only tree is not in the list},
+  claim  = {W2008: two flakes of one tree are one entry; a refused-only tree is not in the list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakes.py -k test_recorded_lists_each_flaked_tree_once_with_the_checks_that_refused_it},
+}
+
+@misc{hooks-stackahead-live-stack-with-a-smaller-key-is-ahead-and-a-later-one-is-not,
+  section = {stackland},
+  title  = {The witness: the earlier stack's files are named; the later stack's and my own are not},
+  claim  = {The witness: the earlier stack's files are named; the later stack's and my own are not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_a_live_stack_with_a_smaller_key_is_ahead_and_a_later_one_is_not},
+}
+
+@misc{hooks-stackahead-stack-no-longer-live-a-deletion-or-a-torn-snapshot-names-nothing,
+  section = {stackland},
+  title  = {A finished or withdrawn stack, a removed file and an unreadable snapshot are not ahead},
+  claim  = {A finished or withdrawn stack, a removed file and an unreadable snapshot are not ahead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_a_stack_no_longer_live_a_deletion_or_a_torn_snapshot_names_nothing},
+}
+
+@misc{hooks-stackahead-no-snapshot-or-a-file-that-is-not-one-names-nothing,
+  section = {stackland},
+  title  = {The empty cases: no snapshot at all, and a name that is not `stack-<digits>`},
+  claim  = {The empty cases: no snapshot at all, and a name that is not `stack-<digits>`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_no_snapshot_or_a_file_that_is_not_one_names_nothing},
+}
+
+@misc{hooks-stackbuildfiles-source-a-stack-queued-ahead-carries-is-sound-and-otherwise-a-finding,
+  section = {stackland},
+  title  = {W1746: what a stack queued ahead holds explains a name},
+  claim  = {W1746: what a stack queued ahead holds explains a name. This stack lands on a HEAD that
+            includes the stack ahead; the same stack with nothing ahead is the control
+            and is still refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_source_a_stack_queued_ahead_carries_is_sound_and_otherwise_a_finding},
+}

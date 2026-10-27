@@ -28,12 +28,13 @@ CONSUMED BY: `commit_kata.main`, at submit.
 """
 
 import re
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
 from mikemol.hooks import stacksnap
 from mikemol.hooks.isolated import EnvRunner
+from mikemol.hooks.stackahead import paths as ahead_paths
 from mikemol.hooks.stackrun import items_of
 from mikemol.hooks.stacksnap import Frozen
 
@@ -116,17 +117,19 @@ def findings(
     read_blob: ReadBlob,
     in_head: InHead,
     head_names: HeadNames | None = None,
+    ahead: Collection[str] = (),
 ) -> list[str]:
     """Name every source a frozen build file lists that neither HEAD nor the stack carries.
 
     `entries` is each entry's waypoint with its frozen files, in landing order; `head_names`
-    lists the basenames HEAD holds, asked only for a bare name nothing else explains.
+    lists the basenames HEAD holds, asked only for a bare name nothing else explains; `ahead`
+    names the files the stacks queued AHEAD carry, which this stack lands on top of (W1746).
 
     Returns:
         one line per finding: the entry, the build file and the missing path.
 
     """
-    known = _Known(set(), in_head, head_names)
+    known = _Known(set(ahead), in_head, head_names)
     found: list[str] = []
     for waypoint, files in entries:
         known.present.update(frozen.path for frozen in files if frozen.blob)
@@ -137,7 +140,7 @@ def findings(
             here = PurePosixPath(frozen.path).parent
             found += [
                 f"{waypoint}: {frozen.path} names {source}, which neither HEAD nor this "
-                f"entry's or an earlier entry's files carry"
+                f"entry's or an earlier entry's or a stack ahead's files carry"
                 for source in named_sources(text)
                 if not (known.path(here, source) or known.name(source))
             ]
@@ -169,5 +172,5 @@ def refusal(root: Path, stack_file: Path, snap: str, run: EnvRunner) -> str | No
         return frozenset(PurePosixPath(line).name for line in listing.stdout.splitlines())
 
     entries = [(item.waypoint, files) for item, files in zip(items, loaded, strict=True)]
-    found = findings(entries, read_blob, in_head, head_names)
+    found = findings(entries, read_blob, in_head, head_names, ahead_paths(snap))
     return "\n".join(found) if found else None
