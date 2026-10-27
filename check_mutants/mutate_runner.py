@@ -65,6 +65,7 @@ sys.path.extend(
 
 from mikemol.fence.git_env import clean_env
 from mikemol.mutation.declarations import DECLARATION_FILE, Declared, plant, read_declarations
+from mikemol.mutation.sitewalk import GRID, FuncNode, Site, walk
 
 _FNV_OFFSET = 2166136261
 _FNV_PRIME = 16777619
@@ -238,23 +239,6 @@ def _not_source(_directory: str, names: list[str]) -> set[str]:
 _ENUM_BASES = frozenset(
     {"enum.Enum", "Enum", "enum.StrEnum", "StrEnum", "enum.IntEnum", "IntEnum"},
 )
-_PROTOCOL_BASES = frozenset({"Protocol", "typing.Protocol"})
-
-
-def _is_protocol(node: ast.ClassDef) -> bool:
-    """Say whether a class declares a `typing.Protocol`, written bare, qualified or subscripted.
-
-    ⚑ A PROTOCOL'S MEMBERS ARE NOT SITES (github-8f, 2026-10-20): a Protocol states a shape and
-    implements none of it, so its bodies have no behaviour any test could exercise, and a stub
-    perturbed there changes no verdict whatever the suite holds. Four docstring-bodied stubs of
-    webpage's `Waitable` came back SURVIVED and refused a gate; that was a fact about the
-    operator, not the suite.
-
-    Returns:
-        True when any base is `Protocol` or `typing.Protocol`, with or without type arguments.
-
-    """
-    return any(ast.unparse(base).split("[", 1)[0] in _PROTOCOL_BASES for base in node.bases)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -512,7 +496,7 @@ def launch(
     return subprocess.CompletedProcess(argv, code, _text(out), _text(err))
 
 
-def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | None]]:
+def _owned(tree: ast.Module) -> list[Site]:
     """Walk the module in source order, naming each def by its QUALIFIED path.
 
     ⚑⚑⚑ A BARE NAME IS NOT AN ADDRESS, AND THE GRID WAS ADDRESSING BY ONE. Sites were reported as
@@ -524,45 +508,24 @@ def _owned(tree: ast.Module) -> list[tuple[str, ast.FunctionDef, ast.ClassDef | 
     ⚑ AND A PATH CAN STILL REPEAT — a property getter and setter are both `C.x`, and so are the
     two arms of an `if TYPE_CHECKING:` — so the n-th repeat (n >= 2) carries `#n`. The first
     keeps the bare path, which is what leaves a module of unique names reported as before.
+    ⚑ THE WALK ITSELF IS `sitewalk.walk` under its GRID policy (W1761): one finder, shared with the
+    declared-spec scope, so a rule about what is a site is stated once.
 
     Returns:
-        `(qualified path, node, owning class or None)`, in source order.
+        the sites, each `(qualified path, node, owning class or None)`, in source order.
 
     """
-    found: list[tuple[str, ast.FunctionDef, ast.ClassDef | None]] = []
-    seen: dict[str, int] = {}
-
-    def visit(body: ast.AST, prefix: str, owner: ast.ClassDef | None) -> None:
-        for child in ast.iter_child_nodes(body):
-            if isinstance(child, ast.FunctionDef):
-                path = f"{prefix}{child.name}"
-                seen[path] = seen.get(path, 0) + 1
-                label = path if seen[path] == 1 else f"{path}#{seen[path]}"
-                found.append((label, child, owner))
-                visit(child, f"{path}.<locals>.", None)
-            elif isinstance(child, ast.AsyncFunctionDef | ast.Lambda):
-                # ⚑ NOT A SITE (the operator never mutated these), but a def nested in one
-                # still needs the path Python would give it.
-                name = child.name if isinstance(child, ast.AsyncFunctionDef) else "<lambda>"
-                visit(child, f"{prefix}{name}.<locals>.", None)
-            elif isinstance(child, ast.ClassDef):
-                if not _is_protocol(child):
-                    visit(child, f"{prefix}{child.name}.", child)
-            else:
-                visit(child, prefix, owner)
-
-    visit(tree, "", None)
-    return found
+    return walk(tree, GRID)
 
 
-def sites(tree: ast.Module) -> list[tuple[str, ast.FunctionDef]]:
+def sites(tree: ast.Module) -> list[tuple[str, FuncNode]]:
     """List every function definition in a parsed module, in source order, by qualified path.
 
     Returns:
         `(qualified path, FunctionDef)` pairs, nested defs included; every path is distinct.
 
     """
-    return [(path, node) for path, node, _owner in _owned(tree)]
+    return [(site.path, site.node) for site in _owned(tree)]
 
 
 def import_time_sites(tree: ast.Module) -> set[str]:
@@ -592,9 +555,9 @@ def import_time_sites(tree: ast.Module) -> set[str]:
 
     """
     return {
-        path
-        for path, _node, owner in _owned(tree)
-        if owner is not None and {ast.unparse(b) for b in owner.bases} & _ENUM_BASES
+        site.path
+        for site in _owned(tree)
+        if site.owner is not None and {ast.unparse(b) for b in site.owner.bases} & _ENUM_BASES
     }
 
 

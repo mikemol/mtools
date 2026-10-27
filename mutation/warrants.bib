@@ -335,3 +335,38 @@
   claim  = {Bare, subscripted and qualified Protocol bases are skipped; the plain class is kept.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutate.py -k test_a_protocols_methods_are_not_def_sites_but_a_plain_classs_are},
 }
+
+@misc{mutation-sitewalk-definition-policy-skips-one-liners-names-plainly-and-keeps-async-defs,
+  section = {mutate},
+  title  = {The declared-spec scope: `outer.inner`, async defs are sites, a one-liner is not},
+  claim  = {The declared-spec scope: `outer.inner`, async defs are sites, a one-liner is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sitewalk.py -k test_the_definition_policy_skips_one_liners_names_plainly_and_keeps_async_defs},
+}
+
+@misc{mutation-sitewalk-grid-policy-keeps-one-liners-marks-locals-and-labels-repeats,
+  section = {mutate},
+  title  = {The dist grid: Python's own `<locals>` path, `#2` on a repeat, async defs only walked},
+  claim  = {The dist grid: Python's own `<locals>` path, `#2` on a repeat, async defs only walked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sitewalk.py -k test_the_grid_policy_keeps_one_liners_marks_locals_and_labels_repeats},
+}
+
+@misc{mutation-sitewalk-nested-def-has-no-owner-and-a-method-has-its-class,
+  section = {mutate},
+  title  = {The owner is the class a method sits directly in, never a function's enclosing class},
+  claim  = {The owner is the class a method sits directly in, never a function's enclosing class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sitewalk.py -k test_a_nested_def_has_no_owner_and_a_method_has_its_class},
+}
+
+@misc{mutation-sitewalk-protocols-methods-are-never-sites-under-either-policy,
+  section = {mutate},
+  title  = {Bare, qualified, extended and subscripted bases are all Protocols; a plain class is not},
+  claim  = {Bare, qualified, extended and subscripted bases are all Protocols; a plain class is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sitewalk.py -k test_a_protocols_methods_are_never_sites_under_either_policy},
+}
+
+@misc{mutation-sitewalk-class-with-no-protocol-base-is-not-one,
+  section = {mutate},
+  title  = {The control for the rule above: `is_protocol` is false for a plain class and no bases},
+  claim  = {The control for the rule above: `is_protocol` is false for a plain class and no bases.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sitewalk.py -k test_a_class_with_no_protocol_base_is_not_one},
+}

@@ -24,8 +24,14 @@ src/mikemol/mutation/regexop.py|miss-reads-as-applied|if count == 0:|if count < 
 src/mikemol/mutation/regexop.py|locals-spelling-not-accepted|        wanted = spec\.def_name\.replace\("\.<locals>", ""\)|        wanted = spec.def_name|def=_scope_span
 src/mikemol/mutation/lint.py|missing-module-not-named|        if not module\.is_file\(\):|        if False:|def=problems
 src/mikemol/mutation/lint.py|stale-pattern-not-named|        if planted is None:|        if False:|def=problems
-src/mikemol/mutation/mutate.py|protocol-methods-kept-as-def-sites|                if not is_protocol\(child\):|                if True:|def=def_sites.rec
-src/mikemol/mutation/mutate.py|bare-protocol-not-named|    return isinstance\(node, ast\.Name\) and node\.id == "Protocol"|    return False|def=_names_protocol
-src/mikemol/mutation/mutate.py|qualified-protocol-not-named|        return node\.attr == "Protocol"|        return False|def=_names_protocol
-src/mikemol/mutation/mutate.py|subscripted-protocol-not-unwrapped|    node = base\.value if isinstance\(base, ast\.Subscript\) else base|    node = base|def=_names_protocol
-src/mikemol/mutation/mutate.py|no-base-counts-as-protocol|    return any\(_names_protocol\(base\) for base in node\.bases\)|    return False|def=is_protocol
+src/mikemol/mutation/sitewalk.py|protocol-methods-kept-as-def-sites|                if not is_protocol\(child\):|                if True:|def=walk.visit
+src/mikemol/mutation/sitewalk.py|bare-protocol-not-named|    return isinstance\(node, ast\.Name\) and node\.id == "Protocol"|    return False|def=_names_protocol
+src/mikemol/mutation/sitewalk.py|qualified-protocol-not-named|        return node\.attr == "Protocol"|        return False|def=_names_protocol
+src/mikemol/mutation/sitewalk.py|subscripted-protocol-not-unwrapped|    node = base\.value if isinstance\(base, ast\.Subscript\) else base|    node = base|def=_names_protocol
+src/mikemol/mutation/sitewalk.py|no-base-counts-as-protocol|    return any\(_names_protocol\(base\) for base in node\.bases\)|    return False|def=is_protocol
+src/mikemol/mutation/sitewalk.py|locals-marker-ignored|    nested = "\.<locals>\." if policy\.locals_marker else "\."|    nested = "."|def=walk
+src/mikemol/mutation/sitewalk.py|repeat-labels-ignored|if policy\.repeat_labels and seen\[path\] > 1 else path|if False else path|def=walk.visit
+src/mikemol/mutation/sitewalk.py|one-liners-always-skipped|if policy\.one_liners or child\.body\[0\]\.lineno > child\.lineno:|if child.body[0].lineno > child.lineno:|def=walk.visit
+src/mikemol/mutation/sitewalk.py|async-defs-never-sites|policy\.async_sites and isinstance\(child, ast\.AsyncFunctionDef\)|False and isinstance(child, ast.AsyncFunctionDef)|def=walk.visit
+src/mikemol/mutation/sitewalk.py|nested-def-inherits-the-owner|visit\(child, f"\{path\}\{nested\}", None\)|visit(child, f"{path}{nested}", owner)|def=walk.visit
+src/mikemol/mutation/sitewalk.py|walked-async-and-lambda-not-named|elif policy\.locals_marker and isinstance|elif False and isinstance|def=walk.visit

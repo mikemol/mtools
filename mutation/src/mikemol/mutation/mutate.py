@@ -44,8 +44,8 @@ from pathlib import Path
 from typing import Protocol
 
 from mikemol.mutation import regexop
+from mikemol.mutation.sitewalk import DEFINITION, FuncNode, walk
 
-FuncNode = ast.FunctionDef | ast.AsyncFunctionDef
 Literal = ast.Dict | ast.List | ast.Set | ast.Tuple
 DefSite = tuple[str, FuncNode]
 BranchSite = tuple[str, int, tuple[ast.stmt, ast.stmt]]
@@ -107,34 +107,6 @@ def _is_str_const(node: ast.expr) -> bool:
     return isinstance(node, ast.Constant) and isinstance(_const_value(node), str)
 
 
-def _names_protocol(base: ast.expr) -> bool:
-    """Say whether a class base is `Protocol`, bare, qualified (`typing.Protocol`) or subscripted.
-
-    Returns:
-        True for `Protocol`, `typing.Protocol`, `Protocol[T]` and `typing.Protocol[T]`.
-
-    """
-    node = base.value if isinstance(base, ast.Subscript) else base
-    if isinstance(node, ast.Attribute):
-        return node.attr == "Protocol"
-    return isinstance(node, ast.Name) and node.id == "Protocol"
-
-
-def is_protocol(node: ast.ClassDef) -> bool:
-    """Say whether a class declares a `typing.Protocol`.
-
-    ⚑ A PROTOCOL'S METHODS ARE NOT DEF-SITES (github-8f, 2026-10-20, after a docstring-bodied stub
-    survived four times in webpage): a Protocol states a shape and implements none of it, so its
-    bodies have no behaviour any test could exercise. Perturbing one changes no verdict whatever the
-    suite holds, and the survivors it produced were a fact about the operator, not about the suite.
-
-    Returns:
-        True when any base names `Protocol`.
-
-    """
-    return any(_names_protocol(base) for base in node.bases)
-
-
 def def_sites(text: str) -> list[DefSite]:
     """Return every def or method in a .py source as (qualname, node), in source order.
 
@@ -142,7 +114,8 @@ def def_sites(text: str) -> list[DefSite]:
     its import and flips every witness identically; replacing one function's BODY leaves the
     module importable, so a witness flips only if it exercises that function. A one-liner
     (`def f(): return 1`) shares its signature line with the body, so a line-span replacement
-    cannot isolate the body: it is skipped.
+    cannot isolate the body: it is skipped. The walk is `sitewalk.walk` under its DEFINITION
+    policy, the one finder the grid shares (W1761).
 
     Returns:
         The (qualname, node) pairs, empty when the source does not parse.
@@ -152,22 +125,7 @@ def def_sites(text: str) -> list[DefSite]:
         tree = ast.parse(text)
     except SyntaxError:
         return []
-    out: list[DefSite] = []
-
-    def rec(node: ast.AST, prefix: str) -> None:
-        for child in ast.iter_child_nodes(node):
-            if isinstance(child, ast.FunctionDef | ast.AsyncFunctionDef):
-                if child.body[0].lineno > child.lineno:
-                    out.append((prefix + child.name, child))
-                rec(child, prefix + child.name + ".")
-            elif isinstance(child, ast.ClassDef):
-                if not is_protocol(child):
-                    rec(child, prefix + child.name + ".")
-            else:
-                rec(child, prefix)
-
-    rec(tree, "")
-    return out
+    return [(site.path, site.node) for site in walk(tree, DEFINITION)]
 
 
 def _base_catching_regions(tree: ast.AST) -> set[ast.AST]:
