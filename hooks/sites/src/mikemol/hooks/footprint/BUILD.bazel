@@ -56,6 +56,19 @@ mutant_site(
 )
 
 mutant_site(
+    name = "sees_opens",
+    dist = "hooks",
+    site = "src/mikemol/hooks/footprint.py::sees_opens",
+    tests = "tests/test_footprint.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/footprint.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_footprint.py",
+    ],
+)
+
+mutant_site(
     name = "audit",
     dist = "hooks",
     site = "src/mikemol/hooks/footprint.py::audit",
@@ -110,6 +123,34 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_probe-result-always-trusted",
+    dist = "hooks",
+    site = "src/mikemol/hooks/footprint.py::probe-result-always-trusted",
+    tests = "tests/test_footprint.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/footprint.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_footprint.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_blind-tracer-probe-skipped",
+    dist = "hooks",
+    site = "src/mikemol/hooks/footprint.py::blind-tracer-probe-skipped",
+    tests = "tests/test_footprint.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/footprint.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_footprint.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -117,10 +158,13 @@ test_suite(
         ":within",
         ":findings",
         ":trace_argv",
+        ":sees_opens",
         ":audit",
         ":declared_missing-and-unused-swapped",
         ":declared_directory-counted-as-a-file",
         ":declared_no-strace-reads-as-clean",
+        ":declared_probe-result-always-trusted",
+        ":declared_blind-tracer-probe-skipped",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

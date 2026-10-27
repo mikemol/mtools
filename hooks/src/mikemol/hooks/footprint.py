@@ -28,6 +28,7 @@ from mikemol.hooks.runproc import run_process
 
 DEGRADED = "DEGRADED"
 STRACE = "strace"
+CAT = "cat"
 _OPENAT = re.compile(r'openat\([^,]+, "([^"]+)"[^)]*\) = (\d+)')
 
 type Runner = Callable[[Sequence[str], Path], tuple[int, str]]
@@ -87,6 +88,28 @@ def trace_argv(out: Path, command: Sequence[str]) -> list[str]:
     return [STRACE, "-f", "-e", "trace=openat", "-o", str(out), *command]
 
 
+def sees_opens(run: Runner, root: Path) -> bool:
+    """Trace a file of KNOWN footprint and say whether the tracer saw it opened.
+
+    ⚑ A BLIND TRACER READS AS A CLEAN EMPTY ONE (drained from cassian-observability's
+    trace-inputs, W2022). With ptrace blocked, or a tracer that follows no children, `strace`
+    exits quietly and writes nothing, and an empty trace is a minimal, wrong footprint that gets
+    cached as correct. So before a trace is believed, `cat` opens a file whose path this call
+    chose, and a trace that does not name it is not to be trusted.
+
+    Returns:
+        True when the probe's own trace names the file `cat` opened.
+
+    """
+    with tempfile.TemporaryDirectory() as scratch:
+        known = Path(scratch) / "known.txt"
+        known.write_text("known\n", encoding="utf-8")
+        out = Path(scratch) / "probe.txt"
+        run(trace_argv(out, [CAT, str(known)]), root)
+        text = out.read_text(encoding="utf-8") if out.is_file() else ""
+        return str(known) in opened(text)
+
+
 def audit(
     command: Sequence[str],
     root: Path,
@@ -97,10 +120,11 @@ def audit(
     """Trace one test command and compare its opens with its declaration.
 
     Returns:
-        the findings, `[DEGRADED]` when strace is absent, so the caller cannot read it as a pass.
+        the findings, `[DEGRADED]` when strace is absent or cannot see a known open, so the caller
+        cannot read either as a pass.
 
     """
-    if which(STRACE) is None:
+    if which(STRACE) is None or not sees_opens(run, root):
         return [DEGRADED]
     with tempfile.TemporaryDirectory() as scratch:
         out = Path(scratch) / "trace.txt"

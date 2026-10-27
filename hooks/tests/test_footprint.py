@@ -14,10 +14,13 @@ def _openat(path: str, result: str) -> str:
     return f'123 openat(AT_FDCWD, "{path}", O_RDONLY|O_CLOEXEC) = {result}'
 
 
-def _runner(trace: str, ran: list[Sequence[str]]) -> footprint.Runner:
+def _runner(trace: str, ran: list[Sequence[str]], *, blind: bool = False) -> footprint.Runner:
+    # A fake strace: the probe's `cat` is traced truly unless `blind`; the command gets `trace`.
     def run(argv: Sequence[str], _cwd: Path) -> tuple[int, str]:
         ran.append(argv)
-        Path(argv[argv.index("-o") + 1]).write_text(trace, encoding="utf-8")
+        probing = argv[-2] == footprint.CAT
+        text = (_openat(argv[-1], "3") if not blind else "") if probing else trace
+        Path(argv[argv.index("-o") + 1]).write_text(text, encoding="utf-8")
         return 0, ""
 
     return run
@@ -76,4 +79,44 @@ def test_an_audit_traces_the_command_and_compares_the_repo_files_it_opened(
         _COMMAND, tmp_path, ["a.py"], run=_runner(trace, ran), which=lambda _name: "/usr/bin/strace"
     )
     assert got == ["MISSING b.py"]
-    assert len(ran) == 1
+    assert [argv[-2] == footprint.CAT for argv in ran] == [True, False]
+
+
+def test_a_blind_tracer_is_degraded_and_the_command_never_runs(tmp_path: Path) -> None:
+    """W2022: a tracer that cannot see a file `cat` opened writes an empty, believable trace.
+
+    The control is the same audit with a sighted tracer, which runs the command and reports.
+    """
+    (tmp_path / "a.py").write_text("x", encoding="utf-8")
+    trace = _openat(str(tmp_path / "a.py"), "3")
+    ran: list[Sequence[str]] = []
+    blind = footprint.audit(
+        _COMMAND,
+        tmp_path,
+        ["a.py"],
+        run=_runner(trace, ran, blind=True),
+        which=lambda _name: "/usr/bin/strace",
+    )
+    assert blind == [footprint.DEGRADED]
+    assert [argv[-2] for argv in ran] == [footprint.CAT]
+    sighted = footprint.audit(
+        _COMMAND,
+        tmp_path,
+        ["a.py"],
+        run=_runner(trace, []),
+        which=lambda _name: "/usr/bin/strace",
+    )
+    assert sighted == []
+
+
+def test_a_trace_that_names_other_files_but_not_the_known_one_is_still_blind(
+    tmp_path: Path,
+) -> None:
+    """Seeing SOME opens is not seeing the probe's: the known file's own path must be named."""
+    other = _openat("/etc/ld.so.cache", "3")
+
+    def run(argv: Sequence[str], _cwd: Path) -> tuple[int, str]:
+        Path(argv[argv.index("-o") + 1]).write_text(other, encoding="utf-8")
+        return 0, ""
+
+    assert footprint.sees_opens(run, tmp_path) is False

@@ -15849,3 +15849,19 @@
   claim  = {No file is no rise; a malformed entry is skipped; an unreadable file is no fact.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_declared_rises_read_absent_empty_malformed_and_unreadable_apart},
 }
+
+@misc{hooks-footprint-blind-tracer-is-degraded-and-the-command-never-runs,
+  section = {footprint},
+  title  = {W2022: a tracer that cannot see a file `cat` opened writes an empty, believable trace},
+  claim  = {W2022: a tracer that cannot see a file `cat` opened writes an empty, believable trace.
+            The control is the same audit with a sighted tracer, which runs the command
+            and reports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_a_blind_tracer_is_degraded_and_the_command_never_runs},
+}
+
+@misc{hooks-footprint-trace-that-names-other-files-but-not-the-known-one-is-still-blind,
+  section = {footprint},
+  title  = {Seeing SOME opens is not seeing the probe's: the known file's own path must be named},
+  claim  = {Seeing SOME opens is not seeing the probe's: the known file's own path must be named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_a_trace_that_names_other_files_but_not_the_known_one_is_still_blind},
+}
