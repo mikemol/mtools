@@ -37272,17 +37272,19 @@
     {
       "symbol": "W1725",
       "title": "A submit refuses a stack entry whose frozen blob of a file differs from HEAD plus the entries ahead of it, unless the entry deliberately changes that file",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1724"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Still real (the gap is names added to an existing module, which stackimports does not check). Hooks lane, after W1958 and W1724: at submit compare each entry's frozen blob with HEAD plus earlier entries and refuse an unasked difference, naming file and entry, in stackblobs.py. I still need W1958 landed, W1725",
-      "evidence": "2026-10-19: 2026-10-19 evidence, read from BES invocation 0c127912-b5e6-4389-8860-faed0c54bbf1 (bb_log --failures, no key): a leader round over the queued stacks failed at collection with ImportError: cannot import name stage_note from mikemol.hooks.gatephase, because a stack froze commit_kata.py importing W1661's new name while its tip lacked W1661's gatephase.py. stackimports checks new MODULES a later entry adds, not new NAMES in an existing module, which is the gap",
+      "evidence": "2026-10-19: 2026-10-19 evidence, read from BES invocation 0c127912-b5e6-4389-8860-faed0c54bbf1 (bb_log --failures, no key): a leader round over the queued stacks failed at collection with ImportError: cannot import name stage_note from mikemol.hooks.gatephase, because a stack froze commit_kata.py importing W1661's new name while its tip lacked W1661's gatephase.py. stackimports checks new MODULES a later entry adds, not new NAMES in an existing module, which is the gap | 2026-10-27: 2026-10-27: W1958 is done (a5e68c04, 88d4664e); W1724 is the remaining prerequisite in this card's own next step, itself behind the hooks stack lane (W2057, stack-next-13)",
       "issued_at": "2026-10-19T16:52:12Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T21:24:31Z",
+      "last_worked": "2026-10-27T13:15:13Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackblobs.py",
@@ -43009,7 +43011,35 @@
         "hooks/src/mikemol/hooks/new_dist_cli.py",
         "hooks/tests/test_new_dist_cli.py"
       ],
-      "size_class": "small"
+      "size_class": "small",
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1954",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#eedeac58-2d68-4a77-9fb6-94afdfbf0509",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T14:23:25.041Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/eedeac58-2d68-4a77-9fb6-94afdfbf0509",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 107846,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify eedeac58-2d68-4a77-9fb6-94afdfbf0509 --claim operator --line 107846"
+          }
+        }
+      ]
     },
     {
       "symbol": "W1955",
@@ -45212,19 +45242,21 @@
     {
       "symbol": "W2032",
       "title": "Split the hooks modules whose sites collapse into few input sets along their function clusters",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1989"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Hold. W1989 carries the lever: the sites_fresh gate target (mutants_gen --check over the committed sites), committing hooks/sites, then retiring the sharded mutants. Reopen this card only if a module's measured sites stay slow after that. I still need W1989's first two steps, W2032",
-      "evidence": "2026-10-26: 2026-10-26 DESIGN FINDING before any split: a mutation site's test list is the REVERSE cone (tests whose imports reach the module), so splitting a module into LEAF clusters that commit_kata still imports narrows nothing: every test that imports commit_kata still reaches every cluster. The narrowing comes from peeling the TOP of the module, the part few tests import, into its own module that commit_kata does NOT import. commit_kata.py (1,300 lines, 101 sites over two input classes) holds the library half (run_git_in, commit, verdict, prepare, tracked, published, ... lines 1-585, imported by the stack/train modules and most tests) and the CLI half (resolve_root, parse, Claim, fence_of, claim_of, routing_line, stack_target, run_stack_mode, in_gate, withdraw_cmd, main, run_held, lines 587-1250). Peeling the CLI half to a module the library never imports (the console script points at it) makes its ~50 sites run only the CLI tests (test_commit_claim, test_commit_kata_root, test_in_gate, test_commit_withdraw, test_submit_problem, test_commit_launcher_fence, test_launcher, test_commit_stack, test_commit_lease_wait). Cost: 26 files name commit_kata.<cli name> (src: stackpin, commit_gauge, stackrun, requeue, stackfreeze, shardgate, launcher, verdictlog, trainverdict, stackimports, stacktree, stackbuildfiles, trainlead, commit_span, fence guard_cli; the rest tests), each repointed, and the live hook order applies (new module first, build the venv, then the importers). | 2026-10-26: 2026-10-26 MEASURED (importdag.cost.affected over hooks/graph.json): reverse cone of commit_kata is 50 tests, 49 importing it directly; watchdog 6 tests; gen_warrants 4; cmdparse 33 (3 direct). So the test COUNT per site is already small for most modules, and a CLI peel of commit_kata would cut 50 tests to about 9, not the cost the first site run showed (3-8 minutes per site cold). That cost was STAGING a 100-module cone per site, which the per-module libraries (W1988, landed) remove if mutant_site depends on //hooks:<module lib> and the test targets instead of copying files. So the split is the second lever, not the first: the first is mutant_site taking deps. Order revised: (1) mutants_gen emits site targets whose deps are the module's own library plus its tests' libraries (check_mutants/mutants_gen.py, defs.bzl); (2) measure one site cold and warm; (3) split only the modules whose measured sites are still slow. | 2026-10-26: 2026-10-26 MEASURED after stack-w1988b: with hooks/sites regenerated from the CURRENT graph, round_wire's in_gate site PASSES in 33 s wall (critical path 33.1 s, 2056 action cache hits, 2 sandbox processes), against the 490 s of the first sample: the per-module libraries already carry the cost. WITH STALE SITES (generated before the graph gained flakes, series and others) all 13 round_wire sites ERRORED ('the suite did NOT run'), which is exactly what the gate's mutants_gen --check target must refuse: a committed hooks/sites that lags the graph is not a smaller grid, it is no grid. So the split is not the first lever; the --check gate target and committing sites are. | 2026-10-26: reconciled STALE | 2026-10-26: 2026-10-26 MEASURED per-site cost on the regenerated sites, while a gate and two other sessions were loading the host: ratchet_pace's 11 sites 89 s wall (critical path 84 s); testgate's 11 sites 89 s; commit_span plus its tests, 30 targets, 367 s wall (critical path 334 s); watchdog plus ratchet_pace plus commit_span's neighbours, 75 targets, 485 s wall with a 191 s critical path. Amortized that is about 6 to 12 s of wall per site with 24 jobs, and one site alone is 30 to 90 s, against the 490 s of the first sample. The whole 1,789-site grid would be about 3 h of wall at that rate on a loaded host, and the sharded :mutants it replaces cost about 36,000 s of miss wall per run on any hooks change; the lever is the per-site cache (an edit reruns only that module's sites and its importers' sites), not smaller modules. So splitting modules is NOT the first lever and is not needed to make a site cheap; revisit it only for a module whose measured site is still slow (none found yet).",
+      "evidence": "2026-10-26: 2026-10-26 DESIGN FINDING before any split: a mutation site's test list is the REVERSE cone (tests whose imports reach the module), so splitting a module into LEAF clusters that commit_kata still imports narrows nothing: every test that imports commit_kata still reaches every cluster. The narrowing comes from peeling the TOP of the module, the part few tests import, into its own module that commit_kata does NOT import. commit_kata.py (1,300 lines, 101 sites over two input classes) holds the library half (run_git_in, commit, verdict, prepare, tracked, published, ... lines 1-585, imported by the stack/train modules and most tests) and the CLI half (resolve_root, parse, Claim, fence_of, claim_of, routing_line, stack_target, run_stack_mode, in_gate, withdraw_cmd, main, run_held, lines 587-1250). Peeling the CLI half to a module the library never imports (the console script points at it) makes its ~50 sites run only the CLI tests (test_commit_claim, test_commit_kata_root, test_in_gate, test_commit_withdraw, test_submit_problem, test_commit_launcher_fence, test_launcher, test_commit_stack, test_commit_lease_wait). Cost: 26 files name commit_kata.<cli name> (src: stackpin, commit_gauge, stackrun, requeue, stackfreeze, shardgate, launcher, verdictlog, trainverdict, stackimports, stacktree, stackbuildfiles, trainlead, commit_span, fence guard_cli; the rest tests), each repointed, and the live hook order applies (new module first, build the venv, then the importers). | 2026-10-26: 2026-10-26 MEASURED (importdag.cost.affected over hooks/graph.json): reverse cone of commit_kata is 50 tests, 49 importing it directly; watchdog 6 tests; gen_warrants 4; cmdparse 33 (3 direct). So the test COUNT per site is already small for most modules, and a CLI peel of commit_kata would cut 50 tests to about 9, not the cost the first site run showed (3-8 minutes per site cold). That cost was STAGING a 100-module cone per site, which the per-module libraries (W1988, landed) remove if mutant_site depends on //hooks:<module lib> and the test targets instead of copying files. So the split is the second lever, not the first: the first is mutant_site taking deps. Order revised: (1) mutants_gen emits site targets whose deps are the module's own library plus its tests' libraries (check_mutants/mutants_gen.py, defs.bzl); (2) measure one site cold and warm; (3) split only the modules whose measured sites are still slow. | 2026-10-26: 2026-10-26 MEASURED after stack-w1988b: with hooks/sites regenerated from the CURRENT graph, round_wire's in_gate site PASSES in 33 s wall (critical path 33.1 s, 2056 action cache hits, 2 sandbox processes), against the 490 s of the first sample: the per-module libraries already carry the cost. WITH STALE SITES (generated before the graph gained flakes, series and others) all 13 round_wire sites ERRORED ('the suite did NOT run'), which is exactly what the gate's mutants_gen --check target must refuse: a committed hooks/sites that lags the graph is not a smaller grid, it is no grid. So the split is not the first lever; the --check gate target and committing sites are. | 2026-10-26: reconciled STALE | 2026-10-26: 2026-10-26 MEASURED per-site cost on the regenerated sites, while a gate and two other sessions were loading the host: ratchet_pace's 11 sites 89 s wall (critical path 84 s); testgate's 11 sites 89 s; commit_span plus its tests, 30 targets, 367 s wall (critical path 334 s); watchdog plus ratchet_pace plus commit_span's neighbours, 75 targets, 485 s wall with a 191 s critical path. Amortized that is about 6 to 12 s of wall per site with 24 jobs, and one site alone is 30 to 90 s, against the 490 s of the first sample. The whole 1,789-site grid would be about 3 h of wall at that rate on a loaded host, and the sharded :mutants it replaces cost about 36,000 s of miss wall per run on any hooks change; the lever is the per-site cache (an edit reruns only that module's sites and its importers' sites), not smaller modules. So splitting modules is NOT the first lever and is not needed to make a site cheap; revisit it only for a module whose measured site is still slow (none found yet). | 2026-10-27: 2026-10-27: its own next step is Hold; W1989 carries the lever (sites_fresh gate target, committing hooks/sites, retiring the sharded mutants), a hooks-lane stack behind W2057",
       "issued_at": "2026-10-26T01:18:30Z",
       "minted_during": "interrupt",
       "caused_by": "W1989",
-      "last_worked": "2026-10-26T16:58:57Z",
+      "last_worked": "2026-10-27T12:37:22Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45255,38 +45287,44 @@
     {
       "symbol": "W2034",
       "title": "The four tests under a CPU budget with size medium (W1798) wait on events, not a longer bazel timeout",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1954"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "github-8f 2026-10-25: the operator ruled 2026-10-17 'No, shard finer only' to a longer bazel timeout even as a backstop behind RLIMIT_CPU, so test_traindrive, test_trainlead, test_grade and test_import_cycles (hooks/BUILD.bazel _CPU_BUDGET_S, size medium) contradict it. For each: name what it waits on, make the wait event-bound or shard it finer, then drop it from _CPU_BUDGET_S's medium. The CPU rlimit itself stays as the bound.",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks stack; the hooks lane reopens once stack-next-20 (W1954, the exit-baseline paydown the pace refusal names) lands and stack-next-13 follows",
       "issued_at": "2026-10-26T01:39:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-27T12:45:30Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2035",
       "title": "commit_kata.waiter waits on the child's pidfd instead of a wait(timeout) slice loop",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1898"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "github-8f 2026-10-25: Popen.wait(timeout=...) is a polling loop (1 to 50 ms backoff, seen in strace of a commit) and so a wall-clock sync point under load. commit_kata.waiter (line ~194) wraps child.wait(timeout=seconds) for the W1803 progress looks; wait on the event instead (os.pidfd_open + select, or a blocking waitpid on a thread) so a slice costs no wakeups. Note the slice length is the progress witness's look interval, so the looks stay.",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27: edits commit_kata.py, a live hook in the serial hooks stack lane; the lane opens when stack-next-13 (W1898's label fix with the hold-lift widening) lands, which the exit-baseline pace refusal now holds (ruling on BUSY asked of github-8f)",
       "issued_at": "2026-10-26T01:44:44Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-27T13:59:34Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2036",
@@ -45479,13 +45517,41 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When nemik:W1111 lands, write .claude/ratchet-tombstones.json with {ratchet: .claude/debtplan.json, reason: debtplan config, not a ratchet kind (kinds.py:36, test_kinds.py:28), retired_at}. I still need W1111, W2045",
-      "evidence": "2026-10-26: 2026-10-26 nemik-84: no tombstone format exists; nemik carded nemik:W1111 (caused by W2045) and proposed .claude/ratchet-tombstones.json, a list of {ratchet, reason, retired_at}, copied by luthen into the export tree and read by pacewrite. Agreed, keyed by the repo-relative path as the pace file names it. HOLD the debtplan.json tombstone until W1111 fixes the format.",
+      "next_bounded_step": "Find where pycheck --ratchet compares a file to its baseline (hooks pycheck, ratchet census) and add a split-aware mode: a declared record {from: old file, to: [new files]} moves the old file's counts to the new files, refuses any rise in the total, keeps the record. Witness: one file split into two with its counts moved reads the same total and no N > baseline 0. Then remap.py shift verdict and the tsv-to-json tombstone (linux-sources:W437). I still need to read the pycheck ratchet compare, W2045",
+      "evidence": "2026-10-26: 2026-10-26 nemik-84: no tombstone format exists; nemik carded nemik:W1111 (caused by W2045) and proposed .claude/ratchet-tombstones.json, a list of {ratchet, reason, retired_at}, copied by luthen into the export tree and read by pacewrite. Agreed, keyed by the repo-relative path as the pace file names it. HOLD the debtplan.json tombstone until W1111 fixes the format. | 2026-10-27: 2026-10-27 OPERATOR RULING (relayed by github-8f, host 695f3e0a line 107690, uuid 81f034b6-1657-41dd-a984-fd8b5207ddd5, 2026-10-27T13:55:42Z): 'splitting should read as shifting of debt, not new debt.' So mikemol-ratchet remap must carry a module split as a SHIFT: entries keyed under the old file move to the new files, the total is unchanged, the pace sees no rise. WITNESS: a fixture where one file splits into two, entries moved, reads the same total and no new-debt row. This card carries it with the tsv-to-json rename-with-tombstone (linux-sources:W437, no pace-history reset); remap.py today rewrites only path leaves (audit item 3, to be verified by that fixture first) | 2026-10-27: 2026-10-27 nemik's measurement (via github-8f): the place it bites is mikemol-pycheck --ratchet, which refuses a file above its own baseline, so debt moved into a NEW file meets baseline 0 ('N > baseline 0'); remap only rewrites path leaves in path-keyed documents, not count baselines. So the fix lives where the per-file check runs: a split-aware mode that moves counts from the old file to the new ones, refuses any rise in the total, and keeps the move as a declared record. Until then nemik splits only where the new file lands with zero findings, which blocks W1176.",
       "issued_at": "2026-10-26T14:05:14Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1107",
-      "last_worked": "2026-10-26T14:11:26Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-27T14:15:22Z",
+      "ticks_blocked": 0,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W2045",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#81f034b6-1657-41dd-a984-fd8b5207ddd5",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T13:55:42.670Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/81f034b6-1657-41dd-a984-fd8b5207ddd5",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 107690,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 81f034b6-1657-41dd-a984-fd8b5207ddd5 --claim operator --line 107690"
+          }
+        }
+      ]
     },
     {
       "symbol": "W2046",
@@ -45655,13 +45721,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-26: 2026-10-26 READ hooks/src/mikemol/hooks/revendor.py: the wheels a repo vendors are a NAMED list (KNOWN plus EXTRA), moved together by --revendor; a repo adds a dist by naming its wheel path in its pyproject and the tool moves it with the set. So the change is one name, 'transcriptstruct', in EXTRA (and a test beside the cvdcore and ratchet ones); transcriptstruct has no runtime dependency and builds with setuptools, so uv build --wheel needs nothing more. Tests: test_revendor 40 pass with the new one. It is in the tree and rides the next stack, a revendor still needs luthen to name the wheel path in ITS pyproject (its side, luthen-observability:W1683/W1684). | 2026-10-26: reconciled LANDED 65b7491b49b774759555e7967f90b609e868da78 | 2026-10-26: landed 65b7491b: transcriptstruct is a vendored dist for mikemol-repin --revendor; luthen names the wheel path and repins at that sha (luthen-observability:W1683/W1684)",
+      "evidence": "2026-10-26: 2026-10-26 READ hooks/src/mikemol/hooks/revendor.py: the wheels a repo vendors are a NAMED list (KNOWN plus EXTRA), moved together by --revendor; a repo adds a dist by naming its wheel path in its pyproject and the tool moves it with the set. So the change is one name, 'transcriptstruct', in EXTRA (and a test beside the cvdcore and ratchet ones); transcriptstruct has no runtime dependency and builds with setuptools, so uv build --wheel needs nothing more. Tests: test_revendor 40 pass with the new one. It is in the tree and rides the next stack, a revendor still needs luthen to name the wheel path in ITS pyproject (its side, luthen-observability:W1683/W1684). | 2026-10-26: reconciled LANDED 65b7491b49b774759555e7967f90b609e868da78 | 2026-10-26: landed 65b7491b: transcriptstruct is a vendored dist for mikemol-repin --revendor; luthen names the wheel path and repins at that sha (luthen-observability:W1683/W1684) | 2026-10-27: 2026-10-27 reopened (github-8f, no new card): importdag joins revendor.EXTRA so nemik can vendor it for nemik:W1056 (cost field per card, costcli from W1997); test_importdag_is_a_vendored_dist_and_moves_with_the_rest passes with test_revendor, _apply and _cli under bazel; rides the hooks lane after stack-next-13 | 2026-10-27: 2026-10-27: back to ready: not in the round and no live stack names it until stack-next-21 is submitted behind stack-next-13",
       "issued_at": "2026-10-26T15:08:24Z",
       "minted_during": "interrupt",
       "caused_by": "W2048",
-      "last_worked": "2026-10-26T17:36:32Z",
+      "last_worked": "2026-10-27T14:38:16Z",
       "ticks_blocked": 0,
-      "completed": "20261026T173632Z"
+      "completed": "20261027T143816Z"
     },
     {
       "symbol": "W2055",

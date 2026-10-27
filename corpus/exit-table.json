@@ -13,11 +13,15 @@
   },
   "DEFER": {
     "value": 3,
-    "names": ["LOCKED", "NOT_TAKEN", "NO_CAP", "NO_DESTINATION", "BUSY"],
+    "names": ["LOCKED", "NOT_TAKEN", "NO_CAP", "NO_DESTINATION"],
     "why": "a precondition is unmet and nothing ran; a later attempt may succeed. A lock held by another LIVE holder is this (the holder will finish)."
   },
   "REFUSE": {"value": 4, "names": ["REFUSED", "FINDINGS", "DIVERGED", "LEDGER"]},
-  "RACE": {"value": 5, "names": ["RACED"]},
+  "RACE": {
+    "value": 5,
+    "names": ["RACED", "BUSY"],
+    "why": "another actor got there first. BUSY is a race with another drainer for the spool: transient, never a fault, and distinct from DEFER's NO_DESTINATION, which luthen must keep reading as a fault (operator ruling 2026-10-27, host 695f3e0a line 107846, uuid eedeac58-2d68-4a77-9fb6-94afdfbf0509: BUSY moves from DEFER to RACE)."
+  },
   "WITHHELD": {"value": 6, "names": ["HELD"]},
   "CANNOT_RUN": {
     "value": 7,
