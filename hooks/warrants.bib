@@ -15865,3 +15865,47 @@
   claim  = {Seeing SOME opens is not seeing the probe's: the known file's own path must be named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_footprint.py -k test_a_trace_that_names_other_files_but_not_the_known_one_is_still_blind},
 }
+
+@misc{hooks-flakemetric-count-is-the-flake-lines-not-the-verdicts,
+  section = {flakes},
+  title  = {Six verdict lines and two flakes: the count is the flakes; an absent log is zero},
+  claim  = {Six verdict lines and two flakes: the count is the flakes; an absent log is zero.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakemetric.py -k test_the_count_is_the_flake_lines_not_the_verdicts},
+}
+
+@misc{hooks-flakemetric-plan-is-one-absolute-gauge-carrying-the-repo,
+  section = {flakes},
+  title  = {The name, the value and the repo as both namespace and attribute},
+  claim  = {The name, the value and the repo as both namespace and attribute.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakemetric.py -k test_the_plan_is_one_absolute_gauge_carrying_the_repo},
+}
+
+@misc{hooks-flakemetric-recorded-flake-starts-one-gauge-with-the-logs-count,
+  section = {flakes},
+  title  = {The positive control: the child is started and carries the number the log holds},
+  claim  = {The positive control: the child is started and carries the number the log holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakemetric.py -k test_a_recorded_flake_starts_one_gauge_with_the_logs_count},
+}
+
+@misc{hooks-flakemetric-without-a-store-nothing-is-started,
+  section = {flakes},
+  title  = {No MIKEMOL_ENDPOINTS and no HOME: the number is not shipped and nothing is spawned},
+  claim  = {No MIKEMOL_ENDPOINTS and no HOME: the number is not shipped and nothing is spawned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakemetric.py -k test_without_a_store_nothing_is_started},
+}
+
+@misc{hooks-flakemetric-child-that-cannot-start-never-raises-into-the-commit,
+  section = {flakes},
+  title  = {A spawn raising OSError: False comes back and the exception does not},
+  claim  = {A spawn raising OSError: False comes back and the exception does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_flakemetric.py -k test_a_child_that_cannot_start_never_raises_into_the_commit},
+}
+
+@misc{hooks-stackrun-flake-tells-the-metric-seam-and-a-plain-pass-does-not,
+  section = {stackland},
+  title  = {W2009: the seam is called once, with the repository's git directory, only on a flake},
+  claim  = {W2009: the seam is called once, with the repository's git directory, only on a flake.
+            The controls are the first run (refused) and a clean pass on a tree never
+            refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_flake_tells_the_metric_seam_and_a_plain_pass_does_not},
+}

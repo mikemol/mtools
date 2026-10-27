@@ -593,6 +593,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_scratch_land.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_counts.py" = ["assert"]
 "tests/test_commit_gauge.py" = ["assert"]
+"tests/test_flakemetric.py" = ["assert"]
 "tests/test_commit_verdict.py" = ["assert"]
 "tests/test_trainround.py" = ["assert"]
 "tests/test_requeue.py" = ["assert"]

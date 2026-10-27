@@ -102,6 +102,7 @@ GRAPH = {
         "src/mikemol/hooks/commit_verdict.py",
         "src/mikemol/hooks/commit_withdraw.py",
         "src/mikemol/hooks/commitprogress.py",
+        "src/mikemol/hooks/flakemetric.py",
         "src/mikemol/hooks/gateenv.py",
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/heartbeat.py",
@@ -212,6 +213,15 @@ GRAPH = {
     "src/mikemol/hooks/flag_contract.py": {
       "imports": [
         "src/mikemol/hooks/refusal_log.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "src/mikemol/hooks/flakemetric.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_span.py",
+        "src/mikemol/hooks/flakes.py",
+        "src/mikemol/hooks/vlogdetach.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1704,6 +1714,14 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/flag_contract.py",
         "src/mikemol/hooks/refusal_log.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_flakemetric.py": {
+      "imports": [
+        "src/mikemol/hooks/flakemetric.py",
+        "src/mikemol/hooks/flakes.py"
       ],
       "reads": [],
       "typing_only": []

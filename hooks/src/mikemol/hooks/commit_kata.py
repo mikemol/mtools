@@ -60,6 +60,7 @@ from mikemol.hooks.commitprogress import phase_of as _phase_of
 from mikemol.hooks.commitprogress import servers_of as _servers_of
 from mikemol.hooks.commitprogress import stall_text as _stall_text
 from mikemol.hooks.commitprogress import watch as _watch
+from mikemol.hooks.flakemetric import emit as _emit_flakes
 from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
@@ -902,6 +903,7 @@ def run_stack_mode(
         published=lambda sha: published(root, sha),
         history=lambda repo: _fetch_history(repo, env),
         lint=_chain_lints(_real_lint(root), _real_types(root)),
+        flaked=lambda git_dir: _emit_flakes(git_dir, root.name, env),
     )
     tee = TeeBuffer()
     try:

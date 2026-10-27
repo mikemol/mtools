@@ -71,6 +71,16 @@ def no_history(_repo: str) -> History | None:
     return None
 
 
+def no_flaked(_git_dir: Path) -> bool:
+    """Say nothing about a flake: the default, so a test sends no metric (W2009).
+
+    Returns:
+        False, nothing was sent.
+
+    """
+    return False
+
+
 @dataclass(frozen=True)
 class Seams:
     """What a test replaces: the git runner, the namespace, the message, publish and history."""
@@ -81,6 +91,7 @@ class Seams:
     published: Callable[[str], str]
     history: Callable[[str], History | None] = no_history
     lint: Lint = no_lint
+    flaked: Callable[[Path], bool] = no_flaked
 
 
 def _item_of(entry: object) -> Item | None:
@@ -194,9 +205,11 @@ def _judged(root: Path, tree: str, shown: str, code: int, seams: Seams) -> str:
         return ""
     kind = flakes.PASSED if code == 0 else flakes.REFUSED
     failed = [] if code == 0 else failed_checks(shown)
-    before = flakes.record(Path(where.stdout.strip()), tree, kind, failed)
+    git_dir = Path(where.stdout.strip())
+    before = flakes.record(git_dir, tree, kind, failed)
     if before is None:
         return ""
+    seams.flaked(git_dir)
     named = "; ".join(before) or "no check named"
     return (
         f"FLAKE {root.name}: this exact tree was refused before ({named}) and passes now. The "

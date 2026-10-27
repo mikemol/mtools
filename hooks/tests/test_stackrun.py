@@ -97,19 +97,27 @@ def _items() -> list[stackrun.Item]:
     ]
 
 
-def _run(root: Path, tmp_path: Path) -> tuple[int, list[str]]:
-    """Run the stack with the real git.
+def _run(root: Path, tmp_path: Path, flaked: list[Path] | None = None) -> tuple[int, list[str]]:
+    """Run the stack with the real git; `flaked`, when given, collects each flake's git directory.
 
     Returns:
         the exit code and the lines written.
 
     """
     out = io.StringIO()
+
+    def on_flake(git_dir: Path) -> bool:
+        if flaked is None:
+            return False
+        flaked.append(git_dir)
+        return True
+
     seams = stackrun.Seams(
         run=ck.run_git_in,
         namespace=tmp_path / "gate",
         message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
         published=lambda _sha: "PUSHED",
+        flaked=on_flake,
     )
     code = stackrun.run_stack(root, _items(), out, seams)
     return code, out.getvalue().splitlines()
@@ -167,6 +175,27 @@ def test_a_pass_on_a_tree_that_was_refused_is_named_a_flake_and_recorded(
     kept = (root / ".git" / "mtools" / "gate-verdicts.jsonl").read_text(encoding="utf-8")
     kinds = [line for line in kept.splitlines() if '"kind"' in line]
     assert ['"refused"' in kinds[0], '"passed"' in kinds[1], '"flake"' in kinds[2]] == [True] * 3
+
+
+def test_a_flake_tells_the_metric_seam_and_a_plain_pass_does_not(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2009: the seam is called once, with the repository's git directory, only on a flake.
+
+    The controls are the first run (refused) and a clean pass on a tree never refused.
+    """
+    root, _remote = _repo(tmp_path, monkeypatch, _REFUSING)
+    seen: list[Path] = []
+    code, _lines = _run(root, tmp_path, seen)
+    assert (code, seen) == (1, [])
+    (root / ".git" / "hooks" / "pre-commit").write_text(_PASSING, encoding="utf-8")
+    code, _lines = _run(root, tmp_path, seen)
+    assert code == 0
+    assert seen == [root / ".git"]
+    (tmp_path / "clean").mkdir()
+    clean, _other = _repo(tmp_path / "clean", monkeypatch, _PASSING)
+    code, _lines = _run(clean, tmp_path / "clean", seen)
+    assert (code, len(seen)) == (0, 1)
 
 
 def test_a_tip_whose_declared_mutants_do_not_plant_is_refused_before_the_gate(

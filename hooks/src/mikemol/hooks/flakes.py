@@ -78,6 +78,16 @@ def earlier_refusal(git_dir: Path, tree: str) -> list[str] | None:
     return None
 
 
+def flake_count(git_dir: Path) -> int:
+    """Count the flakes this repository has recorded (W2009).
+
+    Returns:
+        the number of `flake` lines in the log; 0 when it is absent or unreadable.
+
+    """
+    return sum(1 for row in _rows(git_dir) if row.get("kind") == FLAKE)
+
+
 def record(git_dir: Path, tree: str, kind: str, failed: Sequence[str]) -> list[str] | None:
     """Keep a verdict and say whether it is a flake.
 
