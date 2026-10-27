@@ -189,7 +189,8 @@ def test_no_heartbeat_file_is_a_beat_at_the_watchdogs_own_start(
     said = capsys.readouterr().out.splitlines()
     assert said[0] == "mikemol-watchdog: no heartbeat file: counting from my start"
     assert said[1] == (
-        f"idle with 4 ready cards, last heartbeat {_LATE}s ago (no heartbeat source); {_BOUND}"
+        f"idle with 4 ready cards, last heartbeat {_LATE}s ago "
+        f"(no heartbeat file (counting from watch start)); {_BOUND}"
     )
 
 
@@ -200,7 +201,7 @@ def test_no_heartbeat_file_and_no_ready_cards_is_woken_and_says_so_once(
     seams = _seams([None], lambda: 0, [0, _LATE, _LATE + 100], lives=4)
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
     said = capsys.readouterr().out
-    assert said.count("no heartbeat file") == 1
+    assert said.count("no heartbeat file: counting from my start") == 1
     assert "idle with 0 ready cards" in said
 
 
@@ -223,7 +224,10 @@ def test_a_beat_older_than_the_start_fires_after_the_band_counted_from_the_start
     """Silence since the start past the band, with work waiting, is the alarm all the same."""
     seams = _seams([_beat(0)], lambda: _FOUR, [1000, 1000 + _LATE], start_s=1000)
     assert watchdog.watch(seams, 1.0, _POLL) == watchdog.EXIT_IDLE
-    assert f"last heartbeat {_LATE}s ago" in capsys.readouterr().out
+    said = capsys.readouterr().out
+    assert f"last heartbeat {_LATE}s ago" in said
+    assert "(watch start; last beat mikemol-commit 1000s before it)" in said
+    assert "no heartbeat" not in said
 
 
 def test_no_heartbeat_file_inside_the_band_does_not_fire() -> None:

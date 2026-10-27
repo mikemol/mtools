@@ -37515,17 +37515,19 @@
     {
       "symbol": "W1736",
       "title": "Find which targets drive bazel_test's +58.8 s per gate slope, and shard them",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1898"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After a week of mikemol.gate.target.wall.seconds (from 2026-10-20), rank targets by wall growth between gates that ran them fresh and shard the top; exclude gates whose fresh count is the whole suite.",
-      "evidence": "2026-10-21: 2026-10-21: looked at what can answer it. The per-target series exist only since 2026-10-20 (one day), and the pytest_main edits of that day re-ran every py_test (254 and 255 fresh targets per gate), so a slope from them would measure those re-runs, not growth. Needs about a week of series first; then rank targets by their wall growth across gates. | 2026-10-25: 2026-10-25: a card whose next step waits on DATA, not on a mind: the per-target wall series began 2026-10-20 and the step needs about a week of them (so on or after 2026-10-27), stated ready only because nothing names a blocker; manifest set to the BUILD files that would take the shard counts",
+      "evidence": "2026-10-21: 2026-10-21: looked at what can answer it. The per-target series exist only since 2026-10-20 (one day), and the pytest_main edits of that day re-ran every py_test (254 and 255 fresh targets per gate), so a slope from them would measure those re-runs, not growth. Needs about a week of series first; then rank targets by their wall growth across gates. | 2026-10-25: 2026-10-25: a card whose next step waits on DATA, not on a mind: the per-target wall series began 2026-10-20 and the step needs about a week of them (so on or after 2026-10-27), stated ready only because nothing names a blocker; manifest set to the BUILD files that would take the shard counts | 2026-10-27: 2026-10-27: the week of mikemol.gate.target.wall.seconds is now there (from 2026-10-20), so the ranking can run; the shard counts land in hooks/BUILD.bazel, a hooks-lane stack held behind stack-next-13 (W1898), and the ranking needs the series read from luthen's store, which no mtools reader here does yet",
       "issued_at": "2026-10-19T20:24:27Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-bazel-test-slope",
-      "last_worked": "2026-10-25T12:20:10Z",
+      "last_worked": "2026-10-27T14:48:25Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -42991,21 +42993,21 @@
     {
       "symbol": "W1954",
       "title": "Paydown: retire one entry of corpus/exit-baseline.txt by naming its exit constant in the shared exit-code table",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "file:corpus/exit-baseline.txt!w"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Writer step: EXIT_REFUSED 2 to 4 in pathsforward cli.py, argparse usage stays 2, tests updated, debtplan queue.py:27 follows, then retire the exit-baseline row. vlogcli EXIT_BUSY 5 to 3 is hooks lane (W2057)",
-      "evidence": "2026-10-25: 2026-10-25: first entry paid (new_dist_cli: usage 2 stays, refusals move to 4; callers read, none in this checkout); stack-w1954a submitted. Seven entries left: flag_contract and pathsforward cli EXIT_REFUSED 2 (table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (table wants 7), vlogcli EXIT_BUSY 5 (table wants 3). Each needs its scripted callers read before its number moves | 2026-10-25: 2026-10-25: first entry (mikemol-new-dist) landed as 853a7e0c in the joined run with W1918 (2ef82466), both at 09:22:56 after W1953 failed alone. Seven exit-baseline entries remain: flag_contract and pathsforward cli EXIT_REFUSED 2 (the table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (7), vlogcli EXIT_BUSY 5 (the table lists BUSY under DEFER 3) | 2026-10-26: 2026-10-26: second entry paid, flag_contract EXIT_REFUSED to EXIT_USAGE (value 2), landed 55ec4e56. Two entries remain, both a decision (vlogcli 5 vs 3 collides with NO_DESTINATION; pathsforward cli 2 vs 4 changes every consumer). | 2026-10-27: 2026-10-27 CENSUS of the writer's exit 2 (read, not run; fleet checkouts under ~/github, py/sh/rego, excluding .venv and worktrees): NO production consumer separates 2 from other non-zero. Zero-vs-nonzero only: nemik witnesses.py:480 (apply 'if code', prints the code), nemik work.py:144, luthen pf_record.py:124-163, hooks watchdog.py:378/407, inbound_asks.py:121, tick_release.py:90, katas hosttick.py:85 (passes the code through), luthen fleet_par.py:270. ONE reader of the number: debtplan queue.py:27 EXIT_REFUSED = 2, its own fallback for a SystemExit with no int code, read as refused (labels only, never compares the writer's 2). No shell, rego or service consumer found. The hazard is the writer: argparse usage errors also exit 2, so 2 already means usage AND refused in one binary; moving REFUSED to 4 separates them. Literal 2 asserts live in pathsforward tests and cli.py only. So no consumer needs a 2-or-4 dual-read arm; the work is the writer (EXIT_REFUSED 2 to 4, argparse usage stays 2), its tests, and debtplan queue.py:27 following. Limit: a repo outside ~/github or a script grepping the number out of prose is not seen",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25: first entry paid (new_dist_cli: usage 2 stays, refusals move to 4; callers read, none in this checkout); stack-w1954a submitted. Seven entries left: flag_contract and pathsforward cli EXIT_REFUSED 2 (table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (table wants 7), vlogcli EXIT_BUSY 5 (table wants 3). Each needs its scripted callers read before its number moves | 2026-10-25: 2026-10-25: first entry (mikemol-new-dist) landed as 853a7e0c in the joined run with W1918 (2ef82466), both at 09:22:56 after W1953 failed alone. Seven exit-baseline entries remain: flag_contract and pathsforward cli EXIT_REFUSED 2 (the table wants 4), pycheck_clear and pycheck_format EXIT_NOT_RUN 3 and pycheck_cli and pycheck_install EXIT_NOT_CHECKED 3 (7), vlogcli EXIT_BUSY 5 (the table lists BUSY under DEFER 3) | 2026-10-26: 2026-10-26: second entry paid, flag_contract EXIT_REFUSED to EXIT_USAGE (value 2), landed 55ec4e56. Two entries remain, both a decision (vlogcli 5 vs 3 collides with NO_DESTINATION; pathsforward cli 2 vs 4 changes every consumer). | 2026-10-27: 2026-10-27 CENSUS of the writer's exit 2 (read, not run; fleet checkouts under ~/github, py/sh/rego, excluding .venv and worktrees): NO production consumer separates 2 from other non-zero. Zero-vs-nonzero only: nemik witnesses.py:480 (apply 'if code', prints the code), nemik work.py:144, luthen pf_record.py:124-163, hooks watchdog.py:378/407, inbound_asks.py:121, tick_release.py:90, katas hosttick.py:85 (passes the code through), luthen fleet_par.py:270. ONE reader of the number: debtplan queue.py:27 EXIT_REFUSED = 2, its own fallback for a SystemExit with no int code, read as refused (labels only, never compares the writer's 2). No shell, rego or service consumer found. The hazard is the writer: argparse usage errors also exit 2, so 2 already means usage AND refused in one binary; moving REFUSED to 4 separates them. Literal 2 asserts live in pathsforward tests and cli.py only. So no consumer needs a 2-or-4 dual-read arm; the work is the writer (EXIT_REFUSED 2 to 4, argparse usage stays 2), its tests, and debtplan queue.py:27 following. Limit: a repo outside ~/github or a script grepping the number out of prose is not seen | 2026-10-27: 2026-10-27: landed e330a502 (pathsforward EXIT_REFUSED 2 to 4, debtplan queue follows) and 4b884f9f (BUSY moves from DEFER to RACE in corpus/exit-table.json by operator ruling, host line 107846; exit-baseline empty). Both rows of corpus/exit-baseline.txt are retired; no consumer changed",
       "issued_at": "2026-10-25T10:45:31Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T12:02:41Z",
+      "last_worked": "2026-10-27T15:44:32Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261027T154432Z",
       "manifest": [
         "corpus/exit-baseline.txt",
         "hooks/src/mikemol/hooks/new_dist_cli.py",
@@ -45287,15 +45289,13 @@
     {
       "symbol": "W2034",
       "title": "The four tests under a CPU budget with size medium (W1798) wait on events, not a longer bazel timeout",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W1954"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "github-8f 2026-10-25: the operator ruled 2026-10-17 'No, shard finer only' to a longer bazel timeout even as a backstop behind RLIMIT_CPU, so test_traindrive, test_trainlead, test_grade and test_import_cycles (hooks/BUILD.bazel _CPU_BUDGET_S, size medium) contradict it. For each: name what it waits on, make the wait event-bound or shard it finer, then drop it from _CPU_BUDGET_S's medium. The CPU rlimit itself stays as the bound.",
       "evidence": "2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks stack; the hooks lane reopens once stack-next-20 (W1954, the exit-baseline paydown the pace refusal names) lands and stack-next-13 follows",
       "issued_at": "2026-10-26T01:39:59Z",
@@ -45329,20 +45329,23 @@
     {
       "symbol": "W2036",
       "title": "The submit-time round refusal names every skipped round card in one message",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W1898"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "github-8f 2026-10-25 (luthen hit three refusals in a row: W1672, W1467, W1653). READ: round_check.composition already returns one refusal per skipped ready round card and round_wire.round_reason joins them with ' | ' (I saw three in one refusal at stack-w1503b, 2026-10-25), so within one published round every skipped card is named; the loop luthen saw is the round CHANGING between submits (the file is republished hourly). Still worth doing: one message, not N sentences each repeating the outside card list, and a single writer line per card to run together; the writer's --update-many cannot set working, so it stays one --update per card. Measure the repeated refusals against round.json's as_of before changing anything.",
-      "evidence": "2026-10-26: 2026-10-26 luthen via github-8f: three refusals in a row, each naming one card. Measure them against round.json's as_of.",
+      "evidence": "2026-10-26: 2026-10-26 luthen via github-8f: three refusals in a row, each naming one card. Measure them against round.json's as_of. | 2026-10-27: 2026-10-27: edits round_check/round_wire, hooks-lane files; serial lane behind stack-next-13 (W1898)",
       "issued_at": "2026-10-26T03:28:07Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T11:34:46Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-27T15:15:36Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2037",
@@ -46333,15 +46336,6 @@
       "taken_at": "2026-10-27T03:02:34Z",
       "renewed_at": "2026-10-27T03:02:34Z",
       "expires_at": "2026-10-27T03:32:34Z"
-    },
-    {
-      "tag": "file:corpus/exit-baseline.txt!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1954",
-      "base_sha": "b49c4e6c435ea226533f2b65f0baf9c19aa93770",
-      "taken_at": "2026-10-27T12:02:41Z",
-      "renewed_at": "2026-10-27T12:02:41Z",
-      "expires_at": "2026-10-27T12:32:41Z"
     }
   ],
   "advice": [

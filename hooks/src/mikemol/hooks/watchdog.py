@@ -295,7 +295,7 @@ def watch(
     tools are too old to beat has ready cards and no beat at all, which is the strongest stall
     signal there is; reading it as "never beaten, never fire" hid exactly the repos that need the
     alarm. So the silence is counted from the start, the alarm fires after the band with work
-    waiting, and one line says no heartbeat source exists, so an old pin shows up instead of hiding.
+    waiting, and one line says no heartbeat file exists, so an old pin shows up instead of hiding.
 
     ⚑ A BEAT OLDER THAN THE START IS NOT A SILENCE TO FIRE ON (luthen via github-8f, 2026-10-18,
     W1564): the session started this watchdog, which is its own action, so the silence is counted
@@ -323,7 +323,8 @@ def watch(
 
     """
     read, ready, now_ns, sleep, alive = seams
-    started = Beat("no heartbeat source", now_ns(), ())
+    began = now_ns()
+    started = Beat("no heartbeat file (counting from watch start)", began, ())
     noted = False
     polls = 0
     while alive():
@@ -337,7 +338,11 @@ def watch(
                 sys.stdout.write("mikemol-watchdog: no heartbeat file: counting from my start\n")
                 noted = True
         elif last.at_ns < started.at_ns:
-            last = started
+            # ⚑ A STALE FILE IS NOT A MISSING ONE (github-8f via summit, 2026-10-27, W2043): the
+            # label said "no heartbeat source" for both, and summit read a beat that predated the
+            # watch as a file that was not there.
+            before_s = (started.at_ns - last.at_ns) // _NS_PER_S
+            last = Beat(f"watch start; last beat {last.tool} {before_s}s before it", began, ())
         silent_s = (now_ns() - last.at_ns) / _NS_PER_S
         bound_s = limit(last) if callable(limit) else silence_limit_s(last, limit)
         waiting = ready() if silent_s >= bound_s else None
