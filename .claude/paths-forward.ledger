@@ -4168,3 +4168,10 @@
 2026-10-26T23:38:52Z  status W1964 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-26T23:40:51Z  status W1964 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-26T23:40:53Z  status W2008 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-26T23:49:31Z  status W1724 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T00:12:56Z  status W2052 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T00:22:48Z  interrupt W2056 minted    -         "Re-card of dropped W1868 for estate:W52: record an apply's after-state hash in the waldo apply ledger without a planfile, and check a baseline's hash against the last entry before an apply"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=estate:W52
+2026-10-27T00:24:58Z  status W1977 blocked>ready writer    "blocked -> ready"
+2026-10-27T00:53:06Z  status W1977 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T01:17:55Z  status W1724 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-27T01:17:55Z  status W1964 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2055,
+  "counter": 2056,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -37252,12 +37252,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Hooks files (traintel, gatefacts) share the serial hooks stack lane with W1958 (ratchet_emit), which is taken first; then add executed-test count, cache-hit share and host load to the per-round record. I still need W1958 landed, W1724",
+      "next_bounded_step": "Add executed-test count, cache-hit share and host load to the per-round record (traintel, gatefacts). Hooks lane: stack-next-8 (W1964) holds it in the gate, and W2008 is queued ahead of this; take it after both. I still need W1964 landed, W1724",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1457 (load share of non-gate processes during a gate) separates 'gate slow' from 'host busy'; luthen lists it as enabling this card. NOT made a block here: this card records the host's one-minute load itself, so it can proceed, and W1457's series can be joined later (overlap audit 2026-10-23)",
       "issued_at": "2026-10-19T16:26:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T20:24:09Z",
+      "last_worked": "2026-10-26T23:49:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -43361,7 +43361,7 @@
     {
       "symbol": "W1964",
       "title": "The ratchet emitter sends mikemol.ratchet.retired for each listed tombstone on every run, so retired is written and never inferred from silence",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "github:W42"
       ],
@@ -43370,12 +43370,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "ratchet_emit sends mikemol.ratchet.retired with labels repo, ratchet and reason = 1 for every tombstone the census prints, on every run while it is listed (so at least once by the retiring run), through the same spawn path; nemik's verdict and luthen's dark alert read it. Tell nemik-84 and luthen-observability-ab the metric name and labels first so both can build against it. I still need all of it, W1964",
-      "evidence": "2026-10-25: 2026-10-25 luthen-observability-ab: ratchet tombstones carry the same shape as the family one (metric, reason, owner as datapoint attributes, event_driven freshness with a liveness companion); luthen W1628 makes alerts honour them. For the ratchet series the labels stay repo, ratchet and reason as told to nemik-84, plus owner and the freshness facts | 2026-10-26: 2026-10-26 why nemik:W1040 waits: W1964 needs the tombstone list W1963 adds to the ratchet declaration (W1963 is ready, ratchet/declaration.py), and both it and W1958 edit hooks ratchet_emit.py on the serial hooks lane. Order: W1958 now (working), then W1963, then W1964; the metric name and labels (repo, ratchet, reason) were already told to nemik-84. | 2026-10-26: 2026-10-26: W1963's tombstone lines landed 40710750, which is all this reader needs; the grow-only check stays on W1963.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25 luthen-observability-ab: ratchet tombstones carry the same shape as the family one (metric, reason, owner as datapoint attributes, event_driven freshness with a liveness companion); luthen W1628 makes alerts honour them. For the ratchet series the labels stay repo, ratchet and reason as told to nemik-84, plus owner and the freshness facts | 2026-10-26: 2026-10-26 why nemik:W1040 waits: W1964 needs the tombstone list W1963 adds to the ratchet declaration (W1963 is ready, ratchet/declaration.py), and both it and W1958 edit hooks ratchet_emit.py on the serial hooks lane. Order: W1958 now (working), then W1963, then W1964; the metric name and labels (repo, ratchet, reason) were already told to nemik-84. | 2026-10-26: 2026-10-26: W1963's tombstone lines landed 40710750, which is all this reader needs; the grow-only check stays on W1963. | 2026-10-27: landed 2199bca9; the series mikemol.ratchet.retired (repo, ratchet, reason). Told nemik-84 next.",
       "issued_at": "2026-10-25T12:19:04Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T23:40:51Z",
+      "last_worked": "2026-10-27T01:17:55Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43405,7 +43405,7 @@
           }
         }
       ],
-      "completed": null,
+      "completed": "20261027T011755Z",
       "manifest": [
         "hooks/src/mikemol/hooks/ratchet_emit.py",
         "hooks/tests/test_ratchet_emit.py"
@@ -43853,15 +43853,15 @@
         "file:mdstruct/stubs/panflute-allowlist.txt!w"
       ],
       "blocked_on": [
-        "operator: decide the panflute Doc.__init__ format shadow, measured: (1) declare the TRUE signature (metadata, format, api_version), which stubtest accepts with an empty allowlist but ruff A002 flags as one NEW key in the lint ratchet, so the debt moves from the allowlist to the ratchet (net zero, and a ratchet rise is refused); (2) declare Doc.__init__: object, net minus one, but an opaque boundary the operator ruled out ('types from consumers, not casts'); (3) a project-level ruff builtins-ignorelist for format, one policy for every stub alike, which uncounts the key. Pick one."
+        "operator: decide how a declared ratchet rise is written: (1) allow the single write of the line stubs/panflute/__init__.pyi:builtin-argument-shadowing into mdstruct/ratchet-preview.txt (covered by rebaselines.json and your ruling (a), host line 104181), or (2) approve teaching the standing-4 hook to admit a baseline rise only when rebaselines.json carries the exact matching entry, so every future declared rise goes through the same door. Then W1977 lands."
       ],
       "blocked_kind": "human",
-      "next_bounded_step": "Land it in the next stack (stack-next-1, entry W1977 over mdstruct/stubs/panflute/__init__.pyi, stubs/panflute-allowlist.txt, tests/test_stub_authority.py, warrants.bib); then write the general rule for every stub (declare an unmodellable library constructor as an object attribute, never an exemption). I still need the landing and the general rule, W1977",
-      "evidence": "2026-10-25: 2026-10-25 OPERATOR RULING, host line 97399 (uuid 86e023a4, verified human), via github-8f: 'the adapter pattern is what applies here; an intermediate that encapsulates the required exception. It's important to isolate noncompliant code, even when it's necessary.' So library-imposed noncompliance is ISOLATED behind an adapter, for every stub alike, never spread or waived: one small named module is the only place that touches the noncompliant surface, takes a compliant parameter and passes the library's own name inside, and every other module calls the adapter; the unavoidable exception is one counted entry scoped to that adapter. MY READING FOR panflute Doc.__init__ format (to test, not assume): mdstruct never constructs a panflute element (its allowlist header says so), so no call site needs an adapter; the noncompliant name appears only in the STUB's signature. Two honest shapes to try once W1953 lands: (a) declare Doc.__init__ in the stub as (self, *args: Block, **kwargs: object) so the stub has no parameter named format at all, if stubtest accepts a stub kwargs as covering the runtime's keyword-only names (to be measured, not assumed); (b) if it does not, a one-purpose adapter module in mdstruct that is the only constructor of Doc, and the one counted key on it. Do NOT re-add a per-file exemption | 2026-10-26: 2026-10-26 MEASURED (a) and a third shape. (a) FAILS: stubtest on Doc.__init__(self, *args: Block, **kwargs: object) names 'stub does not have parameter api_version, format, metadata' and 'runtime does not have **kwargs parameter kwargs', so a stub kwargs does not cover the runtime's keyword-only names. (c) PASSES: declaring Doc.__init__: object in the stub (an attribute, not a signature) satisfies stubtest with an EMPTY allowlist (--allowlist /dev/null, no output, exit 0). It says in the stub what the allowlist header said (the constructor is surface the stub declines to model; mdstruct never constructs a Doc) and is stronger: mypy now refuses any construction because object is not callable. No per-file exemption and no new key. The panflute allowlist is empty; test_every_allowlist_entry_is_a_constructor lost its 'assert entries' vacuity guard (now false) and gained a positive control (_offenders names panflute.load and passes a constructor). //mdstruct:all runs (30 targets) before the stack: 29 pass, the one failure was that vacuity guard, fixed; a second run is in flight. | 2026-10-26: 2026-10-26 github-8f's check on the object shape (correct: an object boundary hides the signature and is the pattern the operator ruled out) led to the honest shape, MEASURED: the true signature (*args: Block, metadata: Mapping[str, object], format: str, api_version: tuple[int, ...], read from panflute/elements.py line 56) makes stubtest PASS with an EMPTY allowlist and ruff report builtin-argument-shadowing on format at the stub: one new lint key. So paying the allowlist entry costs a lint-ratchet key: net zero, and standing 2 forbids a ratchet rise. Reverted my tree to the original stub and allowlist (git status clean for mdstruct). No shape pays the debt honestly without an operator decision; the three choices are the ask.",
+      "next_bounded_step": "Operator decision needed: allow the one baseline write (the key line stubs/panflute/__init__.pyi:builtin-argument-shadowing in mdstruct/ratchet-preview.txt, covered by rebaselines.json), or approve teaching the standing hook to admit a baseline rise only when rebaselines.json carries the exact matching entry. Then add stubs/**/*.pyi to the ratchet target's data in mdstruct/BUILD.bazel, run //mdstruct:all, land. The stub, allowlist, test and rebaselines.json edits are in the working tree, uncommitted. I still need that decision, W1977",
+      "evidence": "2026-10-25: 2026-10-25 OPERATOR RULING, host line 97399 (uuid 86e023a4, verified human), via github-8f: 'the adapter pattern is what applies here; an intermediate that encapsulates the required exception. It's important to isolate noncompliant code, even when it's necessary.' So library-imposed noncompliance is ISOLATED behind an adapter, for every stub alike, never spread or waived: one small named module is the only place that touches the noncompliant surface, takes a compliant parameter and passes the library's own name inside, and every other module calls the adapter; the unavoidable exception is one counted entry scoped to that adapter. MY READING FOR panflute Doc.__init__ format (to test, not assume): mdstruct never constructs a panflute element (its allowlist header says so), so no call site needs an adapter; the noncompliant name appears only in the STUB's signature. Two honest shapes to try once W1953 lands: (a) declare Doc.__init__ in the stub as (self, *args: Block, **kwargs: object) so the stub has no parameter named format at all, if stubtest accepts a stub kwargs as covering the runtime's keyword-only names (to be measured, not assumed); (b) if it does not, a one-purpose adapter module in mdstruct that is the only constructor of Doc, and the one counted key on it. Do NOT re-add a per-file exemption | 2026-10-26: 2026-10-26 MEASURED (a) and a third shape. (a) FAILS: stubtest on Doc.__init__(self, *args: Block, **kwargs: object) names 'stub does not have parameter api_version, format, metadata' and 'runtime does not have **kwargs parameter kwargs', so a stub kwargs does not cover the runtime's keyword-only names. (c) PASSES: declaring Doc.__init__: object in the stub (an attribute, not a signature) satisfies stubtest with an EMPTY allowlist (--allowlist /dev/null, no output, exit 0). It says in the stub what the allowlist header said (the constructor is surface the stub declines to model; mdstruct never constructs a Doc) and is stronger: mypy now refuses any construction because object is not callable. No per-file exemption and no new key. The panflute allowlist is empty; test_every_allowlist_entry_is_a_constructor lost its 'assert entries' vacuity guard (now false) and gained a positive control (_offenders names panflute.load and passes a constructor). //mdstruct:all runs (30 targets) before the stack: 29 pass, the one failure was that vacuity guard, fixed; a second run is in flight. | 2026-10-26: 2026-10-26 github-8f's check on the object shape (correct: an object boundary hides the signature and is the pattern the operator ruled out) led to the honest shape, MEASURED: the true signature (*args: Block, metadata: Mapping[str, object], format: str, api_version: tuple[int, ...], read from panflute/elements.py line 56) makes stubtest PASS with an EMPTY allowlist and ruff report builtin-argument-shadowing on format at the stub: one new lint key. So paying the allowlist entry costs a lint-ratchet key: net zero, and standing 2 forbids a ratchet rise. Reverted my tree to the original stub and allowlist (git status clean for mdstruct). No shape pays the debt honestly without an operator decision; the three choices are the ask. | 2026-10-27: 2026-10-27 BUILT, NOT LANDED: the true Doc signature is in the stub, the allowlist entry is gone (test_stub_authority has a positive control now), rebaselines.json declares the rise (mdstruct/ratchet-preview.txt 0 to 1, warrant bde02714:104181). The census over the whole dist shows exactly ONE new key, stubs/panflute/__init__.pyi:builtin-argument-shadowing. TWO FINDINGS: (1) the bazel ruff and ratchet targets stage only src and tests, so a stub is outside the gate's lint domain and the debt would vanish rather than be counted unless the ratchet target's data adds stubs/**/*.pyi; (2) writing the key into mdstruct/ratchet-preview.txt is refused by standing 4's hook ('never expand the ratchet baseline'), which has no path for a declared rise.",
       "issued_at": "2026-10-25T13:43:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T17:31:06Z",
+      "last_worked": "2026-10-27T00:53:06Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43889,6 +43889,33 @@
             "mtools:line": 97399,
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 86e023a4-20d0-40f4-9b60-4b6388929d1e --claim Operator, host line 97399: the adapter pattern is what applies here, an intermediate that encapsulates the required exception, and it is important to isolate noncompliant code even when it is necessary --line 97399"
           }
+        },
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1977",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#bde02714-1533-475a-b934-d2ce58024a15",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-26T23:44:15.140Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/bde02714-1533-475a-b934-d2ce58024a15",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 104181,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify bde02714-1533-475a-b934-d2ce58024a15 --claim operator --line 104181"
+          },
+          "mtools:reason": "operator chose (a) for the panflute stub: true Doc signature plus the counted A002 ruff key"
         }
       ],
       "completed": null
@@ -45524,21 +45551,19 @@
     {
       "symbol": "W2052",
       "title": "Compute the agreement between the two labellings and keep the disagreements as fixtures",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1966"
       ],
       "touches": [],
-      "blocked_on": [
-        "amr-skills"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "amr-skills labels the 300-row blind sample (letter inbox/2026-10-26-mtools-blind-commitment-sample.md, mtools:W2052); then compute agreement and write fixtures. I still need the labels, W2052",
-      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Draw the held-out sample with another seed (mikemol-transcriptstruct --sample 300 --seed 2 --out BLIND --key KEY), label it blind before reading amr-skills' v6 labels, then compare; commit the agreement script. Fixtures: the 56 missed commitments by frame, done not scored. I still need the second sample and my labels of it, W2052",
+      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed.",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": "2026-10-26T18:04:58Z",
+      "last_worked": "2026-10-27T00:19:15Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45603,6 +45628,26 @@
       "last_worked": "2026-10-26T19:49:37Z",
       "ticks_blocked": 0,
       "completed": "20261026T194937Z"
+    },
+    {
+      "symbol": "W2056",
+      "title": "Re-card of dropped W1868 for estate:W52: record an apply's after-state hash in the waldo apply ledger without a planfile, and check a baseline's hash against the last entry before an apply",
+      "status": "ready",
+      "enables": [
+        "estate:W52"
+      ],
+      "touches": [
+        "waldo"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Build in waldo: planledger.record_after_state(config, root, before, after, plan) and planledger.baseline_ok(config, root, baseline_sha, imported) returning None or one of four module constants (HASH_MISMATCH, NO_ENTRY_NOT_IMPORTED, CHAIN_BROKEN, TRUNCATED_BELOW_MARK), each a fixed machine-readable string; the mark (entry count, last-line digest) in a side file written at each append. Tests and mutants per kind. estate repins and wires it as estate:W52. I still need the build, W2056",
+      "evidence": "2026-10-27: 2026-10-26 estate-6d fixed the shape: entry {kind: after_state, root (the domain name, one chain per zone), before_sha256, after_sha256, plan_sha256, applier, at}; the chain shows each before equals the previous after. Check: refuse unless the baseline hash equals the last after_sha256 for that root; no entry yet is a first apply only when the baseline was written by the read-only import; a ledger_intact failure or a ledger shorter than a previous one is a refusal. estate:W52 waits on this. | 2026-10-27: 2026-10-26 estate-6d agreed: the high-water mark is a side file next to apply-ledger.jsonl; baseline_ok returns a DISTINCT code per refusal kind so estate's interlock prints which without parsing prose.",
+      "issued_at": "2026-10-27T00:22:48Z",
+      "minted_during": "interrupt",
+      "caused_by": "estate:W52",
+      "last_worked": "2026-10-27T00:26:46Z",
+      "ticks_blocked": 0
     }
   ],
   "residue": [

@@ -1009,3 +1009,67 @@
   claim  = {A retired file still on disk is not counted; its tombstone is printed once.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired.py -k test_the_census_prints_tombstones_after_the_rows_and_a_retired_file_is_no_row},
 }
+
+@misc{ratchet-rebaseline-rise-with-no-entry-is-refused-and-names-the-entry-it-needs,
+  section = {rebaseline},
+  title  = {The line says the path, the old and the new value, and what to add},
+  claim  = {The line says the path, the old and the new value, and what to add.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_a_rise_with_no_entry_is_refused_and_names_the_entry_it_needs},
+}
+
+@misc{ratchet-rebaseline-rise-with-an-entry-of-exactly-that-old-and-new-is-admitted,
+  section = {rebaseline},
+  title  = {The declared move: (ratchet, old, new) all match},
+  claim  = {The declared move: (ratchet, old, new) all match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_a_rise_with_an_entry_of_exactly_that_old_and_new_is_admitted},
+}
+
+@misc{ratchet-rebaseline-entry-for-another-rise-does-not-cover-this-one,
+  section = {rebaseline},
+  title  = {Old 0 to 2 does not cover 0 to 1, and another ratchet's entry covers nothing here},
+  claim  = {Old 0 to 2 does not cover 0 to 1, and another ratchet's entry covers nothing here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_an_entry_for_another_rise_does_not_cover_this_one},
+}
+
+@misc{ratchet-rebaseline-fall-an-unread-value-and-a-new-ratchet-need-no-entry,
+  section = {rebaseline},
+  title  = {Paydown is what a ratchet is for; UNREAD is not a number; a birth is not judged here},
+  claim  = {Paydown is what a ratchet is for; UNREAD is not a number; a birth is not judged here.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_a_fall_an_unread_value_and_a_new_ratchet_need_no_entry},
+}
+
+@misc{ratchet-rebaseline-entry-that-is-not-a-warranted-rise-is-refused,
+  section = {rebaseline},
+  title  = {Not a rise, no reason, a warrant that is not uuid:line, no ratchet, a non-integer},
+  claim  = {Not a rise, no reason, a warrant that is not uuid:line, no ratchet, a non-integer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_an_entry_that_is_not_a_warranted_rise_is_refused},
+}
+
+@misc{ratchet-rebaseline-no-file-is-no-entries-and-a-file-without-the-list-is-refused,
+  section = {rebaseline},
+  title  = {Absent is none; a file that is not the shape is a refusal, never read as empty},
+  claim  = {Absent is none; a file that is not the shape is a refusal, never read as empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_no_file_is_no_entries_and_a_file_without_the_list_is_refused},
+}
+
+@misc{ratchet-rebaseline-check-compares-two-trees-and-admits-a-declared-rise,
+  section = {rebaseline},
+  title  = {The name-classified ratchet-preview.txt gains a line; the entry in the new tree covers it},
+  claim  = {The name-classified ratchet-preview.txt gains a line; the entry in the new tree covers
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_check_compares_two_trees_and_admits_a_declared_rise},
+}
+
+@misc{ratchet-rebaseline-command-exits-one-on-an-unexplained-rise-and-zero-when-declared,
+  section = {rebaseline},
+  title  = {`mikemol-ratchet rebaselines --repo AFTER --before BEFORE` prints each rise it refuses},
+  claim  = {`mikemol-ratchet rebaselines --repo AFTER --before BEFORE` prints each rise it refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_the_command_exits_one_on_an_unexplained_rise_and_zero_when_declared},
+}
+
+@misc{ratchet-rebaseline-command-refuses-an-untrustworthy-file-without-a-traceback,
+  section = {rebaseline},
+  title  = {A malformed rebaselines file is exit 1 and a line on stderr},
+  claim  = {A malformed rebaselines file is exit 1 and a line on stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_the_command_refuses_an_untrustworthy_file_without_a_traceback},
+}

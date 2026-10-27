@@ -24,6 +24,7 @@ from mikemol.ratchet.declaration import DeclarationError
 from mikemol.ratchet.expression import ExpressionError
 from mikemol.ratchet.fleetcensus import census, census_repo, tombstones, tombstones_under
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
+from mikemol.ratchet.rebaseline import main as rebaselines_main
 from mikemol.ratchet.remap import __doc__ as remap_doc
 from mikemol.ratchet.remap import remap_guard
 from mikemol.ratchet.state import BaselineState
@@ -39,6 +40,7 @@ CANNOT_CENSUS = 2
 
 _REMAP = "remap"
 _CENSUS = "census"
+_REBASELINES = "rebaselines"
 
 
 def _remap_main(argv: list[str]) -> int:
@@ -101,7 +103,11 @@ def _census_main(argv: list[str]) -> int:
     return 0
 
 
-_SUBCOMMANDS = {_REMAP: _remap_main, _CENSUS: _census_main}
+_SUBCOMMANDS = {
+    _REMAP: _remap_main,
+    _CENSUS: _census_main,
+    _REBASELINES: rebaselines_main,
+}
 
 
 def main(argv: list[str] | None = None) -> int:
