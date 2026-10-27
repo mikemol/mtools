@@ -26,3 +26,4 @@ planflow	The Plan-Admit-Apply Flow: Every Gate Stops the Apply, Only a Whole Ver
 plancli	The Plan-Admission Command Line: The Only Apply Line Printed Is the Verified One, an Existing Plan Is Never Overwritten, and SIGHUP Is Held Off an Apply
 planinterlock	Interlocks: The Unmet Preconditions Come Back Sorted, and an Interlock That Cannot Be Evaluated Is Never Read as Met
 planreading	A Reading Taken Before And After An Apply Must Advance And Be Fresh, And Anything That Cannot Be Judged Is A Failure Never A Pass
+after_state	A baseline is checked against the ledger's last after-state before an apply (W2056)

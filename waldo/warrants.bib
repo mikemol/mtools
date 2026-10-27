@@ -1798,3 +1798,73 @@
   claim  = {W1943: a no-advance on an apply that leaves the reading's resources alone is no failure.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_reading_with_a_when_is_taken_only_for_a_plan_that_touches_its_addresses},
 }
+
+@misc{waldo-after-state-baseline-equal-to-the-last-after-state-is-allowed,
+  section = {after_state},
+  title  = {After two applies the last after is the one the next baseline must equal},
+  claim  = {After two applies the last after is the one the next baseline must equal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_a_baseline_equal_to_the_last_after_state_is_allowed},
+}
+
+@misc{waldo-after-state-entry-is-a-lattice-edge-with-its-plan-and-applier,
+  section = {after_state},
+  title  = {kind, root, before, after, plan, applier and time are all there, chained by prev},
+  claim  = {kind, root, before, after, plan, applier and time are all there, chained by prev.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_the_entry_is_a_lattice_edge_with_its_plan_and_applier},
+}
+
+@misc{waldo-after-state-no-entry-is-a-first-apply-only-when-the-baseline-was-imported,
+  section = {after_state},
+  title  = {A missing ledger after tampering must not read as a first apply},
+  claim  = {A missing ledger after tampering must not read as a first apply.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_no_entry_is_a_first_apply_only_when_the_baseline_was_imported},
+}
+
+@misc{waldo-after-state-one-roots-entry-does-not-cover-another-root,
+  section = {after_state},
+  title  = {One chain per zone: zone-a's after-state says nothing about zone-b's baseline},
+  claim  = {One chain per zone: zone-a's after-state says nothing about zone-b's baseline.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_one_roots_entry_does_not_cover_another_root},
+}
+
+@misc{waldo-after-state-edited-line-breaks-the-chain,
+  section = {after_state},
+  title  = {Rewriting an earlier line breaks every later link},
+  claim  = {Rewriting an earlier line breaks every later link.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_an_edited_line_breaks_the_chain},
+}
+
+@misc{waldo-after-state-intact-chain-cut-short-is-truncated-below-the-mark,
+  section = {after_state},
+  title  = {Dropping the last line leaves an intact chain; the mark says it once held more},
+  claim  = {Dropping the last line leaves an intact chain; the mark says it once held more.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_an_intact_chain_cut_short_is_truncated_below_the_mark},
+}
+
+@misc{waldo-after-state-deleted-ledger-with-its-mark-left-is-truncated-not-first,
+  section = {after_state},
+  title  = {Even `imported` cannot excuse a ledger that existed and is gone},
+  claim  = {Even `imported` cannot excuse a ledger that existed and is gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_a_deleted_ledger_with_its_mark_left_is_truncated_not_first},
+}
+
+@misc{waldo-after-state-replaced-last-line-is-caught-by-the-mark-digest,
+  section = {after_state},
+  title  = {Same line count, different last line: the digest at the mark's position differs},
+  claim  = {Same line count, different last line: the digest at the mark's position differs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_a_replaced_last_line_is_caught_by_the_mark_digest},
+}
+
+@misc{waldo-after-state-unreadable-mark-is-a-refusal-and-a-missing-mark-is-not,
+  section = {after_state},
+  title  = {Garbage beside the ledger is tampering; an older ledger with no mark is allowed to pass},
+  claim  = {Garbage beside the ledger is tampering; an older ledger with no mark is allowed to pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_an_unreadable_mark_is_a_refusal_and_a_missing_mark_is_not},
+}
+
+@misc{waldo-after-state-every-refusal-is-its-own-fixed-string,
+  section = {after_state},
+  title  = {The interlock prints which one without parsing prose},
+  claim  = {The interlock prints which one without parsing prose.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_every_refusal_is_its_own_fixed_string},
+}

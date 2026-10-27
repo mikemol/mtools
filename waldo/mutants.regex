@@ -191,4 +191,11 @@ src/mikemol/waldo/planplan.py|digest-recorded-without-declarations|"policy_sha25
 src/mikemol/waldo/planreading.py|when-ignored|    if changes is None or not isinstance\(when, dict\):|    if True:|def=applies
 src/mikemol/waldo/planreading.py|when-always-applies|    return not touches or any\(change in touches for change in changes\)|    return True|def=applies
 src/mikemol/waldo/planflow.py|addresses-keep-the-action|    addresses = tuple\(change\.rpartition\(":"\)\[0\] or change for change in changes\)|    addresses = tuple(changes)|def=confirm_and_apply
+src/mikemol/waldo/planledger.py|baseline-mismatch-allowed|    return None if last == baseline_sha256 else HASH_MISMATCH|    return None|def=baseline_ok
+src/mikemol/waldo/planledger.py|truncation-unchecked|    if _truncated\(path\):|    if False:|def=baseline_ok
+src/mikemol/waldo/planledger.py|broken-chain-unchecked|    if path\.is_file\(\) and not ledger_intact\(path\):|    if False:|def=baseline_ok
+src/mikemol/waldo/planledger.py|first-apply-without-import-allowed|        return None if imported else NO_ENTRY_NOT_IMPORTED|        return None|def=baseline_ok
+src/mikemol/waldo/planledger.py|another-roots-entry-covers|record\.get\("kind"\) != AFTER_STATE or record\.get\("root"\) != root_name|record.get("kind") != AFTER_STATE|def=_last_after_state
+src/mikemol/waldo/planledger.py|mark-digest-unchecked|len\(lines\) < count or hashlib\.sha256\(lines\[count - 1\]\.encode\(\)\)\.hexdigest\(\) != digest|len(lines) < count|def=_truncated
+src/mikemol/waldo/planledger.py|mark-never-written|    _write_mark\(path\)|    pass|def=append_ledger
 src/mikemol/waldo/planflow.py|declarations-not-recorded|\(code, deny, withheld\), extra, seams\.declarations\)|(code, deny, withheld), extra)|def=judge
