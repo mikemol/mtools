@@ -60,6 +60,7 @@ from mikemol.hooks.commitprogress import phase_of as _phase_of
 from mikemol.hooks.commitprogress import servers_of as _servers_of
 from mikemol.hooks.commitprogress import stall_text as _stall_text
 from mikemol.hooks.commitprogress import watch as _watch
+from mikemol.hooks.flakegate import refusal as _flake_refusal
 from mikemol.hooks.flakemetric import emit as _emit_flakes
 from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.gatephase import stage_note as _stage_note
@@ -1085,6 +1086,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         or stack_build_refusal(root, stack_file, snap, run_git_in)
         or _shard_refusal(root, stack_file, env)
         or _round_refusal(root)
+        or _flake_refusal(root)
         or _pace_refusal(root, stack_file, env)
         or _test_refusal(root, stack_file, env)
     )

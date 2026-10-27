@@ -78,6 +78,22 @@ def earlier_refusal(git_dir: Path, tree: str) -> list[str] | None:
     return None
 
 
+def recorded(git_dir: Path) -> list[tuple[str, list[str]]]:
+    """List each tree that has a `flake` line, with the checks that refused it (W2008).
+
+    Returns:
+        (tree id, failed labels) once per tree, in the order the flakes were recorded.
+
+    """
+    found: dict[str, list[str]] = {}
+    for row in _rows(git_dir):
+        labels = row.get("failed")
+        tree = row.get("tree")
+        if row.get("kind") == FLAKE and isinstance(tree, str) and isinstance(labels, list):
+            found.setdefault(tree, [str(label) for label in cast("list[object]", labels)])
+    return list(found.items())
+
+
 def flake_count(git_dir: Path) -> int:
     """Count the flakes this repository has recorded (W2009).
 

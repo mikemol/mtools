@@ -24,6 +24,18 @@ def test_a_pass_on_a_tree_refused_before_returns_the_checks_that_refused_it(tmp_
     assert [line for line in kept if '"flake"' in line]
 
 
+def test_recorded_lists_each_flaked_tree_once_with_the_checks_that_refused_it(
+    tmp_path: Path,
+) -> None:
+    """W2008: two flakes of one tree are one entry; a refused-only tree is not in the list."""
+    for _ in range(2):
+        flakes.record(tmp_path, _TREE, flakes.REFUSED, ["first check"])
+        flakes.record(tmp_path, _TREE, flakes.PASSED, [])
+    flakes.record(tmp_path, _OTHER, flakes.REFUSED, ["never passed"])
+    assert flakes.recorded(tmp_path) == [(_TREE, ["first check"])]
+    assert flakes.recorded(tmp_path / "absent") == []
+
+
 def test_a_tree_never_refused_and_another_trees_refusal_are_not_flakes(tmp_path: Path) -> None:
     """A clean pass, and a pass beside a refusal of a different tree, both say nothing."""
     assert flakes.record(tmp_path, _TREE, flakes.PASSED, []) is None
