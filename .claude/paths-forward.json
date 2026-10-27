@@ -45091,18 +45091,21 @@
     {
       "symbol": "W2024",
       "title": "ratchets.json carries each ratchet's re-baselines, and the census refuses a changed expression without one",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Enforcement is the operator's decision (asked on W1977). Left on this card: a birth judgement (a new ratchet file at a nonzero value) and the entries-only-grow check against HEAD. I still need both, W2024",
-      "evidence": "2026-10-27: 2026-10-27 first slice landed 10ca1275 (ratchet.rebaseline, mikemol-ratchet rebaselines, 9 tests, 5 mutants). Left: the enforcement (standing hook and a submit refusal admit a baseline rise only with a matching entry; operator's call because it loosens a guard), birth, entries only grow.",
+      "blocked_on": [
+        "W1977"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the W1977 door lands (stack-next-23): the birth judgement and the entries-only-grow check against HEAD in ratchet/rebaseline.py. I still need the door landed, W2024",
+      "evidence": "2026-10-27: 2026-10-27 first slice landed 10ca1275 (ratchet.rebaseline, mikemol-ratchet rebaselines, 9 tests, 5 mutants). Left: the enforcement (standing hook and a submit refusal admit a baseline rise only with a matching entry; operator's call because it loosens a guard), birth, entries only grow. | 2026-10-27: 2026-10-27 (github-8f): the operator decided the enforcement: W1977 option (2), host 695f3e0a line 106208, uuid 0afcd13c. The hook admits a baseline rise only with a matching rebaselines.json entry, so this card's enforcement IS the W1977 door, in stack-next-23 (gate running). Left here for after it lands: the birth judgement (a new ratchet file at a nonzero value) and the entries-only-grow check against HEAD, both non-hooks",
       "issued_at": "2026-10-25T23:16:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T01:34:49Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-27T17:09:31Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2025",
@@ -45512,7 +45515,7 @@
     {
       "symbol": "W2045",
       "title": "Retire the .claude/debtplan.json ratchet series with a written tombstone: the file is the debtplan tool's config, not a ratchet, but nemik's pace still reads it as unknown with a standing requirement of 1",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "velocity",
@@ -45520,12 +45523,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Find where pycheck --ratchet compares a file to its baseline (hooks pycheck, ratchet census) and add a split-aware mode: a declared record {from: old file, to: [new files]} moves the old file's counts to the new files, refuses any rise in the total, keeps the record. Witness: one file split into two with its counts moved reads the same total and no N > baseline 0. Then remap.py shift verdict and the tsv-to-json tombstone (linux-sources:W437). I still need to read the pycheck ratchet compare, W2045",
-      "evidence": "2026-10-26: 2026-10-26 nemik-84: no tombstone format exists; nemik carded nemik:W1111 (caused by W2045) and proposed .claude/ratchet-tombstones.json, a list of {ratchet, reason, retired_at}, copied by luthen into the export tree and read by pacewrite. Agreed, keyed by the repo-relative path as the pace file names it. HOLD the debtplan.json tombstone until W1111 fixes the format. | 2026-10-27: 2026-10-27 OPERATOR RULING (relayed by github-8f, host 695f3e0a line 107690, uuid 81f034b6-1657-41dd-a984-fd8b5207ddd5, 2026-10-27T13:55:42Z): 'splitting should read as shifting of debt, not new debt.' So mikemol-ratchet remap must carry a module split as a SHIFT: entries keyed under the old file move to the new files, the total is unchanged, the pace sees no rise. WITNESS: a fixture where one file splits into two, entries moved, reads the same total and no new-debt row. This card carries it with the tsv-to-json rename-with-tombstone (linux-sources:W437, no pace-history reset); remap.py today rewrites only path leaves (audit item 3, to be verified by that fixture first) | 2026-10-27: 2026-10-27 nemik's measurement (via github-8f): the place it bites is mikemol-pycheck --ratchet, which refuses a file above its own baseline, so debt moved into a NEW file meets baseline 0 ('N > baseline 0'); remap only rewrites path leaves in path-keyed documents, not count baselines. So the fix lives where the per-file check runs: a split-aware mode that moves counts from the old file to the new ones, refuses any rise in the total, and keeps the move as a declared record. Until then nemik splits only where the new file lands with zero findings, which blocks W1176.",
+      "next_bounded_step": "Design the finding-identity rows: pyratchet works on counts today, so add a moved_findings(base_rows, now_rows, splits) over identity rows and feed its admitted pairs to regressions; the declared record {from, to} lives in a splits file beside the baseline. Witnesses: a verbatim move reads CLEAN; the paydown-plus-new-debt case reads REFUSED; a copied (not moved) finding reads REFUSED. I still need the row shape ruff and mypy give (message, source line), W2045",
+      "evidence": "2026-10-26: 2026-10-26 nemik-84: no tombstone format exists; nemik carded nemik:W1111 (caused by W2045) and proposed .claude/ratchet-tombstones.json, a list of {ratchet, reason, retired_at}, copied by luthen into the export tree and read by pacewrite. Agreed, keyed by the repo-relative path as the pace file names it. HOLD the debtplan.json tombstone until W1111 fixes the format. | 2026-10-27: 2026-10-27 OPERATOR RULING (relayed by github-8f, host 695f3e0a line 107690, uuid 81f034b6-1657-41dd-a984-fd8b5207ddd5, 2026-10-27T13:55:42Z): 'splitting should read as shifting of debt, not new debt.' So mikemol-ratchet remap must carry a module split as a SHIFT: entries keyed under the old file move to the new files, the total is unchanged, the pace sees no rise. WITNESS: a fixture where one file splits into two, entries moved, reads the same total and no new-debt row. This card carries it with the tsv-to-json rename-with-tombstone (linux-sources:W437, no pace-history reset); remap.py today rewrites only path leaves (audit item 3, to be verified by that fixture first) | 2026-10-27: 2026-10-27 nemik's measurement (via github-8f): the place it bites is mikemol-pycheck --ratchet, which refuses a file above its own baseline, so debt moved into a NEW file meets baseline 0 ('N > baseline 0'); remap only rewrites path leaves in path-keyed documents, not count baselines. So the fix lives where the per-file check runs: a split-aware mode that moves counts from the old file to the new ones, refuses any rise in the total, and keeps the move as a declared record. Until then nemik splits only where the new file lands with zero findings, which blocks W1176. | 2026-10-27: 2026-10-27: FOUND the compare: hooks/src/mikemol/hooks/pyratchet.py regressions(now, base), which lists every file and rule above its baseline (an absent file is baseline 0), called by verdict. Built in the tree, not committed (the serial hooks lane holds stack-next-23): regressions and verdict take an optional splits {old file: [moved-to files]}; the group's per-rule total in now must not exceed its total in base, else nothing is admitted; another rule in a moved-to file and a file outside the group stay new debt. Four tests (witness: no split refuses 'new.py: E501 3 > baseline 0', declared split admits; total rise refused; only own files and rules; verdict exits 0), four mutants (equal-count re-pointed, group-total-rise-admitted, split-admits-every-rule-of-a-file, verdict-drops-the-declared-splits); test_pyratchet passes under bazel. NOT DONE: the declared record (where splits is read from and kept, in pycheck_ratchet), warrants and sites for the new tests and mutants, remap.py's shift verdict, the tsv-to-json tombstone | 2026-10-27: 2026-10-27 CORRECTED (operator, on seeing the count-based design: it violates the crosscheck module's principle, hooks/src/mikemol/hooks/warrant_crosscheck.py:5, set equality against an independent derivation, not read the count). WHAT WAS WRONG: pyratchet.regressions with declared splits admitted a rule when the group's per-rule TOTAL did not rise, which cannot tell a shift from paydown plus new debt: big.py 5 E501, 3 genuinely fixed there, 3 fresh E501 written in new.py, total 5 to 5, admitted. The count-based diff (4 tests, 4 mutants, bazel-green) is KEPT AS RESIDUE in the scratchpad (w2045-count-based-split.patch), removed from the tree, never staged. THE REPLACEMENT: match the moved findings, not their number. A finding's identity is (rule code, message, the stripped source line it sits on), which survives a move of the code. For a declared {from, to}: read the from file's findings at the BASE REVISION (ruff or mypy run on git show base:file, independent of the committed counts) and a to-file finding is admitted only by consuming one unconsumed base finding of the same identity from the from file, and only when that finding is gone from the from file now (moved, not copied). Admitted findings are subtracted from the to file's regression and the from file's baseline credit is spent, so the total can never rise. A to-file finding with no matching base finding is new debt however the totals come out; the failure case above is the control (must be REFUSED)",
       "issued_at": "2026-10-26T14:05:14Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1107",
-      "last_worked": "2026-10-27T14:15:22Z",
+      "last_worked": "2026-10-27T17:00:00Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -45554,7 +45557,8 @@
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 81f034b6-1657-41dd-a984-fd8b5207ddd5 --claim operator --line 107690"
           }
         }
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W2046",

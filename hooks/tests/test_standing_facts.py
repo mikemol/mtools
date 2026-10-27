@@ -139,7 +139,8 @@ def test_a_baseline_edit_carries_its_path_and_the_declared_rises(tmp_path: Path)
     baseline.parent.mkdir()
     baseline.write_text("a:1\n", encoding="utf-8")
     rise = '{"ratchet": "mdstruct/ratchet-preview.txt", "old": 1, "new": 2, "reason": "r"}'
-    (tmp_path / "rebaselines.json").write_text(f"[{rise}]", encoding="utf-8")
+    doc = f'{{"rebaselines": [{rise}]}}'
+    (tmp_path / "rebaselines.json").write_text(doc, encoding="utf-8")
     edit: dict[str, object] = {"tool_name": "Edit", "tool_input": {"file_path": str(baseline)}}
     facts = gather(edit, tmp_path)
     assert facts["target_rel"] == "mdstruct/ratchet-preview.txt"
@@ -150,11 +151,14 @@ def test_declared_rises_read_absent_empty_malformed_and_unreadable_apart(tmp_pat
     """No file is no rise; a malformed entry is skipped; an unreadable file is no fact."""
     assert standing_facts.declared_rises(tmp_path) == []
     path = tmp_path / "rebaselines.json"
-    path.write_text('[{"ratchet": "x", "old": "1", "new": 2}, "junk"]', encoding="utf-8")
+    bad = '{"rebaselines": [{"ratchet": "x", "old": "1", "new": 2}, "junk"]}'
+    path.write_text(bad, encoding="utf-8")
     assert standing_facts.declared_rises(tmp_path) == []
     path.write_text("{not json", encoding="utf-8")
     assert standing_facts.declared_rises(tmp_path) is None
     path.write_text('{"ratchet": "x"}', encoding="utf-8")
+    assert standing_facts.declared_rises(tmp_path) is None
+    path.write_text('[{"ratchet": "x", "old": 0, "new": 1}]', encoding="utf-8")
     assert standing_facts.declared_rises(tmp_path) is None
 
 

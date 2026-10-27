@@ -52,13 +52,14 @@ def declared_rises(project: Path) -> list[dict[str, object]] | None:
 
     """
     try:
-        raw: object = json.loads((project / REBASELINES).read_text(encoding="utf-8"))
+        doc: object = json.loads((project / REBASELINES).read_text(encoding="utf-8"))
     except FileNotFoundError:
         return []
     except Exception as caught:
         if not isinstance(caught, (OSError, ValueError)):
             raise
         return None
+    raw = as_record(doc).get("rebaselines") if isinstance(doc, dict) else None
     if not isinstance(raw, list):
         return None
     rises: list[dict[str, object]] = []
