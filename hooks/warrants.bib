@@ -15988,3 +15988,42 @@
             and is still refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackbuildfiles.py -k test_a_source_a_stack_queued_ahead_carries_is_sound_and_otherwise_a_finding},
 }
+
+@misc{hooks-commit-raced-commit-with-our-waypoint-but-another-subject-is-raced,
+  section = {commit_raced},
+  title  = {W1989: the Waypoint trailer alone does not identify a run's commit either; the subject must},
+  claim  = {W1989: the Waypoint trailer alone does not identify a run's commit either; the subject
+            must. The mirror of the test above: both halves of the identity are needed,
+            so each has its own witness (a mutant that dropped the subject half survived
+            without this one).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_a_commit_with_our_waypoint_but_another_subject_is_raced},
+}
+
+@misc{hooks-commit-raced-every-verdict-the-run-prints-is-handed-to-the-verdict-counter,
+  section = {commit_raced},
+  title  = {W1989: the counter is sent the printed line and the exit code, once, by repository name},
+  claim  = {W1989: the counter is sent the printed line and the exit code, once, by repository name.
+            A mutant that never sent it survived every test that read only the printed
+            text.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_raced.py -k test_every_verdict_the_run_prints_is_handed_to_the_verdict_counter},
+}
+
+@misc{hooks-commit-remote-unreachable-remote-over-a-tracked-commit-is-pushed-but-unverified,
+  section = {commit_remote},
+  title  = {W1989: the word comes from the tracking ref, the suffix from the remote that cannot answer},
+  claim  = {W1989: the word comes from the tracking ref, the suffix from the remote that cannot
+            answer. The control for the test above: the same unreachable remote with a
+            commit the tracking ref does hold reads PUSHED, so the word is not simply
+            LOCAL (or PUSHED) whenever ls-remote fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_remote.py -k test_an_unreachable_remote_over_a_tracked_commit_is_pushed_but_unverified},
+}
+
+@misc{hooks-verdictlog-ship-flag-is-not-a-path-of-the-request,
+  section = {verdictlog},
+  title  = {W1989: `--ship` is read by main and never reaches `parse`, so it is no path to commit},
+  claim  = {W1989: `--ship` is read by main and never reaches `parse`, so it is no path to commit. A
+            mutant that handed `parse` the full argument list survived the test above,
+            because the commit still succeeded around a path it ignored; the request's
+            own paths are what name it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_the_ship_flag_is_not_a_path_of_the_request},
+}

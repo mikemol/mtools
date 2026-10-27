@@ -228,6 +228,30 @@ def test_main_with_ship_prints_the_same_output_and_ships_the_text_it_printed(
     assert "COMMITTED repo " in shipped[0]
 
 
+def test_the_ship_flag_is_not_a_path_of_the_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1989: `--ship` is read by main and never reaches `parse`, so it is no path to commit.
+
+    A mutant that handed `parse` the full argument list survived the test above, because the commit
+    still succeeded around a path it ignored; the request's own paths are what name it.
+    """
+    for key, value in {ck.HELD_ENV: "1", ck.ISOLATED_ENV: "0", "HOME": str(tmp_path)}.items():
+        monkeypatch.setenv(key, value)
+    root = tmp_path / "repo"
+    root.mkdir()
+    _git(root, "init", "--quiet", "-b", "main")
+    seen: list[tuple[str, ...]] = []
+
+    def capture(_root: Path, request: ck.Request, *_rest: object) -> int:
+        seen.append(request.paths)
+        return 0
+
+    monkeypatch.setattr(ck, "commit_buffered", capture)
+    code = ck.main([str(root), "--waypoint", "W1", "--subject", "s", "--ship", "a.txt"])
+    assert (code, seen) == (0, [("a.txt",)])
+
+
 def _held_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Build a throwaway repo with a modified tracked file, in an environment holding the claim.
 

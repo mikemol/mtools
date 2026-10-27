@@ -21,6 +21,8 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
 
+    import pytest
+
 GIT = shutil.which("git") or "git"
 SHORT = 7
 SWEEP_SUBJECT = "Queue: state sync"
@@ -94,6 +96,46 @@ def test_a_commit_with_our_subject_but_another_waypoint_is_raced(tmp_path: Path)
         return commit_kata.run_git(argv)
 
     assert commit_kata.commit(tmp_path, _request(), out, run) == commit_kata.EXIT_RACED
+
+
+def test_a_commit_with_our_waypoint_but_another_subject_is_raced(tmp_path: Path) -> None:
+    """W1989: the Waypoint trailer alone does not identify a run's commit either; the subject must.
+
+    The mirror of the test above: both halves of the identity are needed, so each has its own
+    witness (a mutant that dropped the subject half survived without this one).
+    """
+    _repo(tmp_path)
+    out = io.StringIO()
+
+    def run(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
+        if "commit" in argv:
+            (tmp_path / "queue.txt").write_text("sweep\n", encoding="utf-8")
+            message = f"{SWEEP_SUBJECT}\n\nWaypoint: {_request().waypoint}\n"
+            _git(tmp_path, "commit", "-q", "-m", message, "--", "queue.txt")
+            return subprocess.CompletedProcess(list(argv), 0, "", "")
+        return commit_kata.run_git(argv)
+
+    assert commit_kata.commit(tmp_path, _request(), out, run) == commit_kata.EXIT_RACED
+
+
+def test_every_verdict_the_run_prints_is_handed_to_the_verdict_counter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1989: the counter is sent the printed line and the exit code, once, by repository name.
+
+    A mutant that never sent it survived every test that read only the printed text.
+    """
+    seen: list[tuple[str, str, int]] = []
+
+    def record(name: str, event: tuple[str, int, str], _env: object) -> bool:
+        seen.append((name, event[0], event[1]))
+        return True
+
+    monkeypatch.setattr(commit_kata, "_emit_verdict", record)
+    _repo(tmp_path)
+    out = io.StringIO()
+    assert commit_kata.commit(tmp_path, _request(), out) == 0
+    assert seen == [(tmp_path.name, _last(out), 0)]
 
 
 def test_the_same_request_with_no_second_committer_is_committed(tmp_path: Path) -> None:

@@ -84,5 +84,22 @@ def test_an_unreachable_remote_is_unverified_not_pushed(tmp_path: Path) -> None:
     root = _repo(tmp_path)
     _git(root, "remote", "set-url", "origin", str(tmp_path / "gone.git"))
     line = _last(root)
-    assert "UNVERIFIED: git ls-remote origin failed" in line
-    assert not line.endswith("[PUSHED]")
+    assert "[LOCAL: not on origin/main; UNVERIFIED: git ls-remote origin failed]" in line
+    assert "PUSHED" not in line
+
+
+def test_an_unreachable_remote_over_a_tracked_commit_is_pushed_but_unverified(
+    tmp_path: Path,
+) -> None:
+    """W1989: the word comes from the tracking ref, the suffix from the remote that cannot answer.
+
+    The control for the test above: the same unreachable remote with a commit the tracking ref
+    does hold reads PUSHED, so the word is not simply LOCAL (or PUSHED) whenever ls-remote fails.
+    """
+    root = _repo(tmp_path)
+    request = commit_kata.Request(waypoint="W1", subject="the work", paths=("a.txt",))
+    assert commit_kata.commit(root, request, io.StringIO()) == 0
+    head = _git(root, "rev-parse", "HEAD").strip()
+    _git(root, "update-ref", "refs/remotes/origin/main", head)
+    _git(root, "remote", "set-url", "origin", str(tmp_path / "gone.git"))
+    assert commit_kata.published(root, head) == "PUSHED; UNVERIFIED: git ls-remote origin failed"

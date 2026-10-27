@@ -112,7 +112,10 @@ def test_the_commands_own_budget_variables_are_put_back_or_removed(tmp_path: Pat
     inner = got.argv[got.argv.index("env") :]
     assert "MEMBUDGET_FILE=/host/b" in inner
     assert "MEMBUDGET_MAXLOAD=7" in inner
-    assert "-u" in inner
+    # Exactly the budget names the caller did NOT have are removed, never one it did have (W1989:
+    # `"-u" in inner` held for the swapped selection too, so the survivor came back SURVIVED).
+    unset = {inner[at + 1] for at, arg in enumerate(inner) if arg == "-u"}
+    assert unset == set(commit_kata.BUDGET) - {"MEMBUDGET_FILE", "MEMBUDGET_MAXLOAD"}
     assert f"{commit_kata.HELD_ENV}=1" in inner
     assert inner[-2:] == ["python", "x"]
 
