@@ -68,12 +68,40 @@ def test_an_entry_for_another_rise_does_not_cover_this_one() -> None:
     assert rebaseline.refusals({_PATH: 0}, {_PATH: 1}, [wrong_new, other])
 
 
-def test_a_fall_an_unread_value_and_a_new_ratchet_need_no_entry() -> None:
-    """Paydown is what a ratchet is for; UNREAD is not a number; a birth is not judged here."""
+def test_a_fall_an_unread_value_and_a_birth_at_zero_need_no_entry() -> None:
+    """Paydown is what a ratchet is for; UNREAD is not a number; nothing born is nothing owed."""
     assert rebaseline.refusals({_PATH: 3}, {_PATH: 1}, []) == []
     assert rebaseline.refusals({_PATH: None}, {_PATH: 1}, []) == []
     assert rebaseline.refusals({_PATH: 1}, {_PATH: None}, []) == []
-    assert rebaseline.refusals({}, {_PATH: 4}, []) == []
+    assert rebaseline.refusals({}, {_PATH: 0}, []) == []
+
+
+def test_a_ratchet_born_at_a_nonzero_value_needs_an_entry_from_zero() -> None:
+    """W2024's birth judgement: a new baseline already holding 4 is 4 of expansion.
+
+    The control is the same birth with an entry of old 0 and new 4, which is admitted, and an entry
+    for a different new value, which is not.
+    """
+    [line] = rebaseline.refusals({}, {_PATH: 4}, [])
+    assert line.startswith(f"{_PATH}: was born at 4 with no rebaselines entry")
+    assert '"old": 0, "new": 4' in line
+    declared = rebaseline.Rebaseline(_PATH, 0, 4, _REASON, _WARRANT)
+    assert rebaseline.refusals({}, {_PATH: 4}, [declared]) == []
+    wrong = rebaseline.Rebaseline(_PATH, 0, 3, _REASON, _WARRANT)
+    assert rebaseline.refusals({}, {_PATH: 4}, [wrong])
+
+
+def test_an_entry_the_tree_before_declared_may_not_vanish_or_change() -> None:
+    """Entries only grow: removing one, or editing its reason, is named; adding one is not."""
+    old = rebaseline.Rebaseline(_PATH, 0, 1, _REASON, _WARRANT)
+    added = rebaseline.Rebaseline("other.txt", 0, 2, _REASON, _WARRANT)
+    assert rebaseline.lost([old], [old, added]) == []
+    assert rebaseline.lost([old], [added]) == [
+        f"{_PATH}: the entry 0 to 1 was removed or changed; entries only grow"
+    ]
+    edited = rebaseline.Rebaseline(_PATH, 0, 1, "a different reason", _WARRANT)
+    assert rebaseline.lost([old], [edited])
+    assert rebaseline.lost([], [old]) == []
 
 
 @pytest.mark.parametrize(
@@ -108,6 +136,17 @@ def test_check_compares_two_trees_and_admits_a_declared_rise(tmp_path: Path) -> 
     """The name-classified ratchet-preview.txt gains a line; the entry in the new tree covers it."""
     before, after = _tree(tmp_path / "before", 0), _tree(tmp_path / "after", 1)
     assert rebaseline.check(after, before)
+    _write(after, [_entry()])
+    assert rebaseline.check(after, before) == []
+
+
+def test_check_refuses_a_declaration_deleted_after_it_was_made(tmp_path: Path) -> None:
+    """The ratchet value did not move, but the entry that excused it is gone: still refused."""
+    before, after = _tree(tmp_path / "before", 1), _tree(tmp_path / "after", 1)
+    _write(before, [_entry()])
+    assert rebaseline.check(after, before) == [
+        f"{_PATH}: the entry 0 to 1 was removed or changed; entries only grow"
+    ]
     _write(after, [_entry()])
     assert rebaseline.check(after, before) == []
 

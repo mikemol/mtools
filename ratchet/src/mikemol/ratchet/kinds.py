@@ -32,7 +32,10 @@ from typing import cast
 FLOOR = 0
 _KINDS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("preview", re.compile(r"^ratchet-preview\.txt$")),
-    ("baseline", re.compile(r"baseline.*\.(?:json|txt|tsv)$")),
+    # ⚑ `rebaselines.json` is the file of DECLARED RISES (W2024), not recorded debt: matched by the
+    # bare pattern it read as a ratchet of 5 (its five fields) and a repository that declared its
+    # first rise looked like it had been born with debt. `(?<!re)` leaves every other baseline.
+    ("baseline", re.compile(r"(?<!re)baseline.*\.(?:json|txt|tsv)$")),
     # ⚑ `debtplan.json` is the debt-plan tool's CONFIG (its exclusions), not recorded debt: matched
     # by the old pattern it read as a ratchet of 3 and made mtools look behind (W1955).
     ("debt", re.compile(r"debt(?!plan).*\.json$")),

@@ -19,8 +19,15 @@ a declared move that can be audited, never a baseline someone edited. It is refu
 a rise (`new` above `old`) with a reason and a warrant of that shape.
 
 ⚑ AN UNREAD VALUE IS NOT A NUMBER: a ratchet that could not be read before or after is skipped
-here (the census already says UNREAD), and a ratchet new in this change is a BIRTH, which is not
-judged by this module (see NOT DONE on W2024).
+here (the census already says UNREAD).
+
+⚑ A BIRTH AT A NONZERO VALUE IS A RISE FROM NOTHING: a ratchet that is new in this change counts
+from zero, so a new baseline file already holding N entries is N units of expansion and needs an
+entry with `old` 0 and `new` N; a birth at zero needs nothing (W2024's birth judgement).
+
+⚑ ENTRIES ONLY GROW: an entry the tree before the change declared must still be there, unchanged.
+A declaration that can be deleted or edited afterwards would make the rise it excused a baseline
+someone edited, which is exactly what an entry exists to prevent.
 
 CONSUMED BY: `mikemol-ratchet rebaselines --repo DIR --before DIR`.
 """
@@ -131,15 +138,32 @@ def refusals(
     declared = {(e.ratchet, e.old, e.new) for e in entries}
     found: list[str] = []
     for path in sorted(after):
-        was, now = before.get(path), after[path]
+        born = path not in before
+        was, now = (0 if born else before[path]), after[path]
         if was is None or now is None or now <= was:
             continue
         if (path, was, now) not in declared:
+            moved = f"was born at {now}" if born else f"rose {was} to {now}"
             found.append(
-                f"{path}: rose {was} to {now} with no rebaselines entry "
+                f"{path}: {moved} with no rebaselines entry "
                 f'{{"ratchet": "{path}", "old": {was}, "new": {now}, reason, warrant}}'
             )
     return found
+
+
+def lost(before: Sequence[Rebaseline], after: Sequence[Rebaseline]) -> list[str]:
+    """Name every declared rise the tree before had that the tree after no longer carries.
+
+    Returns:
+        one line per entry that was removed or changed, in the order the tree before declared them.
+
+    """
+    kept = set(after)
+    return [
+        f"{e.ratchet}: the entry {e.old} to {e.new} was removed or changed; entries only grow"
+        for e in before
+        if e not in kept
+    ]
 
 
 def check(repo: Path, before: Path) -> list[str]:
@@ -147,10 +171,15 @@ def check(repo: Path, before: Path) -> list[str]:
 
     Returns:
         the refusals of `refusals` over the two trees' census rows, judged by the entries in
-        `repo`; a declaration or an expression that cannot be trusted raises as `census_repo` does.
+        `repo`, then each entry the tree before declared that is gone or changed (`lost`); a
+        declaration or an expression that cannot be trusted raises as `census_repo` does.
 
     """
-    return refusals(values(before), values(repo), read(repo))
+    now_entries = read(repo)
+    return [
+        *refusals(values(before), values(repo), now_entries),
+        *lost(read(before), now_entries),
+    ]
 
 
 def main(argv: Sequence[str] | None = None) -> int:

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2058,
+  "counter": 2060,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-22T02:06:15Z",
   "job_id": "d391e0b5",
@@ -26423,12 +26423,12 @@
         "W1667"
       ],
       "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "Read promptwatch.py and the --prompt-ack handler in cli.py: have --prompt-ack print the diff and require --note (refuse without it, exit 4 with the diff and how to pass the note), write the note into the ledger line beside the ack, and teach nemik-check to show it (nemik's side, a cross-repo ask). Test: no note is refused with the ledger unchanged; a note lands in the ledger. I still need the handler, W1274",
+      "evidence": "2026-10-27: 2026-10-27 DESIGN ASK (github-8f relaying the operator's '...sigh...': a session acknowledged the changed loop prompt without reading it; --prompt-ack, W1562, records an ACT and not a READING, the same actuator-witness class as a working mark). PROPOSAL: --prompt-ack prints the diff since the last-seen text and REFUSES unless given --note '<per changed paragraph: what changes for this repo>'; the note goes in the ledger and nemik-check shows it beside the ack, so a host or reviewer can audit it. Still fakeable, but now a written claim that can be checked and compared with the diff. WITNESS: in a repo, --prompt-ack with no --note is refused, and with a note the note lands in the ledger. Landed pieces it builds on: W1562 (--prompt-ack records the prompt read), W1524 (--tick-open prints what changed), W1563 (the notice repeats until ack); the code is pathsforward promptwatch.py. Carried here because no promptwatch card is open and mtools is over mint pace",
       "issued_at": "2026-10-15T15:14:59Z",
       "minted_during": "interrupt",
       "caused_by": "operator",
-      "last_worked": "2026-10-19T06:00:06Z",
+      "last_worked": "2026-10-27T22:22:05Z",
       "ticks_blocked": 9,
       "completed": null
     },
@@ -37245,15 +37245,13 @@
     {
       "symbol": "W1724",
       "title": "Each gate's duration is recorded beside its executed-test count, cache-hit share and the host's load, so the suite's slope is split into its causes",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1699"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Add executed-test count, cache-hit share and host load to the per-round record (traintel, gatefacts). Hooks files: they land after W2057 (the operator's allowance of the hold-lift widening), because that widening sits uncommitted in the shared hooks registries. I still need W2057, W1724",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1457 (load share of non-gate processes during a gate) separates 'gate slow' from 'host busy'; luthen lists it as enabling this card. NOT made a block here: this card records the host's one-minute load itself, so it can proceed, and W1457's series can be joined later (overlap audit 2026-10-23)",
       "issued_at": "2026-10-19T16:26:59Z",
@@ -37545,17 +37543,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add round to the W1718/W1722 step series. Stack id is unbounded, so it goes on the span, not on a metric label (the lesson of W1732); luthen's registry ceiling decides. github-8f 2026-10-19.",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27: edits hooks/gatetrend.py, a hooks-lane stack; the serial lane is held by stack-next-24 (W1977's door fix) in its gate",
       "issued_at": "2026-10-19T20:24:29Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-round-label",
-      "last_worked": null,
+      "last_worked": "2026-10-27T18:17:02Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/gatetrend.py",
         "hooks/tests/test_gatetrend.py"
       ],
-      "size_class": "small"
+      "size_class": "small",
+      "completed": null
     },
     {
       "symbol": "W1738",
@@ -37730,12 +37729,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "First give stackimports the frozen paths of every stack queued ahead (read each queued key's snapshot via stacksnap); then a module on disk, absent from HEAD, this stack up to the entry and every stack ahead is a finding naming it as held by no stack ahead. Test: ahead-stack holds it passes, nothing ahead holds it is refused.",
-      "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do.",
+      "next_bounded_step": "stackimports.refusal seeds its added/in-HEAD judgement with stackahead.paths(snap), then adds the refusal of a module that exists on disk, is absent from HEAD, this stack up to the entry and every stack ahead (the W1520 shape). Test: ahead stack holds it passes; nothing ahead holds it is refused. I still need slice 2, W1746",
+      "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do. | 2026-10-27: 2026-10-27 re-read, and it is the stall github-8f named: stackbuildfiles/stackimports judge a stack against HEAD plus its OWN entries, so stack-next-29 (W2008) was refused at submit because dag.bzl names W2009's new modules, which stack-next-28 (queued ahead) holds. The fix is this card's own next step, applied to both checks: seed them with the files frozen by the stacks AHEAD (keys below this one in the live commit map, read from their stack-<key>.snap), so a new-module stack can queue behind another. Residue stated: if a stack ahead later fails, this one fails at its own gate. Slice 1: stackahead.paths and stackbuildfiles; slice 2: stackimports plus the on-disk-absent refusal | 2026-10-27: 2026-10-27: slice 1 landed 06d25163 (stackahead.paths seeds stackbuildfiles with the files the live stacks ahead carry, so two new-module stacks queue together; proven by stacks 28 and 30 queueing behind 25/26/27). Slice 2 remains: stackimports takes the same set and refuses a module on disk but in no stack, no HEAD and no stack ahead",
       "issued_at": "2026-10-19T22:26:23Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-test-the-all-red-inference",
-      "last_worked": "2026-10-20T21:18:29Z",
+      "last_worked": "2026-10-27T22:10:30Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackimports.py",
@@ -38104,23 +38103,24 @@
     {
       "symbol": "W1761",
       "title": "One site finder for mutation, imported by both mutate.py and mutate_runner.py",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "mutation/mutate.py's def_sites and check_mutants/mutate_runner.py's _owned/sites are two programs that find mutation sites, and the 2026-10-20 Protocol fix had to land twice because they drifted (the dist grid runs the runner's, the declared-spec scope uses def_sites). Consolidate into one finder in the mutation dist that the runner imports (it already imports mikemol.mutation.declarations), keeping the runner's qualified-path and #n repeat labels and def_sites' one-liner policy as explicit options, and run the wedge or reuse check to confirm the shared core. github-8f 2026-10-20.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-27 BUILT in the tree (bazel run in flight): mikemol.mutation.sitewalk is the one finder; Policy has the four points the two finders differed on (locals_marker, repeat_labels, async_sites, one_liners), DEFINITION for mutate.def_sites and GRID for the runner's _owned, is_protocol stated once. FINDING (census, B1): a THIRD walk exists, mikemol.mutantcell.def_sites (ported from paperkit, deliberately separate because its qualnames key every claim's sensitivity fingerprint), and it lacks the Protocol rule, so it has drifted the same way; not touched here, a re-key decision. BEHAVIOUR CHANGE named: the grid's own copy matched only Protocol and typing.Protocol, the shared rule matches any X.Protocol base (typing_extensions.Protocol), the intended reading. Five tests, ten mutants (five re-pointed, six new for the policy fields) | 2026-10-27: 2026-10-27: landed 959bd724: mikemol.mutation.sitewalk is the one finder (Policy: locals_marker, repeat_labels, async_sites, one_liners; DEFINITION and GRID), used by mutate.def_sites and the runner's _owned. FOLLOW-UP NOT MINTED (over mint pace): a third walk, mikemol.mutantcell.def_sites (ported from paperkit, deliberately separate because its qualnames key every claim's fingerprint) still lacks the Protocol rule; a re-key decision for the mutantcell owner",
       "issued_at": "2026-10-20T03:26:20Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-20-one-site-finder",
-      "last_worked": null,
+      "last_worked": "2026-10-27T20:59:56Z",
       "ticks_blocked": 0,
       "manifest": [
         "mutation/src/mikemol/mutation/mutate.py",
         "check_mutants/mutate_runner.py"
       ],
-      "size_class": "small"
+      "size_class": "small",
+      "completed": "20261027T205956Z"
     },
     {
       "symbol": "W1763",
@@ -41175,21 +41175,19 @@
     {
       "symbol": "W1898",
       "title": "Rung 3: after a stop that rung 2 did not prevent, the watchdog's next wake comes early with an explicit idle-after-refusal prompt naming the top ready card, leaving a ledger line",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1896"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Rung 3 and the two watchdog findings (label fix written, sibling-install path unbuilt) are hooks work: they wait behind the operator act W2057 because the uncommitted hold-lift widening shares hooks/mutants.regex and hooks/sites with them. I still need W2057, W1898",
-      "evidence": "2026-10-27: 2026-10-27 github-8f: carries two watchdog findings that W2043 (done) cannot: (1) the idle line's 'no heartbeat source' for both a missing and a stale file (fix written and tested, in the stack waiting on the operator act below); (2) the host's --tick-open prints a watchdog start line naming a SIBLING repo's install for the host queue, against the no-sibling-paths ruling of 2026-10-19, probably the first install found under the github root; the host has no venv and its writer is mtools' pathsforward. Witness (2): for the host queue, tick-open prints a watchdog path inside mtools' own build, the same build as the writer it was given. Not built yet.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Find where watchdogcmd.tick_line and the reconcile lookup find mikemol-watchdog and mikemol-commit (PATH lookups) and resolve beside the writer first, with no PATH fallback to another checkout; test with a PATH holding a decoy sibling venv. I still need to read watchdogcmd, W1898",
+      "evidence": "2026-10-27: 2026-10-27 github-8f: carries two watchdog findings that W2043 (done) cannot: (1) the idle line's 'no heartbeat source' for both a missing and a stale file (fix written and tested, in the stack waiting on the operator act below); (2) the host's --tick-open prints a watchdog start line naming a SIBLING repo's install for the host queue, against the no-sibling-paths ruling of 2026-10-19, probably the first install found under the github root; the host has no venv and its writer is mtools' pathsforward. Witness (2): for the host queue, tick-open prints a watchdog path inside mtools' own build, the same build as the writer it was given. Not built yet. | 2026-10-27: 2026-10-27 github-8f's readings (host tick-open, pinned writer 0.1.0+504b80e, 20:23Z and 21:15Z): TWO symptoms, ONE cause, a fleet tool found on PATH instead of beside the writer that is running. (1) the watchdog line names another repo's venv (amr-skills) mikemol-watchdog, though the pinned bin beside the writer holds one. (2) 'reconcile: not run (the live-commit map could not be read (is mikemol-commit on PATH?))', though the pinned bin holds mikemol-commit. THE ASK: watchdogcmd.tick_line and the reconcile lookup resolve each fleet tool from the writer's own bin directory first, and never from another checkout (the 2026-10-19 no-sibling-paths ruling). WITNESS: in a repo whose PATH holds a sibling's venv, tick-open prints the pinned watchdog path and runs reconcile",
       "issued_at": "2026-10-24T15:53:30Z",
       "minted_during": "interrupt",
       "caused_by": "W1896",
-      "last_worked": "2026-10-27T03:43:06Z",
+      "last_worked": "2026-10-27T21:30:45Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/watchdog.py",
@@ -42898,12 +42896,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When //hooks:.venv is rebuilt and the live venv imports mikemol.hooks.round_order, wire idle_stop.idle_reason to pass round_order.order(root, now) to idle_card (one codemod, a rollback copy kept), test in test_idle_stop with a round file via MIKEMOL_ROUND_FILE; then part 2 (judge advancement, not a working mark) needs a design: evidence timestamps. I still need the wiring and part 2, W1950",
-      "evidence": "2026-10-25: 2026-10-25: part 1 built: idle_progress.idle_card takes an optional round order and names the best-ranked READY round card before the first ready card of the queue (backwards compatible default); round_order.order reads this repository's published round, best rank first, empty in every way a round can be absent; tests pass under bazel (test_idle_progress, test_round_order). The hook still names the first ready card, W1662 among them, until idle_stop passes the order: venv rebuild in flight, then the wiring last | 2026-10-25: 2026-10-25: part 1 built, wired and tested; in stack-hooks-batch, waiting for W1948's stack to land",
+      "next_bounded_step": "Decide with the operator-facing owner (github-8f) whether to add a turn-start snapshot (tick-open records each ready card's status and evidence length) or to accept the snapshot-free signals above (commit since turn start, done, or blocked with a named blocker); then implement in idle_progress with a test that a bare --status working does NOT count and a landed commit does. I still need that choice, W1950",
+      "evidence": "2026-10-25: 2026-10-25: part 1 built: idle_progress.idle_card takes an optional round order and names the best-ranked READY round card before the first ready card of the queue (backwards compatible default); round_order.order reads this repository's published round, best rank first, empty in every way a round can be absent; tests pass under bazel (test_idle_progress, test_round_order). The hook still names the first ready card, W1662 among them, until idle_stop passes the order: venv rebuild in flight, then the wiring last | 2026-10-25: 2026-10-25: part 1 built, wired and tested; in stack-hooks-batch, waiting for W1948's stack to land | 2026-10-27: 2026-10-27: its wiring edits idle_stop.py, a live hook in the serial hooks lane; the lane is held by stack-next-24 (the W1977 door fix) and the door's own follow-ups | 2026-10-27: 2026-10-27 READ (part 2): part 1 is landed (idle_stop imports round_order and passes the round to idle_card). Part 2 asks for advancement and not a working mark. TODAY idle_progress._worked_since counts ANY card whose last_worked is at or after the turn start, and the writer stamps last_worked on every update, so a bare --status working, an evidence note or a flip to blocked each satisfy the hook: the gaming the card names (this very turn's cure was to flip cards blocked or append a line). A real judge needs the card's state at the TURN START to diff against, and the hook has none: only the queue as it is now. Three honest signals exist without a snapshot: a commit since the turn start whose subject or Waypoint trailer names the card (git log), a card that became done or landed, and a card newly blocked WITH a named blocker; a status of working or a bare evidence append would not count. Missing: the turn start's own queue hash or per-card status, which the writer would have to record at tick-open",
       "issued_at": "2026-10-25T10:17:24Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T15:23:43Z",
+      "last_worked": "2026-10-27T21:45:39Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/idle_progress.py",
@@ -43076,11 +43074,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After stack w1955 lands: kinds.py excludes debt-resolutions; fleetcensus skips directories named scratch or tmp and any *_session_export_* directory (like the clone skip); fixtures for each, and a census over a copy of the fleet tree as the positive control (the count of files must drop by 32 and no real ratchet file may). I still need the exclusions and the fixtures, W1956",
-      "evidence": "2026-10-25: 2026-10-25 census of ~/github read (141 files, 1 unread), each non-mtools suspect's head read. CERTAIN misread: gcalculus/debt-resolutions.json (a map of module to file, 2 keys, not debt). PROBABLE data or archive read as a ratchet, consumers not read: aeternum/processed/emissions-baseline.json (per-item measurements), substrate/scratch/eliza/tests/baseline_5KB.json (a benchmark fixture under scratch), 28 files cotype/cotype_session_export_*/cotype_working/c_eps_NN_baseline.json (atlas measurements in a session export archive), tmp/cone_vm/tests/repl_baseline.txt (a copy of coneVM's). UNREAD, correctly not valued: freecell/.cotype-baseline.json (a dated text journal, not JSON). Real ratchets, not touched: the debt-ledger.json files, gabion/baselines, luthen's *_debt.json and *_baseline files (bounds_debt.json is a debt ledger by its own header), substrate/scripts baselines, nemik's three baselines, linux-sources ls_gate. Defense: a name-only classifier cannot tell a gate's baseline from a measurement called baseline, so the fix is exclusions with a fixture each (resolutions, *_session_export_*, scratch, tmp) and, better, the owning repo declaring its ratchets; until then a false behind is possible on these 32 | 2026-10-25: 2026-10-25 github-8f: W1956's exclusions stay as the FALLBACK's hygiene; the real fix is declared ratchets, carded as W1957 (declaration read by the census), W1958 (guessed flag on rows and series) and W1959 (ratchet-hook writes the starting declaration), all enabling github:W42",
+      "evidence": "2026-10-25: 2026-10-25 census of ~/github read (141 files, 1 unread), each non-mtools suspect's head read. CERTAIN misread: gcalculus/debt-resolutions.json (a map of module to file, 2 keys, not debt). PROBABLE data or archive read as a ratchet, consumers not read: aeternum/processed/emissions-baseline.json (per-item measurements), substrate/scratch/eliza/tests/baseline_5KB.json (a benchmark fixture under scratch), 28 files cotype/cotype_session_export_*/cotype_working/c_eps_NN_baseline.json (atlas measurements in a session export archive), tmp/cone_vm/tests/repl_baseline.txt (a copy of coneVM's). UNREAD, correctly not valued: freecell/.cotype-baseline.json (a dated text journal, not JSON). Real ratchets, not touched: the debt-ledger.json files, gabion/baselines, luthen's *_debt.json and *_baseline files (bounds_debt.json is a debt ledger by its own header), substrate/scripts baselines, nemik's three baselines, linux-sources ls_gate. Defense: a name-only classifier cannot tell a gate's baseline from a measurement called baseline, so the fix is exclusions with a fixture each (resolutions, *_session_export_*, scratch, tmp) and, better, the owning repo declaring its ratchets; until then a false behind is possible on these 32 | 2026-10-25: 2026-10-25 github-8f: W1956's exclusions stay as the FALLBACK's hygiene; the real fix is declared ratchets, carded as W1957 (declaration read by the census), W1958 (guessed flag on rows and series) and W1959 (ratchet-hook writes the starting declaration), all enabling github:W42 | 2026-10-27: 2026-10-27: one instance paid under W2024 (stack-next-31): kinds.py's baseline pattern is unanchored, so rebaselines.json (the file of DECLARED RISES) read as a ratchet of 5, its five fields; (?<!re) excludes it. The class this card names (data and archive files with a ratchet-shaped name) is still open; this is the same shape as debtplan.json (W1955)",
       "issued_at": "2026-10-25T11:16:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-25T11:18:54Z",
+      "last_worked": "2026-10-27T21:21:40Z",
       "ticks_blocked": 0,
       "manifest": [
         "ratchet/src/mikemol/ratchet/kinds.py",
@@ -43884,21 +43882,19 @@
     {
       "symbol": "W1977",
       "title": "Decide the library-imposed parameter name question at the policy level for every stub alike: panflute Doc.__init__ format shadows a builtin",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "file:mdstruct/stubs/panflute-allowlist.txt!w"
       ],
-      "blocked_on": [
-        "operator: decide how a declared ratchet rise is written: (1) allow the single write of the line stubs/panflute/__init__.pyi:builtin-argument-shadowing into mdstruct/ratchet-preview.txt (covered by rebaselines.json and your ruling (a), host line 104181), or (2) approve teaching the standing-4 hook to admit a baseline rise only when rebaselines.json carries the exact matching entry, so every future declared rise goes through the same door. Then W1977 lands."
-      ],
-      "blocked_kind": "human",
-      "next_bounded_step": "Needs a Bash permission rule in this session's settings (or the operator making the edit): allow the codemod that adds standing_facts.declared_rises and the rego door (standing.rego rule 4, rego tests, test_standing_facts). Then: land it, write mdstruct/ratchet-preview.txt's key line through the door (rebaselines.json is already written), add stubs/**/*.pyi to the ratchet target data in mdstruct/BUILD.bazel, run //mdstruct:all, land. I still need the permission, W1977",
-      "evidence": "2026-10-25: 2026-10-25 OPERATOR RULING, host line 97399 (uuid 86e023a4, verified human), via github-8f: 'the adapter pattern is what applies here; an intermediate that encapsulates the required exception. It's important to isolate noncompliant code, even when it's necessary.' So library-imposed noncompliance is ISOLATED behind an adapter, for every stub alike, never spread or waived: one small named module is the only place that touches the noncompliant surface, takes a compliant parameter and passes the library's own name inside, and every other module calls the adapter; the unavoidable exception is one counted entry scoped to that adapter. MY READING FOR panflute Doc.__init__ format (to test, not assume): mdstruct never constructs a panflute element (its allowlist header says so), so no call site needs an adapter; the noncompliant name appears only in the STUB's signature. Two honest shapes to try once W1953 lands: (a) declare Doc.__init__ in the stub as (self, *args: Block, **kwargs: object) so the stub has no parameter named format at all, if stubtest accepts a stub kwargs as covering the runtime's keyword-only names (to be measured, not assumed); (b) if it does not, a one-purpose adapter module in mdstruct that is the only constructor of Doc, and the one counted key on it. Do NOT re-add a per-file exemption | 2026-10-26: 2026-10-26 MEASURED (a) and a third shape. (a) FAILS: stubtest on Doc.__init__(self, *args: Block, **kwargs: object) names 'stub does not have parameter api_version, format, metadata' and 'runtime does not have **kwargs parameter kwargs', so a stub kwargs does not cover the runtime's keyword-only names. (c) PASSES: declaring Doc.__init__: object in the stub (an attribute, not a signature) satisfies stubtest with an EMPTY allowlist (--allowlist /dev/null, no output, exit 0). It says in the stub what the allowlist header said (the constructor is surface the stub declines to model; mdstruct never constructs a Doc) and is stronger: mypy now refuses any construction because object is not callable. No per-file exemption and no new key. The panflute allowlist is empty; test_every_allowlist_entry_is_a_constructor lost its 'assert entries' vacuity guard (now false) and gained a positive control (_offenders names panflute.load and passes a constructor). //mdstruct:all runs (30 targets) before the stack: 29 pass, the one failure was that vacuity guard, fixed; a second run is in flight. | 2026-10-26: 2026-10-26 github-8f's check on the object shape (correct: an object boundary hides the signature and is the pattern the operator ruled out) led to the honest shape, MEASURED: the true signature (*args: Block, metadata: Mapping[str, object], format: str, api_version: tuple[int, ...], read from panflute/elements.py line 56) makes stubtest PASS with an EMPTY allowlist and ruff report builtin-argument-shadowing on format at the stub: one new lint key. So paying the allowlist entry costs a lint-ratchet key: net zero, and standing 2 forbids a ratchet rise. Reverted my tree to the original stub and allowlist (git status clean for mdstruct). No shape pays the debt honestly without an operator decision; the three choices are the ask. | 2026-10-27: 2026-10-27 BUILT, NOT LANDED: the true Doc signature is in the stub, the allowlist entry is gone (test_stub_authority has a positive control now), rebaselines.json declares the rise (mdstruct/ratchet-preview.txt 0 to 1, warrant bde02714:104181). The census over the whole dist shows exactly ONE new key, stubs/panflute/__init__.pyi:builtin-argument-shadowing. TWO FINDINGS: (1) the bazel ruff and ratchet targets stage only src and tests, so a stub is outside the gate's lint domain and the debt would vanish rather than be counted unless the ratchet target's data adds stubs/**/*.pyi; (2) writing the key into mdstruct/ratchet-preview.txt is refused by standing 4's hook ('never expand the ratchet baseline'), which has no path for a declared rise. | 2026-10-27: 2026-10-27 OPERATOR CHOSE OPTION (2) (host line 106208, uuid 0afcd13c, warrant attached). The door, designed: standing_facts.declared_rises reads rebaselines.json for the baseline's project-relative path and gathers facts.rebaselines [{old,new}] and facts.baseline_size for a Write or Edit of ratchet-preview.txt; standing.rego rule 4 then admits a growth only when an entry has old equal to the current size and new equal to the size after (Edit: current plus the added non-blank lines), else denies as before; no file, an unreadable one or a foreign shape declares nothing, so the rule stays closed. BLOCKED: the Claude Code auto-mode classifier denied the edit of the hook (a Bash codemod on standing_facts.py: [Security Weaken]); only the unused REBASELINES constant landed in the tree. Not worked around. The same classifier denied W2057's stack twice despite the operator's grant in the host session.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-25: 2026-10-25 OPERATOR RULING, host line 97399 (uuid 86e023a4, verified human), via github-8f: 'the adapter pattern is what applies here; an intermediate that encapsulates the required exception. It's important to isolate noncompliant code, even when it's necessary.' So library-imposed noncompliance is ISOLATED behind an adapter, for every stub alike, never spread or waived: one small named module is the only place that touches the noncompliant surface, takes a compliant parameter and passes the library's own name inside, and every other module calls the adapter; the unavoidable exception is one counted entry scoped to that adapter. MY READING FOR panflute Doc.__init__ format (to test, not assume): mdstruct never constructs a panflute element (its allowlist header says so), so no call site needs an adapter; the noncompliant name appears only in the STUB's signature. Two honest shapes to try once W1953 lands: (a) declare Doc.__init__ in the stub as (self, *args: Block, **kwargs: object) so the stub has no parameter named format at all, if stubtest accepts a stub kwargs as covering the runtime's keyword-only names (to be measured, not assumed); (b) if it does not, a one-purpose adapter module in mdstruct that is the only constructor of Doc, and the one counted key on it. Do NOT re-add a per-file exemption | 2026-10-26: 2026-10-26 MEASURED (a) and a third shape. (a) FAILS: stubtest on Doc.__init__(self, *args: Block, **kwargs: object) names 'stub does not have parameter api_version, format, metadata' and 'runtime does not have **kwargs parameter kwargs', so a stub kwargs does not cover the runtime's keyword-only names. (c) PASSES: declaring Doc.__init__: object in the stub (an attribute, not a signature) satisfies stubtest with an EMPTY allowlist (--allowlist /dev/null, no output, exit 0). It says in the stub what the allowlist header said (the constructor is surface the stub declines to model; mdstruct never constructs a Doc) and is stronger: mypy now refuses any construction because object is not callable. No per-file exemption and no new key. The panflute allowlist is empty; test_every_allowlist_entry_is_a_constructor lost its 'assert entries' vacuity guard (now false) and gained a positive control (_offenders names panflute.load and passes a constructor). //mdstruct:all runs (30 targets) before the stack: 29 pass, the one failure was that vacuity guard, fixed; a second run is in flight. | 2026-10-26: 2026-10-26 github-8f's check on the object shape (correct: an object boundary hides the signature and is the pattern the operator ruled out) led to the honest shape, MEASURED: the true signature (*args: Block, metadata: Mapping[str, object], format: str, api_version: tuple[int, ...], read from panflute/elements.py line 56) makes stubtest PASS with an EMPTY allowlist and ruff report builtin-argument-shadowing on format at the stub: one new lint key. So paying the allowlist entry costs a lint-ratchet key: net zero, and standing 2 forbids a ratchet rise. Reverted my tree to the original stub and allowlist (git status clean for mdstruct). No shape pays the debt honestly without an operator decision; the three choices are the ask. | 2026-10-27: 2026-10-27 BUILT, NOT LANDED: the true Doc signature is in the stub, the allowlist entry is gone (test_stub_authority has a positive control now), rebaselines.json declares the rise (mdstruct/ratchet-preview.txt 0 to 1, warrant bde02714:104181). The census over the whole dist shows exactly ONE new key, stubs/panflute/__init__.pyi:builtin-argument-shadowing. TWO FINDINGS: (1) the bazel ruff and ratchet targets stage only src and tests, so a stub is outside the gate's lint domain and the debt would vanish rather than be counted unless the ratchet target's data adds stubs/**/*.pyi; (2) writing the key into mdstruct/ratchet-preview.txt is refused by standing 4's hook ('never expand the ratchet baseline'), which has no path for a declared rise. | 2026-10-27: 2026-10-27 OPERATOR CHOSE OPTION (2) (host line 106208, uuid 0afcd13c, warrant attached). The door, designed: standing_facts.declared_rises reads rebaselines.json for the baseline's project-relative path and gathers facts.rebaselines [{old,new}] and facts.baseline_size for a Write or Edit of ratchet-preview.txt; standing.rego rule 4 then admits a growth only when an entry has old equal to the current size and new equal to the size after (Edit: current plus the added non-blank lines), else denies as before; no file, an unreadable one or a foreign shape declares nothing, so the rule stays closed. BLOCKED: the Claude Code auto-mode classifier denied the edit of the hook (a Bash codemod on standing_facts.py: [Security Weaken]); only the unused REBASELINES constant landed in the tree. Not worked around. The same classifier denied W2057's stack twice despite the operator's grant in the host session. | 2026-10-27: 2026-10-27: landed 75a562be (the door), 8a68709a (corrected to the file the ratchet tool writes) and 5bb00574 (ruling (a): the panflute stub tells the truth, one key declared in rebaselines.json and admitted by the live hook, stubs/**/*.pyi inside the ratchet target)",
       "issued_at": "2026-10-25T13:43:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T16:11:50Z",
+      "last_worked": "2026-10-27T20:59:37Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43980,9 +43976,35 @@
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 0afcd13c-bc08-4eaf-bac5-6a29304b0faa --claim operator --line 106208"
           },
           "mtools:reason": "operator chose option (2) for W1977: teach the standing-4 hook to admit a rise only with a matching rebaselines entry"
+        },
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W1977",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#53079d0f-ccac-4e25-b783-9f7b8912463c",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T22:18:45.552Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/53079d0f-ccac-4e25-b783-9f7b8912463c",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 109815,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 53079d0f-ccac-4e25-b783-9f7b8912463c --claim operator --line 109815"
+          }
         }
       ],
-      "completed": null
+      "completed": "20261027T205937Z"
     },
     {
       "symbol": "W1978",
@@ -44356,23 +44378,21 @@
     {
       "symbol": "W1989",
       "title": "The hooks mutants shards take the module they plant in and the tests whose closure holds it as their inputs",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "W1982"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Find, for each of the five commit_kata survivors, the test that kills it under the whole-dist shard (run the shard's selection against the site) and add the missing graph edge or strengthen the test; then retire the shards. I still need the five attributions, W1989",
       "evidence": "2026-10-25: 2026-10-25 REUSE, not a new generator (github-8f's cone search, confirmed by reading check_mutants/mutants_gen.py, W1883 e9bd2ecd): it already implements the operator's direction (2026-10-22: flat sharding kills caching; exhaustive or targeted sharding; thousands of targets are fine in a hierarchical build): ONE TARGET PER MUTATION SITE, build files one package per module under <dist>/sites/ beside src (never inside it, never named mutants), each site staging its module, the import cone of the tests that see it, those tests and the package __init__ files; the test list rides in the target's own environment (MUTATE_TESTS) so no graph.json is staged and a graph change reruns nothing; a module the graph cannot narrow stages the whole dist (an unknown is never read as nothing else matters); names are the site's own, never an index; --check exits 1 naming every generated file that differs. No dist uses it yet (hooks and witness have no sites/), and it needs the dist's committed graph.json from W1503, so the order is W1503 (graph committed with a freshness gate) then this card: generate hooks' sites, add the gate target that runs --check, and retire the sharded :mutants targets for hooks in favour of the per-site ones. The measured prize: the hooks mutants shards are ~36,000 of the ~39,000 s of miss wall | 2026-10-25: 2026-10-25 FIRST FULL SITE RUN (stopped at 446 of 1153 tests run, jobs saturated): 177 failed, 171 of them 'Test timed out': the generated mutant_site targets are size small, a 60 s WALL timeout, and under 24 parallel sites they timed out on waiting, not on work. That is the wall-clock bound the standing rule forbids (W1114, W1798): each site must be bounded by CPU (the runner's cpu budget, as mutants_sharded gives the shards) with the wall timeout only a backstop. Not survivors; the remaining 6 failures not yet read. Fix before committing sites: give mutant_site a CPU budget (check_mutants/defs.bzl) and rerun. Note 1153 tests ran of the 1962 targets the generator wrote, so the rest were still queued. | 2026-10-25: 2026-10-25 later: mutant_site gets a cpu_budget (default 120 CPU s as MUTATE_SHARD_CPU_S, timeout eternal as a backstop), so a site is bounded by CPU not the 60 s wall timer; hooks/BUILD.bazel also exports mutants.regex (a declared-defect site stages it; first sample failed Visibility on //hooks:mutants.regex). Re-running a sample (round_wire's sites) in the background. | 2026-10-26: 2026-10-25 SAMPLE OF ROUND_WIRE'S 13 SITES (with the CPU budget): 12 pass, 1 fails: the declared defect submission-map-ignored SURVIVED as an isolated site (REGEX 1: survived), though the gate's whole-suite shards passed it when stack-w2004 landed. So a test outside the graph-narrowed test list kills it: the graph misses an edge (a test that reaches round_wire's behavior without importing it, e.g. through a spawned hook script), the exact under-declaration W2012/W2023 exist for. The site took 490 s wall, 21.5 s CPU in the runner itself (the rest is staging a 103-module cone). Next: run that one site with MUTATE_TESTS blank to name the killing test, then add its edge. | 2026-10-26: 2026-10-25 RESOLVED the survivor: the declared defect submission-map-ignored (round_wire.round_reason ignoring in_gate) survived even against the WHOLE suite, so the graph narrowing was not the cause: my W2000 test exercised in_gate and refresh but nothing called round_reason with a live commit.counts entry. Added test_the_reason_exempts_a_working_card_a_live_submission_names; the site is now killed. NOT EXPLAINED: stack-w2004 landed through the gate's whole-suite shards with this mutant declared, so either that shard run did not plant it or it was cached from before; an isolated per-site target is what exposed it, which is the point of W1989. The fix (hooks/tests/test_round_wire.py + a warrant in hooks/warrants.bib) is in the tree and waits for stack-w1692 (it carries warrants.bib). | 2026-10-26: reconciled LANDED d6b7c37ee339bb84e431f4c998c9d79129643504 | 2026-10-26: sites committed 1ee738d8; stack-next-3 landed (W1603 2e418ed2, W1920 wired e53edaf5) | 2026-10-26: 2026-10-26 FIRST FULL RUN of a site suite (hooks commit_kata, 108 sites): 103 killed, 5 declared mutants SURVIVE under the graph-selected tests: restore-and-removal-swapped, ship-flag-reaches-parse, unverified-reads-pushed, verdict-counter-never-sent, waypoint-alone-identifies. The sharded :mutants runs every test of the dist and kills them, so the selection leaves out a killer test or a test is weak. Before the shards are retired, each of the five needs the killing test found (a missing graph edge, or a test that asserts too little); recorded for W1880.",
       "issued_at": "2026-10-25T14:47:57Z",
       "minted_during": "interrupt",
       "caused_by": "W1982",
-      "last_worked": "2026-10-27T06:08:14Z",
+      "last_worked": "2026-10-27T21:14:22Z",
       "ticks_blocked": 0,
       "manifest": [
         "check_mutants/mutants_gen.py",
@@ -44749,44 +44769,40 @@
     {
       "symbol": "W2008",
       "title": "mikemol-commit refuses the next land in a repo while a recorded flake has no ranked card",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Refuse the next land while a recorded flake has no ranked card in the round, naming the target and the writer command that mints the card. Edits commit_kata.py, which stack-next-7 holds in the gate (cited by W1734); take it when that lands. I still need that landing, W2008",
-      "evidence": "",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-27: landed d909c2e0 (flakegate: the next land is refused while a recorded flake has no card tagged flake:<tree12> that is done or ranked in the round; fails open on an unreadable queue or a worktree with no .git of its own)",
       "issued_at": "2026-10-25T20:16:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T06:08:14Z",
+      "last_worked": "2026-10-27T22:10:10Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261027T221010Z"
     },
     {
       "symbol": "W2009",
       "title": "Flaky passes per repo are a published metric series",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Emits mikemol.commit.flaky_passes{repo} from the flake records (W2007, landed 7861893e); touches hooks, which stack-next-7 holds in the gate (cited by W1734). Take it when that lands. I still need that landing, W2009",
-      "evidence": "",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-27: landed f7c55d15 (mikemol.commit.flaky_passes{repo}, absolute gauge from the flake log; the commit_kata wiring line has no unit test, said in the commit body)",
       "issued_at": "2026-10-25T20:17:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T06:08:14Z",
+      "last_worked": "2026-10-27T22:09:48Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261027T220948Z",
       "manifest": [
         "hooks/src/mikemol/hooks/flakes.py",
         "hooks/src/mikemol/hooks/flakemetric.py",
@@ -44815,7 +44831,7 @@
     {
       "symbol": "W2011",
       "title": "A pre-commit step runs graph --check over each dist's working tree, so a new module fails before the sandbox could miss it",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W2010"
       ],
@@ -44825,11 +44841,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "AGREED (github-8f 2026-10-25, option a): the names come from git ls-files. Run graph --check over the git ls-files set of each dist with a committed graph, FIRST in mikemol-commit's presubmit (fail-fast ordering, mtools:W1480): a new tracked module fails before the gate, naming the --write to run. graph_fresh stays in the gate for edits to known files, its data generated by name from the graph (modules, tests, support, graph.json, dag.bzl). No glob survives. Needs a git-ls-files reader in importdag.graph (a --files mode), the presubmit step in commit_kata (live hook: dependencies first). I still need all of it, W2011",
-      "evidence": "",
+      "evidence": "2026-10-27: 2026-10-27: back to ready: the reader landed (504b80ec); what is left is the commit_kata presubmit step and graph_fresh by name, hooks-lane work in the round behind W2009 and W2008; not in the round and no live stack cites it | 2026-10-27: 2026-10-27 FINDING (stack-next-29 refused at submit): two hooks entries that each ADD A MODULE cannot be queued while the first has not landed. dag.bzl, graph.json and hooks/sites are whole-file generated artefacts and freeze at the CURRENT tree, so a second entry's frozen dag.bzl names the first entry's new modules, which are in neither HEAD nor its own or an earlier entry's files: 'W2008: hooks/dag.bzl names src/mikemol/hooks/flakemetric.py, which neither HEAD nor this entry's or an earlier entry's files carry'. In one stack the generated files could ride only the LAST entry, and a shared source file (commit_kata.py) with both entries' edits could not be split at all. So the serial cost is real and comes from generating those files whole: generating graph_fresh and the sites BY NAME from the graph (this card's second half) is what would let each entry carry only its own rows. Until then: one new-module card per queued stack, resubmitted after the one ahead lands (github-8f's 'one stack' reading, line 9, needs this fixed first)",
       "issued_at": "2026-10-25T20:41:39Z",
       "minted_during": "interrupt",
       "caused_by": "W2010",
-      "last_worked": "2026-10-27T07:41:23Z",
+      "last_worked": "2026-10-27T20:20:58Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -44920,15 +44936,13 @@
     {
       "symbol": "W2016",
       "title": "Witness the split at the gate: after every hooks test is on its closure, one out-of-cone edit shows the gate's hit count",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "One more gate hit count from a central module's change (contrast with this leaf), then close with both. I still need that, W2016",
       "evidence": "2026-10-25: 2026-10-25 MEASURED after stack-w1988b landed (2b52dca4, W2010 1b9fa302), bazel test //hooks:all --test_lang_filters=py over 242 py tests: baseline after the BUILD change executed 234 of 242 (all pass); a one-line comment in vlogwatch.py (a module the graph says 75 tests reach, so a central one) executed 81 of 242; the same edit in watchdog.py (6 tests reach it) executed 12 of 242, 4 of them the whole-dist tests (W2020) plus the 6, 242 pass. Before the split every edit to any hooks module missed all of them. Both edits reverted; git status clean. Not yet the gate's own hit count; the next gate run's is the number to read. | 2026-10-25: 2026-10-25 the 2 tests beyond the graph's 6 and W2020's four (github-8f asked which reading): the second reading, not a graph bug. bazel query finds five hooks py_tests that are not test_*.py modules and so are outside GRAPH['tests'] and outside the generated switch: ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite. ruff_suppression was seen running in the sample. I did not identify which two of the five reran, so the graph-undercounts-an-edge reading is not ruled out by a positive control; W2012's input mutation will say. Carded W2021 to put the five on the generated closure or name why not. | 2026-10-26: 2026-10-26 FIRST REAL GATE HIT COUNT over the split (stack-w2031's gate, read from its own output): 'Executed 379 out of 1495 tests: 1495 tests pass' = 25 percent executed, 1,116 cached; '402 processes: 138201 action cache hit, 47 disk cache hit, 4 remote cache hit, 510 linux-sandbox' = 99.7 percent of actions hit (the W1982 measurement before the split was 67 percent of targets hitting, ~99 percent of hooks targets missing on any change); elapsed 4,650 s wall for a 314 s critical path (the 77 minutes is the load, the queue and the mutation shards, not rebuilding). The change was stackgate.py plus test_stackgate.py, a leaf with a small cone. The other three stacks' outputs carry commit lines only, so no second figure. Next: a central-module change's gate for the contrast, and W1989 for the 1,495-test remainder. | 2026-10-26: 2026-10-26 SECOND GATE HIT COUNT (stack-w2007's gate, 7861893e; changed stackrun.py, new flakes.py, graph.json and dag.bzl): 'Executed 382 out of 1498 tests: 1498 tests pass' (25 percent), '1860 processes: 136777 action cache hit, 518 disk cache hit, 15 remote cache hit, 515 linux-sandbox'. Same 25 percent as the stackgate leaf (379 of 1495), though this change touched graph.json, which every graph_fresh input names, so part of the executed set is graph_fresh and the mutation sites rather than hooks tests. Still no central-module contrast (vlogwatch-class). | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-27: the contrast needs a gate run over a central hooks module; every hooks stack is held behind the Bash permission rule (W2057), and stack 17's gate was importdag-only, so it is no contrast",
       "issued_at": "2026-10-25T21:04:01Z",
@@ -45013,15 +45027,13 @@
     {
       "symbol": "W2021",
       "title": "Five hooks py_tests outside the graph's tests (ratchet_refusal, reqs, ruff_selector, ruff_suppression, suite) get a closure or a stated reason",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "bazel query: kind(py_test, //hooks:*) except names test_*. They depend on the dist-wide :hooks, so some rerun on any edit (2 extra of 12 in the watchdog sample). For each: read what it imports and reads, put it in the generated switch, or record why it must stay on :hooks.",
       "evidence": "2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks-lane stack; every hooks stack is held behind the Bash permission rule (W2057)",
       "issued_at": "2026-10-25T22:05:58Z",
@@ -45037,42 +45049,38 @@
     {
       "symbol": "W2022",
       "title": "footprint.audit probes a known footprint before trusting an empty trace",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Drained from cassian-observability tools/trace-inputs.py (read with tar -xO, github-8f 2026-10-25): before deriving any input set it strace-traces a fixture with a KNOWN footprint (one file opened, one only stat'd) and REFUSES to emit if the tracer did not see both, since a blind tracer yields a minimal, wrong set that gets cached as correct. hooks footprint.py already marks no-strace as DEGRADED but has no known-footprint probe, so ptrace blocked or a tracer that sees opens and not stats reads as a clean empty set. Add the probe, with a test that a blind tracer is DEGRADED.",
-      "evidence": "2026-10-27: 2026-10-27: edits hooks/src/mikemol/hooks/footprint.py, a hooks-lane stack; held behind the Bash permission rule (W2057)",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-27: edits hooks/src/mikemol/hooks/footprint.py, a hooks-lane stack; held behind the Bash permission rule (W2057) | 2026-10-27: 2026-10-27: landed 2928ffdb (footprint.sees_opens: a blind tracer is DEGRADED and the command never runs; the stat half is not covered by an openat-only trace)",
       "issued_at": "2026-10-25T23:05:35Z",
       "minted_during": "interrupt",
       "caused_by": "W2020",
-      "last_worked": "2026-10-27T10:52:01Z",
+      "last_worked": "2026-10-27T22:09:27Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/footprint.py",
         "hooks/tests/test_footprint.py"
       ],
-      "completed": null
+      "completed": "20261027T220927Z"
     },
     {
       "symbol": "W2023",
       "title": "A reads audit compares a test's declared reads with its strace footprint, asymmetrically",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W2020"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2057"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Design drained from the cassian reads audit: output only traced-but-not-declared (strong), subtract the harness by derivation, print the full list, an unanswering tracer is UNEVALUABLE. Needs the footprint probe first (a sibling card). Hooks files: they land after W2057 (the operator's allowance of the hold-lift widening) because of the shared hooks registries. I still need W2057, W2023",
       "evidence": "",
       "issued_at": "2026-10-25T23:05:36Z",
@@ -45091,21 +45099,47 @@
     {
       "symbol": "W2024",
       "title": "ratchets.json carries each ratchet's re-baselines, and the census refuses a changed expression without one",
-      "status": "blocked",
+      "status": "working",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W1977"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "After the W1977 door lands (stack-next-23): the birth judgement and the entries-only-grow check against HEAD in ratchet/rebaseline.py. I still need the door landed, W2024",
-      "evidence": "2026-10-27: 2026-10-27 first slice landed 10ca1275 (ratchet.rebaseline, mikemol-ratchet rebaselines, 9 tests, 5 mutants). Left: the enforcement (standing hook and a submit refusal admit a baseline rise only with a matching entry; operator's call because it loosens a guard), birth, entries only grow. | 2026-10-27: 2026-10-27 (github-8f): the operator decided the enforcement: W1977 option (2), host 695f3e0a line 106208, uuid 0afcd13c. The hook admits a baseline rise only with a matching rebaselines.json entry, so this card's enforcement IS the W1977 door, in stack-next-23 (gate running). Left here for after it lands: the birth judgement (a new ratchet file at a nonzero value) and the entries-only-grow check against HEAD, both non-hooks",
+      "evidence": "2026-10-27: 2026-10-27 first slice landed 10ca1275 (ratchet.rebaseline, mikemol-ratchet rebaselines, 9 tests, 5 mutants). Left: the enforcement (standing hook and a submit refusal admit a baseline rise only with a matching entry; operator's call because it loosens a guard), birth, entries only grow. | 2026-10-27: 2026-10-27 (github-8f): the operator decided the enforcement: W1977 option (2), host 695f3e0a line 106208, uuid 0afcd13c. The hook admits a baseline rise only with a matching rebaselines.json entry, so this card's enforcement IS the W1977 door, in stack-next-23 (gate running). Left here for after it lands: the birth judgement (a new ratchet file at a nonzero value) and the entries-only-grow check against HEAD, both non-hooks | 2026-10-27: 2026-10-27: stack-next-31 was refused at its gate for an ORPHAN warrant (a test renamed in the birth change; pruned with gen-warrants --prune); it resubmits after the mdstruct paydown clears the pace",
       "issued_at": "2026-10-25T23:16:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T17:09:31Z",
+      "last_worked": "2026-10-27T22:35:28Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "warrants": [
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W2024",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e#0afcd13c-bc08-4eaf-bac5-6a29304b0faa",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T06:53:47.005Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/0afcd13c-bc08-4eaf-bac5-6a29304b0faa",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 106208,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 0afcd13c-bc08-4eaf-bac5-6a29304b0faa --claim operator --line 106208"
+          }
+        }
+      ]
     },
     {
       "symbol": "W2025",
@@ -45300,11 +45334,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "github-8f 2026-10-25: the operator ruled 2026-10-17 'No, shard finer only' to a longer bazel timeout even as a backstop behind RLIMIT_CPU, so test_traindrive, test_trainlead, test_grade and test_import_cycles (hooks/BUILD.bazel _CPU_BUDGET_S, size medium) contradict it. For each: name what it waits on, make the wait event-bound or shard it finer, then drop it from _CPU_BUDGET_S's medium. The CPU rlimit itself stays as the bound.",
-      "evidence": "2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks stack; the hooks lane reopens once stack-next-20 (W1954, the exit-baseline paydown the pace refusal names) lands and stack-next-13 follows",
+      "evidence": "2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks stack; the hooks lane reopens once stack-next-20 (W1954, the exit-baseline paydown the pace refusal names) lands and stack-next-13 follows | 2026-10-27: 2026-10-27: edits hooks/BUILD.bazel, a hooks-lane stack; the serial lane is held by stack-next-24 (W1977's door fix) in its gate",
       "issued_at": "2026-10-26T01:39:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T12:45:30Z",
+      "last_worked": "2026-10-27T17:54:26Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45524,11 +45558,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Design the finding-identity rows: pyratchet works on counts today, so add a moved_findings(base_rows, now_rows, splits) over identity rows and feed its admitted pairs to regressions; the declared record {from, to} lives in a splits file beside the baseline. Witnesses: a verbatim move reads CLEAN; the paydown-plus-new-debt case reads REFUSED; a copied (not moved) finding reads REFUSED. I still need the row shape ruff and mypy give (message, source line), W2045",
-      "evidence": "2026-10-26: 2026-10-26 nemik-84: no tombstone format exists; nemik carded nemik:W1111 (caused by W2045) and proposed .claude/ratchet-tombstones.json, a list of {ratchet, reason, retired_at}, copied by luthen into the export tree and read by pacewrite. Agreed, keyed by the repo-relative path as the pace file names it. HOLD the debtplan.json tombstone until W1111 fixes the format. | 2026-10-27: 2026-10-27 OPERATOR RULING (relayed by github-8f, host 695f3e0a line 107690, uuid 81f034b6-1657-41dd-a984-fd8b5207ddd5, 2026-10-27T13:55:42Z): 'splitting should read as shifting of debt, not new debt.' So mikemol-ratchet remap must carry a module split as a SHIFT: entries keyed under the old file move to the new files, the total is unchanged, the pace sees no rise. WITNESS: a fixture where one file splits into two, entries moved, reads the same total and no new-debt row. This card carries it with the tsv-to-json rename-with-tombstone (linux-sources:W437, no pace-history reset); remap.py today rewrites only path leaves (audit item 3, to be verified by that fixture first) | 2026-10-27: 2026-10-27 nemik's measurement (via github-8f): the place it bites is mikemol-pycheck --ratchet, which refuses a file above its own baseline, so debt moved into a NEW file meets baseline 0 ('N > baseline 0'); remap only rewrites path leaves in path-keyed documents, not count baselines. So the fix lives where the per-file check runs: a split-aware mode that moves counts from the old file to the new ones, refuses any rise in the total, and keeps the move as a declared record. Until then nemik splits only where the new file lands with zero findings, which blocks W1176. | 2026-10-27: 2026-10-27: FOUND the compare: hooks/src/mikemol/hooks/pyratchet.py regressions(now, base), which lists every file and rule above its baseline (an absent file is baseline 0), called by verdict. Built in the tree, not committed (the serial hooks lane holds stack-next-23): regressions and verdict take an optional splits {old file: [moved-to files]}; the group's per-rule total in now must not exceed its total in base, else nothing is admitted; another rule in a moved-to file and a file outside the group stay new debt. Four tests (witness: no split refuses 'new.py: E501 3 > baseline 0', declared split admits; total rise refused; only own files and rules; verdict exits 0), four mutants (equal-count re-pointed, group-total-rise-admitted, split-admits-every-rule-of-a-file, verdict-drops-the-declared-splits); test_pyratchet passes under bazel. NOT DONE: the declared record (where splits is read from and kept, in pycheck_ratchet), warrants and sites for the new tests and mutants, remap.py's shift verdict, the tsv-to-json tombstone | 2026-10-27: 2026-10-27 CORRECTED (operator, on seeing the count-based design: it violates the crosscheck module's principle, hooks/src/mikemol/hooks/warrant_crosscheck.py:5, set equality against an independent derivation, not read the count). WHAT WAS WRONG: pyratchet.regressions with declared splits admitted a rule when the group's per-rule TOTAL did not rise, which cannot tell a shift from paydown plus new debt: big.py 5 E501, 3 genuinely fixed there, 3 fresh E501 written in new.py, total 5 to 5, admitted. The count-based diff (4 tests, 4 mutants, bazel-green) is KEPT AS RESIDUE in the scratchpad (w2045-count-based-split.patch), removed from the tree, never staged. THE REPLACEMENT: match the moved findings, not their number. A finding's identity is (rule code, message, the stripped source line it sits on), which survives a move of the code. For a declared {from, to}: read the from file's findings at the BASE REVISION (ruff or mypy run on git show base:file, independent of the committed counts) and a to-file finding is admitted only by consuming one unconsumed base finding of the same identity from the from file, and only when that finding is gone from the from file now (moved, not copied). Admitted findings are subtracted from the to file's regression and the from file's baseline credit is spent, so the total can never rise. A to-file finding with no matching base finding is new debt however the totals come out; the failure case above is the control (must be REFUSED)",
+      "evidence": "2026-10-26: 2026-10-26 nemik-84: no tombstone format exists; nemik carded nemik:W1111 (caused by W2045) and proposed .claude/ratchet-tombstones.json, a list of {ratchet, reason, retired_at}, copied by luthen into the export tree and read by pacewrite. Agreed, keyed by the repo-relative path as the pace file names it. HOLD the debtplan.json tombstone until W1111 fixes the format. | 2026-10-27: 2026-10-27 OPERATOR RULING (relayed by github-8f, host 695f3e0a line 107690, uuid 81f034b6-1657-41dd-a984-fd8b5207ddd5, 2026-10-27T13:55:42Z): 'splitting should read as shifting of debt, not new debt.' So mikemol-ratchet remap must carry a module split as a SHIFT: entries keyed under the old file move to the new files, the total is unchanged, the pace sees no rise. WITNESS: a fixture where one file splits into two, entries moved, reads the same total and no new-debt row. This card carries it with the tsv-to-json rename-with-tombstone (linux-sources:W437, no pace-history reset); remap.py today rewrites only path leaves (audit item 3, to be verified by that fixture first) | 2026-10-27: 2026-10-27 nemik's measurement (via github-8f): the place it bites is mikemol-pycheck --ratchet, which refuses a file above its own baseline, so debt moved into a NEW file meets baseline 0 ('N > baseline 0'); remap only rewrites path leaves in path-keyed documents, not count baselines. So the fix lives where the per-file check runs: a split-aware mode that moves counts from the old file to the new ones, refuses any rise in the total, and keeps the move as a declared record. Until then nemik splits only where the new file lands with zero findings, which blocks W1176. | 2026-10-27: 2026-10-27: FOUND the compare: hooks/src/mikemol/hooks/pyratchet.py regressions(now, base), which lists every file and rule above its baseline (an absent file is baseline 0), called by verdict. Built in the tree, not committed (the serial hooks lane holds stack-next-23): regressions and verdict take an optional splits {old file: [moved-to files]}; the group's per-rule total in now must not exceed its total in base, else nothing is admitted; another rule in a moved-to file and a file outside the group stay new debt. Four tests (witness: no split refuses 'new.py: E501 3 > baseline 0', declared split admits; total rise refused; only own files and rules; verdict exits 0), four mutants (equal-count re-pointed, group-total-rise-admitted, split-admits-every-rule-of-a-file, verdict-drops-the-declared-splits); test_pyratchet passes under bazel. NOT DONE: the declared record (where splits is read from and kept, in pycheck_ratchet), warrants and sites for the new tests and mutants, remap.py's shift verdict, the tsv-to-json tombstone | 2026-10-27: 2026-10-27 CORRECTED (operator, on seeing the count-based design: it violates the crosscheck module's principle, hooks/src/mikemol/hooks/warrant_crosscheck.py:5, set equality against an independent derivation, not read the count). WHAT WAS WRONG: pyratchet.regressions with declared splits admitted a rule when the group's per-rule TOTAL did not rise, which cannot tell a shift from paydown plus new debt: big.py 5 E501, 3 genuinely fixed there, 3 fresh E501 written in new.py, total 5 to 5, admitted. The count-based diff (4 tests, 4 mutants, bazel-green) is KEPT AS RESIDUE in the scratchpad (w2045-count-based-split.patch), removed from the tree, never staged. THE REPLACEMENT: match the moved findings, not their number. A finding's identity is (rule code, message, the stripped source line it sits on), which survives a move of the code. For a declared {from, to}: read the from file's findings at the BASE REVISION (ruff or mypy run on git show base:file, independent of the committed counts) and a to-file finding is admitted only by consuming one unconsumed base finding of the same identity from the from file, and only when that finding is gone from the from file now (moved, not copied). Admitted findings are subtracted from the to file's regression and the from file's baseline credit is spent, so the total can never rise. A to-file finding with no matching base finding is new debt however the totals come out; the failure case above is the control (must be REFUSED) | 2026-10-27: 2026-10-27 REWORK ACCOUNT (github-8f asked on the operator's behalf): the count-based design cost one build-and-test cycle (pyratchet.py splits, 4 tests, 4 mutants, bazel green) and was never staged, submitted or landed; no stack was withdrawn. The operator's objection is attached as this card's warrant (transcript line 388961, uuid 4f00d305-0511-4c91-a2e4-8802b0f58dff). nemik:W1176 waits on the corrected design: identity-matched moved findings (rule, message, source line), the from file read at the base revision, to-file findings admitted only by consuming a matching base finding that is gone from the from file; unmatched is new debt. The 60 stale ready cards are not behind this rework",
       "issued_at": "2026-10-26T14:05:14Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1107",
-      "last_worked": "2026-10-27T17:00:00Z",
+      "last_worked": "2026-10-27T19:10:22Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -45555,6 +45589,32 @@
             },
             "mtools:line": 107690,
             "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github/695f3e0a-d36f-4080-9c67-7548978cd99e --verify 81f034b6-1657-41dd-a984-fd8b5207ddd5 --claim operator --line 107690"
+          }
+        },
+        {
+          "@context": {
+            "prov": "http://www.w3.org/ns/prov#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "mtools": "urn:mtools:warrant#"
+          },
+          "@id": "urn:nemik:mtools/W2045",
+          "prov:wasDerivedFrom": {
+            "@id": "urn:claude:transcript:-home-mikemol-github-mtools/0709aae6-1dba-4fe5-bfbe-24d21edd31e0#4f00d305-0511-4c91-a2e4-8802b0f58dff",
+            "@type": "prov:Entity",
+            "prov:generatedAtTime": {
+              "@value": "2026-10-27T16:56:32.178Z",
+              "@type": "xsd:dateTime"
+            },
+            "prov:wasAttributedTo": {
+              "@id": "urn:nemik:operator",
+              "@type": "prov:Agent"
+            },
+            "prov:wasGeneratedBy": {
+              "@id": "urn:nemik:utterance/4f00d305-0511-4c91-a2e4-8802b0f58dff",
+              "@type": "prov:Activity"
+            },
+            "mtools:line": 388961,
+            "mtools:reader": "mikemol-transcriptstruct claude:transcript:-home-mikemol-github-mtools/0709aae6-1dba-4fe5-bfbe-24d21edd31e0 --verify 4f00d305-0511-4c91-a2e4-8802b0f58dff --claim operator --line 388961"
           }
         }
       ],
@@ -45688,11 +45748,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Three parts on this card now: (a) the rulings KeyError (treat a missing prov:generatedAtTime as unknown, never crash), (b) --verify accepts an AskUserQuestion tool_result as the operator's, refusing any other tool_result, (c) the owed-kind decision and the fixtures. Do (a) and (b) next (non-hooks, transcriptstruct). I still need all three, W2052",
-      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7. | 2026-10-27: 2026-10-27 the turn-boundary layer for transcriptstruct --resolve (github-8f, from amr-skills' a84163cd run over 14 seed-3 rows) is carried HERE because W1986 is done: --resolve attaches only by card and artifact name, so every announce reads open at layer none; an announce is discharged when a later tool_use, or later text, in the SAME assistant turn carries it out (the next tool_use after the sentence, before the turn's end); only rows still unattached when the turn ends are debt. Rows from a blind sample carry session '' and at ''. | 2026-10-27: 2026-10-27 part (a) LANDED 9b777ed1 (turnlayer, rows kind, --resolve --turns). amr-skills told; their rerun over the 14 seed-3 rows gives the unattached set to join to my seed-3 labels. | 2026-10-27: 2026-10-27 THE WITNESS (amr-skills ran --resolve --turns, 9b777ed1, on seed 3's 300 new rows): over MY labels, 65 announces: 56 discharged at layer turn, 9 unattached (open at none); my 15 owed open. Over their classifier's 6 announce rows: 5 discharged, 1 open. So 86 percent of announces are carried out by their own turn, and the debt is the 9 (14 percent). They built an I'll/I will announce rule (5 of the 9 unattached carry it, 4 of the 56 discharged; commit gating, amr-skills) and ask for a FOURTH draw (another seed) after that commit lands: they label first, I label blind, the turn layer runs over both. | 2026-10-27: 2026-10-27 amr-skills v9 landed (3be3dc4, the I'll/I will announce rule). SEED 4 DRAWN: 396 rows, 292 new (104 repeat earlier draws, ids listed). They label first; I label the 292 blind after they say so. | 2026-10-27: 2026-10-27 SEED 4 (292 new rows, five words, mine blind to v9): mine status 190, announce 53, done 31, owed 18; v9: other 203, status 69, announce 17, owed 3. Per kind: announce recall 15 of 53, precision 15 of 17 (seed 3, v7: 4 of 65 and 4 of 6): the I'll/I will rule holds on the first draw after it was built; owed recall 1 of 18, precision 1 of 3 (unsolved). Turn layer over my rows: 40 of 53 announces discharged, 13 unattached (25 percent; seed 3: 9 of 65, 14 percent). | 2026-10-27: 2026-10-27 the join (amr-skills, rows resolved both ways with --turns): of my 53 seed-4 announces, 40 discharged, 13 unattached (matches mine); v9 calls announce 6 of the 40 and 9 of the 13 unattached (all by the lexical I'll/I will rule), misses 4 of the 13 (3 other, 1 status). Its 17 announce rows: 15 are my announces, 2 my status (let-01, both open). So the debt-bearing announces are caught at 9 of 13. | 2026-10-27: 2026-10-27 SEED 5 (289 new rows, five words, mine blind to v11; amr-skills' classifier 01c1930): mine status 174, announce 60, done 30, owed 25; v11: other 204, status 68, announce 15, owed 2. Announce recall 15 of 60, precision 15 of 15; owed recall 2 of 25, precision 2 of 2. Turn layer over my rows: 48 of 60 announces discharged, 12 unattached (20 percent); 25 owed open. The owed-impersonal route (kind owed-impersonal, uncertain true: --resolve counts an unknown kind like owed unless uncertain, then leaves it out) is amr-skills' to compute; counts to come. | 2026-10-27: 2026-10-27 owed-impersonal route (amr-skills, seed 5, my 289 new rows): of my 25 owed rows the route OFFERS 0 (it offered 2 named rows, both my status). Resolving my 25 owed rows by name: 15 attached (12 at layer card, 3 at hook), 10 open (9 name nothing, 1 names something no card carries); v11 labelled owed 2 of the 10 open and 0 of the 15 attached. So the resolver attaches owed statements only by names, 9 of 10 open owed rows have none, and a nameless unattached owed statement is only ever visible as a count. | 2026-10-27: 2026-10-27 two transcriptstruct defects (github-8f, no new card): (1) --rulings crashes with KeyError prov:generatedAtTime in rulingq._ruling (line 36): a ledger row lacks the key and the reader assumes it. (2) the writer's warrant check (transcriptstruct --verify) cannot attach an operator's answer to an AskUserQuestion: the harness records it as a tool_result whose text begins 'The user answered:' then the question and answer, so --warrant with --claim operator on that line is REFUSED as tool_result, not human (amr-skills transcript 34c5ccf4 line 86832 is the operator's 'Ratched adoptions done, now pay down the ratchets.'). Sessions are told to ask through AskUserQuestion, so these operator words cannot be warranted today. Witness: the warrant reader accepts a tool_result whose tool_use was AskUserQuestion, attributes the answer to the operator and the question to the asker, and still refuses any other tool_result.",
+      "evidence": "2026-10-26: 2026-10-26 FIRST FIGURE, mine against the regex (not against amr-skills): of the 95 regex hits I labelled 77 commitment, 16 status, 2 mention (precision 0.81); of the 300 random rows 29 were commitments the regex did not hit (ids 0 2 5 7 12 16 18 25 47 50 63 79 106 108 114 119 137 141 190 201 206 208 212 265 268 295 329 365 383), so recall against my labels on this sample is 77 of 106 = 0.73. CAVEAT: the regex hits are all included while the random rows are a 300-sentence draw, so the 29 misses are a sample, not a population count; the population recall is 77 / (77 + 29 x N_random_pool / 300) and needs the pool size. The missed ones are mostly imperative or forward plans ('Settle the dev-group lock...', 'Now the F-arm', 'I'll X') with no 'still' or 'yet' cue. | 2026-10-26: reconciled STALE | 2026-10-27: 2026-10-26: amr-skills sent the classifier v5 labels (395 rows). AGREEMENT computed (scratchpad agreement.py, to be committed with this card): reading their fifth word other as my status, 274 of 395 = 0.69; classifier commitment PRECISION 50 of 53 (94 percent), RECALL 50 of my 106 (47 percent), never emits done (my 50). Told amr-skills, who may now read my labels. | 2026-10-27: 2026-10-26 amr-skills: reproduced my confusion cell for cell; done is not a classifier target (the ledger reads unfinished work), so fixtures do not score it. Of the 56 missed commitments: do-02 ':mod still' with no agent 18, compound root 21, 'thing' 5, see-01 3, obligate-01 2. Classifier v6 adds still-todo (read off this sample, so NOT held out): 53 to 61 called, recall 47 to 54 percent. Held-out test: a second blind sample with another seed. | 2026-10-27: 2026-10-27: my seed-2 labels written (mtools-ad-labels-300-seed2.jsonl, 398 rows; 300 held-out read blind to v6, 98 repeats reuse seed-1 labels), amr-skills told. Their v6 labels (labels-blind-300-seed2.jsonl) are in; the held-out agreement is next. | 2026-10-27: 2026-10-27: held-out v6 on seed 2 (300 rows): recall 6 of 81 (7.4 percent), precision 6 of 7 (86 percent); the gap was scope (announced next actions). github-8f ruled announce in scope as its own kind (warrants host lines 94427, 94534); classifier v7 landed (amr-skills b57e732). Seed 3 drawn (300 new rows; 98 repeats listed). I label five words: commitment (owed), announce, status, done, mention. The unattached subset is the resolver's output, not my column. | 2026-10-27: 2026-10-27 SEED 3 (300 new rows, five words, labelled by me blind to v7): mine status 180, announce 65, done 40, owed 15; v7: other 219, status 70, announce 6, owed 5. Per kind: announce recall 4 of 65 (6 percent), precision 4 of 6 (67); owed recall 1 of 15 (7), precision 1 of 5 (20). Witness NOT met (owed precision target 86 percent). The 65 announces are mostly bare participle or imperative openers that let-01 does not reach. Unattached subset not marked (resolver's output). Seed-2 held-out v6: recall 6 of 81, precision 6 of 7. | 2026-10-27: 2026-10-27 the turn-boundary layer for transcriptstruct --resolve (github-8f, from amr-skills' a84163cd run over 14 seed-3 rows) is carried HERE because W1986 is done: --resolve attaches only by card and artifact name, so every announce reads open at layer none; an announce is discharged when a later tool_use, or later text, in the SAME assistant turn carries it out (the next tool_use after the sentence, before the turn's end); only rows still unattached when the turn ends are debt. Rows from a blind sample carry session '' and at ''. | 2026-10-27: 2026-10-27 part (a) LANDED 9b777ed1 (turnlayer, rows kind, --resolve --turns). amr-skills told; their rerun over the 14 seed-3 rows gives the unattached set to join to my seed-3 labels. | 2026-10-27: 2026-10-27 THE WITNESS (amr-skills ran --resolve --turns, 9b777ed1, on seed 3's 300 new rows): over MY labels, 65 announces: 56 discharged at layer turn, 9 unattached (open at none); my 15 owed open. Over their classifier's 6 announce rows: 5 discharged, 1 open. So 86 percent of announces are carried out by their own turn, and the debt is the 9 (14 percent). They built an I'll/I will announce rule (5 of the 9 unattached carry it, 4 of the 56 discharged; commit gating, amr-skills) and ask for a FOURTH draw (another seed) after that commit lands: they label first, I label blind, the turn layer runs over both. | 2026-10-27: 2026-10-27 amr-skills v9 landed (3be3dc4, the I'll/I will announce rule). SEED 4 DRAWN: 396 rows, 292 new (104 repeat earlier draws, ids listed). They label first; I label the 292 blind after they say so. | 2026-10-27: 2026-10-27 SEED 4 (292 new rows, five words, mine blind to v9): mine status 190, announce 53, done 31, owed 18; v9: other 203, status 69, announce 17, owed 3. Per kind: announce recall 15 of 53, precision 15 of 17 (seed 3, v7: 4 of 65 and 4 of 6): the I'll/I will rule holds on the first draw after it was built; owed recall 1 of 18, precision 1 of 3 (unsolved). Turn layer over my rows: 40 of 53 announces discharged, 13 unattached (25 percent; seed 3: 9 of 65, 14 percent). | 2026-10-27: 2026-10-27 the join (amr-skills, rows resolved both ways with --turns): of my 53 seed-4 announces, 40 discharged, 13 unattached (matches mine); v9 calls announce 6 of the 40 and 9 of the 13 unattached (all by the lexical I'll/I will rule), misses 4 of the 13 (3 other, 1 status). Its 17 announce rows: 15 are my announces, 2 my status (let-01, both open). So the debt-bearing announces are caught at 9 of 13. | 2026-10-27: 2026-10-27 SEED 5 (289 new rows, five words, mine blind to v11; amr-skills' classifier 01c1930): mine status 174, announce 60, done 30, owed 25; v11: other 204, status 68, announce 15, owed 2. Announce recall 15 of 60, precision 15 of 15; owed recall 2 of 25, precision 2 of 2. Turn layer over my rows: 48 of 60 announces discharged, 12 unattached (20 percent); 25 owed open. The owed-impersonal route (kind owed-impersonal, uncertain true: --resolve counts an unknown kind like owed unless uncertain, then leaves it out) is amr-skills' to compute; counts to come. | 2026-10-27: 2026-10-27 owed-impersonal route (amr-skills, seed 5, my 289 new rows): of my 25 owed rows the route OFFERS 0 (it offered 2 named rows, both my status). Resolving my 25 owed rows by name: 15 attached (12 at layer card, 3 at hook), 10 open (9 name nothing, 1 names something no card carries); v11 labelled owed 2 of the 10 open and 0 of the 15 attached. So the resolver attaches owed statements only by names, 9 of 10 open owed rows have none, and a nameless unattached owed statement is only ever visible as a count. | 2026-10-27: 2026-10-27 two transcriptstruct defects (github-8f, no new card): (1) --rulings crashes with KeyError prov:generatedAtTime in rulingq._ruling (line 36): a ledger row lacks the key and the reader assumes it. (2) the writer's warrant check (transcriptstruct --verify) cannot attach an operator's answer to an AskUserQuestion: the harness records it as a tool_result whose text begins 'The user answered:' then the question and answer, so --warrant with --claim operator on that line is REFUSED as tool_result, not human (amr-skills transcript 34c5ccf4 line 86832 is the operator's 'Ratched adoptions done, now pay down the ratchets.'). Sessions are told to ask through AskUserQuestion, so these operator words cannot be warranted today. Witness: the warrant reader accepts a tool_result whose tool_use was AskUserQuestion, attributes the answer to the operator and the question to the asker, and still refuses any other tool_result. | 2026-10-27: 2026-10-27 (b) --verify and an AskUserQuestion answer, READ not built: provenance.classify returns kind tool_result for any user record whose blocks are all tool_result, and --verify --claim operator refuses it (why ff51fc5e needed the operator to retype 'Yes, a verified record lifts it'). Accepting one means linking the result's tool_use_id to an earlier assistant tool_use named AskUserQuestion, a cross-record lookup provenance.py does not do today, and trusting the harness-produced answer text as the operator's. THAT WIDENS WHAT THE VERIFIER TRUSTS, like W1525's widening, which the operator chose explicitly (host line 104311), so it is the operator's call, not a build I take on a peer's word. Evidence shape needed before any decision: a real AskUserQuestion tool_result record (tool_use_id, content text) from a session transcript. Left as an operator: decide ask if the operator wants it; not blocking the rest of W2052",
       "issued_at": "2026-10-26T15:03:30Z",
       "minted_during": "tick",
       "caused_by": "W1966",
-      "last_worked": "2026-10-27T08:28:02Z",
+      "last_worked": "2026-10-27T19:27:05Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45782,23 +45842,21 @@
     {
       "symbol": "W2057",
       "title": "Operator act: allow landing the hold-lift widening you authorised at host line 104311 (stack-next-13: W1525 widening plus W1898's watchdog label fix)",
-      "status": "blocked",
+      "status": "done",
       "enables": [],
       "touches": [
         "hold-lift"
       ],
-      "blocked_on": [
-        "operator: act allow the Bash command 'mikemol-commit ~/github/mtools --stack ~/mtools-stacks/stack-next-13.json' (the auto-mode classifier denied the earlier equivalent as a guard weakening). It lands hooks/src/mikemol/hooks/hold_lift.py: a hold lifts when a human answer to a numbered question quotes the card's ask (your words at host line 104311, 'This is the way'), plus a fix so current urn warrants can lift at all. Allow it with a Bash permission rule, or run it yourself."
-      ],
-      "blocked_kind": "human",
-      "next_bounded_step": "On the operator's allowance: submit stack-next-13 (W1525 widening, then W1898's label fix), then lift W1977's hold by its existing warrant, and put nemik:W1113 and luthen's W633 on the same lift. I still need the operator's allowance, W2057",
-      "evidence": "2026-10-27: 2026-10-27 VERBATIM STEP (nemik G8): env -C ~/github/mtools ~/github/mtools/hooks/.venv/bin/mikemol-commit ~/github/mtools --stack ~/mtools-stacks/stack-next-13.json ; EXPECTED: the gate runs once on the tip of the 2-entry stack (W1525 widening, W1898 label fix) and prints COMMITTED with each entry's sha, exit 0. EXECUTED PROBE: the same command (stack-next-9, which held the W1525 entry) was run here and the Claude Code auto-mode classifier DENIED it: 'Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken]'; I did not work around it. DONE WHEN: git log shows a W1525 subject and hold_lift.py has answers_ask.",
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-10-27: 2026-10-27 VERBATIM STEP (nemik G8): env -C ~/github/mtools ~/github/mtools/hooks/.venv/bin/mikemol-commit ~/github/mtools --stack ~/mtools-stacks/stack-next-13.json ; EXPECTED: the gate runs once on the tip of the 2-entry stack (W1525 widening, W1898 label fix) and prints COMMITTED with each entry's sha, exit 0. EXECUTED PROBE: the same command (stack-next-9, which held the W1525 entry) was run here and the Claude Code auto-mode classifier DENIED it: 'Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken]'; I did not work around it. DONE WHEN: git log shows a W1525 subject and hold_lift.py has answers_ask. | 2026-10-27: 2026-10-27: operator words reached this session: 'Go, for both' (stack-next-13 and the W1977 hook change), after warrant aebb23cb (host 695f3e0a line 107063, '2 allow') and the allow rule for mikemol-commit. LANDED: 3a1c9d80 (W1525 hold-lift widening with W1898's label fix, stack-next-13), 75a562be (W1977 door), 8a68709a (door corrected to read the file the ratchet tool writes). The hooks lane is open",
       "issued_at": "2026-10-27T03:41:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-27T06:08:58Z",
+      "last_worked": "2026-10-27T18:30:59Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261027T183059Z",
       "warrants": [
         {
           "@context": {
@@ -45908,6 +45966,50 @@
         }
       ],
       "completed": "20261027T120318Z"
+    },
+    {
+      "symbol": "W2059",
+      "title": "mikemol-commit's usage text names --in-gate and --json, the reader of the queue that already exists",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add --in-gate [--json] to the USAGE string in commit_kata.py (a bare 'mikemol-commit' prints usage that omits it, which is why a cold reader missed the mode). The reader itself is done: --in-gate --json prints each in-flight and queued entry with key, state, waypoints and began_ns, and the queue depth is the length of that list. I still need the usage edit and a test that the usage names the flag, W2059",
+      "evidence": "2026-10-27: 2026-10-27 github-8f's cold reviewer found it: this card duplicated a reader mtools already ships (commit_counts.live and live_json behind --in-gate --json, pid and start-time liveness applied). Run just now for mtools it printed W2022 inflight then W2009, W2008+W1746 and W2024 queued. NARROWED, not minted over: the gap is the usage line, which lists no --in-gate. No depth line is needed: depth is the list's length",
+      "issued_at": "2026-10-27T20:00:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "W1703",
+      "last_worked": "2026-10-27T21:44:18Z",
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/commit_counts.py",
+        "hooks/src/mikemol/hooks/commit_kata.py",
+        "hooks/tests/test_commit_counts.py"
+      ],
+      "size_class": "small"
+    },
+    {
+      "symbol": "W2060",
+      "title": "mikemol-repin --revendor has a first-vendor mode that builds and adds a dist the repo does not yet vendor",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Today --revendor only refreshes dists already vendored (revendor.vendored reads the pyproject), so nemik:W1180 hand-built the transcriptstruct wheel. Add --first-vendor DIST: build that dist's wheel at the sha, add its path source and dependency and SHA256SUMS row to the repo's pyproject, then the usual move; refuse a name not in revendor.ALL. github-8f 2026-10-27 relaying nemik. I still need to read revendor_apply's plan builder",
+      "evidence": "",
+      "issued_at": "2026-10-27T20:01:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1180",
+      "last_worked": null,
+      "ticks_blocked": 0,
+      "manifest": [
+        "hooks/src/mikemol/hooks/revendor_cli.py",
+        "hooks/src/mikemol/hooks/revendor_apply.py",
+        "hooks/tests/test_revendor_apply.py"
+      ],
+      "size_class": "medium"
     }
   ],
   "residue": [
@@ -46340,15 +46442,6 @@
       "taken_at": "2026-10-27T03:02:34Z",
       "renewed_at": "2026-10-27T03:02:34Z",
       "expires_at": "2026-10-27T03:32:34Z"
-    },
-    {
-      "tag": "file:mdstruct/stubs/panflute-allowlist.txt!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1977",
-      "base_sha": "eb1697cfdc0777e60e3cfa5537611f1eb2817e36",
-      "taken_at": "2026-10-27T16:11:50Z",
-      "renewed_at": "2026-10-27T16:11:50Z",
-      "expires_at": "2026-10-27T16:41:50Z"
     }
   ],
   "advice": [

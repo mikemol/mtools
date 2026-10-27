@@ -1031,13 +1031,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_an_entry_for_another_rise_does_not_cover_this_one},
 }
 
-@misc{ratchet-rebaseline-fall-an-unread-value-and-a-new-ratchet-need-no-entry,
-  section = {rebaseline},
-  title  = {Paydown is what a ratchet is for; UNREAD is not a number; a birth is not judged here},
-  claim  = {Paydown is what a ratchet is for; UNREAD is not a number; a birth is not judged here.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_a_fall_an_unread_value_and_a_new_ratchet_need_no_entry},
-}
-
 @misc{ratchet-rebaseline-entry-that-is-not-a-warranted-rise-is-refused,
   section = {rebaseline},
   title  = {Not a rise, no reason, a warrant that is not uuid:line, no ratchet, a non-integer},
@@ -1072,4 +1065,34 @@
   title  = {A malformed rebaselines file is exit 1 and a line on stderr},
   claim  = {A malformed rebaselines file is exit 1 and a line on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_the_command_refuses_an_untrustworthy_file_without_a_traceback},
+}
+
+@misc{ratchet-rebaseline-fall-an-unread-value-and-a-birth-at-zero-need-no-entry,
+  section = {rebaseline},
+  title  = {Paydown is what a ratchet is for; UNREAD is not a number; nothing born is nothing owed},
+  claim  = {Paydown is what a ratchet is for; UNREAD is not a number; nothing born is nothing owed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_a_fall_an_unread_value_and_a_birth_at_zero_need_no_entry},
+}
+
+@misc{ratchet-rebaseline-ratchet-born-at-a-nonzero-value-needs-an-entry-from-zero,
+  section = {rebaseline},
+  title  = {W2024's birth judgement: a new baseline already holding 4 is 4 of expansion},
+  claim  = {W2024's birth judgement: a new baseline already holding 4 is 4 of expansion. The control
+            is the same birth with an entry of old 0 and new 4, which is admitted, and
+            an entry for a different new value, which is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_a_ratchet_born_at_a_nonzero_value_needs_an_entry_from_zero},
+}
+
+@misc{ratchet-rebaseline-entry-the-tree-before-declared-may-not-vanish-or-change,
+  section = {rebaseline},
+  title  = {Entries only grow: removing one, or editing its reason, is named; adding one is not},
+  claim  = {Entries only grow: removing one, or editing its reason, is named; adding one is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_an_entry_the_tree_before_declared_may_not_vanish_or_change},
+}
+
+@misc{ratchet-rebaseline-check-refuses-a-declaration-deleted-after-it-was-made,
+  section = {rebaseline},
+  title  = {The ratchet value did not move, but the entry that excused it is gone: still refused},
+  claim  = {The ratchet value did not move, but the entry that excused it is gone: still refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_check_refuses_a_declaration_deleted_after_it_was_made},
 }

@@ -70,4 +70,8 @@ src/mikemol/ratchet/rebaseline.py|entry-need-not-be-a-rise|    if new <= old:|  
 src/mikemol/ratchet/rebaseline.py|reason-not-required|    if not isinstance\(reason, str\) or not reason\.strip\(\):|    if False:|def=_entry
 src/mikemol/ratchet/rebaseline.py|warrant-shape-unchecked|    if not isinstance\(warrant, str\) or not _WARRANT\.match\(warrant\):|    if False:|def=_entry
 src/mikemol/ratchet/rebaseline.py|refused-rise-exits-zero|    return 1 if lines else 0|    return 0|def=main
+src/mikemol/ratchet/rebaseline.py|birth-not-judged|        was, now = \(0 if born else before\[path\]\), after\[path\]|        was, now = before.get(path), after[path]|def=refusals
+src/mikemol/ratchet/rebaseline.py|birth-worded-as-a-rise|f"was born at \{now\}" if born else|f"rose {was} to {now}" if born else|def=refusals
+src/mikemol/ratchet/rebaseline.py|vanished-entry-not-named|        if e not in kept|        if False|def=lost
+src/mikemol/ratchet/rebaseline.py|check-never-asks-what-was-lost|        \*lost\(read\(before\), now_entries\),|        *[],|def=check
 src/mikemol/ratchet/fleetcensus.py|guessed-flag-not-printed|        return line if self\.guessed is None else f"\{line\} guessed=\{int\(self\.guessed\)\}"|        return line|def=Row.line
