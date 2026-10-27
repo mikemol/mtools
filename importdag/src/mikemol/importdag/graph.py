@@ -41,12 +41,12 @@ import argparse
 import ast
 import json
 import sys
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from pathlib import Path
 
 from mikemol.atomicwrite.durable import write_atomic
 
-from mikemol.importdag import dagderive
+from mikemol.importdag import dagderive, trackednames
 
 SCHEMA = 1
 GRAPH_FILE = "graph.json"
@@ -59,6 +59,7 @@ BZL_HEADER = (
 READS_FILE = "reads.json"
 SUPPORT_FILES = ("tests/conftest.py",)
 EXIT_STALE = 1
+EXIT_NO_GIT = 2
 
 Entry = dict[str, list[str]]
 
@@ -150,6 +151,34 @@ def test_paths(dist: Path) -> list[str]:
     return sorted(str(p.relative_to(dist)) for p in (dist / "tests").glob("test_*.py"))
 
 
+def listed_modules(names: Iterable[str], package: str) -> list[str]:
+    """Pick a distribution's modules out of a list of its file names (W2011).
+
+    Returns:
+        every listed `.py` under `src/<package path>/`, sorted, `__init__.py` included.
+
+    """
+    prefix = "src/" + "/".join(package.split(".")) + "/"
+    return sorted(n for n in names if n.startswith(prefix) and n.endswith(".py"))
+
+
+def listed_tests(names: Iterable[str]) -> list[str]:
+    """Pick a distribution's test modules out of a list of its file names (W2011).
+
+    Returns:
+        every listed `tests/test_*.py` directly under `tests/`, sorted.
+
+    """
+    return sorted(
+        n
+        for n in names
+        if n.startswith("tests/")
+        and "/" not in n[len("tests/") :]
+        and n.endswith(".py")
+        and Path(n).name.startswith("test_")
+    )
+
+
 def declared_reads(dist: Path, known: set[str]) -> dict[str, list[str]]:
     """Read `reads.json` and refuse a declaration that names a file that is not there.
 
@@ -175,16 +204,25 @@ def declared_reads(dist: Path, known: set[str]) -> dict[str, list[str]]:
     return {owner: sorted(set(files)) for owner, files in raw.items()}
 
 
-def build(dist: Path, package: str) -> dict[str, object]:
+def build(dist: Path, package: str, names: Sequence[str] | None = None) -> dict[str, object]:
     """Derive the graph of one distribution.
+
+    With `names` (the distribution's tracked files, `graph --files`), the modules, tests and support
+    are the listed ones and nothing on disk that is not listed (W2011); without, the directory is
+    walked as before.
 
     Returns:
         the document `graph.json` holds: schema, package, and per-module and per-test entries.
 
     """
-    modules = module_paths(dist, package)
-    tests = test_paths(dist)
-    support = [path for path in SUPPORT_FILES if (dist / path).is_file()]
+    if names is None:
+        modules = module_paths(dist, package)
+        tests = test_paths(dist)
+        support = [path for path in SUPPORT_FILES if (dist / path).is_file()]
+    else:
+        modules = listed_modules(names, package)
+        tests = listed_tests(names)
+        support = [path for path in SUPPORT_FILES if path in names]
     index = dagderive.stem_index(modules)
     reads = declared_reads(dist, set(modules) | set(tests) | set(support))
 
@@ -245,10 +283,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--package", required=True)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--write", action="store_true")
+    parser.add_argument(
+        "--files", action="store_true", help="take the file names from git ls-files (W2011)"
+    )
     opts: dict[str, object] = vars(parser.parse_args(sys.argv[1:] if argv is None else argv))
     mode = "--write" if opts["write"] else "--check"
     dist = Path(str(opts["dist"]))
-    doc = build(dist, str(opts["package"]))
+    tracked = trackednames.of(dist) if opts["files"] else None
+    if opts["files"] and tracked is None:
+        sys.stderr.write(f"graph: git cannot list the files of {dist.name}\n")
+        return EXIT_NO_GIT
+    doc = build(dist, str(opts["package"]), tracked)
     wanted = {GRAPH_FILE: render(doc), BZL_FILE: render_bzl(doc)}
     stale = [
         name

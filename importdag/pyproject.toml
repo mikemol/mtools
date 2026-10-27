@@ -120,6 +120,18 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_costcli.py" = ["assert"]
 "tests/test_neighbour.py" = ["assert"]
 "tests/test_costcli_pair.py" = ["assert"]
+# ⚑ ITS WITNESSES BUILD A REAL GIT REPOSITORY, because the defect under test is what git tracks.
+"tests/test_graph_files.py" = [
+    "assert",
+    "start-process-with-partial-path",
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+# ⚑ THE ONE PLACE `graph --files` asks git which files a distribution tracks (W2011).
+"src/mikemol/importdag/trackednames.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
 # ⚑ THE ONE PLACE `mikemol-landing-cost` asks the store: `mikemol-otlp query-metrics` as a child.
 "src/mikemol/importdag/costcli.py" = [
     "subprocess-without-shell-equals-true",
