@@ -7589,3 +7589,10 @@
   claim  = {W2047: fewer than two known landings leave nothing to judge against.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_with_no_learned_bound_no_card_is_called_idle},
 }
+
+@misc{pathsforward-landed-landing-times-are-read-newest-first-and-none-when-git-refuses,
+  section = {landed},
+  title  = {W2047: the times come from the last N commits' committer dates; a refusal is None},
+  claim  = {W2047: the times come from the last N commits' committer dates; a refusal is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_landing_times_are_read_newest_first_and_none_when_git_refuses},
+}

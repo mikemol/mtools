@@ -95,6 +95,23 @@ def read_commits(root: Path) -> str | None:
     return _run([git, "-C", str(root), "log", "-n500", date, fmt], env)
 
 
+def landing_times(root: Path, count: int) -> list[float] | None:
+    """Read the commit times of the last `count` commits, for the idle bound (W2047).
+
+    Returns:
+        the committer times in epoch seconds, newest first, or None when git is absent or refused:
+        no answer is not an empty history.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    out = _run([git, "-C", str(root), "log", f"-n{count}", "--format=%ct"])
+    if out is None:
+        return None
+    return [float(line) for line in out.split() if line.isdigit()]
+
+
 def read_head_files(root: Path) -> frozenset[str] | None:
     """Name every file HEAD holds, relative to the root (W1717).
 

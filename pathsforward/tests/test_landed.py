@@ -150,6 +150,30 @@ def test_a_working_card_idle_past_the_bound_is_named_and_a_fresh_one_is_not() ->
     assert closegate.idle_cards(state, _NOW, _DAY) == ["W1"]
 
 
+def test_landing_times_are_read_newest_first_and_none_when_git_refuses(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """W2047: the times come from the last N commits' committer dates; a refusal is None."""
+    asked: list[list[str]] = []
+
+    def answers(argv: list[str], env: dict[str, str] | None = None) -> str | None:
+        del env
+        asked.append(argv)
+        return "300\n200\n100\n"
+
+    def refuses(argv: list[str], env: dict[str, str] | None = None) -> str | None:
+        del argv, env
+        return None
+
+    monkeypatch.setattr("mikemol.pathsforward.landed._run", answers)
+    got = landed.landing_times(tmp_path, _THREE)
+    assert got is not None
+    assert [int(t) for t in got] == [300, 200, 100]
+    assert "-n3" in asked[0]
+    monkeypatch.setattr("mikemol.pathsforward.landed._run", refuses)
+    assert landed.landing_times(tmp_path, _THREE) is None
+
+
 def test_with_no_learned_bound_no_card_is_called_idle() -> None:
     """W2047: fewer than two known landings leave nothing to judge against."""
     old = _worked("W1", "working", "2026-09-01T14:00:00Z")

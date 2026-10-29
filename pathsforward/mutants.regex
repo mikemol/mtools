@@ -343,3 +343,4 @@ src/mikemol/pathsforward/closegate.py|handoff-drops-the-session|            sess
 src/mikemol/pathsforward/closegate.py|landing-bound-is-the-smallest-gap|    return max\(gaps\) if gaps else None|    return min(gaps) if gaps else None|def=landing_bound
 src/mikemol/pathsforward/closegate.py|idle-card-named-when-fresh|        if \(now - worked\)\.total_seconds\(\) > bound:|        if (now - worked).total_seconds() < bound:|def=idle_cards
 src/mikemol/pathsforward/closegate.py|idle-card-named-with-no-bound|    if bound is None:|    if False:|def=idle_cards
+src/mikemol/pathsforward/landed.py|landing-times-ask-for-one-commit|f"-n\{count\}"|"-n1"|def=landing_times
