@@ -92,3 +92,30 @@ def test_the_command_adds_a_retro_from_a_file_and_refuses_a_bad_finding(tmp_path
     bad = _file(tmp_path, "bad.json", {"findings": [{"finding_card": "x"}]})
     assert cli.main(["--state", str(queue), "--add-retro", str(bad)]) == cli.EXIT_REFUSED
     assert _saved(queue) == saved
+
+
+def test_migrate_renames_cause_and_leaves_a_spec_record_alone() -> None:
+    """A host record gains `root` and `unsplit`; a spec record is untouched; a rerun is empty."""
+    spec: Json = {"id": "r:R2", "root": "r", "trigger": "t"}
+    doc: Json = {"retros": [{"id": "r:R1", "cause": "why", "keep": 1}, spec]}
+    assert retros.migrate(doc) == ["r:R1"]
+    assert doc["retros"] == [
+        {"id": "r:R1", "keep": 1, "root": "why", "trigger": retros.UNSPLIT},
+        spec,
+    ]
+    assert retros.migrate(doc) == []
+
+
+def test_migrate_command_dry_run_saves_nothing(tmp_path: Path) -> None:
+    """--migrate-retros --dry-run names the ids and leaves the file; without it the file moves."""
+    queue = _project(tmp_path)
+    doc = _saved(queue)
+    doc["retros"] = [{"id": "r:R1", "cause": "why"}]
+    queue.write_text(json.dumps(doc), encoding="utf-8")
+    before = _saved(queue)
+    assert cli.main(["--state", str(queue), "--migrate-retros", "--dry-run"]) == cli.EXIT_OK
+    assert _saved(queue) == before
+    assert cli.main(["--state", str(queue), "--migrate-retros"]) == cli.EXIT_OK
+    [stored] = cast("list[Json]", _saved(queue)["retros"])
+    assert stored["root"] == "why"
+    assert "cause" not in stored

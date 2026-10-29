@@ -496,6 +496,7 @@ _FLAGS = (
     "ghosts",
     "watchdog_line",
     "prompt_ack",
+    "migrate_retros",
 )
 _VALUED = (
     "verify",
@@ -673,6 +674,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
     "add_retro": frozenset(),
+    "migrate_retros": frozenset({"dry_run"}),
     "regressions": frozenset(),
     "warrant": frozenset(
         {"transcript", "uuid", "claim", "line", "reader", "root", "reason", "dry_run"}
@@ -2089,6 +2091,10 @@ def _fields_of(ctx: Ctx) -> ops.Update:
     if blockers is not None and not all(b.strip() for b in blockers):
         msg = "--blocked-on: an empty or whitespace blocker is refused; a bare --blocked-on clears"
         raise ops.RefusedError(msg)
+    tags = ctx.many("touches")
+    if tags is not None and not all(t.strip() for t in tags):
+        msg = "--touches: an empty or whitespace tag is refused (W2041)"
+        raise ops.RefusedError(msg)
     return ops.Update(
         status=ctx.get("status"),
         blocked_on=blockers,
@@ -2291,7 +2297,14 @@ def _add(ctx: Ctx) -> int:
     Returns:
         EXIT_OK.
 
+    Raises:
+        RefusedError: when a `--touches` value is empty or only whitespace (W2041).
+
     """
+    tags = ctx.many("touches") or ()
+    if not all(t.strip() for t in tags):
+        msg = "--touches: an empty or whitespace tag is refused (W2041)"
+        raise ops.RefusedError(msg)
     draft = ops.Draft(
         ctx.get("add") or "",
         ctx.get("next") or "",
@@ -3075,6 +3088,25 @@ def _add_retro(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _migrate_retros(ctx: Ctx) -> int:
+    """Rename `cause` to `root` on host-schema retros, or say which would change (W2091).
+
+    Returns:
+        EXIT_OK; with --dry-run nothing is saved and the ids that would change are listed.
+
+    """
+    if ctx.opts.get("dry_run"):
+        scratch = cast("dict[str, object]", json.loads(json.dumps(store.load(ctx.path).doc)))
+        _say(f"WOULD MIGRATE {' '.join(retros.migrate(scratch)) or 'none'}")
+        return EXIT_OK
+
+    def edit(state: State) -> int:
+        _say(f"MIGRATED {' '.join(retros.migrate(state.doc)) or 'none'}")
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
 def _repair_counter(ctx: Ctx) -> int:
     """Raise a lagging counter to the highest claimed symbol, and ledger the repair (W355).
 
@@ -3300,6 +3332,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "manifests_from": _manifests_from,
     "add_retro": _add_retro,
     "regressions": _regressions,
+    "migrate_retros": _migrate_retros,
     "repair_counter": _repair_counter,
     "overlaps": _overlaps,
     "ics": _ics,

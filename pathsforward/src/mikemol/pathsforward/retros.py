@@ -80,6 +80,54 @@ def retro_refusals(retro: Json) -> list[str]:
     return refused
 
 
+UNSPLIT = "unsplit"
+
+
+def _migrated(retro: Json) -> Json | None:
+    """Rewrite one host-schema retro (`cause`, no `root`) into the spec schema.
+
+    Returns:
+        the rewritten record, or None when it needs no change: it already has a `root`, or it has
+        no `cause` to rename. `cause` becomes `root` and an absent or blank `trigger` becomes
+        `unsplit`, the honest word for a record whose cause was never split from its trigger.
+
+    """
+    if "cause" not in retro or _filled(retro, "root"):
+        return None
+    record: Json = {key: value for key, value in retro.items() if key != "cause"}
+    record["root"] = retro["cause"]
+    if not _filled(record, "trigger"):
+        record["trigger"] = UNSPLIT
+    return record
+
+
+def migrate(doc: Json) -> list[str]:
+    """Rename `cause` to `root` on every retro that carries the host schema (W2091).
+
+    ⚑ ONLY THE TWO FIELDS MOVE: ids, the counter, findings and every other field are untouched, and
+    a record already in the spec schema is left byte for byte, so a second run changes nothing.
+
+    Returns:
+        the ids of the retros that changed, in list order; empty when none did.
+
+    """
+    existing = doc.get("retros")
+    if not isinstance(existing, list):
+        return []
+    changed: list[str] = []
+    rewritten: list[object] = []
+    for item in cast("list[object]", existing):
+        record = _migrated(cast("Json", item)) if isinstance(item, dict) else None
+        if record is None:
+            rewritten.append(item)
+            continue
+        rewritten.append(record)
+        changed.append(str(record.get("id", "?")))
+    if changed:
+        doc["retros"] = rewritten
+    return changed
+
+
 def add_retro(doc: Json, repo: str, retro: Json) -> str:
     """Mint the next retro id and append the record, or refuse it.
 
