@@ -67,11 +67,78 @@ def _shrunk(card: Json, now: Json) -> str | None:
     return None
 
 
+def _retros(doc: Json) -> dict[str, list[object]]:
+    # Each retro id to its findings list; a retro with no findings list holds an empty one.
+    raw = doc.get("retros")
+    if not isinstance(raw, list):
+        return {}
+    found: dict[str, list[object]] = {}
+    for item in cast("list[object]", raw):
+        if not isinstance(item, dict):
+            continue
+        retro = cast("Json", item)
+        ident, findings = retro.get("id"), retro.get("findings")
+        if isinstance(ident, str):
+            found[ident] = (
+                list(cast("list[object]", findings)) if isinstance(findings, list) else []
+            )
+    return found
+
+
+def lost_retros(head: Json, staged: Json) -> list[str]:
+    """Say which retros, or findings of a retro, the staged queue lost relative to HEAD's (W1936).
+
+    ⚑ A RETRO IS APPEND-ONLY: its id stays, and every finding it held at HEAD is still among its
+    findings, equal. Other fields are free, so a schema migration (W2091) is not a loss.
+
+    Returns:
+        one line per vanished retro or finding, in id order; empty when nothing was lost.
+
+    """
+    before, after = _retros(head), _retros(staged)
+    found: list[str] = []
+    for ident in sorted(before):
+        if ident not in after:
+            found.append(f"{ident} was a retro at HEAD and is gone: retros are append-only")
+            continue
+        found.extend(
+            f"{ident} lost finding {number} of its HEAD record: a finding is write-once"
+            for number, finding in enumerate(before[ident], start=1)
+            if finding not in after[ident]
+        )
+    return found
+
+
+def _counter(doc: Json) -> int | None:
+    value = doc.get("counter")
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def counter_lag(head: Json, staged: Json, bound: int) -> str | None:
+    """Say when HEAD's committed counter trails the working queue's by more than `bound` (W1938).
+
+    ⚑ THE BOUND IS PASSED IN, NOT TYPED HERE: the caller learns it from the landing cadence, so
+    this function states only the comparison.
+
+    Returns:
+        a warning line, or None when either counter is unreadable or the lag is within the bound.
+
+    """
+    was, now = _counter(head), _counter(staged)
+    if was is None or now is None or now - was <= bound:
+        return None
+    return (
+        f"the committed queue counter ({was}) trails the working queue's ({now}) by {now - was}, "
+        f"more than {bound}: the queue file is not being committed as it moves"
+    )
+
+
 def lost(head: Json, staged: Json) -> list[str]:
     """Say what the staged queue lost relative to HEAD's.
 
     Returns:
-        one line per reverted card or lost evidence, in symbol order; empty when nothing was lost.
+        one line per reverted card or lost evidence, in symbol order, then one per lost retro or
+        finding; empty when nothing was lost.
 
     """
     before, after = _cards(head, "waypoints"), _cards(staged, "waypoints")
@@ -94,4 +161,5 @@ def lost(head: Json, staged: Json) -> list[str]:
         for symbol in sorted(residue_before)
         if symbol not in residue_after
     )
+    found.extend(lost_retros(head, staged))
     return found

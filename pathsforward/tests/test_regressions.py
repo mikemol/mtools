@@ -70,6 +70,31 @@ def test_evidence_only_grows_except_by_an_explicit_redaction() -> None:
     assert regressions.lost(head, grown) == []
 
 
+def test_a_retro_or_finding_present_at_head_may_not_vanish_or_change() -> None:
+    """W1936: a retro id and its findings stay equal; other fields and additions are free."""
+    one: Json = {"certify_change": "a"}
+    two: Json = {"certify_change": "b"}
+    head: Json = {"retros": [{"id": "r:R1", "cause": "x", "findings": [one, two]}]}
+    kept: Json = {"retros": [{"id": "r:R1", "root": "x", "findings": [two, one, {"x": 1}]}]}
+    assert regressions.lost(head, kept) == []
+    assert regressions.lost(head, {"retros": []}) == [
+        "r:R1 was a retro at HEAD and is gone: retros are append-only"
+    ]
+    edited: Json = {"retros": [{"id": "r:R1", "findings": [one, {"certify_change": "c"}]}]}
+    assert regressions.lost(head, edited) == [
+        "r:R1 lost finding 2 of its HEAD record: a finding is write-once"
+    ]
+    assert regressions.lost({"retros": [{"id": "r:R2"}]}, {"retros": [{"id": "r:R2"}]}) == []
+
+
+def test_a_counter_lag_beyond_the_bound_warns() -> None:
+    """W1938: the lag is judged against the bound passed in; unreadable counters say nothing."""
+    assert regressions.counter_lag({"counter": 1496}, {"counter": 1936}, 100) is not None
+    assert regressions.counter_lag({"counter": 1496}, {"counter": 1596}, 100) is None
+    assert regressions.counter_lag({}, {"counter": 1936}, 100) is None
+    assert regressions.counter_lag({"counter": True}, {"counter": 1936}, 100) is None
+
+
 def test_an_unreadable_document_loses_nothing() -> None:
     """Structure is the loader's to refuse: a missing list or a card without a symbol is skipped."""
     assert regressions.lost({}, {}) == []
