@@ -228,6 +228,40 @@ def _load_rev(root: Path, rev: str, rel: str) -> Json:
     return cast("Json", json.loads(result.stdout))
 
 
+def text_at(root: Path, rev: str, rel: str) -> str | None:
+    """Read a file as it stood at a revision (W1908).
+
+    Returns:
+        the file's text, or None when the revision does not hold it or git cannot be asked.
+
+    """
+    result = subprocess.run(
+        ["git", "-C", str(root), "show", "--end-of-options", f"{rev}:{rel}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.stdout if result.returncode == 0 else None
+
+
+def revisions_of(root: Path, rel: str, count: int) -> list[str]:
+    """List the last `count` commits that touched a file, oldest first (W1908).
+
+    Returns:
+        full commit ids; empty when git cannot be asked or the file has no history.
+
+    """
+    result = subprocess.run(
+        ["git", "-C", str(root), "log", f"-{count}", "--format=%H", "--end-of-options", "--", rel],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return []
+    return list(reversed(result.stdout.split()))
+
+
 def _render_like(doc: Json, source: str) -> str:
     """Serialise `doc` in the source's indent width, ASCII-ness and trailing newline.
 

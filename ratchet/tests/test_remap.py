@@ -342,3 +342,40 @@ def test_write_keeps_the_source_formatting(
         (root / "b.json").read_text(encoding="utf-8"),
         (root / "d.json").read_text(encoding="utf-8"),
     ) == (CLEAN, json.dumps(_BASE), json.dumps(_BASE, indent=4) + "\n")
+
+
+_TRENDED = "ratchet-preview.txt"
+_FIRST, _SECOND, _THIRD = 4, 3, 1
+
+
+def _preview(root: Path, count: int) -> None:
+    (root / _TRENDED).write_text("".join(f"entry-{n}\n" for n in range(count)), encoding="utf-8")
+    _git(root, "add", _TRENDED)
+    _git(root, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", f"to {count}")
+
+
+def test_the_census_prints_the_trend_of_a_ratchet_over_its_commits(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W1908: a preview file that held 4, then 3, then 1 entries reads `trend=falling`."""
+    _git(tmp_path, "init", "-q")
+    for count in (_FIRST, _SECOND, _THIRD):
+        _preview(tmp_path, count)
+    code, said = _run(capsys, "census", str(tmp_path), "--repo", "--trend", "3")
+    assert code == CLEAN
+    assert "value=1 floor=0 guessed=1 trend=falling" in said
+    _, plain = _run(capsys, "census", str(tmp_path), "--repo")
+    assert "trend=" not in plain
+
+
+def test_a_ratchet_that_grew_reads_rising_and_one_commit_reads_unknown(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The direction follows the ends, and a single reading is not a direction."""
+    _git(tmp_path, "init", "-q")
+    _preview(tmp_path, _THIRD)
+    _, one = _run(capsys, "census", str(tmp_path), "--repo", "--trend", "3")
+    _preview(tmp_path, _FIRST)
+    _, two = _run(capsys, "census", str(tmp_path), "--repo", "--trend", "3")
+    assert "trend=unknown" in one
+    assert "trend=rising" in two

@@ -1096,3 +1096,52 @@
   claim  = {The ratchet value did not move, but the entry that excused it is gone: still refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_check_refuses_a_declaration_deleted_after_it_was_made},
 }
+
+@misc{ratchet-trend-direction-is-read-from-the-ends-of-the-values-that-were-read,
+  section = {trend},
+  title  = {Falling, rising and flat go by first and last; fewer than two readings is unknown},
+  claim  = {Falling, rising and flat go by first and last; fewer than two readings is unknown.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trend.py -k test_the_direction_is_read_from_the_ends_of_the_values_that_were_read},
+}
+
+@misc{ratchet-trend-noisy-middle-commit-does-not-flip-the-direction,
+  section = {trend},
+  title  = {Ends, not steps: 40, 90, 10 is paydown overall, whatever the middle commit held},
+  claim  = {Ends, not steps: 40, 90, 10 is paydown overall, whatever the middle commit held.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trend.py -k test_a_noisy_middle_commit_does_not_flip_the_direction},
+}
+
+@misc{ratchet-trend-revision-that-cannot-be-read-is-skipped-not-counted-as-zero,
+  section = {trend},
+  title  = {None between two readings is skipped; read as 0 it would make 40 then 40 look rising},
+  claim  = {None between two readings is skipped; read as 0 it would make 40 then 40 look rising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trend.py -k test_a_revision_that_cannot_be_read_is_skipped_not_counted_as_zero},
+}
+
+@misc{ratchet-trend-revision-is-counted-by-the-census-rule-under-the-files-own-name,
+  section = {trend},
+  title  = {The text a revision held is read by kinds.value_of: a preview file counts its entries},
+  claim  = {The text a revision held is read by kinds.value_of: a preview file counts its entries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trend.py -k test_a_revision_is_counted_by_the_census_rule_under_the_files_own_name},
+}
+
+@misc{ratchet-trend-history-pairs-each-revision-with-its-value-in-the-order-given,
+  section = {trend},
+  title  = {A revision that does not hold the file keeps None in its place, never a dropped row},
+  claim  = {A revision that does not hold the file keeps None in its place, never a dropped row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trend.py -k test_history_pairs_each_revision_with_its_value_in_the_order_given},
+}
+
+@misc{ratchet-remap-census-prints-the-trend-of-a-ratchet-over-its-commits,
+  section = {remap},
+  title  = {W1908: a preview file that held 4, then 3, then 1 entries reads `trend=falling`},
+  claim  = {W1908: a preview file that held 4, then 3, then 1 entries reads `trend=falling`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_the_census_prints_the_trend_of_a_ratchet_over_its_commits},
+}
+
+@misc{ratchet-remap-ratchet-that-grew-reads-rising-and-one-commit-reads-unknown,
+  section = {remap},
+  title  = {The direction follows the ends, and a single reading is not a direction},
+  claim  = {The direction follows the ends, and a single reading is not a direction.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_remap.py -k test_a_ratchet_that_grew_reads_rising_and_one_commit_reads_unknown},
+}

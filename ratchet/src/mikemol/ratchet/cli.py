@@ -15,9 +15,11 @@ and nobody chose that set. ABSENT must be converted to a recorded set by someone
 
 import argparse
 import sys
+import tempfile
 from pathlib import Path
 from typing import cast
 
+from mikemol.ratchet import trend
 from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
 from mikemol.ratchet.declaration import DeclarationError
@@ -26,10 +28,26 @@ from mikemol.ratchet.fleetcensus import census, census_repo, tombstones, tombsto
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.rebaseline import main as rebaselines_main
 from mikemol.ratchet.remap import __doc__ as remap_doc
-from mikemol.ratchet.remap import remap_guard
+from mikemol.ratchet.remap import remap_guard, revisions_of, text_at
 from mikemol.ratchet.state import BaselineState
 
 _BASELINE = Path("ratchet-preview.txt")
+
+
+def _trend_of(repo: Path, rel: str, count: int) -> str:
+    """Say which way one ratchet file's value went over its last `count` commits (W1908).
+
+    Returns:
+        `falling`, `flat`, `rising` or `unknown`, by the census's own counting at each commit.
+
+    """
+    revs = revisions_of(repo, rel, count)
+    with tempfile.TemporaryDirectory() as scratch:
+        series = trend.history(
+            Path(rel).name, revs, lambda rev: text_at(repo, rev, rel), Path(scratch)
+        )
+    return trend.direction([value for _rev, value in series])
+
 
 # ⚑⚑ "COULD NOT LOOK" IS NOT "LOOKED AND REFUSED", AND THE STATUS SAYS WHICH. 2 matches
 # `remap.UNREADABLE` and argparse's own usage status: in all three the gate did not run. Every
@@ -86,8 +104,16 @@ def _census_main(argv: list[str]) -> int:
     parser.add_argument(
         "--repo", action="store_true", help="ROOT is itself one repository: census it alone"
     )
+    parser.add_argument(
+        "--trend",
+        type=int,
+        default=0,
+        metavar="N",
+        help="append trend=falling|flat|rising|unknown from each file's last N commits (W1908)",
+    )
     opts: dict[str, object] = vars(parser.parse_args(argv))
     where = Path(str(opts["root"]))
+    count = int(str(opts["trend"]))
     try:
         rows = census_repo(where) if opts["repo"] else census(where)
         dead = tombstones(where) if opts["repo"] else tombstones_under(where)
@@ -95,7 +121,9 @@ def _census_main(argv: list[str]) -> int:
         sys.stderr.write(f"mikemol-ratchet census: {fault}\n")
         return 1
     for row in rows:
-        sys.stdout.write(f"{row.line()}\n")
+        repo = where if opts["repo"] else where / row.repo
+        said = f" trend={_trend_of(repo, row.ratchet, count)}" if count else ""
+        sys.stdout.write(f"{row.line()}{said}\n")
     for line in dead:
         sys.stdout.write(f"{line}\n")
     unread = sum(r.value is None for r in rows)

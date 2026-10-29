@@ -16,3 +16,4 @@ fleetcensus	Fleet census (W1907): every ratchet file under a root, with value an
 declaration	Ratchet declaration (W1957): a repository names its ratchets and the census reads that, not filenames
 expression	Value-expression
 rebaseline	A ratchet rises only with a warranted, written re-baseline (W2024)
+trend	The ratchet trend over git history (W1908)
