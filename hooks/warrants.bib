@@ -16201,3 +16201,10 @@
             there.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_zero_ratchets_never_read_as_sent_and_fail_for_a_directory_that_declares_some},
 }
+
+@misc{hooks-commit-kata-usage-names-the-queue-reader-and-its-json-flag,
+  section = {commit-kata},
+  title  = {W2059: a bare `mikemol-commit` names --in-gate [--json], which a cold reader had missed},
+  claim  = {W2059: a bare `mikemol-commit` names --in-gate [--json], which a cold reader had missed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_the_usage_names_the_queue_reader_and_its_json_flag},
+}

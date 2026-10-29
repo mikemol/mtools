@@ -159,6 +159,8 @@ USAGE = (
     "       mikemol-commit REPO --waypoint W --subject S --ship [PATH ...]   (verdicts to vlog)\n"
     "       mikemol-commit REPO --stack FILE\n"
     "       mikemol-commit REPO --withdraw KEY   (a queued submission leaves the queue)\n"
+    "       mikemol-commit REPO --in-gate [--json]   (who is in flight and who is queued: key,\n"
+    "  state, waypoints, began_ns; the queue depth is the length of the list)\n"
     "  FILE is a JSON list of waypoint, subject, body, paths: several commits, ONE gate run on\n"
     "  the tip, one verdict each; a refusal lands nothing\n"
     "  REPO is a path, or a directory name under the host root; PATH defaults to the queue files\n"

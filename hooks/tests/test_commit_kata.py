@@ -258,3 +258,13 @@ def test_a_bad_command_line_is_a_usage_error(capsys: pytest.CaptureFixture[str])
     """Main with no arguments prints the usage and exits 2."""
     assert commit_kata.main([]) == USAGE_RC
     assert "usage: mikemol-commit" in capsys.readouterr().err
+
+
+def test_the_usage_names_the_queue_reader_and_its_json_flag(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2059: a bare `mikemol-commit` names --in-gate [--json], which a cold reader had missed."""
+    assert commit_kata.main([]) == USAGE_RC
+    usage = capsys.readouterr().err
+    assert "--in-gate [--json]" in usage
+    assert "key" in usage
