@@ -50,6 +50,31 @@ class Spec:
     tree: str
 
 
+_ABSOLUTE_START = ("/", "$", '"$', "'$", "~")
+
+
+def unsound_reason(spec: Spec) -> str | None:
+    """Say why a spec would write a block that publishes nothing, or None when it is sound (W2017).
+
+    ⚑ A RELATIVE DIR NAMES THE REPOSITORY BY AN EMPTY BASENAME: `--dir .` made the census label the
+    repo '' and the emit's parser dropped the line while still printing `sent=True` (summit
+    355d22a, 0 ratchets with '.', 1 with the absolute path). The DIR is a shell expression, so it
+    is judged by how it starts: an absolute path, `$VAR`, `$(...)` or `~` resolve at run time.
+
+    Returns:
+        the refusal, naming the flag, or None.
+
+    """
+    if not spec.name.strip():
+        return "--name is empty: every series would carry an empty repository name"
+    if not spec.tree.startswith(_ABSOLUTE_START):
+        return (
+            f"--dir {spec.tree!r} is relative: the census names the repository by its basename, "
+            "which is empty for '.'; pass an absolute path or an expression such as $(pwd)"
+        )
+    return None
+
+
 def block(spec: Spec) -> list[str]:
     """Spell the block, the lines inserted into the script.
 
@@ -121,6 +146,10 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
         sys.stderr.write(_USAGE)
         return EXIT_USAGE
     script, spec, write = parsed
+    unsound = unsound_reason(spec)
+    if unsound is not None:
+        sys.stderr.write(f"mikemol-ratchet-hook: {unsound}\n")
+        return EXIT_REFUSED
     try:
         text = script.read_text(encoding="utf-8")
     except OSError as refusal:

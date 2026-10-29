@@ -4,6 +4,18 @@
 load("@mikemol_check_mutants//:defs.bzl", "mutant_site")
 
 mutant_site(
+    name = "unsound_reason",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_hook.py::unsound_reason",
+    tests = "tests/test_ratchet_hook.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/ratchet_hook.py",
+        "//hooks:tests/test_ratchet_hook.py",
+    ],
+)
+
+mutant_site(
     name = "block",
     dist = "hooks",
     site = "src/mikemol/hooks/ratchet_hook.py::block",
@@ -90,9 +102,36 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_relative-dir-accepted",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_hook.py::relative-dir-accepted",
+    tests = "tests/test_ratchet_hook.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/ratchet_hook.py",
+        "//hooks:tests/test_ratchet_hook.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_empty-name-accepted",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_hook.py::empty-name-accepted",
+    tests = "tests/test_ratchet_hook.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/ratchet_hook.py",
+        "//hooks:tests/test_ratchet_hook.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
+        ":unsound_reason",
         ":block",
         ":insert",
         ":_spec_of",
@@ -100,6 +139,8 @@ test_suite(
         ":declared_block-inserted-twice",
         ":declared_block-before-the-anchor",
         ":declared_dry-run-writes",
+        ":declared_relative-dir-accepted",
+        ":declared_empty-name-accepted",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

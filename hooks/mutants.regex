@@ -780,3 +780,5 @@ src/mikemol/hooks/bazel_admit.py|off-flags-not-after-the-verb|    return \[\*arg
 src/mikemol/hooks/bazel_admit.py|light-verb-probed-too|    address = service_address\(directory\) if verb in SERVICE_VERBS else None|    address = service_address(directory)|def=degrade
 src/mikemol/hooks/bazel_admit.py|nearest-bazelrc-ignored|        if rc\.is_file\(\):|        if False:|def=service_address
 src/mikemol/hooks/bazel_admit.py|degrade-never-applied|    args, down = degrade\(args, Path\.cwd\(\)\)|    down = None|def=admit
+src/mikemol/hooks/ratchet_hook.py|relative-dir-accepted|    if not spec\.tree\.startswith\(_ABSOLUTE_START\):|    if False:|def=unsound_reason
+src/mikemol/hooks/ratchet_hook.py|empty-name-accepted|    if not spec\.name\.strip\(\):|    if False:|def=unsound_reason

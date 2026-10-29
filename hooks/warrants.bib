@@ -16185,3 +16185,11 @@
   claim  = {The argv contract holds for the new hook too, and the refusal names it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_precompact_entry_refuses_an_argument_before_reading_stdin},
 }
+
+@misc{hooks-ratchet-hook-relative-dir-or-an-empty-name-is-refused-and-an-absolute-or-expanded-dir-is-not,
+  section = {ratchet_hook},
+  title  = {W2017: `--dir .` names the repository by an empty basename, so nothing is written for it},
+  claim  = {W2017: `--dir .` names the repository by an empty basename, so nothing is written for
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_a_relative_dir_or_an_empty_name_is_refused_and_an_absolute_or_expanded_dir_is_not},
+}

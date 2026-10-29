@@ -87,3 +87,22 @@ def test_a_bad_command_line_or_a_missing_anchor_is_refused(tmp_path: Path) -> No
     assert ratchet_hook.main(_args(script), io.StringIO()) == ratchet_hook.EXIT_REFUSED
     gone = tmp_path / "gone.sh"
     assert ratchet_hook.main(_args(gone), io.StringIO()) == ratchet_hook.EXIT_REFUSED
+
+
+def test_a_relative_dir_or_an_empty_name_is_refused_and_an_absolute_or_expanded_dir_is_not(
+    tmp_path: Path,
+) -> None:
+    """W2017: `--dir .` names the repository by an empty basename, so nothing is written for it."""
+    relative = ratchet_hook.Spec(_SPEC.after, _SPEC.tool, _SPEC.ratchet, _SPEC.name, ".")
+    nameless = ratchet_hook.Spec(_SPEC.after, _SPEC.tool, _SPEC.ratchet, "  ", "$wt")
+    assert "--dir" in str(ratchet_hook.unsound_reason(relative))
+    assert "--name" in str(ratchet_hook.unsound_reason(nameless))
+    for tree in ("/abs/path", "$PWD", '"$(pwd)"', "$(pwd)", "~/work"):
+        sound = ratchet_hook.Spec(_SPEC.after, _SPEC.tool, _SPEC.ratchet, _SPEC.name, tree)
+        assert ratchet_hook.unsound_reason(sound) is None
+    script = tmp_path / "gate.sh"
+    script.write_text(_SCRIPT, encoding="utf-8")
+    args = [*_args(script, "--write")]
+    args[args.index("--dir") + 1] = "."
+    assert ratchet_hook.main(args, io.StringIO()) == ratchet_hook.EXIT_REFUSED
+    assert script.read_text(encoding="utf-8") == _SCRIPT
