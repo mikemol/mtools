@@ -32,6 +32,40 @@ def test_the_record_carries_the_gate_seconds_and_the_push_word() -> None:
     assert second["pushed"].startswith("LOCAL")
 
 
+def test_a_direct_record_carries_the_subject_and_the_path_and_no_stack_keys() -> None:
+    """W2126: one shape for every path; a run that is no stack names neither a key nor an index."""
+    first, second = commit_span.landing_records(_TEXT, _GATE_S)
+    assert first["subject"] == "W1: first"
+    assert second["subject"] == "no card here"
+    assert (first["path"], second["path"]) == ("direct", "direct")
+    assert "stack_key" not in first
+    assert "stack_index" not in first
+
+
+def test_a_stack_record_names_its_key_and_its_place_in_the_stack() -> None:
+    """The same landings under a stack key: path stack, the key, and the index in landing order."""
+    first, second = commit_span.landing_records(_TEXT, _GATE_S, "1793255768")
+    assert (first["path"], first["stack_key"], first["stack_index"]) == ("stack", "1793255768", "0")
+    assert (second["stack_key"], second["stack_index"]) == ("1793255768", "1")
+
+
+def test_every_value_of_a_record_is_a_flat_string() -> None:
+    """The host's reader takes no nested object and no boolean: every value stays a string."""
+    for record in commit_span.landing_records(_TEXT, _GATE_S, "9"):
+        assert all(isinstance(value, str) for value in record.values())
+
+
+def test_a_stack_run_ships_its_records_under_the_submit_key() -> None:
+    """emit_landings with a key sends records that carry it, in the JSON on the child's stdin."""
+    sent: list[tuple[Sequence[str], str]] = []
+    count = commit_span.emit_landings(
+        _TEXT, _GATE_S, _ENV, lambda a, t: sent.append((a, t)), stack_key="42"
+    )
+    assert count == len(sent) == _TWO
+    shipped = cast("dict[str, str]", json.loads(sent[1][1]))
+    assert (shipped["path"], shipped["stack_key"], shipped["stack_index"]) == ("stack", "42", "1")
+
+
 def test_each_record_is_sent_as_a_log_line_to_the_otlp_child() -> None:
     """The argv names the service, repo, sha and card, and the stdin is the record as JSON."""
     sent: list[tuple[Sequence[str], str]] = []

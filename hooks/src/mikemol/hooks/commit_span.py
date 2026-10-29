@@ -53,38 +53,50 @@ Spawn = Callable[[Sequence[str]], None]
 TextSpawn = Callable[[Sequence[str], str], None]
 
 
-def landing_records(text: str, gate_s: float) -> list[dict[str, str]]:
-    """Make one landing record per COMMITTED line of a run's output (W1738).
+def landing_records(text: str, gate_s: float, stack_key: str = "") -> list[dict[str, str]]:
+    """Make one landing record per COMMITTED line of a run's output (W1738, W2126).
 
     ⚑ A LOG RECORD, NOT A METRIC: the card and the sha are unbounded, so neither may be a metric
     label. `pushed` is the word the line carried in brackets, so a card that is done but not yet
     pushed reads differently from one that landed on the remote.
+
+    ⚑ ONE SHAPE FOR EVERY PATH (W2126, the first slice of W1969): flat strings only, because the
+    host's reader takes no nested objects. `path` is `stack` when the run belongs to a stack and
+    `direct` otherwise; `stack_key` and `stack_index` appear only for a stack, so a reader derives
+    the stack as the records that share a key. The `subject` is carried whole. Still to come on the
+    same builder: the `cards` and `notes` lists, and the refused and withdrawn events.
 
     Returns:
         the records, in order; the card is the subject's leading `W<n>`, or `-` when it has none.
 
     """
     records: list[dict[str, str]] = []
-    for event in verdictlog.events_of(text):
-        if event["verdict"] != _OK:
-            continue
+    landed = [event for event in verdictlog.events_of(text) if event["verdict"] == _OK]
+    for index, event in enumerate(landed):
         card = _CARD.match(event.get("subject", ""))
-        records.append(
-            {
-                "event": "landing",
-                "repo": event["repo"],
-                "sha": event["sha"],
-                "card": card.group(1) if card else NO_CARD,
-                "gate_s": f"{gate_s:.0f}",
-                "pushed": event.get("pushed", ""),
-                "verdict": _OK,
-            }
-        )
+        record = {
+            "event": "landing",
+            "repo": event["repo"],
+            "sha": event["sha"],
+            "subject": event.get("subject", ""),
+            "card": card.group(1) if card else NO_CARD,
+            "path": "stack" if stack_key else "direct",
+            "gate_s": f"{gate_s:.0f}",
+            "pushed": event.get("pushed", ""),
+            "verdict": _OK,
+        }
+        if stack_key:
+            record |= {"stack_key": stack_key, "stack_index": str(index)}
+        records.append(record)
     return records
 
 
 def emit_landings(
-    text: str, gate_s: float, env: Mapping[str, str], spawn: TextSpawn = spawn_with_stdin
+    text: str,
+    gate_s: float,
+    env: Mapping[str, str],
+    spawn: TextSpawn = spawn_with_stdin,
+    stack_key: str = "",
 ) -> int:
     """Ship each landing record as a log record, when a child and a store exist.
 
@@ -96,7 +108,7 @@ def emit_landings(
     if program is None or not store_named(env):
         return 0
     started = 0
-    for record in landing_records(text, gate_s):
+    for record in landing_records(text, gate_s, stack_key):
         argv = [program, "log", "--service", SERVICE, "--namespace", record["repo"]]
         argv += ["--version", record["sha"], "--field", f"card={record['card']}"]
         argv += ["--field", f"pushed={record['pushed']}", "--field", f"gate_s={record['gate_s']}"]
@@ -415,7 +427,8 @@ def emit_stack(
         how many were started, as `emit`; the waypoint attribute is the entries' joined.
 
     """
-    emit_landings(text, (moments.end_ns - moments.lease_ns) / NS_PER_S, env)
+    gate_s = (moments.end_ns - moments.lease_ns) / NS_PER_S
+    emit_landings(text, gate_s, env, stack_key=env.get(SUBMIT_ENV, ""))
     found = _marks_of(text)
     event = stack_event(text)
     if event is not None:

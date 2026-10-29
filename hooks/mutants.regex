@@ -624,7 +624,7 @@ src/mikemol/hooks/pyratchet.py|equal-count-is-a-rise|        if n > base\.get\(n
 src/mikemol/hooks/pyratchet.py|codeless-finding-loses-its-rule|str\(row\.get\("code"\) or SYNTAX\)|str(row.get("code"))|def=_pair
 src/mikemol/hooks/pyratchet.py|mypy-notes-counted-as-errors|if row\.get\("severity"\) == "error"|if True|def=mypy_counts
 src/mikemol/hooks/pyratchet.py|links-followed-before-relativising|        name = raw\.absolute\(\)\.relative_to\(root\.absolute\(\)\)|        name = raw.resolve().relative_to(root.resolve())|def=_pair
-src/mikemol/hooks/commit_span.py|refusal-recorded-as-a-landing|        if event\["verdict"\] != _OK:|        if False:|def=landing_records
+src/mikemol/hooks/commit_span.py|refusal-recorded-as-a-landing|if event\["verdict"\] == _OK\]|if True]|def=landing_records
 src/mikemol/hooks/commit_span.py|landings-without-a-store|    if program is None or not store_named\(env\):|    if program is None:|def=emit_landings
 src/mikemol/hooks/vlogdetach.py|journal-wrapper-always-used|    if program is None:|    if False:|def=journaled
 src/mikemol/hooks/rootdrop.py|non-root-process-drops|    if euid != ROOT_UID:|    if False:|def=owner_of
