@@ -1159,3 +1159,10 @@
   claim  = {W1963: the retired list only grows; added tombstones and a reorder are free.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_declaration.py -k test_a_tombstone_present_at_head_may_not_vanish_or_change},
 }
+
+@misc{ratchet-kinds-tab-separated-table-counts-its-rows-and-not-its-header-line,
+  section = {kinds},
+  title  = {W1992: a 3-row table with a header reads 3, a header alone and an empty file read 0},
+  claim  = {W1992: a 3-row table with a header reads 3, a header alone and an empty file read 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kinds.py -k test_a_tab_separated_table_counts_its_rows_and_not_its_header_line},
+}

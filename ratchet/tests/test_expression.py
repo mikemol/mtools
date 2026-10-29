@@ -21,9 +21,9 @@ if TYPE_CHECKING:
 
 _HEADER = "letter\tmismatch\tjoined\tunjudged\tfreeform\n"
 _COLUMNS = ["mismatch", "joined", "unjudged", "freeform"]
-# `rows` is the line count, the HEADER INCLUDED (the entry count the census always gave; W1992 is
-# the card that says a header is not an entry): three data rows and a header.
-_LINES = 4
+# `rows` is the entry count with a .tsv's HEADER NOT COUNTED (W1992: a header is not an entry, and
+# `kinds.value_of` drops it): three data rows under a header read 3.
+_ROWS = 3
 _TWO_ONES = 2
 
 
@@ -41,8 +41,8 @@ def test_a_table_is_counted_by_its_failure_columns_not_its_lines(tmp_path: Path)
     """Rows stays at the entry count; the two column expressions fall when a 1 becomes 0."""
     before = _table(tmp_path / "a.tsv", "a\t0\t0\t0\t0\n", "b\t0\t0\t1\t0\n", "c\t0\t1\t0\t0\n")
     after = _table(tmp_path / "b.tsv", "a\t0\t0\t0\t0\n", "b\t0\t0\t0\t0\n", "c\t0\t1\t0\t0\n")
-    assert expression.evaluate(before, expression.ROWS) == _LINES
-    assert expression.evaluate(after, expression.ROWS) == _LINES
+    assert expression.evaluate(before, expression.ROWS) == _ROWS
+    assert expression.evaluate(after, expression.ROWS) == _ROWS
     assert expression.evaluate(before, expression.SUM_OF_COLUMNS, _COLUMNS) == _TWO_ONES
     assert expression.evaluate(after, expression.SUM_OF_COLUMNS, _COLUMNS) == 1
     assert expression.evaluate(before, expression.ROWS_WHERE_NONZERO, _COLUMNS) == _TWO_ONES

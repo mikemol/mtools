@@ -65,6 +65,20 @@ def test_a_text_baseline_counts_entries_not_blanks_or_comments(tmp_path: Path) -
     assert kinds.value_of(tmp_path / "ratchet-preview.txt") == 0
 
 
+def test_a_tab_separated_table_counts_its_rows_and_not_its_header_line(tmp_path: Path) -> None:
+    """W1992: a 3-row table with a header reads 3, a header alone and an empty file read 0."""
+    table = tmp_path / "baseline.tsv"
+    table.write_text("letter\tmismatch\na\t1\nb\t2\nc\t3\n", encoding="utf-8")
+    assert kinds.value_of(table) == len(["a", "b", "c"])
+    table.write_text("letter\tmismatch\n", encoding="utf-8")
+    assert kinds.value_of(table) == 0
+    table.write_text("", encoding="utf-8")
+    assert kinds.value_of(table) == 0
+    plain = tmp_path / "baseline.txt"
+    plain.write_text("letter\na\n", encoding="utf-8")
+    assert kinds.value_of(plain) == len(["letter", "a"])
+
+
 def test_a_file_that_cannot_be_read_is_unread_never_zero(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

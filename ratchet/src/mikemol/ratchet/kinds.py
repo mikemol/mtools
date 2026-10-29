@@ -94,7 +94,9 @@ def value_of(path: Path) -> int | None:
             return None
         return _weight(parsed)
     lines = (line.strip() for line in text.splitlines())
-    return sum(1 for line in lines if line and not line.startswith("#"))
+    entries = [line for line in lines if line and not line.startswith("#")]
+    # ⚑ A TAB-SEPARATED TABLE'S FIRST LINE IS ITS HEADER, NOT DEBT (W1992): 70 rows read 70.
+    return len(entries) - 1 if path.suffix == ".tsv" and entries else len(entries)
 
 
 def _counts(node: object) -> list[int] | None:
