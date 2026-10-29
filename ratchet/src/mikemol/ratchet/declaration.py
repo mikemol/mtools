@@ -195,3 +195,24 @@ def read_retired(repo: Path) -> list[Retired]:
     """
     doc = _parsed(repo)
     return [] if doc is None else _retired_list(doc)
+
+
+def lost_retired(before: list[Retired], after: list[Retired]) -> list[str]:
+    """Name every tombstone HEAD held that the staged declaration no longer carries unchanged.
+
+    ⚑ THE RETIRED LIST ONLY GROWS (W1963), like a queue's residue: a tombstone is how a retired
+    metric family is told apart from a ratchet gone silent, so deleting one, or rewriting its
+    reason, sha or rename target, would turn a written retirement back into an inference.
+
+    Returns:
+        one line per lost or changed tombstone, in the order HEAD listed them; empty when every
+        one is still there exactly as it was.
+
+    """
+    kept = set(after)
+    return [
+        f"{NAME}: retired {entry.path} ({entry.reason}, sha {entry.sha}) is gone or changed: "
+        "the retired list only grows"
+        for entry in before
+        if entry not in kept
+    ]

@@ -98,3 +98,20 @@ def test_a_link_is_never_read_as_a_declaration(
     _declare(tmp_path, [{"path": "x.txt", "kind": "baseline"}])
     monkeypatch.setattr("pathlib.Path.is_symlink", _only_the_declaration)
     assert declaration.read(tmp_path) is None
+
+
+def test_a_tombstone_present_at_head_may_not_vanish_or_change() -> None:
+    """W1963: the retired list only grows; added tombstones and a reorder are free."""
+    gone = declaration.Retired("a.json", "paid-to-zero-and-removed", "abc123")
+    moved = declaration.Retired("b.json", "renamed-to", "def456", "c.json")
+    extra = declaration.Retired("z.json", "reclassified-not-a-ratchet", "999999")
+    assert declaration.lost_retired([gone, moved], [moved, extra, gone]) == []
+    said = (
+        "ratchets.json: retired a.json (paid-to-zero-and-removed, sha abc123) is gone or changed: "
+        "the retired list only grows"
+    )
+    assert declaration.lost_retired([gone, moved], [moved]) == [said]
+    edited = declaration.Retired("b.json", "renamed-to", "def456", "d.json")
+    lost = declaration.lost_retired([gone, moved], [gone, edited])
+    assert len(lost) == 1
+    assert "b.json" in lost[0]

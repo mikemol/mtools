@@ -83,3 +83,8 @@ src/mikemol/ratchet/rebaseline.py|birth-worded-as-a-rise|f"was born at \{now\}" 
 src/mikemol/ratchet/rebaseline.py|vanished-entry-not-named|        if e not in kept|        if False|def=lost
 src/mikemol/ratchet/rebaseline.py|check-never-asks-what-was-lost|        \*lost\(read\(before\), now_entries\),|        *[],|def=check
 src/mikemol/ratchet/fleetcensus.py|guessed-flag-not-printed|        return line if self\.guessed is None else f"\{line\} guessed=\{int\(self\.guessed\)\}"|        return line|def=Row.line
+src/mikemol/ratchet/kinds.py|false-leaf-counted|    if node is False or \(isinstance\(node, str\) and not node\):|    if isinstance(node, str) and not node:|def=_weight
+src/mikemol/ratchet/kinds.py|empty-string-leaf-counted|    if node is False or \(isinstance\(node, str\) and not node\):|    if node is False:|def=_weight
+src/mikemol/ratchet/kinds.py|numeric-zero-dropped|    if node is False or \(isinstance\(node, str\) and not node\):|    if not node:|def=_weight
+src/mikemol/ratchet/declaration.py|changed-tombstone-allowed|        if entry not in kept|        if entry.path not in {e.path for e in after}|def=lost_retired
+src/mikemol/ratchet/declaration.py|vanished-tombstone-not-named|        if entry not in kept|        if False|def=lost_retired
