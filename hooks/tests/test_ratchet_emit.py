@@ -170,5 +170,30 @@ def test_main_reads_the_census_and_ships_the_values(
     first = cast("dict[str, object]", json.loads(sent[0].splitlines()[0]))
     assert first["value"] == 0
     assert cast("dict[str, str]", first["fields"])["repo"] == "mtools"
-    assert "3 ratchet(s), sent=True" in capsys.readouterr().out
+    assert "3 ratchet(s), sent=3" in capsys.readouterr().out
     assert ratchet_emit.main(["only-one-argument"]) == ratchet_emit.EXIT_USAGE
+
+
+def test_zero_ratchets_never_read_as_sent_and_fail_for_a_directory_that_declares_some(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2018: `0 ratchet(s), sent=True` read as success; now sent is a count and 0 exits 1 there."""
+    tool = tmp_path / "mikemol-ratchet"
+    tool.write_text("", encoding="utf-8")
+    monkeypatch.setenv("RATCHET_BIN", str(tool))
+    monkeypatch.setenv("MIKEMOL_OTLP_BIN", "/bin/otlp")
+    monkeypatch.setenv("MIKEMOL_ENDPOINTS", "x")
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def run(_argv: Sequence[str]) -> tuple[int, str]:
+        return 0, ""
+
+    def spawn(_argv: Sequence[str], _text: str) -> None:
+        return None
+
+    assert ratchet_emit.main(["r", str(repo)], spawn, run) == 0
+    assert "0 ratchet(s), sent=0" in capsys.readouterr().out
+    (repo / "ratchets.json").write_text("{}", encoding="utf-8")
+    assert ratchet_emit.main(["r", str(repo)], spawn, run) == 1
+    assert "sent=0" in capsys.readouterr().out

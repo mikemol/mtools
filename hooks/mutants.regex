@@ -782,3 +782,5 @@ src/mikemol/hooks/bazel_admit.py|nearest-bazelrc-ignored|        if rc\.is_file\
 src/mikemol/hooks/bazel_admit.py|degrade-never-applied|    args, down = degrade\(args, Path\.cwd\(\)\)|    down = None|def=admit
 src/mikemol/hooks/ratchet_hook.py|relative-dir-accepted|    if not spec\.tree\.startswith\(_ABSOLUTE_START\):|    if False:|def=unsound_reason
 src/mikemol/hooks/ratchet_hook.py|empty-name-accepted|    if not spec\.name\.strip\(\):|    if False:|def=unsound_reason
+src/mikemol/hooks/ratchet_emit.py|sent-reported-as-a-boolean|    sent = len\(rows\) if emit\(rows, os\.environ, spawn\) else 0|    sent = emit(rows, os.environ, spawn)|def=main
+src/mikemol/hooks/ratchet_emit.py|declared-ratchets-found-none-exits-clean|    return 1 if declared and not rows else 0|    return 0|def=main

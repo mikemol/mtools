@@ -508,6 +508,60 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_sent-reported-as-a-boolean",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::sent-reported-as-a-boolean",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py tests/test_ratchet_emit_retired.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:tests/test_ratchet_emit_retired.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_declared-ratchets-found-none-exits-clean",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::declared-ratchets-found-none-exits-clean",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py tests/test_ratchet_emit_retired.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:tests/test_ratchet_emit_retired.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -530,6 +584,8 @@ test_suite(
         ":declared_census-line-not-matched",
         ":declared_repo-label-is-the-emitting-repo",
         ":declared_send-without-binary-or-store",
+        ":declared_sent-reported-as-a-boolean",
+        ":declared_declared-ratchets-found-none-exits-clean",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

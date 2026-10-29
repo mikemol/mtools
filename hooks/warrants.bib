@@ -16193,3 +16193,11 @@
             it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_hook.py -k test_a_relative_dir_or_an_empty_name_is_refused_and_an_absolute_or_expanded_dir_is_not},
 }
+
+@misc{hooks-ratchet-emit-zero-ratchets-never-read-as-sent-and-fail-for-a-directory-that-declares-some,
+  section = {ratchet_emit},
+  title  = {W2018: `0 ratchet(s), sent=True` read as success; now sent is a count and 0 exits 1 there},
+  claim  = {W2018: `0 ratchet(s), sent=True` read as success; now sent is a count and 0 exits 1
+            there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_zero_ratchets_never_read_as_sent_and_fail_for_a_directory_that_declares_some},
+}

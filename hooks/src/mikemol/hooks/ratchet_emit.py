@@ -213,8 +213,14 @@ def main(
 ) -> int:
     """Read the census of one repository directory and ship its values under a name.
 
+    ⚑ `sent=` IS A COUNT OF ROWS STARTED, NOT A BOOLEAN (W2018): `0 ratchet(s), sent=True` read as
+    success while nothing was published (summit, 2026-10-25). A run whose census held no ratchet
+    for a directory that declares some (a `ratchets.json`) exits 1, so the gate's own `|| echo`
+    says so; a send that cannot start for want of a binary or a store still changes nothing.
+
     Returns:
-        0 once the arguments are right (a send that cannot start changes nothing); 2 with usage.
+        0 once the arguments are right and rows were found or none are declared; 1 when none were
+        found for a directory that declares ratchets; 2 with usage.
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
@@ -236,9 +242,10 @@ def main(
     now = time.time_ns()
     dead = [(args[0], path, reason) for _repo, path, reason in parse_tombstones(said)]
     rows = [*rows_of(named, now), *retired_rows(dead, now)]
-    sent = emit(rows, os.environ, spawn)
+    sent = len(rows) if emit(rows, os.environ, spawn) else 0
     sys.stdout.write(f"ratchet emit: {len(rows)} ratchet(s), sent={sent}\n")
-    return 0
+    declared = (Path(args[1]) / "ratchets.json").is_file()
+    return 1 if declared and not rows else 0
 
 
 if __name__ == "__main__":
