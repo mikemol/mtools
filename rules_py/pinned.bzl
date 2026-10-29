@@ -29,12 +29,24 @@ sibling changes the verdict and nothing says so. This gives the gate the repo AT
   relative to itself still does.
 """
 
+def _without_git_env(rctx):
+    """The environment that removes every GIT_* variable the caller inherited (mtools:W1849).
+
+    ⚑ `git -C <remote>` MUST READ <remote>, NOT THE CALLER'S REPOSITORY. Under mikemol-commit's
+    isolated commit GIT_DIR, GIT_INDEX_FILE and GIT_WORK_TREE point at the snapshot's repository, and
+    a git call that inherits them ignores `-C` and fails with 'not a tree object' on the sibling's
+    sha (estate-dd). The names are read from the rule's own environment, so a variable git adds later
+    is removed too; Bazel's `execute` removes a variable whose value is None.
+    """
+    return {name: None for name in rctx.os.environ if name.startswith("GIT_")}
+
 def _pinned_files_impl(rctx):
     remote = rctx.attr.remote
     commit = rctx.attr.commit
+    clean = _without_git_env(rctx)
     if len(commit) != 40 or not all([c in "0123456789abcdef" for c in commit.elems()]):
         fail("pinned_files: commit must be a full 40-hex sha, got %r (a ref moves; a sha does not)" % commit)
-    listing = rctx.execute(["git", "-C", remote, "ls-tree", "-r", "-z", "--name-only", commit], quiet = True)
+    listing = rctx.execute(["git", "-C", remote, "ls-tree", "-r", "-z", "--name-only", commit], quiet = True, environment = clean)
     if listing.return_code != 0:
         fail("pinned_files: %s does not hold commit %s: %s" % (remote, commit, listing.stderr))
     everything = [p for p in listing.stdout.split("\0") if p]
@@ -47,7 +59,7 @@ def _pinned_files_impl(rctx):
     names = sorted([p for p in everything if p.startswith(rctx.attr.prefix) and p not in own_builds])
     if not names:
         fail("pinned_files: no path of %s at %s starts with %r" % (remote, commit, rctx.attr.prefix))
-    archive = rctx.execute(["git", "-C", remote, "archive", "--format=tar", "-o", str(rctx.path("pinned.tar")), commit], quiet = True)
+    archive = rctx.execute(["git", "-C", remote, "archive", "--format=tar", "-o", str(rctx.path("pinned.tar")), commit], quiet = True, environment = clean)
     if archive.return_code != 0:
         fail("pinned_files: git archive %s failed: %s" % (commit, archive.stderr))
     rctx.extract("pinned.tar")
