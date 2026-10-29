@@ -21,7 +21,10 @@ PRESENCE between the actual source and a nearby counterfactual: drop the present
     dflip:<name>#<n>  PERTURB one VALUE of a dict value or list element to a counterfactual (a
                       valid-enum sibling where the literal has a finite value domain, else a
                       distinct marker). NON-monotone. A consumer never asks it of a bare set
-                      membership.
+                      membership. `dflip:<name>#<n>/<i>/<j>` follows an INDEX PATH inside entry
+                      `n` (a tuple or list element, nested) and perturbs exactly that leaf, so
+                      element 4 of a 5-tuple is reachable; a path that names no scalar constant
+                      is a KeyError.
     import-:<name>    DROP `import <name>` or `from <name> import ...` (present becomes absent).
     import+:<name>    INJECT `import <name>` (absent becomes present), the NEGATIVE polarity that
                       falsifies a "module does NOT import X" assertion.
@@ -707,23 +710,70 @@ def _perturb_assign(
     return text.replace(asrc, new_asrc, 1)
 
 
+def _path_of(arg: str) -> tuple[str, tuple[int, ...]]:
+    """Split `<name>#<n>[/<i>[/<j>...]]` into the site and the index path inside it.
+
+    Returns:
+        the `<name>#<n>` head and the path, empty when the selector has none.
+
+    Raises:
+        KeyError: when a path element is not an integer.
+
+    """
+    head, _, tail = arg.partition("/")
+    try:
+        return head, tuple(int(part) for part in tail.split("/")) if tail else ()
+    except ValueError as bad:
+        msg = f"mutant: 'dflip:{arg}' has a path element that is not an index"
+        raise KeyError(msg) from bad
+
+
+def _perturb_leaf(text: str, qualname: str, entry: ast.expr, path: tuple[int, ...]) -> str:
+    """Perturb the leaf an index path names inside one entry, by its own source span.
+
+    ⚑ BY POSITION, NOT BY TEXT (paperkit:W542, el-openglo's TIMELINE of 5-tuples): the first-leaf
+    form only ever reached tuple element 0, and rewriting by matching the leaf's text would hit an
+    earlier equal string. The span of the named node is the only thing replaced.
+
+    Returns:
+        The module text with that one leaf replaced by a counterfactual.
+
+    Raises:
+        KeyError: when the path names no scalar constant (a shape that does not match, a container,
+            or an element of a set, which has no position to name).
+
+    """
+    leaf = _at_path(entry, path)
+    if not isinstance(leaf, ast.Constant):
+        spelled = "/".join(str(i) for i in path)
+        msg = f"mutant: 'dflip:{qualname}' path /{spelled} names no perturbable leaf"
+        raise KeyError(msg)
+    return _splice(text, leaf, leaf, _counterfactual(text, qualname, entry, leaf))
+
+
 def _perturb_data(text: str, arg: str) -> str:
     """Perturb one value to a counterfactual (non-monotone: a value swap, never a drop).
 
-    Descends into a nested value to the FIRST scalar leaf, keeping the module parseable.
+    `<name>#<n>` descends into entry `n` to its FIRST scalar leaf; `<name>#<n>/<i>/<j>` follows
+    that index path inside the entry instead, keeping the module parseable either way.
 
     Returns:
         The perturbed source.
 
     Raises:
-        KeyError: when `arg` (`<name>#<n>`) is not a data site.
+        KeyError: when `arg` is not a data site, or its path names no leaf.
 
     """
-    qualname, n = _split_qn_n(arg)
+    head, path = _path_of(arg)
+    qualname, n = _split_qn_n(head)
     assign = _assign_of(ast.parse(text), qualname)
     for name, i, _kind, _k, val in data_sites(text):
         if name == qualname and i == n:
-            out = _perturb_assign(text, qualname, val, assign)
+            out = (
+                _perturb_leaf(text, qualname, val, path)
+                if path
+                else _perturb_assign(text, qualname, val, assign)
+            )
             ast.parse(out)
             return out
     msg = f"mutant: 'dflip:{qualname}#{n}' is not a data site in the module"

@@ -35,3 +35,7 @@ src/mikemol/mutation/sitewalk.py|one-liners-always-skipped|if policy\.one_liners
 src/mikemol/mutation/sitewalk.py|async-defs-never-sites|policy\.async_sites and isinstance\(child, ast\.AsyncFunctionDef\)|False and isinstance(child, ast.AsyncFunctionDef)|def=walk.visit
 src/mikemol/mutation/sitewalk.py|nested-def-inherits-the-owner|visit\(child, f"\{path\}\{nested\}", None\)|visit(child, f"{path}{nested}", owner)|def=walk.visit
 src/mikemol/mutation/sitewalk.py|walked-async-and-lambda-not-named|elif policy\.locals_marker and isinstance|elif False and isinstance|def=walk.visit
+src/mikemol/mutation/mutate.py|dflip-path-never-read|tuple\(int\(part\) for part in tail\.split\("/"\)\) if tail else \(\)|()|def=_path_of
+src/mikemol/mutation/mutate.py|dflip-non-index-leaks-a-value-error|    except ValueError as bad:|    except KeyError as bad:|def=_path_of
+src/mikemol/mutation/mutate.py|dflip-container-leaf-perturbed|    if not isinstance\(leaf, ast\.Constant\):|    if False:|def=_perturb_leaf
+src/mikemol/mutation/mutate.py|dflip-path-ignored-by-the-site|                if path|                if False|def=_perturb_data

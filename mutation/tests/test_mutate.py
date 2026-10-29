@@ -6,19 +6,41 @@ from __future__ import annotations
 
 import ast
 import re
+import runpy
 import sys
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
 from mikemol.mutation import mutate
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
 
 USAGE_EXIT = 2
 RAISE = "raise BaseException('PAPERKIT_MUT')\n"
+HAZARD_SRC = (
+    "def g():\n"
+    "    try:\n"
+    "        raise BaseException('MUT')\n"
+    "    except BaseException:\n"
+    "        return 'swallowed'\n"
+    "    return 'end'\n"
+)
+
+
+def hazard_result(path: Path) -> str:
+    """Run a module file and call its `g()`.
+
+    Returns:
+        what `g()` returned.
+
+    """
+    table = cast("dict[str, object]", runpy.run_path(str(path)))
+    return cast("Callable[[], str]", table["g"])()
+
 
 SITES_SRC = """\
 import os
@@ -240,6 +262,22 @@ def test_branch_sites_refuse_an_arm_a_base_exception_handler_would_swallow() -> 
     assert got == [("f", 0, 5), ("f", 1, 9), ("f", 2, 11), ("f", 3, 13)]
 
 
+def test_a_raise_planted_in_a_base_exception_region_is_swallowed_by_its_handler(
+    tmp_path: Path,
+) -> None:
+    """W2102 (paperkit:R7): the fact that justifies the refusal above, EXECUTED.
+
+    `branch_sites` refuses an arm under `except BaseException` because a raise planted there never
+    escapes: the handler wins and the module returns its own value, so a mutant planted there would
+    read as a survivor for a reason no test can observe. This runs the hazard on a real module.
+    """
+    probe = tmp_path / "hazard.py"
+    probe.write_text(HAZARD_SRC, encoding="utf-8")
+    assert hazard_result(probe) == "swallowed"
+    arms = [first.lineno for _qn, _n, (first, _last) in mutate.branch_sites(HAZARD_SRC)]
+    assert arms == [5]  # the handler's own return; the try body (line 3) is the refused arm
+
+
 def test_flip_sites_number_every_if_and_while_condition_per_def() -> None:
     """The test expression of each if and while, in source order, per def."""
     got = [
@@ -428,6 +466,53 @@ def test_a_data_perturb_with_no_locatable_segment_marks_the_whole_value(
     """When the source segment cannot be found the value itself is replaced by the marker."""
     monkeypatch.setattr(ast, "get_source_segment", _no_segment)
     assert mutate.emit_mutant("X = [1]\n", "dflip:X#0") == 'X = ["PAPERKIT_PERTURB"]\n'
+
+
+TIMELINE_SRC = """\
+TIMELINE = [
+    (300, 'op', 1, {'m': 1}, 'one'),
+    (400, 'op', 2, {'m': 2}, 'two'),
+]
+"""
+
+
+def test_a_dflip_path_reaches_any_element_of_a_tuple_entry() -> None:
+    """W2062 (paperkit:W542, el-openglo's TIMELINE): `#i/4` and `#i/1` are reachable, not only `#i`.
+
+    Element 4 takes its same-position sibling (the finite domain), element 1 has none and takes the
+    marker; the control is the bare form, which still perturbs element 0 and nothing else.
+    """
+    entry = "(300, 'op', 1, {'m': 1}, 'one')"
+    assert mutate.emit_mutant(TIMELINE_SRC, "dflip:TIMELINE#0/4") == TIMELINE_SRC.replace(
+        entry, "(300, 'op', 1, {'m': 1}, 'two')"
+    )
+    second = "(400, 'op', 2, {'m': 2}, 'two')"
+    assert mutate.emit_mutant(TIMELINE_SRC, "dflip:TIMELINE#1/1") == TIMELINE_SRC.replace(
+        second, "(400, 'op·PAPERKIT_PERTURB', 2, {'m': 2}, 'two')"
+    )
+    assert mutate.emit_mutant(TIMELINE_SRC, "dflip:TIMELINE#0") == TIMELINE_SRC.replace(
+        "(300,", "(301,"
+    )
+
+
+def test_a_dflip_path_replaces_the_named_leaf_by_position_not_by_text() -> None:
+    """An equal string earlier in the literal is left alone: only the named span changes."""
+    src = "T = [('a', 'x'), ('b', 'x')]\n"
+    got = mutate.emit_mutant(src, "dflip:T#1/1")
+    assert got == "T = [('a', 'x'), ('b', 'x·PAPERKIT_PERTURB')]\n"
+
+
+def test_a_dflip_path_that_names_no_scalar_leaf_is_a_key_error() -> None:
+    """A container, an out-of-range index, a non-index and a set element each name no leaf."""
+    for spec in ("dflip:TIMELINE#0/3", "dflip:TIMELINE#0/9", "dflip:TIMELINE#0/4/0"):
+        with pytest.raises(KeyError, match="names no perturbable leaf"):
+            mutate.emit_mutant(TIMELINE_SRC, spec)
+    with pytest.raises(KeyError, match="not an index"):
+        mutate.emit_mutant(TIMELINE_SRC, "dflip:TIMELINE#0/x")
+    with pytest.raises(KeyError, match="names no perturbable leaf"):
+        mutate.emit_mutant("S = {'a', 'b'}\n", "dflip:S#0/0")
+    with pytest.raises(KeyError, match="is not a data site"):
+        mutate.emit_mutant(TIMELINE_SRC, "dflip:TIMELINE#7/4")
 
 
 def test_mutate_lines_collapses_nested_nodes_and_replaces_several_at_once() -> None:
