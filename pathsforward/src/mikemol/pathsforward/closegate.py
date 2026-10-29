@@ -31,7 +31,10 @@ CONSUMED BY: `cli._tick_close` (and the katas `tick end`, W1202).
 """
 
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime
+from itertools import pairwise
 from pathlib import Path
 from typing import cast
 
@@ -50,6 +53,45 @@ FRESH = re.compile(
 TOP = 3
 TICK_SYMBOL = 2
 SESSION = re.compile(r"\bsession=(\S+)")
+
+
+def landing_bound(times: Sequence[float]) -> float | None:
+    """Learn how long this repository goes between landings, from its own landing times (W2047).
+
+    ⚑ NO TYPED THRESHOLD: the bound is the LARGEST gap between consecutive landings among the times
+    given, so a card idle longer than the repository has ever gone without landing anything is
+    idle by its own record, not by a number someone chose.
+
+    Returns:
+        the largest gap in seconds, or None when fewer than two landings are known.
+
+    """
+    gaps = [later - earlier for earlier, later in pairwise(sorted(times))]
+    return max(gaps) if gaps else None
+
+
+def idle_cards(state: State, now: datetime, bound: float | None) -> list[str]:
+    """Name each working card whose last work is older than the learned bound (W2047).
+
+    Returns:
+        the symbols of working cards stamped before `now` minus `bound` seconds, in queue order;
+        empty with no bound, and a working card with no readable stamp is not named.
+
+    """
+    if bound is None:
+        return []
+    named: list[str] = []
+    for card in state.waypoints:
+        stamp = text(card, "last_worked")
+        if text(card, "status") != "working" or not stamp:
+            continue
+        try:
+            worked = datetime.fromisoformat(stamp).astimezone(UTC)
+        except ValueError:
+            continue
+        if (now - worked).total_seconds() > bound:
+            named.append(text(card, "symbol"))
+    return named
 
 
 @dataclass(frozen=True)

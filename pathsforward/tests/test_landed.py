@@ -2,6 +2,7 @@
 # Copyright (c) 2026 Mike Mol
 """A card is advanced only when a landed commit carries it; an edit alone is shown apart (W1377)."""
 
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,8 @@ import pytest
 from mikemol.pathsforward import closegate, landed
 from mikemol.pathsforward.model import Json, State
 
+_DAY = 86_400.0
+_NOW = datetime(2026, 10, 29, 14, 0, tzinfo=UTC)
 _SINCE = "2026-10-18T08:00:00Z"
 _STAMP = "2026-10-18T09:00:00Z"
 _LOG = "W1: a subject\n\nWaypoint: W1\n\nCo-Authored-By: x\n\nW2: b\n\nWaypoint: W2  \n"
@@ -124,3 +127,30 @@ def test_the_handoff_line_is_absent_without_a_tick_line_and_dashes_a_missing_ses
     bare = '2026-10-29T12:50:00Z  tick  W7 advanced  unblock  "b"\n'
     want = "G1-HANDOFF m W7 closed=2026-10-29T12:50:00Z session=-"
     assert closegate.handoff_line(bare, "m") == want
+
+
+def _worked(symbol: str, status: str, stamp: str) -> Json:
+    return {"symbol": symbol, "status": status, "last_worked": stamp}
+
+
+def test_the_landing_bound_is_the_largest_gap_between_consecutive_landings() -> None:
+    """W2047: no typed threshold; two landings are the least that name a gap."""
+    assert closegate.landing_bound([100.0, 40.0, 70.0, 400.0]) == pytest.approx(300.0)
+    assert closegate.landing_bound([5.0]) is None
+    assert closegate.landing_bound([]) is None
+
+
+def test_a_working_card_idle_past_the_bound_is_named_and_a_fresh_one_is_not() -> None:
+    """W2047: a three-week-old working card is flagged; one worked inside the bound is not."""
+    old = _worked("W1", "working", "2026-10-08T14:00:00Z")
+    fresh = _worked("W2", "working", "2026-10-29T13:00:00Z")
+    ready = _worked("W3", "ready", "2026-10-01T14:00:00Z")
+    blank = _worked("W4", "working", "")
+    state = State({}, [old, fresh, ready, blank], [], _THREE)
+    assert closegate.idle_cards(state, _NOW, _DAY) == ["W1"]
+
+
+def test_with_no_learned_bound_no_card_is_called_idle() -> None:
+    """W2047: fewer than two known landings leave nothing to judge against."""
+    old = _worked("W1", "working", "2026-09-01T14:00:00Z")
+    assert closegate.idle_cards(State({}, [old], [], 1), _NOW, None) == []

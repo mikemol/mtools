@@ -7568,3 +7568,24 @@
   claim  = {A ledger with no tick line prints nothing; a tick line with no session names `-`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_handoff_line_is_absent_without_a_tick_line_and_dashes_a_missing_session},
 }
+
+@misc{pathsforward-landed-landing-bound-is-the-largest-gap-between-consecutive-landings,
+  section = {landed},
+  title  = {W2047: no typed threshold; two landings are the least that name a gap},
+  claim  = {W2047: no typed threshold; two landings are the least that name a gap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_landing_bound_is_the_largest_gap_between_consecutive_landings},
+}
+
+@misc{pathsforward-landed-working-card-idle-past-the-bound-is-named-and-a-fresh-one-is-not,
+  section = {landed},
+  title  = {W2047: a three-week-old working card is flagged; one worked inside the bound is not},
+  claim  = {W2047: a three-week-old working card is flagged; one worked inside the bound is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_working_card_idle_past_the_bound_is_named_and_a_fresh_one_is_not},
+}
+
+@misc{pathsforward-landed-with-no-learned-bound-no-card-is-called-idle,
+  section = {landed},
+  title  = {W2047: fewer than two known landings leave nothing to judge against},
+  claim  = {W2047: fewer than two known landings leave nothing to judge against.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_with_no_learned_bound_no_card_is_called_idle},
+}

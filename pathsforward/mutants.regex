@@ -340,3 +340,6 @@ src/mikemol/pathsforward/cli.py|update-blank-touches-allowed|    if tags is not 
 src/mikemol/pathsforward/cli.py|add-blank-touches-allowed|    if not all\(t\.strip\(\) for t in tags\):|    if False:|def=_add
 src/mikemol/pathsforward/closegate.py|handoff-names-the-first-tick-line|    for line in reversed\(ledger_text\.splitlines\(\)\):|    for line in ledger_text.splitlines():|def=handoff_line
 src/mikemol/pathsforward/closegate.py|handoff-drops-the-session|            session = found\.group\(1\) if found else "-"|            session = "-"|def=handoff_line
+src/mikemol/pathsforward/closegate.py|landing-bound-is-the-smallest-gap|    return max\(gaps\) if gaps else None|    return min(gaps) if gaps else None|def=landing_bound
+src/mikemol/pathsforward/closegate.py|idle-card-named-when-fresh|        if \(now - worked\)\.total_seconds\(\) > bound:|        if (now - worked).total_seconds() < bound:|def=idle_cards
+src/mikemol/pathsforward/closegate.py|idle-card-named-with-no-bound|    if bound is None:|    if False:|def=idle_cards
