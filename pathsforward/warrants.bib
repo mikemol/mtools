@@ -7554,3 +7554,17 @@
   claim  = {--migrate-retros --dry-run names the ids and leaves the file; without it the file moves.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_migrate_command_dry_run_saves_nothing},
 }
+
+@misc{pathsforward-landed-handoff-line-carries-the-last-tick-lines-own-time-and-session,
+  section = {landed},
+  title  = {W2154: the header names the repo, the symbol, the ledger timestamp and the session},
+  claim  = {W2154: the header names the repo, the symbol, the ledger timestamp and the session.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_handoff_line_carries_the_last_tick_lines_own_time_and_session},
+}
+
+@misc{pathsforward-landed-handoff-line-is-absent-without-a-tick-line-and-dashes-a-missing-session,
+  section = {landed},
+  title  = {A ledger with no tick line prints nothing; a tick line with no session names `-`},
+  claim  = {A ledger with no tick line prints nothing; a tick line with no session names `-`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_handoff_line_is_absent_without_a_tick_line_and_dashes_a_missing_session},
+}

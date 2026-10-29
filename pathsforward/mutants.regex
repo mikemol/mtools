@@ -338,3 +338,5 @@ src/mikemol/pathsforward/retros.py|spec-record-rewritten|    if "cause" not in r
 src/mikemol/pathsforward/retros.py|trigger-not-defaulted|        record\["trigger"\] = UNSPLIT|        pass|def=_migrated
 src/mikemol/pathsforward/cli.py|update-blank-touches-allowed|    if tags is not None and not all\(t\.strip\(\) for t in tags\):|    if False:|def=_fields_of
 src/mikemol/pathsforward/cli.py|add-blank-touches-allowed|    if not all\(t\.strip\(\) for t in tags\):|    if False:|def=_add
+src/mikemol/pathsforward/closegate.py|handoff-names-the-first-tick-line|    for line in reversed\(ledger_text\.splitlines\(\)\):|    for line in ledger_text.splitlines():|def=handoff_line
+src/mikemol/pathsforward/closegate.py|handoff-drops-the-session|            session = found\.group\(1\) if found else "-"|            session = "-"|def=handoff_line

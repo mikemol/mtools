@@ -48,6 +48,8 @@ FRESH = re.compile(
     re.IGNORECASE,
 )
 TOP = 3
+TICK_SYMBOL = 2
+SESSION = re.compile(r"\bsession=(\S+)")
 
 
 @dataclass(frozen=True)
@@ -251,6 +253,27 @@ def roll_note(state: State, ledger: Path | None) -> str:
     since = tick_start(state, ledger)
     landed = None if ledger is None else landed_since(ledger.parent.parent, since)
     return f"rolled; advanced {advanced(state, since, landed)}"
+
+
+def handoff_line(ledger_text: str, repo: str) -> str:
+    """Name the tick the ledger just closed, as the line a reviewer hand-off pastes (W2154).
+
+    ⚑ THE CLOSE TIME IS THE LEDGER LINE'S OWN TIMESTAMP, NOT ONE TYPED BY HAND (github:W59, the
+    host typed close times wrong twice in three ticks): the last `tick` line of the ledger is the
+    one the close or roll just wrote, and its first field is the time it was written.
+
+    Returns:
+        `G1-HANDOFF <repo> <symbol> closed=<timestamp> session=<id>`, or an empty string when the
+        ledger holds no tick line.
+
+    """
+    for line in reversed(ledger_text.splitlines()):
+        fields = line.split()
+        if len(fields) > TICK_SYMBOL and fields[1] == "tick":
+            found = SESSION.search(line)
+            session = found.group(1) if found else "-"
+            return f"G1-HANDOFF {repo} {fields[2]} closed={fields[0]} session={session}"
+    return ""
 
 
 def judge(

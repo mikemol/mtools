@@ -77,6 +77,7 @@ from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.blockerwatch import SEEN_NAME as _BLOCKERS_SEEN
 from mikemol.pathsforward.blockerwatch import notice as blocker_notice
 from mikemol.pathsforward.check import check, evidence_findings, unscored
+from mikemol.pathsforward.closegate import handoff_line as handoff_of
 from mikemol.pathsforward.closegate import judge as judge_close
 from mikemol.pathsforward.closegate import open_line, rank_check, roll_note, top_ranked
 from mikemol.pathsforward.closeumbrellas import apply as close_apply
@@ -117,6 +118,7 @@ from mikemol.pathsforward.transitions import lines as transition_lines
 from mikemol.pathsforward.transitions import snapshot as status_snapshot
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
+HANDOFF_LINE = handoff_of
 RECONCILE = reconcile_run
 PRUNE_EDGES = edges_of
 PRUNE_REMOVED = removed
@@ -1904,6 +1906,22 @@ def _top_of(ctx: Ctx) -> str | None:
         raise ops.RefusedError(msg) from exc
 
 
+def _say_handoff(ctx: Ctx) -> None:
+    """Print the hand-off header for the tick just ledgered, as the last line of a close (W2154).
+
+    The time on it is the ledger line's own, so a reviewer hand-off pastes the tool's reading and
+    not one typed by hand; an unreadable ledger or one with no tick line prints nothing.
+    """
+    ledger = store.sibling(ctx.path, store.LEDGER)
+    try:
+        body = ledger.read_text(encoding="utf-8")
+    except OSError:
+        return
+    line = HANDOFF_LINE(body, ctx.path.resolve().parent.parent.name)
+    if line:
+        _say(line)
+
+
 def _tick_close(ctx: Ctx) -> int:
     """Close a tick in one verb: ledger line, prune landed blockers, render, check, unlock (W1079).
 
@@ -1944,6 +1962,7 @@ def _tick_close(ctx: Ctx) -> int:
     for step in (_promote, _prune_landed, _render, _check, _unlock):
         result = step(closing)
         code = code or result
+    _say_handoff(closing)
     return code
 
 
@@ -1982,6 +2001,7 @@ def _tick_roll(ctx: Ctx) -> int:
         code = code or step(rolling)
     code = code or _chronic_reconcile(rolling)
     _say(f"rolled: {holder} keeps the lock and the next tick has begun")
+    _say_handoff(rolling)
     return code
 
 

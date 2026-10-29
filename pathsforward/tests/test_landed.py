@@ -102,3 +102,25 @@ def test_the_commit_tool_is_found_beside_the_writer_before_path(tmp_path: Path) 
     assert landed.gate_tool(tmp_path, beside, decoy) == str(interpreter_bin / "mikemol-commit")
     (writer_bin / "mikemol-commit").write_text("", encoding="utf-8")
     assert landed.gate_tool(tmp_path, beside, decoy) == str(writer_bin / "mikemol-commit")
+
+
+def test_the_handoff_line_carries_the_last_tick_lines_own_time_and_session() -> None:
+    """W2154: the header names the repo, the symbol, the ledger timestamp and the session."""
+    ledger = (
+        '2026-10-29T12:31:14Z  tick  W1979 advanced  collapse  "a"  session=old\n'
+        '2026-10-29T12:39:55Z  status W1995 ready>blocked writer    "x"  session=other\n'
+        '2026-10-29T12:50:00Z  tick  W2154 advanced  unblock  "b"  session=abc-1\n'
+        '2026-10-29T12:50:01Z  status W9 ready>blocked writer    "y"  session=zzz\n'
+    )
+    got = closegate.handoff_line(ledger, "mtools")
+    assert got == "G1-HANDOFF mtools W2154 closed=2026-10-29T12:50:00Z session=abc-1"
+
+
+def test_the_handoff_line_is_absent_without_a_tick_line_and_dashes_a_missing_session() -> None:
+    """A ledger with no tick line prints nothing; a tick line with no session names `-`."""
+    status = "2026-10-29T12:39:55Z  status W1 a>b writer  x\n"
+    assert not closegate.handoff_line("", "mtools")
+    assert not closegate.handoff_line(status, "m")
+    bare = '2026-10-29T12:50:00Z  tick  W7 advanced  unblock  "b"\n'
+    want = "G1-HANDOFF m W7 closed=2026-10-29T12:50:00Z session=-"
+    assert closegate.handoff_line(bare, "m") == want
