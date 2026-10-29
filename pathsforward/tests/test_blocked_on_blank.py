@@ -59,3 +59,30 @@ def test_a_real_blocker_is_still_stored(tmp_path: Path) -> None:
     path = _state(tmp_path)
     assert cli.main(["--state", str(path), "--update", "W1", "--blocked-on", "W2"]) == _OK
     assert _blockers(path) == ["W2"]
+
+
+def _waypoints(path: Path) -> list[Rec]:
+    doc = cast("Rec", json.loads(path.read_text(encoding="utf-8")))
+    return cast("list[Rec]", doc["waypoints"])
+
+
+def test_a_blank_touches_tag_is_refused_on_update_and_add_and_stores_nothing(
+    tmp_path: Path,
+) -> None:
+    """W2041: `--touches ' '` stored a blank tag (probed 2026-10-28); both verbs now refuse it."""
+    path = _state(tmp_path)
+    before = _waypoints(path)
+    for blank in ("", "   "):
+        assert cli.main(["--state", str(path), "--update", "W1", "--touches", blank]) != _OK
+        assert cli.main(["--state", str(path), "--add", "t", "--touches", blank]) != _OK
+    assert _waypoints(path) == before
+
+
+def test_a_real_touches_tag_is_still_stored_on_update_and_add(tmp_path: Path) -> None:
+    """The control: a named tag passes both verbs."""
+    path = _state(tmp_path)
+    assert cli.main(["--state", str(path), "--update", "W1", "--touches", "hooks"]) == _OK
+    assert cli.main(["--state", str(path), "--add", "t", "--touches", "locks"]) == _OK
+    cards = _waypoints(path)
+    assert cards[0]["touches"] == ["hooks"]
+    assert cards[-1]["touches"] == ["locks"]

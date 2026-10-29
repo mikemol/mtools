@@ -4480,3 +4480,44 @@
 2026-10-29T09:16:15Z  status W1985 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-29T09:22:28Z  tick  W2126 advanced  observe   "W1924 gate reading 3 at 09:21Z: 1515/1534 tests, FAILED 0 (reading 2 08:51Z was 1367: 148 tests in 30 min); about 19 tests left, landing expected shortly, then the joined W1849 W1908 W2062 under their own gate and W2067 after; W2126 slice 1 stays built and unstacked [blocked by W1924]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-29T09:26:24Z  status W1988 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:42:26Z  status W1513 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:42:26Z  status W1924 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:43:01Z  status W1849 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:43:40Z  status W1905 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:43:40Z  status W1908 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:44:10Z  status W2062 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:44:10Z  status W2102 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:48:34Z  status W2102 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T09:49:19Z  interrupt W2143 minted    -         "The observed-type annotator tells Literal[False] from bool for an exit that only ever returned False, by keeping values and not only types"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1924
+2026-10-29T09:49:48Z  interrupt W2144 minted    -         "pinned_files drops GIT_* variables: confirm on Bazel 9.x and give the rule an in-repo test"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1849
+2026-10-29T10:00:49Z  lease W1975 lapsed    --        "lease on file:hooks/src/mikemol/hooks/trainlead.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:01:21Z  tick  W1979 advanced  mechanize "ratchet stack (W1979 then W1963, stack-ratchet-a, key 1793267766504253890) submitted and past presubmit: ratchet tests and the whole mutants grid passed locally first; W2067 inflight ahead; pathsforward stack (W1898/W1895/W2069 + W2133/W1936/W2091/W2041) prepared with 6 declared mutants and 6 warrants, its tests and grid running in the background before submit [blocked by W2067]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:04:09Z  status W1513 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:11:35Z  status W1905 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:22:28Z  tick  W2067 advanced  observe   "W2067 gate reading at 10:21Z (about 44 min in): 1196/1534 tests, FAILED 0; ratchet-a (W1979, W1963) queued behind it; local pathsforward grid for the prepared pathsforward stack at 7/44 shards after 25 min under load; HEAD still ad8793a0 [blocked by W1979]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:25:11Z  status W1992 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:46:45Z  interrupt W2145 minted    -         "The bazel_admit wrapper (tools/bazel) also finds the INSTALLED admit tool in the real checkout's venv when run inside a gate snapshot, so a repo that installs mikemol-hooks gets the outage degrade in its own gate"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=el-openglo:W179
+2026-10-29T10:49:18Z  interrupt W2146 minted    -         "A pure module created_record appends the paths a session's Write tool made to a per-session record beside the transcript, and answers whether a path is one the session created, including any path under the session's own scratchpad directory"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1993
+2026-10-29T10:49:18Z  interrupt W2147 minted    -         "A PostToolUse hook on the Write tool calls created_record for each file written, as a console entry with a launcher, failing open"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1993
+2026-10-29T10:50:33Z  status W2147 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T10:53:34Z  interrupt W2148 minted    -         "Every repo that installs mikemol-hooks repins it to the sha that carries the outage degrade and the tools/bazel wrapper, in one stack with a regenerated tools/bazel, after W2145 lands"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W76
+2026-10-29T11:00:12Z  interrupt W2149 minted    -         "A gate refuses when the installed mikemol-hooks read through MIKEMOL_REAL_ROOT is not the sha the snapshot's pyproject pins, except the bootstrap stack that moves the pin"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2145
+2026-10-29T11:01:13Z  status W2145 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:04:40Z  tick  W2145 advanced  observe   "W2067 gate reading C at 11:03Z: 1339/1534 tests, FAILED 0 (3.5 tests/min, landing near 12:00Z); behind it stack-ratchet-a (W1979 W1963) and stack-pathsforward-b (W1898 W1895 W2069 W2133 W1936 W2091 W2041) past presubmit; W2145 built and green unstacked (wrapper branch for MIKEMOL_REAL_ROOT), its warrant and stack follow W2067 [blocked by W2067]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:09:54Z  interrupt W2150 minted    -         "A withdrawn follower's group neither gates nor lands (the train drive checks each group's submission is still live before each round), and a withdraw names the queued stacks built on its files"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2067
+2026-10-29T11:10:35Z  status W1746 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:10:35Z  status W1823 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:10:35Z  status W1824 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:10:35Z  status W1875 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:10:35Z  status W1920 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:10:35Z  status W1932 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:10:35Z  status W2067 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:29:02Z  status W1994 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:33:19Z  status W1746 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:38:01Z  interrupt W2151 minted    -         "commit.counts joined is ambiguous: ratchet-a shows joined=1 while --in-gate lists pathsforward-b as queued, and I misreported b as joined (github-42, retro github:R109)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42:R109
+2026-10-29T11:39:38Z  status W1823 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:42:00Z  status W1824 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:51:21Z  lease W2145 lapsed    --        "lease on file:hooks/src/mikemol/hooks/bazel_admit.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:53:54Z  tick  W1994 advanced  unblock   "deletecmd.py and test_deletecmd.py written in main, untracked and unrun; next: when hooks-c prints COMMITTED, bazel build //hooks:.venv, message github-42 and el-openglo, then one hooks stack for W1994, W1746 slice 2, W1823, W1824 [blocked by W2117]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T11:55:27Z  status W1875 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T12:03:40Z  status W1920 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

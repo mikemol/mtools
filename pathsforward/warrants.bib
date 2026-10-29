@@ -7223,15 +7223,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant.py -k test_a_citation_without_a_claim_is_refused_before_the_reader_runs},
 }
 
-@misc{pathsforward-landed-commit-tool-is-found-beside-the-interpreter-before-path,
-  section = {landed},
-  title  = {A full-path launch has no .venv/bin on PATH, so the sibling wins, then PATH, then the repo's},
-  claim  = {A full-path launch has no .venv/bin on PATH, so the sibling wins, then PATH, then the
-            repo's. The control is the absent case: none of the three has it, so no
-            tool, never an empty string.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_commit_tool_is_found_beside_the_interpreter_before_path},
-}
-
 @misc{pathsforward-mutations-ship-intervention-is-in-the-ledger-whether-or-not-the-send-started,
   section = {mutations_ship},
   title  = {W1887: the ledger line cannot fail silently, and the message says started, not sent},
@@ -7486,4 +7477,80 @@
   title  = {Retiring declares the drop; a word moved between the sets is kept, not dropped},
   claim  = {Retiring declares the drop; a word moved between the sets is kept, not dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_setters_dropped.py -k test_a_retired_outcome_word_a_kept_one_and_a_first_declaration_are_admitted},
+}
+
+@misc{pathsforward-watchdogcmd-watchdog-beside-the-writer-beats-a-sibling-repos-copy-on-path,
+  section = {watchdogcmd},
+  title  = {W1898: the host's pinned writer printed another repository's venv because PATH named it},
+  claim  = {W1898: the host's pinned writer printed another repository's venv because PATH named it.
+            The writer's own bin holds a watchdog here and PATH holds a decoy: the
+            writer's wins. The control is the same writer with no watchdog beside it,
+            which falls back to PATH as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_watchdog_beside_the_writer_beats_a_sibling_repos_copy_on_path},
+}
+
+@misc{pathsforward-landed-commit-tool-is-found-beside-the-writer-before-path,
+  section = {landed},
+  title  = {W1898: the writer's own bin wins, then its interpreter's, then the repo's, and PATH is last},
+  claim  = {W1898: the writer's own bin wins, then its interpreter's, then the repo's, and PATH is
+            last. The control is the absent case: none of them has it, so no tool, never
+            an empty string; and a PATH entry naming another checkout's copy never beats
+            the tool the writer came with.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_commit_tool_is_found_beside_the_writer_before_path},
+}
+
+@misc{pathsforward-tags-flake-tag-is-a-grain-and-never-leasable,
+  section = {tags},
+  title  = {`flake:040a91b156c3` is the tag the commit gate demands (W2008): known, named, no lease},
+  claim  = {`flake:040a91b156c3` is the tag the commit gate demands (W2008): known, named, no lease.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tags.py -k test_a_flake_tag_is_a_grain_and_never_leasable},
+}
+
+@misc{pathsforward-nested-citation-ref-named-for-the-root-directory-is-the-root-s-own-queue,
+  section = {foreign},
+  title  = {nemik:W1259: `github:W1` under `.../github` reads `<root>/.claude/paths-forward.json`},
+  claim  = {nemik:W1259: `github:W1` under `.../github` reads `<root>/.claude/paths-forward.json`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_nested_citation.py -k test_a_ref_named_for_the_root_directory_is_the_root_s_own_queue},
+}
+
+@misc{pathsforward-blocked-on-blank-blank-touches-tag-is-refused-on-update-and-add-and-stores-nothing,
+  section = {open_line},
+  title  = {W2041: `--touches ' '` stored a blank tag (probed 2026-10-28); both verbs now refuse it},
+  claim  = {W2041: `--touches ' '` stored a blank tag (probed 2026-10-28); both verbs now refuse it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocked_on_blank.py -k test_a_blank_touches_tag_is_refused_on_update_and_add_and_stores_nothing},
+}
+
+@misc{pathsforward-blocked-on-blank-real-touches-tag-is-still-stored-on-update-and-add,
+  section = {open_line},
+  title  = {The control: a named tag passes both verbs},
+  claim  = {The control: a named tag passes both verbs.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blocked_on_blank.py -k test_a_real_touches_tag_is_still_stored_on_update_and_add},
+}
+
+@misc{pathsforward-regressions-retro-or-finding-present-at-head-may-not-vanish-or-change,
+  section = {regressions},
+  title  = {W1936: a retro id and its findings stay equal; other fields and additions are free},
+  claim  = {W1936: a retro id and its findings stay equal; other fields and additions are free.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regressions.py -k test_a_retro_or_finding_present_at_head_may_not_vanish_or_change},
+}
+
+@misc{pathsforward-regressions-counter-lag-beyond-the-bound-warns,
+  section = {regressions},
+  title  = {W1938: the lag is judged against the bound passed in; unreadable counters say nothing},
+  claim  = {W1938: the lag is judged against the bound passed in; unreadable counters say nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_regressions.py -k test_a_counter_lag_beyond_the_bound_warns},
+}
+
+@misc{pathsforward-retros-migrate-renames-cause-and-leaves-a-spec-record-alone,
+  section = {retros},
+  title  = {A host record gains `root` and `unsplit`; a spec record is untouched; a rerun is empty},
+  claim  = {A host record gains `root` and `unsplit`; a spec record is untouched; a rerun is empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_migrate_renames_cause_and_leaves_a_spec_record_alone},
+}
+
+@misc{pathsforward-retros-migrate-command-dry-run-saves-nothing,
+  section = {retros},
+  title  = {--migrate-retros --dry-run names the ids and leaves the file; without it the file moves},
+  claim  = {--migrate-retros --dry-run names the ids and leaves the file; without it the file moves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_migrate_command_dry_run_saves_nothing},
 }

@@ -171,7 +171,9 @@ src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witne
 src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line"\}:|    if True:|def=main
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
-src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = which\(SCRIPT\) or |    found = |def=command
+src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = installed or which\(SCRIPT\)|    found = installed|def=command
+src/mikemol/pathsforward/watchdogcmd.py|writer-bin-not-looked-in|for c in \(\*beside, venv_bin / SCRIPT\) if|for c in (venv_bin / SCRIPT,) if|def=command
+src/mikemol/pathsforward/watchdogcmd.py|path-before-the-writers-bin|    found = installed or which\(SCRIPT\)|    found = which(SCRIPT) or installed|def=command
 src/mikemol/pathsforward/watchdogcmd.py|interpreter-fallback-dropped|    elif \(venv_bin / "python"\)\.is_file\(\):|    elif False:|def=command
 src/mikemol/pathsforward/watchdogcmd.py|missing-watchdog-prints-a-command|    if found is None:|    if False:|def=tick_line
 src/mikemol/pathsforward/watchdogcmd.py|writer-path-resolved|        return str\(Path\(argv0\)\.absolute\(\)\)|        return str(Path(argv0).resolve())|def=writer_named
@@ -218,8 +220,9 @@ src/mikemol/pathsforward/warrant.py|old-form-keyed-with-its-extension|    sessio
 src/mikemol/pathsforward/warrant.py|reader-directory-kept|        words\[0\] = Path\(words\[0\]\)\.name|        words[0] = words[0]|def=portable_reader
 src/mikemol/pathsforward/warrant.py|reason-never-stored|    if reason:|    if False:|def=build
 src/mikemol/pathsforward/cli.py|dry-run-attaches|    if ctx\.opts\.get\("dry_run"\):|    if False:|def=_warrant
-src/mikemol/pathsforward/landed.py|sibling-tool-ignored|    if sibling\.is_file\(\):|    if False:|def=gate_tool
-src/mikemol/pathsforward/landed.py|repo-tool-before-path|    return on_path or \(str\(own\) if own\.is_file\(\) else None\)|    return (str(own) if own.is_file() else None) or on_path|def=gate_tool
+src/mikemol/pathsforward/landed.py|sibling-tool-ignored|        if sibling\.is_file\(\):|        if False:|def=gate_tool
+src/mikemol/pathsforward/landed.py|path-before-the-repos-own-tool|    return str\(own\) if own\.is_file\(\) else on_path|    return on_path or (str(own) if own.is_file() else None)|def=gate_tool
+src/mikemol/pathsforward/landed.py|only-the-first-bin-dir-looked-in|    for directory in beside:|    for directory in beside[:1]:|def=gate_tool
 src/mikemol/pathsforward/cli.py|claim-not-required|    if not where or not uuid or not claim:|    if not where or not uuid:|def=_warrant
 src/mikemol/pathsforward/reconcile.py|gating-card-read-as-landed|        if symbol in gating:|        if False:|def=verdicts
 src/mikemol/pathsforward/reconcile.py|commit-before-working-counted|        if commit\.stamp < since or symbol not in trailer_cards\(commit\.body\):|        if symbol not in trailer_cards(commit.body):|def=_landing
@@ -328,3 +331,10 @@ src/mikemol/pathsforward/cli.py|dropped-outcome-word-admitted|        lost = out
 src/mikemol/pathsforward/ghosts.py|any-led-symbol-listed|        if lead is not None and lead\.group\(1\) in wanted:|        if lead is not None:|def=candidates
 src/mikemol/pathsforward/ghosts.py|markers-case-sensitive|    return tuple\(m for m in _MARKERS if m\.lower\(\) in lowered\)|    return tuple(m for m in _MARKERS if m in subject)|def=markers_in
 src/mikemol/pathsforward/ghosts.py|unreadable-log-is-no-ghosts|    if raw is None:|    if False:|def=report
+src/mikemol/pathsforward/foreign.py|root-ref-read-below-the-root|    repo_dir = root if repo == root\.name else root / repo|    repo_dir = root / repo|def=peer
+src/mikemol/pathsforward/regressions.py|vanished-retro-not-named|        if ident not in after:|        if False:|def=lost_retros
+src/mikemol/pathsforward/regressions.py|lost-finding-not-named|            if finding not in after\[ident\]|            if False|def=lost_retros
+src/mikemol/pathsforward/retros.py|spec-record-rewritten|    if "cause" not in retro or _filled\(retro, "root"\):|    if "cause" not in retro:|def=_migrated
+src/mikemol/pathsforward/retros.py|trigger-not-defaulted|        record\["trigger"\] = UNSPLIT|        pass|def=_migrated
+src/mikemol/pathsforward/cli.py|update-blank-touches-allowed|    if tags is not None and not all\(t\.strip\(\) for t in tags\):|    if False:|def=_fields_of
+src/mikemol/pathsforward/cli.py|add-blank-touches-allowed|    if not all\(t\.strip\(\) for t in tags\):|    if False:|def=_add
