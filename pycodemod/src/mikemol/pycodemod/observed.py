@@ -25,13 +25,14 @@ and not one per call.
 the first free one of three and says so when none is.
 """
 
+import builtins
 import inspect
 import sys
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from itertools import islice
 from pathlib import Path
-from types import CodeType, TracebackType
+from types import CodeType, FrameType, GeneratorType, TracebackType
 from typing import Self, cast
 
 NAME = "mikemol-pycodemod-observed"
@@ -40,6 +41,32 @@ _SAMPLE = 8
 _VARARGS = 0x04
 _VARKEYWORDS = 0x08
 _SKIPPED = frozenset({"self", "cls"})
+_BUILTINS = frozenset(dir(builtins))
+_ELSEWHERE: dict[type, str] = {
+    TracebackType: "types.TracebackType",
+    FrameType: "types.FrameType",
+    GeneratorType: "types.GeneratorType",
+}
+
+
+def _builtin_spelling(kind: type) -> str:
+    """Spell a type whose module reads `builtins` the way a module can name it.
+
+    ⚑ `type(tb).__module__` IS `builtins` AND ITS QUALNAME IS `traceback`, which is no name a module
+    can write: el-openglo's first real annotate run printed `tb: traceback` with no import (mypy:
+    Name "traceback" is not defined). A name the builtins namespace holds is kept; the few types
+    the interpreter reports under `builtins` without holding them (traceback, frame, generator) are
+    spelled through the `types` module that does, which is a dotted name, so the annotator sends it
+    to the worklist as needing an import and never writes it bare.
+
+    Returns:
+        the bare name when `builtins` holds it, `types.<Name>` for the known few, and
+        `builtins.<qualname>` for any other, which the annotator will not write either.
+
+    """
+    if kind.__qualname__ in _BUILTINS:
+        return kind.__qualname__
+    return _ELSEWHERE.get(kind, f"builtins.{kind.__qualname__}")
 
 
 @dataclass
@@ -53,7 +80,7 @@ class Signature:
 def _name(value: object) -> str:
     kind = type(value)
     if kind.__module__ == "builtins":
-        return "None" if value is None else kind.__qualname__
+        return "None" if value is None else _builtin_spelling(kind)
     return f"{kind.__module__}.{kind.__qualname__}"
 
 

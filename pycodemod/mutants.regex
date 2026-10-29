@@ -100,7 +100,11 @@ src/mikemol/pycodemod/observed.py|self-recorded-as-a-parameter|            if \(
 src/mikemol/pycodemod/observed.py|every-file-watched|        return code\.co_filename\.startswith\(self\.root\)|        return True|def=Observer._watched
 src/mikemol/pycodemod/observed.py|list-elements-dropped|        return f"\{name\}\[\{inner\}\]" if inner else name|        return name|def=type_of
 src/mikemol/pycodemod/observed.py|dict-elements-dropped|        return f"\{name\}\[\{keys\}, \{vals\}\]" if keys else name|        return name|def=type_of
-src/mikemol/pycodemod/observed.py|none-spelled-as-nonetype|        return "None" if value is None else kind\.__qualname__|        return kind.__qualname__|def=_name
+src/mikemol/pycodemod/observed.py|none-spelled-as-nonetype|        return "None" if value is None else _builtin_spelling\(kind\)|        return _builtin_spelling(kind)|def=_name
+src/mikemol/pycodemod/observed.py|interpreter-name-written-bare|    if kind\.__qualname__ in _BUILTINS:|    if True:|def=_builtin_spelling
+src/mikemol/pycodemod/observed.py|traceback-not-named-through-types|    return _ELSEWHERE\.get\(kind, f"builtins\.\{kind\.__qualname__\}"\)|    return kind.__qualname__|def=_builtin_spelling
+src/mikemol/pycodemod/annotating.py|exit-bool-written-as-final|        if function\.name in _EXITS and signature\.returns == \{"bool"\}:|        if False:|def=plan
+src/mikemol/pycodemod/annotating.py|every-exit-return-held-back|function\.name in _EXITS and signature\.returns == \{"bool"\}|function.name in _EXITS|def=plan
 src/mikemol/pycodemod/observed.py|tool-id-never-freed|        monitoring\.free_tool_id\(self\._tool\)|        pass|def=Observer.__exit__
 src/mikemol/pycodemod/narrowing.py|integer-index-read-as-a-key|            if isinstance\(key, ast\.Constant\) and isinstance\(key\.value, str\):|            if isinstance(key, ast.Constant):|def=_Walker.visit_Subscript
 src/mikemol/pycodemod/narrowing.py|self-counted-as-a-parameter|        names = \[n for n in _names\(node\.args\) if n not in _SKIPPED\]|        names = _names(node.args)|def=_Walker._function

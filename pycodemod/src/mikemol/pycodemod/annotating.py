@@ -27,6 +27,7 @@ from mikemol.pycodemod.observed import Signature
 
 _SELF = frozenset({"self", "cls"})
 _NONE = "None"
+_EXITS = frozenset({"__exit__", "__aexit__"})
 _OPEN = frozenset({"(", "[", "{"})
 _CLOSE = frozenset({")", "]", "}"})
 Function = ast.FunctionDef | ast.AsyncFunctionDef
@@ -145,6 +146,15 @@ def plan(text: str, seen: Mapping[str, Signature]) -> Planned:
             end = _at(text, starts, arg.end_lineno or arg.lineno, arg.end_col_offset or 0)
             edits.append((end, f": {spelled}"))
         if function.returns is not None:
+            continue
+        if function.name in _EXITS and signature.returns == {"bool"}:
+            # ⚑ A TRACED `bool` IS A CANDIDATE, NEVER AN ANNOTATION, FOR `__exit__`: a run that saw
+            # only False makes mypy refuse `-> bool` ('"bool" is invalid as return type for
+            # "__exit__" that always returns False', el-openglo's first real run), and the observer
+            # keeps types, not values, so it cannot tell `Literal[False]` from a real bool.
+            worklist.append(
+                (f"{qual}()", "an observed bool return of an exit may be Literal[False]")
+            )
             continue
         spelled = _spelling(signature.returns)
         colon = colons.get((function.lineno, function.col_offset))

@@ -92,6 +92,19 @@ def test_the_types_each_call_passed_and_returned_are_collected_per_parameter(
     assert add.returns == {"int", "str"}
 
 
+def test_a_traceback_is_named_through_types_not_by_the_bare_interpreter_name() -> None:
+    """W1924: `type(tb)` reads module `builtins`, qualname `traceback`, which no module can write.
+
+    el-openglo's first real run printed `tb: traceback` with no import; the observer now says
+    `types.TracebackType`, a dotted name the annotator sends to the worklist. A real builtin keeps
+    its bare name.
+    """
+    with pytest.raises(ValueError, match="invalid literal") as caught:
+        int("x")
+    assert observed.type_of(caught.tb) == "types.TracebackType"
+    assert observed.type_of(1) == "int"
+
+
 def test_a_container_is_spelled_with_its_element_types(tmp_path: Path) -> None:
     """A list of ints, a dict of str to float, a tuple and an empty list each read as they are."""
     fn = _functions(tmp_path)

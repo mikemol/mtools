@@ -7005,3 +7005,30 @@
   claim  = {Everything after `--` goes to the runner; a missing option or root is exit 2.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli_observe.py -k test_the_command_line_splits_options_from_the_runner_arguments},
 }
+
+@misc{pycodemod-observed-traceback-is-named-through-types-not-by-the-bare-interpreter-name,
+  section = {observed},
+  title  = {W1924: `type(tb)` reads module `builtins`, qualname `traceback`, which no module can write},
+  claim  = {W1924: `type(tb)` reads module `builtins`, qualname `traceback`, which no module can
+            write. el-openglo's first real run printed `tb: traceback` with no import;
+            the observer now says `types.TracebackType`, a dotted name the annotator
+            sends to the worklist. A real builtin keeps its bare name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_observed.py -k test_a_traceback_is_named_through_types_not_by_the_bare_interpreter_name},
+}
+
+@misc{pycodemod-annotating-exit-observed-returning-bool-is-a-candidate-not-an-annotation,
+  section = {annotating},
+  title  = {W1924 (el-openglo's first annotate run): a run that saw only False must not write `-> bool`},
+  claim  = {W1924 (el-openglo's first annotate run): a run that saw only False must not write `->
+            bool`. mypy refuses it for an `__exit__` that always returns False, and the
+            observer keeps types, not values; the site goes to the worklist, while the
+            same exit observed returning None is annotated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_an_exit_observed_returning_bool_is_a_candidate_not_an_annotation},
+}
+
+@misc{pycodemod-annotating-traceback-observed-by-name-goes-to-the-worklist-not-bare,
+  section = {annotating},
+  title  = {The observer spells a traceback `types.TracebackType`, a dotted name needing an import},
+  claim  = {The observer spells a traceback `types.TracebackType`, a dotted name needing an import.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_a_traceback_observed_by_name_goes_to_the_worklist_not_bare},
+}

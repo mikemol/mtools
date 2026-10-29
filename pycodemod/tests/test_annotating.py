@@ -50,6 +50,42 @@ def test_a_type_that_needs_an_import_goes_to_the_worklist() -> None:
     assert "-> int" in planned.text
 
 
+_EXIT_SOURCE = (
+    "class Guard:\n"
+    "    def __exit__(self, kind, value, tb):\n"
+    "        return False\n"
+    "\n"
+    "    def __aexit__(self, kind, value, tb):\n"
+    "        return None\n"
+)
+
+
+def test_an_exit_observed_returning_bool_is_a_candidate_not_an_annotation() -> None:
+    """W1924 (el-openglo's first annotate run): a run that saw only False must not write `-> bool`.
+
+    mypy refuses it for an `__exit__` that always returns False, and the observer keeps types, not
+    values; the site goes to the worklist, while the same exit observed returning None is annotated.
+    """
+    seen = {
+        "Guard.__exit__": Signature(params={}, returns={"bool"}),
+        "Guard.__aexit__": Signature(params={}, returns={"None"}),
+    }
+    planned = annotating.plan(_EXIT_SOURCE, seen)
+    assert "def __exit__(self, kind, value, tb):" in planned.text
+    assert "def __aexit__(self, kind, value, tb) -> None:" in planned.text
+    assert ("Guard.__exit__()", "an observed bool return of an exit may be Literal[False]") in (
+        planned.worklist
+    )
+
+
+def test_a_traceback_observed_by_name_goes_to_the_worklist_not_bare() -> None:
+    """The observer spells a traceback `types.TracebackType`, a dotted name needing an import."""
+    seen = {"Guard.__exit__": Signature(params={"tb": {"types.TracebackType"}}, returns=set())}
+    planned = annotating.plan(_EXIT_SOURCE, seen)
+    assert "tb:" not in planned.text
+    assert ("Guard.__exit__(tb)", "the observed type needs an import") in planned.worklist
+
+
 def test_a_function_the_run_never_reached_is_untouched() -> None:
     """No observation, no edit, no worklist entry."""
     planned = annotating.plan(_SOURCE, {})
