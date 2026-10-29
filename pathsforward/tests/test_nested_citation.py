@@ -102,6 +102,19 @@ def test_an_empty_or_dot_led_segment_is_refused(tmp_path: Path) -> None:
         assert "refused" in why
 
 
+def test_a_ref_named_for_the_root_directory_is_the_root_s_own_queue(tmp_path: Path) -> None:
+    """nemik:W1259: `github:W1` under `.../github` reads `<root>/.claude/paths-forward.json`."""
+    root = tmp_path / "github"
+    root.mkdir()
+    _nested(root, "")
+    landed, why = foreign.landed(root, "github", "W1")
+    assert landed
+    assert why.endswith("github/.claude/paths-forward.json")
+    other, said = foreign.landed(root, "elsewhere", "W1")
+    assert not other
+    assert "no queue file" in said
+
+
 def test_a_nested_name_with_no_queue_says_so(tmp_path: Path) -> None:
     """Absent is absent: named, not refused."""
     landed, why = foreign.landed(tmp_path, "parent/child", "W1")

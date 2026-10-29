@@ -95,7 +95,10 @@ def peer(root: Path, repo: str) -> tuple[State | None, Path, str]:
         (state, path, "") on success; (None, path, why) when refused or unreadable.
 
     """
-    repo_dir = root / repo
+    # ⚑ THE ROOT'S OWN QUEUE (nemik:W1259, nemik:W224): a ref named for the root directory itself
+    # (`github:W48` under ~/github) is the host queue at `<root>/.claude/...`, not at
+    # `<root>/github/...`.
+    repo_dir = root if repo == root.name else root / repo
     path = repo_dir.joinpath(*QUEUE)
     if _escapes(repo):
         return None, path, f"repo name {repo!r} has an empty, dot-led or escaping segment; refused"
