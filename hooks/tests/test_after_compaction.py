@@ -277,6 +277,26 @@ def test_precompact_reads_stdin_freezes_and_never_blocks(
     assert "not JSON" in capsys.readouterr().err
 
 
+def test_nothing_frozen_always_says_why_on_stderr_and_still_exits_zero(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2125: no transcript_path, an unreadable transcript and a frozen record each read apart."""
+    gone = str(tmp_path / "gone.jsonl")
+    nameless: dict[str, str] = {}
+    missing: dict[str, str] = {"transcript_path": gone}
+    for payload, said in (
+        (nameless, "the payload names no transcript_path"),
+        (missing, f"the transcript {gone} cannot be read"),
+    ):
+        monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
+        assert after_compaction.precompact() == 0
+        assert f"precompact: nothing frozen: {said}" in capsys.readouterr().err
+    readable: dict[str, str] = {"transcript_path": str(_transcript(tmp_path, SHORT))}
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(readable)))
+    assert after_compaction.precompact() == 0
+    assert "nothing frozen" not in capsys.readouterr().err
+
+
 def test_the_precompact_entry_refuses_an_argument_before_reading_stdin(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

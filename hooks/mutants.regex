@@ -784,3 +784,5 @@ src/mikemol/hooks/ratchet_hook.py|relative-dir-accepted|    if not spec\.tree\.s
 src/mikemol/hooks/ratchet_hook.py|empty-name-accepted|    if not spec\.name\.strip\(\):|    if False:|def=unsound_reason
 src/mikemol/hooks/ratchet_emit.py|sent-reported-as-a-boolean|    sent = len\(rows\) if emit\(rows, os\.environ, spawn\) else 0|    sent = emit(rows, os.environ, spawn)|def=main
 src/mikemol/hooks/ratchet_emit.py|declared-ratchets-found-none-exits-clean|    return 1 if declared and not rows else 0|    return 0|def=main
+src/mikemol/hooks/after_compaction.py|nothing-frozen-says-nothing|    if freeze\(payload, datetime\.now\(\)\.astimezone\(\)\) is None:|    if False:|def=precompact
+src/mikemol/hooks/after_compaction.py|unreadable-transcript-reads-as-unwritable|    if _line_bound\(Path\(named\)\) is None:|    if False:|def=unfrozen_reason

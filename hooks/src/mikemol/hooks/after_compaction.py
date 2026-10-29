@@ -202,13 +202,35 @@ def run(
     return 0
 
 
+def unfrozen_reason(payload: dict[str, object]) -> str:
+    """Say why `freeze` wrote nothing for a payload (W2125, github:R135).
+
+    ⚑ A MISSING RECORD MUST NOT READ AS UNKNOWN: with no line, "hook not loaded", "venv unbuilt" and
+    "transcript unreadable" all look the same from outside. The reasons are the same three checks
+    `freeze` makes, in its order.
+
+    Returns:
+        a short phrase naming the first check that failed.
+
+    """
+    named = text_of(payload.get("transcript_path"))
+    if not named:
+        return "the payload names no transcript_path"
+    if _line_bound(Path(named)) is None:
+        return f"the transcript {named} cannot be read"
+    return "the record could not be written beside the transcript"
+
+
 def precompact() -> int:
     """Read the PreCompact payload on stdin and freeze the compaction's facts (W2117).
 
-    An unreadable payload freezes nothing and says so on stderr: a compaction must not be blocked.
+    Nothing frozen says why on stderr, every time (an unreadable payload, no transcript, an
+    unreadable transcript, a directory that cannot be written): a compaction must not be blocked,
+    and a missing record must not read as an unknown cause.
 
     Returns:
-        0 always.
+        0 whenever it handled the payload, frozen or not. An exception it does not anticipate is
+        NOT caught here and exits 1 with its traceback, which the harness reads as non-blocking.
 
     """
     try:
@@ -216,7 +238,9 @@ def precompact() -> int:
     except ValueError:
         sys.stderr.write("precompact: the payload was not JSON; nothing frozen\n")
         return 0
-    freeze(as_record(raw), datetime.now().astimezone())
+    payload = as_record(raw)
+    if freeze(payload, datetime.now().astimezone()) is None:
+        sys.stderr.write(f"precompact: nothing frozen: {unfrozen_reason(payload)}\n")
     return 0
 
 

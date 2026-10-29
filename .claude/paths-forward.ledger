@@ -4573,3 +4573,40 @@
 2026-10-29T17:14:17Z  status W2160 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-29T17:21:41Z  tick  W2013 advanced  unblock   "recorded W2013 slice 1 fd3f6ee5 and W2160 e8eb4f6a landed; ratchet-b 1793292276555634493 is the only gate (inflight since about 17:12Z) and the bazel build //hooks:.venv waits for it (standing 8) [blocked by W1992]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-29T17:24:35Z  status W1992 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:01:58Z  status W2017 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:02:16Z  tick  W2017 advanced  unblock   "W2017 built in a clean scratch tree (ratchet_hook refuses a relative --dir and an empty --name; test, 2 mutants, warrant, site) and submitted as hooks-f; hooks venv built and mikemol-hook-precompact exists; W1992 landed 52e9453; W2163 extension recorded [reason: hooks-f, W2017, holds the hooks lane's registries now in the gate, so the other hooks-lane cards (W2018 and the rest) queue behind it as one stack each (cites W2018)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:03:14Z  status W2024 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:20:57Z  status W2018 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:23:21Z  status W2049 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:33:16Z  status W2059 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:37:16Z  tick  W2059 advanced  unblock   "three hooks stacks in the train, hooks-f W2017 inflight at 790/1534 FAILED 0 (18:35:15Z), hooks-g W2018 and hooks-h W2059 queued built on its registries; corrected two typed times on W2059 and W2018 evidence [blocked by W2017]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:38:44Z  status W2060 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:55:55Z  tick  W2017 advanced  unblock   "hooks-f W2017 reading 1197/1534 FAILED 0 TIMEOUT 0 at 18:51:51Z (790 at 18:35:15Z); hooks-g W2018 and hooks-h W2059 still queued; nothing landed since 52e94532 [blocked by W2059]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T18:58:23Z  status W2064 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T19:22:37Z  tick  W2017 advanced  unblock   "hooks-f W2017 at 1486/1534 FAILED 0 TIMEOUT 0 (19:20:46Z), about to give its verdict; hooks-g W2018 and hooks-h W2059 queued behind it; nothing landed since 52e94532 [blocked by W2059]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T19:24:09Z  status W2065 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T19:36:56Z  status W2017 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T19:36:56Z  status W2024 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T19:36:56Z  status W2060 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T19:49:22Z  interrupt W2164 minted    -         "katas tick end flush takes each repo's commit lease and skips repos with a live session or armed watchdog"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:R132
+2026-10-29T19:55:35Z  status W2024 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:03:01Z  tick  W2018 advanced  unblock   "hooks-g W2018 gate at 119/1534 FAILED 0 (19:59:39Z, early); hooks-h W2059 queued; hooks-f landed 0c1832e; W2164 carded and W2117 warrants attached [blocked by W2059]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:08:19Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:11:38Z  status W2066 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:24:19Z  status W2114 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:26:32Z  interrupt W2165 minted    -         "hold_lift's naming half accepts a record that names a card whose blocked_on cites the held symbol, one hop"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:R133
+2026-10-29T20:47:59Z  status W2070 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:52:06Z  tick  W2114 advanced  unblock   "W2117 hold lifted (warrant 126070) and re-filed to W2125; W2114 and W2164 decided as one stack, option 2; hooks-g W2018 at 183/1534 FAILED 0 at 20:50:22Z, 29 tests in 18 min with load 21 (about 1.6 tests a min), hooks-h W2059 queued [blocked by W2059]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T20:53:24Z  status W2071 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:19:30Z  status W2072 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:23:59Z  interrupt W2166 minted    -         "The two standing hooks become console scripts in the pinned bin, with standing.rego as package data"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1798
+2026-10-29T21:25:40Z  status W2073 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:31:11Z  tick  W2141 advanced  unblock   "gate readings for hooks-g W2018 (753/1534 FAILED 0 TIMEOUT 0 at 21:28:05Z, invocation d980fa93 read from the log) sent to github-42; W2141 extended with the invocation id and the HUNG flag; hooks-h W2059 queued [blocked by W2059]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:33:04Z  status W2074 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:08Z  status W2018 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:32Z  status W2024 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:32Z  status W2059 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:32Z  status W2064 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:32Z  status W2065 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:32Z  status W2066 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:43:32Z  status W2071 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

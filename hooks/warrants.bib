@@ -16208,3 +16208,10 @@
   claim  = {W2059: a bare `mikemol-commit` names --in-gate [--json], which a cold reader had missed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_the_usage_names_the_queue_reader_and_its_json_flag},
 }
+
+@misc{hooks-after-compaction-nothing-frozen-always-says-why-on-stderr-and-still-exits-zero,
+  section = {after-compaction},
+  title  = {W2125: no transcript_path, an unreadable transcript and a frozen record each read apart},
+  claim  = {W2125: no transcript_path, an unreadable transcript and a frozen record each read apart.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_nothing_frozen_always_says_why_on_stderr_and_still_exits_zero},
+}
