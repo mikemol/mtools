@@ -4610,3 +4610,13 @@
 2026-10-29T21:43:32Z  status W2065 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-29T21:43:32Z  status W2066 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-29T21:43:32Z  status W2071 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:59:39Z  status W2125 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T21:59:58Z  tick  W2125 advanced  unblock   "hooks train landed (W2018 00a4dbb, W2059 2c52620); W2125 residues built in a clean scratch tree and submitted as hooks-i; next hooks stacks: W2114 with W2164, W2060 with W2155, W2024 [blocked by W2024]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:03:26Z  status W2024 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:04:25Z  status W2064 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:11:08Z  status W2064 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:24:26Z  status W2156 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:25:00Z  status W2064 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:37:41Z  tick  W2156 advanced  unblock   "hooks-j W2156 resubmitted after the submit-time sandbox refusal (main's dirt parked, rescue ref main-dirt-2026-10-29b); hooks-i W2125 at 993/1534 FAILED 0 TIMEOUT 0 (22:36:58Z, invocation 538eb576), readings sent to github-42 [reason: the next hooks-lane cards (W2064 family, W2114 with W2164, W2060 with W2155, W2024) are built on hooks-j's registries, one stack each, so they wait for the train's verdict (cites W2064, W2114, W2164, W2060, W2155, W2024)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:52:19Z  tick  W2125 advanced  unblock   "hooks-i W2125 at 1392/1534 FAILED 0 (22:50:59Z) nearing its verdict, hooks-j W2156 queued; nothing landed since 2c526208 [blocked by W2156]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-29T22:55:55Z  status W2065 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

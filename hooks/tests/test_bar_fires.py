@@ -3053,10 +3053,13 @@ def _needs_inline_arming(command: str, scripts: list[str], bin_dir: Path) -> boo
 def _declared_script_reads_arming(name: str) -> bool:
     """Say whether a declared hook script's module reads an arming variable.
 
-    ⚑ THE MODULE IS FOUND BY NAME (`mikemol-hook-no-chaining` is `no_chaining.py`) AND A MODULE
-    THAT CANNOT BE FOUND IS JUDGED ARMED. The strict reading is the default: only a module that is
-    present and reads no `_HOOK_BLOCK` is exempt, so a script renamed away from its module falls
-    back to being held, never to being waved through.
+    ⚑ THE MODULE IS FOUND BY NAME (`mikemol-hook-no-chaining` is `no_chaining.py`), THEN BY WHAT
+    `entry.py` RUNS FOR IT (W2156), AND A MODULE THAT CANNOT BE FOUND EITHER WAY IS JUDGED ARMED.
+    A hook whose console function lives in `entry.py` (`mikemol-hook-precompact` is
+    `entry:precompact_main`, whose logic is `after_compaction.precompact`) is judged by the module
+    its `_guarded("<name>", module.function)` call runs. The strict reading stays the default:
+    only a module that is present and reads no `_HOOK_BLOCK` is exempt, so a script renamed away
+    from its module falls back to being held, never to being waved through.
 
     Returns:
         True when the module reads `_HOOK_BLOCK`, or cannot be found.
@@ -3064,6 +3067,10 @@ def _declared_script_reads_arming(name: str) -> bool:
     """
     stem = name.removeprefix("mikemol-hook-").replace("-", "_")
     source = _PKG / f"{stem}.py"
+    if not source.is_file():
+        entry_text = (_PKG / "entry.py").read_text(encoding="utf-8")
+        found = pyre.search(rf'_guarded\(\s*"{pyre.escape(name)}",\s*(\w+)\.\w+', entry_text)
+        source = _PKG / f"{found.group(1)}.py" if found else source
     if not source.is_file():
         return True
     return "_HOOK_BLOCK" in source.read_text(encoding="utf-8")
@@ -3099,6 +3106,17 @@ def test_the_blocking_hooks_stay_held_to_inline_arming_and_the_surfacing_hook_is
 def test_a_declared_script_whose_module_is_missing_is_judged_armed() -> None:
     """A script with no module of that name falls back to the strict reading, never to exempt."""
     assert _declared_script_reads_arming("mikemol-hook-no-such-module") is True
+
+
+def test_a_hook_run_through_the_entry_module_is_judged_by_the_module_it_runs() -> None:
+    """W2156: precompact's logic is after_compaction, which reads no arming variable: exempt.
+
+    ⚑ THE CONTROLS: a blocking hook keeps its own module (held), and a name that neither has a
+    module nor appears in an `_guarded(...)` call is still the strict reading.
+    """
+    assert _declared_script_reads_arming("mikemol-hook-precompact") is False
+    assert _declared_script_reads_arming("mikemol-hook-no-chaining") is True
+    assert _declared_script_reads_arming("mikemol-hook-not-in-entry") is True
 
 
 def test_a_launcher_that_reads_an_arming_variable_must_be_armed_inline(tmp_path: Path) -> None:

@@ -16215,3 +16215,13 @@
   claim  = {W2125: no transcript_path, an unreadable transcript and a frozen record each read apart.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_nothing_frozen_always_says_why_on_stderr_and_still_exits_zero},
 }
+
+@misc{hooks-bar-fires-hook-run-through-the-entry-module-is-judged-by-the-module-it-runs,
+  section = {bar-fires},
+  title  = {W2156: precompact's logic is after_compaction, which reads no arming variable: exempt},
+  claim  = {W2156: precompact's logic is after_compaction, which reads no arming variable: exempt.
+            THE CONTROLS: a blocking hook keeps its own module (held), and a name that
+            neither has a module nor appears in an `_guarded(...)` call is still the
+            strict reading.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_hook_run_through_the_entry_module_is_judged_by_the_module_it_runs},
+}
