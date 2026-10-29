@@ -369,6 +369,25 @@ def test_main_execs_the_real_bazel_and_answers_127_when_it_cannot_be_started(
     assert f"cannot run {REAL}" in capsys.readouterr().err
 
 
+def test_the_wrapper_finds_the_tool_in_the_real_checkouts_venv_and_not_without_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2145: a gate snapshot has no venv; the wrapper reaches the installed tool by REAL_ROOT."""
+    repo, real = tmp_path / "repo", tmp_path / "real"
+    wrapper = bazel_admit.install(repo)
+    tool = real / ".venv" / "bin" / "mikemol-bazel-admit"
+    tool.parent.mkdir(parents=True)
+    tool.write_text('#!/bin/sh\necho "admit $*"\n', encoding="utf-8")
+    tool.chmod(stat.S_IRWXU)
+    monkeypatch.setenv("BAZEL_REAL", "/real/bazel")
+    monkeypatch.setenv("MIKEMOL_REAL_ROOT", str(real))
+    assert bazel_admit.run_probe(["/bin/sh", str(wrapper), "test", "//t"]) == (
+        "admit -- /real/bazel test //t\n"
+    )
+    monkeypatch.delenv("MIKEMOL_REAL_ROOT")
+    assert bazel_admit.run_probe(["/bin/sh", str(wrapper), "test", "//t"]) is None
+
+
 def test_admit_runs_a_heavy_verb_with_the_services_off_when_the_endpoint_refuses(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
