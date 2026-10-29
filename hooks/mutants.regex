@@ -773,3 +773,8 @@ src/mikemol/hooks/stacktypes.py|silent-mypy-death-passes|            if code != 
 src/mikemol/hooks/stacktypes.py|cache-inside-the-snapshot|            cache = snapshot\.parent / "mypy-cache" / dist|            cache = snapshot / "mypy-cache" / dist|def=real_types
 src/mikemol/hooks/stackmutants.py|only-the-first-lint-runs|        return \[problem for lint in lints for problem in lint\(snapshot, dists\)\]|        return [problem for lint in lints[:1] for problem in lint(snapshot, dists)]|def=chain
 src/mikemol/hooks/stackrun.py|lint-problems-ignored|    if broken:|    if False:|def=run_stack
+src/mikemol/hooks/bazel_admit.py|outage-never-degrades|    if address is None or \(reachable or can_connect\)\(\*address\):|    if True:|def=degrade
+src/mikemol/hooks/bazel_admit.py|off-flags-not-after-the-verb|    return \[\*args\[:at\], \*OFF_FLAGS, \*args\[at:\]\], note|    return [*args, *OFF_FLAGS], note|def=degrade
+src/mikemol/hooks/bazel_admit.py|light-verb-probed-too|    address = service_address\(directory\) if verb in SERVICE_VERBS else None|    address = service_address(directory)|def=degrade
+src/mikemol/hooks/bazel_admit.py|nearest-bazelrc-ignored|        if rc\.is_file\(\):|        if False:|def=service_address
+src/mikemol/hooks/bazel_admit.py|degrade-never-applied|    args, down = degrade\(args, Path\.cwd\(\)\)|    down = None|def=admit

@@ -16027,3 +16027,54 @@
             own paths are what name it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdictlog.py -k test_the_ship_flag_is_not_a_path_of_the_request},
 }
+
+@misc{hooks-bazel-admit-endpoint-is-read-from-the-nearest-bazelrc-and-absent-when-none-names-one,
+  section = {bazel_admit},
+  title  = {W2124: nothing is written into this module; a workspace with no BES line has no endpoint},
+  claim  = {W2124: nothing is written into this module; a workspace with no BES line has no
+            endpoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_the_endpoint_is_read_from_the_nearest_bazelrc_and_absent_when_none_names_one},
+}
+
+@misc{hooks-bazel-admit-refused-endpoint-turns-the-cache-and-the-upload-off-right-after-the-verb,
+  section = {bazel_admit},
+  title  = {The flags go after the verb, so a later caller flag wins; the note names the endpoint},
+  claim  = {The flags go after the verb, so a later caller flag wins; the note names the endpoint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_refused_endpoint_turns_the_cache_and_the_upload_off_right_after_the_verb},
+}
+
+@misc{hooks-bazel-admit-endpoint-that-accepts-changes-nothing,
+  section = {bazel_admit},
+  title  = {The control: with the service up the cache and the stream stay on, no flag is added},
+  claim  = {The control: with the service up the cache and the stream stay on, no flag is added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_an_endpoint_that_accepts_changes_nothing},
+}
+
+@misc{hooks-bazel-admit-light-verb-or-a-workspace-without-an-endpoint-is-never-probed,
+  section = {bazel_admit},
+  title  = {`info` does not use the services, and no named endpoint means nothing to probe},
+  claim  = {`info` does not use the services, and no named endpoint means nothing to probe.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_a_light_verb_or_a_workspace_without_an_endpoint_is_never_probed},
+}
+
+@misc{hooks-bazel-admit-admit-runs-a-heavy-verb-with-the-services-off-when-the-endpoint-refuses,
+  section = {bazel_admit},
+  title  = {End to end: the executed command carries the off-flags and stderr says why},
+  claim  = {End to end: the executed command carries the off-flags and stderr says why.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_admit_runs_a_heavy_verb_with_the_services_off_when_the_endpoint_refuses},
+}
+
+@misc{hooks-bazel-admit-can-connect-is-true-for-an-accepted-connection-and-false-for-a-socket-error,
+  section = {bazel_admit},
+  title  = {The probe answers from the connection attempt alone: accepted is True, any OSError False},
+  claim  = {The probe answers from the connection attempt alone: accepted is True, any OSError
+            False.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_can_connect_is_true_for_an_accepted_connection_and_false_for_a_socket_error},
+}
+
+@misc{hooks-bazel-admit-main-execs-the-real-bazel-and-answers-127-when-it-cannot-be-started,
+  section = {bazel_admit},
+  title  = {Through `main`, a light verb is handed to execve unchanged; a failed exec is said},
+  claim  = {Through `main`, a light verb is handed to execve unchanged; a failed exec is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_main_execs_the_real_bazel_and_answers_127_when_it_cannot_be_started},
+}

@@ -4,6 +4,57 @@
 load("@mikemol_check_mutants//:defs.bzl", "mutant_site")
 
 mutant_site(
+    name = "service_address",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::service_address",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+    ],
+)
+
+mutant_site(
+    name = "can_connect",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::can_connect",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+    ],
+)
+
+mutant_site(
+    name = "degrade",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::degrade",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+    ],
+)
+
+mutant_site(
     name = "verb_of",
     dist = "hooks",
     site = "src/mikemol/hooks/bazel_admit.py::verb_of",
@@ -139,9 +190,102 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_outage-never-degrades",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::outage-never-degrades",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_off-flags-not-after-the-verb",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::off-flags-not-after-the-verb",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_light-verb-probed-too",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::light-verb-probed-too",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_nearest-bazelrc-ignored",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::nearest-bazelrc-ignored",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_degrade-never-applied",
+    dist = "hooks",
+    site = "src/mikemol/hooks/bazel_admit.py::degrade-never-applied",
+    tests = "tests/test_bazel_admit.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/bazel_admit.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/host_facts.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/standing_facts.py",
+        "//hooks:src/mikemol/hooks/tool_path.py",
+        "//hooks:tests/test_bazel_admit.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
+        ":service_address",
+        ":can_connect",
+        ":degrade",
         ":verb_of",
         ":estimate_mb",
         ":run_probe",
@@ -150,6 +294,11 @@ test_suite(
         ":install",
         ":_exec",
         ":main",
+        ":declared_outage-never-degrades",
+        ":declared_off-flags-not-after-the-verb",
+        ":declared_light-verb-probed-too",
+        ":declared_nearest-bazelrc-ignored",
+        ":declared_degrade-never-applied",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

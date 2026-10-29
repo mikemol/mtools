@@ -205,3 +205,4 @@ watchdog_evidence	The Watchdog's Exit Carries the Beats It Saw
 repro_rungs	Each Refusing Rung Says the One Command That Reproduces Only It
 testgate	A Stack's Own Tests Run in the Sandbox Before It Can Queue
 sites_gate	The generated mutation sites follow the graph at the commit gate (W1989)
+bazel_admit	bazel_admit

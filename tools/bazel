@@ -12,4 +12,10 @@ for admit in \
         exec "$admit" -- "$BAZEL_REAL" "$@"
     fi
 done
+# W2124: a frozen snapshot tree has neither venv, but it carries this tool's own source (stdlib
+# only), which is exactly what was frozen: run that, so a gate reads nothing outside its snapshot.
+if [ -f "$here/hooks/src/mikemol/hooks/bazel_admit.py" ] && command -v python3 >/dev/null 2>&1; then
+    PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$here/hooks/src" \
+        exec python3 -m mikemol.hooks.bazel_admit -- "$BAZEL_REAL" "$@"
+fi
 exec "$BAZEL_REAL" "$@"

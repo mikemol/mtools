@@ -193,8 +193,11 @@ def test_a_light_verb_is_executed_as_given() -> None:
     assert not err.getvalue()
 
 
-def test_a_heavy_verb_runs_under_the_hold_and_its_exit_code_is_returned(tmp_path: Path) -> None:
+def test_a_heavy_verb_runs_under_the_hold_and_its_exit_code_is_returned(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """`test` is executed as membudget's hold with the gated environment; its status comes back."""
+    monkeypatch.chdir(tmp_path)
     tool = _budget(tmp_path)
     run, err = _Exec(code=BAZEL_FAILED), io.StringIO()
     env = {bazel_admit.MEMBUDGET_ENV: str(tool), bazel_admit.TRACE_ENV: "1"}
@@ -238,6 +241,8 @@ def test_install_writes_an_executable_wrapper_that_fails_open(tmp_path: Path) ->
     assert ".venv/bin/mikemol-bazel-admit" in text
     assert "bazel-bin/hooks/.venv/bin/mikemol-bazel-admit" in text
     assert 'exec "$admit" -- "$BAZEL_REAL" "$@"' in text
+    assert 'PYTHONPATH="$here/hooks/src"' in text
+    assert "-m mikemol.hooks.bazel_admit" in text
     assert text.rstrip().endswith('exec "$BAZEL_REAL" "$@"')
 
 
@@ -249,3 +254,135 @@ def test_main_installs_a_wrapper_and_refuses_a_bad_command_line(
     assert capsys.readouterr().out.strip() == str(tmp_path / "tools" / "bazel")
     assert bazel_admit.main([]) == bazel_admit.EXIT_USAGE
     assert "usage: mikemol-bazel-admit" in capsys.readouterr().err
+
+
+PORT = 1985
+RC = "build --remote_cache=grpc://svc.example:1985\nbuild --bes_backend=grpc://svc.example:1985\n"
+
+
+def _workspace(tmp_path: Path, text: str = RC) -> Path:
+    """Make a workspace whose `.bazelrc` is `text`, with a subdirectory to run from.
+
+    Returns:
+        the subdirectory.
+
+    """
+    (tmp_path / ".bazelrc").write_text(text, encoding="utf-8")
+    inner = tmp_path / "pkg"
+    inner.mkdir()
+    return inner
+
+
+def _down(_host: str, _port: int) -> bool:
+    return False
+
+
+def _up(_host: str, _port: int) -> bool:
+    return True
+
+
+def _never_asked(_host: str, _port: int) -> bool:
+    msg = "the endpoint must not be probed"
+    raise AssertionError(msg)
+
+
+def test_the_endpoint_is_read_from_the_nearest_bazelrc_and_absent_when_none_names_one(
+    tmp_path: Path,
+) -> None:
+    """W2124: nothing is written into this module; a workspace with no BES line has no endpoint."""
+    inner = _workspace(tmp_path)
+    assert bazel_admit.service_address(inner) == ("svc.example", PORT)
+    bare = tmp_path / "other"
+    bare.mkdir()
+    (bare / ".bazelrc").write_text("build --jobs=2\n", encoding="utf-8")
+    assert bazel_admit.service_address(bare) is None
+
+
+def test_a_refused_endpoint_turns_the_cache_and_the_upload_off_right_after_the_verb(
+    tmp_path: Path,
+) -> None:
+    """The flags go after the verb, so a later caller flag wins; the note names the endpoint."""
+    inner = _workspace(tmp_path)
+    args, note = bazel_admit.degrade(["test", "//hooks:t", "--jobs=2"], inner, _down)
+    assert args == ["test", *bazel_admit.OFF_FLAGS, "//hooks:t", "--jobs=2"]
+    assert note is not None
+    assert f"svc.example:{PORT} refuses connections" in note
+
+
+def test_an_endpoint_that_accepts_changes_nothing(tmp_path: Path) -> None:
+    """The control: with the service up the cache and the stream stay on, no flag is added."""
+    inner = _workspace(tmp_path)
+    assert bazel_admit.degrade(["test", "//hooks:t"], inner, _up) == (["test", "//hooks:t"], None)
+
+
+def test_a_light_verb_or_a_workspace_without_an_endpoint_is_never_probed(tmp_path: Path) -> None:
+    """`info` does not use the services, and no named endpoint means nothing to probe."""
+    inner = _workspace(tmp_path)
+    assert bazel_admit.degrade(["info"], inner, _never_asked) == (["info"], None)
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    (plain / ".bazelrc").write_text("build --jobs=2\n", encoding="utf-8")
+    assert bazel_admit.degrade(["build"], plain, _never_asked) == (["build"], None)
+
+
+def test_can_connect_is_true_for_an_accepted_connection_and_false_for_a_socket_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The probe answers from the connection attempt alone: accepted is True, any OSError False."""
+    asked: list[tuple[tuple[str, int], float]] = []
+
+    def accept(address: tuple[str, int], timeout: float) -> io.StringIO:
+        asked.append((address, timeout))
+        return io.StringIO()
+
+    def refuse(_address: tuple[str, int], timeout: float) -> io.StringIO:
+        raise ConnectionRefusedError(timeout)
+
+    monkeypatch.setattr("socket.create_connection", accept)
+    assert bazel_admit.can_connect("svc.example", PORT) is True
+    assert asked == [(("svc.example", PORT), bazel_admit.CONNECT_TIMEOUT_S)]
+    monkeypatch.setattr("socket.create_connection", refuse)
+    assert bazel_admit.can_connect("svc.example", PORT) is False
+
+
+NOT_RUNNABLE = 127
+
+
+def test_main_execs_the_real_bazel_and_answers_127_when_it_cannot_be_started(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Through `main`, a light verb is handed to execve unchanged; a failed exec is said."""
+    seen: list[tuple[str, list[str]]] = []
+
+    def record(program: str, argv: list[str], _env: dict[str, str]) -> None:
+        seen.append((program, argv))
+
+    monkeypatch.setattr("os.execve", record)
+    bazel_admit.main(["--", REAL, "info"])
+    assert seen == [(REAL, [REAL, "info"])]
+
+    def refuse(_program: str, _argv: list[str], _env: dict[str, str]) -> None:
+        raise OSError
+
+    monkeypatch.setattr("os.execve", refuse)
+    assert bazel_admit.main(["--", REAL, "info"]) == NOT_RUNNABLE
+    assert f"cannot run {REAL}" in capsys.readouterr().err
+
+
+def test_admit_runs_a_heavy_verb_with_the_services_off_when_the_endpoint_refuses(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """End to end: the executed command carries the off-flags and stderr says why."""
+    inner = _workspace(tmp_path)
+    monkeypatch.chdir(inner)
+    monkeypatch.setenv("PATH", str(tmp_path / "empty"))
+    monkeypatch.setattr(bazel_admit, "can_connect", _down)
+    run, err = _Exec(), io.StringIO()
+    assert bazel_admit.admit([REAL, "test", "//t"], {}, run, err, _supports) == 0
+    assert run.runs[0][0] == [REAL, "test", *bazel_admit.OFF_FLAGS, "//t"]
+    assert "refuses connections" in err.getvalue()
+    monkeypatch.setattr(bazel_admit, "can_connect", _up)
+    again, quiet = _Exec(), io.StringIO()
+    assert bazel_admit.admit([REAL, "test", "//t"], {}, again, quiet, _supports) == 0
+    assert again.runs[0][0] == [REAL, "test", "//t"]
+    assert "refuses connections" not in quiet.getvalue()

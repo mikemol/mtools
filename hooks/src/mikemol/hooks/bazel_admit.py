@@ -39,7 +39,9 @@ CONSUMED BY: the `mikemol-bazel-admit` console script.
 """
 
 import os
+import re
 import shutil
+import socket
 import subprocess
 import sys
 from collections.abc import Callable, Mapping, Sequence
@@ -47,6 +49,80 @@ from pathlib import Path
 from typing import TextIO
 
 from mikemol.hooks import host_facts, tool_path
+
+# W2124: the remote services a build uses when the workspace's .bazelrc names them. The endpoint is
+# READ from the .bazelrc, never written here, so a moved service needs no change in this module.
+_BES_FLAG = re.compile(
+    r"^build\s+--bes_backend=grpc://(?P<host>[^:\s/]+):(?P<port>\d+)\s*$", re.MULTILINE
+)
+SERVICE_VERBS = frozenset({"build", "test", "coverage", "run"})
+CONNECT_TIMEOUT_S = 3
+OFF_FLAGS = ("--remote_cache=", "--bes_backend=", "--bes_results_url=")
+Reach = Callable[[str, int], bool]
+
+
+def service_address(directory: Path) -> tuple[str, int] | None:
+    """Read the remote-service endpoint the nearest workspace `.bazelrc` names.
+
+    Returns:
+        `(host, port)` of its `build --bes_backend=grpc://...` line, or None when no `.bazelrc`
+        above `directory` names one.
+
+    """
+    for candidate in (directory, *directory.parents):
+        rc = candidate / ".bazelrc"
+        if rc.is_file():
+            try:
+                found = _BES_FLAG.search(rc.read_text(encoding="utf-8"))
+            except OSError:
+                return None
+            return (found["host"], int(found["port"])) if found else None
+    return None
+
+
+def can_connect(host: str, port: int) -> bool:
+    """Say whether a TCP connection to the endpoint is accepted now.
+
+    Returns:
+        True when it connects within CONNECT_TIMEOUT_S, False on any socket error.
+
+    """
+    try:
+        with socket.create_connection((host, port), timeout=CONNECT_TIMEOUT_S):
+            return True
+    except OSError:
+        return False
+
+
+def degrade(
+    args: Sequence[str], directory: Path, reachable: Reach | None = None
+) -> tuple[list[str], str | None]:
+    """Switch the remote cache and the BEP upload off for one command when their endpoint is down.
+
+    ⚑ AN OUTAGE OF TELEMETRY AND A CACHE MUST NOT FAIL A BUILD THAT PASSES (host retro, 2026-10-29:
+    BuildBuddy's endpoint refused connections after a reboot, bazel failed every test action on its
+    remote-cache capability query and exited 34 on a passing build for the failed BEP upload).
+    ⚑ WHEN THE ENDPOINT IS UP NOTHING CHANGES: the cache and the BES stream stay on, so cache hits
+    and the results link are as before. The flags go right after the verb, so a flag the caller put
+    later on the command line still wins, and `.bazelrc` is read as it always was.
+
+    Returns:
+        the arguments (the off-flags inserted after the verb when the endpoint refuses), and a
+        note saying so; unchanged arguments and None for a light verb, a workspace that names no
+        endpoint, or an endpoint that accepts.
+
+    """
+    verb = verb_of(args)
+    address = service_address(directory) if verb in SERVICE_VERBS else None
+    if address is None or (reachable or can_connect)(*address):
+        return list(args), None
+    at = list(args).index(str(verb)) + 1
+    note = (
+        f"bazel-admit: {address[0]}:{address[1]} refuses connections; this `{verb}` runs with the "
+        "remote cache and the BEP upload off"
+    )
+    return [*args[:at], *OFF_FLAGS, *args[at:]], note
+
 
 HEAVY_MB = {"build": 4096, "test": 4096, "coverage": 4096, "run": 2048, "fetch": 1024}
 MEMBUDGET = "mikemol-membudget"
@@ -79,6 +155,12 @@ for admit in \\
         exec "$admit" -- "$BAZEL_REAL" "$@"
     fi
 done
+# W2124: a frozen snapshot tree has neither venv, but it carries this tool's own source (stdlib
+# only), which is exactly what was frozen: run that, so a gate reads nothing outside its snapshot.
+if [ -f "$here/hooks/src/mikemol/hooks/bazel_admit.py" ] && command -v python3 >/dev/null 2>&1; then
+    PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$here/hooks/src" \\
+        exec python3 -m mikemol.hooks.bazel_admit -- "$BAZEL_REAL" "$@"
+fi
 exec "$BAZEL_REAL" "$@"
 """
 
@@ -176,6 +258,9 @@ def admit(
         if env.get(TRACE_ENV):
             err.write(f"bazel-admit: `{verb}` is light; running untouched\n")
         return execute([real, *args], env)
+    args, down = degrade(args, Path.cwd())
+    if down:
+        err.write(f"{down}\n")
     command, gated, note = plan(real, args, mb, env, probe)
     if note:
         err.write(f"{note}\n")
@@ -228,3 +313,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return admit(args[1:], dict(os.environ), _exec, sys.stderr)
     sys.stderr.write("usage: mikemol-bazel-admit -- <bazel> [args...] | --install DIR\n")
     return EXIT_USAGE
+
+
+if __name__ == "__main__":
+    sys.exit(main())
