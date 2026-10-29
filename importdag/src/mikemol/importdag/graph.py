@@ -246,6 +246,26 @@ def build(dist: Path, package: str, names: Sequence[str] | None = None) -> dict[
     }
 
 
+def input_mutants(tests: dict[str, Entry]) -> list[tuple[str, str]]:
+    """Name every (test, edge) whose removal an input-mutant target would try (W2013).
+
+    ⚑ ONE MUTANT PER TEST AND PER REMOVABLE EDGE: an edge is a module the test imports (typing-only
+    ones included, since dropping one must not fail the test and a survivor says so) or a file it
+    declares it reads. A test with no edge has no mutant. The wrapper that makes the mutant pass
+    only on failure, and the report of survivors, are the generator's, not this function's.
+
+    Returns:
+        `(test path, edge path)` pairs, sorted, one per test and edge; `tests` is the `tests`
+        table of `build`'s document.
+
+    """
+    return sorted(
+        (test, edge)
+        for test, entry in tests.items()
+        for edge in {*entry.get("imports", []), *entry.get("reads", [])}
+    )
+
+
 def render(doc: dict[str, object]) -> str:
     """Spell the graph file.
 

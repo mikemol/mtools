@@ -46,3 +46,5 @@ src/mikemol/importdag/graph.py|untracked-module-listed|        modules = listed_
 src/mikemol/importdag/graph.py|files-flag-ignored|    tracked = trackednames\.of\(dist\) if opts\["files"\] else None|    tracked = None|def=main
 src/mikemol/importdag/graph.py|nested-test-listed|        and "/" not in n\[len\("tests/"\) :\]|        and True|def=listed_tests
 src/mikemol/importdag/costcli.py|dist-prefix-left-on|    manifest = \[m\.removeprefix\(f"\{dist\}/"\) for m in named if m\.startswith\(f"\{dist\}/"\)\]|    manifest = list(named)|def=main
+src/mikemol/importdag/graph.py|input-mutant-skips-the-reads|, \*entry\.get\("reads", \[\]\)\}|}|def=input_mutants
+src/mikemol/importdag/graph.py|input-mutants-unsorted|    return sorted\(|    return list(|def=input_mutants

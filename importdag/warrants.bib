@@ -1618,3 +1618,11 @@
   claim  = {`git ls-files` for the directory: a staged new file counts.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph_files.py -k test_the_tracked_names_are_sorted_dist_relative_and_include_staged_files},
 }
+
+@misc{importdag-graph-input-mutant-is-named-for-each-test-and-each-import-or-read,
+  section = {graph},
+  title  = {W2013: one pair per test and edge (reads included), sorted; a test with no edge has none},
+  claim  = {W2013: one pair per test and edge (reads included), sorted; a test with no edge has
+            none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_an_input_mutant_is_named_for_each_test_and_each_import_or_read},
+}

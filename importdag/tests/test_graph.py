@@ -163,3 +163,18 @@ def test_a_rendering_is_byte_stable(tmp_path: Path) -> None:
     doc = graph.build(_dist(tmp_path), _PKG)
     assert graph.render(doc) == graph.render(graph.build(tmp_path, _PKG))
     assert graph.render(doc).endswith("}\n")
+
+
+def test_an_input_mutant_is_named_for_each_test_and_each_import_or_read() -> None:
+    """W2013: one pair per test and edge (reads included), sorted; a test with no edge has none."""
+    tests: dict[str, dict[str, list[str]]] = {
+        "tests/test_b.py": {"imports": ["src/m/x.py", "src/m/y.py"], "reads": ["data/f.txt"]},
+        "tests/test_a.py": {"imports": ["src/m/x.py"], "reads": [], "typing_only": ["src/m/x.py"]},
+        "tests/test_c.py": {"imports": [], "reads": []},
+    }
+    assert graph.input_mutants(tests) == [
+        ("tests/test_a.py", "src/m/x.py"),
+        ("tests/test_b.py", "data/f.txt"),
+        ("tests/test_b.py", "src/m/x.py"),
+        ("tests/test_b.py", "src/m/y.py"),
+    ]
