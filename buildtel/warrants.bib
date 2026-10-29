@@ -1569,3 +1569,24 @@
   claim  = {W1894: past half the limit in CPU is a split finding; long wall of low CPU is not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardplan.py -k test_a_plain_test_is_judged_by_its_own_cpu_when_the_row_has_it_else_by_wall},
 }
+
+@misc{buildtel-targettimes-cpu-samples-read-target-and-value-and-skip-a-line-that-is-not-one,
+  section = {targettimes},
+  title  = {W1895: one JSON sample per line becomes target -> seconds; noise is skipped, not raised},
+  claim  = {W1895: one JSON sample per line becomes target -> seconds; noise is skipped, not raised.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_cpu_samples_read_target_and_value_and_skip_a_line_that_is_not_one},
+}
+
+@misc{buildtel-targettimes-row-with-a-cpu-sample-gains-cpu-s-and-a-row-without-one-does-not,
+  section = {targettimes},
+  title  = {The join: `--cpu FILE` adds the column only where the label was measured},
+  claim  = {The join: `--cpu FILE` adds the column only where the label was measured.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_a_row_with_a_cpu_sample_gains_cpu_s_and_a_row_without_one_does_not},
+}
+
+@misc{buildtel-targettimes-unreadable-cpu-file-is-a-usage-error-naming-the-file,
+  section = {targettimes},
+  title  = {A samples file that does not exist exits 2 and says which, never a traceback},
+  claim  = {A samples file that does not exist exits 2 and says which, never a traceback.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_targettimes.py -k test_an_unreadable_cpu_file_is_a_usage_error_naming_the_file},
+}

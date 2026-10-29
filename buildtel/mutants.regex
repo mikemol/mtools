@@ -69,6 +69,10 @@ src/mikemol/buildtel/targettimes.py|dead-invocation-stops-the-rest|            c
 src/mikemol/buildtel/targettimes.py|flag-taken-as-a-log| or args\[0\]\.startswith\("-"\)||def=main
 src/mikemol/buildtel/targettimes.py|unreachable-exit-lost|            code = EXIT_UNREACHABLE|            code = 0|def=main
 src/mikemol/buildtel/targettimes.py|empty-log-not-named|    if not ids:|    if False:|def=main
+src/mikemol/buildtel/targettimes.py|cpu-sample-never-joined|    if row\.label in cpu:|    if False:|def=fields_of
+src/mikemol/buildtel/targettimes.py|unmeasured-row-gets-cpu|    if row\.label in cpu:|    if True:|def=fields_of
+src/mikemol/buildtel/targettimes.py|unlabelled-sample-raises|        except \(ValueError, KeyError, IndexError, TypeError\):|        except ValueError:|def=cpu_samples
+src/mikemol/buildtel/targettimes.py|cpu-file-read-as-nothing|cpu_samples\(samples\.read_text\(encoding="utf-8", errors="replace"\)\)|{}|def=_cpu_of
 
 # image_digest.py `digest`: `absent` is a stable answer for everything but an unknown image name.
 src/mikemol/buildtel/image_digest.py|unknown-image-accepted|if image not in IMAGES:|if False:|def=digest

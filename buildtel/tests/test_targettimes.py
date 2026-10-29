@@ -135,3 +135,48 @@ def test_main_refuses_anything_but_one_log(
     """No operand, a flag, or two operands is a usage error: exit 2 and the usage line."""
     assert targettimes.main(argv, lambda _i: {}, _none) == _USAGE_EXIT
     assert capsys.readouterr().err == targettimes.USAGE + "\n"
+
+
+_CPU = 72.5
+
+
+def _sample(target: str | None, value: float) -> str:
+    metric: dict[str, object] = {} if target is None else {"target": target}
+    row: dict[str, object] = {"metric": metric, "value": [1.0, str(value)]}
+    return json.dumps(row)
+
+
+def test_cpu_samples_read_target_and_value_and_skip_a_line_that_is_not_one() -> None:
+    """W1895: one JSON sample per line becomes target -> seconds; noise is skipped, not raised."""
+    text = f"{_sample('//a:t', _CPU)}\nnot json\n{_sample(None, 1.0)}\n"
+    assert targettimes.cpu_samples(text) == {"//a:t": _CPU}
+
+
+def test_a_row_with_a_cpu_sample_gains_cpu_s_and_a_row_without_one_does_not(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The join: `--cpu FILE` adds the column only where the label was measured."""
+    log = tmp_path / "mtools.log"
+    log.write_text(f"/invocation/{_ONE}\n", encoding="utf-8")
+    cpu = tmp_path / "cpu.jsonl"
+    cpu.write_text(_sample("//a:t", _CPU) + "\n", encoding="utf-8")
+    page = _page("//a:t", "//b:t")
+    assert targettimes.main([str(log), "--cpu", str(cpu)], lambda _i: page, _none) == 0
+    lines = capsys.readouterr().out.splitlines()
+    rows = {
+        str(r["label"]): r for r in (cast("dict[str, object]", json.loads(line)) for line in lines)
+    }
+    assert rows["//a:t"]["cpu_s"] == _CPU
+    assert "cpu_s" not in rows["//b:t"]
+
+
+def test_an_unreadable_cpu_file_is_a_usage_error_naming_the_file(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A samples file that does not exist exits 2 and says which, never a traceback."""
+    log = tmp_path / "mtools.log"
+    log.write_text(f"/invocation/{_ONE}\n", encoding="utf-8")
+    missing = tmp_path / "no-such.jsonl"
+    argv = [str(log), "--cpu", str(missing)]
+    assert targettimes.main(argv, lambda _i: _page("//a:t"), _none) == _USAGE_EXIT
+    assert f"targettimes: {missing}" in capsys.readouterr().err
