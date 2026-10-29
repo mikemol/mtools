@@ -198,6 +198,16 @@ def after_compaction_main() -> int:
     return _guarded("mikemol-hook-after-compaction", after_compaction.main)
 
 
+def precompact_main() -> int:
+    """Run `mikemol-hook-precompact` behind the argv contract (W2117).
+
+    Returns:
+        the exit code.
+
+    """
+    return _guarded("mikemol-hook-precompact", after_compaction.precompact)
+
+
 def tick_release_main() -> int:
     """Run `mikemol-hook-tick-release` behind the argv contract (W815).
 

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# W2117: PreCompact freezes the facts of the compaction about to happen (the transcript's line
+# bound, its path, the prior record). The logic is mikemol.hooks.after_compaction.precompact; this
+# launcher is the stable path the harness's settings name.
+#
+# ⚑ FAIL OPEN, ALWAYS. A compaction that cannot start because a freezing hook could not run has been
+# made worse by the hook. An unbuilt venv is a note on stderr and exit 0 (the same direction as
+# mikemol-hook-after-compaction).
+#
+# ⚑ THE REAL PATH, NOT `bazel-bin`: CPython reached through the convenience symlink prints
+# "Could not find platform dependent libraries" on every call; the same venv by its real path is
+# silent (see mikemol-hook-no-verify).
+set -uo pipefail
+# ⚑ W1032: NOTHING RUN FROM bazel-bin REWRITES A .pyc IN IT (a hook per tool call raced bazel test).
+export PYTHONDONTWRITEBYTECODE=1
+
+root="${CLAUDE_PROJECT_DIR:-}"
+entry="$(basename "$0")"
+if [ -z "$root" ]; then
+    echo "$entry: CLAUDE_PROJECT_DIR is unset; nothing frozen" >&2
+    exit 0
+fi
+
+venv="$root/bazel-bin/hooks/.venv"
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    echo "$entry: the hook venv is not built (bazel build //hooks:.venv); nothing frozen" >&2
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"

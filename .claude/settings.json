@@ -120,6 +120,16 @@
         ]
       }
     ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PRECOMPACT_HOOK_BLOCK=1 \"$CLAUDE_PROJECT_DIR/hooks/bin/mikemol-hook-precompact\""
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

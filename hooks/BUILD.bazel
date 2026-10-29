@@ -193,6 +193,7 @@ _TEST_ENV = {
             # test_bin_launchers_argv's glob so none can escape the no-bytecode rule. Named one by
             # one (a gate never globs its inputs); the test's floor counts them.
             "bin/mikemol-hook-after-compaction",
+            "bin/mikemol-hook-precompact",
             "bin/mikemol-hook-build-failure",
             "bin/mikemol-hook-pycheck-advise",
             "bin/mikemol-hook-read-guard",
@@ -558,6 +559,8 @@ venv_from_hub(
         "mikemol-hook-tick-gate": "mikemol.hooks.entry:tick_gate_main",
         # W813: the SessionStart(compact) after-compaction context.
         "mikemol-hook-after-compaction": "mikemol.hooks.entry:after_compaction_main",
+        # W2117: the PreCompact freeze of the compaction's facts.
+        "mikemol-hook-precompact": "mikemol.hooks.entry:precompact_main",
         # W815: the SessionEnd tick-lock release.
         "mikemol-hook-tick-release": "mikemol.hooks.entry:tick_release_main",
         "mikemol-hook-work-claims": "mikemol.hooks.entry:work_claims_main",

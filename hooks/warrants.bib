@@ -16136,3 +16136,52 @@
   claim  = {emit_landings with a key sends records that carry it, in the JSON on the child's stdin.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_stack_run_ships_its_records_under_the_submit_key},
 }
+
+@misc{hooks-after-compaction-precompact-payload-freezes-the-bound-the-path-and-the-trigger,
+  section = {after-compaction},
+  title  = {W2117: the record holds the transcript line bound, its path and the trigger, numbered 1},
+  claim  = {W2117: the record holds the transcript line bound, its path and the trigger, numbered 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_precompact_payload_freezes_the_bound_the_path_and_the_trigger},
+}
+
+@misc{hooks-after-compaction-second-compaction-is-numbered-next-and-names-the-prior-record,
+  section = {after-compaction},
+  title  = {The chain: record 2 names record 1's path, and its bound is the longer transcript's},
+  claim  = {The chain: record 2 names record 1's path, and its bound is the longer transcript's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_second_compaction_is_numbered_next_and_names_the_prior_record},
+}
+
+@misc{hooks-after-compaction-payload-without-a-readable-transcript-freezes-nothing,
+  section = {after-compaction},
+  title  = {A compaction is never blocked: no path, or a path that is not there, writes no record},
+  claim  = {A compaction is never blocked: no path, or a path that is not there, writes no record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_payload_without_a_readable_transcript_freezes_nothing},
+}
+
+@misc{hooks-after-compaction-compact-session-start-names-the-frozen-record-for-the-validator,
+  section = {after-compaction},
+  title  = {W2117: after a freeze, the SessionStart(compact) output ends with the validator line},
+  claim  = {W2117: after a freeze, the SessionStart(compact) output ends with the validator line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_compact_session_start_names_the_frozen_record_for_the_validator},
+}
+
+@misc{hooks-after-compaction-session-with-no-frozen-record-gets-no-validator-line,
+  section = {after-compaction},
+  title  = {The control: the same start payload without a PreCompact record adds no such line},
+  claim  = {The control: the same start payload without a PreCompact record adds no such line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_a_session_with_no_frozen_record_gets_no_validator_line},
+}
+
+@misc{hooks-after-compaction-precompact-reads-stdin-freezes-and-never-blocks,
+  section = {after-compaction},
+  title  = {Through the console function: a payload freezes a record; a non-JSON payload says so},
+  claim  = {Through the console function: a payload freezes a record; a non-JSON payload says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_precompact_reads_stdin_freezes_and_never_blocks},
+}
+
+@misc{hooks-after-compaction-precompact-entry-refuses-an-argument-before-reading-stdin,
+  section = {after-compaction},
+  title  = {The argv contract holds for the new hook too, and the refusal names it},
+  claim  = {The argv contract holds for the new hook too, and the refusal names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_compaction.py -k test_the_precompact_entry_refuses_an_argument_before_reading_stdin},
+}

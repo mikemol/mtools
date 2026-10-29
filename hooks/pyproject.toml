@@ -97,6 +97,9 @@ mikemol-hook-tick-gate = "mikemol.hooks.entry:tick_gate_main"
 # W813: SessionStart (matcher compact) context: the project's after-compaction pointers plus the live
 # host facts. It only adds context and never blocks a session start.
 mikemol-hook-after-compaction = "mikemol.hooks.entry:after_compaction_main"
+# W2117: PreCompact freezes the compaction's facts (transcript line bound, path, prior record) so the
+# SessionStart(compact) line can point a validator at them. No model; never blocks a compaction.
+mikemol-hook-precompact = "mikemol.hooks.entry:precompact_main"
 # W815: SessionEnd releases the host tick lock, through the one writer, if this session still holds it.
 mikemol-hook-tick-release = "mikemol.hooks.entry:tick_release_main"
 mikemol-hook-work-claims = "mikemol.hooks.entry:work_claims_main"

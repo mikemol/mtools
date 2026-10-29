@@ -27,6 +27,7 @@ variable's name (the wiring arm reads a module that does as one that arms).
 import json
 import sys
 from collections.abc import Callable
+from datetime import datetime
 from pathlib import Path
 from typing import TextIO
 
@@ -42,6 +43,90 @@ NOTES = Path(".claude") / "after-compaction.md"
 MAX_NOTES_CHARS = 6000
 
 COMPACT = "compact"
+
+# W2117: where a compaction's frozen facts go, beside the transcript they describe.
+FREEZE_DIR = "compaction"
+READ_CHUNK = 1 << 20
+VALIDATOR_LINE = "run the compaction-summary validator over {frozen}"
+
+
+def freeze_dir(transcript: Path, session: str) -> Path:
+    """Name the directory that holds a session's compaction records.
+
+    ⚑ BESIDE THE TRANSCRIPT, NOT IN A TEMPORARY DIRECTORY: the transcript lives under the user's
+    project directory on durable storage, and a record kept in a scratch area is lost with the
+    reboot that loses the scratch area (2026-10-29).
+
+    Returns:
+        `<transcript's directory>/compaction/<session>`.
+
+    """
+    return transcript.parent / FREEZE_DIR / session
+
+
+def latest_freeze(directory: Path) -> Path | None:
+    """Find the compaction record with the highest number.
+
+    Returns:
+        its path, or None when the directory holds none (or does not exist).
+
+    """
+    found = [(int(path.stem), path) for path in directory.glob("*.json") if path.stem.isdecimal()]
+    return max(found)[1] if found else None
+
+
+def _line_bound(transcript: Path) -> int | None:
+    # How many lines the transcript holds now, counted in chunks; None when it cannot be read.
+    try:
+        with transcript.open("rb") as handle:
+            return sum(chunk.count(b"\n") for chunk in iter(lambda: handle.read(READ_CHUNK), b""))
+    except OSError:
+        return None
+
+
+def freeze(payload: dict[str, object], now: datetime) -> Path | None:
+    """Write the facts of a compaction that is about to happen (W2117, no model involved).
+
+    ⚑ ONLY FACTS ARE FROZEN: the transcript line the compaction will cover (the bound), the path of
+    the transcript, the compaction's trigger, and the path of the PRIOR record (so a validator can
+    follow the chain to the earlier summary's bound). Nothing is summarised here.
+
+    ⚑ A COMPACTION IS NEVER BLOCKED: a payload without a readable transcript, or a directory that
+    cannot be written, freezes nothing and answers None.
+
+    Returns:
+        the record's path, `<freeze_dir>/<n>.json`; None when nothing was written.
+
+    """
+    named = text_of(payload.get("transcript_path"))
+    if not named:
+        return None
+    transcript = Path(named)
+    session = text_of(payload.get("session_id")) or transcript.stem
+    bound = _line_bound(transcript)
+    if bound is None:
+        return None
+    directory = freeze_dir(transcript, session)
+    prior = latest_freeze(directory)
+    number = (int(prior.stem) if prior is not None else 0) + 1
+    record: dict[str, object] = {
+        "n": number,
+        "session": session,
+        "trigger": text_of(payload.get("trigger")),
+        "transcript": str(transcript),
+        "line_bound": bound,
+        "prior": str(prior) if prior is not None else "",
+        "at": now.isoformat(),
+    }
+    target = directory / f"{number}.json"
+    staging = target.with_name(f"{target.name}.tmp")
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+        staging.write_text(json.dumps(record), encoding="utf-8")
+        staging.replace(target)
+    except OSError:
+        return None
+    return target
 
 
 def read_notes(directory: Path) -> str | None:
@@ -62,19 +147,31 @@ def read_notes(directory: Path) -> str | None:
     return text[:MAX_NOTES_CHARS] + "\n... (notes cut here)"
 
 
-def context(directory: Path, notes: str | None, facts: str) -> str:
+def context(directory: Path, notes: str | None, facts: str, frozen: Path | None = None) -> str:
     """Compose the context a compaction gets back.
 
     Returns:
         the notes (or the statement that there are none, naming where they would be), then the
-        live host facts.
+        live host facts, then, when a PreCompact record exists (W2117), the one line that tells the
+        session to run the compaction-summary validator over it.
 
     """
     if notes is None:
         head = f"after compaction: no notes file at {directory / NOTES}; write one (pointers only)."
     else:
         head = f"after compaction, this project's notes ({NOTES}):\n{notes.rstrip()}"
-    return f"{head}\n{facts}"
+    body = f"{head}\n{facts}"
+    return body if frozen is None else f"{body}\n{VALIDATOR_LINE.format(frozen=frozen)}"
+
+
+def _frozen_for(payload: dict[str, object]) -> Path | None:
+    # The newest compaction record of the session this SessionStart belongs to, if any.
+    named = text_of(payload.get("transcript_path"))
+    if not named:
+        return None
+    transcript = Path(named)
+    session = text_of(payload.get("session_id")) or transcript.stem
+    return latest_freeze(freeze_dir(transcript, session))
 
 
 def run(
@@ -96,10 +193,30 @@ def run(
     added: dict[str, dict[str, str]] = {
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",
-            "additionalContext": context(directory, read_notes(directory), facts),
+            "additionalContext": context(
+                directory, read_notes(directory), facts, _frozen_for(payload)
+            ),
         }
     }
     out.write(json.dumps(added) + "\n")
+    return 0
+
+
+def precompact() -> int:
+    """Read the PreCompact payload on stdin and freeze the compaction's facts (W2117).
+
+    An unreadable payload freezes nothing and says so on stderr: a compaction must not be blocked.
+
+    Returns:
+        0 always.
+
+    """
+    try:
+        raw: object = json.load(sys.stdin)
+    except ValueError:
+        sys.stderr.write("precompact: the payload was not JSON; nothing frozen\n")
+        return 0
+    freeze(as_record(raw), datetime.now().astimezone())
     return 0
 
 
