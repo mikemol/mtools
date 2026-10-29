@@ -19,6 +19,7 @@ _STARTED = "100"
 _QUEUED_PID = 4242
 _BUSY_PID = 4343
 _LEADER_PID = 4444
+_FOLLOWER_PID = 4545
 _JOINED = 2
 
 
@@ -48,6 +49,8 @@ def _map(path: Path) -> Path:
             "waypoints": ["W4"],
             "joined": _JOINED,
         },
+        "50": {"state": commit_counts.QUEUED, "pid": _FOLLOWER_PID, "start": _STARTED},
+        "60": {"state": commit_counts.QUEUED, "pid": _FOLLOWER_PID, "start": _STARTED},
     }
     path.write_text(json.dumps(entries), encoding="utf-8")
     return path
@@ -93,6 +96,55 @@ def test_an_in_flight_leader_with_followers_is_refused_naming_the_count(tmp_path
     assert f"leads {_JOINED} joined stack(s)" in text
     assert not commit_withdraw.marker_path(path, "40").exists()
     assert kills.calls == []
+
+
+def _leader_with(path: Path, followers: list[str]) -> Path:
+    """Write a map of one in-flight leader that recorded `_JOINED` joins, plus live followers.
+
+    Returns:
+        the map's path.
+
+    """
+    entries: dict[str, dict[str, object]] = {
+        "40": {
+            "state": commit_counts.INFLIGHT,
+            "pid": _LEADER_PID,
+            "start": _STARTED,
+            "waypoints": ["W4"],
+            "joined": _JOINED,
+        }
+    }
+    for key in followers:
+        entries[key] = {"state": commit_counts.QUEUED, "pid": _FOLLOWER_PID, "start": _STARTED}
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    return path
+
+
+def test_a_leader_whose_followers_are_gone_is_withdrawn_not_refused(tmp_path: Path) -> None:
+    """W2067: the recorded join count outlives followers that exited (143); none is live now."""
+    path = _leader_with(tmp_path / "c", [])
+    code, text = commit_withdraw.withdraw(path, "40", _probe, _Kills(), list)
+    assert code == commit_withdraw.EXIT_WITHDRAWN
+    assert text.startswith("WITHDRAW REQUESTED 40")
+    assert commit_withdraw.marker_path(path, "40").is_file()
+
+
+def test_a_leader_is_refused_for_the_followers_still_live_not_the_recorded_count(
+    tmp_path: Path,
+) -> None:
+    """Two joins were recorded and one follower is live: the refusal names one."""
+    path = _leader_with(tmp_path / "c", ["50"])
+    code, text = commit_withdraw.withdraw(path, "40", _probe, _Kills(), list)
+    assert code == commit_withdraw.EXIT_REFUSED
+    assert "leads 1 joined stack(s)" in text
+    assert not commit_withdraw.marker_path(path, "40").exists()
+
+
+def test_a_queued_stack_ahead_of_the_leader_is_not_its_follower(tmp_path: Path) -> None:
+    """Only a LATER key follows: a live entry with an earlier key does not hold the leader."""
+    path = _leader_with(tmp_path / "c", ["30"])
+    code, _text = commit_withdraw.withdraw(path, "40", _probe, _Kills(), list)
+    assert code == commit_withdraw.EXIT_WITHDRAWN
 
 
 def test_an_unknown_or_dead_key_is_not_found_and_nothing_is_signalled(tmp_path: Path) -> None:

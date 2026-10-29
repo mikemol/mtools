@@ -22,9 +22,15 @@ SIGINT goes to the bazel CLIENT among the submission's descendants (`bazelstop`)
 cancellation, never the server and never the process group; the gate then takes its normal release
 path. The marker stays as the fallback for every phase that is not bazel.
 
-⚑ A LEADER WITH JOINED FOLLOWERS IS REFUSED, NAMING THE COUNT. A train that gates the joined tip
+⚑ A LEADER WITH LIVE FOLLOWERS IS REFUSED, NAMING THE COUNT. A train that gates the joined tip
 treats a gate that stops as a red tip and bisects it, so withdrawing the leader would refuse every
 follower that asked for nothing (option (b), carded for when the train has real runs behind it).
+
+⚑ ONLY LIVE FOLLOWERS COUNT (W2067): the leader recorded how many stacks it joined once, at join
+time, and a follower whose client exited (a withdraw, a kill, exit 143) left the live map while the
+count stayed, so a lead could not be withdrawn over followers that no longer existed (nemik's
+stack596, then this repository's stack 36). `live_followers` caps the recorded count by the live
+submissions with a later key.
 
 ⚑ THE KEY IS READ FROM THE LIVE MAP, AND THE PID WITH ITS START TIME: a recycled pid is not the
 submission and is never signalled, and a marker is named for its key so a stale one cannot stop a
@@ -71,13 +77,27 @@ def clear_marker(counts: Path, key: str) -> None:
         return
 
 
+def live_followers(row: Live, rows: dict[str, Live]) -> int:
+    """Count the followers a train leader still has, capping its recorded joined count.
+
+    ⚑ A FOLLOWER IS A LIVE SUBMISSION WITH A LATER KEY: keys are submission times, and a joined
+    stack stays in the map until its client exits.
+
+    Returns:
+        the followers a withdraw of the leader would still refuse.
+
+    """
+    behind = sum(1 for other in rows.values() if int(other.key) > int(row.key))
+    return min(row.joined, behind)
+
+
 def _ask_to_stop(
-    counts: Path, row: Live, pid: int, stop: tuple[Kill, bazelstop.Table]
+    counts: Path, row: Live, pid: int, stop: tuple[Kill, bazelstop.Table], followers: int
 ) -> tuple[int, str]:
     # An in-flight submission: a marker for its gate, its bazel client interrupted, or a refusal
     # naming the followers it leads.
-    if row.joined:
-        said = f"leads {row.joined} joined stack(s); withdrawing it would refuse them too"
+    if followers:
+        said = f"leads {followers} joined stack(s); withdrawing it would refuse them too"
         return EXIT_REFUSED, f"mikemol-commit: {row.key} is in flight and {said}"
     marker_path(counts, row.key).write_text("", encoding="utf-8")
     sent = bazelstop.interrupt(pid, *stop)
@@ -108,6 +128,6 @@ def withdraw(
     if row is None or pid is None:
         return EXIT_FAILED, f"mikemol-commit: no live submission {key}"
     if row.state == INFLIGHT:
-        return _ask_to_stop(path, row, pid, (kill, table))
+        return _ask_to_stop(path, row, pid, (kill, table), live_followers(row, rows))
     kill(pid, signal.SIGTERM)
     return EXIT_WITHDRAWN, f"WITHDRAWN {key} ({', '.join(row.waypoints) or 'no waypoints'})"

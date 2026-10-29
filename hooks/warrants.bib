@@ -16078,3 +16078,24 @@
   claim  = {Through `main`, a light verb is handed to execve unchanged; a failed exec is said.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazel_admit.py -k test_main_execs_the_real_bazel_and_answers_127_when_it_cannot_be_started},
 }
+
+@misc{hooks-commit-withdraw-leader-whose-followers-are-gone-is-withdrawn-not-refused,
+  section = {commit_withdraw},
+  title  = {W2067: the recorded join count outlives followers that exited (143); none is live now},
+  claim  = {W2067: the recorded join count outlives followers that exited (143); none is live now.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_leader_whose_followers_are_gone_is_withdrawn_not_refused},
+}
+
+@misc{hooks-commit-withdraw-leader-is-refused-for-the-followers-still-live-not-the-recorded-count,
+  section = {commit_withdraw},
+  title  = {Two joins were recorded and one follower is live: the refusal names one},
+  claim  = {Two joins were recorded and one follower is live: the refusal names one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_leader_is_refused_for_the_followers_still_live_not_the_recorded_count},
+}
+
+@misc{hooks-commit-withdraw-queued-stack-ahead-of-the-leader-is-not-its-follower,
+  section = {commit_withdraw},
+  title  = {Only a LATER key follows: a live entry with an earlier key does not hold the leader},
+  claim  = {Only a LATER key follows: a live entry with an earlier key does not hold the leader.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_queued_stack_ahead_of_the_leader_is_not_its_follower},
+}

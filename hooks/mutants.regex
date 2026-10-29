@@ -560,7 +560,9 @@ src/mikemol/hooks/siblingratchet.py|equal-to-baseline-refused|        if counts\
 src/mikemol/hooks/siblingratchet.py|new-file-given-slack|        allowed = baseline\.get\(file, 0\)|        allowed = baseline.get(file, 99)|def=violations
 src/mikemol/hooks/siblingcensus.py|own-repo-counted-as-a-reach|        if named != root\.name:|        if True:|def=_line_reaches
 src/mikemol/hooks/siblingcensus.py|inside-dotdot-counted-as-a-reach|        if _lands_in\(root, file, chain\.count\("\.\./"\)\) == root\.parent and name != root\.name:|        if name != root.name:|def=_line_reaches
-src/mikemol/hooks/commit_withdraw.py|leader-with-followers-withdrawn|    if row\.joined:|    if False:|def=_ask_to_stop
+src/mikemol/hooks/commit_withdraw.py|leader-with-followers-withdrawn|    if followers:|    if False:|def=_ask_to_stop
+src/mikemol/hooks/commit_withdraw.py|recorded-joins-outlive-followers|    return min\(row\.joined, behind\)|    return row.joined|def=live_followers
+src/mikemol/hooks/commit_withdraw.py|earlier-keys-count-as-followers|if int\(other\.key\) > int\(row\.key\)|if int(other.key) != int(row.key)|def=live_followers
 src/mikemol/hooks/commit_counts.py|joined-count-not-recorded|        entry\["joined"\] = joined|        entry["joined"] = 0|def=note_joined
 src/mikemol/hooks/revendor.py|waldo-not-a-vendorable-dist|    "waldo",|    "waldo_",|
 src/mikemol/hooks/revendor.py|cvdcore-not-a-vendorable-dist|    "cvdcore",|    "cvdcore_",|
