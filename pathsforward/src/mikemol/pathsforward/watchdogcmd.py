@@ -7,10 +7,16 @@ a background task THE SESSION STARTED. A process the writer detached would exit 
 writer does not start it: it prints the command, and the session runs it with `run_in_background`.
 
 ⚑ THE WATCHDOG LIVES IN MTOOLS' HOOKS DIST, and a repo's writer may be installed anywhere, so the
-command is found in this order: a `mikemol-watchdog` on PATH, then the installed script in the
-mtools checkout under the home directory, then that checkout's interpreter running the module. The
+command is found in this order: the `mikemol-watchdog` BESIDE THE WRITER that is running (its own
+bin directory, W1898), then the installed script in the mtools checkout under the home directory,
+then a `mikemol-watchdog` on PATH, then that checkout's interpreter running the module. The
 last is the form that works before a venv has been rebuilt with the console script. None found:
 no command, and `--tick-open` says so rather than printing one that cannot run.
+
+⚑ PATH COMES AFTER THE WRITER'S OWN BIN, NOT BEFORE (the 2026-10-19 no-sibling-paths ruling; the
+host's pinned writer printed another repository's venv because PATH named it first): a tool the
+writer was installed with is the one that belongs to it, and PATH is whatever the shell happened
+to hold.
 
 ⚑ THE WRITER IS NAMED BY ITS OWN PATH (`sys.argv[0]`, made absolute and NOT resolved, W1567), so the
 watchdog asks the same writer that printed the command, a different copy on PATH cannot disagree
@@ -38,7 +44,9 @@ def command(
 
     """
     venv_bin = home.joinpath(*CHECKOUT, "hooks", ".venv", "bin")
-    found = which(SCRIPT) or (str(venv_bin / SCRIPT) if (venv_bin / SCRIPT).is_file() else None)
+    beside = [Path(writer).parent / SCRIPT] if "/" in writer else []
+    installed = next((str(c) for c in (*beside, venv_bin / SCRIPT) if c.is_file()), None)
+    found = installed or which(SCRIPT)
     if found is not None:
         runner = found
     elif (venv_bin / "python").is_file():

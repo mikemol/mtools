@@ -29,6 +29,26 @@ def test_a_watchdog_on_path_is_used_and_names_the_state_and_the_writer(tmp_path:
     assert got == f"/usr/bin/mikemol-watchdog --state {_STATE} --writer {_WRITER}"
 
 
+def test_the_watchdog_beside_the_writer_beats_a_sibling_repos_copy_on_path(tmp_path: Path) -> None:
+    """W1898: the host's pinned writer printed another repository's venv because PATH named it.
+
+    The writer's own bin holds a watchdog here and PATH holds a decoy: the writer's wins. The
+    control is the same writer with no watchdog beside it, which falls back to PATH as before.
+    """
+    bin_dir = tmp_path / "pinned" / "bin"
+    bin_dir.mkdir(parents=True)
+    writer = str(bin_dir / "mikemol-paths-forward")
+    decoy = "/sibling/.venv/bin/mikemol-watchdog"
+    assert watchdogcmd.command(_STATE, writer, tmp_path, lambda _n: decoy) == (
+        f"{decoy} --state {_STATE} --writer {writer}"
+    )
+    own = bin_dir / "mikemol-watchdog"
+    own.write_text("", encoding="utf-8")
+    assert watchdogcmd.command(_STATE, writer, tmp_path, lambda _n: decoy) == (
+        f"{own} --state {_STATE} --writer {writer}"
+    )
+
+
 def test_the_installed_script_in_the_checkout_comes_next(tmp_path: Path) -> None:
     """No PATH entry, but the mtools checkout has the console script."""
     script = _checkout_bin(tmp_path) / "mikemol-watchdog"

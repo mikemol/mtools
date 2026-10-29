@@ -80,19 +80,25 @@ def test_a_roll_note_carries_the_count_of_cards_a_landed_commit_carried(
     assert closegate.roll_note(_state("W2", "W3"), ledger) == "rolled; advanced 0"
 
 
-def test_the_commit_tool_is_found_beside_the_interpreter_before_path(tmp_path: Path) -> None:
-    """A full-path launch has no .venv/bin on PATH, so the sibling wins, then PATH, then the repo's.
+def test_the_commit_tool_is_found_beside_the_writer_before_path(tmp_path: Path) -> None:
+    """W1898: the writer's own bin wins, then its interpreter's, then the repo's, and PATH is last.
 
-    The control is the absent case: none of the three has it, so no tool, never an empty string.
+    The control is the absent case: none of them has it, so no tool, never an empty string; and a
+    PATH entry naming another checkout's copy never beats the tool the writer came with.
     """
-    beside = tmp_path / "venv" / "bin"
-    beside.mkdir(parents=True)
+    writer_bin = tmp_path / "pinned" / "bin"
+    writer_bin.mkdir(parents=True)
+    interpreter_bin = tmp_path / "venv" / "bin"
+    interpreter_bin.mkdir(parents=True)
+    beside = (writer_bin, interpreter_bin)
     own = tmp_path / "hooks" / ".venv" / "bin"
     own.mkdir(parents=True)
-    found = "/usr/bin/mikemol-commit"
+    decoy = "/sibling/.venv/bin/mikemol-commit"
     assert landed.gate_tool(tmp_path, beside, None) is None
+    assert landed.gate_tool(tmp_path, beside, decoy) == decoy
     (own / "mikemol-commit").write_text("", encoding="utf-8")
-    assert landed.gate_tool(tmp_path, beside, None) == str(own / "mikemol-commit")
-    assert landed.gate_tool(tmp_path, beside, found) == found
-    (beside / "mikemol-commit").write_text("", encoding="utf-8")
-    assert landed.gate_tool(tmp_path, beside, found) == str(beside / "mikemol-commit")
+    assert landed.gate_tool(tmp_path, beside, decoy) == str(own / "mikemol-commit")
+    (interpreter_bin / "mikemol-commit").write_text("", encoding="utf-8")
+    assert landed.gate_tool(tmp_path, beside, decoy) == str(interpreter_bin / "mikemol-commit")
+    (writer_bin / "mikemol-commit").write_text("", encoding="utf-8")
+    assert landed.gate_tool(tmp_path, beside, decoy) == str(writer_bin / "mikemol-commit")
