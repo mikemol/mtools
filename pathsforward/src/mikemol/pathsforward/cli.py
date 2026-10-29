@@ -2283,6 +2283,20 @@ def _redact(ctx: Ctx) -> int:
     return code
 
 
+def _standing_hits(doc: Json, pattern: str) -> list[str]:
+    """Find the stored standing rules that still hold a literal (W2160).
+
+    Returns:
+        one `standing rule <i> n=<count>` per rule holding it, empty when none does.
+
+    """
+    return [
+        f"standing rule {i} n={rule.count(pattern)}"
+        for i, rule in enumerate(standing.rules(doc), 1)
+        if pattern in rule
+    ]
+
+
 def _scan_literal(ctx: Ctx) -> int:
     """Report every place a literal still appears, never the literal itself.
 
@@ -2301,6 +2315,7 @@ def _scan_literal(ctx: Ctx) -> int:
         ledger_path.read_text(encoding="utf-8").splitlines() if ledger_path.is_file() else []
     )
     hits = scan([*state.waypoints, *state.residue], ledger_lines, pattern)
+    hits += _standing_hits(state.doc, pattern)
     if mirror_path.is_file():
         for i, raw in enumerate(mirror_path.read_text(encoding="utf-8").splitlines(), 1):
             if pattern in raw:

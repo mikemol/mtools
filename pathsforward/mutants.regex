@@ -344,3 +344,5 @@ src/mikemol/pathsforward/closegate.py|landing-bound-is-the-smallest-gap|    retu
 src/mikemol/pathsforward/closegate.py|idle-card-named-when-fresh|        if \(now - worked\)\.total_seconds\(\) > bound:|        if (now - worked).total_seconds() < bound:|def=idle_cards
 src/mikemol/pathsforward/closegate.py|idle-card-named-with-no-bound|    if bound is None:|    if False:|def=idle_cards
 src/mikemol/pathsforward/landed.py|landing-times-ask-for-one-commit|f"-n\{count\}"|"-n1"|def=landing_times
+src/mikemol/pathsforward/cli.py|scan-skips-the-standing-rules|    hits \+= _standing_hits\(state\.doc, pattern\)|    hits += []|def=_scan_literal
+src/mikemol/pathsforward/cli.py|every-standing-rule-is-a-hit|        if pattern in rule|        if True|def=_standing_hits

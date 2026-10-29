@@ -142,6 +142,26 @@ def test_the_cli_redacts_ledgers_the_hash_and_the_scan_then_comes_back_clean(
     assert _run(path, "--check") == cli.EXIT_OK
 
 
+def test_the_scan_finds_a_literal_held_only_by_a_standing_rule(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2160: a literal in a stored standing rule is a hit, named by rule number and count."""
+    doc: Rec = {
+        "counter": 1,
+        "project_root": str(tmp_path),
+        "waypoints": [{**_wp("W1"), "next_bounded_step": "s", "evidence": ""}],
+        "residue": [],
+        "standing": ["keep this clean", f"never point at {_LITERAL}"],
+    }
+    path = tmp_path / "paths-forward.json"
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert _run(path, "--scan-literal", _LITERAL) == cli.EXIT_FAILED
+    out = capsys.readouterr().out
+    assert "standing rule 2 n=1" in out
+    assert _LITERAL not in out
+    assert _run(path, "--scan-literal", "no such literal") == cli.EXIT_OK
+
+
 def test_a_refused_redaction_writes_neither_state_nor_ledger(tmp_path: Path) -> None:
     """A zero-match pattern exits refused, and the state file and ledger are untouched."""
     path = _file(tmp_path)

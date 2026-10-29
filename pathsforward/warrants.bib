@@ -7596,3 +7596,10 @@
   claim  = {W2047: the times come from the last N commits' committer dates; a refusal is None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_landing_times_are_read_newest_first_and_none_when_git_refuses},
 }
+
+@misc{pathsforward-redact-scan-finds-a-literal-held-only-by-a-standing-rule,
+  section = {redact},
+  title  = {W2160: a literal in a stored standing rule is a hit, named by rule number and count},
+  claim  = {W2160: a literal in a stored standing rule is a hit, named by rule number and count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_the_scan_finds_a_literal_held_only_by_a_standing_rule},
+}
