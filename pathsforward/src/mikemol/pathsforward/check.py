@@ -431,7 +431,7 @@ def _grammar_fault(raw: str) -> str | None:
     """
     tag = parse_tag(raw)
     if tag.grain == "unknown":
-        return "has an unknown prefix (file:, mod: or party:, or none for a topic)"
+        return "has an unknown prefix (file:, mod:, party: or flake:, or none for a topic)"
     if tag.write and tag.grain not in ARTIFACT_GRAINS:
         return "marks a write on a tag that names no bytes (!w is for file: and mod:)"
     if tag.grain == "file" and (tag.name.startswith("/") or ".." in tag.name.split("/")):

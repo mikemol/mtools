@@ -4,7 +4,10 @@
 
 ⚑ THE GRAIN IS DECLARED, NEVER GUESSED (W120, after fence's keyway): a tag says what it names by
 its prefix. An unprefixed tag is a topic, so every tag written before this grammar keeps its
-meaning with zero migration. A tag whose prefix is not one of the three is `unknown`, which
+meaning with zero migration. `flake:<tree12>` names a recorded gate flake (the first 12 of the
+tree id): the commit gate refuses a land while a flake has no card carrying it (W2008), so the
+grammar must accept the tag it demands. A tag whose prefix is not one of the four is
+`unknown`, which
 `--check` reports; it is never quietly read as a topic.
 
 ⚑ ACCESS IS A SUFFIX: `!w` marks a write, and its absence a read. Two reads cannot collide, so
@@ -18,7 +21,7 @@ import re
 from dataclasses import dataclass
 from typing import Literal
 
-Grain = Literal["file", "mod", "party", "topic", "unknown"]
+Grain = Literal["file", "mod", "party", "flake", "topic", "unknown"]
 
 ARTIFACT_GRAINS: frozenset[str] = frozenset({"file", "mod"})
 WRITE_SUFFIX = "!w"
@@ -84,4 +87,6 @@ def parse_tag(raw: str) -> Tag:
         return Tag(raw, "mod", rest, write)
     if prefix == "party":
         return Tag(raw, "party", rest, write)
+    if prefix == "flake":
+        return Tag(raw, "flake", rest, write)
     return Tag(raw, "unknown", body, write)

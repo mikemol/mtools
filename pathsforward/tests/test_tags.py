@@ -36,6 +36,13 @@ def test_an_unknown_prefix_is_unknown_not_a_topic() -> None:
     assert (tag.grain, tag.name) == ("unknown", "path:a/b.py")
 
 
+def test_a_flake_tag_is_a_grain_and_never_leasable() -> None:
+    """`flake:040a91b156c3` is the tag the commit gate demands (W2008): known, named, no lease."""
+    tag = parse_tag("flake:040a91b156c3")
+    assert (tag.grain, tag.name, tag.leasable) == ("flake", "040a91b156c3", False)
+    assert parse_tag("flake:040a91b156c3!w").leasable is False
+
+
 def test_a_party_tag_keeps_its_name() -> None:
     """`party:summit` is an external party named summit, byte-compared."""
     tag = parse_tag("party:summit")
