@@ -57,7 +57,10 @@ _LEAVES: frozenset[type] = frozenset({str, int, float, bool})
 
 
 def _weight(node: object) -> int:
-    # The entry count of a parsed JSON node: every scalar leaf is one entry, null is none.
+    # The entry count of a parsed JSON node: every scalar leaf is one entry, null is none, and so is
+    # an empty string or false (W1979: a baseline's empty means no debt; a numeric 0 still counts).
+    if node is False or (isinstance(node, str) and not node):
+        return 0
     if type(node) in _LEAVES:
         return 1
     if isinstance(node, list):

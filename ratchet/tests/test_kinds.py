@@ -45,6 +45,17 @@ def test_a_json_baseline_is_weighed_by_its_recorded_counts(tmp_path: Path) -> No
     assert kinds.value_of(listed) == len(["x", "y", "z"])
 
 
+def test_an_empty_string_or_false_leaf_counts_nothing_and_a_numeric_zero_still_counts(
+    tmp_path: Path,
+) -> None:
+    """W1979: module -> first error or empty (empty means it compiles); false is no debt too."""
+    codon = tmp_path / "codon-baseline.json"
+    codon.write_text(
+        '{"a": "", "b": "SyntaxError", "c": false, "d": true, "e": 0}', encoding="utf-8"
+    )
+    assert kinds.value_of(codon) == len(["SyntaxError", True, 0])
+
+
 def test_a_text_baseline_counts_entries_not_blanks_or_comments(tmp_path: Path) -> None:
     """One entry per line; a blank line and a # comment record nothing."""
     text = tmp_path / "public_ratchet_baseline.txt"
