@@ -1566,3 +1566,24 @@
   claim  = {No verdict before the world has had time; with two cards, one that landed is enough.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_intents.py -k test_a_statement_after_the_bound_is_pending_and_several_cards_take_the_best},
 }
+
+@misc{transcriptstruct-intentsio-cards-are-read-with-status-and-stamp-and-a-bad-document-reads-as-none,
+  section = {intents},
+  title  = {A card with no last_worked has the empty stamp; text that is not a queue gives nothing},
+  claim  = {A card with no last_worked has the empty stamp; text that is not a queue gives nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intentsio.py -k test_cards_are_read_with_status_and_stamp_and_a_bad_document_reads_as_none},
+}
+
+@misc{transcriptstruct-intentsio-trailers-are-read-per-record-and-prose-and-torn-records-are-not-trailers,
+  section = {intents},
+  title  = {Only a line that is exactly `Waypoint: W<n>` counts; the stamp is its commit's own},
+  claim  = {Only a line that is exactly `Waypoint: W<n>` counts; the stamp is its commit's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intentsio.py -k test_trailers_are_read_per_record_and_prose_and_torn_records_are_not_trailers},
+}
+
+@misc{transcriptstruct-intentsio-command-prints-each-intents-outcome-and-how-many-diverged,
+  section = {intents},
+  title  = {W7 landed after its statement, W8 did not: landed, missed, and one divergence counted},
+  claim  = {W7 landed after its statement, W8 did not: landed, missed, and one divergence counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intentsio.py -k test_the_command_prints_each_intents_outcome_and_how_many_diverged},
+}

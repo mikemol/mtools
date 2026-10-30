@@ -101,3 +101,9 @@ src/mikemol/transcriptstruct/intents.py|card-closed-before-the-statement-counts|
 src/mikemol/transcriptstruct/intents.py|statement-after-the-bound-judged|        elif row\.at > bound:|        elif False:|def=resolve
 src/mikemol/transcriptstruct/intents.py|unknown-card-treated-as-known|_OWN_CARD\.fullmatch\(n\) and n in cards\)|_OWN_CARD.fullmatch(n))|def=_known
 src/mikemol/transcriptstruct/intents.py|every-row-diverges|    return \[r for r in resolutions if r\.state == MISSED\]|    return list(resolutions)|def=diverged
+# `--intents` reads the queue's cards and the log's trailers, and counts the divergences (W2101).
+src/mikemol/transcriptstruct/intentsio.py|card-without-a-symbol-kept|        if isinstance\(symbol, str\):|        if True:|def=cards_of
+src/mikemol/transcriptstruct/intentsio.py|torn-record-read|        if len\(parts\) == _FIELDS:|        if True:|def=trailers_of
+src/mikemol/transcriptstruct/cli.py|intents-queue-never-read|    cards = CARDS_OF\(Path\(queue\)\.read_text\(encoding="utf-8"\)\) if queue else \{\}|    cards = {}|def=_intents
+src/mikemol/transcriptstruct/cli.py|intents-log-never-read|    landed = TRAILERS_OF\(Path\(log\)\.read_text\(encoding="utf-8"\)\) if log else \[\]|    landed = []|def=_intents
+src/mikemol/transcriptstruct/cli.py|intents-divergence-not-counted|\{len\(DIVERGED_INTENTS\(resolved\)\)\} diverged|{0} diverged|def=_intents

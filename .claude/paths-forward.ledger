@@ -4718,3 +4718,12 @@
 2026-10-30T16:40:59Z  status W2093 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T16:49:14Z  status W2100 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T16:49:14Z  status W2101 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T17:15:31Z  tick  W2099 advanced  unblock   "17:14Z: hooks-r (W2099, key 1793380325270692287) inflight alone, gate in prebuild (no suite.log); HEAD c450a67. No new build this tick [blocked by W2104]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T17:16:18Z  status W2101 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T17:21:00Z  interrupt W2178 minted    -         "Writer --add-blocker: additive, keeps prior blockers, human kind and working status, restores on close (github-42)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
+2026-10-30T17:36:57Z  interrupt W2179 minted    -         "Writer probes on a scratch queue emit mutation events to the store: add a suppress switch (github-42)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
+2026-10-30T17:45:48Z  tick  W2101 advanced  unblock   "17:44Z: hooks-r (W2099) inflight at 668/1539, FAILED+TIMEOUT 0; transcriptstruct-d (W2101) queued behind it; HEAD c450a67. No new build this tick [blocked by W2099]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T17:46:50Z  status W2103 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T18:00:58Z  status W2105 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T18:09:04Z  interrupt W2180 minted    -         "Reconcile at tick-open names a repo with no commit gate instead of blaming PATH (github:W59 R205 F1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
+2026-10-30T18:11:37Z  tick  W2103 advanced  unblock   "18:08Z: hooks-r (W2099) inflight at 1352/1539, clean at the last reading; transcriptstruct-d queued; HEAD c450a67. W2103 ranked first in the hooks lane with luthen's weight (W1831, W1844); W2180 carded (reconcile names a repo with no gate); W2075 corrected [blocked by W2099]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

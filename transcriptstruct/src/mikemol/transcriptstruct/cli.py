@@ -36,6 +36,9 @@ from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.commitments import Commitment
 from mikemol.transcriptstruct.commitments import extract as extract_commitments
 from mikemol.transcriptstruct.harvest import harvest
+from mikemol.transcriptstruct.intents import diverged as diverged_intents
+from mikemol.transcriptstruct.intents import resolve as resolve_intents
+from mikemol.transcriptstruct.intentsio import cards_of, trailers_of
 from mikemol.transcriptstruct.memaudit import audit
 from mikemol.transcriptstruct.query import (
     Hit,
@@ -55,6 +58,10 @@ from mikemol.transcriptstruct.rulings import harvest_tree
 from mikemol.transcriptstruct.turnstart import turn_start
 from mikemol.transcriptstruct.warrant import verify
 
+DIVERGED_INTENTS = diverged_intents
+RESOLVE_INTENTS = resolve_intents
+CARDS_OF = cards_of
+TRAILERS_OF = trailers_of
 _REFUSED = 1
 _USAGE = 2
 _DEFAULT_SPEAKERS = ("human", "peer", "assistant")
@@ -111,6 +118,12 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="W1931: one JSON line per statement of known-needed, unpersisted work the "
         "assistant made (line, uuid, session, repo, family, text, names), then the count",
+    )
+    mode.add_argument(
+        "--intents",
+        action="store_true",
+        help="W2101: the commitments, each resolved by what landed: landed, closed, missed, "
+        "unchecked or pending, with --queue (the cards), --git-log (the trailers) and --bound",
     )
     mode.add_argument(
         "--resolve",
@@ -207,6 +220,14 @@ def _parser() -> argparse.ArgumentParser:
         metavar="PATH",
         help="--commitments: resolve each statement against this paths-forward queue and "
         "write the ledger document (as_of and rows with state, layer, resolved_by)",
+    )
+    parser.add_argument(
+        "--git-log",
+        metavar="PATH",
+        help="--intents: a file holding git log as %%H%%x1f%%cd%%x1f%%B%%x1e under TZ=UTC",
+    )
+    parser.add_argument(
+        "--bound", metavar="STAMP", help="--intents: judge a miss up to this UTC stamp (now)"
     )
     return parser
 
@@ -549,6 +570,29 @@ def _verify(opts: dict[str, object], uuid: str, out: TextIO) -> int:
     return 0 if verdict.ok else _REFUSED
 
 
+def _intents(path: Path, opts: dict[str, object], out: TextIO) -> None:
+    """Write what each statement of intent came to, then the count and how many diverged (W2101).
+
+    ⚑ THE SAME ROWS AS `--commitments`, RESOLVED BY WHAT LANDED (`intents.resolve`): `--queue` names
+    the queue document (the cards' status and last-worked stamp), `--git-log` a file holding
+    `git log` in the `%H%x1f%cd%x1f%B%x1e` shape under `TZ=UTC` (the landed trailers), `--bound` the
+    stamp up to which a miss is judged (now, by default). With no queue or no log the cards or the
+    trailers are empty, so every row reads UNCHECKED or MISSED by what was given, never by a guess.
+    """
+    repo = path.resolve().parent.name.rsplit("-", 1)[-1]
+    rows = extract_commitments(read_path(path), path.stem, repo)
+    queue, log = _text(opts, "queue"), _text(opts, "git_log")
+    cards = CARDS_OF(Path(queue).read_text(encoding="utf-8")) if queue else {}
+    landed = TRAILERS_OF(Path(log).read_text(encoding="utf-8")) if log else []
+    bound = _text(opts, "bound") or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    resolved = RESOLVE_INTENTS(rows, cards, landed, bound)
+    out.writelines(
+        _line({"line": r.line, "state": r.state, "cards": list(r.cards), "text": r.text})
+        for r in resolved
+    )
+    out.write(f"# {len(resolved)} intent(s), {len(DIVERGED_INTENTS(resolved))} diverged\n")
+
+
 def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out: TextIO) -> bool:
     """Run the two modes that list a whole transcript, when one is asked for.
 
@@ -564,6 +608,8 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
         _auth_failed(path, out)
     elif opts.get("turn_start") is True:
         _turn_start(path, out)
+    elif opts.get("intents") is True:
+        _intents(path, opts, out)
     elif opts.get("commitments") is True:
         _commitments(
             path, out, _text(opts, "queue"), Window(_number(opts, "since"), _number(opts, "until"))
