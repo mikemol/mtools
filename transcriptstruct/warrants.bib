@@ -1531,3 +1531,38 @@
             is the invoking command, which contains it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_since_last_nth_skips_the_probes_own_record_that_matches_its_regex},
 }
+
+@misc{transcriptstruct-intents-commit-citing-a-named-card-after-the-statement-is-landed,
+  section = {intents},
+  title  = {The control: a trailer stamped after the row lands it; one stamped BEFORE does not},
+  claim  = {The control: a trailer stamped after the row lands it; one stamped BEFORE does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intents.py -k test_a_commit_citing_a_named_card_after_the_statement_is_landed},
+}
+
+@misc{transcriptstruct-intents-card-closed-after-the-statement-without-a-commit-is-closed,
+  section = {intents},
+  title  = {Done or dropped, and last worked after the row: CLOSED; a card done BEFORE it is missed},
+  claim  = {Done or dropped, and last worked after the row: CLOSED; a card done BEFORE it is missed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intents.py -k test_a_card_closed_after_the_statement_without_a_commit_is_closed},
+}
+
+@misc{transcriptstruct-intents-stack-36-case-is-missed-and-diverges,
+  section = {intents},
+  title  = {A verdict claimed for W2061 that never landed it: MISSED, and `diverged` returns it},
+  claim  = {A verdict claimed for W2061 that never landed it: MISSED, and `diverged` returns it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intents.py -k test_the_stack_36_case_is_missed_and_diverges},
+}
+
+@misc{transcriptstruct-intents-statement-naming-no-known-card-is-unchecked-not-missed,
+  section = {intents},
+  title  = {No symbol, another repository's symbol and an unknown symbol are all UNCHECKED},
+  claim  = {No symbol, another repository's symbol and an unknown symbol are all UNCHECKED.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intents.py -k test_a_statement_naming_no_known_card_is_unchecked_not_missed},
+}
+
+@misc{transcriptstruct-intents-statement-after-the-bound-is-pending-and-several-cards-take-the-best,
+  section = {intents},
+  title  = {No verdict before the world has had time; with two cards, one that landed is enough},
+  claim  = {No verdict before the world has had time; with two cards, one that landed is enough.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_intents.py -k test_a_statement_after_the_bound_is_pending_and_several_cards_take_the_best},
+}

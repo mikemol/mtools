@@ -4707,3 +4707,8 @@
 2026-10-30T15:08:33Z  tick  W2170 advanced  unblock   "15:07Z: pathsforward-m (W2170) inflight at 1479/1536 tests, 14 actions running; HEAD f1ac530. No new build [blocked by W2097]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T15:10:08Z  status W2098 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T15:34:01Z  status W2170 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T15:38:14Z  tick  W2092 advanced  unblock   "15:37Z: hooks-q (W2092) inflight, gate in prebuild (no suite.log yet); HEAD 42c2e96. No new build this tick [blocked by W2098]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T15:39:23Z  status W2099 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T15:57:51Z  status W2100 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:16:13Z  tick  W2100 advanced  unblock   "16:14Z: hooks-q (W2092) inflight at 961/1537, FAILED+TIMEOUT 0; transcriptstruct-c (W2100) queued behind it; HEAD 42c2e96. Second standing-5 reading sent to github-42 [blocked by W2092]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:17:58Z  status W2101 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

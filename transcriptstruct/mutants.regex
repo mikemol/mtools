@@ -95,3 +95,9 @@ src/mikemol/transcriptstruct/cli.py|since-last-nth-ignored|    nth = _number\(op
 src/mikemol/transcriptstruct/cli.py|since-last-short-of-nth-still-moves|        if len\(lines\) >= nth:|        if lines:|def=_window_of
 src/mikemol/transcriptstruct/cli.py|since-last-matches-any-block-kind|block_kinds=\["tool_use"\], window=Window\(since, until\)|block_kinds=None, window=Window(since, until)|def=_window_of
 src/mikemol/transcriptstruct/cli.py|commitments-window-ignored|        found = \[row for row in found if window\.admits\(row\.line\)\]|        found = list(found)|def=_commitments
+# A statement resolves by what came AFTER it, and a miss is only a miss once the bound passed (W2100).
+src/mikemol/transcriptstruct/intents.py|landing-before-the-statement-counts|    if any\(t\.card in known and t\.at > row\.at for t in landed\):|    if any(t.card in known for t in landed):|def=_answer
+src/mikemol/transcriptstruct/intents.py|card-closed-before-the-statement-counts|cards\[c\]\.status in _DONE and cards\[c\]\.last_worked > row\.at for c in known|cards[c].status in _DONE for c in known|def=_answer
+src/mikemol/transcriptstruct/intents.py|statement-after-the-bound-judged|        elif row\.at > bound:|        elif False:|def=resolve
+src/mikemol/transcriptstruct/intents.py|unknown-card-treated-as-known|_OWN_CARD\.fullmatch\(n\) and n in cards\)|_OWN_CARD.fullmatch(n))|def=_known
+src/mikemol/transcriptstruct/intents.py|every-row-diverges|    return \[r for r in resolutions if r\.state == MISSED\]|    return list(resolutions)|def=diverged
