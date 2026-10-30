@@ -81,6 +81,16 @@ def test_guessed_is_a_label_only_where_the_census_said_so() -> None:
     assert labels == ["true", "false", None]
 
 
+def test_a_stage_is_a_label_only_when_one_is_given() -> None:
+    """W2171: the gate's rows keep their labels; a landed run adds `stage=landed` to both series."""
+    census = [("nemik", "ruff-baseline.json", "baseline", _ENTRIES, _SUM, None)]
+    gate = ratchet_emit.rows_of(census, _NOW)
+    landed = ratchet_emit.rows_of(census, _NOW, "landed")
+    assert all("stage" not in cast("dict[str, str]", r["fields"]) for r in gate)
+    assert [cast("dict[str, str]", r["fields"])["stage"] for r in landed] == ["landed", "landed"]
+    assert [r["value"] for r in landed] == [r["value"] for r in gate]
+
+
 def test_a_file_rule_count_baseline_also_sends_its_sum_and_no_other_does() -> None:
     """W1922: a count falling inside a key leaves the entry count flat; the sum shows it."""
     census = [
@@ -172,6 +182,12 @@ def test_main_reads_the_census_and_ships_the_values(
     assert cast("dict[str, str]", first["fields"])["repo"] == "mtools"
     assert "3 ratchet(s), sent=3" in capsys.readouterr().out
     assert ratchet_emit.main(["only-one-argument"]) == ratchet_emit.EXIT_USAGE
+    sent.clear()
+    assert ratchet_emit.main(["mtools", "/snapshot/tree", "landed"], spawn, run) == 0
+    landed = cast("dict[str, object]", json.loads(sent[0].splitlines()[0]))
+    assert cast("dict[str, str]", landed["fields"])["stage"] == "landed"
+    assert ratchet_emit.main(["mtools", "/snapshot/tree", "someday"]) == ratchet_emit.EXIT_USAGE
+    assert ratchet_emit.main(["mtools", "/snapshot/tree", "landed", "x"]) == ratchet_emit.EXIT_USAGE
 
 
 def test_zero_ratchets_never_read_as_sent_and_fail_for_a_directory_that_declares_some(

@@ -212,6 +212,32 @@ mutant_site(
 )
 
 mutant_site(
+    name = "_stage_of",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::_stage_of",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py tests/test_ratchet_emit_retired.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:tests/test_ratchet_emit_retired.py",
+    ],
+)
+
+mutant_site(
     name = "declared_label-is-the-directory-name",
     dist = "hooks",
     site = "src/mikemol/hooks/ratchet_emit.py::label-is-the-directory-name",
@@ -562,6 +588,87 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_stage-label-dropped",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::stage-label-dropped",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py tests/test_ratchet_emit_retired.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:tests/test_ratchet_emit_retired.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_unknown-stage-admitted",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::unknown-stage-admitted",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py tests/test_ratchet_emit_retired.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:tests/test_ratchet_emit_retired.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_stage-never-passed-to-the-rows",
+    dist = "hooks",
+    site = "src/mikemol/hooks/ratchet_emit.py::stage-never-passed-to-the-rows",
+    tests = "tests/test_commitments_emit.py tests/test_ratchet_emit.py tests/test_ratchet_emit_retired.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/commitments_emit.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/hold_lift.py",
+        "//hooks:src/mikemol/hooks/ratchet_emit.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_commitments_emit.py",
+        "//hooks:tests/test_ratchet_emit.py",
+        "//hooks:tests/test_ratchet_emit_retired.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -573,6 +680,7 @@ test_suite(
         ":emit",
         ":reader_path",
         ":main",
+        ":_stage_of",
         ":declared_label-is-the-directory-name",
         ":declared_tombstone-reason-dropped",
         ":declared_retired-value-not-one",
@@ -586,6 +694,9 @@ test_suite(
         ":declared_send-without-binary-or-store",
         ":declared_sent-reported-as-a-boolean",
         ":declared_declared-ratchets-found-none-exits-clean",
+        ":declared_stage-label-dropped",
+        ":declared_unknown-stage-admitted",
+        ":declared_stage-never-passed-to-the-rows",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

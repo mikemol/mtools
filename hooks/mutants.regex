@@ -795,3 +795,7 @@ src/mikemol/hooks/commit_kata.py|submit-refusal-emits-nothing|    _emit_stack\(v
 src/mikemol/hooks/commit_kata.py|unrecognised-flag-taken-as-a-path|        elif word\.startswith\("--"\) and len\(word\) > len\("--"\):|        elif False:|def=parse
 src/mikemol/hooks/commit_kata.py|unreadable-stack-queued|    if not isinstance\(items, str\):|    if True:|def=unreadable_stack
 src/mikemol/hooks/commit_kata.py|unreadable-stack-never-checked|    return unreadable_stack\(stack_target\(\[a for a in args if a != SHIP_FLAG\], env\)\)|    return None|def=admin_mode
+# A ratchet row can be marked as read after the push, and only a known stage is accepted (W2171).
+src/mikemol/hooks/ratchet_emit.py|stage-label-dropped|            fields\["stage"\] = stage|            pass|def=rows_of
+src/mikemol/hooks/ratchet_emit.py|unknown-stage-admitted|    if len\(args\) == ARGUMENTS \+ 1 and args\[ARGUMENTS\] in STAGES:|    if len(args) == ARGUMENTS + 1:|def=_stage_of
+src/mikemol/hooks/ratchet_emit.py|stage-never-passed-to-the-rows|    rows = \[\*rows_of\(named, now, stage\), \*retired_rows\(dead, now\)\]|    rows = [*rows_of(named, now), *retired_rows(dead, now)]|def=main

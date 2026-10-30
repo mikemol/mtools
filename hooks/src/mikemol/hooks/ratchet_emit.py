@@ -52,6 +52,8 @@ SUM = "mikemol.ratchet.sum"
 CHUNK = 100
 EXIT_USAGE = 2
 ARGUMENTS = 2
+STAGES = ("staged", "landed")
+"""The stage a run may name as its third word; `landed` marks a row read after the push (W2171)."""
 READER_ENV = "RATCHET_BIN"
 _LINE = re.compile(
     r"^(?P<repo>\S+) (?P<path>\S+) (?P<kind>\S+) value=(?P<value>\d+) floor=\d+"
@@ -128,17 +130,25 @@ def retired_rows(tombstones: Sequence[Tombstone], now_ns: int) -> list[Row]:
     ]
 
 
-def rows_of(census: Sequence[Entry], now_ns: int) -> list[Row]:
+def rows_of(census: Sequence[Entry], now_ns: int, stage: str = "") -> list[Row]:
     """Turn census entries into gauge rows: the entry count, and the sum where there is one.
 
     ⚑ THE SUM IS A SECOND SERIES (W1922, asked for by nemik:W991): a count falling inside a key
     leaves the entry count flat, so a baseline of the file-rule-count shape also sends
     `mikemol.ratchet.sum`; any other baseline sends the entry count alone.
 
+    ⚑ `stage` SEPARATES A GATE-TIME SAMPLE FROM A LANDED ONE (W2171, nemik:W1179): the gate emits
+    before its verdict, so a refused stack left numbers the pace counted as landings (nemik's
+    stacks 703 and 704, codon 146 to 145 and 144, read as a fall that never landed). A row sent
+    after a push carries `stage=landed`; the gate's own rows carry no `stage` label, as before, so
+    the existing series stands as unlabeled history and a reader that wants landings selects
+    `stage="landed"`.
+
     Returns:
         rows named `mikemol.ratchet.value`, and `mikemol.ratchet.sum` for entries with a sum,
-        with the labels `repo`, `ratchet` and `kind`, and `guessed` (true when the row came from
-        the name classifier, false when declared) only where the census said so (W1958).
+        with the labels `repo`, `ratchet` and `kind`, `guessed` (true when the row came from the
+        name classifier, false when declared) only where the census said so (W1958), and `stage`
+        only when one is given.
 
     """
     rows: list[Row] = []
@@ -146,6 +156,8 @@ def rows_of(census: Sequence[Entry], now_ns: int) -> list[Row]:
         fields = {"repo": repo, "ratchet": ratchet, "kind": kind}
         if guessed is not None:
             fields["guessed"] = "true" if guessed else "false"
+        if stage:
+            fields["stage"] = stage
         rows.append({"name": VALUE, "value": value, "time_ns": now_ns, "fields": fields})
         if total is not None:
             rows.append({"name": SUM, "value": total, "time_ns": now_ns, "fields": fields})
@@ -224,8 +236,9 @@ def main(
 
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != ARGUMENTS:
-        sys.stderr.write("usage: mikemol-ratchet-emit NAME DIR\n")
+    stage = _stage_of(args)
+    if stage is None:
+        sys.stderr.write("usage: mikemol-ratchet-emit NAME DIR [staged|landed]\n")
         return EXIT_USAGE
     tool = reader_path(os.environ)
     if tool is None:
@@ -241,11 +254,21 @@ def main(
     ]
     now = time.time_ns()
     dead = [(args[0], path, reason) for _repo, path, reason in parse_tombstones(said)]
-    rows = [*rows_of(named, now), *retired_rows(dead, now)]
+    rows = [*rows_of(named, now, stage), *retired_rows(dead, now)]
     sent = len(rows) if emit(rows, os.environ, spawn) else 0
     sys.stdout.write(f"ratchet emit: {len(rows)} ratchet(s), sent={sent}\n")
     declared = (Path(args[1]) / "ratchets.json").is_file()
     return 1 if declared and not rows else 0
+
+
+def _stage_of(args: Sequence[str]) -> str | None:
+    # The stage the words name: "" for NAME DIR, the third word when it is a known stage, and None
+    # for any other count or an unknown stage (the caller answers usage).
+    if len(args) == ARGUMENTS:
+        return ""
+    if len(args) == ARGUMENTS + 1 and args[ARGUMENTS] in STAGES:
+        return args[ARGUMENTS]
+    return None
 
 
 if __name__ == "__main__":

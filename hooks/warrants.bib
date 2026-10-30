@@ -16310,3 +16310,11 @@
             script.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_another_repository_is_refused_naming_its_pinned_tool},
 }
+
+@misc{hooks-ratchet-emit-stage-is-a-label-only-when-one-is-given,
+  section = {ratchet_emit},
+  title  = {W2171: the gate's rows keep their labels; a landed run adds `stage=landed` to both series},
+  claim  = {W2171: the gate's rows keep their labels; a landed run adds `stage=landed` to both
+            series.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_a_stage_is_a_label_only_when_one_is_given},
+}
