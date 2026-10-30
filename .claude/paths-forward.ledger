@@ -4631,3 +4631,34 @@
 2026-10-30T00:37:22Z  status W2156 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T00:51:50Z  status W2128 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T01:03:33Z  tick  W2168 minted    -         "Read modes of the writer (--show) leave the target repo's heartbeat untouched"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:R151
+2026-10-30T01:15:28Z  tick  W2128 advanced  unblock   "W2128 built and submitted as hooks-k (all non-landing verdicts as log rows, submit-time refusal emits); transcriptstruct-a landed 88acec1 and e6dc759; W2116 (same file, commit_kata) next on hooks-k's registries [blocked by W2116]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T01:34:39Z  status W2116 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T01:48:16Z  status W2168 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T01:52:09Z  tick  W2116 advanced  unblock   "hooks-k W2128 gate at 610/1534 FAILED 0 (01:50:57Z), hooks-l W2116 and pathsforward-g W2168 queued behind it; nothing landed since e6dc759 [blocked by W2128]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:06:28Z  status W2076 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:20:38Z  status W2077 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:22:31Z  interrupt W2169 minted    -         "--tick-open --json prints one JSON document with each hook's command, exit, UTC read time and output"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:R156
+2026-10-30T02:27:35Z  tick  W2128 advanced  unblock   "hooks-k landed 56a13d3 (W2128); hooks-l W2116 inflight (just started, gate files not yet present at 02:26:00Z), W2168 and W2076 queued; W2169 carded, W2077 blocked on W2076 [blocked by W2116]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:29:47Z  status W2078 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:34:38Z  status W2079 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:51:55Z  tick  W2079 advanced  unblock   "hooks-l W2116 gate at 255/1535 FAILED 0 (02:50:49Z), pathsforward-g W2168 and pathsforward-h W2076 queued; W2079 next step written; nothing landed since 56a13d3 [blocked by W2116]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T02:53:33Z  status W2081 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:04:33Z  status W2082 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:23:39Z  tick  W2116 advanced  unblock   "03:20:30Z reading: hooks-l (W2116) inflight at 589/1535 tests, FAILED 0; W2168 and W2076 queued behind it; nothing landed since 56a13d3 [reason: hooks-l holds the lease with W2168 and W2076 queued; the hooks-lane cards left are built on its files and land after it (cites W2168, W2076)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:25:22Z  interrupt W2170 minted    -         "Atomize rule exempts umbrella cards whose child stacks land (nemik W1187, W1179)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1187
+2026-10-30T03:25:47Z  status W2083 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:52:45Z  status W2084 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:53:14Z  status W2084 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:53:41Z  tick  W2116 advanced  unblock   "reading: hooks-l (W2116) still inflight, W2168 and W2076 queued, HEAD 56a13d3 unchanged; W2084 has no next step and layercover files unread this tick [reason: hooks-l holds the gate lease with W2168 and W2076 queued; hooks-lane builds land on its files after it (cites W2168, W2076)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T03:56:57Z  interrupt W2171 minted    -         "Ratchet value series: staged gate-time points versus landed only (tag or emit after push)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1179
+2026-10-30T03:59:59Z  status W2171 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T04:24:19Z  tick  W2171 advanced  unblock   "04:20Z: hooks-l (W2116) at 1292/1535 tests, FAILED/TIMEOUT 0 in bep; W2168 and W2076 queued; HEAD 56a13d3. W2171: read ratchet_emit docstring, no staged/landed label exists, evidence and next step written [blocked by W2116]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T04:32:15Z  status W2084 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T04:53:50Z  tick  W2171 advanced  unblock   "04:51Z: hooks-l (W2116) 1323/1535 tests, mutants_95; W2168 and W2076 queued; HEAD 56a13d3. W2171: nemik ratchetpace.py defines its series as value after each landed commit, so staged points violate it; evidence and next read written [blocked by W2116]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T05:22:37Z  tick  W2171 advanced  unblock   "05:20Z: hooks-l (W2116) 1365/1535, mutants_127; W2168 and W2076 queued; HEAD 56a13d3. W2171: nemik pacerun.py feeds one sample per gate run to a series ratchetpace defines per landing; evidence written [blocked by W2116]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T05:31:12Z  status W2078 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T05:31:12Z  status W2116 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T05:31:34Z  status W2168 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T05:31:57Z  interrupt W2172 minted    -         "pycheck --ratchet --write refuses while a queued stack names that baseline file (nemik W1246)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1246
+2026-10-30T05:33:50Z  tick  W2116 closed    collapse  "Landed 448fed5e (W2116), fa0c59cc (W2168), f534999d (W2076 first half); gate idle (--in-gate empty); hooks venv rebuilt. Minted W2172 for nemik W1246. Next: W2114+W2164 stack in a clean scratch tree on f534999d [blocked by W2085]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T05:45:28Z  status W2078 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

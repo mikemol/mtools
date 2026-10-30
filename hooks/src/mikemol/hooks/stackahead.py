@@ -36,6 +36,39 @@ def _key(snap: Path) -> str | None:
     return name if snap.stem.startswith(_PREFIX) and name.isdecimal() else None
 
 
+def _order(snap: Path) -> int:
+    # A snapshot's submission time for sorting; a file that is not one sorts first and is skipped.
+    key = _key(snap)
+    return int(key) if key is not None else -1
+
+
+def blobs(snap: str, probe: commit_counts.Probe = commit_counts.proc_start) -> dict[str, str]:
+    """Map each file frozen by the live stacks submitted before the one at `snap` to its blob.
+
+    ⚑ THE NEWEST STACK AHEAD WINS A PATH: snapshots are read in key order, so a file two stacks
+    ahead carry names the blob of the later of them, the one this stack will land on.
+
+    Returns:
+        path to frozen blob id, deletions left out; empty when `snap` is empty or not a snapshot,
+        or nothing live is ahead.
+
+    """
+    mine = Path(snap)
+    key = _key(mine) if snap else None
+    if key is None:
+        return {}
+    live = {row.key for row in commit_counts.live(mine.parent / _COUNTS, probe)}
+    held: dict[str, str] = {}
+    for other in sorted(mine.parent.glob(f"{_PREFIX}*.snap"), key=_order):
+        theirs = _key(other)
+        entries = stacksnap.load(other) if theirs is not None else None
+        if theirs is None or int(theirs) >= int(key) or theirs not in live or entries is None:
+            continue
+        frozen_here = (frozen for files in entries for frozen in files if frozen.blob)
+        held.update({frozen.path: frozen.blob for frozen in frozen_here})
+    return held
+
+
 def paths(snap: str, probe: commit_counts.Probe = commit_counts.proc_start) -> frozenset[str]:
     """Name the files frozen by the live stacks submitted before the one at `snap`.
 
@@ -44,16 +77,28 @@ def paths(snap: str, probe: commit_counts.Probe = commit_counts.proc_start) -> f
         snapshot, or nothing live is ahead.
 
     """
-    mine = Path(snap)
-    key = _key(mine) if snap else None
-    if key is None:
-        return frozenset()
-    live = {row.key for row in commit_counts.live(mine.parent / _COUNTS, probe)}
-    held: set[str] = set()
-    for other in sorted(mine.parent.glob(f"{_PREFIX}*.snap")):
-        theirs = _key(other)
-        entries = stacksnap.load(other) if theirs is not None else None
-        if theirs is None or int(theirs) >= int(key) or theirs not in live or entries is None:
-            continue
-        held.update(frozen.path for files in entries for frozen in files if frozen.blob)
-    return frozenset(held)
+    return frozenset(blobs(snap, probe))
+
+
+def unbuilt_on(snap: str, probe: commit_counts.Probe = commit_counts.proc_start) -> list[str]:
+    """Name the files this stack shares with a stack ahead but does not carry the same bytes of.
+
+    ⚑ A SHARED FILE IS BUILT ON THE STACK AHEAD ONLY IF IT IS THAT STACK'S BYTES (W2078, github-8f
+    pass 47): a stack built on HEAD's copy of a file a gate in flight also changes would, if that
+    gate lands, put HEAD's copy over the gate's change (at best a refusal at the next gate, at worst
+    a silent revert; the registries every hooks stack freezes whole, `mutants.regex` and
+    `warrants.bib`, make this the common case). Equal blobs mean the stack was built on the ahead
+    stack's tree for that path; any other blob is refused, because a three-way merge is not
+    something a blob comparison can tell from a revert.
+
+    Returns:
+        the sorted shared paths whose blob here differs from the newest stack ahead's; empty when
+        nothing is shared, `snap` is not a snapshot or its entries cannot be read.
+
+    """
+    ahead = blobs(snap, probe)
+    mine = stacksnap.load(Path(snap)) if ahead else None
+    if mine is None:
+        return []
+    own = {frozen.path: frozen.blob for files in mine for frozen in files if frozen.blob}
+    return sorted(path for path, blob in own.items() if path in ahead and ahead[path] != blob)

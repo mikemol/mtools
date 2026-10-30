@@ -16275,3 +16275,28 @@
   claim  = {W2116: paperkit's shape, an entry body ending in Co-Authored-By, never enters the queue.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_stack_file_the_reader_rejects_is_refused_at_submit_with_its_reason},
 }
+
+@misc{hooks-stackahead-shared-file-with-other-bytes-than-the-stack-ahead-is-named,
+  section = {stackland},
+  title  = {W2078: built on HEAD's copy, the registry would revert the stack ahead; it is named},
+  claim  = {W2078: built on HEAD's copy, the registry would revert the stack ahead; it is named. The
+            control is the same path carrying the stack ahead's own blob (built on its
+            tree), a path nobody else holds, and a disjoint stack: none of them is
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_a_shared_file_with_other_bytes_than_the_stack_ahead_is_named},
+}
+
+@misc{hooks-stackahead-shared-file-with-the-stack-aheads-own-bytes-is-built-on-it,
+  section = {stackland},
+  title  = {Equal blobs mean the stack was built on the ahead stack's tree: nothing is refused},
+  claim  = {Equal blobs mean the stack was built on the ahead stack's tree: nothing is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_a_shared_file_with_the_stack_aheads_own_bytes_is_built_on_it},
+}
+
+@misc{hooks-stackahead-disjoint-stack-and-the-newest-of-two-ahead-are-judged-right,
+  section = {stackland},
+  title  = {No overlap names nothing; with two stacks ahead the LATER one's blob is the one to match},
+  claim  = {No overlap names nothing; with two stacks ahead the LATER one's blob is the one to
+            match.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_a_disjoint_stack_and_the_newest_of_two_ahead_are_judged_right},
+}

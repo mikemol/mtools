@@ -612,11 +612,13 @@ src/mikemol/hooks/flakegate.py|unranked-card-covers|        if card\.status == D
 src/mikemol/hooks/flakegate.py|dropped-card-covers|        if tag not in card\.tags or card\.status == DROPPED:|        if tag not in card.tags:|def=covered
 src/mikemol/hooks/flakegate.py|every-tree-shares-one-tag|    return f"\{TAG\}\{tree\[:SHORT\]\}"|    return f"{TAG}"|def=tag_of
 src/mikemol/hooks/flakegate.py|unreadable-queue-not-spared|    if not recorded or cards is None:|    if not recorded:|def=refusal
-src/mikemol/hooks/stackahead.py|own-key-counted-as-ahead|int\(theirs\) >= int\(key\)|int(theirs) > int(key)|def=paths
-src/mikemol/hooks/stackahead.py|later-stack-counted-as-ahead|int\(theirs\) >= int\(key\)|int(theirs) < 0|def=paths
-src/mikemol/hooks/stackahead.py|finished-stack-counted-as-ahead|or theirs not in live or|or|def=paths
-src/mikemol/hooks/stackahead.py|deletion-counted-as-a-file|for frozen in files if frozen\.blob\)|for frozen in files)|def=paths
+src/mikemol/hooks/stackahead.py|own-key-counted-as-ahead|int\(theirs\) >= int\(key\)|int(theirs) > int(key)|def=blobs
+src/mikemol/hooks/stackahead.py|later-stack-counted-as-ahead|int\(theirs\) >= int\(key\)|int(theirs) < 0|def=blobs
+src/mikemol/hooks/stackahead.py|finished-stack-counted-as-ahead|or theirs not in live or|or|def=blobs
+src/mikemol/hooks/stackahead.py|deletion-counted-as-a-file|for frozen in files if frozen\.blob\)|for frozen in files)|def=blobs
 src/mikemol/hooks/stackahead.py|non-numeric-name-read-as-a-key|and name\.isdecimal\(\)|and True|def=_key
+src/mikemol/hooks/stackahead.py|same-bytes-counted-as-unbuilt|ahead\[path\] != blob|ahead[path] == blob|def=unbuilt_on
+src/mikemol/hooks/stackahead.py|unshared-file-counted-as-unbuilt|if path in ahead and ahead|if path not in ahead and ahead|def=unbuilt_on
 src/mikemol/hooks/stackbuildfiles.py|ahead-files-ignored|    known = _Known\(set\(ahead\), in_head, head_names\)|    known = _Known(set(), in_head, head_names)|def=findings
 src/mikemol/hooks/stackbuildfiles.py|refusal-never-asks-what-is-ahead|head_names, ahead_paths\(snap\)\)|head_names, ())|def=refusal
 src/mikemol/hooks/flakegate.py|round-never-read|    owed = uncovered\(recorded, cards, order\(root, now or datetime\.now\(UTC\)\)\)|    owed = uncovered(recorded, cards, [])|def=refusal
