@@ -1507,3 +1507,17 @@
             control is the stamped entity beside it, which still leads.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_rulingq.py -k test_an_entity_with_no_stamp_is_a_ruling_of_unknown_time_listed_last},
 }
+
+@misc{transcriptstruct-cli-since-last-starts-after-the-last-matching-tool-use,
+  section = {cli},
+  title  = {W2161: two closes, a typed 'about' time between and one after: only the later is a hit},
+  claim  = {W2161: two closes, a typed 'about' time between and one after: only the later is a hit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_since_last_starts_after_the_last_matching_tool_use},
+}
+
+@misc{transcriptstruct-commitments-command-honours-since-and-until,
+  section = {commitments},
+  title  = {W1947: the window keeps only the commitments on admitted lines; the count follows it},
+  claim  = {W1947: the window keeps only the commitments on admitted lines; the count follows it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_the_command_honours_since_and_until},
+}

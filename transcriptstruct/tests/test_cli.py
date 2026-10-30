@@ -107,6 +107,40 @@ def test_extract_prints_null_for_a_missing_line(tmp_path: Path) -> None:
     ]
 
 
+def _tool(command: str) -> str:
+    """Build a synthetic assistant line holding one Bash tool_use block.
+
+    Returns:
+        the JSONL line.
+
+    """
+    block: dict[str, object] = {"type": "tool_use", "id": "t", "name": "Bash"}
+    block["input"] = {"command": command}
+    message: dict[str, object] = {"role": "assistant", "content": [block]}
+    envelope: dict[str, object] = {"type": "assistant", "message": message}
+    return json.dumps(envelope)
+
+
+def test_since_last_starts_after_the_last_matching_tool_use(tmp_path: Path) -> None:
+    """W2161: two closes, a typed 'about' time between and one after: only the later is a hit."""
+    lines = [
+        _tool("writer --tick-close github-42 first"),
+        _tool("note about 21:10Z"),
+        _tool("writer --tick-close github-42 second"),
+        _tool("note about 22:58Z"),
+        _user("a mention of --tick-close github-42 that is prose, not a call"),
+    ]
+    path = tmp_path / "close.jsonl"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    grep = ("--grep", "about [0-9]{2}:[0-9]", "--kinds", "tool_use")
+    *every, _ = _run(str(path), *grep)
+    assert [_object(hit)["line"] for hit in every] == [2, 4]
+    *since, _ = _run(str(path), "--since-last", "--tick-close github-42", *grep)
+    assert [_object(hit)["line"] for hit in since] == [4]
+    *none, _ = _run(str(path), "--since-last", "no such close", *grep)
+    assert [_object(hit)["line"] for hit in none] == [2, 4]
+
+
 def test_raw_prints_whole_records_of_a_type(tmp_path: Path) -> None:
     """`--raw user` prints each user record whole, then the denominator line."""
     *hits, footer = _run(str(_transcript(tmp_path)), "--raw", "user")
