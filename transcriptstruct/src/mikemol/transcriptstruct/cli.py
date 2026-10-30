@@ -177,6 +177,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--since", type=int, help="first line to search (1-based, inclusive)")
     parser.add_argument("--until", type=int, help="last line to search (inclusive)")
+    parser.add_argument(
+        "--since-last",
+        metavar="REGEX",
+        help="start after the last tool_use block matching REGEX (W2161)",
+    )
     parser.add_argument("--repo", help="--resolve: keep only the rows of this repository")
     parser.add_argument(
         "--turns",
@@ -389,14 +394,19 @@ def _ledger(found: list[Commitment], queue: Path, out: TextIO) -> None:
     out.write(f"# {sum(tally.values())} counted: {tally}\n")
 
 
-def _commitments(path: Path, out: TextIO, queue: str | None = None) -> None:
+def _commitments(
+    path: Path, out: TextIO, queue: str | None = None, window: Window | None = None
+) -> None:
     """Write each commitment the assistant records of one transcript make, then the count.
 
     The session is the transcript's file name and the repository the last word of its project
     directory (`-home-mikemol-github-mtools` is `mtools`), a reading and not a declaration.
+    `window` keeps only commitments whose line it admits (W1947: --since was ignored).
     """
     repo = path.resolve().parent.name.rsplit("-", 1)[-1]
     found = extract_commitments(read_path(path), path.stem, repo)
+    if window is not None:
+        found = [row for row in found if window.admits(row.line)]
     if queue is not None:
         _ledger(found, Path(queue), out)
         return
@@ -549,7 +559,9 @@ def _listing(opts: dict[str, object], path: Path, scheduled: Sequence[str], out:
     elif opts.get("turn_start") is True:
         _turn_start(path, out)
     elif opts.get("commitments") is True:
-        _commitments(path, out, _text(opts, "queue"))
+        _commitments(
+            path, out, _text(opts, "queue"), Window(_number(opts, "since"), _number(opts, "until"))
+        )
     elif opts.get("harvest") is True:
         _harvest(path, scheduled, out)
     elif _number(opts, "sample") is not None:
@@ -590,6 +602,29 @@ def _special(
     return 0 if _listing(opts, path, scheduled, out) else None
 
 
+def _window_of(opts: dict[str, object], path: Path) -> Window:
+    """Build the line window of a query, `--since-last REGEX` moving its start (W2161).
+
+    ⚑ A FIXED LINE CANNOT BOUND A SEARCH TO "SINCE THE LAST TICK CLOSE" (github:R141):
+    `--since-last` starts the search on the line after the LAST tool_use block that matches the
+    regex, inside any `--since` and `--until` given. When nothing matches, the window is the one
+    `--since` and `--until` name, so a transcript with no close yet is searched whole.
+
+    Returns:
+        the window.
+
+    """
+    since, until = _number(opts, "since"), _number(opts, "until")
+    pattern = _text(opts, "since_last")
+    if pattern is not None:
+        marks = grep_blocks(
+            read_path(path), pattern, block_kinds=["tool_use"], window=Window(since, until)
+        )
+        if marks.hits:
+            since = max(hit.line for hit in marks.hits) + 1
+    return Window(since, until)
+
+
 def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     """Run one query over one transcript.
 
@@ -600,7 +635,7 @@ def main(argv: Sequence[str] | None = None, out: TextIO | None = None) -> int:
     opts: dict[str, object] = vars(_parser().parse_args(sys.argv[1:] if argv is None else argv))
     sink = out or sys.stdout
     path = Path(str(opts["transcript"]))
-    window = Window(_number(opts, "since"), _number(opts, "until"))
+    window = _window_of(opts, path)
     scheduled = _texts(opts, "scheduled") or ()
     grep, human, lines = _text(opts, "grep"), _text(opts, "human"), _texts(opts, "extract")
     types = _texts(opts, "raw")

@@ -114,3 +114,16 @@ def test_the_command_prints_one_json_line_per_statement_then_the_count(tmp_path:
         "names": ["W7"],
     }
     assert count == "# 1 commitment(s)"
+
+
+def test_the_command_honours_since_and_until(tmp_path: Path) -> None:
+    """W1947: the window keeps only the commitments on admitted lines; the count follows it."""
+    project = tmp_path / "-home-someone-github-mtools"
+    project.mkdir()
+    log = project / "abc.jsonl"
+    lines = [_assistant(f"I still need to wire W{n}.", f"u{n}") for n in (1, 2, 3)]
+    log.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    for window, wanted in (([], 3), (["--since", "2"], 2), (["--since", "2", "--until", "2"], 1)):
+        out = io.StringIO()
+        assert main([str(log), "--commitments", *window], out) == 0
+        assert out.getvalue().splitlines()[-1] == f"# {wanted} commitment(s)"
