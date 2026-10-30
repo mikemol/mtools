@@ -78,6 +78,10 @@ src/mikemol/katas/fleet.py|probe-leaves-its-cleanup|, \[temp, held\]\)|, [])|def
 
 # Flush asks mikemol-commit for the `none` waypoint and the sync subject.
 src/mikemol/katas/fleet.py|flush-wrong-waypoint|commits\.Request\(repo, "none", SYNC_SUBJECT\)|commits.Request(repo, "W0", SYNC_SUBJECT)|def=flush
+# A repo is committed through its own pinned tool when it has one (W2164 (b), W2114).
+src/mikemol/katas/fleet.py|pin-never-used|    return own if own\.is_file\(\) else default|    return default|def=pinned_commit
+src/mikemol/katas/fleet.py|absent-pin-still-named|    return own if own\.is_file\(\) else default|    return own|def=pinned_commit
+src/mikemol/katas/fleet.py|flush-ignores-the-pin|commits\.commit_argv\(pinned_commit\(fleet, repo, binary\), request\)|commits.commit_argv(binary, request)|def=flush
 
 # W876: archive never overwrites, cuts a name to its leaf, and reports what was not there.
 src/mikemol/katas/inbox.py|archive-overwrites|elif target\.exists\(\):|elif False:|def=archive

@@ -192,8 +192,30 @@ def ceiling(fleet: Fleet, repo: str) -> float:
     return min(CEILING_CAP_S, max(CEILING_FLOOR_S, measured * STRETCH))
 
 
+PINNED = Path(".venv/bin/mikemol-commit")
+"""Where a repo keeps the `mikemol-commit` it pinned, relative to the repo."""
+
+
+def pinned_commit(fleet: Fleet, repo: str, default: Path) -> Path:
+    """Name the `mikemol-commit` a repo commits through: its own pinned install when it has one.
+
+    ⚑ A REPOSITORY IS COMMITTED BY THE TOOL IT PINNED, never by another checkout's live tree
+    (W2164 (b), W2114): a flush through mtools' launcher for a peer ran mtools' hooks code in the
+    peer's repository.
+
+    Returns:
+        the repo's own `.venv/bin/mikemol-commit` when that file exists, else `default`.
+
+    """
+    own = fleet.root / repo / PINNED
+    return own if own.is_file() else default
+
+
 def flush(fleet: Fleet, binary: Path, skip: Collection[str] = ()) -> list[str]:
     """Start a detached queue commit in every repo `flush_targets` names, each under its ceiling.
+
+    Each repo is committed through its own pinned `mikemol-commit` where it has one; `binary` is
+    the fallback.
 
     Returns:
         the repos a commit was started in.
@@ -202,7 +224,7 @@ def flush(fleet: Fleet, binary: Path, skip: Collection[str] = ()) -> list[str]:
     started = flush_targets(fleet, skip)
     for repo in started:
         request = commits.Request(repo, "none", SYNC_SUBJECT)
-        argv = commits.commit_argv(binary, request)
+        argv = commits.commit_argv(pinned_commit(fleet, repo, binary), request)
         detach.start(log_of(fleet, repo), argv, timeout=ceiling(fleet, repo))
     return started
 

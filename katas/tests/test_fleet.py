@@ -255,6 +255,26 @@ def test_flush_starts_a_detached_commit_with_the_sync_request(tmp_path: Path) ->
     assert f"ARG={fleet.SYNC_SUBJECT}" in text
 
 
+def test_flush_commits_a_repo_through_its_own_pinned_tool_and_others_through_the_default(
+    tmp_path: Path,
+) -> None:
+    """W2164 (b): a repo with its own pinned `mikemol-commit` uses it; the rest use `binary`."""
+    host = _fleet(tmp_path)
+    pinned = _repo(host.root, "pinned")
+    _touch_queue(pinned)
+    _touch_queue(_repo(host.root, "plain"))
+    own = pinned / fleet.PINNED
+    own.parent.mkdir(parents=True)
+    own.write_text('#!/bin/sh\necho "OWN-PIN"\n', encoding="utf-8")
+    own.chmod(_EXECUTABLE)
+    assert fleet.flush(host, _fake_commit(tmp_path)) == ["pinned", "plain"]
+    assert _wait(fleet.log_of(host, "pinned")) == commits.DONE
+    assert _wait(fleet.log_of(host, "plain")) == commits.DONE
+    assert "OWN-PIN" in fleet.log_of(host, "pinned").read_text(encoding="utf-8")
+    assert "ARG=plain" in fleet.log_of(host, "plain").read_text(encoding="utf-8")
+    assert fleet.pinned_commit(host, "plain", Path("dflt")) == Path("dflt")
+
+
 def test_probe_refuses_a_repo_with_no_hook(tmp_path: Path) -> None:
     """Nothing to probe is a refusal naming the missing hook."""
     host = _fleet(tmp_path)

@@ -976,3 +976,10 @@
   claim  = {The process tree is not even read when there is no lock to account for.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_liveness_lock.py -k test_with_no_lock_nothing_is_live},
 }
+
+@misc{katas-fleet-flush-commits-a-repo-through-its-own-pinned-tool-and-others-through-the-default,
+  section = {fleet},
+  title  = {W2164 (b): a repo with its own pinned `mikemol-commit` uses it; the rest use `binary`},
+  claim  = {W2164 (b): a repo with its own pinned `mikemol-commit` uses it; the rest use `binary`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_flush_commits_a_repo_through_its_own_pinned_tool_and_others_through_the_default},
+}
