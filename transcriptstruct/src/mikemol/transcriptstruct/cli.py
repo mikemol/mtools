@@ -182,6 +182,12 @@ def _parser() -> argparse.ArgumentParser:
         metavar="REGEX",
         help="start after the last tool_use block matching REGEX (W2161)",
     )
+    parser.add_argument(
+        "--nth",
+        type=int,
+        help="--since-last: count back this many matches (1 is the last, 2 the one before); "
+        "the probe's own record matches its regex, so a tick-open hook asks for 2 (W2176)",
+    )
     parser.add_argument("--repo", help="--resolve: keep only the rows of this repository")
     parser.add_argument(
         "--turns",
@@ -610,18 +616,26 @@ def _window_of(opts: dict[str, object], path: Path) -> Window:
     regex, inside any `--since` and `--until` given. When nothing matches, the window is the one
     `--since` and `--until` name, so a transcript with no close yet is searched whole.
 
+    ⚑ THE PROBE'S OWN RECORD MATCHES ITS REGEX (W2176, github-42): the command that carries
+    `--since-last 'tick-open'` is itself a tool_use containing 'tick-open', so it is the last
+    match and nothing after it is searched. `--nth N` counts back N matches (1 is the last, the
+    old behaviour; 2 skips the invoker and starts after the previous tick-open). With fewer than N
+    matches the window is the one `--since` and `--until` name.
+
     Returns:
         the window.
 
     """
     since, until = _number(opts, "since"), _number(opts, "until")
     pattern = _text(opts, "since_last")
+    nth = _number(opts, "nth") or 1
     if pattern is not None:
         marks = grep_blocks(
             read_path(path), pattern, block_kinds=["tool_use"], window=Window(since, until)
         )
-        if marks.hits:
-            since = max(hit.line for hit in marks.hits) + 1
+        lines = sorted(hit.line for hit in marks.hits)
+        if len(lines) >= nth:
+            since = lines[-nth] + 1
     return Window(since, until)
 
 

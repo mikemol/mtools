@@ -1521,3 +1521,13 @@
   claim  = {W1947: the window keeps only the commitments on admitted lines; the count follows it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitments.py -k test_the_command_honours_since_and_until},
 }
+
+@misc{transcriptstruct-cli-since-last-nth-skips-the-probes-own-record-that-matches-its-regex,
+  section = {cli},
+  title  = {W2176: the probe carries its own regex, so the last match is itself; --nth 2 starts earlier},
+  claim  = {W2176: the probe carries its own regex, so the last match is itself; --nth 2 starts
+            earlier. THE PROBE IS A RECORD IN THE TRANSCRIPT (github-42, 2026-10-30): a
+            tick-open hook searches for 'tick-open' in a transcript whose last tool_use
+            is the invoking command, which contains it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_since_last_nth_skips_the_probes_own_record_that_matches_its_regex},
+}

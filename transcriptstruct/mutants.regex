@@ -90,6 +90,8 @@ src/mikemol/transcriptstruct/labelcompare.py|excluded-id-counted|    shared = \(
 src/mikemol/transcriptstruct/labelcompare.py|recall-and-precision-swapped|recall \{both\} of \{mine\}, precision \{both\} of \{theirs\}|recall {both} of {theirs}, precision {both} of {mine}|def=kind_line
 src/mikemol/transcriptstruct/labelcompare.py|foreign-line-read-as-a-label|            if "id" in fields and "label" in fields:|            if True:|def=read_labels
 src/mikemol/transcriptstruct/labelcompare.py|unreadable-file-exits-zero|        return 2$|        return 0|def=main
-src/mikemol/transcriptstruct/cli.py|since-last-starts-after-the-first-match|            since = max\(hit\.line for hit in marks\.hits\) \+ 1|            since = min(hit.line for hit in marks.hits) + 1|def=_window_of
+src/mikemol/transcriptstruct/cli.py|since-last-starts-after-the-first-match|            since = lines\[-nth\] \+ 1|            since = lines[0] + 1|def=_window_of
+src/mikemol/transcriptstruct/cli.py|since-last-nth-ignored|    nth = _number\(opts, "nth"\) or 1|    nth = 1|def=_window_of
+src/mikemol/transcriptstruct/cli.py|since-last-short-of-nth-still-moves|        if len\(lines\) >= nth:|        if lines:|def=_window_of
 src/mikemol/transcriptstruct/cli.py|since-last-matches-any-block-kind|block_kinds=\["tool_use"\], window=Window\(since, until\)|block_kinds=None, window=Window(since, until)|def=_window_of
 src/mikemol/transcriptstruct/cli.py|commitments-window-ignored|        found = \[row for row in found if window\.admits\(row\.line\)\]|        found = list(found)|def=_commitments

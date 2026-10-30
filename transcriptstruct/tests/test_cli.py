@@ -141,6 +141,32 @@ def test_since_last_starts_after_the_last_matching_tool_use(tmp_path: Path) -> N
     assert [_object(hit)["line"] for hit in none] == [2, 4]
 
 
+def test_since_last_nth_skips_the_probes_own_record_that_matches_its_regex(tmp_path: Path) -> None:
+    """W2176: the probe carries its own regex, so the last match is itself; --nth 2 starts earlier.
+
+    ⚑ THE PROBE IS A RECORD IN THE TRANSCRIPT (github-42, 2026-10-30): a tick-open hook searches
+    for 'tick-open' in a transcript whose last tool_use is the invoking command, which contains it.
+    """
+    lines = [
+        _tool("writer --tick-open previous"),
+        _tool("note about 21:10Z"),
+        _tool("writer --tick-open current"),
+        _tool("note about 22:58Z"),
+        _tool("mikemol-transcriptstruct --since-last tick-open"),
+    ]
+    path = tmp_path / "open.jsonl"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    grep = ("--grep", "about [0-9]{2}:[0-9]", "--kinds", "tool_use")
+    *last, _ = _run(str(path), "--since-last", "tick-open", *grep)
+    assert [_object(hit)["line"] for hit in last] == []
+    *second, _ = _run(str(path), "--since-last", "tick-open", "--nth", "2", *grep)
+    assert [_object(hit)["line"] for hit in second] == [4]
+    *third, _ = _run(str(path), "--since-last", "tick-open", "--nth", "3", *grep)
+    assert [_object(hit)["line"] for hit in third] == [2, 4]
+    *beyond, _ = _run(str(path), "--since-last", "tick-open", "--nth", "9", *grep)
+    assert [_object(hit)["line"] for hit in beyond] == [2, 4]
+
+
 def test_raw_prints_whole_records_of_a_type(tmp_path: Path) -> None:
     """`--raw user` prints each user record whole, then the denominator line."""
     *hits, footer = _run(str(_transcript(tmp_path)), "--raw", "user")
