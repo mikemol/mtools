@@ -58,17 +58,26 @@ def test_a_certify_change_alone_stands_and_a_finding_with_neither_is_refused() -
 
 def test_the_layer_and_the_handoff_operator_are_held_to_their_vocabularies() -> None:
     """The layers run memory to gate; the handoff operator is self or other."""
-    good: Json = {"enforcement_layer": "gate", "handoff": {"operator": "self"}}
+    good: Json = {"enforcement_layer": "gate", "handoff": {"operator": "self"}, "findings": []}
     assert retros.retro_refusals(good) == []
-    bad = retros.retro_refusals({"enforcement_layer": "vibes", "handoff": {"operator": "us"}})
-    assert len(bad) == len(["layer", "operator"])
+    both: Json = {"enforcement_layer": "vibes", "handoff": {"operator": "us"}, "findings": []}
+    assert len(retros.retro_refusals(both)) == len(["layer", "operator"])
+
+
+def test_a_retro_with_no_findings_list_or_an_unknown_key_is_refused() -> None:
+    """W2088: G7 that never ran, and a misspelled key, are refused; an empty list is a claim."""
+    assert retros.retro_refusals({"trigger": "t", "findings": []}) == []
+    [missing] = retros.retro_refusals({"trigger": "t"})
+    assert "no findings list" in missing
+    [unknown] = retros.retro_refusals({"findings": [], "triger": "t", "extra": 1})
+    assert "extra, triger" in unknown
 
 
 def test_adding_a_retro_mints_the_next_id_and_a_refused_one_changes_nothing() -> None:
     """The counter only rises; an old document with no list or counter starts at R1."""
     doc: Json = {"waypoints": []}
     first = retros.add_retro(doc, "mtools", {"trigger": "t", "findings": [_CARD]})
-    second = retros.add_retro(doc, "mtools", {"trigger": "u"})
+    second = retros.add_retro(doc, "mtools", {"trigger": "u", "findings": []})
     assert (first, second) == ("mtools:R1", "mtools:R2")
     assert doc["retro_counter"] == len(["R1", "R2"])
     before = dict(doc)

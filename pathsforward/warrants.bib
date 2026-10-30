@@ -7654,3 +7654,10 @@
   claim  = {W2088: --retros prints a stored record in full; an unknown Rn is refused and named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_retros_command_prints_all_or_the_named_and_refuses_an_unknown_id},
 }
+
+@misc{pathsforward-retros-retro-with-no-findings-list-or-an-unknown-key-is-refused,
+  section = {retros},
+  title  = {W2088: G7 that never ran, and a misspelled key, are refused; an empty list is a claim},
+  claim  = {W2088: G7 that never ran, and a misspelled key, are refused; an empty list is a claim.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_retro_with_no_findings_list_or_an_unknown_key_is_refused},
+}

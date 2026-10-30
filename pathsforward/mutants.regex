@@ -355,3 +355,6 @@ src/mikemol/pathsforward/retros.py|named-ids-ignored|    chosen = \[row for row 
 src/mikemol/pathsforward/retros.py|unknown-id-not-named|    unknown = \[one for one in wanted if not any\(_named\(row, \[one\]\) for row in rows\)\]|    unknown = []|def=render_full
 src/mikemol/pathsforward/retros.py|findings-left-out|                lines\.extend\(_finding_block\(number, cast\("Json", finding\)\)\)|                pass|def=_retro_block
 src/mikemol/pathsforward/cli.py|unknown-retro-exits-ok|    return EXIT_REFUSED if unknown else EXIT_OK|    return EXIT_OK|def=_retros
+# A retro with no findings list, or a key outside the schema, is refused (W2088).
+src/mikemol/pathsforward/retros.py|retro-without-findings-admitted|    if not isinstance\(retro\.get\("findings"\), list\):|    if False:|def=_shape_refusals
+src/mikemol/pathsforward/retros.py|unknown-retro-key-admitted|    if unknown:|    if False:|def=_shape_refusals

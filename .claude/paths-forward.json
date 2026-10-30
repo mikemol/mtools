@@ -46804,11 +46804,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "mikemol-paths-forward --retros [Rn ...] prints each retro (all when none named) in full: card, trigger, root, contributing, precommit, delta, sustain, enforcement_layer, handoff, and every finding with its card, owner, due and witness (or certify_change), so the reviewed-loop skill can seed a re-spawned reviewer from them; --export has no retros and --render prints only a summary line. WITNESS (test): a record with findings prints each finding; an unknown Rn is named and refused. Host-reviewer R62 (due 2026-10-31); related W1935 (schema).",
-      "evidence": "2026-10-29: nemik-84 (nemik:W1246) 2026-10-28: --add-retro accepted a record with no findings list and unknown top-level keys (20 nemik rounds, G7 never ran, mirror shows 0 findings). Wanted: refuse a retro with no findings list or an unknown top-level key; render each finding's id, card, due, witness in the retros section. | 2026-10-30: 2026-10-30: taken as the card file-disjoint from katas-a and hooks/bin (touches only pathsforward); github-42 asked for such a card. Building in a pathsforward scratch tree: retros.py reader first.",
+      "evidence": "2026-10-29: nemik-84 (nemik:W1246) 2026-10-28: --add-retro accepted a record with no findings list and unknown top-level keys (20 nemik rounds, G7 never ran, mirror shows 0 findings). Wanted: refuse a retro with no findings list or an unknown top-level key; render each finding's id, card, due, witness in the retros section. | 2026-10-30: 2026-10-30: taken as the card file-disjoint from katas-a and hooks/bin (touches only pathsforward); github-42 asked for such a card. Building in a pathsforward scratch tree: retros.py reader first. | 2026-10-30: Landed 232203b841bcc284fb01f22511c00897fa621aac (pathsforward-i: --retros, retros.render_full). NOT DONE: refuse a retro with no findings list or an unknown top-level key; the grid and bazel run.",
       "issued_at": "2026-10-28T13:30:29Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-30T07:44:01Z",
+      "last_worked": "2026-10-30T08:57:51Z",
       "ticks_blocked": 0,
       "completed": null
     },

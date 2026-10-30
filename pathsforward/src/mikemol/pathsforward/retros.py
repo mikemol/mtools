@@ -59,15 +59,27 @@ def _finding_lines(findings: list[object]) -> list[str]:
     return refused
 
 
+def _shape_refusals(retro: Json) -> list[str]:
+    # A record with no findings list never ran G7, and a key outside the schema is a misspelling.
+    refused: list[str] = []
+    if not isinstance(retro.get("findings"), list):
+        refused.append("a retro has no findings list (G7 never ran); give [] only if it found none")
+    known = {"id", "findings", *RETRO_FIELDS}
+    unknown = sorted(key for key in retro if key not in known)
+    if unknown:
+        refused.append(f"unknown top-level key {', '.join(unknown)}")
+    return refused
+
+
 def retro_refusals(retro: Json) -> list[str]:
     """Say what is wrong with a retro record.
 
     Returns:
-        the refusals, empty when the layer and handoff operator are in their vocabularies and
-        every finding passes `finding_refusals`.
+        the refusals, empty when the record has a findings list and only schema keys, the layer
+        and handoff operator are in their vocabularies and every finding passes `finding_refusals`.
 
     """
-    refused: list[str] = []
+    refused = _shape_refusals(retro)
     layer = retro.get("enforcement_layer")
     if layer is not None and layer not in LAYERS:
         refused.append(f"enforcement_layer {layer!r} is not one of {', '.join(LAYERS)}")
