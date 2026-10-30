@@ -128,6 +128,29 @@ def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
     return done.returncode, done.stdout + done.stderr
 
 
+Clock = Callable[[], str]
+
+
+def records(
+    lines: Sequence[str], cwd: Path, clock: Clock, runner: Runner = run_process
+) -> list[dict[str, object]]:
+    """Run every command in order and keep each result as a record (W2169).
+
+    ⚑ THE READ TIME IS TAKEN WHEN THAT HOOK FINISHED, not once for the tick: a reader of the
+    output (`--tick-open --json`) must be able to say when each reading was true, in the clock's own
+    terms (the caller passes UTC), so a local-time stamp elsewhere cannot be mistaken for it.
+
+    Returns:
+        one `{command, exit, read_at, output}` record per command, in order, `output` whole.
+
+    """
+    found: list[dict[str, object]] = []
+    for line in lines:
+        code, output = runner(shlex.split(line), cwd)
+        found.append({"command": line, "exit": code, "read_at": clock(), "output": output})
+    return found
+
+
 def run_all(lines: Sequence[str], cwd: Path, runner: Runner = run_process) -> list[str]:
     """Run every command in order and describe each result.
 
@@ -137,10 +160,9 @@ def run_all(lines: Sequence[str], cwd: Path, runner: Runner = run_process) -> li
 
     """
     said: list[str] = []
-    for line in lines:
-        code, output = runner(shlex.split(line), cwd)
-        said.append(f"HOOK {line} exit {code}")
-        body = output.splitlines()
+    for record in records(lines, cwd, lambda: "", runner):
+        said.append(f"HOOK {record['command']} exit {record['exit']}")
+        body = str(record["output"]).splitlines()
         said.extend(f"  {row}" for row in body[:SHOWN])
         if len(body) > SHOWN:
             said.append(f"  ... {len(body) - SHOWN} more line(s)")

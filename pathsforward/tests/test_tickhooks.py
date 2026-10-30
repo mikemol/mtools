@@ -78,6 +78,18 @@ def test_a_failing_hook_is_reported_and_the_next_still_runs() -> None:
     assert said == ["HOOK a x exit 0", "HOOK b exit 3", "HOOK c exit 0"]
 
 
+def test_records_keep_each_hooks_exit_output_and_its_own_read_time() -> None:
+    """W2169: one record per hook with the whole output, stamped when THAT hook finished."""
+    run, _ = _runner({"b": 3}, "one\ntwo\n")
+    ticks = iter(["2026-10-30T00:00:01Z", "2026-10-30T00:00:09Z"])
+    found = tickhooks.records(["a x", "b"], HERE, lambda: next(ticks), run)
+    assert found == [
+        {"command": "a x", "exit": 0, "read_at": "2026-10-30T00:00:01Z", "output": "one\ntwo\n"},
+        {"command": "b", "exit": 3, "read_at": "2026-10-30T00:00:09Z", "output": "one\ntwo\n"},
+    ]
+    assert tickhooks.records([], HERE, lambda: "unused", run) == []
+
+
 def test_long_output_is_capped_with_a_count_of_the_rest() -> None:
     """Twenty-five lines show twenty indented and say how many were left out."""
     run, _ = _runner({}, "".join(f"line {n}\n" for n in range(OVER)))

@@ -7661,3 +7661,10 @@
   claim  = {W2088: G7 that never ran, and a misspelled key, are refused; an empty list is a claim.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_retro_with_no_findings_list_or_an_unknown_key_is_refused},
 }
+
+@misc{pathsforward-tickhooks-records-keep-each-hooks-exit-output-and-its-own-read-time,
+  section = {tickhooks},
+  title  = {W2169: one record per hook with the whole output, stamped when THAT hook finished},
+  claim  = {W2169: one record per hook with the whole output, stamped when THAT hook finished.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_records_keep_each_hooks_exit_output_and_its_own_read_time},
+}

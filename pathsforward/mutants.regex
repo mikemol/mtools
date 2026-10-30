@@ -358,3 +358,6 @@ src/mikemol/pathsforward/cli.py|unknown-retro-exits-ok|    return EXIT_REFUSED i
 # A retro with no findings list, or a key outside the schema, is refused (W2088).
 src/mikemol/pathsforward/retros.py|retro-without-findings-admitted|    if not isinstance\(retro\.get\("findings"\), list\):|    if False:|def=_shape_refusals
 src/mikemol/pathsforward/retros.py|unknown-retro-key-admitted|    if unknown:|    if False:|def=_shape_refusals
+# A hook's record carries its exit and the time it was read, taken per hook (W2169).
+src/mikemol/pathsforward/tickhooks.py|record-read-time-dropped|"read_at": clock\(\)|"read_at": ""|def=records
+src/mikemol/pathsforward/tickhooks.py|record-exit-dropped|"exit": code,|"exit": 0,|def=records
