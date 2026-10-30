@@ -34,6 +34,7 @@ from mikemol.hooks.idle_stop import TurnReader, idle_reason, read_turn
 from mikemol.hooks.payload import as_record, text_of
 from mikemol.hooks.round_wire import round_reason
 from mikemol.hooks.stamps import parse_time
+from mikemol.hooks.subagent_guard import running as running_subagents
 
 # The host's queue, relative to the payload's cwd (the session's directory, not the project the
 # hooks were installed from: the host session runs from ~/github with mtools' hooks).
@@ -107,6 +108,45 @@ def payload_lock(payload: dict[str, object]) -> HostLock | None:
     return host_lock(payload_dir(payload) / QUEUE)
 
 
+def reviewer_running(payload: dict[str, object], now: datetime) -> bool:
+    """Say whether a subagent of the payload's session is running (W2182, github:R207).
+
+    ⚑ A REVIEW IS A NAMED WAIT, NOT IDLENESS: while the session's own reviewer runs, the host
+    idles by rule (standing 10), and demanding a card move then made the host mark cards
+    working without working them. The subagents are read from the harness's records beside
+    the payload's `transcript_path`, the way `subagent_guard` counts them.
+
+    Returns:
+        True when `subagent_guard.running` names one; False for no transcript path.
+
+    """
+    transcript = Path(text_of(payload.get("transcript_path")))
+    if not transcript.name:
+        return False
+    folder = transcript.with_suffix("") / "subagents"
+    return bool(running_subagents(folder, now.timestamp()))
+
+
+def idle_block(payload: dict[str, object], now: datetime, reader: TurnReader) -> str | None:
+    """Decide whether a turn with no lock held should still be blocked for idle or round work.
+
+    Returns:
+        the reason to block; None while a reviewer subagent runs, or when neither the idle
+        rule (W1904) nor the round rule (W1948) blocks.
+
+    """
+    if reviewer_running(payload, now):
+        return None
+    # W1904: no lock to release; a turn that ends with ready work and no card moved is blocked,
+    # at most CAP times a turn (counted from the transcript, not from the flag).
+    idle = idle_reason(payload, payload_dir(payload), reader)
+    # W1948: a working set that skips a ready card of the published round while including
+    # one outside it is blocked too; no round, or a repeat stop, refuses nothing.
+    if idle is None and payload.get("stop_hook_active") is not True:
+        idle = round_reason(payload_dir(payload), now)
+    return idle
+
+
 def run(
     payload: dict[str, object],
     now: datetime,
@@ -127,11 +167,7 @@ def run(
     if reason is None:
         # W1904: no lock to release; a turn that ends with ready work and no card moved is blocked,
         # at most CAP times a turn (counted from the transcript, not from the flag).
-        idle = idle_reason(payload, payload_dir(payload), reader)
-        # W1948: a working set that skips a ready card of the published round while including
-        # one outside it is blocked too; no round, or a repeat stop, refuses nothing.
-        if idle is None and payload.get("stop_hook_active") is not True:
-            idle = round_reason(payload_dir(payload), now)
+        idle = idle_block(payload, now, reader)
         if idle is not None:
             verdict: dict[str, str] = {"decision": "block", "reason": idle}
             out.write(json.dumps(verdict) + "\n")

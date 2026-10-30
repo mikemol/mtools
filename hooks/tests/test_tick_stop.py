@@ -191,3 +191,32 @@ def test_a_working_set_that_skips_the_published_round_blocks_the_stop_once(
     again = io.StringIO()
     assert tick_stop.run({"cwd": str(root), "stop_hook_active": True}, NOW, again, err) == 0
     assert not again.getvalue()
+
+
+def test_a_running_reviewer_lets_an_idle_turn_end_and_a_finished_one_does_not(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2182: while a subagent of the session runs, the round block is not printed."""
+    root = tmp_path / "mtools"
+    root.mkdir()
+    cards = [{"symbol": "W1", "status": "ready"}, {"symbol": "W7", "status": "working"}]
+    _queue(root, {"waypoints": cards})
+    round_file = tmp_path / "round.json"
+    head = '{"as_of": "2026-10-06T11:00:00Z"}\n'
+    row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}\n'
+    round_file.write_text(head + row, encoding="utf-8")
+    monkeypatch.setenv("MIKEMOL_ROUND_FILE", str(round_file))
+    session = tmp_path / "s1.jsonl"
+    folder = session.with_suffix("") / "subagents"
+    folder.mkdir(parents=True)
+    agent = folder / "agent-rev.jsonl"
+    agent.write_text('{"type": "assistant"}\n', encoding="utf-8")
+    payload: dict[str, object] = {"cwd": str(root), "transcript_path": str(session)}
+    err = io.StringIO()
+    quiet = io.StringIO()
+    assert tick_stop.run(payload, NOW, quiet, err) == 0
+    assert not quiet.getvalue()
+    agent.write_text('{"toolEndsTurn": true}\n', encoding="utf-8")
+    blocked = io.StringIO()
+    assert tick_stop.run(payload, NOW, blocked, err) == 0
+    assert "take W1 first" in blocked.getvalue()

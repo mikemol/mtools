@@ -707,8 +707,10 @@ src/mikemol/hooks/round_check.py|no-outside-card-still-refused|    if not outsid
 src/mikemol/hooks/round_check.py|blocked-round-card-counted-skipped|        if symbol in available and symbol not in doing|        if symbol not in doing|def=composition
 src/mikemol/hooks/round_check.py|other-repos-rows-read|        if row\.get\("repo"\) == repo and isinstance\(row\.get\("symbol"\), str\):|        if isinstance(row.get("symbol"), str):|def=round_symbols
 src/mikemol/hooks/round_check.py|one-line-document-not-read|    if isinstance\(whole, dict\):|    if False:|def=_rows
-src/mikemol/hooks/tick_stop.py|round-checked-on-a-repeat-stop|        if idle is None and payload\.get\("stop_hook_active"\) is not True:|        if idle is None:|def=run
-src/mikemol/hooks/tick_stop.py|round-never-consulted|            idle = round_reason\(payload_dir\(payload\), now\)|            idle = None|def=run
+src/mikemol/hooks/tick_stop.py|round-checked-on-a-repeat-stop|    if idle is None and payload\.get\("stop_hook_active"\) is not True:|    if idle is None:|def=idle_block
+src/mikemol/hooks/tick_stop.py|round-never-consulted|        idle = round_reason\(payload_dir\(payload\), now\)|        idle = None|def=idle_block
+src/mikemol/hooks/tick_stop.py|running-reviewer-ignored|    if reviewer_running\(payload, now\):|    if False:|def=idle_block
+src/mikemol/hooks/tick_stop.py|reviewer-folder-read-from-the-wrong-place|    folder = transcript\.with_suffix\(""\) / "subagents"|    folder = transcript.parent / "subagents"|def=reviewer_running
 src/mikemol/hooks/commit_kata.py|round-not-asked-at-submit|        or _round_refusal\(root\)|        or None|def=submit_problem
 src/mikemol/hooks/round_wire.py|wall-clock-judgement-never-refuses|    return round_reason\(directory, datetime\.now\(UTC\)\)|    return None|def=now_reason
 src/mikemol/hooks/commitments_emit.py|open-count-always-zero|            value = held\[repo\]\[layer\]|            value = 0|def=rows_of

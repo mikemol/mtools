@@ -1055,7 +1055,8 @@ GRAPH = {
         "src/mikemol/hooks/idle_stop.py",
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/round_wire.py",
-        "src/mikemol/hooks/stamps.py"
+        "src/mikemol/hooks/stamps.py",
+        "src/mikemol/hooks/subagent_guard.py"
       ],
       "reads": [],
       "typing_only": []

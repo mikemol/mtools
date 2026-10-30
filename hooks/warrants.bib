@@ -16432,3 +16432,10 @@
   claim  = {A main checkout's ledger, or none at all, passes and writes nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_worktree.py -k test_a_main_checkout_and_an_unnamed_git_dir_are_not_refused},
 }
+
+@misc{hooks-tick-stop-running-reviewer-lets-an-idle-turn-end-and-a-finished-one-does-not,
+  section = {tick_stop},
+  title  = {W2182: while a subagent of the session runs, the round block is not printed},
+  claim  = {W2182: while a subagent of the session runs, the round block is not printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_running_reviewer_lets_an_idle_turn_end_and_a_finished_one_does_not},
+}
