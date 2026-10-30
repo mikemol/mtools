@@ -48761,18 +48761,18 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When v prints COMMITTED record the sha; then name the reviewer (tick-stop accepts only a reviewer named by the session) if the host still sees false working claims",
-      "evidence": "2026-10-30: 2026-10-30 stack-hooks-v SUBMITTED: tick_stop.reviewer_running and idle_block; 150 related tests pass; mutant lint clean; sites/graph regenerated in the scratch tree. Lives in a live hook (tick-stop); subagent_guard is already in the built venv.",
+      "next_bounded_step": "Optional: accept only a NAMED reviewer if the host still sees false working claims",
+      "evidence": "2026-10-30: 2026-10-30 stack-hooks-v SUBMITTED: tick_stop.reviewer_running and idle_block; 150 related tests pass; mutant lint clean; sites/graph regenerated in the scratch tree. Lives in a live hook (tick-stop); subagent_guard is already in the built venv. | 2026-10-30T22:51:56Z: LANDED fd6c1e43 (tick-stop lets an idle turn end while any subagent of the session runs).",
       "issued_at": "2026-10-30T19:07:02Z",
       "minted_during": "interrupt",
       "caused_by": "github:W84",
-      "last_worked": "2026-10-30T22:17:00Z",
+      "last_worked": "2026-10-30T22:51:56Z",
       "ticks_blocked": 0
     },
     {
       "symbol": "W2183",
       "title": "Answer luthen-observability:W1850: --evidence-append and --next prefix the writer's own full UTC time, not a typed date",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "luthen-observability:W1850"
       ],
@@ -48781,13 +48781,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "When o prints COMMITTED record the sha; then reply to luthen-observability that W1850 landed; --next does not prefix in this writer",
+      "evidence": "2026-10-30T22:52:14Z: stack-pathsforward-o SUBMITTED: evidence entries stamped with the full UTC clock time; warrantfind date regex fixed so the stamped form still counts; 1386 tests pass.",
       "issued_at": "2026-10-30T20:57:13Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1850",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-30T22:52:14Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2184",

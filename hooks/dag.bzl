@@ -263,6 +263,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/gatefirst.py": {
+      "imports": [
+        "src/mikemol/hooks/payload.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/gatehistory.py": {
       "imports": [],
       "reads": [],
@@ -1856,6 +1863,13 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/gateenv.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_gatefirst.py": {
+      "imports": [
+        "src/mikemol/hooks/gatefirst.py"
       ],
       "reads": [],
       "typing_only": []

@@ -16439,3 +16439,17 @@
   claim  = {W2182: while a subagent of the session runs, the round block is not printed.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_running_reviewer_lets_an_idle_turn_end_and_a_finished_one_does_not},
 }
+
+@misc{hooks-gatefirst-first-failed-summary-is-named-with-its-label-status-and-stop-time,
+  section = {gatefirst},
+  title  = {Passed summaries are skipped; the first FAILED one is the answer, a later one is not},
+  claim  = {Passed summaries are skipped; the first FAILED one is the answer, a later one is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatefirst.py -k test_the_first_failed_summary_is_named_with_its_label_status_and_stop_time},
+}
+
+@misc{hooks-gatefirst-timeout-is-red-and-an-all-green-or-unreadable-file-names-nothing,
+  section = {gatefirst},
+  title  = {TIMEOUT counts; torn lines and events with no summary are skipped; green gives None},
+  claim  = {TIMEOUT counts; torn lines and events with no summary are skipped; green gives None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatefirst.py -k test_a_timeout_is_red_and_an_all_green_or_unreadable_file_names_nothing},
+}

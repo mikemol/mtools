@@ -823,3 +823,7 @@ src/mikemol/hooks/worktree_submit.py|log-overwritten-not-appended|    with path\
 src/mikemol/hooks/commit_kata.py|worktree-ledger-never-judged|    if worktree_refused\(stacked\[0\], ledger_of\(stacked\[0\]\)\):|    if False:|def=unreadable_stack
 src/mikemol/hooks/commit_kata.py|worktree-refusal-leaves-no-mark|        _worktree_append\(\*made\)|        pass|def=worktree_refused
 src/mikemol/hooks/commit_kata.py|main-checkout-refused-too|    if text is None:|    if False:|def=worktree_refused
+# The first red test of a gate is read from its build events, in the order bazel wrote them (W2107).
+src/mikemol/hooks/gatefirst.py|timeout-not-red|        if status in RED:|        if status == "FAILED":|def=first_failure
+src/mikemol/hooks/gatefirst.py|last-red-test-named-not-first|    for line in bep_text\.splitlines\(\):|    for line in reversed(bep_text.splitlines()):|def=first_failure
+src/mikemol/hooks/gatefirst.py|stop-time-dropped|            return label, status, text_of\(summary\.get\("lastStopTime"\)\)|            return label, status, ""|def=first_failure
