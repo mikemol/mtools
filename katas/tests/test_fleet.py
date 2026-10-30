@@ -152,14 +152,21 @@ def test_a_bare_index_lock_that_nothing_accounts_for_is_not_a_commit_in_flight(
     assert not fleet.in_flight(host, "alpha", proc)
 
 
-def test_in_flight_judges_the_lock_against_the_process_table_it_is_given(tmp_path: Path) -> None:
-    """W2173: a commit row whose pid exists only in the planted table is in flight there only."""
-    host = _fleet(tmp_path)
-    repo = _repo(host.root, "alpha")
+def _hold_in_planted(repo: Path, tmp_path: Path, row_start: str) -> Path:
+    """Hold the repo's index with a commit row, and plant the process table that row is read in.
+
+    The planted table has one process, `_FAKE_PID`, started at `_FAKE_START`; the row names that pid
+    and says it started at `row_start`, so equal strings make it the commit and others a recycled
+    pid. Nothing here reads the host's `/proc`.
+
+    Returns:
+        the planted process-table directory.
+
+    """
     (repo / ".git" / "index.lock").touch()
-    (repo / ".git" / "mtools").mkdir()
+    (repo / ".git" / "mtools").mkdir(exist_ok=True)
     row: dict[str, dict[str, object]] = {
-        "1": {"state": "inflight", "pid": _FAKE_PID, "start": _FAKE_START}
+        "1": {"state": "inflight", "pid": _FAKE_PID, "start": row_start}
     }
     (repo / ".git" / "mtools" / "commit.counts").write_text(json.dumps(row), encoding="utf-8")
     proc = tmp_path / "proc"
@@ -167,6 +174,14 @@ def test_in_flight_judges_the_lock_against_the_process_table_it_is_given(tmp_pat
     fields = " ".join(["S", *["0"] * (_START_INDEX - 1), _FAKE_START])
     stat = f"{_FAKE_PID} (mikemol-commit) {fields}"
     (proc / str(_FAKE_PID) / "stat").write_text(stat, encoding="utf-8")
+    return proc
+
+
+def test_in_flight_judges_the_lock_against_the_process_table_it_is_given(tmp_path: Path) -> None:
+    """W2173: a commit row whose pid exists only in the planted table is in flight there only."""
+    host = _fleet(tmp_path)
+    repo = _repo(host.root, "alpha")
+    proc = _hold_in_planted(repo, tmp_path, _FAKE_START)
     assert fleet.in_flight(host, "alpha", proc)
     empty = tmp_path / "empty"
     empty.mkdir()
@@ -184,14 +199,15 @@ def test_a_live_commit_in_the_repos_own_map_accounts_for_the_lock(tmp_path: Path
 def test_a_row_whose_start_time_is_not_the_process_is_a_recycled_pid_and_accounts_for_nothing(
     tmp_path: Path,
 ) -> None:
-    """A pid that exists but started at another time is not the commit: the lock is stale."""
+    """A pid that exists but started at another time is not the commit: the lock is stale.
+
+    ⚑ THE TABLE IS PLANTED (W2173): the host's `/proc` is not read, so a git running there cannot
+    make the bare-lock fallback answer True.
+    """
     host = _fleet(tmp_path)
     repo = _repo(host.root, "alpha")
-    _hold_index(repo)
-    counts = repo / ".git" / "mtools" / "commit.counts"
-    said = counts.read_text(encoding="utf-8").replace('"start": "', '"start": "9')
-    counts.write_text(said, encoding="utf-8")
-    assert not fleet.in_flight(host, "alpha")
+    proc = _hold_in_planted(repo, tmp_path, "9" + _FAKE_START)
+    assert not fleet.in_flight(host, "alpha", proc)
 
 
 def test_no_lock_is_not_in_flight_whatever_the_map_says(tmp_path: Path) -> None:
