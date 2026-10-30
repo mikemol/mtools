@@ -7668,3 +7668,11 @@
   claim  = {W2169: one record per hook with the whole output, stamped when THAT hook finished.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_records_keep_each_hooks_exit_output_and_its_own_read_time},
 }
+
+@misc{pathsforward-tickhooks-tick-open-json-prints-one-document-with-each-hooks-utc-record,
+  section = {tickhooks},
+  title  = {W2169: one JSON object; hooks carry exit, output and a UTC stamp; the text stays in lines},
+  claim  = {W2169: one JSON object; hooks carry exit, output and a UTC stamp; the text stays in
+            lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_tick_open_json_prints_one_document_with_each_hooks_utc_record},
+}

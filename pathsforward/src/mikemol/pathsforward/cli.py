@@ -114,11 +114,17 @@ from mikemol.pathsforward.pruned import said as pruned_said
 from mikemol.pathsforward.realizable import GATES
 from mikemol.pathsforward.reconcilecmd import run as reconcile_run
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
+from mikemol.pathsforward.tickjson import capture as capture_open
+from mikemol.pathsforward.tickjson import document as open_document
+from mikemol.pathsforward.tickjson import utc_stamp
 from mikemol.pathsforward.transitions import lines as transition_lines
 from mikemol.pathsforward.transitions import snapshot as status_snapshot
 from mikemol.pathsforward.unlinked import report as unlinked_report
 
 HANDOFF_LINE = handoff_of
+CAPTURE_OPEN = capture_open
+OPEN_DOCUMENT = open_document
+UTC_STAMP = utc_stamp
 RECONCILE = reconcile_run
 PRUNE_EDGES = edges_of
 PRUNE_REMOVED = removed
@@ -713,7 +719,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "reconcile": frozenset({"write", "root"}),
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
-    "tick_open": frozenset({"root", "exclude", "verbose"}),
+    "tick_open": frozenset({"root", "exclude", "verbose", "json"}),
     "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote", "rank_from"}),
     "tick_roll": frozenset({"kind", "evidence"}),
     "close_gate": frozenset({"blocked_by", "reason", "rank_from"}),
@@ -1009,6 +1015,13 @@ def _add_realizable_fields(ap: argparse.ArgumentParser) -> None:
         default=None,
         help="W1860: --warrant: verify the cited record and print what would be attached, "
         "saving nothing",
+    )
+    ap.add_argument(
+        "--json",
+        action="store_true",
+        default=None,
+        help="W2169: --tick-open: print one JSON document (holder, exit, hooks with their UTC read "
+        "times, and the open's lines) instead of the text",
     )
     ap.add_argument(
         "--facts",
@@ -1839,6 +1852,43 @@ def _unlock(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _hook_lines(ctx: Ctx, root: Path) -> list[str]:
+    """Run the stored tick hooks and describe them; with a `hook_records` sink, keep the records.
+
+    The sink is the JSON open's (W2169): when it is there each hook is read with a UTC stamp taken
+    as that hook finishes and its record is appended; the lines are the same either way.
+
+    Returns:
+        the `HOOK <line> exit N` lines `--tick-open` prints.
+
+    """
+    stored = tickhooks.stored(store.load(ctx.path).doc)
+    sink = ctx.opts.get("hook_records")
+    if not isinstance(sink, list):
+        return tickhooks.run_all(stored, root)
+    found = tickhooks.records(stored, root, UTC_STAMP)
+    cast("list[dict[str, object]]", sink).extend(found)
+    return tickhooks.describe(found)
+
+
+def _tick_open_json(ctx: Ctx) -> int:
+    """Open the tick as `_tick_open` does, and print ONE JSON document instead of the text (W2169).
+
+    ⚑ THE OPEN RUNS UNCHANGED UNDER A CAPTURE: its text is kept whole in `lines`, and the hooks'
+    own records (command, exit, UTC read time, output) arrive through `hook_records`, so a reader
+    gets each hook's time without parsing the text.
+
+    Returns:
+        the open's own status.
+
+    """
+    sink: list[dict[str, object]] = []
+    inner = replace(ctx, opts={**ctx.opts, "json": False, "hook_records": sink})
+    code, lines = CAPTURE_OPEN(lambda: _tick_open(inner))
+    _say(OPEN_DOCUMENT(ctx.get("tick_open") or "", code, lines, sink))
+    return code
+
+
 def _tick_open(ctx: Ctx) -> int:
     """Open a tick as HOLDER in one verb: take the lock, bump blocked, inbound, check (W1078).
 
@@ -1852,6 +1902,8 @@ def _tick_open(ctx: Ctx) -> int:
         EXIT_OK, EXIT_LOCKED when another holder has the lock, or the first failing step's status.
 
     """
+    if ctx.opts.get("json") is True:
+        return _tick_open_json(ctx)
     holder = ctx.get("tick_open") or ""
     held = replace(ctx, opts={**ctx.opts, "lock": holder, "count_tick": True})
     code = _lock(held)
@@ -1882,7 +1934,7 @@ def _tick_open(ctx: Ctx) -> int:
         code = max(code, _reconcile(replace(held, opts={**held.opts, "write": False})))
     except ops.RefusedError as refused:
         _say(f"reconcile: not run ({refused})")
-    for said in tickhooks.run_all(tickhooks.stored(store.load(ctx.path).doc), root):
+    for said in _hook_lines(ctx, root):
         _say(said)
     for said in standing.lines(store.load(ctx.path).doc):
         _say(said)

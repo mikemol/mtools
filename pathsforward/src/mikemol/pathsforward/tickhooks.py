@@ -159,8 +159,18 @@ def run_all(lines: Sequence[str], cwd: Path, runner: Runner = run_process) -> li
         indented two spaces (with a count of the rest).
 
     """
+    return describe(records(lines, cwd, lambda: "", runner))
+
+
+def describe(found: Sequence[dict[str, object]]) -> list[str]:
+    """Format hook records as the lines `--tick-open` prints.
+
+    Returns:
+        the same lines `run_all` gives: one `HOOK` line per record and up to `SHOWN` output lines.
+
+    """
     said: list[str] = []
-    for record in records(lines, cwd, lambda: "", runner):
+    for record in found:
         said.append(f"HOOK {record['command']} exit {record['exit']}")
         body = str(record["output"]).splitlines()
         said.extend(f"  {row}" for row in body[:SHOWN])

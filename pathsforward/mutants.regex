@@ -361,3 +361,8 @@ src/mikemol/pathsforward/retros.py|unknown-retro-key-admitted|    if unknown:|  
 # A hook's record carries its exit and the time it was read, taken per hook (W2169).
 src/mikemol/pathsforward/tickhooks.py|record-read-time-dropped|"read_at": clock\(\)|"read_at": ""|def=records
 src/mikemol/pathsforward/tickhooks.py|record-exit-dropped|"exit": code,|"exit": 0,|def=records
+# `--tick-open --json` prints one document with the hooks' records and the open's text (W2169).
+src/mikemol/pathsforward/tickjson.py|document-hooks-left-out|    body = \{"holder": holder, "exit": code, "hooks": hooks, "lines": lines\}|    body = {"holder": holder, "exit": code, "hooks": [], "lines": lines}|def=document
+src/mikemol/pathsforward/tickjson.py|document-lines-left-out|    body = \{"holder": holder, "exit": code, "hooks": hooks, "lines": lines\}|    body = {"holder": holder, "exit": code, "hooks": hooks, "lines": []}|def=document
+src/mikemol/pathsforward/cli.py|json-flag-ignored|    if ctx\.opts\.get\("json"\) is True:|    if False:|def=_tick_open
+src/mikemol/pathsforward/cli.py|hook-records-not-kept|    cast\("list\[dict\[str, object\]\]", sink\)\.extend\(found\)|    pass|def=_hook_lines

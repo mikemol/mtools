@@ -137,3 +137,31 @@ def test_tick_open_runs_the_stored_hooks_and_a_failing_one_changes_nothing(
     assert "HOOK echo after exit 0" in said
     assert said[-1].startswith("tick open as tester")
     assert _doc(state)["lock"]
+
+
+def test_tick_open_json_prints_one_document_with_each_hooks_utc_record(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2169: one JSON object; hooks carry exit, output and a UTC stamp; the text stays in lines."""
+    state = _repo(tmp_path)
+    source = tmp_path / "hooks.txt"
+    source.write_text("echo hello\nfalse\n", encoding="utf-8")
+    assert cli.main(["--state", str(state), "--tick-hooks-set", str(source)]) == 0
+    capsys.readouterr()
+    assert cli.main(["--state", str(state), "--tick-open", "tester", "--json"]) == 0
+    document = cast("Doc", json.loads(capsys.readouterr().out))
+    assert document["holder"] == "tester"
+    assert document["exit"] == 0
+    hooks = cast("list[Doc]", document["hooks"])
+    assert [(h["command"], h["exit"]) for h in hooks] == [("echo hello", 0), ("false", 1)]
+    assert hooks[0]["output"] == "hello\n"
+    stamp = "2026-10-30T00:00:00Z"
+    for hook in hooks:
+        read_at = str(hook["read_at"])
+        assert len(read_at) == len(stamp)
+        assert read_at.endswith("Z")
+        assert read_at[4] == "-"
+        assert read_at[10] == "T"
+    lines = cast("list[str]", document["lines"])
+    assert "HOOK echo hello exit 0" in lines
+    assert lines[-1].startswith("tick open as tester")
