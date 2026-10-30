@@ -129,7 +129,8 @@ GRAPH = {
         "src/mikemol/hooks/trainjoin.py",
         "src/mikemol/hooks/trainlead.py",
         "src/mikemol/hooks/trainverdict.py",
-        "src/mikemol/hooks/verdictlog.py"
+        "src/mikemol/hooks/verdictlog.py",
+        "src/mikemol/hooks/worktree_submit.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1714,6 +1715,14 @@ GRAPH = {
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/commit_withdraw.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_commit_worktree.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/worktree_submit.py"
       ],
       "reads": [],
       "typing_only": []

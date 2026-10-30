@@ -77,6 +77,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogsink.py",
         "//hooks:src/mikemol/hooks/vlogspool.py",
         "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_train_tips.py",
     ],
 )
@@ -155,6 +156,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogsink.py",
         "//hooks:src/mikemol/hooks/vlogspool.py",
         "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_train_tips.py",
         "//hooks:mutants.regex",
     ],

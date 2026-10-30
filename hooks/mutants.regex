@@ -817,3 +817,7 @@ src/mikemol/hooks/worktree_submit.py|any-mode-lifts-the-refusal|    if main is N
 src/mikemol/hooks/worktree_submit.py|main-checkout-recorded|    if main is None:|    if False:|def=record
 src/mikemol/hooks/worktree_submit.py|log-directory-not-made|    path\.parent\.mkdir\(parents=True, exist_ok=True\)|    pass|def=append
 src/mikemol/hooks/worktree_submit.py|log-overwritten-not-appended|    with path\.open\("a", encoding="utf-8"\) as log:|    with path.open("w", encoding="utf-8") as log:|def=append
+# The stack path asks the worktree judge before anything is queued, and marks what it refuses (W2103).
+src/mikemol/hooks/commit_kata.py|worktree-ledger-never-judged|    if worktree_refused\(stacked\[0\], ledger_of\(stacked\[0\]\)\):|    if False:|def=unreadable_stack
+src/mikemol/hooks/commit_kata.py|worktree-refusal-leaves-no-mark|        _worktree_append\(\*made\)|        pass|def=worktree_refused
+src/mikemol/hooks/commit_kata.py|main-checkout-refused-too|    if text is None:|    if False:|def=worktree_refused

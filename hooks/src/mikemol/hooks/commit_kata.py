@@ -97,6 +97,10 @@ from mikemol.hooks.trainjoin import Follower as _Follower
 from mikemol.hooks.trainlead import lead as _train_lead
 from mikemol.hooks.trainverdict import take as _take_verdict
 from mikemol.hooks.verdictlog import ship_text as _ship_text
+from mikemol.hooks.worktree_submit import REFUSED as _WORKTREE_REFUSED
+from mikemol.hooks.worktree_submit import append as _worktree_append
+from mikemol.hooks.worktree_submit import record as _worktree_record
+from mikemol.hooks.worktree_submit import refusal as _worktree_refusal
 
 stack_build_refusal = _build_refusal
 take_verdict = _take_verdict
@@ -1117,6 +1121,8 @@ def unreadable_stack(stacked: tuple[Path, Path] | None) -> int | None:
     """
     if stacked is None:
         return None
+    if worktree_refused(stacked[0], ledger_of(stacked[0])):
+        return EXIT_USAGE
     items = stack_items(stacked[1])
     if not isinstance(items, str):
         return None
@@ -1205,6 +1211,31 @@ class Held:
     lease: int
     claim: str
     shipping: bool
+
+
+def worktree_refused(root: Path, ledger: Path | None) -> bool:
+    """Refuse a stack submitted from a linked worktree, leaving the mark in the main repository.
+
+    ⚑ THE LEDGER IS `<git dir>/mtools`, SO ITS PARENT IS THE GIT DIR THE QUEUE WOULD COME FROM:
+    for a linked worktree that is `<main>/.git/worktrees/<name>`, a second queue and lease beside
+    main's (W2103, github-8f's toy run).
+
+    Returns:
+        True after writing the refusal on stderr and the line in `<main>/.git/mtools`; False for
+        a main checkout or a repository git could not name.
+
+    """
+    if ledger is None:
+        return False
+    text = _worktree_refusal(root.name, ledger.parent)
+    if text is None:
+        return False
+    stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    made = _worktree_record(stamp, root.name, ledger.parent, _WORKTREE_REFUSED)
+    if made is not None:
+        _worktree_append(*made)
+    sys.stderr.write(f"mikemol-commit: {text}\n")
+    return True
 
 
 def ledger_of(root: Path) -> Path | None:

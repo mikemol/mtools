@@ -78,6 +78,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogsink.py",
         "//hooks:src/mikemol/hooks/vlogspool.py",
         "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_siblingcensus.py",
     ],
 )
@@ -157,6 +158,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogsink.py",
         "//hooks:src/mikemol/hooks/vlogspool.py",
         "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_siblingcensus.py",
     ],
 )

@@ -16411,3 +16411,24 @@
   claim  = {The mark goes to `<main>/.git/mtools`, which `git worktree remove` does not delete.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_submit.py -k test_every_worktree_submit_leaves_a_line_in_the_main_repositorys_log},
 }
+
+@misc{hooks-commit-worktree-worktree-ledger-is-refused-on-stderr-and-marked-in-the-main-repository,
+  section = {worktree_submit},
+  title  = {The refusal names W2103 and the main log gets one `refused` line},
+  claim  = {The refusal names W2103 and the main log gets one `refused` line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_worktree.py -k test_a_worktree_ledger_is_refused_on_stderr_and_marked_in_the_main_repository},
+}
+
+@misc{hooks-commit-worktree-stack-from-a-worktree-is-refused-before-its-file-is-read,
+  section = {worktree_submit},
+  title  = {The stack path returns the usage exit for a worktree even when the stack file is absent},
+  claim  = {The stack path returns the usage exit for a worktree even when the stack file is absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_worktree.py -k test_a_stack_from_a_worktree_is_refused_before_its_file_is_read},
+}
+
+@misc{hooks-commit-worktree-main-checkout-and-an-unnamed-git-dir-are-not-refused,
+  section = {worktree_submit},
+  title  = {A main checkout's ledger, or none at all, passes and writes nothing},
+  claim  = {A main checkout's ledger, or none at all, passes and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_worktree.py -k test_a_main_checkout_and_an_unnamed_git_dir_are_not_refused},
+}
