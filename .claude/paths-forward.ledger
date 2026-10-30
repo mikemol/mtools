@@ -4693,3 +4693,13 @@
 2026-10-30T12:49:50Z  interrupt W2176 minted    -         "transcriptstruct --since-last matches its own invoking record; add --nth N or skip the invoker"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
 2026-10-30T12:50:17Z  interrupt W2177 minted    -         "--tick-close refuses a close whose HH:MM[:SS] literals match no tool-result stamp since the previous tick-open"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
 2026-10-30T12:52:00Z  status W2093 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T13:22:06Z  status W2175 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T13:22:43Z  tick  W2175 advanced  unblock   "13:15Z: W2169 inflight, W2173 and W2176 queued; HEAD d2d5b86. W2175: measured the test alone (2.08 s for 7 cases) and submitted hooks-p, a CPU bound for test_worktreereap_save in hooks/BUILD.bazel [blocked by W2169]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T13:32:02Z  status W2094 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T13:48:19Z  status W2095 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T13:51:14Z  tick  W2094 advanced  unblock   "13:50Z: W2169 inflight at 737/1535 (pathsforward mutants shards, slow), W2173, W2176, W2175 queued as one joined tip behind it; HEAD d2d5b86. No new build this tick [blocked by W2169]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T13:52:30Z  status W2096 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T14:05:16Z  status W2097 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T14:21:50Z  status W2173 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T14:22:11Z  status W2176 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T14:55:09Z  status W2170 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

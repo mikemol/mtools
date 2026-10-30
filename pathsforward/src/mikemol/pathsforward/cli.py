@@ -1414,7 +1414,9 @@ def _atomize_line(ctx: Ctx, state: State) -> str | None:
     # did not is counted by the deny-list, exactly as before.
     sets = outcomes.declared(state)
     counted = frozenset(sets[0]) if sets else None
-    return atomize(state.waypoints, read(path) if path.is_file() else [], counted)
+    return atomize(
+        state.waypoints, read(path) if path.is_file() else [], counted, root=ctx.path.parent.parent
+    )
 
 
 _UNLOCKED = "(unlocked)"

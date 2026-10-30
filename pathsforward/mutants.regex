@@ -366,3 +366,8 @@ src/mikemol/pathsforward/tickjson.py|document-hooks-left-out|    body = \{"holde
 src/mikemol/pathsforward/tickjson.py|document-lines-left-out|    body = \{"holder": holder, "exit": code, "hooks": hooks, "lines": lines\}|    body = {"holder": holder, "exit": code, "hooks": hooks, "lines": []}|def=document
 src/mikemol/pathsforward/cli.py|json-flag-ignored|    if ctx\.opts\.get\("json"\) is True:|    if False:|def=_tick_open
 src/mikemol/pathsforward/cli.py|hook-records-not-kept|    cast\("list\[dict\[str, object\]\]", sink\)\.extend\(found\)|    pass|def=_hook_lines
+# A card's landing resets its advance count, per card, at or after the landing's own stamp (W2170).
+src/mikemol/pathsforward/atomize.py|landed-advance-still-counted|        if e\.entry\.symbol != symbol or e\.stamp <= floor:|        if e.entry.symbol != symbol:|def=advances
+src/mikemol/pathsforward/atomize.py|advance-at-the-landing-second-counts|        if e\.entry\.symbol != symbol or e\.stamp <= floor:|        if e.entry.symbol != symbol or e.stamp < floor:|def=advances
+src/mikemol/pathsforward/atomize.py|landings-never-read-from-the-root|        landed_at = landings_of\(root\)|        pass|def=atomize
+src/mikemol/pathsforward/landed.py|older-landing-replaces-the-newest|            found\.setdefault\(card, parts\[1\]\.strip\(\)\)|            found[card] = parts[1].strip()|def=stamps_of

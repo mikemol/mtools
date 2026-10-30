@@ -44,6 +44,16 @@ def test_the_waypoint_trailers_of_a_log_name_the_cards_it_landed() -> None:
     assert landed.trailer_cards("W3: subject that says Waypoint: W3 inline\n") == set()
 
 
+def test_a_cards_landing_stamp_is_its_newest_commit_and_a_torn_record_is_skipped() -> None:
+    """W2170: records are newest first, so the first commit naming a card is its latest landing."""
+    new = "bbb\x1f2026-10-30T12:00:00Z\x1fsubject two\n\nWaypoint: W1\nWaypoint: W2\n\x1e"
+    old = "aaa\x1f2026-10-29T08:00:00Z\x1fsubject one\n\nWaypoint: W1\n\x1e"
+    torn = "ccc\x1f2026-10-28T08:00:00Z\x1e"
+    found = landed.stamps_of(new + old + torn)
+    assert found == {"W1": "2026-10-30T12:00:00Z", "W2": "2026-10-30T12:00:00Z"}
+    assert landed.stamps_of("") == {}
+
+
 def test_no_answer_is_none_and_never_an_empty_set(tmp_path: Path) -> None:
     """A tick that could not look must not report that nothing landed."""
     assert landed.landed_since(tmp_path, "", _log) is None

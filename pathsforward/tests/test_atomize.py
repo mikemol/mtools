@@ -101,3 +101,30 @@ def test_another_symbols_split_does_not_reset_this_one() -> None:
     """The reset is per symbol: W8's split leaves W7's advances standing."""
     entries: list[Parsed | Unparsed] = [_tick("W7"), _tick("W8", outcome="atomized"), _tick("W7")]
     assert advances("W7", entries) == _TWO
+
+
+def _tick_at(stamp: str, symbol: str = "W7") -> Parsed:
+    return Parsed(stamp, Entry("tick", symbol, "advanced", "unblock", "note"))
+
+
+def test_a_landing_resets_the_count_and_only_that_cards_landing_does() -> None:
+    """W2170: three advances, a landing between the second and third: one counts; W8's does not."""
+    waypoints: list[dict[str, object]] = [{"symbol": "W7", "status": "ready"}]
+    entries: list[Parsed | Unparsed] = [
+        _tick_at("2026-10-30T01:00:00Z"),
+        _tick_at("2026-10-30T02:00:00Z"),
+        _tick_at("2026-10-30T04:00:00Z"),
+    ]
+    landed = {"W7": "2026-10-30T03:00:00Z", "W8": "2026-10-30T09:00:00Z"}
+    assert advances("W7", entries, None, landed) == 1
+    assert advances("W7", entries, None, {"W8": "2026-10-30T09:00:00Z"}) == len(entries)
+    assert advances("W7", entries) == len(entries)
+    expected = "ATOMIZE W7 (advanced 1 times without landing)"
+    assert atomize(waypoints, entries, landed_at=landed) == expected
+    assert atomize(waypoints, [_tick_at("2026-10-30T02:00:00Z")], landed_at=landed) is None
+
+
+def test_an_advance_stamped_when_the_card_landed_is_spent() -> None:
+    """Equal-or-before: an advance at the landing's own second is not counted."""
+    entries: list[Parsed | Unparsed] = [_tick_at("2026-10-30T03:00:00Z")]
+    assert advances("W7", entries, None, {"W7": "2026-10-30T03:00:00Z"}) == 0

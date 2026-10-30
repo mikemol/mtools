@@ -7676,3 +7676,33 @@
             lines.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_tick_open_json_prints_one_document_with_each_hooks_utc_record},
 }
+
+@misc{pathsforward-atomize-landing-resets-the-count-and-only-that-cards-landing-does,
+  section = {atomize},
+  title  = {W2170: three advances, a landing between the second and third: one counts; W8's does not},
+  claim  = {W2170: three advances, a landing between the second and third: one counts; W8's does
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_a_landing_resets_the_count_and_only_that_cards_landing_does},
+}
+
+@misc{pathsforward-atomize-advance-stamped-when-the-card-landed-is-spent,
+  section = {atomize},
+  title  = {Equal-or-before: an advance at the landing's own second is not counted},
+  claim  = {Equal-or-before: an advance at the landing's own second is not counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize.py -k test_an_advance_stamped_when_the_card_landed_is_spent},
+}
+
+@misc{pathsforward-landed-cards-landing-stamp-is-its-newest-commit-and-a-torn-record-is-skipped,
+  section = {landed},
+  title  = {W2170: records are newest first, so the first commit naming a card is its latest landing},
+  claim  = {W2170: records are newest first, so the first commit naming a card is its latest
+            landing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_cards_landing_stamp_is_its_newest_commit_and_a_torn_record_is_skipped},
+}
+
+@misc{pathsforward-atomize-root-root-reads-the-landings-from-there-and-an-unreadable-repository-skips-nothing,
+  section = {atomize},
+  title  = {The root reaches the reader; a landing after the advance spends it; None skips nothing},
+  claim  = {The root reaches the reader; a landing after the advance spends it; None skips nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_root.py -k test_a_root_reads_the_landings_from_there_and_an_unreadable_repository_skips_nothing},
+}

@@ -22,6 +22,7 @@ from typing import cast
 
 _TRAILER = re.compile(r"^Waypoint: (W[0-9]+)[ \t]*$", re.MULTILINE)
 _GIT_TIMEOUT_S = 60
+_RECORD_FIELDS = 3
 
 Reader = Callable[[Path, str], str | None]
 
@@ -93,6 +94,39 @@ def read_commits(root: Path) -> str | None:
     date = "--date=format-local:%Y-%m-%dT%H:%M:%SZ"
     env = {"TZ": "UTC", "PATH": "/usr/bin:/bin"}
     return _run([git, "-C", str(root), "log", "-n500", date, fmt], env)
+
+
+def stamps_of(raw: str) -> dict[str, str]:
+    """Read `read_commits` text into each card's newest landing stamp (W2170).
+
+    ⚑ A RECORD IS `sha US stamp US message RS`, NEWEST FIRST: the first record that carries a card's
+    `Waypoint:` trailer is its latest landing, so a later record for the same card never replaces
+    it. The stamp is the commit's own date, which for a stack is its gate's start; an advance
+    stamped after it is work done once the card's stack had gone to its gate.
+
+    Returns:
+        card symbol to the UTC stamp of the newest commit whose trailers name it.
+
+    """
+    found: dict[str, str] = {}
+    for record in raw.split("\x1e"):
+        parts = record.strip("\n").split("\x1f", 2)
+        if len(parts) != _RECORD_FIELDS:
+            continue
+        for card in sorted(trailer_cards(parts[2])):
+            found.setdefault(card, parts[1].strip())
+    return found
+
+
+def last_landings(root: Path) -> dict[str, str] | None:
+    """Read each card's newest landing stamp from the repository's last 500 commits.
+
+    Returns:
+        the map, or None when git is absent or refused (no answer is not an empty history).
+
+    """
+    raw = read_commits(root)
+    return None if raw is None else stamps_of(raw)
 
 
 def landing_times(root: Path, count: int) -> list[float] | None:

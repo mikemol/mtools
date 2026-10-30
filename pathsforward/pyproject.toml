@@ -246,6 +246,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_blocker_index.py" = ["assert"]
 "tests/test_update_many.py" = ["assert"]
 "tests/test_atomize_declared.py" = ["assert"]
+"tests/test_atomize_root.py" = ["assert"]
 "tests/test_inbound.py" = ["assert"]
 "tests/test_warrantfind.py" = ["assert"]
 "tests/test_manifest.py" = ["assert"]
