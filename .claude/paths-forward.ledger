@@ -4670,3 +4670,6 @@
 2026-10-30T07:26:04Z  status W2164 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T07:29:44Z  tick  W2114 advanced  unblock   "07:28Z: katas-a (W2164 first slice) inflight alone, .suite.log absent so in prebuild; hooks-m landed 805e4bbe. Told github-42 the next slice shares katas registries with katas-a [blocked by W2164]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T07:31:17Z  status W2087 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T07:44:01Z  status W2088 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T07:46:38Z  interrupt W2173 minted    -         "katas test_fleet bare-lock test reads the host /proc: thread a proc dir through fleet.in_flight"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
+2026-10-30T08:08:57Z  tick  W2088 advanced  unblock   "Built --retros (retros.render_full, cli._retros) in a scratch tree, 1374 pathsforward tests pass, submitted as pathsforward-i (outcome unread); katas-a landed 44a6fc99 (W2164 first slice, refused once then green on resubmit; W2173 stays open) [blocked by W2173]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

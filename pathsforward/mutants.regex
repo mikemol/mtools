@@ -350,3 +350,8 @@ src/mikemol/pathsforward/cli.py|show-leaves-a-beat|    if mode not in \{"ready_c
 src/mikemol/pathsforward/warrantfind.py|citation-window-unbounded|        end = marks\[at \+ 1\]\.start\(\) if at \+ 1 < len\(marks\) else len\(evidence\)|        end = len(evidence)|def=cites
 src/mikemol/pathsforward/warrantfind.py|claimed-uuid-listed-again|if m\.span\(\) not in claimed\]|if True]|def=cites
 src/mikemol/pathsforward/warrantfind.py|cited-card-called-unresolved|    return bool\(_DATE\.search\(evidence\)\) and not cites\(evidence\)|    return bool(_DATE.search(evidence))|def=unresolved
+# --retros prints the records in full and names an id no retro carries (W2088).
+src/mikemol/pathsforward/retros.py|named-ids-ignored|    chosen = \[row for row in rows if _named\(row, wanted\)\] if wanted else rows|    chosen = rows|def=render_full
+src/mikemol/pathsforward/retros.py|unknown-id-not-named|    unknown = \[one for one in wanted if not any\(_named\(row, \[one\]\) for row in rows\)\]|    unknown = []|def=render_full
+src/mikemol/pathsforward/retros.py|findings-left-out|                lines\.extend\(_finding_block\(number, cast\("Json", finding\)\)\)|                pass|def=_retro_block
+src/mikemol/pathsforward/cli.py|unknown-retro-exits-ok|    return EXIT_REFUSED if unknown else EXIT_OK|    return EXIT_OK|def=_retros

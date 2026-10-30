@@ -7640,3 +7640,17 @@
   claim  = {The measured majority: dates are not checkable. A text with no date claims nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrantfind.py -k test_a_card_that_cites_only_dates_is_unresolved_and_has_no_citation},
 }
+
+@misc{pathsforward-retros-render-full-prints-every-field-and-finding-and-names-an-unknown-id,
+  section = {retros},
+  title  = {W2088: a record with findings prints each finding; an unknown Rn is named, not guessed},
+  claim  = {W2088: a record with findings prints each finding; an unknown Rn is named, not guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_render_full_prints_every_field_and_finding_and_names_an_unknown_id},
+}
+
+@misc{pathsforward-retros-retros-command-prints-all-or-the-named-and-refuses-an-unknown-id,
+  section = {retros},
+  title  = {W2088: --retros prints a stored record in full; an unknown Rn is refused and named},
+  claim  = {W2088: --retros prints a stored record in full; an unknown Rn is refused and named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_retros_command_prints_all_or_the_named_and_refuses_an_unknown_id},
+}

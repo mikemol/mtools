@@ -24,6 +24,21 @@ _CARD: Json = {
 }
 
 
+def test_render_full_prints_every_field_and_finding_and_names_an_unknown_id() -> None:
+    """W2088: a record with findings prints each finding; an unknown Rn is named, not guessed."""
+    doc: Json = {"retros": []}
+    retro: Json = {"title": "t", "root": "the root", "findings": [_CARD, {"certify_change": "ok"}]}
+    ident = retros.add_retro(doc, "mtools", retro)
+    lines, unknown = retros.render_full(doc, [])
+    assert unknown == []
+    assert lines[0] == ident
+    assert "  root: the root" in lines
+    assert "    finding_owner: mtools-ad" in lines
+    assert "    certify_change: ok" in lines
+    assert retros.render_full(doc, ["R1"])[0] == lines
+    assert retros.render_full(doc, ["R9"]) == ([], ["R9"])
+
+
 def test_a_card_finding_needs_its_owner_its_due_date_and_its_witness() -> None:
     """The G7 rule: a card without the other three is an intention, not a commitment."""
     assert retros.finding_refusals(_CARD) == []
@@ -92,6 +107,22 @@ def test_the_command_adds_a_retro_from_a_file_and_refuses_a_bad_finding(tmp_path
     bad = _file(tmp_path, "bad.json", {"findings": [{"finding_card": "x"}]})
     assert cli.main(["--state", str(queue), "--add-retro", str(bad)]) == cli.EXIT_REFUSED
     assert _saved(queue) == saved
+
+
+def test_the_retros_command_prints_all_or_the_named_and_refuses_an_unknown_id(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2088: --retros prints a stored record in full; an unknown Rn is refused and named."""
+    queue = _project(tmp_path)
+    good = _file(tmp_path, "good.json", {"trigger": "t", "findings": [_CARD]})
+    assert cli.main(["--state", str(queue), "--add-retro", str(good)]) == cli.EXIT_OK
+    capsys.readouterr()
+    assert cli.main(["--state", str(queue), "--retros"]) == cli.EXIT_OK
+    assert "    finding_owner: mtools-ad" in capsys.readouterr().out
+    assert cli.main(["--state", str(queue), "--retros", "R1"]) == cli.EXIT_OK
+    capsys.readouterr()
+    assert cli.main(["--state", str(queue), "--retros", "R7"]) == cli.EXIT_REFUSED
+    assert "R7: no retro with that id" in capsys.readouterr().err
 
 
 def test_migrate_renames_cause_and_leaves_a_spec_record_alone() -> None:

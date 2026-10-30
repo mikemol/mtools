@@ -513,6 +513,7 @@ _VALUED = (
     "drop",
     "ledger",
     "show",
+    "retros",
     "preamble_set",
     "standing_set",
     "tick_hooks_set",
@@ -676,6 +677,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
     "add_retro": frozenset(),
+    "retros": frozenset(),
     "migrate_retros": frozenset({"dry_run"}),
     "regressions": frozenset(),
     "warrant": frozenset(
@@ -1045,6 +1047,13 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         metavar="FILE",
         help="W1930: compare this queue with the queue document in FILE (HEAD's copy) and refuse "
         "a done card reopened, a residue card gone, or evidence shortened without a redaction",
+    )
+    mode.add_argument(
+        "--retros",
+        nargs="*",
+        metavar="Rn",
+        help="W2088: print the retro records in full (every field and finding), all of them or "
+        "the named <repo>:R<n> / R<n>; an unknown id is named and refused",
     )
     mode.add_argument(
         "--add-retro",
@@ -2843,6 +2852,25 @@ def _show(ctx: Ctx) -> int:
     return EXIT_REFUSED if missing else EXIT_OK
 
 
+def _retros(ctx: Ctx) -> int:
+    """Print the retro records in full, all of them or the ones named (W2088).
+
+    ⚑ A reviewer re-spawned from the queue reads its subtracted set here: `--export` carries no
+    retros and `--render` prints a summary line. The state is only read; an id no retro carries is
+    named on stderr and the exit is a refusal.
+
+    Returns:
+        EXIT_OK when every named id resolves (or none is named), else EXIT_REFUSED.
+
+    """
+    lines, unknown = retros.render_full(store.load(ctx.path).doc, list(ctx.many("retros") or ()))
+    for line in lines:
+        _say(line)
+    for ident in unknown:
+        _warn(f"{ident}: no retro with that id")
+    return EXIT_REFUSED if unknown else EXIT_OK
+
+
 def _commit_message(ctx: Ctx) -> int:
     """Print a draft commit message for one live waypoint; the state is only read.
 
@@ -3349,6 +3377,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "inbound": _inbound,
     "ledger": _ledger_mode,
     "show": _show,
+    "retros": _retros,
     "commit_message": _commit_message,
     "scan_literal": _scan_literal,
     "preamble_set": _preamble_set,

@@ -128,6 +128,77 @@ def migrate(doc: Json) -> list[str]:
     return changed
 
 
+RETRO_FIELDS: tuple[str, ...] = (
+    "title",
+    "card",
+    "trigger",
+    "root",
+    "contributing",
+    "precommit",
+    "delta",
+    "sustain",
+    "enforcement_layer",
+    "handoff",
+)
+FINDING_FIELDS: tuple[str, ...] = (
+    "finding_card",
+    "finding_owner",
+    "due",
+    "finding_witness",
+    "certify_change",
+)
+
+
+def _present(rec: Json, key: str) -> bool:
+    return key in rec and rec[key] not in (None, "", [], {})
+
+
+def _finding_block(number: int, finding: Json) -> list[str]:
+    lines = [f"  finding {number}:"]
+    lines.extend(f"    {key}: {finding[key]}" for key in FINDING_FIELDS if _present(finding, key))
+    return lines
+
+
+def _retro_block(retro: Json) -> list[str]:
+    lines = [str(retro.get("id", "?"))]
+    lines.extend(f"  {key}: {retro[key]}" for key in RETRO_FIELDS if _present(retro, key))
+    findings = retro.get("findings")
+    if isinstance(findings, list):
+        for number, finding in enumerate(cast("list[object]", findings), start=1):
+            if isinstance(finding, dict):
+                lines.extend(_finding_block(number, cast("Json", finding)))
+    return lines
+
+
+def _named(retro: Json, wanted: list[str]) -> bool:
+    ident = str(retro.get("id", ""))
+    return ident in wanted or ident.rsplit(":", 1)[-1] in wanted
+
+
+def _rows(doc: Json) -> list[Json]:
+    existing = doc.get("retros")
+    if not isinstance(existing, list):
+        return []
+    return [cast("Json", row) for row in cast("list[object]", existing) if isinstance(row, dict)]
+
+
+def render_full(doc: Json, wanted: list[str]) -> tuple[list[str], list[str]]:
+    """Print retro records in full: the fields and every finding with its card, owner and witness.
+
+    ⚑ `--export` carries no retros and `--render` prints a summary line, so a reviewer re-spawned
+    from the queue (the reviewed-loop skill) had no way to read a record back (W2088).
+
+    Returns:
+        the lines, and the wanted ids no retro carries. A wanted id is `<repo>:R<n>` or `R<n>`;
+        none wanted means every retro.
+
+    """
+    rows = _rows(doc)
+    chosen = [row for row in rows if _named(row, wanted)] if wanted else rows
+    unknown = [one for one in wanted if not any(_named(row, [one]) for row in rows)]
+    return [line for row in chosen for line in _retro_block(row)], unknown
+
+
 def add_retro(doc: Json, repo: str, retro: Json) -> str:
     """Mint the next retro id and append the record, or refuse it.
 
