@@ -16318,3 +16318,38 @@
             series.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_emit.py -k test_a_stage_is_a_label_only_when_one_is_given},
 }
+
+@misc{hooks-live-tree-edit-import-of-a-module-the-venv-lacks-is-named-in-both-import-forms,
+  section = {live_tree_edit},
+  title  = {`from mikemol.hooks import x` and `import mikemol.hooks.y` both name the missing module},
+  claim  = {`from mikemol.hooks import x` and `import mikemol.hooks.y` both name the missing module.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_live_tree_edit.py -k test_an_import_of_a_module_the_venv_lacks_is_named_in_both_import_forms},
+}
+
+@misc{hooks-live-tree-edit-held-module-and-a-foreign-import-are-not-named,
+  section = {live_tree_edit},
+  title  = {The negatives: a held module (either form), the package itself and non-hooks imports},
+  claim  = {The negatives: a held module (either form), the package itself and non-hooks imports.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_live_tree_edit.py -k test_a_held_module_and_a_foreign_import_are_not_named},
+}
+
+@misc{hooks-live-tree-edit-from-import-of-a-submodule-with-names-is-judged-by-the-module,
+  section = {live_tree_edit},
+  title  = {`from mikemol.hooks.stackahead import blobs` names the module, not `blobs`},
+  claim  = {`from mikemol.hooks.stackahead import blobs` names the module, not `blobs`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_live_tree_edit.py -k test_a_from_import_of_a_submodule_with_names_is_judged_by_the_module},
+}
+
+@misc{hooks-live-tree-edit-relative-import-is-unreadable-and-never-judged,
+  section = {live_tree_edit},
+  title  = {The caller cannot resolve it without the file's module name: it is named, not guessed},
+  claim  = {The caller cannot resolve it without the file's module name: it is named, not guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_live_tree_edit.py -k test_a_relative_import_is_unreadable_and_never_judged},
+}
+
+@misc{hooks-live-tree-edit-source-that-does-not-parse-names-nothing,
+  section = {live_tree_edit},
+  title  = {The edit's own lint refuses a syntax error; this check adds no second voice},
+  claim  = {The edit's own lint refuses a syntax error; this check adds no second voice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_live_tree_edit.py -k test_a_source_that_does_not_parse_names_nothing},
+}

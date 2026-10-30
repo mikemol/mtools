@@ -56,6 +56,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/inbound_asks:suite",
         "//hooks/sites/src/mikemol/hooks/isolated:suite",
         "//hooks/sites/src/mikemol/hooks/launcher:suite",
+        "//hooks/sites/src/mikemol/hooks/live_tree_edit:suite",
         "//hooks/sites/src/mikemol/hooks/loadwait:suite",
         "//hooks/sites/src/mikemol/hooks/musthave:suite",
         "//hooks/sites/src/mikemol/hooks/musthave_cli:suite",

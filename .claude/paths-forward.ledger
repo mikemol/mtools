@@ -4703,3 +4703,7 @@
 2026-10-30T14:21:50Z  status W2173 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T14:22:11Z  status W2176 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T14:55:09Z  status W2170 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T14:55:56Z  tick  W2170 advanced  unblock   "14:4xZ: gate was empty; built W2170 (landing resets the ATOMIZE count) in a scratch tree and submitted pathsforward-m; HEAD f1ac530. Answered github-42 on W1920 (c): code stricter than the card's title, the exemption is a design call [blocked by W2097]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T15:08:33Z  tick  W2170 advanced  unblock   "15:07Z: pathsforward-m (W2170) inflight at 1479/1536 tests, 14 actions running; HEAD f1ac530. No new build [blocked by W2097]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T15:10:08Z  status W2098 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T15:34:01Z  status W2170 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

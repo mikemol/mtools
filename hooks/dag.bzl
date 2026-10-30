@@ -400,6 +400,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/live_tree_edit.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/loadwait.py": {
       "imports": [],
       "reads": [],
@@ -2048,6 +2053,13 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/launcher.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_live_tree_edit.py": {
+      "imports": [
+        "src/mikemol/hooks/live_tree_edit.py"
       ],
       "reads": [],
       "typing_only": []

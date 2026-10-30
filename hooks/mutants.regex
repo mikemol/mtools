@@ -799,3 +799,8 @@ src/mikemol/hooks/commit_kata.py|unreadable-stack-never-checked|    return unrea
 src/mikemol/hooks/ratchet_emit.py|stage-label-dropped|            fields\["stage"\] = stage|            pass|def=rows_of
 src/mikemol/hooks/ratchet_emit.py|unknown-stage-admitted|    if len\(args\) == ARGUMENTS \+ 1 and args\[ARGUMENTS\] in STAGES:|    if len(args) == ARGUMENTS + 1:|def=_stage_of
 src/mikemol/hooks/ratchet_emit.py|stage-never-passed-to-the-rows|    rows = \[\*rows_of\(named, now, stage\), \*retired_rows\(dead, now\)\]|    rows = [*rows_of(named, now), *retired_rows(dead, now)]|def=main
+# An edit's unbuilt hooks imports are named; held ones, foreign ones and relative ones are not (W2092).
+src/mikemol/hooks/live_tree_edit.py|package-import-not-expanded|            if node\.module == PREFIX:|            if False:|def=_hooks_modules
+src/mikemol/hooks/live_tree_edit.py|held-modules-named-too|    return sorted\(_hooks_modules\(tree\) - set\(built\)\)|    return sorted(_hooks_modules(tree))|def=unbuilt_imports
+src/mikemol/hooks/live_tree_edit.py|relative-import-loses-its-dots|        "\." \* node\.level \+ \(node\.module or ""\)|        (node.module or "")|def=unreadable
+src/mikemol/hooks/live_tree_edit.py|prefix-match-takes-a-sibling-package|    return name\.startswith\(PREFIX \+ "\."\)|    return name.startswith(PREFIX)|def=_in_hooks
