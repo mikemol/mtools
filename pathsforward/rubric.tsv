@@ -113,3 +113,4 @@ regressions	Queue regressions (W1930): a staged queue may not lose a finished ca
 open_line	Tick open: ready cards named
 ghosts	Ready cards that lead a landed commit's subject are listed, never closed (W2033)
 warrantfind	Warrant Finder: A Card's Evidence Yields the Citations a Reader Can Check, and a Date Is Not One
+judge_reviewing	Review Wait: A Close May Idle for a Named Reviewer Only While It Is Running

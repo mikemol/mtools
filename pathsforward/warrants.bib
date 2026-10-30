@@ -7706,3 +7706,38 @@
   claim  = {The root reaches the reader; a landing after the advance spends it; None skips nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_root.py -k test_a_root_reads_the_landings_from_there_and_an_unreadable_repository_skips_nothing},
 }
+
+@misc{pathsforward-judge-reviewing-running-reviewer-lets-a-close-with-ready-cards-idle,
+  section = {judge_reviewing},
+  title  = {Naming a live reviewer accepts the close and records `reviewing <id>`},
+  claim  = {Naming a live reviewer accepts the close and records `reviewing <id>`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_judge_reviewing.py -k test_a_running_reviewer_lets_a_close_with_ready_cards_idle},
+}
+
+@misc{pathsforward-judge-reviewing-reviewer-that-is-not-running-is-no-block,
+  section = {judge_reviewing},
+  title  = {A typed name the reader does not list leaves the bare refusal standing},
+  claim  = {A typed name the reader does not list leaves the bare refusal standing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_judge_reviewing.py -k test_a_reviewer_that_is_not_running_is_no_block},
+}
+
+@misc{pathsforward-judge-reviewing-queue-with-nothing-ready-closes-without-a-named-wait,
+  section = {judge_reviewing},
+  title  = {No ready card means no refusal and no note, running reviewer or not},
+  claim  = {No ready card means no refusal and no note, running reviewer or not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_judge_reviewing.py -k test_a_queue_with_nothing_ready_closes_without_a_named_wait},
+}
+
+@misc{pathsforward-subagents-fresh-unfinished-agent-is-running-and-an-ended-or-stale-one-is-not,
+  section = {judge_reviewing},
+  title  = {Only the agent whose last record lacks the end mark and whose file is fresh is listed},
+  claim  = {Only the agent whose last record lacks the end mark and whose file is fresh is listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagents.py -k test_a_fresh_unfinished_agent_is_running_and_an_ended_or_stale_one_is_not},
+}
+
+@misc{pathsforward-subagents-close-idles-for-a-reviewer-only-when-the-transcript-lists-it-as-running,
+  section = {judge_reviewing},
+  title  = {A listed reviewer accepts the refused close; an unlisted one or no transcript does not},
+  claim  = {A listed reviewer accepts the refused close; an unlisted one or no transcript does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagents.py -k test_a_close_idles_for_a_reviewer_only_when_the_transcript_lists_it_as_running},
+}

@@ -77,9 +77,16 @@ from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.blockerwatch import SEEN_NAME as _BLOCKERS_SEEN
 from mikemol.pathsforward.blockerwatch import notice as blocker_notice
 from mikemol.pathsforward.check import check, evidence_findings, unscored
+from mikemol.pathsforward.closegate import (
+    Verdict,
+    judge_reviewing,
+    open_line,
+    rank_check,
+    roll_note,
+    top_ranked,
+)
 from mikemol.pathsforward.closegate import handoff_line as handoff_of
 from mikemol.pathsforward.closegate import judge as judge_close
-from mikemol.pathsforward.closegate import open_line, rank_check, roll_note, top_ranked
 from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
@@ -114,6 +121,7 @@ from mikemol.pathsforward.pruned import said as pruned_said
 from mikemol.pathsforward.realizable import GATES
 from mikemol.pathsforward.reconcilecmd import run as reconcile_run
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
+from mikemol.pathsforward.subagents import running as running_subagents
 from mikemol.pathsforward.tickjson import capture as capture_open
 from mikemol.pathsforward.tickjson import document as open_document
 from mikemol.pathsforward.tickjson import utc_stamp
@@ -586,6 +594,7 @@ _FIELDS = (
     "evidence",
     "blocked_by",
     "reason",
+    "reviewing",
     "rank_from",
     "promote",
     "weight",
@@ -720,7 +729,18 @@ _APPLIES: dict[str, frozenset[str]] = {
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "tick_open": frozenset({"root", "exclude", "verbose", "json"}),
-    "tick_close": frozenset({"kind", "evidence", "blocked_by", "reason", "promote", "rank_from"}),
+    "tick_close": frozenset(
+        {
+            "kind",
+            "evidence",
+            "blocked_by",
+            "reason",
+            "reviewing",
+            "transcript",
+            "promote",
+            "rank_from",
+        }
+    ),
     "tick_roll": frozenset({"kind", "evidence"}),
     "close_gate": frozenset({"blocked_by", "reason", "rank_from"}),
     "lift": frozenset({"jwk"}),
@@ -863,6 +883,12 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         metavar="TEXT",
         help="W1203: --tick-close with ready cards left: why, citing a card of this queue; "
         "W1860: --warrant: the operator record this sanctions, printed and stored",
+    )
+    ap.add_argument(
+        "--reviewing",
+        metavar="AGENT-ID",
+        help="W2038: --tick-close with ready cards left: the reviewer subagent it idles for; "
+        "accepted only while --transcript PATH's session lists it as running",
     )
     ap.add_argument(
         "--rank-from",
@@ -1985,6 +2011,26 @@ def _say_handoff(ctx: Ctx) -> None:
         _say(line)
 
 
+def review_wait(ctx: Ctx, state: State, verdict: Verdict) -> Verdict:
+    """Let a refused close idle for a reviewer the session lists as running (W2038).
+
+    ⚑ A TYPED NAME IS NOT A BLOCK: `--reviewing AGENT-ID` is accepted only while the harness's
+    own subagent transcripts, found from `--transcript PATH`, list that agent as running.
+
+    Returns:
+        the verdict unchanged unless the close was refused and names a running reviewer.
+
+    """
+    reviewer, transcript = ctx.get("reviewing"), ctx.get("transcript")
+    if reviewer is None or not verdict.refused:
+        return verdict
+    if transcript is None:
+        _warn("--reviewing needs --transcript PATH (the session transcript)")
+        return verdict
+    alive = running_subagents(Path(transcript), time.time())
+    return judge_reviewing(state, reviewer, alive, store.sibling(ctx.path, store.LEDGER))
+
+
 def _tick_close(ctx: Ctx) -> int:
     """Close a tick in one verb: ledger line, prune landed blockers, render, check, unlock (W1079).
 
@@ -2008,6 +2054,7 @@ def _tick_close(ctx: Ctx) -> int:
     when = (ctx.get("blocked_by"), ctx.get("reason"), worked)
     state = store.load(ctx.path)
     verdict = CLOSE_JUDGE(state, *when, store.sibling(ctx.path, store.LEDGER))
+    verdict = review_wait(ctx, state, verdict)
     verdict = rank_check(verdict, state, _top_of(ctx), when)
     for said in verdict.lines:
         _say(said)

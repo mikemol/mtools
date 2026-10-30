@@ -343,6 +343,13 @@ src/mikemol/pathsforward/closegate.py|handoff-drops-the-session|            sess
 src/mikemol/pathsforward/closegate.py|landing-bound-is-the-smallest-gap|    return max\(gaps\) if gaps else None|    return min(gaps) if gaps else None|def=landing_bound
 src/mikemol/pathsforward/closegate.py|idle-card-named-when-fresh|        if \(now - worked\)\.total_seconds\(\) > bound:|        if (now - worked).total_seconds() < bound:|def=idle_cards
 src/mikemol/pathsforward/closegate.py|idle-card-named-with-no-bound|    if bound is None:|    if False:|def=idle_cards
+src/mikemol/pathsforward/closegate.py|reviewer-need-not-be-running|    if not bare\.refused or reviewing not in running:|    if not bare.refused:|def=judge_reviewing
+src/mikemol/pathsforward/closegate.py|review-wait-accepted-with-no-ready-card|    if not bare\.refused or reviewing not in running:|    if reviewing not in running:|def=judge_reviewing
+src/mikemol/pathsforward/closegate.py|review-wait-leaves-no-note|    note = f"reviewing \{reviewing\}"|    note = ""|def=judge_reviewing
+src/mikemol/pathsforward/subagents.py|stale-agent-counted-as-running|        if fresh and not _ended\(path\):|        if not _ended(path):|def=running
+src/mikemol/pathsforward/subagents.py|ended-agent-counted-as-running|        if fresh and not _ended\(path\):|        if fresh:|def=running
+src/mikemol/pathsforward/cli.py|typed-reviewer-name-trusted|    alive = running_subagents\(Path\(transcript\), time\.time\(\)\)|    alive = [reviewer]|def=review_wait
+src/mikemol/pathsforward/cli.py|reviewing-without-a-transcript-passes|    if transcript is None:|    if False:|def=review_wait
 src/mikemol/pathsforward/landed.py|landing-times-ask-for-one-commit|f"-n\{count\}"|"-n1"|def=landing_times
 src/mikemol/pathsforward/cli.py|scan-skips-the-standing-rules|    hits \+= _standing_hits\(state\.doc, pattern\)|    hits += []|def=_scan_literal
 src/mikemol/pathsforward/cli.py|every-standing-rule-is-a-hit|        if pattern in rule|        if True|def=_standing_hits

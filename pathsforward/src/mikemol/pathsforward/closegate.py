@@ -360,3 +360,25 @@ def judge(
         "citing one, or a peer's repo:W<n>; a gate running for the card worked is not a block"
     )
     return Verdict(refused=True, lines=(count, why), note="")
+
+
+def judge_reviewing(
+    state: State, reviewing: str, running: Sequence[str], ledger: Path | None = None
+) -> Verdict:
+    """Decide whether a tick may close while a named reviewer runs (W2038, github:W84).
+
+    ⚑ A REVIEW IS A NAMED WAIT, NOT A CARD: `reviewing` is accepted only when `running` (the ids a
+    reader of the harness's subagent transcripts finds live) holds it, so a typed name that is not
+    running is no block and the close is judged as a bare one.
+
+    Returns:
+        the bare verdict when no card is ready or the reviewer is not running; otherwise an
+        accepted verdict whose note is `reviewing <id>`.
+
+    """
+    bare = judge(state, ledger=ledger)
+    if not bare.refused or reviewing not in running:
+        return bare
+    note = f"reviewing {reviewing}"
+    named = f"closing on a named wait ({note})"
+    return Verdict(refused=False, lines=(bare.lines[0], named), note=note)
