@@ -181,6 +181,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/wheel:suite",
         "//hooks/sites/src/mikemol/hooks/work_claims:suite",
         "//hooks/sites/src/mikemol/hooks/work_claims_hook:suite",
+        "//hooks/sites/src/mikemol/hooks/worktree_submit:suite",
         "//hooks/sites/src/mikemol/hooks/worktree_venv:suite",
         "//hooks/sites/src/mikemol/hooks/worktreereap:suite",
         "//hooks/sites/src/mikemol/hooks/writeguard:suite",

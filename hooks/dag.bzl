@@ -1341,6 +1341,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/worktree_submit.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/worktree_venv.py": {
       "imports": [],
       "reads": [],
@@ -3294,6 +3299,13 @@ GRAPH = {
     "tests/test_work_claims_hook.py": {
       "imports": [
         "src/mikemol/hooks/work_claims_hook.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_worktree_submit.py": {
+      "imports": [
+        "src/mikemol/hooks/worktree_submit.py"
       ],
       "reads": [],
       "typing_only": []

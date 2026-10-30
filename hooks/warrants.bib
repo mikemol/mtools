@@ -16382,3 +16382,32 @@
   claim  = {`mikemol-scratch restore W5 --as-of-stack KEY --file PATH` writes into the opened tree.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_restore.py -k test_the_command_restores_into_the_symbols_worktree_and_refuses_a_missing_tree},
 }
+
+@misc{hooks-worktree-submit-worktrees-git-dir-names-its-main-and-any-other-shape-names-none,
+  section = {worktree_submit},
+  title  = {`<main>/.git/worktrees/<name>` has a main; a main checkout's `.git` and a bare dir do not},
+  claim  = {`<main>/.git/worktrees/<name>` has a main; a main checkout's `.git` and a bare dir do
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_submit.py -k test_a_worktrees_git_dir_names_its_main_and_any_other_shape_names_none},
+}
+
+@misc{hooks-worktree-submit-undeclared-worktree-submit-is-refused-naming-the-main-repo-and-the-card,
+  section = {worktree_submit},
+  title  = {The witness: the refusal names the main repository's directory and W2103},
+  claim  = {The witness: the refusal names the main repository's directory and W2103.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_submit.py -k test_an_undeclared_worktree_submit_is_refused_naming_the_main_repo_and_the_card},
+}
+
+@misc{hooks-worktree-submit-mode-is-admitted-only-from-the-closed-declared-list,
+  section = {worktree_submit},
+  title  = {Today the list is empty, so a named mode does not lift the refusal},
+  claim  = {Today the list is empty, so a named mode does not lift the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_submit.py -k test_a_mode_is_admitted_only_from_the_closed_declared_list},
+}
+
+@misc{hooks-worktree-submit-every-worktree-submit-leaves-a-line-in-the-main-repositorys-log,
+  section = {worktree_submit},
+  title  = {The mark goes to `<main>/.git/mtools`, which `git worktree remove` does not delete},
+  claim  = {The mark goes to `<main>/.git/mtools`, which `git worktree remove` does not delete.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_submit.py -k test_every_worktree_submit_leaves_a_line_in_the_main_repositorys_log},
+}

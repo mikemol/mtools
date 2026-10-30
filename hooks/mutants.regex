@@ -811,3 +811,9 @@ src/mikemol/hooks/scratch_restore.py|first-entry-wins-a-file-carried-twice|     
 src/mikemol/hooks/scratch_restore.py|deleted-file-restored-from-nothing|    if not blob:|    if False:|def=frozen_blob
 src/mikemol/hooks/scratch_cli.py|restore-without-a-key-runs|    if not key or not rel:|    if False:|def=_restore
 src/mikemol/hooks/scratch_cli.py|restore-into-a-tree-that-is-not-open|    if not where\.is_dir\(\):|    if False:|def=_restore
+# An undeclared linked-worktree submit is refused and leaves a line in the MAIN repository's log (W2103).
+src/mikemol/hooks/worktree_submit.py|any-git-dir-has-a-main|    return git_dir\.parent\.parent if git_dir\.parent\.name == "worktrees" else None|    return git_dir.parent.parent|def=main_git_dir
+src/mikemol/hooks/worktree_submit.py|any-mode-lifts-the-refusal|    if main is None or \(mode and mode in DECLARED_MODES\):|    if main is None or mode:|def=refusal
+src/mikemol/hooks/worktree_submit.py|main-checkout-recorded|    if main is None:|    if False:|def=record
+src/mikemol/hooks/worktree_submit.py|log-directory-not-made|    path\.parent\.mkdir\(parents=True, exist_ok=True\)|    pass|def=append
+src/mikemol/hooks/worktree_submit.py|log-overwritten-not-appended|    with path\.open\("a", encoding="utf-8"\) as log:|    with path.open("w", encoding="utf-8") as log:|def=append

@@ -4727,3 +4727,5 @@
 2026-10-30T18:00:58Z  status W2105 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T18:09:04Z  interrupt W2180 minted    -         "Reconcile at tick-open names a repo with no commit gate instead of blaming PATH (github:W59 R205 F1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-42
 2026-10-30T18:11:37Z  tick  W2103 advanced  unblock   "18:08Z: hooks-r (W2099) inflight at 1352/1539, clean at the last reading; transcriptstruct-d queued; HEAD c450a67. W2103 ranked first in the hooks lane with luthen's weight (W1831, W1844); W2180 carded (reconcile names a repo with no gate); W2075 corrected [blocked by W2099]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T18:15:26Z  status W2099 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T18:27:31Z  interrupt W2181 minted    -         "pycheck --ratchet --write takes a ratchet name and rewrites only that baseline (nemik W1309)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1309
