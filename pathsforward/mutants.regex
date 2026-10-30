@@ -168,7 +168,7 @@ src/mikemol/pathsforward/beat.py|zero-gap-kept|if before is not None and now_ns 
 src/mikemol/pathsforward/beat.py|worktree-guessed-at|    if not git_dir.is_dir\(\):|    if False:|def=try_beat
 src/mikemol/pathsforward/idle.py|working-cards-counted|text\(w, "status"\) == "ready"|text(w, "status") in {"ready", "working"}|def=ready_count
 src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witness"\)|and True|def=ready_count
-src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line"\}:|    if True:|def=main
+src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line", "show"\}:|    if True:|def=main
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
 src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = installed or which\(SCRIPT\)|    found = installed|def=command
@@ -346,3 +346,4 @@ src/mikemol/pathsforward/closegate.py|idle-card-named-with-no-bound|    if bound
 src/mikemol/pathsforward/landed.py|landing-times-ask-for-one-commit|f"-n\{count\}"|"-n1"|def=landing_times
 src/mikemol/pathsforward/cli.py|scan-skips-the-standing-rules|    hits \+= _standing_hits\(state\.doc, pattern\)|    hits += []|def=_scan_literal
 src/mikemol/pathsforward/cli.py|every-standing-rule-is-a-hit|        if pattern in rule|        if True|def=_standing_hits
+src/mikemol/pathsforward/cli.py|show-leaves-a-beat|    if mode not in \{"ready_count", "watchdog_line", "show"\}:|    if mode not in {"ready_count", "watchdog_line"}:|def=main

@@ -86,6 +86,16 @@ def test_the_ready_count_question_is_not_a_beat(tmp_path: Path) -> None:
     assert not beat.path_of(state.parent.parent / ".git").exists()
 
 
+def test_reading_a_card_with_show_is_not_a_beat(tmp_path: Path) -> None:
+    """W2168: a peer or a reviewer reading a card must not make the repo look alive to its watchdog.
+
+    ⚑ THE CONTROL IS THE NEXT TEST: a mode that does not read (`--hash`) still beats.
+    """
+    state = _repo(tmp_path)
+    cli.main(["--state", str(state), "--show", "W1"])
+    assert not beat.path_of(state.parent.parent / ".git").exists()
+
+
 def test_every_writer_call_beats(tmp_path: Path) -> None:
     """Even a read leaves a beat, because using the tool is the heartbeat."""
     state = _repo(tmp_path)

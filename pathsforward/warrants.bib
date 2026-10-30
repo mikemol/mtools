@@ -7603,3 +7603,12 @@
   claim  = {W2160: a literal in a stored standing rule is a hit, named by rule number and count.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_redact.py -k test_the_scan_finds_a_literal_held_only_by_a_standing_rule},
 }
+
+@misc{pathsforward-beat-reading-a-card-with-show-is-not-a-beat,
+  section = {beat},
+  title  = {W2168: a peer or a reviewer reading a card must not make the repo look alive to its watchdog},
+  claim  = {W2168: a peer or a reviewer reading a card must not make the repo look alive to its
+            watchdog. THE CONTROL IS THE NEXT TEST: a mode that does not read (`--hash`)
+            still beats.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_reading_a_card_with_show_is_not_a_beat},
+}
