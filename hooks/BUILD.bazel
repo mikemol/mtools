@@ -85,6 +85,14 @@ _CPU_BUDGET_S = {
     "tests/test_trainlead.py": 90,
     "tests/test_grade.py": 82,
     "tests/test_import_cycles.py": 75,
+    # W2175: test_worktreereap_save TIMED OUT at small's 60 s in the hooks-o train (2026-10-30, after
+    # 4 of its 7 cases) and passed when the gate bisected; run alone it takes 2.08 s of wall for all
+    # 7 (0.07 to 0.49 s a case, measured while a gate ran). Each case builds a git repository and
+    # three worktrees, so under a saturated host it is waiting on process starts, not working. The
+    # budget is 30 CPU seconds, about fifteen times its measured wall alone (a judgement, not the
+    # derivation above: its largest wall seen is the 60 s timeout, which says nothing about work),
+    # and `medium` lifts the wall timeout to 300 s.
+    "tests/test_worktreereap_save.py": 30,
 }
 
 # W1988: EVERY TEST DEPENDS ON ITS OWN IMPORT CLOSURE, GENERATED FROM THE GRAPH. A test takes the
