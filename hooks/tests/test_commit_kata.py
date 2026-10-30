@@ -270,6 +270,33 @@ def test_the_usage_names_the_queue_reader_and_its_json_flag(
     assert "key" in usage
 
 
+def test_an_unrecognised_flag_is_refused_not_taken_as_a_path(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2116: a mistyped `--subjct` used to become a path; now the parse refuses it, naming it."""
+    good = ["repo", "--waypoint", "W1", "--subject", "s", "a.py"]
+    assert commit_kata.parse(good, {}) is not None
+    assert commit_kata.parse([*good, "--subjct", "x"], {}) is None
+    assert "unrecognised flag --subjct" in capsys.readouterr().err
+
+
+def test_a_stack_file_the_reader_rejects_is_refused_at_submit_with_its_reason(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2116: paperkit's shape, an entry body ending in Co-Authored-By, never enters the queue."""
+    bad = tmp_path / "bad.json"
+    bad.write_text(
+        '[{"waypoint": "W1", "subject": "s", "body": "x\\n\\nCo-Authored-By: a", "paths": ["a"]}]',
+        encoding="utf-8",
+    )
+    good = tmp_path / "good.json"
+    good.write_text('[{"waypoint": "W1", "subject": "s", "paths": ["a"]}]', encoding="utf-8")
+    assert commit_kata.unreadable_stack((tmp_path, good)) is None
+    assert commit_kata.unreadable_stack(None) is None
+    assert commit_kata.main([str(tmp_path), "--stack", str(bad)]) == USAGE_RC
+    assert "Co-Authored-By" in capsys.readouterr().err
+
+
 def test_a_submit_time_refusal_emits_a_not_committed_verdict(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

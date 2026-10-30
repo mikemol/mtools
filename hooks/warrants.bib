@@ -16261,3 +16261,17 @@
             shipped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_submit_time_refusal_emits_a_not_committed_verdict},
 }
+
+@misc{hooks-commit-kata-unrecognised-flag-is-refused-not-taken-as-a-path,
+  section = {commit-kata},
+  title  = {W2116: a mistyped `--subjct` used to become a path; now the parse refuses it, naming it},
+  claim  = {W2116: a mistyped `--subjct` used to become a path; now the parse refuses it, naming it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_an_unrecognised_flag_is_refused_not_taken_as_a_path},
+}
+
+@misc{hooks-commit-kata-stack-file-the-reader-rejects-is-refused-at-submit-with-its-reason,
+  section = {commit-kata},
+  title  = {W2116: paperkit's shape, an entry body ending in Co-Authored-By, never enters the queue},
+  claim  = {W2116: paperkit's shape, an entry body ending in Co-Authored-By, never enters the queue.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_stack_file_the_reader_rejects_is_refused_at_submit_with_its_reason},
+}

@@ -650,6 +650,11 @@ def parse(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Request] |
                 return None
             values[word] = args[index + 1]
             index += 2
+        elif word.startswith("--") and len(word) > len("--"):
+            # ⚑ W2116: AN UNRECOGNISED FLAG IS REFUSED, NOT TAKEN AS A PATH (a mistyped `--subjct`
+            # became a path and the commit went on without its subject's flag).
+            sys.stderr.write(f"mikemol-commit: unrecognised flag {word}\n")
+            return None
         else:
             positional.append(word)
             index += 1
@@ -1058,6 +1063,10 @@ def withdraw_cmd(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> in
 def admin_mode(args: Sequence[str], env: Mapping[str, str]) -> int | None:
     """Run the read or maintenance mode the arguments name, if any.
 
+    A stack file the entries reader rejects is refused here too (W2116), before anything is queued:
+    `main` is at its complexity limit, and this is the one place that already answers an exit code
+    before the submission takes a turn.
+
     Returns:
         the mode's exit code, or None when the arguments name no such mode.
 
@@ -1066,7 +1075,7 @@ def admin_mode(args: Sequence[str], env: Mapping[str, str]) -> int | None:
         return in_gate([a for a in args if a != IN_GATE_FLAG], env, sys.stdout)
     if WITHDRAW_FLAG in args:
         return withdraw_cmd(args, env, sys.stdout)
-    return None
+    return unreadable_stack(stack_target([a for a in args if a != SHIP_FLAG], env))
 
 
 def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
@@ -1092,6 +1101,27 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         or _pace_refusal(root, stack_file, env)
         or _test_refusal(root, stack_file, env)
     )
+
+
+def unreadable_stack(stacked: tuple[Path, Path] | None) -> int | None:
+    """Refuse at submit a stack file the entries reader rejects, naming why (W2116).
+
+    ⚑ UNREADABLE INPUT IS REFUSED AT SUBMIT, NOT QUEUED (paperkit 2026-10-28): `stack_items` answers
+    an error STRING for a file it cannot read (an entry body carrying a Co-Authored-By trailer, a
+    missing key), and `named_waypoints` turned the string into an empty waypoint list, so the
+    stack went into the queue with no refusal and failed, or not, when its turn came.
+
+    Returns:
+        EXIT_USAGE after writing the reason on stderr; None for no stack or a readable one.
+
+    """
+    if stacked is None:
+        return None
+    items = stack_items(stacked[1])
+    if not isinstance(items, str):
+        return None
+    sys.stderr.write(f"mikemol-commit: {items}\n")
+    return EXIT_USAGE
 
 
 def main(argv: Sequence[str] | None = None) -> int:
