@@ -786,3 +786,7 @@ src/mikemol/hooks/ratchet_emit.py|sent-reported-as-a-boolean|    sent = len\(row
 src/mikemol/hooks/ratchet_emit.py|declared-ratchets-found-none-exits-clean|    return 1 if declared and not rows else 0|    return 0|def=main
 src/mikemol/hooks/after_compaction.py|nothing-frozen-says-nothing|    if freeze\(payload, datetime\.now\(\)\.astimezone\(\)\) is None:|    if False:|def=precompact
 src/mikemol/hooks/after_compaction.py|unreadable-transcript-reads-as-unwritable|    if _line_bound\(Path\(named\)\) is None:|    if False:|def=unfrozen_reason
+src/mikemol/hooks/commit_span.py|landing-counted-as-a-refusal|VERDICTS\} - \{_OK\}|VERDICTS}|def=refusal_records
+src/mikemol/hooks/commit_span.py|refusal-reason-dropped|            "reason": event\.get\("why", ""\),|            "reason": "",|def=refusal_records
+src/mikemol/hooks/commit_span.py|stack-run-ships-no-refusals|    emit_refusals\(text, env, stack_key=key, waypoints=waypoints\)|    pass|def=emit_stack
+src/mikemol/hooks/commit_kata.py|submit-refusal-emits-nothing|    _emit_stack\(verdict, Moments\(now, now, now\), \[\], env\)|    pass|def=unordered

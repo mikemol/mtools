@@ -91,6 +91,66 @@ def landing_records(text: str, gate_s: float, stack_key: str = "") -> list[dict[
     return records
 
 
+def refusal_records(
+    text: str, stack_key: str = "", waypoints: Sequence[str] = ()
+) -> list[dict[str, str]]:
+    """Make one record per verdict line of a run's output that is not a landing (W2128).
+
+    ⚑ A REFUSAL IS A ROW TOO (github-42, cold8 finding 7): the log table held landings only, so a
+    repository's last verdict could not be read by query once it was a REFUSED, NOT COMMITTED or
+    RACED. The record carries the verdict, repo, the reason line (`why`), the exit code the
+    verdict line gave, the stack's waypoints joined and its key, all flat strings.
+
+    Returns:
+        the records, in order; empty when every verdict line was a landing.
+
+    """
+    names = {name for name, _ in verdictlog.VERDICTS} - {_OK}
+    found = [e for e in verdictlog.events_of(text) if e["verdict"] in names]
+    return [
+        {
+            "event": "verdict",
+            "repo": event["repo"],
+            "verdict": event["verdict"],
+            "reason": event.get("why", ""),
+            "rc": event.get("rc", ""),
+            "waypoints": ",".join(waypoints),
+            "path": "stack" if stack_key else "direct",
+            "stack_key": stack_key,
+        }
+        for event in found
+    ]
+
+
+def emit_refusals(
+    text: str,
+    env: Mapping[str, str],
+    spawn: TextSpawn = spawn_with_stdin,
+    stack_key: str = "",
+    waypoints: Sequence[str] = (),
+) -> int:
+    """Ship each non-landing verdict as a log record, when a child and a store exist (W2128).
+
+    Returns:
+        how many were started: 0 with no binary or store; a failed start ends the run quietly.
+
+    """
+    program = binary(env)
+    if program is None or not store_named(env):
+        return 0
+    started = 0
+    for record in refusal_records(text, stack_key, waypoints):
+        argv = [program, "log", "--service", SERVICE, "--namespace", record["repo"]]
+        argv += ["--version", "-", "--field", f"verdict={record['verdict']}"]
+        argv += ["--field", f"reason={record['reason']}", "--field", f"rc={record['rc']}"]
+        try:
+            spawn(argv, json.dumps(record))
+        except OSError:
+            break
+        started += 1
+    return started
+
+
 def emit_landings(
     text: str,
     gate_s: float,
@@ -428,7 +488,9 @@ def emit_stack(
 
     """
     gate_s = (moments.end_ns - moments.lease_ns) / NS_PER_S
-    emit_landings(text, gate_s, env, stack_key=env.get(SUBMIT_ENV, ""))
+    key = env.get(SUBMIT_ENV, "")
+    emit_landings(text, gate_s, env, stack_key=key)
+    emit_refusals(text, env, stack_key=key, waypoints=waypoints)
     found = _marks_of(text)
     event = stack_event(text)
     if event is not None:

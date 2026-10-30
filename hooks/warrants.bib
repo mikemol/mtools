@@ -16225,3 +16225,39 @@
             strict reading.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bar_fires.py -k test_a_hook_run_through_the_entry_module_is_judged_by_the_module_it_runs},
 }
+
+@misc{hooks-commit-landing-stack-run-ships-its-refusals-under-the-submit-key,
+  section = {commit-span},
+  title  = {W2128: emit_stack hands the output, the submit key and the waypoints to emit_refusals},
+  claim  = {W2128: emit_stack hands the output, the submit key and the waypoints to emit_refusals.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_stack_run_ships_its_refusals_under_the_submit_key},
+}
+
+@misc{hooks-commit-landing-refusal-is-a-verdict-row-with-its-reason-and-code,
+  section = {commit-span},
+  title  = {W2128: REFUSED, NOT COMMITTED and RACED each make a record; a landing makes none},
+  claim  = {W2128: REFUSED, NOT COMMITTED and RACED each make a record; a landing makes none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_refusal_is_a_verdict_row_with_its_reason_and_code},
+}
+
+@misc{hooks-commit-landing-refusal-row-is-sent-to-the-same-service-with-its-verdict-field,
+  section = {commit-span},
+  title  = {emit_refusals starts one log child per non-landing verdict, the record on its stdin},
+  claim  = {emit_refusals starts one log child per non-landing verdict, the record on its stdin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_refusal_row_is_sent_to_the_same_service_with_its_verdict_field},
+}
+
+@misc{hooks-commit-landing-run-that-only-landed-ships-no-refusal-row,
+  section = {commit-span},
+  title  = {The control: COMMITTED output starts no verdict child},
+  claim  = {The control: COMMITTED output starts no verdict child.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_landing.py -k test_a_run_that_only_landed_ships_no_refusal_row},
+}
+
+@misc{hooks-commit-kata-submit-time-refusal-emits-a-not-committed-verdict,
+  section = {commit-kata},
+  title  = {W2128: the refusal at submit used to return with no emit; now its verdict line is shipped},
+  claim  = {W2128: the refusal at submit used to return with no emit; now its verdict line is
+            shipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_submit_time_refusal_emits_a_not_committed_verdict},
+}

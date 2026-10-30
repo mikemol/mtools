@@ -4628,3 +4628,6 @@
 2026-10-30T00:25:33Z  status W2071 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T00:28:58Z  interrupt W2167 minted    -         "A ratchet-lowering stack need not carry the baseline file: the pace check accepts a measured fall in the staged tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1280
 2026-10-30T00:33:23Z  status W2075 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T00:37:22Z  status W2156 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T00:51:50Z  status W2128 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T01:03:33Z  tick  W2168 minted    -         "Read modes of the writer (--show) leave the target repo's heartbeat untouched"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:R151

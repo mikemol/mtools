@@ -3,8 +3,10 @@
 """Each landed card gets one landing log record: card, sha, gate seconds, and whether it pushed."""
 
 import json
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import cast
+
+import pytest
 
 from mikemol.hooks import commit_span
 
@@ -17,6 +19,31 @@ _TEXT = (
 _ENV = {commit_span.BIN_ENV: "/opt/mikemol-otlp", commit_span.ENDPOINTS_ENV: "/host/e.json"}
 _GATE_S = 240.4
 _TWO = 2
+
+
+def test_a_stack_run_ships_its_refusals_under_the_submit_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2128: emit_stack hands the output, the submit key and the waypoints to emit_refusals."""
+    calls: list[tuple[str, str, Sequence[str]]] = []
+
+    def record(
+        text: str,
+        env: Mapping[str, str],
+        spawn: object = None,
+        stack_key: str = "",
+        waypoints: Sequence[str] = (),
+    ) -> int:
+        del env, spawn
+        calls.append((text, stack_key, waypoints))
+        return 0
+
+    monkeypatch.setattr("mikemol.hooks.commit_span.emit_refusals", record)
+    moments = commit_span.Moments(1, 2, 3)
+    env = {commit_span.SUBMIT_ENV: "9"}
+    text = "REFUSED mtools (rc=1): why\n"
+    commit_span.emit_stack(text, moments, ["W4"], env, lambda _argv: None)
+    assert calls == [(text, "9", ["W4"])]
 
 
 def test_one_record_per_committed_line_and_none_for_a_refusal() -> None:
@@ -82,6 +109,45 @@ def test_with_no_store_nothing_is_started() -> None:
     sent: list[tuple[Sequence[str], str]] = []
     env = {commit_span.BIN_ENV: "/opt/mikemol-otlp", "HOME": "/nonexistent-home"}
     assert commit_span.emit_landings(_TEXT, _GATE_S, env, lambda a, t: sent.append((a, t))) == 0
+    assert sent == []
+
+
+def test_a_refusal_is_a_verdict_row_with_its_reason_and_code() -> None:
+    """W2128: REFUSED, NOT COMMITTED and RACED each make a record; a landing makes none."""
+    text = (
+        "COMMITTED mtools aaa1111 W1: first [PUSHED]\n"
+        "REFUSED mtools (rc=1): the tip was gated once and refused\n"
+        "NOT COMMITTED mtools: refused at submit: an import only a later entry adds\n"
+        "RACED mtools: HEAD moved while the stack was gated\n"
+    )
+    got = commit_span.refusal_records(text, "77", ["W1", "W2"])
+    assert [(r["verdict"], r["rc"]) for r in got] == [
+        ("REFUSED", "1"),
+        ("NOT COMMITTED", ""),
+        ("RACED", ""),
+    ]
+    assert got[0]["reason"] == "the tip was gated once and refused"
+    assert (got[0]["waypoints"], got[0]["stack_key"], got[0]["path"]) == ("W1,W2", "77", "stack")
+    assert commit_span.refusal_records("COMMITTED mtools aaa1111 W1: x [PUSHED]\n") == []
+
+
+def test_a_refusal_row_is_sent_to_the_same_service_with_its_verdict_field() -> None:
+    """emit_refusals starts one log child per non-landing verdict, the record on its stdin."""
+    sent: list[tuple[Sequence[str], str]] = []
+    text = "REFUSED mtools (rc=1): why not\n"
+    count = commit_span.emit_refusals(text, _ENV, lambda a, t: sent.append((a, t)), "5", ["W9"])
+    assert count == len(sent) == 1
+    argv, body = sent[0]
+    assert argv[:_TWO] == ["/opt/mikemol-otlp", "log"]
+    assert "verdict=REFUSED" in argv
+    assert cast("dict[str, str]", json.loads(body))["reason"] == "why not"
+
+
+def test_a_run_that_only_landed_ships_no_refusal_row() -> None:
+    """The control: COMMITTED output starts no verdict child."""
+    sent: list[tuple[Sequence[str], str]] = []
+    text = "COMMITTED mtools aaa1111 W1: first [PUSHED]\n"
+    assert commit_span.emit_refusals(text, _ENV, lambda a, t: sent.append((a, t))) == 0
     assert sent == []
 
 

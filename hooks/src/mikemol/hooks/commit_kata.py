@@ -1214,6 +1214,12 @@ def unordered(
         f"NOT COMMITTED {root.name}: this stack is refused at submit, before it waits:\n"
     )
     sys.stdout.write(problem + "\n")
+    # ⚑ W2128: A SUBMIT-TIME REFUSAL IS A VERDICT ROW TOO (github-42, cold8 finding 7): this path
+    # returned without any emit, so a repository's last verdict could not be read by query.
+    first = problem.splitlines()[0] if problem else ""
+    now = time.time_ns()
+    verdict = f"NOT COMMITTED {root.name}: refused at submit: {first}\n"
+    _emit_stack(verdict, Moments(now, now, now), [], env)
     forget(env)
     track(ledger, key, None, env)
     return EXIT_NOT_COMMITTED

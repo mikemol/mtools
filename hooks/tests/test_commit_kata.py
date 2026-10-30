@@ -268,3 +268,20 @@ def test_the_usage_names_the_queue_reader_and_its_json_flag(
     usage = capsys.readouterr().err
     assert "--in-gate [--json]" in usage
     assert "key" in usage
+
+
+def test_a_submit_time_refusal_emits_a_not_committed_verdict(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2128: the refusal at submit used to return with no emit; now its verdict line is shipped."""
+    seen: list[str] = []
+
+    def record(text: str, moments: object, waypoints: object, env: object) -> int:
+        del moments, waypoints, env
+        seen.append(text)
+        return 0
+
+    monkeypatch.setattr("mikemol.hooks.commit_kata._emit_stack", record)
+    code = commit_kata.unordered(tmp_path / "repo", None, "k", {}, "first finding\nsecond finding")
+    assert code == commit_kata.EXIT_NOT_COMMITTED
+    assert seen == ["NOT COMMITTED repo: refused at submit: first finding\n"]
