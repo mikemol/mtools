@@ -46,7 +46,6 @@ NAMES_HOME = names_home
 
 NUDGE_TICKS: tuple[int, ...] = (1, 2, 4, 8)
 ESCALATE_TICK = 16
-_DATE = 10
 _UNBLOCKING = ("ready", "done")
 
 
@@ -635,7 +634,10 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         new["next_bounded_step"] = None
     if upd.evidence_append is not None:
         old = text(w, "evidence")
-        entry = f"{now[:_DATE]}: {upd.evidence_append}"
+        # ⚑ THE WRITER STAMPS THE FULL UTC TIME ITSELF (luthen:W1850): sessions typed HH:MMZ from
+        # memory and some ran ahead of the real clock, so no session types one and the entry
+        # carries the clock's own date-time, to the second.
+        entry = f"{now}: {upd.evidence_append}"
         new["evidence"] = f"{old} | {entry}" if old else entry
     was_blocked = text(w, "status") == "blocked"
     if (text(new, "status") == "blocked") != was_blocked or (

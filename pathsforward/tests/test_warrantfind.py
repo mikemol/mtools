@@ -44,5 +44,7 @@ def test_a_card_that_cites_only_dates_is_unresolved_and_has_no_citation() -> Non
     dated = "2026-10-26 the operator said to do it; also 2026-10-27"
     assert warrantfind.cites(dated) == []
     assert warrantfind.unresolved(dated)
+    stamped = "2026-10-26T18:30:05Z: the operator said to do it (the writer's own stamp)"
+    assert warrantfind.unresolved(stamped)
     assert not warrantfind.unresolved("no date and no citation at all")
     assert not warrantfind.unresolved(f"2026-10-26 host 695f3e0a line {_LINE}")

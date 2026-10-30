@@ -48761,12 +48761,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "When v prints COMMITTED record the sha; then name the reviewer (tick-stop accepts only a reviewer named by the session) if the host still sees false working claims",
+      "evidence": "2026-10-30: 2026-10-30 stack-hooks-v SUBMITTED: tick_stop.reviewer_running and idle_block; 150 related tests pass; mutant lint clean; sites/graph regenerated in the scratch tree. Lives in a live hook (tick-stop); subagent_guard is already in the built venv.",
       "issued_at": "2026-10-30T19:07:02Z",
       "minted_during": "interrupt",
       "caused_by": "github:W84",
-      "last_worked": null,
+      "last_worked": "2026-10-30T22:17:00Z",
       "ticks_blocked": 0
     },
     {

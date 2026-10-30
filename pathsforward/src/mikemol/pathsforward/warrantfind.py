@@ -22,7 +22,7 @@ from dataclasses import dataclass
 _UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 _SESSION_LINE = re.compile(r"\bhost\s+(?P<session>[0-9a-f]{8})\s+line\s+(?P<line>\d+)")
 _UUID_AT = re.compile(rf"\b(?P<uuid>{_UUID})\b")
-_DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
+_DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}(?!\d)")
 
 
 @dataclass(frozen=True)

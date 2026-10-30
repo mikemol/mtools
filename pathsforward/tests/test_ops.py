@@ -15,7 +15,6 @@ from mikemol.pathsforward.model import State, validate
 Rec = dict[str, object]
 
 _NOW = "2026-09-23T12:00:00Z"
-_DATE = "2026-09-23"
 _COUNTER = 3
 _MINTED = 4
 _OLD_TICKS = 5
@@ -207,11 +206,11 @@ def test_an_explicit_count_wins() -> None:
 
 
 def test_evidence_is_appended_with_its_date() -> None:
-    """Evidence is appended with a date, starting clean when there was none."""
+    """Evidence is appended with the writer's own full UTC time (luthen:W1850), clean at first."""
     state = _state()
     ops.update(state, "W1", ops.Update(evidence_append="a"), _NOW)
     w = ops.update(state, "W1", ops.Update(evidence_append="b"), _NOW)
-    assert w["evidence"] == f"{_DATE}: a | {_DATE}: b"
+    assert w["evidence"] == f"{_NOW}: a | {_NOW}: b"
 
 
 @pytest.mark.parametrize(
