@@ -1587,3 +1587,24 @@
   claim  = {W7 landed after its statement, W8 did not: landed, missed, and one divergence counted.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_intentsio.py -k test_the_command_prints_each_intents_outcome_and_how_many_diverged},
 }
+
+@misc{transcriptstruct-gitlog-question-names-the-repo-utc-iso-stamps-and-the-trailer-records,
+  section = {intents},
+  title  = {The argv holds the repository and the format; the environment is UTC},
+  claim  = {The argv holds the repository and the format; the environment is UTC.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gitlog.py -k test_the_question_names_the_repo_utc_iso_stamps_and_the_trailer_records},
+}
+
+@misc{transcriptstruct-gitlog-path-that-is-no-repository-reads-as-no-log,
+  section = {intents},
+  title  = {Asking git about a path that is no repository gives None, never a partial log},
+  claim  = {Asking git about a path that is no repository gives None, never a partial log.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gitlog.py -k test_a_path_that_is_no_repository_reads_as_no_log},
+}
+
+@misc{transcriptstruct-gitlog-git-repo-feeds-the-intents-mode-and-a-log-file-wins-over-it,
+  section = {intents},
+  title  = {The trailers come from the repository's log; `--git-log`, when given, is read instead},
+  claim  = {The trailers come from the repository's log; `--git-log`, when given, is read instead.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gitlog.py -k test_git_repo_feeds_the_intents_mode_and_a_log_file_wins_over_it},
+}

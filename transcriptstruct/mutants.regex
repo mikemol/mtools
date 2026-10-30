@@ -107,3 +107,9 @@ src/mikemol/transcriptstruct/intentsio.py|torn-record-read|        if len\(parts
 src/mikemol/transcriptstruct/cli.py|intents-queue-never-read|    cards = CARDS_OF\(Path\(queue\)\.read_text\(encoding="utf-8"\)\) if queue else \{\}|    cards = {}|def=_intents
 src/mikemol/transcriptstruct/cli.py|intents-log-never-read|    landed = TRAILERS_OF\(Path\(log\)\.read_text\(encoding="utf-8"\)\) if log else \[\]|    landed = []|def=_intents
 src/mikemol/transcriptstruct/cli.py|intents-divergence-not-counted|\{len\(DIVERGED_INTENTS\(resolved\)\)\} diverged|{0} diverged|def=_intents
+# `--git-repo` produces the log the mode reads: UTC ISO stamps, nothing on a refusal, a file wins (W1934).
+src/mikemol/transcriptstruct/gitlog.py|stamps-in-local-time|        "--date=format-local:%25Y-%25m-%25dT%25H:%25M:%25SZ",|        "--date=local",|def=command
+src/mikemol/transcriptstruct/gitlog.py|child-runs-in-another-zone|    return \{"TZ": "UTC", |    return {"TZ": "America/New_York", |def=child_env
+src/mikemol/transcriptstruct/gitlog.py|refused-git-read-as-a-log|    return done\.stdout if done\.returncode == 0 else None|    return done.stdout|def=read
+src/mikemol/transcriptstruct/cli.py|git-repo-never-read|    repo_log = read_git_log\(Path\(repo_path\)\) if repo_path and not log else None|    repo_log = None|def=_intents
+src/mikemol/transcriptstruct/cli.py|repo-log-beats-the-log-file|    repo_log = read_git_log\(Path\(repo_path\)\) if repo_path and not log else None|    repo_log = read_git_log(Path(repo_path)) if repo_path else None|def=_intents

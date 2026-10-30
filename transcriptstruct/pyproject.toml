@@ -100,6 +100,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+# ⚑ READING THE COMMIT LOG IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1934, as pathsforward's
+# landed.py): the argv is the git binary and fixed words plus a repository path; no shell runs.
+"src/mikemol/transcriptstruct/gitlog.py" = [
+    "subprocess-without-shell-equals-true",
+    "suspicious-subprocess-import",
+]
+"tests/test_gitlog.py" = ["assert"]
 "tests/test_records.py" = ["assert"]
 "tests/test_walk.py" = ["assert"]
 "tests/test_blocks.py" = ["assert"]

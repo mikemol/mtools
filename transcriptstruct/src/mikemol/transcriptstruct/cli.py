@@ -35,6 +35,7 @@ from mikemol.transcriptstruct.blocks import Block
 from mikemol.transcriptstruct.cacheturns import Turn, turns
 from mikemol.transcriptstruct.commitments import Commitment
 from mikemol.transcriptstruct.commitments import extract as extract_commitments
+from mikemol.transcriptstruct.gitlog import read as read_git_log
 from mikemol.transcriptstruct.harvest import harvest
 from mikemol.transcriptstruct.intents import diverged as diverged_intents
 from mikemol.transcriptstruct.intents import resolve as resolve_intents
@@ -225,6 +226,12 @@ def _parser() -> argparse.ArgumentParser:
         "--git-log",
         metavar="PATH",
         help="--intents: a file holding git log as %%H%%x1f%%cd%%x1f%%B%%x1e under TZ=UTC",
+    )
+    parser.add_argument(
+        "--git-repo",
+        metavar="PATH",
+        help="--intents: read the landed trailers from this repository's git log "
+        "(--git-log wins when both are given)",
     )
     parser.add_argument(
         "--bound", metavar="STAMP", help="--intents: judge a miss up to this UTC stamp (now)"
@@ -582,8 +589,11 @@ def _intents(path: Path, opts: dict[str, object], out: TextIO) -> None:
     repo = path.resolve().parent.name.rsplit("-", 1)[-1]
     rows = extract_commitments(read_path(path), path.stem, repo)
     queue, log = _text(opts, "queue"), _text(opts, "git_log")
+    repo_path = _text(opts, "git_repo")
     cards = CARDS_OF(Path(queue).read_text(encoding="utf-8")) if queue else {}
+    repo_log = read_git_log(Path(repo_path)) if repo_path and not log else None
     landed = TRAILERS_OF(Path(log).read_text(encoding="utf-8")) if log else []
+    landed = TRAILERS_OF(repo_log) if repo_log else landed
     bound = _text(opts, "bound") or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     resolved = RESOLVE_INTENTS(rows, cards, landed, bound)
     out.writelines(
