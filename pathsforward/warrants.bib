@@ -7612,3 +7612,31 @@
             still beats.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_beat.py -k test_reading_a_card_with_show_is_not_a_beat},
 }
+
+@misc{pathsforward-warrantfind-host-line-with-its-uuid-is-one-citation-carrying-all-three,
+  section = {warrantfind},
+  title  = {W1977's shape: 'host 695f3e0a line 109815, uuid <uuid>'},
+  claim  = {W1977's shape: 'host 695f3e0a line 109815, uuid <uuid>'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrantfind.py -k test_a_host_line_with_its_uuid_is_one_citation_carrying_all_three},
+}
+
+@misc{pathsforward-warrantfind-two-citations-each-take-the-uuid-that-follows-them-and-not-the-next-ones,
+  section = {warrantfind},
+  title  = {The window of a citation ends where the next begins, so the uuids are not swapped},
+  claim  = {The window of a citation ends where the next begins, so the uuids are not swapped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrantfind.py -k test_two_citations_each_take_the_uuid_that_follows_them_and_not_the_next_ones},
+}
+
+@misc{pathsforward-warrantfind-line-without-a-uuid-is-kept-and-a-bare-uuid-stands-alone,
+  section = {warrantfind},
+  title  = {Either can be checked, one by line and one by uuid; neither is dropped},
+  claim  = {Either can be checked, one by line and one by uuid; neither is dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrantfind.py -k test_a_line_without_a_uuid_is_kept_and_a_bare_uuid_stands_alone},
+}
+
+@misc{pathsforward-warrantfind-card-that-cites-only-dates-is-unresolved-and-has-no-citation,
+  section = {warrantfind},
+  title  = {The measured majority: dates are not checkable. A text with no date claims nothing},
+  claim  = {The measured majority: dates are not checkable. A text with no date claims nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrantfind.py -k test_a_card_that_cites_only_dates_is_unresolved_and_has_no_citation},
+}
