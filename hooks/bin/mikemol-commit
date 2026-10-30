@@ -29,6 +29,20 @@ export PYTHONDONTWRITEBYTECODE=1
 root="${MIKEMOL_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
 venv="$root/bazel-bin/hooks/.venv"
 
+# ⚑⚑ THIS LAUNCHER COMMITS THIS CHECKOUT ONLY (W2114): it runs the live tree's hooks code, so
+# serving another repository ran mtools' code inside it. The first word, when it is not a flag,
+# names the repository (an existing directory, else a name beside this checkout, the rule
+# `commit_kata` uses); one that is not this checkout is refused with the pinned tool named, which
+# the katas already resolve (W2164 (b)). A word that names no directory is left to the commit.
+first="${1:-}"
+if [ -n "$first" ] && [ "${first#-}" = "$first" ]; then
+    if [ -d "$first" ]; then target="$first"; else target="$(dirname "$root")/$first"; fi
+    if [ -d "$target" ] && [ "$(realpath "$target")" != "$(realpath "$root")" ]; then
+        echo "NOT COMMITTED: $first is not this checkout; use its pinned $target/.venv/bin/mikemol-commit" >&2
+        exit 1
+    fi
+fi
+
 if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/mikemol-commit" ]; then
     echo "NOT COMMITTED: the hooks venv is not built; run 'bazel build //hooks:.venv' in $root" >&2
     exit 1

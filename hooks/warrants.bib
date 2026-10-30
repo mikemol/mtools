@@ -16300,3 +16300,13 @@
             match.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackahead.py -k test_a_disjoint_stack_and_the_newest_of_two_ahead_are_judged_right},
 }
+
+@misc{hooks-commit-launcher-another-repository-is-refused-naming-its-pinned-tool,
+  section = {commit-launcher},
+  title  = {W2114: a first word naming a directory beside this checkout is not served from this tree},
+  claim  = {W2114: a first word naming a directory beside this checkout is not served from this
+            tree. The controls are the checkout itself (by absolute path and by its own
+            name) and a word that names no directory: each still reaches the console
+            script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_launcher.py -k test_another_repository_is_refused_naming_its_pinned_tool},
+}

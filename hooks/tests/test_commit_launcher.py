@@ -67,6 +67,24 @@ def test_every_argument_reaches_the_console_script(tmp_path: Path) -> None:
     assert lines[2:] == [f"ARG={a}" for a in _ARGS], proc.stdout
 
 
+def test_another_repository_is_refused_naming_its_pinned_tool(tmp_path: Path) -> None:
+    """W2114: a first word naming a directory beside this checkout is not served from this tree.
+
+    The controls are the checkout itself (by absolute path and by its own name) and a word that
+    names no directory: each still reaches the console script.
+    """
+    root = _project(tmp_path, venv=True)
+    (tmp_path / "peer").mkdir()
+    proc = _run(root, "peer", "--waypoint", "W9")
+    assert proc.returncode == _REFUSED
+    assert not proc.stdout
+    assert "NOT COMMITTED: peer is not this checkout" in proc.stderr
+    assert str(tmp_path / "peer" / ".venv" / "bin" / "mikemol-commit") in proc.stderr
+    assert "ARGC=" in _run(root, str(root), "--waypoint", "W9").stdout
+    assert "ARGC=" in _run(root, "project", "--waypoint", "W9").stdout
+    assert "ARGC=" in _run(root, "nowhere", "--waypoint", "W9").stdout
+
+
 def test_an_absent_venv_refuses_and_names_the_repair(tmp_path: Path) -> None:
     """No built venv is a NOT COMMITTED line on stderr and exit 1, never a silent success."""
     proc = _run(_project(tmp_path, venv=False), *_ARGS)
