@@ -16353,3 +16353,32 @@
   claim  = {The edit's own lint refuses a syntax error; this check adds no second voice.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_live_tree_edit.py -k test_a_source_that_does_not_parse_names_nothing},
 }
+
+@misc{hooks-scratch-restore-frozen-bytes-come-back-where-a-head-restore-gives-the-old-ones,
+  section = {scratch_restore},
+  title  = {The stack changed x.py to `stack`; HEAD holds `head`; the restore must give `stack`},
+  claim  = {The stack changed x.py to `stack`; HEAD holds `head`; the restore must give `stack`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_restore.py -k test_the_frozen_bytes_come_back_where_a_head_restore_gives_the_old_ones},
+}
+
+@misc{hooks-scratch-restore-dead-key-a-file-the-stack-never-froze-and-a-deletion-are-refused,
+  section = {scratch_restore},
+  title  = {Nothing to restore from: no such live key, a path outside the snapshot, a blob-less entry},
+  claim  = {Nothing to restore from: no such live key, a path outside the snapshot, a blob-less
+            entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_restore.py -k test_a_dead_key_a_file_the_stack_never_froze_and_a_deletion_are_refused},
+}
+
+@misc{hooks-scratch-restore-last-entry-of-a-stack-wins-a-file-carried-twice,
+  section = {scratch_restore},
+  title  = {A stack of two entries touching one file lands the later entry's bytes},
+  claim  = {A stack of two entries touching one file lands the later entry's bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_restore.py -k test_the_last_entry_of_a_stack_wins_a_file_carried_twice},
+}
+
+@misc{hooks-scratch-restore-command-restores-into-the-symbols-worktree-and-refuses-a-missing-tree,
+  section = {scratch_restore},
+  title  = {`mikemol-scratch restore W5 --as-of-stack KEY --file PATH` writes into the opened tree},
+  claim  = {`mikemol-scratch restore W5 --as-of-stack KEY --file PATH` writes into the opened tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch_restore.py -k test_the_command_restores_into_the_symbols_worktree_and_refuses_a_missing_tree},
+}

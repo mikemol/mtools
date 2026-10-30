@@ -110,6 +110,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/scratch:suite",
         "//hooks/sites/src/mikemol/hooks/scratch_cli:suite",
         "//hooks/sites/src/mikemol/hooks/scratch_land:suite",
+        "//hooks/sites/src/mikemol/hooks/scratch_restore:suite",
         "//hooks/sites/src/mikemol/hooks/sessioncache:suite",
         "//hooks/sites/src/mikemol/hooks/shardgate:suite",
         "//hooks/sites/src/mikemol/hooks/shellcheck:suite",

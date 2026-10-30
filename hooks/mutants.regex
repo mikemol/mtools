@@ -804,3 +804,10 @@ src/mikemol/hooks/live_tree_edit.py|package-import-not-expanded|            if n
 src/mikemol/hooks/live_tree_edit.py|held-modules-named-too|    return sorted\(_hooks_modules\(tree\) - set\(built\)\)|    return sorted(_hooks_modules(tree))|def=unbuilt_imports
 src/mikemol/hooks/live_tree_edit.py|relative-import-loses-its-dots|        "\." \* node\.level \+ \(node\.module or ""\)|        (node.module or "")|def=unreadable
 src/mikemol/hooks/live_tree_edit.py|prefix-match-takes-a-sibling-package|    return name\.startswith\(PREFIX \+ "\."\)|    return name.startswith(PREFIX)|def=_in_hooks
+# A scratch restore reads only a LIVE stack's last frozen bytes of the named file (W2099).
+src/mikemol/hooks/scratch_restore.py|dead-stack-restored-from|    if key not in live:|    if False:|def=frozen_blob
+src/mikemol/hooks/scratch_restore.py|any-file-takes-the-blob|            if frozen\.path == rel:|            if True:|def=frozen_blob
+src/mikemol/hooks/scratch_restore.py|first-entry-wins-a-file-carried-twice|                blob = frozen\.blob|                blob = blob or frozen.blob|def=frozen_blob
+src/mikemol/hooks/scratch_restore.py|deleted-file-restored-from-nothing|    if not blob:|    if False:|def=frozen_blob
+src/mikemol/hooks/scratch_cli.py|restore-without-a-key-runs|    if not key or not rel:|    if False:|def=_restore
+src/mikemol/hooks/scratch_cli.py|restore-into-a-tree-that-is-not-open|    if not where\.is_dir\(\):|    if False:|def=_restore

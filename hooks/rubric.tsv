@@ -207,3 +207,4 @@ testgate	A Stack's Own Tests Run in the Sandbox Before It Can Queue
 sites_gate	The generated mutation sites follow the graph at the commit gate (W1989)
 bazel_admit	bazel_admit
 live_tree_edit	Live Tree Edit: An Edit That Imports a Hooks Module the Built Venv Lacks Is Named Before It Kills a Commit
+scratch_restore	Scratch Restore: A File Restored in a Scratch Tree Keeps the Bytes a Live Stack Froze, Not HEAD's

@@ -4712,3 +4712,9 @@
 2026-10-30T15:57:51Z  status W2100 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T16:16:13Z  tick  W2100 advanced  unblock   "16:14Z: hooks-q (W2092) inflight at 961/1537, FAILED+TIMEOUT 0; transcriptstruct-c (W2100) queued behind it; HEAD 42c2e96. Second standing-5 reading sent to github-42 [blocked by W2092]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T16:17:58Z  status W2101 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:27:00Z  status W2092 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:27:00Z  status W2093 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:39:49Z  tick  W2100 advanced  unblock   "16:38Z: transcriptstruct-c (W2100) inflight alone; hooks-q landed ea61652 (W2092); HEAD ea61652. No new build this tick: W2093 (hook plus launcher, console script, host settings entry operator-side) and the scratch-tool stack (W2099+W2104) are next in the hooks lane [blocked by W2093]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:40:59Z  status W2093 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:49:14Z  status W2100 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-30T16:49:14Z  status W2101 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

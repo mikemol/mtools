@@ -775,7 +775,8 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/scratch.py",
-        "src/mikemol/hooks/scratch_land.py"
+        "src/mikemol/hooks/scratch_land.py",
+        "src/mikemol/hooks/scratch_restore.py"
       ],
       "reads": [],
       "typing_only": []
@@ -783,6 +784,16 @@ GRAPH = {
     "src/mikemol/hooks/scratch_land.py": {
       "imports": [
         "src/mikemol/hooks/scratch.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "src/mikemol/hooks/scratch_restore.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_counts.py",
+        "src/mikemol/hooks/scratch.py",
+        "src/mikemol/hooks/scratch_land.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2597,6 +2608,17 @@ GRAPH = {
         "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/scratch_cli.py",
         "src/mikemol/hooks/scratch_land.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_scratch_restore.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_counts.py",
+        "src/mikemol/hooks/scratch.py",
+        "src/mikemol/hooks/scratch_cli.py",
+        "src/mikemol/hooks/scratch_restore.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []
