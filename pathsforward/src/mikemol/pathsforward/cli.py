@@ -32,6 +32,7 @@ from mikemol.pathsforward import (
     attach,
     beat,
     behindopen,
+    blockedlist,
     bulkblock,
     certify,
     delivered,
@@ -527,6 +528,7 @@ _VALUED = (
     "drop",
     "ledger",
     "show",
+    "blocked_on_list",
     "retros",
     "preamble_set",
     "standing_set",
@@ -728,6 +730,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "reconcile": frozenset({"write", "root"}),
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
+    "blocked_on_list": frozenset({"all"}),
     "tick_open": frozenset({"root", "exclude", "verbose", "json"}),
     "tick_close": frozenset(
         {
@@ -1061,8 +1064,14 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
     """Register the modes that store a file's lines into the queue state.
 
     ⚑ ONE HELPER, BECAUSE `_parser` IS AT THE STATEMENT LIMIT: `--preamble-set`, `--standing-set`
-    and `--tick-hooks-set` (W1348) have one shape, FILE in and a list stored.
+    and `--tick-hooks-set` (W1348) have one shape, FILE in and a list stored. `--blocked-on-list`
+    (W2184) rides here for the same reason, the parser having no statement left for it.
     """
+    mode.add_argument(
+        "--blocked-on-list",
+        metavar="SYMBOL",
+        help="W2184: the open cards blocked on SYMBOL, newest first, 50 at most (--all: every one)",
+    )
     mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
     mode.add_argument(
         "--standing-set",
@@ -2953,6 +2962,22 @@ def _show(ctx: Ctx) -> int:
     return EXIT_REFUSED if missing else EXIT_OK
 
 
+def _blocked_on_list(ctx: Ctx) -> int:
+    """Print the open cards blocked on one card, then how many there are (W2184).
+
+    ⚑ A READING, NOT A WRITE: it asks the queue and changes nothing, so it leaves no beat.
+
+    Returns:
+        EXIT_OK always; the last line counts every blocked card, listed or not.
+
+    """
+    symbol = ctx.get("blocked_on_list") or ""
+    limit = None if ctx.opts.get("all") is True else blockedlist.LIMIT
+    for found in blockedlist.report(store.load(ctx.path), symbol, ctx.now, limit):
+        _say(found)
+    return EXIT_OK
+
+
 def _retros(ctx: Ctx) -> int:
     """Print the retro records in full, all of them or the ones named (W2088).
 
@@ -3478,6 +3503,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "inbound": _inbound,
     "ledger": _ledger_mode,
     "show": _show,
+    "blocked_on_list": _blocked_on_list,
     "retros": _retros,
     "commit_message": _commit_message,
     "scan_literal": _scan_literal,
@@ -3591,7 +3617,7 @@ def main(argv: list[str] | None = None) -> int:
         _warn("REFUSED: --state PATH is required; there is no default root")
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
-    if mode not in {"ready_count", "watchdog_line", "show"}:
+    if mode not in {"ready_count", "watchdog_line", "show", "blocked_on_list"}:
         beat.try_beat(ctx.path, time.time_ns())
     try:
         code = _HANDLERS[mode](ctx)

@@ -7741,3 +7741,24 @@
   claim  = {A listed reviewer accepts the refused close; an unlisted one or no transcript does not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_subagents.py -k test_a_close_idles_for_a_reviewer_only_when_the_transcript_lists_it_as_running},
 }
+
+@misc{pathsforward-blockedlist-exact-local-blockers-are-listed-newest-first-with-age-touches-and-title,
+  section = {blockedlist},
+  title  = {W2 (issued later) precedes W1; foreign, done and other-symbol cards are not rows},
+  claim  = {W2 (issued later) precedes W1; foreign, done and other-symbol cards are not rows.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_exact_local_blockers_are_listed_newest_first_with_age_touches_and_title},
+}
+
+@misc{pathsforward-blockedlist-bounded-list-counts-the-cards-it-left-out-and-none-blocked-says-zero,
+  section = {blockedlist},
+  title  = {Limit 1 shows the newest row and still counts both; an unblocked symbol counts none},
+  claim  = {Limit 1 shows the newest row and still counts both; an unblocked symbol counts none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_a_bounded_list_counts_the_cards_it_left_out_and_none_blocked_says_zero},
+}
+
+@misc{pathsforward-blockedlist-mode-prints-the-rows-and-the-count-for-the-named-symbol,
+  section = {blockedlist},
+  title  = {`--blocked-on-list W9` prints the two rows and the count, and exits clean},
+  claim  = {`--blocked-on-list W9` prints the two rows and the count, and exits clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_the_mode_prints_the_rows_and_the_count_for_the_named_symbol},
+}

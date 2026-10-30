@@ -168,7 +168,7 @@ src/mikemol/pathsforward/beat.py|zero-gap-kept|if before is not None and now_ns 
 src/mikemol/pathsforward/beat.py|worktree-guessed-at|    if not git_dir.is_dir\(\):|    if False:|def=try_beat
 src/mikemol/pathsforward/idle.py|working-cards-counted|text\(w, "status"\) == "ready"|text(w, "status") in {"ready", "working"}|def=ready_count
 src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witness"\)|and True|def=ready_count
-src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line", "show"\}:|    if True:|def=main
+src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line", "show", "blocked_on_list"\}:|    if True:|def=main
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
 src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = installed or which\(SCRIPT\)|    found = installed|def=command
@@ -353,7 +353,7 @@ src/mikemol/pathsforward/cli.py|reviewing-without-a-transcript-passes|    if tra
 src/mikemol/pathsforward/landed.py|landing-times-ask-for-one-commit|f"-n\{count\}"|"-n1"|def=landing_times
 src/mikemol/pathsforward/cli.py|scan-skips-the-standing-rules|    hits \+= _standing_hits\(state\.doc, pattern\)|    hits += []|def=_scan_literal
 src/mikemol/pathsforward/cli.py|every-standing-rule-is-a-hit|        if pattern in rule|        if True|def=_standing_hits
-src/mikemol/pathsforward/cli.py|show-leaves-a-beat|    if mode not in \{"ready_count", "watchdog_line", "show"\}:|    if mode not in {"ready_count", "watchdog_line"}:|def=main
+src/mikemol/pathsforward/cli.py|show-leaves-a-beat|    if mode not in \{"ready_count", "watchdog_line", "show", "blocked_on_list"\}:|    if mode not in {"ready_count", "watchdog_line", "blocked_on_list"}:|def=main
 src/mikemol/pathsforward/warrantfind.py|citation-window-unbounded|        end = marks\[at \+ 1\]\.start\(\) if at \+ 1 < len\(marks\) else len\(evidence\)|        end = len(evidence)|def=cites
 src/mikemol/pathsforward/warrantfind.py|claimed-uuid-listed-again|if m\.span\(\) not in claimed\]|if True]|def=cites
 src/mikemol/pathsforward/warrantfind.py|cited-card-called-unresolved|    return bool\(_DATE\.search\(evidence\)\) and not cites\(evidence\)|    return bool(_DATE.search(evidence))|def=unresolved
@@ -379,3 +379,9 @@ src/mikemol/pathsforward/atomize.py|landed-advance-still-counted|        if e\.e
 src/mikemol/pathsforward/atomize.py|advance-at-the-landing-second-counts|        if e\.entry\.symbol != symbol or e\.stamp <= floor:|        if e.entry.symbol != symbol or e.stamp < floor:|def=advances
 src/mikemol/pathsforward/atomize.py|landings-never-read-from-the-root|        landed_at = landings_of\(root\)|        pass|def=atomize
 src/mikemol/pathsforward/landed.py|older-landing-replaces-the-newest|            found\.setdefault\(card, parts\[1\]\.strip\(\)\)|            found[card] = parts[1].strip()|def=stamps_of
+# The cards blocked on one card are listed exactly, open only, newest first, bounded, all counted (W2184).
+src/mikemol/pathsforward/blockedlist.py|foreign-blocker-listed-too|        if text\(w, "status"\) in _OPEN and symbol in strlist\(w, "blocked_on"\)|        if text(w, "status") in _OPEN and any(symbol in b for b in strlist(w, "blocked_on"))|def=report
+src/mikemol/pathsforward/blockedlist.py|done-card-listed|        if text\(w, "status"\) in _OPEN and symbol in strlist\(w, "blocked_on"\)|        if symbol in strlist(w, "blocked_on")|def=report
+src/mikemol/pathsforward/blockedlist.py|oldest-listed-first|    held\.sort\(key=lambda w: text\(w, "issued_at"\), reverse=True\)|    held.sort(key=lambda w: text(w, "issued_at"), reverse=False)|def=report
+src/mikemol/pathsforward/blockedlist.py|bound-ignored|    shown = held if limit is None else held\[:limit\]|    shown = held|def=report
+src/mikemol/pathsforward/blockedlist.py|count-only-the-shown|\{len\(held\)\} blocked on|{len(shown)} blocked on|def=report
