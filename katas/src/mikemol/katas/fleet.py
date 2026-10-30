@@ -92,17 +92,20 @@ def queue_pending(fleet: Fleet, repo: str) -> bool:
     return bool(git(fleet, repo, "status", "--short", "--", *QUEUE_PATHS).strip())
 
 
-def in_flight(fleet: Fleet, repo: str) -> bool:
+def in_flight(fleet: Fleet, repo: str, proc: Path = liveness.PROC) -> bool:
     """Say whether some commit holds the repo's index right now, from any session.
 
     ⚑ A LOCK LEFT BY A KILLED GIT IS NOT A COMMIT (W1763): see `liveness.lock_is_live`.
+
+    ⚑ `proc` IS THE PROCESS TABLE THE LOCK IS JUDGED AGAINST (W2173): the host's by default, a
+    planted directory in a test, so a verdict does not depend on which git processes the host runs.
 
     Returns:
         True when `.git/index.lock` exists and a live commit or a git process in the repo accounts
         for it.
 
     """
-    return liveness.lock_is_live(fleet.root / repo / ".git")
+    return liveness.lock_is_live(fleet.root / repo / ".git", proc)
 
 
 def log_of(fleet: Fleet, repo: str, suffix: str = "") -> Path:

@@ -241,13 +241,20 @@ def _tick(ctx: Context) -> int:
 
 
 def _commit(ctx: Context) -> int:
-    """Commit through `mikemol-commit`, passing the arguments on as they are.
+    """Commit through the repo's own pinned `mikemol-commit`, passing the arguments on as they are.
+
+    ⚑ THE FIRST WORD NAMES THE REPOSITORY (W2164 (b), W2114): when it is not a flag, the commit goes
+    through that repository's pinned install (`fleet.pinned_commit`), and through
+    `policy.commit_tool` only when the repository pinned none.
 
     Returns:
         the commit's status.
 
     """
-    done = capture((str(ctx.policy.commit_tool), *ctx.args))
+    tool = ctx.policy.commit_tool
+    if ctx.args and not ctx.args[0].startswith("-"):
+        tool = fleet.pinned_commit(ctx.fleet(), ctx.args[0], tool)
+    done = capture((str(tool), *ctx.args))
     ctx.say((done.stdout + done.stderr).strip())
     return done.returncode
 

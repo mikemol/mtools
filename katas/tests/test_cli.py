@@ -272,3 +272,19 @@ def test_commit_passes_its_arguments_to_mikemol_commit_unchanged(tmp_path: Path)
     assert status == 0
     assert "COMMITTED" in text
     assert "commit alpha --waypoint W9 --subject s" in record.read_text(encoding="utf-8")
+
+
+def test_commit_goes_through_the_repos_own_pinned_tool_when_it_has_one(tmp_path: Path) -> None:
+    """W2164 (b): the first word names the repo; its pinned install runs, not the policy's tool."""
+    policy_file, record = _setup(tmp_path)
+    own = tmp_path / "hosts" / "alpha" / ".venv" / "bin" / "mikemol-commit"
+    own.parent.mkdir(parents=True)
+    _script(own, f'echo "pinned $*" >> {record}\necho "COMMITTED y"\n')
+    status, text = _run(policy_file, "commit", "alpha", "--waypoint", "W9")
+    assert status == 0
+    assert "COMMITTED y" in text
+    calls = record.read_text(encoding="utf-8")
+    assert "pinned alpha --waypoint W9" in calls
+    assert "commit alpha" not in calls
+    status, text = _run(policy_file, "commit", "beta", "--waypoint", "W9")
+    assert "COMMITTED x" in text

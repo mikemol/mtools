@@ -3,7 +3,7 @@
 
 state file: `.claude/paths-forward.json`
 
-counter 2173 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:c3687833cd43f18e`
+counter 2173 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:e1cf1ca5bc08f529`
 
 | # | symbol | status |
 |---|---|---|
@@ -2273,8 +2273,8 @@ counter 2173 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:c36
      propose the config schema and which of the four are one module; build after hooks-j.
 27. **W2114** (working) mtools/hooks/bin/mikemol-commit refuses a repository other than mtools, naming the pinned bin,
    instead of serving it from the live tree
-   - next: After hooks-m lands: read katas policy.py commit_tool and fleet.flush; add pinned_commit(repo) there; _commit
-     and flush use it; then the launcher refusal; one stack with W2164
+   - next: When katas-b prints COMMITTED: mikemol-scratch land W2164, write stack-hooks-n.json (paths:
+     hooks/bin/mikemol-commit, hooks/tests/test_commit_launcher.py, hooks/warrants.bib), submit
 28. **W2120** (working) A queued plain commit freezes its paths at submit as a stack entry does, or a plain submit
    behind a running gate is refused
    - next: CONFIRMED FROM SOURCE (mine and paperkit's, same lines): commit_kata.py main() lines 1126-1135 run
@@ -2376,8 +2376,8 @@ counter 2173 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:c36
      transcriptstruct --verify, in a card's evidence or a peer message, and refuse an 'about HH:Mx' time where a stamp
      is available. The --fixpoint verb of W2159 stamps its own time.
 47. **W2171** (working) Ratchet value series: staged gate-time points versus landed only (tag or emit after push)
-   - next: Read nemik/src/nemik/ratchetseries.py series_of/export_series for dedupe by landing; if none, reply to nemik
-     on W1179: staged points distort the window, fix is either a stage label here or the origin/main read side there
+   - next: Wait for nemik/luthen's choice recorded on nemik W1179; then either nothing here (read side) or emit after
+     the landing in commit_kata
 48. **W2134** (ready) gatephase records each bazel invocation's id when it starts and its outcome when it ends, as a
    line in the repository's own gate-verdicts log
    - next: In gatephase, read the invocation id from bazel's 'Streaming build results to: .../invocation/`<id>`' header

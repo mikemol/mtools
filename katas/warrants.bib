@@ -983,3 +983,18 @@
   claim  = {W2164 (b): a repo with its own pinned `mikemol-commit` uses it; the rest use `binary`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_flush_commits_a_repo_through_its_own_pinned_tool_and_others_through_the_default},
 }
+
+@misc{katas-fleet-in-flight-judges-the-lock-against-the-process-table-it-is-given,
+  section = {fleet},
+  title  = {W2173: a commit row whose pid exists only in the planted table is in flight there only},
+  claim  = {W2173: a commit row whose pid exists only in the planted table is in flight there only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleet.py -k test_in_flight_judges_the_lock_against_the_process_table_it_is_given},
+}
+
+@misc{katas-cli-commit-goes-through-the-repos-own-pinned-tool-when-it-has-one,
+  section = {cli},
+  title  = {W2164 (b): the first word names the repo; its pinned install runs, not the policy's tool},
+  claim  = {W2164 (b): the first word names the repo; its pinned install runs, not the policy's
+            tool.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_goes_through_the_repos_own_pinned_tool_when_it_has_one},
+}

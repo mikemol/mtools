@@ -118,7 +118,7 @@ src/mikemol/katas/policy.py|xdg-ignored|if env\.get\("XDG_CONFIG_HOME"\)|if Fals
 # the tick note is read, an archive needs a letter.
 src/mikemol/katas/cli.py|delegated-name-ignored|if name in DELEGATED:|if False:|def=main
 src/mikemol/katas/cli.py|tick-note-ignored|given\.get\("--note", ""\)|""|def=_tick
-src/mikemol/katas/cli.py|commit-drops-its-arguments|\(str\(ctx\.policy\.commit_tool\), \*ctx\.args\)|(str(ctx.policy.commit_tool),)|def=_commit
+src/mikemol/katas/cli.py|commit-drops-its-arguments|\(str\(tool\), \*ctx\.args\)|(str(tool),)|def=_commit
 src/mikemol/katas/cli.py|archive-needs-no-letter|len\(ctx\.args\) < _ARCHIVE_MINIMUM|len(ctx.args) < 1|def=_archive
 src/mikemol/katas/cli.py|flush-skip-ignored|ctx\.args\[:1\] == \["--skip"\]|False|def=_flush
 
@@ -150,3 +150,6 @@ src/mikemol/katas/hosttick.py|gate-drops-the-blocker|args \+= \["--blocked-by", 
 src/mikemol/katas/hosttick.py|gate-drops-the-reason|args \+= \["--reason", reason\]|pass|def=gate
 src/mikemol/katas/cli.py|tick-end-closes-through-a-refusal|if status != 0:|if False:|def=_tick
 src/mikemol/katas/cli.py|tick-end-forgets-the-named-block|if named and note:|if False:|def=_tick
+# The commit verb runs the repo's own pinned tool; the lock is judged against the table it is given.
+src/mikemol/katas/cli.py|commit-ignores-the-pin|        tool = fleet\.pinned_commit\(ctx\.fleet\(\), ctx\.args\[0\], tool\)|        pass|def=_commit
+src/mikemol/katas/fleet.py|in-flight-ignores-the-given-proc|    return liveness\.lock_is_live\(fleet\.root / repo / "\.git", proc\)|    return liveness.lock_is_live(fleet.root / repo / ".git")|def=in_flight

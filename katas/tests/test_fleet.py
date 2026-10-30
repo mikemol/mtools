@@ -25,6 +25,8 @@ _FIRST = "first subject"
 _QUEUE_FILES = (".claude/paths-forward.json", ".claude/paths-forward.ledger")
 _TWO_PENDING = 2
 _START_INDEX = 19
+_FAKE_PID = 4242
+_FAKE_START = "777"
 
 
 def _hold_index(repo: Path) -> None:
@@ -136,12 +138,39 @@ def test_an_inbox_letter_alone_is_not_a_pending_queue(tmp_path: Path) -> None:
 def test_a_bare_index_lock_that_nothing_accounts_for_is_not_a_commit_in_flight(
     tmp_path: Path,
 ) -> None:
-    """A lock left by a killed git, with no live commit and no git process, reads as idle."""
+    """A lock left by a killed git, with no live commit and no git process, reads as idle.
+
+    ⚑ THE PROCESS TABLE IS PLANTED (W2173): an empty directory, not the host's `/proc`, so another
+    git running on the host cannot make the verdict flip.
+    """
     host = _fleet(tmp_path)
     repo = _repo(host.root, "alpha")
-    assert not fleet.in_flight(host, "alpha")
+    proc = tmp_path / "proc"
+    proc.mkdir()
+    assert not fleet.in_flight(host, "alpha", proc)
     (repo / ".git" / "index.lock").touch()
-    assert not fleet.in_flight(host, "alpha")
+    assert not fleet.in_flight(host, "alpha", proc)
+
+
+def test_in_flight_judges_the_lock_against_the_process_table_it_is_given(tmp_path: Path) -> None:
+    """W2173: a commit row whose pid exists only in the planted table is in flight there only."""
+    host = _fleet(tmp_path)
+    repo = _repo(host.root, "alpha")
+    (repo / ".git" / "index.lock").touch()
+    (repo / ".git" / "mtools").mkdir()
+    row: dict[str, dict[str, object]] = {
+        "1": {"state": "inflight", "pid": _FAKE_PID, "start": _FAKE_START}
+    }
+    (repo / ".git" / "mtools" / "commit.counts").write_text(json.dumps(row), encoding="utf-8")
+    proc = tmp_path / "proc"
+    (proc / str(_FAKE_PID)).mkdir(parents=True)
+    fields = " ".join(["S", *["0"] * (_START_INDEX - 1), _FAKE_START])
+    stat = f"{_FAKE_PID} (mikemol-commit) {fields}"
+    (proc / str(_FAKE_PID) / "stat").write_text(stat, encoding="utf-8")
+    assert fleet.in_flight(host, "alpha", proc)
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    assert not fleet.in_flight(host, "alpha", empty)
 
 
 def test_a_live_commit_in_the_repos_own_map_accounts_for_the_lock(tmp_path: Path) -> None:
