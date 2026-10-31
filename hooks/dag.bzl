@@ -26,6 +26,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/bazelshim.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/bazelstop.py": {
       "imports": [],
       "reads": [],
@@ -1434,6 +1439,13 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/bazel_admit.py",
         "src/mikemol/hooks/host_facts.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_bazelshim.py": {
+      "imports": [
+        "src/mikemol/hooks/bazelshim.py"
       ],
       "reads": [],
       "typing_only": []

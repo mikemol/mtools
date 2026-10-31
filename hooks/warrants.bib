@@ -16559,3 +16559,24 @@
             passes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_freeze_from.py -k test_a_directory_of_another_repository_or_unreadable_is_refused_before_the_stack_is_read},
 }
+
+@misc{hooks-bazelshim-test-or-build-gets-the-flag-right-after-its-verb-past-startup-options,
+  section = {bazelshim},
+  title  = {The flag follows the verb, and `--output_base=...` before it is skipped over},
+  claim  = {The flag follows the verb, and `--output_base=...` before it is skipped over.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelshim.py -k test_a_test_or_build_gets_the_flag_right_after_its_verb_past_startup_options},
+}
+
+@misc{hooks-bazelshim-another-verb-no-verb-or-an-existing-flag-leaves-the-command-alone,
+  section = {bazelshim},
+  title  = {query, info, run and a bare `--version` are not changed; an own file is kept, once},
+  claim  = {query, info, run and a bare `--version` are not changed; an own file is kept, once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelshim.py -k test_another_verb_no_verb_or_an_existing_flag_leaves_the_command_alone},
+}
+
+@misc{hooks-bazelshim-real-bazel-is-the-first-on-the-path-outside-the-shims-own-directory,
+  section = {bazelshim},
+  title  = {The shim's directory is skipped even when it comes first; no other bazel gives None},
+  claim  = {The shim's directory is skipped even when it comes first; no other bazel gives None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelshim.py -k test_the_real_bazel_is_the_first_on_the_path_outside_the_shims_own_directory},
+}

@@ -213,3 +213,4 @@ gatefirst	Gate First Failure: the First FAILED or TIMEOUT Test Summary Named Fro
 gatecpu	Gate CPU: a Gate's Process Tree Summed in CPU Seconds From /proc, Every Descendant and No Other Process
 gatehung	Gate Hung: a Gate Reads Hung Only When Its CPU Did Not Rise Over a Window the Series Covers
 freezefrom	Freeze From: a Stack Frozen From a Scratch Tree of the Same Repository, Read in One Form and Refused for Another Repository
+bazelshim	Bazel Shim: the Build-Event File Added to Test and Build Once and Nowhere Else, and the Real Bazel Never the Shim Itself

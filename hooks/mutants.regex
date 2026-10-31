@@ -849,3 +849,8 @@ src/mikemol/hooks/commit_kata.py|five-word-stack-form-not-read|    if _form_is_s
 src/mikemol/hooks/commit_kata.py|freeze-root-always-the-repository|    return _freeze_from\(args\) or root|    return root|def=freeze_root
 src/mikemol/hooks/commit_kata.py|freeze-from-always-admitted|    if given is None:|    if False:|def=freeze_refused
 src/mikemol/hooks/commit_kata.py|freeze-refusal-never-reported|    if text is None:|    if False:|def=freeze_refused
+# The bazel shim adds the build-event file to test and build once, and never finds itself (W2109).
+src/mikemol/hooks/bazelshim.py|other-verb-gets-the-flag-too|    if verb is None or words\[verb\] not in VERBS:|    if verb is None:|def=with_bep
+src/mikemol/hooks/bazelshim.py|own-flag-added-twice|    if any\(word == FLAG or word\.startswith\(f"\{FLAG\}="\) for word in words\):|    if False:|def=with_bep
+src/mikemol/hooks/bazelshim.py|flag-put-before-the-verb|    return \[\*words\[: verb \+ 1\], f"\{FLAG\}=\{path\}", \*words\[verb \+ 1 :\]\]|    return [*words[:verb], f"{FLAG}={path}", *words[verb:]]|def=with_bep
+src/mikemol/hooks/bazelshim.py|shim-finds-itself|        if not entry or Path\(entry\) == shim_dir:|        if not entry:|def=real_bazel

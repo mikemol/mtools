@@ -6,6 +6,7 @@ test_suite(
     tests = [
         "//hooks/sites/src/mikemol/hooks/after_compaction:suite",
         "//hooks/sites/src/mikemol/hooks/bazel_admit:suite",
+        "//hooks/sites/src/mikemol/hooks/bazelshim:suite",
         "//hooks/sites/src/mikemol/hooks/bazelstop:suite",
         "//hooks/sites/src/mikemol/hooks/beat:suite",
         "//hooks/sites/src/mikemol/hooks/build_failure:suite",
