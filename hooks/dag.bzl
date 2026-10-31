@@ -280,6 +280,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/gatehung.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/gatejobs.py": {
       "imports": [],
       "reads": [],
@@ -1889,6 +1894,13 @@ GRAPH = {
     "tests/test_gatehistory.py": {
       "imports": [
         "src/mikemol/hooks/gatehistory.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_gatehung.py": {
+      "imports": [
+        "src/mikemol/hooks/gatehung.py"
       ],
       "reads": [],
       "typing_only": []

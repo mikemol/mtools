@@ -211,3 +211,4 @@ scratch_restore	Scratch Restore: A File Restored in a Scratch Tree Keeps the Byt
 worktree_submit	Worktree Submit: An Undeclared Linked-Worktree Submit Is Refused Naming the Main Repository, and Every One Leaves a Mark There
 gatefirst	Gate First Failure: the First FAILED or TIMEOUT Test Summary Named From the Build Events, in the Order Bazel Wrote Them
 gatecpu	Gate CPU: a Gate's Process Tree Summed in CPU Seconds From /proc, Every Descendant and No Other Process
+gatehung	Gate Hung: a Gate Reads Hung Only When Its CPU Did Not Rise Over a Window the Series Covers

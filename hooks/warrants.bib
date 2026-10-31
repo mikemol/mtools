@@ -16467,3 +16467,38 @@
   claim  = {Root 100 with child 101 and grandchild 102; 200 is a stranger; 'self' is skipped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatecpu.py -k test_the_sum_covers_the_root_and_every_descendant_and_no_other_process},
 }
+
+@misc{hooks-gatehung-flat-series-over-a-covered-window-is-hung-and-a-rising-one-is-moving,
+  section = {gatehung},
+  title  = {The same shape of series, flat or rising, reads hung or moving},
+  claim  = {The same shape of series, flat or rising, reads hung or moving.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehung.py -k test_a_flat_series_over_a_covered_window_is_hung_and_a_rising_one_is_moving},
+}
+
+@misc{hooks-gatehung-rise-before-the-window-is-not-movement-inside-it,
+  section = {gatehung},
+  title  = {CPU that jumped at 300 s and then flatlined reads hung over the last 600 s},
+  claim  = {CPU that jumped at 300 s and then flatlined reads hung over the last 600 s.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehung.py -k test_a_rise_before_the_window_is_not_movement_inside_it},
+}
+
+@misc{hooks-gatehung-series-shorter-than-the-window-or-empty-is-unknown-not-hung,
+  section = {gatehung},
+  title  = {A gate that has just started has not had the chance to prove it moves},
+  claim  = {A gate that has just started has not had the chance to prove it moves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehung.py -k test_a_series_shorter_than_the_window_or_empty_is_unknown_not_hung},
+}
+
+@misc{hooks-gatehung-fall-is-no-advance-but-a-fall-then-a-rise-is-movement,
+  section = {gatehung},
+  title  = {A child that exited drops the sum; only a later rise inside the window counts},
+  claim  = {A child that exited drops the sum; only a later rise inside the window counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehung.py -k test_a_fall_is_no_advance_but_a_fall_then_a_rise_is_movement},
+}
+
+@misc{hooks-gatehung-delta-line-names-a-rise-a-stall-a-fall-and-a-first-sample,
+  section = {gatehung},
+  title  = {`CPU +N s since last tick` for a rise; a stall or a fall says it did not advance},
+  claim  = {`CPU +N s since last tick` for a rise; a stall or a fall says it did not advance.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehung.py -k test_the_delta_line_names_a_rise_a_stall_a_fall_and_a_first_sample},
+}

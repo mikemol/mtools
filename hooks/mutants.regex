@@ -833,3 +833,9 @@ src/mikemol/hooks/gatecpu.py|system-time-ignored|        ticks = float\(fields\[
 src/mikemol/hooks/gatecpu.py|grandchildren-not-followed|            if parent in members and pid not in members:|            if parent == root and pid not in members:|def=tree_ticks
 src/mikemol/hooks/gatecpu.py|absent-root-sums-its-orphans|    if root not in stats:|    if False:|def=tree_ticks
 src/mikemol/hooks/gatecpu.py|ticks-left-unconverted|    return tree_ticks\(stats, root\) / ticks_per_second|    return tree_ticks(stats, root)|def=sample
+# A gate reads hung only when its CPU did not rise over a window the series covers (W2106).
+src/mikemol/hooks/gatehung.py|short-series-read-as-hung|    if not before:|    if False:|def=verdict
+src/mikemol/hooks/gatehung.py|window-opener-dropped|    inside = \[before\[-1\], \*\(cpu for at, cpu in samples if at > cutoff\)\]|    inside = [*(cpu for at, cpu in samples if at > cutoff)]|def=verdict
+src/mikemol/hooks/gatehung.py|fall-counts-as-a-rise|any\(later > earlier for earlier, later in pairwise\(inside\)\)|any(later != earlier for earlier, later in pairwise(inside))|def=verdict
+src/mikemol/hooks/gatehung.py|window-reaches-forward|    cutoff = samples\[-1\]\[0\] - window_s|    cutoff = samples[-1][0] + window_s|def=verdict
+src/mikemol/hooks/gatehung.py|stall-reported-as-a-rise|    if current > previous:|    if current >= previous:|def=delta_line

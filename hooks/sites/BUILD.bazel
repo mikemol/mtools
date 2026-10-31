@@ -37,6 +37,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/gateenv:suite",
         "//hooks/sites/src/mikemol/hooks/gatefirst:suite",
         "//hooks/sites/src/mikemol/hooks/gatehistory:suite",
+        "//hooks/sites/src/mikemol/hooks/gatehung:suite",
         "//hooks/sites/src/mikemol/hooks/gatejobs:suite",
         "//hooks/sites/src/mikemol/hooks/gatephase:suite",
         "//hooks/sites/src/mikemol/hooks/gatetargets:suite",

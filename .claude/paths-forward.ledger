@@ -4749,3 +4749,6 @@
 2026-10-30T22:52:14Z  status W2183 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T23:19:12Z  status W2183 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-30T23:19:32Z  status W2107 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T00:21:29Z  status W2108 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T00:41:21Z  status W2108 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T00:41:49Z  interrupt W2188 minted    -         "MUTATE_LINT shows the mutated line beside the declared replacement, so a pattern that parses but plants the wrong defect is seen (W2061's class)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2108

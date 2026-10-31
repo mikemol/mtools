@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2187,
+  "counter": 2188,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -47139,12 +47139,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After hooks-r: read ratchet_emit's emit seam and commit_span for the gate-run hook point; pure module gatecpu.py (sum_ticks(stat_texts, clock_hz) over a given pid set, children found from ppid fields), tests on planted stat text (no /proc read), registries",
-      "evidence": "2026-10-30: 2026-10-30: taken. A new hooks module (hooks registries, so after hooks-r's verdict). It is the CPU witness this session kept lacking: W2175's 30 CPU-second budget was a judgement because nothing read a test's or a gate's CPU; github-42's HUNG question (W2141, 'is the gate moving?') also wants CPU accrual across two reads. Shape: a pure sample(proc_tree_text) summing utime+stime ticks over a process tree from /proc stat lines passed in as text, plus a thin reader of /proc; emission as mikemol.gate.cpu_seconds goes through mikemol-otlp like ratchet_emit.",
+      "next_bounded_step": "Tick emit mikemol.gate.cpu_seconds{repo,stack} (find the gate root pid from the bazel client), then W2106 hung reader over a window",
+      "evidence": "2026-10-30: 2026-10-30: taken. A new hooks module (hooks registries, so after hooks-r's verdict). It is the CPU witness this session kept lacking: W2175's 30 CPU-second budget was a judgement because nothing read a test's or a gate's CPU; github-42's HUNG question (W2141, 'is the gate moving?') also wants CPU accrual across two reads. Shape: a pure sample(proc_tree_text) summing utime+stime ticks over a process tree from /proc stat lines passed in as text, plus a thin reader of /proc; emission as mikemol.gate.cpu_seconds goes through mikemol-otlp like ratchet_emit. | 2026-10-31T00:18:15Z: stack-hooks-x SUBMITTED: gatecpu.sample/parse_stat/tree_ticks pure over a /proc dir; 5 mutants; cheap checks clean pre-submit. | 2026-10-31T00:49:10Z: LANDED 8c5a0678 (stack x): gatecpu sampler, no caller.",
       "issued_at": "2026-10-28T19:33:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2068",
-      "last_worked": "2026-10-30T18:00:58Z",
+      "last_worked": "2026-10-31T00:49:10Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -47191,7 +47191,7 @@
     {
       "symbol": "W2108",
       "title": "MUTATE_LINT also parses the mutated source, so a declared mutant that breaks the module is named before the gate",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "check_mutants",
@@ -47199,13 +47199,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "mutate_runner's lint (MUTATE_LINT, W1176) checks that every declared pattern applies; extend it to compile() each mutated module source and name a mutant whose result is a SyntaxError (the class that cost a train: a replacement field with \\n is an re.sub newline inside an f-string, hours of gate on a defect a compile finds in a second). WITNESS (test): a spec whose replacement breaks the source is named by the lint as unparseable, one that mutates cleanly is not. Files: check_mutants/mutate_runner.py lint_declared, mutation/src/mikemol/mutation/lint.py.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-10-31T00:21:29Z: READ: files named by the card: check_mutants/mutate_runner.py lint_declared and mutation/src/mikemol/mutation/lint.py. No stack in the gate touches check_mutants or mutation, so there is no registry collision; hooks-x gates alone. | 2026-10-31T00:41:21Z: READ THE CODE BEFORE BUILDING: the ask is already met. mutation/src/mikemol/mutation/regexop.py apply_regex ast.parse()s the rewritten module and raises ValueError('regex spec ... leaves source that does not parse'); check_mutants/mutate_runner.py lint_declared catches that ValueError and names the declaration on stderr (MUTATE_LINT exits 1); check_mutants/test_mutate_runner.py test_lint_mode_names_each_declaration_the_grid_would_error_or_leave_unapplied covers an unparsable rewrite ('breaks') beside a missing module and a stale pattern. So a mutant that is a SyntaxError is named before the gate. RESIDUE, not done here: W2061's class (a replacement newline in an f-string replacement field) can PARSE under Python 3.12+ (multi-line replacement fields are legal) while planting the wrong defect, which no compile can see; that needs a check of the mutated line against the declared replacement, a separate card if wanted. No code written, no stack.",
       "issued_at": "2026-10-28T20:44:50Z",
       "minted_during": "interrupt",
       "caused_by": "W2061",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T00:41:21Z",
+      "ticks_blocked": 0,
+      "completed": "20261031T004121Z"
     },
     {
       "symbol": "W2109",
@@ -48800,12 +48801,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When p prints COMMITTED record the sha and tell luthen W1285 is answered; add the no-heartbeat and --all past-50 tests",
-      "evidence": "2026-10-30: READ 2026-10-30: no verb lists the cards blocked on a given card (--queue lists ready only; --triage one line; --block-matching and --block-behind-open write). Build waits for stack-pathsforward-n to land (pathsforward registries). | 2026-10-30T23:52:32Z: stack-pathsforward-p SUBMITTED: --blocked-on-list SYMBOL [--all], blockedlist module; 1389 tests pass.",
+      "next_bounded_step": "Tell luthen W1285 is answered; add the no-heartbeat and --all past-50 tests",
+      "evidence": "2026-10-30: READ 2026-10-30: no verb lists the cards blocked on a given card (--queue lists ready only; --triage one line; --block-matching and --block-behind-open write). Build waits for stack-pathsforward-n to land (pathsforward registries). | 2026-10-30T23:52:32Z: stack-pathsforward-p SUBMITTED: --blocked-on-list SYMBOL [--all], blockedlist module; 1389 tests pass. | 2026-10-31T00:17:56Z: LANDED 25ccf584 (stack p): --blocked-on-list SYMBOL [--all].",
       "issued_at": "2026-10-30T20:57:40Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1285",
-      "last_worked": "2026-10-30T23:52:32Z",
+      "last_worked": "2026-10-31T00:17:56Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48867,6 +48868,25 @@
       "issued_at": "2026-10-30T21:47:25Z",
       "minted_during": "interrupt",
       "caused_by": "W2038",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2188",
+      "title": "MUTATE_LINT shows the mutated line beside the declared replacement, so a pattern that parses but plants the wrong defect is seen (W2061's class)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "check_mutants",
+        "mutation"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In lint_declared, after a spec plants, print the planted line's before and after for each declaration under MUTATE_LINT=1 --verbose or check that the line the replacement names (f-string fields, escapes) equals the planted text; witness: a replacement with a backslash-n inside an f-string replacement field is flagged though it parses on 3.12+",
+      "evidence": "",
+      "issued_at": "2026-10-31T00:41:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2108",
       "last_worked": null,
       "ticks_blocked": 0
     }
