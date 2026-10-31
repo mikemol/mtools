@@ -1166,3 +1166,24 @@
   claim  = {W1992: a 3-row table with a header reads 3, a header alone and an empty file read 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_kinds.py -k test_a_tab_separated_table_counts_its_rows_and_not_its_header_line},
 }
+
+@misc{ratchet-exemptions-two-files-holding-three-rules-count-three,
+  section = {exemptions},
+  title  = {One per (file, rule), not one per file},
+  claim  = {One per (file, rule), not one per file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_two_files_holding_three_rules_count_three},
+}
+
+@misc{ratchet-exemptions-absent-table-and-an-empty-one-are-a-real-zero,
+  section = {exemptions},
+  title  = {The file parsed and holds no exemption},
+  claim  = {The file parsed and holds no exemption.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_an_absent_table_and_an_empty_one_are_a_real_zero},
+}
+
+@misc{ratchet-exemptions-text-that-does-not-parse-or-has-the-wrong-shape-is-unread,
+  section = {exemptions},
+  title  = {None is UNREAD: a broken file must not look like a clean one},
+  claim  = {None is UNREAD: a broken file must not look like a clean one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_text_that_does_not_parse_or_has_the_wrong_shape_is_unread},
+}

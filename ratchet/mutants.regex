@@ -90,3 +90,7 @@ src/mikemol/ratchet/declaration.py|changed-tombstone-allowed|        if entry no
 src/mikemol/ratchet/declaration.py|vanished-tombstone-not-named|        if entry not in kept|        if False|def=lost_retired
 src/mikemol/ratchet/kinds.py|tsv-header-counted|if path\.suffix == "\.tsv" and entries else|if False else|def=value_of
 src/mikemol/ratchet/kinds.py|header-dropped-from-every-text-file|path\.suffix == "\.tsv" and entries|bool(entries)|def=value_of
+src/mikemol/ratchet/exemptions.py|absent-table-read-as-unread|            return 0|            return None|def=count
+src/mikemol/ratchet/exemptions.py|one-per-file-not-per-rule|        total \+= len\(cast\("list\[object\]", rules\)\)|        total += 1|def=count
+src/mikemol/ratchet/exemptions.py|unparsed-text-not-caught|    except tomllib\.TOMLDecodeError:|    except ZeroDivisionError:|def=count
+src/mikemol/ratchet/exemptions.py|non-list-rules-accepted|        if not isinstance\(rules, list\):|        if False:|def=count
