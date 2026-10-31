@@ -839,3 +839,8 @@ src/mikemol/hooks/gatehung.py|window-opener-dropped|    inside = \[before\[-1\],
 src/mikemol/hooks/gatehung.py|fall-counts-as-a-rise|any\(later > earlier for earlier, later in pairwise\(inside\)\)|any(later != earlier for earlier, later in pairwise(inside))|def=verdict
 src/mikemol/hooks/gatehung.py|window-reaches-forward|    cutoff = samples\[-1\]\[0\] - window_s|    cutoff = samples[-1][0] + window_s|def=verdict
 src/mikemol/hooks/gatehung.py|stall-reported-as-a-rise|    if current > previous:|    if current >= previous:|def=delta_line
+# `--freeze-from DIR` is read in its one form and a directory of another repository is refused (W2103).
+src/mikemol/hooks/freezefrom.py|flag-word-not-checked|    if len\(args\) == _FORM_FROM and args\[1\] == "--stack" and args\[3\] == FLAG:|    if len(args) == _FORM_FROM and args[1] == "--stack":|def=parse
+src/mikemol/hooks/freezefrom.py|stray-flag-form-taken-as-a-stack|    if len\(args\) == _FORM_PLAIN:|    if len(args) >= _FORM_PLAIN:|def=form_is_stack
+src/mikemol/hooks/freezefrom.py|another-repository-admitted|    if repo_common\.resolve\(\) != dir_common\.resolve\(\):|    if False:|def=refusal
+src/mikemol/hooks/freezefrom.py|unknown-common-dir-admitted|    if repo_common is None or dir_common is None:|    if repo_common is None and dir_common is None:|def=refusal

@@ -248,6 +248,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/freezefrom.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/gate_ledger.py": {
       "imports": [],
       "reads": [],
@@ -1810,6 +1815,13 @@ GRAPH = {
     "tests/test_footprint.py": {
       "imports": [
         "src/mikemol/hooks/footprint.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_freezefrom.py": {
+      "imports": [
+        "src/mikemol/hooks/freezefrom.py"
       ],
       "reads": [],
       "typing_only": []

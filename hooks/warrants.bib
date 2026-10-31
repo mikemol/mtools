@@ -16516,3 +16516,24 @@
   claim  = {W2185: the refusal tests the shared failure flag, which every earlier check sets.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites_gate.py -k test_any_cheap_check_having_failed_refuses_before_the_suite_not_only_the_sites_one},
 }
+
+@misc{hooks-freezefrom-five-word-form-gives-the-directory-and-no-other-arrangement-does,
+  section = {freezefrom},
+  title  = {Only `REPO --stack FILE --freeze-from DIR` yields a directory},
+  claim  = {Only `REPO --stack FILE --freeze-from DIR` yields a directory.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freezefrom.py -k test_the_five_word_form_gives_the_directory_and_no_other_arrangement_does},
+}
+
+@misc{hooks-freezefrom-both-stack-forms-are-stack-forms-and-a-commit-or-a-stray-flag-is-not,
+  section = {freezefrom},
+  title  = {The plain form and the freeze-from form are stacks; a message commit is not},
+  claim  = {The plain form and the freeze-from form are stacks; a message commit is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freezefrom.py -k test_both_stack_forms_are_stack_forms_and_a_commit_or_a_stray_flag_is_not},
+}
+
+@misc{hooks-freezefrom-same-common-dir-is-admitted-and-another-or-an-unknown-one-is-refused,
+  section = {freezefrom},
+  title  = {The scratch worktree shares the main repository's common dir; a stranger does not},
+  claim  = {The scratch worktree shares the main repository's common dir; a stranger does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freezefrom.py -k test_the_same_common_dir_is_admitted_and_another_or_an_unknown_one_is_refused},
+}

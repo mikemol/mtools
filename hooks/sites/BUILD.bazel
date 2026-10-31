@@ -31,6 +31,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/flakemetric:suite",
         "//hooks/sites/src/mikemol/hooks/flakes:suite",
         "//hooks/sites/src/mikemol/hooks/footprint:suite",
+        "//hooks/sites/src/mikemol/hooks/freezefrom:suite",
         "//hooks/sites/src/mikemol/hooks/gate_ledger:suite",
         "//hooks/sites/src/mikemol/hooks/gateclass:suite",
         "//hooks/sites/src/mikemol/hooks/gatecpu:suite",

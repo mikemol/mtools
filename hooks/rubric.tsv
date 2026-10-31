@@ -212,3 +212,4 @@ worktree_submit	Worktree Submit: An Undeclared Linked-Worktree Submit Is Refused
 gatefirst	Gate First Failure: the First FAILED or TIMEOUT Test Summary Named From the Build Events, in the Order Bazel Wrote Them
 gatecpu	Gate CPU: a Gate's Process Tree Summed in CPU Seconds From /proc, Every Descendant and No Other Process
 gatehung	Gate Hung: a Gate Reads Hung Only When Its CPU Did Not Rise Over a Window the Series Covers
+freezefrom	Freeze From: a Stack Frozen From a Scratch Tree of the Same Repository, Read in One Form and Refused for Another Repository
