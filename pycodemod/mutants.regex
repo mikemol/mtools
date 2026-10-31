@@ -112,6 +112,9 @@ src/mikemol/pycodemod/narrowing.py|comprehension-not-iteration|        self\._it
 src/mikemol/pycodemod/narrowing.py|len-not-sized|                sized\.sized = True|                pass|def=_Walker.visit_Call
 src/mikemol/pycodemod/narrowing.py|class-not-in-the-qualified-name|        self\._scope\.append\(node\.name\)|        pass|def=_Walker.visit_ClassDef
 src/mikemol/pycodemod/narrowing.py|array-attributes-not-recognised|        \(bool\(use\.attrs & _ARRAY_ATTRS\), Narrowed\("ndarray"\)\),|        (bool(use.attrs - _ARRAY_ATTRS), Narrowed("ndarray")),|def=narrow
+src/mikemol/pycodemod/narrowing.py|position-name-read-as-a-key|        return key\.id in _INDEX_NAMES|        return False|def=_integer
+src/mikemol/pycodemod/narrowing.py|variable-key-read-as-a-position|            elif _integer\(key\):|            elif True:|def=_Walker.visit_Subscript
+src/mikemol/pycodemod/narrowing.py|mapping-rule-ignores-slices-and-positions|        \(use\.varkeyed and not use\.indexed, Narrowed\("mapping"\)\),|        (use.varkeyed, Narrowed("mapping")),|def=narrow
 src/mikemol/pycodemod/cli_typedargs.py|original-not-restored|path\.write_text\(texts\[0\], encoding="utf-8"\)|pass|def=_selftest
 src/mikemol/pycodemod/cli_observe.py|returns-not-recorded|            "returns": sorted\(signature\.returns\),|            "returns": [],|def=seen_document
 src/mikemol/pycodemod/cli_observe.py|runner-arguments-not-split-off|    split = args\.index\("--"\) if "--" in args else len\(args\)|    split = len(args)|def=main

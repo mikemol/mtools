@@ -42,6 +42,26 @@ def mapping_only(table):
     return table.items()
 
 
+def _num(consts, name):
+    return consts[name]
+
+
+def reach(graph, node):
+    return {n for n in graph[node]}
+
+
+def by_position(items, i):
+    return items[i] + items[-1] + items[len(items) - 1]
+
+
+def sliced_and_keyed(rows, name):
+    return rows[1:] + rows[name]
+
+
+def attribute_keyed(table, entry):
+    return table[entry.key]
+
+
 class Box:
     def put(self, item):
         return item.value
@@ -85,6 +105,15 @@ def test_dict_methods_alone_are_a_mapping_and_a_bare_operand_is_unconstrained() 
     """An operand alone shows nothing, so the traced type is kept; items() shows a mapping."""
     assert _kind("mapping_only", "table").kind == "mapping"
     assert _kind("operand", "n") == narrowing.Narrowed("unconstrained")
+
+
+def test_a_value_subscripted_by_a_variable_key_is_a_mapping_and_by_a_position_a_sequence() -> None:
+    """W2111, el-openglo's misreads: consts[name] and graph[node] are mappings, items[i] is not."""
+    assert _kind("_num", "consts").kind == "mapping"
+    assert _kind("reach", "graph").kind == "mapping"
+    assert _kind("attribute_keyed", "table").kind == "mapping"
+    assert _kind("by_position", "items").kind == "sequence"
+    assert _kind("sliced_and_keyed", "rows").kind == "sequence"
 
 
 def test_self_is_skipped_methods_are_qualified_and_nested_parameters_are_their_own() -> None:

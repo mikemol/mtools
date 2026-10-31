@@ -17,6 +17,7 @@ so this reads the body and prefers it to the traced type.
     array attributes (shape, dtype, ...)    NDArray
     any other attribute read or called      Protocol of those names
     dict methods alone                      Mapping
+    subscripted by a variable key           Mapping (when never sliced or int-indexed)
     called as a function                    Callable
     indexed, iterated or sized              Sequence, Iterable or Sized
     none of these                           unconstrained, so the traced type is kept
@@ -33,6 +34,33 @@ import ast
 from dataclasses import dataclass, field
 
 _SKIPPED = frozenset({"self", "cls"})
+# ⚑ W2111 (el-openglo's benchmark, graded at W1925): `consts[name]` and `graph[node]` were read as
+# Sequence because any non-string subscript counted as an index, while the hand annotations were
+# Mapping[str, float] and Mapping[str, set[str]]. A subscript is an INTEGER index when it is an
+# int constant, a slice, arithmetic with one, a call of len/int/round, or a name that reads as a
+# position; any other name, attribute or call result is a key, and a value only ever keyed so
+# is a Mapping. A loop variable called `i` stays a position, which is a convention and not a
+# proof: the name list is the cost of not running the program.
+_INDEX_NAMES = frozenset(
+    {
+        "i",
+        "j",
+        "k",
+        "n",
+        "m",
+        "idx",
+        "index",
+        "pos",
+        "row",
+        "col",
+        "start",
+        "stop",
+        "end",
+        "lo",
+        "hi",
+    }
+)
+_INTEGER_CALLS = frozenset({"len", "int", "round"})
 _MAPPING_METHODS = frozenset({"get", "items", "keys", "values", "setdefault", "update", "pop"})
 _ARRAY_ATTRS = frozenset(
     {
@@ -70,6 +98,7 @@ class Use:
     called: bool = False
     iterated: bool = False
     indexed: bool = False
+    varkeyed: bool = False
     sized: bool = False
 
 
@@ -95,11 +124,37 @@ def narrow(use: Use) -> Narrowed:
         (bool(use.attrs - _MAPPING_METHODS), Narrowed("protocol", tuple(sorted(use.attrs)))),
         (bool(use.attrs), Narrowed("mapping")),
         (use.called, Narrowed("callable")),
+        (use.varkeyed and not use.indexed, Narrowed("mapping")),
         (use.indexed, Narrowed("sequence")),
         (use.iterated, Narrowed("iterable")),
         (use.sized, Narrowed("sized")),
     )
     return next((form for fits, form in rules if fits), Narrowed("unconstrained"))
+
+
+def _integer(key: ast.expr) -> bool:
+    """Say whether a subscript's index reads as an integer position.
+
+    Returns:
+        True for a slice, an int constant, arithmetic with one, a len/int/round call or a
+        position-like name; False for any other name, attribute or call result.
+
+    """
+    if isinstance(key, ast.Slice):
+        return True
+    if isinstance(key, ast.Constant):
+        return isinstance(key.value, int)
+    if isinstance(key, ast.UnaryOp):
+        return _integer(key.operand)
+    if isinstance(key, ast.BinOp):
+        return _integer(key.left) or _integer(key.right)
+    if isinstance(key, ast.Name):
+        return key.id in _INDEX_NAMES
+    return (
+        isinstance(key, ast.Call)
+        and isinstance(key.func, ast.Name)
+        and (key.func.id in _INTEGER_CALLS)
+    )
 
 
 def _names(args: ast.arguments) -> list[str]:
@@ -146,8 +201,10 @@ class _Walker(ast.NodeVisitor):
             key = node.slice
             if isinstance(key, ast.Constant) and isinstance(key.value, str):
                 use.keys.add(key.value)
-            else:
+            elif _integer(key):
                 use.indexed = True
+            else:
+                use.varkeyed = True
         self.generic_visit(node)
 
     def visit_Attribute(self, node: ast.Attribute) -> None:

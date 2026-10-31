@@ -7032,3 +7032,11 @@
   claim  = {The observer spells a traceback `types.TracebackType`, a dotted name needing an import.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_annotating.py -k test_a_traceback_observed_by_name_goes_to_the_worklist_not_bare},
 }
+
+@misc{pycodemod-narrowing-value-subscripted-by-a-variable-key-is-a-mapping-and-by-a-position-a-sequence,
+  section = {narrowing},
+  title  = {W2111, el-openglo's misreads: consts[name] and graph[node] are mappings, items[i] is not},
+  claim  = {W2111, el-openglo's misreads: consts[name] and graph[node] are mappings, items[i] is
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_value_subscripted_by_a_variable_key_is_a_mapping_and_by_a_position_a_sequence},
+}

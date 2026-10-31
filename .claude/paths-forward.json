@@ -47236,19 +47236,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When ag prints COMMITTED record the sha; the first red gate is the witness (a FAILED summary ends the run within minutes); then W2107's skip of witness stages after a failed bazel phase",
-      "evidence": "2026-10-31T07:38:41Z: READING (from bazel's documented options; NOT yet confirmed against 8.7.0's own help, because a gate is running and standing 8 forbids a foreground bazel beside it): the option that governs a failed TEST is --test_keep_going (default true): 'when disabled, any non-passing test will cause the entire build to stop; by default all tests are run'. --nokeep_going (what .githooks/pre-commit passes at the bazel test line) is the BUILD option: it stops scheduling after the first failed ACTION, and a failed test is not a failed action, which matches the observation (stack 38's tip ran past mutants_100's FAILED to 456 of 1533 tests). So the gate asks for the wrong flag. FIX CANDIDATE: add --notest_keep_going to the gate's bazel test command in .githooks/pre-commit (the hook, not .bazelrc, standing 1), after which the first FAILED or TIMEOUT summary stops the run: the W2107 first-failure stop, by bazel's own option. Cost to state: a red tip then reports one failing target, not all of them (the bisect re-gates prefixes anyway). | 2026-10-31T08:15:48Z: CONFIRMED against bazel 8.7.0's own help (gate empty): --[no]test_keep_going (a boolean; default true) exists; the gate passes only --nokeep_going. | 2026-10-31T08:26:27Z: BUILT in scratch tree W2206 (not yet landed): --notest_keep_going added beside --nokeep_going on the gate's bazel test line with the reasoning comment; tests/test_gate_test_keep_going.py (2 tests); bash -n and shellcheck clean; 502 related tests pass. It carries stack af's registry lines (warrants.bib, pyproject.toml restored from af's frozen blobs with scratch_cli restore --as-of-stack, then my lines added), so the land waits for af to land (main's copies of those two files are dirty while af is in flight). | 2026-10-31T08:26:59Z: CORRECTION: scratch tree W2206 with af's warrants.bib restored FAILS the warrant-pairing tests (the restored ledger names af's test files, which this tree does not carry). So a stack beside a queued one cannot borrow its registry blobs unless it carries its files too. W2206 is discarded; the hook edit (one flag plus comment) and the 2-test file are redone in a fresh tree off the HEAD that af lands as. | 2026-10-31T08:54:41Z: stack-hooks-ag SUBMITTED (fresh tree W2207 off 5b7aa323): --notest_keep_going on the gate's bazel test line; 502 related tests pass; bash -n and shellcheck clean. Live hook: the next gate runs it.",
+      "next_bounded_step": "Watch the next red gate for the stop; W2107's skip of witness stages after a failed bazel phase remains",
+      "evidence": "2026-10-31T07:38:41Z: READING (from bazel's documented options; NOT yet confirmed against 8.7.0's own help, because a gate is running and standing 8 forbids a foreground bazel beside it): the option that governs a failed TEST is --test_keep_going (default true): 'when disabled, any non-passing test will cause the entire build to stop; by default all tests are run'. --nokeep_going (what .githooks/pre-commit passes at the bazel test line) is the BUILD option: it stops scheduling after the first failed ACTION, and a failed test is not a failed action, which matches the observation (stack 38's tip ran past mutants_100's FAILED to 456 of 1533 tests). So the gate asks for the wrong flag. FIX CANDIDATE: add --notest_keep_going to the gate's bazel test command in .githooks/pre-commit (the hook, not .bazelrc, standing 1), after which the first FAILED or TIMEOUT summary stops the run: the W2107 first-failure stop, by bazel's own option. Cost to state: a red tip then reports one failing target, not all of them (the bisect re-gates prefixes anyway). | 2026-10-31T08:15:48Z: CONFIRMED against bazel 8.7.0's own help (gate empty): --[no]test_keep_going (a boolean; default true) exists; the gate passes only --nokeep_going. | 2026-10-31T08:26:27Z: BUILT in scratch tree W2206 (not yet landed): --notest_keep_going added beside --nokeep_going on the gate's bazel test line with the reasoning comment; tests/test_gate_test_keep_going.py (2 tests); bash -n and shellcheck clean; 502 related tests pass. It carries stack af's registry lines (warrants.bib, pyproject.toml restored from af's frozen blobs with scratch_cli restore --as-of-stack, then my lines added), so the land waits for af to land (main's copies of those two files are dirty while af is in flight). | 2026-10-31T08:26:59Z: CORRECTION: scratch tree W2206 with af's warrants.bib restored FAILS the warrant-pairing tests (the restored ledger names af's test files, which this tree does not carry). So a stack beside a queued one cannot borrow its registry blobs unless it carries its files too. W2206 is discarded; the hook edit (one flag plus comment) and the 2-test file are redone in a fresh tree off the HEAD that af lands as. | 2026-10-31T08:54:41Z: stack-hooks-ag SUBMITTED (fresh tree W2207 off 5b7aa323): --notest_keep_going on the gate's bazel test line; 502 related tests pass; bash -n and shellcheck clean. Live hook: the next gate runs it. | 2026-10-31T09:19:50Z: FIRST GATE UNDER THE NEW FLAG (stack ag), the witness: refused at //hooks:test_bar_fires after 11.2 s of that test with 'Testing //hooks:test_bar_fires failed: Test failed, aborting' - the run stopped at the first failing test as built. The failure was MY MISS: tests/test_gate_test_keep_going.py was not registered in hooks/graph.json and hooks/dag.bzl (a test that tests no module is still a graph entry; I ran mutants_gen --check but not importdag graph --write), so the sandbox did not stage it and its two warrants named tests that did not exist. stack-hooks-ah SUBMITTED with graph.json and dag.bzl regenerated (dag.bzl names the file). | 2026-10-31T09:41:07Z: LANDED (stack ah, gate passed): the gate's bazel test carries --notest_keep_going. From here on a red gate stops at its first failing test.",
       "issued_at": "2026-10-28T21:54:55Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-31T08:54:41Z",
+      "last_worked": "2026-10-31T09:41:07Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2111",
       "title": "narrowing.py reads a value subscripted by a variable key as a Mapping, not a Sequence (the two misreads of el-openglo's benchmark)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pycodemod"
@@ -47256,12 +47256,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "From W1925's grading: pycodemod/src/mikemol/pycodemod/narrowing.py says Sequence for _num(consts) and reach(graph) in el-openglo's check_wall_limits.py, whose hand annotations are Mapping[str, float] and Mapping[str, set[str]]: the body subscripts by a NON-CONSTANT key (consts[name], graph[node]). Rule: a subscript whose index is not an integer expression (a name, an attribute, a call result) on a value never sliced is a Mapping use, and a constant-string subscript stays TypedDict. WITNESS (test): the two functions' bodies, taken from the before files at el-openglo b67322b's ancestors (cee3ed5a for check_wall_limits), narrow to mapping; an int-indexed list stays sequence.",
-      "evidence": "",
+      "evidence": "2026-10-31T09:38:48Z: Taken. pycodemod dist, disjoint from the hooks stack gating (ah); reading narrowing.py first.",
       "issued_at": "2026-10-28T22:17:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1925",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T09:38:48Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2112",
