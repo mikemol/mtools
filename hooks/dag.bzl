@@ -1071,6 +1071,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/surfaces.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/testgate.py": {
       "imports": [
         "src/mikemol/hooks/presubmit.py",
@@ -3056,6 +3061,14 @@ GRAPH = {
     "tests/test_suppressions.py": {
       "imports": [
         "src/mikemol/hooks/suppressions.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_surfaces.py": {
+      "imports": [
+        "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/surfaces.py"
       ],
       "reads": [],
       "typing_only": []

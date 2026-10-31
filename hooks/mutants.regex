@@ -882,3 +882,7 @@ src/mikemol/hooks/citeguard.py|any-long-number-read-as-a-citation|        after 
 src/mikemol/hooks/citeguard.py|earlier-turn-counts-as-read|            start = index \+ 1|            start = 0|def=turn_results
 src/mikemol/hooks/citeguard.py|unreadable-transcript-refuses|    except OSError:|    except ZeroDivisionError:|def=run
 src/mikemol/hooks/citeguard.py|seen-lines-still-refused|    unread = sorted\(cited\(text\) - seen\)|    unread = sorted(cited(text))|def=refusal
+src/mikemol/hooks/surfaces.py|absent-surface-still-reviewed|            "reviewed_by": reviews if declared else \[\],|            "reviewed_by": reviews,|def=survey
+src/mikemol/hooks/surfaces.py|review-assumed-without-its-file|    return sorted\(\{label for name, label in _REVIEW_FILES\.items\(\) if \(repo / name\)\.is_file\(\)\}\)|    return sorted(set(_REVIEW_FILES.values()))|def=_reviews
+src/mikemol/hooks/surfaces.py|repo-name-dropped|    return \{"schema": SCHEMA, "repo": repo\.name, "surfaces": surfaces\}|    return {"schema": SCHEMA, "repo": "", "surfaces": surfaces}|def=survey
+src/mikemol/hooks/surfaces.py|json-without-trailing-newline|    return json\.dumps\(survey\(repo\), indent=2, sort_keys=True\) \+ "\\n"|    return json.dumps(survey(repo), indent=2, sort_keys=True)|def=to_json

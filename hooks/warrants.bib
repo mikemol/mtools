@@ -16779,3 +16779,31 @@
   claim  = {Without either switch main exits 0 and reads nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_an_unarmed_hook_says_nothing},
 }
+
+@misc{hooks-surfaces-document-has-the-fixed-keys-in-the-fixed-order,
+  section = {surfaces},
+  title  = {Top-level keys, every surface's keys, and the order of the surface names},
+  claim  = {Top-level keys, every surface's keys, and the order of the surface names.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_the_document_has_the_fixed_keys_in_the_fixed_order},
+}
+
+@misc{hooks-surfaces-declared-surfaces-are-what-exists-and-review-follows-the-git-hook,
+  section = {surfaces},
+  title  = {A held surface lists its paths and the pre-commit gate; an absent one lists nothing},
+  claim  = {A held surface lists its paths and the pre-commit gate; an absent one lists nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_declared_surfaces_are_what_exists_and_review_follows_the_git_hook},
+}
+
+@misc{hooks-surfaces-repository-without-a-review-file-has-no-reviewer,
+  section = {surfaces},
+  title  = {The reviewer is derived from a file that exists, never assumed},
+  claim  = {The reviewer is derived from a file that exists, never assumed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_a_repository_without_a_review_file_has_no_reviewer},
+}
+
+@misc{hooks-surfaces-json-is-stable-and-parses-back-to-the-survey,
+  section = {surfaces},
+  title  = {Two renderings are the same text and equal the survey's own record},
+  claim  = {Two renderings are the same text and equal the survey's own record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_the_json_is_stable_and_parses_back_to_the_survey},
+}

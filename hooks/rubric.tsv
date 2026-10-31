@@ -218,3 +218,4 @@ baselinedir	Baseline Directory: a Mypy Baseline Kept One File per Module Reads a
 commitdecl	Commit Declaration: A Repository's Owned Paths and Pre-Steps Are Read From One File, Absent Reads Empty, Wrong Is Refused (W2130)
 commit_plain_frozen	A Plain Commit Lands the Bytes Frozen at Submit, Not What the Tree Holds When It Finally Runs (W2120)
 citeguard	A Message Citing a Transcript Line Is Admitted Only When the Turn Read That Line (W2064)
+surfaces	A Repository's Config Surfaces Are Reported as Fixed JSON Keys, Read From Itself Alone (W2201)

@@ -470,7 +470,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_hooks_preflight.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_pycheck_changed.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
-"tests/test_pycheck_format.py" = ["assert"]
 "tests/test_commit_isolated_hooks.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_isolated_routing.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_isolated_ignored.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -479,19 +478,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_lease_wait.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stackgate.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacklanding.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_vlogrecord.py" = ["assert"]
-"tests/test_vlogspool.py" = ["assert"]
-"tests/test_vlogforms.py" = ["assert"]
-"tests/test_vlogcli.py" = ["assert"]
-"tests/test_vlogbatch.py" = ["assert"]
-"tests/test_vlogwatch.py" = ["assert"]
 "tests/test_verdictlog.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_vlogship.py" = ["assert", "invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_vlogsink.py" = ["assert", "invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_snaplinks.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_stackrun.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_stackmutants.py" = ["assert"]
-"tests/test_stacktypes.py" = ["assert"]
 "tests/test_commit_stack.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_isolated_staged.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_remote.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -508,9 +499,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_repro_rungs.py" =["assert"]
 "tests/test_index_refresh.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_raced.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_pycheck_install.py" = ["assert"]
-"tests/test_pycheck_clear.py" = ["assert"]
-"tests/test_pycheck_clear_ledger.py" = ["assert"]
 # Its witnesses make throwaway git repositories under tmp_path and run real git against them.
 "tests/test_snapshot.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -519,60 +507,17 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/pycheck_clear.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # The snapshot is git plus a command the caller names, and its fixed namespaced path under /var/tmp is
 # the operator's ruling (2026-10-06), not an accident: a hardcoded temp path is the point.
-"tests/test_repin_cli.py" = ["assert"]
-"tests/test_loadwait.py" = ["assert"]
-"tests/test_repin_metrics.py" = ["assert"]
-"tests/test_revendor.py" = ["assert"]
-"tests/test_revendor_apply.py" = ["assert"]
-"tests/test_wheel.py" = ["assert"]
 "tests/test_import_cycles.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_revendor_cli.py" = ["assert"]
-"tests/test_work_claims.py" = ["assert"]
-"tests/test_work_claims_hook.py" = ["assert"]
 "src/mikemol/hooks/runproc.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 # ⚑ ONE RESPONSIBILITY EACH (W1461): the probe runs the pinned compiler (subprocess) and downloads it
 # from the https URL the repo's own MODULE.bazel pins (urlopen), verified by sha256 before it is opened.
 "src/mikemol/hooks/codon_probe.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "suspicious-url-open-usage"]
-"tests/test_codon_probe.py" = ["assert"]
-"tests/test_idle_progress.py" = ["assert"]
-"tests/test_idle_stop.py" = ["assert"]
-"tests/test_ratchet_emit.py" = ["assert"]
-"tests/test_live_tree_edit.py" = ["assert"]
-"tests/test_scratch_restore.py" = ["assert"]
-"tests/test_worktree_submit.py" = ["assert"]
-"tests/test_commit_worktree.py" = ["assert"]
-"tests/test_gatefirst.py" = ["assert"]
-"tests/test_gatecpu.py" = ["assert"]
-"tests/test_gatehung.py" = ["assert"]
-"tests/test_freezefrom.py" = ["assert"]
-"tests/test_commit_freeze_from.py" = ["assert"]
 "tests/test_commit_plain_frozen.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_bazelshim.py" = ["assert"]
-"tests/test_baselinedir.py" = ["assert"]
-"tests/test_baselinedir_wiring.py" = ["assert"]
-"tests/test_baselinedir_write.py" = ["assert"]
-"tests/test_gate_test_keep_going.py" = ["assert"]
-"tests/test_ratchet_emit_retired.py" = ["assert"]
-"tests/test_hold_lift_numbered.py" = ["assert"]
-"tests/test_round_check.py" = ["assert"]
-"tests/test_round_wire.py" = ["assert"]
-"tests/test_commitments_emit.py" = ["assert"]
 "tests/test_mypy_mirror.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_ratchet_hook.py" = ["assert"]
 "tests/test_queuecarry.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/presubmit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/testgate.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_testgate.py" = ["assert"]
-"tests/test_testgate_run.py" = ["assert"]
-"tests/test_gate_series.py" = ["assert"]
-"tests/test_sites_gate.py" = ["assert"]
-"tests/test_presubmit.py" = ["assert"]
-"tests/test_commit_withdraw.py" = ["assert"]
-"tests/test_refusal_stage.py" = ["assert"]
-"tests/test_siblingcensus.py" = ["assert"]
-"tests/test_siblingratchet.py" = ["assert"]
-"tests/test_gatetrend.py" = ["assert"]
 "src/mikemol/hooks/siblingcensus_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/vlogdetach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -580,7 +525,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/vlogsink.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/snaplinks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/privacy_audit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_privacy_shipped.py" = ["assert"]
 "tests/test_privacy_audit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_post_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -595,7 +539,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # W901: its witnesses build decoy repositories, a private index and a snapshot under tmp_path and
 # run real git (resolved by shutil.which, as above) with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set.
 "tests/test_isolated_commit.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_shellcheck_added.py" = ["assert"]
 "tests/test_commit_isolated.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE WORKTREE FALLBACK (W553): asking git where a linked worktree's main tree is IS its one
@@ -609,17 +552,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_scratch.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_scratch_land.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_commit_counts.py" = ["assert"]
-"tests/test_commit_gauge.py" = ["assert"]
-"tests/test_flakemetric.py" = ["assert"]
-"tests/test_flakegate.py" = ["assert"]
-"tests/test_stackahead.py" = ["assert"]
-"tests/test_commit_verdict.py" = ["assert"]
-"tests/test_trainround.py" = ["assert"]
-"tests/test_requeue.py" = ["assert"]
-"tests/test_commit_span.py" = ["assert"]
 "tests/test_gateenv.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_stackdrift.py" = ["assert"]
 "tests/test_stackfreeze.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacksnap.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_stacktree.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -682,13 +615,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_inbound_launcher_root.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.
-"tests/test_build_failure_note.py" = ["assert"]
 # ⚑ `test_tool_path.py` finds console scripts in planted directories under tmp_path: no process.
-"tests/test_tool_path.py" = ["assert"]
 
 # ⚑ W899: `test_probe.py` fires stub launchers and the real `hooks/bin` ones through the probe, which
 # is the code that spawns; the test itself only asserts.
-"tests/test_probe.py" = ["assert"]
 
 # ⚑ W886/W910/W924: these run the tracked `mikemol-commit` launcher, or its Python, in a throwaway git
 # checkout with stub executables: fixed argv, never a shell, no untrusted input. `git` is resolved
@@ -769,9 +699,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody has looked at — the blast radius a per-responsibility override exists to avoid.
 "tests/test_bar_fires.py" = ["assert", "suspicious-subprocess-import"]
 "tests/test_no_chaining.py" = ["assert", "suspicious-subprocess-import"]
-"tests/test_writeguard.py" = ["assert"]
-"tests/test_watchdog_exit.py" = ["assert"]
-"tests/test_hook_import_check.py" = ["assert"]
 # ⚑⚑ THE EIGHTH, AND ITS SUBJECT IS EXECUTION ITSELF. `test_reader_guard.py` exists because a
 # guard that tested `is_file()` admitted a script whose shebang interpreter was gone — present,
 # mode 775, and `execve` refused it naming the script. The repaired guard's predicate is an
