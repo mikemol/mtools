@@ -4767,3 +4767,5 @@
 2026-10-31T07:47:56Z  interrupt W2194 minted    -         "mikemol-commit's usage text lists --freeze-from DIR and says a freeze-from stack must not list queue paths (luthen:W1857)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1857
 2026-10-31T09:38:48Z  status W2111 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T10:16:31Z  status W2192 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T11:01:33Z  status W2191 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T11:09:47Z  status W2112 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

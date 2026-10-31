@@ -14,6 +14,7 @@ so this reads the body and prefers it to the traced type.
 ⚑ WHAT THE BODY DOES, AND THE FORM THAT FOLLOWS, IN THIS ORDER:
 
     constant string keys subscripted        TypedDict of those keys (dict methods alone allowed)
+    string-only methods alone               str
     array attributes (shape, dtype, ...)    NDArray
     any other attribute read or called      Protocol of those names
     dict methods alone                      Mapping
@@ -61,6 +62,48 @@ _INDEX_NAMES = frozenset(
     }
 )
 _INTEGER_CALLS = frozenset({"len", "int", "round"})
+# ⚑ W2112 (graded at W1925: 14 of 117 hand annotations were narrower than a Protocol because the
+# value is really a `str`): a parameter whose every attribute read is a method that ONLY a string
+# has is a `str`. Methods a list or bytes share (count, index, copy, join's bytes twin) are left
+# out, so a value that could be another sequence stays a Protocol.
+_STR_METHODS = frozenset(
+    {
+        "strip",
+        "lstrip",
+        "rstrip",
+        "split",
+        "rsplit",
+        "splitlines",
+        "startswith",
+        "endswith",
+        "lower",
+        "upper",
+        "title",
+        "casefold",
+        "capitalize",
+        "swapcase",
+        "replace",
+        "format",
+        "join",
+        "encode",
+        "find",
+        "rfind",
+        "partition",
+        "rpartition",
+        "isdigit",
+        "isalpha",
+        "isalnum",
+        "isspace",
+        "isupper",
+        "islower",
+        "zfill",
+        "ljust",
+        "rjust",
+        "center",
+        "expandtabs",
+        "translate",
+    }
+)
 _MAPPING_METHODS = frozenset({"get", "items", "keys", "values", "setdefault", "update", "pop"})
 _ARRAY_ATTRS = frozenset(
     {
@@ -120,6 +163,7 @@ def narrow(use: Use) -> Narrowed:
     keyed = bool(use.keys) and use.attrs <= _MAPPING_METHODS
     rules = (
         (keyed, Narrowed("typeddict", tuple(sorted(use.keys)))),
+        (bool(use.attrs) and use.attrs <= _STR_METHODS, Narrowed("str")),
         (bool(use.attrs & _ARRAY_ATTRS), Narrowed("ndarray")),
         (bool(use.attrs - _MAPPING_METHODS), Narrowed("protocol", tuple(sorted(use.attrs)))),
         (bool(use.attrs), Narrowed("mapping")),

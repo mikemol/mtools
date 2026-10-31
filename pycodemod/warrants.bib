@@ -7040,3 +7040,10 @@
             not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_value_subscripted_by_a_variable_key_is_a_mapping_and_by_a_position_a_sequence},
 }
+
+@misc{pycodemod-narrowing-parameter-read-only-through-string-only-methods-is-a-str,
+  section = {narrowing},
+  title  = {W2112: strip, split and upper are str's; add write and it is a stream; count is shared},
+  claim  = {W2112: strip, split and upper are str's; add write and it is a stream; count is shared.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_parameter_read_only_through_string_only_methods_is_a_str},
+}

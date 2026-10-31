@@ -47267,7 +47267,7 @@
     {
       "symbol": "W2112",
       "title": "pycodemod: a concrete-type rule names a parameter only str-methoded or only passed str as str, covering the benchmark's narrower cases",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2111"
       ],
@@ -47276,13 +47276,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "From the W1925 grading: 14 of 117 hand annotations are narrower than narrowing's Protocol (a value that is really str or an ast node: of_string(text), read_svg(path), _qml_timers(text), the cotype_index text parameters, _consts(tree), _num(node), _callee(call)) and 82 get no form. Rule: when every attribute read or call on a parameter is a str method (or bytes, or an ast.AST attribute), and/or every caller in the file passes a str literal or f-string, the form is the concrete class, preferred over the Protocol. WITNESS: re-grade the 12 pairs: NARROWER falls from 14 toward 0 and NONE falls where a str literal flows in; no EXACT case regresses. Needs the benchmark instrument (sibling card) to measure.",
-      "evidence": "",
+      "next_bounded_step": "When it lands record the sha; next the caller-side half (a call-site read) and ast.AST sets",
+      "evidence": "2026-10-31T11:09:47Z: Taken. pycodemod dist (no hooks registries). First slice: a str kind when every attribute read on a parameter is a method only str has. | 2026-10-31T11:19:22Z: stack-pycodemod-b SUBMITTED (behind aj): str kind for a parameter read only through str-only methods; 1124 pycodemod tests; 1 mutant. NOT DONE: caller-passes-a-str-literal half, bytes and ast.AST attribute sets, the re-grade witness.",
       "issued_at": "2026-10-28T22:19:17Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W774",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T11:19:22Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2113",
@@ -48939,7 +48940,7 @@
     {
       "symbol": "W2191",
       "title": "pycheck --ratchet --write rewrites only the mypy baseline modules whose counts changed (W2181 folded in)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2186"
       ],
@@ -48949,13 +48950,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After the reader slice: --write NAME scoped to the named baseline, and per-module files rewritten only when their counts differ, leaving the others byte-identical; test with two modules and one fall",
-      "evidence": "",
+      "next_bounded_step": "When aj prints COMMITTED record the sha; then the conversion verb (split an existing baseline into per-module parts) and --init for a split layout; nemik's kinds.py answer",
+      "evidence": "2026-10-31T11:01:33Z: stack-hooks-aj SUBMITTED: baselinedir.parts and lowered, pycheck_ratchet_write._save writes only changed parts and never the single file beside the directory; the SPLIT_WRITE refusal removed; 4 tests; 266 related tests pass; the edit gate answered after landing. NOT DONE: --init for a split layout; a one-time conversion of an existing baseline into parts.",
       "issued_at": "2026-10-31T07:09:30Z",
       "minted_during": "interrupt",
       "caused_by": "W2186",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T11:01:33Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2192",

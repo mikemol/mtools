@@ -62,6 +62,18 @@ def attribute_keyed(table, entry):
     return table[entry.key]
 
 
+def of_string(text):
+    return text.strip().split(",") + [text.upper()]
+
+
+def string_and_stream(box):
+    return box.strip() + box.write("x")
+
+
+def shared_method(items):
+    return items.count("a")
+
+
 class Box:
     def put(self, item):
         return item.value
@@ -114,6 +126,13 @@ def test_a_value_subscripted_by_a_variable_key_is_a_mapping_and_by_a_position_a_
     assert _kind("attribute_keyed", "table").kind == "mapping"
     assert _kind("by_position", "items").kind == "sequence"
     assert _kind("sliced_and_keyed", "rows").kind == "sequence"
+
+
+def test_a_parameter_read_only_through_string_only_methods_is_a_str() -> None:
+    """W2112: strip, split and upper are str's; add write and it is a stream; count is shared."""
+    assert _kind("of_string", "text") == narrowing.Narrowed("str")
+    assert _kind("string_and_stream", "box").kind == "protocol"
+    assert _kind("shared_method", "items").kind == "protocol"
 
 
 def test_self_is_skipped_methods_are_qualified_and_nested_parameters_are_their_own() -> None:
