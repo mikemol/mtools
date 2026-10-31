@@ -38,7 +38,7 @@ from itertools import pairwise
 from pathlib import Path
 from typing import cast
 
-from mikemol.pathsforward import lock
+from mikemol.pathsforward import inflight, lock
 from mikemol.pathsforward.behindopen import plan
 from mikemol.pathsforward.landed import landed_since
 from mikemol.pathsforward.ledger import Parsed, read
@@ -318,6 +318,20 @@ def handoff_line(ledger_text: str, repo: str) -> str:
     return ""
 
 
+def _live(ledger: Path | None) -> frozenset[str]:
+    """Name the cards a queued or in-flight stack names, for the project the ledger is in.
+
+    ⚑ A CARD MID-LANDING IS NOT AN UNLANDED EDIT (W2096, paperkit:R2): its evidence-only
+    change has a gate running, so the close does not count it among 'more touched, named by
+    no landed commit'.
+
+    Returns:
+        the symbols, or none when there is no ledger or the count file cannot be read.
+
+    """
+    return frozenset() if ledger is None else inflight.read(ledger.parent.parent)
+
+
 def judge(
     state: State,
     blocked_by: str | None = None,
@@ -337,7 +351,7 @@ def judge(
     since = tick_start(state, ledger)
     landed = None if ledger is None else landed_since(ledger.parent.parent, since)
     moved = advanced(state, since, landed)
-    open_edits = 0 if landed is None else len(touched(state, since) - landed)
+    open_edits = 0 if landed is None else len(touched(state, since) - landed - _live(ledger))
     # ⚑ THE FIGURE IS THE TOUCHED CARDS NO LANDED COMMIT NAMES, NOT "NOTHING LANDED" (W1588,
     # github-8f and nemik, 2026-10-18): nemik's close read `advanced 85; 39 touched, none landed`,
     # and the second half was taken to mean that no commit landed, when 85 cards had.

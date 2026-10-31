@@ -400,3 +400,5 @@ src/mikemol/pathsforward/cli.py|all-flag-ignored-by-blocked-on-list|    limit = 
 src/mikemol/pathsforward/inflight.py|withdrawn-stack-counted-as-live|        if fields\.get\("state"\) in LIVE and isinstance\(names, list\):|        if isinstance(names, list):|def=cards_of
 src/mikemol/pathsforward/inflight.py|queued-stack-not-counted-as-live|        if fields\.get\("state"\) in LIVE and isinstance\(names, list\):|        if fields.get("state") == "inflight" and isinstance(names, list):|def=cards_of
 src/mikemol/pathsforward/atomize.py|live-stack-card-still-advised|    if root is not None and top in inflight\.read\(root\):|    if False:|def=atomize
+src/mikemol/pathsforward/closegate.py|live-stack-card-counted-as-untouched|touched\(state, since\) - landed - _live\(ledger\)\)|touched(state, since) - landed)|def=judge
+src/mikemol/pathsforward/closegate.py|live-cards-never-read|    return frozenset\(\) if ledger is None else inflight\.read\(ledger\.parent\.parent\)|    return frozenset()|def=_live

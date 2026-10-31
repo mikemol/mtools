@@ -7846,3 +7846,10 @@
   claim  = {W2185 has an advance and a live stack: no advice; the same card with no stack is named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_inflight.py -k test_atomize_says_nothing_for_a_top_card_with_a_live_stack_and_otherwise_still_speaks},
 }
+
+@misc{pathsforward-close-live-stack-card-with-a-queued-stack-is-left-out-of-the-untouched-figure,
+  section = {open_line},
+  title  = {With W1 queued the close says one more touched; with nothing live it says two},
+  claim  = {With W1 queued the close says one more touched; with nothing live it says two.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_close_live_stack.py -k test_a_card_with_a_queued_stack_is_left_out_of_the_untouched_figure},
+}
