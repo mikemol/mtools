@@ -29,6 +29,17 @@ def test_the_step_is_guarded_by_the_sites_directory_and_checks_never_writes() ->
     assert "--write" not in joined
 
 
+def test_the_step_runs_before_the_suite_and_ends_the_run_when_it_fails() -> None:
+    """W2185: the check comes before `phase bazel_test`, and its failure exits before it."""
+    lines = _GATE.read_text(encoding="utf-8").splitlines()
+    step = next(i for i, line in enumerate(lines) if _STEP in line)
+    suite = next(i for i, line in enumerate(lines) if line.strip() == "phase bazel_test")
+    assert step < suite
+    between = "\n".join(lines[step:suite])
+    assert 'if [ "$failed_checks" != "$_sites_before" ]; then' in between
+    assert "exit 1" in between
+
+
 def test_the_step_runs_through_the_captured_runner_from_the_tools_root() -> None:
     """The generator needs fence and mutation on the path and the hooks interpreter of the tools."""
     joined = " ".join(_step())

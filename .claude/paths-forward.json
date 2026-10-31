@@ -47158,12 +47158,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": "agent",
-      "next_bounded_step": "When y prints COMMITTED record the sha; then the learned window from past gates' CPU series and the per-tick emit feeding gatecpu samples to verdict",
-      "evidence": "2026-10-30: 2026-10-30 read: no code yet (card had no next step); blocked on W2103 only for the hooks registry ordering, not for design. | 2026-10-31T01:13:58Z: stack-hooks-y SUBMITTED: gatehung.verdict (moving/hung/unknown over a window) and delta_line; pure, no caller; 5 mutants; cheap checks clean.",
+      "next_bounded_step": "Learned window from past gates' CPU series; the tick emit feeding gatecpu samples to verdict and printing the CPU line per long gate",
+      "evidence": "2026-10-30: 2026-10-30 read: no code yet (card had no next step); blocked on W2103 only for the hooks registry ordering, not for design. | 2026-10-31T01:13:58Z: stack-hooks-y SUBMITTED: gatehung.verdict (moving/hung/unknown over a window) and delta_line; pure, no caller; 5 mutants; cheap checks clean. | 2026-10-31T01:54:44Z: LANDED 74f364bb (stack y): gatehung.verdict and delta_line, pure, no caller.",
       "issued_at": "2026-10-28T19:33:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2068",
-      "last_worked": "2026-10-31T01:13:58Z",
+      "last_worked": "2026-10-31T01:54:44Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48676,20 +48676,21 @@
     {
       "symbol": "W2178",
       "title": "Writer --add-blocker: additive, keeps prior blockers, human kind and working status, restores on close (github-42)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After stack-pathsforward-n lands: first slice = additive blocker with remembered prior status (needs 1-3); then need (5) closeumbrellas guard",
-      "evidence": "2026-10-30: 2026-10-30: demand edge from host github:W82 (applying the operator's tick-review rulings), due 2026-10-31T18:00Z, per github-42; for ranking, not an order. | 2026-10-30: 2026-10-30 SEARCH DONE (grep of pathsforward/src for add.blocker, prior_status, restore-status; and the card list): no existing code or card covers --add-blocker or a remembered prior status. Need (4) is met by W2038 (stack-pathsforward-n queued, --reviewing). Held until n lands: a second pathsforward stack built now would carry registry files (mutants.regex, rubric.tsv, warrants.bib) without n's lines and delete them when it lands after. First slice then: model.add_blocker(card, blocker) appends to blocked_on, records prior_status and prior_kind on the card, sets blocked/human; plus the restore on the blocker's close; need (1) and (2) follow.",
+      "next_bounded_step": "When q prints COMMITTED record the sha; then need (2) relabel kind, (5) close-umbrellas never closes a card with its own next step, (4) refusal while a review card is ready",
+      "evidence": "2026-10-30: 2026-10-30: demand edge from host github:W82 (applying the operator's tick-review rulings), due 2026-10-31T18:00Z, per github-42; for ranking, not an order. | 2026-10-30: 2026-10-30 SEARCH DONE (grep of pathsforward/src for add.blocker, prior_status, restore-status; and the card list): no existing code or card covers --add-blocker or a remembered prior status. Need (4) is met by W2038 (stack-pathsforward-n queued, --reviewing). Held until n lands: a second pathsforward stack built now would carry registry files (mutants.regex, rubric.tsv, warrants.bib) without n's lines and delete them when it lands after. First slice then: model.add_blocker(card, blocker) appends to blocked_on, records prior_status and prior_kind on the card, sets blocked/human; plus the restore on the blocker's close; need (1) and (2) follow. | 2026-10-31T01:54:25Z: stack-pathsforward-q SUBMITTED: --add-blocker (needs 1 and 3): addblocker.fields, model.relieve restores prior_status, ops.Update.add_blocker, cli flag; 1393 tests pass; 7 mutants.",
       "issued_at": "2026-10-30T17:21:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-42",
-      "last_worked": "2026-10-30T20:17:49Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T01:54:25Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2179",

@@ -16502,3 +16502,10 @@
   claim  = {`CPU +N s since last tick` for a rise; a stall or a fall says it did not advance.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatehung.py -k test_the_delta_line_names_a_rise_a_stall_a_fall_and_a_first_sample},
 }
+
+@misc{hooks-sites-gate-step-runs-before-the-suite-and-ends-the-run-when-it-fails,
+  section = {sites_gate},
+  title  = {W2185: the check comes before `phase bazel_test`, and its failure exits before it},
+  claim  = {W2185: the check comes before `phase bazel_test`, and its failure exits before it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_sites_gate.py -k test_the_step_runs_before_the_suite_and_ends_the_run_when_it_fails},
+}

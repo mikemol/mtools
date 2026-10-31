@@ -853,6 +853,25 @@ if ! _gate_explained=$("$_gate_jobs_tool" --explain); then
   exit 1
 fi
 say "$_gate_explained"
+# ⚑⚑ W2185 (github-42, 2026-10-30; memory fail-fast-order-by-failure-rate-over-cost): THE CHEAP
+# STRUCTURAL CHECK RUNS BEFORE THE HOUR OF SUITE, NOT AFTER IT. `hooks-t` ran 1,542 tests, all
+# green, and was then refused by `mutants_gen --check`, a check that takes seconds and fails far
+# more often than any test. Moved here from after the suite (it needs no bazel); ONLY THIS CHECK
+# ends the run early, so a failure of any earlier check still lets the suite run as it always has.
+# ⚑ ONLY WHERE THE SITES ARE COMMITTED: a repository (or a snapshot of one) with no `hooks/sites`
+# has nothing to follow.
+_sites_before="$failed_checks"
+if [ -d hooks/sites ]; then
+  run_checked "hooks/sites follow the graph (mutants_gen --check)" \
+    git_scrubbed env PYTHONPATH="$tools/fence/src:$tools/mutation/src" \
+      "$tools/hooks/.venv/bin/python3" check_mutants/mutants_gen.py --dist hooks --check
+  if [ "$failed_checks" != "$_sites_before" ]; then
+    record_refusal pre-commit "$failed_checks" "${failed_detail:-}"
+    say "REFUSED before the suite — a cheap structural check failed:${failed_checks:-}"
+    say "the failing check(s) said:${failed_detail:-}"
+    exit 1
+  fi
+fi
 phase bazel_test
 # ⚑ W1785: THE BUILD EVENTS GO TO A LOCAL FILE TOO, for `mikemol-gate-targets` below: they name each
 # target's wall time and whether bazel replayed it from cache, which the console log does not.
@@ -1122,11 +1141,8 @@ run_checked "no untracked code (.py .rego .sh) under .claude/" \
 # module is gone. It is cheap (seconds, no bazel), so it runs here and not as a target that would
 # need every sub-package's BUILD file as a declared input. ⚑ ONLY WHERE THE SITES ARE COMMITTED: a
 # repository (or a snapshot of one) with no `hooks/sites` has nothing to follow.
-if [ -d hooks/sites ]; then
-  run_checked "hooks/sites follow the graph (mutants_gen --check)" \
-    git_scrubbed env PYTHONPATH="$tools/fence/src:$tools/mutation/src" \
-      "$tools/hooks/.venv/bin/python3" check_mutants/mutants_gen.py --dist hooks --check
-fi
+# ⚑ W2185: THE STEP NOW RUNS BEFORE THE SUITE (see `phase bazel_test`), where its failure ends the
+# run in seconds; it is not run a second time here.
 
 # ⚑⚑ THE ROSTER IS THE ONE POPULATION IN THIS REPOSITORY THAT CANNOT BE ENUMERATED, measured
 # rather than assumed: PATH yields 2,843 executables and flagging all of it is useless; an
