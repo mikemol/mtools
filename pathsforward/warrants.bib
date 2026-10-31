@@ -7895,3 +7895,24 @@
   claim  = {Round trip: the raw output as the file keeps the list; one edited line changes one rule.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_raw.py -k test_setting_from_the_raw_output_changes_nothing_and_an_edit_changes_one_rule},
 }
+
+@misc{pathsforward-workingstale-stale-working-cards-are-listed-oldest-first-and-the-controls-are-not,
+  section = {workingstale},
+  title  = {Bound 2: W6 (unreadable) first, then W5 (10 d from issue), W2 (5 d); W3 is live},
+  claim  = {Bound 2: W6 (unreadable) first, then W5 (10 d from issue), W2 (5 d); W3 is live.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workingstale.py -k test_stale_working_cards_are_listed_oldest_first_and_the_controls_are_not},
+}
+
+@misc{pathsforward-workingstale-card-exactly-at-the-bound-is-not-stale,
+  section = {workingstale},
+  title  = {W7 was worked 2 d ago: bound 2 leaves it out},
+  claim  = {W7 was worked 2 d ago: bound 2 leaves it out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workingstale.py -k test_a_card_exactly_at_the_bound_is_not_stale},
+}
+
+@misc{pathsforward-workingstale-mode-reads-the-live-map-leaves-no-beat-and-refuses-a-bad-bound,
+  section = {workingstale},
+  title  = {A card the count file names is not a row; no heartbeat is written; `abc` is refused},
+  claim  = {A card the count file names is not a row; no heartbeat is written; `abc` is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_workingstale.py -k test_the_mode_reads_the_live_map_leaves_no_beat_and_refuses_a_bad_bound},
+}

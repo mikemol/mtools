@@ -44,6 +44,7 @@ from mikemol.pathsforward import (
     ghosts,
     idle,
     inbound,
+    inflight,
     lease,
     lock,
     manifest,
@@ -67,6 +68,7 @@ from mikemol.pathsforward import (
     warrant,
     watchdogcmd,
     wholelist,
+    workingstale,
 )
 from mikemol.pathsforward.advice import close_applied as close_advice
 from mikemol.pathsforward.advice import counts as count_advice
@@ -531,6 +533,7 @@ _VALUED = (
     "show",
     "blocked_on_list",
     "ready_older_than",
+    "working_stale",
     "retros",
     "preamble_set",
     "standing_set",
@@ -643,6 +646,18 @@ _FIELDS = (
     "line",
     "reader",
     "dry_run",
+)
+# ⚑ A READING IS NOT A SIGN OF LIFE: these modes ask the queue and change nothing, so they leave no
+# heartbeat (a session that only reads must not look alive to the watchdog).
+_READINGS = frozenset(
+    {
+        "ready_count",
+        "watchdog_line",
+        "show",
+        "blocked_on_list",
+        "ready_older_than",
+        "working_stale",
+    }
 )
 _APPLIES: dict[str, frozenset[str]] = {
     "update": frozenset(
@@ -1090,6 +1105,12 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         "--blocked-on-list",
         metavar="SYMBOL",
         help="W2184: the open cards blocked on SYMBOL, newest first, 50 at most (--all: every one)",
+    )
+    mode.add_argument(
+        "--working-stale",
+        metavar="DAYS",
+        help="W2195: the working cards no live stack names whose last work is older than "
+        "DAYS days, oldest first, as '<symbol> <age>d <next step>', then a count",
     )
     mode.add_argument(
         "--ready-older-than",
@@ -3014,6 +3035,27 @@ def _blocked_on_list(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _working_stale(ctx: Ctx) -> int:
+    """Print the working cards no live stack names, oldest first, then how many (W2195).
+
+    ⚑ A READING, NOT A WRITE: it asks the queue and the gate's live map and changes nothing, so it
+    leaves no beat.
+
+    Returns:
+        EXIT_OK; EXIT_REFUSED when the bound is not a non-negative number.
+
+    """
+    given = ctx.get("working_stale") or ""
+    days = readyolder.parse_days(given)
+    if days is None:
+        _warn(f"REFUSED: --working-stale wants a number of days, not {given!r}")
+        return EXIT_REFUSED
+    live = inflight.read(ctx.path.parent.parent)
+    for found in workingstale.report(store.load(ctx.path), days, ctx.now, live):
+        _say(found)
+    return EXIT_OK
+
+
 def _ready_older_than(ctx: Ctx) -> int:
     """Print the ready cards older than a bound, oldest first, then how many there are (W2118).
 
@@ -3562,6 +3604,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "show": _show,
     "blocked_on_list": _blocked_on_list,
     "ready_older_than": _ready_older_than,
+    "working_stale": _working_stale,
     "retros": _retros,
     "commit_message": _commit_message,
     "scan_literal": _scan_literal,
@@ -3675,7 +3718,7 @@ def main(argv: list[str] | None = None) -> int:
         _warn("REFUSED: --state PATH is required; there is no default root")
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
-    if mode not in {"ready_count", "watchdog_line", "show", "blocked_on_list", "ready_older_than"}:
+    if mode not in _READINGS:
         beat.try_beat(ctx.path, time.time_ns())
     try:
         code = _HANDLERS[mode](ctx)

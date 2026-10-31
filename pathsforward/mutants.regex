@@ -168,7 +168,7 @@ src/mikemol/pathsforward/beat.py|zero-gap-kept|if before is not None and now_ns 
 src/mikemol/pathsforward/beat.py|worktree-guessed-at|    if not git_dir.is_dir\(\):|    if False:|def=try_beat
 src/mikemol/pathsforward/idle.py|working-cards-counted|text\(w, "status"\) == "ready"|text(w, "status") in {"ready", "working"}|def=ready_count
 src/mikemol/pathsforward/idle.py|witnessed-cards-counted|and not text\(w, "witness"\)|and True|def=ready_count
-src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in \{"ready_count", "watchdog_line", "show", "blocked_on_list", "ready_older_than"\}:|    if True:|def=main
+src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in _READINGS:|    if True:|def=main
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
 src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = installed or which\(SCRIPT\)|    found = installed|def=command
@@ -353,7 +353,7 @@ src/mikemol/pathsforward/cli.py|reviewing-without-a-transcript-passes|    if tra
 src/mikemol/pathsforward/landed.py|landing-times-ask-for-one-commit|f"-n\{count\}"|"-n1"|def=landing_times
 src/mikemol/pathsforward/cli.py|scan-skips-the-standing-rules|    hits \+= _standing_hits\(state\.doc, pattern\)|    hits += []|def=_scan_literal
 src/mikemol/pathsforward/cli.py|every-standing-rule-is-a-hit|        if pattern in rule|        if True|def=_standing_hits
-src/mikemol/pathsforward/cli.py|show-leaves-a-beat|    if mode not in \{"ready_count", "watchdog_line", "show", "blocked_on_list", "ready_older_than"\}:|    if mode not in {"ready_count", "watchdog_line", "blocked_on_list", "ready_older_than"}:|def=main
+src/mikemol/pathsforward/cli.py|show-leaves-a-beat|    if mode not in _READINGS:|    if mode not in _READINGS - {"show"}:|def=main
 src/mikemol/pathsforward/warrantfind.py|citation-window-unbounded|        end = marks\[at \+ 1\]\.start\(\) if at \+ 1 < len\(marks\) else len\(evidence\)|        end = len(evidence)|def=cites
 src/mikemol/pathsforward/warrantfind.py|claimed-uuid-listed-again|if m\.span\(\) not in claimed\]|if True]|def=cites
 src/mikemol/pathsforward/warrantfind.py|cited-card-called-unresolved|    return bool\(_DATE\.search\(evidence\)\) and not cites\(evidence\)|    return bool(_DATE.search(evidence))|def=unresolved
@@ -408,3 +408,8 @@ src/mikemol/pathsforward/closegate.py|live-stack-card-counted-as-untouched|touch
 src/mikemol/pathsforward/closegate.py|live-cards-never-read|    return frozenset\(\) if ledger is None else inflight\.read\(ledger\.parent\.parent\)|    return frozenset()|def=_live
 src/mikemol/pathsforward/cli.py|raw-flag-ignored|    shown = standing\.rules\(doc\) if ctx\.opts\.get\("raw"\) is True else standing\.lines\(doc\)|    shown = standing.lines(doc)|def=_standing
 src/mikemol/pathsforward/cli.py|raw-is-the-default|    shown = standing\.rules\(doc\) if ctx\.opts\.get\("raw"\) is True else standing\.lines\(doc\)|    shown = standing.rules(doc)|def=_standing
+src/mikemol/pathsforward/workingstale.py|live-card-listed|        if text\(w, "status"\) != "working" or symbol in live:|        if text(w, "status") != "working":|def=report
+src/mikemol/pathsforward/workingstale.py|ready-card-listed|        if text\(w, "status"\) != "working" or symbol in live:|        if symbol in live:|def=report
+src/mikemol/pathsforward/workingstale.py|card-at-the-bound-listed|        if age > days:|        if age >= days:|def=report
+src/mikemol/pathsforward/workingstale.py|unreadable-stamp-read-as-fresh|        return _UNKNOWN|        return 0.0|def=_age
+src/mikemol/pathsforward/workingstale.py|never-worked-card-ignores-its-issue-stamp|        age = _age\(text\(w, "last_worked"\) or text\(w, "issued_at"\), now\)|        age = _age(text(w, "last_worked"), now)|def=report
