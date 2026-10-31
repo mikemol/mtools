@@ -51,7 +51,7 @@ src/mikemol/ratchet/kinds.py|negative-count-summed|            if type\(count\) 
 src/mikemol/ratchet/kinds.py|flat-shape-summed|        if not isinstance\(inner, dict\) or not inner:|        if False:|def=_counts
 src/mikemol/ratchet/cli.py|repo-flag-censuses-the-fleet|    rows = census_repo\(where\) if opts\["repo"\] else census\(where\)|    rows = census(where)|def=_census_main
 src/mikemol/ratchet/fleetcensus.py|clone-counted|        and not _CLONE\.search\(entry\.name\)|        and True|def=repos_under
-src/mikemol/ratchet/fleetcensus.py|depth-unbounded|            and len\(Path\(here\)\.parts\) - base < MAX_DEPTH|            and True|def=_files
+src/mikemol/ratchet/fleetcensus.py|depth-unbounded|            and len\(Path\(here\)\.parts\) - base < MAX_DEPTH|            and True|def=_walk
 src/mikemol/ratchet/declaration.py|link-read-as-a-declaration|    if file\.is_symlink\(\) or not file\.is_file\(\):|    if not file.is_file():|def=_parsed
 src/mikemol/ratchet/declaration.py|path-may-leave-the-repository|    if given\.is_absolute\(\) or "\.\." in given\.parts:|    if False:|def=_row
 src/mikemol/ratchet/declaration.py|unknown-kind-accepted|    if kind not in kinds\.KIND_NAMES:|    if False:|def=_row
@@ -94,3 +94,5 @@ src/mikemol/ratchet/exemptions.py|absent-table-read-as-unread|            return
 src/mikemol/ratchet/exemptions.py|one-per-file-not-per-rule|        total \+= len\(cast\("list\[object\]", rules\)\)|        total += 1|def=count
 src/mikemol/ratchet/exemptions.py|unparsed-text-not-caught|    except tomllib\.TOMLDecodeError:|    except ZeroDivisionError:|def=count
 src/mikemol/ratchet/exemptions.py|non-list-rules-accepted|        if not isinstance\(rules, list\):|        if False:|def=count
+src/mikemol/ratchet/fleetcensus.py|exemptions-left-out-of-the-census|    return \[\*rows, \*exemption_rows\(repo\)\]|    return rows|def=census_repo
+src/mikemol/ratchet/fleetcensus.py|every-file-read-as-a-pyproject|        if path\.name == "pyproject\.toml":|        if True:|def=exemption_rows

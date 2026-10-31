@@ -4875,3 +4875,6 @@
 2026-10-31T17:09:42Z  status W2120 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T17:21:54Z  status W2195 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T17:22:24Z  interrupt W2199 minted    -         "tick-open applies the release of working cards that are LANDED or STALE with no gate entry, or nemik flags them (W2195 follow-up)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2195
+2026-10-31T17:35:15Z  status W2138 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T17:35:15Z  status W2139 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T17:37:18Z  status W2139 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

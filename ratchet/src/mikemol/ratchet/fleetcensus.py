@@ -27,7 +27,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from mikemol.ratchet import declaration, expression, kinds
+from mikemol.ratchet import declaration, exemptions, expression, kinds
 
 MAX_DEPTH = 4
 _SUFFIXES = frozenset({".json", ".txt", ".tsv"})
@@ -82,7 +82,7 @@ def repos_under(root: Path) -> list[Path]:
     ]
 
 
-def _files(repo: Path) -> Iterator[Path]:
+def _walk(repo: Path) -> Iterator[Path]:
     base = len(repo.parts)
     for here, dirs, names in os.walk(repo):
         dirs[:] = sorted(
@@ -93,8 +93,32 @@ def _files(repo: Path) -> Iterator[Path]:
             and len(Path(here).parts) - base < MAX_DEPTH
         )
         for name in sorted(names):
-            if Path(name).suffix in _SUFFIXES:
-                yield Path(here) / name
+            yield Path(here) / name
+
+
+def _files(repo: Path) -> Iterator[Path]:
+    return (path for path in _walk(repo) if path.suffix in _SUFFIXES)
+
+
+def exemption_rows(repo: Path) -> list[Row]:
+    """List one `exemption` row per pyproject the repository carries (W2139).
+
+    ⚑ AN EXEMPTION IS DEBT MOVED, NOT DEBT PAID (operator 2026-10-25): a counted allowlist entry
+    removed and the same debt put in a `per-file-ignores` row makes one count fall and this one
+    rise, so their sum reads unchanged and never as paydown. The row's value is
+    `exemptions.count` of the file; an unreadable pyproject is `UNREAD`, not zero.
+
+    Returns:
+        the rows in path order; empty when the repository has no pyproject.
+
+    """
+    rows: list[Row] = []
+    for path in _walk(repo):
+        if path.name == "pyproject.toml":
+            value = exemptions.count(path.read_text(encoding="utf-8", errors="replace"))
+            relative = path.relative_to(repo).as_posix()
+            rows.append(Row(repo.name, relative, "exemption", value, kinds.FLOOR))
+    return rows
 
 
 def _declared_row(repo: Path, item: declaration.Declared) -> Row:
@@ -125,7 +149,7 @@ def census_repo(repo: Path) -> list[Row]:
     """
     declared = declaration.read(repo)
     if declared is not None:
-        return [_declared_row(repo, item) for item in declared]
+        return [*(_declared_row(repo, item) for item in declared), *exemption_rows(repo)]
     rows: list[Row] = []
     for path in _files(repo):
         kind = kinds.kind_of(path.name)
@@ -133,7 +157,7 @@ def census_repo(repo: Path) -> list[Row]:
             relative = path.relative_to(repo).as_posix()
             value, total = kinds.value_of(path), kinds.sum_of(path)
             rows.append(Row(repo.name, relative, kind, value, kinds.FLOOR, total, guessed=True))
-    return rows
+    return [*rows, *exemption_rows(repo)]
 
 
 def tombstone_line(repo: str, item: declaration.Retired) -> str:

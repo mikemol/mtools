@@ -1187,3 +1187,17 @@
   claim  = {None is UNREAD: a broken file must not look like a clean one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_text_that_does_not_parse_or_has_the_wrong_shape_is_unread},
 }
+
+@misc{ratchet-fleetcensus-pyproject-is-listed-as-an-exemption-row-and-unreadable-is-not-zero,
+  section = {fleetcensus},
+  title  = {W2139: one `exemption` row per pyproject; a broken one reads UNREAD, a clean one 0},
+  claim  = {W2139: one `exemption` row per pyproject; a broken one reads UNREAD, a clean one 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_a_pyproject_is_listed_as_an_exemption_row_and_unreadable_is_not_zero},
+}
+
+@misc{ratchet-fleetcensus-allowlist-entry-moved-to-per-file-ignores-reads-unchanged-never-paydown,
+  section = {fleetcensus},
+  title  = {W2139: the entry leaves the counted preview and the same debt appears as an exemption},
+  claim  = {W2139: the entry leaves the counted preview and the same debt appears as an exemption.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_an_allowlist_entry_moved_to_per_file_ignores_reads_unchanged_never_paydown},
+}

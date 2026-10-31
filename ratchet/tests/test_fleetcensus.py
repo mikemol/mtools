@@ -78,3 +78,40 @@ def test_the_command_prints_the_rows_and_the_counts(
     out = capsys.readouterr().out.splitlines()
     assert out[-1] == "# 4 ratchet file(s), 1 unread"
     assert "beta ratchet-preview.txt preview value=2 floor=0 guessed=1" in out
+
+
+_CLEAN = "[tool.ruff]\nline-length = 100\n"
+_EXEMPT = '[tool.ruff.lint.per-file-ignores]\n"a.py" = ["x"]\n'
+
+
+def _total(root: Path) -> int:
+    return sum(row.value or 0 for row in fleetcensus.census(root))
+
+
+def test_a_pyproject_is_listed_as_an_exemption_row_and_unreadable_is_not_zero(
+    tmp_path: Path,
+) -> None:
+    """W2139: one `exemption` row per pyproject; a broken one reads UNREAD, a clean one 0."""
+    _put(tmp_path / "alpha" / "pyproject.toml", _EXEMPT)
+    _put(tmp_path / "beta" / "pyproject.toml", "[tool.ruff")
+    _put(tmp_path / "gamma" / "pyproject.toml", _CLEAN)
+    lines = [row.line() for row in fleetcensus.census(tmp_path)]
+    assert lines == [
+        "alpha pyproject.toml exemption value=1 floor=0",
+        "beta pyproject.toml exemption value=UNREAD floor=0",
+        "gamma pyproject.toml exemption value=0 floor=0",
+    ]
+
+
+def test_an_allowlist_entry_moved_to_per_file_ignores_reads_unchanged_never_paydown(
+    tmp_path: Path,
+) -> None:
+    """W2139: the entry leaves the counted preview and the same debt appears as an exemption."""
+    _put(tmp_path / "alpha" / "ratchet-preview.txt", "k1\nk2\n")
+    _put(tmp_path / "alpha" / "pyproject.toml", _CLEAN)
+    before = _total(tmp_path)
+    _put(tmp_path / "alpha" / "ratchet-preview.txt", "k1\n")
+    _put(tmp_path / "alpha" / "pyproject.toml", _EXEMPT)
+    assert _total(tmp_path) == before
+    _put(tmp_path / "alpha" / "pyproject.toml", _CLEAN)
+    assert _total(tmp_path) < before
