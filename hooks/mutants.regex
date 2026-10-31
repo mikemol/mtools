@@ -827,3 +827,9 @@ src/mikemol/hooks/commit_kata.py|main-checkout-refused-too|    if text is None:|
 src/mikemol/hooks/gatefirst.py|timeout-not-red|        if status in RED:|        if status == "FAILED":|def=first_failure
 src/mikemol/hooks/gatefirst.py|last-red-test-named-not-first|    for line in bep_text\.splitlines\(\):|    for line in reversed(bep_text.splitlines()):|def=first_failure
 src/mikemol/hooks/gatefirst.py|stop-time-dropped|            return label, status, text_of\(summary\.get\("lastStopTime"\)\)|            return label, status, ""|def=first_failure
+# A gate's process tree is summed in CPU seconds from /proc, every descendant and nothing else (W2105).
+src/mikemol/hooks/gatecpu.py|name-split-at-the-first-paren|    close = stat\.rfind\("\)"\)|    close = stat.find(")")|def=parse_stat
+src/mikemol/hooks/gatecpu.py|system-time-ignored|        ticks = float\(fields\[_AFTER_COMM_UTIME\]\) \+ float\(fields\[_AFTER_COMM_STIME\]\)|        ticks = float(fields[_AFTER_COMM_UTIME])|def=parse_stat
+src/mikemol/hooks/gatecpu.py|grandchildren-not-followed|            if parent in members and pid not in members:|            if parent == root and pid not in members:|def=tree_ticks
+src/mikemol/hooks/gatecpu.py|absent-root-sums-its-orphans|    if root not in stats:|    if False:|def=tree_ticks
+src/mikemol/hooks/gatecpu.py|ticks-left-unconverted|    return tree_ticks\(stats, root\) / ticks_per_second|    return tree_ticks(stats, root)|def=sample

@@ -258,6 +258,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/gatecpu.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/gateenv.py": {
       "imports": [],
       "reads": [],
@@ -1847,6 +1852,13 @@ GRAPH = {
     "tests/test_gateclass.py": {
       "imports": [
         "src/mikemol/hooks/gateclass.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_gatecpu.py": {
+      "imports": [
+        "src/mikemol/hooks/gatecpu.py"
       ],
       "reads": [],
       "typing_only": []

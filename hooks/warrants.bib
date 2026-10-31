@@ -16453,3 +16453,17 @@
   claim  = {TIMEOUT counts; torn lines and events with no summary are skipped; green gives None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatefirst.py -k test_a_timeout_is_red_and_an_all_green_or_unreadable_file_names_nothing},
 }
+
+@misc{hooks-gatecpu-stat-line-with-spaces-and-parentheses-in-its-name-parses-from-the-last-paren,
+  section = {gatecpu},
+  title  = {The parent and the user+sys ticks are read after the closing parenthesis},
+  claim  = {The parent and the user+sys ticks are read after the closing parenthesis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatecpu.py -k test_a_stat_line_with_spaces_and_parentheses_in_its_name_parses_from_the_last_paren},
+}
+
+@misc{hooks-gatecpu-sum-covers-the-root-and-every-descendant-and-no-other-process,
+  section = {gatecpu},
+  title  = {Root 100 with child 101 and grandchild 102; 200 is a stranger; 'self' is skipped},
+  claim  = {Root 100 with child 101 and grandchild 102; 200 is a stranger; 'self' is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatecpu.py -k test_the_sum_covers_the_root_and_every_descendant_and_no_other_process},
+}
