@@ -16807,3 +16807,31 @@
   claim  = {Two renderings are the same text and equal the survey's own record.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_the_json_is_stable_and_parses_back_to_the_survey},
 }
+
+@misc{hooks-dirtymap-stack-beats-a-scratch-tree-and-a-scratch-tree-beats-nothing,
+  section = {dirtymap},
+  title  = {Carriers in order: stack key, scratch name, the named exceptions, NONE},
+  claim  = {Carriers in order: stack key, scratch name, the named exceptions, NONE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtymap.py -k test_a_stack_beats_a_scratch_tree_and_a_scratch_tree_beats_nothing},
+}
+
+@misc{hooks-dirtymap-lines-end-on-a-count-that-separates-only-in-main,
+  section = {dirtymap},
+  title  = {Six dirty paths: three carried, two excepted, one only in main},
+  claim  = {Six dirty paths: three carried, two excepted, one only in main.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtymap.py -k test_the_lines_end_on_a_count_that_separates_only_in_main},
+}
+
+@misc{hooks-dirtymap-clean-tree-is-a-zero-count-line,
+  section = {dirtymap},
+  title  = {No dirty path gives only the count line},
+  claim  = {No dirty path gives only the count line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtymap.py -k test_a_clean_tree_is_a_zero_count_line},
+}
+
+@misc{hooks-dirtymap-porcelain-text-is-read-into-paths-and-a-rename-names-its-new-path,
+  section = {dirtymap},
+  title  = {Modified, untracked, staged and renamed entries; the status columns are dropped},
+  claim  = {Modified, untracked, staged and renamed entries; the status columns are dropped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtymap.py -k test_porcelain_text_is_read_into_paths_and_a_rename_names_its_new_path},
+}

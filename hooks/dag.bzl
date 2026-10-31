@@ -213,6 +213,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/dirtymap.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/entry.py": {
       "imports": [
         "src/mikemol/hooks/after_compaction.py",
@@ -1862,6 +1867,13 @@ GRAPH = {
     "tests/test_corelimit.py": {
       "imports": [
         "src/mikemol/hooks/corelimit.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_dirtymap.py": {
+      "imports": [
+        "src/mikemol/hooks/dirtymap.py"
       ],
       "reads": [],
       "typing_only": []
