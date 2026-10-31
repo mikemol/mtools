@@ -7881,3 +7881,17 @@
   claim  = {A huge bound lists none and says 0; a reading writes no heartbeat; `abc` is refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_readyolder.py -k test_the_mode_prints_the_count_leaves_no_beat_and_refuses_a_bad_bound},
 }
+
+@misc{pathsforward-standing-raw-raw-prints-the-bare-rules-and-the-default-stays-numbered,
+  section = {standing},
+  title  = {`--raw` has no `standing N:` prefix; without it the numbered lines are as before},
+  claim  = {`--raw` has no `standing N:` prefix; without it the numbered lines are as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_raw.py -k test_raw_prints_the_bare_rules_and_the_default_stays_numbered},
+}
+
+@misc{pathsforward-standing-raw-setting-from-the-raw-output-changes-nothing-and-an-edit-changes-one-rule,
+  section = {standing},
+  title  = {Round trip: the raw output as the file keeps the list; one edited line changes one rule},
+  claim  = {Round trip: the raw output as the file keeps the list; one edited line changes one rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_raw.py -k test_setting_from_the_raw_output_changes_nothing_and_an_edit_changes_one_rule},
+}

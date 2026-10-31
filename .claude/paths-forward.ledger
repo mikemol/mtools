@@ -4779,3 +4779,6 @@
 2026-10-31T14:00:21Z  status W2122 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T14:03:35Z  status W2122 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T14:04:35Z  tick  W2122 advanced  sweep     "W2122 read and blocked on nemik:W1245 with the three facts needed; pathsforward-v (W2118) in the gate with hooks-am (W2121) queued behind it, nothing to resubmit [reason: W2119 waits on W2118 landing in the gate and W2115 is a producer design over hooks sites that would queue a third stack (cites W2118, W2119, W2115) (cites W2119, W2118, W2115, W2118, W2119, W2115)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T14:09:09Z  status W2118 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T14:37:55Z  status W2137 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T14:51:52Z  status W2121 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

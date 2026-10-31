@@ -632,6 +632,7 @@ _FIELDS = (
     "gate",
     "root",
     "all",
+    "raw",
     "on",
     "write",
     "verbose",
@@ -736,6 +737,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
     "blocked_on_list": frozenset({"all"}),
+    "standing": frozenset({"raw"}),
     "tick_open": frozenset({"root", "exclude", "verbose", "json"}),
     "tick_close": frozenset(
         {
@@ -884,6 +886,12 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
         action="store_true",
         default=None,
         help="--bump-blocked: one row per blocked card (default: counts and external parties)",
+    )
+    ap.add_argument(
+        "--raw",
+        action="store_true",
+        default=None,
+        help="W2137: --standing: the bare rules, one per line, no 'standing N:' prefix",
     )
     ap.add_argument("--kind", help="the ledger line's kind column (default: tick)")
     ap.add_argument("--evidence", metavar="TEXT", help="the ledger line's evidence column")
@@ -3138,7 +3146,9 @@ def _standing(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    for said in standing.lines(store.load(ctx.path).doc):
+    doc = store.load(ctx.path).doc
+    shown = standing.rules(doc) if ctx.opts.get("raw") is True else standing.lines(doc)
+    for said in shown:
         _say(said)
     return EXIT_OK
 

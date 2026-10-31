@@ -406,3 +406,5 @@ src/mikemol/pathsforward/inflight.py|queued-stack-not-counted-as-live|        if
 src/mikemol/pathsforward/atomize.py|live-stack-card-still-advised|    if root is not None and top in inflight\.read\(root\):|    if False:|def=atomize
 src/mikemol/pathsforward/closegate.py|live-stack-card-counted-as-untouched|touched\(state, since\) - landed - _live\(ledger\)\)|touched(state, since) - landed)|def=judge
 src/mikemol/pathsforward/closegate.py|live-cards-never-read|    return frozenset\(\) if ledger is None else inflight\.read\(ledger\.parent\.parent\)|    return frozenset()|def=_live
+src/mikemol/pathsforward/cli.py|raw-flag-ignored|    shown = standing\.rules\(doc\) if ctx\.opts\.get\("raw"\) is True else standing\.lines\(doc\)|    shown = standing.lines(doc)|def=_standing
+src/mikemol/pathsforward/cli.py|raw-is-the-default|    shown = standing\.rules\(doc\) if ctx\.opts\.get\("raw"\) is True else standing\.lines\(doc\)|    shown = standing.rules(doc)|def=_standing
