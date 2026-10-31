@@ -42,6 +42,16 @@ def test_the_five_word_form_is_a_stack_with_the_same_repository_and_file(
     assert commit_kata.stack_target(["/r", "--stack", "s.json", "--freeze-from"], {}) is None
 
 
+def test_the_usage_text_names_the_flag_the_same_repository_rule_and_the_queue_file_note() -> None:
+    """W2194 (luthen:W1857): a caller reading the usage text learns the flag and its rules."""
+    usage = commit_kata.USAGE
+    assert "mikemol-commit REPO --stack FILE --freeze-from DIR" in usage
+    assert "scratch worktree of the same repository" in usage
+    assert "should not list" in usage
+    assert "queue files" in usage
+    assert "another repository's DIR is refused" in usage
+
+
 def test_the_freeze_root_is_the_directory_only_when_the_flag_is_given() -> None:
     """Without the flag the files are frozen from the repository, as before."""
     root = Path("/r")

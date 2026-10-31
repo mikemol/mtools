@@ -47288,20 +47288,21 @@
     {
       "symbol": "W2113",
       "title": "Commit the el-openglo benchmark grader as an instrument so its 117-parameter reading can be re-run",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pycodemod"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Turn scratchpad grade_narrowing.py into a committed instrument: pycodemod/tools (or a test that skips without network) reading the twelve (file, before, after) shas from a tracked table, fetching them by sha into a scratch clone (never a live checkout), and printing exact, narrower, none, differ per parameter with the totals; the table is the 12 pairs recorded on W1925. WITNESS: a run prints TOTALS exact 17 or 19, narrower 14, none 82, with the two Mapping misreads named. The grading rule (sequence/iterable/mapping/callable compatibility spellings, TypedDict and Protocol resolution incl. the functional TypedDict form) is in the script now; its subprocess git call needs the dist's per-file ignore.",
-      "evidence": "",
+      "next_bounded_step": "Build in pycodemod: (1) the table as tracked data (file, before sha, after sha), (2) a pure grader: parse a before file with narrowing.uses_of, parse the after file's annotations with ast, and classify each shared parameter exact, narrower, none or differ (the compatibility spellings and TypedDict/Protocol resolution are in W1925's evidence), (3) a thin fetcher by sha into a scratch clone (needs a per-file ruff entry for the subprocess rules); tests on small synthetic before/after sources; the live run's witness is TOTALS exact 17 or 19, narrower 14, none 82 before W2111/W2112, then narrower and none falling",
+      "evidence": "2026-10-31T12:40:07Z: Taken. This is the sibling instrument W2112 needs for its re-grade witness. Reading W1925's recorded twelve pairs and looking for the scratchpad grade_narrowing.py first. | 2026-10-31T12:42:02Z: READ: the scratchpad grade_narrowing.py is GONE (searched the session scratchpads and the rescue copies), so the instrument is rebuilt, not committed. The twelve pairs resolve in the el-openglo repository to FULL shas (13 distinct commits, each 'before' the parent of the next 'after'): 1 check_modes b67322bedb9ead2c6d4e4f6db73ba4d81a8addfe (parent 0aa950ce); 2 check_cotype_coherence 0aa950ceeeb12dd5e9444a3f78c0d22a9e25f108 (parent a551fbb6); 3 capture_baseline a551fbb647f61d08fbf5b6fa4e385e3d365b5738 (parent 534c2a30); 4 identify 534c2a303b1fe216785d50fcb8695f339c4bd13b (parent 33807845); 5 plasma_rewrite 3380784558446fa90d317e9a6b9bbe1728deceda (parent cee3ed5a); 6 check_wall_limits cee3ed5ad7f573ead50923048a2cd9afed8d7eda (parent 06dcdadb); 7 cotype_index 06dcdadb7f080fffc8a71432f0210ac9b634d843 (parent d9451720); 8 check_plasma_air d945172077ae8753441f49f5662e787136bd463a (parent 014d30bc); 9 extract_template 014d30bc9280aaff9d85b233b4de44562798d5c3 (parent ab1d741c); 10 svg_setdiff ab1d741c8792fb68f47a9cc6e340ef45485c39f2 (parent adad454b); 11 drop_lines adad454b9855423ec63cf5c346dc4e3161e81827 (parent 68e7b59d); 12 catalog/fixtures/deps/undeclared 68e7b59dbcd4f74c1efcdc1f5bdd45f0a268b8ed (parent 6730be17bdaa387973711cf3818e77c5a1fe4a60). The pair is (after = the commit, before = its parent).",
       "issued_at": "2026-10-28T22:20:08Z",
       "minted_during": "interrupt",
       "caused_by": "el-openglo:W774",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T12:42:02Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2114",
@@ -48994,19 +48995,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When ak prints COMMITTED record the sha and tell luthen; W2194 (usage text) next",
-      "evidence": "2026-10-31T11:50:51Z: stack-hooks-ak SUBMITTED (behind pycodemod-b): isolated.refresh_tree and stacklanding.land print its line; real-git tests; 3 mutants; 562 related tests; checks clean. A failed restore is reported under 'differs' without git's reason.",
+      "next_bounded_step": "Tell luthen it is landed; W2194 (usage text) next",
+      "evidence": "2026-10-31T11:50:51Z: stack-hooks-ak SUBMITTED (behind pycodemod-b): isolated.refresh_tree and stacklanding.land print its line; real-git tests; 3 mutants; 562 related tests; checks clean. A failed restore is reported under 'differs' without git's reason. | 2026-10-31T12:25:16Z: LANDED (stack ak, gate passed): isolated.refresh_tree and stacklanding.land bring the main tree's working copies of landed paths to HEAD when unedited and name edited ones.",
       "issued_at": "2026-10-31T07:47:30Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1857",
-      "last_worked": "2026-10-31T11:50:51Z",
+      "last_worked": "2026-10-31T12:25:16Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2194",
       "title": "mikemol-commit's usage text lists --freeze-from DIR and says a freeze-from stack must not list queue paths (luthen:W1857)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2103"
       ],
@@ -49015,13 +49016,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "commit_kata.USAGE: add the REPO --stack FILE --freeze-from DIR form with one sentence: DIR is a scratch worktree of the same repository; queue files are read from the main tree at land time (W1941), so the stack should not list them; test that USAGE names the flag",
-      "evidence": "",
+      "next_bounded_step": "When al prints COMMITTED record the sha and close W2194",
+      "evidence": "2026-10-31T12:27:13Z: luthen: checks.land now takes --freeze-from and refuses queue paths with it (luthen:W1858, ed6f46b2), so the usage note can say the wrapper passes the flag through; their repin past 50547c98 is luthen:W1859. | 2026-10-31T12:35:53Z: stack-hooks-al SUBMITTED (behind pycodemod-c): USAGE names --freeze-from DIR, the same-repository rule and the queue-file note; one test; checks clean.",
       "issued_at": "2026-10-31T07:47:56Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1857",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T12:35:53Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [
