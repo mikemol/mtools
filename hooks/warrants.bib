@@ -16594,3 +16594,17 @@
   claim  = {Parts are read by name and merged; no directory and no part both give None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir.py -k test_a_directory_is_read_in_name_order_and_an_absent_or_empty_one_is_no_baseline},
 }
+
+@misc{hooks-baselinedir-wiring-directory-wins-over-the-single-file-beside-it-and-other-paths-read-as-before,
+  section = {baselinedir},
+  title  = {`disk` on the mypy baseline's path answers the merged directory when one exists},
+  claim  = {`disk` on the mypy baseline's path answers the merged directory when one exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_wiring.py -k test_the_directory_wins_over_the_single_file_beside_it_and_other_paths_read_as_before},
+}
+
+@misc{hooks-baselinedir-wiring-write-refuses-a-split-baseline-and-writes-nothing-while-its-writer-is-unbuilt,
+  section = {baselinedir},
+  title  = {With `mypy-baseline.d` present `--write` exits not-checked and touches no file},
+  claim  = {With `mypy-baseline.d` present `--write` exits not-checked and touches no file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_wiring.py -k test_write_refuses_a_split_baseline_and_writes_nothing_while_its_writer_is_unbuilt},
+}

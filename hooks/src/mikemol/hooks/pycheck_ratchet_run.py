@@ -15,7 +15,8 @@ an empty finding list.
 import sys
 from pathlib import Path
 
-from mikemol.hooks.pycheck_ratchet import Tools
+from mikemol.hooks import baselinedir
+from mikemol.hooks.pycheck_ratchet import MYPY_BASELINE, Tools
 from mikemol.hooks.runproc import run_process
 
 TREES = ("src", "tests", "checks", "tools")
@@ -86,6 +87,11 @@ def disk(path: Path) -> str | None:
         its text, or None when it is missing or unreadable.
 
     """
+    # ⚑ W2190: THE MYPY BASELINE MAY BE A DIRECTORY OF PER-MODULE FILES beside its single file;
+    # when it is, the directory is the baseline and `baselinedir` merges it.
+    split = path.parent / baselinedir.DIR
+    if path.name == MYPY_BASELINE and split.is_dir():
+        return baselinedir.read(split)
     try:
         return path.read_text(encoding="utf-8")
     except OSError:

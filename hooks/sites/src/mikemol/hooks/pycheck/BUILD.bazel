@@ -11,6 +11,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -98,6 +99,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -185,6 +187,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -272,6 +275,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -359,6 +363,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -446,6 +451,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -533,6 +539,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -620,6 +627,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -708,6 +716,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
@@ -796,6 +805,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",

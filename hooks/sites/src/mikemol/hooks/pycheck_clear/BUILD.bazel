@@ -10,6 +10,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -57,6 +58,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -104,6 +106,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -151,6 +154,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -199,6 +203,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -247,6 +252,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -295,6 +301,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -343,6 +350,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -391,6 +399,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -439,6 +448,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",
@@ -487,6 +497,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_ratchet_cli.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
         "//hooks:src/mikemol/hooks/checkers.py",
         "//hooks:src/mikemol/hooks/cmdparse.py",

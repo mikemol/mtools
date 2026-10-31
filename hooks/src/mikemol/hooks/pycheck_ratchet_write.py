@@ -19,7 +19,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import pyratchet
+from mikemol.hooks import baselinedir, pyratchet
 from mikemol.hooks.pycheck_ratchet import (
     EXIT_NOT_CHECKED,
     MYPY_BASELINE,
@@ -31,6 +31,12 @@ from mikemol.hooks.pycheck_ratchet import (
 
 EXIT_FAILED = 1
 EXISTS = "pycheck --ratchet --init: a baseline exists; use --write\n"
+# ⚑ THE READER TAKES THE DIRECTORY BEFORE THE FILE (W2190), so a `--write` that rewrote only the
+# single file would lower a baseline nobody reads: it refuses until the per-module writer exists.
+SPLIT_WRITE = (
+    "pycheck --ratchet --write: mypy-baseline.d is the baseline, and its writer is not built "
+    "yet (mtools:W2191); nothing written\n"
+)
 
 type Write = Callable[[Path, str], None]
 type Measured = tuple[pyratchet.Counts, pyratchet.Counts]
@@ -69,6 +75,9 @@ def lower(root: Path, tools: Tools, write: Write, out: TextIO, err: TextIO) -> i
     mypy_base = baseline(tools.read(root / MYPY_BASELINE))
     if ruff_base is None or mypy_base is None:
         err.write(NO_BASELINE)
+        return EXIT_NOT_CHECKED
+    if (root / baselinedir.DIR).is_dir():
+        err.write(SPLIT_WRITE)
         return EXIT_NOT_CHECKED
     now = _measure(root, tools)
     judged = [

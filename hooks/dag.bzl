@@ -633,6 +633,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/pycheck_ratchet_run.py": {
       "imports": [
+        "src/mikemol/hooks/baselinedir.py",
         "src/mikemol/hooks/pycheck_ratchet.py",
         "src/mikemol/hooks/runproc.py"
       ],
@@ -641,6 +642,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/pycheck_ratchet_write.py": {
       "imports": [
+        "src/mikemol/hooks/baselinedir.py",
         "src/mikemol/hooks/pycheck_ratchet.py",
         "src/mikemol/hooks/pyratchet.py"
       ],
@@ -1443,6 +1445,16 @@ GRAPH = {
     "tests/test_baselinedir.py": {
       "imports": [
         "src/mikemol/hooks/baselinedir.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_baselinedir_wiring.py": {
+      "imports": [
+        "src/mikemol/hooks/baselinedir.py",
+        "src/mikemol/hooks/pycheck_ratchet.py",
+        "src/mikemol/hooks/pycheck_ratchet_run.py",
+        "src/mikemol/hooks/pycheck_ratchet_write.py"
       ],
       "reads": [],
       "typing_only": []
