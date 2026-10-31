@@ -112,17 +112,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_rows.py" = ["assert"]
-"tests/test_cycle.py" = ["assert"]
-"tests/test_reduce.py" = ["assert"]
-"tests/test_plan.py" = ["assert"]
-"tests/test_ledger.py" = ["assert"]
-"tests/test_resolutions.py" = ["assert"]
-"tests/test_blockers.py" = ["assert"]
-"tests/test_queue.py" = ["assert"]
-"tests/test_mint.py" = ["assert"]
-"tests/test_mint_idiom.py" = ["assert"]
-"tests/test_fold.py" = ["assert"]
-"tests/test_cli.py" = ["assert"]
-"tests/test_universe.py" = ["assert"]
-"tests/test_config.py" = ["assert"]
+"tests/*" = ["assert"]

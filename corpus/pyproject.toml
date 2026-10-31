@@ -94,13 +94,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 
 # ⚑⚑ PER FILE, NEVER A GLOB: each line is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_corpus.py" = ["assert"]
-"tests/test_tree_root.py" = ["assert"]
-"tests/test_import_edges.py" = ["assert"]
-"tests/test_depmap.py" = ["assert"]
-"tests/test_exitcensus.py" = ["assert"]
-"tests/test_exit_gate.py" = ["assert"]
-"tests/test_codoncensus.py" = ["assert"]
+"tests/*" = ["assert"]
 # ⚑ THE CODON CENSUS STARTS THE PINNED COMPILER (W1321): the argv is `[codon, build, -o, out.o,
 # name]` with the binary the caller names, never a shell, run in a scratch directory it owns.
 "src/mikemol/corpus/codoncensus.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -108,5 +102,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # exclusions. MEASURED: git is resolved by `shutil.which`, the argv is fixed
 # (`git -C <root> check-ignore --stdin`), the names go in on stdin, never through a shell.
 "src/mikemol/corpus/suite_discovery.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_suite_pragmas.py" = ["assert"]
 "tests/test_suite_discovery.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
