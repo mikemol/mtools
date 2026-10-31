@@ -393,3 +393,5 @@ src/mikemol/pathsforward/addblocker.py|closed-card-held|    if status not in HOL
 src/mikemol/pathsforward/addblocker.py|blank-blocker-accepted|    if not blocker\.strip\(\):|    if False:|def=fields
 src/mikemol/pathsforward/model.py|freed-card-returns-ready-not-as-it-was|    rec\["status"\] = prior if prior in \{"ready", "working"\} else "ready"|    rec["status"] = "ready"|def=relieve
 src/mikemol/pathsforward/ops.py|add-blocker-never-applied|    if upd\.add_blocker is not None:|    if False:|def=_held
+src/mikemol/pathsforward/addblocker.py|human-ask-relabelled-by-an-agent-blocker|    if "human" in \{held, given\}:|    if "human" in {given}:|def=kind_of
+src/mikemol/pathsforward/addblocker.py|given-human-kind-ignored|    if "human" in \{held, given\}:|    if "human" in {held}:|def=kind_of

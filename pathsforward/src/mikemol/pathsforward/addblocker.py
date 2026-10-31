@@ -20,13 +20,31 @@ from mikemol.pathsforward.model import Json, RefusedError, strlist, text
 HOLDABLE = frozenset({"ready", "working", "blocked"})
 
 
+def kind_of(w: Json, given: str | None) -> str:
+    """Say who can move a card once another blocker is added: a human ask stays human.
+
+    ⚑ A CARD HAS ONE KIND FOR MANY BLOCKERS, so a list that mixes an operator ask and an agent
+    blocker is the operator's to unblock: adding an agent blocker, or the flag's `agent`,
+    must not relabel the human ask it sits beside (a host cold probe, need 2).
+
+    Returns:
+        `human` when the card is blocked on a human ask or the given kind is human, else the
+        given kind, else the card's own, else `agent`.
+
+    """
+    held = text(w, "blocked_kind") if text(w, "status") == "blocked" else ""
+    if "human" in {held, given}:
+        return "human"
+    return given or held or "agent"
+
+
 def fields(w: Json, blocker: str, kind: str | None) -> Json:
     """Compute the fields an added blocker changes on a card.
 
     Returns:
         the changed fields: `blocked_on` with the blocker appended once, the status `blocked`
         with the old one remembered in `prior_status` and the count restarted when the card was
-        not blocked already, and `blocked_kind` (the given kind, else the card's, else `agent`).
+        not blocked already, and `blocked_kind` (see `kind_of`).
 
     Raises:
         RefusedError: when the blocker is blank or the card is not open.
@@ -42,7 +60,7 @@ def fields(w: Json, blocker: str, kind: str | None) -> Json:
     on = strlist(w, "blocked_on")
     out: Json = {
         "blocked_on": on if blocker in on else [*on, blocker],
-        "blocked_kind": kind or text(w, "blocked_kind") or "agent",
+        "blocked_kind": kind_of(w, kind),
     }
     if status != "blocked":
         out.update({"prior_status": status, "status": "blocked", "ticks_blocked": 0})

@@ -572,10 +572,10 @@ def _set_given(new: Json, upd: Update) -> None:
             new[key] = [*strlist(new, key), item]
 
 
-def _held(new: Json, upd: Update) -> None:
+def _held(new: Json, upd: Update, old: Json) -> None:
     """Apply `--add-blocker` to the card being built: append, remember the status, block."""
     if upd.add_blocker is not None:
-        new.update(addblocker.fields(new, upd.add_blocker, upd.blocked_kind))
+        new.update(addblocker.fields(old, upd.add_blocker, upd.blocked_kind))
 
 
 def _is_work(upd: Update) -> bool:
@@ -653,7 +653,7 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         if stamp is not None or "landed_at" in new:
             new["landed_at"] = stamp
     _set_given(new, upd)
-    _held(new, upd)
+    _held(new, upd, w)
     # A blank --next is no next step: null, not "" (linux-sources' reconcile check refuses ""
     # on a done waypoint, and patched it by hand four times, W64 W69 W70 W71, 2026-09-26).
     if upd.next_step is not None and not upd.next_step.strip():

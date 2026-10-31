@@ -75,6 +75,20 @@ def test_the_last_blocker_going_returns_the_card_to_its_remembered_status() -> N
     assert "prior_status" not in held
 
 
+def test_a_human_ask_stays_human_when_an_agent_blocker_is_added_beside_it() -> None:
+    """Need 2: `--blocked-kind agent` must not relabel the operator ask already there."""
+    ask = _card("W1", "blocked", ["operator: decide x"])
+    ask["blocked_kind"] = "human"
+    state = _state(ask, _card("W2", "blocked", ["W9"]), _card("W9", "ready"))
+    held = ops.update(state, "W1", ops.Update(add_blocker="W9", blocked_kind="agent"), _NOW)
+    assert held["blocked_kind"] == "human"
+    assert held["blocked_on"] == ["operator: decide x", "W9"]
+    plain = ops.update(state, "W2", ops.Update(add_blocker="W8"), _NOW)
+    assert plain["blocked_kind"] == "agent"
+    lifted = ops.update(state, "W2", ops.Update(add_blocker="W7", blocked_kind="human"), _NOW)
+    assert lifted["blocked_kind"] == "human"
+
+
 def test_a_done_card_and_a_blank_blocker_are_refused() -> None:
     """Only an open card can be held, and an empty blocker is no blocker."""
     state = _state(_card("W1", "done"), _card("W2", "ready"))

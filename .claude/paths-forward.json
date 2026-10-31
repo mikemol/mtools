@@ -48683,12 +48683,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When q prints COMMITTED record the sha; then need (2) relabel kind, (5) close-umbrellas never closes a card with its own next step, (4) refusal while a review card is ready",
-      "evidence": "2026-10-30: 2026-10-30: demand edge from host github:W82 (applying the operator's tick-review rulings), due 2026-10-31T18:00Z, per github-42; for ranking, not an order. | 2026-10-30: 2026-10-30 SEARCH DONE (grep of pathsforward/src for add.blocker, prior_status, restore-status; and the card list): no existing code or card covers --add-blocker or a remembered prior status. Need (4) is met by W2038 (stack-pathsforward-n queued, --reviewing). Held until n lands: a second pathsforward stack built now would carry registry files (mutants.regex, rubric.tsv, warrants.bib) without n's lines and delete them when it lands after. First slice then: model.add_blocker(card, blocker) appends to blocked_on, records prior_status and prior_kind on the card, sets blocked/human; plus the restore on the blocker's close; need (1) and (2) follow. | 2026-10-31T01:54:25Z: stack-pathsforward-q SUBMITTED: --add-blocker (needs 1 and 3): addblocker.fields, model.relieve restores prior_status, ops.Update.add_blocker, cli flag; 1393 tests pass; 7 mutants.",
+      "next_bounded_step": "Need (2) relabel a human ask agent on an existing blocker; (4) close refusal while a review card is ready; (5) close-umbrellas never closes a card with its own next step; --add-blocker in --update-many; CLI-level test",
+      "evidence": "2026-10-30: 2026-10-30: demand edge from host github:W82 (applying the operator's tick-review rulings), due 2026-10-31T18:00Z, per github-42; for ranking, not an order. | 2026-10-30: 2026-10-30 SEARCH DONE (grep of pathsforward/src for add.blocker, prior_status, restore-status; and the card list): no existing code or card covers --add-blocker or a remembered prior status. Need (4) is met by W2038 (stack-pathsforward-n queued, --reviewing). Held until n lands: a second pathsforward stack built now would carry registry files (mutants.regex, rubric.tsv, warrants.bib) without n's lines and delete them when it lands after. First slice then: model.add_blocker(card, blocker) appends to blocked_on, records prior_status and prior_kind on the card, sets blocked/human; plus the restore on the blocker's close; need (1) and (2) follow. | 2026-10-31T01:54:25Z: stack-pathsforward-q SUBMITTED: --add-blocker (needs 1 and 3): addblocker.fields, model.relieve restores prior_status, ops.Update.add_blocker, cli flag; 1393 tests pass; 7 mutants. | 2026-10-31T02:20:47Z: LANDED edd6717d (stack q): --update --add-blocker SYMBOL; model.relieve restores prior_status. Needs 1 and 3 done.",
       "issued_at": "2026-10-30T17:21:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-42",
-      "last_worked": "2026-10-31T01:54:25Z",
+      "last_worked": "2026-10-31T02:20:47Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48812,7 +48812,7 @@
     {
       "symbol": "W2185",
       "title": "Submit-time precheck: a stack with stale hooks sites, warrants or registries is refused within minutes of submit, before the hour of suite (mutants_gen --check, gen-warrants --check, importdag graph --check, lint)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1989"
       ],
@@ -48822,13 +48822,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Search W1989 (sites_fresh gate target) and W1978 (checks as build actions) for overlap first; then add a cheap-checks refusal to commit_kata.submit_problem (beside _stack_refusal/_shard_refusal) that runs the structural --check commands over the stack's frozen snapshot; witness: a stack with stale sites is refused at submit",
-      "evidence": "",
+      "next_bounded_step": "When z prints COMMITTED record the sha; then move warrants pairing, importdag graph --check and lint ahead of the suite the same way; then the submit-time form in commit_kata.submit_problem",
+      "evidence": "2026-10-31T02:19:36Z: stack-hooks-z SUBMITTED (queued behind q): mutants_gen --check moved ahead of the suite in .githooks/pre-commit, exits 1 on its own failure only; bash -n and shellcheck clean; 499 related tests pass. The live hook applies at landing.",
       "issued_at": "2026-10-30T21:04:42Z",
       "minted_during": "interrupt",
       "caused_by": "github-42",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T02:19:36Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2186",
