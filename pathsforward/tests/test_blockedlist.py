@@ -81,3 +81,43 @@ def test_the_mode_prints_the_rows_and_the_count_for_the_named_symbol(
     assert lines[0].startswith("W2 blocked age=")
     assert lines[1].startswith("W1 blocked age=")
     assert lines[2] == "# 2 blocked on W9"
+
+
+def _project(tmp_path: Path, doc: Rec) -> Path:
+    """Make a project with a git dir and a queue, so a heartbeat has somewhere to go.
+
+    Returns:
+        the queue file.
+
+    """
+    (tmp_path / ".git").mkdir()
+    (tmp_path / ".claude").mkdir()
+    state = tmp_path / ".claude" / "paths-forward.json"
+    state.write_text(json.dumps(doc), encoding="utf-8")
+    return state
+
+
+def test_the_mode_leaves_no_heartbeat_where_a_writing_mode_leaves_one(tmp_path: Path) -> None:
+    """A reading is not a sign of life: `--blocked-on-list` writes none, `--check` does."""
+    state = _project(tmp_path, _doc())
+    beat = tmp_path / ".git" / "mtools" / "heartbeat"
+    assert cli.main(["--state", str(state), "--blocked-on-list", "W9"]) == 0
+    assert not beat.exists()
+    cli.main(["--state", str(state), "--check"])
+    assert beat.exists()
+
+
+def test_all_lifts_the_bound_and_the_default_stops_at_fifty_rows(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """60 cards blocked on W9: 50 rows and the full count by default, all 60 with `--all`."""
+    many = [_card(f"W{n}", "blocked", ["W9"], "2026-10-01T00:00:00Z") for n in range(100, 160)]
+    doc = _doc()
+    doc["waypoints"] = [*many, _card("W9", "ready", [], "2026-09-01T00:00:00Z")]
+    state = _project(tmp_path, doc)
+    assert cli.main(["--state", str(state), "--blocked-on-list", "W9"]) == 0
+    bounded = capsys.readouterr().out.splitlines()
+    assert len(bounded) == blockedlist.LIMIT + 1
+    assert bounded[-1] == "# 60 blocked on W9"
+    assert cli.main(["--state", str(state), "--blocked-on-list", "W9", "--all"]) == 0
+    assert len(capsys.readouterr().out.splitlines()) == len(many) + 1

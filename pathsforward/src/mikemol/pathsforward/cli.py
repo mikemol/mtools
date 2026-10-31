@@ -715,6 +715,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "ticks_blocked",
             "enables",
             "add_enables",
+            "add_blocker",
             "weight",
             "touches",
             "witness",
@@ -2284,6 +2285,16 @@ def _fields_of(ctx: Ctx) -> ops.Update:
     )
 
 
+def _named_blockers(upd: ops.Update) -> tuple[str, ...]:
+    """List every blocker an update names: the set `--blocked-on` and the added `--add-blocker`.
+
+    Returns:
+        the blockers a landed card must not be among (W2178: an added blocker is judged too).
+
+    """
+    return (*(upd.blocked_on or ()), *((upd.add_blocker,) if upd.add_blocker else ()))
+
+
 def _update_many(ctx: Ctx) -> int:
     """Apply one set of field flags to many waypoints, all or none; a dry run unless `--write`.
 
@@ -2318,7 +2329,7 @@ def _update_many(ctx: Ctx) -> int:
         for sym, reason in skipped.items():
             _say(f"EXCLUDED {sym}" + (f" ({reason})" if reason else ""))
         for sym in chosen:
-            REFUSE_LANDED(state, sym, upd.blocked_on or (), _root(ctx))
+            REFUSE_LANDED(state, sym, _named_blockers(upd), _root(ctx))
             ops.update(state, sym, upd, ctx.stamp())
         verb = "UPDATED" if write else "WOULD UPDATE"
         return [(sym, f"update {sym}", f"{verb} {sym}") for sym in chosen]
@@ -2358,7 +2369,7 @@ def _update(ctx: Ctx) -> int:
         root = attach.project_path(text(state.doc, "project_root") or str(ctx.path.parent.parent))
         pinned = _pinned(upd, root, ctx.get("attach"))
         manifest.check(upd.manifest or (), root)
-        REFUSE_LANDED(state, sym, upd.blocked_on or (), _root(ctx))
+        REFUSE_LANDED(state, sym, _named_blockers(upd), _root(ctx))
         ops.update(state, sym, pinned, ctx.stamp())
         code = _lease_for_status(ctx, state, sym, upd.status)
         if code == EXIT_OK and upd.status == "done":

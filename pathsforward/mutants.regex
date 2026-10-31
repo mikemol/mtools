@@ -395,3 +395,4 @@ src/mikemol/pathsforward/model.py|freed-card-returns-ready-not-as-it-was|    rec
 src/mikemol/pathsforward/ops.py|add-blocker-never-applied|    if upd\.add_blocker is not None:|    if False:|def=_held
 src/mikemol/pathsforward/addblocker.py|human-ask-relabelled-by-an-agent-blocker|    if "human" in \{held, given\}:|    if "human" in {given}:|def=kind_of
 src/mikemol/pathsforward/addblocker.py|given-human-kind-ignored|    if "human" in \{held, given\}:|    if "human" in {held}:|def=kind_of
+src/mikemol/pathsforward/cli.py|all-flag-ignored-by-blocked-on-list|    limit = None if ctx\.opts\.get\("all"\) is True else blockedlist\.LIMIT|    limit = blockedlist.LIMIT|def=_blocked_on_list

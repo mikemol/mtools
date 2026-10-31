@@ -7797,3 +7797,31 @@
   claim  = {Need 2: `--blocked-kind agent` must not relabel the operator ask already there.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker.py -k test_a_human_ask_stays_human_when_an_agent_blocker_is_added_beside_it},
 }
+
+@misc{pathsforward-addblocker-cli-update-with-add-blocker-holds-the-card-and-remembers-its-status,
+  section = {addblocker},
+  title  = {`--update W1 --add-blocker W9` blocks W1 on W9 and keeps `working` to come back to},
+  claim  = {`--update W1 --add-blocker W9` blocks W1 on W9 and keeps `working` to come back to.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker_cli.py -k test_update_with_add_blocker_holds_the_card_and_remembers_its_status},
+}
+
+@misc{pathsforward-addblocker-cli-update-many-applies-it-to-every-named-card-only-with-write,
+  section = {addblocker},
+  title  = {A dry run changes nothing and says WOULD UPDATE; `--write` holds both cards},
+  claim  = {A dry run changes nothing and says WOULD UPDATE; `--write` holds both cards.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker_cli.py -k test_update_many_applies_it_to_every_named_card_only_with_write},
+}
+
+@misc{pathsforward-blockedlist-mode-leaves-no-heartbeat-where-a-writing-mode-leaves-one,
+  section = {blockedlist},
+  title  = {A reading is not a sign of life: `--blocked-on-list` writes none, `--check` does},
+  claim  = {A reading is not a sign of life: `--blocked-on-list` writes none, `--check` does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_the_mode_leaves_no_heartbeat_where_a_writing_mode_leaves_one},
+}
+
+@misc{pathsforward-blockedlist-all-lifts-the-bound-and-the-default-stops-at-fifty-rows,
+  section = {blockedlist},
+  title  = {60 cards blocked on W9: 50 rows and the full count by default, all 60 with `--all`},
+  claim  = {60 cards blocked on W9: 50 rows and the full count by default, all 60 with `--all`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_all_lifts_the_bound_and_the_default_stops_at_fifty_rows},
+}
