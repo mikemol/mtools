@@ -877,3 +877,8 @@ src/mikemol/hooks/isolated.py|frozen-files-never-placed|    frozen = \[run\(list
 src/mikemol/hooks/commit_kata.py|placed-paths-read-from-the-tree-again|    left = \[p for p in paths if p in QUEUE_FILES\] if placed else list\(paths\)|    left = list(paths)|def=isolated_commit
 src/mikemol/hooks/stackfreeze.py|plain-snapshot-never-read|    return stacksnap\.apply_argv\(loaded\[0\]\) if loaded is not None and len\(loaded\) == 1 else \[\]|    return []|def=plain_plan
 src/mikemol/hooks/commit_kata.py|reexec-takes-a-fresh-snapshot|    if parsed is None or env\.get\(HELD_ENV\):|    if parsed is None:|def=plain_snapshot
+src/mikemol/hooks/citeguard.py|short-number-read-as-a-transcript-line|    return int\(digits\) if digits\.isdigit\(\) and len\(digits\) >= min_digits else None|    return int(digits) if digits.isdigit() else None|def=_long
+src/mikemol/hooks/citeguard.py|any-long-number-read-as-a-citation|        after = words\[here - 1\]\.lower\(\) == "line" if here else False|        after = True|def=cited
+src/mikemol/hooks/citeguard.py|earlier-turn-counts-as-read|            start = index \+ 1|            start = 0|def=turn_results
+src/mikemol/hooks/citeguard.py|unreadable-transcript-refuses|    except OSError:|    except ZeroDivisionError:|def=run
+src/mikemol/hooks/citeguard.py|seen-lines-still-refused|    unread = sorted\(cited\(text\) - seen\)|    unread = sorted(cited(text))|def=refusal

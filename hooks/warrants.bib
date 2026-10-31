@@ -16730,3 +16730,52 @@
   claim  = {A stacked or re-exec'd run keeps the snapshot already in its environment.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_the_snapshot_is_taken_only_for_a_fresh_plain_submit},
 }
+
+@misc{hooks-citeguard-long-numbers-after-line-or-written-l-are-citations-and-short-ones-are-not,
+  section = {citeguard},
+  title  = {`line N` and `L<N>` of five digits or more; a source line like 1126 is not},
+  claim  = {`line N` and `L<N>` of five digits or more; a source line like 1126 is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_long_numbers_after_line_or_written_l_are_citations_and_short_ones_are_not},
+}
+
+@misc{hooks-citeguard-tool-result-holds-the-numbers-it-printed,
+  section = {citeguard},
+  title  = {Plain, `L`-prefixed and JSON-quoted numbers all count as seen},
+  claim  = {Plain, `L`-prefixed and JSON-quoted numbers all count as seen.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_a_tool_result_holds_the_numbers_it_printed},
+}
+
+@misc{hooks-citeguard-unread-citation-is-refused-naming-it-and-a-seen-one-is-admitted,
+  section = {citeguard},
+  title  = {The reason names the number; nothing cited or all seen admits},
+  claim  = {The reason names the number; nothing cited or all seen admits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_an_unread_citation_is_refused_naming_it_and_a_seen_one_is_admitted},
+}
+
+@misc{hooks-citeguard-only-tool-results-since-the-last-human-prompt-count,
+  section = {citeguard},
+  title  = {A line read before the last prompt is not read in this turn; list-shaped content works},
+  claim  = {A line read before the last prompt is not read in this turn; list-shaped content works.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_only_tool_results_since_the_last_human_prompt_count},
+}
+
+@misc{hooks-citeguard-run-denies-an-unread-citation-and-admits-a-read-one,
+  section = {citeguard},
+  title  = {The decision JSON is written for the unread line only},
+  claim  = {The decision JSON is written for the unread line only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_run_denies_an_unread_citation_and_admits_a_read_one},
+}
+
+@misc{hooks-citeguard-unreadable-transcript-and-a-message-without-a-citation-admit,
+  section = {citeguard},
+  title  = {Doubt never refuses: a missing transcript path says nothing},
+  claim  = {Doubt never refuses: a missing transcript path says nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_an_unreadable_transcript_and_a_message_without_a_citation_admit},
+}
+
+@misc{hooks-citeguard-unarmed-hook-says-nothing,
+  section = {citeguard},
+  title  = {Without either switch main exits 0 and reads nothing},
+  claim  = {Without either switch main exits 0 and reads nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_citeguard.py -k test_an_unarmed_hook_says_nothing},
+}

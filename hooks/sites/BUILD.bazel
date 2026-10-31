@@ -13,6 +13,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/build_failure:suite",
         "//hooks/sites/src/mikemol/hooks/checker_context:suite",
         "//hooks/sites/src/mikemol/hooks/checkers:suite",
+        "//hooks/sites/src/mikemol/hooks/citeguard:suite",
         "//hooks/sites/src/mikemol/hooks/claude_code_census:suite",
         "//hooks/sites/src/mikemol/hooks/cmdparse:suite",
         "//hooks/sites/src/mikemol/hooks/codon_probe:suite",

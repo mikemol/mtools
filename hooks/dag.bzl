@@ -68,6 +68,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/citeguard.py": {
+      "imports": [
+        "src/mikemol/hooks/payload.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/claude_code_census.py": {
       "imports": [],
       "reads": [],
@@ -1552,6 +1559,14 @@ GRAPH = {
     "tests/test_checkers.py": {
       "imports": [
         "src/mikemol/hooks/checkers.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_citeguard.py": {
+      "imports": [
+        "src/mikemol/hooks/citeguard.py",
+        "src/mikemol/hooks/payload.py"
       ],
       "reads": [],
       "typing_only": []
