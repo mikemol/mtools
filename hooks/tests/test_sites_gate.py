@@ -36,8 +36,22 @@ def test_the_step_runs_before_the_suite_and_ends_the_run_when_it_fails() -> None
     suite = next(i for i, line in enumerate(lines) if line.strip() == "phase bazel_test")
     assert step < suite
     between = "\n".join(lines[step:suite])
-    assert 'if [ "$failed_checks" != "$_sites_before" ]; then' in between
+    assert 'if [ "$fail" -ne 0 ]; then' in between
     assert "exit 1" in between
+
+
+def test_any_cheap_check_having_failed_refuses_before_the_suite_not_only_the_sites_one() -> None:
+    """W2185: the refusal tests the shared failure flag, which every earlier check sets."""
+    lines = _GATE.read_text(encoding="utf-8").splitlines()
+    suite = next(i for i, line in enumerate(lines) if line.strip() == "phase bazel_test")
+    gate = next(i for i, line in enumerate(lines) if line.strip() == 'if [ "$fail" -ne 0 ]; then')
+    assert gate < suite
+    assert not any("_sites_before" in line for line in lines)
+    earlier = [line for line in lines[:gate] if "run_checked " in line]
+    assert len(earlier) > _CHEAP_BEFORE_THE_SUITE
+
+
+_CHEAP_BEFORE_THE_SUITE = 3
 
 
 def test_the_step_runs_through_the_captured_runner_from_the_tools_root() -> None:
