@@ -52,6 +52,7 @@ from mikemol.pathsforward import (
     ops,
     outcomes,
     promptwatch,
+    readyolder,
     refusal_record,
     regressions,
     render,
@@ -529,6 +530,7 @@ _VALUED = (
     "ledger",
     "show",
     "blocked_on_list",
+    "ready_older_than",
     "retros",
     "preamble_set",
     "standing_set",
@@ -1080,6 +1082,12 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         "--blocked-on-list",
         metavar="SYMBOL",
         help="W2184: the open cards blocked on SYMBOL, newest first, 50 at most (--all: every one)",
+    )
+    mode.add_argument(
+        "--ready-older-than",
+        metavar="DAYS",
+        help="W2118: the ready cards issued more than DAYS days ago (2.2 is allowed), oldest "
+        "first, as '<symbol> <age>d <next step>', then a count",
     )
     mode.add_argument("--preamble-set", metavar="FILE", help="store FILE's lines as preamble")
     mode.add_argument(
@@ -2998,6 +3006,25 @@ def _blocked_on_list(ctx: Ctx) -> int:
     return EXIT_OK
 
 
+def _ready_older_than(ctx: Ctx) -> int:
+    """Print the ready cards older than a bound, oldest first, then how many there are (W2118).
+
+    ⚑ A READING, NOT A WRITE: it asks the queue and changes nothing, so it leaves no beat.
+
+    Returns:
+        EXIT_OK; EXIT_REFUSED when the bound is not a non-negative number.
+
+    """
+    given = ctx.get("ready_older_than") or ""
+    days = readyolder.parse_days(given)
+    if days is None:
+        _warn(f"REFUSED: --ready-older-than wants a number of days, not {given!r}")
+        return EXIT_REFUSED
+    for found in readyolder.report(store.load(ctx.path), days, ctx.now):
+        _say(found)
+    return EXIT_OK
+
+
 def _retros(ctx: Ctx) -> int:
     """Print the retro records in full, all of them or the ones named (W2088).
 
@@ -3524,6 +3551,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "ledger": _ledger_mode,
     "show": _show,
     "blocked_on_list": _blocked_on_list,
+    "ready_older_than": _ready_older_than,
     "retros": _retros,
     "commit_message": _commit_message,
     "scan_literal": _scan_literal,
@@ -3637,7 +3665,7 @@ def main(argv: list[str] | None = None) -> int:
         _warn("REFUSED: --state PATH is required; there is no default root")
         return EXIT_REFUSED
     ctx = Ctx(opts, Path(str(state)).absolute(), datetime.now(UTC))
-    if mode not in {"ready_count", "watchdog_line", "show", "blocked_on_list"}:
+    if mode not in {"ready_count", "watchdog_line", "show", "blocked_on_list", "ready_older_than"}:
         beat.try_beat(ctx.path, time.time_ns())
     try:
         code = _HANDLERS[mode](ctx)

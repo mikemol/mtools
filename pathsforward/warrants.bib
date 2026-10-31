@@ -7853,3 +7853,31 @@
   claim  = {With W1 queued the close says one more touched; with nothing live it says two.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_close_live_stack.py -k test_a_card_with_a_queued_stack_is_left_out_of_the_untouched_figure},
 }
+
+@misc{pathsforward-readyolder-older-ready-cards-are-listed-oldest-first-with-age-and-next-step,
+  section = {readyolder},
+  title  = {Bound 2.2: W1 (29.5 d) then W2 (2.5 d); W3 is newer, W4 works, W5 is witnessed},
+  claim  = {Bound 2.2: W1 (29.5 d) then W2 (2.5 d); W3 is newer, W4 works, W5 is witnessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_readyolder.py -k test_older_ready_cards_are_listed_oldest_first_with_age_and_next_step},
+}
+
+@misc{pathsforward-readyolder-card-exactly-at-the-bound-is-not-older-than-it,
+  section = {readyolder},
+  title  = {W2 is 2.5 d old: bound 2.5 leaves it out, so only W1 is a row},
+  claim  = {W2 is 2.5 d old: bound 2.5 leaves it out, so only W1 is a row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_readyolder.py -k test_a_card_exactly_at_the_bound_is_not_older_than_it},
+}
+
+@misc{pathsforward-readyolder-bound-reads-an-integer-or-a-decimal-and-refuses-anything-else,
+  section = {readyolder},
+  title  = {`2`, `2.2` and `0` read; `abc`, an empty string and `-1` do not},
+  claim  = {`2`, `2.2` and `0` read; `abc`, an empty string and `-1` do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_readyolder.py -k test_the_bound_reads_an_integer_or_a_decimal_and_refuses_anything_else},
+}
+
+@misc{pathsforward-readyolder-mode-prints-the-count-leaves-no-beat-and-refuses-a-bad-bound,
+  section = {readyolder},
+  title  = {A huge bound lists none and says 0; a reading writes no heartbeat; `abc` is refused},
+  claim  = {A huge bound lists none and says 0; a reading writes no heartbeat; `abc` is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_readyolder.py -k test_the_mode_prints_the_count_leaves_no_beat_and_refuses_a_bad_bound},
+}
