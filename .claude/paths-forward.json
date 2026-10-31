@@ -46957,12 +46957,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After pathsforward-l lands: scratch tree; read closegate.idle_cards and the atomize counter (W188/W1377); add the in-flight exemption and the landed-since-advance exemption with a ledger and queue fixture; tests from the paperkit close and nemik's W1187 data",
-      "evidence": "2026-10-30: 2026-10-30: taken. Same rule as W2170 (nemik's umbrella exemption from 'ATOMIZE X (advanced N times without landing)'): both change when closegate/atomize count an advance, so ONE change to that reader should serve both, an exemption for a card with a stack landed since its last advance (W2170) and for evidence-only closes while a live stack names the card (this card). Registries are pathsforward's (mutants.regex, warrants.bib) which W2169's gate (pathsforward-l) holds, so it builds after that lands.",
+      "next_bounded_step": "When t prints COMMITTED record the sha; then the block-marking half and the closegate.advanced count",
+      "evidence": "2026-10-30: 2026-10-30: taken. Same rule as W2170 (nemik's umbrella exemption from 'ATOMIZE X (advanced N times without landing)'): both change when closegate/atomize count an advance, so ONE change to that reader should serve both, an exemption for a card with a stack landed since its last advance (W2170) and for evidence-only closes while a live stack names the card (this card). Registries are pathsforward's (mutants.regex, warrants.bib) which W2169's gate (pathsforward-l) holds, so it builds after that lands. | 2026-10-31T04:17:20Z: stack-pathsforward-t SUBMITTED (behind hooks-aa): inflight.cards_of/read and atomize silent for a top card with a queued or in-flight stack; 1401 tests; 3 mutants. NOT DONE: marking a block naming a card the tick touched; the same exemption for closegate.advanced.",
       "issued_at": "2026-10-28T14:33:55Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:R2",
-      "last_worked": "2026-10-30T13:52:30Z",
+      "last_worked": "2026-10-31T04:17:20Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48683,12 +48683,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When s prints COMMITTED record the sha; then wait for the host's cold probe against 3c2e0527 to say which of the five needs still fails",
-      "evidence": "2026-10-30: 2026-10-30: demand edge from host github:W82 (applying the operator's tick-review rulings), due 2026-10-31T18:00Z, per github-42; for ranking, not an order. | 2026-10-30: 2026-10-30 SEARCH DONE (grep of pathsforward/src for add.blocker, prior_status, restore-status; and the card list): no existing code or card covers --add-blocker or a remembered prior status. Need (4) is met by W2038 (stack-pathsforward-n queued, --reviewing). Held until n lands: a second pathsforward stack built now would carry registry files (mutants.regex, rubric.tsv, warrants.bib) without n's lines and delete them when it lands after. First slice then: model.add_blocker(card, blocker) appends to blocked_on, records prior_status and prior_kind on the card, sets blocked/human; plus the restore on the blocker's close; need (1) and (2) follow. | 2026-10-31T01:54:25Z: stack-pathsforward-q SUBMITTED: --add-blocker (needs 1 and 3): addblocker.fields, model.relieve restores prior_status, ops.Update.add_blocker, cli flag; 1393 tests pass; 7 mutants. | 2026-10-31T02:20:47Z: LANDED edd6717d (stack q): --update --add-blocker SYMBOL; model.relieve restores prior_status. Needs 1 and 3 done. | 2026-10-31T02:47:21Z: stack-pathsforward-r SUBMITTED: need 2 (kind_of: a human ask stays human; ops._held reads the pre-update card). Need 5 verified already met: closeumbrellas._refusal keeps a card with its own next step, test_an_umbrella_with_its_own_next_step_is_kept. Need 4 remains. | 2026-10-31T03:08:24Z: LANDED 3c2e0527 (stack r): need 2 (a human ask stays human; _held reads the pre-update card). READING OF NEED 4 (not code): the close refuses because a review card is READY; with --add-blocker the host can hold that card behind the review's blocker (it leaves the ready set while held and returns to its remembered status when the blocker closes), and W2038's --reviewing names the running reviewer for the close itself, so need 4 is met by the two together if the host uses them; the host should confirm with its cold probe. Needs 1,2,3,5 done; --add-blocker in --update-many and a CLI-level test remain. | 2026-10-31T03:21:37Z: stack-pathsforward-s SUBMITTED: --add-blocker in --update-many, REFUSE_LANDED judges the added blocker, CLI-level tests, plus W2184's heartbeat and --all tests; 1398 tests pass. Host letter written: ~/github/inbox/2026-10-30-mtools-w2178-w2038-w2182-landed.md (github-42 unreachable live).",
+      "next_bounded_step": "Wait for the host's cold probe against 231aad6d to say which of the five needs still fails; need 4 has no code of its own",
+      "evidence": "2026-10-30: 2026-10-30: demand edge from host github:W82 (applying the operator's tick-review rulings), due 2026-10-31T18:00Z, per github-42; for ranking, not an order. | 2026-10-30: 2026-10-30 SEARCH DONE (grep of pathsforward/src for add.blocker, prior_status, restore-status; and the card list): no existing code or card covers --add-blocker or a remembered prior status. Need (4) is met by W2038 (stack-pathsforward-n queued, --reviewing). Held until n lands: a second pathsforward stack built now would carry registry files (mutants.regex, rubric.tsv, warrants.bib) without n's lines and delete them when it lands after. First slice then: model.add_blocker(card, blocker) appends to blocked_on, records prior_status and prior_kind on the card, sets blocked/human; plus the restore on the blocker's close; need (1) and (2) follow. | 2026-10-31T01:54:25Z: stack-pathsforward-q SUBMITTED: --add-blocker (needs 1 and 3): addblocker.fields, model.relieve restores prior_status, ops.Update.add_blocker, cli flag; 1393 tests pass; 7 mutants. | 2026-10-31T02:20:47Z: LANDED edd6717d (stack q): --update --add-blocker SYMBOL; model.relieve restores prior_status. Needs 1 and 3 done. | 2026-10-31T02:47:21Z: stack-pathsforward-r SUBMITTED: need 2 (kind_of: a human ask stays human; ops._held reads the pre-update card). Need 5 verified already met: closeumbrellas._refusal keeps a card with its own next step, test_an_umbrella_with_its_own_next_step_is_kept. Need 4 remains. | 2026-10-31T03:08:24Z: LANDED 3c2e0527 (stack r): need 2 (a human ask stays human; _held reads the pre-update card). READING OF NEED 4 (not code): the close refuses because a review card is READY; with --add-blocker the host can hold that card behind the review's blocker (it leaves the ready set while held and returns to its remembered status when the blocker closes), and W2038's --reviewing names the running reviewer for the close itself, so need 4 is met by the two together if the host uses them; the host should confirm with its cold probe. Needs 1,2,3,5 done; --add-blocker in --update-many and a CLI-level test remain. | 2026-10-31T03:21:37Z: stack-pathsforward-s SUBMITTED: --add-blocker in --update-many, REFUSE_LANDED judges the added blocker, CLI-level tests, plus W2184's heartbeat and --all tests; 1398 tests pass. Host letter written: ~/github/inbox/2026-10-30-mtools-w2178-w2038-w2182-landed.md (github-42 unreachable live). | 2026-10-31T03:49:31Z: LANDED 231aad6d (stack s): --add-blocker in --update-many, the landed-blocker refusal judges it, CLI-level tests.",
       "issued_at": "2026-10-30T17:21:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-42",
-      "last_worked": "2026-10-31T03:21:37Z",
+      "last_worked": "2026-10-31T03:49:31Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48791,7 +48791,7 @@
     {
       "symbol": "W2184",
       "title": "Answer luthen-observability:W1285: a verb listing the cards blocked on a given card (title, touches, age, bounded, newest first)",
-      "status": "working",
+      "status": "done",
       "enables": [
         "luthen-observability:W1285"
       ],
@@ -48800,14 +48800,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Close when stack s lands",
-      "evidence": "2026-10-30: READ 2026-10-30: no verb lists the cards blocked on a given card (--queue lists ready only; --triage one line; --block-matching and --block-behind-open write). Build waits for stack-pathsforward-n to land (pathsforward registries). | 2026-10-30T23:52:32Z: stack-pathsforward-p SUBMITTED: --blocked-on-list SYMBOL [--all], blockedlist module; 1389 tests pass. | 2026-10-31T00:17:56Z: LANDED 25ccf584 (stack p): --blocked-on-list SYMBOL [--all]. | 2026-10-31T03:21:55Z: stack s adds the no-heartbeat and --all-past-50 tests (SUBMITTED).",
+      "next_bounded_step": null,
+      "evidence": "2026-10-30: READ 2026-10-30: no verb lists the cards blocked on a given card (--queue lists ready only; --triage one line; --block-matching and --block-behind-open write). Build waits for stack-pathsforward-n to land (pathsforward registries). | 2026-10-30T23:52:32Z: stack-pathsforward-p SUBMITTED: --blocked-on-list SYMBOL [--all], blockedlist module; 1389 tests pass. | 2026-10-31T00:17:56Z: LANDED 25ccf584 (stack p): --blocked-on-list SYMBOL [--all]. | 2026-10-31T03:21:55Z: stack s adds the no-heartbeat and --all-past-50 tests (SUBMITTED). | 2026-10-31T03:49:49Z: LANDED 25ccf584 (verb) and 231aad6d (heartbeat and --all-past-50 tests): --blocked-on-list SYMBOL [--all]; luthen told.",
       "issued_at": "2026-10-30T20:57:40Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1285",
-      "last_worked": "2026-10-31T03:21:55Z",
+      "last_worked": "2026-10-31T03:49:49Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261031T034949Z"
     },
     {
       "symbol": "W2185",

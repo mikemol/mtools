@@ -30,6 +30,7 @@ stamped after the card's newest landing count (`landed_at`, from the commits' `W
 from collections.abc import Mapping
 from pathlib import Path
 
+from mikemol.pathsforward import inflight
 from mikemol.pathsforward.landed import last_landings
 from mikemol.pathsforward.ledger import Parsed, Unparsed
 from mikemol.pathsforward.model import Json, ordered, text, workable
@@ -102,13 +103,17 @@ def atomize(
 
     Returns:
         `ATOMIZE W<n> (advanced k times without landing)`, or None when the top has no advance
-        since its last split or landing, or nothing is workable.
+        since its last split or landing, a live stack names it, or nothing is workable.
 
     """
     queue = ordered(waypoints)
     if not queue or not workable(queue[0]):
         return None
     top = text(queue[0], "symbol")
+    # ⚑ A CARD MID-LANDING IS NOT TOO COARSE (W2096, paperkit:R2): its stack is queued or in the
+    # gate, so the advance has not had the chance to land and the signal would be noise.
+    if root is not None and top in inflight.read(root):
+        return None
     if landed_at is None and root is not None:
         landed_at = landings_of(root)
     prior = advances(top, entries, counted, landed_at)

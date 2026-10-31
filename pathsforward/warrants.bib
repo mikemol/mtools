@@ -7825,3 +7825,24 @@
   claim  = {60 cards blocked on W9: 50 rows and the full count by default, all 60 with `--all`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_all_lifts_the_bound_and_the_default_stops_at_fifty_rows},
 }
+
+@misc{pathsforward-inflight-cards-of-an-inflight-and-a-queued-submission-are-named-and-no-others,
+  section = {atomize},
+  title  = {In flight and queued count; a withdrawn submission does not},
+  claim  = {In flight and queued count; a withdrawn submission does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inflight.py -k test_the_cards_of_an_inflight_and_a_queued_submission_are_named_and_no_others},
+}
+
+@misc{pathsforward-inflight-missing-or-torn-file-names-no-card,
+  section = {atomize},
+  title  = {No file, torn JSON, a non-object and an empty file each read as nothing},
+  claim  = {No file, torn JSON, a non-object and an empty file each read as nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inflight.py -k test_a_missing_or_torn_file_names_no_card},
+}
+
+@misc{pathsforward-inflight-atomize-says-nothing-for-a-top-card-with-a-live-stack-and-otherwise-still-speaks,
+  section = {atomize},
+  title  = {W2185 has an advance and a live stack: no advice; the same card with no stack is named},
+  claim  = {W2185 has an advance and a live stack: no advice; the same card with no stack is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_inflight.py -k test_atomize_says_nothing_for_a_top_card_with_a_live_stack_and_otherwise_still_speaks},
+}

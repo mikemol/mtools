@@ -396,3 +396,7 @@ src/mikemol/pathsforward/ops.py|add-blocker-never-applied|    if upd\.add_blocke
 src/mikemol/pathsforward/addblocker.py|human-ask-relabelled-by-an-agent-blocker|    if "human" in \{held, given\}:|    if "human" in {given}:|def=kind_of
 src/mikemol/pathsforward/addblocker.py|given-human-kind-ignored|    if "human" in \{held, given\}:|    if "human" in {held}:|def=kind_of
 src/mikemol/pathsforward/cli.py|all-flag-ignored-by-blocked-on-list|    limit = None if ctx\.opts\.get\("all"\) is True else blockedlist\.LIMIT|    limit = blockedlist.LIMIT|def=_blocked_on_list
+# A card whose stack is queued or in the gate draws no ATOMIZE advice (W2096).
+src/mikemol/pathsforward/inflight.py|withdrawn-stack-counted-as-live|        if fields\.get\("state"\) in LIVE and isinstance\(names, list\):|        if isinstance(names, list):|def=cards_of
+src/mikemol/pathsforward/inflight.py|queued-stack-not-counted-as-live|        if fields\.get\("state"\) in LIVE and isinstance\(names, list\):|        if fields.get("state") == "inflight" and isinstance(names, list):|def=cards_of
+src/mikemol/pathsforward/atomize.py|live-stack-card-still-advised|    if root is not None and top in inflight\.read\(root\):|    if False:|def=atomize
