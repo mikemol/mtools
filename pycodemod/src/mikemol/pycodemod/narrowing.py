@@ -15,6 +15,7 @@ so this reads the body and prefers it to the traced type.
 
     constant string keys subscripted        TypedDict of those keys (dict methods alone allowed)
     string-only methods alone               str
+    every call in the file passes a str     str (unless keyed, called or non-str methods)
     array attributes (shape, dtype, ...)    NDArray
     any other attribute read or called      Protocol of those names
     dict methods alone                      Mapping
@@ -141,6 +142,7 @@ class Use:
     called: bool = False
     iterated: bool = False
     indexed: bool = False
+    str_callers: bool = False
     varkeyed: bool = False
     sized: bool = False
 
@@ -164,6 +166,10 @@ def narrow(use: Use) -> Narrowed:
     rules = (
         (keyed, Narrowed("typeddict", tuple(sorted(use.keys)))),
         (bool(use.attrs) and use.attrs <= _STR_METHODS, Narrowed("str")),
+        (
+            use.str_callers and not use.keys and not use.called and use.attrs <= _STR_METHODS,
+            Narrowed("str"),
+        ),
         (bool(use.attrs & _ARRAY_ATTRS), Narrowed("ndarray")),
         (bool(use.attrs - _MAPPING_METHODS), Narrowed("protocol", tuple(sorted(use.attrs)))),
         (bool(use.attrs), Narrowed("mapping")),
@@ -198,6 +204,18 @@ def _integer(key: ast.expr) -> bool:
         isinstance(key, ast.Call)
         and isinstance(key.func, ast.Name)
         and (key.func.id in _INTEGER_CALLS)
+    )
+
+
+def _is_str(node: ast.expr) -> bool:
+    """Say whether an argument is a string literal or an f-string.
+
+    Returns:
+        True for a `str` constant or a `JoinedStr`.
+
+    """
+    return isinstance(node, ast.JoinedStr) or (
+        isinstance(node, ast.Constant) and isinstance(node.value, str)
     )
 
 
@@ -281,6 +299,51 @@ class _Walker(ast.NodeVisitor):
         self.generic_visit(node)
 
 
+def _passes(call: ast.Call, params: list[str]) -> dict[str, bool]:
+    """Say, per parameter, whether this call passes a str for it.
+
+    ⚑ A STARRED ARGUMENT, A `**` MAPPING OR AN OMITTED PARAMETER PROVES NOTHING: the value is
+    unknown (or a default nobody read), so it is not a str.
+
+    Returns:
+        parameter name to True when the call gives it a str literal or f-string.
+
+    """
+    if any(isinstance(a, ast.Starred) for a in call.args) or any(
+        k.arg is None for k in call.keywords
+    ):
+        return dict.fromkeys(params, False)
+    bound = dict(zip(params, call.args, strict=False))
+    bound.update({k.arg: k.value for k in call.keywords if k.arg is not None})
+    return {p: p in bound and _is_str(bound[p]) for p in params}
+
+
+def _str_callers(tree: ast.Module, found: dict[str, dict[str, Use]]) -> None:
+    """Mark each module-level function parameter that EVERY call in the file passes a str.
+
+    ⚑ W2112, graded at W1925: a value that is never read through a method still has a type when
+    every caller in the file hands it a string literal or f-string. A function no call names
+    shows nothing, so it is not marked.
+    """
+    defs = {
+        n.name: [a for a in _names(n.args) if a not in _SKIPPED]
+        for n in tree.body
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    seen: dict[str, dict[str, bool]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            name = node.func.id
+            if name in defs:
+                row = seen.setdefault(name, dict.fromkeys(defs[name], True))
+                for param, ok in _passes(node, defs[name]).items():
+                    row[param] = row[param] and ok
+    for name, row in seen.items():
+        for param, ok in row.items():
+            if ok:
+                found[name][param].str_callers = True
+
+
 def uses_of(source: str) -> dict[str, dict[str, Use]]:
     """Read what every function of a module's source does with each of its parameters.
 
@@ -288,6 +351,8 @@ def uses_of(source: str) -> dict[str, dict[str, Use]]:
         qualified function name mapped to parameter name mapped to its uses.
 
     """
+    tree = ast.parse(source)
     walker = _Walker()
-    walker.visit(ast.parse(source))
+    walker.visit(tree)
+    _str_callers(tree, walker.found)
     return walker.found

@@ -74,6 +74,40 @@ def shared_method(items):
     return items.count("a")
 
 
+def label(name):
+    return name
+
+
+def mixed(value):
+    return value
+
+
+def by_keyword(text, count):
+    return text, count
+
+
+def spread(item):
+    return item
+
+
+def keyed_text(cfg):
+    return cfg["name"]
+
+
+def unnamed(orphan):
+    return orphan
+
+
+def drive(args):
+    label("a")
+    label(f"{args}")
+    mixed("a")
+    mixed(3)
+    by_keyword(text="x", count=1)
+    spread(*args)
+    keyed_text("x")
+
+
 class Box:
     def put(self, item):
         return item.value
@@ -133,6 +167,17 @@ def test_a_parameter_read_only_through_string_only_methods_is_a_str() -> None:
     assert _kind("of_string", "text") == narrowing.Narrowed("str")
     assert _kind("string_and_stream", "box").kind == "protocol"
     assert _kind("shared_method", "items").kind == "protocol"
+
+
+def test_a_parameter_every_call_in_the_file_gives_a_str_is_a_str_and_no_other_is() -> None:
+    """W2112: literals and f-strings in every call make a str; a 3, a `*args`, no call, do not."""
+    assert _kind("label", "name") == narrowing.Narrowed("str")
+    assert _kind("by_keyword", "text") == narrowing.Narrowed("str")
+    assert _kind("by_keyword", "count").kind == "unconstrained"
+    assert _kind("mixed", "value").kind == "unconstrained"
+    assert _kind("spread", "item").kind == "unconstrained"
+    assert _kind("unnamed", "orphan").kind == "unconstrained"
+    assert _kind("keyed_text", "cfg").kind == "typeddict"
 
 
 def test_self_is_skipped_methods_are_qualified_and_nested_parameters_are_their_own() -> None:

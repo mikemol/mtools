@@ -7047,3 +7047,10 @@
   claim  = {W2112: strip, split and upper are str's; add write and it is a stream; count is shared.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_parameter_read_only_through_string_only_methods_is_a_str},
 }
+
+@misc{pycodemod-narrowing-parameter-every-call-in-the-file-gives-a-str-is-a-str-and-no-other-is,
+  section = {narrowing},
+  title  = {W2112: literals and f-strings in every call make a str; a 3, a `*args`, no call, do not},
+  claim  = {W2112: literals and f-strings in every call make a str; a 3, a `*args`, no call, do not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_parameter_every_call_in_the_file_gives_a_str_is_a_str_and_no_other_is},
+}

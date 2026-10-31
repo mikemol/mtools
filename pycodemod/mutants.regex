@@ -116,6 +116,9 @@ src/mikemol/pycodemod/narrowing.py|position-name-read-as-a-key|        return ke
 src/mikemol/pycodemod/narrowing.py|variable-key-read-as-a-position|            elif _integer\(key\):|            elif True:|def=_Walker.visit_Subscript
 src/mikemol/pycodemod/narrowing.py|mapping-rule-ignores-slices-and-positions|        \(use\.varkeyed and not use\.indexed, Narrowed\("mapping"\)\),|        (use.varkeyed, Narrowed("mapping")),|def=narrow
 src/mikemol/pycodemod/narrowing.py|one-string-method-makes-a-str|        \(bool\(use\.attrs\) and use\.attrs <= _STR_METHODS, Narrowed\("str"\)\),|        (bool(use.attrs & _STR_METHODS), Narrowed("str")),|def=narrow
+src/mikemol/pycodemod/narrowing.py|one-str-call-makes-every-call-a-str|                    row\[param\] = row\[param\] and ok|                    row[param] = row[param] or ok|def=_str_callers
+src/mikemol/pycodemod/narrowing.py|starred-argument-read-as-a-str|        return dict\.fromkeys\(params, False\)|        return dict.fromkeys(params, True)|def=_passes
+src/mikemol/pycodemod/narrowing.py|mixed-callers-marked-as-str|            if ok:|            if True:|def=_str_callers
 src/mikemol/pycodemod/cli_typedargs.py|original-not-restored|path\.write_text\(texts\[0\], encoding="utf-8"\)|pass|def=_selftest
 src/mikemol/pycodemod/cli_observe.py|returns-not-recorded|            "returns": sorted\(signature\.returns\),|            "returns": [],|def=seen_document
 src/mikemol/pycodemod/cli_observe.py|runner-arguments-not-split-off|    split = args\.index\("--"\) if "--" in args else len\(args\)|    split = len(args)|def=main
