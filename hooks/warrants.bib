@@ -16608,3 +16608,18 @@
   claim  = {With `mypy-baseline.d` present `--write` exits not-checked and touches no file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_wiring.py -k test_write_refuses_a_split_baseline_and_writes_nothing_while_its_writer_is_unbuilt},
 }
+
+@misc{hooks-gate-test-keep-going-gates-bazel-test-carries-the-test-option-that-stops-at-the-first-failure,
+  section = {sites_gate},
+  title  = {`--notest_keep_going` is on the gate's one `bazel test` command, beside `--nokeep_going`},
+  claim  = {`--notest_keep_going` is on the gate's one `bazel test` command, beside
+            `--nokeep_going`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_test_keep_going.py -k test_the_gates_bazel_test_carries_the_test_option_that_stops_at_the_first_failure},
+}
+
+@misc{hooks-gate-test-keep-going-same-command-writes-the-build-events-the-first-failure-is-read-from,
+  section = {sites_gate},
+  title  = {The line after it names the build-event file: the stop and the reading are one command},
+  claim  = {The line after it names the build-event file: the stop and the reading are one command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_test_keep_going.py -k test_the_same_command_writes_the_build_events_the_first_failure_is_read_from},
+}

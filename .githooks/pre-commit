@@ -877,9 +877,16 @@ if [ "$fail" -ne 0 ]; then
   exit 1
 fi
 phase bazel_test
+# ⚑⚑ W2110 (github-8f, measured 2026-10-28): `--nokeep_going` IS THE BUILD OPTION, NOT THE TEST ONE.
+# It stops scheduling after the first failed ACTION, and a failed TEST is not a failed action, so
+# stack 38's tip ran past a FAILED `//hooks:mutants_100` to 456 of 1,533 tests and stack 36's gate
+# ran 9.5 hours on a known red. Bazel's option for tests is `--test_keep_going` (default true: all
+# tests run; checked in `bazel help test` of 8.7.0); `--notest_keep_going` makes the first
+# non-passing test stop the run, which is the first-failure stop of W2107 by bazel's own flag. A red
+# tip then names one failing target and not all of them; the train's bisect re-gates prefixes anyway.
 # ⚑ W1785: THE BUILD EVENTS GO TO A LOCAL FILE TOO, for `mikemol-gate-targets` below: they name each
 # target's wall time and whether bazel replayed it from cache, which the console log does not.
-if ( cd "$staged" && git_scrubbed bazel test --nokeep_going "${_gate_jobs[@]}" //... --test_output=errors \
+if ( cd "$staged" && git_scrubbed bazel test --nokeep_going --notest_keep_going "${_gate_jobs[@]}" //... --test_output=errors \
       --build_event_json_file="$staged/.bep.json" ) 2>&1 \
     | tee "$staged/.suite.log"; then
     _suite_rc=0
