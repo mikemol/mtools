@@ -96,3 +96,7 @@ src/mikemol/ratchet/exemptions.py|unparsed-text-not-caught|    except tomllib\.T
 src/mikemol/ratchet/exemptions.py|non-list-rules-accepted|        if not isinstance\(rules, list\):|        if False:|def=count
 src/mikemol/ratchet/fleetcensus.py|exemptions-left-out-of-the-census|    return \[\*rows, \*exemption_rows\(repo\)\]|    return rows|def=census_repo
 src/mikemol/ratchet/fleetcensus.py|every-file-read-as-a-pyproject|        if path\.name == "pyproject\.toml":|        if True:|def=exemption_rows
+src/mikemol/ratchet/exemptions.py|string-naming-a-suppression-counted|        1 for tok in tokens if tok\.type == tokenize\.COMMENT and _SUPPRESSION\.match\(tok\.string\)|        1 for tok in tokens if _SUPPRESSION.search(tok.string)|def=suppressions
+src/mikemol/ratchet/exemptions.py|untokenizable-source-not-caught|    except \(tokenize\.TokenError, SyntaxError\):|    except ZeroDivisionError:|def=suppressions
+src/mikemol/ratchet/fleetcensus.py|repo-without-python-reports-a-row|    return \[Row\(repo\.name, "\*\.py", "suppression", total, kinds\.FLOOR\)\] if seen else \[\]|    return [Row(repo.name, "*.py", "suppression", total, kinds.FLOOR)]|def=suppression_rows
+src/mikemol/ratchet/fleetcensus.py|unreadable-source-skipped|                return \[Row\(repo\.name, "\*\.py", "suppression", None, kinds\.FLOOR\)\]|                continue|def=suppression_rows

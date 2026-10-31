@@ -1201,3 +1201,24 @@
   claim  = {W2139: the entry leaves the counted preview and the same debt appears as an exemption.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_an_allowlist_entry_moved_to_per_file_ignores_reads_unchanged_never_paydown},
 }
+
+@misc{ratchet-exemptions-comment-that-begins-a-suppression-counts-and-prose-does-not,
+  section = {exemptions},
+  title  = {W2140: real COMMENT tokens count; a docstring or string that names one does not},
+  claim  = {W2140: real COMMENT tokens count; a docstring or string that names one does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_a_comment_that_begins_a_suppression_counts_and_prose_does_not},
+}
+
+@misc{ratchet-exemptions-source-that-does-not-tokenize-is-unread-not-zero,
+  section = {exemptions},
+  title  = {An unterminated bracket cannot be tokenized, so it reads None},
+  claim  = {An unterminated bracket cannot be tokenized, so it reads None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_a_source_that_does_not_tokenize_is_unread_not_zero},
+}
+
+@misc{ratchet-fleetcensus-python-sources-report-one-suppression-row-and-a-broken-one-is-unread,
+  section = {fleetcensus},
+  title  = {W2140: the row sums the sources' suppression comments; none for a repo without Python},
+  claim  = {W2140: the row sums the sources' suppression comments; none for a repo without Python.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_python_sources_report_one_suppression_row_and_a_broken_one_is_unread},
+}

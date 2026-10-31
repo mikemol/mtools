@@ -115,3 +115,18 @@ def test_an_allowlist_entry_moved_to_per_file_ignores_reads_unchanged_never_payd
     assert _total(tmp_path) == before
     _put(tmp_path / "alpha" / "pyproject.toml", _CLEAN)
     assert _total(tmp_path) < before
+
+
+def test_python_sources_report_one_suppression_row_and_a_broken_one_is_unread(
+    tmp_path: Path,
+) -> None:
+    """W2140: the row sums the sources' suppression comments; none for a repo without Python."""
+    _put(tmp_path / "alpha" / "a.py", "x = 1  # " + "noqa: E501\n")
+    _put(tmp_path / "alpha" / "pkg" / "b.py", "y = 2\n")
+    _put(tmp_path / "beta" / "notes.txt", "no python here")
+    _put(tmp_path / "gamma" / "c.py", "z = (1,\n")
+    lines = [row.line() for row in fleetcensus.census(tmp_path) if row.kind == "suppression"]
+    assert lines == [
+        "alpha *.py suppression value=1 floor=0",
+        "gamma *.py suppression value=UNREAD floor=0",
+    ]

@@ -100,6 +100,29 @@ def _files(repo: Path) -> Iterator[Path]:
     return (path for path in _walk(repo) if path.suffix in _SUFFIXES)
 
 
+def suppression_rows(repo: Path) -> list[Row]:
+    """List the repository's one `suppression` row: its sources' suppression comments (W2140).
+
+    ⚑ THE PYCHECK GATE REFUSES TO ADD A SUPPRESSION, so a count above zero is a leftover that this
+    row keeps visible. The walk is the census's own (pruned, depth-bounded), so a vendored tree or
+    a venv is not counted. A source that does not tokenize makes the row `UNREAD`, never short.
+
+    Returns:
+        one row `*.py` summing every source; empty when the repository has no Python source.
+
+    """
+    total = 0
+    seen = False
+    for path in _walk(repo):
+        if path.suffix == ".py":
+            seen = True
+            counted = exemptions.suppressions(path.read_text(encoding="utf-8", errors="replace"))
+            if counted is None:
+                return [Row(repo.name, "*.py", "suppression", None, kinds.FLOOR)]
+            total += counted
+    return [Row(repo.name, "*.py", "suppression", total, kinds.FLOOR)] if seen else []
+
+
 def exemption_rows(repo: Path) -> list[Row]:
     """List one `exemption` row per pyproject the repository carries (W2139).
 
@@ -118,7 +141,7 @@ def exemption_rows(repo: Path) -> list[Row]:
             value = exemptions.count(path.read_text(encoding="utf-8", errors="replace"))
             relative = path.relative_to(repo).as_posix()
             rows.append(Row(repo.name, relative, "exemption", value, kinds.FLOOR))
-    return rows
+    return [*rows, *suppression_rows(repo)]
 
 
 def _declared_row(repo: Path, item: declaration.Declared) -> Row:

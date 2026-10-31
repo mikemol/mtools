@@ -28,6 +28,28 @@ def test_an_absent_table_and_an_empty_one_are_a_real_zero() -> None:
     assert exemptions.count("[tool.ruff.lint.per-file-ignores]\n") == 0
 
 
+_MARK = "# " + "noqa"
+_TYPE = "# " + "type: ignore[arg-type]"
+_RUFF = "# " + "ruff: ignore[assert]"
+_TWO = 2
+
+
+def test_a_comment_that_begins_a_suppression_counts_and_prose_does_not() -> None:
+    """W2140: real COMMENT tokens count; a docstring or string that names one does not."""
+    clean = 'x = 1\ny = "a ' + _MARK + ' in a string"\n'
+    assert exemptions.suppressions(clean) == 0
+    assert exemptions.suppressions(f"x = 1  {_MARK}: E501\n") == 1
+    assert exemptions.suppressions(f"a = f(1)  {_TYPE}\nb = 2  {_RUFF}\nc = 3\n") == _TWO
+    docstring = '"""Prose that says ' + _MARK + ' is forbidden."""\n'
+    assert exemptions.suppressions(docstring) == 0
+    assert exemptions.suppressions("# unrelated comment about noqa\n") == 0
+
+
+def test_a_source_that_does_not_tokenize_is_unread_not_zero() -> None:
+    """An unterminated bracket cannot be tokenized, so it reads None."""
+    assert exemptions.suppressions("x = (1,\n") is None
+
+
 def test_text_that_does_not_parse_or_has_the_wrong_shape_is_unread() -> None:
     """None is UNREAD: a broken file must not look like a clean one."""
     assert exemptions.count("[tool.ruff") is None
