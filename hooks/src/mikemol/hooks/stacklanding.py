@@ -21,7 +21,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from mikemol.hooks.isolated import EnvRunner, refresh_index
+from mikemol.hooks.isolated import EnvRunner, refresh_index, refresh_tree
 
 
 @dataclass(frozen=True)
@@ -49,6 +49,10 @@ def land(
         why = moved.stderr.strip() or "HEAD is no longer where this run started"
         return Landing(moved=False, reason=why, notes=())
     refreshed = refresh_index(root, paths, run)
+    # ⚑ W2193: A STACK FROZEN FROM ANOTHER DIRECTORY LEAVES THE MAIN TREE'S COPIES AT THE OLD
+    # BYTES; they are brought to HEAD when nobody edited them, and named when someone did.
+    tree = refresh_tree(root, paths, start, run)
     pushed = run(["hook", "run", "--ignore-missing", "post-commit"], {}, root)
     shown = (pushed.stdout + pushed.stderr).strip()
-    return Landing(moved=True, reason="", notes=(refreshed, *([shown] if shown else [])))
+    said = [line for line in (tree, shown) if line]
+    return Landing(moved=True, reason="", notes=(refreshed, *said))

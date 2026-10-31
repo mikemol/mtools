@@ -115,6 +115,39 @@ def refresh_index(root: Path, paths: Sequence[str], run: EnvRunner) -> str:
     return f"real index refreshed to HEAD for {len(paths)} committed path(s)"
 
 
+def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -> str | None:
+    """Bring the main tree's working copies of landed paths to HEAD, losing no one's edit.
+
+    ⚑ A STACK FROZEN FROM ANOTHER DIRECTORY (`--freeze-from`, W2103) LEAVES THE MAIN TREE'S COPIES
+    AT THE OLD BYTES (luthen-observability:W1857, measured: a 2-file stack committed as 17654019,
+    the index refreshed, the main working files still the pre-fix bytes and ` M` against the new
+    HEAD, the diff exactly the fix reversed). A path is judged by what the working file equals:
+    HEAD already (the stack was built here: nothing to do), the old HEAD `start` (nobody edited it:
+    restored to HEAD), or something else (someone's edit: left alone and named).
+
+    Returns:
+        None when every path already equals HEAD; else one line saying which were restored and
+        which differ and were left.
+
+    """
+    restored: list[str] = []
+    differ: list[str] = []
+    for path in paths:
+        if run(["diff", "--quiet", "HEAD", "--", path], {}, root).returncode == 0:
+            continue
+        if run(["diff", "--quiet", start, "--", path], {}, root).returncode == 0:
+            done = run(["restore", "--source=HEAD", "--worktree", "--", path], {}, root)
+            (differ if _failed(done) else restored).append(path)
+        else:
+            differ.append(path)
+    if not restored and not differ:
+        return None
+    said = [f"working copy restored to HEAD for {', '.join(restored)}"] if restored else []
+    if differ:
+        said.append(f"working copy differs from HEAD and was left for {', '.join(differ)}")
+    return "; ".join(said)
+
+
 def commit_isolated(
     root: Path,
     paths: Sequence[str],

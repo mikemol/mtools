@@ -108,6 +108,34 @@ def test_landing_moves_head_to_the_tip_refreshes_the_index_and_pushes(
     assert not _git(root, "status", "--porcelain", "--", *paths)
 
 
+def test_a_stack_frozen_elsewhere_restores_untouched_working_copies_and_names_edited_ones(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2193: the main tree's copies are stale bytes; a is restored to HEAD, b (edited) is named."""
+    root, _remote = _repo(tmp_path, monkeypatch)
+    head, commits = _built(root)
+    (root / "a.txt").write_text("original\n", encoding="utf-8")
+    (root / "b.txt").write_text("someone's own edit\n", encoding="utf-8")
+    landing = stacklanding.land(root, commits, head, ["a.txt", "b.txt"], ck.run_git_in)
+    assert landing.moved
+    assert (root / "a.txt").read_text(encoding="utf-8") == "edited a\n"
+    assert (root / "b.txt").read_text(encoding="utf-8") == "someone's own edit\n"
+    said = " ".join(landing.notes)
+    assert "working copy restored to HEAD for a.txt" in said
+    assert "working copy differs from HEAD and was left for b.txt" in said
+
+
+def test_a_stack_built_in_the_main_tree_leaves_its_working_copies_alone_and_says_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The ordinary landing: the working files already equal HEAD, so no tree line is added."""
+    root, _remote = _repo(tmp_path, monkeypatch)
+    head, commits = _built(root)
+    landing = stacklanding.land(root, commits, head, ["a.txt", "b.txt"], ck.run_git_in)
+    assert landing.moved
+    assert not any("working copy" in note for note in landing.notes)
+
+
 def test_a_head_that_moved_during_the_gate_is_a_race_and_nothing_changes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

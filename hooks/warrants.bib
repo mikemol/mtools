@@ -16651,3 +16651,18 @@
   claim  = {The pure rule: unchanged parts are absent, a torn part and a non-object are skipped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_write.py -k test_lowered_keeps_a_part_to_its_own_keys_and_leaves_an_unreadable_part_alone},
 }
+
+@misc{hooks-stacklanding-stack-frozen-elsewhere-restores-untouched-working-copies-and-names-edited-ones,
+  section = {stackland},
+  title  = {W2193: the main tree's copies are stale bytes; a is restored to HEAD, b (edited) is named},
+  claim  = {W2193: the main tree's copies are stale bytes; a is restored to HEAD, b (edited) is
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_stack_frozen_elsewhere_restores_untouched_working_copies_and_names_edited_ones},
+}
+
+@misc{hooks-stacklanding-stack-built-in-the-main-tree-leaves-its-working-copies-alone-and-says-nothing,
+  section = {stackland},
+  title  = {The ordinary landing: the working files already equal HEAD, so no tree line is added},
+  claim  = {The ordinary landing: the working files already equal HEAD, so no tree line is added.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_stack_built_in_the_main_tree_leaves_its_working_copies_alone_and_says_nothing},
+}

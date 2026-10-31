@@ -323,6 +323,9 @@ src/mikemol/hooks/stackrun.py|stack-gate-verdict-ignored|if gate\.returncode != 
 src/mikemol/hooks/stackrun.py|stack-file-any-shape|if not isinstance\(raw, list\) or not raw:|if False:|def=items_of
 src/mikemol/hooks/stacklanding.py|land-without-the-old-value|"HEAD", tip, start\]|"HEAD", tip]|def=land
 src/mikemol/hooks/stacklanding.py|land-never-pushes|"--ignore-missing", "post-commit"|"--ignore-missing", "post-merge"|def=land
+src/mikemol/hooks/stacklanding.py|working-copies-never-refreshed|    tree = refresh_tree\(root, paths, start, run\)|    tree = None|def=land
+src/mikemol/hooks/isolated.py|working-copy-already-at-head-reported-as-differing|        if run\(\["diff", "--quiet", "HEAD", "--", path\], \{\}, root\)\.returncode == 0:|        if False:|def=refresh_tree
+src/mikemol/hooks/isolated.py|untouched-stale-copy-not-restored|        if run\(\["diff", "--quiet", start, "--", path\], \{\}, root\)\.returncode == 0:|        if False:|def=refresh_tree
 
 # W1082 (nemik:W426): PUSHED is what the remote holds, not what the tracking ref claims.
 src/mikemol/hooks/commit_kata.py|tracking-ref-trusted|if remote == sha or on_remote\(root, sha, remote, run\):|if tracked:|def=published

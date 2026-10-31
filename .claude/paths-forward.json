@@ -48950,12 +48950,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When aj prints COMMITTED record the sha; then the conversion verb (split an existing baseline into per-module parts) and --init for a split layout; nemik's kinds.py answer",
-      "evidence": "2026-10-31T11:01:33Z: stack-hooks-aj SUBMITTED: baselinedir.parts and lowered, pycheck_ratchet_write._save writes only changed parts and never the single file beside the directory; the SPLIT_WRITE refusal removed; 4 tests; 266 related tests pass; the edit gate answered after landing. NOT DONE: --init for a split layout; a one-time conversion of an existing baseline into parts.",
+      "next_bounded_step": "A one-time conversion verb (split an existing baseline into parts) and --init for a split layout; nemik's kinds.py answer",
+      "evidence": "2026-10-31T11:01:33Z: stack-hooks-aj SUBMITTED: baselinedir.parts and lowered, pycheck_ratchet_write._save writes only changed parts and never the single file beside the directory; the SPLIT_WRITE refusal removed; 4 tests; 266 related tests pass; the edit gate answered after landing. NOT DONE: --init for a split layout; a one-time conversion of an existing baseline into parts. | 2026-10-31T11:34:04Z: LANDED (stack aj, gate passed): --write lowers a per-module mypy baseline part by part.",
       "issued_at": "2026-10-31T07:09:30Z",
       "minted_during": "interrupt",
       "caused_by": "W2186",
-      "last_worked": "2026-10-31T11:01:33Z",
+      "last_worked": "2026-10-31T11:34:04Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48984,7 +48984,7 @@
     {
       "symbol": "W2193",
       "title": "After a --freeze-from stack lands, the main tree's working copy of each frozen path is refreshed to HEAD or reported (luthen:W1857)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2103"
       ],
@@ -48994,13 +48994,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Measured by luthen: a 2-file freeze-from stack committed as 17654019; the real index was refreshed to HEAD but the main tree's two files stayed at the pre-fix bytes (' M' against the new HEAD, the diff exactly the fix reversed). Find where the post-land index refresh happens (the 'real index refreshed to HEAD for N committed path(s)' line) and, for a stack frozen from another directory, either write the committed blob into the main working file when that file still equals the pre-stack HEAD bytes (unedited), or list the paths whose working copy differs; test both",
-      "evidence": "",
+      "next_bounded_step": "When ak prints COMMITTED record the sha and tell luthen; W2194 (usage text) next",
+      "evidence": "2026-10-31T11:50:51Z: stack-hooks-ak SUBMITTED (behind pycodemod-b): isolated.refresh_tree and stacklanding.land print its line; real-git tests; 3 mutants; 562 related tests; checks clean. A failed restore is reported under 'differs' without git's reason.",
       "issued_at": "2026-10-31T07:47:30Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1857",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T11:50:51Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2194",
