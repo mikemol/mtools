@@ -79,6 +79,20 @@ def test_a_stack_touching_the_ratchet_or_holding_queue_files_alone_is_admitted(
     assert ratchet_pace.stack_reason(root, queue, _NOW, pace) is None
 
 
+def test_a_file_of_the_ratchets_per_module_directory_is_the_paydown_and_a_lookalike_is_not(
+    tmp_path: Path,
+) -> None:
+    """W2192: `exit-baseline.d/<module>.json` counts for `exit-baseline.txt`; a stranger no."""
+    root, pace = _repo(tmp_path)
+    assert ratchet_pace.split_dir(_RATCHET) == "corpus/exit-baseline.d/"
+    assert ratchet_pace.split_dir("mypy-baseline.json") == "mypy-baseline.d/"
+    assert ratchet_pace.split_dir("noext") == "noext.d/"
+    mine = ["corpus/exit-baseline.d/m.json", "hooks/x.py"]
+    assert ratchet_pace.stack_reason(root, mine, _NOW, pace) is None
+    for other in ("corpus/other.d/m.json", "corpus/exit-baseline.dx/m.json", "exit-baseline.d/m"):
+        assert ratchet_pace.stack_reason(root, [other], _NOW, pace) is not None
+
+
 def test_no_fresh_pace_and_no_payable_debt_refuse_nothing(tmp_path: Path) -> None:
     """Absent, stale and unpayable (required above the entries the file holds) are all quiet."""
     root, pace = _repo(tmp_path)

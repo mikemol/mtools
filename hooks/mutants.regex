@@ -698,6 +698,8 @@ src/mikemol/hooks/ratchet_pace.py|one-human-card-holds-a-payable-debt|    return
 src/mikemol/hooks/ratchet_pace.py|held-row-still-refused|        o for o in owed\(rows, directory\.name, directory\) if not operator_held\(queue, o\.ratchet\)|        o for o in owed(rows, directory.name, directory) if True|def=stack_reason
 src/mikemol/hooks/commit_kata.py|pace-refusal-never-asked|        or _pace_refusal\(root, stack_file, env\)||def=submit_problem
 src/mikemol/hooks/ratchet_pace.py|named-pace-file-ignored|Path\(named\) if named else None|None|def=refusal
+src/mikemol/hooks/ratchet_pace.py|per-module-file-not-the-paydown|        p == ratchet or ratchet\.startswith\(p\.rstrip\("/"\) \+ "/"\) or p\.startswith\(parts\)|        p == ratchet or ratchet.startswith(p.rstrip("/") + "/")|def=_touches
+src/mikemol/hooks/ratchet_pace.py|split-dir-drops-the-directory-part|    return f"\{head\}/\{stem\}\.d/" if head else f"\{stem\}\.d/"|    return f"{stem}.d/"|def=split_dir
 src/mikemol/hooks/stacksnap.py|heads-files-not-listed-under-a-directory|        held = run\(\[\*_HELD, path\], \{\}, root\)|        held = run([*_GONE, path], {}, root)|def=_expand
 src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[\(argv, tracked_tree\) for argv in add_argv_list\(root, live_paths\(entry\.paths\)\)\]|        pass|def=_place
 src/mikemol/hooks/ratchet_hook.py|block-inserted-twice|    if MARK in text:|    if False:|def=insert

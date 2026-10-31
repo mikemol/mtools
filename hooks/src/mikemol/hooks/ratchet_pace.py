@@ -155,14 +155,36 @@ def pace_path() -> Path:
     )
 
 
-def _touches(paths: Iterable[str], ratchet: str) -> bool:
-    """Say whether any path is the ratchet's file or a directory holding it.
+def split_dir(ratchet: str) -> str:
+    """Name the directory a ratchet kept one file per module would live in (W2192).
+
+    ⚑ A BASELINE KEPT PER MODULE IS STILL THE SAME RATCHET (nemik on W2186): `mypy-baseline.json`
+    split into `mypy-baseline.d/<module>.json` keeps its name and its summed value, and a stack that
+    lowers only its own module's file must count as touching it.
 
     Returns:
-        True when a path names the ratchet or holds it.
+        the ratchet's path without its last suffix, plus `.d/` (`x/mypy-baseline.json` gives
+        `x/mypy-baseline.d/`); the whole path plus `.d/` when its name has no suffix.
 
     """
-    return any(p == ratchet or ratchet.startswith(p.rstrip("/") + "/") for p in paths)
+    head, _, name = ratchet.rpartition("/")
+    stem = name.rsplit(".", 1)[0] if "." in name else name
+    return f"{head}/{stem}.d/" if head else f"{stem}.d/"
+
+
+def _touches(paths: Iterable[str], ratchet: str) -> bool:
+    """Say whether any path is the ratchet's file, a directory holding it, or one of its parts.
+
+    Returns:
+        True when a path names the ratchet, holds it, or is a file in its per-module directory
+        (`split_dir`).
+
+    """
+    parts = split_dir(ratchet)
+    return any(
+        p == ratchet or ratchet.startswith(p.rstrip("/") + "/") or p.startswith(parts)
+        for p in paths
+    )
 
 
 def paydown_cards(queue: object, ratchet: str) -> list[str]:
