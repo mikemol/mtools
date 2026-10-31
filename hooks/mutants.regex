@@ -854,3 +854,7 @@ src/mikemol/hooks/bazelshim.py|other-verb-gets-the-flag-too|    if verb is None 
 src/mikemol/hooks/bazelshim.py|own-flag-added-twice|    if any\(word == FLAG or word\.startswith\(f"\{FLAG\}="\) for word in words\):|    if False:|def=with_bep
 src/mikemol/hooks/bazelshim.py|flag-put-before-the-verb|    return \[\*words\[: verb \+ 1\], f"\{FLAG\}=\{path\}", \*words\[verb \+ 1 :\]\]|    return [*words[:verb], f"{FLAG}={path}", *words[verb:]]|def=with_bep
 src/mikemol/hooks/bazelshim.py|shim-finds-itself|        if not entry or Path\(entry\) == shim_dir:|        if not entry:|def=real_bazel
+# A mypy baseline kept per module merges into the one object (W2190).
+src/mikemol/hooks/baselinedir.py|duplicate-file-key-merged-silently|            if key in merged:|            if False:|def=merge
+src/mikemol/hooks/baselinedir.py|non-object-part-merged|        if not isinstance\(part, dict\):|        if False:|def=merge
+src/mikemol/hooks/baselinedir.py|empty-directory-read-as-an-empty-baseline|    return json\.dumps\(merged, sort_keys=True\) if parts else None|    return json.dumps(merged, sort_keys=True)|def=merge

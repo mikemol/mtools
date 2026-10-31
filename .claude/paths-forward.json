@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2189,
+  "counter": 2192,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -47217,12 +47217,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Part A build: shim argv builder as a pure function (insert the flag after the verb, once, keeping an existing one) plus the PATH wiring in gateenv.child_env after the hooks venv holds the new module; Part B (live mode) follows once a gate dir holds a BEP file",
-      "evidence": "2026-10-28: 2026-10-28 paperkit, MEASURED (ls of both gate dirs): paperkit's gate directory /var/tmp/mikemol/gate/paperkit holds only .lock, .tree and tree, NO .bep.json, while /var/tmp/mtools-staged has a live 52,789,063-byte .bep.json; paperkit's running gate command line (optionsParsed.explicitCmdLine) is --config=mutant --config=remote --local_resources=memory=16000 with no --build_event_json_file. So the mode's FIRST source (a local BEP file) does not exist for a paperkit gate today. paperkit will NOT add it to its .bazelrc (shared build config, no evidence it is safe). REQUIRED ON THIS CARD: the commit gate writes a BEP file for EVERY repo's gate, as mtools' staged gate does, i.e. mikemol-commit passes --build_event_json_file=<gate dir>/.bep.json to the bazel test of the repository's gate (not .bazelrc), the repository's own pre-commit untouched. Without it the live mode falls back to bazel query plus a claim-to-target map. NOT READ: where mikemol-commit or the mtools .githooks/pre-commit builds the bazel test line (mtools' own pre-commit adds the flag; paperkit's pre-commit is paperkit's). | 2026-10-31T06:09:14Z: PART A READ: mtools' own .githooks/pre-commit adds the flag itself on the bazel test line (--build_event_json_file under the staged tree's .bep.json, next to the --nokeep_going and jobs flags); mikemol-commit passes the repository's gate nothing for it. No environment variable of bazel's makes it write a BEP file, and the repository's own hook is not ours to edit. SEAM CHOSEN: a bazel shim. mikemol-commit already builds the gate child's environment (hooks/src/mikemol/hooks/gateenv.child_env); it can put a one-file shim named bazel first on that PATH which, for a first word of test or build, appends --build_event_json_file=<gate dir>/.bep.json (unless the command already has one) and execs the real bazel. A repository whose hook runs bare bazel then writes a BEP file with no edit to its hook or .bazelrc. Needs: the real bazel found before the shim, a refusal to loop through the shim, and a test over the argv it builds.",
+      "next_bounded_step": "The shim script and the gateenv.child_env PATH wiring (after the hooks venv rebuild with the gate empty); then Part B",
+      "evidence": "2026-10-28: 2026-10-28 paperkit, MEASURED (ls of both gate dirs): paperkit's gate directory /var/tmp/mikemol/gate/paperkit holds only .lock, .tree and tree, NO .bep.json, while /var/tmp/mtools-staged has a live 52,789,063-byte .bep.json; paperkit's running gate command line (optionsParsed.explicitCmdLine) is --config=mutant --config=remote --local_resources=memory=16000 with no --build_event_json_file. So the mode's FIRST source (a local BEP file) does not exist for a paperkit gate today. paperkit will NOT add it to its .bazelrc (shared build config, no evidence it is safe). REQUIRED ON THIS CARD: the commit gate writes a BEP file for EVERY repo's gate, as mtools' staged gate does, i.e. mikemol-commit passes --build_event_json_file=<gate dir>/.bep.json to the bazel test of the repository's gate (not .bazelrc), the repository's own pre-commit untouched. Without it the live mode falls back to bazel query plus a claim-to-target map. NOT READ: where mikemol-commit or the mtools .githooks/pre-commit builds the bazel test line (mtools' own pre-commit adds the flag; paperkit's pre-commit is paperkit's). | 2026-10-31T06:09:14Z: PART A READ: mtools' own .githooks/pre-commit adds the flag itself on the bazel test line (--build_event_json_file under the staged tree's .bep.json, next to the --nokeep_going and jobs flags); mikemol-commit passes the repository's gate nothing for it. No environment variable of bazel's makes it write a BEP file, and the repository's own hook is not ours to edit. SEAM CHOSEN: a bazel shim. mikemol-commit already builds the gate child's environment (hooks/src/mikemol/hooks/gateenv.child_env); it can put a one-file shim named bazel first on that PATH which, for a first word of test or build, appends --build_event_json_file=<gate dir>/.bep.json (unless the command already has one) and execs the real bazel. A repository whose hook runs bare bazel then writes a BEP file with no edit to its hook or .bazelrc. Needs: the real bazel found before the shim, a refusal to loop through the shim, and a test over the argv it builds. | 2026-10-31T06:43:16Z: stack-hooks-ad SUBMITTED: bazelshim.with_bep and real_bazel (pure, no caller); 81 related tests; 4 mutants; cheap checks clean. | 2026-10-31T07:15:20Z: LANDED 96f71766 (stack ad): bazelshim.with_bep and real_bazel, pure, no caller.",
       "issued_at": "2026-10-28T21:29:13Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:W547",
-      "last_worked": "2026-10-31T06:09:14Z",
+      "last_worked": "2026-10-31T07:15:20Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48845,12 +48845,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Design: baseline dir layout (one file per module), kinds.py reading the sum, ratchet_pace _touches by directory/glob, pycheck --write scoped to changed modules; measure the readers and writers of mypy-baseline.json first; fold W2181",
-      "evidence": "2026-10-30: RULING nemik-ed 2026-10-30 (message to mtools:W2186): per-module baselines keep the arithmetic if (1) the ratchet VALUE stays one number, the sum over modules (kinds.py _counts/_weight; pace, owed fall and required fall in ratchetpace.py are functions of the total; NO per-module floor, a clean module could not count a fall); (2) ratchet_pace.stack_reason's touches test (_touches(paths, o.ratchet)) must match ANY module file, so the ratchet needs a directory or glob identity, not one file name; (3) a write rewrites only modules whose counts changed (W2181 folded in) and the gate's emit from the staged tree still reads the sum. A rise in any module must still refuse (pycheck's per-file check). Not relied on: the baseline being a single file.",
+      "next_bounded_step": "Mint slices 1 to 3 as cards enabling this one; build slice 1 in the hooks lane after the gate's hooks stack lands (hooks registries)",
+      "evidence": "2026-10-30: RULING nemik-ed 2026-10-30 (message to mtools:W2186): per-module baselines keep the arithmetic if (1) the ratchet VALUE stays one number, the sum over modules (kinds.py _counts/_weight; pace, owed fall and required fall in ratchetpace.py are functions of the total; NO per-module floor, a clean module could not count a fall); (2) ratchet_pace.stack_reason's touches test (_touches(paths, o.ratchet)) must match ANY module file, so the ratchet needs a directory or glob identity, not one file name; (3) a write rewrites only modules whose counts changed (W2181 folded in) and the gate's emit from the staged tree still reads the sum. A rise in any module must still refuse (pycheck's per-file check). Not relied on: the baseline being a single file. | 2026-10-31T07:08:38Z: MEASURED (readers/writers of the mypy baseline in this repo): the only code naming mypy-baseline.json is hooks/src/mikemol/hooks/pycheck_ratchet.py (MYPY_BASELINE, baseline(text) decoding {file: {rule: count}}, ratchet() judging ruff and mypy against one file each by pyratchet.verdict); the ratchet dist's counting (nemik's kinds.py _counts/_weight sum) and the stack_reason touches test live in the ratchet and hooks pace modules and nemik's own repo. Keys are already per FILE, so a split by module changes only where the object lives, not its shape. SLICES, each landable alone: (1) the reader takes a directory of per-module files (mypy-baseline.d/<module>.json) beside the single file, merging them and refusing a file key that appears twice; (2) --write scoped to the modules whose counts changed (W2181 folded in); (3) the ratchet's touches test matching any file of the directory (nemik's rule 2) and the summed value unchanged (rule 1).",
       "issued_at": "2026-10-30T21:26:28Z",
       "minted_during": "interrupt",
       "caused_by": "github-42",
-      "last_worked": "2026-10-30T21:29:12Z",
+      "last_worked": "2026-10-31T07:08:38Z",
       "ticks_blocked": 0
     },
     {
@@ -48909,6 +48909,69 @@
       "issued_at": "2026-10-31T06:07:39Z",
       "minted_during": "interrupt",
       "caused_by": "W2103",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2190",
+      "title": "pycheck --ratchet reads a directory of per-module mypy baselines beside the single file, merging them and refusing a duplicated file key",
+      "status": "ready",
+      "enables": [
+        "W2186"
+      ],
+      "touches": [
+        "hooks",
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In hooks/src/mikemol/hooks/pycheck_ratchet.py: baseline() takes the text of one file; add a loader that reads mypy-baseline.d/*.json (sorted), merges the {file:{rule:count}} objects, refuses a file key present in two files and an unreadable file, and falls back to the single mypy-baseline.json when the directory is absent; ratchet() judges the merged counts; tests over the merge, the duplicate key and the fallback",
+      "evidence": "",
+      "issued_at": "2026-10-31T07:09:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2186",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2191",
+      "title": "pycheck --ratchet --write rewrites only the mypy baseline modules whose counts changed (W2181 folded in)",
+      "status": "ready",
+      "enables": [
+        "W2186"
+      ],
+      "touches": [
+        "hooks",
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "After the reader slice: --write NAME scoped to the named baseline, and per-module files rewritten only when their counts differ, leaving the others byte-identical; test with two modules and one fall",
+      "evidence": "",
+      "issued_at": "2026-10-31T07:09:30Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2186",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2192",
+      "title": "The ratchet's touches test matches any file of a baseline directory, and the counted value stays one sum (nemik rules 1 and 2 on W2186)",
+      "status": "ready",
+      "enables": [
+        "W2186"
+      ],
+      "touches": [
+        "hooks",
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Find ratchet_pace.stack_reason's _touches(paths, o.ratchet) and the ratchet dist's _counts/_weight; give a ratchet a directory or glob identity so a stack touching any module file counts as touching it, keeping the summed value; test a stack that lowers only one module's file",
+      "evidence": "",
+      "issued_at": "2026-10-31T07:09:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2186",
       "last_worked": null,
       "ticks_blocked": 0
     }

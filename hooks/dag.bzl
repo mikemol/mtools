@@ -18,6 +18,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/baselinedir.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/bazel_admit.py": {
       "imports": [
         "src/mikemol/hooks/host_facts.py",
@@ -1432,6 +1437,13 @@ GRAPH = {
     },
     "tests/test_bar_fires.py": {
       "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_baselinedir.py": {
+      "imports": [
+        "src/mikemol/hooks/baselinedir.py"
+      ],
       "reads": [],
       "typing_only": []
     },

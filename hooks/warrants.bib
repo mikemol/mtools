@@ -16580,3 +16580,17 @@
   claim  = {The shim's directory is skipped even when it comes first; no other bazel gives None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bazelshim.py -k test_the_real_bazel_is_the_first_on_the_path_outside_the_shims_own_directory},
 }
+
+@misc{hooks-baselinedir-parts-union-into-one-baseline-and-a-duplicate-key-or-a-bad-part-reads-as-none,
+  section = {baselinedir},
+  title  = {The merge is the union; two parts naming one file, or a non-object, or no part, is None},
+  claim  = {The merge is the union; two parts naming one file, or a non-object, or no part, is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir.py -k test_parts_union_into_one_baseline_and_a_duplicate_key_or_a_bad_part_reads_as_none},
+}
+
+@misc{hooks-baselinedir-directory-is-read-in-name-order-and-an-absent-or-empty-one-is-no-baseline,
+  section = {baselinedir},
+  title  = {Parts are read by name and merged; no directory and no part both give None},
+  claim  = {Parts are read by name and merged; no directory and no part both give None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir.py -k test_a_directory_is_read_in_name_order_and_an_absent_or_empty_one_is_no_baseline},
+}

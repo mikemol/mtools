@@ -4758,3 +4758,6 @@
 2026-10-31T03:49:49Z  status W2184 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T06:07:39Z  interrupt W2189 minted    -         "Toy repository test for dependent stacks: a carrier stack, a freeze-from dependent, an undeclared worktree submit refused"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2103
 2026-10-31T06:09:14Z  status W2109 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T07:09:05Z  interrupt W2190 minted    -         "pycheck --ratchet reads a directory of per-module mypy baselines beside the single file, merging them and refusing a duplicated file key"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2186
+2026-10-31T07:09:30Z  interrupt W2191 minted    -         "pycheck --ratchet --write rewrites only the mypy baseline modules whose counts changed (W2181 folded in)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2186
+2026-10-31T07:09:56Z  interrupt W2192 minted    -         "The ratchet's touches test matches any file of a baseline directory, and the counted value stays one sum (nemik rules 1 and 2 on W2186)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2186

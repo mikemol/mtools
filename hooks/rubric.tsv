@@ -214,3 +214,4 @@ gatecpu	Gate CPU: a Gate's Process Tree Summed in CPU Seconds From /proc, Every 
 gatehung	Gate Hung: a Gate Reads Hung Only When Its CPU Did Not Rise Over a Window the Series Covers
 freezefrom	Freeze From: a Stack Frozen From a Scratch Tree of the Same Repository, Read in One Form and Refused for Another Repository
 bazelshim	Bazel Shim: the Build-Event File Added to Test and Build Once and Nowhere Else, and the Real Bazel Never the Shim Itself
+baselinedir	Baseline Directory: a Mypy Baseline Kept One File per Module Reads as the One Object
