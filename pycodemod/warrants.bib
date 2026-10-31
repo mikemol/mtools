@@ -7054,3 +7054,24 @@
   claim  = {W2112: literals and f-strings in every call make a str; a 3, a `*args`, no call, do not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_narrowing.py -k test_a_parameter_every_call_in_the_file_gives_a_str_is_a_str_and_no_other_is},
 }
+
+@misc{pycodemod-benchgrade-each-hand-annotation-is-graded-against-the-form-narrowing-names,
+  section = {narrowing},
+  title  = {Exact, a named Protocol as exact, none for an operand, exact for Sized and Callable},
+  claim  = {Exact, a named Protocol as exact, none for an operand, exact for Sized and Callable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_benchgrade.py -k test_each_hand_annotation_is_graded_against_the_form_narrowing_names},
+}
+
+@misc{pycodemod-benchgrade-concrete-class-over-a-protocol-is-narrower-and-a-mismatch-differs,
+  section = {narrowing},
+  title  = {`sink: str` beats the Protocol (narrower); `text: int` is not a str (differ)},
+  claim  = {`sink: str` beats the Protocol (narrower); `text: int` is not a str (differ).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_benchgrade.py -k test_a_concrete_class_over_a_protocol_is_narrower_and_a_mismatch_differs},
+}
+
+@misc{pycodemod-benchgrade-head-reads-subscripts-strings-and-attributes,
+  section = {narrowing},
+  title  = {`NDArray[...]`, `"Sink"` and `np.ndarray` each name their outer class},
+  claim  = {`NDArray[...]`, `"Sink"` and `np.ndarray` each name their outer class.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_benchgrade.py -k test_head_reads_subscripts_strings_and_attributes},
+}

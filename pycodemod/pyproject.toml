@@ -143,6 +143,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_mutantslines.py" = ["assert"]
 "tests/test_observed.py" = ["assert"]
 "tests/test_narrowing.py" = ["assert"]
+"tests/test_benchgrade.py" = ["assert"]
 "tests/test_exceptsplit.py" = ["assert"]
 "tests/test_cli_exceptsplit.py" = ["assert"]
 "tests/test_kwonly.py" = ["assert"]
