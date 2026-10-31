@@ -1453,8 +1453,17 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/baselinedir.py",
         "src/mikemol/hooks/pycheck_ratchet.py",
-        "src/mikemol/hooks/pycheck_ratchet_run.py",
-        "src/mikemol/hooks/pycheck_ratchet_write.py"
+        "src/mikemol/hooks/pycheck_ratchet_run.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_baselinedir_write.py": {
+      "imports": [
+        "src/mikemol/hooks/baselinedir.py",
+        "src/mikemol/hooks/pycheck_ratchet.py",
+        "src/mikemol/hooks/pycheck_ratchet_write.py",
+        "src/mikemol/hooks/pyratchet.py"
       ],
       "reads": [],
       "typing_only": []

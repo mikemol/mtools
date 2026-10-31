@@ -47255,12 +47255,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When it prints COMMITTED record the sha; then re-run W1925's grading on el-openglo's check_wall_limits.py to see the two functions narrow to mapping",
-      "evidence": "2026-10-31T09:38:48Z: Taken. pycodemod dist, disjoint from the hooks stack gating (ah); reading narrowing.py first. | 2026-10-31T09:48:07Z: stack-pycodemod-a SUBMITTED: Use.varkeyed, _integer, mapping rule before sequence; one test on five functions; 1123 pycodemod tests pass; 3 mutants; lint clean. NOT DONE: the real before-files from el-openglo's ancestors as the witness, W1516's measurement.",
+      "next_bounded_step": "Re-run W1925's grading on el-openglo's check_wall_limits.py to see the two functions narrow to mapping",
+      "evidence": "2026-10-31T09:38:48Z: Taken. pycodemod dist, disjoint from the hooks stack gating (ah); reading narrowing.py first. | 2026-10-31T09:48:07Z: stack-pycodemod-a SUBMITTED: Use.varkeyed, _integer, mapping rule before sequence; one test on five functions; 1123 pycodemod tests pass; 3 mutants; lint clean. NOT DONE: the real before-files from el-openglo's ancestors as the witness, W1516's measurement. | 2026-10-31T10:16:51Z: LANDED 2a58353d (stack pycodemod-a): narrowing reads a variable-keyed subscript as a mapping.",
       "issued_at": "2026-10-28T22:17:56Z",
       "minted_during": "interrupt",
       "caused_by": "W1925",
-      "last_worked": "2026-10-31T09:48:07Z",
+      "last_worked": "2026-10-31T10:16:51Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48847,12 +48847,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Mint slices 1 to 3 as cards enabling this one; build slice 1 in the hooks lane after the gate's hooks stack lands (hooks registries)",
-      "evidence": "2026-10-30: RULING nemik-ed 2026-10-30 (message to mtools:W2186): per-module baselines keep the arithmetic if (1) the ratchet VALUE stays one number, the sum over modules (kinds.py _counts/_weight; pace, owed fall and required fall in ratchetpace.py are functions of the total; NO per-module floor, a clean module could not count a fall); (2) ratchet_pace.stack_reason's touches test (_touches(paths, o.ratchet)) must match ANY module file, so the ratchet needs a directory or glob identity, not one file name; (3) a write rewrites only modules whose counts changed (W2181 folded in) and the gate's emit from the staged tree still reads the sum. A rise in any module must still refuse (pycheck's per-file check). Not relied on: the baseline being a single file. | 2026-10-31T07:08:38Z: MEASURED (readers/writers of the mypy baseline in this repo): the only code naming mypy-baseline.json is hooks/src/mikemol/hooks/pycheck_ratchet.py (MYPY_BASELINE, baseline(text) decoding {file: {rule: count}}, ratchet() judging ruff and mypy against one file each by pyratchet.verdict); the ratchet dist's counting (nemik's kinds.py _counts/_weight sum) and the stack_reason touches test live in the ratchet and hooks pace modules and nemik's own repo. Keys are already per FILE, so a split by module changes only where the object lives, not its shape. SLICES, each landable alone: (1) the reader takes a directory of per-module files (mypy-baseline.d/<module>.json) beside the single file, merging them and refusing a file key that appears twice; (2) --write scoped to the modules whose counts changed (W2181 folded in); (3) the ratchet's touches test matching any file of the directory (nemik's rule 2) and the summed value unchanged (rule 1).",
+      "next_bounded_step": "On nemik's answer: either nothing, or the directory read in kinds.py; build W2191 after ai lands",
+      "evidence": "2026-10-30: RULING nemik-ed 2026-10-30 (message to mtools:W2186): per-module baselines keep the arithmetic if (1) the ratchet VALUE stays one number, the sum over modules (kinds.py _counts/_weight; pace, owed fall and required fall in ratchetpace.py are functions of the total; NO per-module floor, a clean module could not count a fall); (2) ratchet_pace.stack_reason's touches test (_touches(paths, o.ratchet)) must match ANY module file, so the ratchet needs a directory or glob identity, not one file name; (3) a write rewrites only modules whose counts changed (W2181 folded in) and the gate's emit from the staged tree still reads the sum. A rise in any module must still refuse (pycheck's per-file check). Not relied on: the baseline being a single file. | 2026-10-31T07:08:38Z: MEASURED (readers/writers of the mypy baseline in this repo): the only code naming mypy-baseline.json is hooks/src/mikemol/hooks/pycheck_ratchet.py (MYPY_BASELINE, baseline(text) decoding {file: {rule: count}}, ratchet() judging ruff and mypy against one file each by pyratchet.verdict); the ratchet dist's counting (nemik's kinds.py _counts/_weight sum) and the stack_reason touches test live in the ratchet and hooks pace modules and nemik's own repo. Keys are already per FILE, so a split by module changes only where the object lives, not its shape. SLICES, each landable alone: (1) the reader takes a directory of per-module files (mypy-baseline.d/<module>.json) beside the single file, merging them and refusing a file key that appears twice; (2) --write scoped to the modules whose counts changed (W2181 folded in); (3) the ratchet's touches test matching any file of the directory (nemik's rule 2) and the summed value unchanged (rule 1). | 2026-10-31T10:37:38Z: LANDED so far: W2190 reader (37c737a4, 5b7aa323). IN GATE: W2192 touches clause (stack ai). Asked nemik whether kinds.py _counts/_weight reads the baseline through pycheck's reader or opens the file itself (the repo that owns it); W2191 (per-module writer) unbuilt. | 2026-10-31T10:39:03Z: Letter to nemik written (nemik inbox, 2026-10-31 w2186 progress and one question): no live nemik session. The question: does kinds.py _counts/_weight read the baseline through pycheck's reader or open the file itself.",
       "issued_at": "2026-10-30T21:26:28Z",
       "minted_during": "interrupt",
       "caused_by": "github-42",
-      "last_worked": "2026-10-31T07:08:38Z",
+      "last_worked": "2026-10-31T10:39:03Z",
       "ticks_blocked": 0
     },
     {
@@ -48960,7 +48960,7 @@
     {
       "symbol": "W2192",
       "title": "The ratchet's touches test matches any file of a baseline directory, and the counted value stays one sum (nemik rules 1 and 2 on W2186)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2186"
       ],
@@ -48970,13 +48970,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After ag lands: fresh scratch; the third clause in _touches, the test, a mutant for the clause, warrants; cheap checks; submit",
-      "evidence": "2026-10-31T09:08:18Z: READ: the touches test is hooks/src/mikemol/hooks/ratchet_pace.py _touches(paths, ratchet): True when a path IS the ratchet's file or a directory holding it (line 158). A per-module mypy baseline puts the stack's paths under mypy-baseline.d/, which neither clause matches, so a stack that lowers only its module's file would be refused as touching nothing. FIX (small, pure): add a third clause, a path that starts with the ratchet's stem plus .d/ (mypy-baseline.json gives mypy-baseline.d/), keeping the ratchet's name and the summed value as they are (nemik rules 1 and 2). Test: a stack with only mypy-baseline.d/<module>.json passes stack_reason for an owed mypy-baseline.json, an unrelated .d/ path does not. Waits for stack ag (hooks registry files).",
+      "next_bounded_step": "nemik to confirm kinds.py (letter in its inbox); W2191 the per-module writer is next",
+      "evidence": "2026-10-31T09:08:18Z: READ: the touches test is hooks/src/mikemol/hooks/ratchet_pace.py _touches(paths, ratchet): True when a path IS the ratchet's file or a directory holding it (line 158). A per-module mypy baseline puts the stack's paths under mypy-baseline.d/, which neither clause matches, so a stack that lowers only its module's file would be refused as touching nothing. FIX (small, pure): add a third clause, a path that starts with the ratchet's stem plus .d/ (mypy-baseline.json gives mypy-baseline.d/), keeping the ratchet's name and the summed value as they are (nemik rules 1 and 2). Test: a stack with only mypy-baseline.d/<module>.json passes stack_reason for an owed mypy-baseline.json, an unrelated .d/ path does not. Waits for stack ag (hooks registry files). | 2026-10-31T10:16:31Z: stack-hooks-ai SUBMITTED: ratchet_pace.split_dir and the third clause in _touches; 164 related tests; 2 mutants; checks clean. The ratchet counting side (nemik's kinds.py) was NOT read here. | 2026-10-31T10:48:26Z: LANDED c72b7b3a (stack ai): _touches counts a file of the ratchet's per-module directory as the paydown.",
       "issued_at": "2026-10-31T07:09:56Z",
       "minted_during": "interrupt",
       "caused_by": "W2186",
-      "last_worked": "2026-10-31T09:08:18Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-10-31T10:48:26Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2193",

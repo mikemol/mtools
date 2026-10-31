@@ -31,12 +31,6 @@ from mikemol.hooks.pycheck_ratchet import (
 
 EXIT_FAILED = 1
 EXISTS = "pycheck --ratchet --init: a baseline exists; use --write\n"
-# ⚑ THE READER TAKES THE DIRECTORY BEFORE THE FILE (W2190), so a `--write` that rewrote only the
-# single file would lower a baseline nobody reads: it refuses until the per-module writer exists.
-SPLIT_WRITE = (
-    "pycheck --ratchet --write: mypy-baseline.d is the baseline, and its writer is not built "
-    "yet (mtools:W2191); nothing written\n"
-)
 
 type Write = Callable[[Path, str], None]
 type Measured = tuple[pyratchet.Counts, pyratchet.Counts]
@@ -60,6 +54,14 @@ def _measure(root: Path, tools: Tools) -> Measured:
 
 def _save(root: Path, counts: Measured, write: Write) -> None:
     write(root / RUFF_BASELINE, encode(counts[0]))
+    # ⚑ W2191: A BASELINE KEPT PER MODULE IS LOWERED PART BY PART. The reader takes the directory
+    # before the single file (W2190), so the single file is never written beside one, and only
+    # the parts whose counts changed are rewritten.
+    split = root / baselinedir.DIR
+    if split.is_dir():
+        for name, part in baselinedir.lowered(baselinedir.parts(split) or [], counts[1]).items():
+            write(split / name, encode(part))
+        return
     write(root / MYPY_BASELINE, encode(counts[1]))
 
 
@@ -75,9 +77,6 @@ def lower(root: Path, tools: Tools, write: Write, out: TextIO, err: TextIO) -> i
     mypy_base = baseline(tools.read(root / MYPY_BASELINE))
     if ruff_base is None or mypy_base is None:
         err.write(NO_BASELINE)
-        return EXIT_NOT_CHECKED
-    if (root / baselinedir.DIR).is_dir():
-        err.write(SPLIT_WRITE)
         return EXIT_NOT_CHECKED
     now = _measure(root, tools)
     judged = [

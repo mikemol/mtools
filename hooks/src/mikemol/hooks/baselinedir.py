@@ -21,7 +21,7 @@ this layout is W2191.
 """
 
 import json
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import cast
 
@@ -51,6 +51,22 @@ def merge(parts: Sequence[tuple[str, str]]) -> str | None:
     return json.dumps(merged, sort_keys=True) if parts else None
 
 
+def parts(directory: Path) -> list[tuple[str, str]] | None:
+    """Read every `*.json` of a baseline directory in name order.
+
+    Returns:
+        the `(name, text)` pairs, or None when a part cannot be read.
+
+    """
+    try:
+        return [
+            (path.name, path.read_text(encoding="utf-8"))
+            for path in sorted(directory.glob("*.json"))
+        ]
+    except OSError:
+        return None
+
+
 def read(directory: Path) -> str | None:
     """Read every `*.json` of a baseline directory in name order and merge them.
 
@@ -58,11 +74,33 @@ def read(directory: Path) -> str | None:
         the merged text (`merge`), or None when a part cannot be read.
 
     """
-    try:
-        parts = [
-            (path.name, path.read_text(encoding="utf-8"))
-            for path in sorted(directory.glob("*.json"))
-        ]
-    except OSError:
-        return None
-    return merge(parts)
+    found = parts(directory)
+    return None if found is None else merge(found)
+
+
+def lowered[V](found: Sequence[tuple[str, str]], now: Mapping[str, V]) -> dict[str, dict[str, V]]:
+    """Name the parts whose counts changed, each with its new contents (W2191).
+
+    ⚑ ONLY A PART THAT CHANGED IS REWRITTEN: a part keeps exactly the file keys it holds, each
+    taken from today's counts, and a key whose file no longer has a finding drops out. A key
+    today's counts hold that no part holds is a RISE and the caller has refused it already, so
+    it is never added here. A part that did not change is left out, so two stacks lowering
+    different modules write disjoint files.
+
+    Returns:
+        part name to its new `{file: counts}` object, for the changed parts only; a part
+        that does not parse is left alone.
+
+    """
+    changed: dict[str, dict[str, V]] = {}
+    for name, text in found:
+        try:
+            old: object = json.loads(text)
+        except ValueError:
+            continue
+        if not isinstance(old, dict):
+            continue
+        keep = {key: now[key] for key in cast("dict[str, object]", old) if key in now}
+        if keep != old:
+            changed[name] = keep
+    return changed

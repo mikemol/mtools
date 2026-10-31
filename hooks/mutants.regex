@@ -862,4 +862,6 @@ src/mikemol/hooks/baselinedir.py|non-object-part-merged|        if not isinstanc
 src/mikemol/hooks/baselinedir.py|empty-directory-read-as-an-empty-baseline|    return json\.dumps\(merged, sort_keys=True\) if parts else None|    return json.dumps(merged, sort_keys=True)|def=merge
 # The ratchet reads a split mypy baseline through `disk`, and `--write` refuses it for now (W2190).
 src/mikemol/hooks/pycheck_ratchet_run.py|baseline-directory-never-read|    if path\.name == MYPY_BASELINE and split\.is_dir\(\):|    if False:|def=disk
-src/mikemol/hooks/pycheck_ratchet_write.py|split-baseline-written-as-the-single-file|    if \(root / baselinedir\.DIR\)\.is_dir\(\):|    if False:|def=lower
+src/mikemol/hooks/baselinedir.py|unchanged-part-rewritten|        if keep != old:|        if True:|def=lowered
+src/mikemol/hooks/baselinedir.py|part-keeps-keys-it-never-held|        keep = \{key: now\[key\] for key in cast\("dict\[str, object\]", old\) if key in now\}|        keep = {key: now[key] for key in now}|def=lowered
+src/mikemol/hooks/pycheck_ratchet_write.py|split-baseline-written-as-the-single-file|    if split\.is_dir\(\):|    if False:|def=_save

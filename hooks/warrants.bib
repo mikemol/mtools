@@ -16602,13 +16602,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_wiring.py -k test_the_directory_wins_over_the_single_file_beside_it_and_other_paths_read_as_before},
 }
 
-@misc{hooks-baselinedir-wiring-write-refuses-a-split-baseline-and-writes-nothing-while-its-writer-is-unbuilt,
-  section = {baselinedir},
-  title  = {With `mypy-baseline.d` present `--write` exits not-checked and touches no file},
-  claim  = {With `mypy-baseline.d` present `--write` exits not-checked and touches no file.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_wiring.py -k test_write_refuses_a_split_baseline_and_writes_nothing_while_its_writer_is_unbuilt},
-}
-
 @misc{hooks-gate-test-keep-going-gates-bazel-test-carries-the-test-option-that-stops-at-the-first-failure,
   section = {sites_gate},
   title  = {`--notest_keep_going` is on the gate's one `bazel test` command, beside `--nokeep_going`},
@@ -16629,4 +16622,32 @@
   title  = {W2192: `exit-baseline.d/<module>.json` counts for `exit-baseline.txt`; a stranger no},
   claim  = {W2192: `exit-baseline.d/<module>.json` counts for `exit-baseline.txt`; a stranger no.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_reason.py -k test_a_file_of_the_ratchets_per_module_directory_is_the_paydown_and_a_lookalike_is_not},
+}
+
+@misc{hooks-baselinedir-write-only-the-part-whose-count-fell-is-rewritten-and-the-single-file-is-not-written,
+  section = {baselinedir},
+  title  = {a.py fell from 2 to 1 (m1 changes); b.py is unchanged (m2 is left alone)},
+  claim  = {a.py fell from 2 to 1 (m1 changes); b.py is unchanged (m2 is left alone).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_write.py -k test_only_the_part_whose_count_fell_is_rewritten_and_the_single_file_is_not_written},
+}
+
+@misc{hooks-baselinedir-write-file-with-no-finding-left-drops-out-of-its-part,
+  section = {baselinedir},
+  title  = {b.py is fixed: m2 is rewritten empty, m1 (unchanged at 2) is not},
+  claim  = {b.py is fixed: m2 is rewritten empty, m1 (unchanged at 2) is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_write.py -k test_a_file_with_no_finding_left_drops_out_of_its_part},
+}
+
+@misc{hooks-baselinedir-write-rise-in-any-module-refuses-and-writes-nothing,
+  section = {baselinedir},
+  title  = {a.py rose from 2 to 3: the exit is the rise exit and no file is written},
+  claim  = {a.py rose from 2 to 3: the exit is the rise exit and no file is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_write.py -k test_a_rise_in_any_module_refuses_and_writes_nothing},
+}
+
+@misc{hooks-baselinedir-write-lowered-keeps-a-part-to-its-own-keys-and-leaves-an-unreadable-part-alone,
+  section = {baselinedir},
+  title  = {The pure rule: unchanged parts are absent, a torn part and a non-object are skipped},
+  claim  = {The pure rule: unchanged parts are absent, a torn part and a non-object are skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_baselinedir_write.py -k test_lowered_keeps_a_part_to_its_own_keys_and_leaves_an_unreadable_part_alone},
 }
