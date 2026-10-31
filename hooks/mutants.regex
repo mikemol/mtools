@@ -132,7 +132,7 @@ src/mikemol/hooks/snaplinks.py|every-entry-a-link|if mode != SYMLINK:|if False:|
 src/mikemol/hooks/snaplinks.py|carried-file-loses-its-mode|out\.chmod\(link\.mode\)|pass|def=write
 src/mikemol/hooks/new_dist_cli.py|existing-directory-admitted|if target.exists\(\):|if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|wrong-operand-count-admitted|if len\(rest\) != _OPERANDS:|if False:|def=main
-src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_isolated
+src/mikemol/hooks/isolated.py|real-index-not-synced|if not _failed\(done\):|if False:|def=commit_planned
 
 # W957: the repin core. A short target pins nothing; a vendored wheel rewritten without its binary is a false
 # statement; an unselected dist moved breaks the one-sha rule from the other side; a pin already at the target
@@ -224,7 +224,7 @@ src/mikemol/hooks/commit_kata.py|any-moved-head-is-ours|return False|return True
 # W1108 (nemik:W428): the real index is refreshed for the committed paths, retried, and checked.
 src/mikemol/hooks/isolated.py|stale-index-reported-fine|if _failed\(done\) or _failed\(left\) or stale:|if False:|def=refresh_index
 src/mikemol/hooks/isolated.py|reset-not-retried|range\(REFRESH_ATTEMPTS - 1\)|range(0)|def=refresh_index
-src/mikemol/hooks/isolated.py|refresh-not-run|note = refresh_index\(root, paths, run\)|note = ""|def=commit_isolated
+src/mikemol/hooks/isolated.py|refresh-not-run|note = refresh_index\(root, plan\.paths, run\)|note = ""|def=commit_planned
 
 # W1097: a commit whose push did not complete prints the repair, and only then.
 src/mikemol/hooks/commit_kata.py|unpushed-repair-never-printed|if any\(mark in line for mark in LOCAL_MARKS\):|if False:|def=commit
@@ -587,8 +587,8 @@ src/mikemol/hooks/trainround.py|round-spawn-failure-raised|    except OSError:| 
 src/mikemol/hooks/traindrive.py|red-round-reads-green|        tell\(trainround\.GREEN if bad is None else trainround\.RED, rnd, bad\)|        tell(trainround.GREEN, rnd, bad)|def=drive
 src/mikemol/hooks/traindrive.py|unbuilt-round-unreported|            tell\(trainround\.UNBUILT\)|            pass|def=drive
 src/mikemol/hooks/traindrive.py|failed-checks-not-recorded|    failed = "; "\.join\(failed_checks\(culprit\.stdout \+ culprit\.stderr\)\) if culprit else ""|    failed = ""|def=_round_record
-src/mikemol/hooks/isolated.py|gated-tree-never-stamped|        stamped = f"\{message\.rstrip\(\)\}\\nGated-Tree: \{tree\.stdout\.strip\(\)\}\\n"|        stamped = message|def=commit_isolated
-src/mikemol/hooks/isolated.py|gated-tree-splits-the-trailer-block|\{message\.rstrip\(\)\}|{message}|def=commit_isolated
+src/mikemol/hooks/isolated.py|gated-tree-never-stamped|        stamped = f"\{message\.rstrip\(\)\}\\nGated-Tree: \{tree\.stdout\.strip\(\)\}\\n"|        stamped = message|def=commit_planned
+src/mikemol/hooks/isolated.py|gated-tree-splits-the-trailer-block|\{message\.rstrip\(\)\}|{message}|def=commit_planned
 src/mikemol/hooks/traindrive.py|round-facts-not-read|    facts = trainround\.facts_of\(first\.stdout \+ first\.stderr\) if first else trainround\.GateFacts\(\)|    facts = trainround.GateFacts()|def=_round_record
 src/mikemol/hooks/requeue.py|consolidated-stack-counted-as-the-leader|    flying = \(r for r in rows if r\.state == commit_counts\.INFLIGHT and set\(r\.waypoints\) != ours\)|    flying = (r for r in rows if r.state == commit_counts.INFLIGHT)|def=leader_of
 src/mikemol/hooks/requeue.py|non-commit-leader-stopped|    if pid is None or not world\.is_commit\(pid\):|    if False:|def=refusal
@@ -873,3 +873,7 @@ src/mikemol/hooks/commitdecl.py|non-string-element-accepted|    if not all\(isin
 src/mikemol/hooks/commitdecl.py|absent-file-read-as-a-file|    if not path\.is_file\(\):|    if False:|def=read
 src/mikemol/hooks/commitdecl.py|non-object-document-accepted|    if not isinstance\(doc, dict\):|    if False:|def=read
 src/mikemol/hooks/commitdecl.py|paths-never-read|        _strings\(fields\.get\("paths", \[\]\), "paths"\),|        (),|def=read
+src/mikemol/hooks/isolated.py|frozen-files-never-placed|    frozen = \[run\(list\(argv\), scope, root\) for argv in plan\.placed\]|    frozen = []|def=commit_planned
+src/mikemol/hooks/commit_kata.py|placed-paths-read-from-the-tree-again|    left = \[p for p in paths if p in QUEUE_FILES\] if placed else list\(paths\)|    left = list(paths)|def=isolated_commit
+src/mikemol/hooks/stackfreeze.py|plain-snapshot-never-read|    return stacksnap\.apply_argv\(loaded\[0\]\) if loaded is not None and len\(loaded\) == 1 else \[\]|    return []|def=plain_plan
+src/mikemol/hooks/commit_kata.py|reexec-takes-a-fresh-snapshot|    if parsed is None or env\.get\(HELD_ENV\):|    if parsed is None:|def=plain_snapshot

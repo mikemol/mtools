@@ -69,7 +69,7 @@ from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
 from mikemol.hooks.historyfetch import fetch as _fetch_history
-from mikemol.hooks.isolated import Done, commit_isolated
+from mikemol.hooks.isolated import Done, Plan, commit_planned
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.launcher import announce as _announce_launcher
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
@@ -83,7 +83,14 @@ from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackbuildfiles import refusal as _build_refusal
 from mikemol.hooks.stackdrift import QUEUE as _QUEUE
 from mikemol.hooks.stackdrift import report as _drift_report
-from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit, forget, with_files
+from mikemol.hooks.stackfreeze import (
+    SNAP_ENV,
+    at_submit,
+    at_submit_paths,
+    forget,
+    plain_plan,
+    with_files,
+)
 from mikemol.hooks.stackimports import refusal as _stack_refusal
 from mikemol.hooks.stackmutants import chain as _chain_lints
 from mikemol.hooks.stackmutants import real_lint as _real_lint
@@ -93,6 +100,7 @@ from mikemol.hooks.stackrun import Item as _Item
 from mikemol.hooks.stackrun import Seams as _Seams
 from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
+from mikemol.hooks.stacksnap import QUEUE_FILES
 from mikemol.hooks.stacktypes import real_types as _real_types
 from mikemol.hooks.testgate import refusal as _test_refusal
 from mikemol.hooks.tool_path import find as _find_tool
@@ -205,7 +213,11 @@ def isolated_commit(root: Path, request: Request, paths: Sequence[str]) -> Done:
 
     """
     namespace = Path(os.environ.get(NAMESPACE_ENV, DEFAULT_NAMESPACE))
-    return commit_isolated(root, paths, message_of(request), run_git_in, namespace)
+    placed = plain_plan(os.environ)
+    # ⚑ W2120: WITH THE SUBMIT-TIME FILES PLACED, ONLY THE QUEUE FILES ARE STILL READ FROM THE TREE
+    # (they are never frozen, so what lands is what the card updates left).
+    left = [p for p in paths if p in QUEUE_FILES] if placed else list(paths)
+    return commit_planned(root, Plan(left, placed), message_of(request), run_git_in, namespace)
 
 
 def waiter(child: subprocess.Popen[bytes]) -> Callable[[float], int | None]:
@@ -1138,6 +1150,34 @@ def unreadable_stack(stacked: tuple[Path, Path] | None, args: Sequence[str] = ()
     return EXIT_USAGE
 
 
+def plain_snapshot(
+    root: Path,
+    parsed: tuple[Path, Request] | None,
+    ledger: Path | None,
+    key: str,
+    env: Mapping[str, str],
+) -> str:
+    """Freeze a plain commit's paths at submit as a stack entry's are (W2120).
+
+    ⚑ AN EDIT OF THE PATHS IN THE MAIN TREE WHILE THE COMMIT WAITS FOR THE LEASE IS NOT WHAT GETS
+    GATED AND LANDED: the commit placed whatever the tree held when it finally ran, under the
+    submitter's name (paperkit:W547 may have carried W570's lock regeneration).
+
+    Returns:
+        the snapshot path; the one already in the environment for a re-exec'd or stacked run.
+
+    """
+    if parsed is None or env.get(HELD_ENV):
+        return env.get(SNAP_ENV, "")
+    return at_submit_paths(root, parsed[1].paths, ledger, key, run_git_in)
+
+
+def finish(ledger: Path | None, key: str, env: Mapping[str, str]) -> None:
+    """End a run: drop its snapshot file and take it out of the live counts."""
+    forget(env)
+    track(ledger, key, None, env)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run `mikemol-commit`.
 
@@ -1169,6 +1209,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     key = str(submitted)
     env.setdefault(MARKER_ENV, marker_value(ledger, key))
     submit(ledger, key, env)
+    env[SNAP_ENV] = plain_snapshot(root, parsed, ledger, key, env)
     if stacked is not None and not env.get(HELD_ENV):
         env[SNAP_ENV] = at_submit(freeze_root(bare, root), stacked[1], ledger, key, run_git_in)
         # ⚑ W1604: a build file naming a Python source no entry carries is refused here, before the
@@ -1207,7 +1248,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         return run_held(root, (stacked, parsed), held)
     finally:
-        track(ledger, key, None, env)
+        finish(ledger, key, env)
 
 
 @dataclass(frozen=True)

@@ -24,6 +24,7 @@ CONSUMED BY: `commit_kata.isolated_commit`, the `mikemol-commit` mode `MIKEMOL_C
 
 import time
 from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
@@ -148,6 +149,20 @@ def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -
     return "; ".join(said)
 
 
+@dataclass(frozen=True)
+class Plan:
+    """What an isolated commit takes: files read from the tree, and blobs frozen at submit.
+
+    ⚑ `placed` ARE THE `update-index` CALLS THAT PUT FROZEN BLOBS INTO THE PRIVATE INDEX (W2120): a
+    plain commit that was frozen at submit places those bytes, so an edit of its paths in the main
+    tree between submit and the gate cannot ride in under its name. `paths` are then only what is
+    still read from the tree (the queue files); with none placed it is the whole request.
+    """
+
+    paths: Sequence[str]
+    placed: Sequence[Sequence[str]] = ()
+
+
 def commit_isolated(
     root: Path,
     paths: Sequence[str],
@@ -156,6 +171,22 @@ def commit_isolated(
     namespace: Path,
 ) -> Done:
     """Commit `paths` of `root` through a private index and a snapshot of the resulting tree.
+
+    Returns:
+        the `git commit` process; or the first step's process that failed before it.
+
+    """
+    return commit_planned(root, Plan(paths), message, run, namespace)
+
+
+def commit_planned(
+    root: Path,
+    plan: Plan,
+    message: str,
+    run: EnvRunner,
+    namespace: Path,
+) -> Done:
+    """Commit a plan through a private index and a snapshot of the resulting tree.
 
     Returns:
         the `git commit` process; or the first step's process that failed before it.
@@ -171,7 +202,9 @@ def commit_isolated(
     scope = {"GIT_DIR": str(git_dir), "GIT_INDEX_FILE": str(index)}
     read = run(["read-tree", "HEAD"], scope, root)
     tracked_tree = {**scope, "GIT_WORK_TREE": str(root)}
-    adds = [run(argv, tracked_tree, root) for argv in add_argv_list(root, paths)]
+    frozen = [run(list(argv), scope, root) for argv in plan.placed]
+    tree_adds = add_argv_list(root, plan.paths)
+    adds = [*frozen, *(run(argv, tracked_tree, root) for argv in tree_adds)]
     tree = run(["write-tree"], scope, root)
     for step in (read, *adds, tree):
         if _failed(step):
@@ -192,6 +225,6 @@ def commit_isolated(
         stamped = f"{message.rstrip()}\nGated-Tree: {tree.stdout.strip()}\n"
         done = run(["commit", "-m", stamped], work, snap.path)
     if not _failed(done):
-        note = refresh_index(root, paths, run)
+        note = refresh_index(root, plan.paths, run)
         done.stdout = f"{done.stdout}{note}\n"
     return done

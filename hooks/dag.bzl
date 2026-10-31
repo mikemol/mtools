@@ -134,6 +134,7 @@ GRAPH = {
         "src/mikemol/hooks/stackmutants.py",
         "src/mikemol/hooks/stackpin.py",
         "src/mikemol/hooks/stackrun.py",
+        "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktypes.py",
         "src/mikemol/hooks/testgate.py",
         "src/mikemol/hooks/tool_path.py",
@@ -1714,6 +1715,15 @@ GRAPH = {
     "tests/test_commit_limit.py": {
       "imports": [
         "src/mikemol/hooks/commitprogress.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_commit_plain_frozen.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/snapshot.py",
+        "src/mikemol/hooks/stackfreeze.py"
       ],
       "reads": [],
       "typing_only": []

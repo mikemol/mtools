@@ -547,6 +547,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_freezefrom.py" = ["assert"]
 "tests/test_commit_freeze_from.py" = ["assert"]
 "tests/test_commitdecl.py" = ["assert"]
+"tests/test_commit_plain_frozen.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_bazelshim.py" = ["assert"]
 "tests/test_baselinedir.py" = ["assert"]
 "tests/test_baselinedir_wiring.py" = ["assert"]

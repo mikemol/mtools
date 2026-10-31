@@ -4878,3 +4878,6 @@
 2026-10-31T17:35:15Z  status W2138 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T17:35:15Z  status W2139 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T17:37:18Z  status W2139 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T17:45:50Z  tick  W2139 advanced  sweep     "W2139 fleetcensus exemption rows submitted as ratchet-w2139; W2138 landed 19da52f2, W2195 landed eeeda689 [reason: ratchet-w2139 holds the gate and the remaining top cards are hooks or pathsforward work behind it (cites W2139, W2120) (cites W2120)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T17:56:10Z  status W2139 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T17:56:10Z  status W2140 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

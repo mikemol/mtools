@@ -19,7 +19,7 @@ unreachable, for `git gc` to take.
 CONSUMED BY: `commit_kata.main` and `run_stack_mode`.
 """
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import replace
 from pathlib import Path
 
@@ -54,6 +54,39 @@ def at_submit(root: Path, stack_file: Path, ledger: Path | None, key: str, run: 
     except OSError:
         return ""
     return str(path)
+
+
+def at_submit_paths(
+    root: Path, paths: Sequence[str], ledger: Path | None, key: str, run: EnvRunner
+) -> str:
+    """Freeze a plain commit's files now and record them as a one-entry snapshot (W2120).
+
+    Returns:
+        the snapshot file's path, or the empty string when there is no ledger or it cannot be
+        written (the commit then reads the tree when it runs, as it always did).
+
+    """
+    if ledger is None:
+        return ""
+    path = ledger / f"stack-{key}.snap"
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        stacksnap.dump(path, [stacksnap.freeze(root, paths, run)])
+    except OSError:
+        return ""
+    return str(path)
+
+
+def plain_plan(env: Mapping[str, str]) -> list[list[str]]:
+    """Plan the `update-index` calls that place a plain commit's submit-time files.
+
+    Returns:
+        the calls, or none when no snapshot was named, it is unreadable, or it is not one entry.
+
+    """
+    named = env.get(SNAP_ENV, "")
+    loaded = stacksnap.load(Path(named)) if named else None
+    return stacksnap.apply_argv(loaded[0]) if loaded is not None and len(loaded) == 1 else []
 
 
 def with_files(items: list[Item], root: Path, env: Mapping[str, str], run: EnvRunner) -> list[Item]:

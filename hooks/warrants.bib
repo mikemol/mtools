@@ -16701,3 +16701,32 @@
   claim  = {A file that is there and wrong raises, it never reads as empty.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitdecl.py -k test_each_wrong_shape_is_refused_by_name},
 }
+
+@misc{hooks-commit-plain-frozen-edit-after-submit-does-not-ride-into-the-landed-tree,
+  section = {commit_plain_frozen},
+  title  = {The landed a.txt is the submitted bytes; the later edit stays in the working tree},
+  claim  = {The landed a.txt is the submitted bytes; the later edit stays in the working tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_an_edit_after_submit_does_not_ride_into_the_landed_tree},
+}
+
+@misc{hooks-commit-plain-frozen-with-no-snapshot-the-commit-reads-the-tree-late-as-before,
+  section = {commit_plain_frozen},
+  title  = {The control: nothing frozen, so the later edit is what lands},
+  claim  = {The control: nothing frozen, so the later edit is what lands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_with_no_snapshot_the_commit_reads_the_tree_late_as_before},
+}
+
+@misc{hooks-commit-plain-frozen-queue-file-is-read-at-land-time-and-never-frozen,
+  section = {commit_plain_frozen},
+  title  = {A card update after submit lands with the commit; the frozen file keeps its submit bytes},
+  claim  = {A card update after submit lands with the commit; the frozen file keeps its submit
+            bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_a_queue_file_is_read_at_land_time_and_never_frozen},
+}
+
+@misc{hooks-commit-plain-frozen-snapshot-is-taken-only-for-a-fresh-plain-submit,
+  section = {commit_plain_frozen},
+  title  = {A stacked or re-exec'd run keeps the snapshot already in its environment},
+  claim  = {A stacked or re-exec'd run keeps the snapshot already in its environment.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_the_snapshot_is_taken_only_for_a_fresh_plain_submit},
+}
