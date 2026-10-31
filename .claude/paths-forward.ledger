@@ -4907,3 +4907,6 @@
 2026-10-31T21:07:21Z  status W2075 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T21:07:21Z  status W2104 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-10-31T21:08:47Z  status W2201 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T21:16:45Z  tick  W2201 advanced  collapse  "W2201 surfaces census submitted as hooks-aq with 73 redundant assert exemptions removed; W2064 landed 0c0ecd0b; stale working cards released [reason: hooks-aq (W2201) holds the gate and W2104's dirty-map needs the same hooks registries (cites W2104) (cites W2104, W2104)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T21:38:48Z  status W2047 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-10-31T22:02:34Z  tick  W2047 advanced  collapse  "W2047 idle-card note wired and submitted as pathsforward-y behind hooks-aq (W2201); 131 pathsforward exemptions consolidated away [reason: hooks-aq (W2201) is inflight and pathsforward-y (W2047) queued behind it, and W2104 needs the hooks registries hooks-aq holds (cites W2201, W2104) (cites W2201, W2104, W2201, W2104)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

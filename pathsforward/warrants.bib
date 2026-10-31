@@ -7916,3 +7916,24 @@
   claim  = {A card the count file names is not a row; no heartbeat is written; `abc` is refused.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_workingstale.py -k test_the_mode_reads_the_live_map_leaves_no_beat_and_refuses_a_bad_bound},
 }
+
+@misc{pathsforward-idle-note-card-idle-past-the-landing-gap-is-named-beside-the-count,
+  section = {idle_note},
+  title  = {W1 and W4 are old working cards; W2 is fresh and W3 is ready, so neither is named},
+  claim  = {W1 and W4 are old working cards; W2 is fresh and W3 is ready, so neither is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_note.py -k test_a_card_idle_past_the_landing_gap_is_named_beside_the_count},
+}
+
+@misc{pathsforward-idle-note-card-a-live-stack-names-is-not-idle,
+  section = {idle_note},
+  title  = {W4 is in a gate right now, so only W1 is named},
+  claim  = {W4 is in a gate right now, so only W1 is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_note.py -k test_a_card_a_live_stack_names_is_not_idle},
+}
+
+@misc{pathsforward-idle-note-no-ledger-and-unreadable-history-say-nothing,
+  section = {idle_note},
+  title  = {No answer is not an empty history: nothing is called idle},
+  claim  = {No answer is not an empty history: nothing is called idle.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_note.py -k test_no_ledger_and_unreadable_history_say_nothing},
+}

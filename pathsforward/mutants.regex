@@ -413,3 +413,6 @@ src/mikemol/pathsforward/workingstale.py|ready-card-listed|        if text\(w, "
 src/mikemol/pathsforward/workingstale.py|card-at-the-bound-listed|        if age > days:|        if age >= days:|def=report
 src/mikemol/pathsforward/workingstale.py|unreadable-stamp-read-as-fresh|        return _UNKNOWN|        return 0.0|def=_age
 src/mikemol/pathsforward/workingstale.py|never-worked-card-ignores-its-issue-stamp|        age = _age\(text\(w, "last_worked"\) or text\(w, "issued_at"\), now\)|        age = _age(text(w, "last_worked"), now)|def=report
+src/mikemol/pathsforward/closegate.py|live-card-called-idle|    named = \[symbol for symbol in idle if symbol not in _live\(ledger\)\]|    named = list(idle)|def=idle_note
+src/mikemol/pathsforward/closegate.py|idle-note-without-a-ledger|    if ledger is None:|    if False:|def=idle_note
+src/mikemol/pathsforward/closegate.py|empty-idle-note-still-printed|, '\.join\(named\)\}" if named else ""|, '.join(named)}"|def=idle_note

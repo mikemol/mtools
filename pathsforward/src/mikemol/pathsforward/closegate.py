@@ -40,7 +40,7 @@ from typing import cast
 
 from mikemol.pathsforward import inflight, lock
 from mikemol.pathsforward.behindopen import plan
-from mikemol.pathsforward.landed import landed_since
+from mikemol.pathsforward.landed import landed_since, landing_times
 from mikemol.pathsforward.ledger import Parsed, read
 from mikemol.pathsforward.model import State, strlist, text, workable
 
@@ -52,6 +52,7 @@ FRESH = re.compile(
 )
 TOP = 3
 TICK_SYMBOL = 2
+IDLE_WINDOW = 50
 SESSION = re.compile(r"\bsession=(\S+)")
 
 
@@ -332,6 +333,25 @@ def _live(ledger: Path | None) -> frozenset[str]:
     return frozenset() if ledger is None else inflight.read(ledger.parent.parent)
 
 
+def idle_note(state: State, ledger: Path | None) -> str:
+    """Name the working cards idle past the repository's own landing gap (W2047).
+
+    ⚑ A CARD A LIVE STACK NAMES IS NOT IDLE: its gate is running. The bound is the largest gap
+    between the last IDLE_WINDOW landings, so nothing typed decides it.
+
+    Returns:
+        `; idle working past the landing gap: W1, W2`, or the empty string when there is no
+        ledger, no readable history or no such card.
+
+    """
+    if ledger is None:
+        return ""
+    times = landing_times(ledger.parent.parent, IDLE_WINDOW)
+    idle = idle_cards(state, datetime.now(UTC), landing_bound(times or []))
+    named = [symbol for symbol in idle if symbol not in _live(ledger)]
+    return f"; idle working past the landing gap: {', '.join(named)}" if named else ""
+
+
 def judge(
     state: State,
     blocked_by: str | None = None,
@@ -356,7 +376,9 @@ def judge(
     # github-8f and nemik, 2026-10-18): nemik's close read `advanced 85; 39 touched, none landed`,
     # and the second half was taken to mean that no commit landed, when 85 cards had.
     edits = f"; {open_edits} more touched, named by no landed commit" if open_edits else ""
+    idle = idle_note(state, ledger)
     count = f"ready and unblocked: {len(ready)}; top: {top}; this tick advanced {moved}{edits}"
+    count += idle
     if not ready:
         return Verdict(refused=False, lines=(count,), note="")
     if FRESH.search(reason or ""):
