@@ -869,3 +869,7 @@ src/mikemol/hooks/baselinedir.py|unchanged-part-rewritten|        if keep != old
 src/mikemol/hooks/baselinedir.py|part-keeps-keys-it-never-held|        keep = \{key: now\[key\] for key in cast\("dict\[str, object\]", old\) if key in now\}|        keep = {key: now[key] for key in now}|def=lowered
 src/mikemol/hooks/pycheck_ratchet_write.py|split-baseline-written-as-the-single-file|    if split\.is_dir\(\):|    if False:|def=_save
 src/mikemol/hooks/codon_probe.py|triple-quoted-text-kept-in-the-block|    block = _BLOCK\.search\(re\.sub\(r'""".\*\?"""', '""', module_bazel, flags=re\.DOTALL\)\)|    block = _BLOCK.search(module_bazel)|def=read_pin
+src/mikemol/hooks/commitdecl.py|non-string-element-accepted|    if not all\(isinstance\(item, str\) for item in items\):|    if False:|def=_strings
+src/mikemol/hooks/commitdecl.py|absent-file-read-as-a-file|    if not path\.is_file\(\):|    if False:|def=read
+src/mikemol/hooks/commitdecl.py|non-object-document-accepted|    if not isinstance\(doc, dict\):|    if False:|def=read
+src/mikemol/hooks/commitdecl.py|paths-never-read|        _strings\(fields\.get\("paths", \[\]\), "paths"\),|        (),|def=read

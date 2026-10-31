@@ -179,6 +179,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/commitdecl.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/commitments_emit.py": {
       "imports": [
         "src/mikemol/hooks/ratchet_emit.py",
@@ -1799,6 +1804,13 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/worktree_submit.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_commitdecl.py": {
+      "imports": [
+        "src/mikemol/hooks/commitdecl.py"
       ],
       "reads": [],
       "typing_only": []

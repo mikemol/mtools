@@ -16680,3 +16680,24 @@
   claim  = {W2121: mtools' real block has `)` at column 0 inside its filegroup text, before the url.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_a_multi_line_build_file_with_close_paren_lines_does_not_end_the_block},
 }
+
+@misc{hooks-commitdecl-declaration-is-read-with-its-paths-and-its-steps,
+  section = {commitdecl},
+  title  = {Both fields come back as tuples, steps as argv tuples},
+  claim  = {Both fields come back as tuples, steps as argv tuples.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitdecl.py -k test_a_declaration_is_read_with_its_paths_and_its_steps},
+}
+
+@misc{hooks-commitdecl-absent-file-and-an-empty-object-read-as-the-empty-declaration,
+  section = {commitdecl},
+  title  = {Nothing declared is not an error},
+  claim  = {Nothing declared is not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitdecl.py -k test_an_absent_file_and_an_empty_object_read_as_the_empty_declaration},
+}
+
+@misc{hooks-commitdecl-each-wrong-shape-is-refused-by-name,
+  section = {commitdecl},
+  title  = {A file that is there and wrong raises, it never reads as empty},
+  claim  = {A file that is there and wrong raises, it never reads as empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitdecl.py -k test_each_wrong_shape_is_refused_by_name},
+}
