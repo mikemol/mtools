@@ -104,6 +104,7 @@ GRAPH = {
         "src/mikemol/hooks/commitprogress.py",
         "src/mikemol/hooks/flakegate.py",
         "src/mikemol/hooks/flakemetric.py",
+        "src/mikemol/hooks/freezefrom.py",
         "src/mikemol/hooks/gateenv.py",
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/heartbeat.py",
@@ -1555,6 +1556,13 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_commit_dir_deletion.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_commit_freeze_from.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py"
       ],

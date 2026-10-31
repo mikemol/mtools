@@ -62,6 +62,9 @@ from mikemol.hooks.commitprogress import stall_text as _stall_text
 from mikemol.hooks.commitprogress import watch as _watch
 from mikemol.hooks.flakegate import refusal as _flake_refusal
 from mikemol.hooks.flakemetric import emit as _emit_flakes
+from mikemol.hooks.freezefrom import form_is_stack as _form_is_stack
+from mikemol.hooks.freezefrom import parse as _freeze_from
+from mikemol.hooks.freezefrom import refusal as _freeze_refusal
 from mikemol.hooks.gateenv import child_env
 from mikemol.hooks.gatephase import stage_note as _stage_note
 from mikemol.hooks.heartbeat import try_beat as _try_beat
@@ -847,7 +850,7 @@ def stack_target(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Pat
         the repository and the stack file, or None when the arguments are not exactly that form.
 
     """
-    if len(args) == len(("REPO", "--stack", "FILE")) and args[1] == "--stack":
+    if _form_is_stack(args):
         return resolve_root(args[0], env), Path(args[2])
     return None
 
@@ -1079,7 +1082,8 @@ def admin_mode(args: Sequence[str], env: Mapping[str, str]) -> int | None:
         return in_gate([a for a in args if a != IN_GATE_FLAG], env, sys.stdout)
     if WITHDRAW_FLAG in args:
         return withdraw_cmd(args, env, sys.stdout)
-    return unreadable_stack(stack_target([a for a in args if a != SHIP_FLAG], env))
+    bare = [a for a in args if a != SHIP_FLAG]
+    return unreadable_stack(stack_target(bare, env), bare)
 
 
 def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
@@ -1107,7 +1111,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
     )
 
 
-def unreadable_stack(stacked: tuple[Path, Path] | None) -> int | None:
+def unreadable_stack(stacked: tuple[Path, Path] | None, args: Sequence[str] = ()) -> int | None:
     """Refuse at submit a stack file the entries reader rejects, naming why (W2116).
 
     ⚑ UNREADABLE INPUT IS REFUSED AT SUBMIT, NOT QUEUED (paperkit 2026-10-28): `stack_items` answers
@@ -1121,7 +1125,7 @@ def unreadable_stack(stacked: tuple[Path, Path] | None) -> int | None:
     """
     if stacked is None:
         return None
-    if worktree_refused(stacked[0], ledger_of(stacked[0])):
+    if worktree_refused(stacked[0], ledger_of(stacked[0])) or freeze_refused(stacked[0], args):
         return EXIT_USAGE
     items = stack_items(stacked[1])
     if not isinstance(items, str):
@@ -1162,7 +1166,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     env.setdefault(MARKER_ENV, marker_value(ledger, key))
     submit(ledger, key, env)
     if stacked is not None and not env.get(HELD_ENV):
-        env[SNAP_ENV] = at_submit(root, stacked[1], ledger, key, run_git_in)
+        env[SNAP_ENV] = at_submit(freeze_root(bare, root), stacked[1], ledger, key, run_git_in)
         # ⚑ W1604: a build file naming a Python source no entry carries is refused here, before the
         # queue turn, as an unsound import is (W1603's finding, the waiting-for-failure case).
         problem = submit_problem(root, stacked[1], env)
@@ -1211,6 +1215,50 @@ class Held:
     lease: int
     claim: str
     shipping: bool
+
+
+def freeze_root(args: Sequence[str], root: Path) -> Path:
+    """Name the directory a stack's files are frozen from: DIR of `--freeze-from`, else the repo.
+
+    Returns:
+        the directory the submit-time snapshot reads and hashes files in.
+
+    """
+    return _freeze_from(args) or root
+
+
+def common_dir(path: Path) -> Path | None:
+    """Name the git common directory of a path: what a repository and its worktrees share.
+
+    Returns:
+        the absolute directory, or None when git cannot read the path.
+
+    """
+    flag = ["rev-parse", "--path-format=absolute", "--git-common-dir"]
+    done = run_git_in(["-C", str(path), *flag], {}, None)
+    named = done.stdout.strip()
+    return Path(named) if done.returncode == 0 and named else None
+
+
+def freeze_refused(root: Path, args: Sequence[str]) -> bool:
+    """Refuse a `--freeze-from DIR` that is not a tree of this repository (W2103 Part 1).
+
+    ⚑ THE FILES ARE HASHED INTO THIS REPOSITORY'S OBJECT STORE and then landed, so a directory
+    of another repository, or one git cannot read, is refused before anything is queued.
+
+    Returns:
+        True after writing the refusal on stderr; False when there is no flag or the
+        directory shares the repository's common directory.
+
+    """
+    given = _freeze_from(args)
+    if given is None:
+        return False
+    text = _freeze_refusal(common_dir(root), common_dir(given), given)
+    if text is None:
+        return False
+    sys.stderr.write(f"mikemol-commit: {text}\n")
+    return True
 
 
 def worktree_refused(root: Path, ledger: Path | None) -> bool:

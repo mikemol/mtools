@@ -243,7 +243,7 @@ src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=_place
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
-src/mikemol/hooks/commit_kata.py|stack-flag-never-recognised|args\[1\] == "--stack"|args[1] == "--no-stack"|def=stack_target
+src/mikemol/hooks/freezefrom.py|stack-flag-never-recognised|        return args\[1\] == "--stack"|        return args[1] == "--no-stack"|def=form_is_stack
 src/mikemol/hooks/commit_kata.py|stack-without-isolation|if not isolated:|if False:|def=run_stack_mode
 src/mikemol/hooks/stackrun.py|culprit-needs-no-trailing-path|t\.endswith\(f"/\{base\}"\)|False|def=culprits
 src/mikemol/hooks/stackrun.py|culprit-needs-no-directory|t\.startswith\(f"\{base\}/"\)|False|def=culprits
@@ -796,7 +796,7 @@ src/mikemol/hooks/commit_span.py|stack-run-ships-no-refusals|    emit_refusals\(
 src/mikemol/hooks/commit_kata.py|submit-refusal-emits-nothing|    _emit_stack\(verdict, Moments\(now, now, now\), \[\], env\)|    pass|def=unordered
 src/mikemol/hooks/commit_kata.py|unrecognised-flag-taken-as-a-path|        elif word\.startswith\("--"\) and len\(word\) > len\("--"\):|        elif False:|def=parse
 src/mikemol/hooks/commit_kata.py|unreadable-stack-queued|    if not isinstance\(items, str\):|    if True:|def=unreadable_stack
-src/mikemol/hooks/commit_kata.py|unreadable-stack-never-checked|    return unreadable_stack\(stack_target\(\[a for a in args if a != SHIP_FLAG\], env\)\)|    return None|def=admin_mode
+src/mikemol/hooks/commit_kata.py|unreadable-stack-never-checked|    return unreadable_stack\(stack_target\(bare, env\), bare\)|    return None|def=admin_mode
 # A ratchet row can be marked as read after the push, and only a known stage is accepted (W2171).
 src/mikemol/hooks/ratchet_emit.py|stage-label-dropped|            fields\["stage"\] = stage|            pass|def=rows_of
 src/mikemol/hooks/ratchet_emit.py|unknown-stage-admitted|    if len\(args\) == ARGUMENTS \+ 1 and args\[ARGUMENTS\] in STAGES:|    if len(args) == ARGUMENTS + 1:|def=_stage_of
@@ -820,7 +820,7 @@ src/mikemol/hooks/worktree_submit.py|main-checkout-recorded|    if main is None:
 src/mikemol/hooks/worktree_submit.py|log-directory-not-made|    path\.parent\.mkdir\(parents=True, exist_ok=True\)|    pass|def=append
 src/mikemol/hooks/worktree_submit.py|log-overwritten-not-appended|    with path\.open\("a", encoding="utf-8"\) as log:|    with path.open("w", encoding="utf-8") as log:|def=append
 # The stack path asks the worktree judge before anything is queued, and marks what it refuses (W2103).
-src/mikemol/hooks/commit_kata.py|worktree-ledger-never-judged|    if worktree_refused\(stacked\[0\], ledger_of\(stacked\[0\]\)\):|    if False:|def=unreadable_stack
+src/mikemol/hooks/commit_kata.py|worktree-ledger-never-judged|    if worktree_refused\(stacked\[0\], ledger_of\(stacked\[0\]\)\) or freeze_refused\(stacked\[0\], args\):|    if False:|def=unreadable_stack
 src/mikemol/hooks/commit_kata.py|worktree-refusal-leaves-no-mark|        _worktree_append\(\*made\)|        pass|def=worktree_refused
 src/mikemol/hooks/commit_kata.py|main-checkout-refused-too|    if text is None:|    if False:|def=worktree_refused
 # The first red test of a gate is read from its build events, in the order bazel wrote them (W2107).
@@ -844,3 +844,8 @@ src/mikemol/hooks/freezefrom.py|flag-word-not-checked|    if len\(args\) == _FOR
 src/mikemol/hooks/freezefrom.py|stray-flag-form-taken-as-a-stack|    if len\(args\) == _FORM_PLAIN:|    if len(args) >= _FORM_PLAIN:|def=form_is_stack
 src/mikemol/hooks/freezefrom.py|another-repository-admitted|    if repo_common\.resolve\(\) != dir_common\.resolve\(\):|    if False:|def=refusal
 src/mikemol/hooks/freezefrom.py|unknown-common-dir-admitted|    if repo_common is None or dir_common is None:|    if repo_common is None and dir_common is None:|def=refusal
+# commit_kata reads `--freeze-from`, freezes from DIR and refuses another repository's DIR (W2103 Part 1).
+src/mikemol/hooks/commit_kata.py|five-word-stack-form-not-read|    if _form_is_stack\(args\):|    if len(args) == 3 and args[1] == "--stack":|def=stack_target
+src/mikemol/hooks/commit_kata.py|freeze-root-always-the-repository|    return _freeze_from\(args\) or root|    return root|def=freeze_root
+src/mikemol/hooks/commit_kata.py|freeze-from-always-admitted|    if given is None:|    if False:|def=freeze_refused
+src/mikemol/hooks/commit_kata.py|freeze-refusal-never-reported|    if text is None:|    if False:|def=freeze_refused

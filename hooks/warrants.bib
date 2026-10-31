@@ -16537,3 +16537,25 @@
   claim  = {The scratch worktree shares the main repository's common dir; a stranger does not.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_freezefrom.py -k test_the_same_common_dir_is_admitted_and_another_or_an_unknown_one_is_refused},
 }
+
+@misc{hooks-commit-freeze-from-five-word-form-is-a-stack-with-the-same-repository-and-file,
+  section = {freezefrom},
+  title  = {`REPO --stack FILE --freeze-from DIR` reads as the stack it extends},
+  claim  = {`REPO --stack FILE --freeze-from DIR` reads as the stack it extends.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_freeze_from.py -k test_the_five_word_form_is_a_stack_with_the_same_repository_and_file},
+}
+
+@misc{hooks-commit-freeze-from-freeze-root-is-the-directory-only-when-the-flag-is-given,
+  section = {freezefrom},
+  title  = {Without the flag the files are frozen from the repository, as before},
+  claim  = {Without the flag the files are frozen from the repository, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_freeze_from.py -k test_the_freeze_root_is_the_directory_only_when_the_flag_is_given},
+}
+
+@misc{hooks-commit-freeze-from-directory-of-another-repository-or-unreadable-is-refused-before-the-stack-is-read,
+  section = {freezefrom},
+  title  = {A stranger's common dir and an unknown one each give the usage exit; the same one passes},
+  claim  = {A stranger's common dir and an unknown one each give the usage exit; the same one
+            passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_freeze_from.py -k test_a_directory_of_another_repository_or_unreadable_is_refused_before_the_stack_is_read},
+}
