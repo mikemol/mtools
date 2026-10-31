@@ -62,6 +62,15 @@ def test_the_pin_is_read_from_the_codon_block_not_another_archive() -> None:
     assert codon_probe.read_pin(_MODULE) == codon_probe.Pin(_URL, "b" * 64, _TOP)
 
 
+def test_a_multi_line_build_file_with_close_paren_lines_does_not_end_the_block() -> None:
+    """W2121: mtools' real block has `)` at column 0 inside its filegroup text, before the url."""
+    one_line = '"""exports_files(["bin/codon"])""",'
+    spread = '"""exports_files(["bin/codon"])\nfilegroup(\n    name = "b",\n)\n""",'
+    multi = _MODULE.replace(one_line, spread)
+    assert multi != _MODULE
+    assert codon_probe.read_pin(multi) == codon_probe.Pin(_URL, "b" * 64, _TOP)
+
+
 @pytest.mark.parametrize(
     "text",
     [

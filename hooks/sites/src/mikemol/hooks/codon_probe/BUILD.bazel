@@ -75,6 +75,19 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_triple-quoted-text-kept-in-the-block",
+    dist = "hooks",
+    site = "src/mikemol/hooks/codon_probe.py::triple-quoted-text-kept-in-the-block",
+    tests = "tests/test_codon_probe.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:tests/test_codon_probe.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -84,6 +97,7 @@ test_suite(
         ":run_codon",
         ":_options",
         ":main",
+        ":declared_triple-quoted-text-kept-in-the-block",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

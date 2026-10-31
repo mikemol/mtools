@@ -70,7 +70,10 @@ def read_pin(module_bazel: str) -> Pin:
         PinError: when there is no codon block, a field is missing, or the URL is not https.
 
     """
-    block = _BLOCK.search(module_bazel)
+    # ⚑ W2121: a multi-line `build_file_content = """..."""` carries lines that start with a close
+    # paren, which `_BLOCK` took for the end of the call before sha256 and url; the triple-quoted
+    # strings are emptied first, and no pinned field lives in one.
+    block = _BLOCK.search(re.sub(r'""".*?"""', '""', module_bazel, flags=re.DOTALL))
     if block is None:
         msg = 'no http_archive(name = "codon") block in MODULE.bazel'
         raise PinError(msg)

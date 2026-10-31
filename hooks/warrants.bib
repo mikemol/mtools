@@ -16673,3 +16673,10 @@
   claim  = {W2194 (luthen:W1857): a caller reading the usage text learns the flag and its rules.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_freeze_from.py -k test_the_usage_text_names_the_flag_the_same_repository_rule_and_the_queue_file_note},
 }
+
+@misc{hooks-codon-probe-multi-line-build-file-with-close-paren-lines-does-not-end-the-block,
+  section = {codon_probe},
+  title  = {W2121: mtools' real block has `)` at column 0 inside its filegroup text, before the url},
+  claim  = {W2121: mtools' real block has `)` at column 0 inside its filegroup text, before the url.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_a_multi_line_build_file_with_close_paren_lines_does_not_end_the_block},
+}

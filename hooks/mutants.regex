@@ -868,3 +868,4 @@ src/mikemol/hooks/pycheck_ratchet_run.py|baseline-directory-never-read|    if pa
 src/mikemol/hooks/baselinedir.py|unchanged-part-rewritten|        if keep != old:|        if True:|def=lowered
 src/mikemol/hooks/baselinedir.py|part-keeps-keys-it-never-held|        keep = \{key: now\[key\] for key in cast\("dict\[str, object\]", old\) if key in now\}|        keep = {key: now[key] for key in now}|def=lowered
 src/mikemol/hooks/pycheck_ratchet_write.py|split-baseline-written-as-the-single-file|    if split\.is_dir\(\):|    if False:|def=_save
+src/mikemol/hooks/codon_probe.py|triple-quoted-text-kept-in-the-block|    block = _BLOCK\.search\(re\.sub\(r'""".\*\?"""', '""', module_bazel, flags=re\.DOTALL\)\)|    block = _BLOCK.search(module_bazel)|def=read_pin
