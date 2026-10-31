@@ -7762,3 +7762,31 @@
   claim  = {`--blocked-on-list W9` prints the two rows and the count, and exits clean.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_blockedlist.py -k test_the_mode_prints_the_rows_and_the_count_for_the_named_symbol},
 }
+
+@misc{pathsforward-addblocker-adding-a-blocker-to-a-working-card-keeps-its-old-blockers-and-remembers-the-status,
+  section = {addblocker},
+  title  = {W1 working with an old blocker W5 is held behind W9: both stay, prior status working},
+  claim  = {W1 working with an old blocker W5 is held behind W9: both stay, prior status working.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker.py -k test_adding_a_blocker_to_a_working_card_keeps_its_old_blockers_and_remembers_the_status},
+}
+
+@misc{pathsforward-addblocker-second-blocker-keeps-the-first-remembered-status-and-a-repeat-adds-nothing,
+  section = {addblocker},
+  title  = {The status to come back to is the one before the first hold, never `blocked`},
+  claim  = {The status to come back to is the one before the first hold, never `blocked`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker.py -k test_a_second_blocker_keeps_the_first_remembered_status_and_a_repeat_adds_nothing},
+}
+
+@misc{pathsforward-addblocker-last-blocker-going-returns-the-card-to-its-remembered-status,
+  section = {addblocker},
+  title  = {Pruning a done blocker leaves W1 blocked while one remains, then working again},
+  claim  = {Pruning a done blocker leaves W1 blocked while one remains, then working again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker.py -k test_the_last_blocker_going_returns_the_card_to_its_remembered_status},
+}
+
+@misc{pathsforward-addblocker-done-card-and-a-blank-blocker-are-refused,
+  section = {addblocker},
+  title  = {Only an open card can be held, and an empty blocker is no blocker},
+  claim  = {Only an open card can be held, and an empty blocker is no blocker.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_addblocker.py -k test_a_done_card_and_a_blank_blocker_are_refused},
+}

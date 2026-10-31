@@ -385,3 +385,11 @@ src/mikemol/pathsforward/blockedlist.py|done-card-listed|        if text\(w, "st
 src/mikemol/pathsforward/blockedlist.py|oldest-listed-first|    held\.sort\(key=lambda w: text\(w, "issued_at"\), reverse=True\)|    held.sort(key=lambda w: text(w, "issued_at"), reverse=False)|def=report
 src/mikemol/pathsforward/blockedlist.py|bound-ignored|    shown = held if limit is None else held\[:limit\]|    shown = held|def=report
 src/mikemol/pathsforward/blockedlist.py|count-only-the-shown|\{len\(held\)\} blocked on|{len(shown)} blocked on|def=report
+# `--add-blocker` appends, remembers the status once, refuses a closed card and gives the status back (W2178).
+src/mikemol/pathsforward/addblocker.py|blocker-list-replaced-not-appended|        "blocked_on": on if blocker in on else \[\*on, blocker\],|        "blocked_on": [blocker],|def=fields
+src/mikemol/pathsforward/addblocker.py|repeat-blocker-added-twice|        "blocked_on": on if blocker in on else \[\*on, blocker\],|        "blocked_on": [*on, blocker],|def=fields
+src/mikemol/pathsforward/addblocker.py|blocked-card-forgets-its-first-status|    if status != "blocked":|    if True:|def=fields
+src/mikemol/pathsforward/addblocker.py|closed-card-held|    if status not in HOLDABLE:|    if False:|def=fields
+src/mikemol/pathsforward/addblocker.py|blank-blocker-accepted|    if not blocker\.strip\(\):|    if False:|def=fields
+src/mikemol/pathsforward/model.py|freed-card-returns-ready-not-as-it-was|    rec\["status"\] = prior if prior in \{"ready", "working"\} else "ready"|    rec["status"] = "ready"|def=relieve
+src/mikemol/pathsforward/ops.py|add-blocker-never-applied|    if upd\.add_blocker is not None:|    if False:|def=_held

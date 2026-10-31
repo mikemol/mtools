@@ -165,19 +165,26 @@ def relieve(rec: Json, kept: list[str]) -> bool:
     returns to ready and restarts its count; a card in any other status only loses the dead
     entries, and loses its `blocked_kind` when none remain.
 
+    ⚑ A CARD HELD BY `--add-blocker` COMES BACK AS IT WAS (W2178): the status it was added from
+    (`prior_status`, ready or working) is restored when the last blocker goes, and any other
+    remembered value, or none, reads as ready. A card not blocked has no use for the memory.
+
     Returns:
-        True when a blocked card was freed to ready.
+        True when a blocked card was freed.
 
     """
     rec["blocked_on"] = kept
     if text(rec, "status") != "blocked":
+        rec.pop("prior_status", None)
         if not kept:
             rec["blocked_kind"] = None
         return False
     rec["ticks_blocked"] = 0
     if kept:
         return False
-    rec["status"], rec["blocked_kind"] = "ready", None
+    prior = rec.pop("prior_status", None)
+    rec["status"] = prior if prior in {"ready", "working"} else "ready"
+    rec["blocked_kind"] = None
     return True
 
 

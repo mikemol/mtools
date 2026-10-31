@@ -588,6 +588,7 @@ _FIELDS = (
     "ticks_blocked",
     "enables",
     "add_enables",
+    "add_blocker",
     "attach",
     "touches",
     "caused_by",
@@ -654,6 +655,7 @@ _APPLIES: dict[str, frozenset[str]] = {
             "ticks_blocked",
             "enables",
             "add_enables",
+            "add_blocker",
             "attach",
             "weight",
             "touches",
@@ -837,6 +839,12 @@ def _add_run_fields(ap: argparse.ArgumentParser) -> None:
     fix for a parser that outgrew its budget is another function, never a waiver.
     """
     ap.add_argument("--except", dest="exclude", nargs="+", metavar="SYMBOL")
+    ap.add_argument(
+        "--add-blocker",
+        metavar="SYMBOL",
+        help="W2178: --update: hold the card behind SYMBOL, keeping its other blockers; its "
+        "status is restored when the last blocker goes",
+    )
     ap.add_argument(
         "--retires",
         nargs="+",
@@ -2244,6 +2252,7 @@ def _fields_of(ctx: Ctx) -> ops.Update:
         title=ctx.get("title"),
         enables=ctx.many("enables"),
         add_enables=ctx.many("add_enables"),
+        add_blocker=ctx.get("add_blocker"),
         weight=ctx.number("weight"),
         touches=ctx.many("touches"),
         witness=ctx.get("witness"),

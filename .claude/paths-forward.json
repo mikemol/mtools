@@ -47151,22 +47151,20 @@
     {
       "symbol": "W2106",
       "title": "gatecpu.hung: a learned-window reader that says a gate whose CPU stopped advancing reads hung, and prints CPU +N s since last tick per long gate",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "W2068"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2103"
-      ],
+      "blocked_on": [],
       "blocked_kind": "agent",
-      "next_bounded_step": "Build in the hooks dist after hooks-u (W2103 stack 2) lands, because a hooks stack built now would drop hooks-u's registry lines: gatecpu.hung(samples, window) reads two CPU samples of the gate's processes and says hung when CPU did not advance over the learned window; print CPU +N s since last tick per long gate; test over advancing, flat and a missing sample",
-      "evidence": "2026-10-30: 2026-10-30 read: no code yet (card had no next step); blocked on W2103 only for the hooks registry ordering, not for design.",
+      "next_bounded_step": "When y prints COMMITTED record the sha; then the learned window from past gates' CPU series and the per-tick emit feeding gatecpu samples to verdict",
+      "evidence": "2026-10-30: 2026-10-30 read: no code yet (card had no next step); blocked on W2103 only for the hooks registry ordering, not for design. | 2026-10-31T01:13:58Z: stack-hooks-y SUBMITTED: gatehung.verdict (moving/hung/unknown over a window) and delta_line; pure, no caller; 5 mutants; cheap checks clean.",
       "issued_at": "2026-10-28T19:33:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2068",
-      "last_worked": "2026-10-30T21:06:49Z",
-      "ticks_blocked": 1,
+      "last_worked": "2026-10-31T01:13:58Z",
+      "ticks_blocked": 0,
       "completed": null
     },
     {

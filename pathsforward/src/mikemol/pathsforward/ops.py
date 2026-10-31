@@ -23,7 +23,16 @@ from enum import StrEnum
 from itertools import starmap
 from typing import cast
 
-from mikemol.pathsforward import attach, lock, realizable, recurrence, suppliers, timevalue, vector
+from mikemol.pathsforward import (
+    addblocker,
+    attach,
+    lock,
+    realizable,
+    recurrence,
+    suppliers,
+    timevalue,
+    vector,
+)
 from mikemol.pathsforward.homepath import names_home
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
@@ -114,6 +123,9 @@ class Update:
 
     status: str | None = None
     blocked_on: tuple[str, ...] | None = None
+    # ⚑ APPENDED, NOT SET (W2178): `--add-blocker` keeps the blockers there, remembers the
+    # card's status and gives it back when the last blocker goes (`addblocker`).
+    add_blocker: str | None = None
     blocked_kind: str | None = None
     next_step: str | None = None
     evidence_append: str | None = None
@@ -560,6 +572,12 @@ def _set_given(new: Json, upd: Update) -> None:
             new[key] = [*strlist(new, key), item]
 
 
+def _held(new: Json, upd: Update) -> None:
+    """Apply `--add-blocker` to the card being built: append, remember the status, block."""
+    if upd.add_blocker is not None:
+        new.update(addblocker.fields(new, upd.add_blocker, upd.blocked_kind))
+
+
 def _is_work(upd: Update) -> bool:
     """Say whether an update records WORK on the item, as opposed to metadata about it.
 
@@ -573,7 +591,14 @@ def _is_work(upd: Update) -> bool:
         True when any work field is given.
 
     """
-    given = (upd.status, upd.blocked_on, upd.blocked_kind, upd.next_step, upd.evidence_append)
+    given = (
+        upd.status,
+        upd.blocked_on,
+        upd.add_blocker,
+        upd.blocked_kind,
+        upd.next_step,
+        upd.evidence_append,
+    )
     return any(value is not None for value in given)
 
 
@@ -628,6 +653,7 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         if stamp is not None or "landed_at" in new:
             new["landed_at"] = stamp
     _set_given(new, upd)
+    _held(new, upd)
     # A blank --next is no next step: null, not "" (linux-sources' reconcile check refuses ""
     # on a done waypoint, and patched it by hand four times, W64 W69 W70 W71, 2026-09-26).
     if upd.next_step is not None and not upd.next_step.strip():
