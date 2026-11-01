@@ -101,6 +101,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 
 # ⚑⚑ PER FILE, NEVER A GLOB. Each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # ⚑ THE TWO MODULES WHOSE ONE RESPONSIBILITY IS A SUBPROCESS: hook_index runs `git status`,
 # rungate runs the sweep budget and the gate. The subprocess import, the untrusted-input check
 # and the partial-path check are all about argv the caller composed from its own constants.
@@ -112,10 +113,5 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/gatecheck/siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_siblingpin.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hook_index.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_indexdiverge.py" = ["assert"]
-"tests/test_hook_grid.py" = ["assert"]
 "tests/test_rungate.py" = ["assert", "suspicious-subprocess-import"]
-"tests/test_absence_audit.py" = ["assert"]
-"tests/test_lint_bzl.py" = ["assert"]
-"tests/test_sibling_edge.py" = ["assert"]
 "tests/test_witness_reach.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

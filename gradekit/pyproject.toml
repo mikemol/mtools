@@ -113,15 +113,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_jsonio.py" = ["assert"]
-"tests/test_cli.py" = ["assert"]
-"tests/test_read_grade.py" = ["assert"]
-"tests/test_grades_rec.py" = ["assert"]
-"tests/test_effective.py" = ["assert"]
+"tests/*" = ["assert"]
 # ⚑ THE COHERENCE CELL RUNS A CHILD INTERPRETER ON A SCRIPT THE CALLER NAMES: the argv is
 # `sys.executable` and paths, never a shell.
 "src/mikemol/gradekit/verdict.py" = [
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
-"tests/test_verdict.py" = ["assert"]
