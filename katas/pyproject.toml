@@ -114,7 +114,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-"tests/test_waiter.py" = ["assert", "suspicious-subprocess-import"]
+"tests/test_waiter.py" = ["suspicious-subprocess-import"]
 # ⚑ `waiter` runs ONE child, with its output going straight into the log as it is produced (W1125):
 # `mikemol.procrun.capture` returns the output only when the child ends, so the log would be silent
 # while a commit runs and W1126's hang witness could not see it grow. The argv is the caller's,

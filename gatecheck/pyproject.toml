@@ -111,7 +111,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/gatecheck/witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # siblingpin runs git in a sibling checkout, argv composed from its own constants (W1018).
 "src/mikemol/gatecheck/siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_siblingpin.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_hook_index.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_rungate.py" = ["assert", "suspicious-subprocess-import"]
-"tests/test_witness_reach.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_hook_index.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_rungate.py" = ["suspicious-subprocess-import"]
+"tests/test_witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

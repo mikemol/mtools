@@ -4995,3 +4995,8 @@
 2026-11-01T17:20:15Z  tick  W2078 held      collapse  "hooks-bc (commit_kata wiring + importdag/pkgbuild exemption fall) inflight, key 1793553448332412893, HEAD 90fdccef; W2078 wording module landed 90fdccef"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T17:38:47Z  tick  W2078 held      collapse  "hooks-bc still inflight (key 1793553448332412893), HEAD 90fdccef; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T18:08:49Z  tick  W2078 held      collapse  "hooks-bc still inflight (key 1793553448332412893), HEAD 90fdccef; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T18:36:43Z  interrupt W2210 minted    -         "Shard pkgbuild:mutants so a pkgbuild pyproject edit does not time out"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2078
+2026-11-01T18:39:50Z  status W2210 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T18:43:27Z  tick  W2210 advanced  unblock   "pkgbuild:mutants converted to mutants_sharded (8 shards) in main, sharded run started; W2078 wiring landed 4f0591a3"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T18:44:49Z  status W2210 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T18:45:10Z  status W2038 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

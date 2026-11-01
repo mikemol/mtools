@@ -104,11 +104,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/*" = ["assert"]
 # ⚑ `_only` IS TESTED BY NAME: its cardinality refusal (zero and many) is reachable from no public
 # call without building a venv with two site-packages, and testing a boundary needs crossing it.
-"tests/test_wheel.py" = ["assert", "private-member-access"]
+"tests/test_wheel.py" = ["private-member-access"]
 "src/mikemol/pkgbuild/sdisttests.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/pkgbuild/environments.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_names.py" = ["assert", "invalid-function-name", "builtin-argument-shadowing"]
+"tests/test_names.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "src/mikemol/pkgbuild/privacycheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_relcheck.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
+"tests/test_relcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "src/mikemol/pkgbuild/twinecheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/pkgbuild/relcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
