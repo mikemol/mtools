@@ -4928,3 +4928,5 @@
 2026-11-01T00:39:51Z  status W1613 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T00:40:55Z  tick  W1613 advanced  sweep     "W1613 released from the W1667 parking lot with a manifest and a join point, W1657 given its operator-side next step; hooks-as (W1366, W2200) inflight [reason: hooks-as (W1366) holds the gate and W1613 and W1122 need the hooks registries it carries (cites W1366) (cites W1366, W1122, W1366)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T01:21:22Z  status W1366 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T01:27:11Z  status W1614 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T01:27:35Z  tick  W1614 advanced  collapse  "W1614 --clear-dead-enables built and submitted as pathsforward-z with a 17-exemption paydown; hooks-as landed c7fdedfc [reason: pathsforward-z (W1614) holds the gate and W1613 and W1122 edit hooks registries, which I take after it lands (cites W1613, W1122) (cites W1613, W1122, W1613, W1122)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
