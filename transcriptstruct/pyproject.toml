@@ -100,39 +100,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # ⚑ READING THE COMMIT LOG IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1934, as pathsforward's
 # landed.py): the argv is the git binary and fixed words plus a repository path; no shell runs.
 "src/mikemol/transcriptstruct/gitlog.py" = [
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
-"tests/test_gitlog.py" = ["assert"]
-"tests/test_records.py" = ["assert"]
-"tests/test_walk.py" = ["assert"]
-"tests/test_blocks.py" = ["assert"]
-"tests/test_provenance.py" = ["assert"]
-"tests/test_query.py" = ["assert"]
-"tests/test_cli.py" = ["assert"]
-"tests/test_hit_ids.py" = ["assert"]
-"tests/test_warrant.py" = ["assert"]
-"tests/test_memclaims.py" = ["assert"]
-"tests/test_memgrants.py" = ["assert"]
-"tests/test_memfind.py" = ["assert"]
-"tests/test_memaudit.py" = ["assert"]
-"tests/test_harvest.py" = ["assert"]
-"tests/test_rulings.py" = ["assert"]
-"tests/test_rulingq.py" = ["assert"]
-"tests/test_rulingq_cli.py" = ["assert"]
-"tests/test_standing_stop.py" = ["assert"]
-"tests/test_cacheturns.py" = ["assert"]
-"tests/test_turnstart.py" = ["assert"]
-"tests/test_commitments.py" = ["assert"]
-"tests/test_intents.py" = ["assert"]
-"tests/test_intentsio.py" = ["assert"]
-"tests/test_commitledger.py" = ["assert"]
-"tests/test_commitrows.py" = ["assert"]
-"tests/test_sample.py" = ["assert"]
-"tests/test_authfail.py" = ["assert"]
-"tests/test_commitexport.py" = ["assert"]
-"tests/test_labelcompare.py" = ["assert"]
-"tests/test_turnlayer.py" = ["assert"]

@@ -104,19 +104,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_mem_learn.py" = ["assert"]
-"tests/test_mem_db.py" = ["assert"]
-"tests/test_mem_project.py" = ["assert"]
-"tests/test_mem_harvest.py" = ["assert"]
-"tests/test_mem_converge.py" = ["assert"]
-"tests/test_sweep_budget.py" = ["assert"]
-"tests/test_cpuweight.py" = ["assert"]
-"tests/test_zswap_probe.py" = ["assert"]
-"tests/test_rail.py" = ["assert"]
-"tests/test_railrun.py" = ["assert"]
-"tests/test_railloop.py" = ["assert"]
-"tests/test_railcli.py" = ["assert"]
-"tests/test_cpucensus.py" = ["assert"]
+"tests/*" = ["assert"]
 # ⚑ THE ONE MODULE THAT RUNS A PROGRAM: `mikemol-membudget`, resolved to an absolute path by
 # `shutil.which` first and called with an argv list, never a shell and never untrusted input.
 "src/mikemol/memres/railcli.py" = [

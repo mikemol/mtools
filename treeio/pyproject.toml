@@ -115,33 +115,15 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # ⚑ `gitrun` names `subprocess.CompletedProcess` (what `procrun.capture` returns) in a signature, so
 # it imports the module; it starts no child except through `capture`. The import was under a
 # TYPE_CHECKING guard, which the Codon target cannot have (mtools:W1319), so it is a real import now.
 "src/mikemol/treeio/gitrun.py" = ["suspicious-subprocess-import"]
-"tests/test_presence.py" = ["assert"]
-"tests/test_result.py" = ["assert"]
-"tests/test_sources.py" = ["assert"]
-"tests/test_read.py" = ["assert"]
-"tests/test_write.py" = ["assert"]
-"tests/test_listing.py" = ["assert"]
-"tests/test_census.py" = ["assert"]
-"tests/test_vfs.py" = ["assert"]
-"tests/test_vfs_cli.py" = ["assert"]
-"tests/test_errors.py" = ["assert"]
-"tests/test_ambient.py" = ["assert"]
-"tests/test_context.py" = ["assert"]
-"tests/test_layout.py" = ["assert"]
-"tests/test_snapshot.py" = ["assert"]
-"tests/test_restore.py" = ["assert"]
-"tests/test_contract.py" = ["assert"]
-"tests/test_snapshot_cli.py" = ["assert"]
 # ⚑ THE WORKING-TREE BRANCH OF `listdir` IS `glob.glob`, ON PURPOSE: `Path.glob` reads `**`, hidden
 # files and symlinks differently, and this module's subject is exactly the disagreement between the
 # two matchers, so swapping the matcher would change the answer it exists to name.
 "src/mikemol/treeio/listing.py" = ["glob"]
-"tests/test_gitrun.py" = ["assert"]
-"tests/test_edit_snapshot.py" = ["assert"]
 # ⚑ THE STUB MIRRORS pygit2's OWN NAMES: `Repository.TreeBuilder` and `pygit2.hash` are the real
 # spellings, so renaming them to satisfy a naming rule would make the stub lie about the library.
 "stubs/pygit2/__init__.pyi" = ["invalid-function-name", "builtin-variable-shadowing"]

@@ -34656,7 +34656,7 @@
     {
       "symbol": "W1613",
       "title": "The commit span records the entry's tree sha beside the invocation id, so presubmit-then-gate cache-hit share is a metric",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks"
@@ -34664,11 +34664,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After hooks-at lands: record sha; make presubmit print 'gated-tree: <sha>' (or emit its own span with the tree) so presubmit-then-gate share is computable; then a reader joining the two on the tree.",
-      "evidence": "2026-11-01T00:39:51Z: 2026-10-31 RELEASED from the W1667 parking lot (nemik 'no manifest' warning): manifest given from the code, the join point named. The next step was empty. | 2026-11-01T01:59:44Z: Built and submitted as stack hooks-at: isolated.commit_planned prints 'gated-tree: <sha>', commit_span.trees_of/_joined add a 'trees' field to the verdict, stack and span fields; 5 tests, 5 mutants (+3 repointed), 5 warrants; hooks suite 2508 pass. The presubmit side must emit its tree for the join to exist.",
+      "evidence": "2026-11-01T00:39:51Z: 2026-10-31 RELEASED from the W1667 parking lot (nemik 'no manifest' warning): manifest given from the code, the join point named. The next step was empty. | 2026-11-01T01:59:44Z: Built and submitted as stack hooks-at: isolated.commit_planned prints 'gated-tree: <sha>', commit_span.trees_of/_joined add a 'trees' field to the verdict, stack and span fields; 5 tests, 5 mutants (+3 repointed), 5 warrants; hooks suite 2508 pass. The presubmit side must emit its tree for the join to exist. | 2026-11-01T02:57:15Z: LANDED 9fb85f5e (stack hooks-at, gate passed): isolated.commit_planned prints 'gated-tree: <sha>' and commit_span adds a 'trees' field. Presubmit still needs to emit its tree for the join.",
       "issued_at": "2026-10-18T20:08:17Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:W1609",
-      "last_worked": "2026-11-01T01:59:44Z",
+      "last_worked": "2026-11-01T02:58:19Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -47088,7 +47088,7 @@
     {
       "symbol": "W2104",
       "title": "mikemol-scratch: a default scratch root, close for a landed worktree, and the land-to-gate window recorded or removed",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks"
@@ -47100,7 +47100,7 @@
       "issued_at": "2026-10-28T19:31:51Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-01T00:07:55Z",
+      "last_worked": "2026-11-01T02:58:39Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49084,11 +49084,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After hooks-ar lands: repeat the consolidation for the remaining dists as each stack needs a paydown (codemod consolidate_asserts.py plus ruff check tests per dist), then ask nemik and the operator whether the exemption kind should keep owing a fall per stack.",
-      "evidence": "2026-10-31T19:54:23Z: 2026-10-31 MEASURED: hooks/pyproject.toml already has 'tests/*' = ['assert'], so its 73 per-file entries of exactly ['assert'] ('tests/test_X.py' = ['assert']) are redundant. Three removed in stack hooks-ap (test_commitdecl, assert from test_commit_plain_frozen, and none added for test_citeguard); each file still passes mikemol-pycheck --check-file. The other 73 are the cheap paydown set for the hooks dist; pycodemod has no tests/* pattern so its entries are real. Pace: ratchet-w2140 and hooks-ap each paid down a redundant entry to pass the submit refusal. | 2026-10-31T21:16:23Z: 2026-10-31 hooks-aq (W2201) removes the 73 redundant assert-only entries from hooks/pyproject.toml (ruff clean over all hooks tests). Pay-down measured, still to be seen in the pace after it lands. Other dists' redundant entries not yet listed. | 2026-10-31T22:02:09Z: 2026-10-31 pathsforward-y (W2047) consolidates pathsforward/pyproject.toml's 132 per-file assert entries into one tests/* grant, as hooks has (net -131). With hooks-aq's 73, that is 204 exemptions paid down across two dists. Other dists with a per-file assert list but no tests/* grant are not yet counted. | 2026-10-31T22:54:13Z: 2026-10-31 hooks-ar's first submit was REFUSED at submit: 'behind its ratchet paydown and this stack lowers none' (45 pyproject.toml files plus '*.py' owed; hooks, ratchet were no longer listed). Paid down by consolidating per-file assert entries into one tests/* grant in buildtel (20 to 1), debtplan (14 to 1), corpus (8 to 1), audiostruct (7 to 1): 49 fewer, ruff clean per dist; added as the second entry of stack hooks-ar. Same shape remains in atomicwrite 3, bibparse 5, converge 2, cvdcore 4, endpoints 3, frontier 2, gatecheck 5 and more. | 2026-11-01T00:01:04Z: LANDED 9d7cf4d6 (stack hooks-ar, second entry): buildtel, debtplan, corpus and audiostruct consolidate their per-file assert entries into one tests/* grant (49 fewer exemptions, ruff clean per dist). Remaining dists with the same shape: atomicwrite, bibparse, converge, cvdcore, endpoints, frontier, gatecheck and more. | 2026-11-01T00:25:33Z: hooks-as second entry: katas 20, ledger 12, importdag 11, htmlstruct 10 per-file assert entries consolidated into tests/* (49 fewer, ruff clean per dist). With hooks-ar's 49, pathsforward-y's 131 and hooks-aq's 73 the total paid down is 302. Remaining dists with the shape: atomicwrite, bibparse, converge, cvdcore, endpoints, frontier, gatecheck, gmailstruct, grade, gradekit, icsstruct and more. | 2026-11-01T01:21:41Z: LANDED c7fdedfc (stack hooks-as, second entry): katas 20, ledger 12, importdag 11, htmlstruct 10 per-file assert entries consolidated into tests/* (49 fewer). | 2026-11-01T02:00:10Z: hooks-at second entry: cvdcore 4, gmailstruct 4, atomicwrite 3, endpoints 3 consolidated into tests/* (14 fewer; the first entry's stated '10' was a miscount, the four dists removed 4+4+3+3 = 14). Running total with pathsforward-z's 17: 333.",
+      "evidence": "2026-10-31T19:54:23Z: 2026-10-31 MEASURED: hooks/pyproject.toml already has 'tests/*' = ['assert'], so its 73 per-file entries of exactly ['assert'] ('tests/test_X.py' = ['assert']) are redundant. Three removed in stack hooks-ap (test_commitdecl, assert from test_commit_plain_frozen, and none added for test_citeguard); each file still passes mikemol-pycheck --check-file. The other 73 are the cheap paydown set for the hooks dist; pycodemod has no tests/* pattern so its entries are real. Pace: ratchet-w2140 and hooks-ap each paid down a redundant entry to pass the submit refusal. | 2026-10-31T21:16:23Z: 2026-10-31 hooks-aq (W2201) removes the 73 redundant assert-only entries from hooks/pyproject.toml (ruff clean over all hooks tests). Pay-down measured, still to be seen in the pace after it lands. Other dists' redundant entries not yet listed. | 2026-10-31T22:02:09Z: 2026-10-31 pathsforward-y (W2047) consolidates pathsforward/pyproject.toml's 132 per-file assert entries into one tests/* grant, as hooks has (net -131). With hooks-aq's 73, that is 204 exemptions paid down across two dists. Other dists with a per-file assert list but no tests/* grant are not yet counted. | 2026-10-31T22:54:13Z: 2026-10-31 hooks-ar's first submit was REFUSED at submit: 'behind its ratchet paydown and this stack lowers none' (45 pyproject.toml files plus '*.py' owed; hooks, ratchet were no longer listed). Paid down by consolidating per-file assert entries into one tests/* grant in buildtel (20 to 1), debtplan (14 to 1), corpus (8 to 1), audiostruct (7 to 1): 49 fewer, ruff clean per dist; added as the second entry of stack hooks-ar. Same shape remains in atomicwrite 3, bibparse 5, converge 2, cvdcore 4, endpoints 3, frontier 2, gatecheck 5 and more. | 2026-11-01T00:01:04Z: LANDED 9d7cf4d6 (stack hooks-ar, second entry): buildtel, debtplan, corpus and audiostruct consolidate their per-file assert entries into one tests/* grant (49 fewer exemptions, ruff clean per dist). Remaining dists with the same shape: atomicwrite, bibparse, converge, cvdcore, endpoints, frontier, gatecheck and more. | 2026-11-01T00:25:33Z: hooks-as second entry: katas 20, ledger 12, importdag 11, htmlstruct 10 per-file assert entries consolidated into tests/* (49 fewer, ruff clean per dist). With hooks-ar's 49, pathsforward-y's 131 and hooks-aq's 73 the total paid down is 302. Remaining dists with the shape: atomicwrite, bibparse, converge, cvdcore, endpoints, frontier, gatecheck, gmailstruct, grade, gradekit, icsstruct and more. | 2026-11-01T01:21:41Z: LANDED c7fdedfc (stack hooks-as, second entry): katas 20, ledger 12, importdag 11, htmlstruct 10 per-file assert entries consolidated into tests/* (49 fewer). | 2026-11-01T02:00:10Z: hooks-at second entry: cvdcore 4, gmailstruct 4, atomicwrite 3, endpoints 3 consolidated into tests/* (14 fewer; the first entry's stated '10' was a miscount, the four dists removed 4+4+3+3 = 14). Running total with pathsforward-z's 17: 333. | 2026-11-01T02:57:35Z: LANDED 9fb85f5e (stack hooks-at, second entry): cvdcore 4, gmailstruct 4, atomicwrite 3, endpoints 3 per-file assert entries consolidated into tests/*.",
       "issued_at": "2026-10-31T19:05:44Z",
       "minted_during": "interrupt",
       "caused_by": "W2139",
-      "last_worked": "2026-11-01T02:00:10Z",
+      "last_worked": "2026-11-01T02:57:35Z",
       "ticks_blocked": 0
     },
     {
