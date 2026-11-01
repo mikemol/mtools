@@ -35,6 +35,7 @@ from mikemol.pathsforward import (
     blockedlist,
     bulkblock,
     certify,
+    deadenables,
     delivered,
     dropto,
     embargo,
@@ -239,6 +240,31 @@ def _block_matching(ctx: "Ctx") -> int:
             _say(f"KEPT {sym} ({why})")
         if write:
             bulkblock.apply(state, found, target)
+        return EXIT_OK
+
+    return _mutate(ctx, edit)
+
+
+def _clear_dead_enables(ctx: "Ctx") -> int:
+    """Name the `enables` edges whose target does not wait on their source; `--write` drops them.
+
+    ⚑ DRY RUN FIRST, as `--block-matching`: without `--write` nothing is saved and each line says
+    WOULD CLEAR. Only local targets are judged, and the edge is dropped, never made a block.
+
+    Returns:
+        EXIT_OK.
+
+    """
+    write = bool(ctx.opts.get("write"))
+
+    def edit(state: State) -> int:
+        found = deadenables.plan(state)
+        verb = "CLEARED" if write else "WOULD CLEAR"
+        for source, target in found:
+            _say(f"{verb} {source} enables {target}: {target} does not wait on it")
+        _say(f"# {len(found)} dead enables edge(s)")
+        if write:
+            deadenables.apply(state, found)
         return EXIT_OK
 
     return _mutate(ctx, edit)
@@ -499,6 +525,7 @@ _FLAGS = (
     "prune_landed",
     "block_behind_open",
     "close_umbrellas",
+    "clear_dead_enables",
     "reconcile",
     "triage",
     "inbound",
@@ -748,6 +775,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "prune_landed": frozenset({"root"}),
     "block_behind_open": frozenset({"write"}),
     "close_umbrellas": frozenset({"write"}),
+    "clear_dead_enables": frozenset({"write"}),
     "reconcile": frozenset({"write", "root"}),
     "triage": frozenset({"write"}),
     "inbound": frozenset({"root", "all"}),
@@ -3596,6 +3624,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "prune_landed": _prune_landed,
     "block_behind_open": _block_behind_open,
     "close_umbrellas": _close_umbrellas,
+    "clear_dead_enables": _clear_dead_enables,
     "reconcile": _reconcile,
     "triage": _triage,
     "lift": _lift,

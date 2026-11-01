@@ -7937,3 +7937,25 @@
   claim  = {No answer is not an empty history: nothing is called idle.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_note.py -k test_no_ledger_and_unreadable_history_say_nothing},
 }
+
+@misc{pathsforward-deadenables-only-a-local-open-target-that-does-not-wait-on-the-source-is-dead,
+  section = {deadenables},
+  title  = {W1 to W2 is dead; W1 to W3 stays (W3 waits on W1), peer:W9 is not judged, W4 and W6 skip},
+  claim  = {W1 to W2 is dead; W1 to W3 stays (W3 waits on W1), peer:W9 is not judged, W4 and W6
+            skip.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deadenables.py -k test_only_a_local_open_target_that_does_not_wait_on_the_source_is_dead},
+}
+
+@misc{pathsforward-deadenables-apply-drops-the-dead-edge-and-keeps-the-others-in-order,
+  section = {deadenables},
+  title  = {W1 keeps W3 then peer:W9; nothing becomes blocked},
+  claim  = {W1 keeps W3 then peer:W9; nothing becomes blocked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deadenables.py -k test_apply_drops_the_dead_edge_and_keeps_the_others_in_order},
+}
+
+@misc{pathsforward-deadenables-mode-is-a-dry-run-until-write-and-then-clears-the-edge,
+  section = {deadenables},
+  title  = {Dry: WOULD CLEAR and the file unchanged. With --write: CLEARED and the edge gone},
+  claim  = {Dry: WOULD CLEAR and the file unchanged. With --write: CLEARED and the edge gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deadenables.py -k test_the_mode_is_a_dry_run_until_write_and_then_clears_the_edge},
+}

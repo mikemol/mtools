@@ -119,3 +119,4 @@ addblocker	Add Blocker: a Card Held Behind One More Blocker Keeps the Old Ones a
 readyolder	The ready cards older than a bound (W2118)
 workingstale	The working cards no live stack names, listed oldest first (W2195)
 idle_note	The close names working cards idle past the repository's own landing gap (W2047)
+deadenables	An enables edge whose open local target does not wait on its source is dropped, never turned into a block (W1614)
