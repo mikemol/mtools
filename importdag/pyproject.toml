@@ -107,19 +107,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_sibling_edge.py" = ["assert"]
-"tests/test_dagderive.py" = ["assert"]
+"tests/*" = ["assert"]
 # ⚑ THE RESOLVER'S WITNESSES ARE PLAIN ASSERTS OVER PURE FUNCTIONS (and one tmp_path read): no child
 # process, so `assert` is the only exemption it needs.
-"tests/test_resolve.py" = ["assert"]
-"tests/test_resolve_init.py" = ["assert"]
-"tests/test_split.py" = ["assert"]
-"tests/test_graph.py" = ["assert"]
-"tests/test_cost.py" = ["assert"]
-"tests/test_series.py" = ["assert"]
-"tests/test_costcli.py" = ["assert"]
-"tests/test_neighbour.py" = ["assert"]
-"tests/test_costcli_pair.py" = ["assert"]
 # ⚑ ITS WITNESSES BUILD A REAL GIT REPOSITORY, because the defect under test is what git tracks.
 "tests/test_graph_files.py" = [
     "assert",

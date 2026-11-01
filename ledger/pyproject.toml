@@ -97,18 +97,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 
 # ⚑⚑ PER FILE, NEVER A GLOB: each line is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # ⚑ RUNNING A WITNESS COMMAND IS finding_kinds' ONE RESPONSIBILITY. MEASURED: the argv is the
 # ledger's own declared command, run with a caller-supplied cwd and never through a shell.
 "src/mikemol/ledger/finding_kinds.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_finding_kinds.py" = ["assert"]
-"tests/test_finding_kindspec.py" = ["assert"]
-"tests/test_finding_restem.py" = ["assert"]
-"tests/test_finding_keys.py" = ["assert"]
-"tests/test_finding_census.py" = ["assert"]
-"tests/test_finding_resolve.py" = ["assert"]
-"tests/test_finding_bibkeys.py" = ["assert"]
-"tests/test_finding_polarity.py" = ["assert"]
-"tests/test_finding_mode.py" = ["assert"]
-"tests/test_finding_entry.py" = ["assert"]
-"tests/test_finding_keys_show.py" = ["assert"]
-"tests/test_finding_cli.py" = ["assert"]

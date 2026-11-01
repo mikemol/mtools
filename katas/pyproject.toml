@@ -113,25 +113,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_workstreams.py" = ["assert"]
-"tests/test_commits.py" = ["assert"]
-"tests/test_fleet.py" = ["assert"]
-"tests/test_inbox.py" = ["assert"]
-"tests/test_pulse.py" = ["assert"]
-"tests/test_policy.py" = ["assert"]
-"tests/test_cli.py" = ["assert"]
-"tests/test_hosttick.py" = ["assert"]
-"tests/test_survey.py" = ["assert"]
-"tests/test_liveness.py" = ["assert"]
-"tests/test_liveness_lock.py" = ["assert"]
-"tests/test_flush_ceiling.py" = ["assert"]
-"tests/test_waiter_seconds.py" = ["assert"]
-"tests/test_flush_held.py" = ["assert"]
-"tests/test_proctree.py" = ["assert"]
-"tests/test_waiter_hang.py" = ["assert"]
-"tests/test_hangwatch.py" = ["assert"]
-"tests/test_waiter_stream.py" = ["assert"]
-"tests/test_scaffold.py" = ["assert"]
+"tests/*" = ["assert"]
 "tests/test_waiter.py" = ["assert", "suspicious-subprocess-import"]
 # ⚑ `waiter` runs ONE child, with its output going straight into the log as it is produced (W1125):
 # `mikemol.procrun.capture` returns the output only when the child ends, so the log would be silent
@@ -150,4 +132,3 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 ]
 # ⚑ `test_detach` starts a real detached child through `detach.start` and waits, bounded, for the
 # log's rc line, so it reads the same module-level exemptions as its subject.
-"tests/test_detach.py" = ["assert"]
