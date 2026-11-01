@@ -891,3 +891,6 @@ src/mikemol/hooks/dirtymap.py|inbox-counted-as-only-in-main|    return "excepted
 src/mikemol/hooks/dirtymap.py|only-in-main-counts-every-dirty-path|    only = sum\(1 for c in carriers if c == "NONE"\)|    only = len(dirty)|def=carrier_lines
 src/mikemol/hooks/dirtymap.py|rename-names-its-old-path|        paths\.append\(body\.split\(_RENAME\)\[-1\]\)|        paths.append(body.split(_RENAME)[0])|def=dirty_paths
 src/mikemol/hooks/dirtymap.py|blank-line-read-as-a-path|        if len\(line\) <= _STATUS_WIDTH:|        if False:|def=dirty_paths
+src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
+src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
+src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row

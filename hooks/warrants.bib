@@ -16835,3 +16835,31 @@
   claim  = {Modified, untracked, staged and renamed entries; the status columns are dropped.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtymap.py -k test_porcelain_text_is_read_into_paths_and_a_rename_names_its_new_path},
 }
+
+@misc{hooks-websubset-otlp-planted-rule-carries-its-modules-and-sites-under-target-and-rule,
+  section = {websubset_otlp},
+  title  = {The seen rule has 3 modules and 4 sites; the totals are 5 modules and 2 clean},
+  claim  = {The seen rule has 3 modules and 4 sites; the totals are 5 modules and 2 clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_the_planted_rule_carries_its_modules_and_sites_under_target_and_rule},
+}
+
+@misc{hooks-websubset-otlp-every-rule-of-the-target-is-written-and-an-unseen-one-is-zero,
+  section = {websubset_otlp},
+  title  = {A rule the census did not see is a 0 gauge, so its last module leaving is a step},
+  claim  = {A rule the census did not see is a 0 gauge, so its last module leaving is a step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_every_rule_of_the_target_is_written_and_an_unseen_one_is_zero},
+}
+
+@misc{hooks-websubset-otlp-repository-is-the-batch-key-and-never-a-label,
+  section = {websubset_otlp},
+  title  = {Two repositories give two batches; no row carries a repo field},
+  claim  = {Two repositories give two batches; no row carries a repo field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_the_repository_is_the_batch_key_and_never_a_label},
+}
+
+@misc{hooks-websubset-otlp-each-row-is-a-sample-otlp-reads-and-declares-no-freshness-class,
+  section = {websubset_otlp},
+  title  = {Name, numeric value, field object, integer time; description and unit set, class absent},
+  claim  = {Name, numeric value, field object, integer time; description and unit set, class absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_each_row_is_a_sample_otlp_reads_and_declares_no_freshness_class},
+}

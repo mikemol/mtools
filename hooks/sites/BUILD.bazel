@@ -186,6 +186,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/websubset_cli:suite",
         "//hooks/sites/src/mikemol/hooks/websubset_codon:suite",
         "//hooks/sites/src/mikemol/hooks/websubset_list:suite",
+        "//hooks/sites/src/mikemol/hooks/websubset_otlp:suite",
         "//hooks/sites/src/mikemol/hooks/websubset_prom:suite",
         "//hooks/sites/src/mikemol/hooks/websubset_tree:suite",
         "//hooks/sites/src/mikemol/hooks/wheel:suite",

@@ -1363,6 +1363,14 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/websubset_otlp.py": {
+      "imports": [
+        "src/mikemol/hooks/websubset.py",
+        "src/mikemol/hooks/websubset_tree.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/websubset_prom.py": {
       "imports": [
         "src/mikemol/hooks/websubset.py",
@@ -3423,6 +3431,16 @@ GRAPH = {
     "tests/test_websubset_list.py": {
       "imports": [
         "src/mikemol/hooks/websubset_list.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_websubset_otlp.py": {
+      "imports": [
+        "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/websubset.py",
+        "src/mikemol/hooks/websubset_otlp.py",
+        "src/mikemol/hooks/websubset_tree.py"
       ],
       "reads": [],
       "typing_only": []

@@ -220,3 +220,4 @@ commit_plain_frozen	A Plain Commit Lands the Bytes Frozen at Submit, Not What th
 citeguard	A Message Citing a Transcript Line Is Admitted Only When the Turn Read That Line (W2064)
 surfaces	A Repository's Config Surfaces Are Reported as Fixed JSON Keys, Read From Itself Alone (W2201)
 dirtymap	Each Dirty Path of a Repository Is Mapped to What Carries It, and Only-in-Main Is a Number (W2104)
+websubset_otlp	The Codon Idiom Census as OTLP Gauge Rows, One Batch Per Repository (W1366)
