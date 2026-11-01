@@ -771,6 +771,15 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/repinonto.py": {
+      "imports": [
+        "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/repin.py",
+        "src/mikemol/hooks/stacksnap.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/requeue.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
@@ -2733,6 +2742,14 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/repin_cli.py",
         "src/mikemol/hooks/repin_metrics.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_repinonto.py": {
+      "imports": [
+        "src/mikemol/hooks/repinonto.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []

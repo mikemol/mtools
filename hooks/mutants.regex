@@ -903,6 +903,10 @@ src/mikemol/hooks/recursive_delete.py|created-root-itself-not-inside|    return 
 src/mikemol/hooks/recursive_delete.py|unexpanded-home-judged-as-relative|            if target\.startswith\(_HOME\) or not any|            if not any|def=_stray
 src/mikemol/hooks/recursive_delete.py|dot-dot-not-resolved|    return posixpath\.normpath\(posixpath\.join\(cwd, target\)\)|    return posixpath.join(cwd, target)|def=_absolute
 src/mikemol/hooks/recursive_delete.py|unreadable-command-allowed|        return f"recursive delete refused: \{caught\}; \{REMEDY\}"|        return None|def=refusal
+src/mikemol/hooks/repinonto.py|deletion-blob-fetched|            if item\.blob == stacksnap\.DELETION or posixpath\.basename\(item\.path\) != PYPROJECT:|            if posixpath.basename(item.path) != PYPROJECT:|def=pins_in_snapshot
+src/mikemol/hooks/repinonto.py|failed-blob-read-as-text|            if done\.returncode != 0:|            if False:|def=pins_in_snapshot
+src/mikemol/hooks/repinonto.py|unchanged-file-reported-moved|            if changed:|            if True:|def=onto
+src/mikemol/hooks/repinonto.py|dead-key-allowed|    if key in set\(alive\):|    if True:|def=refusal
 src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
 src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
 src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row

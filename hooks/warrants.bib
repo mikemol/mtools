@@ -17094,3 +17094,45 @@
   claim  = {An empty record allows nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_with_no_created_path_every_recursive_delete_is_refused},
 }
+
+@misc{hooks-repinonto-frozen-pyproject-is-read-by-entry-and-other-files-are-skipped,
+  section = {repinonto},
+  title  = {Only pyproject.toml blobs are fetched; a deletion and a source file are never asked for},
+  claim  = {Only pyproject.toml blobs are fetched; a deletion and a source file are never asked for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_a_frozen_pyproject_is_read_by_entry_and_other_files_are_skipped},
+}
+
+@misc{hooks-repinonto-unreadable-snapshot-or-blob-reads-as-none-not-empty,
+  section = {repinonto},
+  title  = {A missing snapshot and a blob git cannot find are failures, never 'no pins'},
+  claim  = {A missing snapshot and a blob git cannot find are failures, never 'no pins'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_an_unreadable_snapshot_or_blob_reads_as_none_not_empty},
+}
+
+@misc{hooks-repinonto-onto-moves-the-pins-and-keeps-every-other-line-of-the-frozen-text,
+  section = {repinonto},
+  title  = {Another card's hunk in the same file survives byte for byte beside the moved pin},
+  claim  = {Another card's hunk in the same file survives byte for byte beside the moved pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_onto_moves_the_pins_and_keeps_every_other_line_of_the_frozen_text},
+}
+
+@misc{hooks-repinonto-onto-reports-only-the-files-whose-pins-changed,
+  section = {repinonto},
+  title  = {A file already at the target, and one with no pins, are left out},
+  claim  = {A file already at the target, and one with no pins, are left out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_onto_reports_only_the_files_whose_pins_changed},
+}
+
+@misc{hooks-repinonto-onto-honours-the-chosen-dists,
+  section = {repinonto},
+  title  = {A dist not named keeps its pin},
+  claim  = {A dist not named keeps its pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_onto_honours_the_chosen_dists},
+}
+
+@misc{hooks-repinonto-key-that-is-not-alive-is-refused-and-a-live-one-is-not,
+  section = {repinonto},
+  title  = {A finished run's snapshot is never repinned onto},
+  claim  = {A finished run's snapshot is never repinned onto.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_a_key_that_is_not_alive_is_refused_and_a_live_one_is_not},
+}

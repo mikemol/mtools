@@ -4958,3 +4958,7 @@
 2026-11-01T07:24:32Z  status W2201 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T07:39:25Z  status W1995 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T07:47:29Z  tick  W1995 advanced  unblock   "stack-hooks-ay submitted: recursive_delete.refusal pure core (10 tests, 5 mutants, no caller); hooks-ax W2201 landed 63b06c00 earlier"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T08:08:24Z  tick  W1995 held      collapse  "stack-hooks-ay (recursive_delete pure core + 8 hooks assert exemptions) inflight in the gate, HEAD 63b06c00; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T08:28:41Z  status W2075 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T08:40:22Z  tick  W1995 held      collapse  "hooks-ay still inflight (key 1793519498908922811), HEAD 63b06c00; W2075 slice 1 waits in scratch W2243 for it to leave the gate"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T08:58:51Z  status W1995 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
