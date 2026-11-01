@@ -88,15 +88,16 @@ fixture-parentheses = true
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
-# ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
-# nobody chose for it; each line below is one module that needs it.
+# ⚑⚑ `assert` IS THE TEST IDIOM, so it is granted to `tests/*` once; the SUBPROCESS rules stay PER
+# FILE, never a glob: a `tests/*` entry for them would grant the next test module an exemption
+# nobody chose for it, and each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # ⚑ THE WITNESSES RUN `git init` AND `git worktree add` IN A DECOY REPOSITORY under tmp_path: the argv
 # is fixed, git is resolved on PATH once, and every GIT_* variable is removed first.
-"tests/test_walk.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_suffix.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_virtualenvs.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_exclude.py" = ["assert"]
+"tests/test_walk.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_suffix.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_virtualenvs.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ ONE FILE, ONE RESPONSIBILITY: walk exists to ASK GIT which paths are registered worktrees.
 # The argv is fixed, the root is a path operand after `-C`, and git is resolved on PATH once.
 "src/mikemol/pathwalk/walk.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

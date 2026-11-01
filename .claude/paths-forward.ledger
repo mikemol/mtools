@@ -4952,3 +4952,6 @@
 2026-11-01T05:15:15Z  tick  W1994 advanced  collapse  "deletecmd registries, 5 mutants, warrants built in scratch W2239; stack-hooks-aw.json written, grid running, not yet submitted"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T05:17:21Z  status W1994 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T05:38:27Z  tick  W1994 advanced  collapse  "landed scratch W2239 into main and submitted stack-hooks-aw (deletecmd module, no caller); gate decides the 5 mutants"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T06:27:37Z  status W1994 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T06:27:37Z  status W1995 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T06:42:03Z  tick  W2201 advanced  unblock   "stack-hooks-ax submitted (mikemol-surfaces command); W1994 landed 92ebc783 this tick"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

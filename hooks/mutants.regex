@@ -886,6 +886,8 @@ src/mikemol/hooks/surfaces.py|absent-surface-still-reviewed|            "reviewe
 src/mikemol/hooks/surfaces.py|review-assumed-without-its-file|    return sorted\(\{label for name, label in _REVIEW_FILES\.items\(\) if \(repo / name\)\.is_file\(\)\}\)|    return sorted(set(_REVIEW_FILES.values()))|def=_reviews
 src/mikemol/hooks/surfaces.py|repo-name-dropped|    return \{"schema": SCHEMA, "repo": repo\.name, "surfaces": surfaces\}|    return {"schema": SCHEMA, "repo": "", "surfaces": surfaces}|def=survey
 src/mikemol/hooks/surfaces.py|json-without-trailing-newline|    return json\.dumps\(survey\(repo\), indent=2, sort_keys=True\) \+ "\\n"|    return json.dumps(survey(repo), indent=2, sort_keys=True)|def=to_json
+src/mikemol/hooks/surfaces.py|extra-argument-accepted|    if len\(args\) > 1 or not repo\.is_dir\(\):|    if not repo.is_dir():|def=main
+src/mikemol/hooks/surfaces.py|usage-refusal-exits-clean|        return 2|        return 0|def=main
 src/mikemol/hooks/dirtymap.py|queue-file-counted-as-only-in-main|    if path in QUEUE_FILES:|    if False:|def=carrier_of
 src/mikemol/hooks/dirtymap.py|inbox-counted-as-only-in-main|    return "excepted:inbox" if path\.startswith\(INBOX\) else "NONE"|    return "NONE"|def=carrier_of
 src/mikemol/hooks/dirtymap.py|only-in-main-counts-every-dirty-path|    only = sum\(1 for c in carriers if c == "NONE"\)|    only = len(dirty)|def=carrier_lines

@@ -11,9 +11,12 @@ the rendered JSON is the same text every time.
 import json
 from pathlib import Path
 
+import pytest
+
 from mikemol.hooks import surfaces
 from mikemol.hooks.payload import as_record
 
+_USAGE_EXIT = 2
 _KEYS = {"surface", "declared", "changed_by", "loaded_by", "reviewed_by"}
 _NAMES = [
     "claude_md",
@@ -87,3 +90,24 @@ def test_the_json_is_stable_and_parses_back_to_the_survey(tmp_path: Path) -> Non
     assert first.endswith("\n")
     parsed: object = json.loads(first)
     assert parsed == surfaces.survey(repo)
+
+
+def test_main_prints_the_survey_of_the_named_repository(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """One argument names the repository; stdout is exactly the JSON and the exit code is 0."""
+    repo = tmp_path / "epsilon"
+    _put(repo, "CLAUDE.md")
+    assert surfaces.main([str(repo)]) == 0
+    assert capsys.readouterr().out == surfaces.to_json(repo)
+
+
+def test_main_refuses_a_missing_directory_and_extra_arguments(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A path that is not a directory, and a second argument, exit 2 with a usage line only."""
+    assert surfaces.main([str(tmp_path / "absent")]) == _USAGE_EXIT
+    assert surfaces.main([str(tmp_path), "extra"]) == _USAGE_EXIT
+    seen = capsys.readouterr()
+    assert not seen.out
+    assert "usage: mikemol-surfaces" in seen.err

@@ -17010,3 +17010,17 @@
   claim  = {A non-delete, an empty command and a word that only contains rm are not deletes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_an_ordinary_command_holds_no_delete},
 }
+
+@misc{hooks-surfaces-main-prints-the-survey-of-the-named-repository,
+  section = {surfaces},
+  title  = {One argument names the repository; stdout is exactly the JSON and the exit code is 0},
+  claim  = {One argument names the repository; stdout is exactly the JSON and the exit code is 0.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_main_prints_the_survey_of_the_named_repository},
+}
+
+@misc{hooks-surfaces-main-refuses-a-missing-directory-and-extra-arguments,
+  section = {surfaces},
+  title  = {A path that is not a directory, and a second argument, exit 2 with a usage line only},
+  claim  = {A path that is not a directory, and a second argument, exit 2 with a usage line only.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_main_refuses_a_missing_directory_and_extra_arguments},
+}

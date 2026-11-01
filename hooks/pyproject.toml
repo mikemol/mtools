@@ -145,6 +145,8 @@ mikemol-bazel-admit = "mikemol.hooks.bazel_admit:main"
 # runs it, no harness wires it.
 mikemol-new-dist = "mikemol.hooks.new_dist_cli:main"
 mikemol-scratch = "mikemol.hooks.scratch_cli:main"
+# W2201: the per-repo census of config surfaces, as JSON.
+mikemol-surfaces = "mikemol.hooks.surfaces:main"
 # W959: surveys every repo's mtools pins against a commit and moves them (dry run unless --write).
 # NOT `mikemol-hook-…`: a maintainer runs it, no harness wires it.
 mikemol-repin = "mikemol.hooks.repin_cli:main"

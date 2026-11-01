@@ -30,6 +30,7 @@ list, which is a finding, not an omission.
 """
 
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -120,3 +121,19 @@ def to_json(repo: Path) -> str:
 
     """
     return json.dumps(survey(repo), indent=2, sort_keys=True) + "\n"
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Print the census of the repository named by the one argument, or of the working directory.
+
+    Returns:
+        0 on success; 2 when the argument is not a directory or more than one is given.
+
+    """
+    args = sys.argv[1:] if argv is None else argv
+    repo = Path(args[0]) if len(args) == 1 else Path.cwd()
+    if len(args) > 1 or not repo.is_dir():
+        sys.stderr.write("usage: mikemol-surfaces [REPO_DIR]\n")
+        return 2
+    sys.stdout.write(to_json(repo))
+    return 0

@@ -608,6 +608,8 @@ venv_from_hub(
         "mikemol-pycheck": "mikemol.hooks.pycheck_cli:main",
         # W1378: an isolated worktree for a card.
         "mikemol-scratch": "mikemol.hooks.scratch_cli:main",
+        # W2201: the per-repo census of config surfaces, as JSON.
+        "mikemol-surfaces": "mikemol.hooks.surfaces:main",
         "mikemol-githook-pre-push": "mikemol.hooks.githook_pre_push:main",
         "mikemol-githook-post-commit": "mikemol.hooks.githook_post_commit:main",
         "mikemol-githook-prepare-commit-msg": "mikemol.hooks.githook_prepare_commit_msg:main",

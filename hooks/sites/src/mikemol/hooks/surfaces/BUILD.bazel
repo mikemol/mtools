@@ -56,6 +56,19 @@ mutant_site(
 )
 
 mutant_site(
+    name = "main",
+    dist = "hooks",
+    site = "src/mikemol/hooks/surfaces.py::main",
+    tests = "tests/test_surfaces.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/surfaces.py",
+        "//hooks:tests/test_surfaces.py",
+    ],
+)
+
+mutant_site(
     name = "declared_absent-surface-still-reviewed",
     dist = "hooks",
     site = "src/mikemol/hooks/surfaces.py::absent-surface-still-reviewed",
@@ -111,6 +124,34 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_extra-argument-accepted",
+    dist = "hooks",
+    site = "src/mikemol/hooks/surfaces.py::extra-argument-accepted",
+    tests = "tests/test_surfaces.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/surfaces.py",
+        "//hooks:tests/test_surfaces.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_usage-refusal-exits-clean",
+    dist = "hooks",
+    site = "src/mikemol/hooks/surfaces.py::usage-refusal-exits-clean",
+    tests = "tests/test_surfaces.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/surfaces.py",
+        "//hooks:tests/test_surfaces.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -118,10 +159,13 @@ test_suite(
         ":_reviews",
         ":survey",
         ":to_json",
+        ":main",
         ":declared_absent-surface-still-reviewed",
         ":declared_review-assumed-without-its-file",
         ":declared_repo-name-dropped",
         ":declared_json-without-trailing-newline",
+        ":declared_extra-argument-accepted",
+        ":declared_usage-refusal-exits-clean",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],
