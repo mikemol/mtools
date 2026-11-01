@@ -213,6 +213,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/deletecmd.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/dirtymap.py": {
       "imports": [],
       "reads": [],
@@ -1894,6 +1899,13 @@ GRAPH = {
     "tests/test_corelimit.py": {
       "imports": [
         "src/mikemol/hooks/corelimit.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_deletecmd.py": {
+      "imports": [
+        "src/mikemol/hooks/deletecmd.py"
       ],
       "reads": [],
       "typing_only": []

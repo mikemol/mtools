@@ -3,7 +3,7 @@
 
 state file: `.claude/paths-forward.json`
 
-counter 2202 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:97528507e80c000d`
+counter 2202 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:0f18f775a0c95d23`
 
 | # | symbol | status |
 |---|---|---|
@@ -2163,9 +2163,9 @@ counter 2202 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:975
    - next: After hooks-av lands: record the sha and close W1636; the W1632..W1636 family is then settled.
 2. **W2104** (working) mikemol-scratch: a default scratch root, close for a landed worktree, and the land-to-gate window
    recorded or removed
-   - next: After hooks-au lands: record sha; run 'mikemol-scratch dirty-map --repo `<mtools>`' with MIKEMOL_SCRATCH_ROOT
-     set and READ the number (the card's witness: no path exists only in main, queue files and inbox excepted); then
-     emit it per tick as a gauge for the trend; tell github-42 that W2174 is folded here.
+   - next: Act on the 11: (1) give deletecmd its own scratch tree (W1994 owns it) so it is not only in main, (2) remove
+     the stray tmp file after reading it, (3) decide whether .claude/design is excepted by name (notes) or each patch is
+     carried. Then emit the dirty-map count as a per-tick gauge so the number has a trend.
 3. **W1989** (ready) The hooks mutants shards take the module they plant in and the tests whose closure holds it as
    their inputs
    - next: Run the whole commit_kata site suite (and the other hooks sites) green, then retire the sharded hooks
@@ -2223,6 +2223,8 @@ counter 2202 · heartbeat 2026-10-29T04:12:08Z · job `c82cd746` · hash `v2:975
    naming that the leader was withdrawn
 13. **W1994** (ready) A command parser names the target of rm -r, rm -rf, git clean and find -delete, and refuses a form
    it cannot read
+   - next: Open a scratch tree for W1994, move the three files into it (scratch_cli restore or a copy), read them,
+     finish or discard the module, then main stops holding them. Do not leave them as the only copy.
 14. **W2071** (ready) mikemol-bibstruct dist skeleton with vfs and edit_snapshot ported under the bar (paperkit 6349050
    blobs 14efbe8c, 98992593)
    - next: Own stack 1: mikemol-new-dist bibstruct with an empty-but-real module and one test, integrated alone (a dist

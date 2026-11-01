@@ -16940,3 +16940,73 @@
   claim  = {`dirty-map` takes no symbol and prints the rows then the count line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_the_verb_prints_the_map_and_needs_no_card},
 }
+
+@misc{hooks-deletecmd-rm-with-a-recursive-flag-in-any-spelling-names-its-operands,
+  section = {deletecmd},
+  title  = {-r, -R, -rf, -fr, --recursive and a combined -rfv all make a delete; -f alone does not},
+  claim  = {-r, -R, -rf, -fr, --recursive and a combined -rfv all make a delete; -f alone does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_rm_with_a_recursive_flag_in_any_spelling_names_its_operands},
+}
+
+@misc{hooks-deletecmd-double-dash-ends-the-flags-so-an-operand-named-like-a-flag-is-a-target,
+  section = {deletecmd},
+  title  = {`rm -r -- -rf` deletes a path called -rf; it is the operand, not another flag},
+  claim  = {`rm -r -- -rf` deletes a path called -rf; it is the operand, not another flag.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_a_double_dash_ends_the_flags_so_an_operand_named_like_a_flag_is_a_target},
+}
+
+@misc{hooks-deletecmd-git-clean-needs-force-and-no-dry-run-and-defaults-to-the-working-directory,
+  section = {deletecmd},
+  title  = {-f makes it a delete; -n or --dry-run does not; no pathspec means the directory itself},
+  claim  = {-f makes it a delete; -n or --dry-run does not; no pathspec means the directory itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_git_clean_needs_force_and_no_dry_run_and_defaults_to_the_working_directory},
+}
+
+@misc{hooks-deletecmd-git-clean-is-found-after-git-s-own-global-options,
+  section = {deletecmd},
+  title  = {`git -C repo -c k=v clean -f x` is still a clean; another git verb is not one},
+  claim  = {`git -C repo -c k=v clean -f x` is still a clean; another git verb is not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_git_clean_is_found_after_git_s_own_global_options},
+}
+
+@misc{hooks-deletecmd-find-delete-names-its-leading-paths-or-the-working-directory,
+  section = {deletecmd},
+  title  = {The paths come before the first expression word; none means the directory itself},
+  claim  = {The paths come before the first expression word; none means the directory itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_find_delete_names_its_leading_paths_or_the_working_directory},
+}
+
+@misc{hooks-deletecmd-chained-command-is-read-segment-by-segment-in-order,
+  section = {deletecmd},
+  title  = {&&, ; and | split it; each recursive delete is reported, the rest ignored},
+  claim  = {&&, ; and | split it; each recursive delete is reported, the rest ignored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_a_chained_command_is_read_segment_by_segment_in_order},
+}
+
+@misc{hooks-deletecmd-path-prefix-and-sudo-do-not-hide-the-command,
+  section = {deletecmd},
+  title  = {/bin/rm, sudo rm and command rm are all rm},
+  claim  = {/bin/rm, sudo rm and command rm are all rm.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_a_path_prefix_and_sudo_do_not_hide_the_command},
+}
+
+@misc{hooks-deletecmd-target-built-by-expansion-is-refused-not-guessed,
+  section = {deletecmd},
+  title  = {A variable, a command substitution and a backtick name nothing the hook can judge},
+  claim  = {A variable, a command substitution and a backtick name nothing the hook can judge.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_a_target_built_by_expansion_is_refused_not_guessed},
+}
+
+@misc{hooks-deletecmd-command-that-does-not-split-into-words-is-refused,
+  section = {deletecmd},
+  title  = {An unbalanced quote cannot be read at all},
+  claim  = {An unbalanced quote cannot be read at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_a_command_that_does_not_split_into_words_is_refused},
+}
+
+@misc{hooks-deletecmd-ordinary-command-holds-no-delete,
+  section = {deletecmd},
+  title  = {A non-delete, an empty command and a word that only contains rm are not deletes},
+  claim  = {A non-delete, an empty command and a word that only contains rm are not deletes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_deletecmd.py -k test_an_ordinary_command_holds_no_delete},
+}

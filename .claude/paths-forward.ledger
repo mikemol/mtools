@@ -4945,3 +4945,10 @@
 2026-11-01T03:25:51Z  status W1634 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T03:28:55Z  status W1636 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T03:47:10Z  tick  W1636 advanced  sweep     "W1636 built and submitted as hooks-av (21 test files skip without git, 28 exemptions paid down); hooks-au (W2104, W2200) inflight [reason: hooks-au (W2104) holds the gate and W1122 edits the live pre-commit hook, which waits for it (cites W2104, W1122) (cites W2104, W1122, W2104, W1122)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T04:10:31Z  tick  W2104 advanced  collapse  "hooks-au landed (dirty-map reader), first reading 55 dirty and 11 only in main recorded on W2104 and W1994; hooks-av (W1636) inflight [reason: hooks-av (W1636) holds the gate and W1994's scratch move touches the hooks registries it carries (cites W1636, W1994) (cites W1636, W1994, W1636, W1994)]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T04:49:09Z  status W2103 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T04:56:51Z  status W1227 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T04:56:51Z  status W1636 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T05:15:15Z  tick  W1994 advanced  collapse  "deletecmd registries, 5 mutants, warrants built in scratch W2239; stack-hooks-aw.json written, grid running, not yet submitted"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T05:17:21Z  status W1994 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T05:38:27Z  tick  W1994 advanced  collapse  "landed scratch W2239 into main and submitted stack-hooks-aw (deletecmd module, no caller); gate decides the 5 mutants"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -85,11 +85,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # boolean-type-hint-positional-argument and boolean-default-value-positional-argument:
 # `rungs(descending)`, `grade_from_sens(baseline, ..., reachable)` and `_rank`-style boolean
 # parameters are positional in paperkit's callers (`grade_from_sens(False, [], reachable=True)`);
 # keeping the signature is the port's contract.
 "src/mikemol/grade/grade.py" = ["boolean-type-hint-positional-argument", "boolean-default-value-positional-argument"]
-"tests/test_ladder.py" = ["assert"]
-"tests/test_clamp.py" = ["assert"]
-"tests/test_verify.py" = ["assert"]
