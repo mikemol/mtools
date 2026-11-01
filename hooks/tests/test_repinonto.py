@@ -104,3 +104,48 @@ def test_a_key_that_is_not_alive_is_refused_and_a_live_one_is_not() -> None:
     """A finished run's snapshot is never repinned onto."""
     assert "111" in str(repinonto.refusal("111", ["222", "333"]))
     assert repinonto.refusal("222", iter(["111", "222"])) is None
+
+
+class _Hasher:
+    """Answer `git hash-object -w FILE` with a fixed id, recording the text it was given."""
+
+    def __init__(self, returncode: int = 0) -> None:
+        self.returncode = returncode
+        self.stored: list[str] = []
+        self.dirs: set[Path] = set()
+
+    def __call__(self, args: Sequence[str], env: Mapping[str, str], cwd: Path) -> _Done:
+        self.stored.append(Path(args[-1]).read_text(encoding="utf-8"))
+        self.dirs.add(cwd)
+        return _Done(self.returncode, "newblob\n" if env == {} else "")
+
+
+def test_reblob_replaces_only_the_moved_blob_and_keeps_path_and_mode(tmp_path: Path) -> None:
+    """The moved file gets the stored id; its neighbours and other entries are untouched."""
+    entries = [
+        [Frozen("a/pyproject.toml", "100755", "old"), Frozen("a/x.py", _MODE, "keep")],
+        [Frozen("b/pyproject.toml", _MODE, "other")],
+    ]
+    run = _Hasher()
+    got = repinonto.reblob(entries, {0: {"a/pyproject.toml": "NEW TEXT"}}, tmp_path, run, tmp_path)
+    assert got == [
+        [Frozen("a/pyproject.toml", "100755", "newblob"), Frozen("a/x.py", _MODE, "keep")],
+        [Frozen("b/pyproject.toml", _MODE, "other")],
+    ]
+    assert run.stored == ["NEW TEXT"]
+    assert run.dirs == {tmp_path}
+
+
+def test_reblob_with_nothing_moved_stores_nothing(tmp_path: Path) -> None:
+    """An empty move returns the rows as they were and asks git for nothing."""
+    entries = [[Frozen("pyproject.toml", _MODE, "old")]]
+    run = _Hasher()
+    assert repinonto.reblob(entries, {}, tmp_path, run, tmp_path) == entries
+    assert not run.stored
+
+
+def test_reblob_returns_none_when_git_refuses_a_blob(tmp_path: Path) -> None:
+    """A half-rewritten snapshot is never returned."""
+    entries = [[Frozen("pyproject.toml", _MODE, "old")]]
+    run = _Hasher(returncode=_FAILED)
+    assert repinonto.reblob(entries, {0: {"pyproject.toml": "x"}}, tmp_path, run, tmp_path) is None

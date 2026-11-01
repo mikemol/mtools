@@ -17136,3 +17136,24 @@
   claim  = {A finished run's snapshot is never repinned onto.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_a_key_that_is_not_alive_is_refused_and_a_live_one_is_not},
 }
+
+@misc{hooks-repinonto-reblob-replaces-only-the-moved-blob-and-keeps-path-and-mode,
+  section = {repinonto},
+  title  = {The moved file gets the stored id; its neighbours and other entries are untouched},
+  claim  = {The moved file gets the stored id; its neighbours and other entries are untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_reblob_replaces_only_the_moved_blob_and_keeps_path_and_mode},
+}
+
+@misc{hooks-repinonto-reblob-with-nothing-moved-stores-nothing,
+  section = {repinonto},
+  title  = {An empty move returns the rows as they were and asks git for nothing},
+  claim  = {An empty move returns the rows as they were and asks git for nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_reblob_with_nothing_moved_stores_nothing},
+}
+
+@misc{hooks-repinonto-reblob-returns-none-when-git-refuses-a-blob,
+  section = {repinonto},
+  title  = {A half-rewritten snapshot is never returned},
+  claim  = {A half-rewritten snapshot is never returned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_reblob_returns_none_when_git_refuses_a_blob},
+}

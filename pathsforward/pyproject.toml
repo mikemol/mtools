@@ -127,8 +127,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
-"tests/test_lift_cli.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_lift.py" =["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_lift_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_lift.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ THE STORE AND CLI WITNESSES RUN REAL PROCESSES, because the defects they close were races
 # between processes: argv lists built from `sys.executable`, never a shell, never untrusted input.
 "tests/test_store.py" = [

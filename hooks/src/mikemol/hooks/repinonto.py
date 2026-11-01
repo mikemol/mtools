@@ -86,3 +86,36 @@ def onto(
             if changed:
                 moved.setdefault(index, {})[path] = new
     return moved
+
+
+def reblob(
+    entries: list[list[stacksnap.Frozen]],
+    moved: dict[int, dict[str, str]],
+    root: Path,
+    run: EnvRunner,
+    scratch: Path,
+) -> list[list[stacksnap.Frozen]] | None:
+    """Write each moved text into the object store and return the snapshot rows that name it.
+
+    Returns:
+        the entries with the moved files' blob ids replaced (path and mode kept) and every other
+        row as it was; None when git refuses to store a blob, so a half-rewritten snapshot is
+        never returned.
+
+    """
+    out: list[list[stacksnap.Frozen]] = []
+    for index, entry in enumerate(entries):
+        texts = moved.get(index, {})
+        row: list[stacksnap.Frozen] = []
+        for item in entry:
+            if item.path not in texts:
+                row.append(item)
+                continue
+            staged = scratch / f"{index}.blob"
+            staged.write_text(texts[item.path], encoding="utf-8")
+            done = run(["hash-object", "-w", str(staged)], _NO_ENV, root)
+            if done.returncode != 0:
+                return None
+            row.append(stacksnap.Frozen(item.path, item.mode, done.stdout.strip()))
+        out.append(row)
+    return out

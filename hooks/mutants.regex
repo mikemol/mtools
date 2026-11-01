@@ -907,6 +907,9 @@ src/mikemol/hooks/repinonto.py|deletion-blob-fetched|            if item\.blob =
 src/mikemol/hooks/repinonto.py|failed-blob-read-as-text|            if done\.returncode != 0:|            if False:|def=pins_in_snapshot
 src/mikemol/hooks/repinonto.py|unchanged-file-reported-moved|            if changed:|            if True:|def=onto
 src/mikemol/hooks/repinonto.py|dead-key-allowed|    if key in set\(alive\):|    if True:|def=refusal
+src/mikemol/hooks/repinonto.py|every-blob-restored|            if item\.path not in texts:|            if False:|def=reblob
+src/mikemol/hooks/repinonto.py|stored-id-keeps-its-newline|            row\.append\(stacksnap\.Frozen\(item\.path, item\.mode, done\.stdout\.strip\(\)\)\)|            row.append(stacksnap.Frozen(item.path, item.mode, done.stdout))|def=reblob
+src/mikemol/hooks/repinonto.py|refused-store-read-as-stored|            if done\.returncode != 0:|            if False:|def=reblob
 src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
 src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
 src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row

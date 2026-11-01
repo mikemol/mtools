@@ -110,11 +110,11 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-"tests/test_whisperx_site.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_whisperx_site.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ main.py's RESPONSIBILITY is starting each stage as a process (design note D3/O1); its argv is
 # built by cli.child_argv from parsed arguments, never a shell string.
 "src/mikemol/audiostruct/main.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_stub_authority.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_stub_authority.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ stages.py's RESPONSIBILITY is catching every library error: any one it let through could print
 # the Hugging Face token, so each is rewritten as StageError `from None` (design note D4).
 "src/mikemol/audiostruct/stages.py" = ["blind-except"]

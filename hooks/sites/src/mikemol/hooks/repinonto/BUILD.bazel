@@ -55,6 +55,23 @@ mutant_site(
 )
 
 mutant_site(
+    name = "reblob",
+    dist = "hooks",
+    site = "src/mikemol/hooks/repinonto.py::reblob",
+    tests = "tests/test_repinonto.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/isolated.py",
+        "//hooks:src/mikemol/hooks/repin.py",
+        "//hooks:src/mikemol/hooks/repinonto.py",
+        "//hooks:src/mikemol/hooks/snaplinks.py",
+        "//hooks:src/mikemol/hooks/snapshot.py",
+        "//hooks:src/mikemol/hooks/stacksnap.py",
+        "//hooks:tests/test_repinonto.py",
+    ],
+)
+
+mutant_site(
     name = "declared_deletion-blob-fetched",
     dist = "hooks",
     site = "src/mikemol/hooks/repinonto.py::deletion-blob-fetched",
@@ -126,16 +143,74 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_every-blob-restored",
+    dist = "hooks",
+    site = "src/mikemol/hooks/repinonto.py::every-blob-restored",
+    tests = "tests/test_repinonto.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/isolated.py",
+        "//hooks:src/mikemol/hooks/repin.py",
+        "//hooks:src/mikemol/hooks/repinonto.py",
+        "//hooks:src/mikemol/hooks/snaplinks.py",
+        "//hooks:src/mikemol/hooks/snapshot.py",
+        "//hooks:src/mikemol/hooks/stacksnap.py",
+        "//hooks:tests/test_repinonto.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_stored-id-keeps-its-newline",
+    dist = "hooks",
+    site = "src/mikemol/hooks/repinonto.py::stored-id-keeps-its-newline",
+    tests = "tests/test_repinonto.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/isolated.py",
+        "//hooks:src/mikemol/hooks/repin.py",
+        "//hooks:src/mikemol/hooks/repinonto.py",
+        "//hooks:src/mikemol/hooks/snaplinks.py",
+        "//hooks:src/mikemol/hooks/snapshot.py",
+        "//hooks:src/mikemol/hooks/stacksnap.py",
+        "//hooks:tests/test_repinonto.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_refused-store-read-as-stored",
+    dist = "hooks",
+    site = "src/mikemol/hooks/repinonto.py::refused-store-read-as-stored",
+    tests = "tests/test_repinonto.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/isolated.py",
+        "//hooks:src/mikemol/hooks/repin.py",
+        "//hooks:src/mikemol/hooks/repinonto.py",
+        "//hooks:src/mikemol/hooks/snaplinks.py",
+        "//hooks:src/mikemol/hooks/snapshot.py",
+        "//hooks:src/mikemol/hooks/stacksnap.py",
+        "//hooks:tests/test_repinonto.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
         ":refusal",
         ":pins_in_snapshot",
         ":onto",
+        ":reblob",
         ":declared_deletion-blob-fetched",
         ":declared_failed-blob-read-as-text",
         ":declared_unchanged-file-reported-moved",
         ":declared_dead-key-allowed",
+        ":declared_every-blob-restored",
+        ":declared_stored-id-keeps-its-newline",
+        ":declared_refused-store-read-as-stored",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],
