@@ -412,9 +412,9 @@ src/mikemol/hooks/beat.py|zero-sent-as-one|watchdog\.armed_publisher\(env, proje
 src/mikemol/hooks/beat.py|zero-sent-with-no-spawner|        if spawn is not None:|        if True:|def=run
 src/mikemol/hooks/watchdog.py|publisher-ignores-its-value|"--value", value\]|"--value", ARMED_UP]|def=armed_publisher
 src/mikemol/hooks/commit_span.py|duplicate-invocation-listed|    return ",".join\(seen\)|    return ",".join(m.group(1) for m in _INVOCATION.finditer(text))|def=invocations_of
-src/mikemol/hooks/commit_span.py|invocations-key-always-present|    return \{\*\*found\[-1\], "invocations": ids\} if ids else found\[-1\]|    return {**found[-1], "invocations": ids}|def=verdict_of
-src/mikemol/hooks/commit_span.py|stack-invocations-dropped|    return \{\*\*event, "invocations": ids\} if ids else event|    return event|def=stack_event
-src/mikemol/hooks/commit_span.py|invocations-field-not-passed|\("entries", "invocations"\)|("entries",)|def=plan
+src/mikemol/hooks/commit_span.py|invocations-key-always-present|    return \{\*\*found\[-1\], \*\*_joined\(text\)\}|    return found[-1]|def=verdict_of
+src/mikemol/hooks/commit_span.py|stack-invocations-dropped|    return \{\*\*event, \*\*_joined\(text\)\}|    return event|def=stack_event
+src/mikemol/hooks/commit_span.py|invocations-field-not-passed|\("entries", "invocations", "trees"\)|("entries", "trees")|def=plan
 src/mikemol/hooks/writeguard.py|perl-allowed|    if name in \{"perl", "tee"\}:|    if name in {"tee"}:|def=_reason
 src/mikemol/hooks/writeguard.py|sed-in-place-allowed|        return any\(_SED_IN_PLACE\.match\(arg\) for arg in args\)|        return False|def=_edits_in_place
 src/mikemol/hooks/writeguard.py|awk-in-place-allowed|    return name in \{"awk", "gawk"\} and "inplace" in args|    return False|def=_edits_in_place
@@ -894,3 +894,8 @@ src/mikemol/hooks/dirtymap.py|blank-line-read-as-a-path|        if len\(line\) <
 src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
 src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
 src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row
+src/mikemol/hooks/commit_span.py|trees-joined-without-a-separator|    return ",".join\(seen\)|    return "".join(seen)|def=trees_of
+src/mikemol/hooks/commit_span.py|tree-left-off-the-event|    pairs = \(\("invocations", invocations_of\(text\)\), \("trees", trees_of\(text\)\)\)|    pairs = (("invocations", invocations_of(text)),)|def=_joined
+src/mikemol/hooks/commit_span.py|empty-fields-written|    return \{key: value for key, value in pairs if value\}|    return dict(pairs)|def=_joined
+src/mikemol/hooks/commit_span.py|tree-left-off-the-span-fields|\("entries", "invocations", "trees"\) if key in event|("entries", "invocations") if key in event|def=plan
+src/mikemol/hooks/isolated.py|gated-tree-line-not-printed|    done\.stdout = f"\{done\.stdout\}gated-tree: \{tree\.stdout\.strip\(\)\}\\n"|    pass|def=commit_planned

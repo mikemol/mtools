@@ -139,3 +139,16 @@ def test_the_snapshot_is_taken_only_for_a_fresh_plain_submit(
     fresh = ck.plain_snapshot(root, parsed, ledger, "7", {})
     assert fresh.endswith("stack-7.snap")
     assert (ledger / "stack-7.snap").is_file()
+
+
+def test_the_isolated_commit_prints_the_tree_it_gated(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1613: the output says `gated-tree: <sha>` and the sha is the committed tree."""
+    root = _decoy(tmp_path, monkeypatch)
+    monkeypatch.delenv(SNAP_ENV, raising=False)
+    (root / "a.txt").write_text(_SUBMITTED, encoding="utf-8")
+    out = io.StringIO()
+    assert ck.commit(root, _REQUEST, out, isolated=True) == 0
+    tree = _git(root, "rev-parse", "HEAD^{tree}").strip()
+    assert f"gated-tree: {tree}" in out.getvalue()

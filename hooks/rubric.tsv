@@ -221,3 +221,4 @@ citeguard	A Message Citing a Transcript Line Is Admitted Only When the Turn Read
 surfaces	A Repository's Config Surfaces Are Reported as Fixed JSON Keys, Read From Itself Alone (W2201)
 dirtymap	Each Dirty Path of a Repository Is Mapped to What Carries It, and Only-in-Main Is a Number (W2104)
 websubset_otlp	The Codon Idiom Census as OTLP Gauge Rows, One Batch Per Repository (W1366)
+commit_span_trees	The Commit Span Records the Gated Tree Beside the Bazel Invocation Ids (W1613)

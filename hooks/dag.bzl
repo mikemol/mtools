@@ -1804,6 +1804,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_commit_span_trees.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_span.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_commit_stack.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",

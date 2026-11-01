@@ -224,6 +224,7 @@ def commit_planned(
         # own trailer block and a reader can ask whether a commit's gate ran on what it holds.
         stamped = f"{message.rstrip()}\nGated-Tree: {tree.stdout.strip()}\n"
         done = run(["commit", "-m", stamped], work, snap.path)
+    done.stdout = f"{done.stdout}gated-tree: {tree.stdout.strip()}\n"
     if not _failed(done):
         note = refresh_index(root, plan.paths, run)
         done.stdout = f"{done.stdout}{note}\n"

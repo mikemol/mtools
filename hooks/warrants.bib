@@ -16863,3 +16863,38 @@
   claim  = {Name, numeric value, field object, integer time; description and unit set, class absent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_each_row_is_a_sample_otlp_reads_and_declares_no_freshness_class},
 }
+
+@misc{hooks-commit-span-trees-trees-of-an-output-are-its-gated-tree-lines-distinct-and-in-order,
+  section = {commit_span_trees},
+  title  = {Two trees and a repeat give the two, in order; a short sha and prose are not trees},
+  claim  = {Two trees and a repeat give the two, in order; a short sha and prose are not trees.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span_trees.py -k test_the_trees_of_an_output_are_its_gated_tree_lines_distinct_and_in_order},
+}
+
+@misc{hooks-commit-span-trees-verdict-event-carries-the-tree-only-when-the-output-prints-one,
+  section = {commit_span_trees},
+  title  = {The control: no `gated-tree:` line, no `trees` field},
+  claim  = {The control: no `gated-tree:` line, no `trees` field.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span_trees.py -k test_the_verdict_event_carries_the_tree_only_when_the_output_prints_one},
+}
+
+@misc{hooks-commit-span-trees-stack-event-carries-the-trees-of-its-run,
+  section = {commit_span_trees},
+  title  = {One gate is one trace, so the tree it judged rides on the stack's event},
+  claim  = {One gate is one trace, so the tree it judged rides on the stack's event.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span_trees.py -k test_a_stack_event_carries_the_trees_of_its_run},
+}
+
+@misc{hooks-commit-span-trees-tree-rides-on-every-span-of-the-trace-as-a-field,
+  section = {commit_span_trees},
+  title  = {The plan passes `trees=<sha>` to each `mikemol-otlp trace` argv},
+  claim  = {The plan passes `trees=<sha>` to each `mikemol-otlp trace` argv.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_span_trees.py -k test_the_tree_rides_on_every_span_of_the_trace_as_a_field},
+}
+
+@misc{hooks-commit-plain-frozen-isolated-commit-prints-the-tree-it-gated,
+  section = {commit_plain_frozen},
+  title  = {W1613: the output says `gated-tree: <sha>` and the sha is the committed tree},
+  claim  = {W1613: the output says `gated-tree: <sha>` and the sha is the committed tree.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_the_isolated_commit_prints_the_tree_it_gated},
+}

@@ -46,6 +46,7 @@ _OK = "COMMITTED"
 _INVOCATION = re.compile(
     r"/invocation/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
 )
+_TREE = re.compile(r"^gated-tree: ([0-9a-f]{40})[ \t]*$", re.MULTILINE)
 _CARD = re.compile(r"^(W\d+)\b")
 NS_PER_S = 1_000_000_000
 NO_CARD = "-"
@@ -241,6 +242,36 @@ def invocations_of(text: str) -> str:
     return ",".join(seen)
 
 
+def trees_of(text: str) -> str:
+    """Name the trees a commit run's output says it gated, so presubmit and gate can be joined.
+
+    ⚑ THE SPAN CARRIES THE TREE BESIDE THE INVOCATION IDS (W1613): a presubmit and the gate that
+    follows it judge the same tree when nothing moved, and their bazel invocations then share
+    cached actions; with the tree sha on both spans the cache-hit share of presubmit-then-gate is
+    a metric, not a guess. The isolated commit prints `gated-tree: <sha>` for the tree its snapshot
+    materialized.
+
+    Returns:
+        each distinct tree sha after `gated-tree:`, in order, joined with commas; empty when none.
+
+    """
+    seen: dict[str, None] = {}
+    for found in _TREE.finditer(text):
+        seen.setdefault(found.group(1))
+    return ",".join(seen)
+
+
+def _joined(text: str) -> dict[str, str]:
+    """Collect the bazel invocation ids and gated trees an output names.
+
+    Returns:
+        `invocations` and `trees` for each that is non-empty.
+
+    """
+    pairs = (("invocations", invocations_of(text)), ("trees", trees_of(text)))
+    return {key: value for key, value in pairs if value}
+
+
 def verdict_of(text: str) -> dict[str, str] | None:
     """Read the commit's verdict event out of its output.
 
@@ -253,8 +284,7 @@ def verdict_of(text: str) -> dict[str, str] | None:
     found = [e for e in verdictlog.events_of(text) if e["verdict"] in names]
     if not found:
         return None
-    ids = invocations_of(text)
-    return {**found[-1], "invocations": ids} if ids else found[-1]
+    return {**found[-1], **_joined(text)}
 
 
 def binary(env: Mapping[str, str]) -> str | None:
@@ -345,7 +375,7 @@ def plan(
     status = "OK" if event["verdict"] == _OK else "ERROR"
     fields = {"repo": repo, "waypoint": waypoint, "sha": event.get("sha", "")}
     fields["verdict"] = event["verdict"]
-    fields.update({key: event[key] for key in ("entries", "invocations") if key in event})
+    fields.update({key: event[key] for key in ("entries", "invocations", "trees") if key in event})
     shared = ["--service", SERVICE, "--namespace", repo, "--status", status]
     shared += ["--trace-id", ids.trace]
     for key, value in fields.items():
@@ -377,8 +407,7 @@ def stack_event(text: str) -> dict[str, str] | None:
     bad = next((e["verdict"] for e in found if e["verdict"] != _OK), _OK)
     shas = ",".join(e["sha"] for e in found if "sha" in e)
     event = {"verdict": bad, "repo": found[0]["repo"], "sha": shas, "entries": str(len(found))}
-    ids = invocations_of(text)
-    return {**event, "invocations": ids} if ids else event
+    return {**event, **_joined(text)}
 
 
 def _start(
