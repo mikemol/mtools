@@ -19,12 +19,12 @@ import subprocess
 import sys
 from typing import TYPE_CHECKING, cast
 
+import pytest
+
 from mikemol.pkgbuild import privacycheck, relcheck, wheel
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    import pytest
 
 PYTHON = sys.executable
 PATHS = os.pathsep.join(sys.path)
@@ -67,7 +67,8 @@ def _git(root: Path, *args: str) -> str:
 
     """
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
     return done.stdout.strip()
 

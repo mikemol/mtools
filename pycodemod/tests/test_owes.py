@@ -31,7 +31,8 @@ _FILES = {
 
 def _git(root: Path, *args: str) -> None:
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     subprocess.run(
         [git, "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args],
         cwd=root,
