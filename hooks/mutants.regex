@@ -898,6 +898,11 @@ src/mikemol/hooks/deletecmd.py|dry-run-short-flag-ignored|    dry = "--dry-run" 
 src/mikemol/hooks/deletecmd.py|clean-without-pathspec-names-nothing|    return Delete\(CLEAN_FORM, tuple\(operands\) or \(HERE,\)\)|    return Delete(CLEAN_FORM, tuple(operands))|def=_clean
 src/mikemol/hooks/deletecmd.py|double-dash-does-not-end-flags|        if word == "--":|        if False:|def=_split
 src/mikemol/hooks/deletecmd.py|find-without-path-names-nothing|    return Delete\(FIND_FORM, tuple\(paths\) or \(HERE,\)\)|    return Delete(FIND_FORM, tuple(paths))|def=_find
+src/mikemol/hooks/recursive_delete.py|prefix-sibling-counts-as-inside|path\.startswith\(root\.rstrip\(_SEP\) \+ _SEP\)|path.startswith(root)|def=_inside
+src/mikemol/hooks/recursive_delete.py|created-root-itself-not-inside|    return path == root or path\.startswith|    return path.startswith|def=_inside
+src/mikemol/hooks/recursive_delete.py|unexpanded-home-judged-as-relative|            if target\.startswith\(_HOME\) or not any|            if not any|def=_stray
+src/mikemol/hooks/recursive_delete.py|dot-dot-not-resolved|    return posixpath\.normpath\(posixpath\.join\(cwd, target\)\)|    return posixpath.join(cwd, target)|def=_absolute
+src/mikemol/hooks/recursive_delete.py|unreadable-command-allowed|        return f"recursive delete refused: \{caught\}; \{REMEDY\}"|        return None|def=refusal
 src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
 src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
 src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row

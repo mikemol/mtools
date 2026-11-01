@@ -7,11 +7,13 @@ mutant_site(
     name = "_segments",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_segments",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -19,11 +21,13 @@ mutant_site(
     name = "_split",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_split",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -31,11 +35,13 @@ mutant_site(
     name = "_letters",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_letters",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -43,11 +49,13 @@ mutant_site(
     name = "_rm",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_rm",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -55,11 +63,13 @@ mutant_site(
     name = "_clean",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_clean",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -67,11 +77,13 @@ mutant_site(
     name = "_find",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_find",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -79,11 +91,13 @@ mutant_site(
     name = "_delete_of",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::_delete_of",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -91,11 +105,13 @@ mutant_site(
     name = "deletes",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::deletes",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
     ],
 )
 
@@ -103,11 +119,13 @@ mutant_site(
     name = "declared_capital-r-not-recursive",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::capital-r-not-recursive",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
         "//hooks:mutants.regex",
     ],
 )
@@ -116,11 +134,13 @@ mutant_site(
     name = "declared_dry-run-short-flag-ignored",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::dry-run-short-flag-ignored",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
         "//hooks:mutants.regex",
     ],
 )
@@ -129,11 +149,13 @@ mutant_site(
     name = "declared_clean-without-pathspec-names-nothing",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::clean-without-pathspec-names-nothing",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
         "//hooks:mutants.regex",
     ],
 )
@@ -142,11 +164,13 @@ mutant_site(
     name = "declared_double-dash-does-not-end-flags",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::double-dash-does-not-end-flags",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
         "//hooks:mutants.regex",
     ],
 )
@@ -155,11 +179,13 @@ mutant_site(
     name = "declared_find-without-path-names-nothing",
     dist = "hooks",
     site = "src/mikemol/hooks/deletecmd.py::find-without-path-names-nothing",
-    tests = "tests/test_deletecmd.py",
+    tests = "tests/test_deletecmd.py tests/test_recursive_delete.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/deletecmd.py",
+        "//hooks:src/mikemol/hooks/recursive_delete.py",
         "//hooks:tests/test_deletecmd.py",
+        "//hooks:tests/test_recursive_delete.py",
         "//hooks:mutants.regex",
     ],
 )

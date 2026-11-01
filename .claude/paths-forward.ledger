@@ -4955,3 +4955,6 @@
 2026-11-01T06:27:37Z  status W1994 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T06:27:37Z  status W1995 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T06:42:03Z  tick  W2201 advanced  unblock   "stack-hooks-ax submitted (mikemol-surfaces command); W1994 landed 92ebc783 this tick"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T07:24:32Z  status W2201 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T07:39:25Z  status W1995 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T07:47:29Z  tick  W1995 advanced  unblock   "stack-hooks-ay submitted: recursive_delete.refusal pure core (10 tests, 5 mutants, no caller); hooks-ax W2201 landed 63b06c00 earlier"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

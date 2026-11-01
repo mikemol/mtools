@@ -17024,3 +17024,73 @@
   claim  = {A path that is not a directory, and a second argument, exit 2 with a usage line only.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_surfaces.py -k test_main_refuses_a_missing_directory_and_extra_arguments},
 }
+
+@misc{hooks-recursive-delete-delete-inside-a-created-path-is-allowed,
+  section = {recursive_delete},
+  title  = {A relative and an absolute target under the created root, and the root itself, pass},
+  claim  = {A relative and an absolute target under the created root, and the root itself, pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_a_delete_inside_a_created_path_is_allowed},
+}
+
+@misc{hooks-recursive-delete-delete-outside-every-created-path-is-refused-with-the-remedy,
+  section = {recursive_delete},
+  title  = {The refusal names the form and the target, and carries the remedy},
+  claim  = {The refusal names the form and the target, and carries the remedy.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_a_delete_outside_every_created_path_is_refused_with_the_remedy},
+}
+
+@misc{hooks-recursive-delete-sibling-whose-name-starts-with-a-created-path-is-outside-it,
+  section = {recursive_delete},
+  title  = {/work/scratch-old is not under /work/scratch; only a whole path component counts},
+  claim  = {/work/scratch-old is not under /work/scratch; only a whole path component counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_a_sibling_whose_name_starts_with_a_created_path_is_outside_it},
+}
+
+@misc{hooks-recursive-delete-dot-dot-that-climbs-out-of-the-created-path-is-refused,
+  section = {recursive_delete},
+  title  = {Relative targets are resolved as text first, so ../x leaves the created root},
+  claim  = {Relative targets are resolved as text first, so ../x leaves the created root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_dot_dot_that_climbs_out_of_the_created_path_is_refused},
+}
+
+@misc{hooks-recursive-delete-root-and-an-unexpanded-home-are-refused,
+  section = {recursive_delete},
+  title  = {`/` and `~` lie under no created path (the shell has not expanded the tilde)},
+  claim  = {`/` and `~` lie under no created path (the shell has not expanded the tilde).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_the_root_and_an_unexpanded_home_are_refused},
+}
+
+@misc{hooks-recursive-delete-git-clean-without-a-pathspec-is-judged-as-the-working-directory,
+  section = {recursive_delete},
+  title  = {The implicit target is `.`: allowed inside a created cwd, refused outside one},
+  claim  = {The implicit target is `.`: allowed inside a created cwd, refused outside one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_a_git_clean_without_a_pathspec_is_judged_as_the_working_directory},
+}
+
+@misc{hooks-recursive-delete-every-target-of-a-chain-is-judged-and-the-first-stray-is-named,
+  section = {recursive_delete},
+  title  = {A good delete does not excuse a later bad one},
+  claim  = {A good delete does not excuse a later bad one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_every_target_of_a_chain_is_judged_and_the_first_stray_is_named},
+}
+
+@misc{hooks-recursive-delete-unreadable-command-is-refused-with-the-readers-words,
+  section = {recursive_delete},
+  title  = {A target built by expansion is refused, never guessed},
+  claim  = {A target built by expansion is refused, never guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_an_unreadable_command_is_refused_with_the_readers_words},
+}
+
+@misc{hooks-recursive-delete-command-with-no-recursive-delete-is-allowed-whatever-was-created,
+  section = {recursive_delete},
+  title  = {Nothing to judge, even with an empty record},
+  claim  = {Nothing to judge, even with an empty record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_a_command_with_no_recursive_delete_is_allowed_whatever_was_created},
+}
+
+@misc{hooks-recursive-delete-with-no-created-path-every-recursive-delete-is-refused,
+  section = {recursive_delete},
+  title  = {An empty record allows nothing},
+  claim  = {An empty record allows nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recursive_delete.py -k test_with_no_created_path_every_recursive_delete_is_refused},
+}

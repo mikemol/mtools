@@ -729,6 +729,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/recursive_delete.py": {
+      "imports": [
+        "src/mikemol/hooks/deletecmd.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/refusal_log.py": {
       "imports": [],
       "reads": [],
@@ -2673,6 +2680,13 @@ GRAPH = {
     },
     "tests/test_reader_guard.py": {
       "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_recursive_delete.py": {
+      "imports": [
+        "src/mikemol/hooks/recursive_delete.py"
+      ],
       "reads": [],
       "typing_only": []
     },

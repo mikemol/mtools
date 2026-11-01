@@ -102,6 +102,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/ratchet_hook:suite",
         "//hooks/sites/src/mikemol/hooks/ratchet_pace:suite",
         "//hooks/sites/src/mikemol/hooks/read_guard:suite",
+        "//hooks/sites/src/mikemol/hooks/recursive_delete:suite",
         "//hooks/sites/src/mikemol/hooks/refusal_log:suite",
         "//hooks/sites/src/mikemol/hooks/repin:suite",
         "//hooks/sites/src/mikemol/hooks/repin_cli:suite",

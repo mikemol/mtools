@@ -224,3 +224,4 @@ websubset_otlp	The Codon Idiom Census as OTLP Gauge Rows, One Batch Per Reposito
 commit_span_trees	The Commit Span Records the Gated Tree Beside the Bazel Invocation Ids (W1613)
 dirtyread	The Dirty-Map Reader: a Repository's Dirty Paths, the Live Stacks' Frozen Paths and the Scratch Trees' Own (W2104)
 deletecmd	The Recursive-Delete Reader: the Targets of rm -r, git clean and find -delete, or a Refusal of a Form it Cannot Read (W1994)
+recursive_delete	The Recursive-Delete Refusal: a Delete Passes Only Inside a Path the Session Created, with the Remedy (W1995)
