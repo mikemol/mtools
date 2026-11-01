@@ -44,7 +44,8 @@ def _g(*args: str) -> str:
 
     """
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     return subprocess.run([git, *args], check=True, capture_output=True, text=True).stdout
 
 

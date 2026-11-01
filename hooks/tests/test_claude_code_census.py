@@ -13,12 +13,12 @@ import shutil
 import subprocess
 from typing import TYPE_CHECKING
 
+import pytest
+
 from mikemol.hooks import claude_code_census
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    import pytest
 
 
 def test_untracked_python_under_claude_is_an_offender() -> None:
@@ -69,7 +69,8 @@ def test_untracked_lists_ignored_and_unignored_files_but_not_tracked_ones(
     for name in [name for name in os.environ if name.startswith("GIT_")]:
         monkeypatch.delenv(name)
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     repo = tmp_path / "decoy"
     subprocess.run([git, "init", "--quiet", str(repo)], check=True)
     claude = repo / ".claude"

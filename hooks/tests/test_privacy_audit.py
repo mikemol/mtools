@@ -32,7 +32,8 @@ Row = dict[str, object]
 
 def _git(root: Path, *args: str) -> None:
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     ident = ["-c", "user.name=t", "-c", "user.email=t@example.invalid"]
     subprocess.run([git, "-C", str(root), *ident, *args], check=True, capture_output=True)
 

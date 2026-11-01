@@ -16,14 +16,14 @@ import subprocess
 import threading
 from typing import TYPE_CHECKING
 
+import pytest
+
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import stackgate, stackland
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
     from pathlib import Path
-
-    import pytest
 
     from mikemol.hooks.isolated import Done
 
@@ -57,7 +57,8 @@ def _git(root: Path, *args: str) -> str:
 
     """
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
     return done.stdout
 

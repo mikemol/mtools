@@ -14,12 +14,10 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import TYPE_CHECKING
+
+import pytest
 
 from mikemol.hooks.githook_pre_push import main
-
-if TYPE_CHECKING:
-    import pytest
 
 _REPO_STUB = Path(__file__).parent.parent.parent / ".githooks" / "pre-push"
 _REFS = (
@@ -42,7 +40,8 @@ def _decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     # reads its launcher from there: unset, so the decoy's own absent launcher is what is judged.
     monkeypatch.delenv("MIKEMOL_REAL_ROOT", raising=False)
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     repo = tmp_path / "decoy"
     subprocess.run([git, "init", "--quiet", str(repo)], check=True)
     (repo / ".githooks").mkdir()

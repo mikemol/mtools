@@ -44,7 +44,8 @@ def decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def _git(repo: Path, *args: str) -> None:
     """Run one git command in `repo`."""
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     subprocess.run(
         [git, "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t", *args],
         check=True,

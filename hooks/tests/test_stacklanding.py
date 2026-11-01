@@ -15,13 +15,14 @@ import shutil
 import subprocess
 from typing import TYPE_CHECKING
 
+import pytest
+
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import stackland, stacklanding
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import pytest
 
 _EXECUTABLE = 0o755
 _PUSH = "#!/bin/sh\ngit push origin HEAD:main\n"
@@ -35,7 +36,8 @@ def _git(root: Path, *args: str) -> str:
 
     """
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
     return done.stdout
 

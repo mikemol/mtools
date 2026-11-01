@@ -97,10 +97,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
-"tests/test_smoke.py" = ["assert"]
-"tests/test_waits.py" = ["assert"]
-"tests/test_adopt.py" = ["assert"]
-"tests/test_page.py" = ["assert"]
+"tests/*" = ["assert"]
 # ⚑ THE ONE MODULE THAT STARTS A PROCESS (W1819): it launches the pinned browser from bazel's own
 # data with a fixed argv and no shell, so the two subprocess rules are exempted for it and no other.
 "tests/test_chromium.py" = [

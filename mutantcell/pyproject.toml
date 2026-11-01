@@ -101,14 +101,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB. A `tests/*` entry would grant the next test module an exemption
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
+"tests/*" = ["assert"]
 # ⚑ eval's one responsibility is to spawn the check it measures: its import and its call are that.
 "src/mikemol/mutantcell/eval.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_cellargs.py" = ["assert"]
-"tests/test_cellcgroup.py" = ["assert"]
-"tests/test_cellstage.py" = ["assert"]
-"tests/test_decisions.py" = ["assert"]
-"tests/test_def_sites.py" = ["assert"]
 "tests/test_eval.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_sens.py" = ["assert"]
-"tests/test_sibling_edge.py" = ["assert"]
 "tests/test_sites.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

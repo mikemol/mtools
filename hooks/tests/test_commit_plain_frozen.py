@@ -16,6 +16,8 @@ import shutil
 import subprocess
 from typing import TYPE_CHECKING
 
+import pytest
+
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks.snapshot import NAMESPACE_ENV
 from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit_paths
@@ -23,7 +25,6 @@ from mikemol.hooks.stackfreeze import SNAP_ENV, at_submit_paths
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import pytest
 
 _ORIGINAL = "original\n"
 _SUBMITTED = "submitted bytes\n"
@@ -40,7 +41,8 @@ def _git(root: Path, *args: str) -> str:
 
     """
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
     return done.stdout
 

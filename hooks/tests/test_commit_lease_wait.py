@@ -27,6 +27,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TextIO
 
+import pytest
+
 _STAND_IN = textwrap.dedent(
     """\
     import fcntl
@@ -61,7 +63,8 @@ _WHO = ["--waypoint", "W1", "--subject", "s", "a.txt"]
 
 def _git(repo: Path, env: dict[str, str], *args: str) -> str:
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     done = subprocess.run(
         [git, "-C", str(repo), *args], check=True, capture_output=True, text=True, env=env
     )

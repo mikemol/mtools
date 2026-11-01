@@ -17,6 +17,8 @@ import shutil
 import subprocess
 from typing import TYPE_CHECKING
 
+import pytest
+
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import isolated
 from mikemol.hooks.snapshot import NAMESPACE_ENV
@@ -25,7 +27,6 @@ if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
     from pathlib import Path
 
-    import pytest
 
 _REQUEST = ck.Request(waypoint="W1", subject="isolated subject", paths=("a.txt",))
 _LOCKED = "fatal: Unable to create '.git/index.lock': File exists."
@@ -33,7 +34,8 @@ _LOCKED = "fatal: Unable to create '.git/index.lock': File exists."
 
 def _git(root: Path, *args: str) -> str:
     git = shutil.which("git")
-    assert git is not None
+    if git is None:
+        pytest.skip("git is not installed")
     done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
     return done.stdout
 
