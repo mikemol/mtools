@@ -218,6 +218,17 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/dirtyread.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_counts.py",
+        "src/mikemol/hooks/dirtymap.py",
+        "src/mikemol/hooks/scratch.py",
+        "src/mikemol/hooks/scratch_land.py",
+        "src/mikemol/hooks/stacksnap.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/entry.py": {
       "imports": [
         "src/mikemol/hooks/after_compaction.py",
@@ -827,6 +838,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/scratch_cli.py": {
       "imports": [
+        "src/mikemol/hooks/dirtyread.py",
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/scratch_land.py",
@@ -1889,6 +1901,17 @@ GRAPH = {
     "tests/test_dirtymap.py": {
       "imports": [
         "src/mikemol/hooks/dirtymap.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_dirtyread.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_counts.py",
+        "src/mikemol/hooks/dirtyread.py",
+        "src/mikemol/hooks/scratch.py",
+        "src/mikemol/hooks/scratch_cli.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []

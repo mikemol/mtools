@@ -21,7 +21,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import cast
 
-from mikemol.hooks import scratch, scratch_land, scratch_restore
+from mikemol.hooks import dirtyread, scratch, scratch_land, scratch_restore
 from mikemol.hooks.heartbeat import try_beat
 from mikemol.hooks.scratch import Run
 from mikemol.hooks.scratch_land import Out
@@ -33,8 +33,8 @@ BEAT_TOOL = "mikemol-scratch"
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mikemol-scratch")
-    parser.add_argument("verb", choices=("open", "close", "land", "restore"))
-    parser.add_argument("symbol")
+    parser.add_argument("verb", choices=("open", "close", "land", "restore", "dirty-map"))
+    parser.add_argument("symbol", nargs="?", default="", help="the card (not for dirty-map)")
     parser.add_argument("--repo", default=".", help="the checkout to cut the worktree from")
     parser.add_argument("--dist", help="open: also print the pytest recipe for this dist")
     parser.add_argument("--as-of-stack", metavar="KEY", help="restore: the live stack to read")
@@ -66,6 +66,8 @@ def _act(opts: dict[str, object], environ: Mapping[str, str], run: Run, out: Out
     repo = Path(str(opts["repo"])).resolve()
     root = scratch.root_of(environ)
     symbol = str(opts["symbol"])
+    if opts["verb"] == "dirty-map":
+        return dirtyread.dirty_map(repo, root, out)
     if opts["verb"] == "restore":
         return _restore(opts, repo, root, out)
     if opts["verb"] == "land":

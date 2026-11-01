@@ -899,3 +899,8 @@ src/mikemol/hooks/commit_span.py|tree-left-off-the-event|    pairs = \(\("invoca
 src/mikemol/hooks/commit_span.py|empty-fields-written|    return \{key: value for key, value in pairs if value\}|    return dict(pairs)|def=_joined
 src/mikemol/hooks/commit_span.py|tree-left-off-the-span-fields|\("entries", "invocations", "trees"\) if key in event|("entries", "invocations") if key in event|def=plan
 src/mikemol/hooks/isolated.py|gated-tree-line-not-printed|    done\.stdout = f"\{done\.stdout\}gated-tree: \{tree\.stdout\.strip\(\)\}\\n"|    pass|def=commit_planned
+src/mikemol/hooks/dirtyread.py|tree-outside-the-scratch-root-a-carrier|            if path\.parent == root:|            if True:|def=worktrees_under
+src/mikemol/hooks/dirtyread.py|missing-snapshot-read-as-a-stack|        if entries is not None:|        if True:|def=stack_paths
+src/mikemol/hooks/dirtyread.py|refused-status-read-as-clean|    if code != 0:|    if False:|def=_status
+src/mikemol/hooks/dirtyread.py|scratch-trees-not-read|    trees = worktrees_under\(listing, root\)|    trees = {}|def=dirty_map
+src/mikemol/hooks/dirtyread.py|dead-submissions-listed-live|    return \[row\.key for row in commit_counts\.live\(ledger / "commit\.counts"\)\]|    return []|def=live_keys

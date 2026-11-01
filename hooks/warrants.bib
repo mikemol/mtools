@@ -16898,3 +16898,45 @@
   claim  = {W1613: the output says `gated-tree: <sha>` and the sha is the committed tree.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_plain_frozen.py -k test_the_isolated_commit_prints_the_tree_it_gated},
 }
+
+@misc{hooks-dirtyread-only-worktrees-directly-under-the-scratch-root-are-carriers,
+  section = {dirtyread},
+  title  = {The main tree and a tree elsewhere are not scratch trees; w9 is},
+  claim  = {The main tree and a tree elsewhere are not scratch trees; w9 is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_only_worktrees_directly_under_the_scratch_root_are_carriers},
+}
+
+@misc{hooks-dirtyread-live-stacks-frozen-paths-are-read-and-a-missing-snapshot-carries-nothing,
+  section = {dirtyread},
+  title  = {Key 1 froze two files across two entries; key 2 has no snapshot},
+  claim  = {Key 1 froze two files across two entries; key 2 has no snapshot.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_a_live_stacks_frozen_paths_are_read_and_a_missing_snapshot_carries_nothing},
+}
+
+@misc{hooks-dirtyread-live-keys-are-the-alive-entries-of-the-commit-map,
+  section = {dirtyread},
+  title  = {An entry whose pid runs with its recorded start is live; a stale start is not},
+  claim  = {An entry whose pid runs with its recorded start is live; a stale start is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_the_live_keys_are_the_alive_entries_of_the_commit_map},
+}
+
+@misc{hooks-dirtyread-map-names-the-stack-the-scratch-tree-and-the-path-only-in-main,
+  section = {dirtyread},
+  title  = {a.py is in stack 1, c.py in scratch w9, loose.py nowhere, the queue file is excepted},
+  claim  = {a.py is in stack 1, c.py in scratch w9, loose.py nowhere, the queue file is excepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_the_map_names_the_stack_the_scratch_tree_and_the_path_only_in_main},
+}
+
+@misc{hooks-dirtyread-git-that-refuses-raises-rather-than-printing-a-clean-map,
+  section = {dirtyread},
+  title  = {A failing status is a ScratchError naming the verb},
+  claim  = {A failing status is a ScratchError naming the verb.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_a_git_that_refuses_raises_rather_than_printing_a_clean_map},
+}
+
+@misc{hooks-dirtyread-verb-prints-the-map-and-needs-no-card,
+  section = {dirtyread},
+  title  = {`dirty-map` takes no symbol and prints the rows then the count line},
+  claim  = {`dirty-map` takes no symbol and prints the rows then the count line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_dirtyread.py -k test_the_verb_prints_the_map_and_needs_no_card},
+}
