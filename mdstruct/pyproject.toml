@@ -425,7 +425,7 @@ fixture-parentheses = true
 # the two rules to disagree across. The entry stays because the exemption is still needed.
 # ⚑ THE CODE IS DESCRIBED RATHER THAN QUOTED, for the reason the `tests/*` entry above gives: the
 # arm that reads this block cannot distinguish a historical citation from a live claim.
-"tests/test_cli_flags.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_cli_flags.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑⚑ THE WRITE-MODE ARMS DRIVE THE CLI AS A SUBPROCESS, AND FOR A WRITE THAT IS THE ONLY HONEST
 # SUBJECT. Their claims are about what the COMMAND refuses and what it leaves on disk — a dry run
@@ -437,7 +437,7 @@ fixture-parentheses = true
 # pytest's `tmp_path`. Nothing untrusted reaches it and it never passes through a shell — which is
 # the same argument the two entries above make, granted per FILE so a module that also parsed or
 # rendered would not inherit it.
-"tests/test_sections.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_sections.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑⚑ THE DIRECTORY-OPERAND ARMS RUN REAL `git init` AND `git worktree add` IN A REPOSITORY MADE
 # UNDER `tmp_path`, because the claim is that registered worktrees are skipped and only git can

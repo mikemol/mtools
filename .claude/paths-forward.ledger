@@ -4984,3 +4984,8 @@
 2026-11-01T12:39:16Z  tick  W2209 minted    -         "Toy witnesses b and c: an overlapping HEAD-built stack and an undeclared worktree submit are both refused"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2189
 2026-11-01T12:40:05Z  tick  W2189 advanced  collapse  "atomized W2189 into W2207 harness, W2208 witness a, W2209 witnesses b and c; the toy end to end test is several landable units, none built this tick"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T13:21:40Z  tick  W2075 advanced  unblock   "slice 2a reblob stack-hooks-ba resubmitted with 7 assert tokens stripped (audiostruct buildtel corpus pathsforward) after a pace refusal"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T13:38:10Z  tick  W2075 held      collapse  "hooks-ba (reblob + 7 assert tokens + audiostruct shards 24) inflight, key 1793539464368275442, HEAD 74b808e8; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T14:08:08Z  tick  W2075 held      collapse  "hooks-ba still inflight (key 1793539464368275442), HEAD 74b808e8; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T14:38:24Z  tick  W2075 held      collapse  "hooks-ba still inflight (key 1793539464368275442), HEAD 74b808e8; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T14:40:59Z  status W2078 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T15:13:12Z  tick  W2078 advanced  unblock   "aheadrefusal wording module + 4 tests built in scratch W2246, registries held for hooks-ba; hooks-ba still inflight, HEAD 74b808e8"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

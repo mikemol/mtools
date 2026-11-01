@@ -17157,3 +17157,31 @@
   claim  = {A half-rewritten snapshot is never returned.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repinonto.py -k test_reblob_returns_none_when_git_refuses_a_blob},
 }
+
+@misc{hooks-aheadrefusal-no-unbuilt-path-is-no-refusal,
+  section = {aheadrefusal},
+  title  = {An empty list returns None, not an empty message},
+  claim  = {An empty list returns None, not an empty message.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aheadrefusal.py -k test_no_unbuilt_path_is_no_refusal},
+}
+
+@misc{hooks-aheadrefusal-refusal-names-the-paths-the-count-and-the-escape,
+  section = {aheadrefusal},
+  title  = {Two paths: both named, sorted, the count stated, the --freeze-from way out given},
+  claim  = {Two paths: both named, sorted, the count stated, the --freeze-from way out given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aheadrefusal.py -k test_the_refusal_names_the_paths_the_count_and_the_escape},
+}
+
+@misc{hooks-aheadrefusal-long-list-is-capped-and-says-how-many-are-hidden,
+  section = {aheadrefusal},
+  title  = {Seven paths: the first five by name, two hidden},
+  claim  = {Seven paths: the first five by name, two hidden.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aheadrefusal.py -k test_a_long_list_is_capped_and_says_how_many_are_hidden},
+}
+
+@misc{hooks-aheadrefusal-exactly-the-cap-hides-nothing,
+  section = {aheadrefusal},
+  title  = {Five paths show all five and no 'more'},
+  claim  = {Five paths show all five and no 'more'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_aheadrefusal.py -k test_exactly_the_cap_hides_nothing},
+}

@@ -18,6 +18,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/aheadrefusal.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/baselinedir.py": {
       "imports": [],
       "reads": [],
@@ -1497,6 +1502,13 @@ GRAPH = {
         "src/mikemol/hooks/hook_argv.py",
         "src/mikemol/hooks/host_facts.py",
         "src/mikemol/hooks/tick_gate.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_aheadrefusal.py": {
+      "imports": [
+        "src/mikemol/hooks/aheadrefusal.py"
       ],
       "reads": [],
       "typing_only": []
