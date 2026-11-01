@@ -11,6 +11,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -219,6 +220,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -427,6 +429,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -635,6 +638,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -843,6 +847,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -1051,6 +1056,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -1259,6 +1265,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -1467,6 +1474,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -1675,6 +1683,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -1883,6 +1892,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -2091,6 +2101,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -2299,6 +2310,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -2508,6 +2520,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -2717,6 +2730,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -2926,6 +2940,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",
@@ -3135,6 +3150,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/build_failure.py",
         "//hooks:src/mikemol/hooks/checker_context.py",

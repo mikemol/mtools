@@ -10,6 +10,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -90,6 +91,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -170,6 +172,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -250,6 +253,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -330,6 +334,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -410,6 +415,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -490,6 +496,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -570,6 +577,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -650,6 +658,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -730,6 +739,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -810,6 +820,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -891,6 +902,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -972,6 +984,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1053,6 +1066,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1134,6 +1148,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1215,6 +1230,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1296,6 +1312,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1377,6 +1394,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1458,6 +1476,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1539,6 +1558,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",
@@ -1620,6 +1640,7 @@ mutant_site(
     tests = "tests/test_requeue.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
         "//hooks:src/mikemol/hooks/commit_body.py",
         "//hooks:src/mikemol/hooks/commit_counts.py",

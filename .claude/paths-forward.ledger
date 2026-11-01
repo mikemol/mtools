@@ -4989,3 +4989,9 @@
 2026-11-01T14:38:24Z  tick  W2075 held      collapse  "hooks-ba still inflight (key 1793539464368275442), HEAD 74b808e8; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T14:40:59Z  status W2078 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T15:13:12Z  tick  W2078 advanced  unblock   "aheadrefusal wording module + 4 tests built in scratch W2246, registries held for hooks-ba; hooks-ba still inflight, HEAD 74b808e8"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T15:38:19Z  tick  W2078 held      collapse  "hooks-bb (aheadrefusal + mdstruct tokens) inflight, key 1793546858853786843, HEAD 8f8140dc; W2075 slice 2a landed 8f8140dc"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T16:08:01Z  tick  W2078 held      collapse  "hooks-bb still inflight (key 1793546858853786843), HEAD 8f8140dc; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T16:37:54Z  tick  W2078 held      collapse  "hooks-bb still inflight (key 1793546858853786843), HEAD 8f8140dc; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T17:20:15Z  tick  W2078 held      collapse  "hooks-bc (commit_kata wiring + importdag/pkgbuild exemption fall) inflight, key 1793553448332412893, HEAD 90fdccef; W2078 wording module landed 90fdccef"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T17:38:47Z  tick  W2078 held      collapse  "hooks-bc still inflight (key 1793553448332412893), HEAD 90fdccef; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T18:08:49Z  tick  W2078 held      collapse  "hooks-bc still inflight (key 1793553448332412893), HEAD 90fdccef; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

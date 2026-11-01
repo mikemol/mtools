@@ -116,6 +116,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/commit_kata.py": {
       "imports": [
+        "src/mikemol/hooks/aheadrefusal.py",
         "src/mikemol/hooks/commit_body.py",
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_gauge.py",
@@ -139,6 +140,7 @@ GRAPH = {
         "src/mikemol/hooks/round_wire.py",
         "src/mikemol/hooks/shardgate.py",
         "src/mikemol/hooks/snapshot.py",
+        "src/mikemol/hooks/stackahead.py",
         "src/mikemol/hooks/stackbuildfiles.py",
         "src/mikemol/hooks/stackdrift.py",
         "src/mikemol/hooks/stackfreeze.py",

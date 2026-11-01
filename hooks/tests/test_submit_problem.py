@@ -87,3 +87,37 @@ def test_a_stacks_own_failing_test_is_asked_after_the_cheap_refusals(
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "//hooks:test_x fails"
     _set(monkeypatch, None, None, None, "round")
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "round"
+
+
+def test_a_file_shared_with_a_stack_ahead_is_refused_after_the_build_files_before_the_grid(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2078: the unbuilt shared paths are named, with the way out; earlier findings still win."""
+    seen: list[str] = []
+
+    def unbuilt(snap: str) -> list[str]:
+        seen.append(snap)
+        return ["hooks/warrants.bib"]
+
+    _set(monkeypatch, None, None, "grid")
+    monkeypatch.setattr(commit_kata, "_unbuilt_on", unbuilt)
+    said = commit_kata.submit_problem(_ROOT, _STACK, _ENV)
+    assert said is not None
+    assert "hooks/warrants.bib" in said
+    assert "--freeze-from" in said
+    assert seen == ["snap"]
+    _set(monkeypatch, None, "build", "grid")
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "build"
+
+
+def test_a_stack_sharing_nothing_with_a_stack_ahead_goes_on_to_the_grid(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2078: no unbuilt path is no refusal, so the next refusal speaks."""
+
+    def nothing(snap: str) -> list[str]:
+        return [snap][:0]
+
+    _set(monkeypatch, None, None, "grid")
+    monkeypatch.setattr(commit_kata, "_unbuilt_on", nothing)
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "grid"

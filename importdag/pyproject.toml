@@ -112,7 +112,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # process, so `assert` is the only exemption it needs.
 # ⚑ ITS WITNESSES BUILD A REAL GIT REPOSITORY, because the defect under test is what git tracks.
 "tests/test_graph_files.py" = [
-    "assert",
     "start-process-with-partial-path",
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
@@ -130,23 +129,19 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
 # by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
 "tests/test_closure.py" = [
-    "assert",
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
 "tests/test_imports.py" = [
-    "assert",
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
 "tests/test_dagbzl.py" = [
-    "assert",
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
 # ⚑ ITS WITNESSES RUN THE CENSUS AS `python -m` IN A CHILD: the exit code is the contract.
 "tests/test_closure_census.py" = [
-    "assert",
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
@@ -166,7 +161,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ ITS WITNESSES RUN A REAL CHILD INTERPRETER, because the defect under test is what a fresh
 # process can import.
 "tests/test_dagnames.py" = [
-    "assert",
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]

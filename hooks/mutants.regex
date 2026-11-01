@@ -914,6 +914,7 @@ src/mikemol/hooks/aheadrefusal.py|no-path-still-refused|    if not unbuilt:|    
 src/mikemol/hooks/aheadrefusal.py|cap-one-too-many|    shown = sorted\(unbuilt\)\[:SHOWN\]|    shown = sorted(unbuilt)[:SHOWN + 1]|def=refusal
 src/mikemol/hooks/aheadrefusal.py|hidden-count-never-said|    more = f" and \{hidden\} more" if hidden else ""|    more = ""|def=refusal
 src/mikemol/hooks/aheadrefusal.py|paths-in-submitted-order|    shown = sorted\(unbuilt\)\[:SHOWN\]|    shown = list(unbuilt)[:SHOWN]|def=refusal
+src/mikemol/hooks/commit_kata.py|shared-files-never-asked|        or _ahead_refusal\(_unbuilt_on\(snap\)\)|        or _ahead_refusal([])|def=submit_problem
 src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
 src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
 src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row

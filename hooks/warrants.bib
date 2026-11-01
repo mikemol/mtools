@@ -17185,3 +17185,17 @@
   claim  = {Five paths show all five and no 'more'.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_aheadrefusal.py -k test_exactly_the_cap_hides_nothing},
 }
+
+@misc{hooks-submit-problem-file-shared-with-a-stack-ahead-is-refused-after-the-build-files-before-the-grid,
+  section = {shardgate},
+  title  = {W2078: the unbuilt shared paths are named, with the way out; earlier findings still win},
+  claim  = {W2078: the unbuilt shared paths are named, with the way out; earlier findings still win.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_file_shared_with_a_stack_ahead_is_refused_after_the_build_files_before_the_grid},
+}
+
+@misc{hooks-submit-problem-stack-sharing-nothing-with-a-stack-ahead-goes-on-to-the-grid,
+  section = {shardgate},
+  title  = {W2078: no unbuilt path is no refusal, so the next refusal speaks},
+  claim  = {W2078: no unbuilt path is no refusal, so the next refusal speaks.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_stack_sharing_nothing_with_a_stack_ahead_goes_on_to_the_grid},
+}
