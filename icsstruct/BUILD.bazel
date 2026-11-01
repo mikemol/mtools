@@ -6,6 +6,7 @@
 # `@icsstruct_dev` is declared in MODULE.bazel beside this distribution's birth (W254).
 load("@icsstruct_deps//:requirements.bzl", "requirement")
 load("@icsstruct_dev//:requirements.bzl", dev_all_requirements = "all_requirements", dev_requirement = "requirement")
+load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
@@ -103,8 +104,13 @@ sh_test(
     size = "small",
 )
 
-sh_test(
+# ⚑ SHARDED (W2210's lesson): a single `sh_test` times out at 300 s wall once this distribution's
+# pyproject.toml changes, with no assertion failing; shards bound each run by CPU instead.
+mutants_sharded(
     name = "mutants",
+    shards = 8,
+    cpu_budget = 300,
+    cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
     args = [
         "$(location :pyproject.toml)",
