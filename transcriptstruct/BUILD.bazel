@@ -154,6 +154,7 @@ venv_from_hub(
     # ⚑ THE SAME ENTRY AS pyproject's [project.scripts], as //pathsforward:.venv mirrors its own.
     console_scripts = {
         "mikemol-transcriptstruct": "mikemol.transcriptstruct.cli:main",
+        "mikemol-label-compare": "mikemol.transcriptstruct.labelcompare:main",
     },
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",

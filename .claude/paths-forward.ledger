@@ -5000,3 +5000,13 @@
 2026-11-01T18:43:27Z  tick  W2210 advanced  unblock   "pkgbuild:mutants converted to mutants_sharded (8 shards) in main, sharded run started; W2078 wiring landed 4f0591a3"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T18:44:49Z  status W2210 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-01T18:45:10Z  status W2038 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:08:11Z  tick  W2210 held      collapse  "stack-pkgbuild-w2210 (mutants sharded + 8 assert tokens) inflight, key 1793559199771755682, HEAD 4f0591a3; W2038 holds an earlier landing 5fac86ab, its remaining quiet-close and R86 halves unbuilt"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:18:15Z  status W2210 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:38:16Z  status W2075 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:38:16Z  status W2078 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:38:16Z  status W2104 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:38:36Z  status W2052 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T19:40:28Z  tick  W2052 advanced  collapse  "W2052 read: part (a) already landed 25ce170b, part (b) is the operator's trust decision, part (c) fixtures is the buildable remainder; returned W2075 W2078 W2104 to ready; gate empty, HEAD a4bb4f7a, no stack this tick"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T20:19:54Z  tick  W2052 held      collapse  "console script stack refused on pace and reverted: the cheap exemption falls in the owed keys are spent (W2200 policy evidence recorded); gate empty, HEAD a4bb4f7a"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-01T20:41:18Z  tick  W2211 minted    -         "Shard icsstruct:mutants and pay one exemption token"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-01T20:41:54Z  tick  W2211 advanced  unblock   "icsstruct:mutants sharded and its redundant assert token stripped in main; sharded bazel run started with the gate empty; HEAD a4bb4f7a"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

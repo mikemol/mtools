@@ -28,6 +28,8 @@ dependencies = []
 
 [project.scripts]
 mikemol-transcriptstruct = "mikemol.transcriptstruct.cli:main"
+# W2052: compares two labellers' labels over a blind sample, per kind, as counts `k of n`.
+mikemol-label-compare = "mikemol.transcriptstruct.labelcompare:main"
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
