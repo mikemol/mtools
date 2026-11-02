@@ -38,10 +38,13 @@ Homepage = "https://github.com/mikemol/mtools"
 [tool.uv.sources]
 mikemol-mutation = { path = "../mutation" }
 mikemol-importdag = { path = "../importdag" }
+mikemol-procrun = { path = "../procrun" }
 
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2223) IN THE DEV GROUP ONLY: test_sites starts its children through
+# the one stdlib-only seam instead of a per-file exemption.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -88,7 +91,7 @@ select = ["ALL"]
 ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma"]
 
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.mutation", "mikemol.importdag"]
+known-third-party = ["mikemol.mutation", "mikemol.importdag", "mikemol.procrun"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
@@ -105,4 +108,3 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ eval's one responsibility is to spawn the check it measures: its import and its call are that.
 "src/mikemol/mutantcell/eval.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_eval.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_sites.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

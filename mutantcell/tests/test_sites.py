@@ -4,9 +4,10 @@
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import capture
 
 from mikemol.mutantcell import sites
 
@@ -98,19 +99,12 @@ def test_main_reads_the_process_arguments_when_none_are_given(
 def test_the_module_runs_as_a_real_child_and_its_specs_drive_the_mutator(tmp_path: Path) -> None:
     """A child interpreter prints the specs, and the sibling mutator accepts one by module path."""
     path = _plant(tmp_path)
-    listed = subprocess.run(
-        [sys.executable, "-m", "mikemol.mutantcell.sites", str(path)],
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=60,
-    )
+    listed = capture([sys.executable, "-m", "mikemol.mutantcell.sites", str(path)], timeout=60)
+    assert listed.returncode == 0, listed.stderr
     assert listed.stdout.splitlines()[0] == f"{path}\tf"
-    mutated = subprocess.run(
+    mutated = capture(
         [sys.executable, "-m", "mikemol.mutation.mutate", str(path), "flip:f#0"],
-        capture_output=True,
-        text=True,
-        check=True,
         timeout=60,
     )
+    assert mutated.returncode == 0, mutated.stderr
     assert "if not (v):" in mutated.stdout

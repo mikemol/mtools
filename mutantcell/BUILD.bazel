@@ -58,6 +58,7 @@ py_library(
             ":mutantcell",
             "//importdag:importdag",
             "//mutation:mutation",
+            "//procrun:procrun",  # W2223: test_sites starts its children through procrun.capture
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
@@ -165,6 +166,7 @@ py_binary(
         # ⚑ How mypy sees the siblings inside the sandbox (the runner cannot see pip-installed siblings).
         "//importdag:importdag",
         "//mutation:mutation",
+        "//procrun:procrun",  # W2223: the tests import it, so mypy must resolve it
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -203,6 +205,7 @@ venv_from_hub(
         "//atomicwrite:atomicwrite",
         "//importdag:importdag",
         "//mutation:mutation",
+        "//procrun:procrun",
     ],
 )
 
