@@ -5,12 +5,12 @@
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from mikemol.importdag import dagnames
+from mikemol.procrun.proc import capture
 
 from mikemol.gatecheck import witness_reach
 
@@ -176,12 +176,7 @@ def test_module_runs_as_a_script_with_the_exit_code(tmp_path: Path) -> None:
     """Run as a module, the exit status is the failure verdict."""
     root = _repo(tmp_path, only=("needs_dep.py",))
     env = dagnames.child_env(root)
-    r = subprocess.run(
-        [sys.executable, "-m", "mikemol.gatecheck.witness_reach", "--root", str(root)],
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-    )
+    argv = [sys.executable, "-m", "mikemol.gatecheck.witness_reach", "--root", str(root)]
+    r = capture(argv, env=env)
     assert r.returncode == 1
     assert "0 of 1 load cleanly" in r.stdout

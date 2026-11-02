@@ -42,7 +42,10 @@ Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2212) IN THE DEV GROUP ONLY: the tests that start a child (git, a
+# module as a script) reach it through the one stdlib-only seam instead of each spelling the
+# subprocess rules in a per-file exemption. The runtime dependency list is unchanged.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -57,6 +60,7 @@ environments = ["sys_platform == 'linux'"]
 
 [tool.uv.sources]
 mikemol-importdag = { path = "../importdag" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -99,6 +103,9 @@ fixture-parentheses = true
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \(c\) \d{4} Mike Mol'
 
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
+
 # ⚑⚑ PER FILE, NEVER A GLOB. Each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
@@ -111,7 +118,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/gatecheck/witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # siblingpin runs git in a sibling checkout, argv composed from its own constants (W1018).
 "src/mikemol/gatecheck/siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# test_rungate and test_hook_index model the production module's own subprocess result (a
+# CompletedProcess, a CalledProcessError) as a fake, so naming those types is their subject.
 "tests/test_hook_index.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_rungate.py" = ["suspicious-subprocess-import"]
-"tests/test_witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

@@ -53,6 +53,7 @@ py_library(
         deps = [
             ":gatecheck",
             "//importdag:importdag",
+            "//procrun:procrun",  # W2212: the tests start their children through procrun.capture
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
@@ -183,6 +184,7 @@ py_binary(
     deps = [
         # ⚑ How mypy sees the sibling inside the sandbox (the runner cannot see pip-installed siblings).
         "//importdag:importdag",
+        "//procrun:procrun",  # W2212: the tests import it, so mypy must resolve it
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -221,7 +223,12 @@ venv_from_hub(
     # ⚑ A TRANSITIVE SIBLING MUST BE LISTED TOO (measured, W571): `srcs` takes the named target's own
     # files only, not its py_library deps, so importdag's own sibling (atomicwrite) is named here as well;
     # without it `:venv` and `:mutants` fail with `No module named 'mikemol.atomicwrite'`.
-    srcs = glob(["src/mikemol/gatecheck/**"]) + ["//importdag:importdag", "//atomicwrite:atomicwrite"],
+    # The dev venv also carries procrun (W2212), which the tests import, so the mutation gate does too.
+    srcs = glob(["src/mikemol/gatecheck/**"]) + [
+        "//importdag:importdag",
+        "//atomicwrite:atomicwrite",
+        "//procrun:procrun",
+    ],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

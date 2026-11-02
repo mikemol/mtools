@@ -12,9 +12,10 @@ from __future__ import annotations
 
 import json
 import shutil
-import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
+
+from mikemol.procrun.proc import capture
 
 from mikemol.gatecheck import siblingpin
 
@@ -29,12 +30,9 @@ _FAKE_ROOT = Path("/x")
 
 
 def _git(root: Path, *args: str) -> str:
-    done = subprocess.run(
-        [_GIT, "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    argv = [_GIT, "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args]
+    done = capture(argv)
+    assert done.returncode == 0, done.stderr
     return done.stdout.strip()
 
 
