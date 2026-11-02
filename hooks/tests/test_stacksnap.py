@@ -12,24 +12,20 @@ round-trips.
 
 from __future__ import annotations
 
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata, stackland, stacksnap
+from mikemol.hooks import commit_kata, scratch, stackland, stacksnap
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 RUN = commit_kata.run_git_in
-GIT = shutil.which("git") or "git"
 IDENTITY = ["-c", "user.email=t@e.invalid", "-c", "user.name=t"]
 
 
 def _git(root: Path, *args: str) -> str:
-    argv = [GIT, "-C", str(root), *args]
-    done = subprocess.run(argv, capture_output=True, text=True, check=True)
-    out: str = done.stdout
+    code, out = scratch.git_out(["git", "-C", str(root), *args])
+    assert code == 0, out
     return out
 
 

@@ -2080,7 +2080,8 @@
     "tests/test_gateenv.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
-        "src/mikemol/hooks/gateenv.py"
+        "src/mikemol/hooks/gateenv.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2633,6 +2634,7 @@
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/queuecarry.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackrun.py"
       ],
       "reads": [],
@@ -2972,6 +2974,7 @@
     },
     "tests/test_snapshot.py": {
       "imports": [
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -3013,6 +3016,7 @@
     "tests/test_stackfreeze.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackrun.py"
       ],
@@ -3092,6 +3096,7 @@
     "tests/test_stacksnap.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackland.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
@@ -3101,6 +3106,7 @@
     "tests/test_stacktree.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktree.py"
       ],

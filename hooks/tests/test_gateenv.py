@@ -12,25 +12,21 @@ both run the repository's hook. A non-gate command keeps the whole environment.
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata, gateenv
+from mikemol.hooks import commit_kata, gateenv, scratch
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     import pytest
 
-GIT = shutil.which("git") or "git"
 HOOK = "#!/bin/sh\nenv > hook-env.txt\nexit 0\n"
 
 
 def _git(root: Path, *args: str) -> str:
-    argv = [GIT, "-C", str(root), *args]
-    done = subprocess.run(argv, capture_output=True, text=True, check=True)
-    out: str = done.stdout
+    code, out = scratch.git_out(["git", "-C", str(root), *args])
+    assert code == 0, out
     return out
 
 

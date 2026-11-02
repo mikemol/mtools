@@ -9,23 +9,21 @@ uncommitted (nemik's stacks 427 and 428).
 
 from __future__ import annotations
 
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata, queuecarry
+from mikemol.hooks import commit_kata, queuecarry, scratch
 from mikemol.hooks.stackrun import Item
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 RUN = commit_kata.run_git_in
-GIT = shutil.which("git") or "git"
 QUEUE = ".claude/paths-forward.json"
 
 
 def _git(root: Path, *args: str) -> None:
-    subprocess.run([GIT, "-C", str(root), *args], capture_output=True, text=True, check=True)
+    code, out = scratch.git_out(["git", "-C", str(root), *args])
+    assert code == 0, out
 
 
 def _repo(tmp_path: Path) -> Path:

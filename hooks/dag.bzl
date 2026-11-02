@@ -2083,7 +2083,8 @@ GRAPH = {
     "tests/test_gateenv.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
-        "src/mikemol/hooks/gateenv.py"
+        "src/mikemol/hooks/gateenv.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2636,6 +2637,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/queuecarry.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackrun.py"
       ],
       "reads": [],
@@ -2975,6 +2977,7 @@ GRAPH = {
     },
     "tests/test_snapshot.py": {
       "imports": [
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -3016,6 +3019,7 @@ GRAPH = {
     "tests/test_stackfreeze.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackrun.py"
       ],
@@ -3095,6 +3099,7 @@ GRAPH = {
     "tests/test_stacksnap.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackland.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
@@ -3104,6 +3109,7 @@ GRAPH = {
     "tests/test_stacktree.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktree.py"
       ],

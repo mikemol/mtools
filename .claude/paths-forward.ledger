@@ -5061,3 +5061,15 @@
 2026-11-02T04:23:01Z  status W2078 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T04:28:20Z  status W2222 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T04:29:02Z  tick  W2222 advanced  collapse  "stack-pathwalk-gatecheck landed 10319fe8 and fe7fb5c2: pathwalk and part of gatecheck off subprocess in tests; W2222 done; HEAD fe7fb5c2"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T05:24:50Z  status W2216 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T05:27:26Z  status W2218 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T05:56:30Z  status W2038 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:13:11Z  status W1122 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:14:35Z  tick  W2216 advanced  sweep     "W2216+W2218 stack inflight in gate key 1793596411656478097; W2038 and W1122 read and recorded; scratch W2258 open"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:20:56Z  status W2218 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:21:16Z  status W1122 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:21:36Z  status W2207 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:22:01Z  status W2216 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:46:29Z  tick  W2223 minted    -         "mutantcell test_sites starts its two children through procrun.capture and drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T06:55:22Z  status W2223 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T06:56:47Z  tick  W2207 advanced  sweep     "stack-mutantcell-hooksgit (W2223 keyed fall + W2207 six hooks tests) submitted, gate pending; W2216 and W2218 landed earlier"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -6,12 +6,11 @@ from __future__ import annotations
 
 import fcntl
 import os
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.hooks import snapshot
+from mikemol.hooks import scratch, snapshot
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -20,10 +19,9 @@ _SHA = 40
 
 
 def _git(root: Path, *args: str) -> str:
-    done = subprocess.run(
-        ["git", "-C", str(root), *args], capture_output=True, text=True, check=True
-    )
-    return done.stdout
+    code, out = scratch.git_out(["git", "-C", str(root), *args])
+    assert code == 0, out
+    return out
 
 
 def _repo(tmp_path: Path) -> Path:
