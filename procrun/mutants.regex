@@ -25,3 +25,7 @@ src/mikemol/procrun/proc.py|capture-drops-the-input|        input=input_text,|  
 src/mikemol/procrun/proc.py|capture-bytes-drops-the-timeout|        timeout=timeout,|        timeout=None,|def=capture_bytes
 src/mikemol/procrun/proc.py|capture-bytes-drops-the-input|        input=input_bytes,|        input=None,|def=capture_bytes
 src/mikemol/procrun/proc.py|capture-bytes-raises-on-failure|check=False|check=True|def=capture_bytes
+
+# W2242: capture_stdout leaves stderr to the caller and still passes its timeout.
+src/mikemol/procrun/proc.py|capture-stdout-captures-stderr|        stderr=None,|        stderr=subprocess.PIPE,|def=capture_stdout
+src/mikemol/procrun/proc.py|capture-stdout-drops-the-timeout|        timeout=timeout,|        timeout=None,|def=capture_stdout

@@ -22,13 +22,14 @@ import argparse
 import http.client
 import json
 import os
-import subprocess
 import sys
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import override
 from urllib.parse import parse_qs, urlencode, urlsplit
+
+from mikemol.procrun.proc import capture_bytes, capture_stdout
 
 from mikemol.gmailstruct.auth import DecryptError, ExchangeError, Poster, Runner, decrypt, exchange
 from mikemol.gmailstruct.consent import (
@@ -163,11 +164,9 @@ def age_encrypt(recipient: str, out: Path, binary: str = "age") -> Encrypt:
     """
 
     def encrypt(token: str) -> None:
-        proc = subprocess.run(
+        proc = capture_bytes(
             [binary, "--encrypt", "--recipient", recipient],
-            input=token.encode(),
-            capture_output=True,
-            check=False,
+            input_bytes=token.encode(),
             timeout=_TIMEOUT_S,
         )
         if proc.returncode != 0:
@@ -194,9 +193,7 @@ def age_runner(binary: str = "age") -> Runner:
     """
 
     def run(argv: list[str]) -> tuple[int, bytes, bytes]:
-        proc = subprocess.run(
-            [binary, *argv[1:]], stdout=subprocess.PIPE, check=False, timeout=_TOUCH_S
-        )
+        proc = capture_stdout([binary, *argv[1:]], timeout=_TOUCH_S)
         return proc.returncode, proc.stdout, b""
 
     return run

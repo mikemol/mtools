@@ -91,3 +91,38 @@ def capture_bytes(
         check=False,
         timeout=timeout,
     )
+
+
+def capture_stdout(
+    argv: Sequence[str],
+    cwd: Path | None = None,
+    env: Mapping[str, str] | None = None,
+    timeout: float | None = None,
+) -> CompletedBytes:
+    """Run `argv` to completion capturing only its STDOUT, as bytes; stderr is the caller's.
+
+    ⚑ A CHILD THAT TALKS TO A PERSON THROUGH STDERR (mtools:W2242, gmailstruct W382):
+    age-plugin-yubikey asks for the PIN and says to touch the key on age's stderr, so capturing
+    it hides the prompt and the run fails naming no cause. Its stdout, which carries the secret,
+    is captured and never printed.
+
+    Args:
+        argv: The program and its arguments; never interpreted by a shell.
+        cwd: The directory to run in; the caller's when omitted.
+        env: The child's whole environment; the caller's when omitted.
+        timeout: Seconds to wait before giving up on the child; no limit when omitted.
+
+    Returns:
+        The finished process, with its return code and its stdout as bytes; its stderr went to the
+        caller's, so it is not in the result.
+
+    """
+    return subprocess.run(
+        list(argv),
+        cwd=cwd,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=None,
+        check=False,
+        timeout=timeout,
+    )

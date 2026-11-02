@@ -63,3 +63,10 @@
             abandoned.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_bytes_does_not_raise_on_a_nonzero_status_and_honours_its_timeout},
 }
+
+@misc{procrun-proc-capture-stdout-captures-stdout-bytes-and-lets-stderr-reach-the-terminal,
+  section = {proc},
+  title  = {W2242: only stdout is the result; the child's stderr prompt goes to the caller's stderr},
+  claim  = {W2242: only stdout is the result; the child's stderr prompt goes to the caller's stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_stdout_captures_stdout_bytes_and_lets_stderr_reach_the_terminal},
+}

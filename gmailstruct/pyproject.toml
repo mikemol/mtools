@@ -22,7 +22,9 @@ classifiers = [
 ]
 
 # ⚑ THE RECORD LAYER IS STDLIB ONLY. Auth (W288) and the HTTP client never reach it.
-dependencies = []
+# ⚑ ONE RUNTIME DEPENDENCY, ALSO STANDARD LIBRARY ONLY (W2242): `mikemol-procrun`, the seam the age
+# calls in cli.py run through instead of spelling the subprocess rules in a per-file exemption.
+dependencies = ["mikemol-procrun"]
 
 [project.scripts]
 mikemol-gmail = "mikemol.gmailstruct.cli:main"
@@ -45,6 +47,12 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
+
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -94,10 +102,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-"src/mikemol/gmailstruct/cli.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
+# ⚑ cli.py RUNS age THROUGH `procrun` (W2242), so it carries no subprocess exemption.
 # ⚑ THE PLANTED TOKEN IS THE TEST'S SUBJECT: a synthetic value, planted so each arm can show it
 # is absent from every traceback. It is a hard-coded "password" by construction, and authenticates
 # nothing.

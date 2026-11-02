@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.procrun.proc import TimeoutExpired, capture, capture_bytes
+from mikemol.procrun.proc import TimeoutExpired, capture, capture_bytes, capture_stdout
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -84,3 +84,13 @@ def test_capture_bytes_does_not_raise_on_a_nonzero_status_and_honours_its_timeou
     assert failed.returncode == _FOUR
     with pytest.raises(TimeoutExpired):
         capture_bytes([sys.executable, "-c", _SLEEP], timeout=_SHORT)
+
+
+def test_capture_stdout_captures_stdout_bytes_and_lets_stderr_reach_the_terminal(
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    """W2242: only stdout is the result; the child's stderr prompt goes to the caller's stderr."""
+    code = "import sys; sys.stdout.buffer.write(b'\\xff\\x01'); sys.stderr.write('touch your key')"
+    done = capture_stdout([sys.executable, "-c", code])
+    assert (done.returncode, done.stdout) == (0, b"\xff\x01")
+    assert "touch your key" in capfd.readouterr().err

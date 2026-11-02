@@ -24,6 +24,8 @@ py_library(
     data = glob(["src/mikemol/gmailstruct/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    # ⚑ THE SIBLING EDGE (W2242): standard library only, declared in pyproject.toml for uv.
+    deps = ["//procrun:procrun"],
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The fixtures are inline: each is a few
@@ -47,9 +49,13 @@ py_library(
         size = "small",
         deps = [
             ":gmailstruct",
+            "//procrun:procrun",
             dev_requirement("pytest"),
         ],
         imports = ["src"],
+        # ⚑ Two source roots on sys.path (this dist and procrun): legacy implicit `__init__.py`
+        # creation would shadow the `mikemol` namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -119,6 +125,7 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//procrun:procrun",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -150,5 +157,5 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/gmailstruct/**"]),
+    srcs = glob(["src/mikemol/gmailstruct/**"]) + ["//procrun:procrun"],
 )
