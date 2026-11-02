@@ -11,8 +11,9 @@ it stays out of the decoy. The decoy is always a temp repository — never this 
 from __future__ import annotations
 
 import os
-import subprocess
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import capture
 
 from mikemol.fence import git_env
 
@@ -60,7 +61,7 @@ def _git(env: dict[str, str], *args: str) -> str:
         git's stdout.
 
     """
-    proc = subprocess.run(["git", *args], env=env, capture_output=True, text=True, check=False)
+    proc = capture(["git", *args], env=env)
     assert proc.returncode == 0, f"git {' '.join(args)}: {proc.stderr.strip()}"
     return proc.stdout
 

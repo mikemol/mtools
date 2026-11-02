@@ -56,7 +56,10 @@ Homepage = "https://github.com/mikemol/mtools"
 # ⚑ THE COST IS DELIBERATE: bumping ruff is now a two-file change (`MODULE.bazel` and every dev
 # group), which is correct rather than annoying — they were always required to move together, and
 # only one of them said so.
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2213) IN THE DEV GROUP ONLY, NEVER IN `dependencies`: the tests that
+# start a child (git, here) reach it through the one stdlib-only seam instead of each spelling the
+# subprocess rules in a per-file exemption. The runtime stays empty, for the reason above.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -73,6 +76,9 @@ include = ["mikemol.*"]
 # is a Linux kernel interface. A macOS install would resolve, import, and fail at the first read
 # of /proc/self/cgroup — so the refusal belongs at resolution time.
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -167,6 +173,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 #   S606 (no shell) is a real contradiction — but a LOCAL one, so it carries a `noqa` at the one
 #     line it applies to with the argument beside it, where a reader meets it. A file-scoped
 #     entry would have granted it to every future call site in the module.
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
+
 [tool.ruff.lint.per-file-ignores]
 # ⚑⚑⚑ `no-self-use` IS THE SECOND ENTRY, AND IT MEETS THE SAME BAR: A GENUINE CONTRADICTION.
 # It fires on 33 methods across `test_caps.py`, `test_cli.py` and `test_fence.py` — every one a
@@ -216,18 +225,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # the `/proc` read and the signal are the parts an injected fake cannot vouch for. The arguments are
 # fixed literals and a temp path. ⚑ SCOPED TO THE ONE FILE: another test shelling out is a finding.
 "tests/test_watcher.py" = [
-    "suspicious-subprocess-import",
-    "subprocess-without-shell-equals-true",
-    "start-process-with-partial-path",
-]
-
-# ⚑⚑ ONE FILE RUNS `git` AS A SUBPROCESS, AND RUNNING IT IS THE SUBJECT. `test_git_env.py` codifies
-# the negative control for `git_env.clean_env`: a fixture commit under a hostile `GIT_DIR` aimed at a
-# DECOY repository must land in the decoy unscrubbed and nowhere near it scrubbed. That cannot be
-# asserted without executing git, and `git` is a host tool found on PATH like the fixture code it
-# stands in for. The arguments are fixed literals and temp paths, never input.
-# ⚑ SCOPED TO THE ONE FILE: another test shelling out is a finding to argue about, not an inheritance.
-"tests/test_git_env.py" = [
     "suspicious-subprocess-import",
     "subprocess-without-shell-equals-true",
     "start-process-with-partial-path",

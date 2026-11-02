@@ -60,8 +60,12 @@ py_library(
         deps = [
             ":fence",
             dev_requirement("pytest"),
+            "//procrun:procrun",  # W2213: test_git_env starts git through procrun.capture
         ],
         imports = ["src"],
+        # ⚑ Two source roots plus legacy implicit `__init__.py` files would turn `mikemol` into a
+        # regular package from the first root and shadow the namespace (W566), as in ratchet.
+        legacy_create_init = 0,
     )
     for src in glob(
         ["tests/test_*.py"],
@@ -269,6 +273,7 @@ py_binary(
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
+        "//procrun:procrun",  # W2213: the tests import it, so mypy must resolve it
     ],
 )
 
@@ -334,7 +339,8 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/fence/**"]),
+    # ⚑ The dev venv carries the sibling the tests import (W2213), so the mutation gate imports it.
+    srcs = glob(["src/mikemol/fence/**"]) + ["//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
