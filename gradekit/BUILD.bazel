@@ -25,11 +25,12 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ SIBLINGS = the three distributions this one imports. The shipping hub is empty on purpose.
+# ⚑ SIBLINGS = the four distributions this one imports. The shipping hub is empty on purpose.
 SIBLINGS = [
     "//grade:grade",
     "//bibparse:bibparse",
     "//atomicwrite:atomicwrite",
+    "//procrun:procrun",
 ]
 
 # SIBLING (1): the library depends on them.

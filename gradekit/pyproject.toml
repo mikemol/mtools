@@ -24,7 +24,9 @@ classifiers = [
 # `mikemol-atomicwrite` (the durable write). They are path sources below, NOT editable (an editable
 # install hides the sibling from mypy), and in Bazel they are `py_library` deps, so the pip hubs
 # stay empty and independent of them.
-dependencies = ["mikemol-grade", "mikemol-bibparse", "mikemol-atomicwrite"]
+# ⚑ AND `mikemol-procrun` (W2218): the verdict cell starts the coherence tool through the one
+# stdlib-only seam instead of spelling the subprocess rules in a per-file exemption.
+dependencies = ["mikemol-grade", "mikemol-bibparse", "mikemol-atomicwrite", "mikemol-procrun"]
 
 [project.scripts]
 # ⚑ `mikemol-verdict` is taken by mikemol.hooks.verdict, so this one carries the dist name.
@@ -44,6 +46,7 @@ dev = ["pytest", "mypy", "ruff==0.16.6"]
 mikemol-grade = { path = "../grade" }
 mikemol-bibparse = { path = "../bibparse" }
 mikemol-atomicwrite = { path = "../atomicwrite" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -114,9 +117,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ THE COHERENCE CELL RUNS A CHILD INTERPRETER ON A SCRIPT THE CALLER NAMES: the argv is
-# `sys.executable` and paths, never a shell.
-"src/mikemol/gradekit/verdict.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
+# ⚑ THE COHERENCE CELL RUNS A CHILD INTERPRETER ON A SCRIPT THE CALLER NAMES through
+# `procrun.capture` (W2218): the argv is `sys.executable` and paths, never a shell, and no
+# module here needs a subprocess exemption.

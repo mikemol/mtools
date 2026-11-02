@@ -178,6 +178,7 @@ dependencies = [
     { name = "mikemol-atomicwrite" },
     { name = "mikemol-bibparse" },
     { name = "mikemol-grade" },
+    { name = "mikemol-procrun" },
 ]
 
 [package.dev-dependencies]
@@ -192,7 +193,22 @@ requires-dist = [
     { name = "mikemol-atomicwrite", directory = "../atomicwrite" },
     { name = "mikemol-bibparse", directory = "../bibparse" },
     { name = "mikemol-grade", directory = "../grade" },
+    { name = "mikemol-procrun", directory = "../procrun" },
 ]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
+name = "mikemol-procrun"
+version = "0.1.0"
+source = { directory = "../procrun" }
+
+[package.metadata]
 
 [package.metadata.requires-dev]
 dev = [

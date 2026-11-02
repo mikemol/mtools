@@ -36,7 +36,6 @@ two for agreement. This package is installed beside its dependencies, so the cop
 """
 
 import json
-import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -45,6 +44,7 @@ from mikemol.atomicwrite.durable import write_atomic
 from mikemol.grade.grade import Json, Record, below
 from mikemol.gradekit.cli import UsageError, report, take_options
 from mikemol.gradekit.jsonio import RecordError, as_record, read_json
+from mikemol.procrun.proc import capture
 
 VERDICT_WORDS = ("pass", "fail", "cannot-run")
 TAIL_LINES = 40
@@ -234,13 +234,7 @@ def run_cohere(args: Sequence[str], options: dict[str, list[str]]) -> None:
     """
     verb, project, out, *calcs = args
     script = options["coherence"][-1] if "coherence" in options else DEFAULT_COHERENCE
-    proc = subprocess.run(
-        [sys.executable, script, "--from-calcs", project, *calcs],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=False,
-    )
+    proc = capture([sys.executable, script, "--from-calcs", project, *calcs])
     if proc.stderr:
         sys.stderr.write(proc.stderr)
     why = proc.stderr.strip()[-COHERE_WHY_LIMIT:] if proc.returncode != 0 else ""
