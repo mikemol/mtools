@@ -292,10 +292,3 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "suspicious-subprocess-import",
     "start-process-with-partial-path",
 ]
-# ⚑ ITS WITNESSES RUN THE CLI AS A CHILD PROCESS, because the defect under test is what the
-# process prints and exits: an uncaught error exits 1 with a traceback, which an in-process call
-# cannot observe. The argv is `sys.executable` and literals — no shell, no partial path.
-"tests/test_cannot_census.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]

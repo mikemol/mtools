@@ -11,9 +11,11 @@ that looked and refused were one outcome, told apart only by reading a traceback
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
+
+from mikemol.procrun.proc import capture
 
 # ⚑ THE DECLARED STATUS, WRITTEN HERE RATHER THAN IMPORTED: an import of a constant HEAD lacks
 # would fail at collection, and these arms must fail on HEAD by assertion.
@@ -28,9 +30,16 @@ _EXECUTABLE = 0o755
 _CLEAN_SOURCE = '"""A clean module."""\n'
 
 
-def _run(
-    dist: Path, ruff_bin: str | None, *extra: str, cwd: Path | None = None
-) -> subprocess.CompletedProcess[str]:
+@dataclass(frozen=True)
+class _Done:
+    """What a child printed and exited with: the three fields these witnesses read."""
+
+    returncode: int
+    stdout: str
+    stderr: str
+
+
+def _run(dist: Path, ruff_bin: str | None, *extra: str, cwd: Path | None = None) -> _Done:
     """Run the ratchet CLI over `dist` in a child interpreter, from `cwd` when given.
 
     Returns:
@@ -40,14 +49,9 @@ def _run(
     env = {k: v for k, v in os.environ.items() if k != _SUPPLY_ENV}
     if ruff_bin is not None:
         env[_SUPPLY_ENV] = ruff_bin
-    return subprocess.run(
-        [sys.executable, "-m", "mikemol.ratchet.cli", str(dist), *extra],
-        capture_output=True,
-        text=True,
-        check=False,
-        env=env,
-        cwd=cwd,
-    )
+    argv = [sys.executable, "-m", "mikemol.ratchet.cli", str(dist), *extra]
+    done = capture(argv, cwd=cwd, env=env)
+    return _Done(done.returncode, done.stdout, done.stderr)
 
 
 def _real_ruff() -> Path:
