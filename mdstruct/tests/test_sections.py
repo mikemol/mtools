@@ -19,11 +19,12 @@ differently from the one the author reviewed.
 
 from __future__ import annotations
 
-import subprocess
 import sys
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.mdstruct import sections
 
@@ -241,7 +242,16 @@ def test_append_forwards_exact_to_the_finder(contained: Path) -> None:
 _WRITE_REFUSED = 2
 
 
-def _write_cli(*args: str) -> subprocess.CompletedProcess[str]:
+@dataclass(frozen=True)
+class _Done:
+    """The three fields of a finished child these arms read."""
+
+    returncode: int
+    stdout: str
+    stderr: str
+
+
+def _write_cli(*args: str) -> _Done:
     """Invoke a write mode as a caller does, as a subprocess.
 
     Returns:
@@ -250,12 +260,8 @@ def _write_cli(*args: str) -> subprocess.CompletedProcess[str]:
         in-process call would test the layer that was never the gap.
 
     """
-    return subprocess.run(
-        [sys.executable, "-m", "mikemol.mdstruct.cli", *args],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    done = capture([sys.executable, "-m", "mikemol.mdstruct.cli", *args])
+    return _Done(done.returncode, done.stdout, done.stderr)
 
 
 def test_a_dry_run_is_the_default_and_writes_nothing(contained: Path, tmp_path: Path) -> None:

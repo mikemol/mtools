@@ -10,9 +10,10 @@ nobody had built, in evidence-prose, which reads as covered to anyone who does n
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
+
+from mikemol.procrun.proc import capture
 
 # ⚑ `.parent`, NOT `.resolve().parent` — bazel stages runfiles as SYMLINKS into the source tree,
 # so resolving follows them OUT of the sandbox and reads the live working copy instead of the
@@ -33,7 +34,7 @@ def test_the_stub_matches_the_library_it_describes(tmp_path: Path) -> None:
     generated file would have frozen both as permanently allowed and made this gate vacuous at
     exactly the point it exists to check.
     """
-    proc = subprocess.run(
+    proc = capture(
         [
             sys.executable,
             "-m",
@@ -44,9 +45,6 @@ def test_the_stub_matches_the_library_it_describes(tmp_path: Path) -> None:
             str(_ALLOWLIST),
             "--concise",
         ],
-        capture_output=True,
-        text=True,
-        check=False,
         # ⚑⚑ RUN FROM A WRITABLE DIRECTORY, NOT THE DISTRIBUTION ROOT. stubtest writes a sqlite
         # metastore into `.mypy_cache` RELATIVE TO CWD and exposes no knob for it — measured,
         # `--help` carries no cache option and `MYPY_CACHE_DIR` does not reach its build options.

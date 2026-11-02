@@ -27,11 +27,12 @@ import ast
 import contextlib
 import io
 import re
-import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.mdstruct import cli as _cli_module
 
@@ -69,13 +70,22 @@ _REFUSED = 2
 _CLI_SOURCE = Path(str(_cli_module.__file__))
 
 
+@dataclass(frozen=True)
+class _Done:
+    """The three fields of a finished child these arms read."""
+
+    returncode: int
+    stdout: str
+    stderr: str
+
+
 def _run(
     doc: Path,
     *args: str,
     mode: str = "rows",
     extra: list[str] | None = None,
     terminator: bool = False,
-) -> subprocess.CompletedProcess[str]:
+) -> _Done:
     """Invoke the CLI as a caller does, as a subprocess rather than in-process.
 
     ⚑ A SUBPROCESS IS THE SUBJECT HERE, NOT A CONVENIENCE. These arms are about what a mode does
@@ -105,9 +115,8 @@ def _run(
     lead = (
         [*(["--"] if terminator else []), *args, str(doc)] if mode == "grep" else [str(doc), *args]
     )
-    return subprocess.run(
-        [*head, *lead, *(extra or [])], check=False, capture_output=True, text=True
-    )
+    done = capture([*head, *lead, *(extra or [])])
+    return _Done(done.returncode, done.stdout, done.stderr)
 
 
 def test_rows_scoped_to_one_table_returns_only_that_tables_rows(doc: Path) -> None:
@@ -224,18 +233,8 @@ def test_the_usage_text_names_every_registered_mode() -> None:
     arm does not yet read, which is the no-cardinality rule in the POPULATION dimension rather
     than the value dimension.
     """
-    banner = subprocess.run(
-        [sys.executable, "-m", "mikemol.mdstruct.cli"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    refusal = subprocess.run(
-        [sys.executable, "-m", "mikemol.mdstruct.cli", "nosuchmode", "x.md"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    banner = capture([sys.executable, "-m", "mikemol.mdstruct.cli"])
+    refusal = capture([sys.executable, "-m", "mikemol.mdstruct.cli", "nosuchmode", "x.md"])
     declared = refusal.stderr.split("known modes are", 1)[-1].strip().rstrip(".")
     dispatchable = {m.strip() for m in declared.split(",") if m.strip()}
     assert dispatchable, (

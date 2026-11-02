@@ -77,6 +77,10 @@ dev = [
     "pytest",
     "mypy",
     "ruff==0.16.6",
+    # ⚑ `mikemol-procrun` (W2215), DEV-ONLY: the witnesses that start the CLI, stubtest or git as a
+    # child reach it through the one stdlib-only seam instead of each spelling the subprocess rules
+    # in a per-file exemption.
+    "mikemol-procrun",
     # ⚑⚑⚑ A GIT URL IS A DECLARED, RESOLVABLE INPUT — WHICH IS THE WHOLE POINT, not a workaround
     # for an unpublished package. As a bare name `paperkit` was unresolvable: `uv pip compile
     # --group dev` exited *requirements are unsatisfiable* and produced NO lock, so this
@@ -131,6 +135,7 @@ environments = ["sys_platform == 'linux'"]
 
 [tool.uv.sources]
 mikemol-pathwalk = { path = "../pathwalk" }
+mikemol-procrun = { path = "../procrun" }
 
 # ⚑⚑⚑ THE BAR IS ADOPTED, NOT INVENTED. This ruleset is substrate's, which took it from
 # linux-sources' measured config. Copying a bar that two repos already run beats writing a third
@@ -368,7 +373,6 @@ fixture-parentheses = true
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and this file's is stubtest. The
 # exemption is scoped to the file rather than to `tests/*`, so a future test that shells out
 # is a finding rather than an inheritance.
-"tests/test_stub_authority.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ RUNNING PANDOC IS ONE MODULE'S ONE RESPONSIBILITY. The `S603` exemption a subprocess needs is
 # granted per FILE, so a module that also parsed or rendered would extend it over those concerns
@@ -393,7 +397,6 @@ fixture-parentheses = true
 # constructs; nothing untrusted reaches it and it never passes through a shell.
 # ⚑⚑ SURFACED BY THE ARMING, like the entry above: the call site already carried its declaration
 # inline, and only the preview-only IMPORT rule was new.
-"tests/test_output_is_clean.py" = ["suspicious-subprocess-import"]
 
 # ⚑⚑⚑ THE PACKAGE `__init__` CARRIES TWO WARNING FILTERS AND THEY ARE THE POINT OF THE FILE.
 # `non-empty-init-module` wants an `__init__` to hold only docstrings and re-exports, which is
@@ -425,7 +428,6 @@ fixture-parentheses = true
 # the two rules to disagree across. The entry stays because the exemption is still needed.
 # ⚑ THE CODE IS DESCRIBED RATHER THAN QUOTED, for the reason the `tests/*` entry above gives: the
 # arm that reads this block cannot distinguish a historical citation from a live claim.
-"tests/test_cli_flags.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑⚑ THE WRITE-MODE ARMS DRIVE THE CLI AS A SUBPROCESS, AND FOR A WRITE THAT IS THE ONLY HONEST
 # SUBJECT. Their claims are about what the COMMAND refuses and what it leaves on disk — a dry run
@@ -437,11 +439,9 @@ fixture-parentheses = true
 # pytest's `tmp_path`. Nothing untrusted reaches it and it never passes through a shell — which is
 # the same argument the two entries above make, granted per FILE so a module that also parsed or
 # rendered would not inherit it.
-"tests/test_sections.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑⚑⚑ THE DIRECTORY-OPERAND ARMS RUN REAL `git init` AND `git worktree add` IN A REPOSITORY MADE
 # UNDER `tmp_path`, because the claim is that registered worktrees are skipped and only git can
 # register one. The argv is the resolved `git` executable plus fixed words and fixture paths this
 # module constructs; GIT_* variables are removed and global and system config switched off, so the
 # host repository is never touched. Granted per FILE, like the entries above.
-"tests/test_directory_operand.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

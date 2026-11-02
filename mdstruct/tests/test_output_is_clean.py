@@ -19,12 +19,12 @@ case below is what keeps the scope honest.
 
 from __future__ import annotations
 
-import subprocess
 import sys
 import warnings
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 # ⚑ IMPORTED FOR ITS SIDE EFFECT, AND THAT SIDE EFFECT IS A CASE'S SUBJECT. Importing the package
 # installs the scoped warning filter; the positive control below asserts the filter does NOT
@@ -53,12 +53,7 @@ def test_a_fresh_import_emits_nothing_on_stderr(doc: Path) -> None:
     the suite loaded, and its warning went wherever it went.
     """
     doc.write_text(_FIXTURE, encoding="utf-8")
-    result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — argv is this interpreter and a fixture path
-        [sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    result = capture([sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)])
     assert result.returncode == 0
     assert not result.stderr, f"stderr carried: {result.stderr!r}"
 
@@ -66,12 +61,7 @@ def test_a_fresh_import_emits_nothing_on_stderr(doc: Path) -> None:
 def test_stdout_is_only_the_answer(doc: Path) -> None:
     """Check every stdout line belongs to the report, not to a dependency."""
     doc.write_text(_FIXTURE, encoding="utf-8")
-    result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — argv is this interpreter and a fixture path
-        [sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    result = capture([sys.executable, "-m", "mikemol.mdstruct.cli", "spans", str(doc)])
     for line in result.stdout.splitlines():
         assert "Warning" not in line, f"a warning reached stdout: {line!r}"
 

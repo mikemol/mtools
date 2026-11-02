@@ -13,11 +13,10 @@ tmp_path, with every GIT_* variable removed and the global and system git config
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.mdstruct import cli, operands
 
@@ -50,14 +49,10 @@ _READ_MODES = [
 
 
 def _git(root: Path, *args: str) -> None:
-    git = shutil.which("git")
-    assert git is not None
-    subprocess.run(
-        [git, "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args],
-        cwd=root,
-        check=True,
-        capture_output=True,
+    done = capture(
+        ["git", "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args], cwd=root
     )
+    assert done.returncode == 0, done.stderr
 
 
 def _isolate(monkeypatch: pytest.MonkeyPatch, ceiling: Path) -> None:

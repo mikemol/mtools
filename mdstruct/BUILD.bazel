@@ -77,6 +77,7 @@ py_library(
         deps = [
             ":mdstruct",
             "//pathwalk:pathwalk",
+            "//procrun:procrun",  # W2215: the tests start their children through procrun.capture
             dev_requirement("pytest"),
             # ⚑ `stubtest` SHIPS INSIDE mypy, and the stub-authority witness runs it as a
             # subprocess. Staged for every module rather than one, because a per-target dep list
@@ -148,6 +149,7 @@ py_binary(
     deps = [
         # ⚑ How mypy sees the sibling inside the sandbox (the runner cannot see pip-installed siblings).
         "//pathwalk:pathwalk",
+        "//procrun:procrun",  # W2215: the tests import it, so mypy must resolve it
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -216,7 +218,7 @@ venv_from_hub(
     python_version = "3.13.13",
     python_version_short = "3.13",
     # ⚑ pathwalk has no sibling of its own (a transitive sibling must be listed too: W571).
-    srcs = glob(["src/mikemol/mdstruct/**"]) + ["//pathwalk:pathwalk"],
+    srcs = glob(["src/mikemol/mdstruct/**"]) + ["//pathwalk:pathwalk", "//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
