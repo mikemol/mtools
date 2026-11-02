@@ -7,13 +7,12 @@ is built on `git stash create`, which makes a commit OBJECT and prints its sha w
 worktree or the stash stack, so concurrent runs cannot interfere.
 """
 
-import subprocess
 from pathlib import Path
 
-from mikemol.procrun.proc import capture
+from mikemol.procrun.proc import Completed, capture
 
 
-def git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+def git(root: Path, *args: str) -> Completed:
     """Run git with the given arguments, in `root`.
 
     Returns:

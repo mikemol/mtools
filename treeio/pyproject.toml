@@ -116,10 +116,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ `gitrun` names `subprocess.CompletedProcess` (what `procrun.capture` returns) in a signature, so
-# it imports the module; it starts no child except through `capture`. The import was under a
-# TYPE_CHECKING guard, which the Codon target cannot have (mtools:W1319), so it is a real import now.
-"src/mikemol/treeio/gitrun.py" = ["suspicious-subprocess-import"]
+# ⚑ `gitrun` names `procrun.proc.Completed` (what `procrun.capture` returns) in a signature and
+# starts no child except through `capture`, so it no longer imports the subprocess module (W2229).
 # ⚑ THE WORKING-TREE BRANCH OF `listdir` IS `glob.glob`, ON PURPOSE: `Path.glob` reads `**`, hidden
 # files and symlinks differently, and this module's subject is exactly the disagreement between the
 # two matchers, so swapping the matcher would change the answer it exists to name.

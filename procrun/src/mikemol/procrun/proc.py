@@ -18,6 +18,9 @@ from pathlib import Path
 # The exception `capture` raises for a child that outlasts its timeout, re-exported so a
 # caller can name it without importing the subprocess module itself.
 TimeoutExpired = subprocess.TimeoutExpired
+# What `capture` returns, named here so a caller can annotate its own result without importing
+# the subprocess module itself.
+Completed = subprocess.CompletedProcess[str]
 
 
 def capture(
