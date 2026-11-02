@@ -73,6 +73,17 @@ def test_the_plan_is_the_span_the_round_sample_and_the_jobs_sample() -> None:
     assert len(trainround.plan("/bin/otlp", "mtools", GREEN)) == TWO
 
 
+def test_each_metric_sample_carries_its_own_description() -> None:
+    """W2227: the round sample and the jobs sample are described, and not by the same words."""
+    sends = trainround.plan("/bin/otlp", "mtools", RED)
+    round_text = _flag(sends[1], "--description")
+    jobs_text = _flag(sends[2], "--description")
+    assert round_text == trainround.DESCRIPTIONS[trainround.ROUND_METRIC]
+    assert jobs_text == trainround.DESCRIPTIONS[trainround.JOBS_METRIC]
+    assert round_text
+    assert round_text != jobs_text
+
+
 def test_emit_starts_every_child_and_is_silent_without_a_store_or_on_a_failed_spawn() -> None:
     """Fire and forget: the record never changes a verdict."""
     spawned: list[Sequence[str]] = []

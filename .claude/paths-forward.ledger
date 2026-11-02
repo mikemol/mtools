@@ -5102,3 +5102,18 @@
 2026-11-02T14:40:32Z  status W2226 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T14:40:55Z  status W2218 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T15:12:15Z  interrupt W2228 minted    -         "corpus test_suite_discovery runs git init through procrun.capture and drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T15:24:53Z  status W2227 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T15:25:17Z  status W2228 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T15:42:59Z  status W2228 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T15:51:22Z  interrupt W2229 minted    -         "treeio gitrun names procrun.proc.Completed and drops its subprocess import entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T16:07:41Z  status W2229 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T16:38:16Z  status W1122 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T16:40:15Z  interrupt W2230 minted    -         "mikemol-repin --revendor vendors mikemol.procrun (nemik's 13 text-capture subprocess calls need it)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1175
+2026-11-02T16:40:45Z  interrupt W2231 minted    -         "procrun.capture takes stdin input and a bytes mode (nemik's 5 stdin/bytes calls)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1175
+2026-11-02T16:42:47Z  interrupt W2232 minted    -         "Design the version contract: semver per distribution, declared sibling ranges, so consumers stop repinning a sha per change"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W94
+2026-11-02T16:43:21Z  interrupt W2233 minted    -         "Version contract step 1: a declared format version in paths-forward.json and the ledger, and every CLI refuses a mismatch"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2232
+2026-11-02T16:43:21Z  interrupt W2234 minted    -         "Version contract step 2: each distribution declares its own semver and the ranges it accepts from its siblings"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2232
+2026-11-02T16:43:21Z  interrupt W2235 minted    -         "Version contract step 3: the gate records the resolved versions it ran with, so a range stays reproducible"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2232
+2026-11-02T16:43:21Z  interrupt W2236 minted    -         "Version contract step 4: replace the one-sha-across-every-spec rule in INSTALL.md with the range rule"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2232
+2026-11-02T17:12:09Z  interrupt W2237 minted    -         "scan adf.run_command runs its child through procrun.capture and drops the per-responsibility subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T17:19:21Z  status W2237 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -38,6 +38,12 @@ SERVICE = "mikemol-train"
 NAME = "train.round"
 ROUND_METRIC = "mikemol.train.round"
 JOBS_METRIC = "mikemol.train.jobs"
+# ⚑ METRICS ARE SELF-DESCRIBING (operator 2026-11-01, luthen-observability W1914): each sample
+# names what it counts, as the OTLP Metric's own description, so the store's census has a row.
+DESCRIPTIONS = {
+    ROUND_METRIC: "Train rounds finished, one sample per round, labelled by repo and verdict.",
+    JOBS_METRIC: "Jobs the admission step let a train round run, labelled by repo and cores.",
+}
 GREEN = "green"
 RED = "red"
 UNBUILT = "unbuilt"
@@ -128,7 +134,8 @@ def metric_argv(who: tuple[str, str], name: str, value: str, label: tuple[str, s
     """
     program, repo = who
     argv = [program, "metric", "--service", SERVICE, "--namespace", repo, "--name", name]
-    argv += ["--value", value, "--field", f"repo={repo}", "--field", f"{label[0]}={label[1]}"]
+    argv += ["--value", value, "--description", DESCRIPTIONS[name]]
+    argv += ["--field", f"repo={repo}", "--field", f"{label[0]}={label[1]}"]
     return argv
 
 

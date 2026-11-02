@@ -17286,3 +17286,10 @@
   claim  = {W2226: every restore fails: the note says could not be restored and quotes git's reason.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_restore_that_never_succeeds_is_named_with_gits_reason_not_as_an_edit},
 }
+
+@misc{hooks-trainround-each-metric-sample-carries-its-own-description,
+  section = {trainround},
+  title  = {W2227: the round sample and the jobs sample are described, and not by the same words},
+  claim  = {W2227: the round sample and the jobs sample are described, and not by the same words.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_each_metric_sample_carries_its_own_description},
+}

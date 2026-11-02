@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2228,
+  "counter": 2237,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -23139,7 +23139,7 @@
     {
       "symbol": "W1122",
       "title": "mtools' own pre-commit records each check to a gate ledger with mikemol-gate-ledger --record (live hook: tool first, hook last)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1115",
         "W1143"
@@ -23148,11 +23148,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file.",
+      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file. | 2026-11-02: 2026-11-02 DECISIONS for the two open questions (mine to make; nothing here needs the operator): (1) the ledger lives at <git dir>/mtools/gate-outcomes.tsv, beside promptwatch's seen file and the landing-tip file, so it is never tracked and needs no gitignore line; the hook derives the path with git rev-parse --absolute-git-dir and passes it as --ledger to both --record and --report. (2) SECONDS: the tool's field is a duration by contract (its median column, and the W934 power correlation reads start/end epochs); record the gate's own elapsed seconds as the tool defines it, and say in the hook comment that it is a duration kept for ordering and correlation, never offered as evidence of cost; the epoch pair already carries the correlation axis. EDIT SHAPE: one helper record_gate LABEL STATUS START_EPOCH in .githooks/pre-commit, called from run_checked and witness after their pass/fail branch, tolerant of an absent tool only by printing that it is absent, and never changing fail. Live-hook order: the tool is shipped, so this file is the last edit; the hook-wiring test (test_bar_fires) must learn the call first. Not edited this turn (a stack is in the gate).",
       "issued_at": "2026-10-13T16:21:09Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W934",
-      "last_worked": "2026-11-02T10:47:09Z",
+      "last_worked": "2026-11-02T16:38:16Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -49635,7 +49635,7 @@
     {
       "symbol": "W2227",
       "title": "trainlead's OTLP metrics mikemol.train.jobs and mikemol.train.round carry no description (no metadata row)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks"
@@ -49643,28 +49643,199 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add a --description option to mikemol-otlp metric (the OTLP Metric's field 2) with a test, then pass one per metric from trainround.metric_argv (ROUND_METRIC and JOBS_METRIC); read whether VictoriaMetrics turns it into HELP",
-      "evidence": "2026-11-02: 2026-11-02 READ: the two metrics are built in hooks trainround.metric_argv as a mikemol-otlp metric argv (service, namespace, name, value, kind, field); mikemol-otlp metric has NO description option, so setting one is a two-dist change (otlp: encode field 2 and take --description; hooks: pass it, and the hooks dist then needs the new otlp). Peer note: luthen-observability's checks.otlp_wire.metric_request (bca02352) already encodes the description, a reference for the encoding. Census shows both families with no metadata row (python -m checks.family_types).",
+      "evidence": "2026-11-02: 2026-11-02 READ: the two metrics are built in hooks trainround.metric_argv as a mikemol-otlp metric argv (service, namespace, name, value, kind, field); mikemol-otlp metric has NO description option, so setting one is a two-dist change (otlp: encode field 2 and take --description; hooks: pass it, and the hooks dist then needs the new otlp). Peer note: luthen-observability's checks.otlp_wire.metric_request (bca02352) already encodes the description, a reference for the encoding. Census shows both families with no metadata row (python -m checks.family_types). | 2026-11-02: 2026-11-02: otlp half built and submitted with W2228 (corpus test_suite_discovery via procrun.capture) as the keyed fall: mikemol-otlp metric --description (Request.description, run passes it into the Sample); one witness, one warrant; test_metriccmd 14 passed; bazel 6 of 6. NEXT, after it lands: trainround.metric_argv passes a description per metric (it calls the installed binary, so only after the otlp venv is rebuilt), then luthen reads whether VM keeps it as HELP. | 2026-11-02: 2026-11-02 tick check: stack W2228+W2227 (corpus fall plus mikemol-otlp metric --description) still inflight, key 1793633074862221053, HEAD e33515d3. After it lands: rebuild the otlp venv, then trainround passes a description per metric. | 2026-11-02: 2026-11-02: otlp half LANDED 3d31f4fa (mikemol-otlp metric --description). Next: rebuild //otlp:.venv, then trainround passes a description per metric. | 2026-11-02: 2026-11-02: hooks half submitted with W2229 as the keyed fall: trainround.DESCRIPTIONS and metric_argv passes --description; the otlp binary in main's otlp venv takes the flag; test_trainround+traindrive 15 passed; bazel 45 of 45. Gate result pending. Left over: traintel's commit samples and mikemol.commit.queued may lack a description too.",
       "issued_at": "2026-11-02T14:28:42Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1914",
-      "last_worked": "2026-11-02T14:31:29Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-02T16:08:07Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2228",
       "title": "corpus test_suite_discovery runs git init through procrun.capture and drops its subprocess entry",
-      "status": "ready",
+      "status": "landed",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-02: 2026-11-02: corpus test_suite_discovery moved to procrun.capture (75 passed; bazel 6 of 6 with otlp); procrun is a corpus dev dep with lock regenerated offline; entry (2 rules) gone; submitted with W2227, result pending. | 2026-11-02: 2026-11-02: LANDED 4121338e (corpus test_suite_discovery via procrun.capture; 2 rules fewer).",
       "issued_at": "2026-11-02T15:12:15Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
+      "last_worked": "2026-11-02T15:42:59Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "landed_at": "20261102T154259Z"
+    },
+    {
+      "symbol": "W2229",
+      "title": "treeio gitrun names procrun.proc.Completed and drops its subprocess import entry",
+      "status": "working",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02: procrun.proc exports Completed; treeio gitrun annotates with it and drops its import and entry (1 rule); treeio 215 passed, bazel 45 of 45; submitted with W2227's hooks half, result pending. Risk to watch: the Codon target compiling the module-level alias. | 2026-11-02: 2026-11-02: first submit refused PRE-GATE (W1704): the mutants lint type-checks treeio with main's treeio/.venv, whose installed procrun copy lacked the new Completed alias (31 Any errors). Fixed by uv sync --offline --reinstall-package mikemol-procrun in main's treeio; resubmitted. Lesson: an installed sibling copy goes stale when a sibling's source changes, so reinstall it after landing a sibling change. | 2026-11-02: 2026-11-02 tick check: stack W2229 (treeio Completed alias) plus W2227's hooks half is inflight, key 1793635813930775985, HEAD 3d31f4fa. On landing: record shas, tell luthen-observability about the descriptions. | 2026-11-02: 2026-11-02: second submit gated and REFUSED on //pathsforward:test_cli (culprit unattributed: no path of this stack is under pathsforward). Run alone with the gate empty it PASSES (1 of 1), so it reads as load or ordering, not this stack; resubmitted unchanged per standing 7.",
+      "issued_at": "2026-11-02T15:51:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T17:31:06Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2230",
+      "title": "mikemol-repin --revendor vendors mikemol.procrun (nemik's 13 text-capture subprocess calls need it)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-02T16:40:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1175",
       "last_worked": null,
       "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2231",
+      "title": "procrun.capture takes stdin input and a bytes mode (nemik's 5 stdin/bytes calls)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "procrun"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-02T16:40:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1175",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2232",
+      "title": "Design the version contract: semver per distribution, declared sibling ranges, so consumers stop repinning a sha per change",
+      "status": "blocked",
+      "enables": [
+        "github:W94"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [
+        "W2233",
+        "W2234",
+        "W2235",
+        "W2236"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02: refinement received: mtools keeps releasing together at ONE SHA, each component also carries its own semver x.y.z+sha (build metadata is ignored by precedence, so ranges hold across sha-only moves). The design note for W2233 and W2234 must include the bump rule (intensional surface diff proposes, extensional prior-tests run verifies is the host's offered reading) and goes to github-33 for the warm/cold review BEFORE any build. | 2026-11-02: 2026-11-02 OPERATOR PRIORITY via github-33 (github:W94), verbatim: 'Don't let any of this slow down our paydown of existing ratchets. Those ratchets need paid off before I can let us do more cool things.' RANKING: the version contract (W2232 to W2236) and W2201 (the census reader) rank BELOW ratchet paydown. Work them only when no paydown item is ready, and never let them take gate time from a paydown stack. Paydown items now ready: the src per-responsibility subprocess entries in owed dists (memres, gmailstruct, buildtel x2, pytestspec, webpage x2, transcriptstruct, scan), mutantcell test_eval and audiostruct tests (Popen or GPU hub, harder), rulerseq's assert entry, pathsforward test_store and test_lock, gatecheck test_hook_index and test_rungate, and the hooks groups W2219 to W2221.",
+      "issued_at": "2026-11-02T16:42:47Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W94",
+      "last_worked": "2026-11-02T17:08:36Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2233",
+      "title": "Version contract step 1: a declared format version in paths-forward.json and the ledger, and every CLI refuses a mismatch",
+      "status": "ready",
+      "enables": [
+        "W2232"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02 github:W94 / github-33: operator 2026-11-02 verbatim 'Let's card the version contract. I'm looking for semver compatibility and for fine-grained decoupling.' Host review (github:W93) findings: CLIs and libraries are coupled through shared state formats (paths-forward.json, the ledger), so a contract needs a declared format version and a CLI must refuse a mismatch, the first and smallest step; 40 distributions are linked by uv path sources under INSTALL.md's one-sha rule (lines 114-117 and 168-172), which is what changes; a gate must stay reproducible against a range (record the resolved versions it ran with). THE HOST ASKED FOR THE DESIGN BACK BEFORE ANY BUILD, for its warm and cold review. NEXT: write a design note (card note, not code) for step 1, the handshake: where the format version lives, what a CLI does on a mismatch (refuse, name both versions), how a writer migrates, and which readers exist today. | 2026-11-02: 2026-11-02: ranked BELOW ratchet paydown by the operator (see W2232): the design note waits until no paydown item is ready.",
+      "issued_at": "2026-11-02T16:43:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2232",
+      "last_worked": "2026-11-02T17:09:03Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2234",
+      "title": "Version contract step 2: each distribution declares its own semver and the ranges it accepts from its siblings",
+      "status": "ready",
+      "enables": [
+        "W2232"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02 operator refinement (see W2236 for the verbatim words): each component carries its own semver with the sha as BUILD METADATA, x.y.z+sha, and x, y, z do not change when nothing that decides them changed, even if the sha did. The operator is unsure which check decides the bump and says so. THE HOST'S READING (github:W93), offered as input, NOT a ruling: the INTENSIONAL check diffs each component's declared surface (public API signatures, CLI argparse, the state schemas it reads and writes): removed or changed is x, added is y, an identical surface is z; the EXTENSIONAL check runs the prior release's tests against the new code, and a failure forces x. Common pattern: the intensional diff PROPOSES and the extensional run VERIFIES. THE DESIGN THAT GOES BACK MUST STATE THE BUMP RULE, and must answer what counts as a component's surface (and whether a pyproject's declared console scripts and a state file's format version are part of it). | 2026-11-02: 2026-11-02 operator ruling via github-33 (github:W94), verbatim, replying to the host's note that the intensional check 'trusts the declaration to be complete': 'we cannot decouple without that. But this is why our mutators.regex (and possibly any other mutation testing we're doing) is so helpful; it minimizes, structuralizes and contextualizes that scope and risk.' RULING: the bump decision rests on the DECLARED SURFACE, and mutation testing bounds the risk that the declaration is incomplete. HOST'S READING for the design: a mutant that SURVIVES inside a component's declared surface marks where the declaration is not backed by tests, so a surface-diff bump could miss a break exactly there. THE DESIGN MUST STATE how mutation results bear on the bump, for example surviving mutants on the declared surface are reported with the bump, or block a z-only bump on that component; the bump rule goes back with that coupling as part of the W2233/W2234 design. | 2026-11-02: 2026-11-02 operator CORRECTION via github-33 (github:W94), verbatim: 'That's not just a standing for behavioral checking, that's behavioral checking as driving the test declarations.' So: behavioral checking DRIVES the declarations, it does not stand in for them. A surviving mutant on a component's declared surface is the TRIGGER to mint the missing test and so EXTEND the declaration; the earlier host suggestion (report survivors, or block a z-only bump) is WITHDRAWN. The surface declaration is the OUTPUT of mutation and its completeness is CHECKED by mutation, not trusted. The design must state the loop: surviving mutant on the surface -> a test is minted -> the declaration grows -> the bump rule reads the grown declaration.",
+      "issued_at": "2026-11-02T16:43:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2232",
+      "last_worked": "2026-11-02T17:05:01Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2235",
+      "title": "Version contract step 3: the gate records the resolved versions it ran with, so a range stays reproducible",
+      "status": "ready",
+      "enables": [
+        "W2232"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02 operator addition via github-33 (github:W94), verbatim: ''even if the sha does' ... Meanwhile, the version gets a convenient provenance indicator.' CONSEQUENCE for this card: the +sha suffix doubles as a PROVENANCE marker, so a gate that records its resolved versions as x.y.z+sha already holds the exact commit it ran, with no lookup; the same holds for luthen's user_tools receipts. The design carries this: the gate's recorded line is the resolved x.y.z+sha per component, and a reader recovers the commit from the suffix alone. | 2026-11-02: 2026-11-02 operator addition via github-33, verbatim: 'this is where topology and hott tie in. You're touching on covering n+1-paths over n-paths.' HOST'S READING, offered for the design and NOT as a formal claim: each x.y.z+sha is a POINT; a sha move at fixed x.y.z is a PATH asserting the two builds are equivalent on the surface; the gate's record of resolved versions with its verdict is the EVIDENCE covering that path; and mutation-driven tests cover that evidence. Each level needs a cover one level up. THE DESIGN MUST SAY WHAT WITNESSES EACH LEVEL: point (a version line with its sha), path (the record that two shas share x.y.z and the surface is equal), evidence (the gate verdict tied to the resolved versions), and the cover of that evidence (the mutation-driven tests and their survivor count).",
+      "issued_at": "2026-11-02T16:43:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2232",
+      "last_worked": "2026-11-02T17:05:31Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2236",
+      "title": "Version contract step 4: keep INSTALL.md's one-sha release rule and add each component's x.y.z+sha beside it",
+      "status": "ready",
+      "enables": [
+        "W2232"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02 operator refinement via github-33 (github:W94), verbatim: 'It's worth pointing out that mtools can continue releasing together as a sha, but with individual versions attached to its internal components. The semver can end with +sha, so x.y.z+sha doesn't have to change x, y or z if none of the mutators (I think that's the optimal intentional (vs extensional) behavioral difference check? I don't know) for x, y or z have changed, even if the sha does.' CONSEQUENCE: the one-sha release rule STAYS; per-component x.y.z+<sha> is added beside it. Semver ignores build metadata for precedence, so a consumer's range is satisfied across sha-only moves and nobody cycles. The title said 'replace'; it no longer does.",
+      "issued_at": "2026-11-02T16:43:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2232",
+      "last_worked": "2026-11-02T16:59:18Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2237",
+      "title": "scan adf.run_command runs its child through procrun.capture and drops the per-responsibility subprocess entry",
+      "status": "working",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02: scan adf.run_command now runs scanimage through procrun.capture (runtime dep, stdlib-only leaf); the per-responsibility entry (2 rules) is gone; scan suite 22 passed, ruff clean without the entry, pycheck admits adf.py; landed to main's tree and main's scan venv synced. NEXT: when the gate (W2229 + W2227 hooks half, key 1793635813930775985) clears, bazel test //scan:all, then submit. Ranked ahead of the version contract per the operator (paydown first).",
+      "issued_at": "2026-11-02T17:12:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T17:19:21Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [
