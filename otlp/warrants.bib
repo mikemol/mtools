@@ -494,3 +494,10 @@
   claim  = {W1960: the signal variable is posted to as given, the general one gets /v1/metrics.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_the_standard_otel_endpoint_routes_a_metric_and_the_flag_still_wins},
 }
+
+@misc{otlp-metriccmd-description-rides-on-the-metric-for-both-kinds-and-is-absent-without-the-flag,
+  section = {metriccmd},
+  title  = {W2227: `--description` is the OTLP Metric's own field, on a gauge and on an up-down sum},
+  claim  = {W2227: `--description` is the OTLP Metric's own field, on a gauge and on an up-down sum.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_description_rides_on_the_metric_for_both_kinds_and_is_absent_without_the_flag},
+}

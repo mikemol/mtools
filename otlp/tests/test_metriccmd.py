@@ -97,6 +97,18 @@ def test_an_up_down_sample_arrives_as_a_non_monotonic_sum() -> None:
     assert total["aggregationTemporality"] == "AGGREGATION_TEMPORALITY_CUMULATIVE"
 
 
+def test_a_description_rides_on_the_metric_for_both_kinds_and_is_absent_without_the_flag() -> None:
+    """W2227: `--description` is the OTLP Metric's own field, on a gauge and on an up-down sum."""
+    for kind in ("gauge", "updown"):
+        with _store() as (base, posts):
+            argv = _argv(base, "--value", "1", "--kind", kind, "--description", "queued commits")
+            assert cli.main(argv) == metriccmd.EXIT_SENT
+        assert _metric(posts[0][1])["description"] == "queued commits"
+    with _store() as (base, posts):
+        assert cli.main(_argv(base, "--value", "1")) == metriccmd.EXIT_SENT
+    assert "description" not in _metric(posts[0][1])
+
+
 def test_a_fractional_value_stays_a_double() -> None:
     """2.5 is not rounded to 2: it arrives as a double point."""
     with _store() as (base, posts):

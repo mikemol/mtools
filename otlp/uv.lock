@@ -137,6 +137,7 @@ source = { directory = "../endpoints" }
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "mikemol-fence", directory = "../fence" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "ruff", specifier = "==0.16.6" },

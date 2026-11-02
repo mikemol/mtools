@@ -5098,3 +5098,7 @@
 2026-11-02T10:58:26Z  status W2226 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T11:19:45Z  status W2217 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T12:22:42Z  status W2218 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T14:28:42Z  interrupt W2227 minted    -         "trainlead's OTLP metrics mikemol.train.jobs and mikemol.train.round carry no description (no metadata row)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1914
+2026-11-02T14:40:32Z  status W2226 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T14:40:55Z  status W2218 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T15:12:15Z  interrupt W2228 minted    -         "corpus test_suite_discovery runs git init through procrun.capture and drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200

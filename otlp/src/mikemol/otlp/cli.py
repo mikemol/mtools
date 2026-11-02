@@ -101,6 +101,7 @@ def _parser() -> argparse.ArgumentParser:
     metric.add_argument("--name", required=True, help="the metric's name")
     metric.add_argument("--value", required=True, type=float, help="the sample's value")
     metric.add_argument("--kind", default="gauge", choices=metriccmd.KINDS)
+    metric.add_argument("--description", default="", help="the metric's own description (HELP)")
     metric.add_argument("--field", action="append", metavar="KEY=VALUE")
     batch = verbs.add_parser("metrics", help="send stdin JSON lines as gauge samples, one request")
     batch.add_argument("--url", help=f"the metrics base URL (default: ${endpoints.ENV} name)")
@@ -216,6 +217,7 @@ def _metric(opts: dict[str, object], environ: Mapping[str, str]) -> int:
         kind=_text(opts, "kind"),
         labels=fields,
         url=url,
+        description=_text(opts, "description"),
     )
     return metriccmd.run(request, sender.post)
 

@@ -42,6 +42,7 @@ class Request:
     kind: str
     labels: Mapping[str, str]
     url: str = ""
+    description: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -198,7 +199,9 @@ def run(req: Request, post: sender.Post) -> int:
     """
     resource = metrics.resource_here(req.service, req.namespace, req.version)
     value = int(req.value) if req.value == int(req.value) else req.value
-    sample = metrics.Sample(req.name, value, time.time_ns(), req.labels)
+    sample = metrics.Sample(
+        req.name, value, time.time_ns(), req.labels, description=req.description
+    )
     build = metrics.updown_counter if req.kind == "updown" else metrics.gauge
     payload = build(resource, sample).SerializeToString()
     try:
