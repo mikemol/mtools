@@ -192,6 +192,16 @@ def test_transcriptstruct_is_a_vendored_dist_and_moves_with_the_rest() -> None:
     assert revendor.wheel_name("transcriptstruct", NEW) in revendor.move_sources(text, NEW)
 
 
+def test_procrun_is_a_vendored_dist_and_moves_with_the_rest() -> None:
+    """W2230 (nemik:W1175): the process seam's wheel moves with the pair."""
+    text = "".join(
+        f'mikemol-{d} = {{ path = "vendor/wheels/{revendor.wheel_name(d, OLD)}" }}\n'
+        for d in ("hooks", "procrun")
+    )
+    assert revendor.vendored(text) == ("hooks", "procrun")
+    assert revendor.wheel_name("procrun", NEW) in revendor.move_sources(text, NEW)
+
+
 def test_the_prose_naming_the_old_commit_moves_too() -> None:
     """Nemik's MODULE.bazel comments say `mtools <old>`; they follow the pin."""
     text = "# vendored the same way at mtools b5db3c4, one sha\n"

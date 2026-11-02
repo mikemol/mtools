@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2238,
+  "counter": 2239,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -49690,7 +49690,7 @@
     {
       "symbol": "W2230",
       "title": "mikemol-repin --revendor vendors mikemol.procrun (nemik's 13 text-capture subprocess calls need it)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks"
@@ -49698,17 +49698,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-02: 2026-11-02: procrun added to revendor.EXTRA (the named list of dists a repo may vendor); test_procrun_is_a_vendored_dist_and_moves_with_the_rest pins vendored() and move_sources(); test_revendor and test_revendor_cli 27 passed; one warrant; landed to main's tree. NEXT: bazel //hooks:test_revendor //hooks:test_revendor_cli //hooks:mypy //hooks:ruff plus //memres:all once the gate (W2238+W2231) clears, then submit with memres' fall (W2239). NOT in this change: whether mikemol-wheel builds a procrun wheel (nemik vendors wheels, so check wheel.py before telling them). | 2026-11-02: 2026-11-02 READ: hooks wheel.py takes the dist names from its caller (no validation against revendor.ALL; its only link to revendor is the version, the tag, short_of, wheel_name and with_local_version), so mikemol-wheel can already build a procrun wheel from procrun/pyproject.toml; the EXTRA list is only what --revendor will MOVE once a repo vendors it. So the change is complete for nemik's ask. Unverified: that procrun/pyproject.toml has a version of 0.1.0 for with_local_version to extend (it should, same template); run mikemol-wheel procrun in a scratch to confirm before telling nemik. | 2026-11-02: 2026-11-02 CONFIRMED: mikemol-wheel procrun --sha 26ab4973 --mtools <repo> builds mikemol_procrun-0.1.0+g26ab497-py3-none-any.whl (sha256 28cf9353b4af02a120ee28371ac966fa2a755ac2f449e847697d581d839109f0), so the wheel half of nemik's ask needs no change; only revendor.EXTRA did (built, in main's tree, awaiting the gate and a keyed fall). Built at HEAD, so it predates capture_bytes and input_text (W2231, in the gate): nemik must repin after W2231 lands to get them.",
       "issued_at": "2026-11-02T16:40:15Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1175",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-02T20:09:32Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2231",
       "title": "procrun.capture takes stdin input and a bytes mode (nemik's 5 stdin/bytes calls)",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [
         "procrun"
@@ -49716,13 +49717,14 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: taken, ahead of pytestspec's opa.py (whose evaluate feeds stdin) and nemik's five stdin or bytes calls. Plan: capture keeps its text signature and gains an input keyword (text on stdin, default none, so every caller is unchanged), plus a second function capture_bytes(argv, cwd, env, timeout, input: bytes | None) returning a bytes result; witnesses with real children; one stack with pytestspec's fall. | 2026-11-02: 2026-11-02: codemod written (capture gains input_text, new capture_bytes with input_bytes, CompletedBytes alias, three real-child witnesses) but NOT applied: the in-gate stack's W2229 entry also edits procrun/proc.py (the Completed alias, not yet in HEAD), so a scratch tree cut from HEAD would collide with main's dirty copy at land. Apply after the stack lands; scratch W2276 is open and clean. Then pytestspec's opa.py (evaluate feeds stdin) and memres' railcli.py ride the same stack. | 2026-11-02: 2026-11-02 tick: blocked on W2229, which is inflight in the gate (key 1793640848278740648, with W2237 and W2227's hooks half) and edits the same file, procrun/proc.py; the codemod is written and scratch W2276 is open. | 2026-11-02: 2026-11-02: W2229 landed (2276d9c5), so the block is lifted; applying the codemod in a scratch tree cut from the new HEAD. | 2026-11-02: 2026-11-02: BUILT and submitted with pytestspec's fall (W2238): capture takes input_text, capture_bytes with input_bytes, CompletedBytes alias, three real-child witnesses, three warrants; procrun mutants.regex re-pointed at the multi-line call (the reformat had left four declarations UNAPPLIED, found by the first bazel run) plus five new declarations; procrun suite 9 passed, bazel procrun+pytestspec 37 of 37. Gate result pending. After it lands: W2230 (the --revendor list), then tell nemik.",
+      "evidence": "2026-11-02: 2026-11-02: taken, ahead of pytestspec's opa.py (whose evaluate feeds stdin) and nemik's five stdin or bytes calls. Plan: capture keeps its text signature and gains an input keyword (text on stdin, default none, so every caller is unchanged), plus a second function capture_bytes(argv, cwd, env, timeout, input: bytes | None) returning a bytes result; witnesses with real children; one stack with pytestspec's fall. | 2026-11-02: 2026-11-02: codemod written (capture gains input_text, new capture_bytes with input_bytes, CompletedBytes alias, three real-child witnesses) but NOT applied: the in-gate stack's W2229 entry also edits procrun/proc.py (the Completed alias, not yet in HEAD), so a scratch tree cut from HEAD would collide with main's dirty copy at land. Apply after the stack lands; scratch W2276 is open and clean. Then pytestspec's opa.py (evaluate feeds stdin) and memres' railcli.py ride the same stack. | 2026-11-02: 2026-11-02 tick: blocked on W2229, which is inflight in the gate (key 1793640848278740648, with W2237 and W2227's hooks half) and edits the same file, procrun/proc.py; the codemod is written and scratch W2276 is open. | 2026-11-02: 2026-11-02: W2229 landed (2276d9c5), so the block is lifted; applying the codemod in a scratch tree cut from the new HEAD. | 2026-11-02: 2026-11-02: BUILT and submitted with pytestspec's fall (W2238): capture takes input_text, capture_bytes with input_bytes, CompletedBytes alias, three real-child witnesses, three warrants; procrun mutants.regex re-pointed at the multi-line call (the reformat had left four declarations UNAPPLIED, found by the first bazel run) plus five new declarations; procrun suite 9 passed, bazel procrun+pytestspec 37 of 37. Gate result pending. After it lands: W2230 (the --revendor list), then tell nemik. | 2026-11-02: 2026-11-02: LANDED 9b0c3f7a (procrun.capture input_text, capture_bytes, CompletedBytes; three witnesses, three warrants, mutants re-pointed). nemik repins to get it.",
       "issued_at": "2026-11-02T16:40:45Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1175",
-      "last_worked": "2026-11-02T18:46:48Z",
+      "last_worked": "2026-11-02T20:18:35Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T201835Z"
     },
     {
       "symbol": "W2232",
@@ -49843,17 +49845,35 @@
     {
       "symbol": "W2238",
       "title": "pytestspec opa.py runs opa through procrun.capture and drops the per-responsibility subprocess entry",
+      "status": "landed",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02: pytestspec opa.py moved to procrun.capture (runtime dep; evaluate uses input_text); entry (2 rules) gone; pytestspec 167 passed, bazel 37 of 37 with procrun; submitted with W2231, result pending. | 2026-11-02: 2026-11-02: first submit refused PRE-GATE (W1704): main's pytestspec/.venv held the old installed procrun (no input_text), so the mutants lint's mypy failed on opa.py:164. Fixed with uv sync --offline --reinstall-package mikemol-procrun in main's pytestspec; resubmitted. Second occurrence of this shape (treeio before it): after a sibling's source changes, reinstall it in every consumer's main venv BEFORE submitting. | 2026-11-02: 2026-11-02: LANDED 7bc6c30d (pytestspec opa.py via procrun.capture; 2 rules fewer).",
+      "issued_at": "2026-11-02T18:36:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T20:18:16Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "landed_at": "20261102T201816Z"
+    },
+    {
+      "symbol": "W2239",
+      "title": "memres railcli.run_fence runs its fence command through procrun.capture and drops the per-responsibility subprocess entry",
       "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: pytestspec opa.py moved to procrun.capture (runtime dep; evaluate uses input_text); entry (2 rules) gone; pytestspec 167 passed, bazel 37 of 37 with procrun; submitted with W2231, result pending.",
-      "issued_at": "2026-11-02T18:36:54Z",
+      "evidence": "2026-11-02: 2026-11-02: memres railcli.run_fence moved to procrun.capture (TimeoutExpired from procrun.proc; runtime dep, stdlib-only leaf); the per-responsibility entry (2 rules) gone; memres 163 passed, ruff clean without the entry, pycheck admits railcli.py; landed to main's tree, main's memres venv reinstalled with a fresh procrun. NEXT: bazel //memres:all once the gate (W2238+W2231, key 1793645344829025017) clears, then submit; it is also the fall W2230 (procrun joins --revendor) can ride.",
+      "issued_at": "2026-11-02T18:53:36Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T18:47:07Z",
+      "last_worked": "2026-11-02T18:59:02Z",
       "ticks_blocked": 0,
       "completed": null
     }

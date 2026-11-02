@@ -42,6 +42,7 @@ EXTRA = (
     "cvdcore",
     "ratchet",
     "transcriptstruct",
+    "procrun",
 )
 ALL = (*KNOWN, *EXTRA)
 _ALTERNATION = "|".join(ALL)

@@ -17293,3 +17293,10 @@
   claim  = {W2227: the round sample and the jobs sample are described, and not by the same words.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_trainround.py -k test_each_metric_sample_carries_its_own_description},
 }
+
+@misc{hooks-revendor-procrun-is-a-vendored-dist-and-moves-with-the-rest,
+  section = {revendor},
+  title  = {W2230 (nemik:W1175): the process seam's wheel moves with the pair},
+  claim  = {W2230 (nemik:W1175): the process seam's wheel moves with the pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_procrun_is_a_vendored_dist_and_moves_with_the_rest},
+}
