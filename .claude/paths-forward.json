@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2240,
+  "counter": 2243,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -49484,7 +49484,7 @@
     {
       "symbol": "W2219",
       "title": "Hooks tests that build a real git repo share one tests helper instead of 50 per-file subprocess exemptions",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks",
@@ -49493,12 +49493,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Survey which hooks/tests/*.py entries exist only for git init, worktree add, commit and add subprocess calls (commit_*, stack*, scratch*, snapshot, index_refresh, githook_*, privacy_audit, verdictlog, queuecarry); write ONE module hooks/tests/gitrepo.py that owns the subprocess calls and takes the exemption itself (one entry); migrate the tests in batches of about 10 per stack; delete each per-file entry as it migrates",
-      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency).",
+      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141).",
       "issued_at": "2026-11-01T22:49:23Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-01T23:22:55Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-02T22:34:18Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2220",
@@ -49882,6 +49883,62 @@
     {
       "symbol": "W2240",
       "title": "webpage test_chromium runs the pinned browser through procrun.capture and drops its subprocess entry",
+      "status": "landed",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02: webpage test_chromium moved to procrun.capture (dev dep); its two subprocess rules gone, assert kept; bazel //webpage:all 16 of 16 with the gate empty; submitted, result pending. test_browser's entry stays (live Popen handle). | 2026-11-02: 2026-11-02: LANDED 11d5b4d3 (webpage test_chromium via procrun.capture; 2 rules fewer). test_browser's entry remains (live Popen handle).",
+      "issued_at": "2026-11-02T21:10:18Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T21:29:47Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "landed_at": "20261102T212947Z"
+    },
+    {
+      "symbol": "W2241",
+      "title": "procrun gains a typed process-handle seam so the Popen tests and buildtel.stream drop their subprocess entries",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "procrun"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Build procrun.proc.spawn and Child per the design in evidence, with real-child witnesses (pid/poll/wait/kill, wait timeout raising TimeoutExpired, discard of streams), then convert the six consumers one dist at a time (fence test_watcher, mutantcell test_eval and eval.kill_tree's type, webpage test_browser, pathsforward test_store and test_lock, buildtel proc.stream); each conversion is a keyed fall for its own dist",
+      "evidence": "2026-11-02: 2026-11-02 READ across the remaining subprocess paydown (all plain-capture entries are now converted): the entries left that a one-shot capture cannot take need a LIVE HANDLE: fence tests/test_watcher.py (a real Popen and a signal), mutantcell tests/test_eval.py (Popen of a sleeper and a process-group kill), pathsforward tests/test_store.py and tests/test_lock.py (real racing processes), webpage tests/test_browser.py (_poker holds a Popen[bytes] across a probe), buildtel proc.stream (os.pipe stderr and Popen) and its tests/test_proc.py. A typed Child in procrun.proc (the one module with the exemption) would wrap Popen: pid, poll, wait(timeout), terminate, kill, send_signal, and an iterator over stderr lines, so a consumer names no subprocess type. CONSTRAINT FOUND: a dist that other repos VENDOR as a wheel (transcriptstruct, atomicwrite, frontier, icsstruct, rulerseq, cvdcore, ratchet, corpus, waldo, fence, hooks, pathsforward) cannot gain a RUNTIME procrun dependency without those consumers vendoring procrun too; the five runtime edges added so far (ledger, gradekit, scan, memres, pytestspec) were checked: no repo under ~/github vendors or path-sources them. Check this before every runtime procrun edge. Design the Child API as a card note first. | 2026-11-02: 2026-11-02 DESIGN (from reading the consumers): procrun.proc gains spawn(argv, cwd=None, env=None, stdin='inherit', output='inherit') -> Child, with stdin and output each Literal['inherit','discard'] (no booleans: the FBT rules). Child is a small class over the Popen it owns, in the one exempt module: pid (int property), poll() -> int | None, wait(timeout: float | None = None) -> int (raising the exported TimeoutExpired), kill(), terminate(), send_signal(sig: int), and the context-manager protocol (kill and wait on exit so a test never leaks a process). WHAT EACH CONSUMER NEEDS, measured: fence test_watcher: spawn a shell with stdin discarded, command.pid, command.wait(timeout); pathsforward test_store and test_lock: spawn with env and both output streams discarded, wait(timeout=...) (and expects TimeoutExpired for a blocked locker), poll() in a loop; webpage test_browser: spawn, kill(), wait() and an annotation for _poker's return (Child, not Popen[bytes]); mutantcell test_eval: spawn a sleeper, child.pid, and cell_eval.kill_tree(child), whose parameter is typed Popen in src/eval.py (exempt by its own entry), so kill_tree must take a Child (or a Protocol with pid and kill/wait) and its other caller must not break; buildtel proc.stream: stderr lines while it runs, which needs an iterator over the child's stderr, a second method (stderr_lines()) or a callback parameter on spawn; buildtel is the heaviest, take it last. NOT IN SCOPE: capturing output of a live child (none of the six needs it except buildtel's stderr). Constraints: dists that other repos VENDOR cannot gain a runtime procrun edge (see earlier note); these six are not vendored (fence is: check, fence keeps procrun dev-only, which fits since only test_watcher needs it).",
+      "issued_at": "2026-11-02T21:40:36Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T22:10:13Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2242",
+      "title": "procrun gains a stderr-inherit capture so gmailstruct's age_runner drops its subprocess entry",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "procrun"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02 READ: gmailstruct cli.py has two calls. age_encrypt (bytes in, bytes out, timeout) is exactly procrun.capture_bytes (W2231, landed 9b0c3f7a). age_runner (W382) deliberately does NOT capture stderr: age-plugin-yubikey asks for the PIN and says 'touch your YubiKey' on age's stderr, so stderr must be INHERITED, stdout captured. capture takes both streams, so that call cannot move until procrun has an inherit-stderr variant (a keyword on capture_bytes, e.g. stderr='inherit', or a third function), returning (code, stdout bytes). The entry cannot fall until BOTH calls move. gmailstruct is not vendored or path-sourced by any repo, so a runtime procrun dep is safe. | 2026-11-02: 2026-11-02: BUILT and submitted: procrun.capture_stdout (stdout bytes only, stderr inherited; capfd witness, two mutants, one warrant) and gmailstruct's age_encrypt (capture_bytes) and age_runner (capture_stdout) through it, runtime dep, entry (2 rules) gone; procrun 10 passed, gmailstruct 105 passed, bazel procrun+gmailstruct 29 of 29 with the gate empty. Gate result pending. | 2026-11-02: 2026-11-02: first gate run REFUSED on //pathsforward:test_rank_from, culprit unattributed (nothing of this stack is under pathsforward); alone with the gate empty it PASSES. Same shape as W2229's refusal on //pathsforward:test_cli; that stack then gated clean on resubmit. Two different pathsforward tests, each failing once in a gate, each passing alone: reads as a load-dependent flake, carded; resubmitted unchanged per standing 7.",
+      "issued_at": "2026-11-02T21:41:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T22:19:17Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2243",
+      "title": "pathsforward tests refuse in the gate with an unattributed culprit and pass alone (test_cli, test_rank_from)",
       "status": "ready",
       "enables": [],
       "touches": [],
@@ -49889,9 +49946,9 @@
       "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "",
-      "issued_at": "2026-11-02T21:10:18Z",
+      "issued_at": "2026-11-02T22:18:59Z",
       "minted_during": "interrupt",
-      "caused_by": "W2200",
+      "caused_by": "W2242",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -50376,6 +50433,15 @@
       "taken_at": "2026-11-02T08:38:51Z",
       "renewed_at": "2026-11-02T08:38:51Z",
       "expires_at": "2026-11-02T09:08:51Z"
+    },
+    {
+      "tag": "file:hooks/pyproject.toml!w",
+      "holder": "(unlocked)",
+      "waypoint": "W2219",
+      "base_sha": "11d5b4d36feeed1d95cb8b1c09e195cb9aad22ba",
+      "taken_at": "2026-11-02T22:34:18Z",
+      "renewed_at": "2026-11-02T22:34:18Z",
+      "expires_at": "2026-11-02T23:04:18Z"
     }
   ],
   "advice": [

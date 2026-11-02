@@ -11,26 +11,20 @@ out of the index and a new file beside it. REAL GIT ON A TEMP REPOSITORY, NO FAK
 from __future__ import annotations
 
 import io
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata
+from mikemol.hooks import commit_kata, scratch
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-GIT = shutil.which("git") or "git"
-
 
 def _git(root: Path, *args: str) -> str:
-    done = subprocess.run(
-        [GIT, "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args],
-        capture_output=True,
-        text=True,
-        check=True,
+    code, out = scratch.git_out(
+        ["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args]
     )
-    return done.stdout
+    assert code == 0, out
+    return out
 
 
 def test_a_directory_in_paths_carries_a_staged_deletion_and_a_new_file(tmp_path: Path) -> None:

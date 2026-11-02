@@ -1688,7 +1688,8 @@ GRAPH = {
     },
     "tests/test_commit_dir_deletion.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1824,14 +1825,16 @@ GRAPH = {
     },
     "tests/test_commit_remote.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []
     },
     "tests/test_commit_remote_pushed.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1876,7 +1879,8 @@ GRAPH = {
     },
     "tests/test_commit_unpushed.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []

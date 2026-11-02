@@ -5133,3 +5133,11 @@
 2026-11-02T21:10:18Z  interrupt W2240 minted    -         "webpage test_chromium runs the pinned browser through procrun.capture and drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
 2026-11-02T21:16:06Z  status W2239 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T21:16:29Z  status W2230 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T21:20:04Z  status W2240 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T21:29:47Z  status W2240 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T21:40:36Z  interrupt W2241 minted    -         "procrun gains a typed process-handle seam so the Popen tests and buildtel.stream drop their subprocess entries"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T21:41:09Z  interrupt W2242 minted    -         "procrun gains a stderr-inherit capture so gmailstruct's age_runner drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T21:58:06Z  status W2242 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T22:10:13Z  status W2241 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T22:18:59Z  interrupt W2243 minted    -         "pathsforward tests refuse in the gate with an unattributed culprit and pass alone (test_cli, test_rank_from)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2242
+2026-11-02T22:34:18Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
