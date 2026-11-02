@@ -25,7 +25,7 @@ py_library(
     data = glob(["src/mikemol/ledger/py.typed"], allow_empty = True),
     imports = ["src"],
     # ⚑ THE SIBLING EDGE (W566 variant c): declared in pyproject.toml for uv, carried here for Bazel.
-    deps = ["//witness:witness"],
+    deps = ["//witness:witness", "//procrun:procrun"],
     visibility = ["//visibility:public"],
 )
 
@@ -51,6 +51,7 @@ py_library(
         deps = [
             ":ledger",
             "//witness:witness",
+            "//procrun:procrun",
             dev_requirement("pytest"),
         ],
         imports = ["src"],
@@ -124,6 +125,7 @@ py_binary(
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
         "//witness:witness",
+        "//procrun:procrun",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -151,7 +153,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/ledger/**"]) + ["//witness:witness"],
+    srcs = glob(["src/mikemol/ledger/**"]) + ["//witness:witness", "//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

@@ -26,7 +26,9 @@ classifiers = [
 # ⚑ ONE SIBLING DEPENDENCY: `finding_bibkeys` reads bib keys through `mikemol.witness.raw_bib`
 # (operator, 2026-10-04: substrate's D3 does not bind mtools). Declared a second time in
 # BUILD.bazel as a `py_library` edge; the path source below is for uv only (W566, variant c).
-dependencies = ["mikemol-witness"]
+# ⚑ AND `mikemol-procrun` (W2218): finding_kinds starts each witness command through the one
+# stdlib-only seam instead of spelling the subprocess rules in a per-file exemption.
+dependencies = ["mikemol-witness", "mikemol-procrun"]
 
 [project.urls]
 Homepage = "https://github.com/mikemol/mtools"
@@ -49,6 +51,7 @@ environments = ["sys_platform == 'linux'"]
 # ⚑ NOT `editable = true`: the editable finder hook makes mypy report `import-not-found` (W566).
 [tool.uv.sources]
 mikemol-witness = { path = "../witness" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -87,7 +90,7 @@ ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line",
 # importdag/pyproject.toml, mtools:W547): left to detection, a venv that has it installed and the
 # sandbox that does not would demand opposite import layouts of the same file.
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.witness"]
+known-third-party = ["mikemol.witness", "mikemol.procrun"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
@@ -98,6 +101,5 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB: each line is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ RUNNING A WITNESS COMMAND IS finding_kinds' ONE RESPONSIBILITY. MEASURED: the argv is the
-# ledger's own declared command, run with a caller-supplied cwd and never through a shell.
-"src/mikemol/ledger/finding_kinds.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# ⚑ finding_kinds RUNS ITS WITNESS COMMANDS THROUGH `procrun.capture` (W2218), so it needs no
+# subprocess exemption; the argv is the ledger's own declared command, never a shell.

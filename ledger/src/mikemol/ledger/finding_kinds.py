@@ -20,9 +20,10 @@ failure, because it reads as a missing instrument rather than as a wrong directo
 REQUIRED argument, and only the ledger's CLI — which knows its repository — resolves it.
 """
 
-import subprocess
 from collections.abc import Callable, Sequence
 from pathlib import Path
+
+from mikemol.procrun.proc import TimeoutExpired, capture
 
 # A lens runner: one argv in, `(rc, output)` out, with `rc is None` when it never started.
 Runner = Callable[[Sequence[str]], tuple[int | None, str]]
@@ -65,12 +66,10 @@ def run(*argv: str, cwd: Path) -> tuple[int | None, str]:
 
     """
     try:
-        done = subprocess.run(
-            argv, cwd=cwd, capture_output=True, text=True, timeout=TIMEOUT, check=False
-        )
+        done = capture(argv, cwd=cwd, timeout=TIMEOUT)
     except OSError as exc:
         return None, str(exc)
-    except subprocess.SubprocessError as exc:
+    except TimeoutExpired as exc:
         return None, str(exc)
     return done.returncode, (done.stdout or "") + (done.stderr or "")
 
