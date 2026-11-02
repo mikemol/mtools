@@ -138,10 +138,25 @@ wheels = [
 ]
 
 [[package]]
+name = "mikemol-procrun"
+version = "0.1.0"
+source = { directory = "../procrun" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
 name = "mikemol-pytestspec"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "mikemol-procrun" },
     { name = "pytest" },
 ]
 
@@ -154,7 +169,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytest" }]
+requires-dist = [
+    { name = "mikemol-procrun", directory = "../procrun" },
+    { name = "pytest" },
+]
 
 [package.metadata.requires-dev]
 dev = [

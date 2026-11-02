@@ -25,6 +25,8 @@ py_library(
     data = glob(["src/mikemol/pytestspec/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    # ⚑ THE SIBLING EDGE (W2238): standard library only, declared in pyproject.toml for uv.
+    deps = ["//procrun:procrun"],
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
@@ -47,11 +49,15 @@ py_library(
         size = "small",
         deps = [
             ":pytestspec",
+            "//procrun:procrun",
             dev_requirement("pytest"),
             # ⚑ test_plugin runs a real `-n 2` inner session (W316): the one target that needs
             # pytest-xdist, measured missing when bazel first ran it.
         ] + ([dev_requirement("pytest-xdist")] if src == "tests/test_plugin.py" else []),
         imports = ["src"],
+        # ⚑ Two source roots on sys.path (this dist and procrun): legacy implicit `__init__.py`
+        # creation would shadow the `mikemol` namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -121,6 +127,7 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//procrun:procrun",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -149,7 +156,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/pytestspec/**"]),
+    srcs = glob(["src/mikemol/pytestspec/**"]) + ["//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

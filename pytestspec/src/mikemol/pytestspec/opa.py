@@ -9,9 +9,10 @@ a different checker, and its verdicts are not these specs' verdicts.
 
 import json
 import shutil
-import subprocess
 from pathlib import Path
 from typing import cast
+
+from mikemol.procrun.proc import capture
 
 from mikemol.pytestspec.spec import Case, Evaluator, SpecDataError, Verdict
 
@@ -56,9 +57,7 @@ def resolve(opa: str = "opa") -> str:
     if path is None:
         msg = f"opa not found on PATH (need {PINNED})"
         raise OpaUnavailableError(msg)
-    proc = subprocess.run(
-        [path, "version"], capture_output=True, text=True, check=False, timeout=_TIMEOUT
-    )
+    proc = capture([path, "version"], timeout=_TIMEOUT)
     version = _field(proc.stdout, "Version:")
     if proc.returncode != 0 or version is None:
         msg = f"{path} version: exit {proc.returncode}, no Version line"
@@ -162,7 +161,7 @@ def evaluator(opa: str = "opa", data: tuple[Path, ...] = ()) -> Evaluator:
     def evaluate(spec: Path, case: Case) -> Verdict:
         if not resolved:
             resolved.append(resolve(opa))
-        proc = subprocess.run(
+        proc = capture(
             [
                 resolved[0],
                 "eval",
@@ -174,10 +173,7 @@ def evaluator(opa: str = "opa", data: tuple[Path, ...] = ()) -> Evaluator:
                 *extra,
                 f"data.{package_of(spec)}",
             ],
-            input=json.dumps(case),
-            capture_output=True,
-            text=True,
-            check=False,
+            input_text=json.dumps(case),
             timeout=_TIMEOUT,
         )
         if proc.returncode != 0:

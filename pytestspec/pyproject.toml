@@ -25,7 +25,9 @@ classifiers = [
 
 # ⚑ PYTEST IS A RUNTIME DEPENDENCY HERE, NOT A DEV ONE: a pytest plugin is loaded BY pytest.
 # opa is NOT a Python dependency; it is a pinned host binary, checked at evaluation (W200).
-dependencies = ["pytest"]
+# ⚑ AND `mikemol-procrun` (W2238), standard library only: opa.py starts the pinned binary through
+# the one seam instead of spelling the subprocess rules in a per-file exemption.
+dependencies = ["pytest", "mikemol-procrun"]
 
 [project.entry-points.pytest11]
 pytestspec = "mikemol.pytestspec.plugin"
@@ -48,6 +50,12 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
+
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS (W88)
@@ -92,9 +100,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ THE ONE MODULE THAT SHELLS OUT: opa is resolved to an absolute path by `shutil.which` first,
-# and called with an argv list — never a shell, never an untrusted program name.
-"src/mikemol/pytestspec/opa.py" = [
-    "suspicious-subprocess-import",
-    "subprocess-without-shell-equals-true",
-]
+# ⚑ THE ONE MODULE THAT RUNS opa, THROUGH `procrun.capture` (W2238): opa is resolved to an absolute
+# path by `shutil.which` first and called with an argv list, never a shell, and no subprocess
+# exemption is needed here.
