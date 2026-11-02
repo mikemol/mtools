@@ -8,11 +8,11 @@ DECOY-repo discipline for `owes` already lives in `test_owes.py`, and this suite
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.pycodemod import cli
 
@@ -71,12 +71,17 @@ def test_calls_over_an_unparseable_file_reports_incomplete(tmp_path: Path) -> No
     assert code == 1
 
 
+def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> None:
+    done = capture([_GIT, *args], cwd=repo, env=env)
+    assert done.returncode == 0, done.stderr
+
+
 def _decoy_repo(tmp_path: Path) -> Path:
     repo = tmp_path / "decoy"
     repo.mkdir()
-    subprocess.run([_GIT, "init", "-q"], cwd=repo, check=True, env={"PATH": "/usr/bin:/bin"})
-    subprocess.run([_GIT, "config", "user.email", "t@example.com"], cwd=repo, check=True)
-    subprocess.run([_GIT, "config", "user.name", "t"], cwd=repo, check=True)
+    _git(repo, "init", "-q", env={"PATH": "/usr/bin:/bin"})
+    _git(repo, "config", "user.email", "t@example.com")
+    _git(repo, "config", "user.name", "t")
     return repo
 
 
@@ -85,8 +90,8 @@ def test_owes_reports_an_untouched_caller(tmp_path: Path) -> None:
     repo = _decoy_repo(tmp_path)
     caller = repo / "caller.py"
     caller.write_text("def use():\n    target()\n", encoding="utf-8")
-    subprocess.run([_GIT, "add", "."], cwd=repo, check=True)
-    subprocess.run([_GIT, "commit", "-q", "-m", "first"], cwd=repo, check=True)
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "first")
     code = cli.main(["owes", "target", "--rev", "HEAD", "--root", str(repo), str(caller)])
     assert code == 0
 
@@ -356,8 +361,8 @@ def test_commentary_lost_names_a_dropped_note(
     repo = _decoy_repo(tmp_path)
     target = repo / "m.py"
     target.write_text("# \u2691 keep this note\nx = 1\n", encoding="utf-8")
-    subprocess.run([_GIT, "add", "."], cwd=repo, check=True)
-    subprocess.run([_GIT, "commit", "-q", "-m", "first"], cwd=repo, check=True)
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-q", "-m", "first")
     target.write_text("x = 1\n", encoding="utf-8")
     code = cli.main(["commentary-lost", "--rev", "HEAD", "--root", str(repo), str(target)])
     assert code == 0
@@ -556,11 +561,8 @@ def _child_env() -> dict[str, str]:
 
 def test_module_entry_runs_main() -> None:
     """`python -m mikemol.pycodemod.cli --help` prints the usage and exits 0, not silence."""
-    done = subprocess.run(
+    done = capture(
         [sys.executable, "-m", "mikemol.pycodemod.cli", "--help"],
-        capture_output=True,
-        text=True,
-        check=False,
         env=_child_env(),
         timeout=60,
     )
@@ -579,14 +581,7 @@ def test_funcnames_with_a_genuinely_failing_import_refuses(tmp_path: Path) -> No
     )
     target = tmp_path / "m.py"
     target.write_text("q = func.count()\n", encoding="utf-8")
-    done = subprocess.run(
-        [sys.executable, str(runner), str(target)],
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_child_env(),
-        timeout=60,
-    )
+    done = capture([sys.executable, str(runner), str(target)], env=_child_env(), timeout=60)
     assert done.returncode == _REFUSED
     assert "refused:" in done.stdout
     assert "sqlalchemy" in done.stdout

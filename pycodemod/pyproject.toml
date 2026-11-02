@@ -127,7 +127,7 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑⚑ PER FILE, NEVER A GLOB: each line is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-"tests/test_cli.py" = ["assert", "private-member-access", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_cli.py" = ["assert", "private-member-access"]
 # ⚑ ONE FILE, ONE RESPONSIBILITY: funcnames exists to ASK SQLAlchemy's private `_registry` which
 # names Core translates (no public API answers it, and a roster here would go stale). The private
 # read is the module's job, and an empty or moved registry refuses loudly (RegistryMovedError).

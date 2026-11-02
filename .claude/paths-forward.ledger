@@ -5082,3 +5082,8 @@
 2026-11-02T07:48:46Z  status W2049 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T08:04:03Z  status W2207 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T08:04:38Z  status W2223 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T08:38:51Z  status W2052 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T09:02:16Z  status W2224 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T09:07:32Z  interrupt W2225 minted    -         "pycodemod test_cli runs its git and child interpreters through procrun.capture and drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T09:13:49Z  status W2225 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T09:31:46Z  status W2215 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
