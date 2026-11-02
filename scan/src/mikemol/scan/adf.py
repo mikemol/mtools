@@ -17,10 +17,11 @@ pass is accepted when it exits 0 or 7 AND wrote at least one page; anything else
 tool's own words. The first real scan is the check (luthen-observability:W1210).
 """
 
-import subprocess
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+
+from mikemol.procrun.proc import capture
 
 ENDED_EMPTY = 7
 # ⚑ TIFF, NOT PNM: the PDF step (W1424) joins pages with img2pdf, which reads TIFF and not PNM, and
@@ -105,7 +106,7 @@ def run_command(argv: Sequence[str]) -> tuple[int, str]:
         (exit code, stderr text).
 
     """
-    proc = subprocess.run(list(argv), capture_output=True, text=True, check=False)
+    proc = capture(list(argv))
     code: int = proc.returncode
     err: str = proc.stderr
     return code, err

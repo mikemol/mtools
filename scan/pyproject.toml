@@ -17,8 +17,9 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# ⚑ NO RUNTIME DEPENDENCY: standard library only.
-dependencies = []
+# ⚑ ONE RUNTIME DEPENDENCY, AND IT IS STANDARD LIBRARY ONLY (W2237): `mikemol-procrun`, the one seam
+# that starts a child, which adf uses to run scanimage instead of spelling the subprocess rules.
+dependencies = ["mikemol-procrun"]
 
 [project.scripts]
 mikemol-scan = "mikemol.scan.cli:entry"
@@ -39,6 +40,12 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
+
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -93,9 +100,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ RUNNING scanimage IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1423): the argv is the fixed
-# program name, fixed flags and the caller's device and directory as single words; no shell.
-"src/mikemol/scan/adf.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
+# ⚑ RUNNING scanimage IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1423), AND IT RUNS IT THROUGH
+# `procrun.capture` (W2237): the argv is the fixed program name, fixed flags and the caller's
+# device and directory as single words; no shell, and no subprocess exemption here.

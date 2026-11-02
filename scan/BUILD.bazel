@@ -16,13 +16,15 @@ exports_files([
     "uv.lock",
 ])
 
-# ⚑ NO `deps`: the shipping hub is empty on purpose; the module is standard library only.
+# ⚑ THE SHIPPING HUB IS EMPTY ON PURPOSE: the one dependency is the sibling `//procrun` (W2237),
+# standard library only, declared in pyproject.toml for uv and carried here as a py_library edge.
 py_library(
     name = "scan",
     srcs = glob(["src/mikemol/scan/**/*.py"]),
     data = glob(["src/mikemol/scan/py.typed"], allow_empty = True),
     imports = ["src"],
     visibility = ["//visibility:public"],
+    deps = ["//procrun:procrun"],
 )
 
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS.
@@ -45,10 +47,14 @@ py_library(
         size = "small",
         deps = [
             ":scan",
+            "//procrun:procrun",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
         imports = ["src"],
+        # ⚑ Two source roots on sys.path (this dist and procrun): legacy implicit `__init__.py`
+        # creation would shadow the `mikemol` namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -112,6 +118,7 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//procrun:procrun",
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -141,7 +148,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/scan/**"]),
+    srcs = glob(["src/mikemol/scan/**"]) + ["//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.
