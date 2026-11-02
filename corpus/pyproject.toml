@@ -32,7 +32,9 @@ Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml).
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2228) IN THE DEV GROUP ONLY: the witness that builds a decoy
+# repository reaches git through the one stdlib-only seam instead of a per-file exemption.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -44,6 +46,12 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
+
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -102,4 +110,3 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # exclusions. MEASURED: git is resolved by `shutil.which`, the argv is fixed
 # (`git -C <root> check-ignore --stdin`), the names go in on stdin, never through a shell.
 "src/mikemol/corpus/suite_discovery.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_suite_discovery.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

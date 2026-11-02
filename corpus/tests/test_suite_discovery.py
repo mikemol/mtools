@@ -10,9 +10,9 @@ every GIT_* variable removed, since git's ignore is the walk's one owner of excl
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import capture
 
 from mikemol.corpus import suite_discovery
 
@@ -97,9 +97,8 @@ def test_a_git_ignored_tree_is_not_walked(tmp_path: Path, monkeypatch: pytest.Mo
     """
     for name in [name for name in os.environ if name.startswith("GIT_")]:
         monkeypatch.delenv(name)
-    git = shutil.which("git")
-    assert git is not None
-    subprocess.run([git, "init", "--quiet", str(tmp_path)], check=True)
+    done = capture(["git", "init", "--quiet", str(tmp_path)])
+    assert done.returncode == 0, done.stderr
     _write(tmp_path / ".gitignore", "build/\n")
     _write(tmp_path / "build" / "lib" / "copy_selftest.py", _BODY + _MAIN_GUARD)
     _write(tmp_path / "src" / "real_selftest.py", _BODY + _MAIN_GUARD)
