@@ -170,6 +170,7 @@ source = { directory = "../pathwalk" }
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "mikemol-procrun", directory = "../procrun" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "ruff", specifier = "==0.16.6" },

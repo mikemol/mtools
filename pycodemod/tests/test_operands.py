@@ -11,11 +11,10 @@ with every GIT_* variable removed and the global and system git config switched 
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.pycodemod import cli
 
@@ -30,15 +29,10 @@ _REFUSED = 2
 
 
 def _git(root: Path, *args: str) -> None:
-    git = shutil.which("git")
-    if git is None:
-        pytest.skip("git is not installed")
-    subprocess.run(
-        [git, "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args],
-        cwd=root,
-        check=True,
-        capture_output=True,
+    done = capture(
+        ["git", "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args], cwd=root
     )
+    assert done.returncode == 0, done.stderr
 
 
 def _isolate(monkeypatch: pytest.MonkeyPatch) -> None:
