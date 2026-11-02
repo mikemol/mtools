@@ -5057,3 +5057,7 @@
 2026-11-02T03:54:24Z  tick  W2212 advanced  collapse  "gatecheck test_siblingpin and test_witness_reach onto procrun (dev group, lock, venv, BUILD), 4 rules fewer; bazel run of the gatecheck targets in flight before submit; gate empty, HEAD 21286562"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T04:13:01Z  interrupt W2222 minted    -         "Remove pathwalk's 3 per-file test exemptions with procrun.capture"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
 2026-11-02T04:18:53Z  tick  W2222 advanced  collapse  "pathwalk's 3 tests onto procrun (keyed fall, 6 rules) plus gatecheck's 2 (4 rules) as stack-pathwalk-gatecheck, submitted on 21286562 after a green bazel run (7 of 7); minted W2222 and corrected a misfiled note on W2217"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T04:21:55Z  tick  W2222 held      collapse  "stack-pathwalk-gatecheck (W2222 pathwalk keyed fall + W2212 gatecheck) inflight, key 1793593102248961719, HEAD 21286562; nothing to resubmit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T04:23:01Z  status W2078 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T04:28:20Z  status W2222 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T04:29:02Z  tick  W2222 advanced  collapse  "stack-pathwalk-gatecheck landed 10319fe8 and fe7fb5c2: pathwalk and part of gatecheck off subprocess in tests; W2222 done; HEAD fe7fb5c2"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

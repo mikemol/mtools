@@ -5,11 +5,11 @@
 from __future__ import annotations
 
 import ast
-import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.importdag.closure import (
     FuncDef,
@@ -553,7 +553,7 @@ def test_main_reads_sys_argv_when_not_given_argv(
 def test_runs_as_a_module(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """`python -m mikemol.importdag.closure` prints the rows and exits 0."""
     _project(tmp_path, monkeypatch)
-    r = subprocess.run(
+    r = capture(
         [
             sys.executable,
             "-m",
@@ -563,9 +563,6 @@ def test_runs_as_a_module(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
             *ENGINE,
         ],
         cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
     )
     assert r.returncode == 0
     assert r.stdout.startswith("alpha\tpaperkit/bib.py\n")

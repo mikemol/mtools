@@ -5,10 +5,11 @@
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import capture
 
 from mikemol.importdag import dagnames
 from mikemol.importdag.dagnames import (
@@ -266,20 +267,15 @@ def test_module_path_import_from_a_fresh_interpreter(tmp_path: Path) -> None:
         f"eng = Path({str(eng)!r})\n"
         "print(unresolvable(module_names(eng, ('tests',), 'eng'), eng))\n"
     )
-    r = subprocess.run(
-        [sys.executable, "-c", code], cwd=tmp_path, capture_output=True, text=True, check=False
-    )
+    r = capture([sys.executable, "-c", code], cwd=tmp_path)
     assert (r.returncode, r.stdout.strip()) == (0, "[]")
 
 
 def test_runs_as_a_module(tmp_path: Path) -> None:
     """`python -m mikemol.importdag.dagnames` exits with `main`'s code."""
     eng = _engine(tmp_path)
-    r = subprocess.run(
+    r = capture(
         [sys.executable, "-m", "mikemol.importdag.dagnames", "--engine", str(eng)],
         cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
     )
     assert (r.returncode, r.stdout) == (0, "a\nt\ntools.sub\n")

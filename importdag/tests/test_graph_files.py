@@ -8,8 +8,9 @@ is what it was without the flag; git that cannot answer is exit 2, never an empt
 and the conftest come from the listed names, not the disk.
 """
 
-import subprocess
 from pathlib import Path
+
+from mikemol.procrun.proc import capture
 
 from mikemol.importdag import graph, trackednames
 
@@ -18,14 +19,20 @@ _STALE = 1
 _NO_GIT = 2
 
 
+def _git(cwd: Path, *args: str) -> None:
+    """Run git in `cwd`, failing the test with git's own stderr on a non-zero exit."""
+    done = capture(["git", *args], cwd=cwd)
+    assert done.returncode == 0, done.stderr
+
+
 def _repo(tmp_path: Path) -> Path:
     dist = tmp_path / "dist"
     (dist / "src" / "mikemol" / "demo").mkdir(parents=True)
     (dist / "tests").mkdir()
     (dist / "src" / "mikemol" / "demo" / "alpha.py").write_text("X = 1\n", encoding="utf-8")
     (dist / "tests" / "test_alpha.py").write_text("from mikemol.demo import alpha\n", "utf-8")
-    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
-    subprocess.run(["git", "-C", str(tmp_path), "add", "-A"], check=True)
+    _git(tmp_path, "init", "-q", str(tmp_path))
+    _git(tmp_path, "add", "-A")
     return dist
 
 
@@ -58,7 +65,7 @@ def test_a_tracked_module_the_graph_does_not_name_is_stale_and_named(tmp_path: P
     assert graph.main(_args(dist, "--check", "--files")) == 0
     new = dist / "src" / "mikemol" / "demo" / "gamma.py"
     new.write_text("Y = 2\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(tmp_path), "add", "-A"], check=True)
+    _git(tmp_path, "add", "-A")
     assert graph.main(_args(dist, "--check", "--files")) == _STALE
 
 

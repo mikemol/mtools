@@ -5,10 +5,11 @@
 from __future__ import annotations
 
 import ast
-import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import capture
 
 from mikemol.importdag import dagnames
 from mikemol.importdag.closure_census import (
@@ -350,7 +351,7 @@ def test_main_reads_sys_argv_when_not_given_argv(
 def test_runs_as_a_module(tmp_path: Path) -> None:
     """`python -m mikemol.importdag.closure_census` exits with `main`'s code."""
     tree = _tree(tmp_path)
-    r = subprocess.run(
+    r = capture(
         [
             sys.executable,
             "-m",
@@ -361,9 +362,6 @@ def test_runs_as_a_module(tmp_path: Path) -> None:
             str(tree.closure),
         ],
         cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
     )
     assert r.returncode == 1
     assert "1 under-declared witness(es)" in r.stdout

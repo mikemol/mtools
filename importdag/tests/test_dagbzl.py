@@ -5,9 +5,10 @@
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import capture
 
 from mikemol.importdag.dagbzl import HEADER, main, render, render_with
 
@@ -149,12 +150,9 @@ def test_runs_as_a_module(tmp_path: Path) -> None:
     """`python -m mikemol.importdag.dagbzl` exits with `main`'s code."""
     eng = _engine(tmp_path)
     (eng / "dag.bzl").write_text("old\n", encoding="utf-8")
-    r = subprocess.run(
+    r = capture(
         [sys.executable, "-m", "mikemol.importdag.dagbzl", "--engine", str(eng), "--write"],
         cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
     )
     assert r.returncode == 0
     assert (eng / "dag.bzl").read_text(encoding="utf-8") == HEADER + BODY

@@ -40,7 +40,10 @@ Homepage = "https://github.com/mikemol/mtools"
 
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS (see ratchet/pyproject.toml).
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2216) IN THE DEV GROUP ONLY: the tests that start a child (git, a module
+# as a script) reach it through the one stdlib-only seam instead of each spelling the subprocess
+# rules in a per-file exemption. The runtime list above is unchanged.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -55,6 +58,7 @@ environments = ["sys_platform == 'linux'"]
 
 [tool.uv.sources]
 mikemol-atomicwrite = { path = "../atomicwrite" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -94,7 +98,7 @@ ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line",
 # package's own imports, while the sandbox (no venv) puts it in its own block: the ratchet and the
 # per-edit hook then demand opposite layouts of the same file (mtools:W547).
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.atomicwrite"]
+known-third-party = ["mikemol.atomicwrite", "mikemol.procrun"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
@@ -108,14 +112,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ THE RESOLVER'S WITNESSES ARE PLAIN ASSERTS OVER PURE FUNCTIONS (and one tmp_path read): no child
-# process, so `assert` is the only exemption it needs.
-# ⚑ ITS WITNESSES BUILD A REAL GIT REPOSITORY, because the defect under test is what git tracks.
-"tests/test_graph_files.py" = [
-    "start-process-with-partial-path",
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
+# ⚑ THE TESTS THAT RUN A CHILD (git in a decoy repository, a module as a script) DO IT THROUGH
+# `procrun.capture` (W2216), so no test carries a subprocess entry.
 # ⚑ THE ONE PLACE `graph --files` asks git which files a distribution tracks (W2011).
 "src/mikemol/importdag/trackednames.py" = [
     "subprocess-without-shell-equals-true",
@@ -123,25 +121,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 ]
 # ⚑ THE ONE PLACE `mikemol-landing-cost` asks the store: `mikemol-otlp query-metrics` as a child.
 "src/mikemol/importdag/costcli.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
-# ⚑ THE THREE PORTED TOOLS (mtools:W547). `closure` is exercised as `python -m` in a child as well as
-# by calls; `imports` and `dagbzl` are the two DAG-file writers, and their exit codes are contracts.
-"tests/test_closure.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
-"tests/test_imports.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
-"tests/test_dagbzl.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
-# ⚑ ITS WITNESSES RUN THE CENSUS AS `python -m` IN A CHILD: the exit code is the contract.
-"tests/test_closure_census.py" = [
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
@@ -155,12 +134,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE CENSUS ASKS the closure tool (this distribution's `closure` module, or a script standing in
 # for it) what roots a claim gets, as a child process. Same argv shape: `sys.executable` and paths.
 "src/mikemol/importdag/closure_census.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
-# ⚑ ITS WITNESSES RUN A REAL CHILD INTERPRETER, because the defect under test is what a fresh
-# process can import.
-"tests/test_dagnames.py" = [
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
