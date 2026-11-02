@@ -10,10 +10,10 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.pathwalk.walk import expand
 
@@ -50,7 +50,7 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     (root / _MAIN).write_text(_IMPORTER, encoding="utf-8")
     git = shutil.which("git")
     assert git is not None
-    subprocess.run([git, "init", "-q"], cwd=root, check=True, capture_output=True)
+    assert capture([git, "init", "-q"], cwd=root).returncode == 0
     return root
 
 

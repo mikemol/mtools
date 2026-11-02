@@ -46,10 +46,14 @@ py_library(
         size = "small",
         deps = [
             ":pathwalk",
+            "//procrun:procrun",  # W2222: the tests start git through procrun.capture
             dev_requirement("pytest"),
             dev_requirement("mypy"),
         ],
         imports = ["src"],
+        # ⚑ Two source roots plus legacy implicit `__init__.py` files would turn `mikemol` into a
+        # regular package from the first root and shadow the namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -113,6 +117,7 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//procrun:procrun",  # W2222: the tests import it, so mypy must resolve it
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -142,7 +147,8 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/pathwalk/**"]),
+    # The dev venv also carries procrun (W2222), which the tests import, so the mutation gate does too.
+    srcs = glob(["src/mikemol/pathwalk/**"]) + ["//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

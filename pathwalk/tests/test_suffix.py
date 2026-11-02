@@ -11,10 +11,10 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.pathwalk.walk import expand
 
@@ -27,12 +27,9 @@ _MD = ".md"
 def _git(root: Path, *args: str) -> None:
     git = shutil.which("git")
     assert git is not None
-    subprocess.run(
-        [git, "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args],
-        cwd=root,
-        check=True,
-        capture_output=True,
-    )
+    argv = [git, "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args]
+    done = capture(argv, cwd=root)
+    assert done.returncode == 0, done.stderr
 
 
 def _tree(root: Path) -> None:
