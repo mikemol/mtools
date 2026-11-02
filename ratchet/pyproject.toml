@@ -37,7 +37,10 @@ classifiers = [
 # a py_library dep, so the pip hubs stay independent of it and requirements.txt is deliberately
 # NOT regenerated. The "no runtime dependencies" stance above was about third-party weight in every
 # adopting gate; this adds none.
-dependencies = ["mikemol-atomicwrite"]
+# ⚑ AND `mikemol-procrun` (W2214): the one place a child process starts, which the tests that run
+# mypy, git and this CLI as children now reach instead of each spelling the subprocess rules in a
+# per-file exemption. Stdlib-only, so it adds no third-party weight either.
+dependencies = ["mikemol-atomicwrite", "mikemol-procrun"]
 
 
 [project.scripts]
@@ -59,6 +62,7 @@ dev = ["pytest", "mypy", "ruff==0.16.6"]
 
 [tool.uv.sources]
 mikemol-atomicwrite = { path = "../atomicwrite" }
+mikemol-procrun = { path = "../procrun" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -195,7 +199,7 @@ ignore = [
 # classifies it with this package's own imports while the sandbox (no venv) puts it in its own
 # block: the ratchet and the per-edit hook then demand opposite layouts of the same file.
 [tool.ruff.lint.isort]
-known-third-party = ["mikemol.atomicwrite"]
+known-third-party = ["mikemol.atomicwrite", "mikemol.procrun"]
 
 # ⚑⚑ `@pytest.fixture()` CALLED, NOT BARE — AND THE TWO CHECKERS DISAGREE ABOUT THIS, so the
 # disagreement has to be settled in config rather than re-argued per file. `pytest.fixture` is an
@@ -261,7 +265,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-"tests/test_mypy_domain.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
 # file rather than to the package. An entry naming a directory would grant it to every module in
@@ -285,12 +288,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ `git` IS RESOLVED FROM PATH (start-process-with-partial-path): unlike ruff, git is not a
 # binary the BUILD stages, and the guard needs the work tree's own repository.
 "src/mikemol/ratchet/remap.py" = [
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-    "start-process-with-partial-path",
-]
-# ⚑ ITS WITNESS BUILDS A REAL REPOSITORY, because the baseline under test IS a git revision.
-"tests/test_remap.py" = [
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
     "start-process-with-partial-path",

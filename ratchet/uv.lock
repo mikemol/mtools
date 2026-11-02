@@ -143,11 +143,26 @@ dev = [
 ]
 
 [[package]]
+name = "mikemol-procrun"
+version = "0.1.0"
+source = { directory = "../procrun" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff", specifier = "==0.16.6" },
+]
+
+[[package]]
 name = "mikemol-ratchet"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "mikemol-atomicwrite" },
+    { name = "mikemol-procrun" },
 ]
 
 [package.dev-dependencies]
@@ -158,7 +173,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "mikemol-atomicwrite", directory = "../atomicwrite" }]
+requires-dist = [
+    { name = "mikemol-atomicwrite", directory = "../atomicwrite" },
+    { name = "mikemol-procrun", directory = "../procrun" },
+]
 
 [package.metadata.requires-dev]
 dev = [

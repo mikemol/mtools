@@ -18,11 +18,11 @@ everything proves nothing, so `README.md`, which mypy does not read, must be abs
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+from mikemol.procrun.proc import capture
 
 DOMAIN_ENV = "MYPY_DOMAIN"
 VICTIM = "//ratchet:src/mikemol/ratchet/state.py"
@@ -38,13 +38,8 @@ def _domain() -> set[str]:
 
 
 def _mypy(directory: Path) -> int:
-    done = subprocess.run(
-        [sys.executable, "-m", "mypy", "--strict", "user.py"],
-        cwd=directory,
-        capture_output=True,
-        check=False,
-        timeout=TIMEOUT_S,
-    )
+    argv = [sys.executable, "-m", "mypy", "--strict", "user.py"]
+    done = capture(argv, cwd=directory, timeout=TIMEOUT_S)
     return done.returncode
 
 

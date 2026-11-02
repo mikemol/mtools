@@ -30,6 +30,7 @@ exports_files([
 # hand (mtools:W562, the gradekit, debtplan and treeio precedent).
 SIBLINGS = [
     "//atomicwrite:atomicwrite",
+    "//procrun:procrun",  # W2214: the tests start their children through procrun.capture
 ]
 
 py_library(
@@ -114,7 +115,7 @@ py_test(
     data = ["pyproject.toml", ":mypy_domain"],
     env = {"MYPY_DOMAIN": "$(location :mypy_domain)"},
     size = "small",
-    deps = [dev_requirement("mypy"), dev_requirement("pytest")],
+    deps = [dev_requirement("mypy"), dev_requirement("pytest"), "//procrun:procrun"],
     imports = ["src"],
     legacy_create_init = 0,
 )

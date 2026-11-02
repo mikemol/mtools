@@ -15,10 +15,10 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.ratchet import cli
 
@@ -59,9 +59,7 @@ def _git(root: Path, *args: str) -> None:
     ⚑ THE STDERR IS THE POINT: the refusal above printed only `returned non-zero exit status 1`,
     and its cause could not be read from the gate's report.
     """
-    proc = subprocess.run(
-        ["git", "-C", str(root), *args], capture_output=True, text=True, check=False
-    )
+    proc = capture(["git", "-C", str(root), *args])
     assert proc.returncode == 0, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
 
 
