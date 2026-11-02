@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2239,
+  "counter": 2240,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -49690,7 +49690,7 @@
     {
       "symbol": "W2230",
       "title": "mikemol-repin --revendor vendors mikemol.procrun (nemik's 13 text-capture subprocess calls need it)",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [
         "hooks"
@@ -49698,13 +49698,14 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: procrun added to revendor.EXTRA (the named list of dists a repo may vendor); test_procrun_is_a_vendored_dist_and_moves_with_the_rest pins vendored() and move_sources(); test_revendor and test_revendor_cli 27 passed; one warrant; landed to main's tree. NEXT: bazel //hooks:test_revendor //hooks:test_revendor_cli //hooks:mypy //hooks:ruff plus //memres:all once the gate (W2238+W2231) clears, then submit with memres' fall (W2239). NOT in this change: whether mikemol-wheel builds a procrun wheel (nemik vendors wheels, so check wheel.py before telling them). | 2026-11-02: 2026-11-02 READ: hooks wheel.py takes the dist names from its caller (no validation against revendor.ALL; its only link to revendor is the version, the tag, short_of, wheel_name and with_local_version), so mikemol-wheel can already build a procrun wheel from procrun/pyproject.toml; the EXTRA list is only what --revendor will MOVE once a repo vendors it. So the change is complete for nemik's ask. Unverified: that procrun/pyproject.toml has a version of 0.1.0 for with_local_version to extend (it should, same template); run mikemol-wheel procrun in a scratch to confirm before telling nemik. | 2026-11-02: 2026-11-02 CONFIRMED: mikemol-wheel procrun --sha 26ab4973 --mtools <repo> builds mikemol_procrun-0.1.0+g26ab497-py3-none-any.whl (sha256 28cf9353b4af02a120ee28371ac966fa2a755ac2f449e847697d581d839109f0), so the wheel half of nemik's ask needs no change; only revendor.EXTRA did (built, in main's tree, awaiting the gate and a keyed fall). Built at HEAD, so it predates capture_bytes and input_text (W2231, in the gate): nemik must repin after W2231 lands to get them.",
+      "evidence": "2026-11-02: 2026-11-02: procrun added to revendor.EXTRA (the named list of dists a repo may vendor); test_procrun_is_a_vendored_dist_and_moves_with_the_rest pins vendored() and move_sources(); test_revendor and test_revendor_cli 27 passed; one warrant; landed to main's tree. NEXT: bazel //hooks:test_revendor //hooks:test_revendor_cli //hooks:mypy //hooks:ruff plus //memres:all once the gate (W2238+W2231) clears, then submit with memres' fall (W2239). NOT in this change: whether mikemol-wheel builds a procrun wheel (nemik vendors wheels, so check wheel.py before telling them). | 2026-11-02: 2026-11-02 READ: hooks wheel.py takes the dist names from its caller (no validation against revendor.ALL; its only link to revendor is the version, the tag, short_of, wheel_name and with_local_version), so mikemol-wheel can already build a procrun wheel from procrun/pyproject.toml; the EXTRA list is only what --revendor will MOVE once a repo vendors it. So the change is complete for nemik's ask. Unverified: that procrun/pyproject.toml has a version of 0.1.0 for with_local_version to extend (it should, same template); run mikemol-wheel procrun in a scratch to confirm before telling nemik. | 2026-11-02: 2026-11-02 CONFIRMED: mikemol-wheel procrun --sha 26ab4973 --mtools <repo> builds mikemol_procrun-0.1.0+g26ab497-py3-none-any.whl (sha256 28cf9353b4af02a120ee28371ac966fa2a755ac2f449e847697d581d839109f0), so the wheel half of nemik's ask needs no change; only revendor.EXTRA did (built, in main's tree, awaiting the gate and a keyed fall). Built at HEAD, so it predates capture_bytes and input_text (W2231, in the gate): nemik must repin after W2231 lands to get them. | 2026-11-02: 2026-11-02: LANDED a112bf6d (revendor.EXTRA gains procrun; the wheel half needed no change). nemik repins after 9b0c3f7a to get input_text and capture_bytes.",
       "issued_at": "2026-11-02T16:40:15Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1175",
-      "last_worked": "2026-11-02T20:09:32Z",
+      "last_worked": "2026-11-02T21:16:29Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T211629Z"
     },
     {
       "symbol": "W2231",
@@ -49863,19 +49864,36 @@
     {
       "symbol": "W2239",
       "title": "memres railcli.run_fence runs its fence command through procrun.capture and drops the per-responsibility subprocess entry",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: memres railcli.run_fence moved to procrun.capture (TimeoutExpired from procrun.proc; runtime dep, stdlib-only leaf); the per-responsibility entry (2 rules) gone; memres 163 passed, ruff clean without the entry, pycheck admits railcli.py; landed to main's tree, main's memres venv reinstalled with a fresh procrun. NEXT: bazel //memres:all once the gate (W2238+W2231, key 1793645344829025017) clears, then submit; it is also the fall W2230 (procrun joins --revendor) can ride.",
+      "evidence": "2026-11-02: 2026-11-02: memres railcli.run_fence moved to procrun.capture (TimeoutExpired from procrun.proc; runtime dep, stdlib-only leaf); the per-responsibility entry (2 rules) gone; memres 163 passed, ruff clean without the entry, pycheck admits railcli.py; landed to main's tree, main's memres venv reinstalled with a fresh procrun. NEXT: bazel //memres:all once the gate (W2238+W2231, key 1793645344829025017) clears, then submit; it is also the fall W2230 (procrun joins --revendor) can ride. | 2026-11-02: 2026-11-02: bazel //memres:all plus the hooks revendor targets 38 of 38 with the gate empty; submitted with W2230 (revendor.EXTRA gains procrun) as its keyed fall; result pending. | 2026-11-02: 2026-11-02 tick check: stack W2239 (memres fall) plus W2230 (revendor.EXTRA) inflight, key 1793650952893841949, HEAD 9b0c3f7a. Next paydown after it: webpage (two src entries), buildtel (two), gmailstruct, transcriptstruct src entries; and the Popen/real-process ones (fence test_watcher, mutantcell test_eval, pathsforward test_store and test_lock) need a seam first. | 2026-11-02: 2026-11-02: LANDED 1e6d0de8 (memres railcli via procrun.capture; 2 rules fewer).",
       "issued_at": "2026-11-02T18:53:36Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T18:59:02Z",
+      "last_worked": "2026-11-02T21:16:06Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T211606Z"
+    },
+    {
+      "symbol": "W2240",
+      "title": "webpage test_chromium runs the pinned browser through procrun.capture and drops its subprocess entry",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-02T21:10:18Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

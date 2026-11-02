@@ -5130,3 +5130,6 @@
 2026-11-02T19:20:35Z  status W2230 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T20:18:16Z  status W2238 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T20:18:35Z  status W2231 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T21:10:18Z  interrupt W2240 minted    -         "webpage test_chromium runs the pinned browser through procrun.capture and drops its subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T21:16:06Z  status W2239 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T21:16:29Z  status W2230 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

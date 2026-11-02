@@ -9,10 +9,10 @@ set by the BUILD file, so outside bazel there is nothing to launch and the test 
 """
 
 import os
-import subprocess
 from pathlib import Path
 
 import pytest
+from mikemol.procrun.proc import capture
 
 _PINNED = "153.0.8010.12"
 
@@ -31,6 +31,6 @@ def test_the_pinned_browser_starts_and_reports_the_pinned_version() -> None:
     if binary is None:
         pytest.skip("not run under bazel: no CHROME_RLOCATION to launch")
     assert binary.is_file()
-    done = subprocess.run([str(binary), "--version"], capture_output=True, text=True, check=False)
+    done = capture([str(binary), "--version"])
     assert done.returncode == 0, done.stderr
     assert _PINNED in done.stdout

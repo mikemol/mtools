@@ -30,7 +30,9 @@ Homepage = "https://github.com/mikemol/mtools"
 [dependency-groups]
 # ⚑ playwright IS EXACT (W1818, nemik:W717): the probes are facts about one browser driven by one
 # client, and nemik's uv.lock holds 1.63.0, whose wheel expects chromium_headless_shell-1243.
-dev = ["pytest", "mypy", "ruff==0.16.6", "playwright==1.63.0"]
+# ⚑ AND `mikemol-procrun` (W2240) IN THE DEV GROUP ONLY: the test that launches the pinned browser to
+# read its version reaches it through the one stdlib-only seam. The runtime list stays empty.
+dev = ["pytest", "mypy", "ruff==0.16.6", "playwright==1.63.0", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -42,6 +44,12 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
+
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -98,13 +106,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ THE ONE MODULE THAT STARTS A PROCESS (W1819): it launches the pinned browser from bazel's own
-# data with a fixed argv and no shell, so the two subprocess rules are exempted for it and no other.
-"tests/test_chromium.py" = [
-    "assert",
-    "suspicious-subprocess-import",
-    "subprocess-without-shell-equals-true",
-]
+# ⚑ THE PINNED BROWSER'S VERSION CHECK (W1819) RUNS THROUGH `procrun.capture` (W2240): a fixed argv
+# from bazel's own data, no shell, so it needs only the assert grant.
+"tests/test_chromium.py" = ["assert"]
 # ⚑ THE BROWSER PROBES (W1820): the same two exemptions for the same reason (the second process is
 # `cdp_poke.py` run with this interpreter and a port, no shell), and the helper that starts it.
 "tests/test_browser.py" = [
