@@ -2512,7 +2512,12 @@ GRAPH = {
     },
     "tests/test_pycheck_cli.py": {
       "imports": [
+        "src/mikemol/hooks/project_root.py",
+        "src/mikemol/hooks/pycheck.py",
+        "src/mikemol/hooks/pycheck_clear.py",
         "src/mikemol/hooks/pycheck_cli.py",
+        "src/mikemol/hooks/pycheck_format.py",
+        "src/mikemol/hooks/pycheck_install.py",
         "src/mikemol/hooks/verdict.py"
       ],
       "reads": [],

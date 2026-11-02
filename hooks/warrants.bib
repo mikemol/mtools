@@ -17199,3 +17199,69 @@
   claim  = {W2078: no unbuilt path is no refusal, so the next refusal speaks.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_stack_sharing_nothing_with_a_stack_ahead_goes_on_to_the_grid},
 }
+
+@misc{hooks-pycheck-cli-each-rewrite-flag-runs-its-own-rewriter-on-the-resolved-target,
+  section = {pycheck-cli},
+  title  = {W2203: each rewrite flag reaches its own rewriter, and that rewriter's exit code stands},
+  claim  = {W2203: each rewrite flag reaches its own rewriter, and that rewriter's exit code stands.
+            The usage tests stop at the argument count, so a dispatch that swapped
+            `--format`, `--clear` and `--clear-ledger`, or dropped the target, passed
+            them all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_each_rewrite_flag_runs_its_own_rewriter_on_the_resolved_target},
+}
+
+@misc{hooks-pycheck-cli-check-by-hand-hands-the-real-gate-project-lookup-and-streams-to-check,
+  section = {pycheck-cli},
+  title  = {W2203: `--check-file` is the gate's `analyze`, the real `project_for`, the real streams},
+  claim  = {W2203: `--check-file` is the gate's `analyze`, the real `project_for`, the real streams.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_check_by_hand_hands_the_real_gate_project_lookup_and_streams_to_check},
+}
+
+@misc{hooks-pycheck-cli-clear-by-hand-composes-the-real-formatter-fixer-and-gate,
+  section = {pycheck-cli},
+  title  = {W2203: `--clear` hands pycheck_clear the formatter, the safe fixer and the real check},
+  claim  = {W2203: `--clear` hands pycheck_clear the formatter, the safe fixer and the real check.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_clear_by_hand_composes_the_real_formatter_fixer_and_gate},
+}
+
+@misc{hooks-pycheck-cli-install-by-hand-resolves-the-draft-and-keeps-the-destination-absolute,
+  section = {pycheck-cli},
+  title  = {W2203: the draft is resolved, the destination made absolute, the gate is the real pair},
+  claim  = {W2203: the draft is resolved, the destination made absolute, the gate is the real pair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_install_by_hand_resolves_the_draft_and_keeps_the_destination_absolute},
+}
+
+@misc{hooks-pycheck-cli-ledger-names-are-the-ledger-keys-sorted-and-no-ledger-clears-nothing,
+  section = {pycheck-cli},
+  title  = {W2203: `--clear-ledger` visits the ledger's files sorted; no ledger is not-checked},
+  claim  = {W2203: `--clear-ledger` visits the ledger's files sorted; no ledger is not-checked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_cli.py -k test_the_ledger_names_are_the_ledger_keys_sorted_and_no_ledger_clears_nothing},
+}
+
+@misc{hooks-pycheck-closure-planner-runs-and-its-stdout-is-the-answer,
+  section = {pycheck-closure},
+  title  = {W2203: a planner that exits clean answers with exactly what it printed},
+  claim  = {W2203: a planner that exits clean answers with exactly what it printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_the_planner_runs_and_its_stdout_is_the_answer},
+}
+
+@misc{hooks-pycheck-closure-planner-that-exits-non-zero-answers-nothing-even-with-stdout,
+  section = {pycheck-closure},
+  title  = {W2203: a failing planner's partial output is never read as a plan},
+  claim  = {W2203: a failing planner's partial output is never read as a plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_a_planner_that_exits_non_zero_answers_nothing_even_with_stdout},
+}
+
+@misc{hooks-pycheck-closure-planner-that-cannot-start-answers-nothing,
+  section = {pycheck-closure},
+  title  = {W2203: a missing program is silence, not an error},
+  claim  = {W2203: a missing program is silence, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_a_planner_that_cannot_start_answers_nothing},
+}
+
+@misc{hooks-pycheck-closure-planner-past-its-time-answers-nothing,
+  section = {pycheck-closure},
+  title  = {W2203: a planner that outlasts the bound is silence, not a hang},
+  claim  = {W2203: a planner that outlasts the bound is silence, not a hang.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_a_planner_past_its_time_answers_nothing},
+}

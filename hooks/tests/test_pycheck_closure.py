@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -12,6 +13,8 @@ from mikemol.hooks import pycheck_closure
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
+
+    import pytest
 
 LEDGER_COUNTS: dict[str, int] = {"lib/b.py": 12, "lib/c.py": 3}
 PLAN = '{"rows": [{"file": "app/a.py", "waits_on": ["lib/c.py", "lib/b.py"]}]}'
@@ -121,3 +124,26 @@ def test_a_file_outside_the_project_is_never_advised(tmp_path: Path) -> None:
     """A path that is not under the root says nothing."""
     _project(tmp_path, json.dumps(LEDGER_COUNTS))
     assert pycheck_closure.context_for("/elsewhere/x.py", tmp_path, {}, _answers(PLAN, [])) is None
+
+
+def test_the_planner_runs_and_its_stdout_is_the_answer() -> None:
+    """W2203: a planner that exits clean answers with exactly what it printed."""
+    assert pycheck_closure.run_planner([sys.executable, "-c", "print('rows')"]) == "rows\n"
+
+
+def test_a_planner_that_exits_non_zero_answers_nothing_even_with_stdout() -> None:
+    """W2203: a failing planner's partial output is never read as a plan."""
+    argv = [sys.executable, "-c", "import sys; print('rows'); sys.exit(3)"]
+    assert pycheck_closure.run_planner(argv) is None
+
+
+def test_a_planner_that_cannot_start_answers_nothing(tmp_path: Path) -> None:
+    """W2203: a missing program is silence, not an error."""
+    assert pycheck_closure.run_planner([str(tmp_path / "absent")]) is None
+
+
+def test_a_planner_past_its_time_answers_nothing(monkeypatch: pytest.MonkeyPatch) -> None:
+    """W2203: a planner that outlasts the bound is silence, not a hang."""
+    monkeypatch.setattr(pycheck_closure, "PLAN_TIMEOUT_S", 1)
+    argv = [sys.executable, "-c", "import time; time.sleep(30)"]
+    assert pycheck_closure.run_planner(argv) is None

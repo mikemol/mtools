@@ -5,9 +5,18 @@
 from __future__ import annotations
 
 import io
+import sys
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import pycheck_cli
+from mikemol.hooks import (
+    project_root,
+    pycheck,
+    pycheck_clear,
+    pycheck_cli,
+    pycheck_format,
+)
+from mikemol.hooks.pycheck_clear import Steps
+from mikemol.hooks.pycheck_install import Gate
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -148,3 +157,132 @@ def test_ratchet_with_no_baselines_judges_nothing_and_cannot_run(
     cannot_run = 7  # the exit table's CANNOT_RUN, an instrument fault
     assert pycheck_cli.main(["--ratchet", str(tmp_path)]) == cannot_run
     assert "none judged" in capsys.readouterr().err
+
+
+_CLEARED = 11
+_FORMATTED = 12
+_LEDGERED = 13
+
+
+def test_each_rewrite_flag_runs_its_own_rewriter_on_the_resolved_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2203: each rewrite flag reaches its own rewriter, and that rewriter's exit code stands.
+
+    ⚑ The usage tests stop at the argument count, so a dispatch that swapped `--format`,
+    `--clear` and `--clear-ledger`, or dropped the target, passed them all.
+    """
+    calls: list[tuple[str, Path]] = []
+
+    def clear_here(target: Path) -> int:
+        calls.append(("clear", target))
+        return _CLEARED
+
+    def format_file(target: Path, out: object, err: object) -> int:
+        del out, err
+        calls.append(("format", target))
+        return _FORMATTED
+
+    def clear_ledger(root: Path, names: object, clear: object, out: object, err: object) -> int:
+        del names, clear, out, err
+        calls.append(("ledger", root))
+        return _LEDGERED
+
+    monkeypatch.setattr(pycheck_cli, "_clear_here", clear_here)
+    monkeypatch.setattr("mikemol.hooks.pycheck_format.format_file", format_file)
+    monkeypatch.setattr("mikemol.hooks.pycheck_clear.clear_ledger", clear_ledger)
+    target = tmp_path / "x.py"
+    assert pycheck_cli.main(["--clear", str(target)]) == _CLEARED
+    assert pycheck_cli.main(["--format", str(target)]) == _FORMATTED
+    assert pycheck_cli.main(["--clear-ledger", str(tmp_path)]) == _LEDGERED
+    assert calls == [("clear", target), ("format", target), ("ledger", tmp_path)]
+
+
+def test_check_by_hand_hands_the_real_gate_project_lookup_and_streams_to_check(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2203: `--check-file` is the gate's `analyze`, the real `project_for`, the real streams."""
+    seen: list[tuple[Path, bool, bool, bool, bool]] = []
+
+    def check(path: Path, analyze: object, project_of: object, out: object, err: object) -> int:
+        wired = (
+            analyze is pycheck.analyze,
+            project_of is project_root.project_for,
+            out is sys.stdout,
+            err is sys.stderr,
+        )
+        seen.append((path, *wired))
+        return _CLEARED
+
+    monkeypatch.setattr(pycheck_cli, "check", check)
+    target = tmp_path / "x.py"
+    assert pycheck_cli.main(["--check-file", str(target)]) == _CLEARED
+    assert seen == [(target, True, True, True, True)]
+
+
+def test_clear_by_hand_composes_the_real_formatter_fixer_and_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2203: `--clear` hands pycheck_clear the formatter, the safe fixer and the real check."""
+    steps_seen: list[Steps] = []
+    checked: list[Path] = []
+
+    def clear(path: Path, steps: object, out: object, err: object) -> int:
+        del path, out, err
+        assert isinstance(steps, Steps)
+        steps_seen.append(steps)
+        return _CLEARED
+
+    def check(path: Path, analyze: object, project_of: object, out: object, err: object) -> int:
+        del analyze, project_of, out, err
+        checked.append(path)
+        return _LEDGERED
+
+    monkeypatch.setattr("mikemol.hooks.pycheck_clear.clear", clear)
+    monkeypatch.setattr(pycheck_cli, "check", check)
+    target = tmp_path / "x.py"
+    assert pycheck_cli.main(["--clear", str(target)]) == _CLEARED
+    (steps,) = steps_seen
+    assert steps.format_text is pycheck_format.format_text
+    assert steps.fix_text is pycheck_clear.fix_text
+    assert steps.check(target) == _LEDGERED
+    assert checked == [target]
+
+
+def test_install_by_hand_resolves_the_draft_and_keeps_the_destination_absolute(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2203: the draft is resolved, the destination made absolute, the gate is the real pair."""
+    seen: list[tuple[Path, Path, bool, bool]] = []
+
+    def install(src: Path, dest: Path, gate: object, out: object, err: object) -> int:
+        del out, err
+        assert isinstance(gate, Gate)
+        real = (gate.analyze is pycheck.analyze, gate.format_text is pycheck_format.format_text)
+        seen.append((src, dest, *real))
+        return _CLEARED
+
+    monkeypatch.setattr("mikemol.hooks.pycheck_install.install", install)
+    monkeypatch.chdir(tmp_path)
+    draft = tmp_path / "draft.py"
+    assert pycheck_cli.main([pycheck_cli.INSTALL_FLAG, "draft.py", "out/x.py"]) == _CLEARED
+    assert seen == [(draft.resolve(), tmp_path / "out" / "x.py", True, True)]
+
+
+def test_the_ledger_names_are_the_ledger_keys_sorted_and_no_ledger_clears_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2203: `--clear-ledger` visits the ledger's files sorted; no ledger is not-checked."""
+    visited: list[Path] = []
+
+    def clear_here(target: Path) -> int:
+        visited.append(target)
+        return 0
+
+    monkeypatch.setattr(pycheck_cli, "_clear_here", clear_here)
+    assert pycheck_cli.main(["--clear-ledger", str(tmp_path)]) == pycheck_cli.EXIT_NOT_CHECKED
+    assert not visited
+    (tmp_path / ".claude").mkdir()
+    (tmp_path / ".claude" / "debt-ledger.json").write_text('{"b.py": 2, "a.py": 1}', "utf-8")
+    assert pycheck_cli.main(["--clear-ledger", str(tmp_path)]) == 0
+    assert visited == [tmp_path / "a.py", tmp_path / "b.py"]

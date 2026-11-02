@@ -10,8 +10,6 @@ close, see them go) so the runner that touches a process is not left unexercised
 
 from __future__ import annotations
 
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
@@ -23,12 +21,11 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 _REFUSED = 4
-GIT = shutil.which("git") or "git"
 
 
 def _git(repo: Path, *args: str) -> str:
-    done = subprocess.run([GIT, "-C", str(repo), *args], capture_output=True, text=True, check=True)
-    out: str = done.stdout
+    code, out = scratch.git_out(["git", "-C", str(repo), *args])
+    assert code == 0, out
     return out
 
 

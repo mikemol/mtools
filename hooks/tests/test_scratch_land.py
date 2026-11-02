@@ -10,8 +10,6 @@ there. Each refusal asserts that NOTHING was copied, because a half-landed chang
 
 from __future__ import annotations
 
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
@@ -21,14 +19,13 @@ from mikemol.hooks import scratch, scratch_cli, scratch_land
 if TYPE_CHECKING:
     from pathlib import Path
 
-GIT = shutil.which("git") or "git"
 SYMBOL = "W9"
 IDENTITY = ("-c", "user.email=t@example.invalid", "-c", "user.name=t")
 
 
 def _git(repo: Path, *args: str) -> str:
-    done = subprocess.run([GIT, "-C", str(repo), *args], capture_output=True, text=True, check=True)
-    out: str = done.stdout
+    code, out = scratch.git_out(["git", "-C", str(repo), *args])
+    assert code == 0, out
     return out
 
 
