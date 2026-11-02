@@ -116,6 +116,29 @@ def refresh_index(root: Path, paths: Sequence[str], run: EnvRunner) -> str:
     return f"real index refreshed to HEAD for {len(paths)} committed path(s)"
 
 
+def _restore(root: Path, paths: Sequence[str], run: EnvRunner) -> Done:
+    """Restore `paths` to HEAD in the working tree, trying again while git refuses.
+
+    ⚑ `git restore --worktree` TAKES THE INDEX LOCK TO REFRESH THE INDEX, so a peer's git, a second
+    landing or a host apply pass holding it makes the restore FAIL; refresh_tree filed that failure
+    with the files someone had edited and printed nothing of git's reason (luthen-observability
+    W1880: six stale copies, the last one named only 'differs from HEAD and was left'). So it
+    retries as `refresh_index` does, and the caller names what still failed.
+
+    Returns:
+        git's last answer: success, or the failure that outlasted the attempts.
+
+    """
+    argv = ["restore", "--source=HEAD", "--worktree", "--", *paths]
+    done = run(argv, {}, root)
+    for _attempt in range(REFRESH_ATTEMPTS - 1):
+        if not _failed(done):
+            break
+        time.sleep(REFRESH_PAUSE_S)
+        done = run(argv, {}, root)
+    return done
+
+
 def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -> str | None:
     """Bring the main tree's working copies of landed paths to HEAD, losing no one's edit.
 
@@ -133,17 +156,24 @@ def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -
     """
     restored: list[str] = []
     differ: list[str] = []
+    failed: list[str] = []
     for path in paths:
         if run(["diff", "--quiet", "HEAD", "--", path], {}, root).returncode == 0:
             continue
         if run(["diff", "--quiet", start, "--", path], {}, root).returncode == 0:
-            done = run(["restore", "--source=HEAD", "--worktree", "--", path], {}, root)
-            (differ if _failed(done) else restored).append(path)
+            done = _restore(root, [path], run)
+            if _failed(done):
+                reason = (done.stderr.strip().splitlines() or ["no message"])[0]
+                failed.append(f"{path} (git said: {reason})")
+            else:
+                restored.append(path)
         else:
             differ.append(path)
-    if not restored and not differ:
+    if not restored and not differ and not failed:
         return None
     said = [f"working copy restored to HEAD for {', '.join(restored)}"] if restored else []
+    if failed:
+        said.append(f"⚑ working copy could not be restored for {', '.join(failed)}")
     if differ:
         said.append(f"working copy differs from HEAD and was left for {', '.join(differ)}")
     return "; ".join(said)
@@ -172,7 +202,7 @@ def stale_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -> 
     ]
     if not back:
         return None
-    fixed = run(["restore", "--source=HEAD", "--worktree", "--", *back], {}, root)
+    fixed = _restore(root, back, run)
     action = "NOT restored" if _failed(fixed) else "restored again"
     return (
         f"working copy of {', '.join(back)} held the start commit's bytes AFTER the landing "

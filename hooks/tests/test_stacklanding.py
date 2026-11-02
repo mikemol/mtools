@@ -13,19 +13,22 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import pytest
 
 from mikemol.hooks import commit_kata as ck
-from mikemol.hooks import stackland, stacklanding
+from mikemol.hooks import isolated, stackland, stacklanding
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
     from pathlib import Path
 
 
 _EXECUTABLE = 0o755
 _PUSH = "#!/bin/sh\ngit push origin HEAD:main\n"
+_TRIES = 3
 
 
 def _git(root: Path, *args: str) -> str:
@@ -79,6 +82,33 @@ def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
     (root / "a.txt").write_text("edited a\n", encoding="utf-8")
     (root / "b.txt").write_text("edited b\n", encoding="utf-8")
     return root, remote
+
+
+@dataclass
+class _Failed:
+    """A git answer that failed the way a held index lock does."""
+
+    returncode: int = 128
+    stdout: str = ""
+    stderr: str = "fatal: Unable to create 'index.lock': File exists."
+
+
+def _flaky(failures: int, calls: list[str]) -> isolated.EnvRunner:
+    """Wrap the real runner so the first `failures` restores fail, and count every restore.
+
+    Returns:
+        the wrapping runner.
+
+    """
+
+    def run(argv: Sequence[str], env: Mapping[str, str], cwd: Path) -> isolated.Done:
+        if argv[0] == "restore":
+            calls.append("restore")
+            if len(calls) <= failures:
+                return _Failed()
+        return ck.run_git_in(argv, env, cwd)
+
+    return run
 
 
 def _built(root: Path) -> tuple[str, list[str]]:
@@ -153,6 +183,38 @@ def test_a_copy_written_back_to_the_start_bytes_after_the_landing_is_restored_an
     assert "working copy of a.txt held the start commit's bytes AFTER the landing" in said
     assert "restored again" in said
     assert "b.txt held" not in said
+
+
+def test_a_restore_that_git_refuses_at_first_is_retried_and_lands(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2226: a held index lock fails the restore twice; the third try restores a.txt."""
+    monkeypatch.setattr(isolated, "REFRESH_PAUSE_S", 0.0)
+    root, _remote = _repo(tmp_path, monkeypatch)
+    head, commits = _built(root)
+    (root / "a.txt").write_text("original\n", encoding="utf-8")
+    calls: list[str] = []
+    landing = stacklanding.land(root, commits, head, ["a.txt", "b.txt"], _flaky(2, calls))
+    assert landing.moved
+    assert (root / "a.txt").read_text(encoding="utf-8") == "edited a\n"
+    assert len(calls) == _TRIES
+    assert "working copy restored to HEAD for a.txt" in " ".join(landing.notes)
+
+
+def test_a_restore_that_never_succeeds_is_named_with_gits_reason_not_as_an_edit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2226: every restore fails: the note says could not be restored and quotes git's reason."""
+    monkeypatch.setattr(isolated, "REFRESH_PAUSE_S", 0.0)
+    root, _remote = _repo(tmp_path, monkeypatch)
+    head, commits = _built(root)
+    (root / "a.txt").write_text("original\n", encoding="utf-8")
+    landing = stacklanding.land(root, commits, head, ["a.txt", "b.txt"], _flaky(99, []))
+    assert landing.moved
+    assert (root / "a.txt").read_text(encoding="utf-8") == "original\n"
+    said = " ".join(landing.notes)
+    assert "working copy could not be restored for a.txt (git said: fatal: Unable to create" in said
+    assert "differs from HEAD and was left for a.txt" not in said
 
 
 def test_a_head_that_moved_during_the_gate_is_a_race_and_nothing_changes(

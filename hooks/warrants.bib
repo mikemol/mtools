@@ -17272,3 +17272,17 @@
   claim  = {W2226: the post-commit hook plays the second writer; the landing notices and restores a.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_copy_written_back_to_the_start_bytes_after_the_landing_is_restored_and_named},
 }
+
+@misc{hooks-stacklanding-restore-that-git-refuses-at-first-is-retried-and-lands,
+  section = {stackland},
+  title  = {W2226: a held index lock fails the restore twice; the third try restores a.txt},
+  claim  = {W2226: a held index lock fails the restore twice; the third try restores a.txt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_restore_that_git_refuses_at_first_is_retried_and_lands},
+}
+
+@misc{hooks-stacklanding-restore-that-never-succeeds-is-named-with-gits-reason-not-as-an-edit,
+  section = {stackland},
+  title  = {W2226: every restore fails: the note says could not be restored and quotes git's reason},
+  claim  = {W2226: every restore fails: the note says could not be restored and quotes git's reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_restore_that_never_succeeds_is_named_with_gits_reason_not_as_an_edit},
+}

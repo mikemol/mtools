@@ -326,7 +326,9 @@ src/mikemol/hooks/stacklanding.py|land-never-pushes|"--ignore-missing", "post-co
 src/mikemol/hooks/stacklanding.py|working-copies-never-refreshed|    tree = refresh_tree\(root, paths, start, run\)|    tree = None|def=land
 src/mikemol/hooks/stacklanding.py|late-written-back-copy-not-checked|    late = stale_tree\(root, paths, start, run\)|    late = None|def=land
 src/mikemol/hooks/isolated.py|written-back-copy-not-detected|        and run\(\["diff", "--quiet", start, "--", path\], \{\}, root\)\.returncode == 0|        and False|def=stale_tree
-src/mikemol/hooks/isolated.py|written-back-copy-not-restored|    fixed = run\(\["restore", "--source=HEAD", "--worktree", "--", \*back\], \{\}, root\)|    fixed = run(["status"], {}, root)|def=stale_tree
+src/mikemol/hooks/isolated.py|written-back-copy-not-restored|    fixed = _restore\(root, back, run\)|    fixed = run(["status"], {}, root)|def=stale_tree
+src/mikemol/hooks/isolated.py|failed-restore-not-retried|    for _attempt in range\(REFRESH_ATTEMPTS - 1\):|    for _attempt in range(0):|def=_restore
+src/mikemol/hooks/isolated.py|failed-restore-filed-as-an-edit|            if _failed\(done\):|            if False:|def=refresh_tree
 src/mikemol/hooks/isolated.py|working-copy-already-at-head-reported-as-differing|        if run\(\["diff", "--quiet", "HEAD", "--", path\], \{\}, root\)\.returncode == 0:|        if False:|def=refresh_tree
 src/mikemol/hooks/isolated.py|untouched-stale-copy-not-restored|        if run\(\["diff", "--quiet", start, "--", path\], \{\}, root\)\.returncode == 0:|        if False:|def=refresh_tree
 
