@@ -25,13 +25,14 @@ Ctrl-C ends the loop with exit 0. The ledger total stays wherever the rail last 
 import argparse
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+
+from mikemol.procrun.proc import TimeoutExpired, capture
 
 from mikemol.memres import railloop
 from mikemol.memres.rail import Rail
@@ -112,10 +113,8 @@ def run_fence(argv: Sequence[str]) -> int:
     if found is None:
         return EXIT_NOT_FOUND
     try:
-        done = subprocess.run(
-            [found, *argv[1:]], check=False, capture_output=True, timeout=_RUN_TIMEOUT_S
-        )
-    except subprocess.TimeoutExpired:
+        done = capture([found, *argv[1:]], timeout=_RUN_TIMEOUT_S)
+    except TimeoutExpired:
         return EXIT_TIMED_OUT
     return done.returncode
 
