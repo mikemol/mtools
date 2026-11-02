@@ -17265,3 +17265,10 @@
   claim  = {W2203: a planner that outlasts the bound is silence, not a hang.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_closure.py -k test_a_planner_past_its_time_answers_nothing},
 }
+
+@misc{hooks-stacklanding-copy-written-back-to-the-start-bytes-after-the-landing-is-restored-and-named,
+  section = {stackland},
+  title  = {W2226: the post-commit hook plays the second writer; the landing notices and restores a},
+  claim  = {W2226: the post-commit hook plays the second writer; the landing notices and restores a.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stacklanding.py -k test_a_copy_written_back_to_the_start_bytes_after_the_landing_is_restored_and_named},
+}

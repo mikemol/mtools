@@ -5094,3 +5094,6 @@
 2026-11-02T10:45:50Z  status W2217 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T10:47:09Z  status W1122 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T10:47:53Z  status W2070 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T10:57:17Z  interrupt W2226 minted    -         "Post-land sync leaves stale pre-landing bytes in main's tree after a --freeze-from stack; sync every path or report the skipped"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1880
+2026-11-02T10:58:26Z  status W2226 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T11:19:45Z  status W2217 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

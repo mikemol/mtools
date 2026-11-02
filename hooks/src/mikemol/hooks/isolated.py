@@ -149,6 +149,37 @@ def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -
     return "; ".join(said)
 
 
+def stale_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -> str | None:
+    """Find landed paths whose working copy went back to the pre-landing bytes, and restore them.
+
+    ⚑ `refresh_tree` JUDGES ONCE, RIGHT AFTER THE REF MOVES, AND THE LANDING THEN KEEPS GOING: the
+    post-commit hook pushes, and a second landing or a host apply pass can write the old bytes back
+    in that window (luthen-observability:W1880, five landings, each stale file exactly the stack's
+    start commit's bytes). So this runs AFTER the hook, on the same rule: a copy that differs from
+    HEAD and equals `start` is bytes nobody edited, and is restored again and named, with the
+    source of the bytes, so the landing's own output says it happened.
+
+    Returns:
+        None when no landed path holds the start commit's bytes; else one line naming them and
+        whether they were restored.
+
+    """
+    back = [
+        path
+        for path in paths
+        if run(["diff", "--quiet", "HEAD", "--", path], {}, root).returncode != 0
+        and run(["diff", "--quiet", start, "--", path], {}, root).returncode == 0
+    ]
+    if not back:
+        return None
+    fixed = run(["restore", "--source=HEAD", "--worktree", "--", *back], {}, root)
+    action = "NOT restored" if _failed(fixed) else "restored again"
+    return (
+        f"working copy of {', '.join(back)} held the start commit's bytes AFTER the landing "
+        f"(something wrote them back) and was {action}"
+    )
+
+
 @dataclass(frozen=True)
 class Plan:
     """What an isolated commit takes: files read from the tree, and blobs frozen at submit.

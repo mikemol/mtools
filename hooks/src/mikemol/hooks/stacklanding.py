@@ -21,7 +21,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from mikemol.hooks.isolated import EnvRunner, refresh_index, refresh_tree
+from mikemol.hooks.isolated import EnvRunner, refresh_index, refresh_tree, stale_tree
 
 
 @dataclass(frozen=True)
@@ -54,5 +54,8 @@ def land(
     tree = refresh_tree(root, paths, start, run)
     pushed = run(["hook", "run", "--ignore-missing", "post-commit"], {}, root)
     shown = (pushed.stdout + pushed.stderr).strip()
-    said = [line for line in (tree, shown) if line]
+    # ⚑ W2226: THE HOOK'S WINDOW IS WHEN A SECOND WRITER PUTS THE OLD BYTES BACK, so the copies
+    # are judged again after it.
+    late = stale_tree(root, paths, start, run)
+    said = [line for line in (tree, shown, late) if line]
     return Landing(moved=True, reason="", notes=(refreshed, *said))

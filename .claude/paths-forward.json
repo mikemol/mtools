@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2225,
+  "counter": 2226,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -49438,7 +49438,7 @@
     {
       "symbol": "W2217",
       "title": "Remove pathsforward's 11 per-file test exemptions with a shared helper or no-subprocess tests",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [
         "pathsforward",
@@ -49447,13 +49447,14 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Read the bazel run; one stack file with W2217 (pathwalk, keyed) and W2212 (gatecheck); submit",
-      "evidence": "2026-11-02: 2026-11-02: pathwalk's three git-running tests (test_walk, test_suffix, test_virtualenvs) moved to procrun.capture in main's tree (uncommitted until the stack): procrun dev-only (runtime stays empty), uv source, isort known-third-party, BUILD deps on the test loop plus legacy_create_init = 0, the mypy runner and the .venv srcs, uv.lock regenerated offline, main's pathwalk/.venv synced; their three entries (6 rules) deleted, no test entry left in pathwalk. Suite 33 pass in the new venv; ruff, format and pycheck clean. NOTE: the owed list names pathwalk, so this is a KEYED fall; gatecheck's (W2212) fell off the list once it paid, which is why the gatecheck-only stack was refused. Running the bazel targets, then one stack of both. | 2026-11-02: 2026-11-02 CORRECTION: the entry just above (pathwalk's three git-running tests moved to procrun) was put on this card by mistake; this card is PATHSFORWARD's cleanup, and pathwalk is a different dist. It belongs to W2222 (minted for it), which carries the work. Nothing in pathsforward changed. | 2026-11-02: 2026-11-02: test_lift and test_lift_cli moved to procrun.capture (19 passed; bazel 4 of 4); procrun is a pathsforward dev dep with lock regenerated offline; two pyproject entries (4 rules) gone; submitted, gate result pending. test_store and test_lock remain (real racing processes).",
+      "evidence": "2026-11-02: 2026-11-02: pathwalk's three git-running tests (test_walk, test_suffix, test_virtualenvs) moved to procrun.capture in main's tree (uncommitted until the stack): procrun dev-only (runtime stays empty), uv source, isort known-third-party, BUILD deps on the test loop plus legacy_create_init = 0, the mypy runner and the .venv srcs, uv.lock regenerated offline, main's pathwalk/.venv synced; their three entries (6 rules) deleted, no test entry left in pathwalk. Suite 33 pass in the new venv; ruff, format and pycheck clean. NOTE: the owed list names pathwalk, so this is a KEYED fall; gatecheck's (W2212) fell off the list once it paid, which is why the gatecheck-only stack was refused. Running the bazel targets, then one stack of both. | 2026-11-02: 2026-11-02 CORRECTION: the entry just above (pathwalk's three git-running tests moved to procrun) was put on this card by mistake; this card is PATHSFORWARD's cleanup, and pathwalk is a different dist. It belongs to W2222 (minted for it), which carries the work. Nothing in pathsforward changed. | 2026-11-02: 2026-11-02: test_lift and test_lift_cli moved to procrun.capture (19 passed; bazel 4 of 4); procrun is a pathsforward dev dep with lock regenerated offline; two pyproject entries (4 rules) gone; submitted, gate result pending. test_store and test_lock remain (real racing processes). | 2026-11-02: 2026-11-02: LANDED 7fae701c (pathsforward test_lift and test_lift_cli via procrun.capture; 4 rules fewer). test_store and test_lock remain.",
       "issued_at": "2026-11-01T22:48:37Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T10:45:50Z",
+      "last_worked": "2026-11-02T11:19:45Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T111945Z"
     },
     {
       "symbol": "W2218",
@@ -49609,6 +49610,25 @@
       "ticks_blocked": 0,
       "completed": null,
       "landed_at": "20261102T101001Z"
+    },
+    {
+      "symbol": "W2226",
+      "title": "Post-land sync leaves stale pre-landing bytes in main's tree after a --freeze-from stack; sync every path or report the skipped",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add a verify pass at the end of refresh_tree (re-diff each landed path against HEAD after the restores and name any that moved back), and print a nonzero line for differ; then ask the peer whether the land output carried 'working copy differs from HEAD' for the stale paths",
+      "evidence": "2026-11-02: 2026-11-02: taken; reading the post-land sync in the hooks stack landing code first. | 2026-11-02: 2026-11-02 peer evidence (luthen-observability, W1880): landings 72e69363 (8 paths, host/files.json stale), 1b3d7e49 (6, dr_params_test.py), 4c3fed81 (checks/gate.py, still stale), d47bc0b8 (7, record_types_test.py and record_types.json; second submit of its card), 3143cfcd (5, exposition_baseline.json). Common: another stack queued behind, or a host apply pass running; clean landings had neither. Each stale diff is the exact inverse of the landed commit. The stack files are gone (built in a temp dir). The live stale state is inspectable in the peer tree for 4c3fed81. | 2026-11-02: 2026-11-02 READ: the sync is isolated.refresh_tree(root, paths, start, run), called by stacklanding.land right after update-ref and refresh_index (W2193). Per path: diff --quiet HEAD equal -> skip; diff --quiet start equal -> restore --source=HEAD --worktree; else named as 'working copy differs from HEAD and was left'. So it already reports skipped paths, in the land output's notes. Candidate causes of the peer's stale files, none confirmed: (1) a queued second stack or a host apply pass writes the pre-landing bytes back AFTER refresh_tree ran (a race no per-path judgement can see; needs a final verify pass); (2) start is the previous stack's tip, so a copy at the earlier bytes equals neither HEAD nor start and is named 'differ', which the peer may not have seen; (3) a diff --quiet that fails with rc above 1 (an index.lock) is read as 'differs from start' and also lands in differ, never as an error. Nothing edited. | 2026-11-02: 2026-11-02 peer reply and a read-only look at their live case: gate.py in luthen-observability has HEAD holding check_record_types (2 hits) and the working file holding none; the index equals HEAD (diff --cached empty); diff --name-only HEAD lists it. So it is a worktree-only staleness at exactly the start commit's bytes, the branch refresh_tree should restore. Their checks.land prints only per-step JSON, so the refresh_tree note (restored / differs and was left) written by mikemol-commit never reaches them if their wrapper does not forward it. TWO FIXES: (a) mtools: final verify pass over every landed path plus a printed stale list with the bytes' source (equals start / equals neither); (b) peer: forward mikemol-commit's land notes. Also unresolved: git diff --quiet and --exit-code returned no visible nonzero status in this tool for a differing file, so the status test in refresh_tree is not yet confirmed to read rc correctly; check it with a scratch repo test before trusting it. | 2026-11-02: 2026-11-02: BUILT isolated.stale_tree plus the land() call after the post-commit hook (hook plays the second writer in the new test); test_stacklanding 5 passed, bazel test_stacklanding/mypy/ruff 3 of 3; three declared mutants, one warrant, two site BUILDs regenerated; landed to main's tree; submitted as the stack-hooks-stale-tree stack, gate result pending (hooks is not an owed key, so a refusal naming an owed dist is expected). | 2026-11-02: 2026-11-02 peer data, sixth occurrence (bca02352): the stale checks/otlp_overlap.py and checks/gate.py both equal their landing's parent commit, differ from HEAD, index == HEAD; their mtimes are old (2026-10-16 and 2026-11-01 23:50) while the in-sync sibling otlp_wire.py was rewritten at the landing's time (a stack is built before its gate wait and lands after, so commit time is not landing time). So the sync restored 3 of 4 paths and skipped these silently, and the peer saw no 'working copy' line even though 3 paths were restored: not a write-back race. The post-hook stale_tree verify (built, in the submitted stack) catches only the race; the per-path rule needs its own explanation. NEXT: reproduce refresh_tree with a landed path whose index entry is stat-clean at the old bytes (older mtime, different size) in a real-git test, and read what git diff --quiet HEAD answers inside run_git_in's environment; also ask the peer for the git diff --name-only HEAD output right after the next landing. The peer was told to restore their two files. The stack-hooks-stale-tree submit was refused on ratchet pace (hooks is not an owed key): it needs a fall in an owed dist; ledger/finding_kinds.py and gradekit/verdict.py per-responsibility subprocess entries are the candidates. | 2026-11-02: 2026-11-02 EXPERIMENT (scratch, closed): refresh_tree restores a main-tree copy that is stat-clean in the index at the start commit's bytes with an old mtime (git status run first to refresh the index): 5 passed. So the stat-cache is NOT the cause; the quiet-state per-path rule works. Still unexplained: the peer's two stale files were skipped silently while three siblings were restored. Remaining differences between the test and the real landing: the real stack is built from frozen blobs in another worktree, run() may carry a private GIT_INDEX_FILE, and the stack runs through stackrun.run_stack. NEXT: trace one real landing (add the per-path trace line) rather than guess; the peer will send git diff --name-only HEAD output right after the next landing.",
+      "issued_at": "2026-11-02T10:57:17Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1880",
+      "last_worked": "2026-11-02T12:10:49Z",
+      "ticks_blocked": 0,
+      "completed": null
     }
   ],
   "residue": [
@@ -50091,15 +50111,6 @@
       "taken_at": "2026-11-02T08:38:51Z",
       "renewed_at": "2026-11-02T08:38:51Z",
       "expires_at": "2026-11-02T09:08:51Z"
-    },
-    {
-      "tag": "file:pathsforward/pyproject.toml!w",
-      "holder": "(unlocked)",
-      "waypoint": "W2217",
-      "base_sha": "e16e5d4aa9fdaf707811e2249e3a36e4614f7dc0",
-      "taken_at": "2026-11-02T10:45:50Z",
-      "renewed_at": "2026-11-02T10:45:50Z",
-      "expires_at": "2026-11-02T11:15:50Z"
     }
   ],
   "advice": [

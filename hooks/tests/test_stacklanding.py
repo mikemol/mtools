@@ -138,6 +138,23 @@ def test_a_stack_built_in_the_main_tree_leaves_its_working_copies_alone_and_says
     assert not any("working copy" in note for note in landing.notes)
 
 
+def test_a_copy_written_back_to_the_start_bytes_after_the_landing_is_restored_and_named(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2226: the post-commit hook plays the second writer; the landing notices and restores a."""
+    root, _remote = _repo(tmp_path, monkeypatch)
+    head, commits = _built(root)
+    hook = root / ".git" / "hooks" / "post-commit"
+    hook.write_text(_PUSH + "printf 'original\\n' > a.txt\n", encoding="utf-8")
+    landing = stacklanding.land(root, commits, head, ["a.txt", "b.txt"], ck.run_git_in)
+    assert landing.moved
+    assert (root / "a.txt").read_text(encoding="utf-8") == "edited a\n"
+    said = " ".join(landing.notes)
+    assert "working copy of a.txt held the start commit's bytes AFTER the landing" in said
+    assert "restored again" in said
+    assert "b.txt held" not in said
+
+
 def test_a_head_that_moved_during_the_gate_is_a_race_and_nothing_changes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
