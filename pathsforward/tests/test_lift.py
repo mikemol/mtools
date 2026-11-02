@@ -14,10 +14,10 @@ from __future__ import annotations
 import base64
 import copy
 import json
-import subprocess
 from typing import cast
 
 import pytest
+from mikemol.procrun.proc import capture
 
 from mikemol.pathsforward import lift, opa_eval, ops
 from mikemol.pathsforward.model import RefusedError, State, validate
@@ -62,9 +62,8 @@ def _sign(signing: str, secret: bytes, public: bytes) -> str:
     private: dict[str, str] = {"kty": "OKP", "crv": "Ed25519", "d": _b64(secret), "x": _b64(public)}
     key = json.dumps(private)
     query = f"io.jwt.encode_sign_raw({json.dumps(header)}, {json.dumps(body)}, {json.dumps(key)})"
-    done = subprocess.run(
-        [_opa(), "eval", "--format", "raw", query], capture_output=True, text=True, check=True
-    )
+    done = capture([_opa(), "eval", "--format", "raw", query])
+    assert done.returncode == 0, done.stderr
     jws = done.stdout.strip()
     assert jws.rsplit(".", 1)[0] == signing
     return jws

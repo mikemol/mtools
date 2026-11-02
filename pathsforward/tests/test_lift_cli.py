@@ -12,8 +12,9 @@ from __future__ import annotations
 
 import base64
 import json
-import subprocess
 from typing import TYPE_CHECKING, cast
+
+from mikemol.procrun.proc import capture
 
 from mikemol.pathsforward import cli, lift, opa_eval
 
@@ -58,12 +59,8 @@ def _sign(card: str, secret: bytes, public: bytes) -> str:
     private: dict[str, str] = {"kty": "OKP", "crv": "Ed25519", "d": _b64(secret), "x": _b64(public)}
     key = json.dumps(private)
     query = f"io.jwt.encode_sign_raw({json.dumps(header)}, {json.dumps(body)}, {json.dumps(key)})"
-    done = subprocess.run(
-        [opa_eval.resolve(), "eval", "--format", "raw", query],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    done = capture([opa_eval.resolve(), "eval", "--format", "raw", query])
+    assert done.returncode == 0, done.stderr
     return done.stdout.strip()
 
 

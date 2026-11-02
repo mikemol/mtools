@@ -67,9 +67,13 @@ py_library(
         size = "medium" if src in ("tests/test_lock.py", "tests/test_store.py") else "small",
         deps = [
             ":pathsforward",
+            "//procrun:procrun",  # W2217: the lift tests start opa through procrun.capture
             dev_requirement("pytest"),
         ],
         imports = ["src"],
+        # ⚑ Two source roots on sys.path (this dist and procrun): legacy implicit `__init__.py`
+        # creation would shadow the `mikemol` namespace (W566).
+        legacy_create_init = 0,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -169,6 +173,7 @@ py_binary(
     srcs = ["@mikemol_check_mypy//:mypy_runner.py"],
     main = "@mikemol_check_mypy//:mypy_runner.py",
     deps = [
+        "//procrun:procrun",  # W2217: the tests import it, so mypy must resolve it
         dev_requirement("mypy"),
         dev_requirement("pytest"),
     ],
@@ -202,7 +207,8 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/pathsforward/**"]),
+    # The dev venv also carries procrun (W2217), which the lift tests import.
+    srcs = glob(["src/mikemol/pathsforward/**"]) + ["//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together.

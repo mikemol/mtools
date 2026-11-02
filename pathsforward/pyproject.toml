@@ -36,7 +36,10 @@ Homepage = "https://github.com/mikemol/mtools"
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml): mypy and
 # pytest are staged by the bazel mypy action, and `.githooks/pre-commit` refuses without ruff.
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2217) IN THE DEV GROUP ONLY: the witnesses that start the pinned opa
+# as a child reach it through the one stdlib-only seam instead of each spelling the subprocess
+# rules in a per-file exemption. The runtime list stays empty.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -48,6 +51,12 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
+
+[tool.ruff.lint.isort]
+known-third-party = ["mikemol.procrun"]
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -127,8 +136,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
-"tests/test_lift_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_lift.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ THE STORE AND CLI WITNESSES RUN REAL PROCESSES, because the defects they close were races
 # between processes: argv lists built from `sys.executable`, never a shell, never untrusted input.
 "tests/test_store.py" = [

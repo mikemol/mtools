@@ -23148,11 +23148,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight.",
+      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file.",
       "issued_at": "2026-10-13T16:21:09Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W934",
-      "last_worked": "2026-11-02T06:21:16Z",
+      "last_worked": "2026-11-02T10:47:09Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -46305,20 +46305,22 @@
     {
       "symbol": "W2065",
       "title": "Host Stop hook refuses to end a turn that closed a tick with a W59 G0 entry and sent no SendMessage to reviewer ae415c8902a19911f after it",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2064"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Build the host Stop hook (cwd /home/mikemol/github only): refuse to end a turn when the host queue's latest tick ledger line holds a W59 G0 entry and the transcript has no SendMessage to reviewer agent ae415c8902a19911f after that tick-close. WITNESS (test): a turn that closes a tick and sends no G1 is refused; one that sends it passes.",
-      "evidence": "2026-10-28: 2026-10-28 github-8f spec G1, written in at their cold-review request: Stop hook; refuse to end a turn when the host queue's latest tick ledger line holds a W59 G0 entry and the transcript has no SendMessage to the reviewer agent (ae415c8902a19911f) after that tick-close. Witness: a turn that closes a tick and sends no G1 is refused. Host cwd only. | 2026-10-29: 2026-10-29: BLOCKED behind the hooks train and on the same host-hook shape as W2064: a new Stop hook module for the host cwd needs the hooks registries (freeze whole behind hooks-h) and a Stop entry in the HOST's settings, which only the operator's side may apply (the test_bar_fires arm refuses an unwired hook script). Also read first: this session mtools-ad runs no reviewer subagent and has no G1 reviewer id, so the hook's witness is the host's reviewer ae415c8902a19911f only. Build W2064, W2065 and W2161 as one host-hook family, one settings ask. | 2026-10-29: 2026-10-29: placement decided: mtools, generic module(s) with the host's paths as config (github-42, github:W59). Family with W2064, W2066, W2161; W2156 first. | 2026-10-29: 2026-10-29 SHAPE READ for the host-hook family (W2064, W2065, W2066, W2161), design input for a generic module: existing hooks share read_guard's shape (payload.as_record/text_of/armed, an OWN_SWITCH env var, a pure refusal(tool_input, ...) -> str | None, run(...) that prints the decision, main()) and tick_stop's Stop shape (a pure block_reason(...) over a turn reader, run, main), both behind hook_argv.mode. So a generic guard family is: one config file naming per-hook rules (event, tool matcher, path globs or message regex, what evidence satisfies it, where the transcript lives), one pure judge per rule kind (message cites a line; turn lacks a send; edit touches a guarded path; text carries a verbatim marker with no needle), one dispatcher entry per event (PreToolUse, Stop). Nothing built; the design waits on hooks-j and gets written as a card note before code. | 2026-10-31: reconciled STALE",
+      "evidence": "2026-10-28: 2026-10-28 github-8f spec G1, written in at their cold-review request: Stop hook; refuse to end a turn when the host queue's latest tick ledger line holds a W59 G0 entry and the transcript has no SendMessage to the reviewer agent (ae415c8902a19911f) after that tick-close. Witness: a turn that closes a tick and sends no G1 is refused. Host cwd only. | 2026-10-29: 2026-10-29: BLOCKED behind the hooks train and on the same host-hook shape as W2064: a new Stop hook module for the host cwd needs the hooks registries (freeze whole behind hooks-h) and a Stop entry in the HOST's settings, which only the operator's side may apply (the test_bar_fires arm refuses an unwired hook script). Also read first: this session mtools-ad runs no reviewer subagent and has no G1 reviewer id, so the hook's witness is the host's reviewer ae415c8902a19911f only. Build W2064, W2065 and W2161 as one host-hook family, one settings ask. | 2026-10-29: 2026-10-29: placement decided: mtools, generic module(s) with the host's paths as config (github-42, github:W59). Family with W2064, W2066, W2161; W2156 first. | 2026-10-29: 2026-10-29 SHAPE READ for the host-hook family (W2064, W2065, W2066, W2161), design input for a generic module: existing hooks share read_guard's shape (payload.as_record/text_of/armed, an OWN_SWITCH env var, a pure refusal(tool_input, ...) -> str | None, run(...) that prints the decision, main()) and tick_stop's Stop shape (a pure block_reason(...) over a turn reader, run, main), both behind hook_argv.mode. So a generic guard family is: one config file naming per-hook rules (event, tool matcher, path globs or message regex, what evidence satisfies it, where the transcript lives), one pure judge per rule kind (message cites a line; turn lacks a send; edit touches a guarded path; text carries a verbatim marker with no needle), one dispatcher entry per event (PreToolUse, Stop). Nothing built; the design waits on hooks-j and gets written as a card note before code. | 2026-10-31: reconciled STALE | 2026-11-02: 2026-11-02: blocked on W2064, the same host-hook family and the one settings ask: the Stop entry in the host's settings is operator-applied (draft patch W2064-settings.patch under the design notes), and the hook module needs that wiring before test_bar_fires admits it.",
       "issued_at": "2026-10-28T03:11:54Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-29T22:55:55Z",
+      "last_worked": "2026-11-02T09:38:48Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -46410,7 +46412,7 @@
     {
       "symbol": "W2070",
       "title": "--tick-open stores each repo's branch tip and prints previous-tip..branch as that tick's landings, a history rewrite when not an ancestor",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pathsforward",
@@ -46419,11 +46421,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Write the function and test in landed.py/test_landed.py (typed fakes for _run: first open, same tip, ancestor, rewrite), then the wiring edit in cli.py, mutants and warrants, one pathsforward stack.",
-      "evidence": "2026-10-29: 2026-10-29: TAKEN, not built. Plan: landed.landing_tips(root, seen_file) reads HEAD (git rev-parse), compares with the stored previous tip, prints previous..tip as the tick's landings (git log --oneline), says 'history rewrite' when git merge-base --is-ancestor says the previous tip is not an ancestor, and stores the new tip under <git dir>/mtools beside promptwatch's seen file; tick-open prints its lines after the prompt-watch notice. A pathsforward-lane change: it does not wait on the hooks train. The structural obstacle is cli.py: a new import and its first use are ~1800 lines apart and the edit gate demands both in one write, so the wiring goes through an alias import line and a module-level constant beside the others, in one wide edit (as W2154 did). | 2026-10-31: reconciled STALE",
+      "evidence": "2026-10-29: 2026-10-29: TAKEN, not built. Plan: landed.landing_tips(root, seen_file) reads HEAD (git rev-parse), compares with the stored previous tip, prints previous..tip as the tick's landings (git log --oneline), says 'history rewrite' when git merge-base --is-ancestor says the previous tip is not an ancestor, and stores the new tip under <git dir>/mtools beside promptwatch's seen file; tick-open prints its lines after the prompt-watch notice. A pathsforward-lane change: it does not wait on the hooks train. The structural obstacle is cli.py: a new import and its first use are ~1800 lines apart and the edit gate demands both in one write, so the wiring goes through an alias import line and a module-level constant beside the others, in one wide edit (as W2154 did). | 2026-10-31: reconciled STALE | 2026-11-02: 2026-11-02: taken because the submit's round rule put it ahead of W1122 (returned to ready with its design read recorded). Not built this turn; the plan above stands (landed.landing_tips plus a tick-open line, one pathsforward stack).",
       "issued_at": "2026-10-28T05:54:07Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-29T20:47:59Z",
+      "last_worked": "2026-11-02T10:47:53Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49395,7 +49397,7 @@
     {
       "symbol": "W2215",
       "title": "Remove mdstruct's 7 per-file test exemptions with a shared helper or no-subprocess tests",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [
         "mdstruct",
@@ -49404,13 +49406,14 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Read mdstruct/pyproject.toml per-file-ignores; the stubtest, pandoc and CLI-subprocess entries: a shared child-runner helper in tests or childless tests; src entries (pandoc.py, __init__.py) are responsibility exemptions and stay; ruff check tests clean; check mdstruct:mutants is sharded",
-      "evidence": "2026-11-02: 2026-11-02: five mdstruct tests moved to procrun.capture (99 passed; bazel 7 of 7); procrun added as a dev dep with lock regenerated offline; five pyproject entries (9 rules) gone; submitted in the stack with W2225, gate result pending. The first W2225-alone submit was refused because pycodemod left the owed list.",
+      "evidence": "2026-11-02: 2026-11-02: five mdstruct tests moved to procrun.capture (99 passed; bazel 7 of 7); procrun added as a dev dep with lock regenerated offline; five pyproject entries (9 rules) gone; submitted in the stack with W2225, gate result pending. The first W2225-alone submit was refused because pycodemod left the owed list. | 2026-11-02: 2026-11-02: LANDED 414c298a (five mdstruct tests via procrun.capture; 9 rules fewer; the keyed fall for the stack).",
       "issued_at": "2026-11-01T22:47:42Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T09:31:46Z",
+      "last_worked": "2026-11-02T10:09:41Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T100941Z"
     },
     {
       "symbol": "W2216",
@@ -49435,7 +49438,7 @@
     {
       "symbol": "W2217",
       "title": "Remove pathsforward's 11 per-file test exemptions with a shared helper or no-subprocess tests",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pathsforward",
@@ -49444,12 +49447,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Read the bazel run; one stack file with W2217 (pathwalk, keyed) and W2212 (gatecheck); submit",
-      "evidence": "2026-11-02: 2026-11-02: pathwalk's three git-running tests (test_walk, test_suffix, test_virtualenvs) moved to procrun.capture in main's tree (uncommitted until the stack): procrun dev-only (runtime stays empty), uv source, isort known-third-party, BUILD deps on the test loop plus legacy_create_init = 0, the mypy runner and the .venv srcs, uv.lock regenerated offline, main's pathwalk/.venv synced; their three entries (6 rules) deleted, no test entry left in pathwalk. Suite 33 pass in the new venv; ruff, format and pycheck clean. NOTE: the owed list names pathwalk, so this is a KEYED fall; gatecheck's (W2212) fell off the list once it paid, which is why the gatecheck-only stack was refused. Running the bazel targets, then one stack of both. | 2026-11-02: 2026-11-02 CORRECTION: the entry just above (pathwalk's three git-running tests moved to procrun) was put on this card by mistake; this card is PATHSFORWARD's cleanup, and pathwalk is a different dist. It belongs to W2222 (minted for it), which carries the work. Nothing in pathsforward changed.",
+      "evidence": "2026-11-02: 2026-11-02: pathwalk's three git-running tests (test_walk, test_suffix, test_virtualenvs) moved to procrun.capture in main's tree (uncommitted until the stack): procrun dev-only (runtime stays empty), uv source, isort known-third-party, BUILD deps on the test loop plus legacy_create_init = 0, the mypy runner and the .venv srcs, uv.lock regenerated offline, main's pathwalk/.venv synced; their three entries (6 rules) deleted, no test entry left in pathwalk. Suite 33 pass in the new venv; ruff, format and pycheck clean. NOTE: the owed list names pathwalk, so this is a KEYED fall; gatecheck's (W2212) fell off the list once it paid, which is why the gatecheck-only stack was refused. Running the bazel targets, then one stack of both. | 2026-11-02: 2026-11-02 CORRECTION: the entry just above (pathwalk's three git-running tests moved to procrun) was put on this card by mistake; this card is PATHSFORWARD's cleanup, and pathwalk is a different dist. It belongs to W2222 (minted for it), which carries the work. Nothing in pathsforward changed. | 2026-11-02: 2026-11-02: test_lift and test_lift_cli moved to procrun.capture (19 passed; bazel 4 of 4); procrun is a pathsforward dev dep with lock regenerated offline; two pyproject entries (4 rules) gone; submitted, gate result pending. test_store and test_lock remain (real racing processes).",
       "issued_at": "2026-11-01T22:48:37Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T04:16:31Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-02T10:45:50Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2218",
@@ -49591,19 +49595,20 @@
     {
       "symbol": "W2225",
       "title": "pycodemod test_cli runs its git and child interpreters through procrun.capture and drops its subprocess entry",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: pycodemod test_cli moved to procrun.capture (197 passed; bazel test_cli/mypy/ruff 3 of 3); one pyproject entry (2 rules) gone; submitted in its own stack, gate result pending.",
+      "evidence": "2026-11-02: 2026-11-02: pycodemod test_cli moved to procrun.capture (197 passed; bazel test_cli/mypy/ruff 3 of 3); one pyproject entry (2 rules) gone; submitted in its own stack, gate result pending. | 2026-11-02: 2026-11-02: LANDED e16e5d4a (pycodemod test_cli via procrun.capture; 2 rules fewer; pycodemod now has no per-file test subprocess entry).",
       "issued_at": "2026-11-02T09:07:32Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T09:13:49Z",
+      "last_worked": "2026-11-02T10:10:01Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T101001Z"
     }
   ],
   "residue": [
@@ -50088,13 +50093,13 @@
       "expires_at": "2026-11-02T09:08:51Z"
     },
     {
-      "tag": "file:mdstruct/pyproject.toml!w",
+      "tag": "file:pathsforward/pyproject.toml!w",
       "holder": "(unlocked)",
-      "waypoint": "W2215",
-      "base_sha": "055528270355a1a73c09a6149fb42726f7b3256f",
-      "taken_at": "2026-11-02T09:31:46Z",
-      "renewed_at": "2026-11-02T09:31:46Z",
-      "expires_at": "2026-11-02T10:01:46Z"
+      "waypoint": "W2217",
+      "base_sha": "e16e5d4aa9fdaf707811e2249e3a36e4614f7dc0",
+      "taken_at": "2026-11-02T10:45:50Z",
+      "renewed_at": "2026-11-02T10:45:50Z",
+      "expires_at": "2026-11-02T11:15:50Z"
     }
   ],
   "advice": [
