@@ -15,6 +15,10 @@ import subprocess
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
+# The exception `capture` raises for a child that outlasts its timeout, re-exported so a
+# caller can name it without importing the subprocess module itself.
+TimeoutExpired = subprocess.TimeoutExpired
+
 
 def capture(
     argv: Sequence[str],

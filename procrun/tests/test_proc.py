@@ -4,13 +4,12 @@
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.procrun.proc import capture
+from mikemol.procrun.proc import TimeoutExpired, capture
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -51,7 +50,7 @@ def test_capture_never_interprets_an_argument_as_shell() -> None:
 
 def test_capture_gives_up_on_a_child_that_outlasts_its_timeout() -> None:
     """A child still running when the timeout passes is abandoned with the standard error."""
-    with pytest.raises(subprocess.TimeoutExpired):
+    with pytest.raises(TimeoutExpired):
         capture([sys.executable, "-c", _SLEEP], timeout=_SHORT)
 
 
