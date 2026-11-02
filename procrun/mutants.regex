@@ -7,13 +7,21 @@
 
 # W872/W873: `capture` passes its timeout to the child. Dropping it lets a runaway child hang the
 # caller (the 30-second sleeping child outlasts the 0.2-second timeout only when it is passed).
-src/mikemol/procrun/proc.py|capture-drops-the-timeout|, timeout=timeout|, timeout=None|def=capture
+src/mikemol/procrun/proc.py|capture-drops-the-timeout|        timeout=timeout,|        timeout=None,|def=capture
 
 # The working directory is the one passed: dropping it runs the child in the caller's.
-src/mikemol/procrun/proc.py|capture-drops-the-cwd|cwd=cwd, |cwd=None, |def=capture
+src/mikemol/procrun/proc.py|capture-drops-the-cwd|        cwd=cwd,|        cwd=None,|def=capture
 
 # The whole environment is the one passed: dropping it hands the child the caller's.
-src/mikemol/procrun/proc.py|capture-drops-the-env|env=env, |env=None, |def=capture
+src/mikemol/procrun/proc.py|capture-drops-the-env|        env=env,|        env=None,|def=capture
 
 # A non-zero status is a value: `check=True` would raise it.
 src/mikemol/procrun/proc.py|capture-raises-on-failure|check=False|check=True|def=capture
+
+# W2231: the text on stdin reaches the child; dropping it leaves the child reading nothing.
+src/mikemol/procrun/proc.py|capture-drops-the-input|        input=input_text,|        input=None,|def=capture
+
+# W2231: the bytes seam is the same seam in bytes: each of its parameters reaches the child.
+src/mikemol/procrun/proc.py|capture-bytes-drops-the-timeout|        timeout=timeout,|        timeout=None,|def=capture_bytes
+src/mikemol/procrun/proc.py|capture-bytes-drops-the-input|        input=input_bytes,|        input=None,|def=capture_bytes
+src/mikemol/procrun/proc.py|capture-bytes-raises-on-failure|check=False|check=True|def=capture_bytes

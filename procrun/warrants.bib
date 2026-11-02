@@ -40,3 +40,26 @@
   claim  = {A child that finishes inside its timeout returns as it does with none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_with_a_generous_timeout_returns_the_result},
 }
+
+@misc{procrun-proc-capture-writes-the-given-text-to-the-childs-stdin,
+  section = {proc},
+  title  = {W2231: `input_text` reaches the child's standard input, and a child that reads it answers},
+  claim  = {W2231: `input_text` reaches the child's standard input, and a child that reads it
+            answers.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_writes_the_given_text_to_the_childs_stdin},
+}
+
+@misc{procrun-proc-capture-bytes-returns-undecoded-bytes-and-carries-bytes-to-stdin,
+  section = {proc},
+  title  = {W2231: bytes that are not UTF-8 go in and come out unchanged, with stderr as bytes too},
+  claim  = {W2231: bytes that are not UTF-8 go in and come out unchanged, with stderr as bytes too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_bytes_returns_undecoded_bytes_and_carries_bytes_to_stdin},
+}
+
+@misc{procrun-proc-capture-bytes-does-not-raise-on-a-nonzero-status-and-honours-its-timeout,
+  section = {proc},
+  title  = {W2231: failure is a value here as in `capture`, and a child past its timeout is abandoned},
+  claim  = {W2231: failure is a value here as in `capture`, and a child past its timeout is
+            abandoned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_bytes_does_not_raise_on_a_nonzero_status_and_honours_its_timeout},
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2237,
+  "counter": 2238,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -49643,11 +49643,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Add a --description option to mikemol-otlp metric (the OTLP Metric's field 2) with a test, then pass one per metric from trainround.metric_argv (ROUND_METRIC and JOBS_METRIC); read whether VictoriaMetrics turns it into HELP",
-      "evidence": "2026-11-02: 2026-11-02 READ: the two metrics are built in hooks trainround.metric_argv as a mikemol-otlp metric argv (service, namespace, name, value, kind, field); mikemol-otlp metric has NO description option, so setting one is a two-dist change (otlp: encode field 2 and take --description; hooks: pass it, and the hooks dist then needs the new otlp). Peer note: luthen-observability's checks.otlp_wire.metric_request (bca02352) already encodes the description, a reference for the encoding. Census shows both families with no metadata row (python -m checks.family_types). | 2026-11-02: 2026-11-02: otlp half built and submitted with W2228 (corpus test_suite_discovery via procrun.capture) as the keyed fall: mikemol-otlp metric --description (Request.description, run passes it into the Sample); one witness, one warrant; test_metriccmd 14 passed; bazel 6 of 6. NEXT, after it lands: trainround.metric_argv passes a description per metric (it calls the installed binary, so only after the otlp venv is rebuilt), then luthen reads whether VM keeps it as HELP. | 2026-11-02: 2026-11-02 tick check: stack W2228+W2227 (corpus fall plus mikemol-otlp metric --description) still inflight, key 1793633074862221053, HEAD e33515d3. After it lands: rebuild the otlp venv, then trainround passes a description per metric. | 2026-11-02: 2026-11-02: otlp half LANDED 3d31f4fa (mikemol-otlp metric --description). Next: rebuild //otlp:.venv, then trainround passes a description per metric. | 2026-11-02: 2026-11-02: hooks half submitted with W2229 as the keyed fall: trainround.DESCRIPTIONS and metric_argv passes --description; the otlp binary in main's otlp venv takes the flag; test_trainround+traindrive 15 passed; bazel 45 of 45. Gate result pending. Left over: traintel's commit samples and mikemol.commit.queued may lack a description too.",
+      "evidence": "2026-11-02: 2026-11-02 READ: the two metrics are built in hooks trainround.metric_argv as a mikemol-otlp metric argv (service, namespace, name, value, kind, field); mikemol-otlp metric has NO description option, so setting one is a two-dist change (otlp: encode field 2 and take --description; hooks: pass it, and the hooks dist then needs the new otlp). Peer note: luthen-observability's checks.otlp_wire.metric_request (bca02352) already encodes the description, a reference for the encoding. Census shows both families with no metadata row (python -m checks.family_types). | 2026-11-02: 2026-11-02: otlp half built and submitted with W2228 (corpus test_suite_discovery via procrun.capture) as the keyed fall: mikemol-otlp metric --description (Request.description, run passes it into the Sample); one witness, one warrant; test_metriccmd 14 passed; bazel 6 of 6. NEXT, after it lands: trainround.metric_argv passes a description per metric (it calls the installed binary, so only after the otlp venv is rebuilt), then luthen reads whether VM keeps it as HELP. | 2026-11-02: 2026-11-02 tick check: stack W2228+W2227 (corpus fall plus mikemol-otlp metric --description) still inflight, key 1793633074862221053, HEAD e33515d3. After it lands: rebuild the otlp venv, then trainround passes a description per metric. | 2026-11-02: 2026-11-02: otlp half LANDED 3d31f4fa (mikemol-otlp metric --description). Next: rebuild //otlp:.venv, then trainround passes a description per metric. | 2026-11-02: 2026-11-02: hooks half submitted with W2229 as the keyed fall: trainround.DESCRIPTIONS and metric_argv passes --description; the otlp binary in main's otlp venv takes the flag; test_trainround+traindrive 15 passed; bazel 45 of 45. Gate result pending. Left over: traintel's commit samples and mikemol.commit.queued may lack a description too. | 2026-11-02: 2026-11-02: hooks half LANDED 26ab4973 (trainround.DESCRIPTIONS and --description); otlp half 3d31f4fa. Left: whether VictoriaMetrics keeps the description as HELP (luthen-observability reads that), and traintel's commit samples and mikemol.commit.queued.",
       "issued_at": "2026-11-02T14:28:42Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1914",
-      "last_worked": "2026-11-02T16:08:07Z",
+      "last_worked": "2026-11-02T18:31:52Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49672,19 +49672,20 @@
     {
       "symbol": "W2229",
       "title": "treeio gitrun names procrun.proc.Completed and drops its subprocess import entry",
-      "status": "working",
+      "status": "landed",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: procrun.proc exports Completed; treeio gitrun annotates with it and drops its import and entry (1 rule); treeio 215 passed, bazel 45 of 45; submitted with W2227's hooks half, result pending. Risk to watch: the Codon target compiling the module-level alias. | 2026-11-02: 2026-11-02: first submit refused PRE-GATE (W1704): the mutants lint type-checks treeio with main's treeio/.venv, whose installed procrun copy lacked the new Completed alias (31 Any errors). Fixed by uv sync --offline --reinstall-package mikemol-procrun in main's treeio; resubmitted. Lesson: an installed sibling copy goes stale when a sibling's source changes, so reinstall it after landing a sibling change. | 2026-11-02: 2026-11-02 tick check: stack W2229 (treeio Completed alias) plus W2227's hooks half is inflight, key 1793635813930775985, HEAD 3d31f4fa. On landing: record shas, tell luthen-observability about the descriptions. | 2026-11-02: 2026-11-02: second submit gated and REFUSED on //pathsforward:test_cli (culprit unattributed: no path of this stack is under pathsforward). Run alone with the gate empty it PASSES (1 of 1), so it reads as load or ordering, not this stack; resubmitted unchanged per standing 7.",
+      "evidence": "2026-11-02: 2026-11-02: procrun.proc exports Completed; treeio gitrun annotates with it and drops its import and entry (1 rule); treeio 215 passed, bazel 45 of 45; submitted with W2227's hooks half, result pending. Risk to watch: the Codon target compiling the module-level alias. | 2026-11-02: 2026-11-02: first submit refused PRE-GATE (W1704): the mutants lint type-checks treeio with main's treeio/.venv, whose installed procrun copy lacked the new Completed alias (31 Any errors). Fixed by uv sync --offline --reinstall-package mikemol-procrun in main's treeio; resubmitted. Lesson: an installed sibling copy goes stale when a sibling's source changes, so reinstall it after landing a sibling change. | 2026-11-02: 2026-11-02 tick check: stack W2229 (treeio Completed alias) plus W2227's hooks half is inflight, key 1793635813930775985, HEAD 3d31f4fa. On landing: record shas, tell luthen-observability about the descriptions. | 2026-11-02: 2026-11-02: second submit gated and REFUSED on //pathsforward:test_cli (culprit unattributed: no path of this stack is under pathsforward). Run alone with the gate empty it PASSES (1 of 1), so it reads as load or ordering, not this stack; resubmitted unchanged per standing 7. | 2026-11-02: 2026-11-02: LANDED 2276d9c5 (procrun.proc.Completed; treeio gitrun import and entry gone; 1 rule fewer).",
       "issued_at": "2026-11-02T15:51:22Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T17:31:06Z",
+      "last_worked": "2026-11-02T18:31:33Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "landed_at": "20261102T183133Z"
     },
     {
       "symbol": "W2230",
@@ -49707,7 +49708,7 @@
     {
       "symbol": "W2231",
       "title": "procrun.capture takes stdin input and a bytes mode (nemik's 5 stdin/bytes calls)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "procrun"
@@ -49715,12 +49716,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-02: 2026-11-02: taken, ahead of pytestspec's opa.py (whose evaluate feeds stdin) and nemik's five stdin or bytes calls. Plan: capture keeps its text signature and gains an input keyword (text on stdin, default none, so every caller is unchanged), plus a second function capture_bytes(argv, cwd, env, timeout, input: bytes | None) returning a bytes result; witnesses with real children; one stack with pytestspec's fall. | 2026-11-02: 2026-11-02: codemod written (capture gains input_text, new capture_bytes with input_bytes, CompletedBytes alias, three real-child witnesses) but NOT applied: the in-gate stack's W2229 entry also edits procrun/proc.py (the Completed alias, not yet in HEAD), so a scratch tree cut from HEAD would collide with main's dirty copy at land. Apply after the stack lands; scratch W2276 is open and clean. Then pytestspec's opa.py (evaluate feeds stdin) and memres' railcli.py ride the same stack. | 2026-11-02: 2026-11-02 tick: blocked on W2229, which is inflight in the gate (key 1793640848278740648, with W2237 and W2227's hooks half) and edits the same file, procrun/proc.py; the codemod is written and scratch W2276 is open. | 2026-11-02: 2026-11-02: W2229 landed (2276d9c5), so the block is lifted; applying the codemod in a scratch tree cut from the new HEAD. | 2026-11-02: 2026-11-02: BUILT and submitted with pytestspec's fall (W2238): capture takes input_text, capture_bytes with input_bytes, CompletedBytes alias, three real-child witnesses, three warrants; procrun mutants.regex re-pointed at the multi-line call (the reformat had left four declarations UNAPPLIED, found by the first bazel run) plus five new declarations; procrun suite 9 passed, bazel procrun+pytestspec 37 of 37. Gate result pending. After it lands: W2230 (the --revendor list), then tell nemik.",
       "issued_at": "2026-11-02T16:40:45Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1175",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-02T18:46:48Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2232",
@@ -49823,17 +49825,35 @@
     {
       "symbol": "W2237",
       "title": "scan adf.run_command runs its child through procrun.capture and drops the per-responsibility subprocess entry",
+      "status": "landed",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-02: 2026-11-02: scan adf.run_command now runs scanimage through procrun.capture (runtime dep, stdlib-only leaf); the per-responsibility entry (2 rules) is gone; scan suite 22 passed, ruff clean without the entry, pycheck admits adf.py; landed to main's tree and main's scan venv synced. NEXT: when the gate (W2229 + W2227 hooks half, key 1793635813930775985) clears, bazel test //scan:all, then submit. Ranked ahead of the version contract per the operator (paydown first). | 2026-11-02: 2026-11-02: bazel //scan:all 15 of 15 (mutants included) with the gate empty; added to the stack with W2229 and W2227's hooks half after the pace rule named scan as owed (treeio no longer counted). Submitted, result pending. | 2026-11-02: 2026-11-02: LANDED d6d01370 (scan adf via procrun.capture; 2 rules fewer). Next shapes: pytestspec opa.py, memres railcli.py.",
+      "issued_at": "2026-11-02T17:12:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2200",
+      "last_worked": "2026-11-02T18:31:14Z",
+      "ticks_blocked": 0,
+      "completed": null,
+      "landed_at": "20261102T183114Z"
+    },
+    {
+      "symbol": "W2238",
+      "title": "pytestspec opa.py runs opa through procrun.capture and drops the per-responsibility subprocess entry",
       "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02: scan adf.run_command now runs scanimage through procrun.capture (runtime dep, stdlib-only leaf); the per-responsibility entry (2 rules) is gone; scan suite 22 passed, ruff clean without the entry, pycheck admits adf.py; landed to main's tree and main's scan venv synced. NEXT: when the gate (W2229 + W2227 hooks half, key 1793635813930775985) clears, bazel test //scan:all, then submit. Ranked ahead of the version contract per the operator (paydown first).",
-      "issued_at": "2026-11-02T17:12:09Z",
+      "evidence": "2026-11-02: 2026-11-02: pytestspec opa.py moved to procrun.capture (runtime dep; evaluate uses input_text); entry (2 rules) gone; pytestspec 167 passed, bazel 37 of 37 with procrun; submitted with W2231, result pending.",
+      "issued_at": "2026-11-02T18:36:54Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-02T17:19:21Z",
+      "last_worked": "2026-11-02T18:47:07Z",
       "ticks_blocked": 0,
       "completed": null
     }

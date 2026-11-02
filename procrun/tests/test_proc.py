@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.procrun.proc import TimeoutExpired, capture
+from mikemol.procrun.proc import TimeoutExpired, capture, capture_bytes
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 _SLEEP = "import time; time.sleep(30)"
 _SHORT = 0.2
 _LONG = 30
+_FOUR = 4
 
 
 def test_capture_returns_text_output_and_a_nonzero_status_without_raising() -> None:
@@ -58,3 +59,28 @@ def test_capture_with_a_generous_timeout_returns_the_result() -> None:
     """A child that finishes inside its timeout returns as it does with none."""
     done = capture([sys.executable, "-c", "print('ok')"], timeout=_LONG)
     assert done.stdout.strip() == "ok"
+
+
+def test_capture_writes_the_given_text_to_the_childs_stdin() -> None:
+    """W2231: `input_text` reaches the child's standard input, and a child that reads it answers."""
+    code = "import sys; sys.stdout.write(sys.stdin.read().upper())"
+    done = capture([sys.executable, "-c", code], input_text="queue\n")
+    assert (done.returncode, done.stdout) == (0, "QUEUE\n")
+
+
+def test_capture_bytes_returns_undecoded_bytes_and_carries_bytes_to_stdin() -> None:
+    """W2231: bytes that are not UTF-8 go in and come out unchanged, with stderr as bytes too."""
+    code = (
+        "import sys; data = sys.stdin.buffer.read(); sys.stdout.buffer.write(data[::-1]); "
+        "sys.stderr.buffer.write(b'\\xfe')"
+    )
+    done = capture_bytes([sys.executable, "-c", code], input_bytes=b"\xff\x00\x01")
+    assert (done.returncode, done.stdout, done.stderr) == (0, b"\x01\x00\xff", b"\xfe")
+
+
+def test_capture_bytes_does_not_raise_on_a_nonzero_status_and_honours_its_timeout() -> None:
+    """W2231: failure is a value here as in `capture`, and a child past its timeout is abandoned."""
+    failed = capture_bytes([sys.executable, "-c", "import sys; sys.exit(4)"])
+    assert failed.returncode == _FOUR
+    with pytest.raises(TimeoutExpired):
+        capture_bytes([sys.executable, "-c", _SLEEP], timeout=_SHORT)

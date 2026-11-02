@@ -5117,3 +5117,11 @@
 2026-11-02T16:43:21Z  interrupt W2236 minted    -         "Version contract step 4: replace the one-sha-across-every-spec rule in INSTALL.md with the range rule"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2232
 2026-11-02T17:12:09Z  interrupt W2237 minted    -         "scan adf.run_command runs its child through procrun.capture and drops the per-responsibility subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
 2026-11-02T17:19:21Z  status W2237 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T17:38:00Z  status W2231 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T18:08:17Z  status W2231 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T18:31:14Z  status W2237 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T18:31:33Z  status W2229 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T18:32:32Z  status W2231 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T18:36:54Z  interrupt W2238 minted    -         "pytestspec opa.py runs opa through procrun.capture and drops the per-responsibility subprocess entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2200
+2026-11-02T18:46:48Z  status W2231 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T18:47:07Z  status W2238 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
