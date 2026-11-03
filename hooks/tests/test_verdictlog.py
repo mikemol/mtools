@@ -13,13 +13,11 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from mikemol.hooks import commit_counts, commit_span, verdictlog
+from mikemol.hooks import commit_counts, commit_span, scratch, verdictlog
 from mikemol.hooks import commit_kata as ck
 
 if TYPE_CHECKING:
@@ -180,11 +178,11 @@ def _git(root: Path, *args: str) -> str:
         git's stdout.
 
     """
-    git = shutil.which("git")
-    if git is None:
-        pytest.skip("git is not installed")
-    done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
-    return done.stdout
+    code, out = scratch.git_out(
+        ["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args]
+    )
+    assert code == 0, out
+    return out
 
 
 def test_main_with_ship_prints_the_same_output_and_ships_the_text_it_printed(

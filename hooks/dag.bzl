@@ -3360,6 +3360,7 @@ GRAPH = {
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/commit_span.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/verdictlog.py"
       ],
       "reads": [],

@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2252,
+  "counter": 2254,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-ad",
-    "taken_at": "2026-11-03T02:36:35Z",
-    "pid": 8594,
-    "start": 26430
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal or a timeout, even when a peer endorses it: ask the operator (W1455 was reverted for this)",
     "do not expand the ratchet baseline: lowering it is an operator decision",
@@ -49257,38 +49252,42 @@
     {
       "symbol": "W2208",
       "title": "Toy witness a: a freeze-from stack built in a scratch worktree lands in queue order behind a carrier stack",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2189"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2254"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "2026-11-02: 2026-11-02: the toy witnesses (W2208, W2209) run against the toy harness proper (W2207's remainder); W2207's git-wrapper batch is in the gate (key 1793603072648523364) and the harness itself is unbuilt, so this waits on W2207.",
       "issued_at": "2026-11-01T12:39:16Z",
       "minted_during": "tick",
       "caused_by": "W2189",
-      "last_worked": "2026-11-03T02:54:05Z",
+      "last_worked": "2026-11-03T03:40:00Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2209",
       "title": "Toy witnesses b and c: an overlapping HEAD-built stack and an undeclared worktree submit are both refused",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2189"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
+      "blocked_on": [
+        "W2254"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2254 builds the harness: write witness b (overlapping HEAD-built stack refused) and c (undeclared worktree submit refused).",
       "evidence": "2026-11-02: 2026-11-02: same precondition as W2208: the toy witnesses run against the toy harness proper, W2207's unbuilt remainder; its git-wrapper batch is in the gate (key 1793603072648523364).",
       "issued_at": "2026-11-01T12:39:16Z",
       "minted_during": "tick",
       "caused_by": "W2189",
-      "last_worked": "2026-11-02T07:48:20Z",
+      "last_worked": "2026-11-03T03:39:23Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49489,11 +49488,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Survey which hooks/tests/*.py entries exist only for git init, worktree add, commit and add subprocess calls (commit_*, stack*, scratch*, snapshot, index_refresh, githook_*, privacy_audit, verdictlog, queuecarry); write ONE module hooks/tests/gitrepo.py that owns the subprocess calls and takes the exemption itself (one entry); migrate the tests in batches of about 10 per stack; delete each per-file entry as it migrates",
-      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again.",
+      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again. | 2026-11-03T04:02:07Z: 2026-11-03: batch 3 LANDED cd6c19b3 (test_in_gate, test_census_unmeasured).",
       "issued_at": "2026-11-01T22:49:23Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-03T01:51:03Z",
+      "last_worked": "2026-11-03T04:02:07Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49951,21 +49950,21 @@
     {
       "symbol": "W2244",
       "title": "Pace guard: an unmatchable or uncountable ratchet key reports UNMATCHABLE and never counts as owed",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "In hooks ratchet_pace: classify a behind row whose key no stack path can match (a glob key with * or ?, or a key _touches cannot satisfy) as UNMATCHABLE in owed(), excluded from the refusal list and from 'required fall' text, with a test that a *.py row beside a real owed row is not named and that a stack touching the real row passes; also name UNMATCHABLE rows in the refusal's trailing note so the sensor defect stays visible",
-      "evidence": "2026-11-02: 2026-11-02 via github-94 (github:W59, github:W90 deferral): the pace file carries a row ratchet '*.py', state behind, required 1, observed 0, value 20. entries_in (ratchet_pace.py:108-123) counts only .txt/.tsv, so a glob reads as 'entries unknown'; owed() (126-142) keeps any behind row whose count is unknown or large enough; _touches (175-187) accepts a path equal to the ratchet, a directory prefix of it, or a file in its split .d/ directory, and a glob key matches none of these, so the guard asks for something no stack can do. The host read the root pyproject.toml: its per-file-ignores (line 91 on) has no '*.py' key; the only '*.py' there is mypy's files glob at line 31; WHAT EMITS THE 20 is luthen's (under incident github:W90) and is deferred there. This card is only the guard's half: UNMATCHABLE, not owed. Witness: the pace reads the *.py row as UNMATCHABLE and nothing in the guard requires touching it. Ranks with paydown (guard correctness). | 2026-11-02: 2026-11-02: BUILT in scratch and landed to main's working tree (uncommitted, disjoint from the in-flight stack): ratchet_pace.unmatchable() (a key with *, ? or [), owed() skips it, stack_reason notes '(UNMATCHABLE, not owed: ...)'; two witnesses (test_a_glob_key_is_unmatchable_and_is_never_owed, test_a_glob_row_is_named_unmatchable_and_a_pace_of_only_a_glob_refuses_nothing), two warrants, mutants.regex re-pointed for the changed owed() condition plus two new declarations, the ratchet_pace site BUILD regenerated; 13 pace tests pass, ruff clean, pycheck admits. NOT SUBMITTED: the guard needs an owed-file touch beside it, and the only cheap ones (hooks/pyproject.toml) overlap the in-flight stack W2242+W2219 (key 1793658805803128141). Submit after it lands with hooks batch 3. | 2026-11-02: 2026-11-02 tick: stack W2242+W2219 (key 1793658805803128141) has been in the gate 3485 s of wall time at epoch 1793662498, 10 gate processes alive; FAILED/TIMEOUT/completed counts are not readable from here (host asked, answered). W2244 is built and landed to the tree, waiting behind it with W2245 and hooks batch 3.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-02: 2026-11-02 via github-94 (github:W59, github:W90 deferral): the pace file carries a row ratchet '*.py', state behind, required 1, observed 0, value 20. entries_in (ratchet_pace.py:108-123) counts only .txt/.tsv, so a glob reads as 'entries unknown'; owed() (126-142) keeps any behind row whose count is unknown or large enough; _touches (175-187) accepts a path equal to the ratchet, a directory prefix of it, or a file in its split .d/ directory, and a glob key matches none of these, so the guard asks for something no stack can do. The host read the root pyproject.toml: its per-file-ignores (line 91 on) has no '*.py' key; the only '*.py' there is mypy's files glob at line 31; WHAT EMITS THE 20 is luthen's (under incident github:W90) and is deferred there. This card is only the guard's half: UNMATCHABLE, not owed. Witness: the pace reads the *.py row as UNMATCHABLE and nothing in the guard requires touching it. Ranks with paydown (guard correctness). | 2026-11-02: 2026-11-02: BUILT in scratch and landed to main's working tree (uncommitted, disjoint from the in-flight stack): ratchet_pace.unmatchable() (a key with *, ? or [), owed() skips it, stack_reason notes '(UNMATCHABLE, not owed: ...)'; two witnesses (test_a_glob_key_is_unmatchable_and_is_never_owed, test_a_glob_row_is_named_unmatchable_and_a_pace_of_only_a_glob_refuses_nothing), two warrants, mutants.regex re-pointed for the changed owed() condition plus two new declarations, the ratchet_pace site BUILD regenerated; 13 pace tests pass, ruff clean, pycheck admits. NOT SUBMITTED: the guard needs an owed-file touch beside it, and the only cheap ones (hooks/pyproject.toml) overlap the in-flight stack W2242+W2219 (key 1793658805803128141). Submit after it lands with hooks batch 3. | 2026-11-02: 2026-11-02 tick: stack W2242+W2219 (key 1793658805803128141) has been in the gate 3485 s of wall time at epoch 1793662498, 10 gate processes alive; FAILED/TIMEOUT/completed counts are not readable from here (host asked, answered). W2244 is built and landed to the tree, waiting behind it with W2245 and hooks batch 3. | 2026-11-03T04:01:35Z: 2026-11-03: LANDED 390bdc60 (stack hooks-batch3). W2245 remains.",
       "issued_at": "2026-11-02T22:38:47Z",
       "minted_during": "interrupt",
       "caused_by": "github:W59",
-      "last_worked": "2026-11-02T23:36:34Z",
+      "last_worked": "2026-11-03T04:01:35Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261103T040135Z"
     },
     {
       "symbol": "W2245",
@@ -50116,6 +50115,48 @@
       "issued_at": "2026-11-03T02:39:13Z",
       "minted_during": "tick",
       "caused_by": "nemik:W1510",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2253",
+      "title": "Declare the metric family mikemol.commit.verdict (commit_verdict.py NAME, line ~30) with type and description, the last undeclared mikemol.* family",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "metrics",
+        "commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "LANDED in main's tree (uncommitted): commit_verdict DESCRIPTION, test, warrant, mutant, site BUILD. Stack file not yet written: the pace guard needs it to travel with a paydown that lowers an owed pyproject (hooks batch 4: candidates test_commit_raced and test_index_refresh need a CompletedProcess replacement first, test_worktree_venv fixture sets GIT_CONFIG_GLOBAL which git_out drops; or a procrun-conversion in another owed dist). Pick one, then stack both.",
+      "evidence": "",
+      "issued_at": "2026-11-03T02:56:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1876",
+      "last_worked": "2026-11-03T04:10:50Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2254",
+      "title": "Build the toy harness proper: a disposable repo plus fake bazel the stack witnesses (W2208, W2209) run mikemol-commit against",
+      "status": "ready",
+      "enables": [
+        "W2208",
+        "W2209"
+      ],
+      "touches": [
+        "commit",
+        "toy"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read W2207's evidence and .claude/design for the harness spec; build the smallest harness (temp git repo, stub bazel, real mikemol-commit) in a scratch tree; first witness: a clean one-file stack lands.",
+      "evidence": "",
+      "issued_at": "2026-11-03T03:38:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2189",
       "last_worked": null,
       "ticks_blocked": 0
     }
