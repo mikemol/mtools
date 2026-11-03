@@ -3039,6 +3039,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackgate.py",
         "src/mikemol/hooks/stackland.py"
       ],
@@ -3059,6 +3060,7 @@ GRAPH = {
     "tests/test_stackland.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackland.py"
       ],
       "reads": [],
@@ -3068,6 +3070,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackland.py",
         "src/mikemol/hooks/stacklanding.py"
       ],
