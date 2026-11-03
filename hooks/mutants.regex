@@ -582,6 +582,7 @@ src/mikemol/hooks/commit_verdict.py|withdraw-exit-read-as-refused|            re
 src/mikemol/hooks/commit_verdict.py|stage-is-the-first-mark|    return found\[-1\]\.name if found else NO_STAGE|    return found[0].name if found else NO_STAGE|def=stage_of
 src/mikemol/hooks/commit_verdict.py|verdict-sent-without-a-store|    if program is None or not store_named\(env\):|    if False:|def=emit
 src/mikemol/hooks/commit_verdict.py|verdict-spawn-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/hooks/commit_verdict.py|verdict-description-dropped|    argv \+= \["--field", f"stage=\{stage\}", "--description", DESCRIPTION\]|    argv += ["--field", f"stage={stage}"]|def=plan
 src/mikemol/hooks/commit_kata.py|verdict-counter-never-sent|        _emit_verdict\(root\.name, \(line, done\.returncode, shown\), os\.environ\)|        pass|def=commit
 src/mikemol/hooks/trainround.py|red-round-reads-ok|    status = "OK" if rec\.verdict == GREEN else "ERROR"|    status = "OK"|def=span_argv
 src/mikemol/hooks/trainround.py|jobs-sample-always-sent|    if rec\.facts\.jobs:|    if True:|def=plan

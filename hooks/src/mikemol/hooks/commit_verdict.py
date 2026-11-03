@@ -28,6 +28,12 @@ from mikemol.hooks.vlogdetach import spawn_detached
 
 SERVICE = "mikemol-commit"
 NAME = "mikemol.commit.verdict"
+# ⚑ METRICS ARE SELF-DESCRIBING (operator 2026-11-01, luthen-observability W1914): the sample
+# names what it counts, as the OTLP Metric's own description, so the store's census has a row
+# (W2253).
+DESCRIPTION = (
+    "Commit verdicts as printed, one sample per commit, labelled by repo, verdict and stage."
+)
 NO_STAGE = "-"
 WITHDRAW_RC = 75
 """The gate's exit when a withdraw marker was read at a phase boundary."""
@@ -77,7 +83,7 @@ def plan(program: str, repo: str, kind: str, stage: str) -> list[str]:
     """
     argv = [program, "metric", "--service", SERVICE, "--namespace", repo, "--name", NAME]
     argv += ["--value", "1", "--field", f"repo={repo}", "--field", f"verdict={kind}"]
-    argv += ["--field", f"stage={stage}"]
+    argv += ["--field", f"stage={stage}", "--description", DESCRIPTION]
     return argv
 
 

@@ -60,6 +60,13 @@ def test_the_sample_is_a_one_labelled_by_repo_verdict_and_stage_alone() -> None:
     assert _fields(argv) == ["repo=mtools", "verdict=REFUSED", "stage=bazel"]
 
 
+def test_the_sample_carries_its_own_description() -> None:
+    """The family names what it counts, so the store's census has a row for it (W2253)."""
+    argv = commit_verdict.plan("/bin/otlp", "mtools", "COMMITTED", "-")
+    assert argv[argv.index("--description") + 1] == commit_verdict.DESCRIPTION
+    assert "verdict" in commit_verdict.DESCRIPTION
+
+
 def test_emit_sends_one_sample_for_a_printed_verdict() -> None:
     """The kind and the stage come from the line, the exit and the gate's output."""
     spawned: list[Sequence[str]] = []
