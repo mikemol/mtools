@@ -22,24 +22,32 @@ that is absent. An unreadable list and an absent module are never a clean run.
 """
 
 import json
+import os
 import sys
 import time
 from collections.abc import Sequence
 from pathlib import Path
 
-from mikemol.hooks import websubset, websubset_list, websubset_prom, websubset_tree
+from mikemol.hooks import (
+    websubset,
+    websubset_list,
+    websubset_otlp,
+    websubset_prom,
+    websubset_tree,
+)
 
 EXIT_FINDINGS = 4
 EXIT_USAGE = 2
 _USAGE = (
     "usage: mikemol-websubset --check-file PATH [--target py2many|codon]\n"
     "       mikemol-websubset --census ROOT [--jsonl FILE] [--counts FILE] [--target T]\n"
-    "       mikemol-websubset --idioms ROOT[:ROOT...] [--target T] [--prom FILE]\n"
+    "       mikemol-websubset --idioms ROOT[:ROOT...] [--target T] [--prom FILE] [--otlp]\n"
 )
 _LIST_DIR = "hooks"
 _LEDGER_FLAGS = frozenset({"--jsonl", "--counts"})
 _TARGET_FLAG = "--target"
 _PROM_FLAG = "--prom"
+_OTLP_FLAG = "--otlp"
 _VALUED = frozenset({"--check-file", "--census", "--idioms", _TARGET_FLAG, _PROM_FLAG}) | (
     _LEDGER_FLAGS
 )
@@ -143,7 +151,7 @@ def _roots(options: dict[str, str]) -> list[Path]:
 
 
 def _idioms(options: dict[str, str], target: str) -> int:
-    """Print the idiom census of the roots and, with `--prom`, write it as a textfile.
+    """Print the idiom census of the roots; `--prom` writes it as a textfile, `--otlp` sends it.
 
     ⚑ ONE REPO PER ROOT: the series label `repo` is the root's directory name, so a fleet run over
     several roots keeps them apart. It is a report, not a gate, so the status is 0.
@@ -155,6 +163,8 @@ def _idioms(options: dict[str, str], target: str) -> int:
     roots = _roots(options)
     counted = [(root.name, websubset_tree.census([root], target)) for root in roots]
     sys.stdout.write(websubset_tree.render(websubset_tree.census(roots, target)))
+    if _OTLP_FLAG in options:
+        websubset_otlp.emit(websubset_otlp.batches(counted, time.time_ns()), os.environ)
     if _PROM_FLAG in options:
         text = websubset_prom.render(counted, int(time.time()))
         websubset_prom.publish(Path(options[_PROM_FLAG]), text)
@@ -162,16 +172,20 @@ def _idioms(options: dict[str, str], target: str) -> int:
 
 
 def _parse(args: Sequence[str]) -> dict[str, str] | None:
-    """Read the valued options.
+    """Read the valued options and the bare `--otlp`.
 
     Returns:
-        the options, or None on an unknown flag, a missing value or a repeated flag.
+        the options (`--otlp` as "1"), or None on an unknown flag, a missing value or a repeated
+        flag.
 
     """
     options: dict[str, str] = {}
     rest = list(args)
     while rest:
         name = rest.pop(0)
+        if name == _OTLP_FLAG and name not in options:
+            options[name] = "1"
+            continue
         if name not in _VALUED or not rest or name in options:
             return None
         options[name] = rest.pop(0)
@@ -191,7 +205,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ledgers = {name: value for name, value in options.items() if name in _LEDGER_FLAGS}
         if set(options) == {"--check-file"}:
             return _check_file(Path(options["--check-file"]), target)
-        if set(options) - {_PROM_FLAG} == {"--idioms"}:
+        if set(options) - {_PROM_FLAG, _OTLP_FLAG} == {"--idioms"}:
             return _idioms(options, target)
         if "--census" in options and set(options) - _LEDGER_FLAGS == {"--census"}:
             return _census(Path(options["--census"]), ledgers, target)

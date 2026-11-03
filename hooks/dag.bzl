@@ -1385,6 +1385,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/websubset.py",
         "src/mikemol/hooks/websubset_list.py",
+        "src/mikemol/hooks/websubset_otlp.py",
         "src/mikemol/hooks/websubset_prom.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],
@@ -1405,6 +1406,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/websubset_otlp.py": {
       "imports": [
+        "src/mikemol/hooks/commit_span.py",
+        "src/mikemol/hooks/vlogdetach.py",
         "src/mikemol/hooks/websubset.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],
@@ -3545,6 +3548,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/websubset.py",
+        "src/mikemol/hooks/websubset_cli.py",
         "src/mikemol/hooks/websubset_otlp.py",
         "src/mikemol/hooks/websubset_tree.py"
       ],

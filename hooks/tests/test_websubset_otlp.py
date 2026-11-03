@@ -8,10 +8,19 @@ included; the repository is the batch key, not a label; each row is a JSON objec
 and no freshness class is declared, since none is decided.
 """
 
-import json
+from __future__ import annotations
 
-from mikemol.hooks import websubset, websubset_otlp, websubset_tree
+import json
+from typing import TYPE_CHECKING
+
+from mikemol.hooks import websubset, websubset_cli, websubset_otlp, websubset_tree
 from mikemol.hooks.payload import as_record
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
+    from pathlib import Path
+
+    import pytest
 
 Rec = dict[str, object]
 
@@ -25,6 +34,7 @@ _FOUND = websubset_tree.TreeCensus(
 )
 _SEEN = {"target": "codon", "rule": "tuple-except"}
 _UNSEEN = {"target": "codon", "rule": "future-import"}
+_ENV = {"MIKEMOL_OTLP_BIN": "/opt/mikemol-otlp", "MIKEMOL_ENDPOINTS": "/host/endpoints.json"}
 
 
 def _load(line: str) -> Rec:
@@ -77,3 +87,48 @@ def test_each_row_is_a_sample_otlp_reads_and_declares_no_freshness_class() -> No
         assert row["description"]
         assert row["unit"]
         assert "freshness_class" not in row
+
+
+def test_emit_starts_one_child_per_repository_with_its_rows_on_stdin() -> None:
+    """The namespace is the repo, the service is fixed, and the rows are JSON lines."""
+    sent = websubset_otlp.batches([("a", _FOUND), ("b", _FOUND)], _NOW)
+    spawned: list[tuple[Sequence[str], str]] = []
+
+    def record(argv: Sequence[str], text: str) -> None:
+        spawned.append((argv, text))
+
+    assert websubset_otlp.emit(sent, _ENV, record)
+    assert [argv[argv.index("--namespace") + 1] for argv, _ in spawned] == ["a", "b"]
+    assert all(argv[argv.index("--service") + 1] == "mikemol-websubset" for argv, _ in spawned)
+    lines = spawned[0][1].splitlines()
+    assert lines == sent["a"]
+    assert all(isinstance(_load(line)["name"], str) for line in lines)
+
+
+def test_a_failed_spawn_sends_nothing_further_and_raises_nothing() -> None:
+    """Fire and forget: the census is already printed."""
+
+    def failing(_argv: Sequence[str], _text: str) -> None:
+        raise OSError
+
+    sent = websubset_otlp.batches([("a", _FOUND)], _NOW)
+    assert not websubset_otlp.emit(sent, _ENV, failing)
+
+
+def test_idioms_sends_only_when_otlp_is_given(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Without `--otlp` nothing is sent; with it each repository's batch is."""
+    sends: list[Mapping[str, list[str]]] = []
+
+    def record(sent: Mapping[str, list[str]], _env: Mapping[str, str]) -> bool:
+        sends.append(sent)
+        return True
+
+    monkeypatch.setattr(websubset_otlp, "emit", record)
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "m.py").write_text("x = 1\n", encoding="utf-8")
+    assert websubset_cli.main(["--idioms", str(tmp_path), "--target", "codon"]) == 0
+    assert not sends
+    assert websubset_cli.main(["--idioms", str(tmp_path), "--target", "codon", "--otlp"]) == 0
+    assert [list(sent) for sent in sends] == [[tmp_path.name]]

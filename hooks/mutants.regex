@@ -926,6 +926,10 @@ src/mikemol/hooks/commit_kata.py|shared-files-never-asked|        or _ahead_refu
 src/mikemol/hooks/websubset_otlp.py|unseen-rule-written-as-one|    return 0, 0|    return 1, 1|def=_reach
 src/mikemol/hooks/websubset_otlp.py|clean-modules-written-as-total|        rows\.append\(_row\("clean_modules", found\.clean, base, now_ns\)\)|        rows.append(_row("clean_modules", found.total, base, now_ns))|def=batches
 src/mikemol/hooks/websubset_otlp.py|row-time-dropped|        "time_ns": now_ns,|        "time_ns": 0,|def=_row
+src/mikemol/hooks/websubset_otlp.py|emit-spawn-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/hooks/websubset_otlp.py|emit-wrong-service|"--service", SERVICE,|"--service", "x",|def=emit
+src/mikemol/hooks/websubset_otlp.py|emit-namespace-is-not-the-repo|"--namespace", repo\]|"--namespace", "x"]|def=emit
+src/mikemol/hooks/websubset_cli.py|idioms-sends-without-the-flag|    if _OTLP_FLAG in options:|    if True:|def=_idioms
 src/mikemol/hooks/commit_span.py|trees-joined-without-a-separator|    return ",".join\(seen\)|    return "".join(seen)|def=trees_of
 src/mikemol/hooks/commit_span.py|tree-left-off-the-event|    pairs = \(\("invocations", invocations_of\(text\)\), \("trees", trees_of\(text\)\)\)|    pairs = (("invocations", invocations_of(text)),)|def=_joined
 src/mikemol/hooks/commit_span.py|empty-fields-written|    return \{key: value for key, value in pairs if value\}|    return dict(pairs)|def=_joined

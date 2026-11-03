@@ -19,17 +19,21 @@ census was taken, not the arrival time at the store.
 it; naming a companion that nothing emits would be a false declaration. The rows leave the field
 absent, which `mikemol-otlp` accepts as "not declared", and the choice is luthen's (carded).
 
-This module is pure: it builds rows and sends nothing; the CLI wiring calls `mikemol-otlp`.
+`batches` is pure and builds rows. `emit` starts one detached `mikemol-otlp metrics` child per
+repository with its rows on stdin, when a binary and a store exist, and never raises into the run.
 """
 
 import json
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, Sequence
 
 from mikemol.hooks import websubset
+from mikemol.hooks.commit_span import binary, store_named
+from mikemol.hooks.vlogdetach import spawn_with_stdin
 from mikemol.hooks.websubset_tree import TreeCensus
 
 PREFIX = "mikemol.codon"
 SERVICE = "mikemol-websubset"
+Spawn = Callable[[Sequence[str], str], None]
 _FAMILIES = {
     "modules": ("src modules read", "{module}"),
     "clean_modules": ("src modules with no finding under the target", "{module}"),
@@ -80,3 +84,27 @@ def batches(counted: Sequence[tuple[str, TreeCensus]], now_ns: int) -> dict[str,
             rows.append(_row("idiom_modules", modules, {**base, "rule": rule}, now_ns))
             rows.append(_row("idiom_sites", sites, {**base, "rule": rule}, now_ns))
     return out
+
+
+def emit(
+    sent: Mapping[str, list[str]], env: Mapping[str, str], spawn: Spawn = spawn_with_stdin
+) -> bool:
+    """Start one `mikemol-otlp metrics` child per repository, when a binary and a store exist.
+
+    ⚑ BEST EFFORT, NEVER RAISING INTO THE RUN, like the flake and verdict counters: the census is
+    already printed, and a send that cannot start changes nothing about it.
+
+    Returns:
+        whether every child was started; False with no binary or store, or a failed spawn.
+
+    """
+    program = binary(env)
+    if program is None or not store_named(env):
+        return False
+    try:
+        for repo, rows in sent.items():
+            argv = [program, "metrics", "--service", SERVICE, "--namespace", repo]
+            spawn(argv, "".join(f"{row}\n" for row in rows))
+    except OSError:
+        return False
+    return True

@@ -17321,3 +17321,24 @@
   claim  = {The family names what it counts, so the store's census has a row for it (W2253).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_verdict.py -k test_the_sample_carries_its_own_description},
 }
+
+@misc{hooks-websubset-otlp-emit-starts-one-child-per-repository-with-its-rows-on-stdin,
+  section = {websubset_otlp},
+  title  = {The namespace is the repo, the service is fixed, and the rows are JSON lines},
+  claim  = {The namespace is the repo, the service is fixed, and the rows are JSON lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_emit_starts_one_child_per_repository_with_its_rows_on_stdin},
+}
+
+@misc{hooks-websubset-otlp-failed-spawn-sends-nothing-further-and-raises-nothing,
+  section = {websubset_otlp},
+  title  = {Fire and forget: the census is already printed},
+  claim  = {Fire and forget: the census is already printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_a_failed_spawn_sends_nothing_further_and_raises_nothing},
+}
+
+@misc{hooks-websubset-otlp-idioms-sends-only-when-otlp-is-given,
+  section = {websubset_otlp},
+  title  = {Without `--otlp` nothing is sent; with it each repository's batch is},
+  claim  = {Without `--otlp` nothing is sent; with it each repository's batch is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_idioms_sends_only_when_otlp_is_given},
+}
