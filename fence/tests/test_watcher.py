@@ -12,9 +12,10 @@ from __future__ import annotations
 import os
 import shutil
 import signal
-import subprocess
 import time
 from typing import TYPE_CHECKING
+
+from mikemol.procrun.proc import spawn
 
 from mikemol.fence import watcher
 
@@ -214,16 +215,13 @@ def test_a_real_guard_interrupts_a_real_child_by_name_and_ends_with_the_command(
     shell = shutil.which("sh")
     assert shell is not None
     marker = tmp_path / "child.pid"
-    command = subprocess.Popen(
-        [shell, "-c", f"sleep 30 & echo $! > {marker}; wait"],
-        stdin=subprocess.DEVNULL,
-    )
-    deadline = time.monotonic() + _WAIT_S
-    while not marker.exists() and time.monotonic() < deadline:
-        time.sleep(_POLL_S)
-    started = time.monotonic()
-    with watcher.Guard(_REAL_ROW, command.pid, lambda: _OVER, os.kill) as guard:
-        command.wait(timeout=_WAIT_S)
+    with spawn([shell, "-c", f"sleep 30 & echo $! > {marker}; wait"], stdin="discard") as command:
+        deadline = time.monotonic() + _WAIT_S
+        while not marker.exists() and time.monotonic() < deadline:
+            time.sleep(_POLL_S)
+        started = time.monotonic()
+        with watcher.Guard(_REAL_ROW, command.pid, lambda: _OVER, os.kill) as guard:
+            command.wait(timeout=_WAIT_S)
     child = int(marker.read_text(encoding="utf-8"))
     assert guard.outcome.tripped
     assert set(guard.outcome.signalled) == {child}
