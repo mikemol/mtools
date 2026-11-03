@@ -36,7 +36,10 @@ Homepage = "https://github.com/mikemol/mtools"
 [dependency-groups]
 # ⚑ THE SAME THREE AS THE SIBLINGS, for the same reasons (see ratchet/pyproject.toml): mypy and
 # pytest are staged by the bazel mypy action, and `.githooks/pre-commit` refuses without ruff.
-dev = ["pytest", "mypy", "ruff==0.16.6"]
+# ⚑ AND `mikemol-procrun` (W2241) IN THE DEV GROUP ONLY, NEVER IN `dependencies`: only
+# test_stub_authority needs it, to run stubtest through the one process seam, and nemik vendors
+# this wheel, so a runtime edge would break its lock until it vendored procrun too.
+dev = ["pytest", "mypy", "ruff==0.16.6", "mikemol-procrun"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -48,6 +51,9 @@ include = ["mikemol.*"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+mikemol-procrun = { path = "../procrun" }
 
 [tool.pytest.ini_options]
 empty_parameter_set_mark = "fail_at_collect"  # a parametrize that collects zero cases FAILS; it never reads as a skip (W88, arms in W90)
@@ -96,4 +102,3 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-"tests/test_stub_authority.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

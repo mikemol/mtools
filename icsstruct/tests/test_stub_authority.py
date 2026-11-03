@@ -10,9 +10,10 @@ that moves either library's surface would otherwise go on type-checking against 
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
+
+from mikemol.procrun.proc import capture
 
 # ⚑ ABSOLUTE WITHOUT RESOLVING, as in //mdstruct:test_stub_authority: `resolve()` would follow
 # bazel's runfiles symlinks out of the sandbox into the live working tree.
@@ -27,7 +28,7 @@ def test_the_stubs_match_the_libraries_they_describe(tmp_path: Path) -> None:
     a sandbox stages the distribution read-only (measured in mdstruct). The parent environment is
     inherited so the staged mypy stays importable under bazel.
     """
-    proc = subprocess.run(
+    proc = capture(
         [
             sys.executable,
             "-m",
@@ -39,9 +40,6 @@ def test_the_stubs_match_the_libraries_they_describe(tmp_path: Path) -> None:
             str(_ALLOWLIST),
             "--concise",
         ],
-        capture_output=True,
-        text=True,
-        check=False,
         cwd=tmp_path,
         env={**os.environ, "MYPYPATH": str(_DIST / "stubs")},
     )

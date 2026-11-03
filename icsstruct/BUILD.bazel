@@ -63,8 +63,14 @@ py_library(
             ":icsstruct",
             dev_requirement("pytest"),
             dev_requirement("mypy"),
-        ],
+        ] + (
+            # W2241: only this test starts a child, so only its cone holds procrun.
+            ["//procrun:procrun"] if src == "tests/test_stub_authority.py" else []
+        ),
         imports = ["src"],
+        # ⚑ Two source roots plus legacy implicit `__init__.py` files would shadow the `mikemol`
+        # namespace (W566), so the test holding procrun turns them off; the rest stay as they were.
+        legacy_create_init = 0 if src == "tests/test_stub_authority.py" else -1,
     )
     for src in glob(["tests/test_*.py"])
 ]
@@ -145,6 +151,7 @@ py_binary(
     deps = [
         dev_requirement("mypy"),
         dev_requirement("pytest"),
+        "//procrun:procrun",  # W2241: the test imports it, so mypy must resolve it
     ],
 )
 
@@ -174,7 +181,7 @@ venv_from_hub(
     hub_requirements = dev_all_requirements,
     python_version = "3.13.13",
     python_version_short = "3.13",
-    srcs = glob(["src/mikemol/icsstruct/**"]),
+    srcs = glob(["src/mikemol/icsstruct/**"]) + ["//procrun:procrun"],
 )
 
 # W376: this distribution's :venv (W342) and :suite (W362), declared together. venv_check collects
