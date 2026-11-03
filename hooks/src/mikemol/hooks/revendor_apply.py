@@ -119,11 +119,11 @@ def same_reading(run: Runner, target: Target, work: Path) -> str | None:
     return None
 
 
-def _move_file(path: Path, short: str, old: set[str]) -> None:
+def _move_file(path: Path, short: str, old: set[str], tag: str) -> None:
     # Move the wheel paths (and the prose naming the old commit) in one text file, if it exists.
     if not path.is_file():
         return
-    text = revendor.move_sources(path.read_text(encoding="utf-8"), short)
+    text = revendor.move_sources(path.read_text(encoding="utf-8"), short, tag)
     for stale in sorted(old - {short}):
         text = revendor.move_mentions(text, stale, short)
     path.write_text(text, encoding="utf-8")
@@ -147,8 +147,18 @@ def write_sums(target: Target) -> None:
     sums.write_text("".join(lines), encoding="utf-8")
 
 
-def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
+def swap(
+    run: Runner,
+    target: Target,
+    work: Path,
+    old: set[str],
+    pinned: Sequence[str],
+) -> str | None:
     """Copy the new wheels in, remove the old, move the pins, then lock and sync.
+
+    `pinned` are the wheel files the repo's rows named before the swap, each as spelled there
+    (mtools:W2251): they are the ones removed, so a row spelled with the other tag is not left
+    behind. `old` is still the set of old short shas, for the prose that names the commit.
 
     Returns:
         why it failed, or None when the repo is on the new commit.
@@ -158,12 +168,10 @@ def swap(run: Runner, target: Target, work: Path, old: set[str]) -> str | None:
     new_names = [revendor.wheel_name(d, short, target.tag) for d in target.dists]
     for name in new_names:
         shutil.copyfile(work / "dist" / name, target.repo / WHEELS / name)
-    for stale in sorted(old - {short}):
-        for dist in target.dists:
-            gone = str(WHEELS / revendor.wheel_name(dist, stale, target.tag))
-            run(["git", "rm", "--quiet", "--force", gone], target.repo)
+    for name in [n for n in pinned if n not in new_names]:
+        run(["git", "rm", "--quiet", "--force", str(WHEELS / name)], target.repo)
     for name in ("pyproject.toml", BAZEL):
-        _move_file(target.repo / name, short, old)
+        _move_file(target.repo / name, short, old, target.tag)
     write_sums(target)
     added = [str(WHEELS / name) for name in new_names]
     if (target.repo / WHEELS / SUMS).is_file():
@@ -186,11 +194,13 @@ def apply(run: Runner, target: Target) -> str | None:
     """
     if dirty(run, target.repo):
         return "pyproject.toml, MODULE.bazel, uv.lock or vendor/wheels have uncommitted changes"
-    old = revendor.pinned_shorts((target.repo / "pyproject.toml").read_text(encoding="utf-8"))
+    pyproject = (target.repo / "pyproject.toml").read_text(encoding="utf-8")
+    old = revendor.pinned_shorts(pyproject)
+    pinned = revendor.pinned_files(pyproject)
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
         failure = build(run, target, work) or same_reading(run, target, work)
-        return failure or swap(run, target, work, old)
+        return failure or swap(run, target, work, old, pinned)
 
 
 def checksums(target: Target) -> dict[str, str]:

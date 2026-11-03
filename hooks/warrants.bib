@@ -17371,3 +17371,52 @@
   claim  = {The control: a refusal that printed no section gets no reprint.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_output_with_no_failing_section_adds_nothing},
 }
+
+@misc{hooks-revendor-move-sources-given-a-tag-rewrites-every-row-to-it-and-without-one-keeps-each,
+  section = {revendor},
+  title  = {W2250: the path names the file the swap wrote; with no tag the old behaviour stands},
+  claim  = {W2250: the path names the file the swap wrote; with no tag the old behaviour stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_move_sources_given_a_tag_rewrites_every_row_to_it_and_without_one_keeps_each},
+}
+
+@misc{hooks-revendor-pinned-files-reads-each-row-as-spelled,
+  section = {revendor},
+  title  = {W2251: the old files to remove come from the rows, in either spelling},
+  claim  = {W2251: the old files to remove come from the rows, in either spelling.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor.py -k test_pinned_files_reads_each_row_as_spelled},
+}
+
+@misc{hooks-revendor-apply-row-spelled-with-the-other-tag-is-rewritten-to-the-repos-spelling,
+  section = {revendor_apply},
+  title  = {W2250: every pinned path names the file the swap wrote, with no stray `g`},
+  claim  = {W2250: every pinned path names the file the swap wrote, with no stray `g`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_a_row_spelled_with_the_other_tag_is_rewritten_to_the_repos_spelling},
+}
+
+@misc{hooks-revendor-apply-old-wheel-spelled-with-the-other-tag-is-removed-too,
+  section = {revendor_apply},
+  title  = {W2251: the superseded `+g` wheel does not stay behind in vendor/wheels},
+  claim  = {W2251: the superseded `+g` wheel does not stay behind in vendor/wheels.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_revendor_apply.py -k test_the_old_wheel_spelled_with_the_other_tag_is_removed_too},
+}
+
+@misc{hooks-runproc-failure-returns-its-standard-output-then-its-standard-error,
+  section = {runproc},
+  title  = {The reason uv gives on stderr reaches the caller},
+  claim  = {The reason uv gives on stderr reaches the caller.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_failure_returns_its_standard_output_then_its_standard_error},
+}
+
+@misc{hooks-runproc-success-returns-standard-output-alone,
+  section = {runproc},
+  title  = {The control: a warning on stderr does not reach a caller that parses stdout},
+  claim  = {The control: a warning on stderr does not reach a caller that parses stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_success_returns_standard_output_alone},
+}
+
+@misc{hooks-runproc-missing-program-is-127-and-empty,
+  section = {runproc},
+  title  = {The existing contract is unchanged},
+  claim  = {The existing contract is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_missing_program_is_127_and_empty},
+}

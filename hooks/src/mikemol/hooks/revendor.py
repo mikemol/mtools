@@ -51,6 +51,9 @@ TAG = "g"
 _SOURCE = re.compile(
     rf"(vendor/wheels/mikemol_(?:{_ALTERNATION})-0\.1\.0\+)(g?)([0-9a-f]+)(-py3-none-any\.whl)"
 )
+_FILE = re.compile(
+    rf"vendor/wheels/(mikemol_(?:{_ALTERNATION})-0\.1\.0\+g?[0-9a-f]+-py3-none-any\.whl)"
+)
 _NAMED = re.compile(rf"vendor/wheels/mikemol_({_ALTERNATION})-0\.1\.0\+")
 _FULL_SHA = re.compile(r"[0-9a-f]{40}")
 _SHORT = 7
@@ -121,8 +124,28 @@ def pinned_shorts(pyproject: str) -> set[str]:
     return {m.group(3) for m in _SOURCE.finditer(pyproject)}
 
 
-def move_sources(pyproject: str, short: str) -> str:
-    """Move every vendored mtools wheel path in a file to a short sha, keeping its tag.
+def pinned_files(text: str) -> tuple[str, ...]:
+    """Name the wheel files a file's vendored paths pin, each as it is spelled there.
+
+    ⚑ A ROW KEEPS THE SPELLING IT WAS VENDORED WITH (mtools:W2251): one repo can hold `+g<sha>`
+    and `+<sha>` rows side by side (nemik's procrun row was `g`, the rest were not), so the old
+    files to remove are read from the rows, never rebuilt from one tag.
+
+    Returns:
+        the distinct file names, sorted.
+
+    """
+    return tuple(sorted({m.group(1) for m in _FILE.finditer(text)}))
+
+
+def move_sources(pyproject: str, short: str, tag: str | None = None) -> str:
+    """Move every vendored mtools wheel path in a file to a short sha.
+
+    ⚑ THE PATH TAKES THE TAG THE NEW FILE IS WRITTEN WITH (mtools:W2250, nemik:W1510): with
+    `tag` given, every row is rewritten to `+<tag><short>`, so the path names the file the swap
+    wrote. Keeping each row's own tag rewrote nemik's procrun row to `+g45ffeb7` while the
+    file was written as `+45ffeb7`, and `uv lock` failed on a wheel that did not exist. With no
+    `tag` each row keeps its own, as before.
 
     ⚑ ALSO FOR `MODULE.bazel` (W1449): nemik names the same wheel paths there, and the rewrite is
     the same text substitution.
@@ -131,7 +154,8 @@ def move_sources(pyproject: str, short: str) -> str:
         the text with each path rewritten and everything else untouched.
 
     """
-    return _SOURCE.sub(rf"\g<1>\g<2>{short}\g<4>", pyproject)
+    keep = r"\g<2>" if tag is None else tag
+    return _SOURCE.sub(rf"\g<1>{keep}{short}\g<4>", pyproject)
 
 
 def move_mentions(text: str, old: str, short: str) -> str:

@@ -178,7 +178,13 @@ src/mikemol/hooks/revendor.py|short-is-whole|return sha\[:_SHORT\]|return sha|de
 src/mikemol/hooks/revendor_apply.py|dirty-tree-allowed|return code != 0 or bool\(out\.strip\(\)\)|return False|def=dirty
 src/mikemol/hooks/revendor_apply.py|hash-mismatch-passes|if not live or live != fresh:|if False:|def=same_reading
 src/mikemol/hooks/revendor_apply.py|empty-hash-matches|if not live or live != fresh:|if live != fresh:|def=same_reading
-src/mikemol/hooks/revendor_apply.py|stale-wheels-kept|for stale in sorted\(old - \{short\}\):|for stale in []:|def=swap
+src/mikemol/hooks/revendor_apply.py|stale-wheels-kept|for name in \[n for n in pinned if n not in new_names\]:|for name in []:|def=swap
+src/mikemol/hooks/revendor_apply.py|pins-keep-their-own-tag|_move_file\(target\.repo / name, short, old, target\.tag\)|_move_file(target.repo / name, short, old, None)|def=swap
+src/mikemol/hooks/revendor_apply.py|pinned-files-never-read|pinned = revendor\.pinned_files\(pyproject\)|pinned = ()|def=apply
+src/mikemol/hooks/revendor.py|rows-keep-their-own-tag|keep = r"\\g<2>" if tag is None else tag|keep = r"\\g<2>"|def=move_sources
+src/mikemol/hooks/revendor.py|no-pinned-files-read|return tuple\(sorted\(\{m\.group\(1\) for m in _FILE\.finditer\(text\)\}\)\)|return ()|def=pinned_files
+src/mikemol/hooks/runproc.py|failure-drops-stderr|    if done\.returncode != 0:|    if False:|def=run_process
+src/mikemol/hooks/runproc.py|success-appends-stderr|    if done\.returncode != 0:|    if True:|def=run_process
 src/mikemol/hooks/revendor_apply.py|lock-skipped|steps = \[\["uv", "lock"\], \["uv", "sync", "--frozen"\]\] if target\.sync else \[\["uv", "lock"\]\]|steps = [["uv", "sync", "--frozen"]]|def=swap
 src/mikemol/hooks/revendor_apply.py|pins-not-moved|path\.write_text\(text, encoding="utf-8"\)|pass|def=_move_file
 src/mikemol/hooks/wheel.py|epoch-not-in-build-env|f"SOURCE_DATE_EPOCH=\{EPOCH\}"|"SOURCE_DATE_EPOCH=0"|def=build_into

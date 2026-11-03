@@ -18,14 +18,22 @@ from pathlib import Path
 def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
     """Run a command in a directory.
 
+    ⚑ A FAILURE KEEPS ITS STANDARD ERROR (mtools:W2249, nemik:W1510): uv writes its reason to
+    stderr, and a runner that kept only stdout made `uv lock` and the throwaway install fail
+    with a blank reason. A success returns stdout alone, because callers parse it (the
+    writer's `--hash`, git's porcelain), and a warning on stderr must not corrupt that.
+
     Returns:
-        its exit code and standard output; 127 and empty when the program is missing.
+        its exit code and standard output, followed by its standard error when the exit
+        is not zero; 127 and empty when the program is missing.
 
     """
     try:
         done = subprocess.run(list(argv), cwd=cwd, capture_output=True, text=True, check=False)
     except FileNotFoundError:
         return 127, ""
+    if done.returncode != 0:
+        return done.returncode, f"{done.stdout}{done.stderr}"
     return done.returncode, done.stdout
 
 

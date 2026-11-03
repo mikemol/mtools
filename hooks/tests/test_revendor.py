@@ -192,6 +192,32 @@ def test_transcriptstruct_is_a_vendored_dist_and_moves_with_the_rest() -> None:
     assert revendor.wheel_name("transcriptstruct", NEW) in revendor.move_sources(text, NEW)
 
 
+_ROWS = 2
+_MIXED = (
+    'a = "vendor/wheels/mikemol_hooks-0.1.0+gaaaaaaa-py3-none-any.whl"\n'
+    'b = "vendor/wheels/mikemol_procrun-0.1.0+aaaaaaa-py3-none-any.whl"\n'
+)
+
+
+def test_move_sources_given_a_tag_rewrites_every_row_to_it_and_without_one_keeps_each() -> None:
+    """W2250: the path names the file the swap wrote; with no tag the old behaviour stands."""
+    to_plain = revendor.move_sources(_MIXED, "bbbbbbb", "")
+    assert "+gbbbbbbb" not in to_plain
+    assert to_plain.count("+bbbbbbb-py3") == _ROWS
+    kept = revendor.move_sources(_MIXED, "bbbbbbb")
+    assert "hooks-0.1.0+gbbbbbbb" in kept
+    assert "procrun-0.1.0+bbbbbbb" in kept
+
+
+def test_pinned_files_reads_each_row_as_spelled() -> None:
+    """W2251: the old files to remove come from the rows, in either spelling."""
+    assert revendor.pinned_files(_MIXED) == (
+        "mikemol_hooks-0.1.0+gaaaaaaa-py3-none-any.whl",
+        "mikemol_procrun-0.1.0+aaaaaaa-py3-none-any.whl",
+    )
+    assert revendor.pinned_files("nothing here") == ()
+
+
 def test_procrun_is_a_vendored_dist_and_moves_with_the_rest() -> None:
     """W2230 (nemik:W1175): the process seam's wheel moves with the pair."""
     text = "".join(

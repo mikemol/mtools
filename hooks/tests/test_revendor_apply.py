@@ -318,6 +318,43 @@ def test_the_new_wheels_and_the_sums_are_force_added_after_the_old_are_removed(
     )
 
 
+def _mixed_tag_repo(tmp_path: Path) -> Target:
+    # nemik's real shape at 45ffeb7: tag-less rows, and ONE row (procrun) spelled with `g`.
+    target = _nemik_repo(tmp_path)
+    odd = NEMIK_DISTS[-1]
+    plain = revendor.wheel_name(odd, NEMIK_OLD, "")
+    spelled = revendor.wheel_name(odd, NEMIK_OLD, "g")
+    for name in ("pyproject.toml", "MODULE.bazel"):
+        path = target.repo / name
+        path.write_text(path.read_text(encoding="utf-8").replace(plain, spelled), encoding="utf-8")
+    (target.repo / "vendor" / "wheels" / plain).rename(target.repo / "vendor" / "wheels" / spelled)
+    return target
+
+
+def test_a_row_spelled_with_the_other_tag_is_rewritten_to_the_repos_spelling(
+    tmp_path: Path,
+) -> None:
+    """W2250: every pinned path names the file the swap wrote, with no stray `g`."""
+    target = _mixed_tag_repo(tmp_path)
+    assert revendor_apply.apply(_World(), target) is None
+    wheels = target.repo / "vendor" / "wheels"
+    for name in ("pyproject.toml", "MODULE.bazel"):
+        text = (target.repo / name).read_text(encoding="utf-8")
+        assert "+g" not in text
+        assert revendor.pinned_shorts(text) == {NEW}
+        assert set(revendor.pinned_files(text)) <= {p.name for p in wheels.iterdir()}
+
+
+def test_the_old_wheel_spelled_with_the_other_tag_is_removed_too(tmp_path: Path) -> None:
+    """W2251: the superseded `+g` wheel does not stay behind in vendor/wheels."""
+    target = _mixed_tag_repo(tmp_path)
+    assert revendor_apply.apply(_World(), target) is None
+    wheels = target.repo / "vendor" / "wheels"
+    assert sorted(p.name for p in wheels.glob("*.whl")) == sorted(
+        revendor.wheel_name(d, NEW, "") for d in NEMIK_DISTS
+    )
+
+
 def test_a_repo_with_no_sums_file_gets_none(tmp_path: Path) -> None:
     """The control: luthen's layout has no SHA256SUMS, and none appears."""
     target = _repo(tmp_path)
