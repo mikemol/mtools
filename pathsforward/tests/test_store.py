@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+from mikemol.procrun.proc import TimeoutExpired, spawn
 
 from mikemol import pathsforward
 from mikemol.pathsforward import store
@@ -120,13 +120,12 @@ def test_the_flock_excludes_another_process(tmp_path: Path) -> None:
     """While the flock is held a locker in another process waits; on release it proceeds."""
     path = _write(tmp_path / "paths-forward.json", {"counter": 0, "waypoints": []})
     with store.exclusive(path):
-        child = subprocess.Popen(
+        child = spawn(
             [sys.executable, "-m", "mikemol.pathsforward", "--state", str(path), "--lock", "B"],
             env=_env(),
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            output="discard",
         )
-        with pytest.raises(subprocess.TimeoutExpired):
+        with pytest.raises(TimeoutExpired):
             child.wait(timeout=_BLOCKED_S)
     assert child.wait(timeout=_WAIT_S) == _OK
 
@@ -134,9 +133,7 @@ def test_the_flock_excludes_another_process(tmp_path: Path) -> None:
 def test_a_reader_never_sees_a_torn_write(tmp_path: Path) -> None:
     """A reader racing a writer decodes every read; the count of reads is the positive control."""
     path = _write(tmp_path / "s.json", {"counter": 0, "waypoints": [], "residue": []})
-    writer = subprocess.Popen(
-        [sys.executable, "-c", _WRITER, str(path), str(_WRITES), str(_PAD)], env=_env()
-    )
+    writer = spawn([sys.executable, "-c", _WRITER, str(path), str(_WRITES), str(_PAD)], env=_env())
     reads, torn = 0, 0
     while writer.poll() is None:
         try:
