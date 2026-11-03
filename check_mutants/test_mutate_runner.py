@@ -1027,3 +1027,45 @@ def test_check_names_a_stale_or_orphaned_package_and_write_makes_it_fresh(
     assert mutants_gen.main(["--dist", "d", "--check"]) == 1
     assert "stale d/sites/src/p/gone/BUILD.bazel" in capsys.readouterr().out
     assert mutants_gen.main(["--dist", "nope", "--check"]) == mutants_gen.EXIT_USAGE
+
+
+_NINE = 9
+
+
+class _Ledger:
+    """A fake non-blocking claim table shared by every pool in a test."""
+
+    def __init__(self) -> None:
+        self.held: set[str] = set()
+
+    def take(self, label: str) -> bool:
+        if label in self.held:
+            return False
+        self.held.add(label)
+        return True
+
+
+def test_two_pools_sharing_one_taker_take_at_most_the_cpus_between_them() -> None:
+    """W1765: the first pool takes its ceiling, the second gets only what is left."""
+    ledger = _Ledger()
+    ceiling = str(_NINE)
+    first = mutate_runner.pool_size(ceiling, _CPUS, 1, take=ledger.take)
+    second = mutate_runner.pool_size(ceiling, _CPUS, 1, take=ledger.take)
+    assert first == _NINE
+    assert first + second <= _CPUS
+    assert second == _CPUS - _NINE
+
+
+def test_a_pool_with_no_free_core_still_runs_one_worker_and_never_waits() -> None:
+    """The control: every label held, the pool is one worker rather than none or a wait."""
+    ledger = _Ledger()
+    ledger.held.update(f"{mutate_runner.CORE_LABEL}:{k}" for k in range(_CPUS))
+    assert mutate_runner.pool_size("3", _CPUS, 1, take=ledger.take) == 1
+
+
+def test_claim_cores_stops_at_the_wanted_count_and_takes_labels_in_order() -> None:
+    """A pool never hoards: it takes `wanted` labels, lowest first."""
+    ledger = _Ledger()
+    got = mutate_runner.claim_cores(2, _CPUS, ledger.take)
+    assert got == [f"{mutate_runner.CORE_LABEL}:0", f"{mutate_runner.CORE_LABEL}:1"]
+    assert ledger.held == set(got)

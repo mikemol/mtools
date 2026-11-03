@@ -428,3 +428,24 @@
             A `manual` site named by an un-tagged `test_suite` is still run by `//...`.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_every_generated_suite_is_manual_so_a_wildcard_never_runs_the_sites},
 }
+
+@misc{root-mutate-runner-two-pools-sharing-one-taker-take-at-most-the-cpus-between-them,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {W1765: the first pool takes its ceiling, the second gets only what is left},
+  claim  = {W1765: the first pool takes its ceiling, the second gets only what is left.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_two_pools_sharing_one_taker_take_at_most_the_cpus_between_them},
+}
+
+@misc{root-mutate-runner-pool-with-no-free-core-still-runs-one-worker-and-never-waits,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {The control: every label held, the pool is one worker rather than none or a wait},
+  claim  = {The control: every label held, the pool is one worker rather than none or a wait.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_pool_with_no_free_core_still_runs_one_worker_and_never_waits},
+}
+
+@misc{root-mutate-runner-claim-cores-stops-at-the-wanted-count-and-takes-labels-in-order,
+  section = {w1764-runner-bounds-its-fan-out},
+  title  = {A pool never hoards: it takes `wanted` labels, lowest first},
+  claim  = {A pool never hoards: it takes `wanted` labels, lowest first.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_claim_cores_stops_at_the_wanted_count_and_takes_labels_in_order},
+}

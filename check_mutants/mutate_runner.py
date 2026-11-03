@@ -44,7 +44,7 @@ import subprocess
 import sys
 import tempfile
 import threading
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 # ⚑⚑ THE FENCE SIBLING EDGE (mtools:W619, ruled A+B 2026-10-04). This runs under each
 # distribution's own `.venv`, and only fence's carries `mikemol.fence`, so `mutate_check.sh` names
@@ -66,6 +66,12 @@ sys.path.extend(
 from mikemol.fence.git_env import clean_env
 from mikemol.mutation.declarations import DECLARATION_FILE, Declared, plant, read_declarations
 from mikemol.mutation.sitewalk import GRID, FuncNode, Site, walk
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+CORE_LABEL = "mutants-core"
+"""The prefix of the label claims that stand for cores (W1765): `mutants-core:<k>`."""
 
 _FNV_OFFSET = 2166136261
 _FNV_PRIME = 16777619
@@ -1063,19 +1069,53 @@ def plan_line(name: str, attempted: list[str], unreachable: list[str], declared:
     return f"{name}: sites={sites} unreachable={len(unreachable)} declared={declared}\n"
 
 
-def pool_size(jobs: str, cpus: int, share: int, load1: float = 0.0) -> int:
+def claim_cores(wanted: int, cpus: int, take: Callable[[str], bool]) -> list[str]:
+    """Take up to `wanted` core labels, never waiting, from the labels `mutants-core:0..cpus-1`.
+
+    ⚑ A CORE IS A LABEL CLAIM, SO SHARDS STARTING TOGETHER DIVIDE THE FREE CORES (W1765). Every
+    shard used to read the same load sample at the same moment and each took the same free cores;
+    a claim is exclusive, so two pools sharing one taker can take at most `cpus` labels between
+    them. `take(label)` is the non-blocking fence claim (claims.take): True when the label was
+    free and is now this shard's, False when another holds it. It stops at `wanted`, so a shard
+    never hoards cores it will not use.
+
+    Returns:
+        the labels taken, in label order; possibly none.
+
+    """
+    taken: list[str] = []
+    for core in range(cpus):
+        if len(taken) >= wanted:
+            break
+        label = f"{CORE_LABEL}:{core}"
+        if take(label):
+            taken.append(label)
+    return taken
+
+
+def pool_size(
+    jobs: str,
+    cpus: int,
+    share: int,
+    load1: float = 0.0,
+    take: Callable[[str], bool] | None = None,
+) -> int:
     """Decide how many mutant suites one runner runs at once.
 
     ⚑ A SHARD GETS ITS SHARE OF THE MACHINE, NOT ALL OF IT (mtools:W970). Bazel schedules each
     shard as one test, but each shard's runner used to start `cpu_count` suites, so six shards of
     one distribution oversubscribed the host six times over and starved every healthy neighbour
     into a timeout (measured 2026-10-11: `test_operands` 3 s alone, 65 s in the gate). An explicit
-    `MUTATE_JOBS` still wins.
+    `MUTATE_JOBS` still wins. With a `take`, the declared count is a ceiling on CLAIMS (W1765):
+    the pool is as wide as the cores it got, and a shard that got none still runs one worker
+    rather than wait.
 
     Returns:
         the worker count, at least one.
 
     """
+    if jobs and take is not None:
+        return max(1, len(claim_cores(min(int(jobs), cpus), cpus, take)))
     if jobs:
         return max(1, min(int(jobs), free_cores(cpus, load1)))
     return max(1, cpus // max(1, share))
