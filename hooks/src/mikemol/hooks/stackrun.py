@@ -142,6 +142,12 @@ def items_of(path: Path) -> list[Item] | str:
     return found
 
 
+SAID = "the failing check(s) said:"
+"""The line the pre-commit prints before each failing check's own output."""
+SECTION_LINES = 28
+"""The longest failing section measured in the refusals kept (pathsforward-b, W1662)."""
+
+
 def culprits(output: str, items: Sequence[Item]) -> list[int]:
     """Name the entries whose paths the gate's output mentions (W1156).
 
@@ -196,6 +202,27 @@ def culprit_note(output: str, items: Sequence[Item], history: History | None = N
         return f"{stage}culprit: unattributed (the failing check names no path in this stack)"
     named = ", ".join(f"entry {p + 1}/{len(items)} ({items[p].waypoint})" for p in hits)
     return f"{stage}culprit: {named}"
+
+
+def refusal_tail(shown: str) -> str:
+    """Pick out the lines the refusing check itself printed, to end the verdict on them (W1662).
+
+    ⚑ THE CAUSE WAS TWELVE LINES ABOVE THE VERDICT, AMONG FORTY PER-DIST COUNTS: the pre-commit
+    already writes each failing check's output under `the failing check(s) said:`, in the merged
+    output this module prints, so this is an extraction and a reprint, not a new capture (W1996).
+    The bound is the longest such section measured in the refusals this repository kept (28 lines,
+    pathsforward-b; the others were 3, 6 and 12), so every one of them is reprinted whole.
+
+    Returns:
+        the last SECTION_LINES lines of the final section, one per line, newline-terminated;
+        empty when the output carries no such section.
+
+    """
+    lines = shown.splitlines()
+    for place in range(len(lines) - 1, -1, -1):
+        if lines[place].endswith(SAID):
+            return "".join(f"{line}\n" for line in lines[place + 1 :][-SECTION_LINES:])
+    return ""
 
 
 def _judged(root: Path, tree: str, shown: str, code: int, seams: Seams) -> str:
@@ -266,6 +293,7 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
             f"gated once and refused; nothing landed, HEAD is still {before[:SHORT]}; "
             f"{culprit_note(shown, items, seams.history(name))}\n"
         )
+        out.write(refusal_tail(shown))
         return gate.returncode
     paths = [p for item in items for p in item.paths]
     landing = land(root, stack.commits, before, paths, run)

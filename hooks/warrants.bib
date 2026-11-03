@@ -17342,3 +17342,32 @@
   claim  = {Without `--otlp` nothing is sent; with it each repository's batch is.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_websubset_otlp.py -k test_idioms_sends_only_when_otlp_is_given},
 }
+
+@misc{hooks-stackrun-refusal-ends-on-the-failing-checks-own-lines-not-the-counts-above-them,
+  section = {stackland},
+  title  = {Forty count lines above a twelve-line section: the tail is the section alone},
+  claim  = {Forty count lines above a twelve-line section: the tail is the section alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_the_refusal_ends_on_the_failing_checks_own_lines_not_the_counts_above_them},
+}
+
+@misc{hooks-stackrun-section-longer-than-the-measured-bound-keeps-its-last-lines,
+  section = {stackland},
+  title  = {The bound is a ceiling: a longer section is cut from the top, never from the end},
+  claim  = {The bound is a ceiling: a longer section is cut from the top, never from the end.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_section_longer_than_the_measured_bound_keeps_its_last_lines},
+}
+
+@misc{hooks-stackrun-refused-stack-ends-on-the-failing-checks-lines-after-the-refused-line,
+  section = {stackland},
+  title  = {W1662: the REFUSED line is followed by the check's own section, so the verdict ends on it},
+  claim  = {W1662: the REFUSED line is followed by the check's own section, so the verdict ends on
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_refused_stack_ends_on_the_failing_checks_lines_after_the_refused_line},
+}
+
+@misc{hooks-stackrun-output-with-no-failing-section-adds-nothing,
+  section = {stackland},
+  title  = {The control: a refusal that printed no section gets no reprint},
+  claim  = {The control: a refusal that printed no section gets no reprint.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_output_with_no_failing_section_adds_nothing},
+}

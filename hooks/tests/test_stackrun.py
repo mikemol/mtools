@@ -305,3 +305,62 @@ def test_a_path_matches_exactly_as_a_trailing_path_or_inside_a_directory() -> No
     assert stackrun.culprits("docs/guide.md is empty", items) == [1]
     assert stackrun.culprits("see abc.txt and xc.txt", items) == []
     assert stackrun.culprits("c.txt and src/a.py", items) == [0, 2]
+
+
+_COUNT_LINES = 40
+_SECTION = 12
+
+
+def _output_with_a_section(counts: int, section: int) -> str:
+    """Build gate output: per-dist counts, then the said-marker and a numbered section.
+
+    Returns:
+        the output text.
+
+    """
+    head = [f"/staged/dist{i}: {i} test functions, 0 finding(s)" for i in range(counts)]
+    tail = [f"      failing line {i}" for i in range(section)]
+    return "\n".join([*head, f"pre-commit: {stackrun.SAID}", "  --- the check", *tail])
+
+
+def test_the_refusal_ends_on_the_failing_checks_own_lines_not_the_counts_above_them() -> None:
+    """Forty count lines above a twelve-line section: the tail is the section alone."""
+    shown = _output_with_a_section(_COUNT_LINES, _SECTION)
+    tail = stackrun.refusal_tail(shown).splitlines()
+    assert tail[0] == "  --- the check"
+    assert tail[-1] == f"      failing line {_SECTION - 1}"
+    assert not [line for line in tail if "test functions" in line]
+
+
+def test_a_section_longer_than_the_measured_bound_keeps_its_last_lines() -> None:
+    """The bound is a ceiling: a longer section is cut from the top, never from the end."""
+    shown = _output_with_a_section(0, stackrun.SECTION_LINES + _SECTION)
+    tail = stackrun.refusal_tail(shown).splitlines()
+    assert len(tail) == stackrun.SECTION_LINES
+    assert tail[-1] == f"      failing line {stackrun.SECTION_LINES + _SECTION - 1}"
+
+
+_SAYING = (
+    "#!/bin/sh\n"
+    'echo "pre-commit: the failing check(s) said:" >&2\n'
+    'echo "  --- the check" >&2\n'
+    'echo "      the cause" >&2\n'
+    "exit 1\n"
+)
+
+
+def test_a_refused_stack_ends_on_the_failing_checks_lines_after_the_refused_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1662: the REFUSED line is followed by the check's own section, so the verdict ends on it."""
+    root, _remote = _repo(tmp_path, monkeypatch, _SAYING)
+    code, lines = _run(root, tmp_path)
+    assert code == 1
+    place = next(i for i, line in enumerate(lines) if line.startswith("REFUSED"))
+    assert lines[place + 1 :] == ["  --- the check", "      the cause"]
+
+
+def test_output_with_no_failing_section_adds_nothing() -> None:
+    """The control: a refusal that printed no section gets no reprint."""
+    assert not stackrun.refusal_tail("gate says no\n")
+    assert not stackrun.refusal_tail("")
