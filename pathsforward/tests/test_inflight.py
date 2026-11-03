@@ -2,10 +2,12 @@
 # Copyright (c) 2026 Mike Mol
 """A card whose stack is queued or in the gate draws no ATOMIZE advice (W2096, paperkit:R2).
 
-⚑ THE FIXTURE IS THE MEASURED FILE (`.git/mtools/commit.counts`, one line `1 TAB {json}`): one
-submission in flight naming W2185, one queued naming W2038 and W2106, one with a state that is
-neither. The controls: a missing or torn file names no card, so nothing is exempted by a reading
-that did not happen.
+⚑ THE FIXTURE IS THE WRITER'S REAL OUTPUT (`.git/mtools/commit.counts`, one bare JSON object, as
+`mikemol.hooks.commit_counts` writes it with `json.dumps(entries, sort_keys=True)`; the first
+version of this test and of the reader assumed `<n> TAB <json>` and the exemption never fired,
+nemik:W1534): one submission in flight naming W2185, one queued naming W2038 and W2106, one with a
+state that is neither. The controls: a missing or torn file names no card, so nothing is exempted
+by a reading that did not happen.
 """
 
 from pathlib import Path
@@ -15,10 +17,12 @@ from mikemol.pathsforward.atomize import atomize
 from mikemol.pathsforward.ledger import Entry, Parsed, Unparsed
 
 _COUNTS = (
-    '1\t{"1": {"began_ns": 5, "pid": 7, "start": "9", "state": "inflight", "waypoints": ["W2185"]},'
+    '{"1": {"began_ns": 5, "pid": 7, "start": "9", "state": "inflight", "waypoints": ["W2185"]},'
     ' "2": {"began_ns": null, "state": "queued", "waypoints": ["W2038", "W2106"]},'
-    ' "3": {"state": "withdrawn", "waypoints": ["W9"]}}\n'
+    ' "3": {"state": "withdrawn", "waypoints": ["W9"]}}'
 )
+# The shape this reader first expected and the writer never wrote: a control that it is refused.
+_TAB_SHAPE = "1\t" + _COUNTS
 
 
 def _project(tmp_path: Path, counts: str) -> Path:
@@ -42,8 +46,9 @@ def test_the_cards_of_an_inflight_and_a_queued_submission_are_named_and_no_other
 def test_a_missing_or_torn_file_names_no_card(tmp_path: Path) -> None:
     """No file, torn JSON, a non-object and an empty file each read as nothing."""
     assert inflight.read(tmp_path) == frozenset()
-    assert inflight.cards_of('1\t{"1": ') == frozenset()
-    assert inflight.cards_of("1\t[1, 2]") == frozenset()
+    assert inflight.cards_of('{"1": ') == frozenset()
+    assert inflight.cards_of("[1, 2]") == frozenset()
+    assert inflight.cards_of(_TAB_SHAPE) == frozenset()
     assert inflight.cards_of("") == frozenset()
     assert inflight.read(_project(tmp_path, _COUNTS)) == {"W2185", "W2038", "W2106"}
 

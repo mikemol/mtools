@@ -15,7 +15,7 @@ from mikemol.pathsforward import closegate, model
 Rec = dict[str, object]
 
 _SINCE = "2026-10-30T00:00:00Z"
-_COUNTS = '1\t{"1": {"state": "queued", "waypoints": ["W1"]}}\n'
+_COUNTS = '{"1": {"state": "queued", "waypoints": ["W1"]}}'
 
 
 def _card(sym: str) -> Rec:

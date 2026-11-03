@@ -7,11 +7,16 @@
 evidence-only close of a card whose gate was running, which is the signal asking for a split of a
 card that is, in fact, mid-landing. `atomize` reads this set and says nothing for such a card.
 
-⚑ THE RECORD IS THE QUEUE'S, NOT GUESSED: `<git dir>/mtools/commit.counts` holds one line,
-`<n> TAB <json>`, where the JSON maps each live submission key to `{"state": "inflight" | "queued",
-"waypoints": [...], ...}` (`mikemol.hooks.commit_counts` writes it; this dist does not import the
-hooks dist, so it reads the file). A missing or torn file names no card, so a card is never
+⚑ THE RECORD IS THE QUEUE'S, NOT GUESSED: `<git dir>/mtools/commit.counts` holds ONE BARE JSON
+OBJECT mapping each live submission key to `{"state": "inflight" | "queued", "waypoints": [...],
+...}` (`mikemol.hooks.commit_counts` writes it with `json.dumps(entries)`; this dist does not import
+the hooks dist, so it reads the file). A missing or torn file names no card, so a card is never
 exempted by a reading that did not happen.
+
+⚑ THIS READER ONCE EXPECTED `<n> TAB <json>` AND NEVER MATCHED THE WRITER (nemik:W1534,
+mtools:W2258): the format was assumed, not read, so the exemption above never fired and tick-close
+told nemik to split three cards that were mid-landing. The fixture in the tests is now a copy of
+the writer's real output.
 
 CONSUMED BY: `atomize.atomize` (when it is given the project root).
 """
@@ -31,9 +36,8 @@ def cards_of(counts: str) -> frozenset[str]:
         the file's shape.
 
     """
-    _count, _tab, body = counts.partition("\t")
     try:
-        parsed: object = json.loads(body)
+        parsed: object = json.loads(counts)
     except ValueError:
         return frozenset()
     if not isinstance(parsed, dict):

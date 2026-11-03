@@ -80,7 +80,7 @@ def _project(tmp_path: Path, live: str) -> Path:
     (tmp_path / ".claude").mkdir()
     entry = {"1": {"state": "inflight", "waypoints": [live]}}
     counts = tmp_path / ".git" / "mtools" / "commit.counts"
-    counts.write_text("1\t" + json.dumps(entry), encoding="utf-8")
+    counts.write_text(json.dumps(entry), encoding="utf-8")
     state = tmp_path / ".claude" / "paths-forward.json"
     state.write_text(json.dumps(_doc()), encoding="utf-8")
     return state
