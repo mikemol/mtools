@@ -691,7 +691,9 @@ src/mikemol/hooks/ratchet_emit.py|guessed-flag-read-inverted|None if flag is Non
 src/mikemol/hooks/ratchet_emit.py|sum-sent-for-every-baseline|        if total is not None:|        if True:|def=rows_of
 src/mikemol/hooks/stacksnap.py|queue-file-frozen-at-submit|            if path in seen or path in QUEUE_FILES:|            if path in seen:|def=freeze
 src/mikemol/hooks/ratchet_pace.py|unpayable-requirement-owed|        if held is not None and row\.required > held:|        if False:|def=owed
-src/mikemol/hooks/ratchet_pace.py|another-repos-row-owed|        if row\.repo != repo or row\.state != BEHIND:|        if row.state != BEHIND:|def=owed
+src/mikemol/hooks/ratchet_pace.py|another-repos-row-owed|        if row\.repo != repo or row\.state != BEHIND or unmatchable\(row\.ratchet\):|        if row.state != BEHIND or unmatchable(row.ratchet):|def=owed
+src/mikemol/hooks/ratchet_pace.py|glob-key-owed|        if row\.repo != repo or row\.state != BEHIND or unmatchable\(row\.ratchet\):|        if row.repo != repo or row.state != BEHIND:|def=owed
+src/mikemol/hooks/ratchet_pace.py|glob-key-detected-by-star-only|    return any\(char in ratchet for char in _GLOB\)|    return "*" in ratchet|def=unmatchable
 src/mikemol/hooks/ratchet_pace.py|comment-line-counted-as-an-entry| and not line\.startswith\("#"\)||def=entries_in
 src/mikemol/hooks/ratchet_pace.py|torn-line-not-counted|            unread \+= 1|            pass|def=read_rows
 src/mikemol/hooks/testgate.py|repeated-test-file-run-twice|        if label and label not in found:|        if label:|def=targets_of

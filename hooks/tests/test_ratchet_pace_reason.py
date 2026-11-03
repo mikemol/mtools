@@ -103,3 +103,28 @@ def test_no_fresh_pace_and_no_payable_debt_refuse_nothing(tmp_path: Path) -> Non
     assert ratchet_pace.stack_reason(root, ["x.py"], _NOW, pace) is not None
     _, unpayable = _repo(tmp_path / "u", required=9)
     assert ratchet_pace.stack_reason(root, ["x.py"], _NOW, unpayable) is None
+
+
+def test_a_glob_row_is_named_unmatchable_and_a_pace_of_only_a_glob_refuses_nothing(
+    tmp_path: Path,
+) -> None:
+    """W2244: the refusal names the real ratchet and notes the glob as UNMATCHABLE, not owed."""
+    root, pace = _repo(tmp_path)
+    glob_row = {
+        "repo": "r",
+        "ratchet": "*.py",
+        "state": "behind",
+        "observed": "0",
+        "required": "1",
+    }
+    pace.write_text(
+        pace.read_text(encoding="utf-8") + json.dumps(glob_row) + "\n", encoding="utf-8"
+    )
+    reason = ratchet_pace.stack_reason(root, ["hooks/x.py"], _NOW, pace)
+    assert reason is not None
+    assert "required fall 1, observed 0; paydown cards: W9" in reason
+    assert "*.py: required fall" not in reason
+    assert "(UNMATCHABLE, not owed: *.py)" in reason
+    only = pace.read_text(encoding="utf-8").splitlines()
+    pace.write_text("\n".join([only[0], json.dumps(glob_row)]) + "\n", encoding="utf-8")
+    assert ratchet_pace.stack_reason(root, ["hooks/x.py"], _NOW, pace) is None

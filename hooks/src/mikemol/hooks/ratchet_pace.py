@@ -31,6 +31,7 @@ from mikemol.hooks.stackrun import items_of
 BEHIND = "behind"
 ENV = "MIKEMOL_PACE_FILE"
 _COUNTED = (".txt", ".tsv")
+_GLOB = "*?["
 _QUEUE_FILES = frozenset(
     {".claude/paths-forward.json", ".claude/paths-forward.ledger", ".claude/paths-forward.md"}
 )
@@ -123,6 +124,21 @@ def entries_in(root: Path, ratchet: str) -> int | None:
     return sum(1 for line in body.splitlines() if line.strip() and not line.startswith("#"))
 
 
+def unmatchable(ratchet: str) -> bool:
+    """Say whether no stack path can ever satisfy a ratchet key.
+
+    ⚑ A GLOB KEY IS A SENSOR DEFECT, NOT DEBT (github-94, github:W59, mtools:W2244): the pace
+    file once carried the row `*.py`, which `entries_in` cannot count and `_touches` cannot
+    match (a stack path equals a file, never a pattern), so the guard asked for something no
+    stack can do. A key with a wildcard is reported UNMATCHABLE and is never owed.
+
+    Returns:
+        True when the key holds `*`, `?` or `[`.
+
+    """
+    return any(char in ratchet for char in _GLOB)
+
+
 def owed(rows: Iterable[Row], repo: str, root: Path) -> list[Owed]:
     """List the ratchets of `repo` that are behind and whose requirement can be met.
 
@@ -133,7 +149,7 @@ def owed(rows: Iterable[Row], repo: str, root: Path) -> list[Owed]:
     """
     out: list[Owed] = []
     for row in rows:
-        if row.repo != repo or row.state != BEHIND:
+        if row.repo != repo or row.state != BEHIND or unmatchable(row.ratchet):
             continue
         held = entries_in(root, row.ratchet)
         if held is not None and row.required > held:
@@ -283,9 +299,17 @@ def stack_reason(
             f"{o.ratchet}: required fall {o.required}, observed {o.observed}; "
             f"paydown cards: {cards}"
         )
+    skipped = sorted(
+        {
+            r.ratchet
+            for r in rows
+            if r.repo == directory.name and r.state == BEHIND and unmatchable(r.ratchet)
+        }
+    )
+    note = f" (UNMATCHABLE, not owed: {', '.join(skipped)})" if skipped else ""
     return (
         f"{directory.name} is behind its ratchet paydown and this stack lowers none of the "
-        f"ratchets it owes ({'; '.join(lines)}): land a stack that touches one"
+        f"ratchets it owes ({'; '.join(lines)}): land a stack that touches one{note}"
     )
 
 

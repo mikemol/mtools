@@ -74,3 +74,18 @@ def test_entries_skip_comments_and_blanks_and_are_unknown_for_a_missing_or_json_
     assert ratchet_pace.entries_in(tmp_path, "f.tsv") == _TWO
     assert ratchet_pace.entries_in(tmp_path, "missing.txt") is None
     assert ratchet_pace.entries_in(tmp_path, "doc.json") is None
+
+
+def test_a_glob_key_is_unmatchable_and_is_never_owed(tmp_path: Path) -> None:
+    """W2244: `*.py` is a sensor defect; a real owed row beside it is still owed."""
+    (tmp_path / "pay.txt").write_text("x 1\ny 2\n", encoding="utf-8")
+    assert ratchet_pace.unmatchable("*.py")
+    assert ratchet_pace.unmatchable("dir/?.txt")
+    assert ratchet_pace.unmatchable("a[1].txt")
+    assert not ratchet_pace.unmatchable("hooks/pyproject.toml")
+    rows = [
+        ratchet_pace.Row("mtools", "*.py", "behind", 0, 1),
+        ratchet_pace.Row("mtools", "pay.txt", "behind", 0, 1),
+    ]
+    kept = [o.ratchet for o in ratchet_pace.owed(rows, "mtools", tmp_path)]
+    assert kept == ["pay.txt"]
