@@ -18,11 +18,11 @@ from __future__ import annotations
 
 import os
 import pkgutil
-import subprocess
 import sys
 from typing import TYPE_CHECKING
 
 import mikemol.hooks as hooks_package
+from mikemol.hooks import runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -45,14 +45,7 @@ def _fresh(name: str, extra: Path | None = None) -> tuple[int, str]:
     """
     paths = [*sys.path, *([str(extra)] if extra is not None else [])]
     env = {**os.environ, "PYTHONPATH": os.pathsep.join(paths), "PYTHONDONTWRITEBYTECODE": "1"}
-    done = subprocess.run(
-        [sys.executable, "-c", f"import {name}"],
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-    )
-    return done.returncode, done.stderr
+    return runproc.run_process([sys.executable, "-c", f"import {name}"], None, env)
 
 
 def test_every_module_of_the_package_imports_first_in_a_fresh_interpreter() -> None:

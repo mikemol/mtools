@@ -185,6 +185,7 @@ src/mikemol/hooks/revendor.py|rows-keep-their-own-tag|keep = r"\\g<2>" if tag is
 src/mikemol/hooks/revendor.py|no-pinned-files-read|return tuple\(sorted\(\{m\.group\(1\) for m in _FILE\.finditer\(text\)\}\)\)|return ()|def=pinned_files
 src/mikemol/hooks/runproc.py|failure-drops-stderr|    if done\.returncode != 0:|    if False:|def=run_process
 src/mikemol/hooks/runproc.py|success-appends-stderr|    if done\.returncode != 0:|    if True:|def=run_process
+src/mikemol/hooks/runproc.py|environment-not-passed|            list\(argv\), cwd=cwd, env=env, capture_output=True, text=True, check=False|            list(argv), cwd=cwd, env=None, capture_output=True, text=True, check=False|def=run_process
 src/mikemol/hooks/revendor_apply.py|lock-skipped|steps = \[\["uv", "lock"\], \["uv", "sync", "--frozen"\]\] if target\.sync else \[\["uv", "lock"\]\]|steps = [["uv", "sync", "--frozen"]]|def=swap
 src/mikemol/hooks/revendor_apply.py|pins-not-moved|path\.write_text\(text, encoding="utf-8"\)|pass|def=_move_file
 src/mikemol/hooks/wheel.py|epoch-not-in-build-env|f"SOURCE_DATE_EPOCH=\{EPOCH\}"|"SOURCE_DATE_EPOCH=0"|def=build_into

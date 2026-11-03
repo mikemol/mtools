@@ -2284,7 +2284,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_import_cycles.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -2365,7 +2367,8 @@ GRAPH = {
     },
     "tests/test_mypy_mirror.py": {
       "imports": [
-        "src/mikemol/hooks/mypy_mirror.py"
+        "src/mikemol/hooks/mypy_mirror.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

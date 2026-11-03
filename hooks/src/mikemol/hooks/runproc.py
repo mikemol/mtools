@@ -11,12 +11,18 @@ it. A module this one imports nothing of the package, so no module can reach it 
 """
 
 import subprocess
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 
-def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
-    """Run a command in a directory.
+def run_process(
+    argv: Sequence[str], cwd: Path | None = None, env: Mapping[str, str] | None = None
+) -> tuple[int, str]:
+    """Run a command in a directory, in the environment given.
+
+    ⚑ `cwd` AND `env` ARE THE CALLER'S WHEN OMITTED (W2219): the tests that ran a child of their
+    own (a fresh interpreter, mypy over a mirror) needed exactly these two and nothing else, so
+    they use this seam and need no subprocess exemption.
 
     ⚑ A FAILURE KEEPS ITS STANDARD ERROR (mtools:W2249, nemik:W1510): uv writes its reason to
     stderr, and a runner that kept only stdout made `uv lock` and the throwaway install fail
@@ -29,7 +35,9 @@ def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
 
     """
     try:
-        done = subprocess.run(list(argv), cwd=cwd, capture_output=True, text=True, check=False)
+        done = subprocess.run(
+            list(argv), cwd=cwd, env=env, capture_output=True, text=True, check=False
+        )
     except FileNotFoundError:
         return 127, ""
     if done.returncode != 0:

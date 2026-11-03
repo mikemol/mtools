@@ -11,11 +11,10 @@ and through nothing else (the same file fails without it).
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import mypy_mirror
+from mikemol.hooks import mypy_mirror, runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -46,15 +45,10 @@ def _run(project: Path, name: str, content: str, *, with_path: bool = True) -> i
         if with_path:
             env["MYPYPATH"] = mirror.mypy_path
         argv = [sys.executable, "-m", "mypy", "--config-file", str(project / "pyproject.toml")]
-        done = subprocess.run(
-            [*argv, "--no-error-summary", mirror.subject],
-            cwd=mirror.root,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=False,
+        code, _said = runproc.run_process(
+            [*argv, "--no-error-summary", mirror.subject], mirror.root, env
         )
-    return done.returncode
+    return code
 
 
 def test_only_a_new_file_under_a_config_with_overrides_needs_a_mirror(tmp_path: Path) -> None:

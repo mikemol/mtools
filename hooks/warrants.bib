@@ -17464,3 +17464,17 @@
   claim  = {Stack a lands and b is refused, then c's gate is withdrawn: c gets no verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_withdraw_after_the_leader_has_its_verdict_tells_nobody_more},
 }
+
+@misc{hooks-runproc-environment-and-directory-given-reach-the-child,
+  section = {runproc},
+  title  = {W2219: the child sees exactly the environment passed and runs where it was told to},
+  claim  = {W2219: the child sees exactly the environment passed and runs where it was told to.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_the_environment_and_directory_given_reach_the_child},
+}
+
+@misc{hooks-runproc-without-an-environment-the-child-inherits-the-callers,
+  section = {runproc},
+  title  = {The control: no env given is the caller's, as before},
+  claim  = {The control: no env given is the caller's, as before.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_without_an_environment_the_child_inherits_the_callers},
+}

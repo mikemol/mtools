@@ -31,3 +31,16 @@ def test_a_success_returns_standard_output_alone(tmp_path: Path) -> None:
 def test_a_missing_program_is_127_and_empty(tmp_path: Path) -> None:
     """The existing contract is unchanged."""
     assert runproc.run_process(["/nonexistent/program"], tmp_path) == (127, "")
+
+
+def test_the_environment_and_directory_given_reach_the_child(tmp_path: Path) -> None:
+    """W2219: the child sees exactly the environment passed and runs where it was told to."""
+    code = "import os; print(os.environ.get('PROBE'), os.getcwd())"
+    status, text = runproc.run_process([sys.executable, "-c", code], tmp_path, {"PROBE": "x"})
+    assert (status, text) == (0, f"x {tmp_path.resolve()}\n")
+
+
+def test_without_an_environment_the_child_inherits_the_callers() -> None:
+    """The control: no env given is the caller's, as before."""
+    code = "import os; print('PATH' in os.environ)"
+    assert runproc.run_process([sys.executable, "-c", code]) == (0, "True\n")
