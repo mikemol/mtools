@@ -1732,6 +1732,7 @@ GRAPH = {
     "tests/test_commit_isolated_ignored.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -1740,6 +1741,7 @@ GRAPH = {
     "tests/test_commit_isolated_new.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -1756,6 +1758,7 @@ GRAPH = {
     "tests/test_commit_isolated_staged.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -2868,6 +2871,13 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_run_with_stdin.py": {
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_runproc.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py"
       ],

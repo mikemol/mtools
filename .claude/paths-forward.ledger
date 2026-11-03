@@ -5239,3 +5239,41 @@
 2026-11-03T10:38:54Z  status W1875 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-03T10:40:13Z  status W1875 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-03T10:59:37Z  status W2258 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T11:15:30Z  status W1895 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T11:16:17Z  interrupt W2259 minted    -         "A producer runs mikemol-otlp query-metrics over mikemol.gate.target.cpu.seconds{kind=pytest} and writes the --cpu file buildtel's targettimes joins into shardplan rows (W1895's remainder)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1895
+2026-11-03T11:16:37Z  status W1874 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T11:16:37Z  status W1895 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T11:38:08Z  status W1874 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T11:40:09Z  status W1874 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:08:09Z  status W1898 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:09:13Z  interrupt W2260 minted    -         "--tick-open records each tick hook's wall and CPU time, prints at most one line naming the slowest, and emits mikemol.tick.hook_seconds{hook,kind} (W1898's remaining half)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1898
+2026-11-03T12:09:39Z  status W1736 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:09:39Z  status W1898 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:09:39Z  status W1899 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:09:39Z  status W2035 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:09:39Z  status W2036 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:16:24Z  status W1736 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T12:22:44Z  interrupt W2261 minted    -         "See what invalidates the bazel cache before changing anything else: record an execution log or --explain for two consecutive gate-equivalent runs, rank the inputs that invalidated the most test actions, and make mikemol-presubmit part of every stack so bazel sees a change before the gate does"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2246
+2026-11-03T13:07:53Z  status W1899 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:08:40Z  status W1899 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:10:43Z  interrupt W2262 minted    -         "Per-object diamond targets: each dist gets precondition, build, test and coverage targets, and a dependent's precondition depends on its dependency's coverage"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2261
+2026-11-03T13:11:32Z  status W1920 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:13:14Z  status W1920 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:17:09Z  status W1662 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:17:09Z  status W1899 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:18:14Z  status W2261 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:24:05Z  status W1899 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:33:26Z  status W1932 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:35:58Z  status W1932 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:38:11Z  status W1934 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:42:45Z  status W1934 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:47:03Z  interrupt W2263 minted    -         "Scratch trees run bazel at the main checkout's path inside a mount namespace, with their own output base and the shared disk cache, so scratch runs hit the same cache keys as the gate"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2261
+2026-11-03T13:47:49Z  status W1936 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T13:48:30Z  interrupt W2264 minted    -         "Wire regressions.lost_retros into the staged-queue check so a retro or finding present at HEAD cannot vanish or change (W1936's remainder), with the W1938 bound"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1936
+2026-11-03T13:48:51Z  status W1936 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T14:12:06Z  status W1938 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T14:14:26Z  status W1938 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T14:15:18Z  status W2263 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T14:40:21Z  status W1939 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T15:08:02Z  tick  W2263 advanced  unblock   "cache measured: comment-only procrun change re-ran 37 of 45; scratch at main's path in a namespace 16, with main's output base 0; corrected W2264 (lost_retros already wired)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T15:11:16Z  status W2250 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
