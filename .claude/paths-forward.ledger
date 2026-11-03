@@ -5193,3 +5193,36 @@
 2026-11-03T03:39:23Z  status W2209 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-03T03:40:00Z  status W2208 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-03T04:01:35Z  status W2244 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T04:19:23Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T04:38:48Z  status W2254 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T04:40:47Z  status W2254 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:00:22Z  interrupt W2255 minted    -         "Ratchet counts a house-config per-responsibility relief (tests/test_*.py = S101) as an owed key that has no fall: decide whether pace excludes or only counts growth"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1524
+2026-11-03T05:01:39Z  status W1966 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:09:14Z  status W1966 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:11:57Z  status W1227 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:19:32Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:19:32Z  status W2253 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:20:54Z  interrupt W2256 minted    -         "Declare descriptions for the traintel commit samples and mikemol.commit.queued, the rest of W2227's family list"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1876
+2026-11-03T05:22:06Z  status W2241 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:22:42Z  status W1227 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:22:42Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:44:05Z  status W2117 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:19Z  status W2125 done>ready writer    "done -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W1662 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W1746 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W1823 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W1875 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W1920 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W1932 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W2000 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W2002 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W2003 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T05:46:56Z  status W2117 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T06:08:03Z  status W1122 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T06:38:57Z  status W1227 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T06:40:15Z  status W1227 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T07:08:36Z  status W1366 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T07:32:02Z  status W1428 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T07:42:59Z  status W1613 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T07:49:46Z  status W2125 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T07:50:21Z  interrupt W2257 minted    -         "After-compaction context prints the repository's live loop job id and lock holder, read from its queue when the hook runs (W2125's unbuilt remainder)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2125

@@ -11,10 +11,11 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+from mikemol.procrun.proc import spawn
 
 from mikemol import pathsforward
 from mikemol.pathsforward import lock
@@ -141,7 +142,7 @@ def _race(path: Path) -> list[int]:
 
     """
     procs = [
-        subprocess.Popen(
+        spawn(
             [
                 sys.executable,
                 "-m",
@@ -152,8 +153,7 @@ def _race(path: Path) -> list[int]:
                 f"holder-{i}",
             ],
             env=_env(),
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            output="discard",
         )
         for i in range(_LOCKERS)
     ]

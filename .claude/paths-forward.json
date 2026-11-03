@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2254,
+  "counter": 2257,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -23139,7 +23139,7 @@
     {
       "symbol": "W1122",
       "title": "mtools' own pre-commit records each check to a gate ledger with mikemol-gate-ledger --record (live hook: tool first, hook last)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1115",
         "W1143"
@@ -23147,12 +23147,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file. | 2026-11-02: 2026-11-02 DECISIONS for the two open questions (mine to make; nothing here needs the operator): (1) the ledger lives at <git dir>/mtools/gate-outcomes.tsv, beside promptwatch's seen file and the landing-tip file, so it is never tracked and needs no gitignore line; the hook derives the path with git rev-parse --absolute-git-dir and passes it as --ledger to both --record and --report. (2) SECONDS: the tool's field is a duration by contract (its median column, and the W934 power correlation reads start/end epochs); record the gate's own elapsed seconds as the tool defines it, and say in the hook comment that it is a duration kept for ordering and correlation, never offered as evidence of cost; the epoch pair already carries the correlation axis. EDIT SHAPE: one helper record_gate LABEL STATUS START_EPOCH in .githooks/pre-commit, called from run_checked and witness after their pass/fail branch, tolerant of an absent tool only by printing that it is absent, and never changing fail. Live-hook order: the tool is shipped, so this file is the last edit; the hook-wiring test (test_bar_fires) must learn the call first. Not edited this turn (a stack is in the gate).",
+      "next_bounded_step": "When --in-gate shows []: open a scratch tree, add the test_bar_fires arm for record_gate in both seams, then the .githooks/pre-commit helper and four call sites (witness and run_checked, pass and fail), in one stack with W2248.",
+      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file. | 2026-11-02: 2026-11-02 DECISIONS for the two open questions (mine to make; nothing here needs the operator): (1) the ledger lives at <git dir>/mtools/gate-outcomes.tsv, beside promptwatch's seen file and the landing-tip file, so it is never tracked and needs no gitignore line; the hook derives the path with git rev-parse --absolute-git-dir and passes it as --ledger to both --record and --report. (2) SECONDS: the tool's field is a duration by contract (its median column, and the W934 power correlation reads start/end epochs); record the gate's own elapsed seconds as the tool defines it, and say in the hook comment that it is a duration kept for ordering and correlation, never offered as evidence of cost; the epoch pair already carries the correlation axis. EDIT SHAPE: one helper record_gate LABEL STATUS START_EPOCH in .githooks/pre-commit, called from run_checked and witness after their pass/fail branch, tolerant of an absent tool only by printing that it is absent, and never changing fail. Live-hook order: the tool is shipped, so this file is the last edit; the hook-wiring test (test_bar_fires) must learn the call first. Not edited this turn (a stack is in the gate). | 2026-11-03T06:09:47Z: 2026-11-03: read the two seams at .githooks/pre-commit lines 247-279 (witness) and 294-304 (run_checked): each does phase, runs the command into a log, then branches on its status (cat log; on failure fail=1 and note_failure). EDIT SHAPE, nothing edited (gate W2241 inflight): add record_gate LABEL STATUS STARTED right after the phase call's neighbour definitions (~line 246), reading epoch from date +%s taken before the command and SECONDS-style duration after; call it in the success branch (pass) and the failure branch (fail) of BOTH functions; the helper runs the built mikemol-gate-ledger with --ledger the git-dir path and prints 'gate ledger: not recorded' on any failure, never touching fail. ORDER: test_bar_fires learns the call first (one hook-wiring arm), then the hook edit last in the same stack as W2248's suite split.",
       "issued_at": "2026-10-13T16:21:09Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W934",
-      "last_worked": "2026-11-03T02:54:32Z",
+      "last_worked": "2026-11-03T06:09:47Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -25420,7 +25420,7 @@
     {
       "symbol": "W1227",
       "title": "Off-host: tests that read a sibling checkout or host tool fail from the sdist (pathsforward, pkgbuild, pycodemod, ratchet, hooks)",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "publish",
@@ -25428,14 +25428,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Per dist from the W1147 reading: make the test skip with a stated reason when its host file or tool is absent, or ship the file; re-run sdist-tests for that dist.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-11-03T05:13:26Z: 2026-11-03: pathsforward half already done (test_frontier_copy.py skips with its reason off the checkout, W1227's own earlier edit). Grep for parents[2]/parents[3]/~/github/Path.home() over the other four dists: pkgbuild, pycodemod, ratchet tests match nothing (positive control: the same grep matches 12 hooks tests), so for those three the off-checkout failure is not a path-up read; the W1147 reading names their real cause. hooks: test_exec_env, test_routing_table, test_snapshot, test_repin_metrics, test_siblingcensus, test_commit_kata_root, test_domain_witness_concurrency, test_repro_rungs, test_ratchet_pace_path, test_sites_gate, test_hold_lift_numbered, test_gate_test_keep_going. | 2026-11-03T06:40:15Z: 2026-11-03: superseded by W1147's measurement. As of ac2783a (2026-10-15) 33 of 34 dists pass their own tests from the built sdist in a clean venv; pathsforward skips its frontier copy by stated reason (test_frontier_copy.py), and hooks and pycodemod skip checkout-tied tests by stated reason (hosttied.py, conftest collect_ignore); the only non-passing dist is audiostruct, operator-ruled exempt (W1234). Not re-measured since: the release-check tests-carried check (W1230) is the regression guard, and a dist that fails off-host again needs a new card, not this one.",
       "issued_at": "2026-10-15T00:14:23Z",
       "minted_during": "interrupt",
       "caused_by": "W1147",
-      "last_worked": "2026-10-18T23:04:53Z",
+      "last_worked": "2026-11-03T06:40:15Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261103T064015Z",
       "manifest": [
         "pathsforward/tests/test_frontier_copy.py"
       ],
@@ -28429,7 +28429,7 @@
     {
       "symbol": "W1366",
       "title": "mikemol-websubset --idioms emits the Codon idiom counts as OTLP gauges with OTel resource attributes instead of a Prometheus textfile",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "luthen-observability:W1107"
       ],
@@ -28443,7 +28443,7 @@
       "issued_at": "2026-10-16T13:33:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-01T01:21:22Z",
+      "last_worked": "2026-11-03T07:08:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29716,7 +29716,7 @@
     {
       "symbol": "W1428",
       "title": "kata: read nemik's stackable set for this repo, open a scratch worktree per card, submit each to mikemol-commit --stack as it goes green",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "katas",
@@ -29729,7 +29729,7 @@
       "issued_at": "2026-10-17T02:05:45Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-31T18:46:08Z",
+      "last_worked": "2026-11-03T07:32:02Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -34652,19 +34652,19 @@
     {
       "symbol": "W1613",
       "title": "The commit span records the entry's tree sha beside the invocation id, so presubmit-then-gate cache-hit share is a metric",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "After hooks-at lands: record sha; make presubmit print 'gated-tree: <sha>' (or emit its own span with the tree) so presubmit-then-gate share is computable; then a reader joining the two on the tree.",
-      "evidence": "2026-11-01T00:39:51Z: 2026-10-31 RELEASED from the W1667 parking lot (nemik 'no manifest' warning): manifest given from the code, the join point named. The next step was empty. | 2026-11-01T01:59:44Z: Built and submitted as stack hooks-at: isolated.commit_planned prints 'gated-tree: <sha>', commit_span.trees_of/_joined add a 'trees' field to the verdict, stack and span fields; 5 tests, 5 mutants (+3 repointed), 5 warrants; hooks suite 2508 pass. The presubmit side must emit its tree for the join to exist. | 2026-11-01T02:57:15Z: LANDED 9fb85f5e (stack hooks-at, gate passed): isolated.commit_planned prints 'gated-tree: <sha>' and commit_span adds a 'trees' field. Presubmit still needs to emit its tree for the join. | 2026-11-01T03:25:03Z: CORRECTION to the earlier landing note: the stack hooks-at landed as TWO commits, W1613's own is 0dc7651b (9fb85f5e is the W2200 entry). The facts stand: isolated.commit_planned prints 'gated-tree: <sha>' and commit_span adds a 'trees' field.",
+      "next_bounded_step": "Read hooks/src/mikemol/hooks/snapshot.py for how it takes the tree (git write-tree over a temp index, or a copy) and whether it can print 'gated-tree: <sha>' on stderr; then make presubmit emit that line (or its own span with the tree) with one test; then the reader joining span rows on the tree.",
+      "evidence": "2026-11-01T00:39:51Z: 2026-10-31 RELEASED from the W1667 parking lot (nemik 'no manifest' warning): manifest given from the code, the join point named. The next step was empty. | 2026-11-01T01:59:44Z: Built and submitted as stack hooks-at: isolated.commit_planned prints 'gated-tree: <sha>', commit_span.trees_of/_joined add a 'trees' field to the verdict, stack and span fields; 5 tests, 5 mutants (+3 repointed), 5 warrants; hooks suite 2508 pass. The presubmit side must emit its tree for the join to exist. | 2026-11-01T02:57:15Z: LANDED 9fb85f5e (stack hooks-at, gate passed): isolated.commit_planned prints 'gated-tree: <sha>' and commit_span adds a 'trees' field. Presubmit still needs to emit its tree for the join. | 2026-11-01T03:25:03Z: CORRECTION to the earlier landing note: the stack hooks-at landed as TWO commits, W1613's own is 0dc7651b (9fb85f5e is the W2200 entry). The facts stand: isolated.commit_planned prints 'gated-tree: <sha>' and commit_span adds a 'trees' field. | 2026-11-03T07:46:09Z: 2026-11-03: read: gated-tree is printed by isolated.commit_planned (commit side, 0dc7651b). The presubmit side is hooks/src/mikemol/hooks/presubmit.py: main() runs each dist's pytest, then run(planned.argv) wraps bazel test in mikemol-snapshot, and it never learns the tree sha because the snapshot tool holds the tree. So the join needs the SNAPSHOT to report its tree sha.",
       "issued_at": "2026-10-18T20:08:17Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:W1609",
-      "last_worked": "2026-11-01T03:25:03Z",
+      "last_worked": "2026-11-03T07:46:09Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -35700,20 +35700,18 @@
     {
       "symbol": "W1662",
       "title": "A REFUSED verdict prints the refusing stage's own FAIL, HOST and HELD lines, not only the gate's last line",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Behind hooks-e (W2117, queued) because stackrun.py, its tests, mutants and warrants are hooks-lane registries. Build: after gate_tip, find the section the pre-commit prints after 'the failing check(s) said:' ('--- <check>' lines up to the next '---' or the end), and print its last N lines AFTER the REFUSED line, so the verdict ends on the cause. N: the median length of the failing sections of the last refusals this repository kept (measure from the client outputs in the task outputs of 2026-10-29: hooks-c, pathsforward-b), never typed. Tests: a refused output with 40 per-dist count lines above a 12-line failing section ends with those 12 lines after REFUSED.",
       "evidence": "2026-10-23: cross-cite: luthen-observability:W1368 (checks.land reports the hook's findings, already landed there) is the same need in luthen's own land tool; different layers, neither blocks the other (overlap audit, luthen 2026-10-23) | 2026-10-24: 2026-10-23: looked at it and it is under-specified for mtools: FAIL/HOST/HELD are luthen's hermetic-runner tokens, mtools' gate prints no such structured lines. What mtools prints is a flat list of every dist's counts with the failing finding in the middle, then a REFUSED line carrying only the failed check's label. Needs a decision on what a refusing stage's 'own lines' are before it is buildable; measure the last few REFUSED outputs first | 2026-10-24: 2026-10-24 measured case: the W1891 gate refusal (hooks pytest, the warrant-pairing test) ended in one REFUSED line naming the check's label and 'culprit: unattributed'; the failing test and its message were far above it among ~40 per-dist count lines. A candidate reading of 'own lines': the failing check's captured output, last N lines, printed after the REFUSED line. Not built; the choice of N and of where the gate stores each check's output is the open part (stackrun.py refuses at gate_tip, which returns one merged stdout) | 2026-10-29: 2026-10-29: W1996 ANSWERED the open part: no per-check capture exists to store, but the pre-commit already writes the failing check's section ('--- <check>') into the merged stdout that stackrun prints before REFUSED. So the build is an extraction and a reprint after the REFUSED line, not a new capture. Measured today: hooks-c's refusal ended 'reproduce only the refusing rung: bazel test //hooks:test_bar_fires' with the failing assertion 12 lines above it; pathsforward-b's failing section was 28 lines of per-dist counts with the ORPHAN WARRANT line among them.",
       "issued_at": "2026-10-19T03:34:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T13:55:25Z",
-      "ticks_blocked": 139,
+      "ticks_blocked": 0,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/gatephase.py",
@@ -37710,20 +37708,18 @@
     {
       "symbol": "W1746",
       "title": "A submit refuses a stack whose file imports a module that neither HEAD nor an earlier entry of that stack holds",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "When stack 39 lands or refuses: if it LANDS, rebuild this scratch tree on the new HEAD (re-apply the two files, regenerate warrants, graph, dag, sites) and submit as one stack; if it refuses, submit on HEAD as is, together with W1950 and W2045's rebuild (all are hooks registries). W2078's detector (stackahead.unbuilt_on) is the check that would have refused the overlap.",
       "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do. | 2026-10-27: 2026-10-27 re-read, and it is the stall github-8f named: stackbuildfiles/stackimports judge a stack against HEAD plus its OWN entries, so stack-next-29 (W2008) was refused at submit because dag.bzl names W2009's new modules, which stack-next-28 (queued ahead) holds. The fix is this card's own next step, applied to both checks: seed them with the files frozen by the stacks AHEAD (keys below this one in the live commit map, read from their stack-<key>.snap), so a new-module stack can queue behind another. Residue stated: if a stack ahead later fails, this one fails at its own gate. Slice 1: stackahead.paths and stackbuildfiles; slice 2: stackimports plus the on-disk-absent refusal | 2026-10-27: 2026-10-27: slice 1 landed 06d25163 (stackahead.paths seeds stackbuildfiles with the files the live stacks ahead carry, so two new-module stacks queue together; proven by stacks 28 and 30 queueing behind 25/26/27). Slice 2 remains: stackimports takes the same set and refuses a module on disk but in no stack, no HEAD and no stack ahead | 2026-10-28: 2026-10-28 REBUILT ALONE on HEAD (754dcf97) in a scratch worktree, NOT submitted: after the withdrawal at a red tip (one TIMEOUT, //hooks:test_worktreereap_save, a load wall-time flake that W2034 and W1875 now hold) the second slice is stackimports.py and test_stackimports.py plus its registries regenerated on HEAD: mutants.regex (the two stackimports mutants re-pointed at _unheld and four new), two warrants, graph.json, dag.bzl and the regenerated commit_counts, stackahead and stackimports sites; git status of the scratch tree lists exactly nine files. OVERLAP: it shares hooks/mutants.regex, warrants.bib and sites with stack 39 (W2061 and W2067, queued) and graph.json and dag.bzl with nothing queued, so by the W2078 rule it is HELD until 39's verdict (or rebuilt on 39's frozen files), not queued behind it. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117 is its registries-carrying entry). Stack 39 is settled (W2067 landed 67be0264), but stackimports.py and its registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and hooks-c, queued, holds hooks/warrants.bib, BUILD, pyproject and sites, so a second hooks-registry stack would wait on it anyway. Rebuild slice 2 on the new HEAD in a scratch tree once hooks-c prints COMMITTED, with the W1994 deletecmd registries, as one hooks stack.",
       "issued_at": "2026-10-19T22:26:23Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-test-the-all-red-inference",
       "last_worked": "2026-10-29T11:33:19Z",
-      "ticks_blocked": 142,
+      "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackimports.py",
         "hooks/src/mikemol/hooks/commit_kata.py",
@@ -39547,22 +39543,20 @@
     {
       "symbol": "W1823",
       "title": "Bazel witness tests for the three mypy domains (ratchet, mdstruct, hooks): one target each, declared inputs its victim files, checker and config, planted defect caught once",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1712"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "A hooks test (hooks/tests/test_witness_mypy.py) per dist runs mypy on a COPY of the victim inside the sandbox with the probe appended, asserts mypy fails naming the probe, and a clean copy passes; BUILD.bazel declares data = victim + checker + config for each. Hooks-lane stack (new test, warrant, graph and dag rows): waits behind the lane, whose critical path is W2067.",
       "evidence": "2026-10-28: 2026-10-28 READ the three witness calls this converts (.githooks/pre-commit lines 1020-1022): witness 'ratchet|mdstruct|hooks: mypy domain reaches a transitive import' <dist> //<dist>:mypy <victim> with victims ratchet/src/mikemol/ratchet/state.py, mdstruct/src/mikemol/mdstruct/frontmatter.py, hooks/src/mikemol/hooks/cmdparse.py; domain_witness.sh plants 'def _transient_domain_probe() -> int: return \"not an int\"' (the mypy payload, line 445) in the victim, expects the checker to FAIL, restores. The design to re-express in the sandbox is the operator's maximal-granularity ruling (695f3e0a line 76435): the test target's declared data = victim files, the mypy checker and its config, planted defect caught once. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). The card adds a hooks test, so it carries hooks registries (warrants.bib, graph.json, dag.bzl, BUILD) that hooks-c already holds in its frozen snapshot; a second stack touching them waits. Build it in a scratch tree on the HEAD after hooks-c, in the same hooks stack as W1746 slice 2 and W1994.",
       "issued_at": "2026-10-22T17:05:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1712",
       "last_worked": "2026-10-29T11:39:38Z",
-      "ticks_blocked": 142,
+      "ticks_blocked": 0,
       "manifest": [
         "BUILD.bazel",
         "hooks/tests/test_witness_mypy.py"
@@ -40706,22 +40700,20 @@
     {
       "symbol": "W1875",
       "title": "shardgate refuses a stack touching a per-test target past half its own measured CPU limit",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1872"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Behind the hooks lane (critical path W2067, then stack 36). Then: shardgate reads each touched per-test target's measured CPU (gate trend / the target CPU series) against its limit and refuses a stack touching one past half, naming the target, its figure and the sharding remedy. Test with the worktreereap_save figures (117 s against 60 s refused; 20 s against 60 s admitted).",
       "evidence": "2026-10-28: 2026-10-28 FIXTURE for the rule: //hooks:test_worktreereap_save TIMED OUT in W1746's gate at 60.1 s and passed alone in about 117 s at host load ~100, i.e. its measured run is 2x its limit, far past half; a stack touching that target should have been refused by this gate before it cost a 4 h gate. Edits hooks/src/mikemol/hooks/shardgate.py (hooks lane). | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). shardgate.py is a hooks module whose new tests and declared mutants need hooks/mutants.regex, warrants.bib and sites, which freeze whole and which hooks-c already holds; build in a scratch tree on the HEAD after hooks-c and ride the one hooks stack with W1994, W1746 slice 2, W1823 and W1824.",
       "issued_at": "2026-10-23T20:46:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1872",
       "last_worked": "2026-10-29T11:55:27Z",
-      "ticks_blocked": 141,
+      "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/shardgate.py",
         "hooks/tests/test_shardgate.py"
@@ -41811,7 +41803,7 @@
     {
       "symbol": "W1920",
       "title": "While a repo is behind its required ratchet paydown rate, the commit gate refuses a commit that lowers no ratchet, admitting queue-state commits and gate-red repairs, and the refusal names the ratchet, the required and observed fall, and the paydown cards to take",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W42"
       ],
@@ -41819,17 +41811,15 @@
         "hooks",
         "velocity"
       ],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "Settle with github-8f: (i) does the ruling mean any ratchet lowered, or each owed ratchet; (ii) add a release for an owed ratchet whose paydown cards are all blocked (agent kind) on a design card?; then build rule (c) with the answer",
       "evidence": "2026-10-24: 2026-10-24 nemik side: nemik:W986, children W987 (computes behind/ok from the mikemol.ratchet.value series, blocked on W1909) and W990 (publishes the per-repo fact this card reads at submit time). The rate's unit is landed commits: the window is the last N landings, the requirement is seeded from earlier windows and may only rise. This card READS nemik:W990's fact and does not recompute it | 2026-10-24: 2026-10-24 operator priority (host line 93549, warranted): built now against a stubbed nemik:W990 fact behind a reader seam, so the real fact replaces the stub when it exists; no longer blocked | 2026-10-24: 2026-10-24 nemik decision (supersedes the ratchet:<path> tag): a paydown card is an open card whose touches name file:<census ratchet path> (the !w suffix ignored); nemik:W988/W989 read that. The refusal text names the paydown cards by that rule; no writer change | 2026-10-24: 2026-10-24 github-8f: nemik:W990 landed (e389f1d): the pace board and the nemik_ratchet_* gauges, so the stub can become the real format; the pace-file writer is nemik:W997, not yet landed, so the live read waits on it. nemik:W988 landed (c559115): a paydown card is an open card touching file:<ratchet path> | 2026-10-26: 2026-10-26 design decision (github-8f, citing nemik:W1105): an UNSATISFIABLE requirement is ignored, so a ratchet whose required fall exceeds what its own file can pay (panflute: required 6 against 1 entry, itself blocked on W1977) does not make this refusal fire on a debt nobody can pay. Read from the live file ~/.local/share/luthen/nemik-export/ratchet-pace.json: head line as_of and window, then one row per ratchet with repo, ratchet, state, observed, required as quoted text. mtools rows behind on 2026-10-26T12:34Z: corpus/exit-baseline.txt (required 1), mdstruct/stubs/panflute-allowlist.txt (required 6); .claude/debtplan.json is unknown. | 2026-10-26: 2026-10-26 DESIGN of the refusal wiring (read commit_kata.submit_problem and round_wire first): the seam is submit_problem, which already chains _stack_refusal, stack_build_refusal, _shard_refusal and _round_refusal; a fifth, _pace_refusal, reads the pace file (MIKEMOL_PACE_FILE, else ~/.local/share/luthen/nemik-export/ratchet-pace.json, ignored when absent, unreadable or stamped over 3 h ago, as round.json is), takes ratchet_pace.owed for this repo, and refuses a stack none of whose entries touches an owed ratchet file, admitting a stack of queue files only (queue-state commits). Gate-red repairs are not yet admitted (no stable fact for them at submit). The text names the ratchet, required against observed, and the open cards touching file:<ratchet> (the !w suffix ignored, nemik:W988). commit_kata is a LIVE hook (the venv follows the tree), so ratchet_pace's new function lands in the tree before commit_kata imports it, and the first stacks after the wiring land are refused unless they touch an owed ratchet: W2042 (touches corpus/exit-baseline.txt) is the one that pays. | 2026-10-26: 2026-10-26 github-8f: a ratchet whose paydown cards are all blocked on an operator decision is NOT refusable (panflute: W1977 awaits github:W63). So ratchet_pace.owed must also drop a behind row when every open card touching file:<ratchet> is blocked_kind human, beside the unsatisfiable-requirement rule (nemik:W1105); a row with NO paydown card, or with one that is ready or working, stays owed. | 2026-10-26: reconciled LANDED fcd460b0e1744258bf11125c9fc47553b9eda26d | 2026-10-26: 2026-10-26 built in the tree, NOT landed: operator_held(queue, ratchet) in ratchet_pace (True only when there are open cards touching file:<ratchet> and EVERY one is blocked with kind human) and stack_reason drops such rows before it judges, per github-8f. Three tests (all-human-blocked holds; a ready card, an agent-blocked card, no card and a done card do not; the submit judgement does not refuse a held debt and does refuse once a ready card exists), three declared mutants (debt-with-no-card-held, one-human-card-holds-a-payable-debt, held-row-still-refused) and warrants; pytest passes; the ratchet_pace sites and tests run under bazel. | 2026-10-26: 2026-10-26 github-8f: W1920's refusal (e53edaf5) is not in nemik's pin (65b7491b), so the teeth were not live there; host W61 closed unchecked. | 2026-10-28: 2026-10-28 READ git log: the refusal landed as e53edaf5 (W1920, the refusal wired) and was proven live by 55ec4e56 (W1954: this repository's own pace refusal refused that stack until a stack lowered the ratchet). What remains is only the card's two named parts, and both touch the hooks lane (ratchet_pace and repin in hooks/, generated registries freezing whole), whose critical path is W2067 then stack 36's end. | 2026-10-28: 2026-10-28 github-8f CORRECTION to his own 2026-10-26 design (host reviewer R70, due 2026-11-01): 'refuses a stack none of whose entries touches an owed ratchet file' (ratchet_pace.py lines 226-265, line 255 any(_touches(...)) over the behind set, which I implemented faithfully) drops two words of the operator's ruling (L93406, loop prompt line 36 'Each ratchet must also fall at a required rate'): EACH (with any-of, one paying ratchet starves another; live on nemik: ruff fell 34 over 10 landings while mypy fell 0 owing 109, every landing admitted) and LOWERS (W1920's own title: touching the baseline file passes even when nothing falls). WITNESS: a replay of nemik's last 10 landings refuses the ruff-only stacks while mypy owes 109 at 0 observed, and a stack that touches the baseline without lowering it is refused. | 2026-10-28: 2026-10-28 github-8f check against the ruling's own text (loop prompt line 35: 'While a repo is behind, the commit gate refuses commits that lower no ratchet; queue-state commits AND GATE-RED REPAIRS still land'): rule (c) must ALSO admit a gate-red repair, a stack carrying the repo's open --gate-red card, so the per-ratchet rule cannot hold a red gate hostage to paydown. ONE FIXTURE for it. My earlier note (2026-10-26): gate-red repairs were not admitted because there was no stable fact for them at submit; the open --gate-red card (the writer's --gate-red REASON) is that fact, readable from the queue like the paydown cards are. | 2026-10-28: 2026-10-28 github-8f (host cold review R81 C1/C2, warm R82, due 2026-10-31): the per-ratchet rule (most-behind first, lower-not-touch, ties to the oldest unpaid) lived only in this card's evidence after my later next-step overwrote the earlier one, so a reader of --show saw only the gate-red admission; the host and its reviewer certified it from my report without reading the card. RESTORED into the next step above (both halves, one rule). CITATION FIX: the earlier evidence line quoting 'loop prompt line 35' is wrong; the paydown rule is line 36 (line 35 is the re-arm rule); the quoted text ('While a repo is behind, the commit gate refuses commits that lower no ratchet; queue-state commits and gate-red repairs still land') belongs to line 36. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). Rule (c) is an edit to ratchet_pace.py with new tests, declared mutants and warrants, so it needs the hooks registries (mutants.regex, warrants.bib, sites) that hooks-c holds frozen. Build in a scratch tree on the HEAD after hooks-c; ratchet_pace.py line 255 any(_touches(...)) is the site to replace, with nemik's last 10 landings as fixtures. | 2026-10-30: 2026-10-30 (nemik-ed, nemik:W1280, read from ratchet_pace.stack_reason): consequence (1), 'lowers' versus 'names the file', is already this card's rule (c) (lowers = the file's entry count in the stack's frozen blob below HEAD's; touching without lowering REFUSED). NEW, consequence (2): because the pass condition is carrying the baseline file, every ratchet-lowering stack carries it, which serializes paydown to one stack in flight per repo (loop prompt line 40; github-42 asked the velocity question). Measured instance on nemik: stack 680 refused for not naming mypy-baseline.json while it lowered ruff, 681 to 685 passed by naming it. OPTIONS to settle with rule (c): (a) the gate computes the lowered baseline at land time from measured counts so no stack carries it; (b) one baseline file per ratchet (mypy and ruff each live in ONE file today); (c) the check accepts an owed ratchet as paid by a measured fall in the staged tree. Folded here, one card for both, no new card (pace). | 2026-10-30: 2026-10-30 14:3xZ policy question from nemik via github-42 (nemik stack 714, ruff 1275 to 1263, refused at submit: codon owed, required fall 2, observed 0, no cheap codon fall exists). READ ratchet_pace.stack_reason lines 248-267: behind = owed rows minus operator_held ones (lines 193-220: held only when EVERY open card touching file:<ratchet> is blocked kind human); the stack passes if it is queue files only (253) or touches ANY owed ratchet (255), else refused (264-267). So today a stack that lowers a ratchet that is NOT owed (ruff) is refused while another (codon) is owed, which is STRICTER than this card's title and the ruling text quoted above ('refuses commits that lower no ratchet'), and DIFFERENT from github-8f's 2026-10-28 correction (each ratchet pays, most-behind first). The text releases a held debt in three ways only: queue-state or gate-red stack, an unsatisfiable requirement (nemik:W1105, entries_in), operator_held; an open agent-blocked design card is none of them. Whether to add 'starved ratchet with an open design card does not block the others' is a design decision for github-8f and the operator (it changes the ruling's reach), not a reading of the text.",
       "issued_at": "2026-10-24T18:47:07Z",
       "minted_during": "interrupt",
       "caused_by": "github:W42",
       "last_worked": "2026-10-30T14:38:59Z",
-      "ticks_blocked": 141,
+      "ticks_blocked": 0,
       "warrants": [
         {
           "@context": {
@@ -42305,22 +42295,20 @@
     {
       "symbol": "W1932",
       "title": "The Stop hook reports an unattached commitment in the turn's own text and the writer command that attaches it, and never blocks on the statement",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "github:W44"
       ],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "In commitments_emit.py: a row builder from commitledger.LedgerRow to one vlog event per row on first sighting (service mikemol-commitments; fields repo, session, uuid, line, ts, kind, layer, resolution and card, classifier source, statement TEXT), a seen-set keyed uuid+line beside the ledger, repo life skipped whole, sent through mikemol-vlog. Tests: life excluded, a rerun sends nothing new, the text present. Witness: a LogsQL query on service mikemol-commitments returns this host session's 'I still need to' rows and nothing from life.",
       "evidence": "2026-10-24: 2026-10-24 github-8f study: the report is the per-turn hot wash, three lines at most and computed: the turn's G0 intents, its G7 statements with their attachment state, and any G5 or G8 flags. It reports and never blocks on a statement | 2026-10-27: 2026-10-27 OPERATOR ASK (relayed by github-8f; host 695f3e0a line 110313, uuid e9399a1f, 23:52Z, verified human; the operator pasted nemik's 'I still need to:' list): 'We should have remarks like those automatically get logged to victoria, so that we can more readily mine them for proto-katas and automation opportunities.' TODAY commitments_emit.py (W1933) ships only the gauges mikemol.commitments.open{repo,layer} and .said{repo}; the rows never leave the ledger file. ASK: beside the gauges, ship each ledger row as ONE LOG EVENT through mikemol-vlog (service mikemol-commitments). FIELDS: repo, session, uuid, line, ts, kind (owed or announce), layer, resolution and the card it attached to, classifier source (regex family or AMR version), and the statement TEXT. ONE EVENT PER ROW PER FIRST SIGHTING, deduped on uuid+line so reruns do not duplicate. EXCLUDE the life repo whole (health data, parked and private). PRIVACY GATE: github-8f's 2026-10-25 ruling kept sentence text OUT of the ledger; the operator's words supersede that for the local Victoria store, but the TEXT field ships only after github-8f confirms it with them. Everything else can go now. WITNESS: a LogsQL query on service mikemol-commitments returns this host session's 'I still need to' rows with repo and kind, and nothing from life. luthen adds the registry row and the freshness rule once the stream exists | 2026-10-28: 2026-10-28 READ the warrants on this card: the later operator ruling (host line 110357, uuid 0e3878ec, verified human) is the one the summary of this work carries, TEXT INCLUDED and the life repo EXCLUDED, which supersedes the 'text only after github-8f confirms' gate in the 2026-10-27 ask. So the vlog row builder ships the statement text from the start, with no flag. This is a hooks-lane change (commitments_emit.py, tests, registries that freeze whole), so it waits for the lane (critical path W2067 then stack 36's end). | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117, resubmitted key 1793276595683394818 behind pathsforward-b). The row builder in commitments_emit.py is a hooks-lane change with new tests, mutants and warrants, so it needs hooks registries that hooks-c holds frozen; build in a scratch tree on the HEAD after hooks-c, in the one hooks stack.",
       "issued_at": "2026-10-24T23:33:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T12:26:19Z",
-      "ticks_blocked": 141,
+      "ticks_blocked": 0,
       "warrants": [
         {
           "@context": {
@@ -43612,21 +43600,23 @@
     {
       "symbol": "W1966",
       "title": "Share the commitment rows, their fixtures and a labelled sample with amr-skills so its classifier (commitment, done, status, mention) trains against them",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "github:W44"
       ],
       "touches": [
         "file:transcriptstruct/tests/test_commitments.py"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Sampler LANDED 755feb02. Next: the blind rows go to stdout, which for a real transcript is too large for a tool result, so add --out PATH for the blind file (beside --key), then draw N=300 seed=1 from this session's transcript, send the BLIND file path to amr-skills, label my own copy without looking at their labels, compute agreement, keep disagreements as fixtures. I still need --out, the labels and the agreement, W1966",
-      "evidence": "2026-10-25: 2026-10-25 github-8f relayed: operator host lines 96863 and 96881 (both verified human) woke amr-skills to build an AMR classifier for 'I haven't done' and 'I still need to' over a rolling window of transcripts; its output feeds W1933's resolver, not a second ledger | 2026-10-25: 2026-10-25 github-8f GUARD on the labelled sample (G4 decorrelation): labelling only my regex's own output leaves recall invisible and puts my reading in the labels. So (1) the sample is RANDOM assistant sentences drawn from the same transcript as well as the regex hits, so a commitment the regex missed can show up (the sampler takes a seed so it is reproducible), and (2) amr-skills labels the SAME sample independently, agreement is reported, and the disagreements are kept as fixtures, neither side being truth | 2026-10-26: reconciled LANDED 5eaba134711cfa016b074363748a06e2e00d9a85",
+      "blocked_on": [
+        "amr-skills"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Wait for amr-skills' labels path; when it arrives compute agreement per seed against mtools-ad-labels-300-seed*.jsonl (my labels were written first), keep disagreements as fixtures in transcriptstruct/tests, report the figure to github:W44. Until then nothing of mine is outstanding.",
+      "evidence": "2026-10-25: 2026-10-25 github-8f relayed: operator host lines 96863 and 96881 (both verified human) woke amr-skills to build an AMR classifier for 'I haven't done' and 'I still need to' over a rolling window of transcripts; its output feeds W1933's resolver, not a second ledger | 2026-10-25: 2026-10-25 github-8f GUARD on the labelled sample (G4 decorrelation): labelling only my regex's own output leaves recall invisible and puts my reading in the labels. So (1) the sample is RANDOM assistant sentences drawn from the same transcript as well as the regex hits, so a commitment the regex missed can show up (the sampler takes a seed so it is reproducible), and (2) amr-skills labels the SAME sample independently, agreement is reported, and the disagreements are kept as fixtures, neither side being truth | 2026-10-26: reconciled LANDED 5eaba134711cfa016b074363748a06e2e00d9a85 | 2026-11-03T05:09:14Z: 2026-11-03: stale next step corrected. --out landed 5eaba134; five blind samples (seeds 1-5, 300 each) were drawn 2026-10-26/27 into ~/.local/share/mikemol/commitment-sample/, sent to amr-skills by letter (inbox/2026-10-26-mtools-blind-commitment-sample.md), and my own labels exist for all five (mtools-ad-labels-300-seed1..5.jsonl). A redundant seed-1 redraw I made today was removed. No amr-skills labels file is in my inbox; no amr-skills session is live (ListAgents).",
       "issued_at": "2026-10-25T12:41:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-26T15:03:30Z",
+      "last_worked": "2026-11-03T05:09:14Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44788,20 +44778,18 @@
     {
       "symbol": "W2000",
       "title": "round_check treats a card the queue marks working as in-round, so it never blocks a stop for work already in progress",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "The live-queue reader EXISTS: commit_counts.live(path) lists live submissions (pid plus start time both match, so a dead or recycled pid is not listed) with their waypoints, printed by mikemol-commit REPO --in-gate --json (8aac70fe). So: round_wire.refusals reads <git dir>/mtools/commit.counts through commit_counts.live and treats a working card named by a live entry's waypoints as in progress (exempt), and only those. A test with a planted map (live, dead, recycled pid) and a mutant. The stale 10-17..20 items.json files are a separate leftover: a reconcile pass that moves a dead key's items.json aside with a tombstone (key, pid, why) is its own card. I still need the exemption and the tombstone pass, W2000",
       "evidence": "2026-10-29: 2026-10-29: BLOCKED on stack hooks-e (W2117, inflight). round_wire.refusals and its test, mutant and warrant are hooks-lane changes, and hooks/mutants.regex and warrants.bib freeze whole while hooks-e holds the lane. Build on the HEAD after hooks-e lands, using the live-queue reader the next step names (commit_counts.live). Note for the build: today's in-gate listing marks a landed key gone and a pid recycled, so the planted map needs a landed-and-removed entry too.",
       "issued_at": "2026-10-25T17:13:06Z",
       "minted_during": "interrupt",
       "caused_by": "W1942",
       "last_worked": "2026-10-29T14:30:43Z",
-      "ticks_blocked": 137,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -44826,39 +44814,35 @@
     {
       "symbol": "W2002",
       "title": "Reconcile pass moves a dead submission's stale items.json aside with a tombstone (key, pid, why judged dead)",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "github-8f 2026-10-25: items.json files from 2026-10-17..20 remain in .git/mtools from runs that aborted before stackfreeze.forget. A dead key (no live entry in commit_counts.live) has its items.json moved aside with a tombstone line, not deleted, so each gets a recorded end.",
       "evidence": "2026-10-29: 2026-10-29: BLOCKED on hooks-e (W2117, queued key 1793285182688164268). The reconcile pass is a hooks-lane change (commit_counts and reconcile code, tests, mutants, warrants) and those registries freeze whole behind hooks-e. Build in a clean scratch tree on the HEAD after it lands (W2158: never generate registries in the dirty main tree).",
       "issued_at": "2026-10-25T18:10:06Z",
       "minted_during": "interrupt",
       "caused_by": "W2000",
       "last_worked": "2026-10-29T14:52:06Z",
-      "ticks_blocked": 137,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2003",
       "title": "The uncertain-row count ships as a metric series beside mikemol.commitments.open",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [],
-      "blocked_on": [
-        "W2117"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "commitledger.uncertain_count(rows) exists (a84163cd) and prints in the --resolve tally; commitments_emit sends open{repo,layer} and said{repo} only. Add the uncertain count (own name, repo label) with a description and freshness class on the W1961 contract.",
       "evidence": "2026-10-29: 2026-10-29: BLOCKED on stack hooks-e (W2117, queued). commitments_emit is a hooks-lane module, so its new metric needs a test, a mutant and a warrant, and those hooks registries freeze whole behind hooks-e. It also needs the freshness class from the W1961 contract, to be read before the build. Build in a clean scratch tree on the HEAD after hooks-e (W2158: never generate registries in the dirty main tree).",
       "issued_at": "2026-10-25T18:19:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1986",
       "last_worked": "2026-10-29T15:11:57Z",
-      "ticks_blocked": 136,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -47353,21 +47337,21 @@
     {
       "symbol": "W2117",
       "title": "PreCompact hook freezes the transcript bound and the prior summary's path; the SessionStart compact hook injects the validator line",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Operator idea kept open on host card github:W72, no LLM in the hooks. (1) a PreCompact hook writes <session scratchpad>/compaction/<n>.json with the transcript line bound at the compaction and the path of the prior compaction summary (read, not summarised); (2) the existing SessionStart hook for source=compact (hooks after_compaction, W813) injects one line: 'run the compaction-summary validator over <that file>'. Both only freeze facts and inject one line. WITNESS (test with a fake payload): after a PreCompact payload the file exists with the bound and the path; the next SessionStart(compact) payload's output contains the instruction naming the file. The validator itself is not this card (it is the host's). Seat: hooks/src/mikemol/hooks/after_compaction.py.",
-      "evidence": "2026-10-29: 2026-10-29 github-42 (host): raise to work-next; the host compacted with no PreCompact freeze or SessionStart(compact) validator line (caused by github:W72). Hooks only, no LLM, fake-payload witness, no cluster. Taken after W2067's resubmission is in the queue (that is in hand: scratch tree built, test passes). | 2026-10-29: 2026-10-29 built in the main tree, UNVERIFIED: after_compaction.freeze/latest_freeze/freeze_dir/precompact (record <transcript dir>/compaction/<session>/<n>.json with n, session, trigger, transcript, line_bound, prior, at; beside the transcript so a scratch-area loss cannot take it), context() gains the validator line when a record exists, entry.precompact_main, hooks/pyproject.toml script mikemol-hook-precompact, ten tests in test_after_compaction (fresh freeze, chained second record, unreadable transcript, validator line, control without a record, stdin path, entry refusal). The prior-record path stands for 'the prior compaction summary' (the summary lives in the transcript; the record gives its bound). bazel test //hooks:test_after_compaction could not run: the whole build fails while the BES endpoint refuses connections (W2124). NOT DONE: mutants, warrants, sites (do them on HEAD after W2067 lands, since mutants.regex and warrants.bib freeze whole); the hooks/bin launcher and the .claude/settings.json PreCompact wiring, which is a settings edit I may not make (a drafted grant for the operator); child W2125 for the live session and cron line. | 2026-10-29: 2026-10-29: SUBMITTED in stack-hooks-c (entry 3 of 3, carrying the registries: twelve warrants, regenerated after_compaction and entry sites, hooks/BUILD.bazel and pyproject for the launcher and script). The settings.json PreCompact entry was sent to github-42 to apply after the stack lands. | 2026-10-29: 2026-10-29 github-42, wiring note for ANY session that applies the PreCompact entry: the launcher resolves its venv from CLAUDE_PROJECT_DIR (root/bazel-bin/hooks/.venv), so the entry must run with CLAUDE_PROJECT_DIR set to the mtools checkout (the host's project directory is the github root, so its entry mirrors its existing SessionStart form: the variable set to the mtools checkout plus the absolute launcher path, not the relative form I sent). Landing needs bazel build //hooks:.venv afterwards for the new console script mikemol-hook-precompact to exist in bazel-bin (the launcher fails open, saying so on stderr, until then). Trains: stack-ratchet-a joined stack-pathsforward-b (joined=1 in commit.counts); stack-hooks-c (key 1793272944) was submitted after that lease, so it takes the next one. | 2026-10-29: 2026-10-29 13:04Z: hooks-c gate FAILED 1 at 1504/1534: //hooks:test_bar_fires::test_every_shipped_hook_is_actually_invoked, 'declared hook script(s) that nothing invokes: [mikemol-hook-precompact]'. The arm requires every mikemol-hook-* script to appear in .claude/settings.json. So the PreCompact settings entry (operator-side, I may not edit settings.json) must be in the tree BEFORE this lands; my plan had it after. Resubmit hooks-c once the entry is applied, carrying .claude/settings.json in the last entry. W2145 and W2126 are independent of this and could land alone first as a 2-entry stack if the entry is slow. | 2026-10-29: 2026-10-29 13:20Z: hooks-c REFUSED rc=1 on test_bar_fires only (2403 passed, 1 failed). SPLIT: W2145 and W2126 resubmitted alone as stack-hooks-d (key 1793279807015755971, inflight, 5 warrants + the re-pointed mutant). W2117's own files stay dirty in main (after_compaction.py, entry.py, test_after_compaction.py, BUILD, pyproject, sites, hooks/bin/mikemol-hook-precompact); its 12 warrants are saved at the rescue dir hooks-warrants-with-w2117-2026-10-29.bib (main's hooks/warrants.bib was restored to HEAD plus hooks-d's five). To land it: the settings.json PreCompact entry must be in the tree, then regenerate its warrants with gen-warrants after_compaction and entry modules. | 2026-10-29: 2026-10-29 13:40Z: operator 'apply it.' VERIFIED (host 695f3e0a transcript line 122623, a queued user message). The entry is in the tree and the settings diff is exactly it. test_bar_fires second arm still red: no inline HOOK_BLOCK=1 on the command, so the settings line needs PRECOMPACT_HOOK_BLOCK=1 before the quoted launcher path (asked of github-42, who relays to the host). Submit W2117 after hooks-d lands and the prefix is in: regenerate its warrants (after_compaction and entry modules) and carry .claude/settings.json in the last entry. | 2026-10-29: 2026-10-29 13:55Z: github-42 REVERTED the PRECOMPACT_HOOK_BLOCK=1 prefix (beyond the operator's quoted go; their standing 18). settings.json holds the bare approved entry (verified, line 128). W2117's submit is HELD until the operator answers github:W77: (A) the prefix on the command, or (B) mine: resolve a declared script's module from its pyproject console-script target in test_bar_fires, strict fallback kept. Offered both to github-42, doing neither unasked. | 2026-10-29: 2026-10-29: LANDED bb7fc9c9 (stack hooks-e, after two refusals of mine: first the settings arm, then a dirty-tree prune). The operator's two answers are both applied, so the human hold is stale; the writer will not let me lift it. Open: bazel build //hooks:.venv and the console-script check after the inflight gate ends (standing 8), W2125, and the nemik nudge to the operator is for an ask already answered. | 2026-10-29: 2026-10-29 17:35Z: bazel build //hooks:.venv completed (no gate inflight) and bazel-bin/hooks/.venv/bin/mikemol-hook-precompact exists. The launcher run with an empty stdin printed 'payload was not JSON; nothing frozen' and exited 0. No real freeze record observed yet. Note: tools/bazel called directly fails (BAZEL_REAL unset), bazel via bazelisk works. | 2026-10-29: 2026-10-29 HOLD_LIFT CHECKS BY HAND (github-42 R133), with the reader transcriptstruct/.venv/bin/mikemol-transcriptstruct on the host transcript, mirroring hold_lift.verifies; I did not call hold_lift.lifted itself. Line 122876 (uuid 95d428ff): --verify --claim operator --line: ok true, kind human. NAMES W2117? --human '\\bW2117\\b' --since 122876 --until 122876: 0 hits (its text is 'W77; I approve the prefix. Damnit, use the warm/cold review process.', it names W77). answers_ask: the record has no numbered item, so numbered(answer) is empty and no question is matched: False. Line 122623 (uuid 7dcbb55b, the queued attachment): --verify: ok true, kind human, so the pinned reader DOES read it as origin human (not a reader defect). NAMES W2117: 0 hits (the text is the W77 card's own sentence plus 'apply it.'); answers_ask: no numbered item: False. OUTCOME: both warrants pass the human-origin check and BOTH FAIL the second half, naming the card or answering a numbered question that quotes its ask, because the operator addressed the host card W77, not W2117. So the refusal is correct under W1525 as written. A lift needs either a warrant whose line names W2117 or an operator answer to a numbered question quoting this card's ask. | 2026-10-29: 2026-10-29: HOLD LIFTED. The operator record that names this card: host transcript line 126070, uuid f46d56ab-cd59-4e8c-b9a1-346d3e7e3463, 2026-10-29T20:37:58Z: --verify --claim operator --line 126070 returns ok true, kind human; --human '\\bW2117\\b' on that line: 1 hit (it quotes 'mtools:W2117's request for your action is stale' and adds 'Go for it.'). Attached with --warrant and the block re-filed to what is left: W2125 (the live loop job and lock holder in the context line) and a real freeze record observed (none yet). | 2026-10-29: 2026-10-29 20:52Z (host probe, reported by github-42, not mine): a synthetic PreCompact payload run through the launcher with CLAUDE_PROJECT_DIR set to mtools froze <transcript dir>/compaction/probe-session/1.json with n 1, line_bound 3 and trigger manual. The freeze path works on a probe; a REAL compaction record is still to be observed.",
+      "next_bounded_step": null,
+      "evidence": "2026-10-29: 2026-10-29 github-42 (host): raise to work-next; the host compacted with no PreCompact freeze or SessionStart(compact) validator line (caused by github:W72). Hooks only, no LLM, fake-payload witness, no cluster. Taken after W2067's resubmission is in the queue (that is in hand: scratch tree built, test passes). | 2026-10-29: 2026-10-29 built in the main tree, UNVERIFIED: after_compaction.freeze/latest_freeze/freeze_dir/precompact (record <transcript dir>/compaction/<session>/<n>.json with n, session, trigger, transcript, line_bound, prior, at; beside the transcript so a scratch-area loss cannot take it), context() gains the validator line when a record exists, entry.precompact_main, hooks/pyproject.toml script mikemol-hook-precompact, ten tests in test_after_compaction (fresh freeze, chained second record, unreadable transcript, validator line, control without a record, stdin path, entry refusal). The prior-record path stands for 'the prior compaction summary' (the summary lives in the transcript; the record gives its bound). bazel test //hooks:test_after_compaction could not run: the whole build fails while the BES endpoint refuses connections (W2124). NOT DONE: mutants, warrants, sites (do them on HEAD after W2067 lands, since mutants.regex and warrants.bib freeze whole); the hooks/bin launcher and the .claude/settings.json PreCompact wiring, which is a settings edit I may not make (a drafted grant for the operator); child W2125 for the live session and cron line. | 2026-10-29: 2026-10-29: SUBMITTED in stack-hooks-c (entry 3 of 3, carrying the registries: twelve warrants, regenerated after_compaction and entry sites, hooks/BUILD.bazel and pyproject for the launcher and script). The settings.json PreCompact entry was sent to github-42 to apply after the stack lands. | 2026-10-29: 2026-10-29 github-42, wiring note for ANY session that applies the PreCompact entry: the launcher resolves its venv from CLAUDE_PROJECT_DIR (root/bazel-bin/hooks/.venv), so the entry must run with CLAUDE_PROJECT_DIR set to the mtools checkout (the host's project directory is the github root, so its entry mirrors its existing SessionStart form: the variable set to the mtools checkout plus the absolute launcher path, not the relative form I sent). Landing needs bazel build //hooks:.venv afterwards for the new console script mikemol-hook-precompact to exist in bazel-bin (the launcher fails open, saying so on stderr, until then). Trains: stack-ratchet-a joined stack-pathsforward-b (joined=1 in commit.counts); stack-hooks-c (key 1793272944) was submitted after that lease, so it takes the next one. | 2026-10-29: 2026-10-29 13:04Z: hooks-c gate FAILED 1 at 1504/1534: //hooks:test_bar_fires::test_every_shipped_hook_is_actually_invoked, 'declared hook script(s) that nothing invokes: [mikemol-hook-precompact]'. The arm requires every mikemol-hook-* script to appear in .claude/settings.json. So the PreCompact settings entry (operator-side, I may not edit settings.json) must be in the tree BEFORE this lands; my plan had it after. Resubmit hooks-c once the entry is applied, carrying .claude/settings.json in the last entry. W2145 and W2126 are independent of this and could land alone first as a 2-entry stack if the entry is slow. | 2026-10-29: 2026-10-29 13:20Z: hooks-c REFUSED rc=1 on test_bar_fires only (2403 passed, 1 failed). SPLIT: W2145 and W2126 resubmitted alone as stack-hooks-d (key 1793279807015755971, inflight, 5 warrants + the re-pointed mutant). W2117's own files stay dirty in main (after_compaction.py, entry.py, test_after_compaction.py, BUILD, pyproject, sites, hooks/bin/mikemol-hook-precompact); its 12 warrants are saved at the rescue dir hooks-warrants-with-w2117-2026-10-29.bib (main's hooks/warrants.bib was restored to HEAD plus hooks-d's five). To land it: the settings.json PreCompact entry must be in the tree, then regenerate its warrants with gen-warrants after_compaction and entry modules. | 2026-10-29: 2026-10-29 13:40Z: operator 'apply it.' VERIFIED (host 695f3e0a transcript line 122623, a queued user message). The entry is in the tree and the settings diff is exactly it. test_bar_fires second arm still red: no inline HOOK_BLOCK=1 on the command, so the settings line needs PRECOMPACT_HOOK_BLOCK=1 before the quoted launcher path (asked of github-42, who relays to the host). Submit W2117 after hooks-d lands and the prefix is in: regenerate its warrants (after_compaction and entry modules) and carry .claude/settings.json in the last entry. | 2026-10-29: 2026-10-29 13:55Z: github-42 REVERTED the PRECOMPACT_HOOK_BLOCK=1 prefix (beyond the operator's quoted go; their standing 18). settings.json holds the bare approved entry (verified, line 128). W2117's submit is HELD until the operator answers github:W77: (A) the prefix on the command, or (B) mine: resolve a declared script's module from its pyproject console-script target in test_bar_fires, strict fallback kept. Offered both to github-42, doing neither unasked. | 2026-10-29: 2026-10-29: LANDED bb7fc9c9 (stack hooks-e, after two refusals of mine: first the settings arm, then a dirty-tree prune). The operator's two answers are both applied, so the human hold is stale; the writer will not let me lift it. Open: bazel build //hooks:.venv and the console-script check after the inflight gate ends (standing 8), W2125, and the nemik nudge to the operator is for an ask already answered. | 2026-10-29: 2026-10-29 17:35Z: bazel build //hooks:.venv completed (no gate inflight) and bazel-bin/hooks/.venv/bin/mikemol-hook-precompact exists. The launcher run with an empty stdin printed 'payload was not JSON; nothing frozen' and exited 0. No real freeze record observed yet. Note: tools/bazel called directly fails (BAZEL_REAL unset), bazel via bazelisk works. | 2026-10-29: 2026-10-29 HOLD_LIFT CHECKS BY HAND (github-42 R133), with the reader transcriptstruct/.venv/bin/mikemol-transcriptstruct on the host transcript, mirroring hold_lift.verifies; I did not call hold_lift.lifted itself. Line 122876 (uuid 95d428ff): --verify --claim operator --line: ok true, kind human. NAMES W2117? --human '\\bW2117\\b' --since 122876 --until 122876: 0 hits (its text is 'W77; I approve the prefix. Damnit, use the warm/cold review process.', it names W77). answers_ask: the record has no numbered item, so numbered(answer) is empty and no question is matched: False. Line 122623 (uuid 7dcbb55b, the queued attachment): --verify: ok true, kind human, so the pinned reader DOES read it as origin human (not a reader defect). NAMES W2117: 0 hits (the text is the W77 card's own sentence plus 'apply it.'); answers_ask: no numbered item: False. OUTCOME: both warrants pass the human-origin check and BOTH FAIL the second half, naming the card or answering a numbered question that quotes its ask, because the operator addressed the host card W77, not W2117. So the refusal is correct under W1525 as written. A lift needs either a warrant whose line names W2117 or an operator answer to a numbered question quoting this card's ask. | 2026-10-29: 2026-10-29: HOLD LIFTED. The operator record that names this card: host transcript line 126070, uuid f46d56ab-cd59-4e8c-b9a1-346d3e7e3463, 2026-10-29T20:37:58Z: --verify --claim operator --line 126070 returns ok true, kind human; --human '\\bW2117\\b' on that line: 1 hit (it quotes 'mtools:W2117's request for your action is stale' and adds 'Go for it.'). Attached with --warrant and the block re-filed to what is left: W2125 (the live loop job and lock holder in the context line) and a real freeze record observed (none yet). | 2026-10-29: 2026-10-29 20:52Z (host probe, reported by github-42, not mine): a synthetic PreCompact payload run through the launcher with CLAUDE_PROJECT_DIR set to mtools froze <transcript dir>/compaction/probe-session/1.json with n 1, line_bound 3 and trigger manual. The freeze path works on a probe; a REAL compaction record is still to be observed. | 2026-11-03T05:46:56Z: 2026-11-03: real freeze records observed: compaction/<session 0709aae6>/1.json to 6.json under this project's transcript directory (written at each real compaction, 2026-10-29 to 2026-11-02, chained), and the SessionStart(compact) context printed the validator line naming 6.json. The last open item of this card is met; the live loop job and lock holder line is W2125's.",
       "issued_at": "2026-10-28T23:26:49Z",
       "minted_during": "interrupt",
       "caused_by": "github:W72",
-      "last_worked": "2026-10-29T20:55:28Z",
+      "last_worked": "2026-11-03T05:46:56Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261103T054656Z",
       "warrants": [
         {
           "@context": {
@@ -47587,13 +47571,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-10-29: 2026-10-29 (github-42, host retro github:R134 item 3, low priority): a non-ValueError exception from after_compaction.freeze() is not caught, so precompact() exits 1 there. Non-blocking for the harness, but the launcher and the docstring say exit 0 always. Either catch broadly and say so on stderr, or correct the docstring. Folded here, no new card (pace). Not built; it is an after_compaction.py edit in the hooks lane, behind the train. | 2026-10-29: 2026-10-29 (github-42, github:R135 cold-review finding 2): when after_compaction.freeze() returns None nothing is printed, so a missing record cannot be told from 'hook not loaded', 'venv unbuilt' or 'transcript unreadable', and a missing record reads as UNKNOWN. ASK: write one stderr line, or one VictoriaLogs line (memory log-to-services), naming why nothing was frozen, every time. Witness: a payload whose transcript is unreadable produces that line. Reported by github-42, not measured by me: the host's PreCompact entry is applied as of about 21:14Z with no prefix, and a scale probe against the real host transcript (126,358 lines) froze in 0.42 s CPU, maxrss about 26 MB, rc 0. Folded with the exit-code residue above into this one card; both are after_compaction.freeze/precompact edits. | 2026-10-29: 2026-10-29: BUILT in a clean scratch tree on 2c526208 and SUBMITTED as stack hooks-i: unfrozen_reason plus precompact writes 'precompact: nothing frozen: <reason>' every time; the docstring now says an unanticipated exception exits 1 (non-blocking), chosen over a broad except because the lint refuses one that is neither re-raised nor logged. Test, 2 mutants, warrant, site; pytest 19 passed, MUTATE_LINT clean, not run under bazel. Left: the live loop job and lock holder line, and a real compaction record. | 2026-10-29: 2026-10-29: first part LANDED f86f8b5 (stack hooks-i): unfrozen_reason and the 'nothing frozen: <reason>' line, the exit-code docstring corrected. Open: the live loop job and lock holder line in the context, and one real compaction record observed. | 2026-10-31: reconciled LANDED f86f8b52946a45864106b49a0f14a36992759dc9",
+      "evidence": "2026-10-29: 2026-10-29 (github-42, host retro github:R134 item 3, low priority): a non-ValueError exception from after_compaction.freeze() is not caught, so precompact() exits 1 there. Non-blocking for the harness, but the launcher and the docstring say exit 0 always. Either catch broadly and say so on stderr, or correct the docstring. Folded here, no new card (pace). Not built; it is an after_compaction.py edit in the hooks lane, behind the train. | 2026-10-29: 2026-10-29 (github-42, github:R135 cold-review finding 2): when after_compaction.freeze() returns None nothing is printed, so a missing record cannot be told from 'hook not loaded', 'venv unbuilt' or 'transcript unreadable', and a missing record reads as UNKNOWN. ASK: write one stderr line, or one VictoriaLogs line (memory log-to-services), naming why nothing was frozen, every time. Witness: a payload whose transcript is unreadable produces that line. Reported by github-42, not measured by me: the host's PreCompact entry is applied as of about 21:14Z with no prefix, and a scale probe against the real host transcript (126,358 lines) froze in 0.42 s CPU, maxrss about 26 MB, rc 0. Folded with the exit-code residue above into this one card; both are after_compaction.freeze/precompact edits. | 2026-10-29: 2026-10-29: BUILT in a clean scratch tree on 2c526208 and SUBMITTED as stack hooks-i: unfrozen_reason plus precompact writes 'precompact: nothing frozen: <reason>' every time; the docstring now says an unanticipated exception exits 1 (non-blocking), chosen over a broad except because the lint refuses one that is neither re-raised nor logged. Test, 2 mutants, warrant, site; pytest 19 passed, MUTATE_LINT clean, not run under bazel. Left: the live loop job and lock holder line, and a real compaction record. | 2026-10-29: 2026-10-29: first part LANDED f86f8b5 (stack hooks-i): unfrozen_reason and the 'nothing frozen: <reason>' line, the exit-code docstring corrected. Open: the live loop job and lock holder line in the context, and one real compaction record observed. | 2026-10-31: reconciled LANDED f86f8b52946a45864106b49a0f14a36992759dc9 | 2026-11-03T05:46:19Z: 2026-11-03: REOPENED. I closed this on the reconcile line (f86f8b52 landed only the unfrozen_reason part). Still unbuilt: the live loop job id and lock holder line in after_compaction.context(), read from the queue when the hook runs. | 2026-11-03T07:49:46Z: 2026-11-03: the reopen was refused by the gate's finished-cards check (a done card stays done); its remainder is carded separately, caused-by W2125.",
       "issued_at": "2026-10-29T04:41:46Z",
       "minted_during": "interrupt",
       "caused_by": "W2117",
-      "last_worked": "2026-11-03T02:52:44Z",
+      "last_worked": "2026-11-03T07:49:46Z",
       "ticks_blocked": 0,
-      "completed": "20261103T025244Z"
+      "completed": "20261103T074946Z"
     },
     {
       "symbol": "W2126",
@@ -49479,7 +49463,7 @@
     {
       "symbol": "W2219",
       "title": "Hooks tests that build a real git repo share one tests helper instead of 50 per-file subprocess exemptions",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks",
@@ -49488,11 +49472,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Survey which hooks/tests/*.py entries exist only for git init, worktree add, commit and add subprocess calls (commit_*, stack*, scratch*, snapshot, index_refresh, githook_*, privacy_audit, verdictlog, queuecarry); write ONE module hooks/tests/gitrepo.py that owns the subprocess calls and takes the exemption itself (one entry); migrate the tests in batches of about 10 per stack; delete each per-file entry as it migrates",
-      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again. | 2026-11-03T04:02:07Z: 2026-11-03: batch 3 LANDED cd6c19b3 (test_in_gate, test_census_unmeasured).",
+      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again. | 2026-11-03T04:02:07Z: 2026-11-03: batch 3 LANDED cd6c19b3 (test_in_gate, test_census_unmeasured). | 2026-11-03T05:19:53Z: 2026-11-03: batch 4 LANDED 526d33c7 (test_verdictlog).",
       "issued_at": "2026-11-01T22:49:23Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-03T04:02:07Z",
+      "last_worked": "2026-11-03T05:22:42Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49896,7 +49880,7 @@
     {
       "symbol": "W2241",
       "title": "procrun gains a typed process-handle seam so the Popen tests and buildtel.stream drop their subprocess entries",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "procrun"
@@ -49908,7 +49892,7 @@
       "issued_at": "2026-11-02T21:40:36Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-03T02:54:32Z",
+      "last_worked": "2026-11-03T05:22:06Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49940,11 +49924,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-03T07:33:45Z: 2026-11-03: another unattributed refusal: //webpage:test_browser TIMED OUT (no assertion) in the gate of the procrun-spawn/fence stack at 1548 of 1638; run alone with bazelisk it passed (exit 0), stack resubmitted. Same class as the pathsforward cases.",
       "issued_at": "2026-11-02T22:18:59Z",
       "minted_during": "interrupt",
       "caused_by": "W2242",
-      "last_worked": null,
+      "last_worked": "2026-11-03T07:33:45Z",
       "ticks_blocked": 0
     },
     {
@@ -50121,7 +50105,7 @@
     {
       "symbol": "W2253",
       "title": "Declare the metric family mikemol.commit.verdict (commit_verdict.py NAME, line ~30) with type and description, the last undeclared mikemol.* family",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "metrics",
@@ -50129,19 +50113,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "LANDED in main's tree (uncommitted): commit_verdict DESCRIPTION, test, warrant, mutant, site BUILD. Stack file not yet written: the pace guard needs it to travel with a paydown that lowers an owed pyproject (hooks batch 4: candidates test_commit_raced and test_index_refresh need a CompletedProcess replacement first, test_worktree_venv fixture sets GIT_CONFIG_GLOBAL which git_out drops; or a procrun-conversion in another owed dist). Pick one, then stack both.",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-11-03T05:19:32Z: 2026-11-03: LANDED 3e9da291 (stack verdict-description). Remainder: traintel commit samples and mikemol.commit.queued descriptions stay on W2227's list, to be carded.",
       "issued_at": "2026-11-03T02:56:10Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1876",
-      "last_worked": "2026-11-03T04:10:50Z",
+      "last_worked": "2026-11-03T05:19:32Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261103T051932Z"
     },
     {
       "symbol": "W2254",
       "title": "Build the toy harness proper: a disposable repo plus fake bazel the stack witnesses (W2208, W2209) run mikemol-commit against",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2208",
         "W2209"
@@ -50150,13 +50134,73 @@
         "commit",
         "toy"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Read W2207's evidence and .claude/design for the harness spec; build the smallest harness (temp git repo, stub bazel, real mikemol-commit) in a scratch tree; first witness: a clean one-file stack lands.",
-      "evidence": "",
+      "blocked_on": [
+        "W2241"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "When W2241 lands procrun.spawn: add mikemol-procrun to hooks' dev group, build test_toy_harness.py with a toy repo, a flag-file pre-commit and a spawned mikemol-commit; first witness a lone one-file stack lands.",
+      "evidence": "2026-11-03T04:40:47Z: 2026-11-03: checked: neither hooks/tests/test_toy_harness.py nor test_dependent_stack_toy.py exists (W2207 closed on its git-wrapper batch only). DESIGN: the harness must hold a first submit inside a flag-file pre-commit while a second submit runs, so it needs a live child handle: procrun.spawn (W2241), not a new subprocess exemption (operator 2026-10-25: no new exemption to clear a key). Synchronous halves (toy repo via scratch.git_out, runner via procrun.capture, hooks gains procrun as a dev dep) can land first.",
       "issued_at": "2026-11-03T03:38:43Z",
       "minted_during": "interrupt",
       "caused_by": "W2189",
+      "last_worked": "2026-11-03T04:40:47Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2255",
+      "title": "Ratchet counts a house-config per-responsibility relief (tests/test_*.py = S101) as an owed key that has no fall: decide whether pace excludes or only counts growth",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "ratchet",
+        "pace"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measure first: which ratchet reader emits the '*.py owes N' row (mtools ratchet kinds or nemik-rank --pace) and whether mtools' own submit guard still counts it after W2244 (390bdc60 skips glob keys). Then write the ruling options (exclude declared house-config reliefs; count only growth) for the operator, since lowering or reshaping the baseline is theirs (standing 2).",
+      "evidence": "",
+      "issued_at": "2026-11-03T05:00:22Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1524",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2256",
+      "title": "Declare descriptions for the traintel commit samples and mikemol.commit.queued, the rest of W2227's family list",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "metrics",
+        "commit"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Grep hooks/src for the traintel commit sample names and the commit.queued emitter; add DESCRIPTION constants and a --description argument as commit_verdict did (3e9da291); one test, one warrant, one mutant each.",
+      "evidence": "",
+      "issued_at": "2026-11-03T05:20:54Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1876",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2257",
+      "title": "After-compaction context prints the repository's live loop job id and lock holder, read from its queue when the hook runs (W2125's unbuilt remainder)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "compaction"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In after_compaction.context(): read the queue's job_id and lock holder with the writer's read mode at hook time and print one line; test with a fixture queue holding a job_id and a lock; a control with no lock prints job only.",
+      "evidence": "",
+      "issued_at": "2026-11-03T07:50:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2125",
       "last_worked": null,
       "ticks_blocked": 0
     }
