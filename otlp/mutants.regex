@@ -18,3 +18,7 @@ src/mikemol/otlp/metriccmd.py|unknown-freshness-class-accepted|    if klass not 
 src/mikemol/otlp/endpoints.py|signal-endpoint-ignored|    if specific:|    if False:|def=otel_url
 src/mikemol/otlp/metriccmd.py|complete-url-ignored|    return url or base\.rstrip\("/"\) \+ sender\.METRICS_PATH|    return base.rstrip("/") + sender.METRICS_PATH|def=target
 src/mikemol/otlp/cli.py|standard-variables-ignored|    if standard:|    if False:|def=_metrics_where
+src/mikemol/otlp/cli.py|logs-standard-endpoint-ignored|    standard = endpoints\.otel_url\("logs", environ\)|    standard = None|def=_destination
+src/mikemol/otlp/cli.py|traces-standard-endpoint-ignored|    standard = "" if given else endpoints\.otel_url\("traces", environ\) or ""|    standard = ""|def=_trace
+src/mikemol/otlp/tracecmd.py|span-posted-to-the-base-not-the-url|    target = req\.url or base \+ sender\.TRACES_PATH|    target = base + sender.TRACES_PATH|def=run
+src/mikemol/otlp/tracecmd.py|readback-without-a-base-sends-first|    if req\.readback and not base:|    if False:|def=run

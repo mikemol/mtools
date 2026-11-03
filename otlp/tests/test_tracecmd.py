@@ -140,6 +140,51 @@ def test_an_answer_without_the_spans_own_id_is_not_a_witness() -> None:
     assert tracecmd.run(request, post, get) == tracecmd.EXIT_BUSY
 
 
+def _hermetic(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    # No endpoints store and no standard variable from the caller's host.
+    for name in (
+        "MIKEMOL_ENDPOINTS",
+        "OTEL_EXPORTER_OTLP_ENDPOINT",
+        "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+
+def test_the_standard_otel_endpoint_routes_a_span_and_the_flag_still_wins(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """W1960: the traces variable is posted to as given, the general one gets /v1/traces."""
+    _hermetic(monkeypatch, tmp_path)
+    who = ["--service", "mikemol-commit", "--namespace", "mtools", "--name", "commit"]
+    with _store() as (base, state):
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", base + "/custom/traces")
+        assert cli.main(["trace", *who]) == tracecmd.EXIT_SENT
+        monkeypatch.delenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT")
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_ENDPOINT", base)
+        assert cli.main(["trace", *who]) == tracecmd.EXIT_SENT
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://127.0.0.1:1")
+        assert cli.main(["trace", "--url", base, *who]) == tracecmd.EXIT_SENT
+    assert [path for path, _body in state.posts] == [
+        "/custom/traces",
+        "/v1/traces",
+        sender.TRACES_PATH,
+    ]
+
+
+def test_a_readback_with_only_the_standard_variable_is_refused_before_anything_is_sent(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The variable names where to post, not where to read: no base, so usage and no span."""
+    _hermetic(monkeypatch, tmp_path)
+    who = ["--service", "mikemol-commit", "--namespace", "mtools", "--name", "commit"]
+    with _store() as (base, state):
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_ENDPOINT", base)
+        assert cli.main(["trace", *who, "--readback"]) == cli.EXIT_USAGE
+    assert not state.posts
+    assert "--readback needs a traces base" in capsys.readouterr().err
+
+
 def test_no_destination_is_a_usage_refusal(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
 ) -> None:

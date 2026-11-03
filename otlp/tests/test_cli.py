@@ -113,6 +113,24 @@ def test_the_url_may_come_from_the_environment(monkeypatch: pytest.MonkeyPatch) 
     assert (code, len(bodies)) == (cli.EXIT_SENT, 1)
 
 
+def test_the_standard_otel_logs_endpoint_routes_a_record_below_the_legacy_url(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """W1960: the logs variable is posted to as given, and MIKEMOL_OTLP_LOGS_URL still wins."""
+    monkeypatch.delenv(endpoints.ENV, raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    argv = ["log", "--service", "s", "--namespace", "n"]
+    with _endpoint() as (url, bodies):
+        monkeypatch.delenv(cli.URL_ENV, raising=False)
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_LOGS_ENDPOINT", url)
+        assert cli.main(argv, io.StringIO("by the standard variable\n")) == cli.EXIT_SENT
+        assert len(bodies) == 1
+        monkeypatch.setenv("OTEL_EXPORTER_OTLP_LOGS_ENDPOINT", "http://127.0.0.1:1")
+        monkeypatch.setenv(cli.URL_ENV, url)
+        assert cli.main(argv, io.StringIO("legacy url wins\n")) == cli.EXIT_SENT
+        assert len(bodies) == _TWO
+
+
 def _publish(path: Path, base: str) -> None:
     # The host's endpoints file with the one name this CLI resolves.
     doc: dict[str, str] = {"victorialogs-http": base}

@@ -501,3 +501,24 @@
   claim  = {W2227: `--description` is the OTLP Metric's own field, on a gauge and on an up-down sum.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_metriccmd.py -k test_a_description_rides_on_the_metric_for_both_kinds_and_is_absent_without_the_flag},
 }
+
+@misc{otlp-cli-standard-otel-logs-endpoint-routes-a-record-below-the-legacy-url,
+  section = {cli},
+  title  = {W1960: the logs variable is posted to as given, and MIKEMOL_OTLP_LOGS_URL still wins},
+  claim  = {W1960: the logs variable is posted to as given, and MIKEMOL_OTLP_LOGS_URL still wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_the_standard_otel_logs_endpoint_routes_a_record_below_the_legacy_url},
+}
+
+@misc{otlp-tracecmd-standard-otel-endpoint-routes-a-span-and-the-flag-still-wins,
+  section = {tracecmd},
+  title  = {W1960: the traces variable is posted to as given, the general one gets /v1/traces},
+  claim  = {W1960: the traces variable is posted to as given, the general one gets /v1/traces.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_the_standard_otel_endpoint_routes_a_span_and_the_flag_still_wins},
+}
+
+@misc{otlp-tracecmd-readback-with-only-the-standard-variable-is-refused-before-anything-is-sent,
+  section = {tracecmd},
+  title  = {The variable names where to post, not where to read: no base, so usage and no span},
+  claim  = {The variable names where to post, not where to read: no base, so usage and no span.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tracecmd.py -k test_a_readback_with_only_the_standard_variable_is_refused_before_anything_is_sent},
+}

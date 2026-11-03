@@ -55,6 +55,9 @@ class Request:
     trace_id: str = ""
     span_id: str = ""
     parent_id: str = ""
+    url: str = ""
+    """A COMPLETE URL to post the span to (the OTel standard variable), used as given; with none
+    the span goes to `base` plus the traces path. A read-back needs `base` either way."""
 
 
 def _entry(req: Request) -> spans.Entry:
@@ -80,33 +83,8 @@ def _entry(req: Request) -> spans.Entry:
     )
 
 
-def run(req: Request, post: sender.Post, get: Get) -> int:
-    """Send one span and, when asked, read it back once.
-
-    Returns:
-        EXIT_SENT when sent (and found, with `readback`), EXIT_FAILED when a call failed,
-        EXIT_USAGE when the span itself is malformed, EXIT_BUSY when it was sent but is not
-        visible yet.
-
-    """
-    resource = metrics.resource_here(req.service, req.namespace, req.version)
-    try:
-        entry = _entry(req)
-        payload = spans.request(resource, entry).SerializeToString()
-    except ValueError as malformed:
-        sys.stderr.write(f"mikemol-otlp: {malformed}\n")
-        return EXIT_USAGE
-    trace_id = entry.trace_id
-    base = req.base.rstrip("/")
-    try:
-        sender.send(base + sender.TRACES_PATH, payload, post)
-    except sender.SendError as failed:
-        sys.stderr.write(f"mikemol-otlp: {failed}\n")
-        return EXIT_FAILED
-    wanted = trace_id.hex()
-    sys.stdout.write(f"sent span name={req.name} trace_id={wanted}\n")
-    if not req.readback:
-        return EXIT_SENT
+def _read_back(base: str, wanted: str, get: Get) -> int:
+    # One read of the trace from the store; BUSY when it is not visible yet.
     url = base + JAEGER_PATH + wanted
     try:
         status, body = get(url)
@@ -118,3 +96,38 @@ def run(req: Request, post: sender.Post, get: Get) -> int:
         return EXIT_SENT
     sys.stderr.write(f"mikemol-otlp: not visible yet (status {status}); retry GET {url}\n")
     return EXIT_BUSY
+
+
+def run(req: Request, post: sender.Post, get: Get) -> int:
+    """Send one span and, when asked, read it back once.
+
+    Returns:
+        EXIT_SENT when sent (and found, with `readback`), EXIT_FAILED when a call failed,
+        EXIT_USAGE when the span itself is malformed, EXIT_BUSY when it was sent but is not
+        visible yet.
+
+    """
+    base = req.base.rstrip("/")
+    if req.readback and not base:
+        sys.stderr.write(
+            "mikemol-otlp: --readback needs a traces base (--url or the endpoints store); "
+            "OTEL_EXPORTER_OTLP_* names only where to post\n"
+        )
+        return EXIT_USAGE
+    resource = metrics.resource_here(req.service, req.namespace, req.version)
+    try:
+        entry = _entry(req)
+        payload = spans.request(resource, entry).SerializeToString()
+    except ValueError as malformed:
+        sys.stderr.write(f"mikemol-otlp: {malformed}\n")
+        return EXIT_USAGE
+    trace_id = entry.trace_id
+    target = req.url or base + sender.TRACES_PATH
+    try:
+        sender.send(target, payload, post)
+    except sender.SendError as failed:
+        sys.stderr.write(f"mikemol-otlp: {failed}\n")
+        return EXIT_FAILED
+    wanted = trace_id.hex()
+    sys.stdout.write(f"sent span name={req.name} trace_id={wanted}\n")
+    return _read_back(base, wanted, get) if req.readback else EXIT_SENT

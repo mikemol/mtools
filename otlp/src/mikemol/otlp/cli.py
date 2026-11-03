@@ -138,7 +138,7 @@ def _fields(opts: dict[str, object]) -> dict[str, str] | None:
 
 
 def _destination(given: str, environ: Mapping[str, str]) -> str:
-    """Pick the logs URL: `--url`, else the environment's full URL, else the named endpoint.
+    """Pick the logs URL: `--url`, the legacy full URL, the OTel standard, then the named endpoint.
 
     ⚑ THE NAME IS RESOLVED LAST (luthen, 2026-10-17): an address in an environment is an address
     literal in their tree, so the host's endpoints file is the route they want, with the older
@@ -153,17 +153,22 @@ def _destination(given: str, environ: Mapping[str, str]) -> str:
     full = environ.get(URL_ENV, "")
     if full:
         return full
+    standard = endpoints.otel_url("logs", environ)
+    if standard:
+        return standard
     return endpoints.url_for(ENDPOINT, sender.LOGS_PATH, environ) or ""
 
 
 def _trace(opts: dict[str, object], environ: Mapping[str, str]) -> int:
     # The `trace` verb: parse into a request and run it; a missing base or a bad field is usage.
-    base = _text(opts, "url") or endpoints.base_url(tracecmd.ENDPOINT, environ) or ""
+    given = _text(opts, "url")
+    standard = "" if given else endpoints.otel_url("traces", environ) or ""
+    base = given or endpoints.base_url(tracecmd.ENDPOINT, environ) or ""
     fields = _fields(opts)
-    if not base or fields is None:
+    if not (base or standard) or fields is None:
         sys.stderr.write(
-            f"mikemol-otlp: need --url or ${endpoints.ENV} naming {tracecmd.ENDPOINT}; "
-            "and --field KEY=VALUE pairs\n"
+            f"mikemol-otlp: need --url, OTEL_EXPORTER_OTLP_ENDPOINT or ${endpoints.ENV} "
+            f"naming {tracecmd.ENDPOINT}; and --field KEY=VALUE pairs\n"
         )
         return EXIT_USAGE
     request = tracecmd.Request(
@@ -181,6 +186,7 @@ def _trace(opts: dict[str, object], environ: Mapping[str, str]) -> int:
         trace_id=_text(opts, "trace_id"),
         span_id=_text(opts, "span_id"),
         parent_id=_text(opts, "parent_id"),
+        url=standard,
     )
     return tracecmd.run(request, sender.post, sender.get)
 
