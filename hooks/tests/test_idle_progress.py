@@ -40,10 +40,35 @@ def test_the_best_ranked_ready_card_of_the_round_is_named_before_the_queue_order
     assert idle_progress.idle_card(queue, START, []) == "W2"
 
 
-def test_a_card_worked_since_the_turn_began_is_progress() -> None:
-    """Advancing, blocking or finishing any card moves its stamp past the start: no escalation."""
-    queue = _queue(_card("W1", "blocked", AFTER), _card("W2", "ready", BEFORE))
-    assert idle_progress.idle_card(queue, START) is None
+def test_a_card_finished_or_blocked_with_a_named_blocker_since_the_turn_began_is_progress() -> None:
+    """W1950: finishing a card, or blocking it on a named blocker, is what the hook asks for."""
+    ready = _card("W2", "ready", BEFORE)
+    done = _queue(_card("W1", "done", AFTER), ready)
+    assert idle_progress.idle_card(done, START) is None
+    blocked = _queue(_card("W1", "blocked", AFTER, blocked_on=["W9"]), ready)
+    assert idle_progress.idle_card(blocked, START) is None
+
+
+def test_a_mark_or_a_blocked_card_with_no_blocker_is_not_progress() -> None:
+    """The gaming the hook ends: a working mark, an evidence note and an empty block prove nothing.
+
+    Each moves the stamp past the turn start, so the ready card is still named.
+    """
+    ready = _card("W2", "ready", BEFORE)
+    assert idle_progress.idle_card(_queue(_card("W1", "working", AFTER), ready), START) == "W2"
+    assert idle_progress.idle_card(_queue(_card("W1", "ready", AFTER), ready), START) == "W1"
+    unnamed = _queue(_card("W1", "blocked", AFTER), ready)
+    assert idle_progress.idle_card(unnamed, START) == "W2"
+
+
+def test_a_commit_since_the_turn_began_that_names_a_card_is_progress() -> None:
+    """A card whose stamp moved and which a landed commit cites advanced, whatever its status.
+
+    The control is the same card with no commit citing it, which is only a mark.
+    """
+    queue = _queue(_card("W1", "working", AFTER), _card("W2", "ready", BEFORE))
+    assert idle_progress.idle_card(queue, START, (), {"W1"}) is None
+    assert idle_progress.idle_card(queue, START, (), {"W7"}) == "W2"
 
 
 def test_nothing_ready_or_only_a_witnessed_card_is_not_idle() -> None:
