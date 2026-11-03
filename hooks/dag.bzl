@@ -1176,6 +1176,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/traindrive.py": {
       "imports": [
+        "src/mikemol/hooks/commit_verdict.py",
         "src/mikemol/hooks/gatephase.py",
         "src/mikemol/hooks/isolated.py",
         "src/mikemol/hooks/stackgate.py",
@@ -3307,9 +3308,7 @@ GRAPH = {
         "src/mikemol/hooks/trainround.py"
       ],
       "reads": [],
-      "typing_only": [
-        "src/mikemol/hooks/trainround.py"
-      ]
+      "typing_only": []
     },
     "tests/test_trainjoin.py": {
       "imports": [

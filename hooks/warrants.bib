@@ -17441,3 +17441,26 @@
   claim  = {Reading the round for a judgement leaves its stamp in the log, once per distinct stamp.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_reason_records_the_round_stamp_it_read},
 }
+
+@misc{hooks-traindrive-withdrawn-tip-is-one-gate-no-bisection-and-the-followers-get-no-verdict,
+  section = {traindrive},
+  title  = {W1944: a gate that exits 75 is a stop. The leader is told, nothing lands, the rest run alone},
+  claim  = {W1944: a gate that exits 75 is a stop. The leader is told, nothing lands, the rest run
+            alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_withdrawn_tip_is_one_gate_no_bisection_and_the_followers_get_no_verdict},
+}
+
+@misc{hooks-traindrive-red-tip-that-is-not-a-withdraw-is-still-bisected,
+  section = {traindrive},
+  title  = {The control: the stop is for the withdraw code alone; an ordinary red still takes the bisection},
+  claim  = {The control: the stop is for the withdraw code alone; an ordinary red still takes the
+            bisection.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_red_tip_that_is_not_a_withdraw_is_still_bisected},
+}
+
+@misc{hooks-traindrive-withdraw-after-the-leader-has-its-verdict-tells-nobody-more,
+  section = {traindrive},
+  title  = {Stack a lands and b is refused, then c's gate is withdrawn: c gets no verdict},
+  claim  = {Stack a lands and b is refused, then c's gate is withdrawn: c gets no verdict.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_withdraw_after_the_leader_has_its_verdict_tells_nobody_more},
+}

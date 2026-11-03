@@ -23,6 +23,13 @@ others' to files their waiting processes read (W1671).
 ⚑ A GROUP THAT CANNOT BE BUILT (a path that is not there) IS NOT COMMITTED AND DROPPED, and the
 rest go on: one broken submission is not a reason to refuse the queue.
 
+⚑ A WITHDRAWN GATE IS NOT A RED TIP (W1944): a gate that exits the withdraw code was stopped on
+purpose, by `mikemol-commit --withdraw`, at a phase boundary. Bisecting it would burn gates on a
+tree nobody judged and refuse followers that asked for nothing. So the train stops, lands
+nothing, tells the leader's own process it was withdrawn, and gives every other group NO
+verdict: `trainverdict` reads a missing file as 'run on your own turn as before', so each
+follower gates its own stack singly.
+
 ⚑ THE TRAIN COUNTS ITSELF (W1676): `Stats` gets the stacks joined, gates run, bisect steps, rounds,
 and how many landed, were refused and were dropped, for `traintel` to record as one span.
 
@@ -35,6 +42,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from mikemol.hooks import trainbisect, trainround
+from mikemol.hooks.commit_verdict import WITHDRAW_RC
 from mikemol.hooks.gatephase import failed_checks
 from mikemol.hooks.isolated import Done
 from mikemol.hooks.stackgate import gate_tip
@@ -167,6 +175,30 @@ def _refused(
     return Verdict(group.key, gate.returncode, text)
 
 
+def _withdrawn(leader: Group, gate: Done, before: str, name: str) -> Verdict:
+    # The leader's verdict for a train whose gate was withdrawn: a refusal the verdict reader
+    # classifies as WITHDRAWN by its code, and the followers' own turns named.
+    shown = (gate.stdout + gate.stderr).strip()
+    head = f"{shown}\n" if shown else ""
+    text = head + (
+        f"REFUSED {name} (rc={gate.returncode}): the train's gate was withdrawn; nothing landed, "
+        f"HEAD is still {before[:SHORT]}; the stacks that joined it run again on their own turn\n"
+    )
+    return Verdict(leader.key, gate.returncode, text)
+
+
+def _stopped(
+    gate: Done, groups: Sequence[Group], remaining: Sequence[Group], before: str, name: str
+) -> list[Verdict] | None:
+    # What a train whose full-tip gate was withdrawn tells its groups, or None when it was not.
+    # The leader's process is `groups[0]`; once it has its verdict, nobody is left to tell.
+    if gate.returncode != WITHDRAW_RC:
+        return None
+    if remaining[0].key != groups[0].key:
+        return []
+    return [_withdrawn(groups[0], gate, before, name)]
+
+
 def _land_prefix(
     root: Path, groups: Sequence[Group], rnd: _Round, before: str
 ) -> list[Verdict] | None:
@@ -212,7 +244,7 @@ def drive(
         the verdicts, one per group: landed, refused, raced or not committed exactly once.
 
     """
-    name, run = root.name, seams.run
+    name = root.name
     count = stats if stats is not None else Stats()
     count.joined = len(groups)
     verdicts: list[Verdict] = []
@@ -226,8 +258,8 @@ def drive(
 
     while remaining:
         began = time.time_ns()
-        before = run(["rev-parse", "HEAD"], {}, root).stdout.strip()
-        stack = build(root, _entries(remaining, seams), run, before)
+        before = seams.run(["rev-parse", "HEAD"], {}, root).stdout.strip()
+        stack = build(root, _entries(remaining, seams), seams.run, before)
         count.rounds += 1
         if stack.failed is not None:
             tell(trainround.UNBUILT)
@@ -237,6 +269,10 @@ def drive(
             del remaining[at]
             continue
         rnd = _Round(root, remaining, (stack, count), seams)
+        ended = _stopped(rnd.gate(len(remaining) - 1), groups, remaining, before, name)
+        if ended is not None:
+            tell(trainround.WITHDRAWN, rnd)
+            return [*verdicts, *ended]
         bad = rnd.first_bad()
         landed = _land_prefix(
             root, remaining[: len(remaining) if bad is None else bad], rnd, before

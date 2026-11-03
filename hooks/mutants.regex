@@ -529,6 +529,10 @@ src/mikemol/hooks/traindrive.py|empty-prefix-lands-something|    if not groups:|
 src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(refused\)|        pass|def=drive
 src/mikemol/hooks/traindrive.py|unbuilt-stack-reports-success|    code = \(stack\.failed\.returncode if stack\.failed else 0\) or 1|    code = 0|def=_unbuilt
 src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|            root, remaining\[: len\(remaining\) if bad is None else bad\], rnd, before|            root, remaining[: len(remaining)], rnd, before|def=drive
+src/mikemol/hooks/traindrive.py|withdraw-code-bisected-as-red|    if gate\.returncode != WITHDRAW_RC:|    if True:|def=_stopped
+src/mikemol/hooks/traindrive.py|withdrawn-leader-never-told|    return \[_withdrawn\(groups\[0\], gate, before, name\)\]|    return []|def=_stopped
+src/mikemol/hooks/traindrive.py|withdrawn-leader-told-after-it-has-a-verdict|    if remaining\[0\]\.key != groups\[0\]\.key:|    if False:|def=_stopped
+src/mikemol/hooks/traindrive.py|withdrawn-round-recorded-as-red|            tell\(trainround\.WITHDRAWN, rnd\)|            tell(trainround.RED, rnd)|def=drive
 src/mikemol/hooks/trainverdict.py|boolean-code-read-as-code|    if isinstance\(code, int\) and not isinstance\(code, bool\) and isinstance\(text, str\):|    if isinstance(code, int) and isinstance(text, str):|def=read
 src/mikemol/hooks/trainverdict.py|verdict-not-cleared-when-taken|        verdict_path\(ledger, key\)\.unlink\(missing_ok=True\)|        pass|def=take
 src/mikemol/hooks/trainverdict.py|verdict-never-replaced-into-place|        staging\.replace\(path\)|        pass|def=write

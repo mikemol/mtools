@@ -48,6 +48,7 @@ GREEN = "green"
 RED = "red"
 UNBUILT = "unbuilt"
 RACED = "raced"
+WITHDRAWN = "withdrawn"
 Spawn = Callable[[Sequence[str]], None]
 
 _UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"

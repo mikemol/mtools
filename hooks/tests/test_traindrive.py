@@ -15,7 +15,7 @@ import os
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import commit_kata as ck
-from mikemol.hooks import stackrun, traindrive
+from mikemol.hooks import stackrun, traindrive, trainround
 from mikemol.hooks.trainjoin import Follower
 
 if TYPE_CHECKING:
@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 
     import pytest
 
-    from mikemol.hooks import trainround
 
 _EXECUTABLE = 0o755
 _GATE = (
@@ -31,6 +30,13 @@ _GATE = (
     'if grep -rq bad --exclude-dir=.git .; then echo "found bad" >&2; exit 1; fi\n'
 )
 _PUSH = "#!/bin/sh\ngit push origin HEAD:main\n"
+_WITHDRAWN = '#!/bin/sh\necho run >> "$MIKEMOL_REAL_ROOT/runs"\nexit 75\n'
+_WITHDRAW_LATE = (
+    '#!/bin/sh\necho run >> "$MIKEMOL_REAL_ROOT/runs"\n'
+    'if grep -rq bad --exclude-dir=.git .; then echo "found bad" >&2; exit 1; fi\n'
+    "if grep -rq withdraw --exclude-dir=.git .; then exit 75; fi\n"
+)
+_WITHDRAW_CODE = 75
 _NAMES = ("a.txt", "b.txt", "c.txt")
 _THREE = 3
 
@@ -39,7 +45,14 @@ def _git(root: Path, *args: str) -> str:
     return ck.run_git_in(list(args), {}, root).stdout
 
 
-def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, bad: str = "") -> Path:
+def _repo(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    bad: str = "",
+    gate: str = _GATE,
+    late: str = "",
+) -> Path:
     for name in [name for name in os.environ if name.startswith("GIT_")]:
         monkeypatch.delenv(name)
     for key, value in {
@@ -64,12 +77,13 @@ def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, bad: str = "") -> 
     _git(root, "commit", "--quiet", "-m", "first")
     _git(root, "remote", "add", "origin", str(remote))
     _git(root, "push", "--quiet", "origin", "HEAD:main")
-    for hook_name, text in (("pre-commit", _GATE), ("post-commit", _PUSH)):
+    for hook_name, text in (("pre-commit", gate), ("post-commit", _PUSH)):
         hook = root / ".git" / "hooks" / hook_name
         hook.write_text(text, encoding="utf-8")
         hook.chmod(_EXECUTABLE)
     for name in _NAMES:
         text = "bad\n" if name == bad else f"edited {name}\n"
+        text = "withdraw\n" if name == late else text
         (root / name).write_text(text, encoding="utf-8")
     return root
 
@@ -224,3 +238,42 @@ def test_a_green_prefix_under_a_red_tip_is_stamped_for_the_tree_it_was_gated_at(
     assert "Gated-by: W2" in below
     assert "W3" not in top
     assert "W3" not in below
+
+
+def test_a_withdrawn_tip_is_one_gate_no_bisection_and_the_followers_get_no_verdict(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1944: a gate that exits 75 is a stop; the leader is told and the rest run alone."""
+    root = _repo(tmp_path, monkeypatch, gate=_WITHDRAWN)
+    rounds: list[trainround.RoundRecord] = []
+    got = _drive(root, tmp_path, rounds=rounds)
+    assert _runs(root) == 1
+    assert list(got) == ["1"]
+    assert got["1"].code == _WITHDRAW_CODE
+    assert "REFUSED repo (rc=75)" in got["1"].text
+    assert "run again on their own turn" in got["1"].text
+    assert _subjects(root) == ["first"]
+    assert [r.verdict for r in rounds] == [trainround.WITHDRAWN]
+
+
+def test_a_red_tip_that_is_not_a_withdraw_is_still_bisected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The control: only the withdraw code is a stop; an ordinary red is still bisected."""
+    root = _repo(tmp_path, monkeypatch, bad="b.txt")
+    got = _drive(root, tmp_path)
+    assert sorted(got) == ["1", "2", "3"]
+    assert _runs(root) > 1
+
+
+def test_a_withdraw_after_the_leader_has_its_verdict_tells_nobody_more(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Stack a lands and b is refused, then c's gate is withdrawn: c gets no verdict."""
+    root = _repo(tmp_path, monkeypatch, bad="b.txt", gate=_WITHDRAW_LATE, late="c.txt")
+    got = _drive(root, tmp_path)
+    assert sorted(got) == ["1", "2"]
+    assert got["1"].code == 0
+    assert "COMMITTED repo" in got["1"].text
+    assert got["2"].code != 0
+    assert "found bad" in got["2"].text
