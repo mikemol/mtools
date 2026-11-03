@@ -1871,6 +1871,7 @@ GRAPH = {
     "tests/test_commit_stack.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],

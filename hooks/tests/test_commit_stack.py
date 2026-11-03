@@ -12,17 +12,16 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-import pytest
-
 from mikemol.hooks import commit_kata as ck
+from mikemol.hooks import scratch
 from mikemol.hooks.snapshot import NAMESPACE_ENV
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    import pytest
 
 
 _EXECUTABLE = 0o755
@@ -37,11 +36,11 @@ def _git(root: Path, *args: str) -> str:
         git's stdout.
 
     """
-    git = shutil.which("git")
-    if git is None:
-        pytest.skip("git is not installed")
-    done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
-    return done.stdout
+    code, out = scratch.git_out(
+        ["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args]
+    )
+    assert code == 0, out
+    return out
 
 
 def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, isolated: str) -> tuple[Path, Path]:
