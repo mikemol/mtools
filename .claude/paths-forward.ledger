@@ -5141,3 +5141,48 @@
 2026-11-02T22:10:13Z  status W2241 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-02T22:18:59Z  interrupt W2243 minted    -         "pathsforward tests refuse in the gate with an unattributed culprit and pass alone (test_cli, test_rank_from)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2242
 2026-11-02T22:34:18Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T22:38:47Z  interrupt W2244 minted    -         "Pace guard: an unmatchable or uncountable ratchet key reports UNMATCHABLE and never counts as owed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W59
+2026-11-02T23:15:55Z  status W2244 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-02T23:19:48Z  interrupt W2245 minted    -         "Pace guard admits a stack that repairs the guard itself (its module and tests alone), so the gate never blocks its own fix"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W59
+2026-11-02T23:40:18Z  interrupt W2246 minted    -         "mikemol-commit --in-gate --json returns the gate's bazel invocation id (or log dir), written at gate start"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W59
+2026-11-03T00:11:59Z  interrupt W2247 minted    -         "Adopt luthen's ready_wake as a standard loop tool: a writer mode or a sibling mikemol-ready-wake that prints one line per change"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1931
+2026-11-03T00:31:44Z  interrupt W2248 minted    -         "Gate runs the bazel suite's mutant targets as a later phase than the rest, so a withdraw can land between them"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W59
+2026-11-03T01:01:16Z  interrupt W2249 minted    -         "revendor_apply's throwaway-install refusal carries uv's output and names an unresolved sibling requirement"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1510
+2026-11-03T01:39:56Z  status W2248 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T01:45:46Z  status W2125 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T01:51:24Z  status W2242 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:06:36Z  lease W2052 lapsed    --        "lease on file:transcriptstruct/src/mikemol/transcriptstruct/labelcompare.py!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:06:36Z  lease W2219 lapsed    --        "lease on file:hooks/pyproject.toml!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:07:45Z  status W2207 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:07:45Z  status W2208 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:07:45Z  status W2209 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:08:05Z  status W2215 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:08:28Z  status W2217 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:08:49Z  status W2218 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:09:10Z  status W2223 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:09:31Z  status W2224 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:09:52Z  status W2225 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:10:14Z  status W2226 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:10:35Z  status W2228 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:10:55Z  status W2229 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:11:15Z  status W2230 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:11:34Z  status W2231 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:11:56Z  status W2237 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:12:16Z  status W2238 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:12:35Z  status W2239 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:12:56Z  status W2240 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:15:00Z  tick  W2244 advanced  collapse  "submitted pace-guard stack (W2244) behind an empty gate; closed 16 landed no-witness cards"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:38:32Z  tick  W2250 minted    -         "mikemol-repin --revendor rewrites a wheel path with the old local version's g kept (+g45ffeb7) while the file is written as +45ffeb7: uv lock fails Distribution not found"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1510
+2026-11-03T02:38:51Z  tick  W2251 minted    -         "mikemol-repin --revendor leaves the superseded mikemol_procrun wheel in vendor/wheels while it git rm's the other ten"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1510
+2026-11-03T02:39:13Z  tick  W2252 minted    -         "INSTALL notes say a repo's vendored mikemol-repin must be run from mtools' own checkout to learn a newly added dist (the tool that must be repinned to learn a dist)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1510
+2026-11-03T02:49:53Z  tick  W2219 advanced  sweep     "hooks batch 3 plus W2244 pace guard stacked as one submit; carded nemik repin findings W2250-W2252"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:52:22Z  status W1966 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:52:22Z  status W2052 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:52:44Z  status W2117 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:52:44Z  status W2125 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:53:09Z  status W2227 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:54:05Z  status W2208 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:54:32Z  status W1122 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:54:32Z  status W2049 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:54:32Z  status W2070 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-03T02:54:32Z  status W2241 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

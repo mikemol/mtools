@@ -537,8 +537,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ RUNNING git FOR A SCRATCH WORKTREE IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1378): the argv is
 # `git`, fixed words, the repo and the worktree path as single words; no shell.
 "src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_in_gate.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_census_unmeasured.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_worktree_venv.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.

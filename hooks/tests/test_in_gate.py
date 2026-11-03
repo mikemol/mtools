@@ -7,24 +7,21 @@ from __future__ import annotations
 import io
 import json
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING, cast
 
-from mikemol.hooks import commit_counts, commit_kata
+from mikemol.hooks import commit_counts, commit_kata, scratch
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     import pytest
 
-GIT = shutil.which("git") or "git"
-
 
 def _repo(tmp_path: Path) -> Path:
     root = tmp_path / "repo"
     root.mkdir()
-    subprocess.run([GIT, "-C", str(root), "init", "-q", "-b", "main"], check=True)
+    code, out = scratch.git_out(["git", "-C", str(root), "init", "-q", "-b", "main"])
+    assert code == 0, out
     return root
 
 

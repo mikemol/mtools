@@ -1614,6 +1614,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/pycheck_census.py",
         "src/mikemol/hooks/pycheck_cli.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/verdict.py"
       ],
       "reads": [],
@@ -2282,7 +2283,8 @@ GRAPH = {
     "tests/test_in_gate.py": {
       "imports": [
         "src/mikemol/hooks/commit_counts.py",
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []

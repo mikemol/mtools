@@ -9,23 +9,21 @@ untracked source and a stub, beside one it can, and an ignored file that is nobo
 from __future__ import annotations
 
 import io
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import pycheck_census, pycheck_cli
+from mikemol.hooks import pycheck_census, pycheck_cli, scratch
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from mikemol.hooks.verdict import Verdict
 
-GIT = shutil.which("git") or "git"
 IDENTITY = ["-c", "user.email=t@e.invalid", "-c", "user.name=t"]
 
 
 def _git(root: Path, *args: str) -> None:
-    subprocess.run([GIT, "-C", str(root), *IDENTITY, *args], capture_output=True, check=True)
+    code, out = scratch.git_out(["git", "-C", str(root), *IDENTITY, *args])
+    assert code == 0, out
 
 
 def _repo(tmp_path: Path) -> Path:
