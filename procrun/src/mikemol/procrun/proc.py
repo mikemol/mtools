@@ -14,6 +14,8 @@ Every argv is a sequence built by the caller: never a shell.
 import subprocess
 from collections.abc import Mapping, Sequence
 from pathlib import Path
+from types import TracebackType
+from typing import Literal, Self
 
 # The exception `capture` raises for a child that outlasts its timeout, re-exported so a
 # caller can name it without importing the subprocess module itself.
@@ -125,4 +127,113 @@ def capture_stdout(
         stderr=None,
         check=False,
         timeout=timeout,
+    )
+
+
+# Where a spawned child's stdin or output goes: the caller's own, or nowhere.
+Stream = Literal["inherit", "discard"]
+
+
+class Child:
+    """A running child process, held by a caller that must signal it, poll it or wait on it.
+
+    ⚑ THE LIVE-HANDLE SEAM (mtools:W2241): `capture` runs a child to completion, which a test that
+    signals a sleeper, races two lockers or probes a browser while it runs cannot use. This class
+    owns the one `Popen` so those callers name no subprocess type and need no exemption of their
+    own. Used as a context manager it kills and reaps the child on exit, so a test cannot leak one.
+    """
+
+    def __init__(self, popen: subprocess.Popen[bytes]) -> None:
+        """Wrap the `Popen` this seam started."""
+        self._popen = popen
+
+    @property
+    def pid(self) -> int:
+        """The child's process id."""
+        return self._popen.pid
+
+    def poll(self) -> int | None:
+        """Say whether the child has finished, without waiting.
+
+        Returns:
+            The exit status once it has finished, None while it runs.
+
+        """
+        return self._popen.poll()
+
+    def wait(self, timeout: float | None = None) -> int:
+        """Wait for the child to finish.
+
+        Args:
+            timeout: Seconds to wait; no limit when omitted.
+
+        Returns:
+            The child's exit status.
+
+        """
+        return self._popen.wait(timeout=timeout)
+
+    def kill(self) -> None:
+        """Send the child SIGKILL."""
+        self._popen.kill()
+
+    def terminate(self) -> None:
+        """Send the child SIGTERM."""
+        self._popen.terminate()
+
+    def send_signal(self, sig: int) -> None:
+        """Send the child the signal numbered `sig`."""
+        self._popen.send_signal(sig)
+
+    def __enter__(self) -> Self:
+        """Enter the context: the child is already running.
+
+        Returns:
+            This child.
+
+        """
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
+        """Kill the child if it still runs, and reap it."""
+        if self._popen.poll() is None:
+            self._popen.kill()
+        self._popen.wait()
+
+
+def spawn(
+    argv: Sequence[str],
+    cwd: Path | None = None,
+    env: Mapping[str, str] | None = None,
+    stdin: Stream = "inherit",
+    output: Stream = "inherit",
+) -> Child:
+    """Start `argv` and hand back the live child without waiting for it.
+
+    Args:
+        argv: The program and its arguments; never interpreted by a shell.
+        cwd: The directory to run in; the caller's when omitted.
+        env: The child's whole environment; the caller's when omitted.
+        stdin: `inherit` leaves the caller's stdin, `discard` gives the child an empty one.
+        output: `inherit` leaves the caller's stdout and stderr, `discard` drops both.
+
+    Returns:
+        The running child.
+
+    """
+    sink = subprocess.DEVNULL
+    return Child(
+        subprocess.Popen(
+            list(argv),
+            cwd=cwd,
+            env=env,
+            stdin=sink if stdin == "discard" else None,
+            stdout=sink if output == "discard" else None,
+            stderr=sink if output == "discard" else None,
+        )
     )

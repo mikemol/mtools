@@ -9,7 +9,13 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.procrun.proc import TimeoutExpired, capture, capture_bytes, capture_stdout
+from mikemol.procrun.proc import (
+    TimeoutExpired,
+    capture,
+    capture_bytes,
+    capture_stdout,
+    spawn,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -18,6 +24,8 @@ _SLEEP = "import time; time.sleep(30)"
 _SHORT = 0.2
 _LONG = 30
 _FOUR = 4
+_SEVEN = 7
+_TERM = 15
 
 
 def test_capture_returns_text_output_and_a_nonzero_status_without_raising() -> None:
@@ -94,3 +102,72 @@ def test_capture_stdout_captures_stdout_bytes_and_lets_stderr_reach_the_terminal
     done = capture_stdout([sys.executable, "-c", code])
     assert (done.returncode, done.stdout) == (0, b"\xff\x01")
     assert "touch your key" in capfd.readouterr().err
+
+
+def test_spawn_returns_a_live_child_that_polls_waits_and_reports_its_status() -> None:
+    """A running child has a pid and no status; once it exits, wait and poll both give its code."""
+    with spawn([sys.executable, "-c", "import sys; sys.exit(7)"], output="discard") as child:
+        assert child.pid > 0
+        assert child.wait(timeout=_LONG) == _SEVEN
+        assert child.poll() == _SEVEN
+
+
+def test_spawn_wait_times_out_on_a_child_that_runs_and_kill_ends_it() -> None:
+    """A sleeper outlasts a short wait, which raises TimeoutExpired; kill then ends it."""
+    with spawn([sys.executable, "-c", _SLEEP], stdin="discard", output="discard") as child:
+        assert child.poll() is None
+        with pytest.raises(TimeoutExpired):
+            child.wait(timeout=_SHORT)
+        child.kill()
+        assert child.wait(timeout=_LONG) != 0
+
+
+def test_spawn_context_exit_kills_a_child_still_running() -> None:
+    """Leaving the block ends the child, so a test cannot leak one."""
+    with spawn([sys.executable, "-c", _SLEEP], output="discard") as child:
+        assert child.poll() is None
+    assert child.poll() is not None
+
+
+def test_spawn_terminate_and_send_signal_reach_the_child() -> None:
+    """SIGTERM from terminate and an explicit signal number both end a sleeper."""
+    with spawn([sys.executable, "-c", _SLEEP], output="discard") as first:
+        first.terminate()
+        assert first.wait(timeout=_LONG) == -_TERM
+    with spawn([sys.executable, "-c", _SLEEP], output="discard") as second:
+        second.send_signal(_TERM)
+        assert second.wait(timeout=_LONG) == -_TERM
+
+
+def test_spawn_discard_drops_the_childs_output_and_gives_it_an_empty_stdin(
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    """Under discard nothing reaches the test's stdout and the child reads end of input at once."""
+    code = (
+        "import sys; sys.stdout.write('loud'); sys.stderr.write('shout');"
+        " sys.exit(0 if sys.stdin.read() == '' else 9)"
+    )
+    with spawn([sys.executable, "-c", code], stdin="discard", output="discard") as child:
+        assert child.wait(timeout=_LONG) == 0
+    seen = capfd.readouterr()
+    assert ("loud" in seen.out, "shout" in seen.err) == (False, False)
+
+
+def test_spawn_inherit_leaves_the_childs_output_with_the_caller(
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    """Under inherit the child writes to the caller's own stdout."""
+    code = "import sys; sys.stdout.write('visible')"
+    with spawn([sys.executable, "-c", code]) as child:
+        assert child.wait(timeout=_LONG) == 0
+    assert "visible" in capfd.readouterr().out
+
+
+def test_spawn_runs_in_the_given_directory_with_exactly_the_given_environment(
+    tmp_path: Path,
+) -> None:
+    """The working directory and the environment reach the child, which writes where told."""
+    code = "import os, pathlib; pathlib.Path('out').write_text(os.getcwd() + os.environ['PROBE'])"
+    with spawn([sys.executable, "-c", code], cwd=tmp_path, env={"PROBE": "x"}) as child:
+        assert child.wait(timeout=_LONG) == 0
+    assert (tmp_path / "out").read_text(encoding="utf-8") == str(tmp_path.resolve()) + "x"

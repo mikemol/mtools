@@ -70,3 +70,54 @@
   claim  = {W2242: only stdout is the result; the child's stderr prompt goes to the caller's stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_stdout_captures_stdout_bytes_and_lets_stderr_reach_the_terminal},
 }
+
+@misc{procrun-proc-spawn-returns-a-live-child-that-polls-waits-and-reports-its-status,
+  section = {proc},
+  title  = {A running child has a pid and no status; once it exits, wait and poll both give its code},
+  claim  = {A running child has a pid and no status; once it exits, wait and poll both give its
+            code.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_returns_a_live_child_that_polls_waits_and_reports_its_status},
+}
+
+@misc{procrun-proc-spawn-wait-times-out-on-a-child-that-runs-and-kill-ends-it,
+  section = {proc},
+  title  = {A sleeper outlasts a short wait, which raises TimeoutExpired; kill then ends it},
+  claim  = {A sleeper outlasts a short wait, which raises TimeoutExpired; kill then ends it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_wait_times_out_on_a_child_that_runs_and_kill_ends_it},
+}
+
+@misc{procrun-proc-spawn-context-exit-kills-a-child-still-running,
+  section = {proc},
+  title  = {Leaving the block ends the child, so a test cannot leak one},
+  claim  = {Leaving the block ends the child, so a test cannot leak one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_context_exit_kills_a_child_still_running},
+}
+
+@misc{procrun-proc-spawn-terminate-and-send-signal-reach-the-child,
+  section = {proc},
+  title  = {SIGTERM from terminate and an explicit signal number both end a sleeper},
+  claim  = {SIGTERM from terminate and an explicit signal number both end a sleeper.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_terminate_and_send_signal_reach_the_child},
+}
+
+@misc{procrun-proc-spawn-discard-drops-the-childs-output-and-gives-it-an-empty-stdin,
+  section = {proc},
+  title  = {Under discard nothing reaches the test's stdout and the child reads end of input at once},
+  claim  = {Under discard nothing reaches the test's stdout and the child reads end of input at
+            once.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_discard_drops_the_childs_output_and_gives_it_an_empty_stdin},
+}
+
+@misc{procrun-proc-spawn-inherit-leaves-the-childs-output-with-the-caller,
+  section = {proc},
+  title  = {Under inherit the child writes to the caller's own stdout},
+  claim  = {Under inherit the child writes to the caller's own stdout.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_inherit_leaves_the_childs_output_with_the_caller},
+}
+
+@misc{procrun-proc-spawn-runs-in-the-given-directory-with-exactly-the-given-environment,
+  section = {proc},
+  title  = {The working directory and the environment reach the child, which writes where told},
+  claim  = {The working directory and the environment reach the child, which writes where told.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_runs_in_the_given_directory_with_exactly_the_given_environment},
+}

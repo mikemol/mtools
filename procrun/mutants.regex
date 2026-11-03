@@ -26,6 +26,18 @@ src/mikemol/procrun/proc.py|capture-bytes-drops-the-timeout|        timeout=time
 src/mikemol/procrun/proc.py|capture-bytes-drops-the-input|        input=input_bytes,|        input=None,|def=capture_bytes
 src/mikemol/procrun/proc.py|capture-bytes-raises-on-failure|check=False|check=True|def=capture_bytes
 
+# W2241: spawn hands the child what it was given, and discard really drops each stream.
+src/mikemol/procrun/proc.py|spawn-drops-the-cwd|            cwd=cwd,|            cwd=None,|def=spawn
+src/mikemol/procrun/proc.py|spawn-drops-the-env|            env=env,|            env=None,|def=spawn
+src/mikemol/procrun/proc.py|spawn-discard-keeps-stdin|            stdin=sink if stdin == "discard" else None,|            stdin=None,|def=spawn
+src/mikemol/procrun/proc.py|spawn-discard-keeps-stdout|            stdout=sink if output == "discard" else None,|            stdout=None,|def=spawn
+src/mikemol/procrun/proc.py|spawn-discard-keeps-stderr|            stderr=sink if output == "discard" else None,|            stderr=None,|def=spawn
+
+# W2241: a Child's wait honours its timeout, and its signals reach the process.
+src/mikemol/procrun/proc.py|child-wait-drops-the-timeout|        return self._popen.wait\(timeout=timeout\)|        return self._popen.wait()|def=Child.wait
+src/mikemol/procrun/proc.py|child-kill-does-nothing|        self._popen.kill\(\)|        pass|def=Child.kill
+src/mikemol/procrun/proc.py|child-terminate-does-nothing|        self._popen.terminate\(\)|        pass|def=Child.terminate
+
 # W2242: capture_stdout leaves stderr to the caller and still passes its timeout.
 src/mikemol/procrun/proc.py|capture-stdout-captures-stderr|        stderr=None,|        stderr=subprocess.PIPE,|def=capture_stdout
 src/mikemol/procrun/proc.py|capture-stdout-drops-the-timeout|        timeout=timeout,|        timeout=None,|def=capture_stdout
