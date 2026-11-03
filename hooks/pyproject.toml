@@ -473,12 +473,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_pycheck_changed.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
 "tests/test_commit_isolated_hooks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_commit_isolated_routing.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_lease_wait.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_vlogship.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_vlogsink.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_snaplinks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"tests/test_stackrun.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_index_refresh.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_raced.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -516,7 +514,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # W901: its witnesses build decoy repositories, a private index and a snapshot under tmp_path and
 # run real git (resolved by shutil.which, as above) with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set.
 "tests/test_isolated_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_commit_isolated.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE WORKTREE FALLBACK (W553): asking git where a linked worktree's main tree is IS its one
 # responsibility. git is resolved by `shutil.which` (absent → no fallback, the refusal stands); the

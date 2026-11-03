@@ -1718,6 +1718,7 @@ GRAPH = {
     "tests/test_commit_isolated.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -1752,6 +1753,7 @@ GRAPH = {
     "tests/test_commit_isolated_routing.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -3123,6 +3125,7 @@ GRAPH = {
     "tests/test_stackrun.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackrun.py"
       ],
       "reads": [],
