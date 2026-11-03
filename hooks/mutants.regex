@@ -765,6 +765,8 @@ src/mikemol/hooks/round_wire.py|ready-card-in-the-gate-still-demanded|    waitin
 src/mikemol/hooks/round_wire.py|queued-card-still-outside| if symbol not in cited\]|]|def=refusals
 src/mikemol/hooks/round_wire.py|submission-map-ignored|directory\.name, now, in_gate\(directory\)\)|directory.name, now, frozenset())|def=round_reason
 src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now,|    found = refusals(queue, text, "", now,|def=round_reason
+src/mikemol/hooks/round_wire.py|same-stamp-logged-again|    if kept and kept\[-1\] == line:|    if False:|def=note_stamp
+src/mikemol/hooks/round_wire.py|round-stamp-never-kept|        note_stamp\(directory, seen\)|        pass|def=round_reason
 src/mikemol/hooks/queuecarry.py|named-queue-file-carried-again|    added = \[p for p in sorted\(QUEUE_FILES\) if p not in named and _differs\(root, p, run\)\]|    added = [p for p in sorted(QUEUE_FILES) if _differs(root, p, run)]|def=carry
 src/mikemol/hooks/queuecarry.py|git-failure-read-as-difference|    return done\.returncode == 0 and bool\(done\.stdout\.strip\(\)\)|    return bool(done.stdout.strip()) or done.returncode != 0|def=_differs
 src/mikemol/hooks/launcher.py|wheel-launcher-noticed|    if wheel_installed\(prefix\):|    if False:|def=notice

@@ -15,6 +15,10 @@ is not yet known (luthen-observability schedules it); three hours is about four 
 round survives a normal pause and dies with an abandoned timer. Replace it with a learned bound
 when the timer's period exists.
 
+⚑ THE DATA THE BOUND IS LEARNED FROM IS KEPT HERE (W1949): `note_stamp` appends each newly seen
+`as_of` once to `<git dir>/mtools/round-stamps`, on the read the hook already makes, with no
+timer of its own. The spacing of that log is the timer's real period.
+
 ⚑ THE REPOSITORY IS THE QUEUE DIRECTORY'S NAME (`mtools` for the checkout `mtools`), the same name
 nemik publishes rows under.
 
@@ -36,6 +40,7 @@ STALE = timedelta(hours=3)
 ENV = "MIKEMOL_ROUND_FILE"
 _COUNTS = ".git/mtools/commit.counts"
 _QUEUE = ".claude/paths-forward.json"
+_STAMPS = ".git/mtools/round-stamps"
 _AS_OF = re.compile(r'"as_of"\s*:\s*"([^"]+)"')
 
 
@@ -62,6 +67,35 @@ def published_at(text: str) -> datetime | None:
     if found is None:
         return None
     return parse_time(text[found.start(1) : found.end(1)])
+
+
+def note_stamp(directory: Path, stamp: datetime) -> bool:
+    """Append a round stamp to the log when it is not the last one kept.
+
+    ⚑ ONE LINE PER DISTINCT STAMP: the hook reads the file every turn, and the same `as_of` read
+    a hundred times is one observation of the timer, not a hundred. A file system that refuses
+    changes nothing about the judgement, so a failure is reported and never raised. A READ NEVER
+    CREATES THE DIRECTORY: `<git dir>/mtools` belongs to the tools that run in a repository, so a
+    checkout none of them has run in keeps no log.
+
+    Returns:
+        True when a line was appended; False when the stamp was already the last line, the
+        directory is absent, or the log could not be written.
+
+    """
+    path = directory / _STAMPS
+    line = stamp.isoformat()
+    if not path.parent.is_dir():
+        return False
+    try:
+        kept = path.read_text(encoding="utf-8").splitlines() if path.is_file() else []
+        if kept and kept[-1] == line:
+            return False
+        with path.open("a", encoding="utf-8") as log:
+            log.write(f"{line}\n")
+    except OSError:
+        return False
+    return True
 
 
 def _symbols(queue: object, status: str) -> list[str]:
@@ -118,6 +152,9 @@ def round_reason(directory: Path, now: datetime, round_file: Path | None = None)
         queue: object = json.loads((directory / _QUEUE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
+    seen = published_at(text)
+    if seen is not None:
+        note_stamp(directory, seen)
     found = refusals(queue, text, directory.name, now, in_gate(directory))
     return " | ".join(found) if found else None
 

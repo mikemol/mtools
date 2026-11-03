@@ -32,6 +32,41 @@ def _queue(**status: str) -> dict[str, object]:
     return {"waypoints": [{"symbol": s, "status": v} for s, v in status.items()]}
 
 
+_STAMP = datetime(2026, 11, 3, 15, 20, 24, tzinfo=UTC)
+_LATER = datetime(2026, 11, 3, 16, 20, 24, tzinfo=UTC)
+
+
+def test_a_stamp_is_kept_once_and_a_new_one_is_appended(tmp_path: Path) -> None:
+    """W1949: the same `as_of` read again adds nothing; a later one adds one line."""
+    (tmp_path / ".git" / "mtools").mkdir(parents=True)
+    assert round_wire.note_stamp(tmp_path, _STAMP)
+    assert not round_wire.note_stamp(tmp_path, _STAMP)
+    assert round_wire.note_stamp(tmp_path, _LATER)
+    kept = (tmp_path / ".git" / "mtools" / "round-stamps").read_text(encoding="utf-8")
+    assert kept.splitlines() == [_STAMP.isoformat(), _LATER.isoformat()]
+
+
+def test_a_log_that_cannot_be_written_is_false_not_an_exception(tmp_path: Path) -> None:
+    """The controls: no tools directory means no log and none created; a file there is False."""
+    assert not round_wire.note_stamp(tmp_path, _STAMP)
+    assert not (tmp_path / ".git").exists()
+    (tmp_path / ".git").write_text("not a directory", encoding="utf-8")
+    assert not round_wire.note_stamp(tmp_path, _STAMP)
+
+
+def test_the_reason_records_the_round_stamp_it_read(tmp_path: Path) -> None:
+    """Reading the round for a judgement leaves its stamp in the log, once per distinct stamp."""
+    (tmp_path / ".claude").mkdir()
+    (tmp_path / ".git" / "mtools").mkdir(parents=True)
+    (tmp_path / ".claude" / "paths-forward.json").write_text(json.dumps(_queue()), encoding="utf-8")
+    round_file = tmp_path / "round.json"
+    round_file.write_text(_ROUND, encoding="utf-8")
+    round_wire.round_reason(tmp_path, _NOW, round_file)
+    round_wire.round_reason(tmp_path, _NOW, round_file)
+    kept = (tmp_path / ".git" / "mtools" / "round-stamps").read_text(encoding="utf-8")
+    assert kept.splitlines() == ["2026-10-25T08:00:00+00:00"]
+
+
 def test_a_ready_round_card_skipped_for_an_outside_card_is_refused() -> None:
     """The composition refusal, through the file reader."""
     found = round_wire.refusals(_queue(W1="ready", W7="working"), _ROUND, "mtools", _NOW)

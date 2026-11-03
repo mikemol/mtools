@@ -17420,3 +17420,24 @@
   claim  = {The existing contract is unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_missing_program_is_127_and_empty},
 }
+
+@misc{hooks-round-wire-stamp-is-kept-once-and-a-new-one-is-appended,
+  section = {round_wire},
+  title  = {W1949: the same `as_of` read again adds nothing; a later one adds one line},
+  claim  = {W1949: the same `as_of` read again adds nothing; a later one adds one line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_stamp_is_kept_once_and_a_new_one_is_appended},
+}
+
+@misc{hooks-round-wire-log-that-cannot-be-written-is-false-not-an-exception,
+  section = {round_wire},
+  title  = {The controls: no tools directory means no log and none created; a file there is False},
+  claim  = {The controls: no tools directory means no log and none created; a file there is False.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_log_that_cannot_be_written_is_false_not_an_exception},
+}
+
+@misc{hooks-round-wire-reason-records-the-round-stamp-it-read,
+  section = {round_wire},
+  title  = {Reading the round for a judgement leaves its stamp in the log, once per distinct stamp},
+  claim  = {Reading the round for a judgement leaves its stamp in the log, once per distinct stamp.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_reason_records_the_round_stamp_it_read},
+}
