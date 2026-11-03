@@ -12,6 +12,13 @@ value are `kinds`; this is the walk.
 with `.` (a gate worktree) or ends in `-bak`, `-bak2` and the like (a clone kept for reference) is
 skipped, because counting a clone's baseline beside the original's would double the debt.
 
+⚑ STAGING AND ARCHIVE DIRECTORIES ARE NOT REPOSITORIES AND HOLD NO RATCHETS (W1956): a name-only
+classifier cannot tell a gate's baseline from a MEASUREMENT called baseline, and `scratch` and
+`tmp` hold benchmark fixtures and copies of other repositories' files, while a directory with
+`_session_export_` in its name is an archive of one session's working files (28 atlas
+measurements read as baselines in cotype's). They are skipped, at the root and inside a
+repository, so the 32 files they gave no longer read as debt.
+
 ⚑ THE WALK READS NO LINK AND ENTERS NO BUILD OR VENDOR TREE: `bazel-*` convenience links, `.git`,
 `.venv`, `node_modules`, `_build`, caches and agent `worktrees` (copies of the repository's own
 files) are pruned, and a link met on the way is not followed.
@@ -32,6 +39,8 @@ from mikemol.ratchet import declaration, exemptions, expression, kinds
 MAX_DEPTH = 4
 _SUFFIXES = frozenset({".json", ".txt", ".tsv"})
 _CLONE = re.compile(r"-bak\d*$")
+_ARCHIVE = re.compile(r"_session_export_")
+_STAGING = frozenset({"scratch", "tmp"})
 _PRUNED = frozenset(
     {".git", ".venv", "node_modules", "__pycache__", "_build", ".kube", "worktrees"}
 )
@@ -79,6 +88,8 @@ def repos_under(root: Path) -> list[Path]:
         and not entry.is_symlink()
         and not entry.name.startswith(".")
         and not _CLONE.search(entry.name)
+        and entry.name not in _STAGING
+        and not _ARCHIVE.search(entry.name)
     ]
 
 
@@ -90,6 +101,8 @@ def _walk(repo: Path) -> Iterator[Path]:
             for d in dirs
             if d not in _PRUNED
             and not d.startswith("bazel-")
+            and d not in _STAGING
+            and not _ARCHIVE.search(d)
             and len(Path(here).parts) - base < MAX_DEPTH
         )
         for name in sorted(names):

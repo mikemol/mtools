@@ -53,6 +53,21 @@ def test_clones_worktrees_and_build_trees_are_not_counted_twice(tmp_path: Path) 
     assert not any("worktrees" in p or "bazel-bin" in p or "deep-baseline" in p for p in paths)
 
 
+def test_staging_and_archive_directories_hold_no_ratchets_and_are_not_repositories(
+    tmp_path: Path,
+) -> None:
+    """W1956: scratch, tmp and a session export add nothing; the real rows are unchanged."""
+    _fleet(tmp_path)
+    before = [row.line() for row in fleetcensus.census(tmp_path)]
+    assert before
+    _put(tmp_path / "tmp" / "cone_vm" / "tests" / "repl_baseline.txt", "a\nb\n")
+    _put(tmp_path / "gamma" / "scratch" / "eliza" / "baseline_5KB.json", '{"x": 1}')
+    archive = tmp_path / "cotype" / "cotype_session_export_1" / "cotype_working"
+    _put(archive / "c_eps_01_baseline.json", '{"x": 1}')
+    _put(tmp_path / "gamma" / "debt-resolutions.json", '{"mod": "file.py", "other": "x.py"}')
+    assert [row.line() for row in fleetcensus.census(tmp_path)] == before
+
+
 def test_a_gate_censuses_its_own_repository_and_reads_no_sibling(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

@@ -38,7 +38,9 @@ _KINDS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("baseline", re.compile(r"(?<!re)baseline.*\.(?:json|txt|tsv)$")),
     # ⚑ `debtplan.json` is the debt-plan tool's CONFIG (its exclusions), not recorded debt: matched
     # by the old pattern it read as a ratchet of 3 and made mtools look behind (W1955).
-    ("debt", re.compile(r"debt(?!plan).*\.json$")),
+    # ⚑ gcalculus's resolutions map is a MAP of module to file, two keys and no debt, which the
+    # census read as a ratchet of 2 (W1956). It is excluded by name, like the debt-plan config.
+    ("debt", re.compile(r"debt(?!plan|-resolutions).*\.json$")),
     ("allowlist", re.compile(r"allowlist.*\.txt$")),
 )
 
