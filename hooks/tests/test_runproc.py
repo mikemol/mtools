@@ -10,9 +10,13 @@ failure appends stderr, so `uv lock` failing is no longer a blank reason (nemik:
 import sys
 from pathlib import Path
 
+import pytest
+
 from mikemol.hooks import runproc
 
 _FAILED = 3
+_SHORT_S = 0.2
+_LONG_S = 30
 
 
 def test_a_failure_returns_its_standard_output_then_its_standard_error(tmp_path: Path) -> None:
@@ -44,3 +48,11 @@ def test_without_an_environment_the_child_inherits_the_callers() -> None:
     """The control: no env given is the caller's, as before."""
     code = "import os; print('PATH' in os.environ)"
     assert runproc.run_process([sys.executable, "-c", code]) == (0, "True\n")
+
+
+def test_a_child_that_outlasts_the_timeout_raises_and_a_quick_one_does_not() -> None:
+    """The bound is passed to the child: a sleeper past it raises, a fast command is unaffected."""
+    sleeper = [sys.executable, "-c", "import time; time.sleep(30)"]
+    with pytest.raises(runproc.TimeoutExpired):
+        runproc.run_process(sleeper, timeout=_SHORT_S)
+    assert runproc.run_process([sys.executable, "-c", "print(1)"], timeout=_LONG_S) == (0, "1\n")

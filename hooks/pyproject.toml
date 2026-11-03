@@ -675,7 +675,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # shebang that does not resolve. There is no way to ask "does this execute" without executing it.
 # ⚑ THE CALL SITE CARRIES ITS OWN `subprocess-without-shell-equals-true` directive, per the
 # asymmetry stated above; this line clears only the import.
-"tests/test_reader_guard.py" = ["suspicious-subprocess-import"]
 
 # ⚑ THE INBOUND-ASKS CONTEXT HOOK (W578): running `mikemol-paths-forward --inbound` IS its one
 # responsibility. MEASURED: the reader is `<project>/.venv/bin/mikemol-paths-forward` or the one

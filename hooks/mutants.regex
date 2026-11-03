@@ -185,7 +185,8 @@ src/mikemol/hooks/revendor.py|rows-keep-their-own-tag|keep = r"\\g<2>" if tag is
 src/mikemol/hooks/revendor.py|no-pinned-files-read|return tuple\(sorted\(\{m\.group\(1\) for m in _FILE\.finditer\(text\)\}\)\)|return ()|def=pinned_files
 src/mikemol/hooks/runproc.py|failure-drops-stderr|    if done\.returncode != 0:|    if False:|def=run_process
 src/mikemol/hooks/runproc.py|success-appends-stderr|    if done\.returncode != 0:|    if True:|def=run_process
-src/mikemol/hooks/runproc.py|environment-not-passed|            list\(argv\), cwd=cwd, env=env, capture_output=True, text=True, check=False|            list(argv), cwd=cwd, env=None, capture_output=True, text=True, check=False|def=run_process
+src/mikemol/hooks/runproc.py|timeout-not-passed|            timeout=timeout,|            timeout=None,|def=run_process
+src/mikemol/hooks/runproc.py|environment-not-passed|            env=env,|            env=None,|def=run_process
 src/mikemol/hooks/revendor_apply.py|lock-skipped|steps = \[\["uv", "lock"\], \["uv", "sync", "--frozen"\]\] if target\.sync else \[\["uv", "lock"\]\]|steps = [["uv", "sync", "--frozen"]]|def=swap
 src/mikemol/hooks/revendor_apply.py|pins-not-moved|path\.write_text\(text, encoding="utf-8"\)|pass|def=_move_file
 src/mikemol/hooks/wheel.py|epoch-not-in-build-env|f"SOURCE_DATE_EPOCH=\{EPOCH\}"|"SOURCE_DATE_EPOCH=0"|def=build_into
@@ -689,6 +690,13 @@ src/mikemol/hooks/corelimit.py|missing-line-reads-as-clean|        return EXIT_U
 src/mikemol/hooks/gatetargets.py|failed-status-read-as-passing|        failed = 0\.0 if result\.status == PASSED else 1\.0|        failed = 0.0|def=_rows_of_result
 src/mikemol/hooks/gatetargets.py|statusless-result-given-a-failed-row|    if result\.status:|    if True:|def=_rows_of_result
 src/mikemol/hooks/idle_progress.py|worked-card-not-progress|    return stamp is not None and stamp >= start|    return False|def=_worked_since
+src/mikemol/hooks/idle_progress.py|finished-card-not-progress|    if card\.get\("status"\) in _FINISHED:|    if False:|def=_advanced
+src/mikemol/hooks/idle_progress.py|named-blocker-not-progress|    if card\.get\("status"\) == "blocked" and card\.get\("blocked_on"\):|    if False:|def=_advanced
+src/mikemol/hooks/idle_progress.py|empty-block-is-progress|    if card\.get\("status"\) == "blocked" and card\.get\("blocked_on"\):|    if card.get("status") == "blocked":|def=_advanced
+src/mikemol/hooks/idle_progress.py|commit-citation-not-progress|    return text_of\(card\.get\("symbol"\)\) in landed|    return False|def=_advanced
+src/mikemol/hooks/idle_stop.py|commit-trailers-never-read|    return frozenset\(str\(found\.group\(1\)\) for found in _TRAILER\.finditer\(said\)\)|    return frozenset()|def=commit_cards
+src/mikemol/hooks/idle_stop.py|failed-git-names-cards|    if code != 0:|    if False:|def=commit_cards
+src/mikemol/hooks/idle_stop.py|commit-cards-not-passed-to-the-judge|round_of\(root, datetime\.now\(UTC\)\), landed\(root, start\)\)|round_of(root, datetime.now(UTC)), frozenset())|def=idle_reason
 src/mikemol/hooks/idle_progress.py|witnessed-card-is-work|        if card\.get\("status"\) == "ready" and not card\.get\("witness"\)|        if card.get("status") == "ready"|def=idle_card
 src/mikemol/hooks/idle_stop.py|idle-block-cap-ignored|    if start is None or not isinstance\(blocks, int\) or blocks >= CAP:|    if start is None or not isinstance(blocks, int):|def=idle_reason
 src/mikemol/hooks/idle_stop.py|idle-block-always-none|    return None if card is None else REASON\.format\(card=card, queue=QUEUE\)|    return None|def=idle_reason

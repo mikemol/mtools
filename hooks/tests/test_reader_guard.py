@@ -18,11 +18,15 @@ from __future__ import annotations
 
 import os
 import stat
-import subprocess
 from typing import TYPE_CHECKING
+
+from mikemol.hooks import runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+_BOUND_S = 30
+_NOT_FOUND = 127
 
 
 def _script(path: Path, shebang: str) -> Path:
@@ -40,22 +44,19 @@ def _script(path: Path, shebang: str) -> Path:
 def _runs(reader: Path) -> bool:
     """Restate the guard's predicate, so this module tests the SHAPE and not the symbol.
 
+    ⚑ A DEAD SHEBANG IS 127 THROUGH THE SEAM: `execve` refusing the file raises
+    `FileNotFoundError`, which `runproc.run_process` reports as exit 127 with no output. The
+    scripts built here exit 0, so 127 means dead; a reader that itself exited 127 would read as
+    dead too, which this module's own scripts never do.
+
     Returns:
         True when `reader` is a file AND `execve` accepts it; False for absent or dead.
 
     """
     if not reader.is_file():
         return False
-    try:
-        subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject
-            [str(reader), "--help"],
-            capture_output=True,
-            check=False,
-            timeout=30,
-        )
-    except OSError:
-        return False
-    return True
+    code, _said = runproc.run_process([str(reader), "--help"], timeout=_BOUND_S)
+    return code != _NOT_FOUND
 
 
 def test_a_reader_whose_shebang_resolves_is_admitted(tmp_path: Path) -> None:

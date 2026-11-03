@@ -14,15 +14,26 @@ import subprocess
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
+# The exception a child that outlasts its `timeout` raises, re-exported so a caller can name it
+# without importing the subprocess module itself.
+TimeoutExpired = subprocess.TimeoutExpired
+
 
 def run_process(
-    argv: Sequence[str], cwd: Path | None = None, env: Mapping[str, str] | None = None
+    argv: Sequence[str],
+    cwd: Path | None = None,
+    env: Mapping[str, str] | None = None,
+    timeout: float | None = None,
 ) -> tuple[int, str]:
     """Run a command in a directory, in the environment given.
 
     ⚑ `cwd` AND `env` ARE THE CALLER'S WHEN OMITTED (W2219): the tests that ran a child of their
     own (a fresh interpreter, mypy over a mirror) needed exactly these two and nothing else, so
     they use this seam and need no subprocess exemption.
+
+    ⚑ A CHILD THAT OUTLASTS `timeout` RAISES `subprocess.TimeoutExpired`, unchanged, so a caller
+    that bounds a probe (the reader guard's thirty seconds) is bounded exactly as before; with
+    none given there is no limit.
 
     ⚑ A FAILURE KEEPS ITS STANDARD ERROR (mtools:W2249, nemik:W1510): uv writes its reason to
     stderr, and a runner that kept only stdout made `uv lock` and the throwaway install fail
@@ -36,7 +47,13 @@ def run_process(
     """
     try:
         done = subprocess.run(
-            list(argv), cwd=cwd, env=env, capture_output=True, text=True, check=False
+            list(argv),
+            cwd=cwd,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
         )
     except FileNotFoundError:
         return 127, ""

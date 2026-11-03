@@ -451,6 +451,7 @@ GRAPH = {
         "src/mikemol/hooks/idle_progress.py",
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/round_order.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stamps.py"
       ],
       "reads": [],
@@ -2278,6 +2279,7 @@ GRAPH = {
     "tests/test_idle_stop.py": {
       "imports": [
         "src/mikemol/hooks/idle_stop.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
       "reads": [],
@@ -2726,7 +2728,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_reader_guard.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

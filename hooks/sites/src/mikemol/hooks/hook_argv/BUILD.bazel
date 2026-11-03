@@ -42,6 +42,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/round_order.py",
         "//hooks:src/mikemol/hooks/round_wire.py",
         "//hooks:src/mikemol/hooks/routing_table.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:src/mikemol/hooks/shellcheck.py",
         "//hooks:src/mikemol/hooks/stamps.py",
         "//hooks:src/mikemol/hooks/standing_facts.py",

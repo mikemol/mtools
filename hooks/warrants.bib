@@ -14933,13 +14933,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_ready_work_and_no_card_worked_this_turn_names_the_top_ready_card},
 }
 
-@misc{hooks-idle-progress-card-worked-since-the-turn-began-is-progress,
-  section = {idle_progress},
-  title  = {Advancing, blocking or finishing any card moves its stamp past the start: no escalation},
-  claim  = {Advancing, blocking or finishing any card moves its stamp past the start: no escalation.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_card_worked_since_the_turn_began_is_progress},
-}
-
 @misc{hooks-idle-progress-nothing-ready-or-only-a-witnessed-card-is-not-idle,
   section = {idle_progress},
   title  = {A queue with no workable ready card does not make a session idle},
@@ -14959,13 +14952,6 @@
   title  = {The reason names the top ready card and the writer command that takes it},
   claim  = {The reason names the top ready card and the writer command that takes it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_ready_work_and_no_card_moved_blocks_with_the_top_card},
-}
-
-@misc{hooks-idle-stop-cap-a-moved-card-and-a-missing-reading-each-let-the-turn-end,
-  section = {idle_stop},
-  title  = {Two blocks already made, progress made, or no reading at all: no block},
-  claim  = {Two blocks already made, progress made, or no reading at all: no block.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_the_cap_a_moved_card_and_a_missing_reading_each_let_the_turn_end},
 }
 
 @misc{hooks-idle-stop-stop-hook-blocks-an-idle-end-even-when-a-block-already-happened,
@@ -17477,4 +17463,61 @@
   title  = {The control: no env given is the caller's, as before},
   claim  = {The control: no env given is the caller's, as before.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_without_an_environment_the_child_inherits_the_callers},
+}
+
+@misc{hooks-idle-progress-card-finished-or-blocked-with-a-named-blocker-since-the-turn-began-is-progress,
+  section = {idle_progress},
+  title  = {W1950: finishing a card, or blocking it on a named blocker, is what the hook asks for},
+  claim  = {W1950: finishing a card, or blocking it on a named blocker, is what the hook asks for.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_card_finished_or_blocked_with_a_named_blocker_since_the_turn_began_is_progress},
+}
+
+@misc{hooks-idle-progress-mark-or-a-blocked-card-with-no-blocker-is-not-progress,
+  section = {idle_progress},
+  title  = {The gaming the hook ends: a working mark, an evidence note and an empty block prove nothing},
+  claim  = {The gaming the hook ends: a working mark, an evidence note and an empty block prove
+            nothing. Each moves the stamp past the turn start, so the ready card is
+            still named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_mark_or_a_blocked_card_with_no_blocker_is_not_progress},
+}
+
+@misc{hooks-idle-progress-commit-since-the-turn-began-that-names-a-card-is-progress,
+  section = {idle_progress},
+  title  = {A card whose stamp moved and which a landed commit cites advanced, whatever its status},
+  claim  = {A card whose stamp moved and which a landed commit cites advanced, whatever its status.
+            The control is the same card with no commit citing it, which is only a mark.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_progress.py -k test_a_commit_since_the_turn_began_that_names_a_card_is_progress},
+}
+
+@misc{hooks-idle-stop-cap-an-advanced-card-and-a-missing-reading-each-let-the-turn-end,
+  section = {idle_stop},
+  title  = {Two blocks already made, progress made, or no reading at all: no block},
+  claim  = {Two blocks already made, progress made, or no reading at all: no block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_the_cap_an_advanced_card_and_a_missing_reading_each_let_the_turn_end},
+}
+
+@misc{hooks-idle-stop-mark-is-not-progress-but-a-commit-that-cites-the-card-is,
+  section = {idle_stop},
+  title  = {W1950 part 2: a working mark moves the stamp and proves nothing; a landed commit does},
+  claim  = {W1950 part 2: a working mark moves the stamp and proves nothing; a landed commit does.
+            The same queue, the same stamp: the only difference is whether a commit
+            since the turn began cites W8.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_a_mark_is_not_progress_but_a_commit_that_cites_the_card_is},
+}
+
+@misc{hooks-idle-stop-commit-cards-reads-the-waypoint-trailers-since-the-turn-began,
+  section = {idle_stop},
+  title  = {A real repository: only the Waypoint trailer names a card, and only since `since` counts},
+  claim  = {A real repository: only the Waypoint trailer names a card, and only since `since`
+            counts. The prose mention of W4 does not count; a `since` after every commit
+            names nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_idle_stop.py -k test_commit_cards_reads_the_waypoint_trailers_since_the_turn_began},
+}
+
+@misc{hooks-runproc-child-that-outlasts-the-timeout-raises-and-a-quick-one-does-not,
+  section = {runproc},
+  title  = {The bound is passed to the child: a sleeper past it raises, a fast command is unaffected},
+  claim  = {The bound is passed to the child: a sleeper past it raises, a fast command is
+            unaffected.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_child_that_outlasts_the_timeout_raises_and_a_quick_one_does_not},
 }
