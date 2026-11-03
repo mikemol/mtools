@@ -19,7 +19,7 @@ import tempfile
 from pathlib import Path
 from typing import cast
 
-from mikemol.ratchet import trend
+from mikemol.ratchet import declaration, starting, trend
 from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
 from mikemol.ratchet.declaration import DeclarationError
@@ -59,6 +59,8 @@ CANNOT_CENSUS = 2
 _REMAP = "remap"
 _CENSUS = "census"
 _REBASELINES = "rebaselines"
+_DECLARE = "declare"
+_RETIRED = "retired"
 
 
 def _remap_main(argv: list[str]) -> int:
@@ -131,10 +133,69 @@ def _census_main(argv: list[str]) -> int:
     return 0
 
 
+def _declare_main(argv: list[str]) -> int:
+    """Run `mikemol-ratchet declare REPO [--write]`: offer the starting `ratchets.json` (W1959).
+
+    Returns:
+        0 after printing it, or after writing it with `--write`; 1 when the repository already
+        declares its ratchets or a link sits where the file would go.
+
+    """
+    parser = argparse.ArgumentParser(prog=f"mikemol-ratchet {_DECLARE}")
+    parser.add_argument("repo", type=Path, help="the repository to offer a declaration for")
+    parser.add_argument(
+        "--write", action="store_true", help="save it as ratchets.json, only when none exists"
+    )
+    opts: dict[str, object] = vars(parser.parse_args(argv))
+    where = Path(str(opts["repo"]))
+    try:
+        text, notes = starting.document(where)
+        target = starting.write(where, text) if opts["write"] else None
+    except DeclarationError as fault:
+        sys.stderr.write(f"mikemol-ratchet {_DECLARE}: {fault}\n")
+        return 1
+    for note in notes:
+        sys.stderr.write(f"{note}\n")
+    sys.stdout.write(text)
+    if target is not None:
+        sys.stdout.write(f"# wrote {target}\n")
+    return 0
+
+
+def _retired_main(argv: list[str]) -> int:
+    """Run `mikemol-ratchet retired REPO [--rev REV]`: the retired list only grows (W1963).
+
+    ⚑ A TOMBSTONE HELD AT THE REVISION MAY NOT VANISH OR CHANGE in the working file; a
+    revision with no declaration holds none, so there is nothing to lose.
+
+    Returns:
+        0 when every tombstone is kept, 1 after one line per lost or changed one, and
+        CANNOT_CENSUS when either declaration cannot be read.
+
+    """
+    parser = argparse.ArgumentParser(prog=f"mikemol-ratchet {_RETIRED}")
+    parser.add_argument("repo", type=Path, help="a git work tree holding ratchets.json")
+    parser.add_argument("--rev", default="HEAD", help="the revision to compare against")
+    opts: dict[str, object] = vars(parser.parse_args(argv))
+    where = Path(str(opts["repo"]))
+    held = text_at(where, str(opts["rev"]), declaration.NAME)
+    try:
+        before = [] if held is None else declaration.retired_in(held)
+        lost = declaration.lost_retired(before, declaration.read_retired(where))
+    except DeclarationError as fault:
+        sys.stderr.write(f"mikemol-ratchet {_RETIRED}: {fault}\n")
+        return CANNOT_CENSUS
+    for line in lost:
+        sys.stdout.write(f"{line}\n")
+    return 1 if lost else 0
+
+
 _SUBCOMMANDS = {
     _REMAP: _remap_main,
     _CENSUS: _census_main,
     _REBASELINES: rebaselines_main,
+    _DECLARE: _declare_main,
+    _RETIRED: _retired_main,
 }
 
 

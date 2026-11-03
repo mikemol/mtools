@@ -1229,3 +1229,73 @@
   claim  = {W1956: scratch, tmp and a session export add nothing; the real rows are unchanged.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_staging_and_archive_directories_hold_no_ratchets_and_are_not_repositories},
 }
+
+@misc{ratchet-starting-offer-lists-the-readable-ratchet-files-and-names-what-it-left-out,
+  section = {starting},
+  title  = {Three files by path and kind; the config, the staging file and a broken one are out},
+  claim  = {Three files by path and kind; the config, the staging file and a broken one are out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_starting.py -k test_the_offer_lists_the_readable_ratchet_files_and_names_what_it_left_out},
+}
+
+@misc{ratchet-starting-written-offer-is-read-back-by-the-census-as-declared-and-unchanged,
+  section = {starting},
+  title  = {The round trip: the same files, kinds and values, now declared and no longer guessed},
+  claim  = {The round trip: the same files, kinds and values, now declared and no longer guessed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_starting.py -k test_the_written_offer_is_read_back_by_the_census_as_declared_and_unchanged},
+}
+
+@misc{ratchet-starting-existing-declaration-is-never-overwritten,
+  section = {starting},
+  title  = {The repository's own word stands: both refuse and the file is untouched},
+  claim  = {The repository's own word stands: both refuse and the file is untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_starting.py -k test_an_existing_declaration_is_never_overwritten},
+}
+
+@misc{ratchet-starting-command-prints-without-write-and-writes-only-with-it,
+  section = {starting},
+  title  = {Without `--write` the file does not appear; with it, it does and the command says so},
+  claim  = {Without `--write` the file does not appear; with it, it does and the command says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_starting.py -k test_the_command_prints_without_write_and_writes_only_with_it},
+}
+
+@misc{ratchet-retired-guard-kept-or-extended-list-is-clean,
+  section = {declaration},
+  title  = {The positive control: the same list, and the same list plus one, both pass},
+  claim  = {The positive control: the same list, and the same list plus one, both pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_a_kept_or_extended_list_is_clean},
+}
+
+@misc{ratchet-retired-guard-vanished-or-edited-tombstone-is-refused-and-named,
+  section = {declaration},
+  title  = {Dropping one, or rewriting its sha, refuses; the line names the path},
+  claim  = {Dropping one, or rewriting its sha, refuses; the line names the path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_a_vanished_or_edited_tombstone_is_refused_and_named},
+}
+
+@misc{ratchet-retired-guard-deleted-declaration-loses-every-tombstone,
+  section = {declaration},
+  title  = {The file removed is the whole list removed},
+  claim  = {The file removed is the whole list removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_a_deleted_declaration_loses_every_tombstone},
+}
+
+@misc{ratchet-retired-guard-revision-with-no-declaration-holds-nothing-to-lose,
+  section = {declaration},
+  title  = {Adding the first declaration is never a loss},
+  claim  = {Adding the first declaration is never a loss.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_a_revision_with_no_declaration_holds_nothing_to_lose},
+}
+
+@misc{ratchet-retired-guard-head-declaration-that-is-not-json-is-not-read-as-an-empty-list,
+  section = {declaration},
+  title  = {HEAD's own copy broken is CANNOT-READ too: an empty list would let everything go},
+  claim  = {HEAD's own copy broken is CANNOT-READ too: an empty list would let everything go.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_a_head_declaration_that_is_not_json_is_not_read_as_an_empty_list},
+}
+
+@misc{ratchet-retired-guard-unreadable-declaration-is-not-a-clean-pass,
+  section = {declaration},
+  title  = {A working file that is not JSON is CANNOT-READ, never read as an empty list},
+  claim  = {A working file that is not JSON is CANNOT-READ, never read as an empty list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_an_unreadable_declaration_is_not_a_clean_pass},
+}

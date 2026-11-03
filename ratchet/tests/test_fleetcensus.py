@@ -65,6 +65,7 @@ def test_staging_and_archive_directories_hold_no_ratchets_and_are_not_repositori
     archive = tmp_path / "cotype" / "cotype_session_export_1" / "cotype_working"
     _put(archive / "c_eps_01_baseline.json", '{"x": 1}')
     _put(tmp_path / "gamma" / "debt-resolutions.json", '{"mod": "file.py", "other": "x.py"}')
+    _put(tmp_path / "old_session_export_2" / "m_baseline.json", '{"x": 1}')
     assert [row.line() for row in fleetcensus.census(tmp_path)] == before
 
 

@@ -105,3 +105,12 @@ src/mikemol/ratchet/exemptions.py|string-naming-a-suppression-counted|        1 
 src/mikemol/ratchet/exemptions.py|untokenizable-source-not-caught|    except \(tokenize\.TokenError, SyntaxError\):|    except ZeroDivisionError:|def=suppressions
 src/mikemol/ratchet/fleetcensus.py|repo-without-python-reports-a-row|    return \[Row\(repo\.name, "\*\.py", "suppression", total, kinds\.FLOOR\)\] if seen else \[\]|    return [Row(repo.name, "*.py", "suppression", total, kinds.FLOOR)]|def=suppression_rows
 src/mikemol/ratchet/fleetcensus.py|unreadable-source-skipped|                return \[Row\(repo\.name, "\*\.py", "suppression", None, kinds\.FLOOR\)\]|                continue|def=suppression_rows
+src/mikemol/ratchet/starting.py|existing-declaration-offered-anyway|    if declaration\.read\(repo\) is not None:|    if False:|def=document
+src/mikemol/ratchet/starting.py|existing-declaration-overwritten|    if target\.exists\(\) or target\.is_symlink\(\):|    if False:|def=write
+src/mikemol/ratchet/starting.py|unreadable-file-offered|        if row\.value is None:|        if False:|def=document
+src/mikemol/ratchet/starting.py|non-file-kind-offered|        if row\.kind not in kinds\.KIND_NAMES:|        if False:|def=document
+src/mikemol/ratchet/cli.py|declare-never-writes|        target = starting\.write\(where, text\) if opts\["write"\] else None|        target = None|def=_declare_main
+src/mikemol/ratchet/cli.py|retired-loss-passes|    return 1 if lost else 0|    return 0|def=_retired_main
+src/mikemol/ratchet/cli.py|retired-unreadable-is-a-refusal|        return CANNOT_CENSUS|        return 1|def=_retired_main
+src/mikemol/ratchet/cli.py|retired-head-read-as-empty|        before = \[\] if held is None else declaration\.retired_in\(held\)|        before = []|def=_retired_main
+src/mikemol/ratchet/declaration.py|retired-text-json-error-trusted|        raise DeclarationError\(msg\) from fault|        return []|def=retired_in

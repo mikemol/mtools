@@ -197,6 +197,27 @@ def read_retired(repo: Path) -> list[Retired]:
     return [] if doc is None else _retired_list(doc)
 
 
+def retired_in(text: str) -> list[Retired]:
+    """Read the tombstones of a declaration given as text, such as one HEAD held (W1963).
+
+    Returns:
+        the retired entries in file order; empty when the text lists none.
+
+    Raises:
+        DeclarationError: when the text is not a declaration that can be trusted.
+
+    """
+    try:
+        doc: object = json.loads(text)
+    except ValueError as fault:
+        msg = f"{NAME}: cannot be read as JSON: {fault}"
+        raise DeclarationError(msg) from fault
+    if not isinstance(doc, dict):
+        msg = f"{NAME}: no `ratchets` list"
+        raise DeclarationError(msg)
+    return _retired_list(doc)
+
+
 def lost_retired(before: list[Retired], after: list[Retired]) -> list[str]:
     """Name every tombstone HEAD held that the staged declaration no longer carries unchanged.
 
