@@ -15,7 +15,6 @@ crash and the close are sent by `cdp_poke.py`, a second process, once the wait i
 import os
 import resource
 import socket
-import subprocess
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -24,6 +23,7 @@ from typing import cast
 from urllib.parse import quote
 
 import pytest
+from mikemol.procrun.proc import Child, spawn
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
 
@@ -97,10 +97,10 @@ def _opened(chrome: Path, html: str, *, watched: bool = True) -> Iterator[tuple[
             browser.close()
 
 
-def _poker(port: int, action: str) -> subprocess.Popen[bytes]:
+def _poker(port: int, action: str) -> Child:
     poke = _located("CDP_POKE")
     assert poke is not None
-    return subprocess.Popen([sys.executable, str(poke), str(port), action])
+    return spawn([sys.executable, str(poke), str(port), action])
 
 
 def test_a_page_that_throws_ends_the_wait_with_its_message(chrome: Path) -> None:

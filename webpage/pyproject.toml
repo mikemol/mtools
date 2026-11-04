@@ -109,10 +109,5 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE PINNED BROWSER'S VERSION CHECK (W1819) RUNS THROUGH `procrun.capture` (W2240): a fixed argv
 # from bazel's own data, no shell, so it needs only the assert grant.
 "tests/test_chromium.py" = ["assert"]
-# ⚑ THE BROWSER PROBES (W1820): the same two exemptions for the same reason (the second process is
-# `cdp_poke.py` run with this interpreter and a port, no shell), and the helper that starts it.
-"tests/test_browser.py" = [
-    "assert",
-    "suspicious-subprocess-import",
-    "subprocess-without-shell-equals-true",
-]
+# ⚑ THE BROWSER PROBES (W1820) START THEIR SECOND PROCESS, `cdp_poke.py`, THROUGH `procrun.spawn`
+# (W2241), so they need only the assert grant `tests/*` already gives.
