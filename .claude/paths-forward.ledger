@@ -5387,3 +5387,11 @@
 2026-11-04T05:24:46Z  status W2070 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T05:25:44Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T05:26:07Z  status W2241 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T05:28:54Z  status W2212 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T05:29:38Z  tick  W2212 advanced  collapse  "closed W2212 (gatecheck has no per-file test entry left); W2269 guard stack inflight in the gate [blocked by W2269]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T06:09:11Z  lease W2219 lapsed    --        "lease on file:hooks/pyproject.toml!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T06:09:51Z  tick  W2267 advanced  collapse  "W2267 corrected: no landing path writes a retro file, so the wiring is a writer mode; W2269 guard stack still inflight [blocked by W2269]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T06:11:11Z  status W2241 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T06:27:44Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T06:39:49Z  tick  W2241 advanced  collapse  "W2269 guard inflight, mutantcell W2241 queued behind it; nothing new landed [blocked by W2269]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T06:41:10Z  status W2220 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

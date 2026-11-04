@@ -8,10 +8,11 @@ import json
 import os
 import resource
 import signal
-import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
+
+from mikemol.procrun.proc import Completed, capture, spawn
 
 from mikemol.mutantcell import cellcgroup, cellstage
 from mikemol.mutantcell import eval as cell_eval
@@ -122,7 +123,7 @@ def _subprocess_cell(
     tmp_path: Path,
     check: str,
     env: dict[str, str],
-) -> subprocess.CompletedProcess[str]:
+) -> Completed:
     """Run one cell as `python -m mikemol.mutantcell.eval`, with the REAL caps.
 
     Returns:
@@ -134,12 +135,9 @@ def _subprocess_cell(
         "PYTHONPATH": os.pathsep.join([str(_SRC_ROOT), os.environ.get("PYTHONPATH", "")]),
         **env,
     }
-    return subprocess.run(
+    return capture(
         [sys.executable, "-m", "mikemol.mutantcell.eval", *_argv(tmp_path, check, "m.py::f")],
         env=child_env,
-        capture_output=True,
-        text=True,
-        check=False,
         timeout=_RUN_TIMEOUT_S,
     )
 
@@ -225,7 +223,10 @@ def test_a_grandchild_orphaned_by_its_parents_exit_is_adopted_once_this_is_a_sub
     """After `become_subreaper`, a grandchild whose parent exited is OUR descendant."""
     cell_eval.become_subreaper()
     code = f"import subprocess, sys\nsubprocess.Popen([sys.executable, '-c', {_SLEEP_FOREVER!r}])\n"
-    subprocess.run([sys.executable, "-c", code], check=True)
+    # ⚑ THE PARENT'S OUTPUT IS DISCARDED, NOT CAPTURED: the orphan inherits its pipes, and a capture
+    # would wait for the sleeper to close them.
+    parent = spawn([sys.executable, "-c", code], stdin="discard", output="discard")
+    assert parent.wait(timeout=_RUN_TIMEOUT_S) == 0
     orphans = cell_eval.descendants(os.getpid())
     try:
         assert orphans
@@ -237,7 +238,7 @@ def test_a_grandchild_orphaned_by_its_parents_exit_is_adopted_once_this_is_a_sub
 
 def test_kill_tree_kills_and_reaps_every_descendant() -> None:
     """A sleeping child is gone afterwards: no descendant survives, none is left a zombie."""
-    child = subprocess.Popen([sys.executable, "-c", _SLEEP_FOREVER])
+    child = spawn([sys.executable, "-c", _SLEEP_FOREVER])
     assert child.pid in cell_eval.descendants(os.getpid())
     cell_eval.kill_tree(child)
     assert child.pid not in cell_eval.descendants(os.getpid())

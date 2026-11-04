@@ -34,7 +34,7 @@ import signal
 import subprocess
 import sys
 from collections.abc import Callable, Sequence
-from typing import cast
+from typing import Protocol, cast
 
 from mikemol.mutantcell import cellargs, cellcgroup, cellstage
 
@@ -174,7 +174,15 @@ def descendants(root: int, proc: pathlib.Path = _PROC) -> list[int]:
     return out
 
 
-def kill_tree(p: subprocess.Popen[bytes]) -> None:
+class Waitable(Protocol):
+    """The one thing `kill_tree` asks of the child it reaps last: a bounded wait."""
+
+    def wait(self, timeout: float | None = None) -> int:
+        """Wait for the child to exit, for at most `timeout` seconds."""
+        ...
+
+
+def kill_tree(p: Waitable) -> None:
     """SIGKILL every descendant of this process until none survive, then reap them all.
 
     Repeated because a fork bomb can create members between one sweep and the next; reaped
