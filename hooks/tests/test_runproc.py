@@ -85,3 +85,28 @@ def test_a_child_that_outlasts_the_timeout_raises_and_a_quick_one_does_not() -> 
     with pytest.raises(runproc.TimeoutExpired):
         runproc.run_process(sleeper, timeout=_SHORT_S)
     assert runproc.run_process([sys.executable, "-c", "print(1)"], timeout=_LONG_S) == (0, "1\n")
+
+
+def test_start_returns_a_live_child_whose_wait_keeps_each_stream_apart(tmp_path: Path) -> None:
+    """W2254: the child runs after start returns; wait collects its status and both streams."""
+    code = "import sys; print('out'); sys.stderr.write('err'); sys.exit(3)"
+    child = runproc.start([sys.executable, "-c", code], tmp_path)
+    assert child.pid > 0
+    assert child.wait(_LONG_S) == runproc.Result(_FAILED, "out\n", "err")
+
+
+def test_start_hands_the_child_the_directory_and_environment_given(tmp_path: Path) -> None:
+    """The child sees exactly the environment passed and runs where it was told to."""
+    code = "import os; print(os.environ.get('PROBE'), os.getcwd())"
+    child = runproc.start([sys.executable, "-c", code], tmp_path, {"PROBE": "x"})
+    assert child.wait(_LONG_S) == runproc.Result(0, f"x {tmp_path.resolve()}\n", "")
+
+
+def test_a_wait_past_its_bound_raises_and_leaves_the_child_running_until_killed() -> None:
+    """A bounded look does not end the held child; kill does, and wait then reports it."""
+    child = runproc.start([sys.executable, "-c", "import time; time.sleep(30)"])
+    with pytest.raises(runproc.TimeoutExpired):
+        child.wait(_SHORT_S)
+    child.kill()
+    assert child.wait(_LONG_S).returncode != 0
+    child.kill()

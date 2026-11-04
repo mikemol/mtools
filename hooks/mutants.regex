@@ -981,3 +981,6 @@ src/mikemol/hooks/runproc.py|run-merges-the-two-streams|    return Result\(done\
 src/mikemol/hooks/runproc.py|run-drops-the-standard-input|            input=stdin_text,|            input=None,|def=run
 src/mikemol/hooks/runproc.py|run-missing-program-not-127|        return Result\(127, "", f"\{argv\[0\]\}: not found"\)|        return Result(1, "", f"{argv[0]}: not found")|def=run
 src/mikemol/hooks/runproc.py|run-ignores-the-timeout|            timeout=timeout,|            timeout=None,|def=run
+src/mikemol/hooks/runproc.py|start-merges-the-streams|        stderr=subprocess\.PIPE,|        stderr=subprocess.STDOUT,|def=start
+src/mikemol/hooks/runproc.py|start-ignores-the-directory|        cwd=cwd,|        cwd=None,|def=start
+src/mikemol/hooks/runproc.py|kill-leaves-the-child|            self\._process\.kill\(\)|            pass|def=Handle.kill

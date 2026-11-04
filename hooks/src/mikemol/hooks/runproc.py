@@ -112,6 +112,67 @@ def run(
     return Result(done.returncode, done.stdout, done.stderr)
 
 
+class Handle:
+    """A child that is still running: its pid, a bounded wait, and a kill (W2254)."""
+
+    def __init__(self, process: subprocess.Popen[str]) -> None:
+        """Hold the running child."""
+        self._process = process
+
+    @property
+    def pid(self) -> int:
+        """The child's process id."""
+        return self._process.pid
+
+    def wait(self, timeout: float | None = None) -> Result:
+        """Wait for the child and return what it exited with and printed.
+
+        ⚑ A CHILD THAT OUTLASTS `timeout` RAISES `TimeoutExpired` and keeps running, so a caller
+        can look again or `kill` it.
+
+        Returns:
+            the exit code, standard output and standard error.
+
+        """
+        out, err = self._process.communicate(timeout=timeout)
+        return Result(self._process.returncode, out, err)
+
+    def kill(self) -> None:
+        """End the child at once; a child already gone is left alone."""
+        if self._process.poll() is None:
+            self._process.kill()
+
+
+def start(
+    argv: Sequence[str],
+    cwd: Path | None = None,
+    env: Mapping[str, str] | None = None,
+) -> Handle:
+    """Start a command and return at once with a handle on the live child (W2254).
+
+    ⚑ THE SEAM A TEST HOLDS A FIRST SUBMIT OPEN THROUGH: the toy harness runs one submit inside a
+    flag-file pre-commit while a second runs, so it needs the child alive after the call. It sits
+    beside `run` under this module's existing subprocess entry, so no test needs one of its own,
+    and it imports nothing of the package, so hooks' per-site mutation targets run it with the
+    third-party venv alone. A missing program raises FileNotFoundError, as the standard library
+    does.
+
+    Returns:
+        a handle whose `wait` collects the exit code and both streams.
+
+    """
+    process = subprocess.Popen(
+        list(argv),
+        cwd=cwd,
+        env=env,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return Handle(process)
+
+
 def run_with_stdin(argv: Sequence[str], text: str) -> tuple[int, str]:
     """Run a command to completion with `text` on its standard input.
 

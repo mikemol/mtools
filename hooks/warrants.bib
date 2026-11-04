@@ -17647,3 +17647,24 @@
   claim  = {A sleeper past the bound raises TimeoutExpired, as run_process does.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_bounds_a_child_with_the_timeout},
 }
+
+@misc{hooks-runproc-start-returns-a-live-child-whose-wait-keeps-each-stream-apart,
+  section = {runproc},
+  title  = {W2254: the child runs after start returns; wait collects its status and both streams},
+  claim  = {W2254: the child runs after start returns; wait collects its status and both streams.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_start_returns_a_live_child_whose_wait_keeps_each_stream_apart},
+}
+
+@misc{hooks-runproc-start-hands-the-child-the-directory-and-environment-given,
+  section = {runproc},
+  title  = {The child sees exactly the environment passed and runs where it was told to},
+  claim  = {The child sees exactly the environment passed and runs where it was told to.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_start_hands_the_child_the_directory_and_environment_given},
+}
+
+@misc{hooks-runproc-wait-past-its-bound-raises-and-leaves-the-child-running-until-killed,
+  section = {runproc},
+  title  = {A bounded look does not end the held child; kill does, and wait then reports it},
+  claim  = {A bounded look does not end the held child; kill does, and wait then reports it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_wait_past_its_bound_raises_and_leaves_the_child_running_until_killed},
+}
