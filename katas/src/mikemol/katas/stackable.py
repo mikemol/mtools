@@ -17,13 +17,16 @@ TRUSTED FOR LANDING: nemik lists cards that landed and are still marked ready (m
 W1895, W1960), so `submit_set` also takes the symbols git says landed and leaves those out.
 """
 
+import re
 from collections.abc import Collection
 from dataclasses import dataclass
+from typing import cast
 
 STACK = "STACK"
 WAITING = "WAITING"
 _STATES = (STACK, WAITING)
 _MIN_FIELDS = 2
+_TRAILER = re.compile(r"^Waypoint: (W[0-9]+)[ \t]*$", re.MULTILINE)
 
 
 @dataclass(frozen=True)
@@ -60,6 +63,37 @@ def parse(text: str) -> list[Row]:
         if line.split(" ", 1)[0] in _STATES:
             rows.append(_row(line))
     return rows
+
+
+def landed_in(log: str) -> frozenset[str]:
+    """Name the cards a git log says landed, from the `Waypoint:` trailers of its messages.
+
+    ⚑ EVERY COMMIT `mikemol-commit` WRITES ENDS IN A `Waypoint: W<n>` TRAILER, so the trailers
+    of the commits since a time name what landed; a card nemik still lists as ready but whose
+    symbol is here has already shipped. The caller reads the log (`git log --format=%B`); this
+    takes its text, so it is tested without git.
+
+    Returns:
+        the distinct symbols.
+
+    """
+    return frozenset(cast("list[str]", _TRAILER.findall(log)))
+
+
+def with_edits(rows: list[Row], dirty: Collection[str]) -> list[Row]:
+    """Keep the rows whose manifest has at least one file edited in the tree.
+
+    ⚑ A CARD WITH NO EDITED MANIFEST FILE HAS NOTHING TO SUBMIT: a stack of an unchanged file
+    is an empty commit, so the kata skips it. A row with no files at all is kept, because an
+    empty manifest says nothing about what changed (nemik counts those and does not list them,
+    so this is a guard, not a case).
+
+    Returns:
+        the rows in the order given.
+
+    """
+    changed = set(dirty)
+    return [row for row in rows if not row.files or changed.intersection(row.files)]
 
 
 def submit_set(rows: list[Row], landed: Collection[str]) -> list[Row]:

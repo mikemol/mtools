@@ -1026,3 +1026,18 @@
   claim  = {WAITING never goes; a card git says landed is left out; the order is the printed one.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_only_stack_rows_not_already_landed_are_submitted_in_order},
 }
+
+@misc{katas-stackable-cards-a-log-says-landed-are-its-trailers-and-nothing-else,
+  section = {stackable},
+  title  = {Only a whole `Waypoint: W<n>` line counts: prose naming a card, or one mid-line, does not},
+  claim  = {Only a whole `Waypoint: W<n>` line counts: prose naming a card, or one mid-line, does
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_the_cards_a_log_says_landed_are_its_trailers_and_nothing_else},
+}
+
+@misc{katas-stackable-only-rows-with-an-edited-manifest-file-are-kept,
+  section = {stackable},
+  title  = {A card whose files are all unchanged has nothing to submit; one changed file is enough},
+  claim  = {A card whose files are all unchanged has nothing to submit; one changed file is enough.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_only_rows_with_an_edited_manifest_file_are_kept},
+}

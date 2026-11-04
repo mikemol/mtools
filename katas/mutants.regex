@@ -157,3 +157,6 @@ src/mikemol/katas/stackable.py|stackable-waiting-rows-submitted|    return \[row
 src/mikemol/katas/stackable.py|stackable-landed-cards-submitted|    return \[row for row in rows if row\.state == STACK and row\.symbol not in done\]|    return [row for row in rows if row.state == STACK]|def=submit_set
 src/mikemol/katas/stackable.py|stackable-malformed-row-skipped|    if not \(colon and repo and symbol\.startswith\("W"\) and symbol\[1:\]\.isdigit\(\)\):|    if False:|def=_row
 src/mikemol/katas/stackable.py|stackable-waiting-rows-not-read|        if line\.split\(" ", 1\)\[0\] in _STATES:|        if line.split(" ", 1)[0] == STACK:|def=parse
+src/mikemol/katas/stackable.py|stackable-no-card-reads-as-landed|    return frozenset\(cast\("list\[str\]", _TRAILER\.findall\(log\)\)\)|    return frozenset()|def=landed_in
+src/mikemol/katas/stackable.py|stackable-empty-manifest-row-dropped|    return \[row for row in rows if not row\.files or changed\.intersection\(row\.files\)\]|    return [row for row in rows if changed.intersection(row.files)]|def=with_edits
+src/mikemol/katas/stackable.py|stackable-every-file-must-be-edited|    return \[row for row in rows if not row\.files or changed\.intersection\(row\.files\)\]|    return [row for row in rows if not row.files or changed.issuperset(row.files)]|def=with_edits

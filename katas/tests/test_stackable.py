@@ -47,3 +47,32 @@ def test_only_stack_rows_not_already_landed_are_submitted_in_order() -> None:
     assert [r.symbol for r in picked] == ["W2131", "W2135"]
     every = stackable.submit_set(stackable.parse(_OUTPUT), set())
     assert [r.symbol for r in every] == ["W2131", "W2126", "W2135"]
+
+
+_LOG = (
+    "W2126 (hooks): a subject that mentions W2999 in prose\n\n"
+    "body text\n\n"
+    "Waypoint: W2126\n"
+    "Co-Authored-By: someone\n"
+    "\n"
+    "W1895 (x): another\n\n"
+    "Waypoint: W1895  \n"
+    "\n"
+    "an unrelated commit with Waypoint: W7 inside a sentence\n"
+)
+
+
+def test_the_cards_a_log_says_landed_are_its_trailers_and_nothing_else() -> None:
+    """Only a whole `Waypoint: W<n>` line counts: prose naming a card, or one mid-line, does not."""
+    assert stackable.landed_in(_LOG) == {"W2126", "W1895"}
+    assert stackable.landed_in("") == frozenset()
+
+
+def test_only_rows_with_an_edited_manifest_file_are_kept() -> None:
+    """A card whose files are all unchanged has nothing to submit; one changed file is enough."""
+    rows = stackable.parse(_OUTPUT)
+    kept = stackable.with_edits(rows, {"hooks/tests/test_a.py", "ratchet/src/c.py"})
+    assert [r.symbol for r in kept] == ["W2131", "W2135"]
+    assert stackable.with_edits(rows, set()) == []
+    bare = stackable.Row("STACK", "mtools", "W9", ())
+    assert stackable.with_edits([bare], set()) == [bare]
