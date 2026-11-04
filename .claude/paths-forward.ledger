@@ -5556,3 +5556,14 @@
 2026-11-04T22:14:12Z  status W2164 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T22:14:31Z  status W2060 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T22:15:23Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T22:20:48Z  status W2060 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T22:38:01Z  tick  W2220 advanced  collapse  "batch 8 stack 1793830809827205788 (test_gate_suite) still gating; HEAD a06c383d [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T22:38:58Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T22:50:23Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:00:53Z  status W2220 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:01:14Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:01:33Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:01:53Z  status W2060 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:02:42Z  status W2276 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:10:45Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:11:09Z  status W2276 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

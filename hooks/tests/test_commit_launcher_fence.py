@@ -10,8 +10,9 @@ is one fact: where the fence is. The stand-in venv's `python3` prints the variab
 from __future__ import annotations
 
 import os
-import subprocess
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 _LAUNCHER = Path(__file__).parent.parent / "bin" / "mikemol-commit"
 _EXECUTABLE = 0o755
@@ -41,16 +42,9 @@ def _checkout(tmp_path: Path, *, fence: bool) -> Path:
     return root
 
 
-def _run(root: Path) -> subprocess.CompletedProcess[str]:
+def _run(root: Path) -> runproc.Result:
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "MIKEMOL_ROOT": str(root)}
-    return subprocess.run(
-        [str(_LAUNCHER), "repo", "--waypoint", "W1"],
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    return runproc.run([str(_LAUNCHER), "repo", "--waypoint", "W1"], env=env, timeout=_TIMEOUT_S)
 
 
 def test_a_built_fence_is_named_to_the_commit(tmp_path: Path) -> None:

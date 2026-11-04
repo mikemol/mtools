@@ -553,7 +553,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ W886/W910/W924: these run the tracked `mikemol-commit` launcher, or its Python, in a throwaway git
 # checkout with stub executables: fixed argv, never a shell, no untrusted input. `git` is resolved
 # from PATH on purpose, as the code under test resolves it.
-"tests/test_commit_launcher_fence.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_commit_claim.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_domain_witness_concurrency.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_commit_published.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
