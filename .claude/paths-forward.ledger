@@ -5490,3 +5490,14 @@
 2026-11-04T16:01:58Z  status W2164 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T16:03:35Z  status W1428 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T16:04:09Z  status W2164 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T16:08:49Z  tick  W2276 minted    -         "Toy harness first witness: test_toy_harness builds a disposable repo on scratch.git_out with a fake bazel and a lone one-file stack lands through mikemol-commit --stack (runproc.run_process for the sync runs)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2254
+2026-11-04T16:09:25Z  status W2254 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T16:10:02Z  tick  W2254 advanced  collapse  "W2254's first slice landed (d35db2e3), atomized: W2276 mints the first witness; batch 3 of W2220 gating [blocked by W2220]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T16:11:20Z  status W2254 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T16:38:32Z  tick  W2220 advanced  collapse  "batch 3 stack 1793808285531979502 still gating; HEAD 6db38860; W2276 and the other hooks-lane builds wait for it [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T16:39:42Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T16:40:40Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:01:24Z  status W2220 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:01:48Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:02:09Z  status W2254 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:03:18Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -10,8 +10,9 @@ received is observed rather than inferred (mtools:W796).
 from __future__ import annotations
 
 import os
-import subprocess
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 _LAUNCHER = Path(__file__).parent.parent / "bin" / "mikemol-commit"
 _EXECUTABLE = 0o755
@@ -40,7 +41,7 @@ def _project(tmp_path: Path, *, venv: bool) -> Path:
     return root
 
 
-def _run(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+def _run(root: Path, *args: str) -> runproc.Result:
     """Run the real launcher with only PATH and MIKEMOL_ROOT in its environment.
 
     Returns:
@@ -48,14 +49,7 @@ def _run(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
     """
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "MIKEMOL_ROOT": str(root)}
-    return subprocess.run(
-        [str(_LAUNCHER), *args],
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    return runproc.run([str(_LAUNCHER), *args], env=env, timeout=_TIMEOUT_S)
 
 
 def test_every_argument_reaches_the_console_script(tmp_path: Path) -> None:

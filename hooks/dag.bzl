@@ -1803,7 +1803,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_commit_launcher.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

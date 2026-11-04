@@ -554,11 +554,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # the code into a peer tree that may not enable the rule, and the ratchet refuses new keys.
 "tests/test_no_verify.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ W796: `test_commit_launcher.py`'s subject is what the tracked `hooks/bin/mikemol-commit` launcher
-# does WHEN EXECUTED (it execs the built venv's console script, or refuses naming the repair), so
-# running it is the case. Literal launcher path derived from `__file__`, explicit env, no shell.
-"tests/test_commit_launcher.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 
 # ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.
 # ⚑ `test_tool_path.py` finds console scripts in planted directories under tmp_path: no process.
