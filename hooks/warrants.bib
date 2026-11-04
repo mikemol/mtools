@@ -17605,3 +17605,17 @@
   claim  = {The write is reproduced for real, then removed and said in the verdict's output (W2269).},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_hook_that_inits_under_the_gates_environment_leaves_no_stray_core_worktree},
 }
+
+@misc{hooks-commit-isolated-stray-core-worktree-left-before-the-commit-is-repaired-first,
+  section = {commit_isolated},
+  title  = {An earlier tool's key, pointing where git cannot even start, is removed and said},
+  claim  = {An earlier tool's key, pointing where git cannot even start, is removed and said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_stray_core_worktree_left_before_the_commit_is_repaired_first},
+}
+
+@misc{hooks-stackgate-stray-core-worktree-left-before-the-gate-is-repaired-first,
+  section = {stackland},
+  title  = {An earlier tool's key, pointing where git cannot even start, is removed before the gate},
+  claim  = {An earlier tool's key, pointing where git cannot even start, is removed before the gate.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_stray_core_worktree_left_before_the_gate_is_repaired_first},
+}

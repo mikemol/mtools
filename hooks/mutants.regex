@@ -975,3 +975,5 @@ src/mikemol/hooks/strayworktree.py|stray-work-tree-asks-a-directory-with-no-conf
 src/mikemol/hooks/strayworktree.py|stray-work-tree-failed-unset-called-removed|    if cleared\.returncode != 0:|    if False:|def=repair
 src/mikemol/hooks/isolated.py|commit-leaves-a-stray-work-tree|\{_repair_worktree\(root, run\)\}|{""}|def=commit_planned
 src/mikemol/hooks/stackgate.py|gate-leaves-a-stray-work-tree|\{_repair_worktree\(root, run\)\}|{""}|def=gate_tip
+src/mikemol/hooks/commit_kata.py|commit-not-repaired-before-it-starts|    earlier = _repair_worktree\(root, run_git_in\)|    earlier = ""|def=isolated_commit
+src/mikemol/hooks/stackgate.py|gate-not-repaired-before-it-starts|    earlier = _repair_worktree\(root, run\)|    earlier = ""|def=gate_tip

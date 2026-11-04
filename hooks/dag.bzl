@@ -150,6 +150,7 @@ GRAPH = {
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py",
         "src/mikemol/hooks/stacktypes.py",
+        "src/mikemol/hooks/strayworktree.py",
         "src/mikemol/hooks/testgate.py",
         "src/mikemol/hooks/tool_path.py",
         "src/mikemol/hooks/trainjoin.py",

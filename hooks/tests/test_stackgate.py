@@ -130,6 +130,23 @@ def test_a_refusing_hook_is_returned_as_the_gate_verdict(
     assert "refused" in done.stderr
 
 
+def test_a_stray_core_worktree_left_before_the_gate_is_repaired_first(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An earlier tool's key, pointing where git cannot even start, is removed before the gate."""
+    root = _repo(tmp_path, monkeypatch, _HOOK)
+    tip = _tip(root)
+    gone = tmp_path / "missing" / "tree"
+    config = str(root / ".git" / "config")
+    code, out = scratch.git_out(["git", "config", "--file", config, "core.worktree", str(gone)])
+    assert code == 0, out
+    done = stackgate.gate_tip(root, tip, ck.run_git_in, tmp_path / "gate")
+    assert done.returncode == 0, done.stderr
+    assert f"stray core.worktree={gone} removed" in done.stdout
+    held, _out = scratch.git_out(["git", "config", "--file", config, "core.worktree"])
+    assert held != 0
+
+
 # A hook that runs `git init` under the exported GIT_DIR and GIT_WORK_TREE: git then writes
 # `core.worktree` (the snapshot) into the REAL repository's config, which is luthen's measured bug.
 _STRAYING = "#!/bin/sh\ngit init -q\n"

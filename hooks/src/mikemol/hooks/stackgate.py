@@ -41,6 +41,9 @@ def gate_tip(root: Path, tree: str, run: EnvRunner, namespace: Path) -> Done:
         pre-commit hook passes (`--ignore-missing`).
 
     """
+    # ⚑ A STRAY `core.worktree` LEFT BEFORE THIS GATE (W2271) is repaired first, so the steps
+    # below can run, and said in the verdict's output.
+    earlier = _repair_worktree(root, run)
     gitdir = run(["rev-parse", "--absolute-git-dir"], {}, root)
     if _stopped(gitdir):
         return gitdir
@@ -61,7 +64,7 @@ def gate_tip(root: Path, tree: str, run: EnvRunner, namespace: Path) -> Done:
             verdict = run(["hook", "run", "--ignore-missing", "pre-commit"], work, snap.path)
         # ⚑ THE HOOK RAN UNDER THE EXPORTED GIT_DIR AND GIT_WORK_TREE (W2269): a stray
         # `core.worktree` it wrote into the real config is removed and said here.
-        verdict.stdout = f"{verdict.stdout}{_repair_worktree(root, run)}"
+        verdict.stdout = f"{earlier}{verdict.stdout}{_repair_worktree(root, run)}"
         return verdict
     finally:
         shutil.rmtree(private, ignore_errors=True)

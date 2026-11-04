@@ -105,6 +105,7 @@ from mikemol.hooks.stackrun import items_of as _items_of
 from mikemol.hooks.stackrun import run_stack as _run_stack
 from mikemol.hooks.stacksnap import QUEUE_FILES
 from mikemol.hooks.stacktypes import real_types as _real_types
+from mikemol.hooks.strayworktree import repair as _repair_worktree
 from mikemol.hooks.testgate import refusal as _test_refusal
 from mikemol.hooks.tool_path import find as _find_tool
 from mikemol.hooks.trainjoin import Follower as _Follower
@@ -220,7 +221,12 @@ def isolated_commit(root: Path, request: Request, paths: Sequence[str]) -> Done:
     # ⚑ W2120: WITH THE SUBMIT-TIME FILES PLACED, ONLY THE QUEUE FILES ARE STILL READ FROM THE TREE
     # (they are never frozen, so what lands is what the card updates left).
     left = [p for p in paths if p in QUEUE_FILES] if placed else list(paths)
-    return commit_planned(root, Plan(left, placed), message_of(request), run_git_in, namespace)
+    # ⚑ A STRAY `core.worktree` LEFT BY AN EARLIER TOOL (W2271) would make git die in repository
+    # setup for the very steps below, so it is repaired first and said in the output.
+    earlier = _repair_worktree(root, run_git_in)
+    done = commit_planned(root, Plan(left, placed), message_of(request), run_git_in, namespace)
+    done.stdout = f"{earlier}{done.stdout}"
+    return done
 
 
 class Waitable(Protocol):
