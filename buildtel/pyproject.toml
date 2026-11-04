@@ -102,10 +102,3 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "subprocess-without-shell-equals-true",
     "suspicious-subprocess-import",
 ]
-# ⚑ ITS WITNESSES RUN REAL CHILDREN (`sys.executable` and literals), because what is under test is
-# what a child's exit status and stderr become.
-"tests/test_proc.py" = [
-    "assert",
-    "subprocess-without-shell-equals-true",
-    "suspicious-subprocess-import",
-]
