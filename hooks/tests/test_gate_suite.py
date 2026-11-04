@@ -12,8 +12,9 @@ from __future__ import annotations
 import os
 import re
 import shutil
-import subprocess
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 _DIST = Path(__file__).parent.parent
 _GATE = _DIST.parent / ".githooks" / "pre-commit"
@@ -45,15 +46,17 @@ _STUBS = (
 _SURVIVED = "survived"
 
 
-def _bash(script: str, cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+def _bash(script: str, cwd: Path) -> runproc.Result:
+    return runproc.run(
         ["/bin/bash", "-c", "set -euo pipefail\n" + script],
         cwd=cwd,
-        capture_output=True,
-        text=True,
-        check=False,
         env={"PATH": os.environ.get("PATH", "/usr/bin:/bin")},
     )
+
+
+def _git(cwd: Path, git: str, argv: list[str]) -> None:
+    done = runproc.run([git, *argv], cwd=cwd)
+    assert done.returncode == 0, done.stderr
 
 
 def _targets_line() -> str:
@@ -153,7 +156,7 @@ def test_an_untracked_test_file_does_not_decide_the_commit(tmp_path: Path) -> No
     git = shutil.which("git")
     assert git, "no git on PATH"
     for argv in (["init", "-q"], ["add", "d/tests/test_staged.py"]):
-        subprocess.run([git, *argv], cwd=tmp_path, check=True, capture_output=True)
+        _git(tmp_path, git, argv)
     script = (
         f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ntools="$PWD"\ndist=d\n{block.group(0)}'
         'printf "fail=%s" "$fail"\n'
@@ -182,7 +185,7 @@ def test_a_tracked_test_with_unstaged_edits_refuses_the_commit(tmp_path: Path) -
     git = shutil.which("git")
     assert git, "no git on PATH"
     for argv in (["init", "-q"], ["add", "d/tests/test_edited.py"]):
-        subprocess.run([git, *argv], cwd=tmp_path, check=True, capture_output=True)
+        _git(tmp_path, git, argv)
     edited.write_text("def test_ok() -> None:\n    pass\n", encoding="utf-8")
     script = (
         f'{_STUBS}{fn.group(0)}fail=0\nroot="$PWD"\ntools="$PWD"\ndist=d\n{block.group(0)}'

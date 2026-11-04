@@ -2081,7 +2081,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_gate_suite.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
