@@ -430,3 +430,7 @@ src/mikemol/pathsforward/landed.py|landing-first-look-compares-an-empty-tip|    
 src/mikemol/pathsforward/landed.py|landing-any-merge-base-counts-as-an-ancestor|    if base is None or base\.strip\(\) != before:|    if base is None:|def=_tip_lines
 src/mikemol/pathsforward/landed.py|landing-tip-stored-where-its-directory-is-absent|    if seen\.parent\.is_dir\(\):|    if True:|def=landing_tips
 src/mikemol/pathsforward/cli.py|tick-open-prints-no-landings|    for said in _landing_tips\(root, root / "\.git" / "mtools" / _TIP_NAME\):|    for said in []:|def=_tick_open
+src/mikemol/pathsforward/landed.py|committed-text-reads-the-working-path|f"HEAD:\{rel\}"|f"{rel}"|def=committed_text
+src/mikemol/pathsforward/cli.py|retro-scaffold-reads-the-working-queue|    held = _committed_text\(root, str\(ctx\.path\.relative_to\(root\)\)\)|    held = None|def=_retro_scaffold
+src/mikemol/pathsforward/cli.py|retro-scaffold-trusts-a-non-object-file|    if not isinstance\(raw, dict\):|    if False:|def=_retro_scaffold
+src/mikemol/pathsforward/cli.py|retro-scaffold-unreadable-head-not-said|    if held is None:|    if False:|def=_retro_scaffold

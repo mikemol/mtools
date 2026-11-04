@@ -8046,3 +8046,38 @@
   claim  = {With no `.git/mtools` the lines print and nothing is written.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_tip_is_not_stored_where_its_directory_does_not_exist},
 }
+
+@misc{pathsforward-retro-scaffold-mode-committed-text-asks-git-for-the-file-at-head,
+  section = {retroscaffold},
+  title  = {The path is read as `HEAD:<rel>`, after an end-of-options marker, in the given root},
+  claim  = {The path is read as `HEAD:<rel>`, after an end-of-options marker, in the given root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retro_scaffold_mode.py -k test_committed_text_asks_git_for_the_file_at_head},
+}
+
+@misc{pathsforward-retro-scaffold-mode-committed-text-is-none-when-git-gives-no-answer,
+  section = {retroscaffold},
+  title  = {No answer is None, never an empty file},
+  claim  = {No answer is None, never an empty file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retro_scaffold_mode.py -k test_committed_text_is_none_when_git_gives_no_answer},
+}
+
+@misc{pathsforward-retro-scaffold-mode-scaffold-reads-its-precommit-from-heads-copy-not-the-working-queue,
+  section = {retroscaffold},
+  title  = {The card's step as HEAD held it is the precommit; the working copy has moved on},
+  claim  = {The card's step as HEAD held it is the precommit; the working copy has moved on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retro_scaffold_mode.py -k test_the_scaffold_reads_its_precommit_from_heads_copy_not_the_working_queue},
+}
+
+@misc{pathsforward-retro-scaffold-mode-unreadable-head-copy-falls-back-to-the-working-queue-and-says-so,
+  section = {retroscaffold},
+  title  = {The fallback is announced on stderr, and the working step is used},
+  claim  = {The fallback is announced on stderr, and the working step is used.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retro_scaffold_mode.py -k test_an_unreadable_head_copy_falls_back_to_the_working_queue_and_says_so},
+}
+
+@misc{pathsforward-retro-scaffold-mode-file-that-is-not-one-json-object-is-refused,
+  section = {retroscaffold},
+  title  = {A list is not a verdict row: usage refusal, nothing printed},
+  claim  = {A list is not a verdict row: usage refusal, nothing printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retro_scaffold_mode.py -k test_a_file_that_is_not_one_json_object_is_refused},
+}

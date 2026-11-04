@@ -96,6 +96,7 @@ from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
+from mikemol.pathsforward.landed import committed_text as _committed_text
 from mikemol.pathsforward.landed import landing_tips as _landing_tips
 from mikemol.pathsforward.landedblock import refuse_landed
 from mikemol.pathsforward.ledger import (
@@ -127,6 +128,7 @@ from mikemol.pathsforward.pruned import said as pruned_said
 from mikemol.pathsforward.realizable import GATES
 from mikemol.pathsforward.reconcilecmd import run as reconcile_run
 from mikemol.pathsforward.redact import REDACTED, digest, redact, scan
+from mikemol.pathsforward.retroscaffold import scaffold as _retro_scaffold_of
 from mikemol.pathsforward.subagents import running as running_subagents
 from mikemol.pathsforward.tickjson import capture as capture_open
 from mikemol.pathsforward.tickjson import document as open_document
@@ -571,6 +573,7 @@ _VALUED = (
     "vectors_from",
     "manifests_from",
     "add_retro",
+    "retro_scaffold",
     "regressions",
     "repair_counter",
     "scan_literal",
@@ -743,6 +746,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "freeze": frozenset({"write", "verbose"}),
     "manifests_from": frozenset({"write"}),
     "add_retro": frozenset(),
+    "retro_scaffold": frozenset(),
     "retros": frozenset(),
     "migrate_retros": frozenset({"dry_run"}),
     "regressions": frozenset(),
@@ -1178,6 +1182,13 @@ def _add_file_modes(mode: argparse._MutuallyExclusiveGroup) -> None:
         metavar="Rn",
         help="W2088: print the retro records in full (every field and finding), all of them or "
         "the named <repo>:R<n> / R<n>; an unknown id is named and refused",
+    )
+    mode.add_argument(
+        "--retro-scaffold",
+        metavar="FILE",
+        help="W2267: print a retro scaffold for the landing verdict row in FILE (one JSON object: "
+        "verdict, reason, rc, waypoints, stack_key), its precommit read from HEAD's copy of this "
+        "queue; the reviewer fills the findings and passes it to --add-retro",
     )
     mode.add_argument(
         "--add-retro",
@@ -3408,6 +3419,37 @@ def _add_retro(ctx: Ctx) -> int:
     return _mutate(ctx, edit)
 
 
+def _retro_scaffold(ctx: Ctx) -> int:
+    """Print a retro scaffold for one landing verdict row (W2267).
+
+    ⚑ THE PRECOMMIT IS READ FROM HEAD'S COPY OF THIS QUEUE, not the working one, because the
+    working copy has been moving since the submit; a HEAD copy that cannot be read falls back to
+    the working queue and says so on stderr.
+
+    Returns:
+        EXIT_OK after printing the scaffold JSON; EXIT_REFUSED when FILE is not one JSON object.
+
+    """
+    raw = _json_file(Path(ctx.get("retro_scaffold") or ""))
+    if not isinstance(raw, dict):
+        _warn("--retro-scaffold FILE holds one verdict row (a JSON object)")
+        return EXIT_REFUSED
+    root = ctx.path.parent.parent
+    held = _committed_text(root, str(ctx.path.relative_to(root)))
+    queue = store.load(ctx.path).doc
+    if held is None:
+        _warn(
+            "--retro-scaffold: HEAD's copy of the queue could not be read; using the working queue"
+        )
+    else:
+        parsed: object = json.loads(held)
+        if isinstance(parsed, dict):
+            queue = cast("dict[str, object]", parsed)
+    scaffold = _retro_scaffold_of(cast("dict[str, object]", raw), queue)
+    _say(json.dumps(scaffold, indent=2))
+    return EXIT_OK
+
+
 def _migrate_retros(ctx: Ctx) -> int:
     """Rename `cause` to `root` on host-schema retros, or say which would change (W2091).
 
@@ -3656,6 +3698,7 @@ _HANDLERS: dict[str, Callable[[Ctx], int]] = {
     "vectors_from": _vectors_from,
     "manifests_from": _manifests_from,
     "add_retro": _add_retro,
+    "retro_scaffold": _retro_scaffold,
     "regressions": _regressions,
     "migrate_retros": _migrate_retros,
     "repair_counter": _repair_counter,

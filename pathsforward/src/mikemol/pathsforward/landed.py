@@ -137,6 +137,19 @@ def landing_tips(root: Path, seen: Path, run: Run = _run) -> list[str]:
     return lines
 
 
+def committed_text(root: Path, rel: str, run: Run = _run) -> str | None:
+    """Read a file as HEAD holds it, not as the working tree has moved it since (W2267).
+
+    Returns:
+        the file's text at HEAD, or None when git is absent, the path is not in HEAD or git refuses.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    return run([git, "-C", str(root), "show", "--end-of-options", f"HEAD:{rel}"])
+
+
 def read_commits(root: Path) -> str | None:
     """Read the last 500 commits as `sha US UTC-stamp US message RS` records (W1639).
 
