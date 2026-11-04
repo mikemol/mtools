@@ -14,11 +14,10 @@ than a group.
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import cmdparse, no_chaining
+from mikemol.hooks import cmdparse, no_chaining, runproc
 
 if TYPE_CHECKING:
     import pytest
@@ -343,7 +342,7 @@ def test_unset_switches_leave_the_hook_unarmed(monkeypatch: pytest.MonkeyPatch) 
 # --- end to end, through the real entry point --------------------------------------------------
 
 
-def _run(payload: str, *, block: str) -> subprocess.CompletedProcess[str]:
+def _run(payload: str, *, block: str) -> runproc.Result:
     """Drive the module's `main()` in a subprocess with a synthetic PreToolUse payload.
 
     ⚑ THE PROBE RUNS THE HOOK RATHER THAN READING ITS CONFIG. A gate that reports what its
@@ -355,13 +354,8 @@ def _run(payload: str, *, block: str) -> subprocess.CompletedProcess[str]:
     """
     env = dict(os.environ, STRUCT_HOOK_BLOCK=block)
     env.pop("NOCHAIN_HOOK_BLOCK", None)
-    return subprocess.run(
-        [sys.executable, "-m", "mikemol.hooks.no_chaining"],
-        input=payload,
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
+    return runproc.run(
+        [sys.executable, "-m", "mikemol.hooks.no_chaining"], env=env, stdin_text=payload
     )
 
 

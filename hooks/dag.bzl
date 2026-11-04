@@ -2429,7 +2429,8 @@ GRAPH = {
     "tests/test_no_chaining.py": {
       "imports": [
         "src/mikemol/hooks/cmdparse.py",
-        "src/mikemol/hooks/no_chaining.py"
+        "src/mikemol/hooks/no_chaining.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
