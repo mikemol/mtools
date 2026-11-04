@@ -106,13 +106,13 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE PLANTED TOKEN IS THE TEST'S SUBJECT: a synthetic value, planted so each arm can show it
 # is absent from every traceback. It is a hard-coded "password" by construction, and authenticates
 # nothing.
-"tests/test_auth.py" = ["assert", "hardcoded-password-string"]
+"tests/test_auth.py" = ["hardcoded-password-string"]
 # ⚑ THE SAME FOR THE EXCHANGE: its planted refresh token, client secret and access token exist so
 # each arm can show none of them reaches a traceback.
-"tests/test_exchange.py" = ["assert", "hardcoded-password-string"]
+"tests/test_exchange.py" = ["hardcoded-password-string"]
 # ⚑ AND THE CONSENT RUN: its planted client secret, code and refresh token exist so each arm can
 # show the token reaches only `encrypt` and nothing reaches a traceback.
-"tests/test_consent.py" = ["assert", "hardcoded-password-string"]
+"tests/test_consent.py" = ["hardcoded-password-string"]
 # ⚑ AND THE CLI'S EFFECTS: a planted client secret, code and refresh token, run through a fake age,
 # a local listener and a local token endpoint.
-"tests/test_cli.py" = ["assert", "hardcoded-password-string"]
+"tests/test_cli.py" = ["hardcoded-password-string"]
