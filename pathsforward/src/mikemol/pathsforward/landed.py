@@ -80,6 +80,63 @@ def _run(argv: list[str], env: dict[str, str] | None = None) -> str | None:
     return done.stdout if done.returncode == 0 else None
 
 
+Run = Callable[[list[str]], str | None]
+_SHORT = 8
+
+
+def _tip_lines(git: str, root: Path, before: str, tip: str, run: Run) -> list[str]:
+    # What the move from the stored tip to this one means, as the lines a tick open prints.
+    if not before:
+        return [f"landings: first look, tip {tip[:_SHORT]}"]
+    if before == tip:
+        return ["landings: none since the last tick open"]
+    base = run([git, "-C", str(root), "merge-base", before, tip])
+    if base is None or base.strip() != before:
+        rewrite = (
+            f"landings: HISTORY REWRITE, the last tip {before[:_SHORT]} is not an ancestor of "
+            f"{tip[:_SHORT]}"
+        )
+        return [rewrite]
+    log = run([git, "-C", str(root), "log", "--oneline", f"{before}..{tip}"])
+    span = f"{before[:_SHORT]}..{tip[:_SHORT]}"
+    if log is None:
+        return [f"landings: {span} (the log could not be read)"]
+    shown = [f"  {line}" for line in log.splitlines()]
+    return [f"landings since the last tick open ({span}):", *shown]
+
+
+def landing_tips(root: Path, seen: Path, run: Run = _run) -> list[str]:
+    """Say what landed on the branch since the previous tick open, and remember this tip (W2070).
+
+    ⚑ THE PREVIOUS TIP IS THE BASELINE, so a tick reads its own landings off the history rather
+    than from card stamps. A previous tip that is not an ancestor of this one is said as a history
+    rewrite, never as an empty range. The tip is stored only where its directory already exists
+    (`.git/mtools`), so a plain directory is not littered.
+
+    Returns:
+        the lines to print; empty when git is absent or cannot name the tip.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return []
+    named = run([git, "-C", str(root), "rev-parse", "HEAD"])
+    if named is None or not named.strip():
+        return []
+    tip = named.strip()
+    try:
+        before = seen.read_text(encoding="utf-8").strip() if seen.is_file() else ""
+    except OSError:
+        before = ""
+    lines = _tip_lines(git, root, before, tip, run)
+    if seen.parent.is_dir():
+        try:
+            seen.write_text(f"{tip}\n", encoding="utf-8")
+        except OSError:
+            lines.append("landings: the tip could not be stored")
+    return lines
+
+
 def read_commits(root: Path) -> str | None:
     """Read the last 500 commits as `sha US UTC-stamp US message RS` records (W1639).
 

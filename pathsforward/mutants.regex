@@ -425,3 +425,8 @@ src/mikemol/pathsforward/retroscaffold.py|scaffold-blank-step-kept|            r
 src/mikemol/pathsforward/retroscaffold.py|scaffold-queue-without-cards-trusted|    if not isinstance\(cards, list\):|    if False:|def=_step_of
 src/mikemol/pathsforward/retroscaffold.py|scaffold-dangling-colon-without-reason|        "trigger": f"\{verdict\}: \{reason\}" if reason else verdict,|        "trigger": f"{verdict}: {reason}",|def=scaffold
 src/mikemol/pathsforward/retroscaffold.py|scaffold-invents-findings|        "findings": \[\],|        "findings": ["unreviewed"],|def=scaffold
+src/mikemol/pathsforward/landed.py|landing-unmoved-tip-lists-a-range|    if before == tip:|    if False:|def=_tip_lines
+src/mikemol/pathsforward/landed.py|landing-first-look-compares-an-empty-tip|    if not before:|    if False:|def=_tip_lines
+src/mikemol/pathsforward/landed.py|landing-any-merge-base-counts-as-an-ancestor|    if base is None or base\.strip\(\) != before:|    if base is None:|def=_tip_lines
+src/mikemol/pathsforward/landed.py|landing-tip-stored-where-its-directory-is-absent|    if seen\.parent\.is_dir\(\):|    if True:|def=landing_tips
+src/mikemol/pathsforward/cli.py|tick-open-prints-no-landings|    for said in _landing_tips\(root, root / "\.git" / "mtools" / _TIP_NAME\):|    for said in []:|def=_tick_open

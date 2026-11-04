@@ -7989,3 +7989,60 @@
   claim  = {No reason means no dangling colon.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retroscaffold.py -k test_a_row_with_no_reason_names_the_verdict_alone_as_the_trigger},
 }
+
+@misc{pathsforward-tick-landings-tick-open-prints-the-landing-lines-and-names-the-tip-file,
+  section = {landed},
+  title  = {The open asks `landing_tips` for the repo and its stored-tip file, and prints the answer},
+  claim  = {The open asks `landing_tips` for the repo and its stored-tip file, and prints the
+            answer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_landings.py -k test_tick_open_prints_the_landing_lines_and_names_the_tip_file},
+}
+
+@misc{pathsforward-landed-first-look-stores-the-tip-and-says-there-is-no-range-yet,
+  section = {landed},
+  title  = {With no stored tip there is nothing to compare: the tip is stored and said},
+  claim  = {With no stored tip there is nothing to compare: the tip is stored and said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_first_look_stores_the_tip_and_says_there_is_no_range_yet},
+}
+
+@misc{pathsforward-landed-unmoved-tip-says-nothing-landed,
+  section = {landed},
+  title  = {The control: the same tip as last time is no landings, not a range},
+  claim  = {The control: the same tip as last time is no landings, not a range.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_an_unmoved_tip_says_nothing_landed},
+}
+
+@misc{pathsforward-landed-tip-that-descends-from-the-stored-one-lists-the-commits-between,
+  section = {landed},
+  title  = {The previous tip is an ancestor: its range is listed and the new tip is stored},
+  claim  = {The previous tip is an ancestor: its range is listed and the new tip is stored.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_tip_that_descends_from_the_stored_one_lists_the_commits_between},
+}
+
+@misc{pathsforward-landed-stored-tip-that-is-not-an-ancestor-is-a-history-rewrite,
+  section = {landed},
+  title  = {Another merge base, or none, is a rewrite and never an empty range},
+  claim  = {Another merge base, or none, is a rewrite and never an empty range.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_stored_tip_that_is_not_an_ancestor_is_a_history_rewrite},
+}
+
+@misc{pathsforward-landed-unreadable-log-still-names-the-range,
+  section = {landed},
+  title  = {The range is real even when its listing cannot be read: say so, do not invent landings},
+  claim  = {The range is real even when its listing cannot be read: say so, do not invent landings.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_an_unreadable_log_still_names_the_range},
+}
+
+@misc{pathsforward-landed-tip-git-cannot-name-prints-nothing-and-stores-nothing,
+  section = {landed},
+  title  = {No answer is not an empty range: nothing is said and the stored tip stays},
+  claim  = {No answer is not an empty range: nothing is said and the stored tip stays.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_a_tip_git_cannot_name_prints_nothing_and_stores_nothing},
+}
+
+@misc{pathsforward-landed-tip-is-not-stored-where-its-directory-does-not-exist,
+  section = {landed},
+  title  = {With no `.git/mtools` the lines print and nothing is written},
+  claim  = {With no `.git/mtools` the lines print and nothing is written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landed.py -k test_the_tip_is_not_stored_where_its_directory_does_not_exist},
+}

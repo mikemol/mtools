@@ -96,6 +96,7 @@ from mikemol.pathsforward.closeumbrellas import apply as close_apply
 from mikemol.pathsforward.closeumbrellas import plan as close_plan
 from mikemol.pathsforward.commitmsg import draft
 from mikemol.pathsforward.digest import Outcome, v2, verify
+from mikemol.pathsforward.landed import landing_tips as _landing_tips
 from mikemol.pathsforward.landedblock import refuse_landed
 from mikemol.pathsforward.ledger import (
     Entry,
@@ -150,6 +151,7 @@ SHIP_MUTATION = ship_mutation
 SHIP_INTERVENTION = ship_intervention
 INTERVENTIONS = INTERVENTION_KINDS
 REFUSE_LANDED = refuse_landed
+_TIP_NAME = "branch.tip"
 BLOCKERS_SEEN = _BLOCKERS_SEEN
 BLOCKER_NOTICE = blocker_notice
 LIFT_ROW = lift_row
@@ -2052,6 +2054,8 @@ def _tick_open(ctx: Ctx) -> int:
     _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], Path.home(), shutil.which))
     seen = root / ".git" / "mtools" / promptwatch.SEEN_NAME
     for said in promptwatch.notice(promptwatch.prompt_of(root), seen):
+        _say(said)
+    for said in _landing_tips(root, root / ".git" / "mtools" / _TIP_NAME):
         _say(said)
     _say(f"tick open as {holder}; close: --ledger ..., --render, --check, --unlock {holder}")
     return code

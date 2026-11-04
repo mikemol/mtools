@@ -188,3 +188,88 @@ def test_with_no_learned_bound_no_card_is_called_idle() -> None:
     """W2047: fewer than two known landings leave nothing to judge against."""
     old = _worked("W1", "working", "2026-09-01T14:00:00Z")
     assert closegate.idle_cards(State({}, [old], [], 1), _NOW, None) == []
+
+
+_OLD_TIP = "a" * 40
+_NEW_TIP = "b" * 40
+
+
+def _git_says(tip: str | None, base: str | None = None, log: str | None = None) -> landed.Run:
+    # A typed stand-in for the git runner: it answers by the subcommand after `-C <root>`.
+    def run(argv: list[str]) -> str | None:
+        answers = {"rev-parse": tip, "merge-base": base, "log": log}
+        return answers[argv[3]]
+
+    return run
+
+
+def _seen(tmp_path: Path, held: str | None = None) -> Path:
+    where = tmp_path / ".git" / "mtools"
+    where.mkdir(parents=True)
+    seen = where / "branch.tip"
+    if held is not None:
+        seen.write_text(f"{held}\n", encoding="utf-8")
+    return seen
+
+
+def test_the_first_look_stores_the_tip_and_says_there_is_no_range_yet(tmp_path: Path) -> None:
+    """With no stored tip there is nothing to compare: the tip is stored and said."""
+    seen = _seen(tmp_path)
+    got = landed.landing_tips(tmp_path, seen, _git_says(_NEW_TIP))
+    assert got == [f"landings: first look, tip {_NEW_TIP[:8]}"]
+    assert seen.read_text(encoding="utf-8").strip() == _NEW_TIP
+
+
+def test_an_unmoved_tip_says_nothing_landed(tmp_path: Path) -> None:
+    """The control: the same tip as last time is no landings, not a range."""
+    seen = _seen(tmp_path, _NEW_TIP)
+    got = landed.landing_tips(tmp_path, seen, _git_says(_NEW_TIP))
+    assert got == ["landings: none since the last tick open"]
+
+
+def test_a_tip_that_descends_from_the_stored_one_lists_the_commits_between(
+    tmp_path: Path,
+) -> None:
+    """The previous tip is an ancestor: its range is listed and the new tip is stored."""
+    seen = _seen(tmp_path, _OLD_TIP)
+    run = _git_says(_NEW_TIP, base=_OLD_TIP, log="2222222 second\n1111111 first\n")
+    got = landed.landing_tips(tmp_path, seen, run)
+    assert got == [
+        f"landings since the last tick open ({_OLD_TIP[:8]}..{_NEW_TIP[:8]}):",
+        "  2222222 second",
+        "  1111111 first",
+    ]
+    assert seen.read_text(encoding="utf-8").strip() == _NEW_TIP
+
+
+def test_a_stored_tip_that_is_not_an_ancestor_is_a_history_rewrite(tmp_path: Path) -> None:
+    """Another merge base, or none, is a rewrite and never an empty range."""
+    seen = _seen(tmp_path, _OLD_TIP)
+    other = "c" * 40
+    for base in (other, None):
+        got = landed.landing_tips(tmp_path, seen, _git_says(_NEW_TIP, base=base))
+        assert len(got) == 1
+        assert got[0].startswith("landings: HISTORY REWRITE")
+        seen.write_text(f"{_OLD_TIP}\n", encoding="utf-8")
+
+
+def test_an_unreadable_log_still_names_the_range(tmp_path: Path) -> None:
+    """The range is real even when its listing cannot be read: say so, do not invent landings."""
+    seen = _seen(tmp_path, _OLD_TIP)
+    got = landed.landing_tips(tmp_path, seen, _git_says(_NEW_TIP, base=_OLD_TIP, log=None))
+    assert got == [f"landings: {_OLD_TIP[:8]}..{_NEW_TIP[:8]} (the log could not be read)"]
+
+
+def test_a_tip_git_cannot_name_prints_nothing_and_stores_nothing(tmp_path: Path) -> None:
+    """No answer is not an empty range: nothing is said and the stored tip stays."""
+    seen = _seen(tmp_path, _OLD_TIP)
+    assert landed.landing_tips(tmp_path, seen, _git_says(None)) == []
+    assert seen.read_text(encoding="utf-8").strip() == _OLD_TIP
+
+
+def test_the_tip_is_not_stored_where_its_directory_does_not_exist(tmp_path: Path) -> None:
+    """With no `.git/mtools` the lines print and nothing is written."""
+    seen = tmp_path / ".git" / "mtools" / "branch.tip"
+    got = landed.landing_tips(tmp_path, seen, _git_says(_NEW_TIP))
+    assert got == [f"landings: first look, tip {_NEW_TIP[:8]}"]
+    assert not seen.exists()
