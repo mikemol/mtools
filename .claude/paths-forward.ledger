@@ -5501,3 +5501,20 @@
 2026-11-04T17:01:48Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T17:02:09Z  status W2254 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T17:03:18Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:09:55Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:13:33Z  tick  W2220 advanced  collapse  "batch 4 stack 1793812143132447742 (test_commit_launcher) still gating; HEAD 2b940e86; W2276 waits for graph.json and dag.bzl [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:14:45Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:37:45Z  lease W2220 lapsed    --        "lease on file:hooks/pyproject.toml!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:38:28Z  tick  W2220 advanced  collapse  "batch 4 stack 1793812143132447742 still gating; HEAD 2b940e86; hooks-lane cards W2276 W2248 W2219 wait for it [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T17:39:40Z  status W2254 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:09:36Z  tick  W2220 advanced  collapse  "batch 4 stack 1793812143132447742 still gating; HEAD 2b940e86; nothing outside the hooks lane is buildable this tick [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:10:51Z  status W2219 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:17:55Z  status W2220 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:18:17Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:18:36Z  status W2254 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:18:56Z  status W2219 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:19:15Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:20:03Z  status W2276 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:21:59Z  interrupt W2277 minted    -         "procrun: let a spawned Child hand back its first stdout line (an output=pipe mode plus a bounded first_line), so nemik's serve and browser helpers drop their Popen"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1568
+2026-11-04T18:22:39Z  status W2254 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:44:24Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

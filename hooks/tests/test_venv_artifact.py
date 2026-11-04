@@ -15,10 +15,11 @@ What stays is hooks' own: its venv must refuse a package its closure does not de
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
 import pytest
+
+from mikemol.hooks import runproc
 
 # ⚑⚑ NOT `Path(__file__).resolve()`: that follows a runfiles symlink back out to the source tree,
 # the escape `test_bar_fires` refuses. The root comes from the working directory, and this arm reads
@@ -46,23 +47,13 @@ def test_a_package_outside_the_declared_closure_does_not_import() -> None:
 
     # ⚑ POSITIVE CONTROL FIRST: a declared package must import, or a refusal below means the
     # interpreter is broken rather than the closure being closed.
-    ctrl = subprocess.run(
-        [str(_HOOKS_PY), "-c", "import pytest"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    ctrl = runproc.run([str(_HOOKS_PY), "-c", "import pytest"])
     assert ctrl.returncode == 0, (
         f"control failed: hooks' venv cannot import its declared pytest — "
         f"{ctrl.stderr.strip()[:200]}"
     )
 
-    proc = subprocess.run(
-        [str(_HOOKS_PY), "-c", "import panflute"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    proc = runproc.run([str(_HOOKS_PY), "-c", "import panflute"])
     assert proc.returncode != 0, (
         "hooks' venv imported `panflute`, which is mdstruct's dependency and is not in hooks' "
         "declared closure — the venv is reaching outside what MODULE.bazel declares"

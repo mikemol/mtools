@@ -599,26 +599,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/shellcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-type-hint-positional-argument"]
 
 
-# ⚑⚑⚑ THE FIFTH NAMED FILE, AND ITS SUBPROCESS IS THE SUBJECT RATHER THAN A CONVENIENCE.
-# `test_venv_artifact.py` asserts that a BUILT venv works, and the only way to know an interpreter
-# works is to RUN it: a symlink that resolves to nothing is well-formed and useless, which is
-# exactly the defect the rule's first draft shipped and only execution caught.
-# ⚑⚑ THE SAME PREVIEW SPLIT AS EVERY ENTRY ABOVE: `ruff check` passes on this file and the
-# ratchet's preview census mints `suspicious-subprocess-import`. Declared here rather than as a
-# `noqa`, because a line directive travels into a peer tree that may not enable the rule.
-# ⚑ AND THE ARGUMENTS CARRY NO UNTRUSTED INPUT: the interpreter path is derived from the
-# repository's own layout, the rest are literals and a distribution NAME taken from a glob over
-# `*/pyproject.toml` in this tree. Never through a shell.
-# ⚑⚑ THE INLINE SUPPRESSION DIRECTIVES THIS REPLACES — one per call site, each naming
-# `subprocess-without-shell-equals-true` by its CODE — MINTED A SECOND RATCHET KEY
-# (`rule-codes-in-suppression-comments`), so the two findings had one cause: a suppression written
-# at the line rather than declared for the file. Declaring it removes both.
-# ⚑ THE OLD CODE IS DESCRIBED HERE RATHER THAN QUOTED, and that is not fussiness: the arm
-# `test_a_selector_and_the_comment_explaining_it_name_the_same_rule` reads the prose block directly
-# above a selector as that selector's explanation, and cannot tell a historical quotation from a
-# live claim — nor should it, since a reader greps the code either way and finds nothing.
-"tests/test_venv_artifact.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑⚑⚑ THE SIXTH AND SEVENTH NAMED FILES, SURFACED BY ARMING PREVIEW RATHER THAN BY NEW CODE.
 # `suspicious-subprocess-import` is preview-only, so `import subprocess` in these two modules was
 # invisible to the gate until `preview = true` was set above — the imports predate the arming and
