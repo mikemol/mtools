@@ -1498,7 +1498,9 @@ GRAPH = {
   },
   "tests": {
     "tests/test_adopt_launcher.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

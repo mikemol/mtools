@@ -11,8 +11,9 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 _DIST = Path(__file__).parent.parent
 _LAUNCHER = _DIST / "adopt" / "tools-hook"
@@ -74,7 +75,7 @@ def _run(
     entry: str,
     stdin: str,
     root: Path | None,
-) -> subprocess.CompletedProcess[str]:
+) -> runproc.Result:
     """Execute the launcher with only PATH and, if given, MTOOLS_ROOT in its environment.
 
     Returns:
@@ -84,18 +85,10 @@ def _run(
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin")}
     if root is not None:
         env["MTOOLS_ROOT"] = str(root)
-    return subprocess.run(
-        [str(launcher), entry],
-        input=stdin,
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    return runproc.run([str(launcher), entry], env=env, timeout=_TIMEOUT_S, stdin_text=stdin)
 
 
-def _decision(proc: subprocess.CompletedProcess[str]) -> str:
+def _decision(proc: runproc.Result) -> str:
     """Read the harness decision a run emitted, or an empty string when it emitted none.
 
     Returns:
