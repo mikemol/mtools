@@ -10,27 +10,21 @@ point git at the real repository.
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
+from mikemol.procrun.proc import capture
 
-from mikemol.gatecheck import hook_index
+from mikemol.gatecheck import hook_index, outcome
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 def _git(root: Path, *args: str) -> None:
-    git = shutil.which("git")
-    assert git is not None
-    subprocess.run(
-        [git, "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args],
-        cwd=root,
-        check=True,
-        capture_output=True,
-    )
+    argv = ["git", "-c", "user.name=decoy", "-c", "user.email=decoy@invalid", *args]
+    done = capture(argv, cwd=root)
+    assert done.returncode == 0, done.stderr
 
 
 @pytest.fixture()
@@ -54,8 +48,8 @@ def decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return tmp_path
 
 
-def _fake(returncode: int, stdout: str = "", stderr: str = "") -> subprocess.CompletedProcess[str]:
-    return subprocess.CompletedProcess([], returncode, stdout, stderr)
+def _fake(returncode: int, stdout: str = "", stderr: str = "") -> outcome.Outcome:
+    return outcome.Outcome(returncode, stdout, stderr)
 
 
 def test_git_status_reads_the_live_porcelain_of_the_cwd(decoy: Path) -> None:
@@ -142,7 +136,7 @@ def test_an_unsound_parser_refuses_before_reading_git(
     monkeypatch.setattr(hook_index, "divergent", _always_clean)
     asked: list[str] = []
 
-    def spy() -> subprocess.CompletedProcess[str]:
+    def spy() -> outcome.Outcome:
         asked.append("git")
         return _fake(0)
 
@@ -163,7 +157,7 @@ def test_an_argument_is_refused_by_name_before_git_is_read(
     no output. paperkit's `hook_index` ignored it too; this one refuses.
     """
 
-    def spy() -> subprocess.CompletedProcess[str]:
+    def spy() -> outcome.Outcome:
         msg = "git was read before the argument was refused"
         raise AssertionError(msg)
 

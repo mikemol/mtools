@@ -4,14 +4,13 @@
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.gatecheck import rungate
+from mikemol.gatecheck import outcome, rungate
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -22,18 +21,18 @@ _GATE_EXIT = 7
 _FAILED_BUDGET_EXIT = 2
 
 
-def _done(returncode: int = 0, stdout: str = "") -> subprocess.CompletedProcess[str]:
-    return subprocess.CompletedProcess([], returncode, stdout, "")
+def _done(returncode: int = 0, stdout: str = "") -> outcome.Outcome:
+    return outcome.Outcome(returncode, stdout)
 
 
 class _Calls:
     """Records every command a seam is asked to run, and answers with a fixed result."""
 
-    def __init__(self, result: subprocess.CompletedProcess[str]) -> None:
+    def __init__(self, result: outcome.Outcome) -> None:
         self.result = result
         self.seen: list[tuple[list[str], Path]] = []
 
-    def __call__(self, cmd: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    def __call__(self, cmd: Sequence[str], cwd: Path) -> outcome.Outcome:
         self.seen.append((list(cmd), cwd))
         return self.result
 
@@ -91,10 +90,13 @@ def test_capture_output_reads_a_failing_status_instead_of_raising(tmp_path: Path
     assert proc.stdout == "said\n"
 
 
-def test_run_passthrough_leaves_the_childs_output_uncaptured(tmp_path: Path) -> None:
-    """The gate's output goes to the terminal, so the completed process holds none of it."""
+def test_run_passthrough_leaves_the_childs_output_uncaptured(
+    tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    """The gate's output reaches the terminal's own descriptor, and the outcome holds none of it."""
     proc = rungate.run_passthrough([sys.executable, "-c", "print('to the terminal')"], tmp_path)
     assert not proc.stdout
+    assert capfd.readouterr().out == "to the terminal\n"
 
 
 def test_run_passthrough_returns_the_commands_exit_code(tmp_path: Path) -> None:
@@ -120,7 +122,7 @@ def test_budget_names_the_command_it_ran(tmp_path: Path) -> None:
 
 def test_a_failing_owner_raises_rather_than_passing_an_empty_budget(tmp_path: Path) -> None:
     """A budget query that fails must not become a gate run with no bound."""
-    with pytest.raises(subprocess.CalledProcessError):
+    with pytest.raises(outcome.CommandFailedError):
         rungate.budget(tmp_path, _Calls(_done(_FAILED_BUDGET_EXIT)))
 
 

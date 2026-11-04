@@ -29,6 +29,7 @@ import sys
 from collections.abc import Callable, Sequence
 
 from mikemol.gatecheck.indexdiverge import divergent
+from mikemol.gatecheck.outcome import Outcome
 
 _REFUSED = 2
 _ALLOW_DIRTY_ENV = "PK_HOOK_ALLOW_DIRTY"
@@ -48,24 +49,25 @@ def _self_proof() -> bool:
     return refuses and passes
 
 
-def git_status() -> subprocess.CompletedProcess[str]:
+def git_status() -> Outcome:
     """Run `git status --porcelain=v1 -z` in the current directory.
 
     Returns:
-        the completed process; its status is read by `main`, never raised.
+        the outcome; its status is read by `main`, never raised.
 
     """
-    return subprocess.run(
+    done = subprocess.run(
         ["git", "status", "--porcelain=v1", "-z"],
         capture_output=True,
         text=True,
         check=False,
     )
+    return Outcome(done.returncode, done.stdout, done.stderr)
 
 
 def main(
     argv: Sequence[str] = (),
-    status: Callable[[], subprocess.CompletedProcess[str]] = git_status,
+    status: Callable[[], Outcome] = git_status,
 ) -> int:
     """Refuse when the worktree differs from the index outside the allowlist.
 

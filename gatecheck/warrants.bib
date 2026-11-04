@@ -732,3 +732,17 @@
   claim  = {Exit 0 and ok true at the sha; exit 1 and ok false elsewhere; 2 for the wrong arguments.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingpin.py -k test_the_command_prints_one_json_line_and_exits_by_the_verdict},
 }
+
+@misc{gatecheck-outcome-successful-outcome-passes-the-check-and-keeps-its-text,
+  section = {outcome},
+  title  = {The control: status zero is not refused, and the text fields default to empty},
+  claim  = {The control: status zero is not refused, and the text fields default to empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcome.py -k test_a_successful_outcome_passes_the_check_and_keeps_its_text},
+}
+
+@misc{gatecheck-outcome-failed-outcome-is-refused-with-its-status-and-stderr,
+  section = {outcome},
+  title  = {Any non-zero status raises, carrying the status and what the command said},
+  claim  = {Any non-zero status raises, carrying the status and what the command said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_outcome.py -k test_a_failed_outcome_is_refused_with_its_status_and_stderr},
+}

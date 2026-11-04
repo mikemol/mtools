@@ -33,7 +33,9 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-Runner = Callable[[Sequence[str], Path], subprocess.CompletedProcess[str]]
+from mikemol.gatecheck.outcome import Outcome
+
+Runner = Callable[[Sequence[str], Path], Outcome]
 
 # Where, under the repo root, the owner of the sweep's RAM bound lives.
 _SWEEP_BUDGET = Path("tools") / "sweep_budget.py"
@@ -74,24 +76,26 @@ def parse(argv: Sequence[str]) -> GateArgs:
     return GateArgs(target=target, keep_going=keep_going, dry_run=dry_run)
 
 
-def capture_output(cmd: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+def capture_output(cmd: Sequence[str], cwd: Path) -> Outcome:
     """Run `cmd` in `cwd`, collecting its output as text.
 
     Returns:
-        the completed process; its status is read by the caller, never raised here.
+        the outcome; its status is read by the caller, never raised here.
 
     """
-    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False)
+    done = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False)
+    return Outcome(done.returncode, done.stdout, done.stderr)
 
 
-def run_passthrough(cmd: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+def run_passthrough(cmd: Sequence[str], cwd: Path) -> Outcome:
     """Run `cmd` in `cwd` with the terminal's own stdout and stderr.
 
     Returns:
-        the completed process; its exit code is the gate's verdict.
+        the outcome, holding no output; its exit code is the gate's verdict.
 
     """
-    return subprocess.run(cmd, cwd=cwd, check=False, text=True)
+    done = subprocess.run(cmd, cwd=cwd, check=False, text=True)
+    return Outcome(done.returncode)
 
 
 def budget(root: Path, capture: Runner = capture_output) -> str:
@@ -103,7 +107,7 @@ def budget(root: Path, capture: Runner = capture_output) -> str:
     """
     exe = sys.executable or "python3"
     proc = capture([exe, str(root / _SWEEP_BUDGET)], root)
-    proc.check_returncode()
+    proc.check()
     return proc.stdout.strip()
 
 

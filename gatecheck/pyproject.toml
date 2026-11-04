@@ -118,7 +118,3 @@ known-third-party = ["mikemol.procrun"]
 "src/mikemol/gatecheck/witness_reach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # siblingpin runs git in a sibling checkout, argv composed from its own constants (W1018).
 "src/mikemol/gatecheck/siblingpin.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-# test_rungate and test_hook_index model the production module's own subprocess result (a
-# CompletedProcess, a CalledProcessError) as a fake, so naming those types is their subject.
-"tests/test_hook_index.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_rungate.py" = ["suspicious-subprocess-import"]

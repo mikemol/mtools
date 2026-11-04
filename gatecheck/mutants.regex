@@ -34,7 +34,10 @@ src/mikemol/gatecheck/rungate.py|sweep-budget-path-renamed|Path\("tools"\) / "sw
 
 src/mikemol/gatecheck/rungate.py|budget-asked-from-the-wrong-directory|\], root\)|], Path("."))|def=budget
 
-src/mikemol/gatecheck/rungate.py|budget-failure-ignored|proc\.check_returncode\(\)|pass|def=budget
+src/mikemol/gatecheck/rungate.py|budget-failure-ignored|proc\.check\(\)|pass|def=budget
+src/mikemol/gatecheck/rungate.py|capture-drops-the-childs-output|    return Outcome\(done\.returncode, done\.stdout, done\.stderr\)|    return Outcome(done.returncode)|def=capture_output
+src/mikemol/gatecheck/hook_index.py|git-status-drops-its-porcelain|    return Outcome\(done\.returncode, done\.stdout, done\.stderr\)|    return Outcome(done.returncode, "", done.stderr)|def=git_status
+src/mikemol/gatecheck/outcome.py|failed-outcome-passes-the-check|        if self\.returncode != 0:|        if False:|def=Outcome.check
 
 src/mikemol/gatecheck/rungate.py|budget-not-stripped|proc\.stdout\.strip\(\)|proc.stdout|def=budget
 
