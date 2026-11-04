@@ -977,3 +977,7 @@ src/mikemol/hooks/isolated.py|commit-leaves-a-stray-work-tree|\{_repair_worktree
 src/mikemol/hooks/stackgate.py|gate-leaves-a-stray-work-tree|\{_repair_worktree\(root, run\)\}|{""}|def=gate_tip
 src/mikemol/hooks/commit_kata.py|commit-not-repaired-before-it-starts|    earlier = _repair_worktree\(root, run_git_in\)|    earlier = ""|def=isolated_commit
 src/mikemol/hooks/stackgate.py|gate-not-repaired-before-it-starts|    earlier = _repair_worktree\(root, run\)|    earlier = ""|def=gate_tip
+src/mikemol/hooks/runproc.py|run-merges-the-two-streams|    return Result\(done\.returncode, done\.stdout, done\.stderr\)|    return Result(done.returncode, done.stdout + done.stderr, "")|def=run
+src/mikemol/hooks/runproc.py|run-drops-the-standard-input|            input=stdin_text,|            input=None,|def=run
+src/mikemol/hooks/runproc.py|run-missing-program-not-127|        return Result\(127, "", f"\{argv\[0\]\}: not found"\)|        return Result(1, "", f"{argv[0]}: not found")|def=run
+src/mikemol/hooks/runproc.py|run-ignores-the-timeout|            timeout=timeout,|            timeout=None,|def=run

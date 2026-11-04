@@ -536,8 +536,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # repositories under tmp_path and execute the launcher, which is the case: the same reason.
 "src/mikemol/hooks/standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "import-outside-top-level"]
 "tests/test_standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-# W513: the rule-8 Stop launcher's witnesses execute it end to end, the same reason.
-"tests/test_standing_stop_launcher.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the
@@ -573,9 +571,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # running it is the case. Literal launcher path derived from `__file__`, explicit env, no shell.
 "tests/test_commit_launcher.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ W881: `test_inbound_launcher_root.py` executes the tracked inbound-asks launcher with MTOOLS_ROOT
-# set, as `test_bin_launchers_argv.py` does without it: a fixed argv, never a shell, no untrusted input.
-"tests/test_inbound_launcher_root.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.
 # ⚑ `test_tool_path.py` finds console scripts in planted directories under tmp_path: no process.

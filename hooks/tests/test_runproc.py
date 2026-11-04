@@ -50,6 +50,35 @@ def test_without_an_environment_the_child_inherits_the_callers() -> None:
     assert runproc.run_process([sys.executable, "-c", code]) == (0, "True\n")
 
 
+def test_run_keeps_the_exit_code_and_each_stream_apart(tmp_path: Path) -> None:
+    """W2220: unlike run_process, a failure's stdout and stderr stay separate, with its status."""
+    code = "import sys; print('out'); sys.stderr.write('err'); sys.exit(3)"
+    got = runproc.run([sys.executable, "-c", code], tmp_path)
+    assert got == runproc.Result(_FAILED, "out\n", "err")
+    ok = runproc.run([sys.executable, "-c", "import sys; sys.stderr.write('warn')"], tmp_path)
+    assert (ok.returncode, ok.stdout, ok.stderr) == (0, "", "warn")
+
+
+def test_run_hands_the_child_its_whole_standard_input_and_environment(tmp_path: Path) -> None:
+    """The text given is all the child reads; the directory and environment given reach it."""
+    code = "import os, sys; print(sys.stdin.read().upper(), os.environ.get('PROBE'), os.getcwd())"
+    got = runproc.run([sys.executable, "-c", code], tmp_path, {"PROBE": "x"}, stdin_text="hi")
+    assert got == runproc.Result(0, f"HI x {tmp_path.resolve()}\n", "")
+
+
+def test_run_reports_a_missing_program_as_127_with_a_note(tmp_path: Path) -> None:
+    """The same code as run_process, with the reason on stderr where a test can read it."""
+    got = runproc.run(["/nonexistent/program"], tmp_path)
+    assert got == runproc.Result(127, "", "/nonexistent/program: not found")
+
+
+def test_run_bounds_a_child_with_the_timeout() -> None:
+    """A sleeper past the bound raises TimeoutExpired, as run_process does."""
+    sleeper = [sys.executable, "-c", "import time; time.sleep(30)"]
+    with pytest.raises(runproc.TimeoutExpired):
+        runproc.run(sleeper, timeout=_SHORT_S)
+
+
 def test_a_child_that_outlasts_the_timeout_raises_and_a_quick_one_does_not() -> None:
     """The bound is passed to the child: a sleeper past it raises, a fast command is unaffected."""
     sleeper = [sys.executable, "-c", "import time; time.sleep(30)"]

@@ -2330,7 +2330,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_inbound_launcher_root.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -3192,7 +3194,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_standing_stop_launcher.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

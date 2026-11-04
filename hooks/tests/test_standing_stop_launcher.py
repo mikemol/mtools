@@ -11,10 +11,11 @@ from __future__ import annotations
 
 import json
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import cast
+
+from mikemol.hooks import runproc
 
 _DIST = Path(__file__).parent.parent
 _ROOT = _DIST.parent
@@ -41,17 +42,10 @@ def _payload(tmp_path: Path) -> str:
     return json.dumps(body)
 
 
-def _launch(stdin: str, python: str) -> subprocess.CompletedProcess[str]:
+def _launch(stdin: str, python: str) -> runproc.Result:
     env = {"CLAUDE_PROJECT_DIR": str(_ROOT), "STANDING_PYTHON": python, "PATH": "/usr/bin:/bin"}
     bash = shutil.which("bash") or "/bin/bash"
-    return subprocess.run(
-        [bash, str(_LAUNCHER)],
-        input=stdin,
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-    )
+    return runproc.run([bash, str(_LAUNCHER)], env=env, stdin_text=stdin)
 
 
 def test_the_launcher_blocks_an_unpaired_hold_end_to_end(tmp_path: Path) -> None:

@@ -17619,3 +17619,31 @@
   claim  = {An earlier tool's key, pointing where git cannot even start, is removed before the gate.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_stray_core_worktree_left_before_the_gate_is_repaired_first},
 }
+
+@misc{hooks-runproc-run-keeps-the-exit-code-and-each-stream-apart,
+  section = {runproc},
+  title  = {W2220: unlike run_process, a failure's stdout and stderr stay separate, with its status},
+  claim  = {W2220: unlike run_process, a failure's stdout and stderr stay separate, with its status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_keeps_the_exit_code_and_each_stream_apart},
+}
+
+@misc{hooks-runproc-run-hands-the-child-its-whole-standard-input-and-environment,
+  section = {runproc},
+  title  = {The text given is all the child reads; the directory and environment given reach it},
+  claim  = {The text given is all the child reads; the directory and environment given reach it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_hands_the_child_its_whole_standard_input_and_environment},
+}
+
+@misc{hooks-runproc-run-reports-a-missing-program-as-127-with-a-note,
+  section = {runproc},
+  title  = {The same code as run_process, with the reason on stderr where a test can read it},
+  claim  = {The same code as run_process, with the reason on stderr where a test can read it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_reports_a_missing_program_as_127_with_a_note},
+}
+
+@misc{hooks-runproc-run-bounds-a-child-with-the-timeout,
+  section = {runproc},
+  title  = {A sleeper past the bound raises TimeoutExpired, as run_process does},
+  claim  = {A sleeper past the bound raises TimeoutExpired, as run_process does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_bounds_a_child_with_the_timeout},
+}

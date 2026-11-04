@@ -10,8 +10,9 @@ checkout comes from MTOOLS_ROOT and the repo it serves from CLAUDE_PROJECT_DIR. 
 from __future__ import annotations
 
 import os
-import subprocess
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 _LAUNCHER = Path(__file__).parent.parent / "bin" / "mikemol-hook-inbound-asks"
 _ENTRY = "mikemol-hook-inbound-asks"
@@ -37,7 +38,7 @@ def _checkout(tmp_path: Path) -> Path:
     return root
 
 
-def _run(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+def _run(env: dict[str, str]) -> runproc.Result:
     """Run the real launcher with `env` plus PATH only.
 
     Returns:
@@ -45,14 +46,7 @@ def _run(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
 
     """
     full = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), **env}
-    return subprocess.run(
-        [str(_LAUNCHER)],
-        capture_output=True,
-        text=True,
-        env=full,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    return runproc.run([str(_LAUNCHER)], env=full, timeout=_TIMEOUT_S)
 
 
 def test_the_venv_comes_from_mtools_root_not_the_served_repo(tmp_path: Path) -> None:

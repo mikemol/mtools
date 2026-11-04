@@ -12,6 +12,7 @@ it. A module this one imports nothing of the package, so no module can reach it 
 
 import subprocess
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 # The exception a child that outlasts its `timeout` raises, re-exported so a caller can name it
@@ -60,6 +61,55 @@ def run_process(
     if done.returncode != 0:
         return done.returncode, f"{done.stdout}{done.stderr}"
     return done.returncode, done.stdout
+
+
+@dataclass(frozen=True)
+class Result:
+    """What a finished command exited with and printed, each stream apart."""
+
+    returncode: int
+    stdout: str
+    stderr: str
+
+
+def run(
+    argv: Sequence[str],
+    cwd: Path | None = None,
+    env: Mapping[str, str] | None = None,
+    timeout: float | None = None,
+    stdin_text: str | None = None,
+) -> Result:
+    """Run a command to completion and keep its exit code and both streams apart (W2220).
+
+    ⚑ THE SEAM THE LAUNCHER AND BIN-SCRIPT TESTS RUN THEIR CHILDREN THROUGH. `run_process`
+    folds stderr into stdout on a failure and returns no separate status the test can assert;
+    these tests assert the exit code, what the script printed and what it complained of,
+    separately. It sits beside `run_process` under this module's existing subprocess entry,
+    so a test that uses it needs none of its own. `cwd` and `env` are the caller's when omitted
+    and `stdin_text` is the child's whole standard input when given.
+
+    ⚑ A CHILD THAT OUTLASTS `timeout` RAISES `subprocess.TimeoutExpired`, as `run_process`
+    does.
+
+    Returns:
+        the exit code, standard output and standard error; 127, empty output and a note on
+        stderr when the program is missing.
+
+    """
+    try:
+        done = subprocess.run(
+            list(argv),
+            cwd=cwd,
+            env=env,
+            input=stdin_text,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
+        )
+    except FileNotFoundError:
+        return Result(127, "", f"{argv[0]}: not found")
+    return Result(done.returncode, done.stdout, done.stderr)
 
 
 def run_with_stdin(argv: Sequence[str], text: str) -> tuple[int, str]:
