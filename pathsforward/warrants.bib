@@ -7959,3 +7959,33 @@
   claim  = {Dry: WOULD CLEAR and the file unchanged. With --write: CLEARED and the edge gone.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_deadenables.py -k test_the_mode_is_a_dry_run_until_write_and_then_clears_the_edge},
 }
+
+@misc{pathsforward-retroscaffold-refused-row-with-two-cards-yields-g0-for-both-and-g1-with-the-reason,
+  section = {retroscaffold},
+  title  = {The precommit carries each card's step as the queue held it; the delta carries the reason},
+  claim  = {The precommit carries each card's step as the queue held it; the delta carries the
+            reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retroscaffold.py -k test_a_refused_row_with_two_cards_yields_g0_for_both_and_g1_with_the_reason},
+}
+
+@misc{pathsforward-retroscaffold-card-the-queue-does-not-hold-or-without-a-step-is-said-so,
+  section = {retroscaffold},
+  title  = {A missing baseline reads as missing, never as an empty step},
+  claim  = {A missing baseline reads as missing, never as an empty step.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retroscaffold.py -k test_a_card_the_queue_does_not_hold_or_without_a_step_is_said_so},
+}
+
+@misc{pathsforward-retroscaffold-scaffold-has-no-findings-and-no-layer-and-passes-the-retro-check,
+  section = {retroscaffold},
+  title  = {The reviewer fills the findings: the scaffold invents none and is accepted as a scaffold},
+  claim  = {The reviewer fills the findings: the scaffold invents none and is accepted as a
+            scaffold.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retroscaffold.py -k test_the_scaffold_has_no_findings_and_no_layer_and_passes_the_retro_check},
+}
+
+@misc{pathsforward-retroscaffold-row-with-no-reason-names-the-verdict-alone-as-the-trigger,
+  section = {retroscaffold},
+  title  = {No reason means no dangling colon},
+  claim  = {No reason means no dangling colon.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retroscaffold.py -k test_a_row_with_no_reason_names_the_verdict_alone_as_the_trigger},
+}

@@ -420,3 +420,8 @@ src/mikemol/pathsforward/deadenables.py|waiting-target-edge-cleared|            
 src/mikemol/pathsforward/deadenables.py|closed-target-edge-cleared|            if held is None or text\(held, "status"\) in _CLOSED:|            if held is None:|def=plan
 src/mikemol/pathsforward/deadenables.py|closed-source-edge-cleared|        if text\(card, "status"\) in _CLOSED:|        if False:|def=plan
 src/mikemol/pathsforward/deadenables.py|every-edge-of-the-source-dropped|            card\["enables"\] = \[t for t in strlist\(card, "enables"\) if t not in drop\]|            card["enables"] = []|def=apply
+src/mikemol/pathsforward/retroscaffold.py|scaffold-precommit-left-empty|        "precommit": "; "\.join\(f"\{symbol\}: \{_step_of\(queue, symbol\)\}" for symbol in symbols\),|        "precommit": "",|def=scaffold
+src/mikemol/pathsforward/retroscaffold.py|scaffold-blank-step-kept|            return step\.strip\(\) if isinstance\(step, str\) and step\.strip\(\) else NO_STEP|            return step|def=_step_of
+src/mikemol/pathsforward/retroscaffold.py|scaffold-queue-without-cards-trusted|    if not isinstance\(cards, list\):|    if False:|def=_step_of
+src/mikemol/pathsforward/retroscaffold.py|scaffold-dangling-colon-without-reason|        "trigger": f"\{verdict\}: \{reason\}" if reason else verdict,|        "trigger": f"{verdict}: {reason}",|def=scaffold
+src/mikemol/pathsforward/retroscaffold.py|scaffold-invents-findings|        "findings": \[\],|        "findings": ["unreviewed"],|def=scaffold
