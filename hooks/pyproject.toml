@@ -589,7 +589,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_launcher_fence.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_commit_claim.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_domain_witness_concurrency.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"tests/test_commit_run_git.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_commit_published.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 
 # ⚑ W825: `test_post_commit_census.py` runs the tracked post-commit stub and git in a throwaway
@@ -709,10 +708,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
 # that demand them are off for this dist.
 "src/mikemol/hooks/repin_cli.py" = ["boolean-type-hint-positional-argument"]
-
-# CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
-# that demand them are off for this dist.
-"src/mikemol/hooks/revendor.py" = ["boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 
 # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
 # that demand them are off for this dist.
