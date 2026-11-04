@@ -107,4 +107,4 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/*" = ["assert"]
 # ⚑ eval's one responsibility is to spawn the check it measures: its import and its call are that.
 "src/mikemol/mutantcell/eval.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_eval.py" = ["assert", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+"tests/test_eval.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
