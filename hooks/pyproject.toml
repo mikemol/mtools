@@ -621,11 +621,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # and literals; the script under judgement travels on STDIN, never through a shell.
 "src/mikemol/hooks/shellcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-type-hint-positional-argument"]
 
-# ⚑ THE GRADER'S OWN CASES. `assert` as everywhere in tests; `private-member-access` for ONE arm that reaches
-# `grade._flips` deliberately — that private function is the single place the reachable/passed
-# TRISTATE is consumed, and an integration-level assertion cannot tell a real flip from a
-# crash-flip. Testing the boundary requires crossing it, and the arm says so at its call site.
-"tests/test_grade.py" = ["private-member-access"]
 
 # ⚑⚑⚑ THE FIFTH NAMED FILE, AND ITS SUBPROCESS IS THE SUBJECT RATHER THAN A CONVENIENCE.
 # `test_venv_artifact.py` asserts that a BUILT venv works, and the only way to know an interpreter

@@ -206,7 +206,7 @@ def arms_with_subjects(module: Path, targets: dict[str, Path]) -> dict[str, list
     return out
 
 
-def _flips(runner: Runner, test: str, subject: Path) -> bool:
+def flips(runner: Runner, test: str, subject: Path) -> bool:
     """Corrupt one subject, run the test, restore. True iff the test flips red.
 
     ⚑⚑⚑ THE RESTORE IS IN `finally` AND THAT IS NOT OPTIONAL. This writes over a file in a live
@@ -255,7 +255,7 @@ def grade_test(
             subjects=tuple(str(s) for s in subjects),
         )
 
-    flipped = tuple(str(s) for s in subjects if _flips(runner, test, s))
+    flipped = tuple(str(s) for s in subjects if flips(runner, test, s))
     if flipped:
         names = set(content)
         return Grade(

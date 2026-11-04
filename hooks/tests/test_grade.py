@@ -262,12 +262,12 @@ def test_a_flip_requires_the_check_to_be_reachable(sandbox: Path) -> None:
     fail. Counting that as a flip would award `behavioral` for a CRASH — the check would be
     credited with detecting a change it never observed.
 
-    ⚑ The arm reaches into `_flips` deliberately: this is the one place the tristate is consumed,
-    and an integration-level assertion could not tell a real flip from a crash-flip.
+    ⚑ The arm calls `flips` directly: this is the one place the tristate is consumed, and an
+    integration-level assertion could not tell a real flip from a crash-flip.
     """
     subject = sandbox / "tests" / "subject.sh"
     runner = _runner(sandbox)
-    assert grade._flips(runner, "test_behavioural", subject)
+    assert grade.flips(runner, "test_behavioural", subject)
     assert subject.read_text(encoding="utf-8") == _SUBJECT
 
 

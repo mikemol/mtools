@@ -64,9 +64,9 @@ mutant_site(
 )
 
 mutant_site(
-    name = "_flips",
+    name = "flips",
     dist = "hooks",
-    site = "src/mikemol/hooks/grade.py::_flips",
+    site = "src/mikemol/hooks/grade.py::flips",
     tests = "tests/test_grade.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
@@ -119,7 +119,7 @@ test_suite(
         ":Runner.run",
         ":subjects_of",
         ":arms_with_subjects",
-        ":_flips",
+        ":flips",
         ":grade_test",
         ":_by_rung",
         ":report",
