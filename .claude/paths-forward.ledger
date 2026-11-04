@@ -5518,3 +5518,15 @@
 2026-11-04T18:21:59Z  interrupt W2277 minted    -         "procrun: let a spawned Child hand back its first stdout line (an output=pipe mode plus a bounded first_line), so nemik's serve and browser helpers drop their Popen"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1568
 2026-11-04T18:22:39Z  status W2254 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T18:44:24Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:45:07Z  tick  W2220 advanced  collapse  "batch 5 (test_venv_artifact onto runproc.run, entry and its comment block dropped) submitted in the gate; W2276 harness waits for the registry files [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T18:45:54Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:08:27Z  status W2276 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:09:05Z  tick  W2220 advanced  collapse  "batch 5 stack 1793817884326207909 still gating; HEAD e543b4d7; W2276 returned to ready (stale working, unbuilt) [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:10:20Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:38:38Z  tick  W2220 advanced  collapse  "batch 5 stack 1793817884326207909 still gating; HEAD e543b4d7; hooks-lane cards wait for the registry files [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:39:51Z  status W2219 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:47:35Z  status W2220 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:47:55Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:48:14Z  status W2219 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:48:32Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T19:49:17Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

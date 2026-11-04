@@ -2436,7 +2436,8 @@ GRAPH = {
     },
     "tests/test_no_verify.py": {
       "imports": [
-        "src/mikemol/hooks/no_verify.py"
+        "src/mikemol/hooks/no_verify.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

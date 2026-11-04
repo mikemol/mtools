@@ -543,17 +543,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # in the command. Never through a shell.
 "src/mikemol/hooks/refusal_log.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 
-# ⚑⚑ THE THIRD NAMED FILE, AND THE SAME REASON AS THE SECOND. `test_no_verify.py`'s subject is
-# what the INSTALLED console script decides — a hook can have a correct predicate and a broken
-# entry point, and only running the installed binary can tell those apart. So invoking it is the
-# case, not a helper around the case.
-# ⚑ MEASURED: every argument is a literal or a path this module constructs — `_BIN` is built from
-# `__file__`'s unresolved parent, and the payload is a `json.dumps` of literals — so there is no
-# untrusted input for `subprocess-without-shell-equals-true` to be about here either.
-# ⚑ DECLARED IN CONFIG, NOT AS `noqa`, following the entry above: a line directive travels with
-# the code into a peer tree that may not enable the rule, and the ratchet refuses new keys.
-"tests/test_no_verify.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 
 # ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.
 # ⚑ `test_tool_path.py` finds console scripts in planted directories under tmp_path: no process.

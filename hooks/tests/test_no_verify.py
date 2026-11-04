@@ -15,11 +15,11 @@ message announcing the policy. That is not a hypothetical: this module's own com
 from __future__ import annotations
 
 import json
-import subprocess
 from pathlib import Path
 
 import pytest
 
+from mikemol.hooks import runproc
 from mikemol.hooks.no_verify import findings
 
 # ⚑⚑⚑ NO `__file__.resolve()`, AND A SIBLING ARM CAUGHT ME WRITING ONE. `test_bar_fires`
@@ -229,13 +229,8 @@ def test_the_installed_console_script_denies_when_armed() -> None:
     if not _BIN.exists():
         pytest.skip(f"console script not installed at {_BIN}")
     payload = json.dumps(_PAYLOAD)
-    result = subprocess.run(
-        [str(_BIN)],
-        input=payload,
-        capture_output=True,
-        text=True,
-        env={"PATH": "/usr/bin:/bin", "NOVERIFY_HOOK_BLOCK": "1"},
-        check=False,
+    result = runproc.run(
+        [str(_BIN)], env={"PATH": "/usr/bin:/bin", "NOVERIFY_HOOK_BLOCK": "1"}, stdin_text=payload
     )
     assert result.returncode == 0, "a hook must exit 0 and decide via its payload"
     # ⚑ `isinstance(x, dict)` NARROWS TO `dict[Any, Any]`, NOT TO A TYPED MAPPING, so indexing it
@@ -260,14 +255,7 @@ def test_the_installed_console_script_is_silent_when_unarmed() -> None:
     if not _BIN.exists():
         pytest.skip(f"console script not installed at {_BIN}")
     payload = json.dumps(_PAYLOAD)
-    result = subprocess.run(
-        [str(_BIN)],
-        input=payload,
-        capture_output=True,
-        text=True,
-        env={"PATH": "/usr/bin:/bin"},
-        check=False,
-    )
+    result = runproc.run([str(_BIN)], env={"PATH": "/usr/bin:/bin"}, stdin_text=payload)
     assert result.returncode == 0
     assert not result.stdout.strip(), (
         "an unarmed hook must emit nothing; an advisory here would be invisible to the harness"
