@@ -5427,3 +5427,8 @@
 2026-11-04T10:06:47Z  status W1428 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T10:10:32Z  tick  W1428 advanced  collapse  "combined W2221 plus W1428 stack inflight; it holds hooks/pyproject.toml and the katas registries [blocked by W2221]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T10:15:48Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T10:23:12Z  status W2254 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T10:38:56Z  interrupt W2272 minted    -         "Answer luthen-observability:W1968: waldo plan_to_json reports only the last stderr line of a failed plan"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1968
+2026-11-04T10:54:10Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T11:06:09Z  interrupt W2273 minted    -         "Retry the post-commit push a bounded number of times on a 5xx before it gives up to LOCAL"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:R217
+2026-11-04T11:11:46Z  status W2219 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

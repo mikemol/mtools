@@ -205,12 +205,6 @@ known-third-party = ["mikemol.procrun"]
 # to argue about, not an inheritance.
 "tests/test_cli.py" = ["import-private-name"]
 
-# ⚑⚑ ONE FILE NAMES A METHOD BY THE STANDARD LIBRARY'S CONTRACT, AND THE NAME IS THE CONTRACT.
-# `http.server` dispatches a GET to a method called exactly `do_GET`; `invalid-function-name`
-# is right everywhere else and cannot be satisfied here without a handler that is never called. `test_reading.py` serves the guard's reading source from a loopback server it starts and
-# stops, because the transport is the subject. ⚑ SCOPED TO THE ONE FILE, never to `tests/*`.
-"tests/test_reading.py" = ["invalid-function-name"]
-
 # ⚑⚑ RUNNING THE COMMAND IT GUARDS IS THE GUARD LAUNCHER'S WHOLE JOB (W921): `guard_cli` starts the
 # argv it was handed as a child, watches beside it and passes its exit status on. An argv list, no
 # shell, never built from the policy. ⚑ SCOPED TO THE ONE FILE.

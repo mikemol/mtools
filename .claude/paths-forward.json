@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2271,
+  "counter": 2273,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -46160,12 +46160,12 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Asked nemik-94 three layout questions before building first-vendor: (1) which table takes the new dist's dependency (runtime or which dev group), (2) the MODULE.bazel row shape a NEW dist needs, (3) the SHA256SUMS line format. Build once answered: --first-vendor DIST adds the [tool.uv.sources] path row, the dependency in the named table, the MODULE.bazel row and the sums line BEFORE the move; tests for a first vendor and a mixed-tag repo; mutants and warrants. Per-dist tags, stderr in run's message, g-kept path and old-wheel removal are already landed (W2249 to W2251). Add importdag (and debtplan, buildtel if wanted) to revendor.EXTRA.",
+      "next_bounded_step": "nemik-94 answered (2026-11-04): a first-vendor of DIST must add, in order: (a) [dependency-groups] dev gets one line mikemol-DIST (dev-only by default; the project-level list is for what the repo imports); (b) [tool.uv.sources] gets mikemol-DIST = { path = vendor/wheels/mikemol_DIST-0.1.0+TAG SHORT-py3-none-any.whl }; (c) MODULE.bazel gets vendored_wheel(name = DIST, wheel = //:vendor/wheels/<file>) via the existing use_repo_rule; (d) BUILD.bazel hub_requirements gains @DIST//:pkg; (e) uv.lock gets a [[package]] block with source = { path = ... } plus the wheel hash and a { name = mikemol-DIST, path = ... } requires-dist row, which uv lock regenerates; (f) vendor/wheels/SHA256SUMS gets <64-hex>  ./<filename> (two spaces, ./ prefix, bare filename), sorted by filename. Add importdag to revendor.EXTRA; nemik needs its console script mikemol-landing-cost (importdag.costcli) on PATH from the wheel. Plan: put (a) to (d) and (f) in pure string functions with tests, leave (e) to uv lock; one hooks stack with the registries; pace companion from a non-hooks dist.",
       "evidence": "2026-10-29: 2026-10-29: BLOCKED behind the hooks train (hooks-f W2017 inflight, hooks-g W2018 and hooks-h W2059 queued on its registries). The change is in revendor_apply.py and revendor_cli.py with tests, mutants and warrants, so it needs the hooks registries that freeze whole. W2155 (revendor keeps the wheel's real +g file name and prints uv's stderr) is in the same two files: build both in one clean scratch tree on the HEAD after hooks-h, as one stack with one registry set. Read revendor_apply's plan builder first, as the card says. | 2026-10-29: 2026-10-29 READ revendor.py and revendor_apply.py (the step the card said it still needed). (1) Target.dists = revendor.vendored(pyproject) and Target.tag = revendor.tag_of(pyproject), ONE tag for every dist, read from the FIRST wheel path (a regex search); swap() names every new wheel with that one tag (wheel_name(d, short, target.tag)). So a repo whose rows mix local-version spellings (+g<sha> and +<sha>), as nemik's transcriptstruct row did, gets one spelling for all: that is W2155's defect, and it makes the config paths and the vendored file names disagree. (2) swap copies the new wheels, git rm's stale ones, moves pins in pyproject.toml and MODULE.bazel (_move_file/move_sources edit EXISTING rows only), writes SHA256SUMS, git add -f, then runs uv lock and uv sync --frozen; a failing step is reported by _failed(step, code, out) from the run() pair (code, out), and nemik saw an empty message, so run()'s out does not carry uv's stderr. (3) For --first-vendor DIST: there is no existing row to move, so the plan must ADD the path source, the dependency and the sums row before the move; a new dist has no tag of its own, so it takes the repo's tag_of default, which is exactly where W2155 bites, so the fix is per-dist tags (each row keeps its own) and one build/lock path for both cards. Build W2060 and W2155 together, in a clean scratch tree on the HEAD after hooks-h. | 2026-10-29: 2026-10-29 (luthen-observability:W1798, github:R134/R135): the host wants every hook binary in the pinned bin; mikemol-hook-standing and mikemol-hook-standing-stop are checkout-path bash launchers with no console_scripts (standing runs hooks/.venv python -m mikemol.hooks.standing_facts then opa on the checkout's standing.rego; standing-stop runs transcriptstruct/.venv python -m mikemol.transcriptstruct.standing_stop with PYTHONPATH on the checkout src). mikemol-debtplan and mikemol-buildlog are console scripts in debtplan and buildtel, but revendor.ALL does not list those dists. For the same revendor build: decide whether ALL gains debtplan and buildtel, and whether the two standing hooks become console scripts (standing_stop in transcriptstruct; standing_facts in hooks, shipping standing.rego as package data with opa on PATH). Answered on W1798 as my position, not built or reviewed. | 2026-10-29: 2026-10-29 (nemik-ed, for nemik:W1056): revendor.EXTRA is (icsstruct, rulerseq, frontier, atomicwrite, corpus, waldo, cvdcore, ratchet, transcriptstruct) and lacks importdag, debtplan and buildtel (re-read in hooks/src/mikemol/hooks/revendor.py at HEAD 2c526208). nemik:W1056 needs importdag vendored, which is exactly this card's first-vendor case: add importdag, debtplan and buildtel to EXTRA (or a general rule), and first-vendor adds a dist a repo does not yet name. Test: a pyproject naming each is re-vendored. nemik:W1056 blocks on W2060. | 2026-10-31: reconciled STALE | 2026-11-03T08:39:46Z: 2026-11-03: same two files and the same repin run as W2249 (print uv's stderr), W2250 (the kept g in the rewritten wheel path) and W2251 (the left-behind superseded wheel): one clean scratch tree, one registry set, after the websubset registries (W1366) are committed, since hooks/mutants.regex and warrants.bib freeze whole and main holds W1366's dirty copies. nemik's real run (nemik:W1510) is the first-vendor and mixed-tag evidence: a +g11d5b4d local version rewrote to +g45ffeb7 while the file was +45ffeb7. | 2026-11-04T10:15:48Z: 2026-11-04 read revendor.py: per-dist spelling is handled (pinned_files from rows, one written tag); what is left is first-vendor, which needs per-repo layout facts (dependency table, MODULE.bazel row, sums format); questions sent to nemik-94.",
       "issued_at": "2026-10-27T20:01:20Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1180",
-      "last_worked": "2026-11-04T10:15:48Z",
+      "last_worked": "2026-11-04T10:22:00Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/revendor_cli.py",
@@ -49427,20 +49427,22 @@
     {
       "symbol": "W2219",
       "title": "Hooks tests that build a real git repo share one tests helper instead of 50 per-file subprocess exemptions",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "file:hooks/pyproject.toml!w"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After the W2271 stack lands (it carries the hooks registries): batch 13 on the new HEAD in a scratch tree. Remaining: snaplinks (needs a stdin seam), lease_wait (Popen, needs a typed spawn seam), index_refresh, commit_raced, isolated_commit, worktree_venv (keep GIT_CONFIG_GLOBAL), githook_prepare_commit_msg (keep GIT_CEILING_DIRECTORIES). Check each for a plain git helper first; delete entries, never add one.",
+      "blocked_on": [
+        "W2221"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the W2221 and W1428 stack lands (it holds hooks/pyproject.toml in main's tree): batch 13 on the new HEAD in a scratch tree. Remaining: snaplinks (stdin seam), lease_wait (needs hooks' own runproc.start, see W2254), index_refresh, commit_raced, isolated_commit, worktree_venv (keep GIT_CONFIG_GLOBAL), githook_prepare_commit_msg (keep GIT_CEILING_DIRECTORIES). Delete entries, never add one.",
       "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again. | 2026-11-03T04:02:07Z: 2026-11-03: batch 3 LANDED cd6c19b3 (test_in_gate, test_census_unmeasured). | 2026-11-03T05:19:53Z: 2026-11-03: batch 4 LANDED 526d33c7 (test_verdictlog). | 2026-11-03T13:17:27Z: 2026-11-03: batch 5 LANDED 39486700 (test_stacklanding, test_stackgate, test_stackland). | 2026-11-03T16:28:54Z: 2026-11-03: batch 6 LANDED 459a112d (test_commit_isolated_new, _ignored, _staged). | 2026-11-03T17:36:32Z: 2026-11-03: batch 7 LANDED 6f4cda95 (test_commit_stack). | 2026-11-03T19:15:20Z: 2026-11-03: batch 8 SUBMITTED (stack batch8-census) with W1956: runproc.run_process(argv, cwd=None, env=None) and test_import_cycles and test_mypy_mirror through it, 4 rules fewer in hooks/pyproject.toml. Chose hooks' own leaf seam over a procrun dev dependency because hooks' per-site mutation targets run a module's tests under mutation with the third-party venv only, so a test importing a sibling dist would fail to import there and kill every mutant for the wrong reason. 13 tests pass (fresh-interpreter sweep and real mypy included), one mutant, two warrants. Not verified under bazel. test_reader_guard needs a timeout the seam lacks. | 2026-11-03T20:09:14Z: 2026-11-03: batch 8 LANDED 3b692b7c (runproc.run_process takes an environment; test_import_cycles and test_mypy_mirror through it). | 2026-11-03T20:29:31Z: 2026-11-03: batch 9 SUBMITTED with W1950 part 2 (stack idle-advance-batch9): run_process takes a timeout and re-exports TimeoutExpired; test_reader_guard through it, one entry and one line-level ruff directive fewer; 22 tests pass. Not verified under bazel. | 2026-11-03T23:35:17Z: 2026-11-03 batch 9 969eb51e, batch 10 e08e66cc (stackrun, commit_isolated_routing, commit_isolated). Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit. | 2026-11-04T02:03:48Z: 2026-11-04 batch 11 landed with W2035 in b7f212b2 (test_commit_plain_frozen, test_pycheck_changed take scratch.git_out; 4 rules fewer). Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit. | 2026-11-04T07:43:08Z: 2026-11-04 batch 12 (test_commit_isolated_hooks) landed with the guard in 5578ac14. Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit, worktree_venv (needs GIT_CONFIG_GLOBAL kept), githook_prepare_commit_msg (needs GIT_CEILING_DIRECTORIES kept).",
       "issued_at": "2026-11-01T22:49:23Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-04T08:39:51Z",
+      "last_worked": "2026-11-04T11:11:46Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49476,11 +49478,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Survey the hooks/tests entries whose rules are not subprocess ones (vlogship and vlogsink invalid-function-name and builtin-argument-shadowing, test_grade private-member-access, others): rename the handler or test through the public surface so the entry can go; one stack per two or three files",
-      "evidence": "2026-11-04T10:05:42Z: 2026-11-04 survey: test_grade's private-member-access entry removed by making grade._flips public (flips); test_vlogship and test_vlogsink are DELIBERATE (http.server's fixed do_POST and log_message(format) names), left. Queued as stack-w1428-w2221 with the katas slice. Remaining entries on the survey: none non-deliberate found yet; re-survey after it lands.",
+      "evidence": "2026-11-04T10:05:42Z: 2026-11-04 survey: test_grade's private-member-access entry removed by making grade._flips public (flips); test_vlogship and test_vlogsink are DELIBERATE (http.server's fixed do_POST and log_message(format) names), left. Queued as stack-w1428-w2221 with the katas slice. Remaining entries on the survey: none non-deliberate found yet; re-survey after it lands. | 2026-11-04T11:18:05Z: 2026-11-04 CORRECTION to my earlier survey note: I called test_vlogship and test_vlogsink's do_POST and log_message(format) entries deliberate, by the same reasoning as fence's test_reading; a scan under the pinned ruff 0.16.6 (drop each entry, compare findings) shows fence's invalid-function-name entry was DEAD (0.16.6 does not flag do_GET), so hooks' vlog entries must be re-measured the same way once hooks/pyproject.toml is free: the scan is /var/tmp/.../scratchpad/dead_entries.py (uv tool run --offline --from ruff==0.16.6; hooks and stubs not yet covered). Do not assume a contract-name entry is live without the measurement.",
       "issued_at": "2026-11-01T22:50:00Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-04T10:05:42Z",
+      "last_worked": "2026-11-04T11:18:05Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49975,21 +49977,23 @@
     {
       "symbol": "W2248",
       "title": "Gate runs the bazel suite's mutant targets as a later phase than the rest, so a withdraw can land between them",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1982"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "After the W2271 stack lands (it carries hooks/mutants.regex, warrants.bib, graph.json, dag.bzl and the commit_kata and stackgate sites): build the mutants-tag change and the pre-commit suite split in a scratch tree on the new HEAD, with a paydown companion; bazel build //hooks:.venv between any new module and the importing edit.",
+      "blocked_on": [
+        "W2221"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the W2221 and W1428 stack lands (it holds hooks/pyproject.toml, the grade site BUILD and the katas registries in main's tree): build the mutants-tag change and the pre-commit suite split in a scratch tree on the new HEAD with a paydown companion; the live .githooks/pre-commit edit goes last, deps first (live-hook-dependencies-first), and bazel build //hooks:.venv between any new module and the importing edit.",
       "evidence": "2026-11-03: 2026-11-02 request from github-94 (github:W59), memory feedback-velocity-before-what-it-carries: one two-commit stack (W2242 + W2219, key 1793658805803128141) has held the gate for 2.5 h or more, almost all in mutant shards (pycodemod 24, hooks about 95), and nothing can stop it mid-suite; that caps paydown at a few stacks a day. THREE READINGS of its bazel run (invocation 27178364-6473-4f2f-84bd-0ac70b3ccca9): epoch 1793663008: 181 of 1638 tests, longest //pycodemod:mutants_5 at 1199 s; 1793663797: 755 of 1638, //pycodemod:mutants_19; 1793665601: 1126 of 1638, //hooks:mutants_60 at 129 s; FAILED 0 and TIMEOUT 0 throughout; rate fell from 0.73 to 0.21 tests/s as the hooks shards took over. WITHDRAW LIMIT: --withdraw is honoured only at a phase() boundary of .githooks/pre-commit (W1705) and the bazel suite is one phase, so it cannot stop a run mid-suite. EXISTING CARD for the cost itself: W1989 (the hooks mutants shards take the module they plant in and the tests whose closure holds it as inputs: per-site targets that cache by input, so only changed files rerun, retiring the sharded :mutants), blocked on W2203 to W2206 (the 37 survivors/failures of its full site run). This card is the other half of the host's suggestion: split the mutant targets into their own phase so a withdraw can land between the rest of the suite and the mutants. It is smaller than W1989 and independent of the survivors. | 2026-11-03: 2026-11-02 READ of .githooks/pre-commit lines 879-895: the suite is ONE invocation, 'bazel test --nokeep_going --notest_keep_going ${_gate_jobs[@]} //... --test_output=errors --build_event_json_file=$staged/.bep.json' under 'phase bazel_test', piped through tee $staged/.suite.log. phase() is the withdraw point (lines 147-155). TWO WAYS to split: (a) tag the mutant targets 'mutants' (check_mutants/defs.bzl mutants_sharded only adds a 'cpu:N' tag today, line 51; mutant_site already carries 'manual') and run two invocations, '--test_tag_filters=-mutants' then '--test_tag_filters=mutants', each under its own phase() mark; (b) exclude by label pattern without touching the macro. (a) is cleaner and also lets a withdraw land between. COST TO MEASURE: a second bazel invocation re-analyses the graph (hooks alone is about 4,500 targets) and the build-event file and the tally predicate (_suite_green, lines 922-926) must run per invocation; the first-failure stop of W2110 must hold in both. Not built.",
       "issued_at": "2026-11-03T00:31:44Z",
       "minted_during": "interrupt",
       "caused_by": "github:W59",
-      "last_worked": "2026-11-04T08:26:42Z",
+      "last_worked": "2026-11-04T10:54:10Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -50094,7 +50098,7 @@
     {
       "symbol": "W2254",
       "title": "Build the toy harness proper: a disposable repo plus fake bazel the stack witnesses (W2208, W2209) run mikemol-commit against",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2208",
         "W2209"
@@ -50105,12 +50109,12 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When W2241 lands procrun.spawn: add mikemol-procrun to hooks' dev group, build test_toy_harness.py with a toy repo, a flag-file pre-commit and a spawned mikemol-commit; first witness a lone one-file stack lands.",
-      "evidence": "2026-11-03T04:40:47Z: 2026-11-03: checked: neither hooks/tests/test_toy_harness.py nor test_dependent_stack_toy.py exists (W2207 closed on its git-wrapper batch only). DESIGN: the harness must hold a first submit inside a flag-file pre-commit while a second submit runs, so it needs a live child handle: procrun.spawn (W2241), not a new subprocess exemption (operator 2026-10-25: no new exemption to clear a key). Synchronous halves (toy repo via scratch.git_out, runner via procrun.capture, hooks gains procrun as a dev dep) can land first.",
+      "next_bounded_step": "REDIRECT: do not add mikemol-procrun to hooks' dev group: hooks' per-site mutation targets run a module's tests with the third-party venv only (the reason batch 8 used hooks' own runproc.run_process), so a harness importing a sibling dist would fail to import and kill every mutant on its module for the wrong reason. Instead add a live-child handle to hooks' own leaf runproc (start(argv, cwd, env) returning a Handle with pid, wait(timeout), kill), which sits under runproc.py's EXISTING subprocess entry (no new exemption), with tests and mutants. Then build test_toy_harness.py on scratch.git_out for the toy repo, runproc.run_process for synchronous runs and runproc.start for the held first submit; first witness: a lone one-file stack lands.",
+      "evidence": "2026-11-03T04:40:47Z: 2026-11-03: checked: neither hooks/tests/test_toy_harness.py nor test_dependent_stack_toy.py exists (W2207 closed on its git-wrapper batch only). DESIGN: the harness must hold a first submit inside a flag-file pre-commit while a second submit runs, so it needs a live child handle: procrun.spawn (W2241), not a new subprocess exemption (operator 2026-10-25: no new exemption to clear a key). Synchronous halves (toy repo via scratch.git_out, runner via procrun.capture, hooks gains procrun as a dev dep) can land first. | 2026-11-04T10:23:12Z: 2026-11-04 read the design against what batch 8 learned: procrun as a hooks dev dep breaks per-site mutation targets; the handle belongs in hooks' own runproc.",
       "issued_at": "2026-11-03T03:38:43Z",
       "minted_during": "interrupt",
       "caused_by": "W2189",
-      "last_worked": "2026-11-03T04:40:47Z",
+      "last_worked": "2026-11-04T10:23:12Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -50433,6 +50437,40 @@
       "last_worked": "2026-11-04T09:45:10Z",
       "ticks_blocked": 0,
       "completed": "20261104T094510Z"
+    },
+    {
+      "symbol": "W2272",
+      "title": "Answer luthen-observability:W1968: waldo plan_to_json reports only the last stderr line of a failed plan",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W1968"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-04T10:58:17Z: 2026-11-04 built in scratch W22720 and queued as stack-w2272: waldo planplan.plan_failure keeps the whole error block (warnings dropped, one line, capped at 600 with the head kept); 308 waldo tests, whole grid 175 killed 0 survived. Tell luthen-observability the sha when it lands; they see it at their next pin move.",
+      "issued_at": "2026-11-04T10:38:56Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W1968",
+      "last_worked": "2026-11-04T10:58:17Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2273",
+      "title": "Retry the post-commit push a bounded number of times on a 5xx before it gives up to LOCAL",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Find the post-commit push (hooks githook_post_commit and where the LOCAL bracket is printed). Add a bounded retry for a transient failure only (a 5xx / 'remote rejected ... Internal Server Error' / connection reset in git's stderr; NOT a non-fast-forward or auth refusal): at most three tries in total, the extra tries paced by a count and a short backoff taken from an injected sleeper so tests never sleep. CONSTRAINT: operator 2026-09-23/24 ruled against wall-clock decisions (bound by progress, never a timer), so the retry count is the bound, the pause is only a courtesy to the remote, and the final failure keeps today's behaviour: 'push of main failed; the commit stays local' and the [LOCAL: not on origin/main] bracket on the commit's verdict line. Test with a fake push that fails twice with a 5xx then succeeds, one that fails with a non-fast-forward (no retry), and one that always 5xxs (three tries, then LOCAL). Mutants and warrants.",
+      "evidence": "2026-11-04T11:07:12Z: 2026-11-04 nemik-94 (R217 finding 2): one push of main failed with a github 500 on stack 972 (Request ID AD08:3E4FD0:23FC92C:2F5D63A:6AEAFE7B), the commits stayed local, a hand retry worked. For nemik a push is a Flux deploy, so a stalled landing matters.",
+      "issued_at": "2026-11-04T11:06:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:R217",
+      "last_worked": "2026-11-04T11:07:12Z",
+      "ticks_blocked": 0
     }
   ],
   "residue": [
