@@ -5395,3 +5395,10 @@
 2026-11-04T06:27:44Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T06:39:49Z  tick  W2241 advanced  collapse  "W2269 guard inflight, mutantcell W2241 queued behind it; nothing new landed [blocked by W2269]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T06:41:10Z  status W2220 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T07:19:05Z  interrupt W2271 minted    -         "Refuse a redirected work tree after a land: rev-parse --show-toplevel must be the checkout"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2269
+2026-11-04T07:19:48Z  status W2220 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T07:19:48Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T07:19:48Z  status W2269 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T07:30:09Z  status W2241 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T07:38:46Z  status W2267 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T07:39:19Z  status W2267 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

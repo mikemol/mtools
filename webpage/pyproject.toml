@@ -106,8 +106,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # nobody chose for it; each line below is one module that needs it.
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
-# ⚑ THE PINNED BROWSER'S VERSION CHECK (W1819) RUNS THROUGH `procrun.capture` (W2240): a fixed argv
-# from bazel's own data, no shell, so it needs only the assert grant.
-"tests/test_chromium.py" = ["assert"]
-# ⚑ THE BROWSER PROBES (W1820) START THEIR SECOND PROCESS, `cdp_poke.py`, THROUGH `procrun.spawn`
-# (W2241), so they need only the assert grant `tests/*` already gives.
+# ⚑ THE PINNED BROWSER'S VERSION CHECK (W1819) RUNS THROUGH `procrun.capture` (W2240) and the
+# BROWSER PROBES (W1820) START THEIR SECOND PROCESS, `cdp_poke.py`, THROUGH `procrun.spawn` (W2241),
+# so neither needs more than the assert grant `tests/*` already gives: no per-file entry.

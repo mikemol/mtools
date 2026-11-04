@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2270,
+  "counter": 2271,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -49469,16 +49469,14 @@
     {
       "symbol": "W2220",
       "title": "Hooks launcher and bin-script tests share one tests helper that runs a script as a child",
-      "status": "blocked",
+      "status": "ready",
       "enables": [],
       "touches": [
         "hooks",
         "file:hooks/pyproject.toml!w"
       ],
-      "blocked_on": [
-        "W2269"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "After the W2269 stack lands, survey the hooks/tests entries that run launcher or bin scripts as children (adopt_launcher, bin_launchers_argv, commit_launcher*, inbound_launcher_root, standing_stop_launcher, no_verify, bar_fires, no_chaining, gate_suite, venv_artifact) and DELETE each entry through scratch.git_out, runproc.run_process (it now carries cwd, env and timeout) or a seam; do NOT add the shared childproc.py exemption (operator 2026-10-25: a new exemption that clears a key cheats the ratchet) without asking the operator whether it counts as paydown.",
       "evidence": "2026-11-04T04:27:18Z: 2026-11-04 not started. Noted the conflict with the 2026-10-25 ruling on new exemptions, and that hooks-lane registries are held by the W2036 stack in the gate.",
       "issued_at": "2026-11-01T22:49:42Z",
@@ -49869,7 +49867,7 @@
     {
       "symbol": "W2241",
       "title": "procrun gains a typed process-handle seam so the Popen tests and buildtel.stream drop their subprocess entries",
-      "status": "working",
+      "status": "ready",
       "enables": [],
       "touches": [
         "procrun"
@@ -49877,11 +49875,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Build procrun.proc.spawn and Child per the design in evidence, with real-child witnesses (pid/poll/wait/kill, wait timeout raising TimeoutExpired, discard of streams), then convert the six consumers one dist at a time (fence test_watcher, mutantcell test_eval and eval.kill_tree's type, webpage test_browser, pathsforward test_store and test_lock, buildtel proc.stream); each conversion is a keyed fall for its own dist",
-      "evidence": "2026-11-02: 2026-11-02 READ across the remaining subprocess paydown (all plain-capture entries are now converted): the entries left that a one-shot capture cannot take need a LIVE HANDLE: fence tests/test_watcher.py (a real Popen and a signal), mutantcell tests/test_eval.py (Popen of a sleeper and a process-group kill), pathsforward tests/test_store.py and tests/test_lock.py (real racing processes), webpage tests/test_browser.py (_poker holds a Popen[bytes] across a probe), buildtel proc.stream (os.pipe stderr and Popen) and its tests/test_proc.py. A typed Child in procrun.proc (the one module with the exemption) would wrap Popen: pid, poll, wait(timeout), terminate, kill, send_signal, and an iterator over stderr lines, so a consumer names no subprocess type. CONSTRAINT FOUND: a dist that other repos VENDOR as a wheel (transcriptstruct, atomicwrite, frontier, icsstruct, rulerseq, cvdcore, ratchet, corpus, waldo, fence, hooks, pathsforward) cannot gain a RUNTIME procrun dependency without those consumers vendoring procrun too; the five runtime edges added so far (ledger, gradekit, scan, memres, pytestspec) were checked: no repo under ~/github vendors or path-sources them. Check this before every runtime procrun edge. Design the Child API as a card note first. | 2026-11-02: 2026-11-02 DESIGN (from reading the consumers): procrun.proc gains spawn(argv, cwd=None, env=None, stdin='inherit', output='inherit') -> Child, with stdin and output each Literal['inherit','discard'] (no booleans: the FBT rules). Child is a small class over the Popen it owns, in the one exempt module: pid (int property), poll() -> int | None, wait(timeout: float | None = None) -> int (raising the exported TimeoutExpired), kill(), terminate(), send_signal(sig: int), and the context-manager protocol (kill and wait on exit so a test never leaks a process). WHAT EACH CONSUMER NEEDS, measured: fence test_watcher: spawn a shell with stdin discarded, command.pid, command.wait(timeout); pathsforward test_store and test_lock: spawn with env and both output streams discarded, wait(timeout=...) (and expects TimeoutExpired for a blocked locker), poll() in a loop; webpage test_browser: spawn, kill(), wait() and an annotation for _poker's return (Child, not Popen[bytes]); mutantcell test_eval: spawn a sleeper, child.pid, and cell_eval.kill_tree(child), whose parameter is typed Popen in src/eval.py (exempt by its own entry), so kill_tree must take a Child (or a Protocol with pid and kill/wait) and its other caller must not break; buildtel proc.stream: stderr lines while it runs, which needs an iterator over the child's stderr, a second method (stderr_lines()) or a callback parameter on spawn; buildtel is the heaviest, take it last. NOT IN SCOPE: capturing output of a live child (none of the six needs it except buildtel's stderr). Constraints: dists that other repos VENDOR cannot gain a runtime procrun edge (see earlier note); these six are not vendored (fence is: check, fence keeps procrun dev-only, which fits since only test_watcher needs it). | 2026-11-02: 2026-11-02 CONSTRAINT CONFIRMED with a case: amr-skills VENDORS the mikemol_mdstruct and mikemol_pathwalk wheels (amr-skills/pyproject.toml lines 55 and 58), so pathwalk/src/.../walk.py's git call cannot move to procrun.capture without giving pathwalk, and so mdstruct, a RUNTIME procrun dependency, which breaks amr-skills' lock unless it vendors procrun too. pathwalk and mdstruct therefore keep procrun dev-only, and walk.py's per-responsibility entry stays unless amr-skills vendors procrun (ask them via the revendor list: procrun is on it now, W2230). Consumers inside mtools of pathwalk are pycodemod, mdstruct and debtplan. | 2026-11-03T09:02:10Z: 2026-11-03: LANDED 2bb11b46 (procrun.spawn and Child), f1169471 (fence test_watcher), 42a71aaf (pathsforward test_lock). Left: mutantcell test_eval and kill_tree's type, webpage test_browser, pathsforward test_store, buildtel proc.stream. | 2026-11-03T10:59:59Z: 2026-11-03: LANDED f77b34c2 (pathsforward test_store through spawn). Left: mutantcell test_eval and kill_tree's type, webpage test_browser, buildtel proc.stream. | 2026-11-03T17:58:08Z: 2026-11-03: icsstruct test_stub_authority converted to procrun.capture, submitted in stack train-withdraw-icsstruct (dev-only dependency, procrun in that one test's cone, uv.lock regenerated, 50 icsstruct tests pass). Left: mutantcell test_eval and kill_tree's type, webpage test_browser, buildtel proc.stream. | 2026-11-03T18:59:28Z: 2026-11-03: icsstruct test_stub_authority LANDED ca803852 (dev-only procrun in that one test's cone). | 2026-11-04T05:25:06Z: 2026-11-04 webpage test_browser via procrun.spawn landed (one of da89bc4c, 8f11df1b, 2563c960, 9725393e); the gate's webpage pytest needed webpage/.venv resynced from the procrun path source first. Left: mutantcell test_eval's Popen use and buildtel's proc.stream.",
+      "evidence": "2026-11-02: 2026-11-02 READ across the remaining subprocess paydown (all plain-capture entries are now converted): the entries left that a one-shot capture cannot take need a LIVE HANDLE: fence tests/test_watcher.py (a real Popen and a signal), mutantcell tests/test_eval.py (Popen of a sleeper and a process-group kill), pathsforward tests/test_store.py and tests/test_lock.py (real racing processes), webpage tests/test_browser.py (_poker holds a Popen[bytes] across a probe), buildtel proc.stream (os.pipe stderr and Popen) and its tests/test_proc.py. A typed Child in procrun.proc (the one module with the exemption) would wrap Popen: pid, poll, wait(timeout), terminate, kill, send_signal, and an iterator over stderr lines, so a consumer names no subprocess type. CONSTRAINT FOUND: a dist that other repos VENDOR as a wheel (transcriptstruct, atomicwrite, frontier, icsstruct, rulerseq, cvdcore, ratchet, corpus, waldo, fence, hooks, pathsforward) cannot gain a RUNTIME procrun dependency without those consumers vendoring procrun too; the five runtime edges added so far (ledger, gradekit, scan, memres, pytestspec) were checked: no repo under ~/github vendors or path-sources them. Check this before every runtime procrun edge. Design the Child API as a card note first. | 2026-11-02: 2026-11-02 DESIGN (from reading the consumers): procrun.proc gains spawn(argv, cwd=None, env=None, stdin='inherit', output='inherit') -> Child, with stdin and output each Literal['inherit','discard'] (no booleans: the FBT rules). Child is a small class over the Popen it owns, in the one exempt module: pid (int property), poll() -> int | None, wait(timeout: float | None = None) -> int (raising the exported TimeoutExpired), kill(), terminate(), send_signal(sig: int), and the context-manager protocol (kill and wait on exit so a test never leaks a process). WHAT EACH CONSUMER NEEDS, measured: fence test_watcher: spawn a shell with stdin discarded, command.pid, command.wait(timeout); pathsforward test_store and test_lock: spawn with env and both output streams discarded, wait(timeout=...) (and expects TimeoutExpired for a blocked locker), poll() in a loop; webpage test_browser: spawn, kill(), wait() and an annotation for _poker's return (Child, not Popen[bytes]); mutantcell test_eval: spawn a sleeper, child.pid, and cell_eval.kill_tree(child), whose parameter is typed Popen in src/eval.py (exempt by its own entry), so kill_tree must take a Child (or a Protocol with pid and kill/wait) and its other caller must not break; buildtel proc.stream: stderr lines while it runs, which needs an iterator over the child's stderr, a second method (stderr_lines()) or a callback parameter on spawn; buildtel is the heaviest, take it last. NOT IN SCOPE: capturing output of a live child (none of the six needs it except buildtel's stderr). Constraints: dists that other repos VENDOR cannot gain a runtime procrun edge (see earlier note); these six are not vendored (fence is: check, fence keeps procrun dev-only, which fits since only test_watcher needs it). | 2026-11-02: 2026-11-02 CONSTRAINT CONFIRMED with a case: amr-skills VENDORS the mikemol_mdstruct and mikemol_pathwalk wheels (amr-skills/pyproject.toml lines 55 and 58), so pathwalk/src/.../walk.py's git call cannot move to procrun.capture without giving pathwalk, and so mdstruct, a RUNTIME procrun dependency, which breaks amr-skills' lock unless it vendors procrun too. pathwalk and mdstruct therefore keep procrun dev-only, and walk.py's per-responsibility entry stays unless amr-skills vendors procrun (ask them via the revendor list: procrun is on it now, W2230). Consumers inside mtools of pathwalk are pycodemod, mdstruct and debtplan. | 2026-11-03T09:02:10Z: 2026-11-03: LANDED 2bb11b46 (procrun.spawn and Child), f1169471 (fence test_watcher), 42a71aaf (pathsforward test_lock). Left: mutantcell test_eval and kill_tree's type, webpage test_browser, pathsforward test_store, buildtel proc.stream. | 2026-11-03T10:59:59Z: 2026-11-03: LANDED f77b34c2 (pathsforward test_store through spawn). Left: mutantcell test_eval and kill_tree's type, webpage test_browser, buildtel proc.stream. | 2026-11-03T17:58:08Z: 2026-11-03: icsstruct test_stub_authority converted to procrun.capture, submitted in stack train-withdraw-icsstruct (dev-only dependency, procrun in that one test's cone, uv.lock regenerated, 50 icsstruct tests pass). Left: mutantcell test_eval and kill_tree's type, webpage test_browser, buildtel proc.stream. | 2026-11-03T18:59:28Z: 2026-11-03: icsstruct test_stub_authority LANDED ca803852 (dev-only procrun in that one test's cone). | 2026-11-04T05:25:06Z: 2026-11-04 webpage test_browser via procrun.spawn landed (one of da89bc4c, 8f11df1b, 2563c960, 9725393e); the gate's webpage pytest needed webpage/.venv resynced from the procrun path source first. Left: mutantcell test_eval's Popen use and buildtel's proc.stream. | 2026-11-04T07:30:09Z: 2026-11-04 landed a9bd30d9: mutantcell test_eval starts its children through procrun (capture, spawn) and its 2-rule entry is gone; kill_tree takes a Waitable protocol; whole dist grid 42 killed 0 survived. Left: buildtel's proc.stream.",
       "issued_at": "2026-11-02T21:40:36Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-04T06:11:11Z",
+      "last_worked": "2026-11-04T07:30:09Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49998,24 +49996,22 @@
     {
       "symbol": "W2248",
       "title": "Gate runs the bazel suite's mutant targets as a later phase than the rest, so a withdraw can land between them",
-      "status": "blocked",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
       "touches": [
         "velocity"
       ],
-      "blocked_on": [
-        "W2269"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "After the W2269 stack lands (it holds hooks/mutants.regex, warrants.bib, graph.json, dag.bzl and the site BUILDs): build the mutants-tag change and the pre-commit suite split in a scratch tree on the new HEAD, bazel build //hooks:.venv between adding any new module and the importing edit, and stack it alone with a paydown companion.",
       "evidence": "2026-11-03: 2026-11-02 request from github-94 (github:W59), memory feedback-velocity-before-what-it-carries: one two-commit stack (W2242 + W2219, key 1793658805803128141) has held the gate for 2.5 h or more, almost all in mutant shards (pycodemod 24, hooks about 95), and nothing can stop it mid-suite; that caps paydown at a few stacks a day. THREE READINGS of its bazel run (invocation 27178364-6473-4f2f-84bd-0ac70b3ccca9): epoch 1793663008: 181 of 1638 tests, longest //pycodemod:mutants_5 at 1199 s; 1793663797: 755 of 1638, //pycodemod:mutants_19; 1793665601: 1126 of 1638, //hooks:mutants_60 at 129 s; FAILED 0 and TIMEOUT 0 throughout; rate fell from 0.73 to 0.21 tests/s as the hooks shards took over. WITHDRAW LIMIT: --withdraw is honoured only at a phase() boundary of .githooks/pre-commit (W1705) and the bazel suite is one phase, so it cannot stop a run mid-suite. EXISTING CARD for the cost itself: W1989 (the hooks mutants shards take the module they plant in and the tests whose closure holds it as inputs: per-site targets that cache by input, so only changed files rerun, retiring the sharded :mutants), blocked on W2203 to W2206 (the 37 survivors/failures of its full site run). This card is the other half of the host's suggestion: split the mutant targets into their own phase so a withdraw can land between the rest of the suite and the mutants. It is smaller than W1989 and independent of the survivors. | 2026-11-03: 2026-11-02 READ of .githooks/pre-commit lines 879-895: the suite is ONE invocation, 'bazel test --nokeep_going --notest_keep_going ${_gate_jobs[@]} //... --test_output=errors --build_event_json_file=$staged/.bep.json' under 'phase bazel_test', piped through tee $staged/.suite.log. phase() is the withdraw point (lines 147-155). TWO WAYS to split: (a) tag the mutant targets 'mutants' (check_mutants/defs.bzl mutants_sharded only adds a 'cpu:N' tag today, line 51; mutant_site already carries 'manual') and run two invocations, '--test_tag_filters=-mutants' then '--test_tag_filters=mutants', each under its own phase() mark; (b) exclude by label pattern without touching the macro. (a) is cleaner and also lets a withdraw land between. COST TO MEASURE: a second bazel invocation re-analyses the graph (hooks alone is about 4,500 targets) and the build-event file and the tally predicate (_suite_green, lines 922-926) must run per invocation; the first-failure stop of W2110 must hold in both. Not built.",
       "issued_at": "2026-11-03T00:31:44Z",
       "minted_during": "interrupt",
       "caused_by": "github:W59",
       "last_worked": "2026-11-04T06:27:44Z",
-      "ticks_blocked": 1,
+      "ticks_blocked": 0,
       "completed": null
     },
     {
@@ -50389,8 +50385,9 @@
       "issued_at": "2026-11-04T03:02:24Z",
       "minted_during": "interrupt",
       "caused_by": "W2079",
-      "last_worked": "2026-11-04T06:08:37Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-04T07:39:19Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2268",
@@ -50411,21 +50408,21 @@
     {
       "symbol": "W2269",
       "title": "Answer luthen-observability:W1962: core.worktree found set in a real .git/config",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "luthen-observability:W1962"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "CAUSE CONFIRMED (luthen-observability, 2026-11-04): its own test checks.alert_minting_test.RealRepo ran an unscrubbed git init under the gate's GIT_DIR (real repo) and GIT_WORK_TREE (snapshot), which wrote core.worktree=/var/tmp/mikemol/gate/luthen-observability/tree into the real .git/config (mtime 22:53:01Z); later lands then restored nothing (84 paths stale) while git status read clean. Test removed; repaired by hand. REMAINING, hooks lane (waits on W2036's registries): (1) after a snapshot gate or isolated commit, stackgate/isolated read core.worktree from the real repo's config, report and unset it; test: set it, run the guard, assert gone and reported. (2) the post-land check refuses a redirected work tree (git rev-parse --show-toplevel not equal to the checkout) instead of reporting clean. luthen is adding the equivalent as luthen-observability:W1963.",
-      "evidence": "2026-11-04T03:44:38Z: 2026-11-04 read: core.worktree is NOT set now in mtools or luthen-observability (git config --show-origin). mtools code exports GIT_WORK_TREE as an ENVIRONMENT variable only (stackland.py:131, stackgate.py:56, isolated.py:265,279; .githooks/pre-commit:272,1081) and never writes core.worktree. git itself writes core.worktree into $GIT_DIR/config when git init or clone runs with GIT_DIR and GIT_WORK_TREE exported, so the likely cause is a step inside the gate environment that runs git init without scrubbing GIT_*. Not confirmed. | 2026-11-04T03:47:20Z: 2026-11-04 luthen-observability replied: the writer was its own test, not the gate; withdraws the hypothesis that the refusal path leaves the key. Guard still worth landing as defence in depth.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-04T03:44:38Z: 2026-11-04 read: core.worktree is NOT set now in mtools or luthen-observability (git config --show-origin). mtools code exports GIT_WORK_TREE as an ENVIRONMENT variable only (stackland.py:131, stackgate.py:56, isolated.py:265,279; .githooks/pre-commit:272,1081) and never writes core.worktree. git itself writes core.worktree into $GIT_DIR/config when git init or clone runs with GIT_DIR and GIT_WORK_TREE exported, so the likely cause is a step inside the gate environment that runs git init without scrubbing GIT_*. Not confirmed. | 2026-11-04T03:47:20Z: 2026-11-04 luthen-observability replied: the writer was its own test, not the gate; withdraws the hypothesis that the refusal path leaves the key. Guard still worth landing as defence in depth. | 2026-11-04T07:19:48Z: 2026-11-04 landed 5578ac14: strayworktree.repair removes a core.worktree a gate step wrote into the real config (read and written with git config --file from /, because git dies on a stray path whose parent is gone), wired into isolated.commit_planned and stackgate.gate_tip; reproduced for real by a hook that runs git init; 6 mutants killed one by one; batch 12 (test_commit_isolated_hooks) paid down 2 rules. The second guard is carded as W2271.",
       "issued_at": "2026-11-04T03:43:56Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1962",
-      "last_worked": "2026-11-04T05:25:26Z",
+      "last_worked": "2026-11-04T07:19:48Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261104T071948Z"
     },
     {
       "symbol": "W2270",
@@ -50441,6 +50438,22 @@
       "minted_during": "interrupt",
       "caused_by": "W2036",
       "last_worked": "2026-11-04T04:31:08Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2271",
+      "title": "Refuse a redirected work tree after a land: rev-parse --show-toplevel must be the checkout",
+      "status": "ready",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "DESIGN NOTE (luthen-observability, 2026-11-04): do NOT ask git (rev-parse --show-toplevel dies in repo setup when core.worktree points at a path whose parent is gone). Read <root>/.git/config as a FILE (git config --file from /) and refuse when core.worktree is set to anything but the checkout; luthen's checks.git_guard (dbbd57fb) does this and refuses the incident's exact value. If a positive toplevel check is also wanted, run it only AFTER the file read finds the key absent. Test with a real repo whose core.worktree points at a nonexistent parent.",
+      "evidence": "",
+      "issued_at": "2026-11-04T07:19:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2269",
+      "last_worked": "2026-11-04T07:22:44Z",
       "ticks_blocked": 0
     }
   ],
