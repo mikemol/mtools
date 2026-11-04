@@ -11,10 +11,11 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 from pathlib import Path
 
 import pytest
+
+from mikemol.hooks import runproc
 
 _BIN = Path(__file__).parent.parent / "bin"
 _VENV_REL = Path("bazel-bin") / "hooks" / ".venv"
@@ -53,7 +54,7 @@ def _project(tmp_path: Path, entry: str, *, venv: bool) -> Path:
     return root
 
 
-def _run(entry: str, root: Path, *args: str, stdin: str = "") -> subprocess.CompletedProcess[str]:
+def _run(entry: str, root: Path, *args: str, stdin: str = "") -> runproc.Result:
     """Run the real launcher `entry` with only PATH and CLAUDE_PROJECT_DIR in its environment.
 
     Returns:
@@ -61,15 +62,7 @@ def _run(entry: str, root: Path, *args: str, stdin: str = "") -> subprocess.Comp
 
     """
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "CLAUDE_PROJECT_DIR": str(root)}
-    return subprocess.run(
-        [str(_BIN / entry), *args],
-        input=stdin,
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    return runproc.run([str(_BIN / entry), *args], env=env, timeout=_TIMEOUT_S, stdin_text=stdin)
 
 
 def _decision(stdout: str) -> str:

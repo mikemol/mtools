@@ -1596,7 +1596,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_bin_launchers_argv.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

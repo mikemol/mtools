@@ -554,12 +554,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # the code into a peer tree that may not enable the rule, and the ratchet refuses new keys.
 "tests/test_no_verify.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ W635: `test_bin_launchers_argv.py`'s subject is what the tracked `hooks/bin` launchers do WHEN
-# EXECUTED, so running them is the case. Arguments are the launcher path this module derives from
-# `__file__`, literal entry names and the literal `--check`, with an explicit env. Never through a
-# shell.
-"tests/test_bin_launchers_argv.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑ W796: `test_commit_launcher.py`'s subject is what the tracked `hooks/bin/mikemol-commit` launcher
 # does WHEN EXECUTED (it execs the built venv's console script, or refuses naming the repair), so
 # running it is the case. Literal launcher path derived from `__file__`, explicit env, no shell.
