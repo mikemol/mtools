@@ -31,11 +31,12 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TextIO
+from typing import Protocol, TextIO
 
 from mikemol.hooks.aheadrefusal import refusal as _ahead_refusal
 from mikemol.hooks.commit_body import refusal as _body_refusal
@@ -222,19 +223,37 @@ def isolated_commit(root: Path, request: Request, paths: Sequence[str]) -> Done:
     return commit_planned(root, Plan(left, placed), message_of(request), run_git_in, namespace)
 
 
-def waiter(child: subprocess.Popen[bytes]) -> Callable[[float], int | None]:
+class Waitable(Protocol):
+    """The part of a `Popen` the waiter uses: its blocking wait."""
+
+    def wait(self, timeout: float | None = None) -> int:
+        """Block until the child exits and return its exit code."""
+        ...
+
+
+def waiter(child: Waitable) -> Callable[[float], int | None]:
     """Wrap a child's wait so a slice that runs on reads as None, not as an exception.
+
+    ⚑ ONE THREAD BLOCKS IN THE CHILD'S WAIT (W2035) AND EACH SLICE SLEEPS ON AN EVENT, NOT ON
+    `Popen.wait(timeout=)`: that is a polling loop (a 1 to 50 ms backoff, seen in strace of a
+    commit), so a slice under load was a string of wakeups and a wall-clock sync point. The blocked
+    thread wakes once, at the exit, and sets the event; a slice is one timed lock acquire. The slice
+    length stays the progress witness's look interval, so the looks stay.
 
     Returns:
         a function from seconds to the exit code, or None while the child is still running.
 
     """
+    exited = threading.Event()
+
+    def reap() -> None:
+        child.wait()
+        exited.set()
+
+    threading.Thread(target=reap, daemon=True).start()
 
     def wait(seconds: float) -> int | None:
-        try:
-            return child.wait(timeout=seconds)
-        except subprocess.TimeoutExpired:
-            return None
+        return child.wait() if exited.wait(seconds) else None
 
     return wait
 

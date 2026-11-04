@@ -5,26 +5,21 @@
 from __future__ import annotations
 
 import io
-import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import pycheck_census, pycheck_cli
+from mikemol.hooks import pycheck_census, pycheck_cli, scratch
 
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
-GIT = shutil.which("git") or "git"
-
 
 def _git(root: Path, *args: str) -> None:
     """Run one git command in `root`, failing the test if git refuses."""
-    subprocess.run(
-        [GIT, "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args],
-        capture_output=True,
-        check=True,
+    code, out = scratch.git_out(
+        ["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args]
     )
+    assert code == 0, out
 
 
 def _repo(root: Path) -> None:

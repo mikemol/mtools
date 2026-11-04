@@ -17521,3 +17521,24 @@
             unaffected.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_child_that_outlasts_the_timeout_raises_and_a_quick_one_does_not},
 }
+
+@misc{hooks-commit-waiter-running-child-reads-as-none-until-it-exits-and-then-as-its-code,
+  section = {commit_run_git},
+  title  = {A slice that runs on is None; after a kill the same waiter answers with the signal},
+  claim  = {A slice that runs on is None; after a kill the same waiter answers with the signal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_waiter.py -k test_a_running_child_reads_as_none_until_it_exits_and_then_as_its_code},
+}
+
+@misc{hooks-commit-waiter-finished-child-answers-every-later-look-with-its-code,
+  section = {commit_run_git},
+  title  = {The exit code is stable across looks, not consumed by the first},
+  claim  = {The exit code is stable across looks, not consumed by the first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_waiter.py -k test_a_finished_child_answers_every_later_look_with_its_code},
+}
+
+@misc{hooks-commit-waiter-no-look-makes-a-timed-wait,
+  section = {commit_run_git},
+  title  = {The polling loop is a `wait(timeout=...)`: none is made, however many looks pass},
+  claim  = {The polling loop is a `wait(timeout=...)`: none is made, however many looks pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_waiter.py -k test_no_look_makes_a_timed_wait},
+}

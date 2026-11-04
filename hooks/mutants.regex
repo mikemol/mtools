@@ -964,3 +964,6 @@ src/mikemol/hooks/dirtyread.py|missing-snapshot-read-as-a-stack|        if entri
 src/mikemol/hooks/dirtyread.py|refused-status-read-as-clean|    if code != 0:|    if False:|def=_status
 src/mikemol/hooks/dirtyread.py|scratch-trees-not-read|    trees = worktrees_under\(listing, root\)|    trees = {}|def=dirty_map
 src/mikemol/hooks/dirtyread.py|dead-submissions-listed-live|    return \[row\.key for row in commit_counts\.live\(ledger / "commit\.counts"\)\]|    return []|def=live_keys
+src/mikemol/hooks/commit_kata.py|waiter-never-reports-an-exit|        return child\.wait\(\) if exited\.wait\(seconds\) else None|        return None|def=waiter
+src/mikemol/hooks/commit_kata.py|waiter-exit-never-signalled|        exited\.set\(\)|        pass|def=waiter
+src/mikemol/hooks/commit_kata.py|waiter-slice-polls-with-a-timed-wait|        return child\.wait\(\) if exited\.wait\(seconds\) else None|        return child.wait(timeout=seconds)|def=waiter

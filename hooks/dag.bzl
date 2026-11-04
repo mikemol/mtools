@@ -1814,6 +1814,7 @@ GRAPH = {
     "tests/test_commit_plain_frozen.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py",
         "src/mikemol/hooks/stackfreeze.py"
       ],
@@ -1900,6 +1901,13 @@ GRAPH = {
     "tests/test_commit_verdict.py": {
       "imports": [
         "src/mikemol/hooks/commit_verdict.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_commit_waiter.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2511,7 +2519,8 @@ GRAPH = {
     "tests/test_pycheck_changed.py": {
       "imports": [
         "src/mikemol/hooks/pycheck_census.py",
-        "src/mikemol/hooks/pycheck_cli.py"
+        "src/mikemol/hooks/pycheck_cli.py",
+        "src/mikemol/hooks/scratch.py"
       ],
       "reads": [],
       "typing_only": []

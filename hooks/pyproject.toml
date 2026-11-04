@@ -470,7 +470,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
 "tests/test_commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hooks_preflight.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_pycheck_changed.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
 "tests/test_commit_isolated_hooks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_lease_wait.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
@@ -489,7 +488,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ ONE RESPONSIBILITY EACH (W1461): the probe runs the pinned compiler (subprocess) and downloads it
 # from the https URL the repo's own MODULE.bazel pins (urlopen), verified by sha256 before it is opened.
 "src/mikemol/hooks/codon_probe.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "suspicious-url-open-usage"]
-"tests/test_commit_plain_frozen.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/presubmit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/testgate.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

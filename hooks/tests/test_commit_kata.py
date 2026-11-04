@@ -7,6 +7,7 @@ from __future__ import annotations
 import io
 import shutil
 import subprocess
+import threading
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -128,16 +129,19 @@ class _TooSlow:
     """A stand-in git child that never finishes inside the limit, and is killed."""
 
     def __init__(self, *_args: object, **_kwargs: object) -> None:
-        self.killed = False
+        self.killed = threading.Event()
         self.pid = 0
 
     def wait(self, timeout: float | None = None) -> int:
-        if self.killed:
+        # An untimed wait blocks until the kill, as a real child's does; a timed one runs on.
+        if timeout is None:
+            self.killed.wait()
+        if self.killed.is_set():
             return -1
         raise subprocess.TimeoutExpired(cmd="git", timeout=timeout or 0)
 
     def kill(self) -> None:
-        self.killed = True
+        self.killed.set()
 
 
 def test_a_gate_that_makes_no_progress_is_a_verdict_not_a_traceback(
