@@ -471,7 +471,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_hooks_preflight.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
-"tests/test_commit_isolated_hooks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_commit_lease_wait.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_vlogship.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_vlogsink.py" = ["invalid-function-name", "builtin-argument-shadowing"]

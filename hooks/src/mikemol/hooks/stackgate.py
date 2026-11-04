@@ -26,6 +26,7 @@ from pathlib import Path
 
 from mikemol.hooks.isolated import Done, EnvRunner
 from mikemol.hooks.snapshot import Snapshot
+from mikemol.hooks.strayworktree import repair as _repair_worktree
 
 
 def _stopped(done: Done) -> bool:
@@ -57,6 +58,10 @@ def gate_tip(root: Path, tree: str, run: EnvRunner, namespace: Path) -> Done:
             refreshed = run(["update-index", "-q", "--refresh"], work, snap.path)
             if _stopped(refreshed):
                 return refreshed
-            return run(["hook", "run", "--ignore-missing", "pre-commit"], work, snap.path)
+            verdict = run(["hook", "run", "--ignore-missing", "pre-commit"], work, snap.path)
+        # ⚑ THE HOOK RAN UNDER THE EXPORTED GIT_DIR AND GIT_WORK_TREE (W2269): a stray
+        # `core.worktree` it wrote into the real config is removed and said here.
+        verdict.stdout = f"{verdict.stdout}{_repair_worktree(root, run)}"
+        return verdict
     finally:
         shutil.rmtree(private, ignore_errors=True)

@@ -130,6 +130,23 @@ def test_a_refusing_hook_is_returned_as_the_gate_verdict(
     assert "refused" in done.stderr
 
 
+# A hook that runs `git init` under the exported GIT_DIR and GIT_WORK_TREE: git then writes
+# `core.worktree` (the snapshot) into the REAL repository's config, which is luthen's measured bug.
+_STRAYING = "#!/bin/sh\ngit init -q\n"
+
+
+def test_a_hook_that_inits_under_the_gates_environment_leaves_no_stray_core_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The write is reproduced for real, then removed and said in the verdict's output (W2269)."""
+    root = _repo(tmp_path, monkeypatch, _STRAYING)
+    done = stackgate.gate_tip(root, _tip(root), ck.run_git_in, tmp_path / "gate")
+    assert done.returncode == 0, done.stderr
+    assert "stray core.worktree=" in done.stdout
+    code, shown = scratch.git_out(["git", "-C", str(root), "config", "--local", "core.worktree"])
+    assert code != 0, shown
+
+
 def test_a_second_gate_in_the_same_repository_cannot_replace_the_first_gates_index(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

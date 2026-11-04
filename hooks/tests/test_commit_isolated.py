@@ -121,6 +121,22 @@ def test_an_edit_commits_through_the_private_index(
     assert _git(root, "show", "HEAD:a.txt") == _EDITED
 
 
+def test_a_hook_that_inits_under_the_commits_environment_leaves_no_stray_core_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The hook's `git init` writes core.worktree for real, and the commit removes it."""
+    root = _decoy(tmp_path, monkeypatch)
+    hook = root / ".git" / "hooks" / "pre-commit"
+    hook.write_text("#!/bin/sh\ngit init -q\n", encoding="utf-8")
+    hook.chmod(_EXECUTABLE)
+    (root / "a.txt").write_text(_EDITED, encoding="utf-8")
+    code, shown = _isolated(root)
+    assert code == 0, shown
+    assert "stray core.worktree=" in shown
+    held, _out = scratch.git_out(["git", "-C", str(root), "config", "--local", "core.worktree"])
+    assert held != 0
+
+
 def test_a_peers_unstaged_file_is_neither_committed_nor_in_the_way(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

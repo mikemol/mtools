@@ -228,3 +228,4 @@ recursive_delete	The Recursive-Delete Refusal: a Delete Passes Only Inside a Pat
 repinonto	The Repin Reader: a Queued Stack's Pins Come From Its Frozen pyproject.toml, Never the Working Tree (W2075)
 aheadrefusal	The Ahead-Stack Refusal: the Shared Files a Stack Was Not Built On, Named With the Way Out (W2078)
 runproc	The leaf command runner keeps a failed command's standard error
+strayworktree	A core.worktree a gate step wrote into the real config is removed and said, not left (W2269)

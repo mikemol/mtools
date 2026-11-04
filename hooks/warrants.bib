@@ -17556,3 +17556,52 @@
   claim  = {Outside cards are listed once, sorted; skipped ones follow the round's rank.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_several_outside_cards_are_named_once_and_skipped_cards_keep_rank_order},
 }
+
+@misc{hooks-strayworktree-stray-work-tree-is-removed-and-named,
+  section = {strayworktree},
+  title  = {A value pointing away from the repository goes, and the line says which one it was},
+  claim  = {A value pointing away from the repository goes, and the line says which one it was.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strayworktree.py -k test_a_stray_work_tree_is_removed_and_named},
+}
+
+@misc{hooks-strayworktree-repositorys-own-root-is-left-alone,
+  section = {strayworktree},
+  title  = {A repository may name its own checkout; that is not stray and nothing is said},
+  claim  = {A repository may name its own checkout; that is not stray and nothing is said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strayworktree.py -k test_the_repositorys_own_root_is_left_alone},
+}
+
+@misc{hooks-strayworktree-repository-with-no-work-tree-key-says-nothing,
+  section = {strayworktree},
+  title  = {The control: the common case reads nothing and changes nothing},
+  claim  = {The control: the common case reads nothing and changes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strayworktree.py -k test_a_repository_with_no_work_tree_key_says_nothing},
+}
+
+@misc{hooks-strayworktree-stray-value-that-cannot-be-unset-is-reported-not-hidden,
+  section = {strayworktree},
+  title  = {If the removal fails the line says so loudly, with git's own reason},
+  claim  = {If the removal fails the line says so loudly, with git's own reason.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strayworktree.py -k test_a_stray_value_that_cannot_be_unset_is_reported_not_hidden},
+}
+
+@misc{hooks-strayworktree-directory-with-no-git-config-is-not-asked,
+  section = {strayworktree},
+  title  = {No `.git/config` means nothing to read: the runner is never called},
+  claim  = {No `.git/config` means nothing to read: the runner is never called.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_strayworktree.py -k test_a_directory_with_no_git_config_is_not_asked},
+}
+
+@misc{hooks-commit-isolated-hook-that-inits-under-the-commits-environment-leaves-no-stray-core-worktree,
+  section = {commit_isolated},
+  title  = {The hook's `git init` writes core.worktree for real, and the commit removes it},
+  claim  = {The hook's `git init` writes core.worktree for real, and the commit removes it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_isolated.py -k test_a_hook_that_inits_under_the_commits_environment_leaves_no_stray_core_worktree},
+}
+
+@misc{hooks-stackgate-hook-that-inits-under-the-gates-environment-leaves-no-stray-core-worktree,
+  section = {stackland},
+  title  = {The write is reproduced for real, then removed and said in the verdict's output (W2269)},
+  claim  = {The write is reproduced for real, then removed and said in the verdict's output (W2269).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackgate.py -k test_a_hook_that_inits_under_the_gates_environment_leaves_no_stray_core_worktree},
+}

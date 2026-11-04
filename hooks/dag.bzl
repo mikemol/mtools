@@ -466,7 +466,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/isolated.py": {
       "imports": [
-        "src/mikemol/hooks/snapshot.py"
+        "src/mikemol/hooks/snapshot.py",
+        "src/mikemol/hooks/strayworktree.py"
       ],
       "reads": [],
       "typing_only": []
@@ -996,7 +997,8 @@ GRAPH = {
     "src/mikemol/hooks/stackgate.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py",
-        "src/mikemol/hooks/snapshot.py"
+        "src/mikemol/hooks/snapshot.py",
+        "src/mikemol/hooks/strayworktree.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1093,6 +1095,11 @@ GRAPH = {
         "src/mikemol/hooks/hold_lift.py",
         "src/mikemol/hooks/payload.py"
       ],
+      "reads": [],
+      "typing_only": []
+    },
+    "src/mikemol/hooks/strayworktree.py": {
+      "imports": [],
       "reads": [],
       "typing_only": []
     },
@@ -1727,6 +1734,7 @@ GRAPH = {
     "tests/test_commit_isolated_hooks.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],
@@ -3190,6 +3198,15 @@ GRAPH = {
     "tests/test_store_named.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_strayworktree.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/scratch.py",
+        "src/mikemol/hooks/strayworktree.py"
       ],
       "reads": [],
       "typing_only": []

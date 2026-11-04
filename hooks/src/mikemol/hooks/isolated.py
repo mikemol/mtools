@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Protocol
 
 from mikemol.hooks.snapshot import Snapshot
+from mikemol.hooks.strayworktree import repair as _repair_worktree
 
 
 class Done(Protocol):
@@ -285,7 +286,10 @@ def commit_planned(
         # own trailer block and a reader can ask whether a commit's gate ran on what it holds.
         stamped = f"{message.rstrip()}\nGated-Tree: {tree.stdout.strip()}\n"
         done = run(["commit", "-m", stamped], work, snap.path)
-    done.stdout = f"{done.stdout}gated-tree: {tree.stdout.strip()}\n"
+    # ⚑ A STEP THAT RAN UNDER THE EXPORTED GIT_DIR AND GIT_WORK_TREE MAY HAVE WRITTEN
+    # `core.worktree` INTO THE REAL CONFIG (W2269): `_repair_worktree` removes it and returns the
+    # line saying so (newline-terminated), or nothing.
+    done.stdout = f"{done.stdout}gated-tree: {tree.stdout.strip()}\n{_repair_worktree(root, run)}"
     if not _failed(done):
         note = refresh_index(root, plan.paths, run)
         done.stdout = f"{done.stdout}{note}\n"
