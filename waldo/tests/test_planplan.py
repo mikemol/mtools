@@ -121,6 +121,47 @@ def test_no_planfile_or_an_empty_one_is_a_reason_with_the_last_line(tmp_path: Pa
     )
 
 
+_LOCK_ERROR = (
+    "Error: Error acquiring the state lock\n"
+    "\n"
+    "Lock Info:\n"
+    "  ID:        1234-abcd\n"
+    "  Path:      terraform.tfstate\n"
+    "  Who:       root@host\n"
+    "\n"
+    "OpenTofu acquires a state lock to protect the state from being written by multiple users\n"
+)
+
+
+def test_a_failed_plan_keeps_the_whole_error_block_not_just_its_last_line(tmp_path: Path) -> None:
+    """luthen-observability:W1968: a state-lock failure names the lock and its holder."""
+    plan = tmp_path / "p.tfplan"
+    locked = _Tofu(writes=False, plan_exit=1, plan_err=_LOCK_ERROR)
+    got = str(planplan.plan_and_show(locked, _TOFU, plan, tmp_path))
+    assert "Error acquiring the state lock" in got
+    assert "ID: 1234-abcd" in got
+    assert "Who: root@host" in got
+    assert "\n" not in got
+
+
+def test_lines_before_the_first_error_are_warnings_and_are_dropped() -> None:
+    """The failure starts at the first `Error` line; a stderr with no `Error` line is kept whole."""
+    assert planplan.plan_failure("Warning: old\nError: boom\nmore\n") == "Error: boom / more"
+    assert planplan.plan_failure("something odd\nhappened\n") == "something odd / happened"
+    assert planplan.plan_failure("") == "(no output)"
+
+
+def test_a_very_long_failure_is_cut_from_the_end_and_marked() -> None:
+    """The head (the summary) is kept; the cut is shown with an ellipsis."""
+    long = "Error: head\n" + "x" * (planplan.PLAN_ERROR_CHARS * 2)
+    got = planplan.plan_failure(long)
+    assert got.startswith("Error: head / xxx")
+    assert got.endswith("...")
+    assert len(got) == planplan.PLAN_ERROR_CHARS + len("...")
+    exact = "Error: " + "y" * (planplan.PLAN_ERROR_CHARS - len("Error: "))
+    assert planplan.plan_failure(exact) == exact
+
+
 def test_a_failed_show_is_a_reason_with_its_tail(tmp_path: Path) -> None:
     """The last 200 characters of tofu's complaint."""
     tofu = _Tofu(show=_Done(1, "", "e" * 300))

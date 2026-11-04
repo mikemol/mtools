@@ -35,6 +35,27 @@ STATE_DIR_MODE = 0o755
 RECORD_MODE = 0o644
 QUIET_ACTIONS = (["no-op"], ["read"])
 SHOW_ERROR_CHARS = 200
+PLAN_ERROR_CHARS = 600
+
+
+def plan_failure(stderr: str) -> str:
+    """Say why a plan failed, from the whole error block rather than its last line.
+
+    ⚑ THE LAST LINE OF A TOFU ERROR IS RARELY THE CAUSE (luthen-observability:W1968): a state-lock
+    failure prints `Error: Error acquiring the state lock`, then the lock's ID, path, operation and
+    holder, and ends on a line about how to release it, so reporting only the last line hid what
+    the lock was and who held it. Lines before the first `Error` are warnings and are dropped; the
+    rest are joined with ` / ` so the verdict stays one line, and the head is kept when it is cut,
+    because the summary line comes first.
+
+    Returns:
+        the failure text, `(no output)` when stderr held nothing.
+
+    """
+    lines = [" ".join(line.split()) for line in stderr.splitlines() if line.strip()]
+    start = next((i for i, line in enumerate(lines) if line.startswith("Error")), 0)
+    text = " / ".join(lines[start:]) or "(no output)"
+    return text if len(text) <= PLAN_ERROR_CHARS else f"{text[:PLAN_ERROR_CHARS]}..."
 
 
 def lock_args(root: Path) -> list[str]:
@@ -85,8 +106,9 @@ def plan_and_show(
         f"-out={planfile}",
     )
     if not planfile.is_file() or planfile.stat().st_size == 0:
-        why = (plan.stderr.strip().splitlines() or ["(no output)"])[-1]
-        return f"tofu plan produced no planfile (exit {plan.returncode}): {why}"
+        return (
+            f"tofu plan produced no planfile (exit {plan.returncode}): {plan_failure(plan.stderr)}"
+        )
     show = tools.run(tofu, f"-chdir={root}", "show", "-json", str(planfile))
     if show.returncode != 0:
         return f"tofu show -json failed: {show.stderr.strip()[-SHOW_ERROR_CHARS:]}"

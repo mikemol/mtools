@@ -199,3 +199,7 @@ src/mikemol/waldo/planledger.py|another-roots-entry-covers|record\.get\("kind"\)
 src/mikemol/waldo/planledger.py|mark-digest-unchecked|len\(lines\) < count or hashlib\.sha256\(lines\[count - 1\]\.encode\(\)\)\.hexdigest\(\) != digest|len(lines) < count|def=_truncated
 src/mikemol/waldo/planledger.py|mark-never-written|    _write_mark\(path\)|    pass|def=append_ledger
 src/mikemol/waldo/planflow.py|declarations-not-recorded|\(code, deny, withheld\), extra, seams\.declarations\)|(code, deny, withheld), extra)|def=judge
+src/mikemol/waldo/planplan.py|plan-failure-reports-only-the-last-line|    lines = \[" "\.join\(line\.split\(\)\) for line in stderr\.splitlines\(\) if line\.strip\(\)\]|    lines = stderr.strip().splitlines()[-1:]|def=plan_failure
+src/mikemol/waldo/planplan.py|plan-failure-warnings-kept|    start = next\(\(i for i, line in enumerate\(lines\) if line\.startswith\("Error"\)\), 0\)|    start = 0|def=plan_failure
+src/mikemol/waldo/planplan.py|plan-failure-empty-stderr-reads-blank|    text = " / "\.join\(lines\[start:\]\) or "\(no output\)"|    text = " / ".join(lines[start:])|def=plan_failure
+src/mikemol/waldo/planplan.py|plan-failure-never-cut|    return text if len\(text\) <= PLAN_ERROR_CHARS else f"\{text\[:PLAN_ERROR_CHARS\]\}\.\.\."|    return text|def=plan_failure

@@ -1868,3 +1868,25 @@
   claim  = {The interlock prints which one without parsing prose.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_every_refusal_is_its_own_fixed_string},
 }
+
+@misc{waldo-planplan-failed-plan-keeps-the-whole-error-block-not-just-its-last-line,
+  section = {planplan},
+  title  = {luthen-observability:W1968: a state-lock failure names the lock and its holder},
+  claim  = {luthen-observability:W1968: a state-lock failure names the lock and its holder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_failed_plan_keeps_the_whole_error_block_not_just_its_last_line},
+}
+
+@misc{waldo-planplan-lines-before-the-first-error-are-warnings-and-are-dropped,
+  section = {planplan},
+  title  = {The failure starts at the first `Error` line; a stderr with no `Error` line is kept whole},
+  claim  = {The failure starts at the first `Error` line; a stderr with no `Error` line is kept
+            whole.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_lines_before_the_first_error_are_warnings_and_are_dropped},
+}
+
+@misc{waldo-planplan-very-long-failure-is-cut-from-the-end-and-marked,
+  section = {planplan},
+  title  = {The head (the summary) is kept; the cut is shown with an ellipsis},
+  claim  = {The head (the summary) is kept; the cut is shown with an ellipsis.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_very_long_failure_is_cut_from_the_end_and_marked},
+}
