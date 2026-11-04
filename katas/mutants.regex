@@ -153,3 +153,7 @@ src/mikemol/katas/cli.py|tick-end-forgets-the-named-block|if named and note:|if 
 # The commit verb runs the repo's own pinned tool; the lock is judged against the table it is given.
 src/mikemol/katas/cli.py|commit-ignores-the-pin|        tool = fleet\.pinned_commit\(ctx\.fleet\(\), ctx\.args\[0\], tool\)|        pass|def=_commit
 src/mikemol/katas/fleet.py|in-flight-ignores-the-given-proc|    return liveness\.lock_is_live\(fleet\.root / repo / "\.git", proc\)|    return liveness.lock_is_live(fleet.root / repo / ".git")|def=in_flight
+src/mikemol/katas/stackable.py|stackable-waiting-rows-submitted|    return \[row for row in rows if row\.state == STACK and row\.symbol not in done\]|    return [row for row in rows if row.symbol not in done]|def=submit_set
+src/mikemol/katas/stackable.py|stackable-landed-cards-submitted|    return \[row for row in rows if row\.state == STACK and row\.symbol not in done\]|    return [row for row in rows if row.state == STACK]|def=submit_set
+src/mikemol/katas/stackable.py|stackable-malformed-row-skipped|    if not \(colon and repo and symbol\.startswith\("W"\) and symbol\[1:\]\.isdigit\(\)\):|    if False:|def=_row
+src/mikemol/katas/stackable.py|stackable-waiting-rows-not-read|        if line\.split\(" ", 1\)\[0\] in _STATES:|        if line.split(" ", 1)[0] == STACK:|def=parse

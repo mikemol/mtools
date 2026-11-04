@@ -1,0 +1,73 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+"""Read nemik's stackable set for a repository and pick the cards worth submitting (W1428).
+
+`nemik-stackable <repo>` prints one text row per ready card that has a manifest:
+
+    STACK|WAITING <repo>:W<n> <file> <file> ...
+    19 stackable of 100 ready; 79 have no manifest
+
+A STACK row can be submitted now; a WAITING row conflicts on files with a STACK row (measured:
+W2132 against W2131 on commit_kata.py) and waits its turn. The closing count line and blank lines
+are not rows. Cards with no manifest are counted by nemik, not listed, so they never appear here.
+
+⚑ A ROW THAT STARTS LIKE ONE BUT DOES NOT FIT IS REFUSED, NOT SKIPPED: dropping it silently would
+lose a card from the set, so `parse` raises ValueError naming the line. ⚑ A ROW'S STATUS IS NOT
+TRUSTED FOR LANDING: nemik lists cards that landed and are still marked ready (measured: W2126,
+W1895, W1960), so `submit_set` also takes the symbols git says landed and leaves those out.
+"""
+
+from collections.abc import Collection
+from dataclasses import dataclass
+
+STACK = "STACK"
+WAITING = "WAITING"
+_STATES = (STACK, WAITING)
+_MIN_FIELDS = 2
+
+
+@dataclass(frozen=True)
+class Row:
+    """One row of the stackable set."""
+
+    state: str
+    repo: str
+    symbol: str
+    files: tuple[str, ...]
+
+
+def _row(line: str) -> Row:
+    fields = line.split()
+    state = fields[0]
+    cite = fields[1] if len(fields) >= _MIN_FIELDS else ""
+    repo, colon, symbol = cite.partition(":")
+    if not (colon and repo and symbol.startswith("W") and symbol[1:].isdigit()):
+        msg = f"stackable row has no <repo>:W<n> after {state}: {line!r}"
+        raise ValueError(msg)
+    return Row(state, repo, symbol, tuple(fields[2:]))
+
+
+def parse(text: str) -> list[Row]:
+    """Read `nemik-stackable`'s text output into rows, in the order printed.
+
+    Returns:
+        one row per STACK or WAITING line; the closing count line and blank lines are ignored.
+
+    """
+    rows: list[Row] = []
+    for raw in text.splitlines():
+        line = raw.strip()
+        if line.split(" ", 1)[0] in _STATES:
+            rows.append(_row(line))
+    return rows
+
+
+def submit_set(rows: list[Row], landed: Collection[str]) -> list[Row]:
+    """Pick the rows to submit now: STACK rows whose card has not already landed.
+
+    Returns:
+        the STACK rows, in the order given, without any whose symbol is in `landed`.
+
+    """
+    done = set(landed)
+    return [row for row in rows if row.state == STACK and row.symbol not in done]

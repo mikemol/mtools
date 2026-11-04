@@ -998,3 +998,31 @@
             tool.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_cli.py -k test_commit_goes_through_the_repos_own_pinned_tool_when_it_has_one},
 }
+
+@misc{katas-stackable-stack-and-waiting-rows-are-read-with-their-files-in-order,
+  section = {stackable},
+  title  = {The count line and the blank line are not rows; each row keeps state, repo, card, files},
+  claim  = {The count line and the blank line are not rows; each row keeps state, repo, card, files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_stack_and_waiting_rows_are_read_with_their_files_in_order},
+}
+
+@misc{katas-stackable-text-that-is-not-a-row-yields-no-rows,
+  section = {stackable},
+  title  = {An empty output and a bare count line give an empty set, not an error},
+  claim  = {An empty output and a bare count line give an empty set, not an error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_text_that_is_not_a_row_yields_no_rows},
+}
+
+@misc{katas-stackable-row-that-does-not-fit-is-refused-naming-the-line,
+  section = {stackable},
+  title  = {Silently skipping it would lose a card: a missing or malformed cite raises},
+  claim  = {Silently skipping it would lose a card: a missing or malformed cite raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_a_row_that_does_not_fit_is_refused_naming_the_line},
+}
+
+@misc{katas-stackable-only-stack-rows-not-already-landed-are-submitted-in-order,
+  section = {stackable},
+  title  = {WAITING never goes; a card git says landed is left out; the order is the printed one},
+  claim  = {WAITING never goes; a card git says landed is left out; the order is the printed one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackable.py -k test_only_stack_rows_not_already_landed_are_submitted_in_order},
+}
