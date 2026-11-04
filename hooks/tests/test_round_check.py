@@ -69,10 +69,31 @@ def test_the_recorded_round_file_of_nemiks_contract_test_reads_as_its_writer_mea
 def test_a_fresh_card_worked_while_an_aged_round_card_is_passed_over_is_refused() -> None:
     """The depth-first pattern: W20 is worked, ready round cards W7 and W9 are skipped."""
     refused = round_check.composition(_ROUND, ready={"W7", "W9", "W20"}, working={"W20"})
-    assert len(refused) == len(_ROUND)
-    assert "W7 is in this repository's round and ready" in refused[0]
-    assert "W20, which is not" in refused[0]
-    assert "--update W7 --status working" in refused[0]
+    assert len(refused) == 1
+    assert "W7, W9 are in this repository's round and ready" in refused[0]
+    assert refused[0].count("W20, which is not") == 1
+    assert "--update W7 --status working; then W9, each the same way" in refused[0]
+
+
+def test_one_skipped_card_is_refused_in_the_singular_without_a_then_clause() -> None:
+    """With a single skipped card the sentence reads as before and carries no follow-up."""
+    refused = round_check.composition(_ROUND, ready={"W7", "W20"}, working={"W7", "W20"})
+    assert refused == []
+    refused = round_check.composition(_ROUND, ready={"W9", "W20"}, working={"W20"})
+    assert len(refused) == 1
+    assert refused[0].startswith("W9 is in this repository's round and ready")
+    assert "then" not in refused[0]
+
+
+def test_several_outside_cards_are_named_once_and_skipped_cards_keep_rank_order() -> None:
+    """Outside cards are listed once, sorted; skipped ones follow the round's rank."""
+    refused = round_check.composition(
+        ["W9", "W7"], ready={"W7", "W9", "W20", "W3"}, working={"W20", "W3"}
+    )
+    assert len(refused) == 1
+    assert refused[0].startswith("W9, W7 are in this repository's round and ready")
+    assert refused[0].count("includes W20, W3, which is not") == 1
+    assert "take W9 first" in refused[0]
 
 
 def test_the_round_worked_in_full_or_wholly_inside_is_admitted() -> None:

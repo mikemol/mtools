@@ -17542,3 +17542,17 @@
   claim  = {The polling loop is a `wait(timeout=...)`: none is made, however many looks pass.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_waiter.py -k test_no_look_makes_a_timed_wait},
 }
+
+@misc{hooks-round-check-one-skipped-card-is-refused-in-the-singular-without-a-then-clause,
+  section = {round_check},
+  title  = {With a single skipped card the sentence reads as before and carries no follow-up},
+  claim  = {With a single skipped card the sentence reads as before and carries no follow-up.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_one_skipped_card_is_refused_in_the_singular_without_a_then_clause},
+}
+
+@misc{hooks-round-check-several-outside-cards-are-named-once-and-skipped-cards-keep-rank-order,
+  section = {round_check},
+  title  = {Outside cards are listed once, sorted; skipped ones follow the round's rank},
+  claim  = {Outside cards are listed once, sorted; skipped ones follow the round's rank.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_check.py -k test_several_outside_cards_are_named_once_and_skipped_cards_keep_rank_order},
+}

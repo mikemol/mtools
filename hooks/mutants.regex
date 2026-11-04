@@ -738,8 +738,10 @@ src/mikemol/hooks/stackland.py|queue-file-not-read-at-build|        steps \+= \[
 src/mikemol/hooks/ratchet_hook.py|block-inserted-twice|    if MARK in text:|    if False:|def=insert
 src/mikemol/hooks/ratchet_hook.py|block-before-the-anchor|    merged = \[\*lines\[: at \+ 1\], \*block\(spec\), \*lines\[at \+ 1 :\]\]|    merged = [*lines[:at], *block(spec), *lines[at:]]|def=insert
 src/mikemol/hooks/ratchet_hook.py|dry-run-writes|    elif write:|    elif True:|def=main
-src/mikemol/hooks/round_check.py|no-outside-card-still-refused|    if not outside:|    if False:|def=composition
-src/mikemol/hooks/round_check.py|blocked-round-card-counted-skipped|        if symbol in available and symbol not in doing|        if symbol not in doing|def=composition
+src/mikemol/hooks/round_check.py|no-outside-card-still-refused|    if not outside or not skipped:|    if not skipped:|def=composition
+src/mikemol/hooks/round_check.py|blocked-round-card-counted-skipped|    skipped = \[s for s in round_cards if s in available and s not in doing\]|    skipped = [s for s in round_cards if s not in doing]|def=composition
+src/mikemol/hooks/round_check.py|later-skipped-cards-dropped-from-the-refusal|    first, rest = skipped\[0\], skipped\[1:\]|    first, rest = skipped[0], []|def=composition
+src/mikemol/hooks/round_check.py|many-skipped-cards-read-in-the-singular|    verb = "are" if rest else "is"|    verb = "is"|def=composition
 src/mikemol/hooks/round_check.py|other-repos-rows-read|        if row\.get\("repo"\) == repo and isinstance\(row\.get\("symbol"\), str\):|        if isinstance(row.get("symbol"), str):|def=round_symbols
 src/mikemol/hooks/round_check.py|one-line-document-not-read|    if isinstance\(whole, dict\):|    if False:|def=_rows
 src/mikemol/hooks/tick_stop.py|round-checked-on-a-repeat-stop|    if idle is None and payload\.get\("stop_hook_active"\) is not True:|    if idle is None:|def=idle_block

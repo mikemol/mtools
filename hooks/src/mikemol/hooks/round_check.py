@@ -77,20 +77,29 @@ def composition(
 ) -> list[str]:
     """Judge a working set against the round.
 
+    ⚑ ONE REFUSAL NAMES EVERY SKIPPED CARD (W2036). Three refusals in a row each named one card
+    and repeated the outside list (luthen, 2026-10-25), so a session took one card per refusal.
+    The skipped cards come in rank order, the outside cards once, and the writer command is given
+    for the first; the rest follow in the same order, one `--update` each (`--update-many` cannot
+    set working).
+
     Returns:
-        one refusal per ready round card the working set leaves out, naming the outside card and
-        the writer command that takes the skipped one; empty when the set is inside the round, has
-        nothing outside it, or the round has nothing ready that it skips.
+        one refusal naming every ready round card the working set leaves out and the outside
+        cards, with the command that takes the best-ranked skipped one; empty when the set is inside
+        the round, has nothing outside it, or the round has nothing ready that it skips.
 
     """
     inside, available, doing = set(round_cards), set(ready), set(working)
     outside = sorted(doing - inside)
-    if not outside:
+    skipped = [s for s in round_cards if s in available and s not in doing]
+    if not outside or not skipped:
         return []
-    return [
-        f"{symbol} is in this repository's round and ready, but the working set includes "
-        f"{', '.join(outside)}, which is not: take {symbol} first with {_TAKE} {symbol} "
-        "--status working"
-        for symbol in round_cards
-        if symbol in available and symbol not in doing
-    ]
+    first, rest = skipped[0], skipped[1:]
+    verb = "are" if rest else "is"
+    then = f"; then {', '.join(rest)}, each the same way" if rest else ""
+    message = (
+        f"{', '.join(skipped)} {verb} in this repository's round and ready, but the working set "
+        f"includes {', '.join(outside)}, which is not: take {first} first with {_TAKE} {first} "
+        f"--status working{then}"
+    )
+    return [message]
