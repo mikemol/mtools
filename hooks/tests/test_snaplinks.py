@@ -11,10 +11,9 @@ a link to a link and a link to a directory must each stay absent, or "carry" has
 
 from __future__ import annotations
 
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import snaplinks, snapshot
+from mikemol.hooks import runproc, snaplinks, snapshot
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -26,13 +25,8 @@ _REFUSED = ("esc", "abs", "dangling", "chain", "dirlink")
 
 
 def _git(root: Path, *args: str, stdin: str | None = None) -> str:
-    done = subprocess.run(
-        ["git", "-C", str(root), *args],
-        input=stdin,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    done = runproc.run(["git", "-C", str(root), *args], stdin_text=stdin)
+    assert done.returncode == 0, done.stderr
     return done.stdout.strip()
 
 

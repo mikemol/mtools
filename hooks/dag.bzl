@@ -3057,6 +3057,7 @@ GRAPH = {
     },
     "tests/test_snaplinks.py": {
       "imports": [
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/snaplinks.py",
         "src/mikemol/hooks/snapshot.py"
       ],

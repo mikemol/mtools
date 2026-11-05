@@ -5826,3 +5826,8 @@
 2026-11-05T22:51:46Z  status W1501 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T22:58:20Z  status W2298 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T22:58:20Z  status W2301 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T23:06:01Z  status W2301 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T23:18:46Z  tick  W2219 advanced  sweep     "stack 21 (W1667 release 128 to 126 plus the mirror check) inflight; submitted hooks batch 21 (test_snaplinks onto runproc) behind it because the two share no file, so the next leader can join both [blocked by W2289]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T23:19:49Z  status W2298 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T23:20:43Z  status W2286 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T23:26:37Z  interrupt W2303 minted    -         "Plain commits skip the pace guard: commit_kata.py:1239-1243 lets a non-stack commit land with no pace judgement"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2301
