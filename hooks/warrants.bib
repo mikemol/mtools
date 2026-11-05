@@ -17704,3 +17704,18 @@
   claim  = {The control: without MIKEMOL_REAL_ROOT in the tracked hook there is no isolated path.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_hook_that_does_not_name_the_real_root_refuses_the_stack_and_commits_nothing},
 }
+
+@misc{hooks-toy-harness-stack-sharing-a-file-with-a-held-stack-is-refused-unless-built-on-its-bytes,
+  section = {toy-harness},
+  title  = {W2209 witness b: a stack built on HEAD's copy of a file a stack ahead froze is refused},
+  claim  = {W2209 witness b: a stack built on HEAD's copy of a file a stack ahead froze is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_stack_sharing_a_file_with_a_held_stack_is_refused_unless_built_on_its_bytes},
+}
+
+@misc{hooks-toy-harness-stack-submitted-from-a-linked-worktree-is-refused-and-commits-nothing,
+  section = {toy-harness},
+  title  = {W2209 witness c: an undeclared worktree submit would take a queue and lease beside main's},
+  claim  = {W2209 witness c: an undeclared worktree submit would take a queue and lease beside
+            main's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_stack_submitted_from_a_linked_worktree_is_refused_and_commits_nothing},
+}

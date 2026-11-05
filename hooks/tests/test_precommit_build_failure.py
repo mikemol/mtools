@@ -5,8 +5,9 @@
 from __future__ import annotations
 
 import shutil
-import subprocess
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 GATE = Path(__file__).parent.parent.parent / ".githooks" / "pre-commit"
 BASH = shutil.which("bash") or "bash"
@@ -34,20 +35,15 @@ def _function() -> str:
     return text[head : text.index("\n}\n", head) + 2]
 
 
-def _run(root: Path, log: Path) -> subprocess.CompletedProcess[str]:
+def _run(root: Path, log: Path) -> runproc.Result:
     """Run the function under bash, as the gate's `set -euo pipefail` shell would.
 
     Returns:
-        the finished process, both streams captured.
+        the finished command's result, both streams captured.
 
     """
     script = SCRIPT.replace("{function}", _function())
-    return subprocess.run(
-        [BASH, "-c", script, "bash", str(root), str(log)],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    return runproc.run([BASH, "-c", script, "bash", str(root), str(log)])
 
 
 def _tool(root: Path, body: str) -> None:

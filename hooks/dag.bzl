@@ -1512,6 +1512,7 @@ GRAPH = {
     "tests/test_adoption.py": {
       "imports": [
         "src/mikemol/hooks/routing_table.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/structural_query.py"
       ],
       "reads": [],
@@ -2484,7 +2485,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_precommit_build_failure.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

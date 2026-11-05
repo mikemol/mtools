@@ -172,3 +172,86 @@ def test_a_hook_that_does_not_name_the_real_root_refuses_the_stack_and_commits_n
     assert done.returncode != 0
     assert "a stack needs the isolated commit path" in done.stdout + done.stderr
     assert _git(repo, env, "log", "-1", "--format=%s").strip() == "first"
+
+
+def _held_hook(tmp_path: Path) -> tuple[str, Path, Path]:
+    """Build a gate hook that reports it is running, then waits to be released.
+
+    ⚑ NAMED PIPES, NOT A POLL AND NOT A TIMER: the hook writes `held` once its gate is running and
+    then blocks reading `release`, so the test blocks on the child's own progress in both
+    directions. A child that never reaches the hook leaves the read open until the test runner's
+    own limit ends it.
+
+    Returns:
+        the hook text, the pipe it announces on and the pipe it waits on.
+
+    """
+    held, release = tmp_path / "held", tmp_path / "release"
+    os.mkfifo(held)
+    os.mkfifo(release)
+    hook = (
+        '#!/bin/sh\n: "${MIKEMOL_REAL_ROOT:-}"\n'
+        f"echo held > '{held}'\nread _go < '{release}'\nexit 0\n"
+    )
+    return hook, held, release
+
+
+def test_a_stack_sharing_a_file_with_a_held_stack_is_refused_unless_built_on_its_bytes(
+    tmp_path: Path,
+) -> None:
+    """W2209 witness b: a stack built on HEAD's copy of a file a stack ahead froze is refused."""
+    hook, held, release = _held_hook(tmp_path)
+    env = _environment(tmp_path)
+    repo = _repo(tmp_path, env, _NAMING_HOOK)
+    gate = repo / ".githooks" / "pre-commit"
+    gate.write_text(hook, encoding="utf-8")
+    _git(repo, env, "add", ".githooks/pre-commit")
+    _git(repo, env, "commit", "--quiet", "--no-verify", "-m", "hold the gate")
+    runner = tmp_path / "run_commit.py"
+    runner.write_text(_RUNNER, encoding="utf-8")
+    first = runproc.start(
+        [sys.executable, str(runner), str(repo), "--stack", str(_stack(tmp_path))],
+        cwd=repo,
+        env=env,
+    )
+    assert held.read_text(encoding="utf-8") == "held\n"
+    (repo / "a.txt").write_text("three\n", encoding="utf-8")
+    entries: list[dict[str, object]] = [
+        {"waypoint": "W2", "subject": "W2 toy: built on HEAD", "paths": ["a.txt"]}
+    ]
+    other = tmp_path / "stack2.json"
+    other.write_text(json.dumps(entries), encoding="utf-8")
+    second = runproc.run(
+        [sys.executable, str(runner), str(repo), "--stack", str(other)],
+        cwd=repo,
+        env=env,
+        timeout=_TIMEOUT_S,
+    )
+    release.write_text("go\n", encoding="utf-8")
+    done = first.wait(timeout=_TIMEOUT_S)
+    said = second.stdout + second.stderr
+    assert second.returncode != 0, said
+    assert "shares 1 file(s) with a stack ahead" in said
+    assert "a.txt" in said
+    assert done.returncode == 0, done.stdout + done.stderr
+    assert _git(repo, env, "show", "HEAD:a.txt") == "two\n"
+    assert _git(repo, env, "log", "-1", "--format=%s").strip() == _SUBJECT
+
+
+def test_a_stack_submitted_from_a_linked_worktree_is_refused_and_commits_nothing(
+    tmp_path: Path,
+) -> None:
+    """W2209 witness c: an undeclared worktree submit would take a queue and lease beside main's."""
+    env = _environment(tmp_path)
+    repo = _repo(tmp_path, env, _NAMING_HOOK)
+    linked = tmp_path / "linked"
+    _git(repo, env, "worktree", "add", "--quiet", "-b", "linked", str(linked))
+    runner = tmp_path / "run_commit.py"
+    runner.write_text(_RUNNER, encoding="utf-8")
+    argv = [sys.executable, str(runner), str(linked), "--stack", str(_stack(tmp_path))]
+    done = runproc.run(argv, cwd=linked, env=env, timeout=_TIMEOUT_S)
+    said = done.stdout + done.stderr
+    assert done.returncode != 0, said
+    assert "an undeclared worktree submit" in said
+    assert "mtools:W2103" in said
+    assert _git(repo, env, "log", "-1", "--format=%s").strip() == "first"

@@ -386,26 +386,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # warrant stores is never run.
 "src/mikemol/hooks/hold_lift.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑⚑ THE SAME RULE, THE SAME REASON, A SECOND NAMED FILE. `test_adoption.py`'s subject is what a
-# real checkout produces WHEN INSTALLED, so building venvs and installing wheels is the case
-# rather than a helper around it. ⚑ MEASURED: every argument is a literal or a path this module
-# constructs — `sys.executable`, a `tempfile` directory, and `_SOURCE_TREE / dist` — so there is
-# no untrusted input for `subprocess-without-shell-equals-true` to be about here.
-# ⚑ DECLARED IN CONFIG, NOT AS `noqa`. Three line directives were written first and the ratchet
-# refused them as new keys, correctly: this repository's rule is DECLARE, NEVER SUPPRESS, and a
-# line directive travels with the code into a peer tree that may not even enable the rule —
-# measured by substrate as `RUF100 Unused noqa`. A config entry stays behind.
-# ⚑⚑ `suspicious-subprocess-import` IS PREVIEW-ONLY, AND THE RATCHET ONCE SAW IT WHILE `ruff check`
-# DID NOT. The census ran ruff with `--preview` while the gate did not, so hoisting
-# `import subprocess` to module scope minted a new baseline key that a plain preflight reported as
-# clean — a gate and a preflight disagreeing about the same file, which is exactly the shape that
-# makes a green local run mean nothing.
-# ⚑⚑⚑ THAT DISAGREEMENT IS NOW CLOSED BY CONSTRUCTION, and the entry is kept because the exemption
-# is still needed, not because the hazard is still live: `preview = true` is set above, so the
-# preview rules are part of the config every caller loads and there is no longer a flag for two
-# callers to differ on. The census and the gate cannot disagree about the rule set any more.
-"tests/test_adoption.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑ THE SHARED GIT PRE-PUSH: asking git, and running a repo's own pre-push.local, ARE its
 # responsibility. MEASURED: git is resolved by `shutil.which` (absent → refuse); the local hook is
 # a path this module builds as `<git toplevel>/.githooks/pre-push.local` and runs only when
@@ -456,9 +436,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
-# The preflight witness runs the script itself under an emptied PATH to prove a failed rebuild exits 3.
-# Its witness runs the pre-commit's `build_failure_cause` function under bash with a stub tool.
-"tests/test_precommit_build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
 "tests/test_commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
