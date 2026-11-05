@@ -101,16 +101,17 @@ _CPU_BUDGET_S = {
 # does not rebuild it. The test list itself is the graph's, not a glob: a new test is a stale graph
 # (the git-ls-files check, W2011) until `--write` is run. A test whose run reads or spawns a module
 # it does not import fails in the sandbox, and its read is declared in reads.json, not widened here.
-# ⚑ FOUR TESTS READ FILES THEY DO NOT IMPORT, so their closure is too small (MEASURED 2026-10-25:
+# ⚑ FIVE TESTS READ FILES THEY DO NOT IMPORT, so their closure is too small (MEASURED 2026-10-25:
 # 238 of 242 pass on it). They stay on the dist-wide `:hooks` until each declares what it reads
 # (W2020): test_bar_fires reads module and launcher files by path, test_import_cycles sweeps every
-# module, test_probe spawns the scripts under hooks/bin, test_commit_lease_wait spawns a child that
-# imports what the test does not.
+# module, test_probe spawns the scripts under hooks/bin, test_commit_lease_wait and
+# test_toy_harness (W2276, MEASURED 2026-11-05) spawn a child that imports what the test does not.
 _WHOLE_DIST_TESTS = [
     "tests/test_bar_fires.py",
     "tests/test_import_cycles.py",
     "tests/test_probe.py",
     "tests/test_commit_lease_wait.py",
+    "tests/test_toy_harness.py",
 ]
 
 # ⚑ A FILE ONE TEST RUNS, staged for that test alone (never in the list every test shares, which

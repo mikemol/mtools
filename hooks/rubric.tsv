@@ -229,3 +229,4 @@ repinonto	The Repin Reader: a Queued Stack's Pins Come From Its Frozen pyproject
 aheadrefusal	The Ahead-Stack Refusal: the Shared Files a Stack Was Not Built On, Named With the Way Out (W2078)
 runproc	The leaf command runner keeps a failed command's standard error
 strayworktree	A core.worktree a gate step wrote into the real config is removed and said, not left (W2269)
+toy-harness	The Toy Harness: a Disposable Repository the Real Stack Command Runs Against

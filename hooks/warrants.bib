@@ -17690,3 +17690,17 @@
   claim  = {W2171: with no tool built the hook still pushes and exits 0, and starts nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_missing_emit_tool_sends_nothing_and_leaves_the_hook_alone},
 }
+
+@misc{hooks-toy-harness-lone-one-file-stack-lands-through-the-isolated-path,
+  section = {toy-harness},
+  title  = {The real stack command commits the one file with the entry's subject and says it did},
+  claim  = {The real stack command commits the one file with the entry's subject and says it did.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_lone_one_file_stack_lands_through_the_isolated_path},
+}
+
+@misc{hooks-toy-harness-hook-that-does-not-name-the-real-root-refuses-the-stack-and-commits-nothing,
+  section = {toy-harness},
+  title  = {The control: without MIKEMOL_REAL_ROOT in the tracked hook there is no isolated path},
+  claim  = {The control: without MIKEMOL_REAL_ROOT in the tracked hook there is no isolated path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_hook_that_does_not_name_the_real_root_refuses_the_stack_and_commits_nothing},
+}
