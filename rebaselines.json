@@ -6,6 +6,13 @@
       "new": 1,
       "reason": "upstream-dictated name, operator chose (a): panflute Doc.__init__ keyword-only `format` shadows a builtin (A002) and stubtest checks the name; W1977",
       "warrant": "bde02714-1533-475a-b934-d2ce58024a15:104181"
+    },
+    {
+      "ratchet": ".claude/unmanifested-baseline.txt",
+      "old": 0,
+      "new": 128,
+      "reason": "operator: the 128 cards parked behind W1667 are modeled as a ratchet so the backlog has a number that must fall; a birth at the true count, each card paid by a manifest and a release (W1667)",
+      "warrant": "596b66c6-99e0-40d1-921b-495a10fb0c65:465723"
     }
   ]
 }
