@@ -121,3 +121,45 @@
   claim  = {The working directory and the environment reach the child, which writes where told.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_spawn_runs_in_the_given_directory_with_exactly_the_given_environment},
 }
+
+@misc{procrun-proc-first-line-returns-the-childs-first-line-and-leaves-it-running,
+  section = {proc},
+  title  = {The line comes back without its newline while the child is still alive and writing},
+  claim  = {The line comes back without its newline while the child is still alive and writing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_first_line_returns_the_childs_first_line_and_leaves_it_running},
+}
+
+@misc{procrun-proc-first-line-gives-up-on-a-child-that-has-gone-quiet,
+  section = {proc},
+  title  = {A child writing nothing for the idle bound raises, however long it would run},
+  claim  = {A child writing nothing for the idle bound raises, however long it would run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_first_line_gives_up_on_a_child_that_has_gone_quiet},
+}
+
+@misc{procrun-proc-first-line-at-the-end-of-output-returns-what-was-written,
+  section = {proc},
+  title  = {A child that ends without a newline gives its partial line; one with no output, nothing},
+  claim  = {A child that ends without a newline gives its partial line; one with no output, nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_first_line_at_the_end_of_output_returns_what_was_written},
+}
+
+@misc{procrun-proc-first-line-needs-a-child-started-by-spawn-piped,
+  section = {proc},
+  title  = {A child started by plain `spawn` has no pipe to read, and says so},
+  claim  = {A child started by plain `spawn` has no pipe to read, and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_first_line_needs_a_child_started_by_spawn_piped},
+}
+
+@misc{procrun-proc-file-given-as-stderr-receives-what-the-child-complains-of,
+  section = {proc},
+  title  = {The caller reads the child's stderr from its own file after the child has gone},
+  claim  = {The caller reads the child's stderr from its own file after the child has gone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_a_file_given_as_stderr_receives_what_the_child_complains_of},
+}
+
+@misc{procrun-proc-discarded-stderr-reaches-nobody-and-inherited-stderr-reaches-the-caller,
+  section = {proc},
+  title  = {`discard` drops the child's stderr; leaving it inherited is the control that shows it},
+  claim  = {`discard` drops the child's stderr; leaving it inherited is the control that shows it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_discarded_stderr_reaches_nobody_and_inherited_stderr_reaches_the_caller},
+}

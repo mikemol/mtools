@@ -15,6 +15,7 @@ from mikemol.procrun.proc import (
     capture_bytes,
     capture_stdout,
     spawn,
+    spawn_piped,
 )
 
 if TYPE_CHECKING:
@@ -171,3 +172,59 @@ def test_spawn_runs_in_the_given_directory_with_exactly_the_given_environment(
     with spawn([sys.executable, "-c", code], cwd=tmp_path, env={"PROBE": "x"}) as child:
         assert child.wait(timeout=_LONG) == 0
     assert (tmp_path / "out").read_text(encoding="utf-8") == str(tmp_path.resolve()) + "x"
+
+
+def test_first_line_returns_the_childs_first_line_and_leaves_it_running() -> None:
+    """The line comes back without its newline while the child is still alive and writing."""
+    code = "import time; print('ready', flush=True); time.sleep(30)"
+    with spawn_piped([sys.executable, "-c", code]) as child:
+        assert child.first_line(_LONG) == "ready"
+        assert child.poll() is None
+
+
+def test_first_line_gives_up_on_a_child_that_has_gone_quiet() -> None:
+    """A child writing nothing for the idle bound raises, however long it would run."""
+    sleeper = spawn_piped([sys.executable, "-c", _SLEEP])
+    with sleeper, pytest.raises(TimeoutExpired):
+        sleeper.first_line(_SHORT)
+
+
+def test_first_line_at_the_end_of_output_returns_what_was_written() -> None:
+    """A child that ends without a newline gives its partial line; one with no output, nothing."""
+    partial = "import sys; sys.stdout.write('partial')"
+    with spawn_piped([sys.executable, "-c", partial]) as child:
+        assert child.first_line(_LONG) == "partial"
+    with spawn_piped([sys.executable, "-c", "pass"]) as silent:
+        assert not silent.first_line(_LONG)
+
+
+def test_first_line_needs_a_child_started_by_spawn_piped() -> None:
+    """A child started by plain `spawn` has no pipe to read, and says so."""
+    quiet = spawn([sys.executable, "-c", "pass"])
+    with quiet, pytest.raises(ValueError, match="spawn_piped"):
+        quiet.first_line(_SHORT)
+
+
+def test_a_file_given_as_stderr_receives_what_the_child_complains_of(tmp_path: Path) -> None:
+    """The caller reads the child's stderr from its own file after the child has gone."""
+    code = "import sys; sys.stderr.write('complaint')"
+    log = tmp_path / "err.log"
+    with (
+        log.open("wb") as handle,
+        spawn_piped([sys.executable, "-c", code], stderr=handle) as child,
+    ):
+        child.wait(_LONG)
+    assert log.read_text(encoding="utf-8") == "complaint"
+
+
+def test_discarded_stderr_reaches_nobody_and_inherited_stderr_reaches_the_caller(
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    """`discard` drops the child's stderr; leaving it inherited is the control that shows it."""
+    code = "import sys; sys.stderr.write('noise')"
+    with spawn_piped([sys.executable, "-c", code], stderr="discard") as dropped:
+        dropped.wait(_LONG)
+    assert not capfd.readouterr().err
+    with spawn_piped([sys.executable, "-c", code]) as kept:
+        kept.wait(_LONG)
+    assert capfd.readouterr().err == "noise"

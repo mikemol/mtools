@@ -41,3 +41,13 @@ src/mikemol/procrun/proc.py|child-terminate-does-nothing|        self._popen.ter
 # W2242: capture_stdout leaves stderr to the caller and still passes its timeout.
 src/mikemol/procrun/proc.py|capture-stdout-captures-stderr|        stderr=None,|        stderr=subprocess.PIPE,|def=capture_stdout
 src/mikemol/procrun/proc.py|capture-stdout-drops-the-timeout|        timeout=timeout,|        timeout=None,|def=capture_stdout
+
+# W2277: the piped spawn really pipes, lets the parent's copy of the write end go (else EOF never
+# comes), honours its stderr destination, and the first line is read whole and bound by silence.
+src/mikemol/procrun/proc.py|piped-is-not-a-pipe|    reader, writer = os\.pipe\(\)|    reader, writer = None, None|def=spawn_piped
+src/mikemol/procrun/proc.py|piped-keeps-the-write-end-open|        os\.close\(writer\)|        pass|def=spawn_piped
+src/mikemol/procrun/proc.py|piped-discard-keeps-stderr|        if stderr == "discard":|        if stderr == "":|def=spawn_piped
+src/mikemol/procrun/proc.py|piped-stderr-file-ignored|        errors = stderr|        errors = None|def=spawn_piped
+src/mikemol/procrun/proc.py|first-line-reads-past-the-newline|if not byte or byte == b"\\n":|if not byte:|def=Child.first_line
+src/mikemol/procrun/proc.py|first-line-bound-in-seconds-not-ms|poller\.poll\(idle \* _MS\)|poller.poll(idle)|def=Child.first_line
+src/mikemol/procrun/proc.py|first-line-drops-the-text|return written\.decode\("utf-8", errors="replace"\)|return ""|def=Child.first_line

@@ -11,11 +11,13 @@ caller that only needs to start a child does not inherit treeio's native git dep
 Every argv is a sequence built by the caller: never a shell.
 """
 
+import os
+import select
 import subprocess
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from types import TracebackType
-from typing import Literal, Self
+from typing import BinaryIO, Literal, Self
 
 # The exception `capture` raises for a child that outlasts its timeout, re-exported so a
 # caller can name it without importing the subprocess module itself.
@@ -25,6 +27,8 @@ TimeoutExpired = subprocess.TimeoutExpired
 Completed = subprocess.CompletedProcess[str]
 # What `capture_bytes` returns, for the same reason.
 CompletedBytes = subprocess.CompletedProcess[bytes]
+# Milliseconds in the second `poll` counts in.
+_MS = 1000
 
 
 def capture(
@@ -143,9 +147,10 @@ class Child:
     own. Used as a context manager it kills and reaps the child on exit, so a test cannot leak one.
     """
 
-    def __init__(self, popen: subprocess.Popen[bytes]) -> None:
-        """Wrap the `Popen` this seam started."""
+    def __init__(self, popen: subprocess.Popen[bytes], reader: int | None = None) -> None:
+        """Wrap the `Popen` this seam started, and the read end of its output pipe if any."""
         self._popen = popen
+        self._reader = reader
 
     @property
     def pid(self) -> int:
@@ -194,16 +199,51 @@ class Child:
         """
         return self
 
+    def first_line(self, idle: float) -> str:
+        """Read the first line the child writes to its piped output.
+
+        ⚑ THE BOUND IS SILENCE, NOT A CLOCK: `idle` is the longest the child may go without
+        writing a byte, and every byte that arrives starts the count again. A child that is
+        slow but still writing is never cut off; one that has gone quiet is, and the
+        `TimeoutExpired` it raises is the one `capture` raises.
+
+        Args:
+            idle: Seconds without any output before giving up.
+
+        Returns:
+            The line without its newline; whatever was written if the output ended first.
+
+        Raises:
+            ValueError: when the child was not started by `spawn_piped`.
+
+        """
+        fd = self._reader
+        if fd is None:
+            message = "first_line needs a child started by spawn_piped"
+            raise ValueError(message)
+        poller = select.poll()
+        poller.register(fd, select.POLLIN)
+        written = bytearray()
+        while True:
+            if not poller.poll(idle * _MS):
+                raise TimeoutExpired(self._popen.args, idle)
+            byte = os.read(fd, 1)
+            if not byte or byte == b"\n":
+                return written.decode("utf-8", errors="replace")
+            written.extend(byte)
+
     def __exit__(
         self,
         exc_type: type[BaseException] | None,
         exc: BaseException | None,
         tb: TracebackType | None,
     ) -> None:
-        """Kill the child if it still runs, and reap it."""
+        """Kill the child if it still runs, reap it, and close its piped output."""
         if self._popen.poll() is None:
             self._popen.kill()
         self._popen.wait()
+        if self._reader is not None:
+            os.close(self._reader)
 
 
 def spawn(
@@ -237,3 +277,48 @@ def spawn(
             stderr=sink if output == "discard" else None,
         )
     )
+
+
+def spawn_piped(
+    argv: Sequence[str],
+    cwd: Path | None = None,
+    env: Mapping[str, str] | None = None,
+    stderr: Stream | BinaryIO = "inherit",
+) -> Child:
+    """Start `argv` with its stdout piped to the caller and hand back the live child (W2277).
+
+    ⚑ A SEPARATE FUNCTION BECAUSE `spawn` TAKES FIVE ARGUMENTS ALREADY: the child's first stdout
+    line (`Child.first_line`) is how a caller learns a server is up and which port it took. The
+    pipe is made here and its read end kept on the `Child`, so the caller names no subprocess
+    type. The caller's stdin is left alone.
+
+    Args:
+        argv: The program and its arguments; never interpreted by a shell.
+        cwd: The directory to run in; the caller's when omitted.
+        env: The child's whole environment; the caller's when omitted.
+        stderr: `inherit` leaves the caller's stderr, `discard` drops it, and a binary file
+            object the caller opened receives it, so the caller can read what the child
+            complained of after it has gone.
+
+    Returns:
+        The running child; its read end is closed when the context manager exits.
+
+    Raises:
+        OSError: when the program cannot be started; the pipe is closed first, as in `Popen`.
+
+    """
+    reader, writer = os.pipe()
+    errors: int | BinaryIO | None = None
+    if isinstance(stderr, str):
+        if stderr == "discard":
+            errors = subprocess.DEVNULL
+    else:
+        errors = stderr
+    try:
+        popen = subprocess.Popen(list(argv), cwd=cwd, env=env, stdout=writer, stderr=errors)
+    except OSError:
+        os.close(reader)
+        raise
+    finally:
+        os.close(writer)
+    return Child(popen, reader)
