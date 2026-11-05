@@ -17668,3 +17668,25 @@
   claim  = {A bounded look does not end the held child; kill does, and wait then reports it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_a_wait_past_its_bound_raises_and_leaves_the_child_running_until_killed},
 }
+
+@misc{hooks-githook-post-commit-gate-verified-commit-sends-the-ratchet-values-as-the-landed-sample,
+  section = {githook-post-commit},
+  title  = {W2171: after the push, the emit tool starts with the repository, its tree and `landed`},
+  claim  = {W2171: after the push, the emit tool starts with the repository, its tree and `landed`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_gate_verified_commit_sends_the_ratchet_values_as_the_landed_sample},
+}
+
+@misc{hooks-githook-post-commit-commit-the-gate-did-not-verify-sends-no-landed-sample,
+  section = {githook-post-commit},
+  title  = {W2171: no witness for the tree means nothing landed through the gate, so nothing is sent},
+  claim  = {W2171: no witness for the tree means nothing landed through the gate, so nothing is
+            sent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_commit_the_gate_did_not_verify_sends_no_landed_sample},
+}
+
+@misc{hooks-githook-post-commit-missing-emit-tool-sends-nothing-and-leaves-the-hook-alone,
+  section = {githook-post-commit},
+  title  = {W2171: with no tool built the hook still pushes and exits 0, and starts nothing},
+  claim  = {W2171: with no tool built the hook still pushes and exits 0, and starts nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_githook_post_commit.py -k test_a_missing_emit_tool_sends_nothing_and_leaves_the_hook_alone},
+}

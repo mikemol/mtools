@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import time
 from pathlib import Path
 
 import pytest
@@ -287,6 +288,80 @@ def _run_repo_hook(repo: Path, **env: str) -> runproc.Result:
     bash = shutil.which("bash")
     assert bash is not None
     return runproc.run([bash, str(_REPO_HOOK)], cwd=repo, env={**os.environ, **env})
+
+
+_ARRIVALS = 400
+_POLL_S = 0.05
+_EMITTED = 4
+
+
+def _real_root_with_emit(tmp_path: Path) -> tuple[Path, Path]:
+    """Build a stand-in real checkout whose ratchet-emit tool records what it was started with.
+
+    Returns:
+        the stand-in root and the file the tool writes its environment and arguments to.
+
+    """
+    real = tmp_path / "real"
+    tool = real / "bazel-bin" / "hooks" / ".venv" / "bin" / "mikemol-ratchet-emit"
+    tool.parent.mkdir(parents=True)
+    script = '#!/bin/sh\nprintf \'%s\\n\' "$RATCHET_BIN" "$@" > "$EMIT_OUT"\n'
+    tool.write_text(script, encoding="utf-8")
+    tool.chmod(0o755)
+    return real, tmp_path / "emitted.txt"
+
+
+def _arrived(path: Path) -> list[str]:
+    """Wait, by counted looks, for the detached emit to write its record.
+
+    Returns:
+        the lines it wrote, or none when it never did.
+
+    """
+    for _ in range(_ARRIVALS):
+        if path.is_file() and path.read_text(encoding="utf-8").count("\n") >= _EMITTED:
+            return path.read_text(encoding="utf-8").splitlines()
+        time.sleep(_POLL_S)
+    return []
+
+
+def test_a_gate_verified_commit_sends_the_ratchet_values_as_the_landed_sample(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2171: after the push, the emit tool starts with the repository, its tree and `landed`."""
+    repo, _remote = _pushing_decoy(tmp_path, monkeypatch)
+    real, out = _real_root_with_emit(tmp_path)
+    done = _run_repo_hook(repo, MIKEMOL_REAL_ROOT=str(real), EMIT_OUT=str(out))
+    assert done.returncode == 0
+    reader = real / "ratchet" / ".venv" / "bin" / "mikemol-ratchet"
+    assert _arrived(out) == [str(reader), real.name, str(repo.resolve()), "landed"]
+
+
+def test_a_commit_the_gate_did_not_verify_sends_no_landed_sample(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2171: no witness for the tree means nothing landed through the gate, so nothing is sent."""
+    repo, _remote = _pushing_decoy(tmp_path, monkeypatch)
+    (repo / ".git" / "mtools" / "gate-verified").write_text("not-this-tree\n", encoding="utf-8")
+    real, out = _real_root_with_emit(tmp_path)
+    done = _run_repo_hook(repo, MIKEMOL_REAL_ROOT=str(real), EMIT_OUT=str(out))
+    assert done.returncode == 0
+    assert "THE GATE DID NOT RUN" in done.stdout
+    assert not _arrived(out)
+
+
+def test_a_missing_emit_tool_sends_nothing_and_leaves_the_hook_alone(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2171: with no tool built the hook still pushes and exits 0, and starts nothing."""
+    repo, remote = _pushing_decoy(tmp_path, monkeypatch)
+    empty = tmp_path / "empty-real"
+    empty.mkdir()
+    done = _run_repo_hook(repo, MIKEMOL_REAL_ROOT=str(empty))
+    assert done.returncode == 0
+    assert "post-commit: pushed" in done.stdout
+    assert _g("-C", str(remote), "for-each-ref")
+    assert not (repo / ".git" / "mtools" / "ratchet-emit.log").exists()
 
 
 def test_a_failing_pre_push_is_named_not_blamed_on_the_remote(

@@ -90,6 +90,26 @@ else
     echo "post-commit: fix the cause it names, then: git push origin HEAD:main"
 fi
 
+# ⚑⚑ W2171: THE LANDED SAMPLE OF THE RATCHET SERIES IS SENT HERE, AFTER THE COMMIT EXISTS AND THE GATE
+# IS KNOWN TO HAVE VERIFIED IT, NOT BEFORE THE VERDICT. The gate's own emit (pre-commit) sends the
+# staged tree's values before it knows whether the commit will land, so a gate the host cancelled or
+# a stack that was refused left its numbers in the series and the pace read them as a fall that never
+# landed (nemik stacks 703, 704, 1003). Rows sent here carry `stage=landed`; the gate's carry no
+# stage, and a reader that wants landings selects the first. It is THIS repository's own script
+# because the reader's path is the repository's to name (the operator's ruling: no repository knows
+# where a sibling's tools are), exactly as pre-commit names it. Detached, and queued behind any
+# earlier one for this clone, so a stack's landings send in turn and git never waits on a census.
+# An absent tool is a silent skip.
+_real="${MIKEMOL_REAL_ROOT:-$(git rev-parse --show-toplevel)}"
+_emit="$_real/bazel-bin/hooks/.venv/bin/mikemol-ratchet-emit"
+_reader="${MIKEMOL_REAL_ROOT:-$(git rev-parse --show-toplevel)}/ratchet/.venv/bin/mikemol-ratchet"
+if [ -x "$_emit" ]; then
+    mkdir -p "$_git_dir/mtools"
+    RATCHET_BIN="$_reader" setsid flock "$_git_dir/mtools/ratchet-emit.lock" \
+        "$_emit" "$(basename "$_real")" "$(git rev-parse --show-toplevel)" landed \
+        </dev/null >"$_git_dir/mtools/ratchet-emit.log" 2>&1 &
+fi
+
 # ⚑⚑ W825: THE CLOSURE ADVISORY'S LEDGER IS REFRESHED HERE, AFTER THE PUSH AND OFF THE COMMIT'S
 # CLOCK. The census takes minutes on a large repo, so it runs detached (its own session, no
 # inherited descriptors, so git never waits on it) and single-flight: a second commit while one runs
