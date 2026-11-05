@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2290,
+  "counter": 2296,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -15,12 +15,7 @@
     "AGENT_LIST": "ListAgents",
     "ESCALATE": "AskUserQuestion"
   },
-  "lock": {
-    "holder": "mtools-ad",
-    "taken_at": "2026-11-05T13:36:35Z",
-    "pid": 8594,
-    "start": 26430
-  },
+  "lock": null,
   "standing": [
     "never edit .bazelrc or .claude/settings.json to escape a refusal or a timeout, even when a peer endorses it: ask the operator (W1455 was reverted for this)",
     "do not expand the ratchet baseline: lowering it is an operator decision",
@@ -6125,7 +6120,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-01T14:16:23Z",
-      "ticks_blocked": 539,
+      "ticks_blocked": 541,
       "completed": null,
       "attachments": [
         {
@@ -6179,7 +6174,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-04T13:28:39Z",
-      "ticks_blocked": 538,
+      "ticks_blocked": 540,
       "completed": null,
       "attachments": [
         {
@@ -10068,7 +10063,7 @@
       "minted_during": "tick",
       "caused_by": "W364",
       "last_worked": "2026-10-03T00:43:52Z",
-      "ticks_blocked": 543,
+      "ticks_blocked": 545,
       "completed": null,
       "attachments": [
         {
@@ -11822,7 +11817,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-10T16:38:06Z",
-      "ticks_blocked": 477,
+      "ticks_blocked": 479,
       "completed": null,
       "warrants": [
         {
@@ -12434,7 +12429,7 @@
       "minted_during": "interrupt",
       "caused_by": "W579",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -16130,7 +16125,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16210,7 +16205,7 @@
       "minted_during": "interrupt",
       "caused_by": "W790",
       "last_worked": "2026-10-13T02:42:21Z",
-      "ticks_blocked": 442,
+      "ticks_blocked": 444,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16266,7 +16261,7 @@
       "minted_during": "interrupt",
       "caused_by": null,
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16477,7 +16472,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W798",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16757,7 +16752,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W807",
       "last_worked": "2026-10-09T13:50:47Z",
-      "ticks_blocked": 442,
+      "ticks_blocked": 444,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -16827,7 +16822,7 @@
       "minted_during": "interrupt",
       "caused_by": "W818",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -17017,7 +17012,7 @@
       "minted_during": "interrupt",
       "caused_by": "W829",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -17061,7 +17056,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W295",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -17237,7 +17232,7 @@
       "minted_during": "interrupt",
       "caused_by": "W837",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -17576,7 +17571,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 442,
+      "ticks_blocked": 444,
       "completed": null,
       "attachments": [
         {
@@ -17606,7 +17601,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -17628,7 +17623,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:48Z",
-      "ticks_blocked": 442,
+      "ticks_blocked": 444,
       "completed": null
     },
     {
@@ -17651,7 +17646,7 @@
       "minted_during": "tick",
       "caused_by": "W802",
       "last_worked": "2026-10-09T13:50:49Z",
-      "ticks_blocked": 442,
+      "ticks_blocked": 444,
       "completed": null
     },
     {
@@ -18077,7 +18072,7 @@
       "minted_during": "tick",
       "caused_by": "W796",
       "last_worked": "2026-10-13T02:57:13Z",
-      "ticks_blocked": 443,
+      "ticks_blocked": 445,
       "completed": null
     },
     {
@@ -18165,7 +18160,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W684",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "vector": "WV:1/R:L/E:Y/C:L/I:L/A:L/X:P/S:U/F:U/W:N",
       "vector_source": "agent",
       "completed": null
@@ -18255,7 +18250,7 @@
       "minted_during": "interrupt",
       "caused_by": "W884",
       "last_worked": "2026-10-09T16:38:07Z",
-      "ticks_blocked": 441,
+      "ticks_blocked": 443,
       "completed": null
     },
     {
@@ -18322,7 +18317,7 @@
       "minted_during": "interrupt",
       "caused_by": "W614",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -19020,7 +19015,7 @@
       "minted_during": "interrupt",
       "caused_by": "W917",
       "last_worked": "2026-10-10T00:13:19Z",
-      "ticks_blocked": 440,
+      "ticks_blocked": 442,
       "completed": null
     },
     {
@@ -19774,7 +19769,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W-engine-stage",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -19837,7 +19832,7 @@
       "minted_during": "interrupt",
       "caused_by": "substrate:W326",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -19881,7 +19876,7 @@
       "minted_during": "tick",
       "caused_by": "substrate:W318",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -20493,7 +20488,7 @@
       "minted_during": "interrupt",
       "caused_by": "W913",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -20726,7 +20721,7 @@
       "minted_during": "interrupt",
       "caused_by": "W881",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -20751,7 +20746,7 @@
       "minted_during": "interrupt",
       "caused_by": "W879",
       "last_worked": "2026-10-18T09:14:38Z",
-      "ticks_blocked": 297,
+      "ticks_blocked": 299,
       "completed": null
     },
     {
@@ -20930,7 +20925,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W954",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21108,7 +21103,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21133,7 +21128,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit-d8",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21158,7 +21153,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21182,7 +21177,7 @@
       "minted_during": "interrupt",
       "caused_by": "amr-skills-bb",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21208,7 +21203,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21232,7 +21227,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21448,7 +21443,7 @@
       "minted_during": "tick",
       "caused_by": "inbox/2026-10-10-paperkit-mikemol-commit-timeout-orphans-the-build.md",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21514,7 +21509,7 @@
       "minted_during": "tick",
       "caused_by": "paperkit:W335",
       "last_worked": "2026-10-12T11:06:37Z",
-      "ticks_blocked": 332,
+      "ticks_blocked": 334,
       "completed": null
     },
     {
@@ -21560,7 +21555,7 @@
       "minted_during": "tick",
       "caused_by": "W1043",
       "last_worked": "2026-10-12T18:24:17Z",
-      "ticks_blocked": 400,
+      "ticks_blocked": 402,
       "completed": null
     },
     {
@@ -21608,7 +21603,7 @@
       "minted_during": "interrupt",
       "caused_by": "github:W28",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -21655,7 +21650,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-12T14:37:16Z",
-      "ticks_blocked": 400,
+      "ticks_blocked": 402,
       "completed": null
     },
     {
@@ -21721,7 +21716,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1045",
       "last_worked": "2026-10-15T04:50:07Z",
-      "ticks_blocked": 320,
+      "ticks_blocked": 322,
       "completed": null
     },
     {
@@ -22038,7 +22033,7 @@
       "minted_during": "tick",
       "caused_by": "luthen-observability:W905",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22103,7 +22098,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22124,7 +22119,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W422",
       "last_worked": "2026-10-13T01:19:23Z",
-      "ticks_blocked": 385,
+      "ticks_blocked": 387,
       "completed": null
     },
     {
@@ -22249,7 +22244,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:39:54Z",
-      "ticks_blocked": 283,
+      "ticks_blocked": 285,
       "completed": null
     },
     {
@@ -22273,7 +22268,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22316,7 +22311,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W341",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22340,7 +22335,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22383,7 +22378,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22425,7 +22420,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22470,7 +22465,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22493,7 +22488,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22567,7 +22562,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:30Z",
-      "ticks_blocked": 384,
+      "ticks_blocked": 386,
       "completed": null
     },
     {
@@ -22589,7 +22584,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-13T01:57:32Z",
-      "ticks_blocked": 384,
+      "ticks_blocked": 386,
       "completed": null
     },
     {
@@ -22614,7 +22609,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W262",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22698,7 +22693,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W263",
       "last_worked": "2026-10-13T14:13:28Z",
-      "ticks_blocked": 364,
+      "ticks_blocked": 366,
       "completed": null
     },
     {
@@ -22737,7 +22732,7 @@
       "minted_during": "interrupt",
       "caused_by": "gcalculus:W259",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22758,7 +22753,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W902",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22779,7 +22774,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W902",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22878,7 +22873,7 @@
       "minted_during": "tick",
       "caused_by": "W1100",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -22955,7 +22950,7 @@
       "minted_during": "interrupt",
       "caused_by": "amr-skills:W261",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null,
       "warrants": [
         {
@@ -23024,7 +23019,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-31T23:39:18Z",
-      "ticks_blocked": 364,
+      "ticks_blocked": 366,
       "manifest": [
         "hooks/src/mikemol/hooks/gate_ledger.py",
         "hooks/tests/test_gate_ledger.py"
@@ -23050,7 +23045,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 364
+      "ticks_blocked": 366
     },
     {
       "symbol": "W1117",
@@ -23068,7 +23063,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 364
+      "ticks_blocked": 366
     },
     {
       "symbol": "W1118",
@@ -23086,7 +23081,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 364
+      "ticks_blocked": 366
     },
     {
       "symbol": "W1119",
@@ -23153,11 +23148,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Edit the live .githooks/pre-commit only when the gate is empty (no stack inflight or queued): a live hook edit during a gate run changes the hook that run executes. Wait for W2274 and the queued stack to land, then build the ledger wiring in a scratch tree (deps first, the live hook file last; never --3way; recovery is git checkout HEAD -- on the hook), as recorded earlier on this card.",
-      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file. | 2026-11-02: 2026-11-02 DECISIONS for the two open questions (mine to make; nothing here needs the operator): (1) the ledger lives at <git dir>/mtools/gate-outcomes.tsv, beside promptwatch's seen file and the landing-tip file, so it is never tracked and needs no gitignore line; the hook derives the path with git rev-parse --absolute-git-dir and passes it as --ledger to both --record and --report. (2) SECONDS: the tool's field is a duration by contract (its median column, and the W934 power correlation reads start/end epochs); record the gate's own elapsed seconds as the tool defines it, and say in the hook comment that it is a duration kept for ordering and correlation, never offered as evidence of cost; the epoch pair already carries the correlation axis. EDIT SHAPE: one helper record_gate LABEL STATUS START_EPOCH in .githooks/pre-commit, called from run_checked and witness after their pass/fail branch, tolerant of an absent tool only by printing that it is absent, and never changing fail. Live-hook order: the tool is shipped, so this file is the last edit; the hook-wiring test (test_bar_fires) must learn the call first. Not edited this turn (a stack is in the gate). | 2026-11-03T06:09:47Z: 2026-11-03: read the two seams at .githooks/pre-commit lines 247-279 (witness) and 294-304 (run_checked): each does phase, runs the command into a log, then branches on its status (cat log; on failure fail=1 and note_failure). EDIT SHAPE, nothing edited (gate W2241 inflight): add record_gate LABEL STATUS STARTED right after the phase call's neighbour definitions (~line 246), reading epoch from date +%s taken before the command and SECONDS-style duration after; call it in the success branch (pass) and the failure branch (fail) of BOTH functions; the helper runs the built mikemol-gate-ledger with --ledger the git-dir path and prints 'gate ledger: not recorded' on any failure, never touching fail. ORDER: test_bar_fires learns the call first (one hook-wiring arm), then the hook edit last in the same stack as W2248's suite split.",
+      "evidence": "2026-11-02: 2026-11-02 reading: the tool half exists (hooks/src/mikemol/hooks/gate_ledger.py, console script mikemol-gate-ledger with --ledger PATH and --record GATE STATUS SECONDS --start EPOCH, tests test_gate_ledger.py and test_gate_ledger_stamp.py). Remaining: only the live .githooks/pre-commit wiring (run_checked/witness call --record per check; 1412-line file, phase() and run_checked() are the two seams). Live-hook order: deps first, hook last, never --3way. Not started; gate stack W2216+W2218 inflight. | 2026-11-02: 2026-11-02 design read, nothing edited: the tool contract is mikemol-gate-ledger --ledger PATH --record GATE pass|fail SECONDS [--start EPOCH]. The two seams in .githooks/pre-commit are run_checked() and witness(), both already label a gate and branch on pass or fail; a record_gate helper called after each branch, never changing the verdict and tolerating an absent tool only by saying so, is the whole edit. OPEN DECISIONS before the live-file edit: (1) where the ledger lives and whether it is gitignored (the tool takes the path as an argument by design); (2) the seconds field is wall time, and the standing rule is to avoid wall-clock as evidence, so decide whether to record CPU time or pass SECONDS as a count. Live-hook order applies: the tool is already shipped, so the hook edit is the last file. | 2026-11-02: 2026-11-02 DECISIONS for the two open questions (mine to make; nothing here needs the operator): (1) the ledger lives at <git dir>/mtools/gate-outcomes.tsv, beside promptwatch's seen file and the landing-tip file, so it is never tracked and needs no gitignore line; the hook derives the path with git rev-parse --absolute-git-dir and passes it as --ledger to both --record and --report. (2) SECONDS: the tool's field is a duration by contract (its median column, and the W934 power correlation reads start/end epochs); record the gate's own elapsed seconds as the tool defines it, and say in the hook comment that it is a duration kept for ordering and correlation, never offered as evidence of cost; the epoch pair already carries the correlation axis. EDIT SHAPE: one helper record_gate LABEL STATUS START_EPOCH in .githooks/pre-commit, called from run_checked and witness after their pass/fail branch, tolerant of an absent tool only by printing that it is absent, and never changing fail. Live-hook order: the tool is shipped, so this file is the last edit; the hook-wiring test (test_bar_fires) must learn the call first. Not edited this turn (a stack is in the gate). | 2026-11-03T06:09:47Z: 2026-11-03: read the two seams at .githooks/pre-commit lines 247-279 (witness) and 294-304 (run_checked): each does phase, runs the command into a log, then branches on its status (cat log; on failure fail=1 and note_failure). EDIT SHAPE, nothing edited (gate W2241 inflight): add record_gate LABEL STATUS STARTED right after the phase call's neighbour definitions (~line 246), reading epoch from date +%s taken before the command and SECONDS-style duration after; call it in the success branch (pass) and the failure branch (fail) of BOTH functions; the helper runs the built mikemol-gate-ledger with --ledger the git-dir path and prints 'gate ledger: not recorded' on any failure, never touching fail. ORDER: test_bar_fires learns the call first (one hook-wiring arm), then the hook edit last in the same stack as W2248's suite split. | 2026-11-05T14:16:13Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn.",
       "issued_at": "2026-10-13T16:21:09Z",
       "minted_during": "tick",
       "caused_by": "luthen-observability:W934",
-      "last_worked": "2026-11-04T12:14:09Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -23336,7 +23331,7 @@
       "minted_during": "tick",
       "caused_by": "W1114",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -23357,7 +23352,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W476",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -23595,7 +23590,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-18T16:33:23Z",
-      "ticks_blocked": 230
+      "ticks_blocked": 232
     },
     {
       "symbol": "W1144",
@@ -23663,7 +23658,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -23755,7 +23750,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 333
+      "ticks_blocked": 335
     },
     {
       "symbol": "W1151",
@@ -23801,7 +23796,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 352
+      "ticks_blocked": 354
     },
     {
       "symbol": "W1153",
@@ -23825,7 +23820,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:39Z",
-      "ticks_blocked": 330,
+      "ticks_blocked": 332,
       "completed": null
     },
     {
@@ -24220,7 +24215,7 @@
       "minted_during": "interrupt",
       "caused_by": "github:W37",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -24242,7 +24237,7 @@
       "minted_during": "interrupt",
       "caused_by": "github:W35",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -24265,7 +24260,7 @@
       "minted_during": "tick",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T14:08:40Z",
-      "ticks_blocked": 353,
+      "ticks_blocked": 355,
       "completed": null,
       "attachments": [
         {
@@ -24318,7 +24313,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -24733,7 +24728,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T18:15:10Z",
-      "ticks_blocked": 300,
+      "ticks_blocked": 302,
       "completed": null,
       "warrants": [
         {
@@ -25129,7 +25124,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1148",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -25648,7 +25643,7 @@
       "minted_during": "tick",
       "caused_by": "W1146",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -25672,7 +25667,7 @@
       "minted_during": "tick",
       "caused_by": "W803",
       "last_worked": "2026-10-18T12:03:12Z",
-      "ticks_blocked": 233,
+      "ticks_blocked": 235,
       "completed": null
     },
     {
@@ -25715,7 +25710,7 @@
       "minted_during": "tick",
       "caused_by": "W1019",
       "last_worked": "2026-10-18T12:03:11Z",
-      "ticks_blocked": 233,
+      "ticks_blocked": 235,
       "completed": null
     },
     {
@@ -25847,7 +25842,7 @@
       "minted_during": "tick",
       "caused_by": "W1080",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -25908,7 +25903,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -25929,7 +25924,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26115,7 +26110,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26157,7 +26152,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26180,7 +26175,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W519",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26261,7 +26256,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-15T20:11:19Z",
-      "ticks_blocked": 283,
+      "ticks_blocked": 285,
       "completed": null
     },
     {
@@ -26282,7 +26277,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26303,7 +26298,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26324,7 +26319,7 @@
       "minted_during": "interrupt",
       "caused_by": "amr-skills-31",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -26427,7 +26422,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-27T22:22:05Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27040,7 +27035,7 @@
       "minted_during": "tick",
       "caused_by": "W1300",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27105,7 +27100,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1307",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27170,7 +27165,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1309",
       "last_worked": "2026-10-16T09:58:49Z",
-      "ticks_blocked": 287,
+      "ticks_blocked": 289,
       "completed": null
     },
     {
@@ -27193,7 +27188,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1311",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27277,7 +27272,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1314",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27352,7 +27347,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W423",
       "last_worked": "2026-10-16T22:43:34Z",
-      "ticks_blocked": 62,
+      "ticks_blocked": 64,
       "completed": null
     },
     {
@@ -27438,7 +27433,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27482,7 +27477,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": null,
-      "ticks_blocked": 272
+      "ticks_blocked": 274
     },
     {
       "symbol": "W1326",
@@ -27526,7 +27521,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1319",
       "last_worked": "2026-10-16T03:33:35Z",
-      "ticks_blocked": 260,
+      "ticks_blocked": 262,
       "completed": null,
       "warrants": [
         {
@@ -27577,7 +27572,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1327",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27598,7 +27593,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1327",
       "last_worked": "2026-10-16T01:53:13Z",
-      "ticks_blocked": 283,
+      "ticks_blocked": 285,
       "completed": null,
       "warrants": [
         {
@@ -27648,7 +27643,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": null,
-      "ticks_blocked": 259
+      "ticks_blocked": 261
     },
     {
       "symbol": "W1331",
@@ -27733,7 +27728,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27777,7 +27772,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27800,7 +27795,7 @@
       "minted_during": "tick",
       "caused_by": "W1320",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27886,7 +27881,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-16T05:25:16Z",
-      "ticks_blocked": 274,
+      "ticks_blocked": 276,
       "completed": null
     },
     {
@@ -27951,7 +27946,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -27974,7 +27969,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-23T19:28:07Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28018,7 +28013,7 @@
       "minted_during": "tick",
       "caused_by": "W1346",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28235,7 +28230,7 @@
       "minted_during": "tick",
       "caused_by": "W1343",
       "last_worked": "2026-10-16T14:11:31Z",
-      "ticks_blocked": 263,
+      "ticks_blocked": 265,
       "completed": null
     },
     {
@@ -28258,7 +28253,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1343",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28384,7 +28379,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1359",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28452,7 +28447,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-23T19:28:05Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28505,7 +28500,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1351",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28545,7 +28540,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28931,7 +28926,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -28953,7 +28948,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -29057,7 +29052,7 @@
       "minted_during": "tick",
       "caused_by": "gabion:W1046",
       "last_worked": "2026-10-16T18:47:35Z",
-      "ticks_blocked": 256,
+      "ticks_blocked": 258,
       "completed": null
     },
     {
@@ -29081,7 +29076,7 @@
       "minted_during": "tick",
       "caused_by": "gabion:W1057",
       "last_worked": "2026-10-16T18:47:36Z",
-      "ticks_blocked": 256,
+      "ticks_blocked": 258,
       "completed": null
     },
     {
@@ -29100,7 +29095,7 @@
       "minted_during": "tick",
       "caused_by": "inbox/2026-10-15-el-openglo-cvd-core-dist.md",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -29444,7 +29439,7 @@
       "minted_during": "interrupt",
       "caused_by": "W793",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -29466,7 +29461,7 @@
       "minted_during": "interrupt",
       "caused_by": "W793",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -29705,11 +29700,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "slice 3: a pure stack_entry(row, subject) in katas.stackable that builds the {waypoint, subject, paths} JSON entry mikemol-commit --stack reads from a STACK row; then the scratch worktree per card. The pace guard refuses a stack that lowers no owed pyproject, so pair it with a katas pyproject paydown",
-      "evidence": "2026-10-31T18:39:05Z: 2026-10-31 nemik-94 (nemik:W613) says parts 1-5 landed at 0ebadf6 with 'nemik-rank --propose --json' and asks whether W1428 needs more. Read: the nemik-rank in ~/github/nemik/.venv here has no --propose (usage: --round, --workable, --flow, --landings, --pace). Asked nemik for the command, sha and a real output. | 2026-10-31T18:42:23Z: 2026-10-31 nemik-94 corrected itself: the tool is nemik-stackable (editable install at ~/github/nemik/.venv/bin/nemik-stackable, main 9678e697); its --propose --json drafts manifests for ready cards without one and is NOT the stackable set. The stackable set is the plain text output of 'nemik-stackable <repo>' (format unseen, run is slow). nemik will send one real output; if a JSON form with symbol, may-stack-now and files is needed it cards the mode under W613. | 2026-10-31T18:46:08Z: 2026-10-31 READ FIRST-HAND: nemik-stackable mtools (editable install, ran to completion) prints one text row per ready card that has a manifest: 'STACK|WAITING <repo>:W<n> <files...>', then '19 stackable of 100 ready; 79 have no manifest'. A WAITING row conflicts on files with a STACK row (W2132 vs W2131 on commit_kata.py). Cards without a manifest are counted, not listed. Rows include cards already landed whose status is still ready (W2126, W1895, W1960), so the kata must also check git before submitting. Wait on nemik:W613 dropped: the text form is enough. | 2026-11-04T09:50:09Z: 2026-11-04 first slice built in scratch W22680: katas.stackable.parse reads nemik-stackable's STACK/WAITING text rows (a malformed row is refused naming it, never skipped) and submit_set picks STACK rows whose card has not already landed; 4 tests, 4 declared mutants, 4 warrants, 1 rubric row. Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card and the --stack submit. | 2026-11-04T10:06:47Z: 2026-11-04 slice 1 (katas.stackable: parse and submit_set) is in stack-w1428-w2221, inflight in the gate; next slice is the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), then a scratch worktree per card and the --stack submit. | 2026-11-04T11:22:37Z: 2026-11-04 slice 1 landed in 731c98a7/b8901fbb (katas.stackable parse and submit_set; whole katas grid 76 killed 0 survived). Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card, the --stack submit. | 2026-11-04T12:32:29Z: 2026-11-04 slice 2 built and landed into main's tree (katas.stackable.landed_in and with_edits; 3 mutants killed, whole grid 78 killed 0 survived); added as the second entry of stack-w2220-run.json, to submit once W2274 lands (the W2220 entry's hooks batch 1 is its pace companion). Left: a scratch worktree per card and the --stack submit. | 2026-11-04T14:04:01Z: slice 2 (landed_in, with_edits) landed as 935f099e; remaining: scratch worktree per card and the --stack submit",
+      "evidence": "2026-10-31T18:39:05Z: 2026-10-31 nemik-94 (nemik:W613) says parts 1-5 landed at 0ebadf6 with 'nemik-rank --propose --json' and asks whether W1428 needs more. Read: the nemik-rank in ~/github/nemik/.venv here has no --propose (usage: --round, --workable, --flow, --landings, --pace). Asked nemik for the command, sha and a real output. | 2026-10-31T18:42:23Z: 2026-10-31 nemik-94 corrected itself: the tool is nemik-stackable (editable install at ~/github/nemik/.venv/bin/nemik-stackable, main 9678e697); its --propose --json drafts manifests for ready cards without one and is NOT the stackable set. The stackable set is the plain text output of 'nemik-stackable <repo>' (format unseen, run is slow). nemik will send one real output; if a JSON form with symbol, may-stack-now and files is needed it cards the mode under W613. | 2026-10-31T18:46:08Z: 2026-10-31 READ FIRST-HAND: nemik-stackable mtools (editable install, ran to completion) prints one text row per ready card that has a manifest: 'STACK|WAITING <repo>:W<n> <files...>', then '19 stackable of 100 ready; 79 have no manifest'. A WAITING row conflicts on files with a STACK row (W2132 vs W2131 on commit_kata.py). Cards without a manifest are counted, not listed. Rows include cards already landed whose status is still ready (W2126, W1895, W1960), so the kata must also check git before submitting. Wait on nemik:W613 dropped: the text form is enough. | 2026-11-04T09:50:09Z: 2026-11-04 first slice built in scratch W22680: katas.stackable.parse reads nemik-stackable's STACK/WAITING text rows (a malformed row is refused naming it, never skipped) and submit_set picks STACK rows whose card has not already landed; 4 tests, 4 declared mutants, 4 warrants, 1 rubric row. Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card and the --stack submit. | 2026-11-04T10:06:47Z: 2026-11-04 slice 1 (katas.stackable: parse and submit_set) is in stack-w1428-w2221, inflight in the gate; next slice is the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), then a scratch worktree per card and the --stack submit. | 2026-11-04T11:22:37Z: 2026-11-04 slice 1 landed in 731c98a7/b8901fbb (katas.stackable parse and submit_set; whole katas grid 76 killed 0 survived). Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card, the --stack submit. | 2026-11-04T12:32:29Z: 2026-11-04 slice 2 built and landed into main's tree (katas.stackable.landed_in and with_edits; 3 mutants killed, whole grid 78 killed 0 survived); added as the second entry of stack-w2220-run.json, to submit once W2274 lands (the W2220 entry's hooks batch 1 is its pace companion). Left: a scratch worktree per card and the --stack submit. | 2026-11-04T14:04:01Z: slice 2 (landed_in, with_edits) landed as 935f099e; remaining: scratch worktree per card and the --stack submit | 2026-11-05T13:54:14Z: 2026-11-05: taken at the Stop hook's ask while paydown stack 16 holds the gate; no code this turn. Slice 3 (stack_entry) needs a katas pyproject paydown companion, so it rides the next paydown stack.",
       "issued_at": "2026-10-17T02:05:45Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-05T11:27:36Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -29812,7 +29807,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1424",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30023,7 +30018,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1379",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30168,7 +30163,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1086",
       "last_worked": "2026-10-17T11:56:17Z",
-      "ticks_blocked": 240,
+      "ticks_blocked": 242,
       "completed": null
     },
     {
@@ -30189,7 +30184,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1448",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30211,7 +30206,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W613",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30252,7 +30247,7 @@
       "minted_during": "tick",
       "caused_by": "W954",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30313,7 +30308,7 @@
       "minted_during": "tick",
       "caused_by": "nemik:W450",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30495,7 +30490,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30517,7 +30512,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30542,7 +30537,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30622,7 +30617,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1463",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30668,7 +30663,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T12:11:07Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30714,7 +30709,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T12:07:54Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null,
       "warrants": [
         {
@@ -30784,7 +30779,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30806,7 +30801,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30827,7 +30822,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -30853,7 +30848,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T20:29:05Z",
-      "ticks_blocked": 235,
+      "ticks_blocked": 237,
       "completed": null,
       "warrants": [
         {
@@ -31018,7 +31013,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31041,7 +31036,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T20:26:24Z",
-      "ticks_blocked": 235,
+      "ticks_blocked": 237,
       "completed": null
     },
     {
@@ -31067,7 +31062,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-18T20:17:21Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31090,7 +31085,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T20:29:03Z",
-      "ticks_blocked": 235,
+      "ticks_blocked": 237,
       "completed": null,
       "warrants": [
         {
@@ -31141,7 +31136,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "warrants": [
         {
           "@context": {
@@ -31192,7 +31187,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T20:30:08Z",
-      "ticks_blocked": 235,
+      "ticks_blocked": 237,
       "completed": null,
       "warrants": [
         {
@@ -31241,7 +31236,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "warrants": [
         {
           "@context": {
@@ -31318,7 +31313,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31361,7 +31356,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31408,7 +31403,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-17T22:19:56Z",
-      "ticks_blocked": 234,
+      "ticks_blocked": 236,
       "completed": null
     },
     {
@@ -31429,7 +31424,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-23T19:26:45Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null,
       "warrants": [
         {
@@ -31481,7 +31476,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31505,7 +31500,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31529,7 +31524,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -31639,7 +31634,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -32257,7 +32252,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W1176",
       "last_worked": "2026-10-18T08:25:42Z",
-      "ticks_blocked": 233,
+      "ticks_blocked": 235,
       "completed": null
     },
     {
@@ -32347,7 +32342,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W1530",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -32369,7 +32364,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W597",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -32476,7 +32471,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -33495,7 +33490,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -33683,7 +33678,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -33734,7 +33729,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -33925,7 +33920,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1557",
       "last_worked": "2026-10-18T18:43:43Z",
-      "ticks_blocked": 232,
+      "ticks_blocked": 234,
       "completed": null
     },
     {
@@ -33946,7 +33941,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1593",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -33967,7 +33962,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1593",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -34377,7 +34372,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1557",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -34419,7 +34414,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:W1488",
       "last_worked": "2026-10-21T08:22:07Z",
-      "ticks_blocked": 228,
+      "ticks_blocked": 230,
       "warrants": [
         {
           "@context": {
@@ -34496,7 +34491,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:W1488",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "warrants": [
         {
           "@context": {
@@ -34547,7 +34542,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:W1488",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "warrants": [
         {
           "@context": {
@@ -35485,7 +35480,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -35612,7 +35607,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-11-01T00:40:21Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -35718,7 +35713,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-26T18:11:01Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/gatephase.py",
@@ -35761,7 +35756,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1600",
       "last_worked": "2026-10-19T06:00:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -35806,7 +35801,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-31T23:41:30Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null
     },
     {
@@ -35979,7 +35974,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T07:03:36Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -35998,7 +35993,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T06:26:17Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -36071,7 +36066,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T07:03:35Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -36090,7 +36085,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1669",
       "last_worked": "2026-10-19T07:48:38Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -36109,7 +36104,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T07:49:58Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -36128,7 +36123,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T07:53:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -36147,7 +36142,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T07:53:06Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null
     },
     {
@@ -36306,7 +36301,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-26T19:23:59Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "BUILD.bazel"
@@ -36375,7 +36370,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-21T08:22:19Z",
-      "ticks_blocked": 228,
+      "ticks_blocked": 230,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_kata.py",
         "hooks/tests/test_commit_claim.py",
@@ -36448,7 +36443,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T04:50:47Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "hooks/pyproject.toml"
@@ -36545,7 +36540,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-19T13:51:31Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "manifest": [
         ".githooks/pre-commit",
         "domain_witness.sh",
@@ -36694,7 +36689,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-25T04:40:02Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/trainlead.py",
@@ -36866,7 +36861,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1700",
       "last_worked": "2026-10-22T17:05:05Z",
-      "ticks_blocked": 226,
+      "ticks_blocked": 228,
       "completed": null,
       "manifest": [
         "hooks/BUILD.bazel",
@@ -36893,7 +36888,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1700",
       "last_worked": "2026-10-19T13:51:40Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null,
       "manifest": [
         ".githooks/pre-commit",
@@ -36993,7 +36988,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-26T01:03:36Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/traindrive.py",
@@ -37141,7 +37136,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-26T01:24:44Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/gatetrend_publish.py",
@@ -37220,7 +37215,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T05:23:32Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/traintel.py",
@@ -37245,7 +37240,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-27T13:15:13Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/stackblobs.py",
         "hooks/tests/test_stackblobs.py",
@@ -37488,7 +37483,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-bazel-test-slope",
       "last_worked": "2026-11-04T21:32:41Z",
-      "ticks_blocked": 28,
+      "ticks_blocked": 30,
       "completed": null,
       "manifest": [
         "BUILD.bazel",
@@ -37512,7 +37507,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-round-label",
       "last_worked": "2026-10-28T00:15:07Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/gatetrend.py",
         "hooks/tests/test_gatetrend.py"
@@ -37694,11 +37689,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After W1366's stack lands: rebuild slice 2 on that HEAD in a scratch tree (stackimports.py and test_stackimports.py, seeded with the files frozen by the stacks ahead, mutants and warrants regenerated), as one hooks stack with whichever of W1662 or W2060 is built then.",
-      "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do. | 2026-10-27: 2026-10-27 re-read, and it is the stall github-8f named: stackbuildfiles/stackimports judge a stack against HEAD plus its OWN entries, so stack-next-29 (W2008) was refused at submit because dag.bzl names W2009's new modules, which stack-next-28 (queued ahead) holds. The fix is this card's own next step, applied to both checks: seed them with the files frozen by the stacks AHEAD (keys below this one in the live commit map, read from their stack-<key>.snap), so a new-module stack can queue behind another. Residue stated: if a stack ahead later fails, this one fails at its own gate. Slice 1: stackahead.paths and stackbuildfiles; slice 2: stackimports plus the on-disk-absent refusal | 2026-10-27: 2026-10-27: slice 1 landed 06d25163 (stackahead.paths seeds stackbuildfiles with the files the live stacks ahead carry, so two new-module stacks queue together; proven by stacks 28 and 30 queueing behind 25/26/27). Slice 2 remains: stackimports takes the same set and refuses a module on disk but in no stack, no HEAD and no stack ahead | 2026-10-28: 2026-10-28 REBUILT ALONE on HEAD (754dcf97) in a scratch worktree, NOT submitted: after the withdrawal at a red tip (one TIMEOUT, //hooks:test_worktreereap_save, a load wall-time flake that W2034 and W1875 now hold) the second slice is stackimports.py and test_stackimports.py plus its registries regenerated on HEAD: mutants.regex (the two stackimports mutants re-pointed at _unheld and four new), two warrants, graph.json, dag.bzl and the regenerated commit_counts, stackahead and stackimports sites; git status of the scratch tree lists exactly nine files. OVERLAP: it shares hooks/mutants.regex, warrants.bib and sites with stack 39 (W2061 and W2067, queued) and graph.json and dag.bzl with nothing queued, so by the W2078 rule it is HELD until 39's verdict (or rebuilt on 39's frozen files), not queued behind it. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117 is its registries-carrying entry). Stack 39 is settled (W2067 landed 67be0264), but stackimports.py and its registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and hooks-c, queued, holds hooks/warrants.bib, BUILD, pyproject and sites, so a second hooks-registry stack would wait on it anyway. Rebuild slice 2 on the new HEAD in a scratch tree once hooks-c prints COMMITTED, with the W1994 deletecmd registries, as one hooks stack. | 2026-11-03T09:14:50Z: 2026-11-03: stale blocker restated: hooks-c and stack 39 are long landed, but the hooks registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and the in-gate stack (W2258, W2241, W1366) holds them; W1662, W2060 and this slice 2 are the next three hooks-registry builds, so they go one at a time on each new HEAD.",
+      "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do. | 2026-10-27: 2026-10-27 re-read, and it is the stall github-8f named: stackbuildfiles/stackimports judge a stack against HEAD plus its OWN entries, so stack-next-29 (W2008) was refused at submit because dag.bzl names W2009's new modules, which stack-next-28 (queued ahead) holds. The fix is this card's own next step, applied to both checks: seed them with the files frozen by the stacks AHEAD (keys below this one in the live commit map, read from their stack-<key>.snap), so a new-module stack can queue behind another. Residue stated: if a stack ahead later fails, this one fails at its own gate. Slice 1: stackahead.paths and stackbuildfiles; slice 2: stackimports plus the on-disk-absent refusal | 2026-10-27: 2026-10-27: slice 1 landed 06d25163 (stackahead.paths seeds stackbuildfiles with the files the live stacks ahead carry, so two new-module stacks queue together; proven by stacks 28 and 30 queueing behind 25/26/27). Slice 2 remains: stackimports takes the same set and refuses a module on disk but in no stack, no HEAD and no stack ahead | 2026-10-28: 2026-10-28 REBUILT ALONE on HEAD (754dcf97) in a scratch worktree, NOT submitted: after the withdrawal at a red tip (one TIMEOUT, //hooks:test_worktreereap_save, a load wall-time flake that W2034 and W1875 now hold) the second slice is stackimports.py and test_stackimports.py plus its registries regenerated on HEAD: mutants.regex (the two stackimports mutants re-pointed at _unheld and four new), two warrants, graph.json, dag.bzl and the regenerated commit_counts, stackahead and stackimports sites; git status of the scratch tree lists exactly nine files. OVERLAP: it shares hooks/mutants.regex, warrants.bib and sites with stack 39 (W2061 and W2067, queued) and graph.json and dag.bzl with nothing queued, so by the W2078 rule it is HELD until 39's verdict (or rebuilt on 39's frozen files), not queued behind it. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117 is its registries-carrying entry). Stack 39 is settled (W2067 landed 67be0264), but stackimports.py and its registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and hooks-c, queued, holds hooks/warrants.bib, BUILD, pyproject and sites, so a second hooks-registry stack would wait on it anyway. Rebuild slice 2 on the new HEAD in a scratch tree once hooks-c prints COMMITTED, with the W1994 deletecmd registries, as one hooks stack. | 2026-11-03T09:14:50Z: 2026-11-03: stale blocker restated: hooks-c and stack 39 are long landed, but the hooks registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and the in-gate stack (W2258, W2241, W1366) holds them; W1662, W2060 and this slice 2 are the next three hooks-registry builds, so they go one at a time on each new HEAD. | 2026-11-05T14:38:29Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn.",
       "issued_at": "2026-10-19T22:26:23Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-test-the-all-red-inference",
-      "last_worked": "2026-11-03T09:14:50Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackimports.py",
@@ -37724,7 +37719,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-restart-waypoint",
       "last_worked": "2026-10-19T23:05:18Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "completed": null,
       "warrants": [
         {
@@ -37917,7 +37912,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-20-stop-via-nonroot-loop",
       "last_worked": "2026-10-23T19:27:47Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "warrants": [
         {
           "@context": {
@@ -38020,7 +38015,7 @@
       "minted_during": "interrupt",
       "caused_by": "mtools:W1753",
       "last_worked": "2026-10-28T05:39:24Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/testtrace.py",
         "hooks/tests/test_testtrace.py",
@@ -38446,7 +38441,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-20-drum-not-presizing",
       "last_worked": "2026-10-20T11:52:50Z",
-      "ticks_blocked": 230,
+      "ticks_blocked": 232,
       "warrants": [
         {
           "@context": {
@@ -38495,7 +38490,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-20-load-agnostic",
       "last_worked": "2026-10-23T19:27:45Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "warrants": [
         {
           "@context": {
@@ -38547,7 +38542,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-20-load-agnostic",
       "last_worked": "2026-10-23T19:27:46Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -38590,7 +38585,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-20-load-agnostic",
       "last_worked": "2026-10-21T03:08:53Z",
-      "ticks_blocked": 228,
+      "ticks_blocked": 230,
       "completed": null
     },
     {
@@ -38869,7 +38864,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1752",
       "last_worked": "2026-10-20T23:20:30Z",
-      "ticks_blocked": 228,
+      "ticks_blocked": 230,
       "completed": null
     },
     {
@@ -38909,7 +38904,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1782",
       "last_worked": "2026-10-28T05:59:08Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "hooks/BUILD.bazel"
@@ -39004,7 +38999,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1743",
       "last_worked": "2026-10-22T04:01:30Z",
-      "ticks_blocked": 228,
+      "ticks_blocked": 230,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/launcher.py",
@@ -39031,7 +39026,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T06:42:08Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/commitprogress.py",
@@ -39562,7 +39557,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1712",
       "last_worked": "2026-10-29T11:42:00Z",
-      "ticks_blocked": 208,
+      "ticks_blocked": 210,
       "manifest": [
         "BUILD.bazel",
         "hooks/tests/test_witness_ruff.py"
@@ -39588,7 +39583,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1712",
       "last_worked": "2026-10-28T08:14:43Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "BUILD.bazel",
         "hooks/tests/test_witness_ratchet_gate.py"
@@ -39827,7 +39822,7 @@
       "minted_during": "interrupt",
       "caused_by": "operator",
       "last_worked": "2026-10-24T00:38:06Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -40461,7 +40456,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1858",
       "last_worked": "2026-10-23T16:25:22Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -40500,7 +40495,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T09:20:24Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "pathsforward/src/mikemol/pathsforward/warrantfind.py",
         "pathsforward/src/mikemol/pathsforward/cli.py",
@@ -40584,7 +40579,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1658",
       "last_worked": "2026-10-23T19:27:43Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -40633,7 +40628,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W926",
       "last_worked": "2026-10-23T20:46:21Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -40685,11 +40680,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "After W1366's stack lands, in a scratch tree on that HEAD: shardgate reads each touched per-test target's measured CPU from the gate trend series against its limit, refuses past half, naming the target, its figure and the sharding remedy; tests with the worktreereap_save figures (117 s against 60 s refused, 20 s against 60 s admitted).",
-      "evidence": "2026-10-28: 2026-10-28 FIXTURE for the rule: //hooks:test_worktreereap_save TIMED OUT in W1746's gate at 60.1 s and passed alone in about 117 s at host load ~100, i.e. its measured run is 2x its limit, far past half; a stack touching that target should have been refused by this gate before it cost a 4 h gate. Edits hooks/src/mikemol/hooks/shardgate.py (hooks lane). | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). shardgate.py is a hooks module whose new tests and declared mutants need hooks/mutants.regex, warrants.bib and sites, which freeze whole and which hooks-c already holds; build in a scratch tree on the HEAD after hooks-c and ride the one hooks stack with W1994, W1746 slice 2, W1823 and W1824. | 2026-11-03T10:40:13Z: 2026-11-03: stale blocker restated (hooks-c is landed). shardgate.py's new tests and declared mutants need the hooks registries, held by the in-gate stack (W2258, W2241, W1366). It joins the hooks lane: W1662, W1746 slice 2, W2060, W1823 and this card, one registry-carrying change per HEAD. Note for the build: the refusal measures a target's CPU time against its limit (not wall time), per the standing rule.",
+      "evidence": "2026-10-28: 2026-10-28 FIXTURE for the rule: //hooks:test_worktreereap_save TIMED OUT in W1746's gate at 60.1 s and passed alone in about 117 s at host load ~100, i.e. its measured run is 2x its limit, far past half; a stack touching that target should have been refused by this gate before it cost a 4 h gate. Edits hooks/src/mikemol/hooks/shardgate.py (hooks lane). | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). shardgate.py is a hooks module whose new tests and declared mutants need hooks/mutants.regex, warrants.bib and sites, which freeze whole and which hooks-c already holds; build in a scratch tree on the HEAD after hooks-c and ride the one hooks stack with W1994, W1746 slice 2, W1823 and W1824. | 2026-11-03T10:40:13Z: 2026-11-03: stale blocker restated (hooks-c is landed). shardgate.py's new tests and declared mutants need the hooks registries, held by the in-gate stack (W2258, W2241, W1366). It joins the hooks lane: W1662, W1746 slice 2, W2060, W1823 and this card, one registry-carrying change per HEAD. Note for the build: the refusal measures a target's CPU time against its limit (not wall time), per the standing rule. | 2026-11-05T14:37:34Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn.",
       "issued_at": "2026-10-23T20:46:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1872",
-      "last_worked": "2026-11-03T10:40:13Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/shardgate.py",
@@ -40759,7 +40754,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1833",
       "last_worked": "2026-10-24T02:36:10Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -40780,7 +40775,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1833",
       "last_worked": "2026-10-26T13:10:21Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/gatetargets.py",
@@ -40875,7 +40870,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1879",
       "last_worked": "2026-10-24T06:34:02Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -40958,7 +40953,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1833",
       "last_worked": "2026-10-24T08:11:41Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -41097,7 +41092,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-24T15:55:46Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "warrants": [
         {
           "@context": {
@@ -41240,7 +41235,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1896",
       "last_worked": "2026-10-24T19:14:55Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "completed": null
     },
     {
@@ -41523,7 +41518,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-24T17:31:57Z",
-      "ticks_blocked": 225,
+      "ticks_blocked": 227,
       "warrants": [
         {
           "@context": {
@@ -41576,7 +41571,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-28T11:06:48Z",
-      "ticks_blocked": 56,
+      "ticks_blocked": 58,
       "completed": null
     },
     {
@@ -41600,7 +41595,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-28T11:56:15Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/layercover.py",
         "hooks/tests/test_layercover.py"
@@ -41626,7 +41621,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-28T12:35:04Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -41647,7 +41642,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-25T19:11:46Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null
     },
     {
@@ -41669,7 +41664,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-28T13:32:50Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -41690,7 +41685,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-28T13:53:11Z",
-      "ticks_blocked": 155,
+      "ticks_blocked": 157,
       "manifest": [
         "hooks/src/mikemol/hooks/live_tree_edit.py",
         "hooks/tests/test_live_tree_edit.py"
@@ -41717,7 +41712,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1910",
       "last_worked": "2026-10-28T14:26:54Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -41765,7 +41760,7 @@
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1588",
       "last_worked": "2026-10-25T15:24:07Z",
-      "ticks_blocked": 114,
+      "ticks_blocked": 116,
       "manifest": [
         "hooks/src/mikemol/hooks/recursive_delete.py",
         "hooks/tests/test_recursive_delete.py"
@@ -41796,7 +41791,7 @@
       "minted_during": "interrupt",
       "caused_by": "github:W42",
       "last_worked": "2026-11-05T13:32:12Z",
-      "ticks_blocked": 3,
+      "ticks_blocked": 5,
       "warrants": [
         {
           "@context": {
@@ -42102,7 +42097,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T23:28:58Z",
-      "ticks_blocked": 144,
+      "ticks_blocked": 146,
       "warrants": [
         {
           "@context": {
@@ -42287,7 +42282,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-11-03T13:35:58Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "warrants": [
         {
           "@context": {
@@ -42506,7 +42501,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-11-03T13:42:45Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "manifest": [
         "transcriptstruct/src/mikemol/transcriptstruct/intents.py",
         "transcriptstruct/tests/test_intents.py"
@@ -42532,7 +42527,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T23:40:16Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "pathsforward/src/mikemol/pathsforward/retros.py",
         "pathsforward/tests/test_retros.py"
@@ -42838,7 +42833,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1706",
       "last_worked": "2026-10-29T01:36:48Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/requeue.py",
         "hooks/src/mikemol/hooks/commit_verdict.py",
@@ -43320,7 +43315,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T03:04:24Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "warrants": [
         {
           "@context": {
@@ -43378,7 +43373,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T05:02:29Z",
-      "ticks_blocked": 220,
+      "ticks_blocked": 222,
       "warrants": [
         {
           "@context": {
@@ -43543,7 +43538,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-25T12:21:04Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "warrants": [
         {
           "@context": {
@@ -43598,7 +43593,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-11-03T05:09:14Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "warrants": [
         {
           "@context": {
@@ -43704,7 +43699,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T06:05:51Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "warrants": [
         {
           "@context": {
@@ -43755,7 +43750,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T05:32:54Z",
-      "ticks_blocked": 46,
+      "ticks_blocked": 48,
       "warrants": [
         {
           "@context": {
@@ -43805,7 +43800,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1968",
       "last_worked": "2026-10-29T05:52:11Z",
-      "ticks_blocked": 140,
+      "ticks_blocked": 142,
       "completed": null
     },
     {
@@ -43826,7 +43821,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1968",
       "last_worked": "2026-10-29T06:39:05Z",
-      "ticks_blocked": 217,
+      "ticks_blocked": 219,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_kata.py",
@@ -43851,7 +43846,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1968",
       "last_worked": "2026-10-29T06:48:28Z",
-      "ticks_blocked": 217,
+      "ticks_blocked": 219,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_kata.py",
@@ -43876,7 +43871,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1968",
       "last_worked": "2026-10-29T06:54:25Z",
-      "ticks_blocked": 216,
+      "ticks_blocked": 218,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_kata.py",
@@ -43903,7 +43898,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T07:08:44Z",
-      "ticks_blocked": 216,
+      "ticks_blocked": 218,
       "manifest": [
         "hooks/src/mikemol/hooks/gatephase.py",
         "hooks/src/mikemol/hooks/gatetargets.py",
@@ -44219,7 +44214,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T07:58:25Z",
-      "ticks_blocked": 214,
+      "ticks_blocked": 216,
       "manifest": [
         "hooks/src/mikemol/hooks/ratchet_emit.py",
         "hooks/tests/test_ratchet_emit.py"
@@ -44292,7 +44287,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-25T14:47:57Z",
-      "ticks_blocked": 211,
+      "ticks_blocked": 213,
       "warrants": [
         {
           "@context": {
@@ -44345,7 +44340,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T08:57:13Z",
-      "ticks_blocked": 212,
+      "ticks_blocked": 214,
       "warrants": [
         {
           "@context": {
@@ -44441,7 +44436,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1981",
       "last_worked": "2026-10-29T09:16:15Z",
-      "ticks_blocked": 212,
+      "ticks_blocked": 214,
       "manifest": [
         ".claude/design/cache-miss-causes-2026-10-25.md"
       ],
@@ -44520,7 +44515,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1982",
       "last_worked": "2026-11-01T12:06:42Z",
-      "ticks_blocked": 105,
+      "ticks_blocked": 107,
       "manifest": [
         "check_mutants/mutants_gen.py",
         "check_mutants/defs.bzl",
@@ -44621,7 +44616,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1919",
       "last_worked": "2026-10-29T10:49:18Z",
-      "ticks_blocked": 209,
+      "ticks_blocked": 211,
       "completed": null
     },
     {
@@ -44667,7 +44662,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1919",
       "last_worked": "2026-11-01T08:58:51Z",
-      "ticks_blocked": 111,
+      "ticks_blocked": 113,
       "completed": null
     },
     {
@@ -44992,7 +44987,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2010",
       "last_worked": "2026-10-28T01:42:39Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null,
       "manifest": [
         "importdag/src/mikemol/importdag/graph.py",
@@ -45021,7 +45016,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1988",
       "last_worked": "2026-10-25T20:52:09Z",
-      "ticks_blocked": 222,
+      "ticks_blocked": 224,
       "completed": null
     },
     {
@@ -45062,7 +45057,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2012",
       "last_worked": "2026-10-29T15:34:35Z",
-      "ticks_blocked": 202,
+      "ticks_blocked": 204,
       "completed": null
     },
     {
@@ -45083,7 +45078,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2012",
       "last_worked": "2026-10-29T15:39:25Z",
-      "ticks_blocked": 201,
+      "ticks_blocked": 203,
       "completed": null
     },
     {
@@ -45176,7 +45171,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1988",
       "last_worked": "2026-10-29T16:53:33Z",
-      "ticks_blocked": 198,
+      "ticks_blocked": 200,
       "manifest": [
         "hooks/BUILD.bazel",
         "hooks/reads.json"
@@ -45201,7 +45196,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2016",
       "last_worked": "2026-10-28T02:11:26Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/BUILD.bazel"
       ],
@@ -45248,7 +45243,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2020",
       "last_worked": "2026-10-28T00:40:23Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/footprint.py",
         "hooks/tests/test_footprint.py",
@@ -45409,7 +45404,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-26T19:05:33Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "manifest": [
         "hooks/src/mikemol/hooks/commit_gauge.py",
         "hooks/tests/test_commit_gauge.py"
@@ -45457,7 +45452,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1989",
       "last_worked": "2026-10-27T12:37:22Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -45502,7 +45497,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T06:32:51Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -45561,7 +45556,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T03:50:42Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -45729,7 +45724,7 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W1107",
       "last_worked": "2026-10-31T16:47:27Z",
-      "ticks_blocked": 139,
+      "ticks_blocked": 141,
       "warrants": [
         {
           "@context": {
@@ -45864,7 +45859,7 @@
       "minted_during": "tick",
       "caused_by": "W1933",
       "last_worked": "2026-11-04T01:27:28Z",
-      "ticks_blocked": 59,
+      "ticks_blocked": 61,
       "completed": null
     },
     {
@@ -46169,11 +46164,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "nemik-94 answered (2026-11-04): a first-vendor of DIST must add, in order: (a) [dependency-groups] dev gets one line mikemol-DIST (dev-only by default; the project-level list is for what the repo imports); (b) [tool.uv.sources] gets mikemol-DIST = { path = vendor/wheels/mikemol_DIST-0.1.0+TAG SHORT-py3-none-any.whl }; (c) MODULE.bazel gets vendored_wheel(name = DIST, wheel = //:vendor/wheels/<file>) via the existing use_repo_rule; (d) BUILD.bazel hub_requirements gains @DIST//:pkg; (e) uv.lock gets a [[package]] block with source = { path = ... } plus the wheel hash and a { name = mikemol-DIST, path = ... } requires-dist row, which uv lock regenerates; (f) vendor/wheels/SHA256SUMS gets <64-hex>  ./<filename> (two spaces, ./ prefix, bare filename), sorted by filename. Add importdag to revendor.EXTRA; nemik needs its console script mikemol-landing-cost (importdag.costcli) on PATH from the wheel. Plan: put (a) to (d) and (f) in pure string functions with tests, leave (e) to uv lock; one hooks stack with the registries; pace companion from a non-hooks dist.",
-      "evidence": "2026-10-29: 2026-10-29: BLOCKED behind the hooks train (hooks-f W2017 inflight, hooks-g W2018 and hooks-h W2059 queued on its registries). The change is in revendor_apply.py and revendor_cli.py with tests, mutants and warrants, so it needs the hooks registries that freeze whole. W2155 (revendor keeps the wheel's real +g file name and prints uv's stderr) is in the same two files: build both in one clean scratch tree on the HEAD after hooks-h, as one stack with one registry set. Read revendor_apply's plan builder first, as the card says. | 2026-10-29: 2026-10-29 READ revendor.py and revendor_apply.py (the step the card said it still needed). (1) Target.dists = revendor.vendored(pyproject) and Target.tag = revendor.tag_of(pyproject), ONE tag for every dist, read from the FIRST wheel path (a regex search); swap() names every new wheel with that one tag (wheel_name(d, short, target.tag)). So a repo whose rows mix local-version spellings (+g<sha> and +<sha>), as nemik's transcriptstruct row did, gets one spelling for all: that is W2155's defect, and it makes the config paths and the vendored file names disagree. (2) swap copies the new wheels, git rm's stale ones, moves pins in pyproject.toml and MODULE.bazel (_move_file/move_sources edit EXISTING rows only), writes SHA256SUMS, git add -f, then runs uv lock and uv sync --frozen; a failing step is reported by _failed(step, code, out) from the run() pair (code, out), and nemik saw an empty message, so run()'s out does not carry uv's stderr. (3) For --first-vendor DIST: there is no existing row to move, so the plan must ADD the path source, the dependency and the sums row before the move; a new dist has no tag of its own, so it takes the repo's tag_of default, which is exactly where W2155 bites, so the fix is per-dist tags (each row keeps its own) and one build/lock path for both cards. Build W2060 and W2155 together, in a clean scratch tree on the HEAD after hooks-h. | 2026-10-29: 2026-10-29 (luthen-observability:W1798, github:R134/R135): the host wants every hook binary in the pinned bin; mikemol-hook-standing and mikemol-hook-standing-stop are checkout-path bash launchers with no console_scripts (standing runs hooks/.venv python -m mikemol.hooks.standing_facts then opa on the checkout's standing.rego; standing-stop runs transcriptstruct/.venv python -m mikemol.transcriptstruct.standing_stop with PYTHONPATH on the checkout src). mikemol-debtplan and mikemol-buildlog are console scripts in debtplan and buildtel, but revendor.ALL does not list those dists. For the same revendor build: decide whether ALL gains debtplan and buildtel, and whether the two standing hooks become console scripts (standing_stop in transcriptstruct; standing_facts in hooks, shipping standing.rego as package data with opa on PATH). Answered on W1798 as my position, not built or reviewed. | 2026-10-29: 2026-10-29 (nemik-ed, for nemik:W1056): revendor.EXTRA is (icsstruct, rulerseq, frontier, atomicwrite, corpus, waldo, cvdcore, ratchet, transcriptstruct) and lacks importdag, debtplan and buildtel (re-read in hooks/src/mikemol/hooks/revendor.py at HEAD 2c526208). nemik:W1056 needs importdag vendored, which is exactly this card's first-vendor case: add importdag, debtplan and buildtel to EXTRA (or a general rule), and first-vendor adds a dist a repo does not yet name. Test: a pyproject naming each is re-vendored. nemik:W1056 blocks on W2060. | 2026-10-31: reconciled STALE | 2026-11-03T08:39:46Z: 2026-11-03: same two files and the same repin run as W2249 (print uv's stderr), W2250 (the kept g in the rewritten wheel path) and W2251 (the left-behind superseded wheel): one clean scratch tree, one registry set, after the websubset registries (W1366) are committed, since hooks/mutants.regex and warrants.bib freeze whole and main holds W1366's dirty copies. nemik's real run (nemik:W1510) is the first-vendor and mixed-tag evidence: a +g11d5b4d local version rewrote to +g45ffeb7 while the file was +45ffeb7. | 2026-11-04T10:15:48Z: 2026-11-04 read revendor.py: per-dist spelling is handled (pinned_files from rows, one written tag); what is left is first-vendor, which needs per-repo layout facts (dependency table, MODULE.bazel row, sums format); questions sent to nemik-94.",
+      "evidence": "2026-10-29: 2026-10-29: BLOCKED behind the hooks train (hooks-f W2017 inflight, hooks-g W2018 and hooks-h W2059 queued on its registries). The change is in revendor_apply.py and revendor_cli.py with tests, mutants and warrants, so it needs the hooks registries that freeze whole. W2155 (revendor keeps the wheel's real +g file name and prints uv's stderr) is in the same two files: build both in one clean scratch tree on the HEAD after hooks-h, as one stack with one registry set. Read revendor_apply's plan builder first, as the card says. | 2026-10-29: 2026-10-29 READ revendor.py and revendor_apply.py (the step the card said it still needed). (1) Target.dists = revendor.vendored(pyproject) and Target.tag = revendor.tag_of(pyproject), ONE tag for every dist, read from the FIRST wheel path (a regex search); swap() names every new wheel with that one tag (wheel_name(d, short, target.tag)). So a repo whose rows mix local-version spellings (+g<sha> and +<sha>), as nemik's transcriptstruct row did, gets one spelling for all: that is W2155's defect, and it makes the config paths and the vendored file names disagree. (2) swap copies the new wheels, git rm's stale ones, moves pins in pyproject.toml and MODULE.bazel (_move_file/move_sources edit EXISTING rows only), writes SHA256SUMS, git add -f, then runs uv lock and uv sync --frozen; a failing step is reported by _failed(step, code, out) from the run() pair (code, out), and nemik saw an empty message, so run()'s out does not carry uv's stderr. (3) For --first-vendor DIST: there is no existing row to move, so the plan must ADD the path source, the dependency and the sums row before the move; a new dist has no tag of its own, so it takes the repo's tag_of default, which is exactly where W2155 bites, so the fix is per-dist tags (each row keeps its own) and one build/lock path for both cards. Build W2060 and W2155 together, in a clean scratch tree on the HEAD after hooks-h. | 2026-10-29: 2026-10-29 (luthen-observability:W1798, github:R134/R135): the host wants every hook binary in the pinned bin; mikemol-hook-standing and mikemol-hook-standing-stop are checkout-path bash launchers with no console_scripts (standing runs hooks/.venv python -m mikemol.hooks.standing_facts then opa on the checkout's standing.rego; standing-stop runs transcriptstruct/.venv python -m mikemol.transcriptstruct.standing_stop with PYTHONPATH on the checkout src). mikemol-debtplan and mikemol-buildlog are console scripts in debtplan and buildtel, but revendor.ALL does not list those dists. For the same revendor build: decide whether ALL gains debtplan and buildtel, and whether the two standing hooks become console scripts (standing_stop in transcriptstruct; standing_facts in hooks, shipping standing.rego as package data with opa on PATH). Answered on W1798 as my position, not built or reviewed. | 2026-10-29: 2026-10-29 (nemik-ed, for nemik:W1056): revendor.EXTRA is (icsstruct, rulerseq, frontier, atomicwrite, corpus, waldo, cvdcore, ratchet, transcriptstruct) and lacks importdag, debtplan and buildtel (re-read in hooks/src/mikemol/hooks/revendor.py at HEAD 2c526208). nemik:W1056 needs importdag vendored, which is exactly this card's first-vendor case: add importdag, debtplan and buildtel to EXTRA (or a general rule), and first-vendor adds a dist a repo does not yet name. Test: a pyproject naming each is re-vendored. nemik:W1056 blocks on W2060. | 2026-10-31: reconciled STALE | 2026-11-03T08:39:46Z: 2026-11-03: same two files and the same repin run as W2249 (print uv's stderr), W2250 (the kept g in the rewritten wheel path) and W2251 (the left-behind superseded wheel): one clean scratch tree, one registry set, after the websubset registries (W1366) are committed, since hooks/mutants.regex and warrants.bib freeze whole and main holds W1366's dirty copies. nemik's real run (nemik:W1510) is the first-vendor and mixed-tag evidence: a +g11d5b4d local version rewrote to +g45ffeb7 while the file was +45ffeb7. | 2026-11-04T10:15:48Z: 2026-11-04 read revendor.py: per-dist spelling is handled (pinned_files from rows, one written tag); what is left is first-vendor, which needs per-repo layout facts (dependency table, MODULE.bazel row, sums format); questions sent to nemik-94. | 2026-11-05T14:10:31Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn.",
       "issued_at": "2026-10-27T20:01:20Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1180",
-      "last_worked": "2026-11-05T11:26:46Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/revendor_cli.py",
@@ -46237,7 +46232,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W537",
       "last_worked": "2026-10-28T07:46:39Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -46259,7 +46254,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-31T22:25:19Z",
-      "ticks_blocked": 129,
+      "ticks_blocked": 131,
       "completed": null
     },
     {
@@ -46281,7 +46276,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-11-02T09:38:48Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -46303,7 +46298,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-29T23:53:03Z",
-      "ticks_blocked": 185,
+      "ticks_blocked": 187,
       "completed": null
     },
     {
@@ -46347,7 +46342,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-10-28T19:33:38Z",
-      "ticks_blocked": 221,
+      "ticks_blocked": 223,
       "completed": null
     },
     {
@@ -46407,7 +46402,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2063",
       "last_worked": "2026-11-05T12:15:47Z",
-      "ticks_blocked": 4,
+      "ticks_blocked": 6,
       "completed": null
     },
     {
@@ -46428,7 +46423,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2063",
       "last_worked": "2026-10-29T21:19:30Z",
-      "ticks_blocked": 191,
+      "ticks_blocked": 193,
       "completed": null
     },
     {
@@ -46449,7 +46444,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2063",
       "last_worked": "2026-10-29T21:25:40Z",
-      "ticks_blocked": 191,
+      "ticks_blocked": 193,
       "completed": null
     },
     {
@@ -46470,7 +46465,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2063",
       "last_worked": "2026-10-29T21:33:04Z",
-      "ticks_blocked": 190,
+      "ticks_blocked": 192,
       "completed": null
     },
     {
@@ -46492,7 +46487,7 @@
       "minted_during": "interrupt",
       "caused_by": "paperkit:W547",
       "last_worked": "2026-11-01T21:40:54Z",
-      "ticks_blocked": 85,
+      "ticks_blocked": 87,
       "completed": null
     },
     {
@@ -46532,7 +46527,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1863",
       "last_worked": "2026-10-30T02:20:38Z",
-      "ticks_blocked": 182,
+      "ticks_blocked": 184,
       "completed": null
     },
     {
@@ -46689,7 +46684,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1912",
       "last_worked": "2026-10-30T06:14:40Z",
-      "ticks_blocked": 173,
+      "ticks_blocked": 175,
       "completed": null
     },
     {
@@ -46710,7 +46705,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1912",
       "last_worked": "2026-10-30T06:23:34Z",
-      "ticks_blocked": 172,
+      "ticks_blocked": 174,
       "completed": null
     },
     {
@@ -46731,7 +46726,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1912",
       "last_worked": "2026-10-30T07:31:17Z",
-      "ticks_blocked": 170,
+      "ticks_blocked": 172,
       "completed": null
     },
     {
@@ -46790,7 +46785,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1915",
       "last_worked": "2026-10-30T09:33:34Z",
-      "ticks_blocked": 166,
+      "ticks_blocked": 168,
       "completed": null
     },
     {
@@ -46889,7 +46884,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1917",
       "last_worked": "2026-10-30T13:48:19Z",
-      "ticks_blocked": 160,
+      "ticks_blocked": 162,
       "completed": null
     },
     {
@@ -47052,7 +47047,7 @@
       "minted_during": "interrupt",
       "caused_by": "github-8f",
       "last_worked": "2026-11-01T04:49:09Z",
-      "ticks_blocked": 117,
+      "ticks_blocked": 119,
       "completed": null
     },
     {
@@ -47756,7 +47751,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1974",
       "last_worked": "2026-10-29T07:09:36Z",
-      "ticks_blocked": 216,
+      "ticks_blocked": 218,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/vlogship.py",
@@ -47782,7 +47777,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1974",
       "last_worked": "2026-10-29T07:10:00Z",
-      "ticks_blocked": 216,
+      "ticks_blocked": 218,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/gatephase.py",
@@ -48008,7 +48003,7 @@
       "minted_during": "interrupt",
       "caused_by": "W1993",
       "last_worked": "2026-10-29T10:50:33Z",
-      "ticks_blocked": 209,
+      "ticks_blocked": 211,
       "completed": null,
       "manifest": [
         "hooks/src/mikemol/hooks/created_hook.py",
@@ -48334,11 +48329,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "READ DONE: a live session leaves <git dir>/mtools/heartbeat, a JSON object {tool, at_ns, gaps_ns} replaced whole on each beat (hooks.heartbeat); the watchdog's bound is 900 s (mikemol.hooks.watchdog). katas is a separate dist, so do NOT import hooks.heartbeat (census-kit B4: record, do not glue): add katas.liveness.beat_is_fresh(git_dir, now_ns, bound_s) that reads that file with its own tolerant parse (missing, unreadable or malformed reads as not fresh) and add it to liveness.held as a reason (a repo whose heartbeat is younger than the bound is held), listing each skipped repo and its reason in the flush output. Test with a real file: fresh, stale, missing, malformed, future-dated (clock skew reads as fresh). Note W2275 (mikemol-commit beating while gating) makes this signal true during a long gate, so land it first or accept false negatives.",
-      "evidence": "2026-10-30: 2026-10-30: first slice (b) built and submitted as katas-a (stack-katas-a.json): fleet.pinned_commit and flush use each repo's own .venv/bin/mikemol-commit; 140 katas tests pass. NOT DONE: cli._commit still uses policy.commit_tool, the launcher refusal (W2114), (a) close verb, skip of armed-watchdog repos. | 2026-10-30: Landed 44a6fc997c20528e0f0b9a17330eb0c9893acd6e (katas-a, first slice (b)). It was REFUSED once at its gate on //katas:test_fleet test_a_bare_index_lock_that_nothing_accounts_for_is_not_a_commit_in_flight, then landed unchanged on resubmit: the test is order- or host-dependent (W2173, open). Remaining: cli._commit pinned, (a) close verb, armed-watchdog skip. | 2026-10-30: 2026-10-30 11:2xZ READ katas: the only use of 'armed' is hosttick.py line 101, which calls the writer's --armed with the job file's text for the katas' OWN queue; liveness.held (already read) holds a repo for a fresh tick lock or a gate-red card, nothing about another repo's armed watchdog. So the armed-watchdog skip (W2164 (b) second part) has no reader yet: it needs where the writer records an armed watchdog (the --armed mode's state, or a heartbeat under the repo's .git/mtools) read first, then a held-reason in liveness.held. Katas registries are free (katas-c touches test_fleet only). | 2026-10-31: reconciled LANDED 44a6fc997c20528e0f0b9a17330eb0c9893acd6e | 2026-11-04T12:12:30Z: 2026-11-04 read hooks/heartbeat.py: the armed-watchdog skip has a reader after all, the heartbeat file; (a) the close verb and cli._commit pinning remain.",
+      "evidence": "2026-10-30: 2026-10-30: first slice (b) built and submitted as katas-a (stack-katas-a.json): fleet.pinned_commit and flush use each repo's own .venv/bin/mikemol-commit; 140 katas tests pass. NOT DONE: cli._commit still uses policy.commit_tool, the launcher refusal (W2114), (a) close verb, skip of armed-watchdog repos. | 2026-10-30: Landed 44a6fc997c20528e0f0b9a17330eb0c9893acd6e (katas-a, first slice (b)). It was REFUSED once at its gate on //katas:test_fleet test_a_bare_index_lock_that_nothing_accounts_for_is_not_a_commit_in_flight, then landed unchanged on resubmit: the test is order- or host-dependent (W2173, open). Remaining: cli._commit pinned, (a) close verb, armed-watchdog skip. | 2026-10-30: 2026-10-30 11:2xZ READ katas: the only use of 'armed' is hosttick.py line 101, which calls the writer's --armed with the job file's text for the katas' OWN queue; liveness.held (already read) holds a repo for a fresh tick lock or a gate-red card, nothing about another repo's armed watchdog. So the armed-watchdog skip (W2164 (b) second part) has no reader yet: it needs where the writer records an armed watchdog (the --armed mode's state, or a heartbeat under the repo's .git/mtools) read first, then a held-reason in liveness.held. Katas registries are free (katas-c touches test_fleet only). | 2026-10-31: reconciled LANDED 44a6fc997c20528e0f0b9a17330eb0c9893acd6e | 2026-11-04T12:12:30Z: 2026-11-04 read hooks/heartbeat.py: the armed-watchdog skip has a reader after all, the heartbeat file; (a) the close verb and cli._commit pinning remain. | 2026-11-05T14:33:48Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn.",
       "issued_at": "2026-10-29T19:49:22Z",
       "minted_during": "interrupt",
       "caused_by": "github:R132",
-      "last_worked": "2026-11-05T11:27:09Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -48821,7 +48816,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2103",
       "last_worked": "2026-11-01T12:39:16Z",
-      "ticks_blocked": 67,
+      "ticks_blocked": 69,
       "completed": null
     },
     {
@@ -49038,7 +49033,7 @@
       "minted_during": "interrupt",
       "caused_by": "W2139",
       "last_worked": "2026-11-01T22:46:11Z",
-      "ticks_blocked": 86,
+      "ticks_blocked": 88,
       "completed": null
     },
     {
@@ -49198,7 +49193,7 @@
       "minted_during": "tick",
       "caused_by": "W2189",
       "last_worked": "2026-11-03T03:40:00Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -49219,7 +49214,7 @@
       "minted_during": "tick",
       "caused_by": "W2189",
       "last_worked": "2026-11-03T03:39:23Z",
-      "ticks_blocked": 66,
+      "ticks_blocked": 68,
       "completed": null
     },
     {
@@ -49421,11 +49416,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "paydown stack from a clean HEAD scratch: swap plain subprocess users to runproc and delete their hooks/pyproject.toml entries (test_pairing_sections is built in scratch W19201); next candidates test_warrant_crosscheck and src warrant_crosscheck",
-      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again. | 2026-11-03T04:02:07Z: 2026-11-03: batch 3 LANDED cd6c19b3 (test_in_gate, test_census_unmeasured). | 2026-11-03T05:19:53Z: 2026-11-03: batch 4 LANDED 526d33c7 (test_verdictlog). | 2026-11-03T13:17:27Z: 2026-11-03: batch 5 LANDED 39486700 (test_stacklanding, test_stackgate, test_stackland). | 2026-11-03T16:28:54Z: 2026-11-03: batch 6 LANDED 459a112d (test_commit_isolated_new, _ignored, _staged). | 2026-11-03T17:36:32Z: 2026-11-03: batch 7 LANDED 6f4cda95 (test_commit_stack). | 2026-11-03T19:15:20Z: 2026-11-03: batch 8 SUBMITTED (stack batch8-census) with W1956: runproc.run_process(argv, cwd=None, env=None) and test_import_cycles and test_mypy_mirror through it, 4 rules fewer in hooks/pyproject.toml. Chose hooks' own leaf seam over a procrun dev dependency because hooks' per-site mutation targets run a module's tests under mutation with the third-party venv only, so a test importing a sibling dist would fail to import there and kill every mutant for the wrong reason. 13 tests pass (fresh-interpreter sweep and real mypy included), one mutant, two warrants. Not verified under bazel. test_reader_guard needs a timeout the seam lacks. | 2026-11-03T20:09:14Z: 2026-11-03: batch 8 LANDED 3b692b7c (runproc.run_process takes an environment; test_import_cycles and test_mypy_mirror through it). | 2026-11-03T20:29:31Z: 2026-11-03: batch 9 SUBMITTED with W1950 part 2 (stack idle-advance-batch9): run_process takes a timeout and re-exports TimeoutExpired; test_reader_guard through it, one entry and one line-level ruff directive fewer; 22 tests pass. Not verified under bazel. | 2026-11-03T23:35:17Z: 2026-11-03 batch 9 969eb51e, batch 10 e08e66cc (stackrun, commit_isolated_routing, commit_isolated). Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit. | 2026-11-04T02:03:48Z: 2026-11-04 batch 11 landed with W2035 in b7f212b2 (test_commit_plain_frozen, test_pycheck_changed take scratch.git_out; 4 rules fewer). Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit. | 2026-11-04T07:43:08Z: 2026-11-04 batch 12 (test_commit_isolated_hooks) landed with the guard in 5578ac14. Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit, worktree_venv (needs GIT_CONFIG_GLOBAL kept), githook_prepare_commit_msg (needs GIT_CEILING_DIRECTORIES kept). | 2026-11-05T01:33:50Z: 2026-11-05: READ test_index_refresh and test_commit_raced for the next batch: neither is a runproc.run swap. Their fakes return subprocess.CompletedProcess because commit_kata's injected runner is typed that way (production contract), so converting them means changing the runner type in commit_kata and its callers, a src change with its own mutants and warrants, not a test-only move. The test-only entries are exhausted after W2220 (batches 1 to 9 and the bar_fires stack); what remains in hooks/pyproject.toml per-file subprocess entries is src modules plus tests whose fakes carry CompletedProcess | 2026-11-05T02:55:24Z: 2026-11-05 CORRECTION of my own 2026-11-05 entry above: 'the test-only entries are exhausted' was WRONG. I read two tests with CompletedProcess fakes (index_refresh, commit_raced) and generalized. test_gate_phase_marks, test_gate_withdraw_phase and test_githook_post_commit are plain bash/git helpers: BUILT in scratch mtools-W22191 (runproc.run swaps, 27 tests pass, pinned ruff check clean with the three entries gone, 6 rules fewer, nothing in src). NOT YET SUBMITTED: waits for the bar_fires stack (key 1793839172192658184) to land, because both regenerate hooks/graph.json, dag.bzl and the runproc site BUILD. Still hard: test_index_refresh, test_commit_raced, test_isolated_commit (tar bytes) and the src modules, which need the commit_kata runner type to move to runproc.Result | 2026-11-05T06:41:43Z: 2026-11-05: batch 13 (test_gate_phase_marks, test_gate_withdraw_phase, test_githook_post_commit onto runproc.run, 6 rules fewer) landed as fe3419f5 with the hooks/BUILD.bazel shard count 166 to 215. Remaining: test_index_refresh, test_commit_raced, test_isolated_commit (bytes) and the src modules, behind the commit_kata runner-type change | 2026-11-05T08:41:02Z: 2026-11-05: the commit_kata runner type moved to runproc.Result (Result made a mutable dataclass, because isolated.commit_planned assigns done.stdout) and test_index_refresh and test_commit_raced dropped their entries (4 rules): landed as d2354dae. Remaining: test_isolated_commit (tar bytes) and the src modules with their own run_git (githook_prepare_commit_msg, githook_post_commit) | 2026-11-05T09:57:01Z: 2026-11-05: batch 14 (githook_post_commit run_git and the post-commit.local call onto runproc.run, entry and its comment dropped, 2 rules) landed as 14c12ed3. Remaining: test_isolated_commit (tar bytes), githook_prepare_commit_msg's own run_git | 2026-11-05T11:26:01Z: 2026-11-05: batch 15 (githook_prepare_commit_msg and its test onto runproc.run, 2 entries, 4 rules) landed as 0b88c776. Remaining: test_isolated_commit (tar bytes)",
+      "evidence": "2026-11-01: 2026-11-01: design settled on W2207 (a 'git' fixture in hooks/tests/conftest.py under one per-file entry; nine tests share an identical _git helper and migrate in batches). W2207 builds the fixture and the first batch; the rest of this card is the later batches. | 2026-11-01: 2026-11-01 CORRECTION to the pace reading: the submit refusal lists only OTHER dists' pyprojects as owed; hooks/pyproject.toml is NOT in the owed set, so removing hooks exemptions (W2219 to W2221, stack-hooks-bd) does not satisfy the pace. They are still worth doing (fewer exemptions) but the keyed falls are the owed dists: fence (W2213), ratchet (W2214), gatecheck (W2212), mdstruct (W2215), importdag (W2216), pathsforward (W2217), the singletons (W2218). For nine hooks tests the cheap route is the _git wrapper over scratch.git_out (no new dependency). | 2026-11-02: 2026-11-02: batch 2 (test_commit_remote, test_commit_remote_pushed, test_commit_unpushed, test_commit_dir_deletion) moved to the scratch.git_out wrapper; four entries (8 rules) gone; 9 passed under pytest, bazel 6 of 6; graph, dag.bzl and the scratch site BUILD regenerated; submitted in one stack with W2242 (gmailstruct and procrun.capture_stdout), result pending. Peer github-94 asked about the pace rows: answered that the per-dist rows are real debt (touching an owed file admits a stack, ratchet_pace.py:175-187) and the *.py row is a glob key the guard cannot match (lines 108-123, 139-141). | 2026-11-03: 2026-11-02: batch 2 LANDED 45ffeb78; hooks/pyproject.toml is on the owed list again. | 2026-11-03T04:02:07Z: 2026-11-03: batch 3 LANDED cd6c19b3 (test_in_gate, test_census_unmeasured). | 2026-11-03T05:19:53Z: 2026-11-03: batch 4 LANDED 526d33c7 (test_verdictlog). | 2026-11-03T13:17:27Z: 2026-11-03: batch 5 LANDED 39486700 (test_stacklanding, test_stackgate, test_stackland). | 2026-11-03T16:28:54Z: 2026-11-03: batch 6 LANDED 459a112d (test_commit_isolated_new, _ignored, _staged). | 2026-11-03T17:36:32Z: 2026-11-03: batch 7 LANDED 6f4cda95 (test_commit_stack). | 2026-11-03T19:15:20Z: 2026-11-03: batch 8 SUBMITTED (stack batch8-census) with W1956: runproc.run_process(argv, cwd=None, env=None) and test_import_cycles and test_mypy_mirror through it, 4 rules fewer in hooks/pyproject.toml. Chose hooks' own leaf seam over a procrun dev dependency because hooks' per-site mutation targets run a module's tests under mutation with the third-party venv only, so a test importing a sibling dist would fail to import there and kill every mutant for the wrong reason. 13 tests pass (fresh-interpreter sweep and real mypy included), one mutant, two warrants. Not verified under bazel. test_reader_guard needs a timeout the seam lacks. | 2026-11-03T20:09:14Z: 2026-11-03: batch 8 LANDED 3b692b7c (runproc.run_process takes an environment; test_import_cycles and test_mypy_mirror through it). | 2026-11-03T20:29:31Z: 2026-11-03: batch 9 SUBMITTED with W1950 part 2 (stack idle-advance-batch9): run_process takes a timeout and re-exports TimeoutExpired; test_reader_guard through it, one entry and one line-level ruff directive fewer; 22 tests pass. Not verified under bazel. | 2026-11-03T23:35:17Z: 2026-11-03 batch 9 969eb51e, batch 10 e08e66cc (stackrun, commit_isolated_routing, commit_isolated). Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit. | 2026-11-04T02:03:48Z: 2026-11-04 batch 11 landed with W2035 in b7f212b2 (test_commit_plain_frozen, test_pycheck_changed take scratch.git_out; 4 rules fewer). Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit. | 2026-11-04T07:43:08Z: 2026-11-04 batch 12 (test_commit_isolated_hooks) landed with the guard in 5578ac14. Left: snaplinks (stdin), lease_wait (Popen), index_refresh, commit_raced, isolated_commit, worktree_venv (needs GIT_CONFIG_GLOBAL kept), githook_prepare_commit_msg (needs GIT_CEILING_DIRECTORIES kept). | 2026-11-05T01:33:50Z: 2026-11-05: READ test_index_refresh and test_commit_raced for the next batch: neither is a runproc.run swap. Their fakes return subprocess.CompletedProcess because commit_kata's injected runner is typed that way (production contract), so converting them means changing the runner type in commit_kata and its callers, a src change with its own mutants and warrants, not a test-only move. The test-only entries are exhausted after W2220 (batches 1 to 9 and the bar_fires stack); what remains in hooks/pyproject.toml per-file subprocess entries is src modules plus tests whose fakes carry CompletedProcess | 2026-11-05T02:55:24Z: 2026-11-05 CORRECTION of my own 2026-11-05 entry above: 'the test-only entries are exhausted' was WRONG. I read two tests with CompletedProcess fakes (index_refresh, commit_raced) and generalized. test_gate_phase_marks, test_gate_withdraw_phase and test_githook_post_commit are plain bash/git helpers: BUILT in scratch mtools-W22191 (runproc.run swaps, 27 tests pass, pinned ruff check clean with the three entries gone, 6 rules fewer, nothing in src). NOT YET SUBMITTED: waits for the bar_fires stack (key 1793839172192658184) to land, because both regenerate hooks/graph.json, dag.bzl and the runproc site BUILD. Still hard: test_index_refresh, test_commit_raced, test_isolated_commit (tar bytes) and the src modules, which need the commit_kata runner type to move to runproc.Result | 2026-11-05T06:41:43Z: 2026-11-05: batch 13 (test_gate_phase_marks, test_gate_withdraw_phase, test_githook_post_commit onto runproc.run, 6 rules fewer) landed as fe3419f5 with the hooks/BUILD.bazel shard count 166 to 215. Remaining: test_index_refresh, test_commit_raced, test_isolated_commit (bytes) and the src modules, behind the commit_kata runner-type change | 2026-11-05T08:41:02Z: 2026-11-05: the commit_kata runner type moved to runproc.Result (Result made a mutable dataclass, because isolated.commit_planned assigns done.stdout) and test_index_refresh and test_commit_raced dropped their entries (4 rules): landed as d2354dae. Remaining: test_isolated_commit (tar bytes) and the src modules with their own run_git (githook_prepare_commit_msg, githook_post_commit) | 2026-11-05T09:57:01Z: 2026-11-05: batch 14 (githook_post_commit run_git and the post-commit.local call onto runproc.run, entry and its comment dropped, 2 rules) landed as 14c12ed3. Remaining: test_isolated_commit (tar bytes), githook_prepare_commit_msg's own run_git | 2026-11-05T11:26:01Z: 2026-11-05: batch 15 (githook_prepare_commit_msg and its test onto runproc.run, 2 entries, 4 rules) landed as 0b88c776. Remaining: test_isolated_commit (tar bytes) | 2026-11-05T14:54:17Z: 2026-11-05 batch 16 LANDED as b3479556 (pairing-sections and warrant-crosscheck tests onto runproc.run, two hooks entries deleted, gate about 1 h 0 min from 13:52Z, landed emit sent=87). Next batches: remaining per-file subprocess entries (about 45), src modules needing a timeout or live handle are not plain swaps. | 2026-11-05T15:09:31Z: 2026-11-05: batch 17 submitted (preflight, worktree-venv, commit-published tests onto runproc.run, three hooks entries, seven rules); keeps the gate fed.",
       "issued_at": "2026-11-01T22:49:23Z",
       "minted_during": "interrupt",
       "caused_by": "W2200",
-      "last_worked": "2026-11-05T13:33:21Z",
+      "last_worked": "2026-11-05T15:09:31Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -49681,7 +49676,7 @@
       "minted_during": "interrupt",
       "caused_by": "github:W94",
       "last_worked": "2026-11-02T17:08:36Z",
-      "ticks_blocked": 68,
+      "ticks_blocked": 70,
       "completed": null
     },
     {
@@ -49960,7 +49955,7 @@
     {
       "symbol": "W2248",
       "title": "Gate runs the bazel suite's mutant targets as a later phase than the rest, so a withdraw can land between them",
-      "status": "working",
+      "status": "ready",
       "enables": [
         "W1982"
       ],
@@ -49974,7 +49969,7 @@
       "issued_at": "2026-11-03T00:31:44Z",
       "minted_during": "interrupt",
       "caused_by": "github:W59",
-      "last_worked": "2026-11-05T13:14:55Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -50079,7 +50074,7 @@
     {
       "symbol": "W2254",
       "title": "Build the toy harness proper: a disposable repo plus fake bazel the stack witnesses (W2208, W2209) run mikemol-commit against",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2208",
         "W2209"
@@ -50088,14 +50083,17 @@
         "commit",
         "toy"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2293",
+        "W2294"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "first witness landed as e7dfc8ed (test_toy_harness); next: the held-submit witness, a first submit held inside a flag-file pre-commit through runproc.start while a second submit runs (W2208, W2209), then a stack with an earlier stack ahead of it",
       "evidence": "2026-11-03T04:40:47Z: 2026-11-03: checked: neither hooks/tests/test_toy_harness.py nor test_dependent_stack_toy.py exists (W2207 closed on its git-wrapper batch only). DESIGN: the harness must hold a first submit inside a flag-file pre-commit while a second submit runs, so it needs a live child handle: procrun.spawn (W2241), not a new subprocess exemption (operator 2026-10-25: no new exemption to clear a key). Synchronous halves (toy repo via scratch.git_out, runner via procrun.capture, hooks gains procrun as a dev dep) can land first. | 2026-11-04T10:23:12Z: 2026-11-04 read the design against what batch 8 learned: procrun as a hooks dev dep breaks per-site mutation targets; the handle belongs in hooks' own runproc. | 2026-11-04T15:53:47Z: runproc.start and Handle landed as d35db2e3; next: test_toy_harness.py on scratch.git_out, run_process and start (first witness: a lone one-file stack lands) | 2026-11-05T12:53:02Z: 2026-11-05: read git log: e7dfc8ed landed the toy harness's first witness; the held-submit witness is what remains.",
       "issued_at": "2026-11-03T03:38:43Z",
       "minted_during": "interrupt",
       "caused_by": "W2189",
-      "last_worked": "2026-11-05T12:53:02Z",
+      "last_worked": "2026-11-05T14:43:53Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -50748,11 +50746,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Follow-up AFTER rule (c), ranked as paydown (github-14 2026-11-05 ruling (3)). Cause: mikemol-ratchet depends on procrun, which as a hooks dev dep breaks the per-site mutation targets (W2254, 2026-11-04). Cheaper route checked: mtools' root .venv holds hooks installs only (python3.13, no mikemol-ratchet) and the root pyproject declares no dependencies, so a copy there is untracked local state, not a pin, and is not reproducible. If a tracked route exists use it, else (1): dev-pin + lock + stage procrun in the sites.",
-      "evidence": "2026-11-05T13:07:56Z: 2026-11-05: read ratchet/pyproject.toml: mikemol-ratchet depends on mikemol-atomicwrite and mikemol-procrun, so a hooks dev pin drags procrun into the hooks venv, which W2254's 2026-11-04 evidence says breaks the per-site mutation targets. Asked github-14 to rule: (1) pin and fix the sites, (2) built non-editable wheel, (3) ship rule (c) with mtools on the marked fallback and pin as follow-up (recommended). No pyproject or lock touched. | 2026-11-05T13:09:41Z: 2026-11-05: github-14 ruled (3): rule (c) ships without W2289; conditions: W2289 stays open and ranked as paydown with the procrun cause; every mtools fallback admission leaves a readable mark, say where it is read when resending; check the root .venv route first (done: untracked, so no).",
+      "evidence": "2026-11-05T13:07:56Z: 2026-11-05: read ratchet/pyproject.toml: mikemol-ratchet depends on mikemol-atomicwrite and mikemol-procrun, so a hooks dev pin drags procrun into the hooks venv, which W2254's 2026-11-04 evidence says breaks the per-site mutation targets. Asked github-14 to rule: (1) pin and fix the sites, (2) built non-editable wheel, (3) ship rule (c) with mtools on the marked fallback and pin as follow-up (recommended). No pyproject or lock touched. | 2026-11-05T13:09:41Z: 2026-11-05: github-14 ruled (3): rule (c) ships without W2289; conditions: W2289 stays open and ranked as paydown with the procrun cause; every mtools fallback admission leaves a readable mark, say where it is read when resending; check the root .venv route first (done: untracked, so no). | 2026-11-05T13:53:19Z: 2026-11-05: taken in the gate-wait gap while paydown stack 16 (W2219) runs; no gate time used. Next: read how the hooks mutation sites stage a dev dep, to size option (1).",
       "issued_at": "2026-11-05T12:49:31Z",
       "minted_during": "tick",
       "caused_by": "W2286",
-      "last_worked": "2026-11-05T13:09:41Z",
+      "last_worked": "2026-11-05T14:41:29Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -50771,6 +50769,119 @@
       "issued_at": "2026-11-05T13:49:29Z",
       "minted_during": "tick",
       "caused_by": "nemik:W1108",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2291",
+      "title": "Shared xunit-style assertion module so a dist's tests drop pytest assert and its tests/* assert entry (operator option 4)",
+      "status": "ready",
+      "enables": [
+        "W2292"
+      ],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "when --in-gate is empty: build a scratch tree with a leaf assertion dist (mikemol-new-dist), converge dev dep + [tool.uv.sources] path, then ONE bazel build of //converge mutation sites; report what the sandbox needed staged",
+      "evidence": "2026-11-05T14:30:09Z: 2026-11-05 operator ruling, host session 695f3e0a line 141299 ('Yes, let's go with option 4.', found first-hand in the transcript): replace pytest asserts with portable xunit idioms, a shared assertion module of plain functions that raise with both values, fixtures and parametrize kept, no unittest.TestCase; compound asserts split and pytest.raises converted; counts as paydown (relayed by github-14). Order: module, ONE small dist (converge 16 or frontier 22), remove its tests/* entry, land, report the real cost, then github-14 decides the rollout. | 2026-11-05T14:32:55Z: 2026-11-05 github-14 ruled (a): measure a leaf dist (new dist, dev-only path source) on converge first: one build of converge's mutation sites, no gate; report what the sandbox needed staged and count any per-site staging work, since it sets the pattern for all 38 rows; (b) generated copies only if (a) breaks. BLOCKED ON THE GATE for the measurement: standing 8 forbids foreground bazel beside a gate run, and stack 16 (W2219) is inflight. Prep in scratch without bazel meanwhile: mikemol-new-dist for the leaf, converge pyproject dev group + uv source. | 2026-11-05T14:36:02Z: 2026-11-05 operator constraint (via github-14): keep the assertion vocabulary SMALL; each function has ONE exact meaning, documented as a proposition over typed values; no catch-all forms, no overlapping synonyms; a new assertion needs a reason no composition of existing ones can serve. Reason: a later translator between xunit dialects, Agda and Lean reads this vocabulary. Build NOTHING for that now: no IR, no records, no translator. | 2026-11-05T14:42:09Z: 2026-11-05 DRAFT VOCABULARY (each one exact proposition, no synonyms; a new one needs a reason no composition serves): assert_true(v: bool) is v is True; assert_false(v: bool) is v is False; assert_equal(actual: T, expected: T) is actual == expected; assert_not_equal(a: T, b: T) is a != b; assert_is(actual, expected) is actual is expected (None checks compose as assert_is(v, None)); assert_in(item: T, container: Container[T]) is item in container; assert_less(a: T, b: T) is a < b; assert_raises(exc: type[BaseException], *, match: str | None) as a with-block, the block raises exc whose str matches. Not in: assert_not_in, assert_is_not, assert_greater (compose via not/swap), approx, truthiness. Each failure raises AssertionError naming both values. Not final: the converge asserts decide what is missing. Marked working only for this draft; the measurement still waits on the gate (stack 16 inflight).",
+      "issued_at": "2026-11-05T14:28:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W42",
+      "last_worked": "2026-11-05T15:10:50Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2292",
+      "title": "Convert converge's tests to xunit assertions and delete its tests/* assert entry, then report the cost",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "converge",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "after W2291: pycodemod dry-run codemod over converge/tests (16 asserts), split compound asserts, convert pytest.raises blocks; report asserts converted, hand fixes, mutation-registry churn and gate time to github-14 before any rollout",
+      "evidence": "",
+      "issued_at": "2026-11-05T14:29:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2291",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2293",
+      "title": "Toy harness: a held first submit through runproc.start while a second submit runs (W2208, W2209 witnesses)",
+      "status": "ready",
+      "enables": [
+        "W2254"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-05T14:43:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2254",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2294",
+      "title": "Toy harness: a stack with an earlier stack ahead of it lands in order",
+      "status": "ready",
+      "enables": [
+        "W2254"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-05T14:43:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2254",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2295",
+      "title": "ratchet census reads an empty {} baseline as UNREAD instead of zero debt (kinds._counts)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "ratchet"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "kinds._counts (~line 106): an empty object is a valid baseline with zero debt, so return an empty count with sum 0, not None; test: census over a repo whose baseline is {} reads value 0 and the series keeps emitting; mutant for the empty branch. Reported by nemik-6f 2026-11-05T14:37Z (nemik mypy-baseline.json reached {} and the series ended).",
+      "evidence": "",
+      "issued_at": "2026-11-05T14:49:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W1108",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2296",
+      "title": "Answer luthen-observability:W2036: a guard needs a freeze-and-resume action beside its observation",
+      "status": "ready",
+      "enables": [
+        "luthen-observability:W2036"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-05T14:49:50Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W2036",
       "last_worked": null,
       "ticks_blocked": 0
     }
@@ -51235,10 +51346,10 @@
       "tag": "file:hooks/pyproject.toml!w",
       "holder": "(unlocked)",
       "waypoint": "W2219",
-      "base_sha": "0b88c77612979b7149376e97d9869f4b22fc6757",
-      "taken_at": "2026-11-05T13:33:21Z",
-      "renewed_at": "2026-11-05T13:33:21Z",
-      "expires_at": "2026-11-05T14:03:21Z"
+      "base_sha": "b347955619e45a21a0c4ea01f1b4b392979743c1",
+      "taken_at": "2026-11-05T15:09:31Z",
+      "renewed_at": "2026-11-05T15:09:31Z",
+      "expires_at": "2026-11-05T15:39:31Z"
     }
   ],
   "advice": [

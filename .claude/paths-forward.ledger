@@ -5704,3 +5704,33 @@
 2026-11-05T13:33:43Z  status W2286 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T13:33:43Z  status W2287 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T13:49:29Z  tick  W2290 minted    -         "fleet census crashes on a listed-but-gone source file in fleetcensus.suppression_rows"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1108
+2026-11-05T13:52:21Z  tick  W2219 advanced  sweep     "paydown batch 16 submitted as a stack: two tests onto runproc, two hooks entries deleted; W2122 dropped to residue and W2290 minted from nemik-6f's census-crash report [blocked by W2289]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:53:19Z  status W2289 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:54:14Z  status W1428 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:06:40Z  lease W2219 lapsed    --        "lease on file:hooks/pyproject.toml!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:09:30Z  tick  W2219 advanced  sweep     "stack 16 still in the gate; read the owed entries of six one-entry dists: all are tests/* assert, unpayable in practice; asked github-14 for a policy ruling, hooks stays the main paydown [blocked by W2289]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:10:31Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:16:13Z  status W1122 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:28:34Z  interrupt W2291 minted    -         "Shared xunit-style assertion module so a dist's tests drop pytest assert and its tests/* assert entry (operator option 4)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W42
+2026-11-05T14:29:09Z  interrupt W2292 minted    -         "Convert converge's tests to xunit assertions and delete its tests/* assert entry, then report the cost"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2291
+2026-11-05T14:31:17Z  status W2291 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:33:48Z  status W2164 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:37:34Z  status W1875 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:38:29Z  status W1746 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W1122 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W1428 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W1746 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W1875 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W2060 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W2164 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W2248 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W2254 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:41:29Z  status W2289 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:42:39Z  tick  W2291 advanced  unblock   "returned nine placeholder working cards to ready; drafted the small assertion vocabulary on W2291; stack 16 still in the gate so the converge measurement waits [blocked by W2292]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T14:43:53Z  interrupt W2293 minted    -         "Toy harness: a held first submit through runproc.start while a second submit runs (W2208, W2209 witnesses)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2254
+2026-11-05T14:43:53Z  interrupt W2294 minted    -         "Toy harness: a stack with an earlier stack ahead of it lands in order"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2254
+2026-11-05T14:49:20Z  interrupt W2295 minted    -         "ratchet census reads an empty {} baseline as UNREAD instead of zero debt (kinds._counts)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1108
+2026-11-05T14:49:50Z  interrupt W2296 minted    -         "Answer luthen-observability:W2036: a guard needs a freeze-and-resume action beside its observation"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2036
+2026-11-05T14:54:17Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T15:09:31Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T15:10:50Z  status W2291 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

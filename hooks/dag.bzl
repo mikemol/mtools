@@ -1847,7 +1847,8 @@ GRAPH = {
     },
     "tests/test_commit_published.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2292,7 +2293,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_hooks_preflight.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -3714,6 +3717,7 @@ GRAPH = {
         "src/mikemol/hooks/pycheck.py",
         "src/mikemol/hooks/pycheck_clear.py",
         "src/mikemol/hooks/pycheck_format.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/worktree_venv.py"
       ],
       "reads": [],

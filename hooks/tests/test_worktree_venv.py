@@ -12,12 +12,11 @@ from __future__ import annotations
 import io
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.hooks import pycheck, pycheck_clear, pycheck_format, worktree_venv
+from mikemol.hooks import pycheck, pycheck_clear, pycheck_format, runproc, worktree_venv
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -46,11 +45,9 @@ def _git(repo: Path, *args: str) -> None:
     git = shutil.which("git")
     if git is None:
         pytest.skip("git is not installed")
-    subprocess.run(
-        [git, "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t", *args],
-        check=True,
-        capture_output=True,
-    )
+    argv = [git, "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t", *args]
+    done = runproc.run(argv)
+    assert done.returncode == 0, done.stderr
 
 
 def _main(decoy: Path) -> Path:

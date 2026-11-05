@@ -461,7 +461,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_precommit_build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
 "tests/test_commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_hooks_preflight.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witnesses format files in a throwaway project whose "ruff" is a stand-in script under tmp_path.
 "tests/test_commit_lease_wait.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_vlogship.py" = ["invalid-function-name", "builtin-argument-shadowing"]
@@ -502,7 +501,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ RUNNING git FOR A SCRATCH WORKTREE IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1378): the argv is
 # `git`, fixed words, the repo and the worktree path as single words; no shell.
 "src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_worktree_venv.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.
 # git is resolved by `shutil.which` (absent → refuse, exit 2); the argv is module constants plus
@@ -536,7 +534,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # from PATH on purpose, as the code under test resolves it.
 "tests/test_commit_claim.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 "tests/test_domain_witness_concurrency.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"tests/test_commit_published.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 
 # ⚑ W825: `test_post_commit_census.py` runs the tracked post-commit stub and git in a throwaway
 # repository: fixed argv, never a shell, no untrusted input. `git` is resolved from PATH on purpose,

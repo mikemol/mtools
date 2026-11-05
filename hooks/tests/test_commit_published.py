@@ -10,10 +10,9 @@ origin/main or it is not.
 
 from __future__ import annotations
 
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata
+from mikemol.hooks import commit_kata, runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -24,14 +23,8 @@ _LOCAL = "LOCAL: not on origin/main"
 
 
 def _git(cwd: Path, *args: str) -> str:
-    done = subprocess.run(
-        ["git", *_IDENTITY, *args],
-        cwd=cwd,
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=_TIMEOUT_S,
-    )
+    done = runproc.run(["git", *_IDENTITY, *args], cwd=cwd, timeout=_TIMEOUT_S)
+    assert done.returncode == 0, done.stderr
     return done.stdout.strip()
 
 
