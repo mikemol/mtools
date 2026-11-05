@@ -21,7 +21,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from mikemol.pathsforward import attach, outcomes, vector
+from mikemol.pathsforward import attach, mirror, outcomes, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -621,6 +621,7 @@ def check(state: State) -> list[str]:
         *outcomes.findings(state),
         *attach.findings(state),
         *attach.drift(state),
+        *mirror.findings(state),
     ]
 
 

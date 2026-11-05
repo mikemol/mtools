@@ -5810,3 +5810,19 @@
 2026-11-05T21:28:35Z  interrupt W2301 minted    -         "Answer nemik:W1660: how a fix to the pace's own input lands while the guard reads the broken pace"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1660
 2026-11-05T21:29:44Z  status W1939 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T21:49:07Z  status W2298 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T21:50:01Z  tick  W2302 minted    -         "MIKEMOL_PACE_FILE swaps the file the pace guard judges against with no trace"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2301
+2026-11-05T21:50:45Z  tick  W1667 advanced  collapse  "stack 19 landed (6aa8602f); the W1667 ratchet stack (baseline of 128, declared rise, hooks batch 20 as its real paydown) submitted; W2301 cold-review findings recorded for a v2, W2302 minted for the untraced pace-file override [blocked by W2298]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T21:51:43Z  status W2298 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:13:54Z  status W2300 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:18:11Z  status W2298 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:18:11Z  status W2300 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:18:44Z  tick  W1667 advanced  collapse  "W1667 ratchet stack (with hooks batch 20) inflight in the gate; W2298 mirror check built in scratch awaiting a pace companion; W2300 answered nemik [blocked by W2298]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:19:49Z  status W2298 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:20:54Z  status W2298 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:38:34Z  tick  W1667 advanced  sweep     "W1667 ratchet stack still inflight in the gate; nothing new cut while it holds the hooks registries [blocked by W2298]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:39:47Z  status W2301 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:44:10Z  status W1975 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:51:23Z  status W1505 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:51:46Z  status W1501 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:58:20Z  status W2298 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T22:58:20Z  status W2301 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -434,3 +434,7 @@ src/mikemol/pathsforward/landed.py|committed-text-reads-the-working-path|f"HEAD:
 src/mikemol/pathsforward/cli.py|retro-scaffold-reads-the-working-queue|    held = _committed_text\(root, str\(ctx\.path\.relative_to\(root\)\)\)|    held = None|def=_retro_scaffold
 src/mikemol/pathsforward/cli.py|retro-scaffold-trusts-a-non-object-file|    if not isinstance\(raw, dict\):|    if False:|def=_retro_scaffold
 src/mikemol/pathsforward/cli.py|retro-scaffold-unreadable-head-not-said|    if held is None:|    if False:|def=_retro_scaffold
+src/mikemol/pathsforward/mirror.py|parked-card-never-reported-missing|            if sym not in listed|            if False|def=findings
+src/mikemol/pathsforward/mirror.py|stale-line-never-reported|            if sym not in blocked|            if False|def=findings
+src/mikemol/pathsforward/mirror.py|a-done-card-still-counts-as-parked|text\(w, "status"\) != _DONE and parked in strlist|parked in strlist|def=findings
+src/mikemol/pathsforward/mirror.py|a-baseline-without-the-header-is-judged|    if parked is None:|    if False:|def=_read
