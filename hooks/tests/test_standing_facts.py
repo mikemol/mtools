@@ -12,12 +12,11 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import standing_facts
+from mikemol.hooks import runproc, standing_facts
 from mikemol.hooks.standing_facts import (
     baseline_lines,
     embargoes,
@@ -44,12 +43,8 @@ def _queue(path: Path, rows: list[dict[str, str | None]]) -> Path:
 
 def _git(repo: Path, *args: str) -> str:
     git = shutil.which("git") or "git"
-    proc = subprocess.run(
-        [git, "-C", str(repo), *args],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    proc = runproc.run([git, "-C", str(repo), *args])
+    assert proc.returncode == 0, proc.stderr
     return proc.stdout
 
 
@@ -183,14 +178,8 @@ def _launch(stdin: str, project: Path) -> str:
         "OPA_BIN": os.environ.get("OPA_BIN") or shutil.which("opa") or "opa",
     }
     bash = shutil.which("bash") or "bash"
-    proc = subprocess.run(
-        [bash, str(_LAUNCHER)],
-        input=stdin,
-        env=env,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    proc = runproc.run([bash, str(_LAUNCHER)], env=env, stdin_text=stdin)
+    assert proc.returncode == 0, proc.stderr
     return proc.stdout
 
 

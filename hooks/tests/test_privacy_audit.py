@@ -13,12 +13,11 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING, cast
 
 import pytest
 
-from mikemol.hooks import privacy_audit
+from mikemol.hooks import privacy_audit, runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -35,7 +34,8 @@ def _git(root: Path, *args: str) -> None:
     if git is None:
         pytest.skip("git is not installed")
     ident = ["-c", "user.name=t", "-c", "user.email=t@example.invalid"]
-    subprocess.run([git, "-C", str(root), *ident, *args], check=True, capture_output=True)
+    done = runproc.run([git, "-C", str(root), *ident, *args])
+    assert done.returncode == 0, done.stderr
 
 
 def _repo(tmp_path: Path) -> Path:
@@ -147,9 +147,7 @@ def _history_repo(tmp_path: Path) -> tuple[Path, str]:
     key = "a = 1\nb = 2\nKEY = 'AKIA" + "ABCDEFGHIJKLMNOP'\n"
     (root / "demo" / "mod.py").write_text(key, encoding="utf-8")
     _git(root, "commit", "--quiet", "-am", "two")
-    added = subprocess.run(
-        ["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, check=True
-    ).stdout.strip()
+    added = runproc.run(["git", "-C", str(root), "rev-parse", "HEAD"]).stdout.strip()
     (root / "demo" / "mod.py").write_text("a = 1\nb = 2\n", encoding="utf-8")
     _git(root, "commit", "--quiet", "-am", "three")
     return root, added

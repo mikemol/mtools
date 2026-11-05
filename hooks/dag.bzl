@@ -1663,7 +1663,8 @@ GRAPH = {
     },
     "tests/test_claude_code_census.py": {
       "imports": [
-        "src/mikemol/hooks/claude_code_census.py"
+        "src/mikemol/hooks/claude_code_census.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2501,7 +2502,8 @@ GRAPH = {
     },
     "tests/test_privacy_audit.py": {
       "imports": [
-        "src/mikemol/hooks/privacy_audit.py"
+        "src/mikemol/hooks/privacy_audit.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -3211,6 +3213,7 @@ GRAPH = {
     },
     "tests/test_standing_facts.py": {
       "imports": [
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/standing_facts.py"
       ],
       "reads": [],

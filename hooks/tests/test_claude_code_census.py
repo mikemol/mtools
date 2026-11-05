@@ -10,12 +10,11 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
 
-from mikemol.hooks import claude_code_census
+from mikemol.hooks import claude_code_census, runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -72,14 +71,16 @@ def test_untracked_lists_ignored_and_unignored_files_but_not_tracked_ones(
     if git is None:
         pytest.skip("git is not installed")
     repo = tmp_path / "decoy"
-    subprocess.run([git, "init", "--quiet", str(repo)], check=True)
+    made = runproc.run([git, "init", "--quiet", str(repo)])
+    assert made.returncode == 0, made.stderr
     claude = repo / ".claude"
     (claude / "design").mkdir(parents=True)
     (repo / ".gitignore").write_text(".claude/design/\n", encoding="utf-8")
     for rel in ("design/hidden.py", "loose.sh", "kept.py"):
         (claude / rel).write_text("", encoding="utf-8")
     (repo / "outside.py").write_text("", encoding="utf-8")
-    subprocess.run([git, "-C", str(repo), "add", ".claude/kept.py"], check=True)
+    staged = runproc.run([git, "-C", str(repo), "add", ".claude/kept.py"])
+    assert staged.returncode == 0, staged.stderr
     assert sorted(claude_code_census.untracked(str(repo))) == [
         ".claude/design/hidden.py",
         ".claude/loose.sh",
