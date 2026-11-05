@@ -383,7 +383,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/githook_post_commit.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

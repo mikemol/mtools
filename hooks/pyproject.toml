@@ -414,12 +414,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ THE SHARED GIT POST-COMMIT: the same two responsibilities. Git is resolved by `shutil.which`
-# (absent → reported, exit 1) and run with constant subcommands; the repo's post-commit.local is a
-# path built as `<git toplevel>/.githooks/post-commit.local`, run only when executable. Never
-# through a shell.
-"src/mikemol/hooks/githook_post_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑ THE TICK-RELEASE HOOK RELEASES A LOCK ONLY THROUGH THE ONE WRITER (W815): the queue has one
 # writer, mikemol-paths-forward, so running it IS the module's responsibility. MEASURED: the argv is
 # the writer's own path (found by a fixed order: an env var, the project's venv, PATH), the queue

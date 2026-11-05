@@ -40,9 +40,10 @@ the shared hook.
 
 import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 MARKER = "post-commit advisory (auto-captured)"
 HEADER = "── post-commit advisory (non-blocking; gates ran pre-commit) ──"
@@ -57,7 +58,7 @@ class GitUnavailableError(RuntimeError):
 
 def run_git(
     *args: str, stdin: str | None = None, env: dict[str, str] | None = None
-) -> subprocess.CompletedProcess[str]:
+) -> runproc.Result:
     """Run git in the current directory and hand back the result, whatever its status.
 
     Returns:
@@ -71,9 +72,7 @@ def run_git(
     if git is None:
         msg = "post-commit: no git on PATH — cannot write the advisory marker"
         raise GitUnavailableError(msg)
-    return subprocess.run(
-        [git, *args], input=stdin, capture_output=True, text=True, check=False, env=env
-    )
+    return runproc.run([git, *args], env=env, stdin_text=stdin)
 
 
 def in_flight(git_dir: Path) -> str | None:
@@ -99,9 +98,7 @@ def advisory(toplevel: Path) -> str:
     lines = [HEADER]
     local = toplevel / _LOCAL
     if local.is_file() and os.access(local, os.X_OK):
-        done = subprocess.run(
-            [str(local)], capture_output=True, text=True, check=False, stdin=subprocess.DEVNULL
-        )
+        done = runproc.run([str(local)], stdin_text="")
         sys.stderr.write(done.stderr)
         body = done.stdout.rstrip("\n")
         if body:

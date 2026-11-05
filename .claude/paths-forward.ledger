@@ -5643,3 +5643,13 @@
 2026-11-05T06:43:25Z  status W1428 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T06:44:19Z  interrupt W2284 minted    -         "procrun: kill the two declared mutants that survive on main"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2277
 2026-11-05T07:23:55Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T07:25:00Z  tick  W2219 advanced  collapse  "commit runner type moved to runproc.Result (Result made mutable), test_index_refresh and test_commit_raced entries dropped (4 rules); stack 1793863455824343896 inflight; HEAD 636e39b9 [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T07:38:12Z  tick  W2219 advanced  collapse  "runner-type stack 1793863455824343896 still gating; HEAD 636e39b9 [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T07:39:06Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T08:08:18Z  tick  W2219 advanced  collapse  "runner-type stack 1793863455824343896 still gating; HEAD 636e39b9 [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T08:09:15Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T08:41:02Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T08:41:27Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T08:41:50Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T08:44:04Z  status W2171 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:11:24Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
