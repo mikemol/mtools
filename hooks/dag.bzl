@@ -2461,7 +2461,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_pairing_sections.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -3553,6 +3555,7 @@ GRAPH = {
     "tests/test_warrant_crosscheck.py": {
       "imports": [
         "src/mikemol/hooks/gen_warrants.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/warrant_crosscheck.py"
       ],
       "reads": [],

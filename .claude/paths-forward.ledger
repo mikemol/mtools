@@ -5671,3 +5671,36 @@
 2026-11-05T10:13:22Z  status W2285 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T10:13:40Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T10:30:52Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:43:29Z  status W2276 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:44:03Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:46:13Z  tick  W2276 advanced  collapse  "toy harness + batch 15 stack 1793875333577016603 still gating; HEAD 14c12ed3 [blocked by W2285]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:46:55Z  status W1428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:08:26Z  tick  W2276 advanced  collapse  "toy harness + batch 15 stack 1793875333577016603 still gating; HEAD 14c12ed3 [blocked by W2285]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:09:30Z  status W2060 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:12:05Z  status W2164 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:25:40Z  status W1428 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:25:40Z  status W2060 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:25:40Z  status W2164 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:25:40Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:25:40Z  status W2254 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:25:40Z  status W2276 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:26:01Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T11:34:13Z  status W1920 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T12:15:47Z  status W2071 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T12:21:51Z  tick  W1920 advanced  collapse  "rule (c) built in scratch and sent to github-14; cold review returned 11 findings, rework (per-file measure, pinned reader, frozen snapshot, title-matched gate-red) recorded in next step; pairing-test paydown companion swapped [blocked by W2219]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T12:22:45Z  interrupt W2286 minted    -         "W1920a: ratchet_fall measures per file from the frozen snapshot with a pinned reader; unmeasurable on the stack's tree is no fall"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1920
+2026-11-05T12:22:45Z  interrupt W2287 minted    -         "W1920b: gate_red matches the card by title as gate._card_of does and admits only the cited entry"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1920
+2026-11-05T12:22:45Z  interrupt W2288 minted    -         "W1920c: real-census tests, registry regeneration and a companion paydown for rule (c), then resend to github-14"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1920
+2026-11-05T12:23:07Z  status W2286 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T12:49:31Z  tick  W2289 minted    -         "Pin mikemol-ratchet as a dev-only dependency of hooks, so the pace guard's pinned reader resolves in mtools (W1920 rule c)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2286
+2026-11-05T12:50:24Z  tick  W2286 advanced  unblock   "ratchet_fall reworked in scratch: per-file measure, stack-tree failure is no fall, pinned reader, units not mixed, emptied declaration; reader census sent to github-14, W2289 minted for the hooks pin; 29 tests pass [blocked by W2287]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T12:52:03Z  status W2289 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T12:53:02Z  status W2254 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:09:41Z  status W2289 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:10:12Z  tick  W2289 advanced  unblock   "github-14 ruled rule (c) ships without the hooks pin; root-venv route checked and rejected (untracked); W2289 stays ready as paydown with the procrun cause; fallback mark designed [blocked by W2287]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:11:24Z  status W2287 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:14:55Z  status W2248 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:33:21Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:33:43Z  status W2286 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:33:43Z  status W2287 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T13:49:29Z  tick  W2290 minted    -         "fleet census crashes on a listed-but-gone source file in fleetcensus.suppression_rows"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1108

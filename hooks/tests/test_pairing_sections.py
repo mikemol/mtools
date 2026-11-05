@@ -4,11 +4,12 @@
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+
+from mikemol.hooks import runproc
 
 _COUNTER = Path(__file__).parent.parent.parent / "count_test_functions.py"
 _CHECK = "python -m pytest tests/test_m.py -k test_a"
@@ -45,19 +46,14 @@ def _dist(root: Path, bib: str, rubric: str | None, name: str = "rubric.tsv") ->
     return dist
 
 
-def _pairing(dist: Path) -> subprocess.CompletedProcess[str]:
+def _pairing(dist: Path) -> runproc.Result:
     """Run the counter's pairing mode over one distribution.
 
     Returns:
-        the completed process.
+        the finished command's result.
 
     """
-    return subprocess.run(
-        [sys.executable, str(_COUNTER), "--pairing", str(dist)],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    return runproc.run([sys.executable, str(_COUNTER), "--pairing", str(dist)])
 
 
 def test_a_rubric_that_agrees_with_the_warrants_is_clean(tmp_path: Path) -> None:

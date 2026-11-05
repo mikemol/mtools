@@ -5,14 +5,13 @@
 from __future__ import annotations
 
 import shutil
-import subprocess
 import sys
 from itertools import starmap
 from pathlib import Path
 
 import pytest
 
-from mikemol.hooks import gen_warrants, warrant_crosscheck
+from mikemol.hooks import gen_warrants, runproc, warrant_crosscheck
 
 _SCRIPT = Path(__file__).parent.parent.parent / warrant_crosscheck.SCRIPT
 _DIST = "dist"
@@ -53,20 +52,15 @@ def _repo(root: Path, tests: list[str], warranted: list[tuple[str, str]]) -> Pat
     return bib
 
 
-def _run(root: Path, *flags: str) -> subprocess.CompletedProcess[str]:
+def _run(root: Path, *flags: str) -> runproc.Result:
     """Run gen_warrants as a program from `root`.
 
     Returns:
-        the completed process.
+        the finished command's result.
 
     """
-    return subprocess.run(
-        [sys.executable, "-m", "mikemol.hooks.gen_warrants", "--root", str(root), *flags],
-        capture_output=True,
-        text=True,
-        check=False,
-        cwd=root,
-    )
+    argv = [sys.executable, "-m", "mikemol.hooks.gen_warrants", "--root", str(root), *flags]
+    return runproc.run(argv, cwd=root)
 
 
 def test_independent_orphans_name_the_warrants_whose_test_is_gone(tmp_path: Path) -> None:
