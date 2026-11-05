@@ -473,8 +473,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_vlogship.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_vlogsink.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_snaplinks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-"tests/test_index_refresh.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"tests/test_commit_raced.py" =["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Running the project's own ruff format is `--format`'s whole job: an argv list, no shell.
 "src/mikemol/hooks/pycheck_format.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

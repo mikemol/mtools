@@ -80,6 +80,7 @@ from mikemol.hooks.rootdrop import drop as _drop
 from mikemol.hooks.rootdrop import invoker_home as _invoker_home
 from mikemol.hooks.rootdrop import owner_of as _owner_of
 from mikemol.hooks.round_wire import now_reason as _round_refusal
+from mikemol.hooks.runproc import Result
 from mikemol.hooks.shardgate import refusal as _shard_refusal
 from mikemol.hooks.snapshot import DEFAULT_NAMESPACE, NAMESPACE_ENV
 from mikemol.hooks.stackahead import unbuilt_on as _unbuilt_on
@@ -191,7 +192,7 @@ USAGE = (
     f"  MIKEMOL_REAL_ROOT (mtools:W891); {ISOLATED_ENV}=0 opts out, =1 forces\n"
 )
 
-Runner = Callable[[Sequence[str]], subprocess.CompletedProcess[str]]
+Runner = Callable[[Sequence[str]], Result]
 """Run one git command: the arguments after `git` in, the finished process out."""
 
 
@@ -274,7 +275,7 @@ def sized(handle: TextIO) -> int:
     return os.fstat(handle.fileno()).st_size
 
 
-def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
+def run_git(argv: Sequence[str]) -> Result:
     """Run a git command in the current directory (see `run_git_in`).
 
     Returns:
@@ -284,9 +285,7 @@ def run_git(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
     return run_git_in(argv, {}, None)
 
 
-def run_git_in(
-    argv: Sequence[str], extra: Mapping[str, str], cwd: Path | None
-) -> subprocess.CompletedProcess[str]:
+def run_git_in(argv: Sequence[str], extra: Mapping[str, str], cwd: Path | None) -> Result:
     """Run a git command with added environment in a directory, output going to files (W928).
 
     ⚑ A PIPE LETS AN ORPHAN WEDGE THE WAIT. `subprocess.run(capture_output=True)` reads the pipes to
@@ -302,7 +301,7 @@ def run_git_in(
     """
     git = shutil.which("git")
     if git is None:
-        return subprocess.CompletedProcess(list(argv), 127, "", "git is not installed")
+        return Result(127, "", "git is not installed")
     with (
         tempfile.TemporaryFile("w+", encoding="utf-8") as out,
         tempfile.TemporaryFile("w+", encoding="utf-8") as err,
@@ -329,12 +328,10 @@ def run_git_in(
             child.kill()
             child.wait()
             err.seek(0)
-            return subprocess.CompletedProcess(
-                list(argv), TIMED_OUT, "", _stall_text(err.read(), *pace)
-            )
+            return Result(TIMED_OUT, "", _stall_text(err.read(), *pace))
         out.seek(0)
         err.seek(0)
-        return subprocess.CompletedProcess(list(argv), code, out.read(), err.read())
+        return Result(code, out.read(), err.read())
 
 
 def head_of(root: Path, run: Runner = run_git) -> str:

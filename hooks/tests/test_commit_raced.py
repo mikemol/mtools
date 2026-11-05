@@ -12,10 +12,9 @@ from __future__ import annotations
 
 import io
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata
+from mikemol.hooks import commit_kata, runproc
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -29,12 +28,8 @@ SWEEP_SUBJECT = "Queue: state sync"
 
 
 def _git(root: Path, *args: str) -> str:
-    done = subprocess.run(
-        [GIT, "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    done = runproc.run([GIT, "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args])
+    assert done.returncode == 0, done.stderr
     return done.stdout
 
 
@@ -68,10 +63,10 @@ def test_a_sweep_that_lands_during_the_gate_is_raced_not_committed(tmp_path: Pat
     out = io.StringIO()
 
     # The request's own commit never runs: the sweep took the repo first.
-    def run(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    def run(argv: Sequence[str]) -> runproc.Result:
         if "commit" in argv:
             _sweep(tmp_path)
-            return subprocess.CompletedProcess(list(argv), 0, "", "")
+            return runproc.Result(0, "", "")
         return commit_kata.run_git(argv)
 
     code = commit_kata.commit(tmp_path, _request(), out, run)
@@ -87,12 +82,12 @@ def test_a_commit_with_our_subject_but_another_waypoint_is_raced(tmp_path: Path)
     _repo(tmp_path)
     out = io.StringIO()
 
-    def run(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    def run(argv: Sequence[str]) -> runproc.Result:
         if "commit" in argv:
             (tmp_path / "queue.txt").write_text("sweep\n", encoding="utf-8")
             message = f"{_request().subject}\n\nWaypoint: none\n"
             _git(tmp_path, "commit", "-q", "-m", message, "--", "queue.txt")
-            return subprocess.CompletedProcess(list(argv), 0, "", "")
+            return runproc.Result(0, "", "")
         return commit_kata.run_git(argv)
 
     assert commit_kata.commit(tmp_path, _request(), out, run) == commit_kata.EXIT_RACED
@@ -107,12 +102,12 @@ def test_a_commit_with_our_waypoint_but_another_subject_is_raced(tmp_path: Path)
     _repo(tmp_path)
     out = io.StringIO()
 
-    def run(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    def run(argv: Sequence[str]) -> runproc.Result:
         if "commit" in argv:
             (tmp_path / "queue.txt").write_text("sweep\n", encoding="utf-8")
             message = f"{SWEEP_SUBJECT}\n\nWaypoint: {_request().waypoint}\n"
             _git(tmp_path, "commit", "-q", "-m", message, "--", "queue.txt")
-            return subprocess.CompletedProcess(list(argv), 0, "", "")
+            return runproc.Result(0, "", "")
         return commit_kata.run_git(argv)
 
     assert commit_kata.commit(tmp_path, _request(), out, run) == commit_kata.EXIT_RACED
@@ -151,7 +146,7 @@ def test_our_commit_beneath_a_later_one_is_still_committed(tmp_path: Path) -> No
     _repo(tmp_path)
     out = io.StringIO()
 
-    def run(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    def run(argv: Sequence[str]) -> runproc.Result:
         done = commit_kata.run_git(argv)
         if "commit" in argv:
             _sweep(tmp_path)

@@ -5619,3 +5619,27 @@
 2026-11-05T05:07:04Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T05:07:24Z  status W2277 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T05:07:44Z  status W1939 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:14:30Z  status W1939 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:14:49Z  tick  W2219 advanced  collapse  "stack 1793855507845937168 (W2219 batch 13 + W2277 procrun spawn_piped) inflight after the shard-count refusal was fixed; HEAD 625f6a2c [blocked by W1939]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:15:37Z  status W1939 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:23:41Z  status W1939 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:24:34Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:42:45Z  interrupt W2283 minted    -         "ratchet census: prune uv's temporary venv directories (.venv.uv-*), not only the exact name .venv, so the *.py suppression row counts the repository's own sources (nemik reads 9 where git tracks 1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1568
+2026-11-05T05:43:57Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:46:50Z  tick  W2277 advanced  collapse  "stack 1793855507845937168 (W2219 batch 13 + W2277) still gating; HEAD 625f6a2c [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:47:59Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T05:49:59Z  status W2060 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:08:22Z  tick  W2219 advanced  collapse  "stack 1793855507845937168 (W2219 batch 13 + W2277) still gating; HEAD 625f6a2c [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:09:22Z  status W2164 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:37:44Z  lease W2219 lapsed    --        "lease on file:hooks/pyproject.toml!w held by (unlocked) lapsed unrenewed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:38:14Z  tick  W2219 advanced  collapse  "stack 1793855507845937168 (W2219 batch 13 + W2277) still gating; HEAD 625f6a2c [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:39:12Z  status W1428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:41:21Z  status W2277 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:41:43Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:42:05Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:42:25Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:42:45Z  status W2060 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:43:05Z  status W2164 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:43:25Z  status W1428 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T06:44:19Z  interrupt W2284 minted    -         "procrun: kill the two declared mutants that survive on main"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2277
+2026-11-05T07:23:55Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

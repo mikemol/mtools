@@ -138,6 +138,7 @@ GRAPH = {
         "src/mikemol/hooks/ratchet_pace.py",
         "src/mikemol/hooks/rootdrop.py",
         "src/mikemol/hooks/round_wire.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/shardgate.py",
         "src/mikemol/hooks/snapshot.py",
         "src/mikemol/hooks/stackahead.py",
@@ -1849,7 +1850,8 @@ GRAPH = {
     },
     "tests/test_commit_raced.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2355,6 +2357,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
         "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/snapshot.py"
       ],
       "reads": [],

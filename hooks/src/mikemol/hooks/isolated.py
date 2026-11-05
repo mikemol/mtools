@@ -33,7 +33,7 @@ from mikemol.hooks.strayworktree import repair as _repair_worktree
 
 
 class Done(Protocol):
-    """What a finished git command shows: `subprocess.CompletedProcess[str]` fits."""
+    """What a finished git command shows: `runproc.Result` fits."""
 
     returncode: int
     stdout: str

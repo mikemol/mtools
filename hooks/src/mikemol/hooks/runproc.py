@@ -63,9 +63,15 @@ def run_process(
     return done.returncode, done.stdout
 
 
-@dataclass(frozen=True)
+@dataclass
 class Result:
-    """What a finished command exited with and printed, each stream apart."""
+    """What a finished command exited with and printed, each stream apart.
+
+    ⚑ MUTABLE ON PURPOSE (W2219): the commit's runner hands one of these back and the isolated
+    commit adds its own lines to `stdout` before reporting it, as it did to the
+    `CompletedProcess` this stands in for.
+
+    """
 
     returncode: int
     stdout: str

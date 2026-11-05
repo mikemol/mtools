@@ -14,13 +14,12 @@ from __future__ import annotations
 import io
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
 
 from mikemol.hooks import commit_kata as ck
-from mikemol.hooks import isolated
+from mikemol.hooks import isolated, runproc
 from mikemol.hooks.snapshot import NAMESPACE_ENV
 
 if TYPE_CHECKING:
@@ -36,7 +35,8 @@ def _git(root: Path, *args: str) -> str:
     git = shutil.which("git")
     if git is None:
         pytest.skip("git is not installed")
-    done = subprocess.run([git, "-C", str(root), *args], check=True, capture_output=True, text=True)
+    done = runproc.run([git, "-C", str(root), *args])
+    assert done.returncode == 0, done.stderr
     return done.stdout
 
 
@@ -71,14 +71,12 @@ class _Refusing:
         self.refusals = refusals
         self.resets = 0
 
-    def __call__(
-        self, argv: Sequence[str], _env: Mapping[str, str], _cwd: Path
-    ) -> subprocess.CompletedProcess[str]:
+    def __call__(self, argv: Sequence[str], _env: Mapping[str, str], _cwd: Path) -> runproc.Result:
         if argv[0] == "reset":
             self.resets += 1
             if self.resets <= self.refusals:
-                return subprocess.CompletedProcess(list(argv), 128, "", _LOCKED)
-        return subprocess.CompletedProcess(list(argv), 0, "", "")
+                return runproc.Result(128, "", _LOCKED)
+        return runproc.Result(0, "", "")
 
 
 def test_the_committed_path_reads_as_committed_and_only_the_other_staged_path_remains(
