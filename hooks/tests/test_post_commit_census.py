@@ -10,9 +10,10 @@ console script that records its argv, so what the stub started is observed rathe
 from __future__ import annotations
 
 import os
-import subprocess
 import time
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 _STUB = Path(__file__).parent.parent.parent / ".githooks" / "post-commit"
 _CENSUS_REL = Path("bazel-bin") / "hooks" / ".venv" / "bin" / "mikemol-pycheck"
@@ -31,14 +32,8 @@ def _git(cwd: Path, *args: str) -> str:
         its stdout.
 
     """
-    done = subprocess.run(
-        ["git", *_IDENTITY, *args],
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=_TIMEOUT_S,
-    )
+    done = runproc.run(["git", *_IDENTITY, *args], cwd=cwd, timeout=_TIMEOUT_S)
+    assert done.returncode == 0, done.stderr
     return done.stdout
 
 
@@ -71,23 +66,15 @@ def _install(repo: Path, body: str) -> None:
     script.chmod(_EXECUTABLE)
 
 
-def _run_stub(repo: Path) -> subprocess.CompletedProcess[str]:
+def _run_stub(repo: Path) -> runproc.Result:
     """Run the real stub in `repo`.
 
     Returns:
-        the finished process.
+        the finished command's result.
 
     """
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": str(repo.parent)}
-    return subprocess.run(
-        [str(_STUB)],
-        cwd=repo,
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    return runproc.run([str(_STUB)], cwd=repo, env=env, timeout=_TIMEOUT_S)
 
 
 def _wait_for(path: Path) -> bool:

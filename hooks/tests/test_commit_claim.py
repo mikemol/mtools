@@ -11,11 +11,10 @@ from, a stub fence that records the claim it was asked for, and the real `main`.
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import commit_kata
+from mikemol.hooks import commit_kata, runproc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -28,9 +27,8 @@ _FENCE = '#!/bin/sh\necho "CLAIM=$3 $4" >> "$FENCE_LOG"\nshift 4\nexec "$@"\n'
 
 
 def _git(cwd: Path, *args: str) -> None:
-    subprocess.run(
-        ["git", *_IDENTITY, *args], cwd=cwd, check=True, capture_output=True, timeout=_TIMEOUT_S
-    )
+    done = runproc.run(["git", *_IDENTITY, *args], cwd=cwd, timeout=_TIMEOUT_S)
+    assert done.returncode == 0, done.stderr
 
 
 def _repo(parent: Path, name: str) -> Path:
@@ -180,14 +178,8 @@ def test_the_real_main_commits_under_the_target_repositorys_claim(tmp_path: Path
         "GIT_COMMITTER_NAME": "t",
         "GIT_COMMITTER_EMAIL": "t@example.invalid",
     }
-    done = subprocess.run(
-        [sys.executable, str(entry), str(target), "--waypoint", "W9", "--subject", "s", _QUEUE],
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    argv = [sys.executable, str(entry), str(target), "--waypoint", "W9", "--subject", "s", _QUEUE]
+    done = runproc.run(argv, env=env, timeout=_TIMEOUT_S)
     assert "COMMITTED paperkit" in done.stdout, done.stderr
     routing = "mikemol-commit: path: plain (the repository's pre-commit does not name"
     assert f"{routing} MIKEMOL_REAL_ROOT); lock: held" in done.stdout
@@ -208,14 +200,8 @@ def test_a_commit_that_cannot_take_the_lease_refuses_naming_the_pin(tmp_path: Pa
         commit_kata.FENCE_ENV: str(tmp_path / "no-such-fence"),
         "HOME": str(tmp_path),
     }
-    done = subprocess.run(
-        [sys.executable, str(entry), str(target), "--waypoint", "W9", "--subject", "s", _QUEUE],
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=_TIMEOUT_S,
-    )
+    argv = [sys.executable, str(entry), str(target), "--waypoint", "W9", "--subject", "s", _QUEUE]
+    done = runproc.run(argv, env=env, timeout=_TIMEOUT_S)
     assert done.returncode == commit_kata.EXIT_USAGE, done.stderr
     assert "REFUSED, no commit lock" in done.stderr
     assert commit_kata.FENCE_PIN in done.stderr

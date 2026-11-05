@@ -1701,7 +1701,8 @@ GRAPH = {
     },
     "tests/test_commit_claim.py": {
       "imports": [
-        "src/mikemol/hooks/commit_kata.py"
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2480,7 +2481,9 @@ GRAPH = {
       "typing_only": []
     },
     "tests/test_post_commit_census.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
