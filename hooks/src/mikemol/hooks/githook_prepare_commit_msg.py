@@ -46,10 +46,11 @@ the cost of not hiding the cause, and the message names what to fix.
 
 import re
 import shutil
-import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 MARKER = "pre-commit gate report (auto-captured)"
 REPORT_NAME = "precommit-report.txt"
@@ -66,7 +67,7 @@ class HookError(RuntimeError):
     """A step the shell version swallowed; the text is the line written to stderr."""
 
 
-def run_git(*args: str) -> subprocess.CompletedProcess[str]:
+def run_git(*args: str) -> runproc.Result:
     """Run git in the current directory and hand back the result, whatever its status.
 
     Returns:
@@ -80,7 +81,7 @@ def run_git(*args: str) -> subprocess.CompletedProcess[str]:
     if git is None:
         msg = "prepare-commit-msg: no git on PATH — cannot find the pre-commit report"
         raise GitUnavailableError(msg)
-    return subprocess.run([git, *args], capture_output=True, text=True, check=False)
+    return runproc.run([git, *args])
 
 
 def report_path() -> Path:

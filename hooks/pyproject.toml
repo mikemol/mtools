@@ -489,13 +489,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/privacy_audit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_privacy_audit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
 
-# ⚑ THE SHARED GIT PREPARE-COMMIT-MSG: asking git for `--absolute-git-dir` IS its one subprocess
-# responsibility. Git is resolved by `shutil.which` (absent → reported, exit 1) and run with
-# constant subcommands; the message file and report are paths, never argv to a process. Never
-# through a shell.
-"src/mikemol/hooks/githook_prepare_commit_msg.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-# Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
-"tests/test_githook_prepare_commit_msg.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # W901: its witnesses build decoy repositories, a private index and a snapshot under tmp_path and
 # run real git (resolved by shutil.which, as above) with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set.
 "tests/test_isolated_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

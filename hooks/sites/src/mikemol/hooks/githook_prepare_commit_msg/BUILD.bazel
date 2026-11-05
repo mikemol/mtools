@@ -11,6 +11,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )
@@ -23,6 +24,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )
@@ -35,6 +37,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )
@@ -47,6 +50,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )
@@ -59,6 +63,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )
@@ -71,6 +76,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )
@@ -83,6 +89,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_prepare_commit_msg.py",
     ],
 )

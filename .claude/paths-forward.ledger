@@ -5653,3 +5653,21 @@
 2026-11-05T08:41:50Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T08:44:04Z  status W2171 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T09:11:24Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:13:52Z  status W1428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:15:58Z  tick  W2171 advanced  collapse  "landed-sample stack 1793869908813520863 (W2171 post-commit emit + W2219 batch 14) inflight; HEAD d2354dae [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:16:40Z  status W2060 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:38:09Z  tick  W2171 advanced  collapse  "landed-sample stack 1793869908813520863 still gating; HEAD d2354dae [blocked by W2283]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:39:10Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:56:40Z  status W2171 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:57:01Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:57:21Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:57:46Z  status W2060 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:58:08Z  status W1428 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T09:59:09Z  status W2276 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:08:42Z  status W2276 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:09:02Z  interrupt W2285 minted    -         "shellcheck Write hook refuses a plain sh stub: 'armed, no parseable verdict' for a 4-line script outside the repo"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2276
+2026-11-05T10:09:42Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:11:47Z  status W2285 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:13:22Z  status W2285 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:13:40Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T10:30:52Z  status W2219 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

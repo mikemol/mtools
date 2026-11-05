@@ -12,11 +12,11 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
 
+from mikemol.hooks import runproc
 from mikemol.hooks.githook_prepare_commit_msg import (
     MARKER,
     REPORT_NAME,
@@ -46,7 +46,9 @@ def _g(*args: str) -> str:
     git = shutil.which("git")
     if git is None:
         pytest.skip("git is not installed")
-    return subprocess.run([git, *args], check=True, capture_output=True, text=True).stdout
+    done = runproc.run([git, *args])
+    assert done.returncode == 0, done.stderr
+    return done.stdout
 
 
 def _clean_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

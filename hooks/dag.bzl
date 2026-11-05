@@ -395,7 +395,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/githook_prepare_commit_msg.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -2230,7 +2232,8 @@ GRAPH = {
     },
     "tests/test_githook_prepare_commit_msg.py": {
       "imports": [
-        "src/mikemol/hooks/githook_prepare_commit_msg.py"
+        "src/mikemol/hooks/githook_prepare_commit_msg.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -3333,6 +3336,13 @@ GRAPH = {
     "tests/test_tool_path.py": {
       "imports": [
         "src/mikemol/hooks/tool_path.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_toy_harness.py": {
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
