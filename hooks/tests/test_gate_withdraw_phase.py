@@ -6,10 +6,9 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
 from pathlib import Path
 
-from mikemol.hooks import gatephase
+from mikemol.hooks import gatephase, runproc
 
 GATE = Path(__file__).parent.parent.parent / ".githooks" / "pre-commit"
 BASH = shutil.which("bash") or "bash"
@@ -31,7 +30,7 @@ def _function() -> str:
     return text[head : text.index("\n}\n", head) + 2]
 
 
-def _run(name: str, marker: str | None) -> subprocess.CompletedProcess[str]:
+def _run(name: str, marker: str | None) -> runproc.Result:
     """Run `phase NAME` under bash as the gate's shell would, with the marker variable set or not.
 
     Returns:
@@ -42,9 +41,7 @@ def _run(name: str, marker: str | None) -> subprocess.CompletedProcess[str]:
     env = {k: v for k, v in os.environ.items() if k != MARKER_ENV}
     if marker is not None:
         env[MARKER_ENV] = marker
-    return subprocess.run(
-        [BASH, "-c", script, "bash", name], capture_output=True, text=True, check=False, env=env
-    )
+    return runproc.run([BASH, "-c", script, "bash", name], env=env)
 
 
 def test_a_marker_stops_the_gate_at_the_boundary_and_is_removed(tmp_path: Path) -> None:

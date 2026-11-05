@@ -2072,7 +2072,8 @@ GRAPH = {
     },
     "tests/test_gate_phase_marks.py": {
       "imports": [
-        "src/mikemol/hooks/gatephase.py"
+        "src/mikemol/hooks/gatephase.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2098,7 +2099,8 @@ GRAPH = {
     },
     "tests/test_gate_withdraw_phase.py": {
       "imports": [
-        "src/mikemol/hooks/gatephase.py"
+        "src/mikemol/hooks/gatephase.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -2209,7 +2211,8 @@ GRAPH = {
     },
     "tests/test_githook_post_commit.py": {
       "imports": [
-        "src/mikemol/hooks/githook_post_commit.py"
+        "src/mikemol/hooks/githook_post_commit.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

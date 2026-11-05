@@ -11,11 +11,11 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
 
+from mikemol.hooks import runproc
 from mikemol.hooks.githook_post_commit import (
     GUARD,
     HEADER,
@@ -41,7 +41,9 @@ def _g(*args: str) -> str:
     git = shutil.which("git")
     if git is None:
         pytest.skip("git is not installed")
-    return subprocess.run([git, *args], check=True, capture_output=True, text=True).stdout
+    done = runproc.run([git, *args])
+    assert done.returncode == 0, done.stderr
+    return done.stdout
 
 
 def _clean_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -275,7 +277,7 @@ def _pushing_decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Pat
     return repo, remote
 
 
-def _run_repo_hook(repo: Path, **env: str) -> subprocess.CompletedProcess[str]:
+def _run_repo_hook(repo: Path, **env: str) -> runproc.Result:
     """Run mtools' `.githooks/post-commit` inside `repo`.
 
     Returns:
@@ -284,14 +286,7 @@ def _run_repo_hook(repo: Path, **env: str) -> subprocess.CompletedProcess[str]:
     """
     bash = shutil.which("bash")
     assert bash is not None
-    return subprocess.run(
-        [bash, str(_REPO_HOOK)],
-        cwd=repo,
-        capture_output=True,
-        text=True,
-        check=False,
-        env={**os.environ, **env},
-    )
+    return runproc.run([bash, str(_REPO_HOOK)], cwd=repo, env={**os.environ, **env})
 
 
 def test_a_failing_pre_push_is_named_not_blamed_on_the_remote(

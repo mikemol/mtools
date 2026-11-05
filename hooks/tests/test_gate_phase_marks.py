@@ -5,11 +5,10 @@
 from __future__ import annotations
 
 import shutil
-import subprocess
 import time
 from pathlib import Path
 
-from mikemol.hooks import gatephase
+from mikemol.hooks import gatephase, runproc
 
 GATE = Path(__file__).parent.parent.parent / ".githooks" / "pre-commit"
 BASH = shutil.which("bash") or "bash"
@@ -30,7 +29,7 @@ def _function() -> str:
     return text[head : text.index("\n}\n", head) + 2]
 
 
-def _run(name: str) -> subprocess.CompletedProcess[str]:
+def _run(name: str) -> runproc.Result:
     """Run `phase NAME` under bash, as the gate's `set -euo pipefail` shell would.
 
     Returns:
@@ -38,9 +37,7 @@ def _run(name: str) -> subprocess.CompletedProcess[str]:
 
     """
     script = SCRIPT.replace("{function}", _function())
-    return subprocess.run(
-        [BASH, "-c", script, "bash", name], capture_output=True, text=True, check=False
-    )
+    return runproc.run([BASH, "-c", script, "bash", name])
 
 
 def test_a_mark_is_one_whole_line_the_reader_reads_with_the_gates_own_clock() -> None:
