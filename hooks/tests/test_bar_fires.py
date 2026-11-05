@@ -32,12 +32,13 @@ import json
 import os
 import re as pyre
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import cast
 
 import pytest
+
+from mikemol.hooks import runproc
 
 # ⚑ `Path` IS A RUNTIME IMPORT HERE, NOT ANNOTATION-ONLY. ruff's TC003 asked for it to move
 # into a type-checking block; these module-level constants evaluate it at import time, so that
@@ -126,7 +127,7 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
     target = tmp / rel
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(body, encoding="utf-8")
-    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of these cases
+    proc = runproc.run(
         [
             *_ruff_argv(),
             "check",
@@ -137,9 +138,6 @@ def _ruff(rel: str, body: str, tmp: Path) -> str:
             "concise",
             str(target),
         ],
-        capture_output=True,
-        text=True,
-        check=False,
         cwd=tmp,
     )
     return proc.stdout + proc.stderr
@@ -302,9 +300,8 @@ def test_the_checker_that_runs_is_the_one_the_lock_pins() -> None:
         for ln in (_DIST / "requirements.txt").read_text(encoding="utf-8").splitlines()
         if ln.startswith("ruff==")
     )
-    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the checker is the subject of this case
-        [*_ruff_argv(), "--version"], capture_output=True, text=True, check=True
-    )
+    proc = runproc.run([*_ruff_argv(), "--version"])
+    assert proc.returncode == 0, proc.stderr
     assert proc.stdout.split()[1] == pinned.split("==")[1].strip()
 
 
@@ -375,7 +372,7 @@ def test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip(tree: Path) -> 
         "    assert True\n",
         encoding="utf-8",
     )
-    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — pytest's own configuration is the subject
+    proc = runproc.run(
         [
             sys.executable,
             "-m",
@@ -386,9 +383,6 @@ def test_an_unknown_pytest_marker_is_an_error_rather_than_a_skip(tree: Path) -> 
             str(_DIST / "pyproject.toml"),
             str(probe),
         ],
-        capture_output=True,
-        text=True,
-        check=False,
         cwd=_DIST,
     )
     assert proc.returncode != 0
@@ -414,7 +408,7 @@ def test_a_declared_pytest_marker_collects_cleanly(tree: Path) -> None:
         "    assert True\n",
         encoding="utf-8",
     )
-    proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — pytest's own configuration is the subject
+    proc = runproc.run(
         [
             sys.executable,
             "-m",
@@ -425,9 +419,6 @@ def test_a_declared_pytest_marker_collects_cleanly(tree: Path) -> None:
             str(_DIST / "pyproject.toml"),
             str(probe),
         ],
-        capture_output=True,
-        text=True,
-        check=False,
         cwd=_DIST,
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr
@@ -556,6 +547,7 @@ def test_the_hermetic_sandbox_is_a_default_not_a_config() -> None:
 # mean either staging a venv or weakening the gate to use `grep`. They SKIP with a stated reason
 # instead — `--strict-markers` is on, so the skip is declared and visible, never silent.
 _CITATION_GATE_READER = _DIST.parent / "mdstruct" / ".venv" / "bin" / "mdstruct"
+_NOT_FOUND = 127
 
 
 def _reader_runs() -> bool:
@@ -585,17 +577,13 @@ def _reader_runs() -> bool:
     if not _CITATION_GATE_READER.is_file():
         return False
     try:
-        subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject
-            [str(_CITATION_GATE_READER), "--help"],
-            capture_output=True,
-            check=False,
-            timeout=30,
-        )
+        done = runproc.run([str(_CITATION_GATE_READER), "--help"], timeout=30)
     except OSError:
         # ⚑ ENOENT AGAINST A FILE THAT EXISTS, or EACCES, or a dead interpreter root — every one of
         # these is "the reader cannot run here", and none of them is a fact about the arm.
         return False
-    return True
+    # ⚑ A MISSING PROGRAM IS NO LONGER AN EXCEPTION HERE: `runproc.run` reports it as 127.
+    return done.returncode != _NOT_FOUND
 
 
 _needs_reader = pytest.mark.skipif(
@@ -617,9 +605,7 @@ def _citations(message: str, rules: str, tree: Path) -> int:
     doc = tree / "rules.md"
     doc.write_text(rules, encoding="utf-8")
     gate = _DIST.parent / "rule_citations.sh"
-    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [str(gate), str(msg), str(doc)], capture_output=True, check=False, cwd=str(_DIST.parent)
-    ).returncode
+    return runproc.run([str(gate), str(msg), str(doc)], cwd=_DIST.parent).returncode
 
 
 @_needs_reader
@@ -672,9 +658,7 @@ def _orphans(tree: Path, scripts: dict[str, str], sites: dict[str, str]) -> int:
     if not (tree / "BUILD.bazel").exists():
         (tree / "BUILD.bazel").write_text("", encoding="utf-8")
     gate = _DIST.parent / "orphan_check.sh"
-    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [str(gate), str(tree)], capture_output=True, check=False, cwd=str(_DIST.parent)
-    ).returncode
+    return runproc.run([str(gate), str(tree)], cwd=_DIST.parent).returncode
 
 
 def test_the_orphan_gate_passes_an_invoked_script(tmp_path: Path) -> None:
@@ -764,9 +748,7 @@ def _freshness(tree: Path, rules: str, *, readable: bool) -> int:
     probe.chmod(0o755)
     doc.chmod(0o644 if readable else 0o000)
     try:
-        return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-            [str(probe)], capture_output=True, check=False, cwd=str(_DIST.parent)
-        ).returncode
+        return runproc.run([str(probe)], cwd=_DIST.parent).returncode
     finally:
         doc.chmod(0o644)
 
@@ -816,11 +798,8 @@ def _witness_args(*argv: str) -> int:
         arguments" and "ran and failed" are different verdicts and a boolean would merge them.
 
     """
-    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [str(_DIST.parent / "domain_witness.sh"), *argv],
-        capture_output=True,
-        check=False,
-        cwd=str(_DIST.parent),
+    return runproc.run(
+        [str(_DIST.parent / "domain_witness.sh"), *argv], cwd=_DIST.parent
     ).returncode
 
 
@@ -912,12 +891,9 @@ def test_the_witness_refuses_a_victim_carrying_probe_residue(tmp_path: Path) -> 
     """
     victim = tmp_path / "residue.py"
     victim.write_text("x = 1\n# transient domain probe 123\n", encoding="utf-8")
-    out = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
+    out = runproc.run(
         [str(_DIST.parent / "domain_witness.sh"), "ratchet", "//ratchet:mypy", str(victim), "mypy"],
-        capture_output=True,
-        check=False,
-        text=True,
-        cwd=str(_DIST.parent),
+        cwd=_DIST.parent,
     )
     assert out.returncode == _ARG_REFUSED
     assert "probe residue" in out.stderr, "the residue guard must be the one that fired"
@@ -959,12 +935,8 @@ def test_the_gate_reads_the_index_not_the_working_tree(tmp_path: Path) -> None:
     # silencing.
     git = shutil.which("git")
     assert git, "git is not on PATH — this test cannot measure what it claims"
-    subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-        [git, "checkout-index", "--all", f"--prefix={staged}/"],
-        check=True,
-        cwd=str(root),
-        capture_output=True,
-    )
+    checkout = runproc.run([git, "checkout-index", "--all", f"--prefix={staged}/"], cwd=root)
+    assert checkout.returncode == 0, checkout.stderr
     victim = root / "ratchet" / "warrants.bib"
     committed = victim.read_text(encoding="utf-8")
     try:
@@ -1018,12 +990,7 @@ def test_the_snapshot_survives_a_mid_write_edit_to_the_live_file(tmp_path: Path)
     live.write_text(live.read_text(encoding="utf-8") + "\nsyntax error (\n", encoding="utf-8")
 
     def parses(path: Path) -> bool:
-        return (
-            subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true]
-                ["/usr/bin/env", "bash", "-n", str(path)], capture_output=True, check=False
-            ).returncode
-            == 0
-        )
+        return runproc.run(["/usr/bin/env", "bash", "-n", str(path)]).returncode == 0
 
     assert not parses(live), "the mutated live file must fail to parse — else the arm is vacuous"
     assert parses(snap), "the snapshot must be immune to the live edit"
@@ -5103,17 +5070,7 @@ def test_a_census_this_repo_hosts_declares_the_vocabulary_its_own_status_uses() 
         # ⚑ THE READER IS THE SAME BINARY THE POLL RUNS, invoked the way the poll invokes it.
         # `hooks` cannot import `mdstruct` — they are separate distributions, and that separation
         # is what makes the subprocess the honest read rather than a workaround.
-        # ⚑ `noqa`, NOT A CONFIG ENTRY, AND THAT IS THIS FILE'S CONVENTION RATHER THAN A LAPSE.
-        # Three sibling modules declare `S603` in `per-file-ignores` because their whole subject is
-        # running an installed binary. This file is not one of them: eleven of its calls carry a
-        # line directive and the rest are ordinary code, so a whole-file entry would clear eleven
-        # suppressions the ratchet is currently holding as keys.
-        proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
-            [str(_CITATION_GATE_READER), "tables", str(path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        proc = runproc.run([str(_CITATION_GATE_READER), "tables", str(path)])
         assert proc.returncode == 0, (
             f"the reader failed on {path.name} (rc={proc.returncode}) — a reader that did not "
             f"run cannot report an absence:\n{proc.stderr}"
@@ -5325,12 +5282,7 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         # measured that `classify` walks EVERY table, so an unscoped read counts revision-log and
         # roster rows as residue — 25 of 33 on one census, which reads alarming and is not. The
         # status table is found the way the poll finds it: a header naming a party and a state.
-        listing = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
-            [str(_CITATION_GATE_READER), "tables", str(path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        listing = runproc.run([str(_CITATION_GATE_READER), "tables", str(path)])
         assert listing.returncode == 0, (
             f"could not list tables in {path.name} (rc={listing.returncode}): {listing.stderr}"
         )
@@ -5338,11 +5290,8 @@ def test_every_census_declares_every_state_its_own_status_rows_use() -> None:
         status = [m.group(1) for ln in listing.stdout.splitlines() if (m := shaped.match(ln))]
         if not status:
             continue
-        proc = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] — the reader is the subject of this case
-            [str(_CITATION_GATE_READER), "classify", str(path), "--table", status[-1]],
-            capture_output=True,
-            text=True,
-            check=False,
+        proc = runproc.run(
+            [str(_CITATION_GATE_READER), "classify", str(path), "--table", status[-1]]
         )
         # ⚑ rc=2 IS A REFUSAL, NOT A FAILURE: a census publishing no vocabulary cannot be read
         # against one. Three do, and counting them as residue would report this reader.
@@ -6285,7 +6234,7 @@ def test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names(
     # ⚑ ONE SCRIPT, LITERAL ARGV: the decoy is made with no GIT_* at all, then GIT_DIR and
     # GIT_INDEX_FILE are aimed at it as a hook aims them at the real repo, the fixture
     # commits through `git_scrubbed`, and the decoy's refs are printed — empty when scrubbed.
-    proc = subprocess.run(
+    proc = runproc.run(
         [
             "/bin/bash",
             "-euc",
@@ -6300,9 +6249,6 @@ def test_the_gates_scrub_keeps_a_fixture_commit_out_of_the_repository_git_names(
             ),
         ],
         cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
         env={**clean, "SCRUB_SH": str(_SCRUB_SH)},
     )
     assert proc.returncode == 0, f"{_SCRUB_SH.name}: {proc.stderr.strip()}"
@@ -6316,12 +6262,9 @@ _KEPT_VALUE = "kept"
 def test_the_scrub_with_no_git_env_set_is_plain_env(tmp_path: Path) -> None:
     """With no GIT_* set, `git_scrubbed CMD` runs CMD with a non-GIT_ variable intact."""
     clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
-    proc = subprocess.run(
+    proc = runproc.run(
         ["/bin/bash", "-euc", '. "$SCRUB_SH"\ngit_scrubbed printenv SCRUB_MARKER\n'],
         cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
         env={**clean, "SCRUB_SH": str(_SCRUB_SH), _KEPT_NAME: _KEPT_VALUE},
     )
     assert proc.returncode == 0, proc.stderr.strip()
@@ -6352,7 +6295,7 @@ _PAIRING_CALL = '"$root/count_test_functions.py" --pairing "${_pairing[@]}"'
 _ORPHAN = "test_this_function_was_renamed_away"
 
 
-def _pairing(dist: Path) -> subprocess.CompletedProcess[str]:
+def _pairing(dist: Path) -> runproc.Result:
     """Run the gate's own pairing check over one distribution directory.
 
     ⚑ THE ARGV IS ALL LITERALS AND THE OPERANDS TRAVEL IN THE ENVIRONMENT, the shape
@@ -6364,11 +6307,8 @@ def _pairing(dist: Path) -> subprocess.CompletedProcess[str]:
 
     """
     clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
-    return subprocess.run(
+    return runproc.run(
         ["/bin/bash", "-euc", 'exec "$PAIRING_PY" "$PAIRING_COUNTER" --pairing "$PAIRING_DIST"'],
-        capture_output=True,
-        text=True,
-        check=False,
         env={
             **clean,
             "PAIRING_PY": sys.executable,

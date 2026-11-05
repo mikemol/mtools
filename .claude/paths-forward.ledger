@@ -5567,3 +5567,18 @@
 2026-11-04T23:02:42Z  status W2276 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T23:10:45Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-04T23:11:09Z  status W2276 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:12:08Z  status W2276 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:14:14Z  tick  W2220 advanced  collapse  "batch 9 stack 1793833889015535015 (test_commit_launcher_fence) still gating; HEAD 947a3463 [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:14:59Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:38:20Z  tick  W2220 advanced  collapse  "batch 9 stack 1793833889015535015 still gating; HEAD 947a3463 [blocked by W2276]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:39:24Z  status W2219 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-04T23:59:33Z  status W2220 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T00:00:09Z  status W2276 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T00:00:46Z  status W2219 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T00:01:23Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T00:02:46Z  status W2220 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T00:06:31Z  interrupt W2279 minted    -         "W2220 bar_fires part 1: move the 12 subprocess.run sites in test_bar_fires.py lines 1 to 1100 onto runproc.run, deleting their line-scoped ruff directives"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2220
+2026-11-05T00:07:08Z  interrupt W2280 minted    -         "W2220 bar_fires part 2: move the 3 subprocess.run sites in test_bar_fires.py around lines 5100 to 5350 onto runproc.run, deleting their line-scoped ruff directives"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2220
+2026-11-05T00:07:44Z  interrupt W2281 minted    -         "W2220 bar_fires part 3: move the last 3 subprocess.run sites in test_bar_fires.py around lines 6280 to 6370, drop import subprocess and the suspicious-subprocess-import entry for the file, and fix the pyproject comment that still names test_no_chaining"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2220
+2026-11-05T00:10:12Z  status W2220 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T00:13:40Z  status W2279 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

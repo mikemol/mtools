@@ -583,20 +583,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/shellcheck.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-type-hint-positional-argument"]
 
 
-# ⚑⚑⚑ THE SIXTH AND SEVENTH NAMED FILES, SURFACED BY ARMING PREVIEW RATHER THAN BY NEW CODE.
-# `suspicious-subprocess-import` is preview-only, so `import subprocess` in these two modules was
-# invisible to the gate until `preview = true` was set above — the imports predate the arming and
-# nothing about them changed.
-# ⚑⚑ AND THE REASON IS THE ONE ALREADY ESTABLISHED FOUR TIMES ABOVE, WHICH IS WHY THIS IS A
-# DECLARATION AND NOT A NEW ARGUMENT. `test_bar_fires.py` runs the gates, the checkers and the
-# build to find out what they REFUSE; `test_no_chaining.py` runs the installed hook to find out
-# what it denies. A gate's behaviour is not observable without executing it, so the subprocess is
-# the case rather than a convenience wrapped around one.
-# ⚑ WHAT IS *NOT* EXEMPTED HERE IS `subprocess-without-shell-equals-true`, and the asymmetry is
-# deliberate: these modules already carry that exemption at the individual call sites that need it,
-# where a reader meets the argv being justified. Granting it file-wide would exempt call sites
-# nobody has looked at — the blast radius a per-responsibility override exists to avoid.
-"tests/test_bar_fires.py" = ["suspicious-subprocess-import"]
 # ⚑⚑ THE EIGHTH, AND ITS SUBJECT IS EXECUTION ITSELF. `test_reader_guard.py` exists because a
 # guard that tested `is_file()` admitted a script whose shebang interpreter was gone — present,
 # mode 775, and `execve` refused it naming the script. The repaired guard's predicate is an
