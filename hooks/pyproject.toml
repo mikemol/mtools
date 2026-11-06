@@ -435,9 +435,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # W901: its witnesses build decoy repositories, a private index and a snapshot under tmp_path and
 # run real git (resolved by shutil.which, as above) with GIT_DIR, GIT_WORK_TREE and GIT_INDEX_FILE set.
 "tests/test_isolated_commit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-# ⚑ RUNNING git FOR A SCRATCH WORKTREE IS ONE RESPONSIBILITY, SO IT IS ONE MODULE (W1378): the argv is
-# `git`, fixed words, the repo and the worktree path as single words; no shell.
-"src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # The standing policy's facts (W238) ask git through `runproc`; what stays is a deferred import.
 "src/mikemol/hooks/standing_facts.py" = ["import-outside-top-level"]

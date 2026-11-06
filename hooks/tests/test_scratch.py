@@ -29,6 +29,23 @@ def _git(repo: Path, *args: str) -> str:
     return out
 
 
+def test_a_git_that_is_not_there_is_127_with_a_note_not_a_raise(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Both runners answer a missing git as 127 and a note naming it, where they used to raise."""
+
+    def fake_which(_name: str) -> str:
+        return str(tmp_path / "no-such-git")
+
+    monkeypatch.setattr("shutil.which", fake_which)
+    code, err = scratch.run_git(["git", "status"])
+    out_code, out = scratch.git_out(["git", "status"])
+    not_found = 127
+    assert (code, out_code) == (not_found, not_found)
+    assert "no-such-git" in err
+    assert not out
+
+
 def _repo(tmp_path: Path) -> Path:
     repo = tmp_path / "myrepo"
     repo.mkdir()

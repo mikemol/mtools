@@ -30,9 +30,10 @@ interpreter inside a worktree too (W1429).
 import os
 import re
 import shutil
-import subprocess
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 ROOT_ENV = "MIKEMOL_SCRATCH_ROOT"
 _SYMBOL = re.compile(r"W\d+")
@@ -171,7 +172,7 @@ def run_git(argv: Sequence[str]) -> tuple[int, str]:
     """
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     git = shutil.which("git") or "git"
-    proc = subprocess.run([git, *argv[1:]], capture_output=True, text=True, check=False, env=env)
+    proc = runproc.run([git, *argv[1:]], env=env)
     code: int = proc.returncode
     err: str = proc.stderr
     return code, err
@@ -186,7 +187,7 @@ def git_out(argv: Sequence[str]) -> tuple[int, str]:
     """
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     git = shutil.which("git") or "git"
-    proc = subprocess.run([git, *argv[1:]], capture_output=True, text=True, check=False, env=env)
+    proc = runproc.run([git, *argv[1:]], env=env)
     code: int = proc.returncode
     out: str = proc.stdout
     return code, out

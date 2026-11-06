@@ -18264,13 +18264,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_working_card_with_a_held_scratch_tree_is_being_built_not_outside},
 }
 
-@misc{hooks-round-wire-no-scratch-root-declared-exempts-nothing-and-does-not-raise,
-  section = {round_wire},
-  title  = {The root is declared, never guessed: unset means no tree is held, so the refusal stands},
-  claim  = {The root is declared, never guessed: unset means no tree is held, so the refusal stands.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_no_scratch_root_declared_exempts_nothing_and_does_not_raise},
-}
-
 @misc{hooks-round-wire-commit-queue-that-cannot-be-read-keeps-the-refusal-and-says-so,
   section = {round_wire},
   title  = {W2316: an unreadable reading fails toward the refusal, visibly, never silently admitting},
@@ -18284,4 +18277,57 @@
   title  = {A hung git answers None (no fallback, the refusal stands); it never raises or waits},
   claim  = {A hung git answers None (no fallback, the refusal stands); it never raises or waits.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_a_git_that_outlasts_its_bound_resolves_nothing_never_a_hang},
+}
+
+@misc{hooks-round-wire-only-a-scratch-branch-whose-tree-still-exists-is-a-held-tree,
+  section = {round_wire},
+  title  = {A worktree on another branch, and a record whose tree is gone, hold nothing (W2321)},
+  claim  = {A worktree on another branch, and a record whose tree is gone, hold nothing (W2321).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_only_a_scratch_branch_whose_tree_still_exists_is_a_held_tree},
+}
+
+@misc{hooks-round-wire-tree-path-that-is-a-file-is-not-a-held-tree,
+  section = {round_wire},
+  title  = {The path must be a directory, not merely exist},
+  claim  = {The path must be a directory, not merely exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_tree_path_that_is_a_file_is_not_a_held_tree},
+}
+
+@misc{hooks-round-wire-tree-excuses-a-working-mark-never-a-ready-card-the-round-demands,
+  section = {round_wire},
+  title  = {W2321: a leftover tree for the READY round card W1 does not stop the round demanding it},
+  claim  = {W2321: a leftover tree for the READY round card W1 does not stop the round demanding it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_tree_excuses_a_working_mark_never_a_ready_card_the_round_demands},
+}
+
+@misc{hooks-round-wire-commit-queue-that-is-not-a-json-object-or-is-a-directory-is-said-to-be-unreadable,
+  section = {round_wire},
+  title  = {Valid JSON that is not an object, and a directory where the map should be, are blind too},
+  claim  = {Valid JSON that is not an object, and a directory where the map should be, are blind
+            too.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_commit_queue_that_is_not_a_json_object_or_is_a_directory_is_said_to_be_unreadable},
+}
+
+@misc{hooks-round-wire-repository-with-no-worktree-records-holds-nothing-and-does-not-raise,
+  section = {round_wire},
+  title  = {No `.git/worktrees` (or no `.git`) is no held tree, so the refusal stands},
+  claim  = {No `.git/worktrees` (or no `.git`) is no held tree, so the refusal stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_repository_with_no_worktree_records_holds_nothing_and_does_not_raise},
+}
+
+@misc{hooks-tick-stop-mark-on-a-card-with-a-scratch-worktree-is-admitted-through-the-stop-hook,
+  section = {tick_stop},
+  title  = {W2321: the same working set as above, with git's record of a scratch tree for W7, ends free},
+  claim  = {W2321: the same working set as above, with git's record of a scratch tree for W7, ends
+            free. NO ENVIRONMENT VARIABLE IS SET FOR THE TREE: the hook runs in the
+            harness's environment, so the exemption has to be read from the repository,
+            and this runs the real `tick_stop.run`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_stop.py -k test_a_mark_on_a_card_with_a_scratch_worktree_is_admitted_through_the_stop_hook},
+}
+
+@misc{hooks-scratch-git-that-is-not-there-is-127-with-a-note-not-a-raise,
+  section = {scratch},
+  title  = {Both runners answer a missing git as 127 and a note naming it, where they used to raise},
+  claim  = {Both runners answer a missing git as 127 and a note naming it, where they used to raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_a_git_that_is_not_there_is_127_with_a_note_not_a_raise},
 }

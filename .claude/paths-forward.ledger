@@ -6084,3 +6084,12 @@
 2026-11-06T21:28:10Z  interrupt W2320 minted    -         "Land the cite-guard launcher so the settings row has a command on disk: hooks/bin/mikemol-hook-cite-guard, entry.cite_guard_main, the console script and its launcher test"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2064
 2026-11-06T21:42:20Z  status W2316 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-06T21:55:43Z  status W879 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:01:50Z  status W1173 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:03:14Z  status W879 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:08:20Z  status W2200 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:55:59Z  status W2316 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:56:48Z  status W2219 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:57:05Z  status W2164 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:58:10Z  interrupt W2321 minted    -         "The round check reads a held scratch tree from git's own worktree records, not from MIKEMOL_SCRATCH_ROOT in the hook's environment"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik-6f:W2027
+2026-11-06T22:58:37Z  status W2164 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T22:58:38Z  status W2321 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
