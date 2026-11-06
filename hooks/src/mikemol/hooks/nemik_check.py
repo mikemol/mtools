@@ -39,11 +39,11 @@ import json
 import os
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
+from mikemol.hooks import runproc
 from mikemol.hooks.payload import as_record, text_of
 
 READER = "nemik-check"
@@ -55,6 +55,8 @@ STDERR_LINES = 3
 """How many of a failing reader's last stderr lines the reason carries (W1497)."""
 USAGE_STATUS = 2
 """The exit status argparse uses for an argument the reader does not know."""
+_NOT_FOUND = 127
+"""The status `runproc.run` answers for a program that is not there."""
 PROJECT_DIR_ENV = "CLAUDE_PROJECT_DIR"
 _SESSION_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
 _STATUSES = ("OK", "VIOLATES")
@@ -116,6 +118,11 @@ def reader_argv(reader: str, root: Path, since: Path | None = None) -> list[str]
     return argv if since is None else [*argv, "--since", str(since)]
 
 
+def _not_found(done: runproc.Result, program: str) -> bool:
+    # runproc answers a program that is not there as 127 and this exact note, not as OSError.
+    return done.returncode == _NOT_FOUND and done.stderr == f"{program}: not found"
+
+
 def run_reader(
     reader: str, root: Path, timeout: float, since: Path | None = None
 ) -> tuple[str | None, str]:
@@ -127,18 +134,13 @@ def run_reader(
 
     """
     try:
-        done = subprocess.run(
-            reader_argv(reader, root, since),
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-            stdin=subprocess.DEVNULL,
-        )
-    except subprocess.TimeoutExpired:
+        done = runproc.run(reader_argv(reader, root, since), timeout=timeout, stdin_text="")
+    except runproc.TimeoutExpired:
         return None, f"timed out after {timeout:g} s"
     except OSError as err:
         return None, f"could not start: {err}"
+    if _not_found(done, reader):
+        return None, f"could not start: {reader} not found"
     if (
         since is not None
         and done.returncode == USAGE_STATUS

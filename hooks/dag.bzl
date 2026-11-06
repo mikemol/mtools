@@ -516,7 +516,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/nemik_check.py": {
       "imports": [
-        "src/mikemol/hooks/payload.py"
+        "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

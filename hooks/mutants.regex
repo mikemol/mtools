@@ -44,6 +44,7 @@ src/mikemol/hooks/probe.py|exit-zero-whatever-the-rows-said|return 0 if all\(v\.
 src/mikemol/hooks/probe.py|unknown-gate-passes|if unknown:|if False:|def=main
 src/mikemol/hooks/probe.py|empty-decision-is-a-decision|or None$|or ""|def=decision_of
 src/mikemol/hooks/verdict.py|a-missing-checker-reads-as-a-finding|    if proc\.returncode == _NOT_FOUND and proc\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_checker
+src/mikemol/hooks/nemik_check.py|a-missing-nemik-reader-reads-as-a-nonzero-exit|        return None, f"could not start: \{reader\} not found"|        return None, "exited 127"|def=run_reader
 src/mikemol/hooks/inbound_asks.py|a-missing-reader-reads-as-a-nonzero-exit|        return None, f"could not start: \{reader\} not found"|        return None, "exited 127"|def=run_reader
 src/mikemol/hooks/inbound_asks.py|a-missing-reader-reads-as-too-old|        return False, f"`\{reader\} --help` could not start: \{reader\} not found"|        return False, "is too old"|def=reader_knows_inbound
 src/mikemol/hooks/warrant_crosscheck.py|a-hung-pairing-check-raises-past-the-prune|    except \(runproc\.TimeoutExpired, OSError\) as exc:|    except OSError as exc:|def=independent_orphans

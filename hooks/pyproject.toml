@@ -528,12 +528,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # asymmetry stated above; this line clears only the import.
 
 
-# ⚑ THE NEMIK-CHECK CONTEXT HOOK (W616): running the fleet reader `nemik-check` IS its one
-# responsibility. MEASURED: the reader is the `NEMIK_CHECK` env file, the one `shutil.which` finds,
-# or `<project parent>/nemik/.venv/bin/nemik-check`; the argv is module constants plus the fleet
-# root as ONE word; stdin is closed and the call is bounded by a timeout. Never through a shell.
-"src/mikemol/hooks/nemik_check.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # CODON REJECTS A BARE `*,` AND A TYPE_CHECKING GUARD (mtools:W1319, W1340, W1343): the rules
 # that demand them are off for this dist.
 "src/mikemol/hooks/cmdparse.py" = ["boolean-type-hint-positional-argument"]
