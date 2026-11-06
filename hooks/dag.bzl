@@ -653,6 +653,7 @@ GRAPH = {
     "src/mikemol/hooks/pycheck_format.py": {
       "imports": [
         "src/mikemol/hooks/project_root.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/worktree_venv.py"
       ],
       "reads": [],

@@ -17,11 +17,10 @@ excludes is left alone.
 could run; the remaining findings are the verdict's to report, not this command's.
 """
 
-import subprocess
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import project_root, worktree_venv
+from mikemol.hooks import project_root, runproc, worktree_venv
 
 EXIT_FORMATTED = 0
 EXIT_NOT_RUN = 7
@@ -48,7 +47,7 @@ def format_text(path: Path, text: str, err: TextIO) -> str | None:
     cfg = project_root.ruff_config_for(root)
     argv = [str(venv_py), "-m", "ruff", "format", "--config", str(cfg), "--no-cache"]
     argv += ["--force-exclude", "--stdin-filename", str(path), "-"]
-    done = subprocess.run(argv, input=text, capture_output=True, text=True, check=False, cwd=root)
+    done = runproc.run(argv, cwd=root, stdin_text=text)
     if done.returncode != 0:
         err.write(f"mikemol-pycheck: {path}: ruff format failed: {done.stderr.strip()}\n")
         return None
