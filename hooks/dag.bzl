@@ -1370,7 +1370,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/warrant_crosscheck.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

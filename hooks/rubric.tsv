@@ -231,3 +231,4 @@ runproc	The leaf command runner keeps a failed command's standard error
 strayworktree	A core.worktree a gate step wrote into the real config is removed and said, not left (W2269)
 toy-harness	The Toy Harness: a Disposable Repository the Real Stack Command Runs Against
 verdict	A checker verdict is clean, flagged or could-not-run, and the last two never merge
+warrant_crosscheck	The prune cross-check

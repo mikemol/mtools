@@ -17789,3 +17789,10 @@
   claim  = {The payload goes in as standard input, never as a word of the command.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_stdin_reaches_the_checker},
 }
+
+@misc{hooks-warrant-crosscheck-checker-that-outlasts-its-bound-is-unverifiable,
+  section = {warrant_crosscheck},
+  title  = {A hung checker refuses the prune: the bound raises, and the refusal names the script},
+  claim  = {A hung checker refuses the prune: the bound raises, and the refusal names the script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_crosscheck.py -k test_a_checker_that_outlasts_its_bound_is_unverifiable},
+}

@@ -27276,7 +27276,7 @@
     {
       "symbol": "W1316",
       "title": "mikemol-new-dist prints a stale gen-warrants step: 'CVDCORE tests.test_smoke=smoke' fails; the working form is 'cvdcore smoke=smoke' with --title",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1314"
       ],
@@ -27286,11 +27286,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "mikemol-new-dist prints a stale gen-warrants step ('CVDCORE tests.test_smoke=smoke', which fails); the working form is 'cvdcore smoke=smoke' with --title. Read new_dist_cli's printed steps, change the printed command to the working form (the dist name lowercase, module=section, a --title for the new section), and pin it with a test that runs the printed step's argument shape through gen-warrants's own parser; mutant on the casing.",
-      "evidence": "2026-10-16: 2026-10-15 second defect found scaffolding cvdcore: new_dist writes the DESCRIPTION argument unwrapped into the module docstring of __init__.py, so a description over about 90 characters fails ruff line-too-long and the ratchet (the commit gate refused: //cvdcore:ruff and //cvdcore:ratchet). The tool should wrap the description into a docstring or refuse an over-long one before writing. | 2026-11-06T01:54:20Z: 2026-11-06 released from the W1667 parking lot (a real fall); files named exist. Hooks lane: lands with a W2219 batch.",
+      "evidence": "2026-10-16: 2026-10-15 second defect found scaffolding cvdcore: new_dist writes the DESCRIPTION argument unwrapped into the module docstring of __init__.py, so a description over about 90 characters fails ruff line-too-long and the ratchet (the commit gate refused: //cvdcore:ruff and //cvdcore:ratchet). The tool should wrap the description into a docstring or refuse an over-long one before writing. | 2026-11-06T01:54:20Z: 2026-11-06 released from the W1667 parking lot (a real fall); files named exist. Hooks lane: lands with a W2219 batch. | 2026-11-06T04:07:52Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 25 holds the gate; no code this turn.",
       "issued_at": "2026-10-16T00:29:06Z",
       "minted_during": "interrupt",
       "caused_by": "W1314",
-      "last_worked": "2026-11-06T01:54:20Z",
+      "last_worked": "2026-11-06T04:07:52Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -27735,7 +27735,7 @@
     {
       "symbol": "W1334",
       "title": "A bulk --drop over a selector with a per-card reason, all-or-none, through the advice store",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1330"
       ],
@@ -27745,11 +27745,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Reuse the --update-many selector and reason forms and the advice rows; dry run prints one WOULD DROP line with its reason per card, --write drops all or none (one refusal stops every drop), residue gets each reason",
-      "evidence": "2026-11-06T01:58:22Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist.",
+      "evidence": "2026-11-06T01:58:22Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:08:50Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 25 holds the gate; no code this turn.",
       "issued_at": "2026-10-16T02:07:41Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-06T01:58:22Z",
+      "last_worked": "2026-11-06T04:08:50Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -50792,7 +50792,7 @@
     {
       "symbol": "W2289",
       "title": "Pin mikemol-ratchet as a dev-only dependency of hooks, so the pace guard's pinned reader resolves in mtools (W1920 rule c)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2288"
       ],
@@ -50803,11 +50803,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Follow-up AFTER rule (c), ranked as paydown (github-14 2026-11-05 ruling (3)). Cause: mikemol-ratchet depends on procrun, which as a hooks dev dep breaks the per-site mutation targets (W2254, 2026-11-04). Cheaper route checked: mtools' root .venv holds hooks installs only (python3.13, no mikemol-ratchet) and the root pyproject declares no dependencies, so a copy there is untracked local state, not a pin, and is not reproducible. If a tracked route exists use it, else (1): dev-pin + lock + stage procrun in the sites.",
-      "evidence": "2026-11-05T13:07:56Z: 2026-11-05: read ratchet/pyproject.toml: mikemol-ratchet depends on mikemol-atomicwrite and mikemol-procrun, so a hooks dev pin drags procrun into the hooks venv, which W2254's 2026-11-04 evidence says breaks the per-site mutation targets. Asked github-14 to rule: (1) pin and fix the sites, (2) built non-editable wheel, (3) ship rule (c) with mtools on the marked fallback and pin as follow-up (recommended). No pyproject or lock touched. | 2026-11-05T13:09:41Z: 2026-11-05: github-14 ruled (3): rule (c) ships without W2289; conditions: W2289 stays open and ranked as paydown with the procrun cause; every mtools fallback admission leaves a readable mark, say where it is read when resending; check the root .venv route first (done: untracked, so no). | 2026-11-05T13:53:19Z: 2026-11-05: taken in the gate-wait gap while paydown stack 16 (W2219) runs; no gate time used. Next: read how the hooks mutation sites stage a dev dep, to size option (1). | 2026-11-05T15:13:00Z: 2026-11-05: taken at the Stop hook's ask (in this round) while stack 17 holds the gate; no code this turn. | 2026-11-05T15:55:16Z: 2026-11-05: gap-only card (github-14 reorder): no gate time of its own; blocked on the paydown stacks (W2219) that hold the gate, and its lock/site work cannot be built beside a stack touching the same registry files. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears.",
+      "evidence": "2026-11-05T13:07:56Z: 2026-11-05: read ratchet/pyproject.toml: mikemol-ratchet depends on mikemol-atomicwrite and mikemol-procrun, so a hooks dev pin drags procrun into the hooks venv, which W2254's 2026-11-04 evidence says breaks the per-site mutation targets. Asked github-14 to rule: (1) pin and fix the sites, (2) built non-editable wheel, (3) ship rule (c) with mtools on the marked fallback and pin as follow-up (recommended). No pyproject or lock touched. | 2026-11-05T13:09:41Z: 2026-11-05: github-14 ruled (3): rule (c) ships without W2289; conditions: W2289 stays open and ranked as paydown with the procrun cause; every mtools fallback admission leaves a readable mark, say where it is read when resending; check the root .venv route first (done: untracked, so no). | 2026-11-05T13:53:19Z: 2026-11-05: taken in the gate-wait gap while paydown stack 16 (W2219) runs; no gate time used. Next: read how the hooks mutation sites stage a dev dep, to size option (1). | 2026-11-05T15:13:00Z: 2026-11-05: taken at the Stop hook's ask (in this round) while stack 17 holds the gate; no code this turn. | 2026-11-05T15:55:16Z: 2026-11-05: gap-only card (github-14 reorder): no gate time of its own; blocked on the paydown stacks (W2219) that hold the gate, and its lock/site work cannot be built beside a stack touching the same registry files. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T04:38:36Z: 2026-11-05: taken at the Stop hook's ask; batch 25 landed (4b8f03cd) and the gate is empty, so W2219 batch 26 (warrant_crosscheck onto runproc) is in progress.",
       "issued_at": "2026-11-05T12:49:31Z",
       "minted_during": "tick",
       "caused_by": "W2286",
-      "last_worked": "2026-11-06T00:50:57Z",
+      "last_worked": "2026-11-06T04:38:36Z",
       "ticks_blocked": 0,
       "completed": null
     },

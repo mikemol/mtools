@@ -85,6 +85,16 @@ def test_a_checker_that_refuses_its_population_is_unverifiable(tmp_path: Path) -
         warrant_crosscheck.independent_orphans(tmp_path, _DIST)
 
 
+def test_a_checker_that_outlasts_its_bound_is_unverifiable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A hung checker refuses the prune: the bound raises, and the refusal names the script."""
+    (tmp_path / warrant_crosscheck.SCRIPT).write_text("import time\ntime.sleep(30)\n", "utf-8")
+    monkeypatch.setattr(warrant_crosscheck, "TIMEOUT_S", 0.2)
+    with pytest.raises(warrant_crosscheck.UnverifiableError, match="did not run to a verdict"):
+        warrant_crosscheck.independent_orphans(tmp_path, _DIST)
+
+
 def test_the_difference_names_every_pair_on_which_the_two_disagree() -> None:
     """Both directions are named: only the prune, and only the pairing check."""
     prune = {(_MODULE, "test_a"), (_MODULE, "test_b")}

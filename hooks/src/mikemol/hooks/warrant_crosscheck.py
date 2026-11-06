@@ -18,9 +18,10 @@ exists to end.
 """
 
 import re
-import subprocess
 import sys
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 SCRIPT = "count_test_functions.py"
 PAIRING = "--pairing"
@@ -51,16 +52,10 @@ def independent_orphans(root: Path, dist: str) -> set[tuple[str, str]]:
         msg = f"no {SCRIPT} at {root}: nothing independent to compare the prune against"
         raise UnverifiableError(msg)
     try:
-        proc = subprocess.run(
-            [sys.executable, str(script), PAIRING, str(root / dist)],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=TIMEOUT_S,
+        proc = runproc.run(
+            [sys.executable, str(script), PAIRING, str(root / dist)], timeout=TIMEOUT_S
         )
-    except Exception as exc:
-        if not isinstance(exc, (subprocess.TimeoutExpired, OSError)):
-            raise
+    except (runproc.TimeoutExpired, OSError) as exc:
         msg = f"{SCRIPT} {PAIRING} did not run to a verdict: {exc}"
         raise UnverifiableError(msg) from exc
     code: int = proc.returncode

@@ -39,11 +39,31 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_a-hung-pairing-check-raises-past-the-prune",
+    dist = "hooks",
+    site = "src/mikemol/hooks/warrant_crosscheck.py::a-hung-pairing-check-raises-past-the-prune",
+    tests = "tests/test_gen_warrants.py tests/test_gen_warrants_rubric.py tests/test_gen_warrants_write.py tests/test_warrant_crosscheck.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/gen_warrants.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:src/mikemol/hooks/warrant_crosscheck.py",
+        "//hooks:tests/test_gen_warrants.py",
+        "//hooks:tests/test_gen_warrants_rubric.py",
+        "//hooks:tests/test_gen_warrants_write.py",
+        "//hooks:tests/test_warrant_crosscheck.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
         ":independent_orphans",
         ":difference",
+        ":declared_a-hung-pairing-check-raises-past-the-prune",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],
