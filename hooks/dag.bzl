@@ -404,7 +404,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/grade.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -934,6 +936,7 @@ GRAPH = {
         "src/mikemol/hooks/cmdparse.py",
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/project_root.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/structural_query.py"
       ],
       "reads": [],

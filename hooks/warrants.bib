@@ -18056,3 +18056,11 @@
   claim  = {The three readers bound their git: a hung one reads as absent, as a refusing one does.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_a_git_that_outlasts_its_bound_is_none_or_empty_never_a_hang},
 }
+
+@misc{hooks-shellcheck-linter-that-outlasts-its-bound-is-unknown-not-a-hang,
+  section = {shellcheck},
+  title  = {A hung linter renders no verdict: `run` answers None (UNKNOWN), never findings or a raise},
+  claim  = {A hung linter renders no verdict: `run` answers None (UNKNOWN), never findings or a
+            raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_linter_that_outlasts_its_bound_is_unknown_not_a_hang},
+}

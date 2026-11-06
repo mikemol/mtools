@@ -32,10 +32,11 @@ is the same conflation this repository has measured seven times in its own check
 """
 
 import ast
-import subprocess
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 # ⚑ THE RUNGS, AND THE ORDER IS THE POINT. Written once here so a reader downstream cannot
 # re-list them: paperkit records at `grade.py:166-171` that re-listing rungs downstream caused
@@ -123,7 +124,7 @@ class Runner:
         # ⚑ `OSError` COVERS THE FAMILY, not just the missing file: a non-executable interpreter
         # raises `PermissionError`, and both are the same fact — the runner could not start.
         try:
-            proc = subprocess.run(
+            proc = runproc.run(
                 [
                     str(self.interpreter),
                     "-m",
@@ -136,10 +137,7 @@ class Runner:
                     "-p",
                     "no:cacheprovider",
                 ],
-                capture_output=True,
-                text=True,
-                check=False,
-                cwd=str(self.dist),
+                cwd=self.dist,
             )
         except OSError:
             return False, False

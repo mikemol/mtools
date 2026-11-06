@@ -35,12 +35,11 @@ import json
 import os
 import re
 import shutil
-import subprocess
 import sys
 import tomllib
 from pathlib import Path
 
-from mikemol.hooks import cmdparse, payload, project_root
+from mikemol.hooks import cmdparse, payload, project_root, runproc
 from mikemol.hooks.structural_query import deny_payload
 
 SHELLCHECK = "shellcheck"
@@ -228,18 +227,13 @@ def run(
         return None
     source_path = [f"--source-path={source_dir}"] if source_dir else []
     try:
-        proc = subprocess.run(
+        proc = runproc.run(
             [binary, f"--shell={shell}", "-x", *source_path, "--format=json1", "-"],
-            input=script,
-            capture_output=True,
-            text=True,
+            cwd=Path(cwd) if cwd else None,
             timeout=_TIMEOUT_S,
-            check=False,
-            cwd=cwd,
+            stdin_text=script,
         )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
-            raise
+    except (OSError, runproc.TimeoutExpired):
         return None
     try:
         parsed: object = json.loads(proc.stdout)

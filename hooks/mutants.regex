@@ -59,6 +59,7 @@ src/mikemol/hooks/commit_body.py|a-trailer-door-sees-only-newlines|    if traile
 src/mikemol/hooks/commit_body.py|the-none-waypoint-is-refused|    if waypoint == _NONE:|    if False:|def=waypoint_refusal
 src/mikemol/hooks/stackland.py|a-queue-only-admitted-entry-is-refused-as-empty|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if not admissions(entry.message):|def=_replay
 src/mikemol/hooks/commit_kata.py|the-backstop-skips-the-trailer|    reason = message_refusal\(message\)|    reason = message_refusal(head)|def=message_of
+src/mikemol/hooks/shellcheck.py|a-hung-linter-raises-past-the-hook|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=run
 src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-tracked-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=tracked_python
 src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-unmeasured-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=unmeasured
 src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-changed-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=changed_python

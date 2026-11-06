@@ -383,6 +383,18 @@ def _main(
     assert shellcheck.main() == 0
 
 
+def test_a_linter_that_outlasts_its_bound_is_unknown_not_a_hang(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """A hung linter renders no verdict: `run` answers None (UNKNOWN), never findings or a raise."""
+    hanger = tmp_path / "shellcheck"
+    hanger.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    hanger.chmod(0o755)
+    monkeypatch.setattr(shellcheck, "linter", lambda: str(hanger))
+    monkeypatch.setattr(shellcheck, "_TIMEOUT_S", 0.2)
+    assert shellcheck.run("echo hi\n") is None
+
+
 def _absent(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Make the linter unfindable: an empty PATH and a shim that does not exist."""
     monkeypatch.setenv("PATH", str(tmp_path))
