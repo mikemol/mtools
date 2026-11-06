@@ -573,7 +573,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/probe.py": {
       "imports": [
-        "src/mikemol/hooks/payload.py"
+        "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

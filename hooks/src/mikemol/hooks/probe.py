@@ -26,18 +26,19 @@ CONSUMED BY: the `mikemol-hooks-probe` console script.
 import json
 import os
 import shlex
-import subprocess
 import sys
 import tempfile
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from mikemol.hooks import runproc
 from mikemol.hooks.payload import as_record, text_of
 
 DEFAULT_LAUNCHER = "{project}/hooks/bin/{entry}"
 USAGE = "usage: mikemol-hooks-probe [--project DIR] [--launcher TEMPLATE] [ENTRY ...]\n"
 TIMEOUT_S = 60
+_NOT_FOUND = 127
 DENY = "deny"
 ARM = "STRUCT_HOOK_BLOCK"
 """The switch every gate honours (payload.SHARED_SWITCH): unarmed, a gate only advises on stderr."""
@@ -168,20 +169,11 @@ def fire(row: Row, template: str, project: Path, cwd: Path, where: str) -> Verdi
         **dict(row.env),
     }
     try:
-        done = subprocess.run(
-            argv,
-            input=payload_of(row),
-            capture_output=True,
-            text=True,
-            cwd=cwd,
-            env=env,
-            check=False,
-            timeout=TIMEOUT_S,
-        )
-    except Exception as exc:
-        if not isinstance(exc, (OSError, subprocess.SubprocessError)):
-            raise
+        done = runproc.run(argv, cwd=cwd, env=env, timeout=TIMEOUT_S, stdin_text=payload_of(row))
+    except (OSError, runproc.TimeoutExpired) as exc:
         return Verdict(row.entry, where, None, f"could not run {argv[0]}: {exc}")
+    if done.returncode == _NOT_FOUND and not done.stdout:
+        return Verdict(row.entry, where, None, f"could not run {argv[0]}: {done.stderr}")
     decision = decision_of(done.stdout)
     if decision is None:
         return Verdict(row.entry, where, None, f"exit {done.returncode}, no decision printed")

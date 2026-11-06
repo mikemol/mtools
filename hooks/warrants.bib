@@ -17726,3 +17726,10 @@
   claim  = {A path that exists but is not executable raises past the runner, and reads as not found.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_the_real_probe_reports_a_file_it_cannot_execute_as_not_found},
 }
+
+@misc{hooks-probe-launcher-that-outlasts-its-bound-is-a-failure,
+  section = {probe},
+  title  = {A hung guard fails with the reason, never hangs the probe or raises past it},
+  claim  = {A hung guard fails with the reason, never hangs the probe or raises past it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_launcher_that_outlasts_its_bound_is_a_failure},
+}

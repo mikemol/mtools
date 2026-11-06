@@ -91,6 +91,17 @@ def test_an_absent_launcher_is_a_failure_not_a_skip(tmp_path: Path) -> None:
     assert "could not run" in verdict.why
 
 
+def test_a_launcher_that_outlasts_its_bound_is_a_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A hung guard fails with the reason, never hangs the probe or raises past it."""
+    monkeypatch.setattr(probe, "TIMEOUT_S", 0.2)
+    launcher = _stub(tmp_path / "gate", "cat >/dev/null\nsleep 5")
+    verdict = probe.fire(_row(), str(launcher), tmp_path, tmp_path, "root")
+    assert not verdict.ok
+    assert "could not run" in verdict.why
+
+
 def test_each_gate_is_fired_from_the_root_and_from_a_foreign_directory(tmp_path: Path) -> None:
     """The launcher sees the project in CLAUDE_PROJECT_DIR and the two different working dirs."""
     log = tmp_path / "log"

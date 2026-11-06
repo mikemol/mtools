@@ -12,6 +12,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -25,6 +26,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -38,6 +40,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -51,6 +54,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -64,6 +68,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -77,6 +82,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -90,6 +96,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -103,6 +110,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
     ],
 )
@@ -116,6 +124,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -130,6 +139,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -144,6 +154,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -158,6 +169,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -172,6 +184,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -186,6 +199,37 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_probe.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_a-missing-launcher-reads-as-a-silent-gate",
+    dist = "hooks",
+    site = "src/mikemol/hooks/probe.py::a-missing-launcher-reads-as-a-silent-gate",
+    tests = "tests/test_probe.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_probe.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_a-hung-launcher-raises-past-the-probe",
+    dist = "hooks",
+    site = "src/mikemol/hooks/probe.py::a-hung-launcher-raises-past-the-probe",
+    tests = "tests/test_probe.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/payload.py",
+        "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -200,6 +244,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/payload.py",
         "//hooks:src/mikemol/hooks/probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -222,6 +267,8 @@ test_suite(
         ":declared_exit-zero-whatever-the-rows-said",
         ":declared_unknown-gate-passes",
         ":declared_empty-decision-is-a-decision",
+        ":declared_a-missing-launcher-reads-as-a-silent-gate",
+        ":declared_a-hung-launcher-raises-past-the-probe",
         ":declared_relative-launcher-not-resolved",
     ],
     tags = ["manual"],
