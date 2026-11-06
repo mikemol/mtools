@@ -616,6 +616,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/pycheck_census.py": {
       "imports": [
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/verdict.py"
       ],
       "reads": [],
@@ -741,7 +742,8 @@ GRAPH = {
     "src/mikemol/hooks/ratchet_pace.py": {
       "imports": [
         "src/mikemol/hooks/round_wire.py",
-        "src/mikemol/hooks/stackrun.py"
+        "src/mikemol/hooks/stackrun.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1030,6 +1032,7 @@ GRAPH = {
     "src/mikemol/hooks/stackland.py": {
       "imports": [
         "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
@@ -3154,6 +3157,7 @@ GRAPH = {
     "tests/test_stackland.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stackland.py"
       ],

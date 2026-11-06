@@ -417,7 +417,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "tests/test_commit_lease_wait.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "tests/test_vlogship.py" = ["invalid-function-name", "builtin-argument-shadowing"]
 "tests/test_vlogsink.py" = ["invalid-function-name", "builtin-argument-shadowing"]
-"src/mikemol/hooks/pycheck_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # The snapshot is git plus a command the caller names, and its fixed namespaced path under /var/tmp is
 # the operator's ruling (2026-10-06), not an accident: a hardcoded temp path is the point.
 "src/mikemol/hooks/runproc.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]

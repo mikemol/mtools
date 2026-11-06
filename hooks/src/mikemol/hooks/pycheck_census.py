@@ -28,11 +28,11 @@ import json
 import os
 import re
 import shutil
-import subprocess
 import tempfile
 from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 
+from mikemol.hooks import runproc
 from mikemol.hooks.verdict import Verdict
 
 _RUFF = re.compile(r"^\s*Found (\d+) errors?\b", re.MULTILINE)
@@ -98,16 +98,8 @@ def tracked_python(root: Path) -> list[str] | None:
     if git is None:
         return None
     try:
-        done = subprocess.run(
-            [git, "-C", str(root), "ls-files", "-z"],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=_GIT_TIMEOUT_S,
-        )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
+        done = runproc.run([git, "-C", str(root), "ls-files", "-z"], timeout=_GIT_TIMEOUT_S)
+    except (OSError, runproc.TimeoutExpired):
         return None
     if done.returncode != 0:
         return None
@@ -132,16 +124,11 @@ def unmeasured(root: Path) -> list[str]:
     if git is None:
         return []
     try:
-        done = subprocess.run(
+        done = runproc.run(
             [git, "-C", str(root), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
-            capture_output=True,
-            text=True,
-            check=False,
             timeout=_GIT_TIMEOUT_S,
         )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
+    except (OSError, runproc.TimeoutExpired):
         return []
     if done.returncode != 0:
         return []
@@ -189,16 +176,11 @@ def changed_python(root: Path) -> list[str] | None:
     if git is None:
         return None
     try:
-        done = subprocess.run(
+        done = runproc.run(
             [git, "-C", str(root), "status", "--porcelain=v1", "-z", "--untracked-files=all"],
-            capture_output=True,
-            text=True,
-            check=False,
             timeout=_GIT_TIMEOUT_S,
         )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
+    except (OSError, runproc.TimeoutExpired):
         return None
     if done.returncode != 0:
         return None

@@ -13,6 +13,8 @@ from mikemol.hooks import pycheck_census, pycheck_cli
 if TYPE_CHECKING:
     from pathlib import Path
 
+    import pytest
+
     from mikemol.hooks.verdict import Verdict
 
 RUFF_REPORT = "--- ruff ---\nE501 too long\nFound 3 errors.\n"
@@ -105,6 +107,24 @@ def test_the_census_counts_refused_files_and_sets_unjudged_apart(tmp_path: Path)
 def test_tracked_python_is_none_outside_a_repository(tmp_path: Path) -> None:
     """Git refusing to name files is None, never an empty list that would read as no files."""
     assert pycheck_census.tracked_python(tmp_path) is None
+
+
+def test_a_git_that_outlasts_its_bound_is_none_or_empty_never_a_hang(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The three readers bound their git: a hung one reads as absent, as a refusing one does."""
+    fake = tmp_path / "git"
+    fake.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    fake.chmod(0o755)
+
+    def fake_which(_name: str) -> str:
+        return str(fake)
+
+    monkeypatch.setattr("shutil.which", fake_which)
+    monkeypatch.setattr(pycheck_census, "_GIT_TIMEOUT_S", 0.2)
+    assert pycheck_census.tracked_python(tmp_path) is None
+    assert pycheck_census.unmeasured(tmp_path) == []
+    assert pycheck_census.changed_python(tmp_path) is None
 
 
 def test_the_cli_census_writes_the_flat_ledger(tmp_path: Path) -> None:

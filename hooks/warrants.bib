@@ -17817,3 +17817,242 @@
   claim  = {The exit status and stdout come back; a program that is not there is (-1, "").},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_the_real_reader_run_answers_status_and_stdout_and_minus_one_for_a_missing_program},
 }
+
+@misc{hooks-stackland-admission-already-in-history-refuses-the-whole-chain,
+  section = {stackland},
+  title  = {SPENT is history's: a commit reachable from head with the exact line spends the row},
+  claim  = {SPENT is history's: a commit reachable from head with the exact line spends the row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_admission_already_in_history_refuses_the_whole_chain},
+}
+
+@misc{hooks-stackland-unspent-admission-lands,
+  section = {stackland},
+  title  = {The control: a row nothing carries lands with its trailer},
+  claim  = {The control: a row nothing carries lands with its trailer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_unspent_admission_lands},
+}
+
+@misc{hooks-stackland-same-row-twice-in-one-chain-is-refused-at-the-second,
+  section = {stackland},
+  title  = {Two stacks in one train cannot both be admitted: the cumulative index names the second},
+  claim  = {Two stacks in one train cannot both be admitted: the cumulative index names the second.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_the_same_row_twice_in_one_chain_is_refused_at_the_second},
+}
+
+@misc{hooks-stackland-line-that-only-mentions-an-admission-in-prose-spends-nothing,
+  section = {stackland},
+  title  = {The trailer is an EXACT line: the words inside a sentence do not forge it},
+  claim  = {The trailer is an EXACT line: the words inside a sentence do not forge it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_line_that_only_mentions_an_admission_in_prose_spends_nothing},
+}
+
+@misc{hooks-stackland-queue-only-entry-with-no-change-still-lands,
+  section = {stackland},
+  title  = {A queue-only entry freezes no paths and may always be empty: it is never refused for it},
+  claim  = {A queue-only entry freezes no paths and may always be empty: it is never refused for it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_queue_only_entry_with_no_change_still_lands},
+}
+
+@misc{hooks-commit-body-body-with-an-admission-trailer-is-refused-with-the-guards-reason,
+  section = {commit_body},
+  title  = {The proof of a spent row is the guard's: a body carrying one is refused naming its line},
+  claim  = {The proof of a spent row is the guard's: a body carrying one is refused naming its line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_a_body_with_an_admission_trailer_is_refused_with_the_guards_reason},
+}
+
+@misc{hooks-commit-body-body-that-only-mentions-an-admission-mid-sentence-passes,
+  section = {commit_body},
+  title  = {The trailer must START the line: prose that names the word is not one},
+  claim  = {The trailer must START the line: prose that names the word is not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_a_body_that_only_mentions_an_admission_mid_sentence_passes},
+}
+
+@misc{hooks-stackland-admitted-entry-with-a-file-and-no-change-is-refused,
+  section = {stackland},
+  title  = {A replay: an admitted non-queue entry whose change is already in the parent fails},
+  claim  = {A replay: an admitted non-queue entry whose change is already in the parent fails.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_admitted_entry_with_a_file_and_no_change_is_refused},
+}
+
+@misc{hooks-stackland-follower-with-no-admission-that-changes-nothing-still-lands,
+  section = {stackland},
+  title  = {github-14's B1: an honest same-blob follower is not a replay and must land},
+  claim  = {github-14's B1: an honest same-blob follower is not a replay and must land.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_follower_with_no_admission_that_changes_nothing_still_lands},
+}
+
+@misc{hooks-stackland-stack-that-renames-an-earlier-entrys-path-still-lands,
+  section = {stackland},
+  title  = {Two entries naming one path, with no admission, are both built},
+  claim  = {Two entries naming one path, with no admission, are both built.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_stack_that_renames_an_earlier_entrys_path_still_lands},
+}
+
+@misc{hooks-stackland-admitted-entry-after-another-that-made-the-change-is-refused,
+  section = {stackland},
+  title  = {The parent tree advances with the chain: the second entry is empty against the first},
+  claim  = {The parent tree advances with the chain: the second entry is empty against the first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_admitted_entry_after_another_that_made_the_change_is_refused},
+}
+
+@misc{hooks-stackland-admitted-entry-naming-a-queue-file-and-an-unchanged-file-is-refused,
+  section = {stackland},
+  title  = {One non-queue path with no change is enough: a queue file beside it does not excuse it},
+  claim  = {One non-queue path with no change is enough: a queue file beside it does not excuse it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_admitted_entry_naming_a_queue_file_and_an_unchanged_file_is_refused},
+}
+
+@misc{hooks-stackland-row-is-spent-only-by-its-exact-line,
+  section = {stackland},
+  title  = {A longer row, trailing or leading text and another case do not spend this row},
+  claim  = {A longer row, trailing or leading text and another case do not spend this row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_row_is_spent_only_by_its_exact_line},
+}
+
+@misc{hooks-stackland-row-with-a-metacharacter-is-matched-literally,
+  section = {stackland},
+  title  = {The dot in `r/1.2` is a dot: a history row `r/1x2` does not spend it},
+  claim  = {The dot in `r/1.2` is a dot: a history row `r/1x2` does not spend it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_row_with_a_metacharacter_is_matched_literally},
+}
+
+@misc{hooks-stackland-row-spent-only-on-an-unreachable-branch-is-not-spent,
+  section = {stackland},
+  title  = {History is what is reachable from head: a commit on another branch spends nothing},
+  claim  = {History is what is reachable from head: a commit on another branch spends nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_row_spent_only_on_an_unreachable_branch_is_not_spent},
+}
+
+@misc{hooks-stackland-any-spent-row-of-several-in-one-message-refuses-the-entry,
+  section = {stackland},
+  title  = {Every row is checked, not only the first},
+  claim  = {Every row is checked, not only the first.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_any_spent_row_of_several_in_one_message_refuses_the_entry},
+}
+
+@misc{hooks-stackland-admissions-of-a-message-are-its-exact-lines-only,
+  section = {stackland},
+  title  = {A trailing word, a leading word or a bare label names no row},
+  claim  = {A trailing word, a leading word or a bare label names no row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_the_admissions_of_a_message_are_its_exact_lines_only},
+}
+
+@misc{hooks-stackland-shallow-history-is-refused-for-an-admission,
+  section = {stackland},
+  title  = {A clone cut off at depth 1 cannot show whether the row was spent, so it is refused},
+  claim  = {A clone cut off at depth 1 cannot show whether the row was spent, so it is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_shallow_history_is_refused_for_an_admission},
+}
+
+@misc{hooks-stackland-history-that-cannot-be-read-is-refused-for-an-admission,
+  section = {stackland},
+  title  = {A failed `git log` is not an empty answer: the row is refused, never admitted},
+  claim  = {A failed `git log` is not an empty answer: the row is refused, never admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_history_that_cannot_be_read_is_refused_for_an_admission},
+}
+
+@misc{hooks-commit-body-subject-is-one-line-and-starts-with-no-tool-trailer,
+  section = {commit_body},
+  title  = {The subject is interpolated raw, so it gets the body's check and a one-line cap},
+  claim  = {The subject is interpolated raw, so it gets the body's check and a one-line cap.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_a_subject_is_one_line_and_starts_with_no_tool_trailer},
+}
+
+@misc{hooks-commit-kata-subject-that-carries-a-tool-trailer-or-a-line-break-is-refused,
+  section = {commit-kata},
+  title  = {W2301: the subject is interpolated raw, so `Admission: r/1` there would register as spent},
+  claim  = {W2301: the subject is interpolated raw, so `Admission: r/1` there would register as
+            spent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_subject_that_carries_a_tool_trailer_or_a_line_break_is_refused},
+}
+
+@misc{hooks-stackrun-entry-whose-subject-carries-a-tool-trailer-is-named-with-its-place,
+  section = {stackland},
+  title  = {W2301: a subject of `Admission: r/1`, or one with a line break, refuses the whole file},
+  claim  = {W2301: a subject of `Admission: r/1`, or one with a line break, refuses the whole file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_an_entry_whose_subject_carries_a_tool_trailer_is_named_with_its_place},
+}
+
+@misc{hooks-stackland-failed-shallow-probe-is-refused-for-an-admission,
+  section = {stackland},
+  title  = {Whether the history is complete is unknown when the probe fails: the row is refused},
+  claim  = {Whether the history is complete is unknown when the probe fails: the row is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_failed_shallow_probe_is_refused_for_an_admission},
+}
+
+@misc{hooks-stackland-plain-stack-in-a-shallow-clone-still-lands,
+  section = {stackland},
+  title  = {Only an admission needs the whole history: an ordinary entry builds in a shallow clone},
+  claim  = {Only an admission needs the whole history: an ordinary entry builds in a shallow clone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_a_plain_stack_in_a_shallow_clone_still_lands},
+}
+
+@misc{hooks-stackland-admitted-replay-with-a-changed-queue-file-is-still-refused,
+  section = {stackland},
+  title  = {github-14's block 2: a changed queue file does not make an unchanged a.txt look new},
+  claim  = {github-14's block 2: a changed queue file does not make an unchanged a.txt look new.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_admitted_replay_with_a_changed_queue_file_is_still_refused},
+}
+
+@misc{hooks-stackland-admitted-entry-that-cannot-be-compared-with-its-parent-is-refused,
+  section = {stackland},
+  title  = {A failed comparison is not an empty one: the entry is not admitted},
+  claim  = {A failed comparison is not an empty one: the entry is not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackland.py -k test_an_admitted_entry_that_cannot_be_compared_with_its_parent_is_refused},
+}
+
+@misc{hooks-commit-body-waypoint-is-w-and-ascii-digits-on-one-line,
+  section = {commit_body},
+  title  = {The waypoint is interpolated raw: anything else, a forged trailer included, is refused},
+  claim  = {The waypoint is interpolated raw: anything else, a forged trailer included, is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_a_waypoint_is_w_and_ascii_digits_on_one_line},
+}
+
+@misc{hooks-commit-body-trailer-is-one-line-and-no-admission,
+  section = {commit_body},
+  title  = {The co-author trailer reaches the message raw from the environment},
+  claim  = {The co-author trailer reaches the message raw from the environment.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_a_trailer_is_one_line_and_no_admission},
+}
+
+@misc{hooks-commit-body-assembled-message-with-an-admission-line-is-refused-naming-its-line,
+  section = {commit_body},
+  title  = {The last check reads the output: whatever route put the line there, it is found},
+  claim  = {The last check reads the output: whatever route put the line there, it is found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_body.py -k test_an_assembled_message_with_an_admission_line_is_refused_naming_its_line},
+}
+
+@misc{hooks-commit-kata-waypoint-or-trailer-that-forges-an-admission-is-refused,
+  section = {commit-kata},
+  title  = {W2301 block 1: the waypoint and the environment trailer reach the message raw},
+  claim  = {W2301 block 1: the waypoint and the environment trailer reach the message raw.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_waypoint_or_trailer_that_forges_an_admission_is_refused},
+}
+
+@misc{hooks-commit-kata-assembled-message-refuses-an-admission-line-whatever-route-made-it,
+  section = {commit-kata},
+  title  = {The backstop: a Request built directly, past every door, still cannot carry the line},
+  claim  = {The backstop: a Request built directly, past every door, still cannot carry the line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_the_assembled_message_refuses_an_admission_line_whatever_route_made_it},
+}
+
+@misc{hooks-stackrun-entry-whose-waypoint-forges-a-trailer-is-named-with-its-place,
+  section = {stackland},
+  title  = {W2301 block 1: a waypoint with a line break and an Admission line is refused},
+  claim  = {W2301 block 1: a waypoint with a line break and an Admission line is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_an_entry_whose_waypoint_forges_a_trailer_is_named_with_its_place},
+}
+
+@misc{hooks-commit-stack-trailer-from-the-environment-that-breaks-lines-is-a-usage-error-not-a-traceback,
+  section = {commit-kata},
+  title  = {W2301: the stack door refuses an env trailer with a vertical tab and an Admission line},
+  claim  = {W2301: the stack door refuses an env trailer with a vertical tab and an Admission line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_stack.py -k test_a_trailer_from_the_environment_that_breaks_lines_is_a_usage_error_not_a_traceback},
+}
+
+@misc{hooks-pycheck-census-git-that-outlasts-its-bound-is-none-or-empty-never-a-hang,
+  section = {pycheck},
+  title  = {The three readers bound their git: a hung one reads as absent, as a refusing one does},
+  claim  = {The three readers bound their git: a hung one reads as absent, as a refusing one does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_pycheck_census.py -k test_a_git_that_outlasts_its_bound_is_none_or_empty_never_a_hang},
+}

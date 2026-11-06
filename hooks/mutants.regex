@@ -44,6 +44,41 @@ src/mikemol/hooks/probe.py|exit-zero-whatever-the-rows-said|return 0 if all\(v\.
 src/mikemol/hooks/probe.py|unknown-gate-passes|if unknown:|if False:|def=main
 src/mikemol/hooks/probe.py|empty-decision-is-a-decision|or None$|or ""|def=decision_of
 src/mikemol/hooks/verdict.py|a-missing-checker-reads-as-a-finding|    if proc\.returncode == _NOT_FOUND and proc\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_checker
+src/mikemol/hooks/stackland.py|a-spent-admission-in-history-is-not-looked-up|        if why is not None:|        if False:|def=_vet
+src/mikemol/hooks/stackland.py|a-row-twice-in-one-chain-is-not-noticed|        if row in chain\.taken:|        if False:|def=_vet
+src/mikemol/hooks/stackland.py|a-spent-lookup-never-finds-a-commit|is already spent" if found\.stdout\.strip\(\) else None|is already spent" if False else None|def=_spent
+src/mikemol/hooks/stackland.py|an-admitted-replay-is-not-refused|    if any\(name not in QUEUE_FILES for name in diff\.stdout\.split\("\\0"\) if name\):|    if True:|def=_replay
+src/mikemol/hooks/stackland.py|a-queue-file-change-makes-a-replay-look-new|    if any\(name not in QUEUE_FILES for name in diff\.stdout\.split\("\\0"\) if name\):|    if diff.stdout.strip():|def=_replay
+src/mikemol/hooks/stackland.py|a-follower-is-refused-for-changing-nothing|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if all(p in QUEUE_FILES for p in entry.paths):|def=_replay
+src/mikemol/hooks/stackland.py|a-queue-file-excuses-an-unchanged-file|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if not admissions(entry.message) or any(p in QUEUE_FILES for p in entry.paths):|def=_replay
+src/mikemol/hooks/stackland.py|a-failed-comparison-admits-the-entry|    if diff\.returncode != 0:|    if False:|def=_replay
+src/mikemol/hooks/commit_body.py|a-waypoint-may-carry-a-line|    if waypoint\.startswith\("W"\) and waypoint\[1:\]\.isdigit\(\) and waypoint\.isascii\(\):|    if waypoint.startswith("W"):|def=waypoint_refusal
+src/mikemol/hooks/commit_body.py|a-waypoint-may-use-other-digits|    if waypoint\.startswith\("W"\) and waypoint\[1:\]\.isdigit\(\) and waypoint\.isascii\(\):|    if waypoint.startswith("W") and waypoint[1:].isdigit():|def=waypoint_refusal
+src/mikemol/hooks/commit_body.py|a-trailer-may-break-lines|    if trailer\.splitlines\(\) != \[trailer\]:|    if False:|def=trailer_refusal
+src/mikemol/hooks/commit_body.py|a-trailer-door-sees-only-newlines|    if trailer\.splitlines\(\) != \[trailer\]:|    if chr(10) in trailer or chr(13) in trailer:|def=trailer_refusal
+src/mikemol/hooks/commit_body.py|the-none-waypoint-is-refused|    if waypoint == _NONE:|    if False:|def=waypoint_refusal
+src/mikemol/hooks/stackland.py|a-queue-only-admitted-entry-is-refused-as-empty|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if not admissions(entry.message):|def=_replay
+src/mikemol/hooks/commit_kata.py|the-backstop-skips-the-trailer|    reason = message_refusal\(message\)|    reason = message_refusal(head)|def=message_of
+src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-tracked-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=tracked_python
+src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-unmeasured-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=unmeasured
+src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-changed-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=changed_python
+src/mikemol/hooks/commit_kata.py|the-stack-door-lets-a-bad-trailer-through|    if bad_trailer is not None:|    if False:|def=run_stack_mode
+src/mikemol/hooks/commit_body.py|a-trailer-may-be-an-admission|    if trailer\.strip\(\)\.lower\(\)\.startswith\(_ADMISSION\):|    if False:|def=trailer_refusal
+src/mikemol/hooks/commit_body.py|an-assembled-admission-line-passes|        if line\.strip\(\)\.lower\(\)\.startswith\(_ADMISSION\):|        if False:|def=message_refusal
+src/mikemol/hooks/commit_kata.py|the-assembled-message-is-not-checked|        raise ValueError\(reason\)|        pass|def=message_of
+src/mikemol/hooks/stackland.py|a-row-is-spent-by-a-longer-row|    pattern = f"\^Admission: \{re\.escape\(row\)\}\$"|    pattern = f"^Admission: {re.escape(row)}"|def=_spent
+src/mikemol/hooks/stackland.py|a-row-is-spent-by-leading-text|    pattern = f"\^Admission: \{re\.escape\(row\)\}\$"|    pattern = f"Admission: {re.escape(row)}$"|def=_spent
+src/mikemol/hooks/stackland.py|a-row-is-spent-by-a-lookalike|    pattern = f"\^Admission: \{re\.escape\(row\)\}\$"|    pattern = f"^Admission: {row}$"|def=_spent
+src/mikemol/hooks/stackland.py|a-row-is-spent-in-another-case|"--extended-regexp", f"--grep=\{pattern\}"\]|"--extended-regexp", "-i", f"--grep={pattern}"]|def=_spent
+src/mikemol/hooks/stackland.py|a-row-is-spent-on-another-branch|    argv = \["log", head,|    argv = ["log", head, "--all",|def=_spent
+src/mikemol/hooks/stackland.py|a-failed-history-read-admits-the-row|    if found\.returncode != 0:|    if False:|def=_spent
+src/mikemol/hooks/stackland.py|a-failed-shallow-probe-admits-the-row|    if shallow\.returncode != 0 or shallow\.stdout\.strip\(\) != "false":|    if shallow.stdout.strip() != "false":|def=_spent
+src/mikemol/hooks/stackland.py|a-shallow-history-admits-the-row|    if shallow\.returncode != 0 or shallow\.stdout\.strip\(\) != "false":|    if False:|def=_spent
+src/mikemol/hooks/stackland.py|an-admission-needs-no-line-end|_ADMISSION = re\.compile\(r"\^Admission: \(\\S\+\)\$", re\.MULTILINE\)|_ADMISSION = re.compile(r"^Admission: ([^ ]+)", re.MULTILINE)|
+src/mikemol/hooks/stackland.py|an-admission-needs-no-line-start|_ADMISSION = re\.compile\(r"\^Admission: \(\\S\+\)\$", re\.MULTILINE\)|_ADMISSION = re.compile(r"Admission: ([^ ]+)$", re.MULTILINE)|
+src/mikemol/hooks/commit_body.py|a-subject-may-break-lines|    if subject\.splitlines\(\) != \[subject\]:|    if False:|def=subject_refusal
+src/mikemol/hooks/commit_body.py|a-subject-may-carry-a-tool-trailer|    reason = refusal\(subject\)|    reason = None|def=subject_refusal
+src/mikemol/hooks/commit_body.py|an-admission-line-gets-the-wrong-reason|            if line\.strip\(\)\.lower\(\)\.startswith\(_ADMISSION\):|            if False:|def=refusal
 src/mikemol/hooks/work_claims_hook.py|a-hung-claim-command-raises-past-the-hook|    except runproc\.TimeoutExpired:|    except FileNotFoundError:|def=run_both
 src/mikemol/hooks/work_claims_hook.py|a-missing-claim-command-leaks-runprocs-note|    if done\.returncode == _NOT_STARTED and done\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_both
 src/mikemol/hooks/hold_lift.py|a-missing-transcript-reader-reads-as-exit-127|    if done\.returncode == _NOT_FOUND and done\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_reader
@@ -260,7 +295,7 @@ src/mikemol/hooks/gatejobs.py|still-clock-divides-by-zero|    if total <= 0:|   
 src/mikemol/hooks/gatejobs.py|no-measurement-window|    wait\(SAMPLE_S\)|    pass|def=measured_busy
 src/mikemol/hooks/gatejobs.py|one-flag-only|--local_test_jobs=\{count\}\\n|\\n|def=main
 src/mikemol/hooks/gatejobs.py|explain-never-notes-the-floor|cores - busy < MIN_JOBS|False|def=explain
-src/mikemol/hooks/stackland.py|parent-not-advanced|parent = made\.stdout\.strip\(\)|parent = head|def=build
+src/mikemol/hooks/stackland.py|parent-not-advanced|    chain\.parent, chain\.parent_tree = made\.stdout\.strip\(\), name|    chain.parent, chain.parent_tree = chain.head, name|def=_link
 src/mikemol/hooks/stackland.py|failed-add-ignored|if _stopped\(added\):|if False:|def=_place
 src/mikemol/hooks/stackgate.py|gate-an-empty-snapshot|snap\.materialize\(root, tree\)|pass|def=gate_tip
 src/mikemol/hooks/stackgate.py|gate-the-wrong-hook|"pre-commit"\]|"post-commit"]|def=gate_tip
@@ -677,7 +712,7 @@ src/mikemol/hooks/bazelstop.py|versioned-client-not-a-client|    return name in 
 src/mikemol/hooks/bazelstop.py|every-descendant-is-a-client|            if is_client\(name\):|            if True:|def=clients_under
 src/mikemol/hooks/bazelstop.py|grandchildren-not-walked|            pending\.append\(pid\)|            pass|def=clients_under
 src/mikemol/hooks/commit_withdraw.py|client-never-interrupted|    sent = bazelstop\.interrupt\(pid, \*stop\)|    sent = []|def=_ask_to_stop
-src/mikemol/hooks/stackland.py|every-commit-claims-the-tip-tree|is_tip=place == len\(entries\) - 1|is_tip=True|def=build
+src/mikemol/hooks/stackland.py|every-commit-claims-the-tip-tree|is_tip=place == chain\.last|is_tip=True|def=_link
 src/mikemol/hooks/stackland.py|tip-trailer-swapped|    trailer = f"Gated-Tree: \{tree\}" if is_tip else f"Gated-by: \{tip\}"|    trailer = f"Gated-by: {tip}" if is_tip else f"Gated-Tree: {tree}"|def=stamped
 src/mikemol/hooks/stackland.py|unnamed-tip-crashes|    return \(found\.group\(1\) or found\.group\(2\)\) if found else NO_TIP|    return found.group(1) or found.group(2)|def=tip_name
 src/mikemol/hooks/traindrive.py|prefix-lands-with-the-whole-chains-stamps|    if ends\[-1\] < len\(rnd\.stack\.commits\):|    if False:|def=_land_prefix
