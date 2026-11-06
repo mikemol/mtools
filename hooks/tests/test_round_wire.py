@@ -148,9 +148,6 @@ def test_the_reason_exempts_a_working_card_a_live_submission_names(tmp_path: Pat
     assert round_wire.round_reason(checkout, _NOW, round_file) is None
 
 
-_SCRATCH_ENV = "MIKEMOL_SCRATCH_ROOT"
-
-
 def _checkout(tmp_path: Path, **status: str) -> tuple[Path, Path]:
     """Build the checkout `mtools` with a queue of the given statuses and a round file beside it.
 
@@ -168,22 +165,87 @@ def _checkout(tmp_path: Path, **status: str) -> tuple[Path, Path]:
     return checkout, round_file
 
 
+def _worktree(
+    checkout: Path, name: str, branch: str, *, tree_exists: bool = True, tree_is_file: bool = False
+) -> None:
+    """Record a linked worktree the way git does: HEAD in the record, the tree's path in gitdir."""
+    record = checkout / ".git" / "worktrees" / name
+    record.mkdir(parents=True)
+    (record / "HEAD").write_text(f"ref: refs/heads/{branch}\n", encoding="utf-8")
+    tree = checkout.parent / "trees" / name
+    if tree_is_file:
+        tree.parent.mkdir(parents=True, exist_ok=True)
+        tree.write_text("not a directory\n", encoding="utf-8")
+    elif tree_exists:
+        tree.mkdir(parents=True)
+    (record / "gitdir").write_text(f"{tree}/.git\n", encoding="utf-8")
+
+
 def test_a_working_card_with_a_held_scratch_tree_is_being_built_not_outside(tmp_path: Path) -> None:
     """W2316: an honest outside mark is admitted; an empty one, and another card's tree, are not."""
     checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
-    scratch_root = tmp_path / "scratch"
-    environ = {_SCRATCH_ENV: str(scratch_root)}
-    assert round_wire.round_reason(checkout, _NOW, round_file, environ) is not None
-    (scratch_root / "mtools-W8").mkdir(parents=True)
-    assert round_wire.round_reason(checkout, _NOW, round_file, environ) is not None
-    (scratch_root / "mtools-W7").mkdir()
-    assert round_wire.round_reason(checkout, _NOW, round_file, environ) is None
+    assert round_wire.round_reason(checkout, _NOW, round_file) is not None
+    _worktree(checkout, "mtools-W8", "scratch/W8")
+    assert round_wire.round_reason(checkout, _NOW, round_file) is not None
+    _worktree(checkout, "mtools-W7", "scratch/W7")
+    assert round_wire.round_reason(checkout, _NOW, round_file) is None
 
 
-def test_no_scratch_root_declared_exempts_nothing_and_does_not_raise(tmp_path: Path) -> None:
-    """The root is declared, never guessed: unset means no tree is held, so the refusal stands."""
+def test_only_a_scratch_branch_whose_tree_still_exists_is_a_held_tree(tmp_path: Path) -> None:
+    """A worktree on another branch, and a record whose tree is gone, hold nothing (W2321)."""
     checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
-    assert round_wire.round_reason(checkout, _NOW, round_file, {}) is not None
+    _worktree(checkout, "by-hand", "feature/W7")
+    _worktree(checkout, "reaped", "scratch/W7", tree_exists=False)
+    assert round_wire.held_trees(checkout) == frozenset()
+    assert round_wire.round_reason(checkout, _NOW, round_file) is not None
+    _worktree(checkout, "mtools-W7", "scratch/W7")
+    assert round_wire.held_trees(checkout) == frozenset({"W7"})
+
+
+def test_a_tree_path_that_is_a_file_is_not_a_held_tree(tmp_path: Path) -> None:
+    """The path must be a directory, not merely exist."""
+    checkout, _round_file = _checkout(tmp_path, W1="ready", W7="working")
+    _worktree(checkout, "mtools-W7", "scratch/W7", tree_is_file=True)
+    assert round_wire.held_trees(checkout) == frozenset()
+
+
+def test_a_tree_excuses_a_working_mark_never_a_ready_card_the_round_demands(
+    tmp_path: Path,
+) -> None:
+    """W2321: a leftover tree for the READY round card W1 does not stop the round demanding it."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
+    _worktree(checkout, "mtools-W1", "scratch/W1")
+    reason = round_wire.round_reason(checkout, _NOW, round_file)
+    assert reason is not None
+    assert "W1 is in this repository's round" in reason
+
+
+def test_a_commit_queue_that_is_not_a_json_object_or_is_a_directory_is_said_to_be_unreadable(
+    tmp_path: Path,
+) -> None:
+    """Valid JSON that is not an object, and a directory where the map should be, are blind too."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
+    counts = checkout / ".git" / "mtools" / "commit.counts"
+    counts.parent.mkdir(parents=True)
+    counts.write_text("[1, 2]", encoding="utf-8")
+    listed = round_wire.round_reason(checkout, _NOW, round_file)
+    assert listed is not None
+    assert "the commit queue could not be read" in listed
+    counts.unlink()
+    counts.mkdir()
+    folder = round_wire.round_reason(checkout, _NOW, round_file)
+    assert folder is not None
+    assert "the commit queue could not be read" in folder
+
+
+def test_a_repository_with_no_worktree_records_holds_nothing_and_does_not_raise(
+    tmp_path: Path,
+) -> None:
+    """No `.git/worktrees` (or no `.git`) is no held tree, so the refusal stands."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
+    assert round_wire.held_trees(checkout) == frozenset()
+    assert round_wire.held_trees(tmp_path / "elsewhere") == frozenset()
+    assert round_wire.round_reason(checkout, _NOW, round_file) is not None
 
 
 def test_a_commit_queue_that_cannot_be_read_keeps_the_refusal_and_says_so(tmp_path: Path) -> None:
@@ -191,11 +253,11 @@ def test_a_commit_queue_that_cannot_be_read_keeps_the_refusal_and_says_so(tmp_pa
     checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
     mapdir = checkout / ".git" / "mtools"
     mapdir.mkdir(parents=True)
-    plain = round_wire.round_reason(checkout, _NOW, round_file, {})
+    plain = round_wire.round_reason(checkout, _NOW, round_file)
     assert plain is not None
     assert "could not be read" not in plain
     (mapdir / "commit.counts").write_text("{ torn", encoding="utf-8")
-    torn = round_wire.round_reason(checkout, _NOW, round_file, {})
+    torn = round_wire.round_reason(checkout, _NOW, round_file)
     assert torn is not None
     assert "the commit queue could not be read" in torn
     assert "W7" in torn
@@ -240,7 +302,5 @@ def test_the_wall_clock_judgement_reads_a_round_stamped_now(
     row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}'
     round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
     assert "take W1 first" in str(round_wire.now_reason(checkout))
-    scratch_root = tmp_path / "scratch"
-    (scratch_root / "mtools-W7").mkdir(parents=True)
-    monkeypatch.setenv(_SCRATCH_ENV, str(scratch_root))
+    _worktree(checkout, "mtools-W7", "scratch/W7")
     assert "take W1 first" in str(round_wire.now_reason(checkout))

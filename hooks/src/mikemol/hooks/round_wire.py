@@ -27,8 +27,14 @@ when a live stack names it (`in_gate`) or a held scratch tree is cut for it (`he
 left to refuse is an EMPTY mark, one nothing is building, that passes over a ready round card. A
 scratch tree is held while it EXISTS: `mikemol-scratch open` cuts it and `close` removes it, so
 that protocol, not a clock, says a card is being built (a leftover tree admits its card's mark).
-⚑ A READING THAT FAILED IS NEVER ADMITTED SILENTLY: an unreadable commit queue or no declared
-scratch root exempts nothing, so the refusal stands; an unreadable commit queue is also SAID in
+⚑ THE TREE IS READ FROM GIT'S OWN RECORDS, NOT FROM AN ENVIRONMENT VARIABLE (W2321, nemik-6f's
+report): `mikemol-scratch open` cuts the worktree on the branch `scratch/<symbol>`, which git keeps
+in `<git dir>/worktrees/<name>/HEAD` with the tree's path in `.../gitdir`. The hook runs in the
+harness's environment, so a variable set inline on one command is invisible to it; the records
+need no declaration and no particular root, and a tree whose path is gone drops out. A worktree
+made by hand on another branch name does not count.
+⚑ A READING THAT FAILED IS NEVER ADMITTED SILENTLY: an unreadable commit queue or no worktree
+record exempts nothing, so the refusal stands; an unreadable commit queue is also SAID in
 the refusal, so a mark refused only because the stack could not be seen is not mistaken for an
 empty one.
 
@@ -38,14 +44,12 @@ CONSUMED BY: the tick-stop hook and the stack submit (`now_reason`, W1948).
 import json
 import os
 import re
-from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from mikemol.hooks.commit_counts import live
 from mikemol.hooks.payload import as_record, text_of
 from mikemol.hooks.round_check import composition, round_symbols
-from mikemol.hooks.scratch import ScratchError, path_for, root_of
 from mikemol.hooks.stamps import parse_time
 
 STALE = timedelta(hours=3)
@@ -142,7 +146,7 @@ def queue_readable(directory: Path) -> bool:
 
     """
     path = directory / _COUNTS
-    if not path.is_file():
+    if not path.exists():
         return True
     try:
         doc: object = json.loads(path.read_text(encoding="utf-8"))
@@ -151,19 +155,60 @@ def queue_readable(directory: Path) -> bool:
     return isinstance(doc, dict)
 
 
-def held_trees(directory: Path, working: list[str], environ: Mapping[str, str]) -> frozenset[str]:
-    """Name the working cards a scratch tree of `directory` is cut for.
+_SCRATCH_BRANCH = re.compile(r"ref: refs/heads/scratch/(W\d+)")
+
+
+def held_trees(directory: Path) -> frozenset[str]:
+    """Name the cards a scratch worktree of `directory` is cut for, read from git's own records.
+
+    ⚑ A RECORD COUNTS ONLY WHILE ITS TREE STILL EXISTS: `.../gitdir` names the tree's `.git` file,
+    and a tree whose directory is gone (reaped, or removed by hand) is not held.
 
     Returns:
-        the symbols among `working` whose worktree exists under the declared scratch root; empty
-        when no root is declared or a symbol is not `W<n>`.
+        the symbols of the worktrees on a branch `scratch/W<n>` whose path exists; empty when the
+        repository has no worktree records or they cannot be read.
 
     """
+    base = directory / ".git" / "worktrees"
     try:
-        root = root_of(environ)
-        return frozenset(s for s in working if path_for(root, directory, s).is_dir())
-    except ScratchError:
+        records = sorted(base.iterdir())
+    except OSError:
         return frozenset()
+    held: set[str] = set()
+    for record in records:
+        try:
+            head = (record / "HEAD").read_text(encoding="utf-8").strip()
+            tree = Path((record / "gitdir").read_text(encoding="utf-8").strip()).parent
+        except OSError:
+            continue
+        named = _SCRATCH_BRANCH.fullmatch(head)
+        if named is not None and tree.is_dir():
+            held.add(named.group(1))
+    return frozenset(held)
+
+
+def without_built(queue: object, built: frozenset[str]) -> object:
+    """Take the working cards a scratch tree is cut for out of the queue's working view.
+
+    ⚑ A TREE EXEMPTS A WORKING MARK ONLY (W2321): a built card's status becomes `building`, so it is
+    neither working nor ready to `composition`. A READY card with a tree keeps its status, so a
+    leftover tree for a card nobody is building does not excuse the round from demanding it.
+
+    Returns:
+        a copy of the queue with those cards marked `building`; the queue itself when none match.
+
+    """
+    raw = as_record(queue).get("waypoints")
+    if not built or not isinstance(raw, list):
+        return queue
+    cards = [as_record(card) for card in raw]
+    swapped = [
+        {**card, "status": "building"}
+        if text_of(card.get("symbol")) in built and card.get("status") == "working"
+        else card
+        for card in cards
+    ]
+    return {**as_record(queue), "waypoints": swapped}
 
 
 def refusals(
@@ -190,7 +235,8 @@ def round_reason(
     directory: Path,
     now: datetime,
     round_file: Path | None = None,
-    environ: Mapping[str, str] | None = None,
+    *,
+    trees: bool = True,
 ) -> str | None:
     """Read the round and the queue under `directory` and judge them.
 
@@ -207,11 +253,8 @@ def round_reason(
     seen = published_at(text)
     if seen is not None:
         note_stamp(directory, seen)
-    working = _symbols(queue, "working")
-    cited = in_gate(directory) | held_trees(
-        directory, working, os.environ if environ is None else environ
-    )
-    found = refusals(queue, text, directory.name, now, cited)
+    built = held_trees(directory) if trees else frozenset()
+    found = refusals(without_built(queue, built), text, directory.name, now, in_gate(directory))
     if not found:
         return None
     blind = (
@@ -231,6 +274,6 @@ def now_reason(directory: Path) -> str | None:
 
     """
     # ⚑ AT SUBMIT NO SCRATCH TREE EXEMPTS ANYTHING (W2316): the submit refuses a stack whose card is
-    # outside the round while a ready round card is passed over, however honest the work; an empty
-    # environment declares no scratch root. Only the Stop hook, which judges marks, admits a tree.
-    return round_reason(directory, datetime.now(UTC), None, {})
+    # outside the round while a ready round card is passed over, however honest the work. Only the
+    # Stop hook, which judges marks, admits a tree.
+    return round_reason(directory, datetime.now(UTC), None, trees=False)

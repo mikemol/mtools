@@ -193,6 +193,39 @@ def test_a_working_set_that_skips_the_published_round_blocks_the_stop_once(
     assert not again.getvalue()
 
 
+def test_a_mark_on_a_card_with_a_scratch_worktree_is_admitted_through_the_stop_hook(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2321: the same working set as above, with git's record of a scratch tree for W7, ends free.
+
+    ⚑ NO ENVIRONMENT VARIABLE IS SET FOR THE TREE: the hook runs in the harness's environment, so
+    the exemption has to be read from the repository, and this runs the real `tick_stop.run`.
+    """
+    root = tmp_path / "mtools"
+    root.mkdir()
+    cards = [{"symbol": "W1", "status": "ready"}, {"symbol": "W7", "status": "working"}]
+    _queue(root, {"waypoints": cards})
+    round_file = tmp_path / "round.json"
+    head = '{"as_of": "2026-10-06T11:00:00Z"}\n'
+    row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}\n'
+    round_file.write_text(head + row, encoding="utf-8")
+    monkeypatch.setenv("MIKEMOL_ROUND_FILE", str(round_file))
+    monkeypatch.delenv("MIKEMOL_SCRATCH_ROOT", raising=False)
+    err = io.StringIO()
+    blocked = io.StringIO()
+    assert tick_stop.run({"cwd": str(root)}, NOW, blocked, err) == 0
+    assert "take W1 first" in blocked.getvalue()
+    record = root / ".git" / "worktrees" / "mtools-W7"
+    record.mkdir(parents=True)
+    (record / "HEAD").write_text("ref: refs/heads/scratch/W7\n", encoding="utf-8")
+    tree = tmp_path / "trees" / "mtools-W7"
+    tree.mkdir(parents=True)
+    (record / "gitdir").write_text(f"{tree}/.git\n", encoding="utf-8")
+    free = io.StringIO()
+    assert tick_stop.run({"cwd": str(root)}, NOW, free, err) == 0
+    assert not free.getvalue()
+
+
 def test_a_running_reviewer_lets_an_idle_turn_end_and_a_finished_one_does_not(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

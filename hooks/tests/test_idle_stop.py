@@ -62,6 +62,9 @@ def test_ready_work_and_no_card_moved_blocks_with_the_top_card(tmp_path: Path) -
     # W2316: the text asks for the advance and offers the mark after the work, not as the task.
     assert reason.startswith("ready work and no card moved this turn: advance W7 with real work")
     assert "take W7" not in reason
+    # The warning that an empty mark is refused, and the named-blocker way out, stay in the text.
+    assert "a mark nothing is building is refused" in reason
+    assert "or block it on a named blocker" in reason
 
 
 def test_the_cap_an_advanced_card_and_a_missing_reading_each_let_the_turn_end(
