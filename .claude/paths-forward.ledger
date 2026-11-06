@@ -5831,3 +5831,11 @@
 2026-11-05T23:19:49Z  status W2298 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T23:20:43Z  status W2286 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-05T23:26:37Z  interrupt W2303 minted    -         "Plain commits skip the pace guard: commit_kata.py:1239-1243 lets a non-stack commit land with no pace judgement"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2301
+2026-11-05T23:41:54Z  tick  W2304 minted    -         "The flake refusal's suggested --caused-by names a bare W2008, which resolves in no peer queue"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1980
+2026-11-05T23:42:18Z  tick  W2305 minted    -         "A refusal by the untracked-code check can be recorded as a flake although the staged tree is identical"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1980
+2026-11-05T23:43:45Z  tick  W1667 advanced  sweep     "stack 21 landed (26b5dc0 release 128 to 126, dda6444 mirror check); batch 21 inflight; swept the parked cards (8 partial landings, none free) and carded nemik's two flake-refusal defects as W2304 and W2305 [blocked by W2289]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-05T23:45:41Z  status W2000 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T00:10:07Z  status W1388 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T00:10:46Z  status W1389 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T00:14:54Z  tick  W1667 advanced  sweep     "released W1388 and W1389 from the parking lot with manifests (126 to 124), queued behind batch 21 as a baseline-only stack that shares no file with it [blocked by W2289]"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T00:19:00Z  status W1899 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

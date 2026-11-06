@@ -33,14 +33,13 @@ CONSUMED BY: the `PostToolUse` and `PostToolUseFailure` entries of a repo's `.cl
 import json
 import os
 import shutil
-import subprocess
 import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import TextIO, cast
 
-from mikemol.hooks import heartbeat, hook_argv, watchdog
+from mikemol.hooks import heartbeat, hook_argv, runproc, watchdog
 
 PROG = "mikemol-hook-beat"
 PROJECT_ENV = "CLAUDE_PROJECT_DIR"
@@ -69,9 +68,7 @@ def run_probe(argv: Sequence[str]) -> tuple[int, str]:
 
     """
     try:
-        done = subprocess.run(
-            list(argv), capture_output=True, text=True, check=False, stdin=subprocess.DEVNULL
-        )
+        done = runproc.run(list(argv), stdin_text="")
     except OSError as err:
         return _NOT_FOUND, str(err)
     return done.returncode, done.stderr

@@ -452,6 +452,7 @@ src/mikemol/hooks/beat.py|probe-run-without-a-built-venv|    if not python\.is_f
 src/mikemol/hooks/beat.py|probe-may-write-bytecode|\[str\(python\), "-B", "-c", f"import \{ENTRY_MODULE\}"\]|[str(python), "-c", f"import {ENTRY_MODULE}"]|def=import_failure
 src/mikemol/hooks/beat.py|probe-run-after-any-edit|    failure = import_failure\(project\) if touched is not None else None|    failure = import_failure(project)|def=hook_break
 src/mikemol/hooks/beat.py|missing-program-reads-as-success|        return _NOT_FOUND, str\(err\)|        return 0, str(err)|def=run_probe
+src/mikemol/hooks/beat.py|real-probe-drops-the-exit-code|    return done\.returncode, done\.stderr|    return 0, done.stderr|def=run_probe
 src/mikemol/hooks/beat.py|break-message-never-printed|        if said:|        if False:|def=run
 src/mikemol/hooks/beat.py|environment-does-not-win|    named = env\.get\(PROJECT_ENV\) or _field\(raw, "cwd"\)|    named = _field(raw, "cwd") or env.get(PROJECT_ENV)|def=project_of
 src/mikemol/hooks/beat.py|unreadable-payload-aborts-the-beat|        raw = None|        return 0|def=run

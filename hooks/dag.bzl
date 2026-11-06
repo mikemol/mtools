@@ -50,6 +50,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/heartbeat.py",
         "src/mikemol/hooks/hook_argv.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/watchdog.py"
       ],
       "reads": [],

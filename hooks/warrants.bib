@@ -17719,3 +17719,10 @@
             main's.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_stack_submitted_from_a_linked_worktree_is_refused_and_commits_nothing},
 }
+
+@misc{hooks-hook-import-check-real-probe-reports-a-file-it-cannot-execute-as-not-found,
+  section = {heartbeat},
+  title  = {A path that exists but is not executable raises past the runner, and reads as not found},
+  claim  = {A path that exists but is not executable raises past the runner, and reads as not found.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hook_import_check.py -k test_the_real_probe_reports_a_file_it_cannot_execute_as_not_found},
+}

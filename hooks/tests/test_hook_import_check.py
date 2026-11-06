@@ -143,3 +143,13 @@ def test_the_real_probe_reports_a_command_exit_and_a_program_that_is_missing() -
     code, text = beat.run_probe(["/nonexistent/program"])
     assert code == _NOT_FOUND
     assert text
+
+
+def test_the_real_probe_reports_a_file_it_cannot_execute_as_not_found(tmp_path: Path) -> None:
+    """A path that exists but is not executable raises past the runner, and reads as not found."""
+    plain = tmp_path / "plain"
+    plain.write_text("", encoding="utf-8")
+    plain.chmod(0o644)
+    code, text = beat.run_probe([str(plain)])
+    assert code == _NOT_FOUND
+    assert text
