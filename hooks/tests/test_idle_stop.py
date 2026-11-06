@@ -59,6 +59,9 @@ def test_ready_work_and_no_card_moved_blocks_with_the_top_card(tmp_path: Path) -
     assert reason is not None
     assert "W7" in reason
     assert "--status working" in reason
+    # W2316: the text asks for the advance and offers the mark after the work, not as the task.
+    assert reason.startswith("ready work and no card moved this turn: advance W7 with real work")
+    assert "take W7" not in reason
 
 
 def test_the_cap_an_advanced_card_and_a_missing_reading_each_let_the_turn_end(
@@ -155,8 +158,8 @@ def test_the_published_rounds_top_card_is_named_before_the_first_ready_card(
     monkeypatch.setenv("MIKEMOL_ROUND_FILE", str(round_file))
     without = idle_stop.idle_reason(_payload(tmp_path), tmp_path, _reader(0), _cites())
     assert without is not None
-    assert "take W6" in without
+    assert "advance W6 with real work" in without
     round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
     reason = idle_stop.idle_reason(_payload(tmp_path), tmp_path, _reader(0), _cites())
     assert reason is not None
-    assert "take W7" in reason
+    assert "advance W7 with real work" in reason

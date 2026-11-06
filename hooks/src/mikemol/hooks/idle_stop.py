@@ -40,10 +40,14 @@ from mikemol.hooks.stamps import parse_time
 
 CAP = 2
 QUEUE = Path(".claude") / "paths-forward.json"
+# ⚑ THE MARK FOLLOWS REAL WORK (W2316): this text used to tell a session to TAKE a named card, and a
+# mark made only to quiet it was an empty mark the round check then punished. It now asks for the
+# advance and names the mark as the thing to make once the work has begun.
 REASON = (
-    "ready work and no card moved this turn: take {card} (mikemol-paths-forward --state {queue} "
-    "--update {card} --status working) and advance it, or block it on a named blocker, before "
-    "ending the turn"
+    "ready work and no card moved this turn: advance {card} with real work (when you begin it, "
+    "mark it: mikemol-paths-forward --state {queue} --update {card} --status working; a mark "
+    "nothing is building is refused when a ready round card is passed over), or block it on a "
+    "named blocker, before ending the turn"
 )
 _TRAILER = re.compile(r"^Waypoint: (W\d+)", re.MULTILINE)
 TurnReader = Callable[[str], dict[str, object] | None]

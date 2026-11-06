@@ -148,6 +148,59 @@ def test_the_reason_exempts_a_working_card_a_live_submission_names(tmp_path: Pat
     assert round_wire.round_reason(checkout, _NOW, round_file) is None
 
 
+_SCRATCH_ENV = "MIKEMOL_SCRATCH_ROOT"
+
+
+def _checkout(tmp_path: Path, **status: str) -> tuple[Path, Path]:
+    """Build the checkout `mtools` with a queue of the given statuses and a round file beside it.
+
+    Returns:
+        the checkout and the round file.
+
+    """
+    checkout = tmp_path / "mtools"
+    (checkout / ".claude").mkdir(parents=True)
+    (checkout / ".claude" / "paths-forward.json").write_text(
+        json.dumps(_queue(**status)), encoding="utf-8"
+    )
+    round_file = tmp_path / "round.json"
+    round_file.write_text(_ROUND, encoding="utf-8")
+    return checkout, round_file
+
+
+def test_a_working_card_with_a_held_scratch_tree_is_being_built_not_outside(tmp_path: Path) -> None:
+    """W2316: an honest outside mark is admitted; an empty one, and another card's tree, are not."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
+    scratch_root = tmp_path / "scratch"
+    environ = {_SCRATCH_ENV: str(scratch_root)}
+    assert round_wire.round_reason(checkout, _NOW, round_file, environ) is not None
+    (scratch_root / "mtools-W8").mkdir(parents=True)
+    assert round_wire.round_reason(checkout, _NOW, round_file, environ) is not None
+    (scratch_root / "mtools-W7").mkdir()
+    assert round_wire.round_reason(checkout, _NOW, round_file, environ) is None
+
+
+def test_no_scratch_root_declared_exempts_nothing_and_does_not_raise(tmp_path: Path) -> None:
+    """The root is declared, never guessed: unset means no tree is held, so the refusal stands."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
+    assert round_wire.round_reason(checkout, _NOW, round_file, {}) is not None
+
+
+def test_a_commit_queue_that_cannot_be_read_keeps_the_refusal_and_says_so(tmp_path: Path) -> None:
+    """W2316: an unreadable reading fails toward the refusal, visibly, never silently admitting."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
+    mapdir = checkout / ".git" / "mtools"
+    mapdir.mkdir(parents=True)
+    plain = round_wire.round_reason(checkout, _NOW, round_file, {})
+    assert plain is not None
+    assert "could not be read" not in plain
+    (mapdir / "commit.counts").write_text("{ torn", encoding="utf-8")
+    torn = round_wire.round_reason(checkout, _NOW, round_file, {})
+    assert torn is not None
+    assert "the commit queue could not be read" in torn
+    assert "W7" in torn
+
+
 def test_the_reason_reads_both_files_and_a_missing_one_gives_none(tmp_path: Path) -> None:
     """The reason joins the refusals; an unreadable round or queue gives None."""
     checkout = tmp_path / "mtools"
@@ -186,4 +239,8 @@ def test_the_wall_clock_judgement_reads_a_round_stamped_now(
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}'
     round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
+    assert "take W1 first" in str(round_wire.now_reason(checkout))
+    scratch_root = tmp_path / "scratch"
+    (scratch_root / "mtools-W7").mkdir(parents=True)
+    monkeypatch.setenv(_SCRATCH_ENV, str(scratch_root))
     assert "take W1 first" in str(round_wire.now_reason(checkout))

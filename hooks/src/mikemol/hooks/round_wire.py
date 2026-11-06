@@ -22,18 +22,30 @@ timer of its own. The spacing of that log is the timer's real period.
 ⚑ THE REPOSITORY IS THE QUEUE DIRECTORY'S NAME (`mtools` for the checkout `mtools`), the same name
 nemik publishes rows under.
 
+⚑ A MARK FOR A CARD BEING BUILT IS ADMITTED (W2316, nemik:W2027): a working card is not "outside"
+when a live stack names it (`in_gate`) or a held scratch tree is cut for it (`held_trees`). What is
+left to refuse is an EMPTY mark, one nothing is building, that passes over a ready round card. A
+scratch tree is held while it EXISTS: `mikemol-scratch open` cuts it and `close` removes it, so
+that protocol, not a clock, says a card is being built (a leftover tree admits its card's mark).
+⚑ A READING THAT FAILED IS NEVER ADMITTED SILENTLY: an unreadable commit queue or no declared
+scratch root exempts nothing, so the refusal stands; an unreadable commit queue is also SAID in
+the refusal, so a mark refused only because the stack could not be seen is not mistaken for an
+empty one.
+
 CONSUMED BY: the tick-stop hook and the stack submit (`now_reason`, W1948).
 """
 
 import json
 import os
 import re
+from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from mikemol.hooks.commit_counts import live
 from mikemol.hooks.payload import as_record, text_of
 from mikemol.hooks.round_check import composition, round_symbols
+from mikemol.hooks.scratch import ScratchError, path_for, root_of
 from mikemol.hooks.stamps import parse_time
 
 STALE = timedelta(hours=3)
@@ -119,6 +131,41 @@ def in_gate(directory: Path) -> frozenset[str]:
     return frozenset(w for row in live(directory / _COUNTS) for w in row.waypoints)
 
 
+def queue_readable(directory: Path) -> bool:
+    """Say whether the commit queue map can be read, an absent one counting as readable.
+
+    ⚑ ABSENT IS NOT BROKEN: nothing queued writes no map. A map that exists and is not a JSON object
+    is the case `in_gate` cannot tell from an empty queue, and the refusal says so.
+
+    Returns:
+        False only when the map exists and cannot be read as a JSON object.
+
+    """
+    path = directory / _COUNTS
+    if not path.is_file():
+        return True
+    try:
+        doc: object = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return False
+    return isinstance(doc, dict)
+
+
+def held_trees(directory: Path, working: list[str], environ: Mapping[str, str]) -> frozenset[str]:
+    """Name the working cards a scratch tree of `directory` is cut for.
+
+    Returns:
+        the symbols among `working` whose worktree exists under the declared scratch root; empty
+        when no root is declared or a symbol is not `W<n>`.
+
+    """
+    try:
+        root = root_of(environ)
+        return frozenset(s for s in working if path_for(root, directory, s).is_dir())
+    except ScratchError:
+        return frozenset()
+
+
 def refusals(
     queue: object, text: str, repo: str, now: datetime, cited: frozenset[str] = frozenset()
 ) -> list[str]:
@@ -139,12 +186,17 @@ def refusals(
     return composition(round_symbols(text, repo), waiting, doing)
 
 
-def round_reason(directory: Path, now: datetime, round_file: Path | None = None) -> str | None:
+def round_reason(
+    directory: Path,
+    now: datetime,
+    round_file: Path | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> str | None:
     """Read the round and the queue under `directory` and judge them.
 
     Returns:
-        the refusals joined into one reason; None when there is nothing to refuse or an input
-        cannot be read.
+        the refusals joined into one reason, saying so when the commit queue could not be read;
+        None when there is nothing to refuse or an input cannot be read.
 
     """
     try:
@@ -155,8 +207,19 @@ def round_reason(directory: Path, now: datetime, round_file: Path | None = None)
     seen = published_at(text)
     if seen is not None:
         note_stamp(directory, seen)
-    found = refusals(queue, text, directory.name, now, in_gate(directory))
-    return " | ".join(found) if found else None
+    working = _symbols(queue, "working")
+    cited = in_gate(directory) | held_trees(
+        directory, working, os.environ if environ is None else environ
+    )
+    found = refusals(queue, text, directory.name, now, cited)
+    if not found:
+        return None
+    blind = (
+        ""
+        if queue_readable(directory)
+        else (" (the commit queue could not be read, so a mark on a live stack is not exempted)")
+    )
+    return " | ".join(found) + blind
 
 
 def now_reason(directory: Path) -> str | None:
@@ -167,4 +230,7 @@ def now_reason(directory: Path) -> str | None:
         of its own.
 
     """
-    return round_reason(directory, datetime.now(UTC))
+    # ⚑ AT SUBMIT NO SCRATCH TREE EXEMPTS ANYTHING (W2316): the submit refuses a stack whose card is
+    # outside the round while a ready round card is passed over, however honest the work; an empty
+    # environment declares no scratch root. Only the Stop hook, which judges marks, admits a tree.
+    return round_reason(directory, datetime.now(UTC), None, {})
