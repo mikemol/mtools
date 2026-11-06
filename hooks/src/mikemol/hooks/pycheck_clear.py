@@ -18,13 +18,12 @@ only with a witness that its fix preserves the program.
 checked. A file it could not rewrite (no project, unreadable, ruff failed) is 3 and untouched.
 """
 
-import subprocess
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import project_root, worktree_venv
+from mikemol.hooks import project_root, runproc, worktree_venv
 
 SAFE_RULES = "I,W,COM812"
 """The ruff rules whose autofix is applied: import order, whitespace, a trailing comma."""
@@ -61,7 +60,7 @@ def fix_text(path: Path, text: str, err: TextIO) -> str | None:
     argv = [str(venv_py), "-m", "ruff", "check", "--fix", "--select", SAFE_RULES]
     argv += ["--config", str(cfg), "--no-cache", "--exit-zero", "--force-exclude"]
     argv += ["--stdin-filename", str(path), "-"]
-    done = subprocess.run(argv, input=text, capture_output=True, text=True, check=False, cwd=root)
+    done = runproc.run(argv, cwd=root, stdin_text=text)
     if done.returncode != 0:
         err.write(f"mikemol-pycheck: {path}: ruff check --fix failed: {done.stderr.strip()}\n")
         return None
