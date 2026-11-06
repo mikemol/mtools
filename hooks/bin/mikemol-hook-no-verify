@@ -1,1 +1,62 @@
-mikemol-hook-structural-query
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Mike Mol
+#
+# ⚑⚑⚑ A TRACKED LAUNCHER AT A STABLE PATH, BECAUSE A MISSING HOOK FAILS OPEN. Measured: a hook
+# that cannot run exits 0 with empty stdout, and the harness reads *exit 0, nothing to report* as
+# ALLOW. Every refusal this repository relies on would stop happening and nothing would say so.
+# So absence is answered with an explicit DENY rather than with silence.
+#
+# ⚑⚑ THIS FILE IS THE THING `.claude/settings.json` NAMES, and it never moves. The built venv
+# lives under `bazel-bin`, a convenience symlink into an output base that `bazel clean` deletes
+# and whose path is hashed on the workspace location — so pointing the harness straight at the
+# artifact would make the hooks disappear with a routine command.
+#
+# ⚑ AND IT RESOLVES THE REAL PATH RATHER THAN USING `bazel-bin` DIRECTLY. Measured, five
+# hypotheses deep: CPython reached through the convenience symlink computes `exec_prefix` beneath
+# it and prints `Could not find platform dependent libraries <exec_prefix>` on every invocation —
+# the same venv by its real path is silent. `realpath` removes that noise from the harness's
+# stderr, and is not a workaround for a defect in the venv: the warning is a property of the path
+# the caller used.
+set -euo pipefail
+# ⚑ W1032: NOTHING RUN FROM bazel-bin REWRITES A .pyc IN IT (a hook per tool call raced bazel test).
+export PYTHONDONTWRITEBYTECODE=1
+
+root="${CLAUDE_PROJECT_DIR:?CLAUDE_PROJECT_DIR is unset — the harness did not supply a project}"
+venv="$root/bazel-bin/hooks/.venv"
+entry="$(basename "$0")"
+
+if [ ! -x "$venv/bin/python3" ] || [ ! -f "$venv/bin/$entry" ]; then
+    # ⚑⚑⚑ THE BOOTSTRAP EXEMPTION, AND WITHOUT IT THIS LAUNCHER DEADLOCKS THE REPOSITORY.
+    # MEASURED IN PRODUCTION, one tick after shipping: a rebuild invalidated `bazel-bin`, the
+    # launcher correctly refused — and then refused `bazel build //hooks:.venv`, THE COMMAND ITS
+    # OWN REFUSAL MESSAGE TELLS THE READER TO RUN. Every Bash call was blocked, including the one
+    # that repairs the condition. A gate whose refusal cannot be satisfied is not fail-closed; it
+    # is fail-shut, and the difference is whether a party can get out.
+    #
+    # ⚑⚑ THE EXEMPTION IS THE NARROWEST THING THAT RESTORES THE ARTIFACT: a bazel invocation
+    # naming this venv target. It is not "allow bazel" — `bazel test //...` stays refused, because
+    # nothing about a test run repairs a missing venv. The payload is read rather than trusted:
+    # the harness hands the command on stdin, and the check is a fixed substring, not a parse.
+    #
+    # ⚑ AND IT IS ANNOUNCED RATHER THAN SILENT. A hook that quietly permits one shape is a hole
+    # nobody can audit; this prints why it allowed, on stderr, where the transcript keeps it.
+    _payload="$(cat)"
+    case "$_payload" in
+        *"bazel build //hooks:.venv"*|*"bazel build //hooks/..."*)
+            echo "hook: venv absent, ALLOWING the build that repairs it — bootstrap exemption" >&2
+            exit 0
+            ;;
+    esac
+
+    # ⚑⚑ REFUSE, LOUDLY, IN THE HARNESS'S OWN VOCABULARY. A bare `exit 1` would be reported as a
+    # hook error and — measured — still not deny the call. The JSON below is what makes absence
+    # BLOCK rather than pass, which is the whole reason this launcher exists.
+    cat <<'JSON'
+{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "the hook venv is not built — run `bazel build //hooks:.venv`, which this hook exempts so the repair is reachable. Refusing everything else rather than failing open: a hook that cannot run exits 0 with no decision, which reads as ALLOW."}}
+JSON
+    exit 0
+fi
+
+real="$(realpath "$venv")"
+exec "$real/bin/python3" "$real/bin/$entry" "$@"
