@@ -1127,7 +1127,8 @@ GRAPH = {
     "src/mikemol/hooks/standing_facts.py": {
       "imports": [
         "src/mikemol/hooks/hold_lift.py",
-        "src/mikemol/hooks/payload.py"
+        "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -1649,6 +1650,11 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/runproc.py"
       ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_bin_launchers_regular.py": {
+      "imports": [],
       "reads": [],
       "typing_only": []
     },

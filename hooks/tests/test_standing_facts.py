@@ -97,6 +97,23 @@ def test_outside_a_repository_there_is_no_staged_fact(
     assert staged_paths(plain) is None
 
 
+def test_a_git_that_outlasts_its_bound_is_no_staged_fact_not_a_hang(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A hung git leaves the fact out (None), as a refusing one does; it never raises or waits."""
+    hanger = tmp_path / "git"
+    hanger.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    hanger.chmod(0o755)
+
+    def fake_which(_name: str) -> str:
+        return str(hanger)
+
+    monkeypatch.setattr("shutil.which", fake_which)
+    monkeypatch.setattr(standing_facts, "_GIT_TIMEOUT_S", 0.2)
+    assert staged_paths(tmp_path) is None
+
+
 def test_gather_reads_the_payload_cwd_and_the_project_queue(tmp_path: Path) -> None:
     """Facts come from the payload's cwd (git) and the project's own queue file."""
     repo = _repo(tmp_path)

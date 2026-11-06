@@ -446,11 +446,8 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # `git`, fixed words, the repo and the worktree path as single words; no shell.
 "src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ THE STANDING POLICY'S FACTS (W238): asking git for the index IS its responsibility. git is
-# resolved by `shutil.which` (absent → the fact is left out); the argv is module constants plus the
-# payload's cwd as ONE word after `-C`. Never through a shell. Its witnesses build decoy
-# repositories under tmp_path and execute the launcher, which is the case: the same reason.
-"src/mikemol/hooks/standing_facts.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "import-outside-top-level"]
+# The standing policy's facts (W238) ask git through `runproc`; what stays is a deferred import.
+"src/mikemol/hooks/standing_facts.py" = ["import-outside-top-level"]
 
 # ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the

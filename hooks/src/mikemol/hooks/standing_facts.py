@@ -24,12 +24,12 @@ Facts:
 import json
 import os
 import shutil
-import subprocess
 import sys
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import cast
 
+from mikemol.hooks import runproc
 from mikemol.hooks.payload import as_record, text_of
 
 # The project's queue, relative to CLAUDE_PROJECT_DIR.
@@ -38,6 +38,9 @@ QUEUE = Path(".claude") / "paths-forward.json"
 # The ratchet baseline's file name (rule 4), and the file that declares a rise it may take.
 BASELINE = "ratchet-preview.txt"
 REBASELINES = "rebaselines.json"
+
+# How long one git read may run before the fact is left out.
+_GIT_TIMEOUT_S = 10
 
 
 def declared_rises(project: Path) -> list[dict[str, object]] | None:
@@ -76,16 +79,8 @@ def _git(cwd: Path, *args: str) -> str | None:
     if git is None:
         return None
     try:
-        proc = subprocess.run(
-            [git, "-C", str(cwd), *args],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=10,
-        )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
+        proc = runproc.run([git, "-C", str(cwd), *args], timeout=_GIT_TIMEOUT_S)
+    except (OSError, runproc.TimeoutExpired):
         return None
     return proc.stdout if proc.returncode == 0 else None
 

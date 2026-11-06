@@ -18234,3 +18234,24 @@
   claim  = {Git failing on a non-repository is exit 2 and a stated reason, not an empty census.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_a_directory_git_refuses_is_cannot_census_exit_two_never_a_clean_tree},
 }
+
+@misc{hooks-standing-facts-git-that-outlasts-its-bound-is-no-staged-fact-not-a-hang,
+  section = {bar-fires},
+  title  = {A hung git leaves the fact out (None), as a refusing one does; it never raises or waits},
+  claim  = {A hung git leaves the fact out (None), as a refusing one does; it never raises or waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_standing_facts.py -k test_a_git_that_outlasts_its_bound_is_no_staged_fact_not_a_hang},
+}
+
+@misc{hooks-bin-launchers-regular-no-launcher-in-bin-is-a-link,
+  section = {adopt-launcher},
+  title  = {Every entry of hooks/bin is a regular file: none is a link, whatever it points at},
+  claim  = {Every entry of hooks/bin is a regular file: none is a link, whatever it points at.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_regular.py -k test_no_launcher_in_bin_is_a_link},
+}
+
+@misc{hooks-bin-launchers-regular-dispatching-launchers-hold-the-originals-bytes-and-are-executable,
+  section = {adopt-launcher},
+  title  = {Each copy equals the structural-query launcher byte for byte and keeps its execute bit},
+  claim  = {Each copy equals the structural-query launcher byte for byte and keeps its execute bit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_regular.py -k test_the_dispatching_launchers_hold_the_originals_bytes_and_are_executable},
+}
