@@ -7,7 +7,7 @@ mutant_site(
     name = "project",
     dist = "hooks",
     site = "src/mikemol/hooks/checker_context.py::project",
-    tests = "tests/test_after_compaction.py tests/test_build_failure.py tests/test_census_unmeasured.py tests/test_hook_argv.py tests/test_inbound_asks.py tests/test_nemik_check.py tests/test_pycheck.py tests/test_pycheck_advise.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_config_report.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_mypy_override.py tests/test_pycheck_ratchet_cli.py tests/test_read_guard.py tests/test_tick_gate.py tests/test_tick_release.py tests/test_tick_stop.py tests/test_worktree_venv.py",
+    tests = "tests/test_after_compaction.py tests/test_build_failure.py tests/test_census_unmeasured.py tests/test_hook_argv.py tests/test_inbound_asks.py tests/test_nemik_check.py tests/test_pycheck.py tests/test_pycheck_advise.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_config_report.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_mypy_override.py tests/test_pycheck_ratchet_cli.py tests/test_read_guard.py tests/test_tick_gate.py tests/test_tick_release.py tests/test_tick_stop.py tests/test_verdict.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
@@ -88,6 +88,7 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        "//hooks:tests/test_verdict.py",
         "//hooks:tests/test_worktree_venv.py",
     ],
 )
@@ -96,7 +97,7 @@ mutant_site(
     name = "in_project",
     dist = "hooks",
     site = "src/mikemol/hooks/checker_context.py::in_project",
-    tests = "tests/test_after_compaction.py tests/test_build_failure.py tests/test_census_unmeasured.py tests/test_hook_argv.py tests/test_inbound_asks.py tests/test_nemik_check.py tests/test_pycheck.py tests/test_pycheck_advise.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_config_report.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_mypy_override.py tests/test_pycheck_ratchet_cli.py tests/test_read_guard.py tests/test_tick_gate.py tests/test_tick_release.py tests/test_tick_stop.py tests/test_worktree_venv.py",
+    tests = "tests/test_after_compaction.py tests/test_build_failure.py tests/test_census_unmeasured.py tests/test_hook_argv.py tests/test_inbound_asks.py tests/test_nemik_check.py tests/test_pycheck.py tests/test_pycheck_advise.py tests/test_pycheck_census.py tests/test_pycheck_changed.py tests/test_pycheck_clear.py tests/test_pycheck_clear_ledger.py tests/test_pycheck_cli.py tests/test_pycheck_config_report.py tests/test_pycheck_house_census.py tests/test_pycheck_install.py tests/test_pycheck_mypy_override.py tests/test_pycheck_ratchet_cli.py tests/test_read_guard.py tests/test_tick_gate.py tests/test_tick_release.py tests/test_tick_stop.py tests/test_verdict.py tests/test_worktree_venv.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/after_compaction.py",
@@ -177,6 +178,7 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        "//hooks:tests/test_verdict.py",
         "//hooks:tests/test_worktree_venv.py",
     ],
 )

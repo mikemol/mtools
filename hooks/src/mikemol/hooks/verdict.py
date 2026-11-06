@@ -1,16 +1,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""Run one checker process and return a three-valued verdict — this package's pycheck subprocess.
+"""Run one checker process and return a three-valued verdict — this package's pycheck runner.
 
-⚑⚑ THE SOLE SUBPROCESS CALLER OF THE PYTHON GATE, AND THAT IS ITS WHOLE RESPONSIBILITY. The
-per-file exemption for running a process is keyed to this path in `pyproject.toml`, and a
-per-file override is honest only over a file with ONE job. Ported from substrate's
-`scripts/pycheck_verdict.py` (letter 2026-09-22).
+⚑⚑ RUNNING A CHECKER IS THIS MODULE'S WHOLE RESPONSIBILITY. It runs the process through the
+package's own `runproc.run`, so it needs no process-launching import and no per-file exemption.
+Ported from substrate's `scripts/pycheck_verdict.py` (letter 2026-09-22).
 
 ⚑⚑ `True` CLEAN / `False` FINDINGS / `None` COULD-NOT-RUN, AND THE LAST TWO NEVER MERGE. An
 absent module exits 1 — the same code as "flagged something" — so `No module named` is read
 before the returncode is, or ABSENT is reported as DIRTY. Exit 2 is a broken invocation: UNKNOWN,
 neither clean nor a finding.
+
+⚑⚑ A MISSING PROGRAM IS RUNPROC'S ANSWER, NOT AN EXCEPTION: status 127 with the note
+`<program>: not found` on stderr. That exact pair reads as not installed; a checker that merely
+exits 127 for its own reasons is reported by its status like any other.
 
 ⚑ THE WORKING DIRECTORY IS AMBIENT (`checker_context`), because a config's relative paths
 resolve against it: config, staging directory and working directory are one decision.
@@ -18,15 +21,16 @@ resolve against it: config, staging directory and working directory are one deci
 CONSUMED BY: `mikemol.hooks.pycheck`.
 """
 
-import subprocess
-
-from mikemol.hooks import checker_context
+from mikemol.hooks import checker_context, runproc
 
 # A checker's verdict: True clean / False findings / None could-not-run, and its report.
 Verdict = tuple[bool | None, str]
 
 # ruff and mypy both exit 1 for "flagged something"; any other nonzero status is not a finding.
 FLAGGED_EXIT = 1
+
+# The status `runproc.run` answers for a program that is not there.
+_NOT_FOUND = 127
 
 # How long one checker may run before its silence is treated as UNKNOWN.
 TIMEOUT_S = 120
@@ -46,21 +50,13 @@ def run_checker(name: str, argv: list[str], stdin_text: str | None = None) -> Ve
 
     """
     try:
-        proc = subprocess.run(
-            argv,
-            capture_output=True,
-            text=True,
-            input=stdin_text,
-            timeout=TIMEOUT_S,
-            check=False,
-            cwd=checker_context.project(),
+        proc = runproc.run(
+            argv, cwd=checker_context.project(), timeout=TIMEOUT_S, stdin_text=stdin_text
         )
-    except FileNotFoundError:
-        return None, f"{name} is not installed in the project venv"
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
-            raise
+    except (OSError, runproc.TimeoutExpired):
         return None, f"{name} could not run"
+    if proc.returncode == _NOT_FOUND and proc.stderr == f"{argv[0]}: not found":
+        return None, f"{name} is not installed in the project venv"
     if proc.returncode == 0:
         return True, ""
     if "No module named" in proc.stderr:

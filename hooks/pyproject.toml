@@ -367,11 +367,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["assert"]
 
-# ⚑ RUNNING A CHECKER IS ONE MODULE'S ONE RESPONSIBILITY, and the exemption is scoped to that
-# file rather than to the package. An entry naming a directory would grant it to every hook in
-# order to cover one call — the blast radius a per-responsibility override exists to avoid.
-"src/mikemol/hooks/verdict.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑ ASKING THE WRITER HOW MANY CARDS ARE READY IS THE WATCHDOG'S ONE SUBPROCESS (W1474): the argv is
 # the resolved writer, a fixed flag, and the queue path the caller named; nothing runs through a
 # shell, and the count has one definition because the writer is the only thing that answers it.

@@ -43,6 +43,8 @@ src/mikemol/hooks/probe.py|gate-unarmed|ARM: "1",|ARM: "0",|def=fire
 src/mikemol/hooks/probe.py|exit-zero-whatever-the-rows-said|return 0 if all\(v\.ok for v in verdicts\) else EXIT_FAILED|return 0|def=main
 src/mikemol/hooks/probe.py|unknown-gate-passes|if unknown:|if False:|def=main
 src/mikemol/hooks/probe.py|empty-decision-is-a-decision|or None$|or ""|def=decision_of
+src/mikemol/hooks/verdict.py|a-missing-checker-reads-as-a-finding|    if proc\.returncode == _NOT_FOUND and proc\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_checker
+src/mikemol/hooks/verdict.py|a-hung-checker-raises-past-the-gate|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=run_checker
 src/mikemol/hooks/probe.py|a-missing-launcher-reads-as-a-silent-gate|    if done\.returncode == _NOT_FOUND and not done\.stdout:|    if False:|def=fire
 src/mikemol/hooks/probe.py|a-hung-launcher-raises-past-the-probe|    except \(OSError, runproc\.TimeoutExpired\) as exc:|    except OSError as exc:|def=fire
 

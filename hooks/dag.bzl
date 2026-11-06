@@ -1276,7 +1276,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/verdict.py": {
       "imports": [
-        "src/mikemol/hooks/checker_context.py"
+        "src/mikemol/hooks/checker_context.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -3459,6 +3460,13 @@ GRAPH = {
     "tests/test_venv_artifact.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_verdict.py": {
+      "imports": [
+        "src/mikemol/hooks/verdict.py"
       ],
       "reads": [],
       "typing_only": []

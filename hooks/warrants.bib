@@ -17733,3 +17733,59 @@
   claim  = {A hung guard fails with the reason, never hangs the probe or raises past it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_probe.py -k test_a_launcher_that_outlasts_its_bound_is_a_failure},
 }
+
+@misc{hooks-verdict-zero-exit-reads-clean,
+  section = {verdict},
+  title  = {Exit 0 is clean, with no report},
+  claim  = {Exit 0 is clean, with no report.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_a_zero_exit_reads_clean},
+}
+
+@misc{hooks-verdict-exit-one-is-a-finding-carrying-both-streams,
+  section = {verdict},
+  title  = {Exit 1 is flagged, and the report quotes what the checker printed},
+  claim  = {Exit 1 is flagged, and the report quotes what the checker printed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_exit_one_is_a_finding_carrying_both_streams},
+}
+
+@misc{hooks-verdict-any-other-status-is-could-not-run-and-quotes-the-detail,
+  section = {verdict},
+  title  = {Exit 2 is a broken invocation: UNKNOWN, with the status and the detail named},
+  claim  = {Exit 2 is a broken invocation: UNKNOWN, with the status and the detail named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_any_other_status_is_could_not_run_and_quotes_the_detail},
+}
+
+@misc{hooks-verdict-absent-module-is-not-installed-not-a-finding,
+  section = {verdict},
+  title  = {`No module named` exits 1 yet reads as could-not-run: ABSENT is never DIRTY},
+  claim  = {`No module named` exits 1 yet reads as could-not-run: ABSENT is never DIRTY.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_an_absent_module_is_not_installed_not_a_finding},
+}
+
+@misc{hooks-verdict-missing-program-is-not-installed,
+  section = {verdict},
+  title  = {A program that is not there is runproc's 127 and a note, read as not installed},
+  claim  = {A program that is not there is runproc's 127 and a note, read as not installed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_a_missing_program_is_not_installed},
+}
+
+@misc{hooks-verdict-checker-that-exits-127-for-itself-is-reported-by-its-status,
+  section = {verdict},
+  title  = {Only the exact not-found note means not installed; a bare 127 is just a status},
+  claim  = {Only the exact not-found note means not installed; a bare 127 is just a status.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_a_checker_that_exits_127_for_itself_is_reported_by_its_status},
+}
+
+@misc{hooks-verdict-checker-that-outlasts-its-bound-is-could-not-run,
+  section = {verdict},
+  title  = {A hung checker is UNKNOWN: the bound raises, and the verdict names it as not run},
+  claim  = {A hung checker is UNKNOWN: the bound raises, and the verdict names it as not run.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_a_checker_that_outlasts_its_bound_is_could_not_run},
+}
+
+@misc{hooks-verdict-stdin-reaches-the-checker,
+  section = {verdict},
+  title  = {The payload goes in as standard input, never as a word of the command},
+  claim  = {The payload goes in as standard input, never as a word of the command.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_verdict.py -k test_stdin_reaches_the_checker},
+}
