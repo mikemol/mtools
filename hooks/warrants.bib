@@ -18178,3 +18178,59 @@
             child.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_run_command_joins_both_streams_passes_the_environment_and_reads_a_missing_program},
 }
+
+@misc{hooks-stackrun-admitted-stack-carries-the-trailer-once-on-the-first-entry-with-a-real-path,
+  section = {stackland},
+  title  = {W2312: one exact line, not on a queue-only entry, not repeated on the later entries},
+  claim  = {W2312: one exact line, not on a queue-only entry, not repeated on the later entries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_an_admitted_stack_carries_the_trailer_once_on_the_first_entry_with_a_real_path},
+}
+
+@misc{hooks-stackrun-stack-no-row-admits-gets-no-trailer-and-keeps-its-messages,
+  section = {stackland},
+  title  = {The default and a None answer write nothing: the messages are exactly the tool's},
+  claim  = {The default and a None answer write nothing: the messages are exactly the tool's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_stack_no_row_admits_gets_no_trailer_and_keeps_its_messages},
+}
+
+@misc{hooks-stackrun-admitted-stack-of-queue-files-alone-carries-no-trailer,
+  section = {stackland},
+  title  = {With no entry that has a real path there is nothing to spend a row on},
+  claim  = {With no entry that has a real path there is nothing to spend a row on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_an_admitted_stack_of_queue_files_alone_carries_no_trailer},
+}
+
+@misc{hooks-ratchet-pace-wired-trailer-names-the-row-only-when-the-pace-needed-it-and-the-row-matches,
+  section = {ratchet_pace},
+  title  = {W2312: needed and matched gives the id; a paydown, another blob and no row give None},
+  claim  = {W2312: needed and matched gives the id; a paydown, another blob and no row give None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_the_trailer_names_the_row_only_when_the_pace_needed_it_and_the_row_matches},
+}
+
+@misc{hooks-ratchet-pace-wired-stack-the-pace-would-admit-anyway-never-spends-a-row,
+  section = {ratchet_pace},
+  title  = {A paydown and a queue-state stack answer None even when a row matches them exactly},
+  claim  = {A paydown and a queue-state stack answer None even when a row matches them exactly.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_stack_the_pace_would_admit_anyway_never_spends_a_row},
+}
+
+@misc{hooks-ratchet-pace-wired-item-that-was-not-frozen-is-never-admitted,
+  section = {ratchet_pace},
+  title  = {No frozen files means no blobs to match: a row cannot admit what it cannot read},
+  claim  = {No frozen files means no blobs to match: a row cannot admit what it cannot read.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_an_item_that_was_not_frozen_is_never_admitted},
+}
+
+@misc{hooks-admission-row-that-pins-no-path-admits-nothing,
+  section = {admission},
+  title  = {An empty row would otherwise match any stack of its card with only queue files},
+  claim  = {An empty row would otherwise match any stack of its card with only queue files.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_row_that_pins_no_path_admits_nothing},
+}
+
+@misc{hooks-claude-code-census-directory-git-refuses-is-cannot-census-exit-two-never-a-clean-tree,
+  section = {bar-fires},
+  title  = {Git failing on a non-repository is exit 2 and a stated reason, not an empty census},
+  claim  = {Git failing on a non-repository is exit 2 and a stated reason, not an empty census.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_claude_code_census.py -k test_a_directory_git_refuses_is_cannot_census_exit_two_never_a_clean_tree},
+}

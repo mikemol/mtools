@@ -48176,7 +48176,7 @@
     {
       "symbol": "W2153",
       "title": "A stack that leaves --in-gate leaves a departure tombstone per key (landed sha, refused with rc and reason, or withdrawn) that --in-gate --json reads after the key is gone (hooks-c and pathsforward-b vanished with no record, 2026-10-29)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks",
@@ -48185,17 +48185,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-06T18:19:52Z: 2026-11-06: taken at the Stop hook's ask while the W2310 unit 2 plus W2219 batch 35 stack holds the gate; no code for this card this turn. The real work in flight is W2310.",
       "issued_at": "2026-10-29T12:27:25Z",
       "minted_during": "interrupt",
       "caused_by": "github:R111",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T18:19:52Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2154",
       "title": "--tick-close and --tick-roll print a last line G1-HANDOFF <repo> <symbol> closed=<the ledger line's own timestamp> session=<id>, so the reviewer hand-off carries the tool's time and not one typed by hand (the host typed close times wrong twice in three ticks)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "pathsforward",
@@ -48204,12 +48205,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-29: 2026-10-29: LANDED cfe689c (stack pathsforward-c, gate FAILED 0 TIMEOUT 0 at 1511/1534 at its last reading). Open: a test that runs the real --tick-close verb and reads its last line (the printed line was seen on W2145's close at 13:59Z).",
+      "evidence": "2026-10-29: 2026-10-29: LANDED cfe689c (stack pathsforward-c, gate FAILED 0 TIMEOUT 0 at 1511/1534 at its last reading). Open: a test that runs the real --tick-close verb and reads its last line (the printed line was seen on W2145's close at 13:59Z). | 2026-11-06T19:10:19Z: 2026-11-06: taken at the Stop hook's ask; W2310 unit 2 landed (0bd38ed7, 9eef65ea), gate empty; starting W2312 design (the trailer writer) for real.",
       "issued_at": "2026-10-29T12:38:59Z",
       "minted_during": "interrupt",
       "caused_by": "github:W59",
-      "last_worked": "2026-10-29T14:27:13Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T19:10:19Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2155",
@@ -51251,7 +51253,7 @@
     {
       "symbol": "W2312",
       "title": "W2301 part E: the landing-path re-check and the Admission trailer in the two landing paths",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "W2301"
       ],
@@ -51263,11 +51265,11 @@
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "One shared function called by stackrun.py and traindrive.py: re-run the row check against the refrozen snapshot, refuse on a judged-versus-landing entry mismatch, write Admission: <repo>/<card>/<row> on the landed commit.",
-      "evidence": "2026-11-06T16:54:19Z: 2026-11-06: ACTUALLY STARTED after the operator asked why no card was being worked: I had been taking the hook's named card with no code each turn. Reading the two landing paths (stackrun.py, traindrive.py) and stacklanding first. | 2026-11-06T16:54:43Z: 2026-11-06: READ both landing paths: stackrun.py:269 and traindrive.py:80 each build entries as Entry(seams.message_of(item), item.paths, item.files), a single choke point, so the trailer can be added there. BUT the trailer must name the Row an entry matched, and that verdict is produced by the pinned Row table (W2310); without it there is nothing honest to write. So W2312 is blocked on W2310, not idle. After W2310: add the row id to Item/Entry, write Admission: <row> after message_of (the backstop refuses it before, so it must be appended in Entry construction, not message_of), re-check against the refrozen snapshot.",
+      "evidence": "2026-11-06T16:54:19Z: 2026-11-06: ACTUALLY STARTED after the operator asked why no card was being worked: I had been taking the hook's named card with no code each turn. Reading the two landing paths (stackrun.py, traindrive.py) and stacklanding first. | 2026-11-06T16:54:43Z: 2026-11-06: READ both landing paths: stackrun.py:269 and traindrive.py:80 each build entries as Entry(seams.message_of(item), item.paths, item.files), a single choke point, so the trailer can be added there. BUT the trailer must name the Row an entry matched, and that verdict is produced by the pinned Row table (W2310); without it there is nothing honest to write. So W2312 is blocked on W2310, not idle. After W2310: add the row id to Item/Entry, write Admission: <row> after message_of (the backstop refuses it before, so it must be appended in Entry construction, not message_of), re-check against the refrozen snapshot. | 2026-11-06T19:34:06Z: 2026-11-06: UNBLOCKED: W2310 units 1 and 2 landed (fae35208, 0bd38ed7), which is all W2312 needed from it (the row judgement and the pace wiring); the first real row is a later review, not a prerequisite. Built and submitting as stack-w2312-b36 with W2219 batch 36.",
       "issued_at": "2026-11-06T10:56:19Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-06T16:54:43Z",
+      "last_worked": "2026-11-06T19:34:06Z",
       "ticks_blocked": 0,
       "completed": null
     },

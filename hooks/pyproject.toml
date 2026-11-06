@@ -446,12 +446,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # `git`, fixed words, the repo and the worktree path as single words; no shell.
 "src/mikemol/hooks/scratch.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ THE `.claude/` CODE CENSUS (W464): asking git for the untracked files IS its responsibility.
-# git is resolved by `shutil.which` (absent → refuse, exit 2); the argv is module constants plus
-# the caller's repository root as ONE word. Never through a shell. Its witness builds a decoy
-# repository with `git init` under tmp_path: the same reason.
-"src/mikemol/hooks/claude_code_census.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑ THE STANDING POLICY'S FACTS (W238): asking git for the index IS its responsibility. git is
 # resolved by `shutil.which` (absent → the fact is left out); the argv is module constants plus the
 # payload's cwd as ONE word after `-C`. Never through a shell. Its witnesses build decoy

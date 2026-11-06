@@ -85,3 +85,17 @@ def test_untracked_lists_ignored_and_unignored_files_but_not_tracked_ones(
         ".claude/design/hidden.py",
         ".claude/loose.sh",
     ]
+
+
+def test_a_directory_git_refuses_is_cannot_census_exit_two_never_a_clean_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Git failing on a non-repository is exit 2 and a stated reason, not an empty census."""
+    for name in [name for name in os.environ if name.startswith("GIT_")]:
+        monkeypatch.delenv(name)
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
+    if shutil.which("git") is None:
+        pytest.skip("git is not installed")
+    cannot = 2
+    assert claude_code_census.main([str(tmp_path)]) == cannot
+    assert "CANNOT CENSUS" in capsys.readouterr().err

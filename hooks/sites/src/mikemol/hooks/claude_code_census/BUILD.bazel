@@ -55,6 +55,20 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_a-refusing-git-reads-as-a-clean-census",
+    dist = "hooks",
+    site = "src/mikemol/hooks/claude_code_census.py::a-refusing-git-reads-as-a-clean-census",
+    tests = "tests/test_claude_code_census.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/claude_code_census.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_claude_code_census.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -62,6 +76,7 @@ test_suite(
         ":untracked",
         ":report",
         ":main",
+        ":declared_a-refusing-git-reads-as-a-clean-census",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

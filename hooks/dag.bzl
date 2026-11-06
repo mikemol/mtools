@@ -90,7 +90,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/claude_code_census.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -2816,6 +2818,7 @@ GRAPH = {
         "src/mikemol/hooks/admission.py",
         "src/mikemol/hooks/ratchet_pace.py",
         "src/mikemol/hooks/stackfreeze.py",
+        "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],

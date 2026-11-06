@@ -20,9 +20,10 @@ CONSUMED BY: `.githooks/pre-commit`, as
 
 import re
 import shutil
-import subprocess
 import sys
 from collections.abc import Iterable
+
+from mikemol.hooks import runproc
 
 _WORKTREE_PREFIX = re.compile(r"^.*(?:^|/)\.claude/worktrees/[^/]+/")
 _UNDER_CLAUDE = re.compile(r"(?:^|/)\.claude/")
@@ -52,19 +53,18 @@ def untracked(root: str) -> list[str]:
 
     Raises:
         FileNotFoundError: when git is not on PATH.
+        OSError: when git refuses (a directory that is not a repository).
 
     """
     git = shutil.which("git")
     if git is None:
         msg = "git"
         raise FileNotFoundError(msg)
-    out = subprocess.run(
-        [git, "-C", root, "ls-files", "--others", "-z", "--", ".claude"],
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout
-    return [p for p in out.split("\0") if p]
+    done = runproc.run([git, "-C", root, "ls-files", "--others", "-z", "--", ".claude"])
+    if done.returncode != 0:
+        msg = f"git ls-files exited {done.returncode}: {done.stderr.strip()}"
+        raise OSError(msg)
+    return [p for p in done.stdout.split("\0") if p]
 
 
 def report(paths: Iterable[str]) -> int:
@@ -93,9 +93,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         paths = untracked(args[0])
-    except Exception as exc:
-        if not isinstance(exc, (OSError, subprocess.CalledProcessError)):
-            raise
+    except OSError as exc:
         sys.stderr.write(f"claude-code census: CANNOT CENSUS — {exc}\n")
         return 2
     return report(paths)
