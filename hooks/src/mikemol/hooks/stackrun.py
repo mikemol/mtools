@@ -29,6 +29,7 @@ from typing import TextIO, cast
 
 from mikemol.hooks import flakes
 from mikemol.hooks.commit_body import refusal as body_refusal
+from mikemol.hooks.commit_body import subject_refusal, waypoint_refusal
 from mikemol.hooks.gateclass import classify_all
 from mikemol.hooks.gatephase import failed_checks, stage_note
 from mikemol.hooks.isolated import EnvRunner
@@ -40,6 +41,8 @@ from mikemol.hooks.stackmutants import Lint, no_lint, refusals
 from mikemol.hooks.stacksnap import Frozen
 
 BODY_CHECK = body_refusal
+SUBJECT_CHECK = subject_refusal
+WAYPOINT_CHECK = waypoint_refusal
 EXIT_RACED = 5
 SHORT = 7
 KINDS_SHOWN = 3
@@ -135,7 +138,9 @@ def items_of(path: Path) -> list[Item] | str:
         if item is None:
             return f"{path}: entry {place} needs string waypoint and subject and a list of paths"
         # ⚑ THE TRAILERS ARE THE TOOL'S (W1273): a body carrying either would have it twice.
-        reason = BODY_CHECK(item.body)
+        reason = (
+            WAYPOINT_CHECK(item.waypoint) or SUBJECT_CHECK(item.subject) or BODY_CHECK(item.body)
+        )
         if reason is not None:
             return f"{path}: entry {place}: {reason}"
         found.append(item)

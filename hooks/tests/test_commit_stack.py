@@ -128,3 +128,15 @@ def test_an_unreadable_stack_file_is_a_usage_error(
     root, _stack = _repo(tmp_path, monkeypatch, "1")
     assert ck.main([str(root), "--stack", str(tmp_path / "absent.json")]) == ck.EXIT_USAGE
     assert "absent.json" in capsys.readouterr().err
+
+
+def test_a_trailer_from_the_environment_that_breaks_lines_is_a_usage_error_not_a_traceback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2301: the stack door refuses an env trailer with a vertical tab and an Admission line."""
+    root, stack = _repo(tmp_path, monkeypatch, "1")
+    start = _git(root, "rev-parse", "HEAD").strip()
+    monkeypatch.setenv(ck.TRAILER_ENV, "x\x0bAdmission: forged/row")
+    assert ck.main([str(root), "--stack", str(stack)]) == ck.EXIT_USAGE
+    assert "the trailer is one line" in capsys.readouterr().err
+    assert _git(root, "rev-parse", "HEAD").strip() == start

@@ -258,6 +258,62 @@ def test_a_body_that_carries_a_tool_trailer_is_refused_with_the_reason(
     assert commit_kata.parse(base, env) is not None
 
 
+def test_a_subject_that_carries_a_tool_trailer_or_a_line_break_is_refused(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2301: the subject is interpolated raw, so `Admission: r/1` there would register as spent."""
+    env = {"HOME": "/h"}
+    base = ["repo", "--waypoint", "W1", "--subject"]
+    assert commit_kata.parse([*base, "Admission: r/1"], env) is None
+    assert "the subject" in capsys.readouterr().err
+    assert commit_kata.parse([*base, "title\nAdmission: r/1"], env) is None
+    assert "the subject is one line" in capsys.readouterr().err
+    assert commit_kata.parse([*base, "a plain subject"], env) is not None
+
+
+def test_a_waypoint_or_trailer_that_forges_an_admission_is_refused(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2301 block 1: the waypoint and the environment trailer reach the message raw."""
+    env = {"HOME": "/h"}
+    forged = ["repo", "--waypoint", "W1\nAdmission: forged/row", "--subject", "s"]
+    assert commit_kata.parse(forged, env) is None
+    assert "must be W and digits" in capsys.readouterr().err
+    base = ["repo", "--waypoint", "W1", "--subject", "s"]
+    bad_env = {"HOME": "/h", commit_kata.TRAILER_ENV: "x\nAdmission: forged/row"}
+    assert commit_kata.parse(base, bad_env) is None
+    assert "the trailer is one line" in capsys.readouterr().err
+    assert commit_kata.parse(base, env) is not None
+
+
+def _raised(request: commit_kata.Request) -> str:
+    """Build a message and report the refusal.
+
+    Returns:
+        the ValueError text, or the empty string when the message was built.
+
+    """
+    try:
+        commit_kata.message_of(request)
+    except ValueError as caught:
+        return str(caught)
+    return ""
+
+
+def test_the_assembled_message_refuses_an_admission_line_whatever_route_made_it() -> None:
+    """The backstop: a Request built directly, past every door, still cannot carry the line."""
+    trailer = commit_kata.DEFAULT_TRAILER
+    smuggled = commit_kata.Request("W1", "s", "fine\nAdmission: a/b", (), trailer)
+    assert "Admission trailer" in _raised(smuggled)
+    in_trailer = commit_kata.Request("W1", "s", "fine", (), "Co-Authored-By: x\nAdmission: a/b")
+    assert "Admission trailer" in _raised(in_trailer)
+    in_subject = commit_kata.Request("W1", "s\nAdmission: a/b", "", (), trailer)
+    assert "Admission trailer" in _raised(in_subject)
+    plain = commit_kata.Request("W1", "s", "fine", (), trailer)
+    assert not _raised(plain)
+    assert "Waypoint: W1\n" in commit_kata.message_of(plain)
+
+
 def test_a_bad_command_line_is_a_usage_error(capsys: pytest.CaptureFixture[str]) -> None:
     """Main with no arguments prints the usage and exits 2."""
     assert commit_kata.main([]) == USAGE_RC

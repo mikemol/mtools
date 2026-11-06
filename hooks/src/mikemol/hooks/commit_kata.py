@@ -39,7 +39,11 @@ from pathlib import Path
 from typing import Protocol, TextIO
 
 from mikemol.hooks.aheadrefusal import refusal as _ahead_refusal
+from mikemol.hooks.commit_body import message_refusal as _message_refusal
 from mikemol.hooks.commit_body import refusal as _body_refusal
+from mikemol.hooks.commit_body import subject_refusal as _subject_refusal
+from mikemol.hooks.commit_body import trailer_refusal as _trailer_refusal
+from mikemol.hooks.commit_body import waypoint_refusal as _waypoint_refusal
 from mikemol.hooks.commit_counts import INFLIGHT, QUEUED
 from mikemol.hooks.commit_counts import WAYPOINTS_ENV as _WAYPOINTS_ENV
 from mikemol.hooks.commit_counts import live as _live
@@ -128,6 +132,10 @@ WAYPOINTS_ENV = _WAYPOINTS_ENV
 live_commits = _live
 live_text = _live_json
 body_refusal = _body_refusal
+subject_refusal = _subject_refusal
+message_refusal = _message_refusal
+trailer_refusal = _trailer_refusal
+waypoint_refusal = _waypoint_refusal
 wait_for_load = _wait_for_load
 add_argv_list = _add_argv_list
 StackItem = _Item
@@ -364,12 +372,22 @@ def tracked(root: Path, path: str, run: Runner) -> bool:
 def message_of(request: Request) -> str:
     """Build the commit message: subject, body, the waypoint trailer, the co-author trailer.
 
+    ⚑ THE LAST CHECK IS ON THE OUTPUT (W2301): no message made here carries an `Admission:` line,
+    whichever input put it there.
+
     Returns:
         the message text.
 
+    Raises:
+        ValueError: when the assembled message carries an Admission trailer line.
+
     """
     head = f"{request.subject}\n\n{request.body}\n\n" if request.body else f"{request.subject}\n\n"
-    return f"{head}Waypoint: {request.waypoint}\n{request.trailer}\n"
+    message = f"{head}Waypoint: {request.waypoint}\n{request.trailer}\n"
+    reason = message_refusal(message)
+    if reason is not None:
+        raise ValueError(reason)
+    return message
 
 
 def supports_isolation(root: Path) -> bool:
@@ -709,7 +727,12 @@ def parse(args: Sequence[str], env: Mapping[str, str]) -> tuple[Path, Request] |
         return None
     # ⚑ THE TRAILERS ARE THE TOOL'S (W1273): a body carrying `Waypoint:` or `Co-Authored-By:` would
     # have it twice, so it is refused here with the reason, as a usage error.
-    reason = body_refusal(values["--body"])
+    reason = (
+        waypoint_refusal(values["--waypoint"])
+        or subject_refusal(values["--subject"])
+        or body_refusal(values["--body"])
+        or trailer_refusal(env.get(TRAILER_ENV) or DEFAULT_TRAILER)
+    )
     if reason is not None:
         sys.stderr.write(f"mikemol-commit: {reason}\n")
         return None
@@ -949,6 +972,10 @@ def run_stack_mode(
     for line in _drift_report(items, root / _QUEUE):
         sys.stdout.write(line + "\n")
     trailer = env.get(TRAILER_ENV) or DEFAULT_TRAILER
+    bad_trailer = trailer_refusal(trailer)
+    if bad_trailer is not None:
+        sys.stderr.write(f"mikemol-commit: {bad_trailer}\n")
+        return EXIT_USAGE
     seams = StackSeams(
         run=run_git_in,
         namespace=Path(env.get(NAMESPACE_ENV, DEFAULT_NAMESPACE)),

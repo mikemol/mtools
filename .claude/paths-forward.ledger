@@ -5936,3 +5936,28 @@
 2026-11-06T09:38:24Z  status W2080 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-06T09:39:17Z  status W2081 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-06T09:50:51Z  status W2082 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:02:45Z  status W2083 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:07:48Z  status W2084 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:08:45Z  status W2089 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:38:28Z  status W2091 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:39:26Z  status W2093 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:47:40Z  status W2094 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:54:55Z  interrupt W2309 minted    -         "W2301 part D: the birth row's accident checks: ratchet file absent at HEAD, frozen rebaselines.json entry matches old and new, warrant verified with --claim operator over the pinned transcript path, uuid and line through hold_lift.run_reader"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:55:40Z  interrupt W2310 minted    -         "W2301 part B: the pinned Row table and the stack-equals-row check in ratchet_pace.stack_reason"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:56:00Z  interrupt W2311 minted    -         "W2301 part C: clause R, the repin admission, as a pure function over frozen blobs"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T10:56:19Z  interrupt W2312 minted    -         "W2301 part E: the landing-path re-check and the Admission trailer in the two landing paths"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:10:24Z  status W2096 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:13:35Z  status W2097 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:14:14Z  status W2098 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:54:24Z  status W2105 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:55:06Z  status W2106 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:57:21Z  status W2107 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T11:58:01Z  status W2109 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T12:03:29Z  status W2110 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T12:04:10Z  status W2111 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T12:30:08Z  interrupt W2313 minted    -         "Answer luthen-observability:W2159: is exec wait time on the drum or the fence recorded or exportable"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2159
+2026-11-06T12:35:11Z  interrupt W2314 minted    -         "Make stackdrift and dirtymap import stacksnap.QUEUE_FILES instead of keeping their own copy"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14:W2301
+2026-11-06T12:36:17Z  status W2112 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T12:37:44Z  status W2113 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T12:40:35Z  status W2115 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T12:41:18Z  status W2119 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

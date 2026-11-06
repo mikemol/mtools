@@ -273,6 +273,35 @@ def test_an_entry_whose_body_carries_a_tool_trailer_is_named_with_its_place(
     assert isinstance(stackrun.items_of(path), list)
 
 
+def test_an_entry_whose_subject_carries_a_tool_trailer_is_named_with_its_place(
+    tmp_path: Path,
+) -> None:
+    """W2301: a subject of `Admission: r/1`, or one with a line break, refuses the whole file."""
+    entries = [
+        {"waypoint": "W1", "subject": "s", "paths": ["a"]},
+        {"waypoint": "W2", "subject": "Admission: r/1", "paths": ["b"]},
+    ]
+    path = tmp_path / "stack.json"
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    assert "entry 2: the subject is an Admission trailer" in str(stackrun.items_of(path))
+    entries[1]["subject"] = "title\nAdmission: r/1"
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    assert "entry 2: the subject is one line" in str(stackrun.items_of(path))
+    entries[1]["subject"] = "plain"
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    assert isinstance(stackrun.items_of(path), list)
+
+
+def test_an_entry_whose_waypoint_forges_a_trailer_is_named_with_its_place(
+    tmp_path: Path,
+) -> None:
+    """W2301 block 1: a waypoint with a line break and an Admission line is refused."""
+    entries = [{"waypoint": "W1\nAdmission: forged/row", "subject": "s", "paths": ["a"]}]
+    path = tmp_path / "stack.json"
+    path.write_text(json.dumps(entries), encoding="utf-8")
+    assert "entry 1: the waypoint" in str(stackrun.items_of(path))
+
+
 _NAMING = '#!/bin/sh\necho "lint: b.txt line 3 is wrong" >&2\nexit 1\n'
 
 

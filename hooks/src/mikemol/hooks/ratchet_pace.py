@@ -27,14 +27,13 @@ from typing import cast
 
 from mikemol.hooks.round_wire import STALE, published_at
 from mikemol.hooks.stackrun import items_of
+from mikemol.hooks.stacksnap import QUEUE_FILES
 
 BEHIND = "behind"
 ENV = "MIKEMOL_PACE_FILE"
 _COUNTED = (".txt", ".tsv")
 _GLOB = "*?["
-_QUEUE_FILES = frozenset(
-    {".claude/paths-forward.json", ".claude/paths-forward.ledger", ".claude/paths-forward.md"}
-)
+_QUEUE_FILES = QUEUE_FILES
 _QUEUE = ".claude/paths-forward.json"
 _OPEN = ("ready", "working", "blocked")
 
