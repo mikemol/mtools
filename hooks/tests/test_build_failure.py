@@ -53,6 +53,26 @@ def _tool(tmp_path: Path) -> dict[str, str]:
     return {build_failure.BUILDLOG_ENV: str(binary), "CLAUDE_PROJECT_DIR": str(tmp_path)}
 
 
+def test_the_real_reader_run_answers_stdout_only_on_a_clean_exit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Exit 0 gives stdout; a nonzero exit, a missing program and a hung one all give None."""
+    ok = tmp_path / "ok"
+    ok.write_text("#!/bin/sh\necho cause\n", encoding="utf-8")
+    ok.chmod(0o755)
+    bad = tmp_path / "bad"
+    bad.write_text("#!/bin/sh\necho cause\nexit 3\n", encoding="utf-8")
+    bad.chmod(0o755)
+    hang = tmp_path / "hang"
+    hang.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    hang.chmod(0o755)
+    assert build_failure.run_reader([str(ok)]) == "cause\n"
+    assert build_failure.run_reader([str(bad)]) is None
+    assert build_failure.run_reader([str(tmp_path / "absent")]) is None
+    monkeypatch.setattr(build_failure, "READ_TIMEOUT_S", 0.2)
+    assert build_failure.run_reader([str(hang)]) is None
+
+
 def test_invocation_ids_are_each_listed_once_in_order() -> None:
     """The ids bazel printed, deduplicated, first appearance first; none when there are none."""
     assert build_failure.invocation_ids(FAILED_OUTPUT) == [FIRST, SECOND]

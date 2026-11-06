@@ -43468,7 +43468,7 @@
     {
       "symbol": "W1963",
       "title": "The ratchet declaration keeps a retired list (path, reason, retiring sha) that only grows, like queue residue",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W42"
       ],
@@ -43478,11 +43478,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Reader side is W1964 (ratchet_emit sends mikemol.ratchet.retired for each tombstone line). Left here: the retired list only grows, an entry present at HEAD may not vanish, checked like the queue's regressions. I still need that check, W1963",
-      "evidence": "2026-10-26: first slice landed 40710750 (retired list, refusals, tombstone lines). Left: the grow-only check | 2026-10-29: 2026-10-29: built in main (unstacked): declaration.lost_retired(before, after) names every tombstone HEAD held that is gone or changed (added entries and a reorder are free), with a test; NOT run (bazel cannot run while BES refuses, W2124). NOT DONE: wiring it as a commit-time check beside the queue's regressions (the --regressions-style mode over HEAD's ratchets.json), mutants, warrants, stack. | 2026-10-29: 2026-10-29: second slice LANDED c98d6f35a48222c51028c19ffb1f2ec8e920c7bd (stack-ratchet-a). Stays open for the commit-time wiring of lost_retired. | 2026-10-31: reconciled LANDED c98d6f35a48222c51028c19ffb1f2ec8e920c7bd | 2026-11-03T21:48:51Z: 2026-11-03: mikemol-ratchet retired REPO [--rev] built in main's tree (declaration.retired_in, cli._retired_main, ratchet/tests/test_retired_guard.py, 4 mutants, 6 warrants); 207 ratchet tests pass, full mutation grid clean (also killed W1956's surviving archive-directory mutant by a root-level archive case). Uncommitted, to stack with W1959/W1960 when the gate empties. Left: call it from the live pre-commit (waits on an empty gate). | 2026-11-03T23:34:32Z: 2026-11-03 landed cd6112c5: mikemol-ratchet retired REPO [--rev]. Left: call it from the live pre-commit (hooks lane).",
+      "evidence": "2026-10-26: first slice landed 40710750 (retired list, refusals, tombstone lines). Left: the grow-only check | 2026-10-29: 2026-10-29: built in main (unstacked): declaration.lost_retired(before, after) names every tombstone HEAD held that is gone or changed (added entries and a reorder are free), with a test; NOT run (bazel cannot run while BES refuses, W2124). NOT DONE: wiring it as a commit-time check beside the queue's regressions (the --regressions-style mode over HEAD's ratchets.json), mutants, warrants, stack. | 2026-10-29: 2026-10-29: second slice LANDED c98d6f35a48222c51028c19ffb1f2ec8e920c7bd (stack-ratchet-a). Stays open for the commit-time wiring of lost_retired. | 2026-10-31: reconciled LANDED c98d6f35a48222c51028c19ffb1f2ec8e920c7bd | 2026-11-03T21:48:51Z: 2026-11-03: mikemol-ratchet retired REPO [--rev] built in main's tree (declaration.retired_in, cli._retired_main, ratchet/tests/test_retired_guard.py, 4 mutants, 6 warrants); 207 ratchet tests pass, full mutation grid clean (also killed W1956's surviving archive-directory mutant by a root-level archive case). Uncommitted, to stack with W1959/W1960 when the gate empties. Left: call it from the live pre-commit (waits on an empty gate). | 2026-11-03T23:34:32Z: 2026-11-03 landed cd6112c5: mikemol-ratchet retired REPO [--rev]. Left: call it from the live pre-commit (hooks lane). | 2026-11-06T07:56:34Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 29 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T12:19:02Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-03T23:36:59Z",
+      "last_worked": "2026-11-06T07:56:34Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -43965,7 +43965,7 @@
     {
       "symbol": "W1975",
       "title": "A train leader that started before a stack was submitted leaves it for the next leader, so measure how often that is and what it costs",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/trainlead.py!w"
@@ -43973,11 +43973,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Measure from the landing spans once the train has landed real stacks (the last day's spans were lost with the 2026-10-29 reboot and the drained train): count stacks submitted after a leader's lease and each one's wait for the next leader. Today's instance to count: W1924, W1849, W1908, W2062 were submitted AFTER stack-w2124 took the lease and wait for the next leader. Then decide: nothing, a no-progress start delay, or a burst hold.",
-      "evidence": "2026-10-25: 2026-10-25 WHY THE TRAIN DID NOT JOIN (github-8f's question, read from trainlead.lead): lead finds its followers ONCE, at the moment it takes the lease (_behind then trainjoin.followers over the queued keys then), and only stacks with a LARGER submit key and both ledger files (snap and items) join. W1953 began its gate before the later stacks (w1918c, w1954a, w1948c, w1961a, w1957) were submitted, so none could be joined, and a leader does not rescan mid-gate (the gate tests ONE tip, so a follower cannot join a run already underway). They are not lost: when W1953 ends, the next in submit order takes the lease and joins every stack behind it that is queued by then, which is all four. So the cost is one full gate for the leader plus a wait, not one gate each. What is open is how often followers arrive after a leader starts and how long that waits (the late-submit case), and whether a leader about to start can wait a short, CPU-bounded moment for stacks submitted in the same burst | 2026-10-29: 2026-10-29 FIRST MEASUREMENTS, from the live map (commit.counts) and keys (submission seconds). (1) W2124 (key 1793255592) took the lease 6 s after submit. (2) W1924 (1793255768), W1849 (...788), W1908 (...804) and W2062 (...821) were all submitted 3 to 4 minutes AFTER W2124's gate began, so none joined it; W1924 waited 3529 s (59 min) for the lease and then led, JOINING 3 (joined=3: W1849, W1908, W2062), i.e. four groups under ONE gate. That is the designed outcome. (3) W2067 (1793259930) was submitted 633 s after W1924's gate began (1793259297), so it was NOT joined and waits for the next leader: a late-arrival cost of the leader's whole remaining gate (reading: about 2 h of pycodemod mutants grids) plus its own gate, for a change whose own tests take seconds. n=1 late arrival of 5 stacks. Cost model so far: a burst submitted within the leader's lease-taking window costs one gate; an arrival after it costs a full gate-length wait. Not yet decided: do nothing, delay a leader's start by a no-progress witness, or let a submit hold the lease for a declared burst. Needs more instances before choosing. | 2026-10-31: reconciled STALE | 2026-11-05T22:44:10Z: 2026-11-05: more instances accrue as the paydown stacks run one at a time: stacks 16 to 20 each waited for the previous gate because each shares hooks' registries (graph.json, dag.bzl, pyproject.toml, sites) and stackahead.unbuilt_on refuses a stack not built on the stack ahead's bytes, so no stack could join a running leader. That is a cost of the shared registries, not only of the lease: the train can only join stacks whose files do not overlap. Count them from the landing spans when W2219's series has landed more stacks. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears.",
+      "evidence": "2026-10-25: 2026-10-25 WHY THE TRAIN DID NOT JOIN (github-8f's question, read from trainlead.lead): lead finds its followers ONCE, at the moment it takes the lease (_behind then trainjoin.followers over the queued keys then), and only stacks with a LARGER submit key and both ledger files (snap and items) join. W1953 began its gate before the later stacks (w1918c, w1954a, w1948c, w1961a, w1957) were submitted, so none could be joined, and a leader does not rescan mid-gate (the gate tests ONE tip, so a follower cannot join a run already underway). They are not lost: when W1953 ends, the next in submit order takes the lease and joins every stack behind it that is queued by then, which is all four. So the cost is one full gate for the leader plus a wait, not one gate each. What is open is how often followers arrive after a leader starts and how long that waits (the late-submit case), and whether a leader about to start can wait a short, CPU-bounded moment for stacks submitted in the same burst | 2026-10-29: 2026-10-29 FIRST MEASUREMENTS, from the live map (commit.counts) and keys (submission seconds). (1) W2124 (key 1793255592) took the lease 6 s after submit. (2) W1924 (1793255768), W1849 (...788), W1908 (...804) and W2062 (...821) were all submitted 3 to 4 minutes AFTER W2124's gate began, so none joined it; W1924 waited 3529 s (59 min) for the lease and then led, JOINING 3 (joined=3: W1849, W1908, W2062), i.e. four groups under ONE gate. That is the designed outcome. (3) W2067 (1793259930) was submitted 633 s after W1924's gate began (1793259297), so it was NOT joined and waits for the next leader: a late-arrival cost of the leader's whole remaining gate (reading: about 2 h of pycodemod mutants grids) plus its own gate, for a change whose own tests take seconds. n=1 late arrival of 5 stacks. Cost model so far: a burst submitted within the leader's lease-taking window costs one gate; an arrival after it costs a full gate-length wait. Not yet decided: do nothing, delay a leader's start by a no-progress witness, or let a submit hold the lease for a declared burst. Needs more instances before choosing. | 2026-10-31: reconciled STALE | 2026-11-05T22:44:10Z: 2026-11-05: more instances accrue as the paydown stacks run one at a time: stacks 16 to 20 each waited for the previous gate because each shares hooks' registries (graph.json, dag.bzl, pyproject.toml, sites) and stackahead.unbuilt_on refuses a stack not built on the stack ahead's bytes, so no stack could join a running leader. That is a cost of the shared registries, not only of the lease: the train can only join stacks whose files do not overlap. Count them from the landing spans when W2219's series has landed more stacks. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T08:07:51Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 29 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T13:17:25Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-06T00:50:57Z",
+      "last_worked": "2026-11-06T08:07:51Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/trainlead.py",
@@ -44171,7 +44171,7 @@
     {
       "symbol": "W1978",
       "title": "A dist's local ratchet target names its stubs among its inputs, so the fine-grained target gives the gate's verdict",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:mdstruct/BUILD.bazel!w"
@@ -44179,11 +44179,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Atomize the design's steps (a) to (d) into cards with manifests: (a) hooks or a new bzl for dist_sources + DistInfo, declared in mdstruct only.",
-      "evidence": "2026-10-25: 2026-10-25 github-8f: the operator's work-with-the-cache rule (host line 92626) needs the fine-grained target to give the gate's verdict. Measured here: the gate's mdstruct ratchet refused the key stubs/panflute/__init__.pyi:builtin-argument-shadowing while //mdstruct:ratchet and //mdstruct:all passed locally, because the ratchet sh_test's data omits the stubs (audiostruct's data is glob of src and tests only, read earlier; icsstruct and mdstruct have stubs too), so a session trusts a green the gate will refuse | 2026-10-25: 2026-10-25 OPERATOR RULING, host line 97413 (uuid db458d09, verified human), via github-8f: 'this is why I don't favor distinguishing between build and test. Correct by construction.' So the fix is NOT to add the stubs to a separate test target's inputs: I tried exactly that (named the stub files in the three dists' ratchet targets), it worked locally, and I REVERTED it, because a check that needs a declared input list beside the build is the gap itself. The design: the ratchet and lint checks are part of the BUILD of each target, so a target cannot build while its checks fail, with the same graph and the same inputs locally and in the gate (a build rule or aspect that runs the check as an action over the target's own sources, stubs included because they are in the target's srcs) | 2026-10-29: 2026-10-29: DESIGN written as a note, .claude/design/W1978-checks-as-build-actions.md (untracked notes file): one dist_sources rule returning a DistInfo provider (py, stubs, tests, pyproject, baselines, tools), every check a dist_check rule whose inputs ARE that provider, the checks as actions on the default output group so a target cannot build while they fail, cache keyed by input digests; a rule rather than an aspect because stubs, pyproject and baselines are srcs of no python target. Pilot mdstruct in steps (a) dist_sources, (b) the ratchet check, (c) ruff and mypy, (d) the other dists. Open residue: the mutants grid's relation to the provider, and the cold-tree cost of a ruff action. Read the current mdstruct/BUILD.bazel first: its ratchet data now globs stubs/**/*.pyi (the stub omission was fixed in place, which is the drift the card is about). NOT DONE: steps (a)-(d). Next: atomize the steps into cards. | 2026-10-31: reconciled STALE",
+      "evidence": "2026-10-25: 2026-10-25 github-8f: the operator's work-with-the-cache rule (host line 92626) needs the fine-grained target to give the gate's verdict. Measured here: the gate's mdstruct ratchet refused the key stubs/panflute/__init__.pyi:builtin-argument-shadowing while //mdstruct:ratchet and //mdstruct:all passed locally, because the ratchet sh_test's data omits the stubs (audiostruct's data is glob of src and tests only, read earlier; icsstruct and mdstruct have stubs too), so a session trusts a green the gate will refuse | 2026-10-25: 2026-10-25 OPERATOR RULING, host line 97413 (uuid db458d09, verified human), via github-8f: 'this is why I don't favor distinguishing between build and test. Correct by construction.' So the fix is NOT to add the stubs to a separate test target's inputs: I tried exactly that (named the stub files in the three dists' ratchet targets), it worked locally, and I REVERTED it, because a check that needs a declared input list beside the build is the gap itself. The design: the ratchet and lint checks are part of the BUILD of each target, so a target cannot build while its checks fail, with the same graph and the same inputs locally and in the gate (a build rule or aspect that runs the check as an action over the target's own sources, stubs included because they are in the target's srcs) | 2026-10-29: 2026-10-29: DESIGN written as a note, .claude/design/W1978-checks-as-build-actions.md (untracked notes file): one dist_sources rule returning a DistInfo provider (py, stubs, tests, pyproject, baselines, tools), every check a dist_check rule whose inputs ARE that provider, the checks as actions on the default output group so a target cannot build while they fail, cache keyed by input digests; a rule rather than an aspect because stubs, pyproject and baselines are srcs of no python target. Pilot mdstruct in steps (a) dist_sources, (b) the ratchet check, (c) ruff and mypy, (d) the other dists. Open residue: the mutants grid's relation to the provider, and the cold-tree cost of a ruff action. Read the current mdstruct/BUILD.bazel first: its ratchet data now globs stubs/**/*.pyi (the stub omission was fixed in place, which is the drift the card is about). NOT DONE: steps (a)-(d). Next: atomize the steps into cards. | 2026-10-31: reconciled STALE | 2026-11-06T08:08:44Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 29 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T13:46:59Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-29T07:48:35Z",
+      "last_worked": "2026-11-06T08:08:44Z",
       "ticks_blocked": 0,
       "manifest": [
         "mdstruct/BUILD.bazel",
@@ -44429,7 +44429,7 @@
     {
       "symbol": "W1984",
       "title": "Remove whatever makes an unchanged target miss the cache, and show it by the hit count of a one-line change",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "github:W49"
       ],
@@ -44437,11 +44437,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "When no gate is running: bazel aquery on //pathsforward:mutants_4 in the main tree, save the action's input digests, make a one-line comment edit to a hooks source in a SCRATCH tree, aquery again there (same output base is not shared, so compare input paths and digests offline), diff. Then drop the input that differs from the shard's data.",
-      "evidence": "2026-10-28: 2026-10-28 github-8f (pass 45) NEW FIXTURE: stack 36 (hooks-only, W2061/W1950/W2045: no pathsforward file) executes the pathsforward mutants grid, about 40 shards (running //pathsforward:mutants_18 for 1224 s and mutants_4 at the 95 min mark, --jobs=2), while W1746's hooks-only gate spent its hours on cache-hitting hooks tests. So pathsforward's mutants depend on something hooks-side they do not need, or on a whole-repo input (a shared generated file, a broad filegroup, the mutation runner's own inputs). WITNESS: a hooks-only stack's gate runs ZERO pathsforward mutant shards (all cache hits); that also shortens every hooks gate. | 2026-10-29: 2026-10-29 READ, no bazel run: //pathsforward:mutants (36 shards, pathsforward/BUILD.bazel lines 126-155) declares data = pyproject.toml, mutants.regex, :.venv, //fence:fence, //mutation:mutation, the runner script, and the dist's own src and tests globs. None of those names a hooks file: :.venv is built from the per-dist hub @pathsforward_dev (its own lock, srcs = pathsforward src only; pathsforward/pyproject.toml has no hooks dependency), //fence:fence is fence src only, and fence and mutation BUILD files mention //hooks only in comments. So a hooks-only change cannot reach these shards BY DECLARATION. That leaves (a) an input the declaration does not show: an environment or action_env change, the tools/bazel wrapper (W2124 now changes how bazel is started, not an input, to be confirmed), the runner or a shared check_mutants file, or an unrelated pathsforward file that stack 36 did carry (to be checked in its snapshot); (b) a cold remote cache at the time (the cluster was reseeded and BES was down when those gates ran). NEXT: take two invocations' action keys for //pathsforward:mutants_4 (bazel aquery --output=jsonproto on the main tree before and after a one-line hooks edit, with no gate running) and diff the input digests; the witness is a one-line hooks change leaving the shard cached. | 2026-10-31: reconciled STALE",
+      "evidence": "2026-10-28: 2026-10-28 github-8f (pass 45) NEW FIXTURE: stack 36 (hooks-only, W2061/W1950/W2045: no pathsforward file) executes the pathsforward mutants grid, about 40 shards (running //pathsforward:mutants_18 for 1224 s and mutants_4 at the 95 min mark, --jobs=2), while W1746's hooks-only gate spent its hours on cache-hitting hooks tests. So pathsforward's mutants depend on something hooks-side they do not need, or on a whole-repo input (a shared generated file, a broad filegroup, the mutation runner's own inputs). WITNESS: a hooks-only stack's gate runs ZERO pathsforward mutant shards (all cache hits); that also shortens every hooks gate. | 2026-10-29: 2026-10-29 READ, no bazel run: //pathsforward:mutants (36 shards, pathsforward/BUILD.bazel lines 126-155) declares data = pyproject.toml, mutants.regex, :.venv, //fence:fence, //mutation:mutation, the runner script, and the dist's own src and tests globs. None of those names a hooks file: :.venv is built from the per-dist hub @pathsforward_dev (its own lock, srcs = pathsforward src only; pathsforward/pyproject.toml has no hooks dependency), //fence:fence is fence src only, and fence and mutation BUILD files mention //hooks only in comments. So a hooks-only change cannot reach these shards BY DECLARATION. That leaves (a) an input the declaration does not show: an environment or action_env change, the tools/bazel wrapper (W2124 now changes how bazel is started, not an input, to be confirmed), the runner or a shared check_mutants file, or an unrelated pathsforward file that stack 36 did carry (to be checked in its snapshot); (b) a cold remote cache at the time (the cluster was reseeded and BES was down when those gates ran). NEXT: take two invocations' action keys for //pathsforward:mutants_4 (bazel aquery --output=jsonproto on the main tree before and after a one-line hooks edit, with no gate running) and diff the input digests; the witness is a one-line hooks change leaving the shard cached. | 2026-10-31: reconciled STALE | 2026-11-06T08:38:17Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 29 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T14:40:45Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-29T09:09:50Z",
+      "last_worked": "2026-11-06T08:38:17Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -44808,17 +44808,17 @@
     {
       "symbol": "W2000",
       "title": "round_check treats a card the queue marks working as in-round, so it never blocks a stop for work already in progress",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "The live-queue reader EXISTS: commit_counts.live(path) lists live submissions (pid plus start time both match, so a dead or recycled pid is not listed) with their waypoints, printed by mikemol-commit REPO --in-gate --json (8aac70fe). So: round_wire.refusals reads <git dir>/mtools/commit.counts through commit_counts.live and treats a working card named by a live entry's waypoints as in progress (exempt), and only those. A test with a planted map (live, dead, recycled pid) and a mutant. The stale 10-17..20 items.json files are a separate leftover: a reconcile pass that moves a dead key's items.json aside with a tombstone (key, pid, why) is its own card. I still need the exemption and the tombstone pass, W2000",
-      "evidence": "2026-10-29: 2026-10-29: BLOCKED on stack hooks-e (W2117, inflight). round_wire.refusals and its test, mutant and warrant are hooks-lane changes, and hooks/mutants.regex and warrants.bib freeze whole while hooks-e holds the lane. Build on the HEAD after hooks-e lands, using the live-queue reader the next step names (commit_counts.live). Note for the build: today's in-gate listing marks a landed key gone and a pid recycled, so the planted map needs a landed-and-removed entry too. | 2026-11-05T23:45:41Z: 2026-11-05: blocked on W2219: hooks lane (round_wire.refusals, its test, mutant and warrant); hooks' registries are held by the paydown stacks in the gate (batch 21). I hit this rule four times today as 'the working set includes W<n>, which is not in the round' when a stack was submitted with a placeholder-working card; this card exempts a working card named by a live submission, which is the legitimate case. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears.",
+      "evidence": "2026-10-29: 2026-10-29: BLOCKED on stack hooks-e (W2117, inflight). round_wire.refusals and its test, mutant and warrant are hooks-lane changes, and hooks/mutants.regex and warrants.bib freeze whole while hooks-e holds the lane. Build on the HEAD after hooks-e lands, using the live-queue reader the next step names (commit_counts.live). Note for the build: today's in-gate listing marks a landed key gone and a pid recycled, so the planted map needs a landed-and-removed entry too. | 2026-11-05T23:45:41Z: 2026-11-05: blocked on W2219: hooks lane (round_wire.refusals, its test, mutant and warrant); hooks' registries are held by the paydown stacks in the gate (batch 21). I hit this rule four times today as 'the working set includes W<n>, which is not in the round' when a stack was submitted with a placeholder-working card; this card exempts a working card named by a live submission, which is the legitimate case. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T08:39:08Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 29 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T17:13:06Z",
       "minted_during": "interrupt",
       "caused_by": "W1942",
-      "last_worked": "2026-11-06T00:50:57Z",
+      "last_worked": "2026-11-06T08:39:08Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -44844,17 +44844,17 @@
     {
       "symbol": "W2002",
       "title": "Reconcile pass moves a dead submission's stale items.json aside with a tombstone (key, pid, why judged dead)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "github-8f 2026-10-25: items.json files from 2026-10-17..20 remain in .git/mtools from runs that aborted before stackfreeze.forget. A dead key (no live entry in commit_counts.live) has its items.json moved aside with a tombstone line, not deleted, so each gets a recorded end.",
-      "evidence": "2026-10-29: 2026-10-29: BLOCKED on hooks-e (W2117, queued key 1793285182688164268). The reconcile pass is a hooks-lane change (commit_counts and reconcile code, tests, mutants, warrants) and those registries freeze whole behind hooks-e. Build in a clean scratch tree on the HEAD after it lands (W2158: never generate registries in the dirty main tree).",
+      "evidence": "2026-10-29: 2026-10-29: BLOCKED on hooks-e (W2117, queued key 1793285182688164268). The reconcile pass is a hooks-lane change (commit_counts and reconcile code, tests, mutants, warrants) and those registries freeze whole behind hooks-e. Build in a clean scratch tree on the HEAD after it lands (W2158: never generate registries in the dirty main tree). | 2026-11-06T08:48:40Z: 2026-11-06: taken at the Stop hook's ask; batch 29 landed (195a49df), gate empty; starting W2219 batch 30 (build_failure and tick_release onto runproc).",
       "issued_at": "2026-10-25T18:10:06Z",
       "minted_during": "interrupt",
       "caused_by": "W2000",
-      "last_worked": "2026-10-29T14:52:06Z",
+      "last_worked": "2026-11-06T08:48:40Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -51573,26 +51573,6 @@
       "lapse_ledgered": true
     },
     {
-      "tag": "file:mdstruct/BUILD.bazel!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1978",
-      "base_sha": "219766613d01c9ce6b27f5b0b98226468655b4b7",
-      "taken_at": "2026-10-29T07:48:35Z",
-      "renewed_at": "2026-10-29T07:48:35Z",
-      "expires_at": "2026-10-29T08:18:35Z",
-      "lapse_ledgered": true
-    },
-    {
-      "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
-      "holder": "(unlocked)",
-      "waypoint": "W1963",
-      "base_sha": "f36661fe99e4f6e105ee5795fd3ed2c5a7a11623",
-      "taken_at": "2026-11-03T21:17:45Z",
-      "renewed_at": "2026-11-03T21:17:45Z",
-      "expires_at": "2026-11-03T21:47:45Z",
-      "lapse_ledgered": true
-    },
-    {
       "tag": "file:hooks/pyproject.toml!w",
       "holder": "(unlocked)",
       "waypoint": "W2219",
@@ -51619,6 +51599,33 @@
       "taken_at": "2026-11-06T07:49:32Z",
       "renewed_at": "2026-11-06T07:49:32Z",
       "expires_at": "2026-11-06T08:19:32Z"
+    },
+    {
+      "tag": "file:ratchet/src/mikemol/ratchet/declaration.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1963",
+      "base_sha": "9cec310e990d872605e9176ec5dbff9dad31a950",
+      "taken_at": "2026-11-06T07:56:34Z",
+      "renewed_at": "2026-11-06T07:56:34Z",
+      "expires_at": "2026-11-06T08:26:34Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/trainlead.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1975",
+      "base_sha": "9cec310e990d872605e9176ec5dbff9dad31a950",
+      "taken_at": "2026-11-06T08:07:51Z",
+      "renewed_at": "2026-11-06T08:07:51Z",
+      "expires_at": "2026-11-06T08:37:51Z"
+    },
+    {
+      "tag": "file:mdstruct/BUILD.bazel!w",
+      "holder": "(unlocked)",
+      "waypoint": "W1978",
+      "base_sha": "9cec310e990d872605e9176ec5dbff9dad31a950",
+      "taken_at": "2026-11-06T08:08:44Z",
+      "renewed_at": "2026-11-06T08:08:44Z",
+      "expires_at": "2026-11-06T08:38:44Z"
     }
   ],
   "advice": [

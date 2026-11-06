@@ -27,13 +27,13 @@ spell that variable's name (the wiring arm reads a module that does as one that 
 import json
 import os
 import shutil
-import subprocess
 import sys
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TextIO
 
+from mikemol.hooks import runproc
 from mikemol.hooks.payload import as_record
 from mikemol.hooks.tick_stop import QUEUE, fresh, payload_dir, payload_lock
 
@@ -76,16 +76,10 @@ def release_with_writer(
 
     """
     try:
-        done = subprocess.run(
-            [str(writer), "--state", str(queue), "--unlock", holder],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=timeout_s,
+        done = runproc.run(
+            [str(writer), "--state", str(queue), "--unlock", holder], timeout=timeout_s
         )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
+    except (OSError, runproc.TimeoutExpired):
         return False
     return done.returncode == 0
 

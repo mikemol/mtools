@@ -17796,3 +17796,10 @@
   claim  = {A hung checker refuses the prune: the bound raises, and the refusal names the script.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_warrant_crosscheck.py -k test_a_checker_that_outlasts_its_bound_is_unverifiable},
 }
+
+@misc{hooks-build-failure-real-reader-run-answers-stdout-only-on-a-clean-exit,
+  section = {build_failure},
+  title  = {Exit 0 gives stdout; a nonzero exit, a missing program and a hung one all give None},
+  claim  = {Exit 0 gives stdout; a nonzero exit, a missing program and a hung one all give None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_the_real_reader_run_answers_stdout_only_on_a_clean_exit},
+}

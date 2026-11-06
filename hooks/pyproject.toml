@@ -386,12 +386,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ THE TICK-RELEASE HOOK RELEASES A LOCK ONLY THROUGH THE ONE WRITER (W815): the queue has one
-# writer, mikemol-paths-forward, so running it IS the module's responsibility. MEASURED: the argv is
-# the writer's own path (found by a fixed order: an env var, the project's venv, PATH), the queue
-# path the payload names, and the holder the queue itself recorded; never a shell, and bounded by a
-# one-second timeout inside SessionEnd's shared 1.5 s budget.
-"src/mikemol/hooks/tick_release.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/work_claims_hook.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ THE CENSUS NAMES ITS FILES FROM GIT'S INDEX (W794; operator: inputs named, never globbed), so
 # running `git ls-files` IS the module's responsibility: the argv is git's own resolved path, a
@@ -400,9 +394,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # planner IS the module's responsibility. MEASURED: the argv is the planner's own found path (an env
 # var, the project's venv, PATH), a fixed `plan` subcommand, the root and a throwaway ledger path;
 # never a shell, bounded by a 20-second timeout.
-# ⚑ THE BUILD-FAILURE HOOK RUNS THE LOG READER (W829): `mikemol-buildlog` IS its responsibility.
-# MEASURED: the argv is the reader's own found path (an env var, the project's venv, PATH), an
-# invocation id matched by a UUID pattern, and a fixed flag; never a shell, bounded by a 45 s timeout.
 # ⚑ THE COMMIT KATA RUNS GIT (W832): committing IS the module's responsibility. MEASURED: the argv is
 # git's own resolved path, fixed subcommands, the repository path and the committer's own paths and
 # message as separate arguments; never a shell, bounded by a 3000 s timeout (a gate waits inside).
@@ -425,7 +416,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "boolean-default-value-positional-argument",
     "boolean-type-hint-positional-argument",
 ]
-"src/mikemol/hooks/build_failure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.

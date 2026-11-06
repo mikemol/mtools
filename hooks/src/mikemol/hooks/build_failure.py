@@ -27,13 +27,12 @@ CONSUMED BY: the `mikemol-hook-build-failure` and `mikemol-build-failure` consol
 import json
 import os
 import re
-import subprocess
 import sys
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import TextIO
 
-from mikemol.hooks import tool_path
+from mikemol.hooks import runproc, tool_path
 from mikemol.hooks.payload import as_record, text_of
 
 BUILDLOG_ENV = "BUILDLOG_BIN"
@@ -76,16 +75,8 @@ def run_reader(argv: Sequence[str]) -> str | None:
 
     """
     try:
-        done = subprocess.run(
-            list(argv),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=READ_TIMEOUT_S,
-        )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
+        done = runproc.run(list(argv), timeout=READ_TIMEOUT_S)
+    except (OSError, runproc.TimeoutExpired):
         return None
     return done.stdout if done.returncode == 0 else None
 

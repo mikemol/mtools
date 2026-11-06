@@ -59,6 +59,7 @@ GRAPH = {
     "src/mikemol/hooks/build_failure.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/tool_path.py"
       ],
       "reads": [],
@@ -1162,6 +1163,7 @@ GRAPH = {
     "src/mikemol/hooks/tick_release.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/tick_stop.py"
       ],
       "reads": [],
