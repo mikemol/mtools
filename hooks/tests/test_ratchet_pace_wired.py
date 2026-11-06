@@ -12,7 +12,8 @@ import json
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import ratchet_pace
+from mikemol.hooks import admission, ratchet_pace, stacksnap
+from mikemol.hooks.stackfreeze import SNAP_ENV
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -71,3 +72,64 @@ def test_queue_only_and_an_unreadable_stack_file_refuse_nothing(tmp_path: Path) 
     queue = _stack(tmp_path, ".claude/paths-forward.json", ".claude/paths-forward.ledger")
     assert ratchet_pace.refusal(root, queue, env) is None
     assert ratchet_pace.refusal(root, tmp_path / "absent.json", env) is None
+
+
+_BLOB = "d" * 40
+_OTHER = "e" * 40
+_MODE = "100644"
+
+
+def _admitted_stack(tmp_path: Path, blob: str) -> tuple[Path, dict[str, str]]:
+    """Write a one-entry stack of hooks/x.py for W1 and its frozen snapshot at `blob`.
+
+    Returns:
+        the stack file and the environment naming the snapshot.
+
+    """
+    stack = _stack(tmp_path, "hooks/x.py")
+    snap = tmp_path / "snapshot.json"
+    stacksnap.dump(snap, [[stacksnap.Frozen("hooks/x.py", _MODE, blob)]])
+    return stack, {SNAP_ENV: str(snap)}
+
+
+def test_a_pinned_row_admits_exactly_its_change_on_the_frozen_snapshot(tmp_path: Path) -> None:
+    """The control: the row's blob admits; another blob, no row, and no snapshot all refuse."""
+    root, env = _repo(tmp_path)
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    stack, snap_env = _admitted_stack(tmp_path, _BLOB)
+    assert ratchet_pace.refusal(root, stack, {**env, **snap_env}, [row]) is None
+    assert ratchet_pace.refusal(root, stack, {**env, **snap_env}) is not None
+    assert ratchet_pace.refusal(root, stack, env, [row]) is not None
+    other, other_env = _admitted_stack(tmp_path, _OTHER)
+    assert ratchet_pace.refusal(root, other, {**env, **other_env}, [row]) is not None
+
+
+def test_an_unreadable_snapshot_never_admits(tmp_path: Path) -> None:
+    """A snapshot the env names that is not there or not a snapshot is no admission."""
+    root, env = _repo(tmp_path)
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    stack = _stack(tmp_path, "hooks/x.py")
+    absent = {**env, SNAP_ENV: str(tmp_path / "absent.json")}
+    assert ratchet_pace.refusal(root, stack, absent, [row]) is not None
+    torn = tmp_path / "torn.json"
+    torn.write_text("{", encoding="utf-8")
+    assert ratchet_pace.refusal(root, stack, {**env, SNAP_ENV: str(torn)}, [row]) is not None
+
+
+def test_the_rows_are_asked_only_for_a_stack_that_would_be_refused(tmp_path: Path) -> None:
+    """A paydown or a queue-state stack is admitted without consulting a row."""
+    root, _env = _repo(tmp_path)
+    pace = tmp_path / "pace.json"
+    asked: list[bool] = []
+
+    def spy() -> bool:
+        asked.append(True)
+        return False
+
+    now = datetime.now(UTC)
+    assert ratchet_pace.stack_reason(root, [_RATCHET], now, pace, spy) is None
+    queue = [".claude/paths-forward.json"]
+    assert ratchet_pace.stack_reason(root, queue, now, pace, spy) is None
+    assert not asked
+    assert ratchet_pace.stack_reason(root, ["hooks/x.py"], now, pace, spy) is not None
+    assert asked == [True]

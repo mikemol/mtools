@@ -19,13 +19,15 @@ lines it could not read, so a caller can say the file was partly unread.
 
 import json
 import os
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
+from mikemol.hooks import admission, stacksnap
 from mikemol.hooks.round_wire import STALE, published_at
+from mikemol.hooks.stackfreeze import SNAP_ENV
 from mikemol.hooks.stackrun import items_of
 from mikemol.hooks.stacksnap import QUEUE_FILES
 
@@ -258,7 +260,11 @@ def operator_held(queue: object, ratchet: str) -> bool:
 
 
 def stack_reason(
-    directory: Path, stack_paths: Iterable[str], now: datetime, pace_file: Path | None = None
+    directory: Path,
+    stack_paths: Iterable[str],
+    now: datetime,
+    pace_file: Path | None = None,
+    admitted: Callable[[], bool] | None = None,
 ) -> str | None:
     """Judge a submitted stack against the repository's paydown pace.
 
@@ -268,6 +274,9 @@ def stack_reason(
     the session cannot fix.
     ⚑ A STACK OF QUEUE FILES ALONE IS ADMITTED (a queue-state commit), and so is any stack that
     touches a ratchet this repository owes: it is the paydown.
+    ⚑ A PINNED ROW IS ASKED LAST (W2301), only for a stack that would otherwise be refused, so an
+    honest paydown never spends one: `admitted` answers whether a row in `admission.ROWS` is
+    exactly this change. It forgives no debt; the row is spent by its trailer at landing.
 
     Returns:
         the reason to refuse, naming each owed ratchet, its required and observed fall and the
@@ -291,6 +300,8 @@ def stack_reason(
         return None
     if any(_touches(paths, o.ratchet) for o in behind):
         return None
+    if admitted is not None and admitted():
+        return None
     lines = []
     for o in behind:
         cards = ", ".join(paydown_cards(queue, o.ratchet)) or "none named: add one touching it"
@@ -312,7 +323,28 @@ def stack_reason(
     )
 
 
-def refusal(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
+def _admitted_by(
+    root: Path, waypoints: Sequence[str], env: Mapping[str, str], rows: Sequence[admission.Row]
+) -> Callable[[], bool]:
+    # Whether a pinned row is exactly this stack, read from the FROZEN snapshot the submit made.
+    # ⚑ NO SNAPSHOT MEANS NO ADMISSION: an unreadable or absent snapshot never admits.
+    def check() -> bool:
+        named = env.get(SNAP_ENV, "")
+        frozen = stacksnap.load(Path(named)) if named else None
+        if frozen is None:
+            return False
+        files = [f for entry in frozen for f in entry]
+        return admission.admitting(rows, root.name, waypoints, files) is not None
+
+    return check
+
+
+def refusal(
+    root: Path,
+    stack_file: Path,
+    env: Mapping[str, str],
+    rows: Sequence[admission.Row] = admission.ROWS,
+) -> str | None:
     """Judge a submitted stack file against the paydown pace, as the other submit refusals do.
 
     Returns:
@@ -326,4 +358,5 @@ def refusal(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
         return None
     named = env.get(ENV)
     paths = [path for item in items for path in item.paths]
-    return stack_reason(root, paths, datetime.now(UTC), Path(named) if named else None)
+    admitted = _admitted_by(root, [item.waypoint for item in items], env, rows)
+    return stack_reason(root, paths, datetime.now(UTC), Path(named) if named else None, admitted)
