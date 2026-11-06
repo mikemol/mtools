@@ -21,8 +21,9 @@ anything odd in git's answer all return None, so the caller keeps its existing d
 
 import os
 import shutil
-import subprocess
 from pathlib import Path, PurePosixPath
+
+from mikemol.hooks import runproc
 
 _GIT_TIMEOUT_S = 10
 _ANSWER_LINES = 3
@@ -54,7 +55,7 @@ def _ask_git(root: Path) -> list[str] | None:
     if git is None or not root.is_dir():
         return None
     try:
-        proc = subprocess.run(
+        proc = runproc.run(
             [
                 git,
                 "-C",
@@ -65,15 +66,10 @@ def _ask_git(root: Path) -> list[str] | None:
                 "--show-toplevel",
                 "--show-prefix",
             ],
-            capture_output=True,
-            text=True,
-            timeout=_GIT_TIMEOUT_S,
-            check=False,
             env=_clean_env(),
+            timeout=_GIT_TIMEOUT_S,
         )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.SubprocessError)):
-            raise
+    except (OSError, runproc.TimeoutExpired):
         return None
     if proc.returncode != 0:
         return None

@@ -18255,3 +18255,33 @@
   claim  = {Each copy equals the structural-query launcher byte for byte and keeps its execute bit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_bin_launchers_regular.py -k test_the_dispatching_launchers_hold_the_originals_bytes_and_are_executable},
 }
+
+@misc{hooks-round-wire-working-card-with-a-held-scratch-tree-is-being-built-not-outside,
+  section = {round_wire},
+  title  = {W2316: an honest outside mark is admitted; an empty one, and another card's tree, are not},
+  claim  = {W2316: an honest outside mark is admitted; an empty one, and another card's tree, are
+            not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_working_card_with_a_held_scratch_tree_is_being_built_not_outside},
+}
+
+@misc{hooks-round-wire-no-scratch-root-declared-exempts-nothing-and-does-not-raise,
+  section = {round_wire},
+  title  = {The root is declared, never guessed: unset means no tree is held, so the refusal stands},
+  claim  = {The root is declared, never guessed: unset means no tree is held, so the refusal stands.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_no_scratch_root_declared_exempts_nothing_and_does_not_raise},
+}
+
+@misc{hooks-round-wire-commit-queue-that-cannot-be-read-keeps-the-refusal-and-says-so,
+  section = {round_wire},
+  title  = {W2316: an unreadable reading fails toward the refusal, visibly, never silently admitting},
+  claim  = {W2316: an unreadable reading fails toward the refusal, visibly, never silently
+            admitting.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_commit_queue_that_cannot_be_read_keeps_the_refusal_and_says_so},
+}
+
+@misc{hooks-worktree-venv-git-that-outlasts-its-bound-resolves-nothing-never-a-hang,
+  section = {worktree-venv},
+  title  = {A hung git answers None (no fallback, the refusal stands); it never raises or waits},
+  claim  = {A hung git answers None (no fallback, the refusal stands); it never raises or waits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_worktree_venv.py -k test_a_git_that_outlasts_its_bound_resolves_nothing_never_a_hang},
+}

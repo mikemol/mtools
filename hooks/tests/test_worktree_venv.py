@@ -158,6 +158,22 @@ def test_a_non_worktree_repository_behaves_as_before(decoy: Path) -> None:
     assert log.exists()
 
 
+def test_a_git_that_outlasts_its_bound_resolves_nothing_never_a_hang(
+    decoy: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A hung git answers None (no fallback, the refusal stands); it never raises or waits."""
+    hanger = decoy / "hang-git"
+    hanger.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    hanger.chmod(0o755)
+
+    def fake_which(_name: str) -> str:
+        return str(hanger)
+
+    monkeypatch.setattr("shutil.which", fake_which)
+    monkeypatch.setattr(worktree_venv, "_GIT_TIMEOUT_S", 0.2)
+    assert worktree_venv.main_tree_venv_python(decoy) is None
+
+
 def test_a_directory_outside_any_repository_resolves_nothing(decoy: Path) -> None:
     """A plain directory, or a missing one, is not a worktree and yields None."""
     plain = decoy / "plain"

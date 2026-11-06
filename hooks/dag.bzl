@@ -878,6 +878,7 @@ GRAPH = {
         "src/mikemol/hooks/commit_counts.py",
         "src/mikemol/hooks/payload.py",
         "src/mikemol/hooks/round_check.py",
+        "src/mikemol/hooks/scratch.py",
         "src/mikemol/hooks/stamps.py"
       ],
       "reads": [],
@@ -1508,7 +1509,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/worktree_venv.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

@@ -60,6 +60,13 @@ src/mikemol/hooks/commit_body.py|the-none-waypoint-is-refused|    if waypoint ==
 src/mikemol/hooks/stackland.py|a-queue-only-admitted-entry-is-refused-as-empty|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if not admissions(entry.message):|def=_replay
 src/mikemol/hooks/commit_kata.py|the-backstop-skips-the-trailer|    reason = message_refusal\(message\)|    reason = message_refusal(head)|def=message_of
 src/mikemol/hooks/testgate.py|the-test-gate-drops-the-error-stream|    return done\.returncode, done\.stdout \+ done\.stderr|    return done.returncode, done.stdout|def=run_command
+src/mikemol/hooks/round_wire.py|every-working-mark-reads-as-built|        return frozenset\(s for s in working if path_for\(root, directory, s\)\.is_dir\(\)\)|        return frozenset(working)|def=held_trees
+src/mikemol/hooks/round_wire.py|no-scratch-root-raises-past-the-hook|    except ScratchError:|    except KeyError:|def=held_trees
+src/mikemol/hooks/round_wire.py|an-absent-commit-queue-reads-as-broken|    if not path\.is_file\(\):|    if False:|def=queue_readable
+src/mikemol/hooks/round_wire.py|a-torn-commit-queue-reads-as-fine|        return False|        return True|def=queue_readable
+src/mikemol/hooks/round_wire.py|a-blind-refusal-does-not-say-so|        if queue_readable\(directory\)|        if True|def=round_reason
+src/mikemol/hooks/round_wire.py|the-submit-exempts-a-scratch-tree|    return round_reason\(directory, datetime\.now\(UTC\), None, \{\}\)|    return round_reason(directory, datetime.now(UTC))|def=now_reason
+src/mikemol/hooks/worktree_venv.py|a-hung-git-raises-past-the-worktree-fallback|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=_ask_git
 src/mikemol/hooks/standing_facts.py|a-hung-git-raises-past-the-standing-facts|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=_git
 src/mikemol/hooks/claude_code_census.py|a-refusing-git-reads-as-a-clean-census|    if done\.returncode != 0:|    if False:|def=untracked
 src/mikemol/hooks/stackrun.py|an-admitted-stack-gets-no-trailer|    if row is not None:|    if False:|def=entries_for
@@ -821,7 +828,7 @@ src/mikemol/hooks/tick_stop.py|round-never-consulted|        idle = round_reason
 src/mikemol/hooks/tick_stop.py|running-reviewer-ignored|    if reviewer_running\(payload, now\):|    if False:|def=idle_block
 src/mikemol/hooks/tick_stop.py|reviewer-folder-read-from-the-wrong-place|    folder = transcript\.with_suffix\(""\) / "subagents"|    folder = transcript.parent / "subagents"|def=reviewer_running
 src/mikemol/hooks/commit_kata.py|round-not-asked-at-submit|        or _round_refusal\(root\)|        or None|def=submit_problem
-src/mikemol/hooks/round_wire.py|wall-clock-judgement-never-refuses|    return round_reason\(directory, datetime\.now\(UTC\)\)|    return None|def=now_reason
+src/mikemol/hooks/round_wire.py|wall-clock-judgement-never-refuses|    return round_reason\(directory, datetime\.now\(UTC\), None, \{\}\)|    return None|def=now_reason
 src/mikemol/hooks/commitments_emit.py|open-count-always-zero|            value = held\[repo\]\[layer\]|            value = 0|def=rows_of
 src/mikemol/hooks/commitments_emit.py|uncounted-layer-counted|        if layer in layers:|        if True:|def=rows_of
 src/mikemol/hooks/idle_progress.py|round-card-not-preferred|        if symbol in ready:|        if False:|def=idle_card
@@ -850,7 +857,7 @@ src/mikemol/hooks/watchdog.py|reversed-window-accepted|    if not 0 < floor <= c
 src/mikemol/hooks/watchdog.py|bad-window-not-refused-at-start|    except ValueError as caught:|    except KeyError as caught:|def=main
 src/mikemol/hooks/round_wire.py|ready-card-in-the-gate-still-demanded|    waiting = \[symbol for symbol in _symbols\(queue, "ready"\) if symbol not in cited\]|    waiting = [symbol for symbol in _symbols(queue, "ready")]|def=refusals
 src/mikemol/hooks/round_wire.py|queued-card-still-outside| if symbol not in cited\]|]|def=refusals
-src/mikemol/hooks/round_wire.py|submission-map-ignored|directory\.name, now, in_gate\(directory\)\)|directory.name, now, frozenset())|def=round_reason
+src/mikemol/hooks/round_wire.py|submission-map-ignored|    cited = in_gate\(directory\)|    cited = frozenset()|def=round_reason
 src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|    found = refusals\(queue, text, directory\.name, now,|    found = refusals(queue, text, "", now,|def=round_reason
 src/mikemol/hooks/round_wire.py|same-stamp-logged-again|    if kept and kept\[-1\] == line:|    if False:|def=note_stamp
 src/mikemol/hooks/round_wire.py|round-stamp-never-kept|        note_stamp\(directory, seen\)|        pass|def=round_reason
