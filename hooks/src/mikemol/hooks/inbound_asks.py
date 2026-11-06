@@ -41,11 +41,11 @@ import json
 import os
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
+from mikemol.hooks import runproc
 from mikemol.hooks.payload import as_record, text_of
 
 READER = "mikemol-paths-forward"
@@ -56,6 +56,7 @@ HOOK_NAME = "mikemol-hook-inbound-asks"
 INBOUND_FLAG = "--inbound"
 SETTINGS_RELATIVE = Path(".claude") / "settings.json"
 READER_TIMEOUT = 20.0
+_NOT_FOUND = 127
 PROJECT_DIR_ENV = "CLAUDE_PROJECT_DIR"
 _SESSION_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
 _HEADING = "inbound: peer ask(s) wait on this repo with no claiming waypoint:"
@@ -98,6 +99,11 @@ def reader_argv(reader: str, state: Path) -> list[str]:
     return [reader, "--state", str(state), "--inbound"]
 
 
+def _not_found(done: runproc.Result, program: str) -> bool:
+    # runproc answers a program that is not there as 127 and this exact note, not as OSError.
+    return done.returncode == _NOT_FOUND and done.stderr == f"{program}: not found"
+
+
 def run_reader(reader: str, state: Path, timeout: float) -> tuple[str | None, str]:
     """Run the reader once, bounded.
 
@@ -106,18 +112,13 @@ def run_reader(reader: str, state: Path, timeout: float) -> tuple[str | None, st
 
     """
     try:
-        done = subprocess.run(
-            reader_argv(reader, state),
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-            stdin=subprocess.DEVNULL,
-        )
-    except subprocess.TimeoutExpired:
+        done = runproc.run(reader_argv(reader, state), timeout=timeout, stdin_text="")
+    except runproc.TimeoutExpired:
         return None, f"timed out after {timeout:g} s"
     except OSError as err:
         return None, f"could not start: {err}"
+    if _not_found(done, reader):
+        return None, f"could not start: {reader} not found"
     if done.returncode != 0:
         detail = done.stderr.strip().splitlines()
         return None, f"exited {done.returncode}" + (f": {detail[0]}" if detail else "")
@@ -266,18 +267,13 @@ def reader_knows_inbound(reader: str, timeout: float) -> tuple[bool, str]:
 
     """
     try:
-        done = subprocess.run(
-            [reader, "--help"],
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-            stdin=subprocess.DEVNULL,
-        )
-    except subprocess.TimeoutExpired:
+        done = runproc.run([reader, "--help"], timeout=timeout, stdin_text="")
+    except runproc.TimeoutExpired:
         return False, f"`{reader} --help` timed out after {timeout:g} s"
     except OSError as err:
         return False, f"`{reader} --help` could not start: {err}"
+    if _not_found(done, reader):
+        return False, f"`{reader} --help` could not start: {reader} not found"
     if INBOUND_FLAG in done.stdout + done.stderr:
         return True, ""
     return False, f"{reader} is too old: its --help does not name {INBOUND_FLAG}"

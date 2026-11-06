@@ -466,7 +466,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/inbound_asks.py": {
       "imports": [
-        "src/mikemol/hooks/payload.py"
+        "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

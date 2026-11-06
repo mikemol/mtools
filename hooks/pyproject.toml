@@ -527,13 +527,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE CALL SITE CARRIES ITS OWN `subprocess-without-shell-equals-true` directive, per the
 # asymmetry stated above; this line clears only the import.
 
-# ⚑ THE INBOUND-ASKS CONTEXT HOOK (W578): running `mikemol-paths-forward --inbound` IS its one
-# responsibility. MEASURED: the reader is `<project>/.venv/bin/mikemol-paths-forward` or the one
-# `shutil.which` finds; the argv is module constants plus the project's state path as ONE word;
-# stdin is closed and the call is bounded by a timeout. Never through a shell. Its tests write fake
-# readers under tmp_path and call `main`, so they spawn nothing themselves and need only `assert`.
-"src/mikemol/hooks/inbound_asks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 
 # ⚑ THE NEMIK-CHECK CONTEXT HOOK (W616): running the fleet reader `nemik-check` IS its one
 # responsibility. MEASURED: the reader is the `NEMIK_CHECK` env file, the one `shutil.which` finds,
