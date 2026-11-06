@@ -179,6 +179,19 @@ def test_a_secret_added_and_later_deleted_is_in_history_and_not_in_the_tree(
     assert "ABCDEFGHIJKLMNOP" not in out
 
 
+def test_run_command_answers_status_and_both_streams_and_127_for_a_missing_program(
+    tmp_path: Path,
+) -> None:
+    """The status and each stream come back apart; a program that is not there is 127 and a note."""
+    talker = tmp_path / "talker"
+    talker.write_text("#!/bin/sh\necho out\necho err >&2\nexit 4\n", encoding="utf-8")
+    talker.chmod(0o755)
+    assert privacy_audit.run_command([str(talker)]) == (4, "out\n", "err\n")
+    status, out, why = privacy_audit.run_command([str(tmp_path / "absent")])
+    assert (status, out) == (127, "")
+    assert "absent" in why
+
+
 def test_a_failing_judge_is_an_error_and_never_a_clean_tree() -> None:
     """A broken opa raises, so no reader mistakes a dead judge for an empty finding list."""
     with pytest.raises(RuntimeError, match="opa exited"):

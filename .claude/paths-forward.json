@@ -47953,7 +47953,7 @@
     {
       "symbol": "W2142",
       "title": "mikemol-commit --withdraw says 'too late: past the last boundary, will land' when the gate can no longer stop, instead of 'accepted' for a stack that then lands",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/commit_withdraw.py!w"
@@ -47961,17 +47961,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Instance: luthen's key 1793263719051201372 printed 'accepted; its gate stops at the next phase boundary' but had passed its last cancellable boundary and landed as da0594f5; the caller planned around the withdraw. Read commit_withdraw._ask_to_stop and gatephase: name the phase the gate is in (the last boundary is the one before the land step: the commit/update-ref phase), and answer 'too late' (a distinct exit code, say 5) when the phase is past it. Test: a map whose entry reports the land phase refuses with the too-late line and writes no marker. Successive entry after W2067 (same file).",
-      "evidence": "",
+      "evidence": "2026-11-06T14:38:26Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 33 holds the gate; no code for this card this turn.",
       "issued_at": "2026-10-29T09:14:37Z",
       "minted_during": "interrupt",
       "caused_by": "github:W76",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T14:38:26Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2143",
       "title": "The observed-type annotator tells Literal[False] from bool for an exit that only ever returned False, by keeping values and not only types",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:pycodemod/src/mikemol/pycodemod/observed.py"
@@ -47979,17 +47980,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "From W1924's NOT DONE: the observer keeps types, not values, so an __exit__ observed returning bool is sent to the worklist as a candidate (an observed bool may be Literal[False]). Decide whether the observer records the set of bool values seen per site and annotates Literal[False] only when no True was seen over enough runs, or leaves it to the worklist for good; el-openglo's selftest-only case is theirs. Read pycodemod/observed.py _builtin_spelling and annotating._EXITS first.",
-      "evidence": "",
+      "evidence": "2026-11-06T14:39:20Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 33 holds the gate; no code for this card this turn.",
       "issued_at": "2026-10-29T09:49:19Z",
       "minted_during": "interrupt",
       "caused_by": "W1924",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T14:39:20Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2144",
       "title": "pinned_files drops GIT_* variables: confirm on Bazel 9.x and give the rule an in-repo test",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:rules_py/pinned.bzl"
@@ -47997,12 +47999,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "From W1849's NOT DONE: (1) estate runs Bazel 9.3.1 and their reading was asked by letter (inbox letter 2026-10-28 to estate); a None value in repository_rule environment is verified to remove a variable only on 8.7.0. (2) No pinned_files instance exists in this repository, so the rule has no unit test target; add a probe module test or a Starlark unit test that runs git -C with GIT_DIR set to a nonexistent path. Wait for estate's answer before closing (1).",
-      "evidence": "",
+      "evidence": "2026-11-06T15:07:58Z: 2026-11-06: taken at the Stop hook's ask; batch 33 landed (2e383889), gate empty; no code for this card this turn. Next real units: W2312 (Admission trailer writer), rule (c) rebase.",
       "issued_at": "2026-10-29T09:49:48Z",
       "minted_during": "interrupt",
       "caused_by": "W1849",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T15:07:58Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2145",
@@ -48026,7 +48029,7 @@
     {
       "symbol": "W2146",
       "title": "A pure module created_record appends the paths a session's Write tool made to a per-session record beside the transcript, and answers whether a path is one the session created, including any path under the session's own scratchpad directory",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1993"
       ],
@@ -48034,16 +48037,17 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "DESIGN (W1919's open decision): the record lives beside the transcript, <transcript dir>/created/<session_id>.jsonl, the same durable place as W2117's compaction records (a scratch area is lost with a reboot). One JSON line per Write: {path (absolute, resolved), at}. API: record(transcript, session, path, now) appends one line, never raises; created(transcript, session) reads the set of paths; is_created(path, paths, scratchpad) is True when the path equals or lies under a created path or under the scratchpad directory (the session's own scratch area counts as created whole, since the harness hands it out empty). A path outside the transcript's project is still recordable. Tests: append then read; a child of a created directory counts; a path outside does not; the scratchpad root counts; an unreadable record reads as empty and says so, never as 'everything created'. New module: graph.json, dag.bzl, mutants, warrants, sites follow.",
-      "evidence": "",
+      "evidence": "2026-11-06T15:08:37Z: 2026-11-06: taken at the Stop hook's ask; gate empty, HEAD 2e383889; no code for this card this turn.",
       "issued_at": "2026-10-29T10:49:18Z",
       "minted_during": "interrupt",
       "caused_by": "W1993",
-      "last_worked": "2026-10-29T10:50:01Z",
+      "last_worked": "2026-11-06T15:08:37Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/created_record.py",
         "hooks/tests/test_created_record.py"
-      ]
+      ],
+      "completed": null
     },
     {
       "symbol": "W2147",
@@ -48075,7 +48079,7 @@
     {
       "symbol": "W2148",
       "title": "Every repo that installs mikemol-hooks repins it to the sha that carries the outage degrade and the tools/bazel wrapper, in one stack with a regenerated tools/bazel, after W2145 lands",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "fleet"
@@ -48083,17 +48087,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Fleet repin (github:W76, el-openglo:W781). Read from source: each repo's gate runs its OWN .venv/bin/mikemol-commit from a repo-local pin (el-openglo pyproject line 61: mikemol-hooks @ git+...@754dcf97#subdirectory=hooks); luthen's pinned-tools set holds mikemol-scan and the nemik tools, not mikemol-commit, so nothing moves without a repo commit. Order per repo: W2145 lands, then uv sync at the new sha in the LOCAL venv (no gate needed), mikemol-bazel-admit --install . to write tools/bazel, then ONE stack carrying the pin move and tools/bazel; the gate finds the locally installed tool through MIKEMOL_REAL_ROOT and degrades. Census first: which repos pin mikemol-hooks and at what sha (grep pyproject for the pin).",
-      "evidence": "",
+      "evidence": "2026-11-06T16:08:52Z: 2026-11-06: taken at the Stop hook's ask; gate empty, HEAD 2e383889; no code for this card this turn.",
       "issued_at": "2026-10-29T10:53:34Z",
       "minted_during": "interrupt",
       "caused_by": "github:W76",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T16:08:52Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2149",
       "title": "A gate refuses when the installed mikemol-hooks read through MIKEMOL_REAL_ROOT is not the sha the snapshot's pyproject pins, except the bootstrap stack that moves the pin",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/bazel_admit.py!w"
@@ -48101,12 +48106,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "github-42 (2026-10-29): the W2145 wrapper reads the real checkout's venv from inside a frozen snapshot, so 'tools are host state' could silently run a version the commit does not pin. Read the installed dist-info direct_url.json for mikemol-hooks (its vcs_info.commit_id), compare with the pin in the SNAPSHOT's pyproject.toml (the mikemol-hooks @ git+...@<sha> line), and refuse with a named reason when they differ. The bootstrap stack differs by design (venv synced ahead of the pin move): allow exactly 'the venv equals the pin this stack moves to' (the snapshot's pin), so the check is satisfied by the stack that carries the pin move and refuses a stale or ahead venv otherwise. Python, in bazel_admit (the wrapper only calls it); tests with a fake dist-info and a fake pyproject.",
-      "evidence": "",
+      "evidence": "2026-11-06T16:09:32Z: 2026-11-06: taken at the Stop hook's ask; gate empty, HEAD 2e383889; no code for this card this turn.",
       "issued_at": "2026-10-29T11:00:12Z",
       "minted_during": "interrupt",
       "caused_by": "W2145",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T16:09:32Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2150",
@@ -51201,7 +51207,7 @@
     {
       "symbol": "W2310",
       "title": "W2301 part B: the pinned Row table and the stack-equals-row check in ratchet_pace.stack_reason",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2301"
       ],
@@ -51211,12 +51217,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Pure functions with tests: Row(repo, card, blobs, review), the check that the frozen stack's non-queue paths equal the row's blob keys and each frozen blob equals the pinned sha, after _touches (ratchet_pace.py).",
-      "evidence": "",
+      "evidence": "2026-11-06T16:55:02Z: 2026-11-06: STARTED (the first real unit after the operator asked why no card was being worked). Reading ratchet_pace.stack_reason and stacksnap.load to place the Row table check after _touches on the frozen stack.",
       "issued_at": "2026-11-06T10:55:40Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T16:55:02Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2311",
@@ -51241,22 +51248,25 @@
     {
       "symbol": "W2312",
       "title": "W2301 part E: the landing-path re-check and the Admission trailer in the two landing paths",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2301"
       ],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2310"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "One shared function called by stackrun.py and traindrive.py: re-run the row check against the refrozen snapshot, refuse on a judged-versus-landing entry mismatch, write Admission: <repo>/<card>/<row> on the landed commit.",
-      "evidence": "",
+      "evidence": "2026-11-06T16:54:19Z: 2026-11-06: ACTUALLY STARTED after the operator asked why no card was being worked: I had been taking the hook's named card with no code each turn. Reading the two landing paths (stackrun.py, traindrive.py) and stacklanding first. | 2026-11-06T16:54:43Z: 2026-11-06: READ both landing paths: stackrun.py:269 and traindrive.py:80 each build entries as Entry(seams.message_of(item), item.paths, item.files), a single choke point, so the trailer can be added there. BUT the trailer must name the Row an entry matched, and that verdict is produced by the pinned Row table (W2310); without it there is nothing honest to write. So W2312 is blocked on W2310, not idle. After W2310: add the row id to Item/Entry, write Admission: <row> after message_of (the backstop refuses it before, so it must be appended in Entry construction, not message_of), re-check against the refrozen snapshot.",
       "issued_at": "2026-11-06T10:56:19Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T16:54:43Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2313",
@@ -51785,6 +51795,24 @@
       "taken_at": "2026-11-06T14:10:33Z",
       "renewed_at": "2026-11-06T14:10:33Z",
       "expires_at": "2026-11-06T14:40:33Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/commit_withdraw.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W2142",
+      "base_sha": "c7458f3f36bade211d5e5ebe8af595dea82464fa",
+      "taken_at": "2026-11-06T14:38:26Z",
+      "renewed_at": "2026-11-06T14:38:26Z",
+      "expires_at": "2026-11-06T15:08:26Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/bazel_admit.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W2149",
+      "base_sha": "2e3838890bc925556497ceac65992253f3f93f80",
+      "taken_at": "2026-11-06T16:09:32Z",
+      "renewed_at": "2026-11-06T16:09:32Z",
+      "expires_at": "2026-11-06T16:39:32Z"
     }
   ],
   "advice": [

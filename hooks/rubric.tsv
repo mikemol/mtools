@@ -233,3 +233,4 @@ toy-harness	The Toy Harness: a Disposable Repository the Real Stack Command Runs
 verdict	A checker verdict is clean, flagged or could-not-run, and the last two never merge
 warrant_crosscheck	The prune cross-check
 build_failure	The build-failure hook's log reader
+admission	A pinned row admits exactly one reviewed change

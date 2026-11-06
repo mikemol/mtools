@@ -30,12 +30,13 @@ import json
 import os
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 from collections.abc import Sequence
 from pathlib import Path
 from typing import cast
+
+from mikemol.hooks import runproc
 
 QUERY = "data.mtools.publish_privacy.findings"
 SNIFF = 8192
@@ -72,7 +73,7 @@ def run_command(argv: Sequence[str]) -> tuple[int, str, str]:
 
     """
     try:
-        done = subprocess.run(list(argv), capture_output=True, text=True, check=False)
+        done = runproc.run(list(argv))
     except OSError as exc:
         return 127, "", f"{type(exc).__name__}: {exc}"
     return done.returncode, done.stdout, done.stderr

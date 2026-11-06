@@ -18064,3 +18064,88 @@
             raise.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shellcheck.py -k test_a_linter_that_outlasts_its_bound_is_unknown_not_a_hang},
 }
+
+@misc{hooks-admission-exact-change-is-admitted-and-names-its-row,
+  section = {admission},
+  title  = {The control: the pinned paths at the pinned blobs under the row's card admit},
+  claim  = {The control: the pinned paths at the pinned blobs under the row's card admit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_the_exact_change_is_admitted_and_names_its_row},
+}
+
+@misc{hooks-admission-queue-files-ride-free-and-a-repeated-waypoint-is-one-card,
+  section = {admission},
+  title  = {A queue file at any blob, and several entries of the same card, change nothing},
+  claim  = {A queue file at any blob, and several entries of the same card, change nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_queue_files_ride_free_and_a_repeated_waypoint_is_one_card},
+}
+
+@misc{hooks-admission-another-card-or-no-card-is-refused,
+  section = {admission},
+  title  = {Every entry must be the row's card: one other waypoint, or none, refuses},
+  claim  = {Every entry must be the row's card: one other waypoint, or none, refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_another_card_or_no_card_is_refused},
+}
+
+@misc{hooks-admission-path-the-row-does-not-pin-is-refused-by-name,
+  section = {admission},
+  title  = {The row pins a change, not a directory: an extra file is not admitted},
+  claim  = {The row pins a change, not a directory: an extra file is not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_path_the_row_does_not_pin_is_refused_by_name},
+}
+
+@misc{hooks-admission-pinned-path-the-stack-does-not-carry-is-refused-by-name,
+  section = {admission},
+  title  = {Half the change is not the change},
+  claim  = {Half the change is not the change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_pinned_path_the_stack_does_not_carry_is_refused_by_name},
+}
+
+@misc{hooks-admission-changed-byte-is-refused-naming-the-path-and-the-blob-it-holds,
+  section = {admission},
+  title  = {The same paths at a different blob are a different change},
+  claim  = {The same paths at a different blob are a different change.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_changed_byte_is_refused_naming_the_path_and_the_blob_it_holds},
+}
+
+@misc{hooks-admission-deletion-is-not-the-pinned-blob,
+  section = {admission},
+  title  = {A frozen deletion has an empty blob and says so},
+  claim  = {A frozen deletion has an empty blob and says so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_deletion_is_not_the_pinned_blob},
+}
+
+@misc{hooks-admission-path-frozen-twice-is-judged-by-its-last-blob,
+  section = {admission},
+  title  = {A later entry's file replaces an earlier one's, as the landing does},
+  claim  = {A later entry's file replaces an earlier one's, as the landing does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_path_frozen_twice_is_judged_by_its_last_blob},
+}
+
+@misc{hooks-admission-no-row-admits-another-repository-or-a-changed-stack,
+  section = {admission},
+  title  = {`admitting` answers None, not an exception, for a wrong repository or a refused stack},
+  claim  = {`admitting` answers None, not an exception, for a wrong repository or a refused stack.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_no_row_admits_another_repository_or_a_changed_stack},
+}
+
+@misc{hooks-admission-first-matching-row-of-several-is-found,
+  section = {admission},
+  title  = {Rows are tried in order and the one that matches this stack wins},
+  claim  = {Rows are tried in order and the one that matches this stack wins.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_the_first_matching_row_of_several_is_found},
+}
+
+@misc{hooks-admission-table-ships-empty-so-nothing-is-admitted-until-a-row-is-added,
+  section = {admission},
+  title  = {A row is a reviewed literal: with none added, the exact change above is not admitted},
+  claim  = {A row is a reviewed literal: with none added, the exact change above is not admitted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_the_table_ships_empty_so_nothing_is_admitted_until_a_row_is_added},
+}
+
+@misc{hooks-privacy-audit-run-command-answers-status-and-both-streams-and-127-for-a-missing-program,
+  section = {privacy_audit},
+  title  = {The status and each stream come back apart; a program that is not there is 127 and a note},
+  claim  = {The status and each stream come back apart; a program that is not there is 127 and a
+            note.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_run_command_answers_status_and_both_streams_and_127_for_a_missing_program},
+}

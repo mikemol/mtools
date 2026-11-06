@@ -59,6 +59,12 @@ src/mikemol/hooks/commit_body.py|a-trailer-door-sees-only-newlines|    if traile
 src/mikemol/hooks/commit_body.py|the-none-waypoint-is-refused|    if waypoint == _NONE:|    if False:|def=waypoint_refusal
 src/mikemol/hooks/stackland.py|a-queue-only-admitted-entry-is-refused-as-empty|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if not admissions(entry.message):|def=_replay
 src/mikemol/hooks/commit_kata.py|the-backstop-skips-the-trailer|    reason = message_refusal\(message\)|    reason = message_refusal(head)|def=message_of
+src/mikemol/hooks/admission.py|another-card-is-admitted|    if not named or named != \{row\.card\}:|    if not named:|def=refusal
+src/mikemol/hooks/admission.py|an-unpinned-path-is-admitted|    if extra:|    if False:|def=refusal
+src/mikemol/hooks/admission.py|half-the-change-is-admitted|    if missing:|    if False:|def=refusal
+src/mikemol/hooks/admission.py|a-changed-byte-is-admitted|        if held\[path\] != row\.blobs\[path\]:|        if False:|def=refusal
+src/mikemol/hooks/admission.py|a-queue-file-is-not-free|    return \{f\.path: f\.blob for f in frozen if f\.path not in QUEUE_FILES\}|    return {f.path: f.blob for f in frozen}|def=_frozen_blobs
+src/mikemol/hooks/admission.py|another-repository-is-admitted|        if row\.repo == repo and refusal\(row, named, held\) is None:|        if refusal(row, named, held) is None:|def=admitting
 src/mikemol/hooks/shellcheck.py|a-hung-linter-raises-past-the-hook|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=run
 src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-tracked-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=tracked_python
 src/mikemol/hooks/pycheck_census.py|a-hung-git-raises-past-the-unmeasured-census|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=unmeasured

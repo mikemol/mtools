@@ -8,6 +8,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/admission.py": {
+      "imports": [
+        "src/mikemol/hooks/stacksnap.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/after_compaction.py": {
       "imports": [
         "src/mikemol/hooks/host_facts.py",
@@ -567,7 +574,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/privacy_audit.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -1522,6 +1531,14 @@ GRAPH = {
     }
   },
   "tests": {
+    "tests/test_admission.py": {
+      "imports": [
+        "src/mikemol/hooks/admission.py",
+        "src/mikemol/hooks/stacksnap.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_adopt_launcher.py": {
       "imports": [
         "src/mikemol/hooks/runproc.py"
