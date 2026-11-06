@@ -10,6 +10,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -161,6 +162,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -312,6 +314,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -463,6 +466,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -614,6 +618,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -765,6 +770,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -916,6 +922,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -1067,6 +1074,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",
@@ -1218,6 +1226,7 @@ mutant_site(
     tests = "tests/test_census_unmeasured.py tests/test_commit_dir_deletion.py tests/test_commit_isolated.py tests/test_commit_isolated_hooks.py tests/test_commit_isolated_ignored.py tests/test_commit_isolated_new.py tests/test_commit_isolated_routing.py tests/test_commit_isolated_staged.py tests/test_commit_plain_frozen.py tests/test_commit_remote.py tests/test_commit_remote_pushed.py tests/test_commit_stack.py tests/test_commit_unpushed.py tests/test_dirtyread.py tests/test_gateenv.py tests/test_idle_stop.py tests/test_in_gate.py tests/test_pycheck_changed.py tests/test_queuecarry.py tests/test_scratch.py tests/test_scratch_beat.py tests/test_scratch_land.py tests/test_scratch_restore.py tests/test_snapshot.py tests/test_stackfreeze.py tests/test_stackgate.py tests/test_stackland.py tests/test_stacklanding.py tests/test_stackrun.py tests/test_stacksnap.py tests/test_stacktree.py tests/test_strayworktree.py tests/test_verdictlog.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/admission.py",
         "//hooks:src/mikemol/hooks/aheadrefusal.py",
         "//hooks:src/mikemol/hooks/baselinedir.py",
         "//hooks:src/mikemol/hooks/bazelstop.py",

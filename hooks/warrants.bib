@@ -18149,3 +18149,32 @@
             note.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_privacy_audit.py -k test_run_command_answers_status_and_both_streams_and_127_for_a_missing_program},
 }
+
+@misc{hooks-ratchet-pace-wired-pinned-row-admits-exactly-its-change-on-the-frozen-snapshot,
+  section = {ratchet_pace},
+  title  = {The control: the row's blob admits; another blob, no row, and no snapshot all refuse},
+  claim  = {The control: the row's blob admits; another blob, no row, and no snapshot all refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_pinned_row_admits_exactly_its_change_on_the_frozen_snapshot},
+}
+
+@misc{hooks-ratchet-pace-wired-unreadable-snapshot-never-admits,
+  section = {ratchet_pace},
+  title  = {A snapshot the env names that is not there or not a snapshot is no admission},
+  claim  = {A snapshot the env names that is not there or not a snapshot is no admission.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_an_unreadable_snapshot_never_admits},
+}
+
+@misc{hooks-ratchet-pace-wired-rows-are-asked-only-for-a-stack-that-would-be-refused,
+  section = {ratchet_pace},
+  title  = {A paydown or a queue-state stack is admitted without consulting a row},
+  claim  = {A paydown or a queue-state stack is admitted without consulting a row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_the_rows_are_asked_only_for_a_stack_that_would_be_refused},
+}
+
+@misc{hooks-testgate-run-command-joins-both-streams-passes-the-environment-and-reads-a-missing-program,
+  section = {testgate},
+  title  = {Output is stdout then stderr with the exit code; the extra environment reaches the child},
+  claim  = {Output is stdout then stderr with the exit code; the extra environment reaches the
+            child.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_testgate.py -k test_run_command_joins_both_streams_passes_the_environment_and_reads_a_missing_program},
+}

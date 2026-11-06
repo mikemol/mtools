@@ -752,7 +752,9 @@ GRAPH = {
     },
     "src/mikemol/hooks/ratchet_pace.py": {
       "imports": [
+        "src/mikemol/hooks/admission.py",
         "src/mikemol/hooks/round_wire.py",
+        "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
@@ -1162,6 +1164,7 @@ GRAPH = {
     "src/mikemol/hooks/testgate.py": {
       "imports": [
         "src/mikemol/hooks/presubmit.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/tool_path.py"
       ],
@@ -2810,7 +2813,10 @@ GRAPH = {
     },
     "tests/test_ratchet_pace_wired.py": {
       "imports": [
-        "src/mikemol/hooks/ratchet_pace.py"
+        "src/mikemol/hooks/admission.py",
+        "src/mikemol/hooks/ratchet_pace.py",
+        "src/mikemol/hooks/stackfreeze.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []

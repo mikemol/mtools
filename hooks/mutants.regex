@@ -59,6 +59,12 @@ src/mikemol/hooks/commit_body.py|a-trailer-door-sees-only-newlines|    if traile
 src/mikemol/hooks/commit_body.py|the-none-waypoint-is-refused|    if waypoint == _NONE:|    if False:|def=waypoint_refusal
 src/mikemol/hooks/stackland.py|a-queue-only-admitted-entry-is-refused-as-empty|    if not admissions\(entry\.message\) or all\(p in QUEUE_FILES for p in entry\.paths\):|    if not admissions(entry.message):|def=_replay
 src/mikemol/hooks/commit_kata.py|the-backstop-skips-the-trailer|    reason = message_refusal\(message\)|    reason = message_refusal(head)|def=message_of
+src/mikemol/hooks/testgate.py|the-test-gate-drops-the-error-stream|    return done\.returncode, done\.stdout \+ done\.stderr|    return done.returncode, done.stdout|def=run_command
+src/mikemol/hooks/ratchet_pace.py|a-row-check-admits-whatever-it-is-asked|    if admitted is not None and admitted\(\):|    if admitted is not None:|def=stack_reason
+src/mikemol/hooks/ratchet_pace.py|the-rows-are-never-asked|    if admitted is not None and admitted\(\):|    if False:|def=stack_reason
+src/mikemol/hooks/ratchet_pace.py|a-paydown-spends-a-row-check|    if any\(_touches\(paths, o\.ratchet\) for o in behind\):|    if False:|def=stack_reason
+src/mikemol/hooks/ratchet_pace.py|a-missing-snapshot-is-read-as-files|        if frozen is None:|        if False:|def=_admitted_by
+src/mikemol/hooks/ratchet_pace.py|a-matching-row-reads-as-not-admitting|        return admission\.admitting\(rows, root\.name, waypoints, files\) is not None|        return admission.admitting(rows, root.name, waypoints, files) is None|def=_admitted_by
 src/mikemol/hooks/admission.py|another-card-is-admitted|    if not named or named != \{row\.card\}:|    if not named:|def=refusal
 src/mikemol/hooks/admission.py|an-unpinned-path-is-admitted|    if extra:|    if False:|def=refusal
 src/mikemol/hooks/admission.py|half-the-change-is-admitted|    if missing:|    if False:|def=refusal

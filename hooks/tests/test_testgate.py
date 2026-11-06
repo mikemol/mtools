@@ -63,6 +63,21 @@ def test_only_test_files_become_targets_once_and_in_order() -> None:
     assert testgate.targets_of(paths) == [_TARGET, "//pathsforward:test_y"]
 
 
+def test_run_command_joins_both_streams_passes_the_environment_and_reads_a_missing_program(
+    tmp_path: Path,
+) -> None:
+    """Output is stdout then stderr with the exit code; the extra environment reaches the child."""
+    talker = tmp_path / "talker"
+    talker.write_text('#!/bin/sh\necho "out $EXTRA"\necho err >&2\nexit 3\n', encoding="utf-8")
+    talker.chmod(0o755)
+    code, text = testgate.run_command([str(talker)], {"EXTRA": "x"}, tmp_path)
+    assert (code, text) == (3, "out x\nerr\n")
+    missing_code, note = testgate.run_command([str(tmp_path / "absent")], {}, tmp_path)
+    not_found = 127
+    assert missing_code == not_found
+    assert "absent" in note
+
+
 def test_a_failing_target_refuses_with_its_tail_and_the_reproduce_command(tmp_path: Path) -> None:
     """The reason carries bazel's last lines and the one command that reproduces only the run."""
     run = _Runs(3, "one\ntwo\nFAILED //hooks:test_x\n")

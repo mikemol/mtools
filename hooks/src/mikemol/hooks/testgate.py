@@ -20,10 +20,10 @@ CONSUMED BY: `commit_kata.submit_problem`, beside the import, build-file and sha
 
 import os
 import re
-import subprocess
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
+from mikemol.hooks import runproc
 from mikemol.hooks.presubmit import DEFAULT_ROOT, ROOT_ENV, SNAPSHOT, SNAPSHOT_ENV, plan
 from mikemol.hooks.stackrun import items_of
 from mikemol.hooks.tool_path import find as find_tool
@@ -58,14 +58,7 @@ def run_command(argv: Sequence[str], env: Mapping[str, str], cwd: Path) -> tuple
         its exit code and what it printed.
 
     """
-    done = subprocess.run(
-        list(argv),
-        env={**os.environ, **env},
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    done = runproc.run(list(argv), cwd=cwd, env={**os.environ, **env})
     return done.returncode, done.stdout + done.stderr
 
 

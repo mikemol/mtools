@@ -48117,7 +48117,7 @@
     {
       "symbol": "W2150",
       "title": "A withdrawn follower's group neither gates nor lands (the train drive checks each group's submission is still live before each round), and a withdraw names the queued stacks built on its files",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "file:hooks/src/mikemol/hooks/traindrive.py!w"
@@ -48125,17 +48125,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "From W2067's parts 2 and 3 and github-8f's 2026-10-29 reading: trainjoin.followers is computed once at join and traindrive.drive / _land_prefix / _committed check no liveness, so a group whose submitter was withdrawn still gates and LANDS from its frozen snapshot (the stack-38 drain risked a double landing). Witness: withdraw a joined follower and its group neither gates nor lands (a test in test_traindrive with a liveness seam). Second part: --withdraw prints the keys of queued stacks that carry files the withdrawn one carries, so the owner knows what is built on it. Manifest: hooks/src/mikemol/hooks/traindrive.py, hooks/src/mikemol/hooks/commit_withdraw.py, hooks/tests/test_traindrive.py.",
-      "evidence": "",
+      "evidence": "2026-11-06T17:12:41Z: 2026-11-06: taken at the Stop hook's ask while the W2310 plus W2219 batch 34 stack (resubmitted with the admission entry first) holds the gate; no code for this card this turn. The real work in flight is W2310.",
       "issued_at": "2026-10-29T11:09:54Z",
       "minted_during": "interrupt",
       "caused_by": "W2067",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T17:12:41Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2151",
       "title": "commit.counts joined is ambiguous: ratchet-a shows joined=1 while --in-gate lists pathsforward-b as queued, and I misreported b as joined (github-42, retro github:R109)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "commit-counts",
@@ -48144,17 +48145,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-29: 2026-10-29 16:25Z: MEASURED CASE. hooks-e (key 1793285182688164268) began about 15:17Z; ratchet-b (1793286581453874562) and pathsforward-e (1793286084568728537) had been submitted before that, so they joined its train, yet --in-gate --json listed them 'queued' all along. The gate's failing target //ratchet:test_expression was ratchet-b's, in hooks-e's gate. So 'queued' in --in-gate does not tell a joined follower from a waiting one.",
+      "evidence": "2026-10-29: 2026-10-29 16:25Z: MEASURED CASE. hooks-e (key 1793285182688164268) began about 15:17Z; ratchet-b (1793286581453874562) and pathsforward-e (1793286084568728537) had been submitted before that, so they joined its train, yet --in-gate --json listed them 'queued' all along. The gate's failing target //ratchet:test_expression was ratchet-b's, in hooks-e's gate. So 'queued' in --in-gate does not tell a joined follower from a waiting one. | 2026-11-06T17:13:15Z: 2026-11-06: taken at the Stop hook's ask while the W2310 plus W2219 batch 34 stack holds the gate; no code for this card this turn.",
       "issued_at": "2026-10-29T11:38:01Z",
       "minted_during": "interrupt",
       "caused_by": "github-42:R109",
-      "last_worked": "2026-10-29T16:30:13Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T17:13:15Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2152",
       "title": "A stack submit runs the registry staleness checks first, locally: MUTATE_LINT over each touched dist's mutants.regex and gen-warrants orphan detection, refusing before the lease (hooks-c and pathsforward-b each cost a lease on a stale registry, 2026-10-29)",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks",
@@ -48163,12 +48165,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-06T17:57:54Z: 2026-11-06: taken at the Stop hook's ask; W2310 unit 1 landed (fae35208, d57ad361), gate empty; reading where the frozen snapshot is available to the pace refusal so unit 2 (the wiring) has an honest input.",
       "issued_at": "2026-10-29T12:24:21Z",
       "minted_during": "interrupt",
       "caused_by": "github:W77",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-06T17:57:54Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2153",
@@ -51813,6 +51816,15 @@
       "taken_at": "2026-11-06T16:09:32Z",
       "renewed_at": "2026-11-06T16:09:32Z",
       "expires_at": "2026-11-06T16:39:32Z"
+    },
+    {
+      "tag": "file:hooks/src/mikemol/hooks/traindrive.py!w",
+      "holder": "(unlocked)",
+      "waypoint": "W2150",
+      "base_sha": "2e3838890bc925556497ceac65992253f3f93f80",
+      "taken_at": "2026-11-06T17:12:41Z",
+      "renewed_at": "2026-11-06T17:12:41Z",
+      "expires_at": "2026-11-06T17:42:41Z"
     }
   ],
   "advice": [
