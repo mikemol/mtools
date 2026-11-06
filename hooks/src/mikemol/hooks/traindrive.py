@@ -48,7 +48,15 @@ from mikemol.hooks.isolated import Done
 from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, Stack, build
 from mikemol.hooks.stacklanding import land
-from mikemol.hooks.stackrun import EXIT_RACED, SHORT, History, Item, Seams, culprit_note
+from mikemol.hooks.stackrun import (
+    EXIT_RACED,
+    SHORT,
+    History,
+    Item,
+    Seams,
+    culprit_note,
+    entries_for,
+)
 from mikemol.hooks.trainjoin import Follower as Group
 from mikemol.hooks.traintel import Stats
 
@@ -77,7 +85,7 @@ def _flat(groups: Sequence[Group]) -> list[Item]:
 
 def _entries(groups: Sequence[Group], seams: Seams) -> list[Entry]:
     # The stack entries of every group's items, in order, for one build.
-    return [Entry(seams.message_of(i), i.paths, i.files) for i in _flat(groups)]
+    return entries_for(_flat(groups), seams)
 
 
 class _Round:

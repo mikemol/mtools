@@ -302,6 +302,56 @@ def test_an_entry_whose_waypoint_forges_a_trailer_is_named_with_its_place(
     assert "entry 1: the waypoint" in str(stackrun.items_of(path))
 
 
+def _seams(tmp_path: Path, row: str | None) -> stackrun.Seams:
+    """Build seams whose message is the subject and whose admission answers `row`.
+
+    Returns:
+        the seams.
+
+    """
+    return stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path,
+        message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
+        published=lambda _sha: "x",
+        admission=lambda _items: row,
+    )
+
+
+_QUEUE = ".claude/paths-forward.json"
+
+
+def test_an_admitted_stack_carries_the_trailer_once_on_the_first_entry_with_a_real_path(
+    tmp_path: Path,
+) -> None:
+    """W2312: one exact line, not on a queue-only entry, not repeated on the later entries."""
+    items = [
+        stackrun.Item("W1", "queue first", "", (_QUEUE,)),
+        stackrun.Item("W1", "the change", "", ("a.txt",)),
+        stackrun.Item("W1", "and more", "", ("b.txt",)),
+    ]
+    entries = stackrun.entries_for(items, _seams(tmp_path, "nemik/W1660"))
+    messages = [entry.message for entry in entries]
+    assert "Admission:" not in messages[0]
+    assert messages[1].endswith("Waypoint: W1\nAdmission: nemik/W1660\n")
+    assert "Admission:" not in messages[2]
+
+
+def test_a_stack_no_row_admits_gets_no_trailer_and_keeps_its_messages(tmp_path: Path) -> None:
+    """The default and a None answer write nothing: the messages are exactly the tool's."""
+    items = [stackrun.Item("W1", "the change", "", ("a.txt",))]
+    plain = stackrun.entries_for(items, _seams(tmp_path, None))
+    assert plain[0].message == "the change\n\nWaypoint: W1\n"
+    assert plain[0].paths == ("a.txt",)
+
+
+def test_an_admitted_stack_of_queue_files_alone_carries_no_trailer(tmp_path: Path) -> None:
+    """With no entry that has a real path there is nothing to spend a row on."""
+    items = [stackrun.Item("W1", "queue", "", (_QUEUE,))]
+    entries = stackrun.entries_for(items, _seams(tmp_path, "nemik/W1660"))
+    assert "Admission:" not in entries[0].message
+
+
 _NAMING = '#!/bin/sh\necho "lint: b.txt line 3 is wrong" >&2\nexit 1\n'
 
 

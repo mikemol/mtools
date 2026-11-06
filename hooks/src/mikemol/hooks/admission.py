@@ -65,6 +65,8 @@ def refusal(row: Row, waypoints: Iterable[str], frozen: Iterable[Frozen]) -> str
         blobs.
 
     """
+    if not row.blobs:
+        return "the row pins no path, so it admits nothing"
     named = set(waypoints)
     if not named or named != {row.card}:
         return f"the stack's waypoints {sorted(named)} are not only {row.card}"

@@ -102,6 +102,14 @@ def test_the_first_matching_row_of_several_is_found() -> None:
     assert admission.admitting([other, _ROW], "nemik", ["W1660"], _EXACT) is _ROW
 
 
+def test_a_row_that_pins_no_path_admits_nothing() -> None:
+    """An empty row would otherwise match any stack of its card with only queue files."""
+    empty = admission.Row(repo="nemik", card="W1660")
+    reason = admission.refusal(empty, ["W1660"], [])
+    assert reason == "the row pins no path, so it admits nothing"
+    assert admission.admitting([empty], "nemik", ["W1660"], []) is None
+
+
 def test_the_table_ships_empty_so_nothing_is_admitted_until_a_row_is_added() -> None:
     """A row is a reviewed literal: with none added, the exact change above is not admitted."""
     assert admission.ROWS == ()

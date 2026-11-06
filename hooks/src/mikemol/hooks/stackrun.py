@@ -38,7 +38,7 @@ from mikemol.hooks.stackgate import gate_tip
 from mikemol.hooks.stackland import Entry, build
 from mikemol.hooks.stacklanding import land
 from mikemol.hooks.stackmutants import Lint, no_lint, refusals
-from mikemol.hooks.stacksnap import Frozen
+from mikemol.hooks.stacksnap import QUEUE_FILES, Frozen
 
 BODY_CHECK = body_refusal
 SUBJECT_CHECK = subject_refusal
@@ -84,6 +84,16 @@ def no_flaked(_git_dir: Path) -> bool:
     return False
 
 
+def no_admission(_items: Sequence[Item]) -> str | None:
+    """Say that no pinned row admits the stack: the default, so a test writes no trailer (W2312).
+
+    Returns:
+        None, so no Admission trailer is written.
+
+    """
+    return None
+
+
 @dataclass(frozen=True)
 class Seams:
     """What a test replaces: the git runner, the namespace, the message, publish and history."""
@@ -95,6 +105,35 @@ class Seams:
     history: Callable[[str], History | None] = no_history
     lint: Lint = no_lint
     flaked: Callable[[Path], bool] = no_flaked
+    admission: Callable[[Sequence[Item]], str | None] = no_admission
+
+
+def entries_for(items: Sequence[Item], seams: Seams) -> list[Entry]:
+    """Make the stack's entries, writing the Admission trailer for a stack a pinned row admits.
+
+    ⚑ ONE BUILDER FOR BOTH LANDING PATHS (W2312): `run_stack` and the train both call this, so the
+    judged stack and the landed stack are the same items and a trailer cannot be written by one path
+    and forgotten by the other. The trailer is written ONCE, on the first entry that carries a
+    non-queue path (so `stackland` finds the change it spends and a queue-only entry is never the
+    carrier), as an exact `Admission: <row>` line after the message the tool built.
+
+    Returns:
+        one entry per item, in order.
+
+    """
+    messages = [seams.message_of(item) for item in items]
+    row = seams.admission(items)
+    if row is not None:
+        place = next(
+            (i for i, item in enumerate(items) if any(p not in QUEUE_FILES for p in item.paths)),
+            None,
+        )
+        if place is not None:
+            messages[place] = f"{messages[place].rstrip()}\nAdmission: {row}\n"
+    return [
+        Entry(message, item.paths, item.files)
+        for message, item in zip(messages, items, strict=True)
+    ]
 
 
 def _item_of(entry: object) -> Item | None:
@@ -266,7 +305,7 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
             "from HEAD and no entry named it, W1941)\n"
         )
     before = run(["rev-parse", "HEAD"], {}, root).stdout.strip()
-    entries = [Entry(seams.message_of(item), item.paths, item.files) for item in items]
+    entries = entries_for(items, seams)
     stack = build(root, entries, run, before)
     if stack.failed is not None:
         place = len(stack.commits) + 1

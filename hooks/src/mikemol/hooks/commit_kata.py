@@ -79,6 +79,7 @@ from mikemol.hooks.isolated import Done, Plan, commit_planned
 from mikemol.hooks.isolated import add_argv_list as _add_argv_list
 from mikemol.hooks.launcher import announce as _announce_launcher
 from mikemol.hooks.loadwait import wait_for_load as _wait_for_load
+from mikemol.hooks.ratchet_pace import admitted_ident as _admitted_ident
 from mikemol.hooks.ratchet_pace import refusal as _pace_refusal
 from mikemol.hooks.rootdrop import drop as _drop
 from mikemol.hooks.rootdrop import invoker_home as _invoker_home
@@ -986,6 +987,7 @@ def run_stack_mode(
         history=lambda repo: _fetch_history(repo, env),
         lint=_chain_lints(_real_lint(root), _real_types(root)),
         flaked=lambda git_dir: _emit_flakes(git_dir, root.name, env),
+        admission=lambda planned: _admitted_ident(root, planned, env),
     )
     tee = TeeBuffer()
     try:

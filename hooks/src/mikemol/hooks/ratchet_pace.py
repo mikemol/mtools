@@ -28,7 +28,7 @@ from typing import cast
 from mikemol.hooks import admission, stacksnap
 from mikemol.hooks.round_wire import STALE, published_at
 from mikemol.hooks.stackfreeze import SNAP_ENV
-from mikemol.hooks.stackrun import items_of
+from mikemol.hooks.stackrun import Item, items_of
 from mikemol.hooks.stacksnap import QUEUE_FILES
 
 BEHIND = "behind"
@@ -337,6 +337,35 @@ def _admitted_by(
         return admission.admitting(rows, root.name, waypoints, files) is not None
 
     return check
+
+
+def admitted_ident(
+    root: Path,
+    items: Sequence[Item],
+    env: Mapping[str, str],
+    rows: Sequence[admission.Row] = admission.ROWS,
+    now: datetime | None = None,
+) -> str | None:
+    """Name the pinned row a stack NEEDS and matches, for the Admission trailer (W2312).
+
+    ⚑ A ROW IS SPENT ONLY WHEN IT WAS NEEDED: a stack the pace would admit anyway (a paydown, queue
+    state, no pace) answers None, so an honest landing never writes the trailer and never spends a
+    row. ⚑ IT READS THE ITEMS BEING LANDED, not the stack file judged at submit, so the row that
+    admits a stack at landing is judged on the bytes that land (the re-check against the refrozen
+    snapshot, W2301 point 4).
+
+    Returns:
+        the row's `<repo>/<card>` id, or None when the pace asks nothing or no row is this stack.
+
+    """
+    named = env.get(ENV)
+    paths = [path for item in items for path in item.paths]
+    pace = Path(named) if named else None
+    if stack_reason(root, paths, now or datetime.now(UTC), pace) is None:
+        return None
+    frozen = [file for item in items for file in item.files or ()]
+    row = admission.admitting(rows, root.name, [item.waypoint for item in items], frozen)
+    return None if row is None else row.ident()
 
 
 def refusal(

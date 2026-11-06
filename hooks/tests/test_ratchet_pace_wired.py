@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 
 from mikemol.hooks import admission, ratchet_pace, stacksnap
 from mikemol.hooks.stackfreeze import SNAP_ENV
+from mikemol.hooks.stackrun import Item
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -133,3 +134,48 @@ def test_the_rows_are_asked_only_for_a_stack_that_would_be_refused(tmp_path: Pat
     assert not asked
     assert ratchet_pace.stack_reason(root, ["hooks/x.py"], now, pace, spy) is not None
     assert asked == [True]
+
+
+def _landing(path: str, blob: str) -> list[Item]:
+    """Make the one item being landed: W1 taking `path` frozen at `blob`.
+
+    Returns:
+        the items, as the landing paths hold them.
+
+    """
+    return [Item("W1", "s", "", (path,), (stacksnap.Frozen(path, _MODE, blob),))]
+
+
+def test_the_trailer_names_the_row_only_when_the_pace_needed_it_and_the_row_matches(
+    tmp_path: Path,
+) -> None:
+    """W2312: needed and matched gives the id; a paydown, another blob and no row give None."""
+    root, env = _repo(tmp_path)
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    now = datetime.now(UTC)
+    assert (
+        ratchet_pace.admitted_ident(root, _landing("hooks/x.py", _BLOB), env, [row], now) == "r/W1"
+    )
+    assert (
+        ratchet_pace.admitted_ident(root, _landing("hooks/x.py", _OTHER), env, [row], now) is None
+    )
+    assert ratchet_pace.admitted_ident(root, _landing("hooks/x.py", _BLOB), env, [], now) is None
+
+
+def test_a_stack_the_pace_would_admit_anyway_never_spends_a_row(tmp_path: Path) -> None:
+    """A paydown and a queue-state stack answer None even when a row matches them exactly."""
+    root, env = _repo(tmp_path)
+    now = datetime.now(UTC)
+    paying = admission.Row(repo="r", card="W1", blobs={_RATCHET: _BLOB})
+    assert ratchet_pace.admitted_ident(root, _landing(_RATCHET, _BLOB), env, [paying], now) is None
+    queue = admission.Row(repo="r", card="W1", blobs={".claude/paths-forward.json": _BLOB})
+    landing = _landing(".claude/paths-forward.json", _BLOB)
+    assert ratchet_pace.admitted_ident(root, landing, env, [queue], now) is None
+
+
+def test_an_item_that_was_not_frozen_is_never_admitted(tmp_path: Path) -> None:
+    """No frozen files means no blobs to match: a row cannot admit what it cannot read."""
+    root, env = _repo(tmp_path)
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    unfrozen = [Item("W1", "s", "", ("hooks/x.py",))]
+    assert ratchet_pace.admitted_ident(root, unfrozen, env, [row], datetime.now(UTC)) is None
