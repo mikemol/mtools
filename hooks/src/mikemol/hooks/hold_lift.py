@@ -28,10 +28,11 @@ import json
 import os
 import re
 import shutil
-import subprocess
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import cast
+
+from mikemol.hooks import runproc
 
 Run = Callable[[Sequence[str]], tuple[int, str]]
 
@@ -48,6 +49,7 @@ _GENERIC = frozenset(
 )
 _SHARED_NEEDED = 2
 _WINDOW = 400
+_NOT_FOUND = 127
 _CHECKOUT = ("github", "mtools", "transcriptstruct", ".venv", "bin", READER_NAME)
 
 
@@ -73,8 +75,10 @@ def run_reader(argv: Sequence[str]) -> tuple[int, str]:
 
     """
     try:
-        done = subprocess.run(list(argv), capture_output=True, text=True, check=False)
+        done = runproc.run(list(argv))
     except OSError:
+        return -1, ""
+    if done.returncode == _NOT_FOUND and done.stderr == f"{argv[0]}: not found":
         return -1, ""
     return done.returncode, done.stdout
 

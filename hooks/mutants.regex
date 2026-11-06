@@ -44,6 +44,9 @@ src/mikemol/hooks/probe.py|exit-zero-whatever-the-rows-said|return 0 if all\(v\.
 src/mikemol/hooks/probe.py|unknown-gate-passes|if unknown:|if False:|def=main
 src/mikemol/hooks/probe.py|empty-decision-is-a-decision|or None$|or ""|def=decision_of
 src/mikemol/hooks/verdict.py|a-missing-checker-reads-as-a-finding|    if proc\.returncode == _NOT_FOUND and proc\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_checker
+src/mikemol/hooks/work_claims_hook.py|a-hung-claim-command-raises-past-the-hook|    except runproc\.TimeoutExpired:|    except FileNotFoundError:|def=run_both
+src/mikemol/hooks/work_claims_hook.py|a-missing-claim-command-leaks-runprocs-note|    if done\.returncode == _NOT_STARTED and done\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_both
+src/mikemol/hooks/hold_lift.py|a-missing-transcript-reader-reads-as-exit-127|    if done\.returncode == _NOT_FOUND and done\.stderr == f"\{argv\[0\]\}: not found":|    if False:|def=run_reader
 src/mikemol/hooks/build_failure.py|a-hung-log-reader-raises-past-the-hook|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=run_reader
 src/mikemol/hooks/tick_release.py|a-hung-writer-raises-past-session-end|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=release_with_writer
 src/mikemol/hooks/nemik_check.py|a-missing-nemik-reader-reads-as-a-nonzero-exit|        return None, f"could not start: \{reader\} not found"|        return None, "exited 127"|def=run_reader

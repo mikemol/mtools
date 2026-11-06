@@ -15,6 +15,17 @@ _LINE = 77561
 _READER = "/r/mikemol-transcriptstruct"
 
 
+def test_the_real_reader_run_answers_status_and_stdout_and_minus_one_for_a_missing_program(
+    tmp_path: Path,
+) -> None:
+    """The exit status and stdout come back; a program that is not there is (-1, "")."""
+    said = tmp_path / "said"
+    said.write_text("#!/bin/sh\necho held\nexit 3\n", encoding="utf-8")
+    said.chmod(0o755)
+    assert hold_lift.run_reader([str(said)]) == (3, "held\n")
+    assert hold_lift.run_reader([str(tmp_path / "absent")]) == (-1, "")
+
+
 def _warrant(reader: str = "evil-command --anything") -> dict[str, object]:
     derived: dict[str, object] = {
         "@id": f"file:///t/session.jsonl#{_UUID}",

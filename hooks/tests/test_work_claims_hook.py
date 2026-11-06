@@ -34,6 +34,21 @@ THEM = "999:123"
 REFUSED = 3
 
 
+def test_the_real_runner_folds_stderr_in_and_reads_a_missing_and_a_hung_program(
+    tmp_path: Path,
+) -> None:
+    """Output is stdout then stderr; a missing program is 127 and empty; a hung one is 124."""
+    talker = tmp_path / "talker"
+    talker.write_text("#!/bin/sh\necho out\necho err >&2\nexit 4\n", encoding="utf-8")
+    talker.chmod(0o755)
+    hanger = tmp_path / "hanger"
+    hanger.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    hanger.chmod(0o755)
+    assert work_claims_hook.run_both([str(talker)], 5.0) == (4, "out\nerr\n")
+    assert work_claims_hook.run_both([str(tmp_path / "absent")], 5.0) == (127, "")
+    assert work_claims_hook.run_both([str(hanger)], 0.2) == (124, "")
+
+
 def _stat(pid: int, comm: str, ppid: int, start: int) -> str:
     """Build a stat line with the state, parent and start-time fields where the kernel puts them.
 

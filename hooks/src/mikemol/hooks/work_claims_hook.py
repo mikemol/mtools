@@ -28,13 +28,12 @@ import hashlib
 import json
 import os
 import re
-import subprocess
 import sys
 import tempfile
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
-from mikemol.hooks import work_claims
+from mikemol.hooks import runproc, work_claims
 from mikemol.hooks.payload import as_record, text_of
 
 Runner = Callable[[Sequence[str], float], tuple[int, str]]
@@ -60,17 +59,12 @@ def run_both(argv: Sequence[str], timeout: float) -> tuple[int, str]:
 
     """
     try:
-        done = subprocess.run(
-            list(argv),
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-            stdin=subprocess.DEVNULL,
-        )
-    except subprocess.TimeoutExpired:
+        done = runproc.run(list(argv), timeout=timeout, stdin_text="")
+    except runproc.TimeoutExpired:
         return _TIMED_OUT, ""
     except OSError:
+        return _NOT_STARTED, ""
+    if done.returncode == _NOT_STARTED and done.stderr == f"{argv[0]}: not found":
         return _NOT_STARTED, ""
     return done.returncode, done.stdout + done.stderr
 

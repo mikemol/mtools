@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2307,
+  "counter": 2308,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -44861,17 +44861,17 @@
     {
       "symbol": "W2003",
       "title": "The uncertain-row count ships as a metric series beside mikemol.commitments.open",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "commitledger.uncertain_count(rows) exists (a84163cd) and prints in the --resolve tally; commitments_emit sends open{repo,layer} and said{repo} only. Add the uncertain count (own name, repo label) with a description and freshness class on the W1961 contract.",
-      "evidence": "2026-10-29: 2026-10-29: BLOCKED on stack hooks-e (W2117, queued). commitments_emit is a hooks-lane module, so its new metric needs a test, a mutant and a warrant, and those hooks registries freeze whole behind hooks-e. It also needs the freshness class from the W1961 contract, to be read before the build. Build in a clean scratch tree on the HEAD after hooks-e (W2158: never generate registries in the dirty main tree).",
+      "evidence": "2026-10-29: 2026-10-29: BLOCKED on stack hooks-e (W2117, queued). commitments_emit is a hooks-lane module, so its new metric needs a test, a mutant and a warrant, and those hooks registries freeze whole behind hooks-e. It also needs the freshness class from the W1961 contract, to be read before the build. Build in a clean scratch tree on the HEAD after hooks-e (W2158: never generate registries in the dirty main tree). | 2026-11-06T09:00:38Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T18:19:47Z",
       "minted_during": "interrupt",
       "caused_by": "W1986",
-      "last_worked": "2026-10-29T15:11:57Z",
+      "last_worked": "2026-11-06T09:00:38Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45077,7 +45077,7 @@
     {
       "symbol": "W2013",
       "title": "importdag emits one input-mutant target per test and removable edge, wrapped to pass only on failure",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2012",
         "W2014"
@@ -45086,11 +45086,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Generator: one target per pair from graph.input_mutants, an inner py_test with the edge removed wrapped by an inverting sh_test; shape of check_mutants/mutants_gen.py; then the survivor report naming reading (1) over-declared and (2) an untested branch.",
-      "evidence": "2026-10-29: 2026-10-29: first slice BUILT and SUBMITTED as stack importdag-a: graph.input_mutants(tests) names each (test, edge) pair, sorted; test, 2 declared mutants (both killed locally), warrant. Local importdag grid: 2 costcli def-sites and the declared a-test-is-its-own-neighbour SURVIVED in code this change does not touch, uninvestigated (a candidate card if they reproduce on HEAD). Open: the generator wrapped to pass only on failure, the survivor report with its two readings, the gate check. | 2026-10-29: 2026-10-29: first slice LANDED fd3f6ee (stack importdag-a): graph.input_mutants. The generator, the survivor report and the gate check remain. | 2026-10-31: reconciled LANDED fd3f6ee511c4319d6f0e4d9e8305cb3677fe8746",
+      "evidence": "2026-10-29: 2026-10-29: first slice BUILT and SUBMITTED as stack importdag-a: graph.input_mutants(tests) names each (test, edge) pair, sorted; test, 2 declared mutants (both killed locally), warrant. Local importdag grid: 2 costcli def-sites and the declared a-test-is-its-own-neighbour SURVIVED in code this change does not touch, uninvestigated (a candidate card if they reproduce on HEAD). Open: the generator wrapped to pass only on failure, the survivor report with its two readings, the gate check. | 2026-10-29: 2026-10-29: first slice LANDED fd3f6ee (stack importdag-a): graph.input_mutants. The generator, the survivor report and the gate check remain. | 2026-10-31: reconciled LANDED fd3f6ee511c4319d6f0e4d9e8305cb3677fe8746 | 2026-11-06T09:06:56Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T20:52:09Z",
       "minted_during": "interrupt",
       "caused_by": "W2012",
-      "last_worked": "2026-10-29T17:14:37Z",
+      "last_worked": "2026-11-06T09:06:56Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -45310,17 +45310,17 @@
     {
       "symbol": "W2024",
       "title": "ratchets.json carries each ratchet's re-baselines, and the census refuses a changed expression without one",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Write hooks/src/mikemol/hooks/rebaseline_refusal.py (a NEW module: graph.json, dag.bzl, sites, rubric, BUILD, warrants, mutants) or put refusal() in ratchet_pace.py to avoid a new module; the second is cheaper and keeps the seam together. Then the one-line chain entry in submit_problem and its test.",
-      "evidence": "2026-10-27: 2026-10-27 first slice landed 10ca1275 (ratchet.rebaseline, mikemol-ratchet rebaselines, 9 tests, 5 mutants). Left: the enforcement (standing hook and a submit refusal admit a baseline rise only with a matching entry; operator's call because it loosens a guard), birth, entries only grow. | 2026-10-27: 2026-10-27 (github-8f): the operator decided the enforcement: W1977 option (2), host 695f3e0a line 106208, uuid 0afcd13c. The hook admits a baseline rise only with a matching rebaselines.json entry, so this card's enforcement IS the W1977 door, in stack-next-23 (gate running). Left here for after it lands: the birth judgement (a new ratchet file at a nonzero value) and the entries-only-grow check against HEAD, both non-hooks | 2026-10-27: 2026-10-27: stack-next-31 was refused at its gate for an ORPHAN warrant (a test renamed in the birth change; pruned with gen-warrants --prune); it resubmits after the mdstruct paydown clears the pace | 2026-10-27: 2026-10-27: landed 40f94fee (birth judgement, entries-only-grow, rebaselines.json excluded from the census) and 4727b410 (the paydown rode with it). Left: wiring mikemol-ratchet rebaselines into the submit refusal, a command nothing runs yet | 2026-10-29: 2026-10-29: BLOCKED behind hooks-f (W2017, in the gate). The wiring is a new refusal in commit_kata's submit chain (a live hook), with tests, mutants and warrants, so it needs the hooks registries that freeze whole while hooks-f holds them. Build in a clean scratch tree on the HEAD after hooks-f. The rebaselines check needs HEAD's tree (git archive or worktree of HEAD) as its --before, read as a measured, bounded step. | 2026-10-29: 2026-10-29: W2017 landed 0c1832e, but hooks-g (W2018, inflight) and hooks-h (W2059, queued) still hold the hooks registries ahead of this change in commit_kata's submit chain. Re-blocked on the last of them, W2059. When it lands: clean scratch tree on that HEAD, the rebaselines check with HEAD's tree from git archive as --before, a test, mutants, warrants. | 2026-10-29: 2026-10-29 READ for the wiring (no code yet). The seam: commit_kata.submit_problem(root, stack_file, env) chains refusals with 'or' (stack, stack_build, shard, round, flake, pace, test) and returns the first finding; ratchet_pace.refusal(root, stack_file, env) is the shape to copy (items_of(stack_file), per-entry paths). The check to wire: 'mikemol-ratchet rebaselines --repo REPO --before BEFORE' (REPO is the tree with the change, BEFORE the same tree before it; check(repo, before) in ratchet/rebaseline.py returns the lines, exit 1 when any). So the new refusal builds two directories: BEFORE = HEAD's tree (git archive HEAD extracted by Python, not a shell pipe) and REPO = that tree overlaid with the stack's files from env[SNAP_ENV] (the frozen snapshot the other refusals read), runs the ratchet tool (found the way ratchet_emit.reader_path finds it: RATCHET_BIN then PATH, never a sibling checkout) and returns its lines as the finding; absent tool or unreadable snapshot returns None (the pace refusal's rule). Costs: a tree extract per submit, so only when the stack's paths include a ratchet file or a rebaselines.json (the census names which), else None. Tests: a stack that raises a baseline with no entry is refused naming the ratchet, with the entry it passes, a stack touching no ratchet file never extracts. Hooks lane, in a clean scratch tree on top of hooks-i's registries. | 2026-10-31: reconciled LANDED 4727b410fcd8049969f5850c080e6c196082fbfc",
+      "evidence": "2026-10-27: 2026-10-27 first slice landed 10ca1275 (ratchet.rebaseline, mikemol-ratchet rebaselines, 9 tests, 5 mutants). Left: the enforcement (standing hook and a submit refusal admit a baseline rise only with a matching entry; operator's call because it loosens a guard), birth, entries only grow. | 2026-10-27: 2026-10-27 (github-8f): the operator decided the enforcement: W1977 option (2), host 695f3e0a line 106208, uuid 0afcd13c. The hook admits a baseline rise only with a matching rebaselines.json entry, so this card's enforcement IS the W1977 door, in stack-next-23 (gate running). Left here for after it lands: the birth judgement (a new ratchet file at a nonzero value) and the entries-only-grow check against HEAD, both non-hooks | 2026-10-27: 2026-10-27: stack-next-31 was refused at its gate for an ORPHAN warrant (a test renamed in the birth change; pruned with gen-warrants --prune); it resubmits after the mdstruct paydown clears the pace | 2026-10-27: 2026-10-27: landed 40f94fee (birth judgement, entries-only-grow, rebaselines.json excluded from the census) and 4727b410 (the paydown rode with it). Left: wiring mikemol-ratchet rebaselines into the submit refusal, a command nothing runs yet | 2026-10-29: 2026-10-29: BLOCKED behind hooks-f (W2017, in the gate). The wiring is a new refusal in commit_kata's submit chain (a live hook), with tests, mutants and warrants, so it needs the hooks registries that freeze whole while hooks-f holds them. Build in a clean scratch tree on the HEAD after hooks-f. The rebaselines check needs HEAD's tree (git archive or worktree of HEAD) as its --before, read as a measured, bounded step. | 2026-10-29: 2026-10-29: W2017 landed 0c1832e, but hooks-g (W2018, inflight) and hooks-h (W2059, queued) still hold the hooks registries ahead of this change in commit_kata's submit chain. Re-blocked on the last of them, W2059. When it lands: clean scratch tree on that HEAD, the rebaselines check with HEAD's tree from git archive as --before, a test, mutants, warrants. | 2026-10-29: 2026-10-29 READ for the wiring (no code yet). The seam: commit_kata.submit_problem(root, stack_file, env) chains refusals with 'or' (stack, stack_build, shard, round, flake, pace, test) and returns the first finding; ratchet_pace.refusal(root, stack_file, env) is the shape to copy (items_of(stack_file), per-entry paths). The check to wire: 'mikemol-ratchet rebaselines --repo REPO --before BEFORE' (REPO is the tree with the change, BEFORE the same tree before it; check(repo, before) in ratchet/rebaseline.py returns the lines, exit 1 when any). So the new refusal builds two directories: BEFORE = HEAD's tree (git archive HEAD extracted by Python, not a shell pipe) and REPO = that tree overlaid with the stack's files from env[SNAP_ENV] (the frozen snapshot the other refusals read), runs the ratchet tool (found the way ratchet_emit.reader_path finds it: RATCHET_BIN then PATH, never a sibling checkout) and returns its lines as the finding; absent tool or unreadable snapshot returns None (the pace refusal's rule). Costs: a tree extract per submit, so only when the stack's paths include a ratchet file or a rebaselines.json (the census names which), else None. Tests: a stack that raises a baseline with no entry is refused naming the ratchet, with the entry it passes, a stack touching no ratchet file never extracts. Hooks lane, in a clean scratch tree on top of hooks-i's registries. | 2026-10-31: reconciled LANDED 4727b410fcd8049969f5850c080e6c196082fbfc | 2026-11-06T09:07:47Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-25T23:16:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-10-29T22:03:26Z",
+      "last_worked": "2026-11-06T09:07:47Z",
       "ticks_blocked": 0,
       "completed": null,
       "warrants": [
@@ -46236,17 +46236,17 @@
     {
       "symbol": "W2061",
       "title": "An isolated commit heals its snapshot to the index's tree before the hook runs: a file whose bytes drifted from the tree (paperkit's MODULE.bazel.lock) is restored from the tree and named in the output",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "At the train's verdict: if 39 is refused, submit W2067 alone (scratch tree w2067) and W2061 corrected (scratch tree w2061) in the same tick; if the bisect lands 39 anyway, nothing: it cannot, its shard is red. Do not mark W2061 done until its mutants run clean in a gate.",
-      "evidence": "2026-10-28: 2026-10-28 W2061-ALONE PREPARED (github-8f pass 45: build now, submit only on a red verdict for stack 36): a scratch worktree of HEAD 754dcf97 holds only W2061's three source and test files, its mutants.regex lines (4 new, 2 re-pointed), two warrants and the regenerated sites for isolated and snapshot; git status there lists exactly seven files, no graph.json or dag.bzl change (no module, test file or import added). Stack file stack-w2061-alone.json written in the stacks directory, NOT submitted. TO SUBMIT: the freeze reads the working tree, which also holds stack 36's and others' changes in the shared files (mutants.regex, warrants.bib), so swap the scratch worktree's seven files into the main tree after saving the combined versions, submit, then restore the combined versions. | 2026-10-28: 2026-10-28 CAUSE of stack 36's red, read from its test log (bazel testlogs/hooks/graph_fresh/test.log in the staged output base): 'graph --check: hooks/graph.json is STALE: run --write' and 'graph --check: hooks/dag.bzl is STALE: run --write'. Those two shared files froze whole with W1746's rows (stackimports imports stackahead, test_stackimports) and W1746 had been withdrawn, so at HEAD+36 the regenerated graph differs: the stale-registry class, exactly the cascade W2078 and W2067 part 2 are about. 36's whole BEP: 589 PASSED, 1 FAILED (graph_fresh), 0 TIMEOUT. The rebuilt W2061 carries no graph.json or dag.bzl change (no module, test file or import added) and its registries were regenerated on HEAD in a scratch worktree, so this cause does not recur in the resubmit. Resubmitted with W2067 as stack-next-39 behind stack 38. | 2026-10-28: 2026-10-28 CAUSE OF THE RED in the train gate (//hooks:mutants_100, isolated.py::refresh-not-run errored; github-8f asked whether the red follows W2061): YES, a defect in W2061's declared mutants, mine. The replacement field of refresh-not-run was {said}\\n and regexop applies it as an re.sub template (mutation/src/mikemol/mutation/regexop.py line 45, re.subn at 191), where \\n is a real newline, so the mutated line broke an f-string across lines: SyntaxError, the module cannot import, the suite does not run, ERRORED, and the grid refuses an errored site. restored-files-not-named has the same ending. MUTATE_LINT proves a pattern APPLIES, not that the result PARSES, so my local checks passed. FIXED to \\n in both mutants.regex copies (the scratch tree of the combined W2061+W2067 and the main tree), sites regenerated. Stack 39 (key 1793191664065529872) carries the frozen bug and will be refused by the bisect; the corrected pair is prepared and unsubmitted. | 2026-10-31: reconciled STALE",
+      "evidence": "2026-10-28: 2026-10-28 W2061-ALONE PREPARED (github-8f pass 45: build now, submit only on a red verdict for stack 36): a scratch worktree of HEAD 754dcf97 holds only W2061's three source and test files, its mutants.regex lines (4 new, 2 re-pointed), two warrants and the regenerated sites for isolated and snapshot; git status there lists exactly seven files, no graph.json or dag.bzl change (no module, test file or import added). Stack file stack-w2061-alone.json written in the stacks directory, NOT submitted. TO SUBMIT: the freeze reads the working tree, which also holds stack 36's and others' changes in the shared files (mutants.regex, warrants.bib), so swap the scratch worktree's seven files into the main tree after saving the combined versions, submit, then restore the combined versions. | 2026-10-28: 2026-10-28 CAUSE of stack 36's red, read from its test log (bazel testlogs/hooks/graph_fresh/test.log in the staged output base): 'graph --check: hooks/graph.json is STALE: run --write' and 'graph --check: hooks/dag.bzl is STALE: run --write'. Those two shared files froze whole with W1746's rows (stackimports imports stackahead, test_stackimports) and W1746 had been withdrawn, so at HEAD+36 the regenerated graph differs: the stale-registry class, exactly the cascade W2078 and W2067 part 2 are about. 36's whole BEP: 589 PASSED, 1 FAILED (graph_fresh), 0 TIMEOUT. The rebuilt W2061 carries no graph.json or dag.bzl change (no module, test file or import added) and its registries were regenerated on HEAD in a scratch worktree, so this cause does not recur in the resubmit. Resubmitted with W2067 as stack-next-39 behind stack 38. | 2026-10-28: 2026-10-28 CAUSE OF THE RED in the train gate (//hooks:mutants_100, isolated.py::refresh-not-run errored; github-8f asked whether the red follows W2061): YES, a defect in W2061's declared mutants, mine. The replacement field of refresh-not-run was {said}\\n and regexop applies it as an re.sub template (mutation/src/mikemol/mutation/regexop.py line 45, re.subn at 191), where \\n is a real newline, so the mutated line broke an f-string across lines: SyntaxError, the module cannot import, the suite does not run, ERRORED, and the grid refuses an errored site. restored-files-not-named has the same ending. MUTATE_LINT proves a pattern APPLIES, not that the result PARSES, so my local checks passed. FIXED to \\n in both mutants.regex copies (the scratch tree of the combined W2061+W2067 and the main tree), sites regenerated. Stack 39 (key 1793191664065529872) carries the frozen bug and will be refused by the bisect; the corrected pair is prepared and unsubmitted. | 2026-10-31: reconciled STALE | 2026-11-06T09:12:24Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-28T00:24:43Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:W426",
-      "last_worked": "2026-10-28T20:44:09Z",
+      "last_worked": "2026-11-06T09:12:24Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -46548,7 +46548,7 @@
     {
       "symbol": "W2076",
       "title": "warrantfind.cites: a pure parser from a card's evidence text to its transcript citations (session prefix or uuid, line), listing the ones with no checkable form",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1863"
       ],
@@ -46556,11 +46556,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "New module pathsforward/src/mikemol/pathsforward/warrantfind.py with cites(evidence: str) -> list[Cite] where Cite holds the session prefix (8 hex, as in 'host 695f3e0a line 109815'), the uuid when present (36 hex-and-dashes) and the line when present; and unresolved(evidence) naming a card whose evidence cites only dates. Pure, no I/O. Tests from real evidence strings: W1977's ('host 695f3e0a line 109815, uuid 53079d0f-ccac-4e25-b783-9f7b8912463c') yields one Cite with all three; a dates-only string yields none and is listed unresolved. Mutants for each regex. Warrants via mikemol-gen-warrants.",
-      "evidence": "2026-10-28: 2026-10-28 design read: the card's measurement (10 flagged cards, 2 cite a uuid or line, 1 verifies, 8 cite only dates) says the parser decides most of the value; the verify and attach halves reuse warrant.read(Citation) and warrant.attach already in the dist, so the second atom is thin once the parser exists. | 2026-10-30: 2026-10-30: BUILT and SUBMITTED as stack pathsforward-h (behind pathsforward-g): warrantfind.cites and unresolved, 4 tests, 3 mutants, 4 warrants, a rubric section and the per-file assert ignore; pathsforward suite 1372 passed, MUTATE_LINT clean, not run under bazel. Left: the second atom (walk the queue, verify with warrant.read, attach with warrant.attach). | 2026-10-30: Landed f534999d (pathsforward-h; warrantfind.cites/unresolved parser). Second atom (walk the queue and attach) remains, so card stays open. | 2026-10-31: reconciled LANDED f534999d47efd281d732f8f8636ca2e79727b4c1",
+      "evidence": "2026-10-28: 2026-10-28 design read: the card's measurement (10 flagged cards, 2 cite a uuid or line, 1 verifies, 8 cite only dates) says the parser decides most of the value; the verify and attach halves reuse warrant.read(Citation) and warrant.attach already in the dist, so the second atom is thin once the parser exists. | 2026-10-30: 2026-10-30: BUILT and SUBMITTED as stack pathsforward-h (behind pathsforward-g): warrantfind.cites and unresolved, 4 tests, 3 mutants, 4 warrants, a rubric section and the per-file assert ignore; pathsforward suite 1372 passed, MUTATE_LINT clean, not run under bazel. Left: the second atom (walk the queue, verify with warrant.read, attach with warrant.attach). | 2026-10-30: Landed f534999d (pathsforward-h; warrantfind.cites/unresolved parser). Second atom (walk the queue and attach) remains, so card stays open. | 2026-10-31: reconciled LANDED f534999d47efd281d732f8f8636ca2e79727b4c1 | 2026-11-06T09:13:13Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-28T09:20:24Z",
       "minted_during": "interrupt",
       "caused_by": "W1863",
-      "last_worked": "2026-10-30T05:30:16Z",
+      "last_worked": "2026-11-06T09:13:13Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -46629,7 +46629,7 @@
     {
       "symbol": "W2080",
       "title": "Trigger: a withdrawn stack opens a retro scaffold naming the withdrawn key, its waypoints and the gate's last record",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1911"
       ],
@@ -46637,18 +46637,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Hook point: commit_withdraw.withdraw's WITHDRAWN and WITHDRAW REQUESTED returns; scaffold from the key, the waypoints (Live.waypoints), the gate's last phase mark and the BEP's failed count. Depends on W2079 (the scaffold builder).",
-      "evidence": "2026-10-28: 2026-10-28 LIVE FIXTURE for the withdrawn-stack trigger: stack-next-35 (W1746, key 1793141950635286263) was withdrawn after about 8 h on a known red (one TIMEOUT, //hooks:test_worktreereap_save at 60.1 s, 02:19Z), and its withdrawal stranded stack 36 (a lead that could not be withdrawn over a dead follower, W2067). That chain is the G1 a scaffold should have been opened with.",
+      "evidence": "2026-10-28: 2026-10-28 LIVE FIXTURE for the withdrawn-stack trigger: stack-next-35 (W1746, key 1793141950635286263) was withdrawn after about 8 h on a known red (one TIMEOUT, //hooks:test_worktreereap_save at 60.1 s, 02:19Z), and its withdrawal stranded stack 36 (a lead that could not be withdrawn over a dead follower, W2067). That chain is the G1 a scaffold should have been opened with. | 2026-11-06T09:38:24Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-28T11:06:48Z",
       "minted_during": "interrupt",
       "caused_by": "W1911",
-      "last_worked": "2026-10-28T11:07:26Z",
+      "last_worked": "2026-11-06T09:38:24Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2081",
       "title": "Trigger: a stall-killed gate opens a retro scaffold naming the phase it was in and its flat-CPU window",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1911"
       ],
@@ -46656,18 +46656,18 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-30: 2026-10-30: BLOCKED on W2079: a trigger calls the scaffold builder, which is not written (W2079's next step is now defined). Same shape as W2080 (blocked on W2079 with its hook point named). This trigger's source is the stall-kill path: the gate-phase marks (gatephase) give the phase it was in; the flat-CPU window is the stall detector's own record, whose location I have not read.",
+      "evidence": "2026-10-30: 2026-10-30: BLOCKED on W2079: a trigger calls the scaffold builder, which is not written (W2079's next step is now defined). Same shape as W2080 (blocked on W2079 with its hook point named). This trigger's source is the stall-kill path: the gate-phase marks (gatephase) give the phase it was in; the flat-CPU window is the stall detector's own record, whose location I have not read. | 2026-11-06T09:39:17Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn.",
       "issued_at": "2026-10-28T11:06:48Z",
       "minted_during": "interrupt",
       "caused_by": "W1911",
-      "last_worked": "2026-10-30T02:53:33Z",
+      "last_worked": "2026-11-06T09:39:17Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2082",
       "title": "Trigger: a reopened done card opens a retro scaffold naming the card and the evidence that closed it",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W1911"
       ],
@@ -46675,11 +46675,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-10-30: 2026-10-30: BLOCKED on W2079, as W2080 and W2081 are: a trigger calls the scaffold builder. This trigger's hook point is the writer itself (a done card set back to working or ready: status transitions are recorded by transitions.py, which I have not read), and the evidence that closed it is the card's evidence text at the moment it went done (readable from the ledger line or the HEAD queue copy).",
+      "evidence": "2026-10-30: 2026-10-30: BLOCKED on W2079, as W2080 and W2081 are: a trigger calls the scaffold builder. This trigger's hook point is the writer itself (a done card set back to working or ready: status transitions are recorded by transitions.py, which I have not read), and the evidence that closed it is the card's evidence text at the moment it went done (readable from the ledger line or the HEAD queue copy). | 2026-11-06T09:50:51Z: 2026-11-06: taken at the Stop hook's ask; batch 30 landed (addad38c), gate empty; starting W2219 batch 31 (work_claims_hook and hold_lift onto runproc).",
       "issued_at": "2026-10-28T11:06:48Z",
       "minted_during": "interrupt",
       "caused_by": "W1911",
-      "last_worked": "2026-10-30T03:04:33Z",
+      "last_worked": "2026-11-06T09:50:51Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -51153,6 +51153,24 @@
       "minted_during": "interrupt",
       "caused_by": "nemik:W1998",
       "last_worked": "2026-11-06T01:21:13Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2308",
+      "title": "The config-surface census names a tick-hooks surface: .claude/tick-hooks.txt declared, with its change and review paths (hooks/surfaces.py SURFACES)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-06T09:11:16Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W2017",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],

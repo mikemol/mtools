@@ -423,7 +423,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/hold_lift.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -1473,6 +1475,7 @@ GRAPH = {
     "src/mikemol/hooks/work_claims_hook.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/work_claims.py"
       ],
       "reads": [],

@@ -372,12 +372,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # shell, and the count has one definition because the writer is the only thing that answers it.
 "src/mikemol/hooks/watchdog.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-# ⚑ ASKING THE TRANSCRIPT READER WHETHER A WARRANT'S RECORD HOLDS IS THIS MODULE'S ONE SUBPROCESS
-# (W1525): the argv is the reader this module finds by name and fixed flags, with a path, a uuid
-# and a line taken from the warrant as arguments; nothing runs through a shell, and the command a
-# warrant stores is never run.
-"src/mikemol/hooks/hold_lift.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-
 # ⚑ THE SHARED GIT PRE-PUSH: asking git, and running a repo's own pre-push.local, ARE its
 # responsibility. MEASURED: git is resolved by `shutil.which` (absent → refuse); the local hook is
 # a path this module builds as `<git toplevel>/.githooks/pre-push.local` and runs only when
@@ -386,7 +380,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
 "tests/test_githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
-"src/mikemol/hooks/work_claims_hook.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # ⚑ THE CENSUS NAMES ITS FILES FROM GIT'S INDEX (W794; operator: inputs named, never globbed), so
 # running `git ls-files` IS the module's responsibility: the argv is git's own resolved path, a
 # fixed subcommand and the root, never a shell.

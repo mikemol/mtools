@@ -17803,3 +17803,17 @@
   claim  = {Exit 0 gives stdout; a nonzero exit, a missing program and a hung one all give None.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_build_failure.py -k test_the_real_reader_run_answers_stdout_only_on_a_clean_exit},
 }
+
+@misc{hooks-work-claims-hook-real-runner-folds-stderr-in-and-reads-a-missing-and-a-hung-program,
+  section = {work_claims_hook},
+  title  = {Output is stdout then stderr; a missing program is 127 and empty; a hung one is 124},
+  claim  = {Output is stdout then stderr; a missing program is 127 and empty; a hung one is 124.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_work_claims_hook.py -k test_the_real_runner_folds_stderr_in_and_reads_a_missing_and_a_hung_program},
+}
+
+@misc{hooks-hold-lift-real-reader-run-answers-status-and-stdout-and-minus-one-for-a-missing-program,
+  section = {hold_lift},
+  title  = {The exit status and stdout come back; a program that is not there is (-1, "")},
+  claim  = {The exit status and stdout come back; a program that is not there is (-1, "").},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_hold_lift.py -k test_the_real_reader_run_answers_status_and_stdout_and_minus_one_for_a_missing_program},
+}
