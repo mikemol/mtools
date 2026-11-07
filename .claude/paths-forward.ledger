@@ -6305,3 +6305,17 @@
 2026-11-07T21:41:03Z  status W2322 done>ready writer    "done -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T21:42:29Z  interrupt W2346 minted    -         "The commit path refuses a stack entry whose change set is empty while its waypoint or message claims a change (96297d1e landed empty with a subject naming code, tests and sixteen mutants)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
 2026-11-07T21:42:43Z  interrupt W2347 minted    -         "A PreToolUse Bash filter refuses direct pytest, mypy and ruff and names the fine-grained bazel target"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-07T21:48:27Z  status W2322 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:48:50Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:50:54Z  status W2000 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:12:54Z  status W2002 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:31:14Z  status W2346 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:36:47Z  status W2003 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:48:58Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:48:58Z  status W2000 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:48:58Z  status W2002 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:48:58Z  status W2003 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:48:58Z  status W2322 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:54:32Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T22:55:33Z  interrupt W2348 minted    -         "A test drives the real submit then submit_problem order and shows the round check refusing with the stack's own entry written"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-07T22:55:34Z  interrupt W2349 minted    -         "A preset MIKEMOL_COMMIT_WAYPOINTS must not decide what the stack's own entry cites to the round check"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
