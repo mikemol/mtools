@@ -1074,11 +1074,11 @@ src/mikemol/hooks/runproc.py|start-ignores-the-directory|        cwd=cwd,|      
 src/mikemol/hooks/runproc.py|kill-leaves-the-child|            self\._process\.kill\(\)|            pass|def=Handle.kill
 src/mikemol/hooks/repin_admission.py|a-file-a-repin-does-not-own-is-owned|    return path in TEXT_FILES or _WHEEL\.fullmatch\(path\) is not None|    return True|def=_owned
 src/mikemol/hooks/repin_admission.py|a-changed-line-beyond-the-sha-passes|    if _mask\(before\) != _mask\(after\):|    if False:|def=_file_reason
-src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(shas\) != 1:|    if len(shas) > 1:|def=admits
-src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|            shas\.add\(named\.group\("sha"\)\)|            pass|def=admits
-src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", line\)|        return line|def=_mask_line
-src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\("S", line\)\)\)|        return line|def=_mask_line
-src/mikemol/hooks/repin_admission.py|every-lock-package-is-a-mikemol-package|            inside = "mikemol" in line|            inside = True|def=_mikemol_lines
+src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(fresh\) != 1:|    if len(fresh) > 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|            found\.add\(named\.group\("sha"\)\)|            pass|def=_shas_of
+src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", body\)|        return body|def=_mask_line
+src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\(r"\\g<head>S", body\)\)\)|        return body|def=_mask_line
+src/mikemol/hooks/repin_admission.py|every-lock-package-is-a-mikemol-package|            inside = "mikemol" in body|            inside = True|def=_lines
 src/mikemol/hooks/birth_checks.py|a-ratchet-already-at-head-is-a-birth|    if ratchet in head_paths:|    if False:|def=absent_at_head
 src/mikemol/hooks/birth_checks.py|an-entry-for-another-rise-is-this-rise|        if row\.get\("ratchet"\) == ratchet and row\.get\("old"\) == old and row\.get\("new"\) == new:|        if row.get("ratchet") == ratchet:|def=_entry_for
 src/mikemol/hooks/birth_checks.py|any-record-warrants-the-entry|    if entry\.get\("warrant"\) != record:|    if False:|def=warrant_matches
@@ -1091,7 +1091,7 @@ src/mikemol/hooks/admission.py|the-pinned-record-is-not-passed-on|        rebase
 src/mikemol/hooks/refusal_log.py|a-hung-curl-raises-past-the-gate|, runproc\.TimeoutExpired\)\)|))|def=log_fallthrough
 src/mikemol/hooks/new_dist_cli.py|a-failed-uv-lock-scaffolds-anyway|        if locked\.returncode != 0:|        if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|uv-lock-runs-outside-the-new-directory|runproc\.run\(\["uv", "lock"\], cwd=target\)|runproc.run(["uv", "lock"], cwd=None)|def=scaffold
-src/mikemol/hooks/ratchet_pace.py|a-stray-change-reads-as-a-repin|    return repin_admission\.admits\(old, new\) is None|    return repin_admission.admits(old, new) is not None|def=_repin_clear
+src/mikemol/hooks/ratchet_pace.py|a-stray-change-reads-as-a-repin|    return repin_admission\.new_sha\(old, new\)|    return "x"|def=_repin_sha
 src/mikemol/hooks/ratchet_pace.py|the-submit-never-asks-clause-r|        return _repin_clear\(root, files\)|        return False|def=_admitted_by
 src/mikemol/hooks/ratchet_pace.py|the-landing-never-asks-clause-r|    if _repin_clear\(root, frozen\):|    if False:|def=landing_refusal
 src/mikemol/hooks/watchdog.py|a-failing-stackable-is-believed|        heard\.append\(done\.stdout if done\.returncode == 0 else ""\)|        heard.append(done.stdout)|def=hint_from
@@ -1110,8 +1110,14 @@ src/mikemol/hooks/admission.py|a-birth-whose-ratchet-is-not-pinned-admits|    if
 src/mikemol/hooks/admission.py|an-earlier-entry-with-other-bytes-is-hidden|        if any\(f\.blob != pinned for f in carried\[:-1\]\):|        if False:|def=_carried_problem
 src/mikemol/hooks/admission.py|a-symlink-mode-is-a-pinned-file|        if any\(f\.mode not in _REGULAR_MODES for f in carried\):|        if False:|def=_carried_problem
 src/mikemol/hooks/stackrun.py|a-refused-landing-builds-anyway|    if refused is not None:|    if False:|def=run_stack
-src/mikemol/hooks/ratchet_pace.py|the-landing-skips-the-accident-checks|    if row is None or not _birth_clear\(row, root, frozen\):|    if row is None:|def=admitted_ident
+src/mikemol/hooks/ratchet_pace.py|the-landing-skips-the-accident-checks|    return row\.ident\(\) if _birth_clear\(row, root, frozen\) else None|    return row.ident()|def=admitted_ident
 src/mikemol/hooks/ratchet_pace.py|the-submit-skips-the-accident-checks|            return _birth_clear\(row, root, files\)|            return True|def=_admitted_by
 src/mikemol/hooks/admission.py|an-unknown-row-kind-reads-as-a-repair|    if row\.kind not in \{REPAIR, BIRTH\}:|    if False:|def=_row_problem
 src/mikemol/hooks/traindrive.py|a-paced-group-is-not-dropped|        if reason is not None:|        if False:|def=_drop_paced
 src/mikemol/hooks/traindrive.py|the-train-judges-all-groups-as-one-stack|    return \[entry for group in groups for entry in entries_for\(group\.items, seams\)\]|    return entries_for(_flat(groups), seams)|def=_entries
+src/mikemol/hooks/repin_admission.py|a-new-sha-need-not-be-new|    fresh = sorted\(_shas_of\(new\) - _shas_of\(old\)\)|    fresh = sorted(_shas_of(new))|def=_verdict
+src/mikemol/hooks/repin_admission.py|line-terminators-are-forgotten|        split\.append\(\(body, raw\[len\(body\) :\], belongs\)\)|        split.append((body, "", belongs))|def=_lines
+src/mikemol/hooks/repin_admission.py|an-unnamed-wheel-is-admitted|        if added and not any\(path\.rpartition\("/"\)\[2\] in text for text in texts\):|        if False:|def=_unnamed_wheel
+src/mikemol/hooks/ratchet_pace.py|a-path-frozen-twice-at-other-bytes-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if not _mode_clear(file, head):|def=_repin_sha
+src/mikemol/hooks/ratchet_pace.py|a-repin-leaves-no-mark|        return None if sha is None else f"\{root\.name\}/repin-\{sha\}"|        return None|def=admitted_ident
+src/mikemol/hooks/ratchet_pace.py|a-link-or-a-flipped-mode-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if held.setdefault(file.path, file.blob) != file.blob:|def=_repin_sha

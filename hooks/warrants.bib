@@ -18632,3 +18632,80 @@
   claim  = {The pace is judged by run_stack and, per group, by the train, not by the builder.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_entries_for_builds_what_it_is_given_and_leaves_the_pace_to_its_callers},
 }
+
+@misc{hooks-repin-admission-third-party-local-version-that-changes-is-not-a-repin,
+  section = {repin-admission},
+  title  = {A package that is not mikemol's may not move its `+local` version beside a repin},
+  claim  = {A package that is not mikemol's may not move its `+local` version beside a repin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_third_party_local_version_that_changes_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-stack-that-moves-no-sha-is-not-a-repin,
+  section = {repin-admission},
+  title  = {B2: a no-op, a same-named wheel with other bytes and a stray wheel pass nothing},
+  claim  = {B2: a no-op, a same-named wheel with other bytes and a stray wheel pass nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_stack_that_moves_no_sha_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-added-wheel-no-new-text-names-is-refused,
+  section = {repin-admission},
+  title  = {B2: a new sha on a wheel nothing references is not part of the repin},
+  claim  = {B2: a new sha on a wheel nothing references is not part of the repin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_an_added_wheel_no_new_text_names_is_refused},
+}
+
+@misc{hooks-repin-admission-dropped-trailing-newline-and-crlf-are-changes-beyond-the-sha,
+  section = {repin-admission},
+  title  = {B2: line terminators are bytes; the masked comparison keeps them},
+  claim  = {B2: line terminators are bytes; the masked comparison keeps them.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_dropped_trailing_newline_and_crlf_are_changes_beyond_the_sha},
+}
+
+@misc{hooks-repin-admission-pin-held-at-an-older-sha-is-not-a-second-sha,
+  section = {repin-admission},
+  title  = {B1: nemik's real repin held converge at 0f8267e while the rest moved; one new sha},
+  claim  = {B1: nemik's real repin held converge at 0f8267e while the rest moved; one new sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_pin_held_at_an_older_sha_is_not_a_second_sha},
+}
+
+@misc{hooks-repin-admission-wheel-directory-readme-is-a-repin-owned-file,
+  section = {repin-admission},
+  title  = {B1: revendor writes checksums into vendor/wheels/README.md; it moves with the sha},
+  claim  = {B1: revendor writes checksums into vendor/wheels/README.md; it moves with the sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_wheel_directory_readme_is_a_repin_owned_file},
+}
+
+@misc{hooks-repin-admission-one-new-sha-is-named-for-the-audit-trailer,
+  section = {repin-admission},
+  title  = {The landing writes it: a repin names its sha, anything else names none},
+  claim  = {The landing writes it: a repin names its sha, anything else names none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_one_new_sha_is_named_for_the_audit_trailer},
+}
+
+@misc{hooks-ratchet-pace-wired-repin-names-its-sha-in-the-audit-trailer-and-a-source-file-beside-it-is-refused,
+  section = {ratchet_pace},
+  title  = {Clause R leaves its mark; a tracked source file in the stack is not repin-owned},
+  claim  = {Clause R leaves its mark; a tracked source file in the stack is not repin-owned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_repin_names_its_sha_in_the_audit_trailer_and_a_source_file_beside_it_is_refused},
+}
+
+@misc{hooks-ratchet-pace-wired-stack-that-moves-no-sha-does-not-get-past-the-pace,
+  section = {ratchet_pace},
+  title  = {B2 end to end: the HEAD pyproject, unchanged, is not a repin and is refused},
+  claim  = {B2 end to end: the HEAD pyproject, unchanged, is not a repin and is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_stack_that_moves_no_sha_does_not_get_past_the_pace},
+}
+
+@misc{hooks-ratchet-pace-wired-earlier-entry-at-other-bytes-is-not-hidden-by-a-later-clean-one,
+  section = {ratchet_pace},
+  title  = {A path frozen twice at different blobs is no repin: the later would hide the earlier},
+  claim  = {A path frozen twice at different blobs is no repin: the later would hide the earlier.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_an_earlier_entry_at_other_bytes_is_not_hidden_by_a_later_clean_one},
+}
+
+@misc{hooks-ratchet-pace-wired-link-or-a-flipped-execute-bit-in-a-repin-stack-is-refused,
+  section = {ratchet_pace},
+  title  = {N2: only a regular file with the mode HEAD gave it belongs to a repin},
+  claim  = {N2: only a regular file with the mode HEAD gave it belongs to a repin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_link_or_a_flipped_execute_bit_in_a_repin_stack_is_refused},
+}
