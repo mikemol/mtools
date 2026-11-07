@@ -57,6 +57,17 @@ def test_an_earlier_refusal_wins_over_a_later_one(monkeypatch: pytest.MonkeyPatc
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "build"
 
 
+def test_an_entry_that_changes_nothing_is_the_stacks_problem_after_the_imports(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2346: an empty entry is refused; the import finding still comes first."""
+    _set(monkeypatch, None, None, None)
+    monkeypatch.setattr(commit_kata, "_empty_refusal", _says("entry 1 changes nothing"))
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "entry 1 changes nothing"
+    _set(monkeypatch, "imports", None, None)
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "imports"
+
+
 def test_a_round_card_skipped_for_an_outside_card_is_the_stacks_problem_when_nothing_else_is(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

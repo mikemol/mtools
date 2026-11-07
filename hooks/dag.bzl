@@ -165,6 +165,7 @@ GRAPH = {
         "src/mikemol/hooks/stackahead.py",
         "src/mikemol/hooks/stackbuildfiles.py",
         "src/mikemol/hooks/stackdrift.py",
+        "src/mikemol/hooks/stackempty.py",
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackimports.py",
         "src/mikemol/hooks/stackmutants.py",
@@ -1038,6 +1039,15 @@ GRAPH = {
     "src/mikemol/hooks/stackdrift.py": {
       "imports": [
         "src/mikemol/hooks/stackrun.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "src/mikemol/hooks/stackempty.py": {
+      "imports": [
+        "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/stackrun.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []
@@ -3198,6 +3208,15 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/stackdrift.py",
         "src/mikemol/hooks/stackrun.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_stackempty.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/stackempty.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []

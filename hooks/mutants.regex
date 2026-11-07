@@ -1155,3 +1155,7 @@ src/mikemol/hooks/round_wire.py|a-card-the-queue-lacks-is-not-the-stacks|    abs
 src/mikemol/hooks/round_wire.py|a-mark-on-a-round-card-stands-for-the-stack|return "ready" if card|return "building" if card|def=_submitted_status
 src/mikemol/hooks/round_wire.py|the-co-lander-is-outside-the-round|    working = \(stack - \{CO_LANDER\}\) or stack|    working = stack|def=as_submitted
 src/mikemol/hooks/round_wire.py|a-lone-co-lander-is-no-working-set|    working = \(stack - \{CO_LANDER\}\) or stack|    working = stack - {CO_LANDER}|def=as_submitted
+src/mikemol/hooks/stackempty.py|an-unchanged-file-counts-as-a-change|            if frozen\.blob != before:|            if True:|def=empty_entries
+src/mikemol/hooks/stackempty.py|the-stacks-earlier-bytes-are-ignored|            before = held\[frozen\.path\] if frozen\.path in held else head_blob\(frozen\.path\)|            before = head_blob(frozen.path)|def=empty_entries
+src/mikemol/hooks/stackempty.py|a-deletion-is-no-change|            if frozen\.blob != before:|            if frozen.blob and frozen.blob != before:|def=empty_entries
+src/mikemol/hooks/commit_kata.py|empty-entry-not-asked-at-submit|        or _empty_refusal\(root, stack_file, snap, run_git_in\)|        or None|def=submit_problem

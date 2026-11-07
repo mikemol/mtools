@@ -94,6 +94,7 @@ from mikemol.hooks.stackahead import unbuilt_on as _unbuilt_on
 from mikemol.hooks.stackbuildfiles import refusal as _build_refusal
 from mikemol.hooks.stackdrift import QUEUE as _QUEUE
 from mikemol.hooks.stackdrift import report as _drift_report
+from mikemol.hooks.stackempty import refusal as _empty_refusal
 from mikemol.hooks.stackfreeze import (
     SNAP_ENV,
     at_submit,
@@ -1188,7 +1189,8 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
     """Judge a submitted stack by the refusals made before it waits for its turn.
 
     The first that has something to say wins: an import only a later entry adds (W1527), a build
-    file naming a source no entry carries (W1604), a file shared with a stack ahead
+    file naming a source no entry carries (W1604), an entry that changes nothing (W2346),
+    a file shared with a stack ahead
     without its bytes (W2078), a mutants grid already past half of its CPU
     budget (W1602), a ready card of the published round skipped for one outside it (W1948), a
     test file of the stack that fails as its bazel target in the sandbox (W2055; last, because
@@ -1201,6 +1203,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
     snap = env[SNAP_ENV]
     return (
         _stack_refusal(root, stack_file, snap, run_git_in)
+        or _empty_refusal(root, stack_file, snap, run_git_in)
         or stack_build_refusal(root, stack_file, snap, run_git_in)
         or _ahead_refusal(_unbuilt_on(snap))
         or _shard_refusal(root, stack_file, env)

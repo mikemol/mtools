@@ -237,3 +237,4 @@ admission	A pinned row admits exactly one reviewed change
 repin-admission	Clause R: a repin changes only the vendored sha
 birth-checks	A birth row's accident checks
 train_stale_head	A train judges an admission-needing group on the landed HEAD
+stackempty	An entry that changes nothing is refused at submit
