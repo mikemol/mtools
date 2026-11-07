@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2345,
+  "counter": 2347,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -51827,11 +51827,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": null,
-      "evidence": "2026-11-07T00:08:19Z: 2026-11-06: begun at github-14's ask (one fixpoint with the W2321 review). Design: submit judges the stack's own waypoints: stack cards count as the working set, queue working marks are ignored; round_wire.now_reason(directory, stack) with a done-card tree never exempting. | 2026-11-07T01:11:14Z: landed 4c7ecc64 with W2219 batch 40 01a3937b | 2026-11-07T01:16:46Z: 2026-11-06: REOPENED by github-14's round check of 4c7ecc64: the submit round check cannot refuse (the stack's own live entry is in the map when it runs, so in_gate cites its cards); stale mutants; fixes follow. | 2026-11-07T01:23:57Z: 2026-11-06: fix built and tested (stack file b41, 14 mutants killed) but REFUSED AT SUBMIT by the repaired round check: W2322 is outside the round while W2294, W1667, W2248, W2060, W2289, W879 are ready in it. No waiver. Asked github-14: (1) work the round first, or (2) a ruling that puts W2322 in the round file. Resubmit b41 when answered. | 2026-11-07T01:25:30Z: 2026-11-06: ROUND ENTRY BY RULING, scoped to this card alone and no code exemption: github-14 (host session, cross-session message 2026-11-06, option 2 of my ask) ruled a defect in the round guard itself is round work. Basis it cites: the recorded design that gate-red repairs are admitted (host memory feedback-ratchet-paydown-rate-with-teeth, a design record, not an operator quote) and the operator's velocity-before-what-it-carries rule (W56). It is the host's ruling, not the operator's, and the host told the operator. Mechanism: the round is drawn by nemik from each card's declared priority, so the entry is --weight 100000 on this card; the round file must show W2322 before b41 is resubmitted. If the class recurs, card a general form for review. | 2026-11-07T01:26:10Z: 2026-11-06: CORRECTION to the entry above: --weight 100000 did NOT enter the round. The round is drawn by nemik in a composed order (operator asks, then Pareto fronts over priority band and downstream weight); nemik-rank mtools puts W2322 8th (velocity band, downstream 0) while the round holds six, and the stored weight is not an input to that order. The remaining honest inputs are an operator ask (op) or real downstream edges; W2324 genuinely waits on this card but one edge does not reach the top six. The round file is nemik's generated output (luthen export tree), not this repo's to edit. Asked github-14 (nemik-side) for the entry the ruling names; b41 resubmits when the round file lists W2322. | 2026-11-07T01:30:22Z: 2026-11-06: github-14's stop-gap: unblocked; touches already carries velocity; enables only true edges: nemik:W2027 (the round check it reads), W2323 (the sweep needs a working submit check) and W2324 (its review remainder). | 2026-11-07T05:21:42Z: 2026-11-07: redraw 05:20:56Z after the W2309/W2310 split: the mtools round is W2327, W2294, W1667, W2248, W1259, W2326; W2322 is not in it (the remainders took the freed slots by their own salience). Third gate cycle, reported to github-14, who will card the common structure into W2200 (a repair to the round check is judged by the round check). b45 stays unsubmitted until they say how it enters; no third route. | 2026-11-07T05:23:34Z: 2026-11-07: lifted to ready on github-14's message of this date: the block on them is answered; W2322 is round work and enters by rank on its true tags, nothing is placed. Tags and edges left as they are. Note for the record: I set this block AFTER the 05:20:56Z redraw (the card was ready at that computation per my own earlier unblock), so the redraw I reported already saw it ready; github-14's read of the queue file saw my later block. Next: report the stamp and rank after the next redraw. | 2026-11-07T20:23:21Z: 2026-11-07: nemik:W2039 landed (eb3fd9c8; github-14). TAGGED gate-repair (the band nemik's bands.toml puts above velocity: order gate-repair, velocity, ...), keeping hooks and velocity. W2322 repairs the stack-submit round check, a gate. No code exemption; only the rank input. Next: confirm rank after luthen's repin and the round's redraw, then resubmit b45 and send github-14 its sha for cold review.",
+      "evidence": "2026-11-07T00:08:19Z: 2026-11-06: begun at github-14's ask (one fixpoint with the W2321 review). Design: submit judges the stack's own waypoints: stack cards count as the working set, queue working marks are ignored; round_wire.now_reason(directory, stack) with a done-card tree never exempting. | 2026-11-07T01:11:14Z: landed 4c7ecc64 with W2219 batch 40 01a3937b | 2026-11-07T01:16:46Z: 2026-11-06: REOPENED by github-14's round check of 4c7ecc64: the submit round check cannot refuse (the stack's own live entry is in the map when it runs, so in_gate cites its cards); stale mutants; fixes follow. | 2026-11-07T01:23:57Z: 2026-11-06: fix built and tested (stack file b41, 14 mutants killed) but REFUSED AT SUBMIT by the repaired round check: W2322 is outside the round while W2294, W1667, W2248, W2060, W2289, W879 are ready in it. No waiver. Asked github-14: (1) work the round first, or (2) a ruling that puts W2322 in the round file. Resubmit b41 when answered. | 2026-11-07T01:25:30Z: 2026-11-06: ROUND ENTRY BY RULING, scoped to this card alone and no code exemption: github-14 (host session, cross-session message 2026-11-06, option 2 of my ask) ruled a defect in the round guard itself is round work. Basis it cites: the recorded design that gate-red repairs are admitted (host memory feedback-ratchet-paydown-rate-with-teeth, a design record, not an operator quote) and the operator's velocity-before-what-it-carries rule (W56). It is the host's ruling, not the operator's, and the host told the operator. Mechanism: the round is drawn by nemik from each card's declared priority, so the entry is --weight 100000 on this card; the round file must show W2322 before b41 is resubmitted. If the class recurs, card a general form for review. | 2026-11-07T01:26:10Z: 2026-11-06: CORRECTION to the entry above: --weight 100000 did NOT enter the round. The round is drawn by nemik in a composed order (operator asks, then Pareto fronts over priority band and downstream weight); nemik-rank mtools puts W2322 8th (velocity band, downstream 0) while the round holds six, and the stored weight is not an input to that order. The remaining honest inputs are an operator ask (op) or real downstream edges; W2324 genuinely waits on this card but one edge does not reach the top six. The round file is nemik's generated output (luthen export tree), not this repo's to edit. Asked github-14 (nemik-side) for the entry the ruling names; b41 resubmits when the round file lists W2322. | 2026-11-07T01:30:22Z: 2026-11-06: github-14's stop-gap: unblocked; touches already carries velocity; enables only true edges: nemik:W2027 (the round check it reads), W2323 (the sweep needs a working submit check) and W2324 (its review remainder). | 2026-11-07T05:21:42Z: 2026-11-07: redraw 05:20:56Z after the W2309/W2310 split: the mtools round is W2327, W2294, W1667, W2248, W1259, W2326; W2322 is not in it (the remainders took the freed slots by their own salience). Third gate cycle, reported to github-14, who will card the common structure into W2200 (a repair to the round check is judged by the round check). b45 stays unsubmitted until they say how it enters; no third route. | 2026-11-07T05:23:34Z: 2026-11-07: lifted to ready on github-14's message of this date: the block on them is answered; W2322 is round work and enters by rank on its true tags, nothing is placed. Tags and edges left as they are. Note for the record: I set this block AFTER the 05:20:56Z redraw (the card was ready at that computation per my own earlier unblock), so the redraw I reported already saw it ready; github-14's read of the queue file saw my later block. Next: report the stamp and rank after the next redraw. | 2026-11-07T20:23:21Z: 2026-11-07: nemik:W2039 landed (eb3fd9c8; github-14). TAGGED gate-repair (the band nemik's bands.toml puts above velocity: order gate-repair, velocity, ...), keeping hooks and velocity. W2322 repairs the stack-submit round check, a gate. No code exemption; only the rank input. Next: confirm rank after luthen's repin and the round's redraw, then resubmit b45 and send github-14 its sha for cold review. | 2026-11-07T21:36:37Z: 2026-11-07: b45 landed as 96297d1e (W2322) with 45c27765 (W2219 batch 44). Entered by rank 1 on the gate-repair band after the 21:20:58Z redraw, no placement. Sent to github-14 for cold review; NOT DONE items carried: a test through the real main order, the unreadable-records message, github-14's survivors (W2324), the scratch-tree sweep (W2323). | 2026-11-07T21:41:03Z: 2026-11-07 REOPENED: 96297d1e is an EMPTY COMMIT (git show --stat prints no files; git grep CO_LANDER HEAD finds nothing), found by github-14. My 'landed' above was wrong: I closed it on the submit's exit code and never checked the commit's diff. 45c27765 (W2219 batch 44) is real but its message claims it rides beside a repair that is not there. The defect is live. Every 'landed with no refusal' since 4c7ecc64 is unchecked by the round, including b45.",
       "issued_at": "2026-11-07T00:07:51Z",
       "minted_during": "interrupt",
       "caused_by": "W2321",
-      "last_worked": "2026-11-07T20:23:21Z",
+      "last_worked": "2026-11-07T21:41:03Z",
       "ticks_blocked": 0,
       "completed": null,
       "weight": 100000
@@ -52319,6 +52319,45 @@
       "minted_during": "interrupt",
       "caused_by": "W2342",
       "last_worked": "2026-11-07T20:00:46Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2346",
+      "title": "The commit path refuses a stack entry whose change set is empty while its waypoint or message claims a change (96297d1e landed empty with a subject naming code, tests and sixteen mutants)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity",
+        "gate-repair"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-07T21:42:29Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-14",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2347",
+      "title": "A PreToolUse Bash filter refuses direct pytest, mypy and ruff and names the fine-grained bazel target",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Write the design (filter beside mikemol-hook-no-chaining; refusal names the target or says none exists, which is atomization work; say whether mikemol-pycheck and hooks-preflight move to bazel targets or are the tool the filter routes to) and send it to github-14 for cold review before building",
+      "evidence": "",
+      "issued_at": "2026-11-07T21:42:43Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-14",
+      "last_worked": null,
       "ticks_blocked": 0
     }
   ],
