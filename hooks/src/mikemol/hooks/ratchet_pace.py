@@ -359,26 +359,55 @@ def _birth_problem(row: admission.Row, root: Path, files: Sequence[stacksnap.Fro
 
 
 def _repin_clear(root: Path, files: Sequence[stacksnap.Frozen]) -> bool:
+    # Whether the stack is a repin (clause R); the sha it brings is `_repin_sha`'s.
+    return _repin_sha(root, files) is not None
+
+
+def _head_modes(root: Path) -> dict[str, str] | None:
+    # path -> file mode of HEAD's tree; None when HEAD cannot be listed.
+    listing = _git_text(root, ["ls-tree", "-r", "-z", "HEAD"])
+    if listing is None:
+        return None
+    modes: dict[str, str] = {}
+    for record in listing.split("\0"):
+        meta, _, path = record.partition("\t")
+        if path:
+            modes[path] = meta.split(" ")[0]
+    return modes
+
+
+def _mode_clear(file: stacksnap.Frozen, head: Mapping[str, str]) -> bool:
+    # N2: a pinned file is a regular file and keeps the mode HEAD gave it, so a link or a
+    # flipped execute bit is no part of a repin.
+    if not file.blob:
+        return True
+    return file.mode in {"100644", "100755"} and head.get(file.path, file.mode) == file.mode
+
+
+def _repin_sha(root: Path, files: Sequence[stacksnap.Frozen]) -> str | None:
     # Clause R (W2301 v4, W2311): the stack is a repin when every non-queue file is repin-owned
     # and each text file differs from HEAD's only by the vendored sha. The judgement is
     # `repin_admission.admits`; this reads HEAD's and the frozen text for it.
-    # ⚑ FAILS CLOSED: a path whose text cannot be read, or HEAD that cannot be listed, is no repin.
-    listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"])
-    if listing is None:
-        return False
-    head = frozenset(listing.split("\0"))
+    # ⚑ FAILS CLOSED: a path whose text cannot be read, HEAD that cannot be listed, or a path
+    # frozen twice at different bytes (the later hides the earlier) is no repin.
+    head = _head_modes(root)
+    if head is None:
+        return None
+    held: dict[str, str] = {}
     old: dict[str, str | None] = {}
     new: dict[str, str | None] = {}
     for file in files:
         if file.path in QUEUE_FILES:
             continue
+        if held.setdefault(file.path, file.blob) != file.blob or not _mode_clear(file, head):
+            return None
         if file.path in repin_admission.TEXT_FILES:
             old[file.path] = _git_text(root, ["show", f"HEAD:{file.path}"])
             new[file.path] = _git_text(root, ["cat-file", "blob", file.blob]) if file.blob else None
         else:
             old[file.path] = "" if file.path in head else None
             new[file.path] = "" if file.blob else None
-    return repin_admission.admits(old, new) is None
+    return repin_admission.new_sha(old, new)
 
 
 def _admitted_by(
@@ -426,9 +455,12 @@ def admitted_ident(
         return None
     frozen = [file for item in items for file in item.files or ()]
     row = admission.admitting(rows, root.name, [item.waypoint for item in items], frozen)
-    if row is None or not _birth_clear(row, root, frozen):
-        return None
-    return row.ident()
+    if row is None:
+        # CLAUSE R LEAVES ITS MARK (the f1710762 review): a repin that cleared the pace with no
+        # row is named in the trailer by the one sha it brought.
+        sha = _repin_sha(root, frozen)
+        return None if sha is None else f"{root.name}/repin-{sha}"
+    return row.ident() if _birth_clear(row, root, frozen) else None
 
 
 def landing_refusal(

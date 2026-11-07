@@ -10,8 +10,14 @@ change must carry, so admission is "this exact change", never "anything in these
 a spent row is inert (`stackland` refuses a second `Admission:` trailer for it).
 
 ⚑ A ROW IS A LITERAL IN THIS FILE, REVIEWED AS THE CHANGE THAT ADDS IT. There is no generic class
-and no repository-side declaration: a repository cannot admit itself, because the table is part of
-the pinned guard it runs. `ROWS` is empty until a reviewed change adds one.
+of ROWS and no repository-side declaration: a repository cannot admit itself, because the table
+is part of the pinned guard it runs. `ROWS` is empty until a reviewed change adds one.
+THE ONE SHAPE RULE OUTSIDE THE TABLE is clause R (`repin_admission`): a software update that
+brings exactly one new vendored sha and changes nothing else, named by the design
+(.claude/design/W2301-pace-input-admission.md, the route by which a row reaches nemik), which
+forgives no debt and leaves an `Admission: <repo>/repin-<sha>` mark at the landing. Its warrant
+is github-14's extension of the pinned-repoint ruling (host line 126887) to a stack past the
+pace, not an operator ruling; the operator was told and may overrule it.
 
 ⚑ THE JUDGEMENT IS PURE: it reads the stack's waypoints and its FROZEN files (`stacksnap.Frozen`,
 path, mode and blob as they were at submit) and nothing else. Queue files ride free, as everywhere

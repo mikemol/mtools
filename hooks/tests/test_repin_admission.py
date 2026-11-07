@@ -112,7 +112,7 @@ def test_a_file_a_repin_does_not_own_refuses_the_stack() -> None:
     new["src/app.py"] = "x = 2\n"
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert "src/app.py" in reason
+    assert "src/app.py is not a repin-owned file" in reason
 
 
 def test_two_shas_in_one_stack_refuse_it() -> None:
@@ -122,7 +122,7 @@ def test_two_shas_in_one_stack_refuse_it() -> None:
     old, new = _stack(new)
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert "exactly one sha" in reason
+    assert "exactly one new sha" in reason
 
 
 def test_a_wheel_named_for_another_sha_refuses_the_stack() -> None:
@@ -132,7 +132,7 @@ def test_a_wheel_named_for_another_sha_refuses_the_stack() -> None:
     new[_wheel("abc1234")] = ""
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert "exactly one sha" in reason
+    assert "exactly one new sha" in reason
 
 
 def test_a_stack_that_names_no_sha_is_not_a_repin() -> None:
@@ -143,7 +143,7 @@ def test_a_stack_that_names_no_sha_is_not_a_repin() -> None:
 
 def test_a_third_party_local_version_is_not_a_second_sha() -> None:
     """A package that is not mikemol's keeps its own `+local` version and counts for nothing."""
-    local = 'name = "torchlike"\nversion = "2.0+deadbee"\n'
+    local = 'name = "torchlike"\nversion = "2.0.1+deadbee"\n'
     old = _texts(_OLD, _DIGEST_OLD, prose=_OLD)
     old[_LOCK] = _lock(_OLD, _DIGEST_OLD, local)
     new = _texts(_NEW, _DIGEST_NEW, prose=_NEW)
@@ -160,3 +160,77 @@ def test_a_text_file_added_or_removed_and_an_empty_stack_are_not_repins() -> Non
     reason = repin_admission.admits(old, new)
     assert reason is not None
     assert "added or removed" in reason
+
+
+def test_a_third_party_local_version_that_changes_is_not_a_repin() -> None:
+    """A package that is not mikemol's may not move its `+local` version beside a repin."""
+    before = 'name = "torchlike"\nversion = "2.0.1+aaaaaaa"\n'
+    after = 'name = "torchlike"\nversion = "2.0.1+bbbbbbb"\n'
+    old = _texts(_OLD, _DIGEST_OLD, prose=_OLD)
+    old[_LOCK] = _lock(_OLD, _DIGEST_OLD, before)
+    new = _texts(_NEW, _DIGEST_NEW, prose=_NEW)
+    new[_LOCK] = _lock(_NEW, _DIGEST_NEW, after)
+    old, new = _stack(new, old_texts=old)
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert _LOCK in reason
+
+
+def test_a_stack_that_moves_no_sha_is_not_a_repin() -> None:
+    """B2: a no-op, a same-named wheel with other bytes and a stray wheel pass nothing."""
+    texts = _texts(_OLD, _DIGEST_OLD, prose=_OLD)
+    same = dict(texts)
+    same[_wheel(_OLD)] = ""
+    assert repin_admission.admits(same, dict(same)) is not None
+    evil = dict(same)
+    evil["vendor/wheels/mikemol_evil-0.1.0+abc1234-py3-none-any.whl"] = ""
+    reason = repin_admission.admits(same, {**evil})
+    assert reason is not None
+
+
+def test_an_added_wheel_no_new_text_names_is_refused() -> None:
+    """B2: a new sha on a wheel nothing references is not part of the repin."""
+    old, new = _stack()
+    new["vendor/wheels/mikemol_evil-0.1.0+abc1234-py3-none-any.whl"] = ""
+    old["vendor/wheels/mikemol_evil-0.1.0+abc1234-py3-none-any.whl"] = None
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+
+
+def test_a_dropped_trailing_newline_and_crlf_are_changes_beyond_the_sha() -> None:
+    """B2: line terminators are bytes; the masked comparison keeps them."""
+    for dropped in (True, False):
+        new = _texts(_NEW, _DIGEST_NEW, prose=_NEW)
+        body = str(new[_PYPROJECT])
+        new[_PYPROJECT] = body.rstrip("\n") if dropped else body.replace("\n", "\r\n")
+        old, new = _stack(new)
+        assert repin_admission.admits(old, new) is not None
+
+
+def test_a_pin_held_at_an_older_sha_is_not_a_second_sha() -> None:
+    """B1: nemik's real repin held converge at 0f8267e while the rest moved; one new sha."""
+    wheel = "vendor/wheels/mikemol_converge-0.1.0+0f8267e-py3-none-any.whl"
+    held = f'mikemol-converge = {{ path = "{wheel}" }}\n'
+    old_texts = _texts(_OLD, _DIGEST_OLD, prose=_OLD)
+    old_texts[_PYPROJECT] = str(old_texts[_PYPROJECT]) + held
+    new_texts = _texts(_NEW, _DIGEST_NEW, prose=_NEW)
+    new_texts[_PYPROJECT] = str(new_texts[_PYPROJECT]) + held
+    old, new = _stack(new_texts, old_texts=old_texts)
+    assert repin_admission.admits(old, new) is None
+    assert repin_admission.new_sha(old, new) == _NEW
+
+
+def test_the_wheel_directory_readme_is_a_repin_owned_file() -> None:
+    """B1: revendor writes checksums into vendor/wheels/README.md; it moves with the sha."""
+    old, new = _stack()
+    row = "mikemol_hooks-0.1.0+{sha}-py3-none-any.whl sha256:{digest}\n"
+    old["vendor/wheels/README.md"] = row.format(sha=_OLD, digest=_DIGEST_OLD)
+    new["vendor/wheels/README.md"] = row.format(sha=_NEW, digest=_DIGEST_NEW)
+    assert repin_admission.admits(old, new) is None
+
+
+def test_the_one_new_sha_is_named_for_the_audit_trailer() -> None:
+    """The landing writes it: a repin names its sha, anything else names none."""
+    old, new = _stack()
+    assert repin_admission.new_sha(old, new) == _NEW
+    assert repin_admission.new_sha(old, dict(old)) is None

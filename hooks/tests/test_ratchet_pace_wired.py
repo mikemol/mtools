@@ -439,3 +439,60 @@ def test_the_submit_refusal_admits_a_repin_the_same_way(tmp_path: Path) -> None:
         stacksnap.dump(snap, [list(item.files or ())])
         reason = ratchet_pace.refusal(root, stack, {**env, SNAP_ENV: str(snap)}, [])
         assert (reason is not None) is refused
+
+
+def test_a_repin_names_its_sha_in_the_audit_trailer_and_a_source_file_beside_it_is_refused(
+    tmp_path: Path,
+) -> None:
+    """Clause R leaves its mark; a tracked source file in the stack is not repin-owned."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))
+    assert ratchet_pace.admitted_ident(root, clean, env, [], now) == f"r/repin-{_NEW_SHA}"
+    src = _git(root, "hash-object", "-w", "--stdin", text="x = 2\n")
+    extra = stacksnap.Frozen("src/app.py", _MODE, src)
+    files = (*(clean[0].files or ()), extra)
+    beside = [Item("W1", "s", "", (*clean[0].paths, "src/app.py"), files)]
+    assert ratchet_pace.landing_refusal(root, beside, env, [], now) is not None
+    assert ratchet_pace.admitted_ident(root, beside, env, [], now) is None
+
+
+def test_a_stack_that_moves_no_sha_does_not_get_past_the_pace(tmp_path: Path) -> None:
+    """B2 end to end: the HEAD pyproject, unchanged, is not a repin and is refused."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    now = datetime.now(UTC)
+    noop = _repin_items(root, _pyproject(_OLD_SHA), wheel_sha=_OLD_SHA)
+    assert ratchet_pace.landing_refusal(root, noop, env, [], now) is not None
+
+
+def test_an_earlier_entry_at_other_bytes_is_not_hidden_by_a_later_clean_one(
+    tmp_path: Path,
+) -> None:
+    """A path frozen twice at different blobs is no repin: the later would hide the earlier."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))[0]
+    stray = _repin_items(root, _pyproject(_NEW_SHA, 'rich = "13"\n'))[0]
+    first = next(f for f in stray.files or () if f.path == "pyproject.toml")
+    files = (first, *(clean.files or ()))
+    twice = [Item("W1", "s", "", clean.paths, files)]
+    assert ratchet_pace.landing_refusal(root, twice, env, [], now) is not None
+
+
+def test_a_link_or_a_flipped_execute_bit_in_a_repin_stack_is_refused(tmp_path: Path) -> None:
+    """N2: only a regular file with the mode HEAD gave it belongs to a repin."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))[0]
+    assert ratchet_pace.landing_refusal(root, [clean], env, [], now) is None
+    for mode in ("120000", "100755"):
+        files = tuple(
+            stacksnap.Frozen(f.path, mode, f.blob) if f.path == "pyproject.toml" else f
+            for f in clean.files or ()
+        )
+        odd = [Item("W1", "s", "", clean.paths, files)]
+        assert ratchet_pace.landing_refusal(root, odd, env, [], now) is not None
