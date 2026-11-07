@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2343,
+  "counter": 2345,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -27881,11 +27881,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Define the citation (inbox/<name>.md in title, next step or evidence), look for the file in inbox/ and inbox/archive/, and for an answering letter by the reply naming convention; report one line per card; el-openglo's 13 letter cards are the fixture shape",
-      "evidence": "2026-11-06T01:57:51Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:49:01Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:23:48Z: 2026-11-07: a pathsforward cli feature that needs a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's 2026-11-07 priority (the gate's cache hit rates, W2319 W2134 W1985) and W2334 are ahead of it. Resume when W2333 lands. | 2026-11-07T13:41:50Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands. | 2026-11-07T14:45:21Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone measurement, W2337) is ahead of it per github-14. Resume when W2339 lands.",
+      "evidence": "2026-11-06T01:57:51Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:49:01Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:23:48Z: 2026-11-07: a pathsforward cli feature that needs a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's 2026-11-07 priority (the gate's cache hit rates, W2319 W2134 W1985) and W2334 are ahead of it. Resume when W2333 lands. | 2026-11-07T13:41:50Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands. | 2026-11-07T14:45:21Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone measurement, W2337) is ahead of it per github-14. Resume when W2339 lands. | 2026-11-07T15:57:09Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b55 (W2342 plus W2219 batch 52) holds the gate, and the W2340 hollow-baseline measurement is running under bazel; both are ahead of it per github-14's cache priority. Resume when W2342 lands.",
       "issued_at": "2026-10-16T02:07:42Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T14:45:21Z",
+      "last_worked": "2026-11-07T15:57:09Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29030,20 +29030,22 @@
     {
       "symbol": "W1388",
       "title": "pre-write hook in mikemol-paths-forward and the commit gate prints the rulings relevant to the card being changed",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "pathsforward",
         "provenance"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "decide where the writer finds the ledger (a MIKEMOL_RULINGS_LEDGER variable, else '<project_root>/.claude/rulings.jsonl' if present, else silent: no ledger means no print); then build pathsforward/src/.../rulinghint.py plus test_rulinghint.py (a planted ledger: newest first, a card symbol as needle, empty answer printed as 'no ruling touches this', absent ledger prints nothing), wire into the writer's --update and --add before the write, a mutant for newest-first and one for absent-ledger-silent, warrants; the commit-gate print is a second step in hooks",
-      "evidence": "2026-11-06T00:10:07Z: 2026-11-05 released from the W1667 parking lot (a real fall in the unmanifested ratchet): read transcriptstruct rulings.py (stage 9, the append-only ledger) and rulingq.py (stage 10, the query, newest first) so the files named are the ones that exist; the hook and the gate print are new code on top of them. | 2026-11-06T00:44:24Z: 2026-11-06: read transcriptstruct rulingq.py: the query is rulings(ledger: Path, pattern: str, limit: int | None = None) -> list[Ruling] (newest first, an empty list for no match); Ruling carries iri, said_at, line and the words. The pre-write hook is a thin caller: pathsforward must not take a runtime dependency on transcriptstruct (the W2289 sibling-edge problem), so it shells out to the pinned mikemol-transcriptstruct binary or reads the ledger file directly (append-only JSON lines, one entity per line, stage 9 format). Decide which at build time; reading the ledger JSON lines directly is the dependency-free option but re-derives the match rule (a case-insensitive regex over the needle), which is the residue to record. Not built. | 2026-11-06T01:20:07Z: 2026-11-06 READ rulingq.py in full: a ledger line is one JSON entity with '@id' (the IRI file#uuid), 'prov:generatedAtTime' {'@value'}, 'mtools:needle' (the matched text), 'mtools:line' and 'mtools:session'; rulings() lowercases nothing, compiles the pattern case-insensitively and searches the needle, sorting by the stamp, newest first. The ledger PATH is not defaulted in the module (the transcriptstruct cli takes it as an argument), so the pre-write hook needs the path from the repo's configuration or an environment variable: decide it with the first test (planted ledger). Dependency-free reading in pathsforward is ~25 lines (json lines, re.IGNORECASE on mtools:needle, sort by stamp desc), so the residue to record is that it re-derives that match rule beside rulingq. | 2026-11-06T05:07:50Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:42:34Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's cache priority (W2317, W2319, W2134, W1985) and W2334 are ahead of it per github-14. Resume when W2333 lands. | 2026-11-07T13:59:43Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands. | 2026-11-07T14:54:47Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337) is ahead of it per github-14. Resume when W2339 lands.",
+      "evidence": "2026-11-06T00:10:07Z: 2026-11-05 released from the W1667 parking lot (a real fall in the unmanifested ratchet): read transcriptstruct rulings.py (stage 9, the append-only ledger) and rulingq.py (stage 10, the query, newest first) so the files named are the ones that exist; the hook and the gate print are new code on top of them. | 2026-11-06T00:44:24Z: 2026-11-06: read transcriptstruct rulingq.py: the query is rulings(ledger: Path, pattern: str, limit: int | None = None) -> list[Ruling] (newest first, an empty list for no match); Ruling carries iri, said_at, line and the words. The pre-write hook is a thin caller: pathsforward must not take a runtime dependency on transcriptstruct (the W2289 sibling-edge problem), so it shells out to the pinned mikemol-transcriptstruct binary or reads the ledger file directly (append-only JSON lines, one entity per line, stage 9 format). Decide which at build time; reading the ledger JSON lines directly is the dependency-free option but re-derives the match rule (a case-insensitive regex over the needle), which is the residue to record. Not built. | 2026-11-06T01:20:07Z: 2026-11-06 READ rulingq.py in full: a ledger line is one JSON entity with '@id' (the IRI file#uuid), 'prov:generatedAtTime' {'@value'}, 'mtools:needle' (the matched text), 'mtools:line' and 'mtools:session'; rulings() lowercases nothing, compiles the pattern case-insensitively and searches the needle, sorting by the stamp, newest first. The ledger PATH is not defaulted in the module (the transcriptstruct cli takes it as an argument), so the pre-write hook needs the path from the repo's configuration or an environment variable: decide it with the first test (planted ledger). Dependency-free reading in pathsforward is ~25 lines (json lines, re.IGNORECASE on mtools:needle, sort by stamp desc), so the residue to record is that it re-derives that match rule beside rulingq. | 2026-11-06T05:07:50Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:42:34Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's cache priority (W2317, W2319, W2134, W1985) and W2334 are ahead of it per github-14. Resume when W2333 lands. | 2026-11-07T13:59:43Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands. | 2026-11-07T14:54:47Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337) is ahead of it per github-14. Resume when W2339 lands. | 2026-11-07T16:02:32Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. W2342 (stack b55) holds the gate and W2340 (the six baseline tests behind the hollow mutation grid) is the operator's cache priority and outranks it per github-14. Resume when W2340 lands.",
       "issued_at": "2026-10-16T18:32:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T14:54:47Z",
+      "last_worked": "2026-11-07T16:02:32Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29057,20 +29059,22 @@
     {
       "symbol": "W1389",
       "title": "ingest paperkit argument graphs and summit floor entries into the same rulings ledger, not separate stores",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "transcriptstruct",
         "provenance"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "read the two source shapes before any code (the paperkit argument graph and the summit floor entry; each in its own repo, cite file:line), then add an ingest step to the rulings ledger (transcriptstruct rulings.py: append-only, one JSON line per entity, incremental by the entity's own IRI) so each becomes a ledger entity with its own IRI and the same query reads them beside operator utterances (rulingq). Tests with a planted source of each shape; a mutant for the duplicate-IRI refusal.",
-      "evidence": "2026-11-06T00:10:46Z: 2026-11-05 released from the W1667 parking lot (a real fall): the ledger it extends is transcriptstruct rulings.py (stage 9) and rulingq.py (stage 10); the input formats live in paperkit and summit and are read first. | 2026-11-06T05:08:46Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T14:58:47Z: 2026-11-07: a medium transcriptstruct feature that reads two source shapes in other repos first and needs a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337, W2340) is ahead of it per github-14. Resume when W2339 lands.",
+      "evidence": "2026-11-06T00:10:46Z: 2026-11-05 released from the W1667 parking lot (a real fall): the ledger it extends is transcriptstruct rulings.py (stage 9) and rulingq.py (stage 10); the input formats live in paperkit and summit and are read first. | 2026-11-06T05:08:46Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T14:58:47Z: 2026-11-07: a medium transcriptstruct feature that reads two source shapes in other repos first and needs a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337, W2340) is ahead of it per github-14. Resume when W2339 lands. | 2026-11-07T16:06:16Z: 2026-11-07: a medium transcriptstruct feature that reads two source shapes in other repos first and needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline, now at its second hooks failure) outranks it per github-14's cache priority. Resume when W2340 lands.",
       "issued_at": "2026-10-16T18:32:39Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T14:58:47Z",
+      "last_worked": "2026-11-07T16:06:16Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29552,20 +29556,22 @@
     {
       "symbol": "W1415",
       "title": "type-hole pilot step 2: for each listed hole collect its consumers (calls, attribute reads, passes) with the existing pycodemod readers",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "typehole",
         "pycodemod"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "read what step 1 left (the listed holes: W793 evidence and the pilot's list), then add a pycodemod mode that, for each hole, collects its consumers (calls, attribute reads, passes) with the EXISTING readers (funccalls for calls, reads for attribute reads, referents for passes), without editing; the output is rows (hole, consumer kind, site). A new module for the collector and its tests, dry-run by default; mutants for each consumer kind.",
-      "evidence": "2026-11-06T01:31:21Z: 2026-11-06 released from the W1667 parking lot (a real fall): there is no typehole module in pycodemod yet (grep over src and tests finds none), so the collector is new code on the existing readers named in the manifest, which exist. | 2026-11-06T05:38:09Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T15:03:15Z: 2026-11-07: needs a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337, W2340) is ahead of it per github-14. Resume when W2339 lands.",
+      "evidence": "2026-11-06T01:31:21Z: 2026-11-06 released from the W1667 parking lot (a real fall): there is no typehole module in pycodemod yet (grep over src and tests finds none), so the collector is new code on the existing readers named in the manifest, which exist. | 2026-11-06T05:38:09Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T15:03:15Z: 2026-11-07: needs a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337, W2340) is ahead of it per github-14. Resume when W2339 lands. | 2026-11-07T16:10:38Z: 2026-11-07: needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline, third hooks cause being fixed) outranks it per github-14's cache priority, and stack b55 holds the gate. Resume when W2340 lands.",
       "issued_at": "2026-10-17T00:36:53Z",
       "minted_during": "interrupt",
       "caused_by": "W793",
-      "last_worked": "2026-11-07T15:03:15Z",
+      "last_worked": "2026-11-07T16:10:38Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29579,20 +29585,22 @@
     {
       "symbol": "W1416",
       "title": "type-hole pilot step 3: emit each hole's constraint set and classify it determined, ambiguous or underdetermined, without editing",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "typehole",
         "pycodemod"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "after W1415: classify each hole's constraint set (what its consumers require of the value) as determined (one type satisfies every consumer), ambiguous (several do) or underdetermined (none is constrained), emitted as rows without editing; reuse W1415's rows, a classifier module with a small constraint vocabulary (attribute read of name X requires a member X; a call with n positional arguments requires a callable of arity n; a pass into a typed parameter requires that parameter's type), tests per class, mutants for each class boundary.",
-      "evidence": "2026-11-06T01:31:50Z: 2026-11-06 released from the W1667 parking lot (a real fall): follows W1415's rows; the classifier is new code on the same readers. | 2026-11-06T05:39:56Z: 2026-11-06: taken at the Stop hook's ask; batch 26 landed (528b52ce), gate empty; starting W2219 batch 27. | 2026-11-07T15:13:05Z: 2026-11-07: needs a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337, W2340) is ahead of it per github-14. Resume when W2339 lands.",
+      "evidence": "2026-11-06T01:31:50Z: 2026-11-06 released from the W1667 parking lot (a real fall): follows W1415's rows; the classifier is new code on the same readers. | 2026-11-06T05:39:56Z: 2026-11-06: taken at the Stop hook's ask; batch 26 landed (528b52ce), gate empty; starting W2219 batch 27. | 2026-11-07T15:13:05Z: 2026-11-07: needs a gate slot and a paydown companion. Stack b53 holds the gate, and the operator's cache priority (W2317 cone classification, W2337, W2340) is ahead of it per github-14. Resume when W2339 lands. | 2026-11-07T16:40:02Z: 2026-11-07: needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline, fourth hooks cause being verified) outranks it per github-14's cache priority, and stack b55 holds the gate. Resume when W2340 lands.",
       "issued_at": "2026-10-17T00:36:53Z",
       "minted_during": "interrupt",
       "caused_by": "W793",
-      "last_worked": "2026-11-07T15:13:05Z",
+      "last_worked": "2026-11-07T16:40:02Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29830,20 +29838,22 @@
     {
       "symbol": "W1428",
       "title": "kata: read nemik's stackable set for this repo, open a scratch worktree per card, submit each to mikemol-commit --stack as it goes green",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "katas",
         "stackmaster"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "slice 3: a pure stack_entry(row, subject) in katas.stackable that builds the {waypoint, subject, paths} JSON entry mikemol-commit --stack reads from a STACK row; then the scratch worktree per card. The pace guard refuses a stack that lowers no owed pyproject, so pair it with a katas pyproject paydown",
-      "evidence": "2026-10-31T18:39:05Z: 2026-10-31 nemik-94 (nemik:W613) says parts 1-5 landed at 0ebadf6 with 'nemik-rank --propose --json' and asks whether W1428 needs more. Read: the nemik-rank in ~/github/nemik/.venv here has no --propose (usage: --round, --workable, --flow, --landings, --pace). Asked nemik for the command, sha and a real output. | 2026-10-31T18:42:23Z: 2026-10-31 nemik-94 corrected itself: the tool is nemik-stackable (editable install at ~/github/nemik/.venv/bin/nemik-stackable, main 9678e697); its --propose --json drafts manifests for ready cards without one and is NOT the stackable set. The stackable set is the plain text output of 'nemik-stackable <repo>' (format unseen, run is slow). nemik will send one real output; if a JSON form with symbol, may-stack-now and files is needed it cards the mode under W613. | 2026-10-31T18:46:08Z: 2026-10-31 READ FIRST-HAND: nemik-stackable mtools (editable install, ran to completion) prints one text row per ready card that has a manifest: 'STACK|WAITING <repo>:W<n> <files...>', then '19 stackable of 100 ready; 79 have no manifest'. A WAITING row conflicts on files with a STACK row (W2132 vs W2131 on commit_kata.py). Cards without a manifest are counted, not listed. Rows include cards already landed whose status is still ready (W2126, W1895, W1960), so the kata must also check git before submitting. Wait on nemik:W613 dropped: the text form is enough. | 2026-11-04T09:50:09Z: 2026-11-04 first slice built in scratch W22680: katas.stackable.parse reads nemik-stackable's STACK/WAITING text rows (a malformed row is refused naming it, never skipped) and submit_set picks STACK rows whose card has not already landed; 4 tests, 4 declared mutants, 4 warrants, 1 rubric row. Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card and the --stack submit. | 2026-11-04T10:06:47Z: 2026-11-04 slice 1 (katas.stackable: parse and submit_set) is in stack-w1428-w2221, inflight in the gate; next slice is the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), then a scratch worktree per card and the --stack submit. | 2026-11-04T11:22:37Z: 2026-11-04 slice 1 landed in 731c98a7/b8901fbb (katas.stackable parse and submit_set; whole katas grid 76 killed 0 survived). Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card, the --stack submit. | 2026-11-04T12:32:29Z: 2026-11-04 slice 2 built and landed into main's tree (katas.stackable.landed_in and with_edits; 3 mutants killed, whole grid 78 killed 0 survived); added as the second entry of stack-w2220-run.json, to submit once W2274 lands (the W2220 entry's hooks batch 1 is its pace companion). Left: a scratch worktree per card and the --stack submit. | 2026-11-04T14:04:01Z: slice 2 (landed_in, with_edits) landed as 935f099e; remaining: scratch worktree per card and the --stack submit | 2026-11-05T13:54:14Z: 2026-11-05: taken at the Stop hook's ask while paydown stack 16 holds the gate; no code this turn. Slice 3 (stack_entry) needs a katas pyproject paydown companion, so it rides the next paydown stack. | 2026-11-05T16:40:35Z: 2026-11-05: taken at the Stop hook's ask while stack 18 holds the gate; no code this turn. Slice 3 (stack_entry) needs a katas pyproject paydown companion; katas owes 5 rules, one of which is the tests/* assert glob, so the companion must remove one of the other four. | 2026-11-05T16:56:35Z: 2026-11-05: taken at the Stop hook's ask; no code this turn (stack 18 holds the gate, katas companion still to choose). | 2026-11-05T17:15:42Z: 2026-11-05: taken at the Stop hook's ask; no code this turn (stack 18 holds the gate). | 2026-11-05T18:40:19Z: 2026-11-05: read katas/pyproject.toml per-file-ignores: besides the tests/* assert glob the entries are waiter.py (streams one child's output into a log as it is produced) and detach.py (a Popen that outlives the caller), neither a plain swap. So slice 3's pace companion is a hooks batch in the same stack, which shares hooks registries with stack 19 (inflight) and would be refused by stackahead.unbuilt_on unless built on its bytes: cut after 19 lands. | 2026-11-05T20:40:54Z: 2026-11-05: blocked on W2219: slice 3 needs a hooks paydown companion built on the in-flight stack's bytes (shared registries); cut after stack 19 lands. Also outside this round, so a working mark refuses submits. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T06:07:49Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn. | 2026-11-07T15:16:02Z: 2026-11-07: slice 3 (stack_entry) still needs a hooks paydown companion built on the in-flight stack's registries. Stack b53 (W2339, W2338, W2219 batch 51) holds them and the gate, and the operator's cache priority is ahead of it per github-14. Resume when W2339 lands.",
+      "evidence": "2026-10-31T18:39:05Z: 2026-10-31 nemik-94 (nemik:W613) says parts 1-5 landed at 0ebadf6 with 'nemik-rank --propose --json' and asks whether W1428 needs more. Read: the nemik-rank in ~/github/nemik/.venv here has no --propose (usage: --round, --workable, --flow, --landings, --pace). Asked nemik for the command, sha and a real output. | 2026-10-31T18:42:23Z: 2026-10-31 nemik-94 corrected itself: the tool is nemik-stackable (editable install at ~/github/nemik/.venv/bin/nemik-stackable, main 9678e697); its --propose --json drafts manifests for ready cards without one and is NOT the stackable set. The stackable set is the plain text output of 'nemik-stackable <repo>' (format unseen, run is slow). nemik will send one real output; if a JSON form with symbol, may-stack-now and files is needed it cards the mode under W613. | 2026-10-31T18:46:08Z: 2026-10-31 READ FIRST-HAND: nemik-stackable mtools (editable install, ran to completion) prints one text row per ready card that has a manifest: 'STACK|WAITING <repo>:W<n> <files...>', then '19 stackable of 100 ready; 79 have no manifest'. A WAITING row conflicts on files with a STACK row (W2132 vs W2131 on commit_kata.py). Cards without a manifest are counted, not listed. Rows include cards already landed whose status is still ready (W2126, W1895, W1960), so the kata must also check git before submitting. Wait on nemik:W613 dropped: the text form is enough. | 2026-11-04T09:50:09Z: 2026-11-04 first slice built in scratch W22680: katas.stackable.parse reads nemik-stackable's STACK/WAITING text rows (a malformed row is refused naming it, never skipped) and submit_set picks STACK rows whose card has not already landed; 4 tests, 4 declared mutants, 4 warrants, 1 rubric row. Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card and the --stack submit. | 2026-11-04T10:06:47Z: 2026-11-04 slice 1 (katas.stackable: parse and submit_set) is in stack-w1428-w2221, inflight in the gate; next slice is the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), then a scratch worktree per card and the --stack submit. | 2026-11-04T11:22:37Z: 2026-11-04 slice 1 landed in 731c98a7/b8901fbb (katas.stackable parse and submit_set; whole katas grid 76 killed 0 survived). Left: the git side (skip cards whose manifest files are unchanged from HEAD or that carry a landing trailer), a scratch worktree per card, the --stack submit. | 2026-11-04T12:32:29Z: 2026-11-04 slice 2 built and landed into main's tree (katas.stackable.landed_in and with_edits; 3 mutants killed, whole grid 78 killed 0 survived); added as the second entry of stack-w2220-run.json, to submit once W2274 lands (the W2220 entry's hooks batch 1 is its pace companion). Left: a scratch worktree per card and the --stack submit. | 2026-11-04T14:04:01Z: slice 2 (landed_in, with_edits) landed as 935f099e; remaining: scratch worktree per card and the --stack submit | 2026-11-05T13:54:14Z: 2026-11-05: taken at the Stop hook's ask while paydown stack 16 holds the gate; no code this turn. Slice 3 (stack_entry) needs a katas pyproject paydown companion, so it rides the next paydown stack. | 2026-11-05T16:40:35Z: 2026-11-05: taken at the Stop hook's ask while stack 18 holds the gate; no code this turn. Slice 3 (stack_entry) needs a katas pyproject paydown companion; katas owes 5 rules, one of which is the tests/* assert glob, so the companion must remove one of the other four. | 2026-11-05T16:56:35Z: 2026-11-05: taken at the Stop hook's ask; no code this turn (stack 18 holds the gate, katas companion still to choose). | 2026-11-05T17:15:42Z: 2026-11-05: taken at the Stop hook's ask; no code this turn (stack 18 holds the gate). | 2026-11-05T18:40:19Z: 2026-11-05: read katas/pyproject.toml per-file-ignores: besides the tests/* assert glob the entries are waiter.py (streams one child's output into a log as it is produced) and detach.py (a Popen that outlives the caller), neither a plain swap. So slice 3's pace companion is a hooks batch in the same stack, which shares hooks registries with stack 19 (inflight) and would be refused by stackahead.unbuilt_on unless built on its bytes: cut after 19 lands. | 2026-11-05T20:40:54Z: 2026-11-05: blocked on W2219: slice 3 needs a hooks paydown companion built on the in-flight stack's bytes (shared registries); cut after stack 19 lands. Also outside this round, so a working mark refuses submits. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T06:07:49Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn. | 2026-11-07T15:16:02Z: 2026-11-07: slice 3 (stack_entry) still needs a hooks paydown companion built on the in-flight stack's registries. Stack b53 (W2339, W2338, W2219 batch 51) holds them and the gate, and the operator's cache priority is ahead of it per github-14. Resume when W2339 lands. | 2026-11-07T16:59:28Z: 2026-11-07: slice 3 (stack_entry) still needs a hooks paydown companion built on the in-flight stack's registries. Stack b55 holds them and the gate, and W2340 (the hollow mutation baseline) outranks it per github-14's cache priority. Resume when W2340 lands.",
       "issued_at": "2026-10-17T02:05:45Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T15:16:02Z",
+      "last_worked": "2026-11-07T16:59:28Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -29930,20 +29940,22 @@
     {
       "symbol": "W1433",
       "title": "mikemol-commit --closes: opt-in per commit, a landed commit under --waypoint W marks W done (or appends its sha to evidence) in the same act, so cross-repo waiters unblock",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "commit-kata",
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "read commit_kata's landing record and stackland's message building: add an opt-in --closes flag so a landed commit under --waypoint W marks W done through the writer (or appends its sha to W's evidence) in the same act, so cross-repo waiters unblock; a refusal when the writer is absent leaves the commit landed and says the mark was not made. Tests with a stand-in writer (mark done, append sha, absent writer), mutants for the opt-in and the absent-writer message.",
-      "evidence": "2026-11-06T01:53:52Z: 2026-11-06 released from the W1667 parking lot (a real fall); files named exist. Hooks lane; note W1466 (mark working at submit and a verdict at the end) is the same family, so read it beside this one. | 2026-11-06T06:08:49Z: 2026-11-06: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn.",
+      "evidence": "2026-11-06T01:53:52Z: 2026-11-06 released from the W1667 parking lot (a real fall); files named exist. Hooks lane; note W1466 (mark working at submit and a verdict at the end) is the same family, so read it beside this one. | 2026-11-06T06:08:49Z: 2026-11-06: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn. | 2026-11-07T17:09:34Z: 2026-11-07: needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline, fourth hooks cause being read) outranks it per github-14's cache priority, and stack b55 holds the gate. Resume when W2340 lands.",
       "issued_at": "2026-10-17T03:24:05Z",
       "minted_during": "interrupt",
       "caused_by": "W1424",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T17:09:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -30146,19 +30158,21 @@
     {
       "symbol": "W1443",
       "title": "mikemol-scratch close deletes the card's branch, and land --close removes the worktree a landed change left dirty",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "read scratch.py and scratch_cli.py (the close and land verbs): close deletes the card's branch (git branch -D after the worktree is removed, only when the branch is the one open created and holds no commit main lacks), land --close removes the worktree a landed change left dirty (after land copied the files into main, the worktree's changes are the same bytes). Tests with a planted worktree: branch gone after close, a branch with an unlanded commit kept and named; mutants for both.",
-      "evidence": "2026-11-06T01:53:18Z: 2026-11-06 released from the W1667 parking lot (a real fall); the files named exist (scratch.py, scratch_cli.py, test_scratch.py). Hooks lane: lands with a W2219 batch. | 2026-11-06T06:38:07Z: 2026-11-06: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn.",
+      "evidence": "2026-11-06T01:53:18Z: 2026-11-06 released from the W1667 parking lot (a real fall); the files named exist (scratch.py, scratch_cli.py, test_scratch.py). Hooks lane: lands with a W2219 batch. | 2026-11-06T06:38:07Z: 2026-11-06: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn. | 2026-11-07T17:13:30Z: 2026-11-07: needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline, fourth hooks cause being read) outranks it per github-14's cache priority, and stack b55 holds the gate. Resume when W2340 lands.",
       "issued_at": "2026-10-17T07:07:22Z",
       "minted_during": "interrupt",
       "caused_by": "W1379",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T17:13:30Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -37853,17 +37867,19 @@
     {
       "symbol": "W1746",
       "title": "A submit refuses a stack whose file imports a module that neither HEAD nor an earlier entry of that stack holds",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W1366's stack lands: rebuild slice 2 on that HEAD in a scratch tree (stackimports.py and test_stackimports.py, seeded with the files frozen by the stacks ahead, mutants and warrants regenerated), as one hooks stack with whichever of W1662 or W2060 is built then.",
-      "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do. | 2026-10-27: 2026-10-27 re-read, and it is the stall github-8f named: stackbuildfiles/stackimports judge a stack against HEAD plus its OWN entries, so stack-next-29 (W2008) was refused at submit because dag.bzl names W2009's new modules, which stack-next-28 (queued ahead) holds. The fix is this card's own next step, applied to both checks: seed them with the files frozen by the stacks AHEAD (keys below this one in the live commit map, read from their stack-<key>.snap), so a new-module stack can queue behind another. Residue stated: if a stack ahead later fails, this one fails at its own gate. Slice 1: stackahead.paths and stackbuildfiles; slice 2: stackimports plus the on-disk-absent refusal | 2026-10-27: 2026-10-27: slice 1 landed 06d25163 (stackahead.paths seeds stackbuildfiles with the files the live stacks ahead carry, so two new-module stacks queue together; proven by stacks 28 and 30 queueing behind 25/26/27). Slice 2 remains: stackimports takes the same set and refuses a module on disk but in no stack, no HEAD and no stack ahead | 2026-10-28: 2026-10-28 REBUILT ALONE on HEAD (754dcf97) in a scratch worktree, NOT submitted: after the withdrawal at a red tip (one TIMEOUT, //hooks:test_worktreereap_save, a load wall-time flake that W2034 and W1875 now hold) the second slice is stackimports.py and test_stackimports.py plus its registries regenerated on HEAD: mutants.regex (the two stackimports mutants re-pointed at _unheld and four new), two warrants, graph.json, dag.bzl and the regenerated commit_counts, stackahead and stackimports sites; git status of the scratch tree lists exactly nine files. OVERLAP: it shares hooks/mutants.regex, warrants.bib and sites with stack 39 (W2061 and W2067, queued) and graph.json and dag.bzl with nothing queued, so by the W2078 rule it is HELD until 39's verdict (or rebuilt on 39's frozen files), not queued behind it. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117 is its registries-carrying entry). Stack 39 is settled (W2067 landed 67be0264), but stackimports.py and its registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and hooks-c, queued, holds hooks/warrants.bib, BUILD, pyproject and sites, so a second hooks-registry stack would wait on it anyway. Rebuild slice 2 on the new HEAD in a scratch tree once hooks-c prints COMMITTED, with the W1994 deletecmd registries, as one hooks stack. | 2026-11-03T09:14:50Z: 2026-11-03: stale blocker restated: hooks-c and stack 39 are long landed, but the hooks registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and the in-gate stack (W2258, W2241, W1366) holds them; W1662, W2060 and this slice 2 are the next three hooks-registry builds, so they go one at a time on each new HEAD. | 2026-11-05T14:38:29Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn. | 2026-11-05T21:10:50Z: 2026-11-05: blocked on W2219: hooks lane, one registry-carrying change per HEAD; the paydown stack (19) holds the registries in the gate. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T06:38:58Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn.",
+      "evidence": "2026-10-20: 2026-10-20 tried and reverted: judging a module that is on disk but absent from HEAD and from the stack would also refuse the valid pattern of a stack that imports a module an EARLIER queued stack adds (W1794 on W1485b did exactly that and was correct). The rule needs the frozen paths of the stacks queued AHEAD, which the commit map does not carry (it holds only waypoints per key); the per-key submit snapshots (stacksnap) do. | 2026-10-27: 2026-10-27 re-read, and it is the stall github-8f named: stackbuildfiles/stackimports judge a stack against HEAD plus its OWN entries, so stack-next-29 (W2008) was refused at submit because dag.bzl names W2009's new modules, which stack-next-28 (queued ahead) holds. The fix is this card's own next step, applied to both checks: seed them with the files frozen by the stacks AHEAD (keys below this one in the live commit map, read from their stack-<key>.snap), so a new-module stack can queue behind another. Residue stated: if a stack ahead later fails, this one fails at its own gate. Slice 1: stackahead.paths and stackbuildfiles; slice 2: stackimports plus the on-disk-absent refusal | 2026-10-27: 2026-10-27: slice 1 landed 06d25163 (stackahead.paths seeds stackbuildfiles with the files the live stacks ahead carry, so two new-module stacks queue together; proven by stacks 28 and 30 queueing behind 25/26/27). Slice 2 remains: stackimports takes the same set and refuses a module on disk but in no stack, no HEAD and no stack ahead | 2026-10-28: 2026-10-28 REBUILT ALONE on HEAD (754dcf97) in a scratch worktree, NOT submitted: after the withdrawal at a red tip (one TIMEOUT, //hooks:test_worktreereap_save, a load wall-time flake that W2034 and W1875 now hold) the second slice is stackimports.py and test_stackimports.py plus its registries regenerated on HEAD: mutants.regex (the two stackimports mutants re-pointed at _unheld and four new), two warrants, graph.json, dag.bzl and the regenerated commit_counts, stackahead and stackimports sites; git status of the scratch tree lists exactly nine files. OVERLAP: it shares hooks/mutants.regex, warrants.bib and sites with stack 39 (W2061 and W2067, queued) and graph.json and dag.bzl with nothing queued, so by the W2078 rule it is HELD until 39's verdict (or rebuilt on 39's frozen files), not queued behind it. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117 is its registries-carrying entry). Stack 39 is settled (W2067 landed 67be0264), but stackimports.py and its registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and hooks-c, queued, holds hooks/warrants.bib, BUILD, pyproject and sites, so a second hooks-registry stack would wait on it anyway. Rebuild slice 2 on the new HEAD in a scratch tree once hooks-c prints COMMITTED, with the W1994 deletecmd registries, as one hooks stack. | 2026-11-03T09:14:50Z: 2026-11-03: stale blocker restated: hooks-c and stack 39 are long landed, but the hooks registries (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) freeze whole and the in-gate stack (W2258, W2241, W1366) holds them; W1662, W2060 and this slice 2 are the next three hooks-registry builds, so they go one at a time on each new HEAD. | 2026-11-05T14:38:29Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn. | 2026-11-05T21:10:50Z: 2026-11-05: blocked on W2219: hooks lane, one registry-carrying change per HEAD; the paydown stack (19) holds the registries in the gate. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T06:38:58Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 27 holds the gate; no code this turn. | 2026-11-07T17:23:14Z: 2026-11-07: slice 2 is a hooks-registry build (mutants.regex, warrants.bib, graph.json, dag.bzl, sites) that goes one at a time on each HEAD. Stack b55 holds the registries and the gate, and W2340 (the hollow mutation baseline, which will change the hooks shards and their registries) outranks it per github-14's cache priority. Resume when W2340 lands.",
       "issued_at": "2026-10-19T22:26:23Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f:ask-2026-10-19-test-the-all-red-inference",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T17:23:14Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/stackimports.py",
@@ -39742,19 +39758,21 @@
     {
       "symbol": "W1823",
       "title": "Bazel witness tests for the three mypy domains (ratchet, mdstruct, hooks): one target each, declared inputs its victim files, checker and config, planted defect caught once",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1712"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W1366's stack lands: scratch tree on that HEAD; tests/test_witness_mypy.py per domain (ratchet, mdstruct, hooks) running mypy on a copy of the victim in the sandbox with the probe appended, asserting failure naming the probe and a clean copy passing; BUILD.bazel data = victim + checker + config; warrants, graph, dag, sites.",
-      "evidence": "2026-10-28: 2026-10-28 READ the three witness calls this converts (.githooks/pre-commit lines 1020-1022): witness 'ratchet|mdstruct|hooks: mypy domain reaches a transitive import' <dist> //<dist>:mypy <victim> with victims ratchet/src/mikemol/ratchet/state.py, mdstruct/src/mikemol/mdstruct/frontmatter.py, hooks/src/mikemol/hooks/cmdparse.py; domain_witness.sh plants 'def _transient_domain_probe() -> int: return \"not an int\"' (the mypy payload, line 445) in the victim, expects the checker to FAIL, restores. The design to re-express in the sandbox is the operator's maximal-granularity ruling (695f3e0a line 76435): the test target's declared data = victim files, the mypy checker and its config, planted defect caught once. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). The card adds a hooks test, so it carries hooks registries (warrants.bib, graph.json, dag.bzl, BUILD) that hooks-c already holds in its frozen snapshot; a second stack touching them waits. Build it in a scratch tree on the HEAD after hooks-c, in the same hooks stack as W1746 slice 2 and W1994. | 2026-11-03T10:09:45Z: 2026-11-03: stale blocker restated (hooks-c and W2067 are landed). It adds hooks/tests/test_witness_mypy.py, so it carries the hooks registries (warrants.bib, graph.json, dag.bzl, sites, BUILD.bazel); the in-gate stack (W2258, W2241, W1366) holds them. The hooks lane builds one registry-carrying change per HEAD: W1662, W1746 slice 2, W2060 (with W2249 to W2251), and this card. | 2026-11-06T06:41:53Z: 2026-11-06: taken at the Stop hook's ask; batch 27 landed (7508dfdd), gate empty; starting W2219 batch 28 (nemik_check onto runproc).",
+      "evidence": "2026-10-28: 2026-10-28 READ the three witness calls this converts (.githooks/pre-commit lines 1020-1022): witness 'ratchet|mdstruct|hooks: mypy domain reaches a transitive import' <dist> //<dist>:mypy <victim> with victims ratchet/src/mikemol/ratchet/state.py, mdstruct/src/mikemol/mdstruct/frontmatter.py, hooks/src/mikemol/hooks/cmdparse.py; domain_witness.sh plants 'def _transient_domain_probe() -> int: return \"not an int\"' (the mypy payload, line 445) in the victim, expects the checker to FAIL, restores. The design to re-express in the sandbox is the operator's maximal-granularity ruling (695f3e0a line 76435): the test target's declared data = victim files, the mypy checker and its config, planted defect caught once. | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). The card adds a hooks test, so it carries hooks registries (warrants.bib, graph.json, dag.bzl, BUILD) that hooks-c already holds in its frozen snapshot; a second stack touching them waits. Build it in a scratch tree on the HEAD after hooks-c, in the same hooks stack as W1746 slice 2 and W1994. | 2026-11-03T10:09:45Z: 2026-11-03: stale blocker restated (hooks-c and W2067 are landed). It adds hooks/tests/test_witness_mypy.py, so it carries the hooks registries (warrants.bib, graph.json, dag.bzl, sites, BUILD.bazel); the in-gate stack (W2258, W2241, W1366) holds them. The hooks lane builds one registry-carrying change per HEAD: W1662, W1746 slice 2, W2060 (with W2249 to W2251), and this card. | 2026-11-06T06:41:53Z: 2026-11-06: taken at the Stop hook's ask; batch 27 landed (7508dfdd), gate empty; starting W2219 batch 28 (nemik_check onto runproc). | 2026-11-07T17:33:26Z: 2026-11-07: a hooks-lane change that rides the registries and the gate. Stack b55 holds them, and W2340 (the hollow mutation baseline, whose hooks shards and registries are changing) outranks it per github-14's cache priority. Resume when W2340 lands.",
       "issued_at": "2026-10-22T17:05:01Z",
       "minted_during": "interrupt",
       "caused_by": "W1712",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T17:33:26Z",
       "ticks_blocked": 0,
       "manifest": [
         "BUILD.bazel",
@@ -40665,19 +40683,21 @@
     {
       "symbol": "W1861",
       "title": "Ship a FLEET ExitCodes preset for plan admission once the witness-failed exit number is decided",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "mtools:W1842"
       ],
       "touches": [],
-      "blocked_on": [],
+      "blocked_on": [
+        "W2340"
+      ],
       "blocked_kind": "agent",
       "next_bounded_step": "Add FLEET = ExitCodes(deny=4, stopped=7, withheld=6, witness=4) beside LUTHEN in waldo/src/mikemol/waldo/planflow.py with named constants and a test per field, then the waldo registries. Known residue to state in the commit: deny is one field for a rule defect AND a failed apply, so a failed apply reads 4 under FLEET (the table wants FAILED 1); an apply_failed field would split it.",
-      "evidence": "2026-10-23: 2026-10-23: waldo's own apply_set pipeline (pipeline.py) already speaks the fleet table: exit 4 for 'a witness that failed', 1 for a failed apply, 7 for a witness that could not be evaluated. A FLEET preset consistent with it is deny 4, stopped 7, withheld 6, witness 4 (witness and deny share 4 there); say if the operator wants that or something else | 2026-11-06T20:52:57Z: 2026-11-06: OPERATOR (host transcript line 145123, uuid 31215353-d1b3-4ac3-a696-94fa8af28670, verified human, warrant attached): 'I thought we already did this?'. CHECKED the exit table and the code: the FLEET preset is NOT shipped (planflow.py has ExitCodes and LUTHEN only; grep FLEET finds only pipeline.py's table comment), but the table already decides the number: pipeline.py:40-47 reads 'a verdict on the subject (a precondition, the declared set, a witness that failed) is REFUSED 4' and anything unevaluated CANNOT 7. DECISION (a table entry, mine to pick, as the operator's 'already did this' implies): the witness-failed outcome is 4, so FLEET = deny 4, stopped 7, withheld 6, witness 4, the preset this card's own 2026-10-23 evidence proposed. The operator block is lifted; the preset is ready agent work.",
+      "evidence": "2026-10-23: 2026-10-23: waldo's own apply_set pipeline (pipeline.py) already speaks the fleet table: exit 4 for 'a witness that failed', 1 for a failed apply, 7 for a witness that could not be evaluated. A FLEET preset consistent with it is deny 4, stopped 7, withheld 6, witness 4 (witness and deny share 4 there); say if the operator wants that or something else | 2026-11-06T20:52:57Z: 2026-11-06: OPERATOR (host transcript line 145123, uuid 31215353-d1b3-4ac3-a696-94fa8af28670, verified human, warrant attached): 'I thought we already did this?'. CHECKED the exit table and the code: the FLEET preset is NOT shipped (planflow.py has ExitCodes and LUTHEN only; grep FLEET finds only pipeline.py's table comment), but the table already decides the number: pipeline.py:40-47 reads 'a verdict on the subject (a precondition, the declared set, a witness that failed) is REFUSED 4' and anything unevaluated CANNOT 7. DECISION (a table entry, mine to pick, as the operator's 'already did this' implies): the witness-failed outcome is 4, so FLEET = deny 4, stopped 7, withheld 6, witness 4, the preset this card's own 2026-10-23 evidence proposed. The operator block is lifted; the preset is ready agent work. | 2026-11-07T17:42:57Z: 2026-11-07: needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline; hooks shard 3 reads clean after four causes, the other four sampled shards are re-running) outranks it per github-14's cache priority, and stack b55 holds the gate. Resume when W2340 lands.",
       "issued_at": "2026-10-23T15:57:44Z",
       "minted_during": "interrupt",
       "caused_by": "W1858",
-      "last_worked": "2026-11-06T20:52:57Z",
+      "last_worked": "2026-11-07T17:42:57Z",
       "ticks_blocked": 0,
       "completed": null,
       "warrants": [
@@ -40923,19 +40943,21 @@
     {
       "symbol": "W1875",
       "title": "shardgate refuses a stack touching a per-test target past half its own measured CPU limit",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1872"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W1366's stack lands, in a scratch tree on that HEAD: shardgate reads each touched per-test target's measured CPU from the gate trend series against its limit, refuses past half, naming the target, its figure and the sharding remedy; tests with the worktreereap_save figures (117 s against 60 s refused, 20 s against 60 s admitted).",
-      "evidence": "2026-10-28: 2026-10-28 FIXTURE for the rule: //hooks:test_worktreereap_save TIMED OUT in W1746's gate at 60.1 s and passed alone in about 117 s at host load ~100, i.e. its measured run is 2x its limit, far past half; a stack touching that target should have been refused by this gate before it cost a 4 h gate. Edits hooks/src/mikemol/hooks/shardgate.py (hooks lane). | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). shardgate.py is a hooks module whose new tests and declared mutants need hooks/mutants.regex, warrants.bib and sites, which freeze whole and which hooks-c already holds; build in a scratch tree on the HEAD after hooks-c and ride the one hooks stack with W1994, W1746 slice 2, W1823 and W1824. | 2026-11-03T10:40:13Z: 2026-11-03: stale blocker restated (hooks-c is landed). shardgate.py's new tests and declared mutants need the hooks registries, held by the in-gate stack (W2258, W2241, W1366). It joins the hooks lane: W1662, W1746 slice 2, W2060, W1823 and this card, one registry-carrying change per HEAD. Note for the build: the refusal measures a target's CPU time against its limit (not wall time), per the standing rule. | 2026-11-05T14:37:34Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn. | 2026-11-05T18:44:40Z: 2026-11-05: blocked on W2219: hooks lane, one registry-carrying change per HEAD; stack 19 holds the registries. Cut after it lands; the figure to measure is CPU time against the limit, not wall time. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T06:50:28Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 28 holds the gate; no code this turn.",
+      "evidence": "2026-10-28: 2026-10-28 FIXTURE for the rule: //hooks:test_worktreereap_save TIMED OUT in W1746's gate at 60.1 s and passed alone in about 117 s at host load ~100, i.e. its measured run is 2x its limit, far past half; a stack touching that target should have been refused by this gate before it cost a 4 h gate. Edits hooks/src/mikemol/hooks/shardgate.py (hooks lane). | 2026-10-29: 2026-10-29: BLOCKED on stack-hooks-c landing (W2117). shardgate.py is a hooks module whose new tests and declared mutants need hooks/mutants.regex, warrants.bib and sites, which freeze whole and which hooks-c already holds; build in a scratch tree on the HEAD after hooks-c and ride the one hooks stack with W1994, W1746 slice 2, W1823 and W1824. | 2026-11-03T10:40:13Z: 2026-11-03: stale blocker restated (hooks-c is landed). shardgate.py's new tests and declared mutants need the hooks registries, held by the in-gate stack (W2258, W2241, W1366). It joins the hooks lane: W1662, W1746 slice 2, W2060, W1823 and this card, one registry-carrying change per HEAD. Note for the build: the refusal measures a target's CPU time against its limit (not wall time), per the standing rule. | 2026-11-05T14:37:34Z: 2026-11-05: taken at the Stop hook's ask while stack 16 holds the gate; no code this turn. | 2026-11-05T18:44:40Z: 2026-11-05: blocked on W2219: hooks lane, one registry-carrying change per HEAD; stack 19 holds the registries. Cut after it lands; the figure to measure is CPU time against the limit, not wall time. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T06:50:28Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 28 holds the gate; no code this turn. | 2026-11-07T18:00:40Z: 2026-11-07: shardgate is a hooks module whose tests, mutants and sites ride the hooks registries, and W2340 is about to change the hooks shards (a truthful shard costs about six times the hollow one, so the shard count and its CPU budgets move). Stack b55 holds the registries and the gate. Cutting a CPU-limit refusal against shard figures that are about to change would measure the wrong thing; resume when W2340 lands and the shards are re-split.",
       "issued_at": "2026-10-23T20:46:21Z",
       "minted_during": "interrupt",
       "caused_by": "W1872",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T18:00:40Z",
       "ticks_blocked": 0,
       "manifest": [
         "hooks/src/mikemol/hooks/shardgate.py",
@@ -41480,19 +41502,21 @@
     {
       "symbol": "W1899",
       "title": "Rung 4: after a learned number of consecutive idle wakes with ready work, an alert fires that other sessions can collect: session_idle_with_ready{repo} and the count of idle wakes are emitted as metrics",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1896"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2340"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Scratch tree on the current HEAD: idlewakes.py plus test_idlewakes.py (count rises over idle wakes with the ledger unchanged, resets when a ledger advanced line appears or ready falls to zero, no emission under the threshold in the alert gauge, the count gauge always), wire it into watchdog.main on EXIT_IDLE, mutants, warrants, graph, dag, sites.",
-      "evidence": "2026-11-03T13:08:40Z: 2026-11-03: the emission lives in the watchdog path (hooks/src/mikemol/hooks/watchdog.py), so it needs the hooks registries (warrants, mutants, sites, graph), which the in-gate stack (W1662, W2219, W1765) holds. Joins the hooks lane (W1746 slice 2, W2060, W1823, W1875), one registry-carrying change per HEAD. Open design point to settle before building: 'a learned number of consecutive idle wakes' has no stored count yet; the watchdog needs a durable counter beside its heartbeat file, reset when a card moves. | 2026-11-03T13:26:50Z: 2026-11-03: unblocked (W1662 landed) and READ the watchdog (hooks/src/mikemol/hooks/watchdog.py main/watch/remember_exit; Beat is tool, at_ns, gaps_ns). DESIGN FINDING: 'consecutive idle wakes' cannot reset on a heartbeat. Every idle exit 8 is answered by a tool call that restarts the watchdog, and that call is itself a beat, so a heartbeat-based reset would zero the count at every wake and it could never reach a threshold. The reset signal must be a card moving, read from the queue: an outcome-advanced or landed line added to the ledger since the previous idle exit, or the ready count falling. SHAPE: a leaf module idlewakes.py (hooks) with bump(git_dir, ledger_marker, waiting) over <git dir>/mtools/idle-wakes.json {count, marker}, plan/emit of two gauges through mikemol-otlp (mikemol.session.idle_wakes{repo} = count and mikemol.session.idle_with_ready{repo} = 1 at or over the threshold, else 0), called in watchdog.main when code is EXIT_IDLE using ready_from for the waiting count. THRESHOLD: the card says 'learned'; nothing learns it yet, so it starts as an env-overridable constant (MIKEMOL_IDLE_WAKES_ALERT) and the raw count is emitted so luthen can learn it from the series. Not built. | 2026-11-06T00:19:00Z: 2026-11-06: blocked on W2219: a new hooks module (idlewakes.py) with tests, mutants, warrants, graph, dag and sites in the hooks registries the paydown stacks hold, and, like every hooks stack while mtools is behind, it needs a real fall in an owed ratchet in the same stack; paydown ranks first (github-14 reorder). | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T07:07:53Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 28 holds the gate; no code this turn.",
+      "evidence": "2026-11-03T13:08:40Z: 2026-11-03: the emission lives in the watchdog path (hooks/src/mikemol/hooks/watchdog.py), so it needs the hooks registries (warrants, mutants, sites, graph), which the in-gate stack (W1662, W2219, W1765) holds. Joins the hooks lane (W1746 slice 2, W2060, W1823, W1875), one registry-carrying change per HEAD. Open design point to settle before building: 'a learned number of consecutive idle wakes' has no stored count yet; the watchdog needs a durable counter beside its heartbeat file, reset when a card moves. | 2026-11-03T13:26:50Z: 2026-11-03: unblocked (W1662 landed) and READ the watchdog (hooks/src/mikemol/hooks/watchdog.py main/watch/remember_exit; Beat is tool, at_ns, gaps_ns). DESIGN FINDING: 'consecutive idle wakes' cannot reset on a heartbeat. Every idle exit 8 is answered by a tool call that restarts the watchdog, and that call is itself a beat, so a heartbeat-based reset would zero the count at every wake and it could never reach a threshold. The reset signal must be a card moving, read from the queue: an outcome-advanced or landed line added to the ledger since the previous idle exit, or the ready count falling. SHAPE: a leaf module idlewakes.py (hooks) with bump(git_dir, ledger_marker, waiting) over <git dir>/mtools/idle-wakes.json {count, marker}, plan/emit of two gauges through mikemol-otlp (mikemol.session.idle_wakes{repo} = count and mikemol.session.idle_with_ready{repo} = 1 at or over the threshold, else 0), called in watchdog.main when code is EXIT_IDLE using ready_from for the waiting count. THRESHOLD: the card says 'learned'; nothing learns it yet, so it starts as an env-overridable constant (MIKEMOL_IDLE_WAKES_ALERT) and the raw count is emitted so luthen can learn it from the series. Not built. | 2026-11-06T00:19:00Z: 2026-11-06: blocked on W2219: a new hooks module (idlewakes.py) with tests, mutants, warrants, graph, dag and sites in the hooks registries the paydown stacks hold, and, like every hooks stack while mtools is behind, it needs a real fall in an owed ratchet in the same stack; paydown ranks first (github-14 reorder). | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T07:07:53Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 28 holds the gate; no code this turn. | 2026-11-07T18:15:04Z: 2026-11-07: needs a gate slot and a paydown companion. W2340 (the hollow mutation baseline; the other five dists' baseline tests are being run now) outranks it per github-14's cache priority, and stack b55 holds the gate. Resume when W2340 lands.",
       "issued_at": "2026-10-24T15:53:30Z",
       "minted_during": "interrupt",
       "caused_by": "W1896",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T18:15:04Z",
       "ticks_blocked": 0,
       "warrants": [
         {
@@ -52178,11 +52202,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "2026-11-07T15:32:53Z: 2026-11-07: built and submitted as stack b54: mutate_runner._baseline_fails puts the original module back and runs the named failing test alone, so a kill whose test fails on the clean tree reads ERRORED; cached per test id; three seam tests; 3 warrants; paired with W2219 batch 52 (commit_kata booleans keyword-only). The shared runner is staged by every dist's mutants target, so every dist's shards re-run once. | 2026-11-07T15:52:52Z: 2026-11-07 THE CONTROL FOUND A HOLLOW INSTRUMENT. Stack b54 (the control plus W2219 batch 52) was REFUSED by its own gate: //hooks:mutants_57 read ERRORED for all 10 of its cells, because the control found that the test which killed them, tests/test_adopt_launcher.py::test_a_built_venv_execs_the_entry (the 19th test in file order), ALSO FAILS ON THE UNMUTATED MODULE in the mutation sandbox (reproduced by bazel test //hooks:mutants_57 in the main workspace: 'control: ... also fails on the UNMUTATED module'). Why: that test runs hooks/adopt/tools-hook, a non-Python file, and //hooks:mutants stages only pyproject.toml, mutants.regex, .venv and glob(src/**/*.py, tests/**/*.py), so the launcher is absent from the temp copy and the test fails whatever the mutant is. A flat shard runs the WHOLE suite with -x (no graph.json is staged, see W2338), so EVERY mutant not killed by one of the first 18 tests dies at test 19. CONSEQUENCE, to size: most of the 'killed' cells of the 215 flat hooks shards (and the 13000 s of CPU per gate they cost) may be this one environmental failure, not a test noticing a mutant. The per-site targets run their cone's tests only, so they measure honestly: the 6 narrowed survivors of the sample may be REAL survivors the shards hid. NOT YET MEASURED: how many hooks shards and cells are affected, and whether other dists' shards have the same kind of baseline failure.",
+      "evidence": "2026-11-07T15:32:53Z: 2026-11-07: built and submitted as stack b54: mutate_runner._baseline_fails puts the original module back and runs the named failing test alone, so a kill whose test fails on the clean tree reads ERRORED; cached per test id; three seam tests; 3 warrants; paired with W2219 batch 52 (commit_kata booleans keyword-only). The shared runner is staged by every dist's mutants target, so every dist's shards re-run once. | 2026-11-07T15:52:52Z: 2026-11-07 THE CONTROL FOUND A HOLLOW INSTRUMENT. Stack b54 (the control plus W2219 batch 52) was REFUSED by its own gate: //hooks:mutants_57 read ERRORED for all 10 of its cells, because the control found that the test which killed them, tests/test_adopt_launcher.py::test_a_built_venv_execs_the_entry (the 19th test in file order), ALSO FAILS ON THE UNMUTATED MODULE in the mutation sandbox (reproduced by bazel test //hooks:mutants_57 in the main workspace: 'control: ... also fails on the UNMUTATED module'). Why: that test runs hooks/adopt/tools-hook, a non-Python file, and //hooks:mutants stages only pyproject.toml, mutants.regex, .venv and glob(src/**/*.py, tests/**/*.py), so the launcher is absent from the temp copy and the test fails whatever the mutant is. A flat shard runs the WHOLE suite with -x (no graph.json is staged, see W2338), so EVERY mutant not killed by one of the first 18 tests dies at test 19. CONSEQUENCE, to size: most of the 'killed' cells of the 215 flat hooks shards (and the 13000 s of CPU per gate they cost) may be this one environmental failure, not a test noticing a mutant. The per-site targets run their cone's tests only, so they measure honestly: the 6 narrowed survivors of the sample may be REAL survivors the shards hid. NOT YET MEASURED: how many hooks shards and cells are affected, and whether other dists' shards have the same kind of baseline failure. | 2026-11-07T15:58:27Z: 2026-11-07 MEASURED, sample of 11 mutants targets run under bazel with the control (invocation output kept in the session task file), cells = def-sites + declared defects: hooks mutants_3/40/150/190: 47 of 47 cells ERRORED by the control (0 honest kills); ratchet:mutants 185 of 186; importdag:mutants_0 38 of 46; fence:mutants_0 12 of 27; katas:mutants_0 5 of 13; mdstruct:mutants_0 1 of 35; witness:mutants 0 of 45 and pathsforward:mutants_0 0 of 21 (clean). TOTAL 288 of 420 sampled cells (68.6 pct) were 'killed' only by a test that also fails on the unmutated module. The failing baseline tests named: hooks tests/test_adopt_launcher.py::test_a_built_venv_execs_the_entry; ratchet tests/test_cannot_census.py::test_a_relative_ruff_bin_is_anchored_where_it_was_named; importdag tests/test_closure_census.py::test_declared_runs_the_real_closure_module_by_default; fence tests/test_fence.py::TestCapBinds::test_a_tight_memory_cap_binds; katas tests/test_host_template.py::test_the_rendered_template_loads_with_the_values_it_was_given; mdstruct tests/test_stub_authority.py::test_the_stub_matches_the_library_it_describes. CAVEATS: errored is not survived (with the baseline test fixed the cell may be killed by a later test, or may survive); some errored cells may have been errored before for another reason; three targets (hooks mutants_100, pathsforward done, witness done) and the other 25 dists are not sampled; a rebuild race (exit 36) stopped one shard. | 2026-11-07T17:42:13Z: 2026-11-07 HOOKS BASELINE: FOUR CAUSES FOUND, EACH BY THE CONTROL, EACH FIXED IN THE TREE (uncommitted): (1) tests/test_adopt_launcher.py::test_a_built_venv_execs_the_entry: UNSTAGED FILE (adopt/tools-hook); fix: the suite's data list is hoisted to _SUITE_DATA in hooks/BUILD.bazel and the mutants target stages it too. (2) tests/test_bar_fires.py::test_the_header_gate_passes_a_correct_notice: MISSING TOOL ENV (RUFF_BIN and OPA_BIN were set on the test targets, not on the shards, and are RELATIVE to the runfiles root); fix: env = _TEST_ENV on the mutants target and the runner makes *_BIN paths absolute for the copy. (3) tests/test_bar_fires.py::test_every_distribution_calls_dist_checks: SIBLINGS ABSENT (the test reads sibling dists' BUILD files and root scripts via its tree's PARENT, and the mutation copy was a lone dist directory); fix: under bazel the runner mirrors the runfiles root beside the copy. (4) tests/test_runproc.py::test_the_environment_and_directory_given_reach_the_child: the bazel venv's pyvenv.cfg has RELATIVE home = bin, so a child python started from another cwd fails with 'No module named encodings'; the runner's chosen interpreter was the venv's own python3 (a regular file in the sandbox, so realpath resolved nothing); fix: use sys.base_prefix/bin/python3 plus the venv site-packages when home is relative. RESULT: hooks mutants_3 now reads CLEAN: 8 of 8 cells honest kills, no control line (earlier: 0 honest of 8). COST FINDING: the same shard now uses 335.7 CPU s against its 300 s budget (the hollow run used about 58 s): a truthful grid is about 6 times dearer, so 215 shards at 300 s will not hold; a re-split near 2 to 3 times as many shards, or the per-site targets, is needed once the baselines read clean.",
       "issued_at": "2026-11-07T14:57:52Z",
       "minted_during": "interrupt",
       "caused_by": "W2317",
-      "last_worked": "2026-11-07T15:52:52Z",
+      "last_worked": "2026-11-07T17:42:13Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -52207,7 +52231,7 @@
     {
       "symbol": "W2342",
       "title": "Clause R as one invariant over the pin texts after the stack, never the README (github-14 BLOCK of 3f44ba69: X1 a real nemik repin refused, X2 a forgotten text admitted)",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -52215,14 +52239,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-11-07T15:56:25Z: 2026-11-07: built per github-14's ruling and submitted as stack b55 with W2219 batch 52. Replay: nemik 24 of 40 including cde95c66, luthen-observability 12 of 40 (every real seven-wheel repin), amr-skills 0 of 8 (repins carry non-owned files or README prose). 28 clause R and pace mutants run against four named test files, all killed. github-14 ruled it does not wait on W2340; the W2340 runner change stays in the tree, uncommitted, with the hollow-baseline measurement running.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-07T15:56:25Z: 2026-11-07: built per github-14's ruling and submitted as stack b55 with W2219 batch 52. Replay: nemik 24 of 40 including cde95c66, luthen-observability 12 of 40 (every real seven-wheel repin), amr-skills 0 of 8 (repins carry non-owned files or README prose). 28 clause R and pace mutants run against four named test files, all killed. github-14 ruled it does not wait on W2340; the W2340 runner change stays in the tree, uncommitted, with the hollow-baseline measurement running. | 2026-11-07T18:17:00Z: 2026-11-07: landed as ebfd1f6e (stack b55, gate invocation c41a3113-dcc5-41bb-8add-94632ae0b7f8) with W2219 batch 52 as 3ba6b42d. Awaiting github-14's cold review. NOT DONE: N4 N5 of the earlier review, the literal-S docstring wording.",
       "issued_at": "2026-11-07T15:35:11Z",
       "minted_during": "interrupt",
       "caused_by": "W2339",
-      "last_worked": "2026-11-07T15:56:25Z",
+      "last_worked": "2026-11-07T18:17:00Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261107T181700Z"
     },
     {
       "symbol": "W2343",
@@ -52238,10 +52262,48 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-07T17:12:39Z: 2026-11-07 READ of mtools (github-14's question, read-only): no mtools guard admits tempfile.gettempdir() as an exemption for undeclared reads: grep for gettempdir/TMPDIR over py, bzl, BUILD and sh finds only (a) uses of TEST_TMPDIR as the test's own scratch (rules_py/engine_env.py, test_exec_env.py skips outside a bazel action, actionlint_test.sh, codon_pin_test.sh), and (b) TMPDIR as a place to WRITE logs (commitprogress.py, blockers.sh, refusal_record.sh), none of them a read-allowlist. Whether a test action sees the live tree through a resolved path: six modules call Path(__file__).resolve()/absolute (hooks tests test_venv_artifact, test_no_verify, test_domain_witness_concurrency, test_bar_fires, test_adoption, and src routing_table); under the sandbox a resolve() of a staged file can leave the execroot for the source path, which has NOT been measured here. Not measured: what path those resolve() calls return inside a bazel test action. A hermetic-read check for these six is the next step.",
       "issued_at": "2026-11-07T15:43:54Z",
       "minted_during": "interrupt",
       "caused_by": "github-14",
+      "last_worked": "2026-11-07T17:12:39Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2344",
+      "title": "Clause R README token counted as a pin move: moved counts pin texts only and a named wheel must carry the sha (github-14 BLOCK of ebfd1f6e, B1)",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-07T18:30:52Z: 2026-11-07: built and submitted as stack b56 with W2219 batch 53 (snapshot.tree_of working keyword-only). Moved counts pin-text tokens only; the one sha must be carried by a wheel a pin text names after the stack; README-only pure and wired tests; 10 of 10 affected mutants killed against four named test files. N1 to N5 carded as W2345.",
+      "issued_at": "2026-11-07T18:30:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2342",
+      "last_worked": "2026-11-07T18:30:52Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2345",
+      "title": "Clause R notes from the ebfd1f6e review: N1 surviving undeclared mutants and a wired catch-up test, N2 the lock-name test agrees with the loose one, N3 a pre-existing disagreement refuses other dists, N4 rollback passes as catch-up and the stale-digest limit returns to the header, N5 linux-sources pins by git URL",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-07T18:30:15Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2342",
       "last_worked": null,
       "ticks_blocked": 0
     }

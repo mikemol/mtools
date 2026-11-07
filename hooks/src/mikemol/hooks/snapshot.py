@@ -64,7 +64,7 @@ def _git(root: Path, args: Sequence[str], env: Mapping[str, str] | None = None) 
     return done.stdout
 
 
-def tree_of(root: Path, working: bool) -> str:
+def tree_of(root: Path, *, working: bool) -> str:
     """Return the tree object of the index, or of the working tree through a temporary index.
 
     ⚑ THE REAL INDEX IS NEVER WRITTEN FOR THE WORKING CASE: `GIT_INDEX_FILE` names a scratch copy,

@@ -6260,3 +6260,21 @@
 2026-11-07T15:43:54Z  interrupt W2343 minted    -         "Does TMPDIR reach the gate's test actions, so a hermetic guard that admits tempfile.gettempdir() lets undeclared reads pass in snapshots (github-14, luthen Guard.read)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
 2026-11-07T15:51:34Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T15:51:34Z  status W2342 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:57:09Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T16:02:32Z  status W1388 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T16:06:16Z  status W1389 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T16:10:38Z  status W1415 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T16:40:02Z  status W1416 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T16:59:28Z  status W1428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T17:09:34Z  status W1433 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T17:13:30Z  status W1443 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T17:23:14Z  status W1746 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T17:33:26Z  status W1823 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T17:42:57Z  status W1861 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:00:40Z  status W1875 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:15:04Z  status W1899 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:17:00Z  status W1336 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:17:00Z  status W2342 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:30:15Z  interrupt W2344 minted    -         "Clause R README token counted as a pin move: moved counts pin texts only and a named wheel must carry the sha (github-14 BLOCK of ebfd1f6e, B1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2342
+2026-11-07T18:30:15Z  interrupt W2345 minted    -         "Clause R notes from the ebfd1f6e review: N1 surviving undeclared mutants and a wired catch-up test, N2 the lock-name test agrees with the loose one, N3 a pre-existing disagreement refuses other dists, N4 rollback passes as catch-up and the stale-digest limit returns to the header, N5 linux-sources pins by git URL"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2342
+2026-11-07T18:30:52Z  status W2344 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
