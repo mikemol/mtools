@@ -264,7 +264,9 @@ def test_a_changed_digest_on_a_row_whose_sha_did_not_move_is_not_a_repin() -> No
     assert "a digest on a pin whose sha did not move" in reason
 
 
-def _two_pins(second: str) -> tuple[dict[str, str | None], dict[str, str | None]]:
+def _two_pins(
+    second: str, *, wheel: bool = True
+) -> tuple[dict[str, str | None], dict[str, str | None]]:
     # A pyproject with two pins; the first moves to the new sha, the second to `second`.
     other_old = "vendor/wheels/mikemol_converge-0.1.0+0f8267e-py3-none-any.whl"
     other_new = f"vendor/wheels/mikemol_converge-0.1.0+{second}-py3-none-any.whl"
@@ -274,6 +276,9 @@ def _two_pins(second: str) -> tuple[dict[str, str | None], dict[str, str | None]
     old, new = _stack()
     old[_PYPROJECT] = head + first_old + f'mikemol-converge = {{ path = "{other_old}" }}\n'
     new[_PYPROJECT] = head + first_new + f'mikemol-converge = {{ path = "{other_new}" }}\n'
+    if wheel:
+        old[other_old], new[other_old] = "blob-c0", None
+        old[other_new], new[other_new] = None, "blob-c1"
     return old, new
 
 
@@ -298,7 +303,7 @@ def test_a_text_naming_a_sha_no_wheel_carries_is_not_a_repin() -> None:
     del new[_wheel(_NEW)]
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert f"no wheel of the stack carries the new sha {_NEW}" in reason
+    assert "which the stack does not add" in reason
 
 
 def test_deleting_a_wheel_a_new_text_still_names_is_not_a_repin() -> None:
@@ -310,4 +315,64 @@ def test_deleting_a_wheel_a_new_text_still_names_is_not_a_repin() -> None:
     new[_SUMS] = _sums(_NEW, _DIGEST_NEW) + "c" * 64 + _ROW_OTHER
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert "is deleted but a text of the stack still names it" in reason
+    assert "is deleted but a text still names it" in reason
+
+
+def test_one_arriving_wheel_cannot_stand_for_two_moved_pins() -> None:
+    """B1: hooks and converge both move, only the hooks wheel arrives; the converge pin is unmet."""
+    old, new = _two_pins(_NEW, wheel=False)
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert "mikemol_converge" in reason
+    assert "which the stack does not add" in reason
+
+
+def test_a_deleted_wheel_a_text_the_stack_leaves_alone_still_names_is_not_a_repin() -> None:
+    """B2: the stack forgot a text; HEAD's untouched copy still pins the wheel it deletes."""
+    old, new = _stack()
+    old[_other_wheel()] = "blob-held"
+    new[_other_wheel()] = None
+    readme = "vendor/wheels/README.md"
+    held: dict[str, str | None] = {readme: f'wheel = "//:{_other_wheel()}",\n'}
+    assert repin_admission.admits(old, new) is None
+    reason = repin_admission.admits(old, new, held)
+    assert reason is not None
+    assert "is deleted but a text still names it" in reason
+
+
+def test_an_added_wheel_with_the_target_sha_that_no_text_names_is_refused() -> None:
+    """B3: it carries the new sha, so only the named-by-no-file branch can refuse it."""
+    old, new = _stack()
+    stray = f"vendor/wheels/mikemol_other-0.1.0+{_NEW}-py3-none-any.whl"
+    old[stray], new[stray] = None, "blob-x"
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert f"{stray} is named by no file of the stack" in reason
+
+
+def test_a_line_whose_token_count_changes_is_a_refusal_not_an_error() -> None:
+    """N1: a contrived pair of lines holding different numbers of sha tokens refuses."""
+    old, new = _stack()
+    one = f'x = "{_wheel(_OLD)}"\n'
+    old[_PYPROJECT] = one
+    new[_PYPROJECT] = f'x = "{_wheel(_NEW)} {_wheel(_NEW)}"\n'
+    assert repin_admission.admits(old, new) is not None
+
+
+def test_a_sha_moved_only_on_a_lock_version_line_with_no_wheel_added_is_not_a_repin() -> None:
+    """B3: no moved line names a wheel, so only the no-wheel-carries-the-sha branch can refuse."""
+    old_lock = _lock(_OLD, _DIGEST_OLD)
+    new_lock = old_lock.replace(f'version = "0.1.0+{_OLD}"', f'version = "0.1.0+{_NEW}"')
+    assert new_lock != old_lock
+    reason = repin_admission.admits({_LOCK: old_lock}, {_LOCK: new_lock})
+    assert reason is not None
+    assert f"no wheel of the stack carries the new sha {_NEW}" in reason
+
+
+def test_a_literal_s_where_the_new_line_has_a_sha_is_refused_not_an_error() -> None:
+    """N1: the masks are equal (the literal S, a sha token) but the token counts are 0 and 1."""
+    old = {_PYPROJECT: 'x = "vendor/wheels/mikemol_hooks-0.1.0+S-py3-none-any.whl"\n'}
+    new = {_PYPROJECT: f'x = "{_wheel(_NEW)}"\n'}
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert "a digest on a pin whose sha did not move" in reason

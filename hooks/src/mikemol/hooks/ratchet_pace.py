@@ -411,7 +411,16 @@ def _repin_sha(root: Path, files: Sequence[stacksnap.Frozen]) -> str | None:
             # D1: a wheel is read by its blob id, so an existing path with other bytes shows.
             old[file.path] = head[file.path][1] if file.path in head else None
             new[file.path] = file.blob or None
-    return repin_admission.new_sha(old, new)
+    # B2: the repin-owned texts the stack leaves alone, as HEAD holds them, so a deleted wheel one
+    # of them still names is seen. FAILS CLOSED: a text git cannot read is no repin.
+    untouched: dict[str, str | None] = {}
+    for path in repin_admission.TEXT_FILES - old.keys():
+        if path in head:
+            text = _git_text(root, ["show", f"HEAD:{path}"])
+            if text is None:
+                return None
+            untouched[path] = text
+    return repin_admission.new_sha(old, new, untouched)
 
 
 def _admitted_by(

@@ -540,3 +540,33 @@ def test_a_held_wheel_at_new_bytes_beside_a_repin_is_refused(tmp_path: Path) -> 
     files = (*(clean.files or ()), stacksnap.Frozen(held, _MODE, swapped))
     beside = [Item("W1", "s", "", (*clean.paths, held), files)]
     assert ratchet_pace.landing_refusal(root, beside, env, [], now) is not None
+
+
+def test_a_held_wheel_listed_at_its_own_bytes_beside_a_repin_is_admitted(tmp_path: Path) -> None:
+    """B3: the blob is compared, so a wheel path frozen at HEAD's own blob is no change."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    held = "vendor/wheels/mikemol_other-0.1.0+9999999-py3-none-any.whl"
+    (root / held).write_bytes(b"held wheel")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "hold another wheel")
+    clean = _repin_items(root, _pyproject(_NEW_SHA))[0]
+    same = _git(root, "hash-object", "-w", "--stdin", text="held wheel")
+    files = (*(clean.files or ()), stacksnap.Frozen(held, _MODE, same))
+    beside = [Item("W1", "s", "", (*clean.paths, held), files)]
+    assert ratchet_pace.landing_refusal(root, beside, env, [], datetime.now(UTC)) is None
+
+
+def test_a_text_the_stack_leaves_alone_that_still_names_a_deleted_wheel_refuses_it(
+    tmp_path: Path,
+) -> None:
+    """B2 wired: HEAD's untouched checksum file still names the old wheel the stack deletes."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    sums = f"{'a' * 64}  ./mikemol_fence-0.1.0+{_OLD_SHA}-py3-none-any.whl\n"
+    (root / "vendor" / "wheels" / "SHA256SUMS").write_text(sums, encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "a checksum file")
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))
+    assert ratchet_pace.landing_refusal(root, clean, env, [], now) is not None
