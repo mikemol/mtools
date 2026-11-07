@@ -18114,13 +18114,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_deletion_is_not_the_pinned_blob},
 }
 
-@misc{hooks-admission-path-frozen-twice-is-judged-by-its-last-blob,
-  section = {admission},
-  title  = {A later entry's file replaces an earlier one's, as the landing does},
-  claim  = {A later entry's file replaces an earlier one's, as the landing does.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_path_frozen_twice_is_judged_by_its_last_blob},
-}
-
 @misc{hooks-admission-no-row-admits-another-repository-or-a-changed-stack,
   section = {admission},
   title  = {`admitting` answers None, not an exception, for a wrong repository or a refused stack},
@@ -18521,4 +18514,78 @@
   title  = {A failed listing raises, so it cannot read as a repository with no reaches},
   claim  = {A failed listing raises, so it cannot read as a repository with no reaches.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_siblingcensus.py -k test_a_directory_git_cannot_list_is_an_error_never_an_empty_census},
+}
+
+@misc{hooks-new-dist-cli-uv-lock-runs-in-the-new-directory,
+  section = {new_dist_cli},
+  title  = {The lock embeds the project name, so it runs where the new dist is, and a pass scaffolds},
+  claim  = {The lock embeds the project name, so it runs where the new dist is, and a pass
+            scaffolds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_uv_lock_runs_in_the_new_directory},
+}
+
+@misc{hooks-new-dist-cli-failing-uv-lock-is-a-refusal-naming-it-not-a-crash,
+  section = {new_dist_cli},
+  title  = {A lock that exits nonzero ends the run as a refusal and says what uv said},
+  claim  = {A lock that exits nonzero ends the run as a refusal and says what uv said.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_a_failing_uv_lock_is_a_refusal_naming_it_not_a_crash},
+}
+
+@misc{hooks-admission-path-frozen-twice-with-the-same-pinned-blob-is-one-file,
+  section = {admission},
+  title  = {Two entries carrying the pinned bytes are one file (an earlier other blob is N6)},
+  claim  = {Two entries carrying the pinned bytes are one file (an earlier other blob is N6).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_path_frozen_twice_with_the_same_pinned_blob_is_one_file},
+}
+
+@misc{hooks-admission-row-must-cite-a-review-and-a-birth-row-its-record-and-its-ratchet,
+  section = {admission},
+  title  = {N4 and N5: an empty review, an empty record and a ratchet not among the blobs each refuse},
+  claim  = {N4 and N5: an empty review, an empty record and a ratchet not among the blobs each
+            refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_row_must_cite_a_review_and_a_birth_row_its_record_and_its_ratchet},
+}
+
+@misc{hooks-admission-earlier-entry-with-unpinned-bytes-and-a-non-regular-mode-are-refused,
+  section = {admission},
+  title  = {N6: the pin covers every entry's bytes for the path, and the file mode},
+  claim  = {N6: the pin covers every entry's bytes for the path, and the file mode.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_an_earlier_entry_with_unpinned_bytes_and_a_non_regular_mode_are_refused},
+}
+
+@misc{hooks-ratchet-pace-wired-landing-refuses-a-stack-the-pace-still-refuses-unless-a-row-clears-it,
+  section = {ratchet_pace},
+  title  = {B1: no row refuses; a paydown does not; a birth whose file a peer landed does},
+  claim  = {B1: no row refuses; a paydown does not; a birth whose file a peer landed does.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_the_landing_refuses_a_stack_the_pace_still_refuses_unless_a_row_clears_it},
+}
+
+@misc{hooks-ratchet-pace-wired-head-git-cannot-list-refuses-even-when-the-rebaselines-blob-is-readable,
+  section = {ratchet_pace},
+  title  = {B2: an unborn HEAD fails ls-tree while the blob reads; it must not read as an empty HEAD},
+  claim  = {B2: an unborn HEAD fails ls-tree while the blob reads; it must not read as an empty
+            HEAD.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_head_git_cannot_list_refuses_even_when_the_rebaselines_blob_is_readable},
+}
+
+@misc{hooks-ratchet-pace-wired-nested-ratchet-already-at-head-and-a-non-utf8-name-both-refuse,
+  section = {ratchet_pace},
+  title  = {N2 and N8: -r reaches a nested file; a name that is not UTF-8 refuses instead of raising},
+  claim  = {N2 and N8: -r reaches a nested file; a name that is not UTF-8 refuses instead of
+            raising.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_nested_ratchet_already_at_head_and_a_non_utf8_name_both_refuse},
+}
+
+@misc{hooks-stackrun-stack-the-landing-refuses-never-becomes-a-commit,
+  section = {stackland},
+  title  = {W2330 B1: the pace judged again at the landing refuses; HEAD does not move; rc is 1},
+  claim  = {W2330 B1: the pace judged again at the landing refuses; HEAD does not move; rc is 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_stack_the_landing_refuses_never_becomes_a_commit},
+}
+
+@misc{hooks-stackrun-entries-for-raises-refused-whatever-the-admission-says,
+  section = {stackland},
+  title  = {Both landing paths build through entries_for, so the refusal is raised there},
+  claim  = {Both landing paths build through entries_for, so the refusal is raised there.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_entries_for_raises_refused_whatever_the_admission_says},
 }

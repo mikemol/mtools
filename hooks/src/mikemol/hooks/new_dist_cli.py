@@ -8,11 +8,10 @@ is generated rather than copied). ⚑ EVERYTHING IS CHECKED BEFORE ANYTHING IS W
 existing directory, a missing template file or a failing edit refuses with the tree untouched.
 """
 
-import subprocess
 import sys
 from pathlib import Path
 
-from mikemol.hooks import new_dist
+from mikemol.hooks import new_dist, runproc
 
 # ⚑ W1954: THE FLEET'S EXIT TABLE (corpus/exit-table.json) NAMES 2 USAGE AND 4 REFUSE. This
 # tool returned 2 for BOTH a bad command line and a refusal by name; the two are now apart.
@@ -54,7 +53,10 @@ def scaffold(root: Path, name: str, description: str, lock: bool = True) -> list
     (root / "MODULE.bazel").write_text(module, encoding="utf-8")
     (root / "INSTALL.md").write_text(install, encoding="utf-8")
     if lock:
-        subprocess.run(["uv", "lock"], cwd=target, check=True)
+        locked = runproc.run(["uv", "lock"], cwd=target)
+        if locked.returncode != 0:
+            msg = f"uv lock failed in {target} (exit {locked.returncode}): {locked.stderr.strip()}"
+            raise ValueError(msg)
     return [
         f"bazel build //{name}:.venv",
         f"uv venv + sync in {name}/ for the host tools",

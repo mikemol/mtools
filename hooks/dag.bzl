@@ -553,7 +553,8 @@ GRAPH = {
     },
     "src/mikemol/hooks/new_dist_cli.py": {
       "imports": [
-        "src/mikemol/hooks/new_dist.py"
+        "src/mikemol/hooks/new_dist.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []

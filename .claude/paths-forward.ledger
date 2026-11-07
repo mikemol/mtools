@@ -6140,3 +6140,24 @@
 2026-11-07T05:21:42Z  status W2322 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T05:23:34Z  status W2322 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T05:29:24Z  status W2327 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:31:06Z  status W2060 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:42:52Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:46:05Z  status W1259 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:47:42Z  status W2326 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:56:28Z  status W1267 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:02:26Z  status W879 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:03:37Z  status W879 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:03:38Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:06:20Z  status W879 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:07:00Z  status W796 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:07:00Z  status W879 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:07:00Z  status W1008 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:31:21Z  interrupt W2329 minted    -         "W2301 part B remainder: wire repin_admission.admits (clause R) into ratchet_pace, reading each changed repin-owned file's text at HEAD and in the frozen stack, so a repin stack is admitted when it changes only the vendored sha"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2327
+2026-11-07T06:31:22Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:31:22Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:31:22Z  status W2327 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:32:09Z  status W1259 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:32:47Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T06:49:17Z  interrupt W2330 minted    -         "Fix the cold review's BLOCK of 9472087b: landing must fail closed on both paths (B1), the fail-closed tests must be able to fail (B2), and N1 N2 N4 N5 N6 N8 (first rebaselines blob vs the landing's last, nested ratchet, non-empty review and record required of a row, ratchet among blobs, pinned mode and no unpinned earlier bytes, non-UTF-8 HEAD name refuses)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2327
+2026-11-07T06:51:44Z  status W2328 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T07:26:12Z  status W2330 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

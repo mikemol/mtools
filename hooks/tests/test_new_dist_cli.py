@@ -8,6 +8,8 @@ tree is byte-identical afterwards, which a shell that wrote before checking woul
 
 from __future__ import annotations
 
+import os
+import stat
 from typing import TYPE_CHECKING
 
 from mikemol.hooks import new_dist, new_dist_cli
@@ -79,3 +81,43 @@ def test_main_prints_the_remaining_steps(
     _repo(tmp_path)
     assert _run(tmp_path, "htmlstruct", "Read HTML.") == 0
     assert "bazel build //htmlstruct:.venv" in capsys.readouterr().out
+
+
+def _stub_uv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, body: str) -> Path:
+    """Put a `uv` that runs `body` first on PATH.
+
+    Returns:
+        the file the stub writes its working directory to.
+
+    """
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    seen = tmp_path / "uv-cwd"
+    script = bin_dir / "uv"
+    script.write_text(f'#!/bin/sh\npwd > "{seen}"\n{body}\n', encoding="utf-8")
+    script.chmod(script.stat().st_mode | stat.S_IXUSR)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    return seen
+
+
+def test_uv_lock_runs_in_the_new_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The lock embeds the project name, so it runs where the new dist is, and a pass scaffolds."""
+    root = tmp_path / "repo"
+    root.mkdir()
+    _repo(root)
+    seen = _stub_uv(tmp_path, monkeypatch, "exit 0")
+    assert new_dist_cli.main(["--root", str(root), "htmlstruct", "Read HTML."]) == 0
+    assert seen.read_text(encoding="utf-8").strip().endswith("repo/htmlstruct")
+
+
+def test_a_failing_uv_lock_is_a_refusal_naming_it_not_a_crash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A lock that exits nonzero ends the run as a refusal and says what uv said."""
+    root = tmp_path / "repo"
+    root.mkdir()
+    _repo(root)
+    _stub_uv(tmp_path, monkeypatch, "echo nope >&2; exit 3")
+    code = new_dist_cli.main(["--root", str(root), "htmlstruct", "Read HTML."])
+    assert code == new_dist_cli.EXIT_REFUSED
+    assert "uv lock failed" in capsys.readouterr().err
