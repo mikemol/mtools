@@ -18397,25 +18397,11 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_wheel_named_for_another_sha_refuses_the_stack},
 }
 
-@misc{hooks-repin-admission-stack-that-names-no-sha-is-not-a-repin,
-  section = {repin-admission},
-  title  = {Texts that change nothing a repin changes name no sha, and a repin names one},
-  claim  = {Texts that change nothing a repin changes name no sha, and a repin names one.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_stack_that_names_no_sha_is_not_a_repin},
-}
-
 @misc{hooks-repin-admission-third-party-local-version-is-not-a-second-sha,
   section = {repin-admission},
   title  = {A package that is not mikemol's keeps its own `+local` version and counts for nothing},
   claim  = {A package that is not mikemol's keeps its own `+local` version and counts for nothing.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_third_party_local_version_is_not_a_second_sha},
-}
-
-@misc{hooks-repin-admission-text-file-added-or-removed-and-an-empty-stack-are-not-repins,
-  section = {repin-admission},
-  title  = {The controls: nothing changed, and uv.lock created by the stack},
-  claim  = {The controls: nothing changed, and uv.lock created by the stack.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_text_file_added_or_removed_and_an_empty_stack_are_not_repins},
 }
 
 @misc{hooks-vlogsink-resolver-runner-keeps-status-and-stdout-and-says-127-for-no-program,
@@ -18647,13 +18633,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_stack_that_moves_no_sha_is_not_a_repin},
 }
 
-@misc{hooks-repin-admission-added-wheel-no-new-text-names-is-refused,
-  section = {repin-admission},
-  title  = {B2: a new sha on a wheel nothing references is not part of the repin},
-  claim  = {B2: a new sha on a wheel nothing references is not part of the repin.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_an_added_wheel_no_new_text_names_is_refused},
-}
-
 @misc{hooks-repin-admission-dropped-trailing-newline-and-crlf-are-changes-beyond-the-sha,
   section = {repin-admission},
   title  = {B2: line terminators are bytes; the masked comparison keeps them},
@@ -18666,20 +18645,6 @@
   title  = {B1: nemik's real repin held converge at 0f8267e while the rest moved; one new sha},
   claim  = {B1: nemik's real repin held converge at 0f8267e while the rest moved; one new sha.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_pin_held_at_an_older_sha_is_not_a_second_sha},
-}
-
-@misc{hooks-repin-admission-wheel-directory-readme-is-a-repin-owned-file,
-  section = {repin-admission},
-  title  = {B1: revendor writes checksums into vendor/wheels/README.md; it moves with the sha},
-  claim  = {B1: revendor writes checksums into vendor/wheels/README.md; it moves with the sha.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_wheel_directory_readme_is_a_repin_owned_file},
-}
-
-@misc{hooks-repin-admission-one-new-sha-is-named-for-the-audit-trailer,
-  section = {repin-admission},
-  title  = {The landing writes it: a repin names its sha, anything else names none},
-  claim  = {The landing writes it: a repin names its sha, anything else names none.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_one_new_sha_is_named_for_the_audit_trailer},
 }
 
 @misc{hooks-ratchet-pace-wired-repin-names-its-sha-in-the-audit-trailer-and-a-source-file-beside-it-is-refused,
@@ -18797,13 +18762,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_text_naming_a_sha_no_wheel_carries_is_not_a_repin},
 }
 
-@misc{hooks-repin-admission-deleting-a-wheel-a-new-text-still-names-is-not-a-repin,
-  section = {repin-admission},
-  title  = {D3: the stack deletes a held wheel and a text it ships still names that wheel},
-  claim  = {D3: the stack deletes a held wheel and a text it ships still names that wheel.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_deleting_a_wheel_a_new_text_still_names_is_not_a_repin},
-}
-
 @misc{hooks-ratchet-pace-wired-crlf-in-a-repin-text-is-refused-on-the-wired-path,
   section = {ratchet_pace},
   title  = {D4: the blobs are read exactly, so a carriage return reaches the comparison and refuses},
@@ -18839,40 +18797,11 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_stale_head.py -k test_the_stack_seams_the_commit_builds_carry_the_pace_questions},
 }
 
-@misc{hooks-repin-admission-one-arriving-wheel-cannot-stand-for-two-moved-pins,
-  section = {repin-admission},
-  title  = {B1: hooks and converge both move, only the hooks wheel arrives; the converge pin is unmet},
-  claim  = {B1: hooks and converge both move, only the hooks wheel arrives; the converge pin is
-            unmet.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_one_arriving_wheel_cannot_stand_for_two_moved_pins},
-}
-
-@misc{hooks-repin-admission-deleted-wheel-a-text-the-stack-leaves-alone-still-names-is-not-a-repin,
-  section = {repin-admission},
-  title  = {B2: the stack forgot a text; HEAD's untouched copy still pins the wheel it deletes},
-  claim  = {B2: the stack forgot a text; HEAD's untouched copy still pins the wheel it deletes.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_deleted_wheel_a_text_the_stack_leaves_alone_still_names_is_not_a_repin},
-}
-
 @misc{hooks-repin-admission-added-wheel-with-the-target-sha-that-no-text-names-is-refused,
   section = {repin-admission},
   title  = {B3: it carries the new sha, so only the named-by-no-file branch can refuse it},
   claim  = {B3: it carries the new sha, so only the named-by-no-file branch can refuse it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_an_added_wheel_with_the_target_sha_that_no_text_names_is_refused},
-}
-
-@misc{hooks-repin-admission-line-whose-token-count-changes-is-a-refusal-not-an-error,
-  section = {repin-admission},
-  title  = {N1: a contrived pair of lines holding different numbers of sha tokens refuses},
-  claim  = {N1: a contrived pair of lines holding different numbers of sha tokens refuses.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_line_whose_token_count_changes_is_a_refusal_not_an_error},
-}
-
-@misc{hooks-repin-admission-sha-moved-only-on-a-lock-version-line-with-no-wheel-added-is-not-a-repin,
-  section = {repin-admission},
-  title  = {B3: no moved line names a wheel, so only the no-wheel-carries-the-sha branch can refuse},
-  claim  = {B3: no moved line names a wheel, so only the no-wheel-carries-the-sha branch can refuse.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_sha_moved_only_on_a_lock_version_line_with_no_wheel_added_is_not_a_repin},
 }
 
 @misc{hooks-repin-admission-literal-s-where-the-new-line-has-a-sha-is-refused-not-an-error,
@@ -18894,4 +18823,96 @@
   title  = {B2 wired: HEAD's untouched checksum file still names the old wheel the stack deletes},
   claim  = {B2 wired: HEAD's untouched checksum file still names the old wheel the stack deletes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_text_the_stack_leaves_alone_that_still_names_a_deleted_wheel_refuses_it},
+}
+
+@misc{hooks-repin-admission-text-file-added-or-removed-is-not-a-repin,
+  section = {repin-admission},
+  title  = {The control: uv.lock created by the stack},
+  claim  = {The control: uv.lock created by the stack.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_text_file_added_or_removed_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-wheel-directory-readme-is-owned-but-never-a-pin,
+  section = {repin-admission},
+  title  = {X1: revendor may move the README's checksums, and its prose is not read as a pin},
+  claim  = {X1: revendor may move the README's checksums, and its prose is not read as a pin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_wheel_directory_readme_is_owned_but_never_a_pin},
+}
+
+@misc{hooks-repin-admission-one-sha-every-changed-pin-moved-to-is-named-for-the-audit-trailer,
+  section = {repin-admission},
+  title  = {The landing writes it: a repin names its sha, anything else names none},
+  claim  = {The landing writes it: a repin names its sha, anything else names none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_one_sha_every_changed_pin_moved_to_is_named_for_the_audit_trailer},
+}
+
+@misc{hooks-repin-admission-moved-pin-whose-wheel-the-tree-does-not-hold-is-not-a-repin,
+  section = {repin-admission},
+  title  = {Hooks and converge both move, only the hooks wheel arrives, converge's is nowhere},
+  claim  = {Hooks and converge both move, only the hooks wheel arrives, converge's is nowhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_moved_pin_whose_wheel_the_tree_does_not_hold_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-catch-up-to-a-wheel-head-already-holds-is-a-repin,
+  section = {repin-admission},
+  title  = {A pin moving to a wheel HEAD already has needs no wheel in the stack: existence rules},
+  claim  = {A pin moving to a wheel HEAD already has needs no wheel in the stack: existence rules.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_catch_up_to_a_wheel_head_already_holds_is_a_repin},
+}
+
+@misc{hooks-repin-admission-text-the-stack-forgot-leaves-the-pin-texts-disagreeing,
+  section = {repin-admission},
+  title  = {X2: the sums row and the wheel move, the pyproject is forgotten and names the old wheel},
+  claim  = {X2: the sums row and the wheel move, the pyproject is forgotten and names the old wheel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_text_the_stack_forgot_leaves_the_pin_texts_disagreeing},
+}
+
+@misc{hooks-repin-admission-each-pin-text-forgotten-in-turn-is-a-disagreement,
+  section = {repin-admission},
+  title  = {X2: whichever pin text the stack leaves alone, the tree disagrees with itself},
+  claim  = {X2: whichever pin text the stack leaves alone, the tree disagrees with itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_each_pin_text_forgotten_in_turn_is_a_disagreement},
+}
+
+@misc{hooks-repin-admission-deleting-a-wheel-a-pin-text-the-stack-leaves-alone-still-names-is-refused,
+  section = {repin-admission},
+  title  = {The stack deletes a held wheel and an untouched text still names it},
+  claim  = {The stack deletes a held wheel and an untouched text still names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_deleting_a_wheel_a_pin_text_the_stack_leaves_alone_still_names_is_refused},
+}
+
+@misc{hooks-repin-admission-sha-moved-only-on-a-lock-version-line-leaves-the-texts-disagreeing,
+  section = {repin-admission},
+  title  = {No moved line names a wheel; the other pin texts still pin hooks at the old sha},
+  claim  = {No moved line names a wheel; the other pin texts still pin hooks at the old sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_sha_moved_only_on_a_lock_version_line_leaves_the_texts_disagreeing},
+}
+
+@misc{hooks-repin-admission-every-wheel-a-line-names-is-read-not-only-the-first,
+  section = {repin-admission},
+  title  = {Two wheels on one line move together; the second one's absence from the tree refuses},
+  claim  = {Two wheels on one line move together; the second one's absence from the tree refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_every_wheel_a_line_names_is_read_not_only_the_first},
+}
+
+@misc{hooks-repin-admission-comment-naming-the-old-wheel-in-a-pin-text-is-not-a-pin,
+  section = {repin-admission},
+  title  = {A comment line is prose and names no pin, so an unchanged one disagrees with nothing},
+  claim  = {A comment line is prose and names no pin, so an unchanged one disagrees with nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_comment_naming_the_old_wheel_in_a_pin_text_is_not_a_pin},
+}
+
+@misc{hooks-ratchet-pace-wired-readme-prose-naming-the-old-wheel-does-not-refuse-a-repin,
+  section = {ratchet_pace},
+  title  = {X1: the README is no pin text; prose naming a wheel the repin deletes refuses nothing},
+  claim  = {X1: the README is no pin text; prose naming a wheel the repin deletes refuses nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_readme_prose_naming_the_old_wheel_does_not_refuse_a_repin},
+}
+
+@misc{hooks-ratchet-pace-wired-unreadable-untouched-pin-text-is-no-repin,
+  section = {ratchet_pace},
+  title  = {N-a: a pin text git cannot read at HEAD fails closed; readable and consistent, it passes},
+  claim  = {N-a: a pin text git cannot read at HEAD fails closed; readable and consistent, it
+            passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_an_unreadable_untouched_pin_text_is_no_repin},
 }

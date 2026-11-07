@@ -18,7 +18,10 @@ from mikemol.hooks.stackfreeze import SNAP_ENV
 from mikemol.hooks.stackrun import Item
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
+
+    import pytest
 
 _RATCHET = "corpus/exit-baseline.txt"
 
@@ -569,4 +572,39 @@ def test_a_text_the_stack_leaves_alone_that_still_names_a_deleted_wheel_refuses_
     _git(root, "commit", "-q", "-m", "a checksum file")
     now = datetime.now(UTC)
     clean = _repin_items(root, _pyproject(_NEW_SHA))
+    assert ratchet_pace.landing_refusal(root, clean, env, [], now) is not None
+
+
+def test_readme_prose_naming_the_old_wheel_does_not_refuse_a_repin(tmp_path: Path) -> None:
+    """X1: the README is no pin text; prose naming a wheel the repin deletes refuses nothing."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    prose = f"vendored wheels:\n- mikemol_fence-0.1.0+{_OLD_SHA}-py3-none-any.whl\n"
+    (root / "vendor" / "wheels" / "README.md").write_text(prose, encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "a readme naming the wheel")
+    clean = _repin_items(root, _pyproject(_NEW_SHA))
+    assert ratchet_pace.landing_refusal(root, clean, env, [], datetime.now(UTC)) is None
+
+
+def test_an_unreadable_untouched_pin_text_is_no_repin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """N-a: a pin text git cannot read at HEAD fails closed; readable and consistent, it passes."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    (root / "vendor" / "wheels" / "SHA256SUMS").write_text("# no rows\n", encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "an empty checksum file")
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))
+    assert ratchet_pace.landing_refusal(root, clean, env, [], now) is None
+    real = runproc.run_exact
+
+    def blind(argv: Sequence[str], cwd: Path | None = None) -> runproc.Result:
+        if "show" in argv and any(word.endswith("SHA256SUMS") for word in argv):
+            return runproc.Result(128, "", "fatal")
+        return real(argv, cwd)
+
+    monkeypatch.setattr(runproc, "run_exact", blind)
     assert ratchet_pace.landing_refusal(root, clean, env, [], now) is not None

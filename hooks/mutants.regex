@@ -1074,8 +1074,8 @@ src/mikemol/hooks/runproc.py|start-ignores-the-directory|        cwd=cwd,|      
 src/mikemol/hooks/runproc.py|kill-leaves-the-child|            self\._process\.kill\(\)|            pass|def=Handle.kill
 src/mikemol/hooks/repin_admission.py|a-file-a-repin-does-not-own-is-owned|    return path in TEXT_FILES or _WHEEL\.fullmatch\(path\) is not None|    return True|def=_owned
 src/mikemol/hooks/repin_admission.py|a-changed-line-beyond-the-sha-passes|        if e0 != e1 or w0 != w1 or _mask_line\(b0, belongs=w0\) != _mask_line\(b1, belongs=w1\):|        if False:|def=_file_verdict
-src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(moved\.shas\) != 1:|    if len(moved.shas) > 1:|def=_verdict
-src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|    return None if added else f"no wheel of the stack carries the new sha \{sha\}"|    return None|def=_wheel_reason
+src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(moved\) != 1:|    if len(moved) > 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|        if f"\{_WHEEL_DIR\}\{file\}" not in present:|        if False:|def=_wheels_reason
 src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", body\)|        return body|def=_mask_line
 src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\(r"\\g<head>S", body\)\)\)|        return body|def=_mask_line
 src/mikemol/hooks/repin_admission.py|every-lock-package-is-a-mikemol-package|            inside = "mikemol" in body|            inside = True|def=_lines
@@ -1091,7 +1091,7 @@ src/mikemol/hooks/admission.py|the-pinned-record-is-not-passed-on|        rebase
 src/mikemol/hooks/refusal_log.py|a-hung-curl-raises-past-the-gate|, runproc\.TimeoutExpired\)\)|))|def=log_fallthrough
 src/mikemol/hooks/new_dist_cli.py|a-failed-uv-lock-scaffolds-anyway|        if locked\.returncode != 0:|        if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|uv-lock-runs-outside-the-new-directory|runproc\.run\(\["uv", "lock"\], cwd=target\)|runproc.run(["uv", "lock"], cwd=None)|def=scaffold
-src/mikemol/hooks/ratchet_pace.py|a-stray-change-reads-as-a-repin|    return repin_admission\.new_sha\(old, new, untouched\)|    return "x"|def=_repin_sha
+src/mikemol/hooks/ratchet_pace.py|a-stray-change-reads-as-a-repin|    return repin_admission\.new_sha\(old, new, untouched, wheels\)|    return "x"|def=_repin_sha
 src/mikemol/hooks/ratchet_pace.py|the-submit-never-asks-clause-r|        return _repin_clear\(root, files\)|        return False|def=_admitted_by
 src/mikemol/hooks/ratchet_pace.py|the-landing-never-asks-clause-r|    if _repin_clear\(root, frozen\):|    if False:|def=landing_refusal
 src/mikemol/hooks/watchdog.py|a-failing-stackable-is-believed|        heard\.append\(done\.stdout if done\.returncode == 0 else ""\)|        heard.append(done.stdout)|def=hint_from
@@ -1117,7 +1117,7 @@ src/mikemol/hooks/traindrive.py|a-paced-group-is-not-dropped|        if reason i
 src/mikemol/hooks/traindrive.py|the-train-judges-all-groups-as-one-stack|    return \[entry for group in groups for entry in entries_for\(group\.items, seams\)\]|    return entries_for(_flat(groups), seams)|def=_entries
 src/mikemol/hooks/repin_admission.py|a-new-sha-need-not-be-new|            if not to:|            if False:|def=_file_verdict
 src/mikemol/hooks/repin_admission.py|line-terminators-are-forgotten|        split\.append\(\(body, raw\[len\(body\) :\], belongs\)\)|        split.append((body, "", belongs))|def=_lines
-src/mikemol/hooks/repin_admission.py|an-unnamed-wheel-is-admitted|        elif any\(name in text for text in texts\):|        elif True:|def=_wheel_reason
+src/mikemol/hooks/repin_admission.py|an-unnamed-wheel-is-admitted|        if added and path\.removeprefix\(_WHEEL_DIR\) not in named:|        if False:|def=_wheels_reason
 src/mikemol/hooks/ratchet_pace.py|a-path-frozen-twice-at-other-bytes-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if not _mode_clear(file, head):|def=_repin_sha
 src/mikemol/hooks/ratchet_pace.py|a-repin-leaves-no-mark|        return None if sha is None else f"\{root\.name\}/repin-\{sha\}"|        return None|def=admitted_ident
 src/mikemol/hooks/ratchet_pace.py|a-link-or-a-flipped-mode-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if held.setdefault(file.path, file.blob) != file.blob:|def=_repin_sha
@@ -1128,15 +1128,20 @@ src/mikemol/hooks/ratchet_pace.py|the-landing-refusal-drops-its-birth-reason|   
 src/mikemol/hooks/traindrive.py|an-admission-group-rides-the-round|        if at and seams\.needs_admission\(group\.items\):|        if False:|def=_round_of
 src/mikemol/hooks/traindrive.py|the-held-groups-are-lost|            return list\(remaining\[:at\]\), list\(remaining\[at:\]\)|            return list(remaining[:at]), []|def=_round_of
 src/mikemol/hooks/new_dist_cli.py|the-printed-warrants-step-names-the-dist-in-capitals|--write \{name\} smoke=smoke|--write {name.upper()} smoke=smoke|def=scaffold
-src/mikemol/hooks/repin_admission.py|two-pins-moving-to-two-shas-pass|    if len\(moved\.shas\) != 1:|    if len(moved.shas) < 1:|def=_verdict
-src/mikemol/hooks/repin_admission.py|a-deleted-wheel-still-named-passes|            if any\(name in text for text in texts\):|            if False:|def=_wheel_reason
-src/mikemol/hooks/repin_admission.py|a-wheel-at-other-bytes-passes|            if old\[path\] != new\[path\]:|            if False:|def=_wheel_reason
+src/mikemol/hooks/repin_admission.py|two-pins-moving-to-two-shas-pass|    if len\(moved\) != 1:|    if len(moved) < 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|a-deleted-wheel-still-named-passes|    present = \{path for path in wheels if new\.get\(path, "kept"\) is not None\}|    present = set(wheels)|def=_wheels_reason
+src/mikemol/hooks/repin_admission.py|a-wheel-at-other-bytes-passes|        if old\.get\(path\) is not None and new\.get\(path\) is not None and old\[path\] != new\[path\]:|        if False:|def=_wheels_reason
 src/mikemol/hooks/ratchet_pace.py|the-git-read-folds-line-endings|        done = runproc\.run_exact\(\["git", "-C", str\(root\), \*argv\]\)|        done = runproc.run(["git", "-C", str(root), *argv])|def=_git_text
 src/mikemol/hooks/ratchet_pace.py|a-wheel-is-read-as-present-not-by-blob|            old\[file\.path\] = head\[file\.path\]\[1\] if file\.path in head else None|            old[file.path] = "" if file.path in head else None|def=_repin_sha
 src/mikemol/hooks/runproc.py|a-carriage-return-is-folded|        done\.returncode, done\.stdout\.decode\("utf-8"\), done\.stderr\.decode\("utf-8", errors="replace"\)|        done.returncode, done.stdout.decode("utf-8").replace(chr(13), ""), done.stderr.decode("utf-8", errors="replace")|def=run_exact
 src/mikemol/hooks/commit_kata.py|the-commit-drops-the-need-seam|        needs_admission=lambda planned: _needs_admission\(root, planned, env\),||def=stack_seams
 src/mikemol/hooks/commit_kata.py|the-commit-drops-the-landing-seam|        landing_refusal=lambda planned: _landing_refusal\(root, planned, env\),||def=stack_seams
-src/mikemol/hooks/repin_admission.py|a-moved-pin-needs-no-wheel-of-its-own|    if missing:|    if False:|def=_wheel_reason
-src/mikemol/hooks/repin_admission.py|a-deleted-wheel-is-checked-against-the-stack-alone|    texts = \[text for path, text in \{\*\*held, \*\*new\}\.items\(\) if path in TEXT_FILES and text\]|    texts = [text for path, text in new.items() if path in TEXT_FILES and text]|def=_wheel_reason
+src/mikemol/hooks/repin_admission.py|a-moved-pin-needs-no-wheel-of-its-own|if _WHEEL\.fullmatch\(path\) and blob\}|if False}|def=_wheels_reason
+src/mikemol/hooks/repin_admission.py|a-deleted-wheel-is-checked-against-the-stack-alone|    disagreement, named = _disagreement\(\{\*\*held, \*\*new\}\)|    disagreement, named = _disagreement({**new})|def=_verdict
 src/mikemol/hooks/repin_admission.py|a-token-count-change-raises|        return set\(\)|        pass|def=_moved_to
-src/mikemol/hooks/ratchet_pace.py|the-untouched-texts-are-not-read|    return repin_admission\.new_sha\(old, new, untouched\)|    return repin_admission.new_sha(old, new, {})|def=_repin_sha
+src/mikemol/hooks/ratchet_pace.py|the-untouched-texts-are-not-read|    return repin_admission\.new_sha\(old, new, untouched, wheels\)|    return repin_admission.new_sha(old, new, {}, wheels)|def=_repin_sha
+src/mikemol/hooks/repin_admission.py|the-readme-is-read-as-a-pin|        if path in PIN_TEXTS and text:|        if path in TEXT_FILES and text:|def=_disagreement
+src/mikemol/hooks/repin_admission.py|only-the-first-wheel-of-a-line-is-read|        for found in _MENTION\.finditer\(body\):|        for found in list(_MENTION.finditer(body))[:1]:|def=_mentions
+src/mikemol/hooks/repin_admission.py|a-comment-line-names-a-pin|        if body\.lstrip\(\)\.startswith\("#"\):|        if False:|def=_mentions
+src/mikemol/hooks/ratchet_pace.py|an-unreadable-untouched-text-is-skipped|            if text is None:|            if False:|def=_repin_sha
+src/mikemol/hooks/repin_admission.py|the-wheels-head-holds-are-not-counted|    present = \{path for path in wheels if|    present = {path for path in () if|def=_wheels_reason
