@@ -441,8 +441,9 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ THE REFUSAL LOG: handing one event to `curl` IS its responsibility. MEASURED: curl is resolved
 # by `shutil.which` (absent → reported NOT emitted); the argv is module constants plus the
 # caller's destination URL, as ONE word; the untrusted payload is the JSON on STDIN, never a word
-# in the command. Never through a shell.
-"src/mikemol/hooks/refusal_log.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
+# in the command. Never through a shell; it runs through runproc (W2219), so it holds no
+# subprocess rule.
+"src/mikemol/hooks/refusal_log.py" = ["boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 
 
 # ⚑ W830: `test_build_failure_note.py` drives the failure hook with a recording runner: no process.

@@ -12,6 +12,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
     ],
 )
@@ -25,6 +26,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
     ],
 )
@@ -38,6 +40,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
     ],
 )

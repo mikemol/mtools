@@ -18473,3 +18473,31 @@
   claim  = {A rejection is printed on standard error: the runner keeps it after standard output.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_the_compiler_runner_returns_the_status_and_both_streams},
 }
+
+@misc{hooks-admission-repair-row-has-no-accident-checks,
+  section = {admission},
+  title  = {The control: only a birth row is asked the accident questions},
+  claim  = {The control: only a birth row is asked the accident questions.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_repair_row_has_no_accident_checks},
+}
+
+@misc{hooks-admission-birth-row-passes-when-the-file-is-new-and-the-entry-cites-the-record,
+  section = {admission},
+  title  = {The control for a birth: new file, matching entry, pinned record},
+  claim  = {The control for a birth: new file, matching entry, pinned record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_birth_row_passes_when_the_file_is_new_and_the_entry_cites_the_record},
+}
+
+@misc{hooks-admission-birth-row-is-refused-for-an-existing-file-a-missing-entry-or-another-record,
+  section = {admission},
+  title  = {Each accident check is reached through the row: file, entry, record},
+  claim  = {Each accident check is reached through the row: file, entry, record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_birth_row_is_refused_for_an_existing_file_a_missing_entry_or_another_record},
+}
+
+@misc{hooks-refusal-log-curl-that-outlasts-its-bound-is-reported-not-raised,
+  section = {refusal-log},
+  title  = {A hung endpoint is NOT emitted with the timeout named; the gate is never held by it},
+  claim  = {A hung endpoint is NOT emitted with the timeout named; the gate is never held by it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_refusal_log.py -k test_a_curl_that_outlasts_its_bound_is_reported_not_raised},
+}

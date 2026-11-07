@@ -128,3 +128,17 @@ def test_junk_arguments_never_raise(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     _curl_at(monkeypatch, _fake_curl(tmp_path, 0))
     junk = refusal_log.Refusal(known=None, argv=None)
     assert refusal_log.log_fallthrough(None, None, _DEST, refusal=junk).emitted
+
+
+def test_a_curl_that_outlasts_its_bound_is_reported_not_raised(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A hung endpoint is NOT emitted with the timeout named; the gate is never held by it."""
+    script = tmp_path / "curl"
+    script.write_text("#!/bin/sh\nexec sleep 5\n", encoding="utf-8")
+    script.chmod(script.stat().st_mode | stat.S_IXUSR)
+    _curl_at(monkeypatch, script)
+    monkeypatch.setattr(refusal_log, "_RUN_TIMEOUT_S", 0.2)
+    got = refusal_log.log_fallthrough("gate", "unknown-flag", destination=_DEST)
+    assert not got.emitted
+    assert got.why.startswith("TimeoutExpired")

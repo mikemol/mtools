@@ -26182,19 +26182,21 @@
     {
       "symbol": "W1259",
       "title": "Validate stored RRULEs with a real parser beside recurrence.py and report verdict differences on the fleet's queues",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2310"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "recurrence.py validates RRULEs by its own reading; add a check that parses each stored RRULE with a real parser (python-dateutil's rrulestr, as a dev-only dependency of pathsforward, never runtime: the sibling-edge rule) beside it and reports where the two disagree, over the fleet's queues read-only; the report is a dry-run mode, one line per disagreeing rule. Tests with planted rules both readers accept, both reject, and one only accepts; mutants for each disagreement direction.",
-      "evidence": "2026-10-15: From github-8f's standards audit /home/mikemol/github/.claude/design-standards-coverage-2026-10-15.md (read in full; its OSLC/RFC terms marked [K] there are unverified): see its rows iCalendar (no test parses output, string checks only, test_vtodo.py:54-61), Rego (witness dual-language, sniffed in test_witness_promql.py:72-89) and gaps 1-2. For the queue contract github-8f relays that the validator is nemik's shapes.ttl (nemik:W519, not read by me), not a new JSON Schema. | 2026-11-06T02:29:10Z: 2026-11-06 released from the W1667 parking lot (a real fall): files named exist; the real parser is a DEV-only dependency by the vendoring rule. | 2026-11-06T03:20:55Z: 2026-11-05: released from W1667 in stack 24 (release 5, manifest and size set); taken at the Stop hook's ask while that stack holds the gate; no code this turn.",
+      "evidence": "2026-10-15: From github-8f's standards audit /home/mikemol/github/.claude/design-standards-coverage-2026-10-15.md (read in full; its OSLC/RFC terms marked [K] there are unverified): see its rows iCalendar (no test parses output, string checks only, test_vtodo.py:54-61), Rego (witness dual-language, sniffed in test_witness_promql.py:72-89) and gaps 1-2. For the queue contract github-8f relays that the validator is nemik's shapes.ttl (nemik:W519, not read by me), not a new JSON Schema. | 2026-11-06T02:29:10Z: 2026-11-06 released from the W1667 parking lot (a real fall): files named exist; the real parser is a DEV-only dependency by the vendoring rule. | 2026-11-06T03:20:55Z: 2026-11-05: released from W1667 in stack 24 (release 5, manifest and size set); taken at the Stop hook's ask while that stack holds the gate; no code this turn. | 2026-11-07T03:29:51Z: 2026-11-06: READ: python-dateutil is not installed in pathsforward's venv, and the card asks for it as a dev-only dependency, which means a pyproject edit, a uv lock and the Bazel pip wiring for a third-party package (not a mikemol wheel). Asked github-14 whether adding a third-party dev dependency to pathsforward is acceptable here and by what route (the vendored-wheel path or the pip hub); until then no code can run the real parser. Resume on the answer. | 2026-11-07T03:31:03Z: 2026-11-06: block lifted: github-14 ruled a third-party dev-only dependency acceptable for pathsforward (a test oracle, never in the runtime dependencies, with a test or check saying so), through the route pathsforward's other dev/test dependencies already use, pinned and hashed, no second mechanism; and that it waits behind W2309, W2310 and b41 if it adds real gate cost. | 2026-11-07T03:31:37Z: 2026-11-06: SIZED the route github-14 allowed. pathsforward keeps its dev tools in [dependency-groups] dev (pytest, mypy, ruff==0.16.6, mikemol-procrun), so python-dateutil goes there, never in dependencies = [] (a test would pin that). Real cost, which is what makes this a fruit card behind W2309, W2310 and b41 (github-14's ruling): a uv lock for the new package (network), the Bazel pip wiring, and type stubs, because pathsforward's mypy is strict with disallow_any_expr and dateutil ships none (types-python-dateutil, staged the way the sibling dists stage third-party stubs). Ordered behind W2310 by that ruling; resume then.",
       "issued_at": "2026-10-15T13:20:43Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-06T21:22:08Z",
+      "last_worked": "2026-11-07T03:31:37Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -51532,7 +51534,7 @@
     {
       "symbol": "W2310",
       "title": "W2301 part B: the pinned Row table and the stack-equals-row check in ratchet_pace.stack_reason",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2301",
         "nemik:W1660"
@@ -51544,11 +51546,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Pure functions with tests: Row(repo, card, blobs, review), the check that the frozen stack's non-queue paths equal the row's blob keys and each frozen blob equals the pinned sha, after _touches (ratchet_pace.py).",
-      "evidence": "2026-11-06T16:55:02Z: 2026-11-06: STARTED (the first real unit after the operator asked why no card was being worked). Reading ratchet_pace.stack_reason and stacksnap.load to place the Row table check after _touches on the frozen stack. | 2026-11-07T01:34:38Z: 2026-11-06: velocity tag and the true edge to nemik:W1660 (this part of W2301 is what that answer rests on), at github-14's ask, so the redraw can place it.",
+      "evidence": "2026-11-06T16:55:02Z: 2026-11-06: STARTED (the first real unit after the operator asked why no card was being worked). Reading ratchet_pace.stack_reason and stacksnap.load to place the Row table check after _touches on the frozen stack. | 2026-11-07T01:34:38Z: 2026-11-06: velocity tag and the true edge to nemik:W1660 (this part of W2301 is what that answer rests on), at github-14's ask, so the redraw can place it. | 2026-11-07T03:29:10Z: 2026-11-06: REAL CODE, unit 3: admission.Row gains kind (repair or birth) and the birth fields (ratchet, old, new, record), and admission.accident(row, head_paths, rebaselines) runs W2309's birth checks for a birth row and none for a repair row. Three new tests pass beside the 19 existing ones; ruff clean. Uncommitted in the main tree beside stack b43 (W2309 + W2219 batch 42, in the gate), which supplies birth_checks; mutants, registries and a W2219 companion follow when b43 lands. Wiring into ratchet_pace and the first real row remain separate units.",
       "issued_at": "2026-11-06T10:55:40Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-07T01:34:38Z",
+      "last_worked": "2026-11-07T03:29:10Z",
       "ticks_blocked": 0,
       "completed": null
     },

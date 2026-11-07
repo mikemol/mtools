@@ -1085,4 +1085,8 @@ src/mikemol/hooks/birth_checks.py|any-record-warrants-the-entry|    if entry\.ge
 src/mikemol/hooks/birth_checks.py|no-entry-passes-the-record-check|        return entry_matches\(text, ratchet, old, new\)|        return None|def=warrant_matches
 src/mikemol/hooks/birth_checks.py|an-absent-file-is-read-as-json|    if text is None:|    if False:|def=_entries
 src/mikemol/hooks/codon_probe.py|a-rejection-on-standard-error-is-lost|    return done\.returncode, done\.stdout \+ done\.stderr|    return done.returncode, done.stdout|def=run_codon
+src/mikemol/hooks/admission.py|a-repair-row-is-asked-the-birth-questions|    if row\.kind != BIRTH:|    if False:|def=accident
+src/mikemol/hooks/admission.py|an-existing-ratchet-file-is-not-asked|    return birth_checks\.absent_at_head\(head_paths, row\.ratchet\) or birth_checks\.warrant_matches\(|    return None or birth_checks.warrant_matches(|def=accident
+src/mikemol/hooks/admission.py|the-pinned-record-is-not-passed-on|        rebaselines, row\.ratchet, row\.old, row\.new, row\.record|        rebaselines, row.ratchet, row.old, row.new, ""|def=accident
+src/mikemol/hooks/refusal_log.py|a-hung-curl-raises-past-the-gate|, runproc\.TimeoutExpired\)\)|))|def=log_fallthrough
 src/mikemol/hooks/vlogsink.py|a-failed-resolver-reads-as-success|    return done\.returncode, done\.stdout|    return 0, done.stdout|def=run_resolver

@@ -12,6 +12,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
         "//hooks:tests/test_refusal_log.py",
     ],
@@ -26,6 +27,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
         "//hooks:tests/test_refusal_log.py",
     ],
@@ -40,6 +42,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
         "//hooks:tests/test_refusal_log.py",
     ],
@@ -54,8 +57,25 @@ mutant_site(
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/flag_contract.py",
         "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_flag_contract.py",
         "//hooks:tests/test_refusal_log.py",
+    ],
+)
+
+mutant_site(
+    name = "declared_a-hung-curl-raises-past-the-gate",
+    dist = "hooks",
+    site = "src/mikemol/hooks/refusal_log.py::a-hung-curl-raises-past-the-gate",
+    tests = "tests/test_flag_contract.py tests/test_refusal_log.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/flag_contract.py",
+        "//hooks:src/mikemol/hooks/refusal_log.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_flag_contract.py",
+        "//hooks:tests/test_refusal_log.py",
+        "//hooks:mutants.regex",
     ],
 )
 
@@ -66,6 +86,7 @@ test_suite(
         ":_join",
         ":event_line",
         ":log_fallthrough",
+        ":declared_a-hung-curl-raises-past-the-gate",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

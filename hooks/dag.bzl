@@ -10,6 +10,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/admission.py": {
       "imports": [
+        "src/mikemol/hooks/birth_checks.py",
         "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
@@ -788,7 +789,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/refusal_log.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },

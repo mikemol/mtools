@@ -24,11 +24,12 @@ emitter somewhere dead; a destination passed per call makes that a plain argumen
 """
 
 import json
-import subprocess
 import sys
 from datetime import UTC, datetime
 from shutil import which
 from typing import NamedTuple
+
+from mikemol.hooks import runproc
 
 # The 2s cap bounds the damage a hung endpoint can do to a commit; the outer timeout is one
 # second longer so `curl`'s own deadline fires first and reports rather than being killed.
@@ -144,7 +145,7 @@ def log_fallthrough(
         curl = which("curl")
         if curl is None:
             return Emission(emitted=False, why=NO_CURL)
-        done = subprocess.run(
+        done = runproc.run(
             [
                 curl,
                 "-fsS",
@@ -156,14 +157,11 @@ def log_fallthrough(
                 "Content-Type: application/stream+json",
                 destination,
             ],
-            input=line,
-            text=True,
-            capture_output=True,
+            stdin_text=line,
             timeout=_RUN_TIMEOUT_S,
-            check=False,
         )
     except Exception as exc:
-        if not isinstance(exc, (OSError, ValueError, TypeError, subprocess.SubprocessError)):
+        if not isinstance(exc, (OSError, ValueError, TypeError, runproc.TimeoutExpired)):
             raise
         return Emission(emitted=False, why=f"{type(exc).__name__}: {exc}")
     if done.returncode != 0:
