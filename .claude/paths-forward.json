@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2337,
+  "counter": 2339,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -27183,21 +27183,23 @@
     {
       "symbol": "W1308",
       "title": "Move the pycheck family's NOT_CHECKED and NOT_RUN names from 3 to 7 with their readers",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1266"
       ],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2338"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Readers: the pycheck tests name the constants and hooks/bin/mikemol-hooks-preflight exits 3 for 'not checked' itself; update both with the value; regenerate the baseline. Waldo is W1310 and the gate's dists are part of it.",
-      "evidence": "2026-11-06T01:59:22Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific (the pycheck tests name the constants and the preflight script exits 3 for not checked itself); the files named exist. | 2026-11-06T03:46:01Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask; starting W2219 batch 25 (next runproc swap) with the gate empty. | 2026-11-07T11:40:35Z: 2026-11-07: its live hooks/bin/mikemol-hooks-preflight edit needs an empty gate; the W2333 stack (github-14's B1 BLOCK fix, a review block) takes the gate next. Resume when W2333 lands.",
+      "evidence": "2026-11-06T01:59:22Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific (the pycheck tests name the constants and the preflight script exits 3 for not checked itself); the files named exist. | 2026-11-06T03:46:01Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask; starting W2219 batch 25 (next runproc swap) with the gate empty. | 2026-11-07T11:40:35Z: 2026-11-07: its live hooks/bin/mikemol-hooks-preflight edit needs an empty gate; the W2333 stack (github-14's B1 BLOCK fix, a review block) takes the gate next. Resume when W2333 lands. | 2026-11-07T13:11:05Z: 2026-11-07: its live hooks/bin/mikemol-hooks-preflight edit needs an empty gate. Stack b52 (W2334 plus W2219 batch 50) holds it, in flight, and W2317 (the operator's cache priority) is next. Resume when W2334 lands. | 2026-11-07T14:14:42Z: 2026-11-07: its live hooks/bin/mikemol-hooks-preflight edit needs an empty gate and a paydown companion. I am running bazel test on the gate's shard 132 to settle W2338 (gate trust, github-14's first ask under the operator's cache priority), and the next hooks stack carries W2338's test fix with whole-tree mypy. Resume when W2338 is settled.",
       "issued_at": "2026-10-15T21:36:42Z",
       "minted_during": "interrupt",
       "caused_by": "W1307",
-      "last_worked": "2026-11-07T11:40:35Z",
+      "last_worked": "2026-11-07T14:14:42Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -27829,11 +27831,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Reuse the --update-many selector and reason forms and the advice rows; dry run prints one WOULD DROP line with its reason per card, --write drops all or none (one refusal stops every drop), residue gets each reason",
-      "evidence": "2026-11-06T01:58:22Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:08:50Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 25 holds the gate; no code this turn. | 2026-11-07T11:57:46Z: 2026-11-07: a pathsforward cli feature needing its own paydown companion and a gate slot. Stack b51 (W2333, W2335, W1316, W2219 batch 49) holds the gate and the W2334 fix is queued behind it. Resume when W2333 lands.",
+      "evidence": "2026-11-06T01:58:22Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:08:50Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 25 holds the gate; no code this turn. | 2026-11-07T11:57:46Z: 2026-11-07: a pathsforward cli feature needing its own paydown companion and a gate slot. Stack b51 (W2333, W2335, W1316, W2219 batch 49) holds the gate and the W2334 fix is queued behind it. Resume when W2333 lands. | 2026-11-07T13:28:47Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands.",
       "issued_at": "2026-10-16T02:07:41Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T11:57:46Z",
+      "last_worked": "2026-11-07T13:28:47Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -27877,11 +27879,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Define the citation (inbox/<name>.md in title, next step or evidence), look for the file in inbox/ and inbox/archive/, and for an answering letter by the reply naming convention; report one line per card; el-openglo's 13 letter cards are the fixture shape",
-      "evidence": "2026-11-06T01:57:51Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:49:01Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:23:48Z: 2026-11-07: a pathsforward cli feature that needs a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's 2026-11-07 priority (the gate's cache hit rates, W2319 W2134 W1985) and W2334 are ahead of it. Resume when W2333 lands.",
+      "evidence": "2026-11-06T01:57:51Z: 2026-11-06 released from the W1667 parking lot (a real fall): the next step was already specific; the files named exist. | 2026-11-06T04:49:01Z: 2026-11-05: released in ebbdf13 (release 4); taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:23:48Z: 2026-11-07: a pathsforward cli feature that needs a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's 2026-11-07 priority (the gate's cache hit rates, W2319 W2134 W1985) and W2334 are ahead of it. Resume when W2333 lands. | 2026-11-07T13:41:50Z: 2026-11-07: a pathsforward cli feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands.",
       "issued_at": "2026-10-16T02:07:42Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T12:23:48Z",
+      "last_worked": "2026-11-07T13:41:50Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -29035,11 +29037,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "decide where the writer finds the ledger (a MIKEMOL_RULINGS_LEDGER variable, else '<project_root>/.claude/rulings.jsonl' if present, else silent: no ledger means no print); then build pathsforward/src/.../rulinghint.py plus test_rulinghint.py (a planted ledger: newest first, a card symbol as needle, empty answer printed as 'no ruling touches this', absent ledger prints nothing), wire into the writer's --update and --add before the write, a mutant for newest-first and one for absent-ledger-silent, warrants; the commit-gate print is a second step in hooks",
-      "evidence": "2026-11-06T00:10:07Z: 2026-11-05 released from the W1667 parking lot (a real fall in the unmanifested ratchet): read transcriptstruct rulings.py (stage 9, the append-only ledger) and rulingq.py (stage 10, the query, newest first) so the files named are the ones that exist; the hook and the gate print are new code on top of them. | 2026-11-06T00:44:24Z: 2026-11-06: read transcriptstruct rulingq.py: the query is rulings(ledger: Path, pattern: str, limit: int | None = None) -> list[Ruling] (newest first, an empty list for no match); Ruling carries iri, said_at, line and the words. The pre-write hook is a thin caller: pathsforward must not take a runtime dependency on transcriptstruct (the W2289 sibling-edge problem), so it shells out to the pinned mikemol-transcriptstruct binary or reads the ledger file directly (append-only JSON lines, one entity per line, stage 9 format). Decide which at build time; reading the ledger JSON lines directly is the dependency-free option but re-derives the match rule (a case-insensitive regex over the needle), which is the residue to record. Not built. | 2026-11-06T01:20:07Z: 2026-11-06 READ rulingq.py in full: a ledger line is one JSON entity with '@id' (the IRI file#uuid), 'prov:generatedAtTime' {'@value'}, 'mtools:needle' (the matched text), 'mtools:line' and 'mtools:session'; rulings() lowercases nothing, compiles the pattern case-insensitively and searches the needle, sorting by the stamp, newest first. The ledger PATH is not defaulted in the module (the transcriptstruct cli takes it as an argument), so the pre-write hook needs the path from the repo's configuration or an environment variable: decide it with the first test (planted ledger). Dependency-free reading in pathsforward is ~25 lines (json lines, re.IGNORECASE on mtools:needle, sort by stamp desc), so the residue to record is that it re-derives that match rule beside rulingq. | 2026-11-06T05:07:50Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:42:34Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's cache priority (W2317, W2319, W2134, W1985) and W2334 are ahead of it per github-14. Resume when W2333 lands.",
+      "evidence": "2026-11-06T00:10:07Z: 2026-11-05 released from the W1667 parking lot (a real fall in the unmanifested ratchet): read transcriptstruct rulings.py (stage 9, the append-only ledger) and rulingq.py (stage 10, the query, newest first) so the files named are the ones that exist; the hook and the gate print are new code on top of them. | 2026-11-06T00:44:24Z: 2026-11-06: read transcriptstruct rulingq.py: the query is rulings(ledger: Path, pattern: str, limit: int | None = None) -> list[Ruling] (newest first, an empty list for no match); Ruling carries iri, said_at, line and the words. The pre-write hook is a thin caller: pathsforward must not take a runtime dependency on transcriptstruct (the W2289 sibling-edge problem), so it shells out to the pinned mikemol-transcriptstruct binary or reads the ledger file directly (append-only JSON lines, one entity per line, stage 9 format). Decide which at build time; reading the ledger JSON lines directly is the dependency-free option but re-derives the match rule (a case-insensitive regex over the needle), which is the residue to record. Not built. | 2026-11-06T01:20:07Z: 2026-11-06 READ rulingq.py in full: a ledger line is one JSON entity with '@id' (the IRI file#uuid), 'prov:generatedAtTime' {'@value'}, 'mtools:needle' (the matched text), 'mtools:line' and 'mtools:session'; rulings() lowercases nothing, compiles the pattern case-insensitively and searches the needle, sorting by the stamp, newest first. The ledger PATH is not defaulted in the module (the transcriptstruct cli takes it as an argument), so the pre-write hook needs the path from the repo's configuration or an environment variable: decide it with the first test (planted ledger). Dependency-free reading in pathsforward is ~25 lines (json lines, re.IGNORECASE on mtools:needle, sort by stamp desc), so the residue to record is that it re-derives that match rule beside rulingq. | 2026-11-06T05:07:50Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 26 holds the gate; no code this turn. | 2026-11-07T12:42:34Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b51 holds the gate, and the operator's cache priority (W2317, W2319, W2134, W1985) and W2334 are ahead of it per github-14. Resume when W2333 lands. | 2026-11-07T13:59:43Z: 2026-11-07: a pathsforward feature needing a gate slot and a paydown companion. Stack b52 holds the gate and the operator's cache priority (W2317) is next per github-14. Resume when W2334 lands.",
       "issued_at": "2026-10-16T18:32:38Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-07T12:42:34Z",
+      "last_worked": "2026-11-07T13:59:43Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -51678,7 +51680,7 @@
     {
       "symbol": "W2317",
       "title": "Apply per-site mutation targets to the hooks dist",
-      "status": "ready",
+      "status": "working",
       "enables": [],
       "touches": [
         "hooks"
@@ -51686,12 +51688,13 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Operator, 2026-11-06 (host line 145240): apply per-site targets to hooks now, since hooks reruns 18.5 percent of its cells on a median change. Work from W1884's design and the lean no-sandbox cut W1889 measured; hooks stays sandboxed until the one foreign read W1890 found (a substrate file) is declared or removed.",
-      "evidence": "2026-11-07T12:24:39Z: 2026-11-07: github-14 ruling, W2317 leads the cache work next after W2334. First step the shard-to-module map. ACCEPTANCE BAR: a one-module hooks edit, including the mutants.regex, warrants and sites changes every stack makes, re-runs only that module's mutants as shown by the gate's count; if those shared files stay inputs to every shard the split buys nothing, so each shard depends only on its own slice. --local_test_jobs read, not changed: gatejobs.py sizes it as round(cores - busy) from a 2 s /proc/stat window at gate start, floor 2, once per gate (W1100, W1776). | 2026-11-07T12:41:50Z: 2026-11-07 READ (no change): THE GATE'S SHARDS ARE FLAT. hooks/BUILD.bazel:485 declares mutants_sharded(shards = 215) and every shard stages the same data: pyproject.toml, mutants.regex, :.venv, and glob(src/**/*.py, tests/**/*.py), with MUTATE_SHARD = i/215 choosing its cells at run time. So a change to ANY source, test, mutants.regex or pyproject invalidates all 215 shards; there is no shard-to-module map in the targets. THE PER-MODULE TARGETS ALREADY EXIST: check_mutants/defs.bzl mutant_site and hooks/sites/ (generated by mutants_gen; one target per cell, data = the module, its tests and the import cone) but they are tagged manual (W1989), so they are not in //..., and the gate still runs the 215 flat shards. THE ACCEPTANCE BAR HAS A SECOND HOLE: mutant_site adds //hooks:pyproject.toml and //hooks:.venv_deps to EVERY site's data, so every W2219 batch (it edits pyproject.toml) would invalidate every site; whether mutants.regex reaches a site must be read from mutate_runner. STEPS: (1) measure, from the b51 BEP file, how many sites'/shards' inputs a one-module edit moves; (2) keep pyproject.toml out of the per-site data (the runner needs only the lint config slice) and give each site its own regex slice; (3) retire the flat :mutants for hooks and drop manual, after the 37 survivors and failures of W2203 to W2206 are cleared.",
+      "evidence": "2026-11-07T12:24:39Z: 2026-11-07: github-14 ruling, W2317 leads the cache work next after W2334. First step the shard-to-module map. ACCEPTANCE BAR: a one-module hooks edit, including the mutants.regex, warrants and sites changes every stack makes, re-runs only that module's mutants as shown by the gate's count; if those shared files stay inputs to every shard the split buys nothing, so each shard depends only on its own slice. --local_test_jobs read, not changed: gatejobs.py sizes it as round(cores - busy) from a 2 s /proc/stat window at gate start, floor 2, once per gate (W1100, W1776). | 2026-11-07T12:41:50Z: 2026-11-07 READ (no change): THE GATE'S SHARDS ARE FLAT. hooks/BUILD.bazel:485 declares mutants_sharded(shards = 215) and every shard stages the same data: pyproject.toml, mutants.regex, :.venv, and glob(src/**/*.py, tests/**/*.py), with MUTATE_SHARD = i/215 choosing its cells at run time. So a change to ANY source, test, mutants.regex or pyproject invalidates all 215 shards; there is no shard-to-module map in the targets. THE PER-MODULE TARGETS ALREADY EXIST: check_mutants/defs.bzl mutant_site and hooks/sites/ (generated by mutants_gen; one target per cell, data = the module, its tests and the import cone) but they are tagged manual (W1989), so they are not in //..., and the gate still runs the 215 flat shards. THE ACCEPTANCE BAR HAS A SECOND HOLE: mutant_site adds //hooks:pyproject.toml and //hooks:.venv_deps to EVERY site's data, so every W2219 batch (it edits pyproject.toml) would invalidate every site; whether mutants.regex reaches a site must be read from mutate_runner. STEPS: (1) measure, from the b51 BEP file, how many sites'/shards' inputs a one-module edit moves; (2) keep pyproject.toml out of the per-site data (the runner needs only the lint config slice) and give each site its own regex slice; (3) retire the flat :mutants for hooks and drop manual, after the 37 survivors and failures of W2203 to W2206 are cleared. | 2026-11-07T13:30:11Z: 2026-11-07 MEASURED the shard-to-module map (a scratchpad script over hooks/sites and the runner's own in_shard): the flat shards place a cell by FNV-1a of its site key mod 215, so a module's cells scatter. 201 modules, 2436 sites. One module's cells land in a median 9 and a mean 11.4 of the 215 shards (commit_kata 136 sites in 99 shards, ratchet_pace 65 in 56, traindrive 40 in 36). So even if each shard staged only its own cells' module cones, a one-module edit would still re-run about 11 shards of about 11 cells each, and a flat shard's data is the whole src and tests glob plus mutants.regex and pyproject, so ANY edit re-runs ALL 215 (b51: 178 of them). The per-site targets in hooks/sites (mutant_site) already carry a module-keyed cone, so a one-module edit re-runs only that module's sites (median 9 sites... mean about 12 of 2436), which is the acceptance bar; hash sharding cannot reach it. REMAINING HOLES in mutant_site: it stages //hooks:pyproject.toml and //hooks:.venv_deps into every site, and whether mutants.regex reaches a site is unread. NEXT: read mutate_runner for the config and regex inputs a site needs, then give each site only its slice. | 2026-11-07T13:30:23Z: 2026-11-07 CORRECTION to the entry above: the per-site figure is the MEAN of about 12 sites per module (2436 sites over 201 modules), not a median of 9. The median of 9 is the shards touched per module edit under the flat hash sharding. The commit_kata, ratchet_pace and traindrive figures stand. | 2026-11-07T13:58:59Z: 2026-11-07 READ of check_mutants/mutate_runner.py: the runner takes a declared defect from read_declared(grid.dist), which reads the dist's WHOLE mutants.regex (line 182, 1008) and filters it by the selected label, and it reads the config from the dist's own pyproject.toml copied into the temp tree. mutant_site stages pyproject.toml but NOT mutants.regex, so a per-site target for a DECLARED defect finds no regex file in its sandbox and answers 'names no site or defect' (line 1015). That is a candidate for part of the 37 failures of W2203 to W2206, to confirm. DESIGN FOR THE BAR: (1) mutants_gen writes, beside each declared defect's site, a one-line regex slice file holding only that line, and the site stages that file and no other regex data, so a regex edit moves only the sites whose line changed. (2) The runner takes the slice path from an env var instead of the dist's mutants.regex. (3) The pyproject.toml each site stages is a generated slice too (the pytest and ruff config it needs, not the 49-entry ruff exemption table), so a W2219 batch does not touch any site. Neither (2) nor (3) is built. | 2026-11-07T14:11:00Z: 2026-11-07 RAN, not read (bazel test of one def-site and one declared-defect site, invocation 3339309a-bed2-4b24-a7d9-b31dcb677e7b): THE MISSING-SLICE CAUSE IS RULED OUT, and my earlier statement that mutant_site does not stage mutants.regex was WRONG: the generated declared-defect site stages //hooks:mutants.regex WHOLE (hooks/sites/.../new_dist_cli/BUILD.bazel), so the runner finds its declared defect. The def-site (scaffold) is KILLED and the site mechanism works. THE REAL HOLE IS THE OPPOSITE: whole mutants.regex staged into every declared site means every regex edit (every stack adds lines) invalidates every declared site, so the regex slice is still needed, but for caching and not for correctness. THE DECLARED SITE existing-directory-admitted SURVIVED, locally in site mode, with the extra test file test_new_dist.py, and in flat shard 132: a REAL SURVIVOR, because test_a_refusal_leaves_the_tree_untouched never created an existing directory (its repo has none, the pathwalk case is refused by MODULE.bazel). Fixed in the tree: the test now makes a taken directory and expects it refused, and the declared defect is KILLED. OPEN, serious: the gate's b52 BEP records //hooks:mutants_132 PASSED while the same shard run locally exits 1 on that survivor, so the gate and a local run disagreed; unexplained (environment? the shard's declared section?), to settle before the shards can be trusted or retired. | 2026-11-07T14:12:07Z: 2026-11-07 .venv_deps ANSWER (github-14's question), by query: bazel query somepath(//hooks:.venv_deps, //hooks:pyproject.toml) is EMPTY and deps(//hooks:.venv_deps) intersect //hooks:* is only itself. It is built from the @hooks_dev hub (uv.lock), so it moves only when the third-party dependency set moves, and no source, test, regex or pyproject edit touches it: not a hole. THE REAL REMAINING INPUTS of a declared site are two: the whole //hooks:mutants.regex, and //hooks:pyproject.toml (the runner takes dist = the config path's parent and the config's name for pytest, argv[2], so a slice has to keep that directory shape). NEXT UNIT, unbuilt: (1) mutants_gen emits a one-line regex slice file per declared defect and the runner reads it from MUTATE_REGEX when set, falling back to the dist's mutants.regex, so a regex edit moves only the sites whose line changed. (2) the same for the config: MUTATE_CONFIG names a generated slice (the pytest section only) and the runner stages it as the temp tree's pyproject name. Both are changes to the shared check_mutants/mutate_runner.py (every dist's runner), to land with a fallback so no other dist changes. The flat shards stay until the gate's count meets the bar.",
       "issued_at": "2026-11-06T21:18:24Z",
       "minted_during": "interrupt",
       "caused_by": "W1888",
-      "last_worked": "2026-11-07T12:41:50Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-07T14:12:07Z",
+      "ticks_blocked": 0,
+      "completed": null
     },
     {
       "symbol": "W2318",
@@ -51722,11 +51725,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Emit the rerun fraction per dist (share of mutation cells a median source change reruns: hooks 18.5, pathsforward 100, transcriptstruct 91, witness 93, fence 76 at the 2026-10-24 measurement) as a counter through the telemetry store, so the falling rate is the visible measure of the atomization.",
-      "evidence": "2026-11-07T12:20:17Z: 2026-11-07 MEASURED from BuildBuddy GetInvocation 40028c27-548a-4427-801c-b69fd1e4c973 (stack b50's gate, bazel test //..., output base 8eaf9072, flags in optionsParsed): wall 4181 s, execution phase 4175 s, ANALYSIS PHASE 15.6 s (0.4 pct). ACTION CACHE: 139901 hits, 1061 misses (99.24 pct hit), miss reasons DIFFERENT_FILES 1060 and UNCONDITIONAL_EXECUTION 1; 252090 actions created, 542 executed. TEST CACHE: TestRunner 538 executed of 1704 created (31.6 pct re-ran, 68.4 pct hit), CPU 12825 s user + 848 s sys. cumulative numAnalyses 1, numBuilds 1: the bazel server was FRESH for this invocation, so the in-memory analysis cache was cold (skyframe 832539 nodes, 138704 CONFIGURED_TARGET built, 105396 PyCompile and 122285 Symlink actions created). Runner counts: linux-sandbox 735, disk cache hit 40, remote cache hit 7. READING: the dominant cost is 538 test executions, not analysis; the misses are input-file changes (DIFFERENT_FILES), so the miss-naming tool must say which input file. Script: the inv_metrics reader in the session scratchpad; to be committed as a tracked tool under W2319. | 2026-11-07T12:23:08Z: 2026-11-07 second measurement (stack b51's gate, IN FLIGHT, partial: 949 test results so far, from the gate's build_event_json_file because BuildBuddy keeps only 16 events per invocation with no testResult): 179 tests executed, 178 are //hooks:mutants_N shards, 13011 s summed, over the 3 local test slots = 4338 s, which matches b50's 4181 s wall; the longest single test is 325 s (mutants_157). So the gate wall is THROUGHPUT-bound by the number of re-run mutation shards, not by a critical path. Skymeld: actionsExecutionStartInMs 4871 is below analysisPhaseTimeInMs 15646, so analysis and execution overlap and the 15.6 s is not separable. NEXT: map shard to module (mutants_gen) and count shards outside the changed closure; second invocation for the warm-server comparison.",
+      "evidence": "2026-11-07T12:20:17Z: 2026-11-07 MEASURED from BuildBuddy GetInvocation 40028c27-548a-4427-801c-b69fd1e4c973 (stack b50's gate, bazel test //..., output base 8eaf9072, flags in optionsParsed): wall 4181 s, execution phase 4175 s, ANALYSIS PHASE 15.6 s (0.4 pct). ACTION CACHE: 139901 hits, 1061 misses (99.24 pct hit), miss reasons DIFFERENT_FILES 1060 and UNCONDITIONAL_EXECUTION 1; 252090 actions created, 542 executed. TEST CACHE: TestRunner 538 executed of 1704 created (31.6 pct re-ran, 68.4 pct hit), CPU 12825 s user + 848 s sys. cumulative numAnalyses 1, numBuilds 1: the bazel server was FRESH for this invocation, so the in-memory analysis cache was cold (skyframe 832539 nodes, 138704 CONFIGURED_TARGET built, 105396 PyCompile and 122285 Symlink actions created). Runner counts: linux-sandbox 735, disk cache hit 40, remote cache hit 7. READING: the dominant cost is 538 test executions, not analysis; the misses are input-file changes (DIFFERENT_FILES), so the miss-naming tool must say which input file. Script: the inv_metrics reader in the session scratchpad; to be committed as a tracked tool under W2319. | 2026-11-07T12:23:08Z: 2026-11-07 second measurement (stack b51's gate, IN FLIGHT, partial: 949 test results so far, from the gate's build_event_json_file because BuildBuddy keeps only 16 events per invocation with no testResult): 179 tests executed, 178 are //hooks:mutants_N shards, 13011 s summed, over the 3 local test slots = 4338 s, which matches b50's 4181 s wall; the longest single test is 325 s (mutants_157). So the gate wall is THROUGHPUT-bound by the number of re-run mutation shards, not by a critical path. Skymeld: actionsExecutionStartInMs 4871 is below analysisPhaseTimeInMs 15646, so analysis and execution overlap and the 15.6 s is not separable. NEXT: map shard to module (mutants_gen) and count shards outside the changed closure; second invocation for the warm-server comparison. | 2026-11-07T14:04:43Z: 2026-11-07 third gate reading, b52, invocation 152959f0-8a8d-49e4-a08f-c35b8a42a971: wall 2748 s at 13 slots, TestRunner 573 executed of 1705 (33.6 pct re-ran), CPU 15322 s user + 1333 s sys, analysis phase 9.1 s, execution started at 2.7 s, numAnalyses 1 numBuilds 1 AGAIN (third cold server in a row). Series so far: b50 538 re-ran at 3 slots 4181 s, b51 724 at 14 slots 2819 s, b52 573 at 13 slots 2748 s.",
       "issued_at": "2026-11-06T21:19:12Z",
       "minted_during": "interrupt",
       "caused_by": "W1888",
-      "last_worked": "2026-11-07T12:23:08Z",
+      "last_worked": "2026-11-07T14:04:43Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -52038,7 +52041,7 @@
     {
       "symbol": "W2334",
       "title": "Clause R: hold wheels by blob, judge shas per pin, require each named wheel to exist, read bytes (github-14 BLOCK of a92d93a1, D1 to D4)",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -52046,14 +52049,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": null,
+      "evidence": "2026-11-07T14:04:42Z: 2026-11-07: landed as 04a83d9e (stack b52, gate invocation 152959f0-8a8d-49e4-a08f-c35b8a42a971) with W2219 batch 50 as 7517bb38. D1 to D4 and N-A. Awaiting github-14's cold review. NOT DONE: N-B, N-C, N-E, N-F of the train review and N-b to N-f of the W2332 review.",
       "issued_at": "2026-11-07T11:47:45Z",
       "minted_during": "interrupt",
       "caused_by": "W2332",
-      "last_worked": "2026-11-07T12:52:52Z",
+      "last_worked": "2026-11-07T14:04:42Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261107T140442Z"
     },
     {
       "symbol": "W2335",
@@ -52116,6 +52119,47 @@
       "last_worked": "2026-11-07T12:58:05Z",
       "ticks_blocked": 0,
       "completed": null
+    },
+    {
+      "symbol": "W2338",
+      "title": "Settle why the gate kills declared defect existing-directory-admitted in shard 132 and a local run of the same shard lets it survive",
+      "status": "working",
+      "enables": [
+        "W2317"
+      ],
+      "touches": [
+        "gate",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-07T14:12:53Z: 2026-11-07 FACTS: the gate's own log (the output base of the staged gate, testlogs/hooks/mutants_132/test.log, b52 tip) reads 'src/mikemol/hooks/new_dist_cli.py::existing-directory-admitted -> killed' while the same shard (MUTATE_SHARD=132/215) run locally on the same tree before my test fix reads 'survived', three times, and as a site with and without tests/test_new_dist.py. The tree under test is the same files, so the difference is the environment: bazel's sandbox (TEST_TMPDIR, HOME, PATH, no repo checkout beside it) against a local shell. The local survival is explained (the test creates no existing directory, now fixed and KILLED locally). NOT EXPLAINED: what kills it in the gate. CANDIDATE: with the check removed, scaffold on an existing name continues and in the sandbox raises or returns a different code than locally. NEXT: read the gate's test.log for the failing test name with the mutant planted (MUTATE debug mode prints it), or replay under the sandbox with the same environment. | 2026-11-07T14:19:30Z: 2026-11-07 CAUSE FOUND AND WITNESSED. (1) NOT a cache hit: b52's //hooks:mutants_132 was a fresh linux-sandbox execution, 184.8 s, started 13:26Z. (2) THE WITNESS: with the OLD test (no taken directory) restored, bazel test //hooks:mutants_132 in the main workspace (the gate path) reads existing-directory-admitted -> KILLED and exits 0, in a 16.5 s run, while MUTATE_SHARD=132/215 outside bazel reads SURVIVED three times: the environment decides, not the test or the cache. (3) THE MECHANISM, by the runner's own code (check_mutants/mutate_runner.py selected_tests and chosen_tests): with a readable graph.json a mutant runs ONLY the test files in its module's import cone; with none it runs the WHOLE tests directory ('no graph, no narrowing'). The flat //hooks:mutants_N shards stage pyproject.toml, mutants.regex, .venv and the src/tests glob but NOT graph.json, so IN THE GATE every mutant runs the whole 1100-test suite (which is why a shard takes about 185 s of CPU), and a local run, which finds graph.json beside the dist, runs the narrowed list. A mutant killed only by a test OUTSIDE its import cone (a subprocess or entry-point test) is KILLED in the gate and SURVIVES locally and in a per-site target (whose MUTATE_TESTS is the graph's list). (4) THE CLASS: every mutant, def-site or declared, whose killing test is outside the import cone. The gate's green is STRONGER than a local one, not weaker, so the counted greens are not unproven; what is unproven is the per-site targets' equivalence with the shards, and the bar needs it. NOT COUNTED: how many of the 2436 sites are in the class. MEASURE: run every site once with the narrowed list and once with MUTATE_TESTS blank, diff the verdicts. The test fix (a taken directory, expecting a refusal) is restored in the tree.",
+      "issued_at": "2026-11-07T14:12:44Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2317",
+      "last_worked": "2026-11-07T14:19:30Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2339",
+      "title": "Clause R: one arriving wheel for several moved pins, a deleted wheel named by untouched texts, two surviving mutants (github-14 BLOCK of 04a83d9e, B1 to B3)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-07T14:27:50Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2334",
+      "last_worked": null,
+      "ticks_blocked": 0
     }
   ],
   "residue": [

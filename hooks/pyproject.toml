@@ -403,7 +403,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "start-process-with-no-shell",
     "suspicious-subprocess-import",
     "subprocess-without-shell-equals-true",
-    "boolean-default-value-positional-argument",
     "boolean-type-hint-positional-argument",
 ]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).

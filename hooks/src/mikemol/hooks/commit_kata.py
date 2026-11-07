@@ -617,7 +617,7 @@ def verdict(root: Path, before: str, after: str, rc: int, run: Runner = run_git)
 
 
 def commit(
-    root: Path, request: Request, out: TextIO, run: Runner = run_git, isolated: bool = False
+    root: Path, request: Request, out: TextIO, run: Runner = run_git, *, isolated: bool = False
 ) -> int:
     """Commit the request's paths, print git's and the hook's output, then the verdict.
 
