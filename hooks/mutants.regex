@@ -610,9 +610,9 @@ src/mikemol/hooks/stackfreeze.py|items-copy-not-forgotten|        Path\(named\)\
 src/mikemol/hooks/stackbuildfiles.py|glob-paths-counted-as-named|    text = re\.sub\(r"\\bglob\\s\*\\\(\[\^\)\]\*\\\)", "", text\)|    text = text|def=named_sources
 src/mikemol/hooks/traindrive.py|green-tip-bisected-anyway|        if self\.green\(last\):|        if False:|def=_Round.first_bad
 src/mikemol/hooks/traindrive.py|empty-prefix-lands-something|    if not groups:|    if False:|def=_land_prefix
-src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(refused\)|        pass|def=drive
+src/mikemol/hooks/traindrive.py|refused-stack-gets-no-verdict|        verdicts\.append\(|        pass; (|def=drive
 src/mikemol/hooks/traindrive.py|unbuilt-stack-reports-success|    code = \(stack\.failed\.returncode if stack\.failed else 0\) or 1|    code = 0|def=_unbuilt
-src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|            root, remaining\[: len\(remaining\) if bad is None else bad\], rnd, before|            root, remaining[: len(remaining)], rnd, before|def=drive
+src/mikemol/hooks/traindrive.py|bad-stack-lands-with-the-rest|batch\[: len\(batch\) if bad is None else bad\]|batch[: len(batch)]|def=drive
 src/mikemol/hooks/traindrive.py|withdraw-code-bisected-as-red|    if gate\.returncode != WITHDRAW_RC:|    if True:|def=_stopped
 src/mikemol/hooks/traindrive.py|withdrawn-leader-never-told|    return \[_withdrawn\(groups\[0\], gate, before, name\)\]|    return []|def=_stopped
 src/mikemol/hooks/traindrive.py|withdrawn-leader-told-after-it-has-a-verdict|    if remaining\[0\]\.key != groups\[0\]\.key:|    if False:|def=_stopped
@@ -1121,3 +1121,10 @@ src/mikemol/hooks/repin_admission.py|an-unnamed-wheel-is-admitted|        if add
 src/mikemol/hooks/ratchet_pace.py|a-path-frozen-twice-at-other-bytes-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if not _mode_clear(file, head):|def=_repin_sha
 src/mikemol/hooks/ratchet_pace.py|a-repin-leaves-no-mark|        return None if sha is None else f"\{root\.name\}/repin-\{sha\}"|        return None|def=admitted_ident
 src/mikemol/hooks/ratchet_pace.py|a-link-or-a-flipped-mode-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if held.setdefault(file.path, file.blob) != file.blob:|def=_repin_sha
+src/mikemol/hooks/ratchet_pace.py|a-binary-ratchet-file-raises|    except \(OSError, UnicodeDecodeError\):|    except OSError:|def=entries_in
+src/mikemol/hooks/ratchet_pace.py|a-refused-group-needs-no-admission|    return stack_reason\(root, paths, now or datetime\.now\(UTC\), pace\) is not None|    return False|def=needs_admission
+src/mikemol/hooks/ratchet_pace.py|a-paid-group-needs-an-admission|    return stack_reason\(root, paths, now or datetime\.now\(UTC\), pace\) is not None|    return True|def=needs_admission
+src/mikemol/hooks/ratchet_pace.py|the-landing-refusal-drops-its-birth-reason|        return f"\{reason\}; the birth row \{row\.ident\(\)\} did not clear: \{problem\}"|        return reason|def=landing_refusal
+src/mikemol/hooks/traindrive.py|an-admission-group-rides-the-round|        if at and seams\.needs_admission\(group\.items\):|        if False:|def=_round_of
+src/mikemol/hooks/traindrive.py|the-held-groups-are-lost|            return list\(remaining\[:at\]\), list\(remaining\[at:\]\)|            return list(remaining[:at]), []|def=_round_of
+src/mikemol/hooks/new_dist_cli.py|the-printed-warrants-step-names-the-dist-in-capitals|--write \{name\} smoke=smoke|--write {name.upper()} smoke=smoke|def=scaffold

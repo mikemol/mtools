@@ -2313,7 +2313,8 @@ GRAPH = {
     },
     "tests/test_githook_pre_push.py": {
       "imports": [
-        "src/mikemol/hooks/githook_pre_push.py"
+        "src/mikemol/hooks/githook_pre_push.py",
+        "src/mikemol/hooks/runproc.py"
       ],
       "reads": [],
       "typing_only": []
@@ -3468,6 +3469,19 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_train_stale_head.py": {
+      "imports": [
+        "src/mikemol/hooks/admission.py",
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/ratchet_pace.py",
+        "src/mikemol/hooks/stackrun.py",
+        "src/mikemol/hooks/stacksnap.py",
+        "src/mikemol/hooks/traindrive.py",
+        "src/mikemol/hooks/trainjoin.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_train_tips.py": {
       "imports": [
         "src/mikemol/hooks/commit_kata.py",
@@ -3490,7 +3504,8 @@ GRAPH = {
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/traindrive.py",
         "src/mikemol/hooks/trainjoin.py",
-        "src/mikemol/hooks/trainround.py"
+        "src/mikemol/hooks/trainround.py",
+        "src/mikemol/hooks/traintel.py"
       ],
       "reads": [],
       "typing_only": []

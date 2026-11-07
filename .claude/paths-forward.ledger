@@ -6188,3 +6188,21 @@
 2026-11-07T10:19:11Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T10:19:11Z  status W2331 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T10:20:57Z  status W2332 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T10:21:38Z  status W1008 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T10:21:38Z  status W2060 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T10:22:24Z  status W1259 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T10:34:56Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T10:52:40Z  status W1008 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T10:53:10Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:05:20Z  status W1267 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:05:47Z  status W1268 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:23:27Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:23:59Z  status W2289 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:36:16Z  status W1304 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:39:58Z  interrupt W2333 minted    -         "Train round ends before a group needing an admission, judged alone on landed HEAD (github-14 BLOCK of eca6bf2b, B1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2331
+2026-11-07T11:40:35Z  status W1308 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:40:36Z  status W2333 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:47:45Z  interrupt W2334 minted    -         "Clause R: hold wheels by blob, judge shas per pin, require each named wheel to exist, read bytes (github-14 BLOCK of a92d93a1, D1 to D4)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2332
+2026-11-07T11:50:34Z  interrupt W2335 minted    -         "Tests a, b, c of the stale-HEAD train fix through drive on a real repository (github-14: a real round against a real landed HEAD)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2333
+2026-11-07T11:51:46Z  status W2335 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:52:22Z  status W1316 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

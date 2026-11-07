@@ -376,8 +376,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # a path this module builds as `<git toplevel>/.githooks/pre-push.local` and runs only when
 # executable; the arguments are git's own pre-push argv. Never through a shell.
 "src/mikemol/hooks/githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-# Its witnesses build decoy repositories with `git init` under tmp_path: the same reason.
-"tests/test_githook_pre_push.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE CENSUS NAMES ITS FILES FROM GIT'S INDEX (W794; operator: inputs named, never globbed), so
 # running `git ls-files` IS the module's responsibility: the argv is git's own resolved path, a

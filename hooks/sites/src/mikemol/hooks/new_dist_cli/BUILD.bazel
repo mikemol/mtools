@@ -91,6 +91,21 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_the-printed-warrants-step-names-the-dist-in-capitals",
+    dist = "hooks",
+    site = "src/mikemol/hooks/new_dist_cli.py::the-printed-warrants-step-names-the-dist-in-capitals",
+    tests = "tests/test_new_dist_cli.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/new_dist.py",
+        "//hooks:src/mikemol/hooks/new_dist_cli.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_new_dist_cli.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -100,6 +115,7 @@ test_suite(
         ":declared_wrong-operand-count-admitted",
         ":declared_a-failed-uv-lock-scaffolds-anyway",
         ":declared_uv-lock-runs-outside-the-new-directory",
+        ":declared_the-printed-warrants-step-names-the-dist-in-capitals",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

@@ -18709,3 +18709,54 @@
   claim  = {N2: only a regular file with the mode HEAD gave it belongs to a repin.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_link_or_a_flipped_execute_bit_in_a_repin_stack_is_refused},
 }
+
+@misc{hooks-traindrive-group-needing-an-admission-is-judged-on-the-head-the-groups-before-it-landed,
+  section = {traindrive},
+  title  = {B1: the round ends before group 2, so its judgement reads HEAD at 'card 1', not the start},
+  claim  = {B1: the round ends before group 2, so its judgement reads HEAD at 'card 1', not the
+            start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_group_needing_an_admission_is_judged_on_the_head_the_groups_before_it_landed},
+}
+
+@misc{hooks-traindrive-with-no-group-needing-an-admission-the-train-is-one-round,
+  section = {traindrive},
+  title  = {The break costs a round only where a group needs it},
+  claim  = {The break costs a round only where a group needs it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_with_no_group_needing_an_admission_the_train_is_one_round},
+}
+
+@misc{hooks-train-stale-head-birth-does-not-land-over-a-file-the-group-before-it-landed,
+  section = {train_stale_head},
+  title  = {a: group 1 lands born.json; the birth is judged on that HEAD and refused, not landed},
+  claim  = {a: group 1 lands born.json; the birth is judged on that HEAD and refused, not landed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_stale_head.py -k test_a_birth_does_not_land_over_a_file_the_group_before_it_landed},
+}
+
+@misc{hooks-train-stale-head-repin-does-not-undo-the-line-the-group-before-it-landed,
+  section = {train_stale_head},
+  title  = {b: a repin frozen from the old file would drop group 1's line; judged on HEAD, it refuses},
+  claim  = {b: a repin frozen from the old file would drop group 1's line; judged on HEAD, it
+            refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_stale_head.py -k test_a_repin_does_not_undo_the_line_the_group_before_it_landed},
+}
+
+@misc{hooks-train-stale-head-clean-repin-of-the-text-the-group-before-it-landed-is-admitted,
+  section = {train_stale_head},
+  title  = {c: a repin frozen on group 1's text is a clean repin of the landed HEAD, not a refusal},
+  claim  = {c: a repin frozen on group 1's text is a clean repin of the landed HEAD, not a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_stale_head.py -k test_a_clean_repin_of_the_text_the_group_before_it_landed_is_admitted},
+}
+
+@misc{hooks-new-dist-cli-printed-gen-warrants-step-is-the-form-the-generator-accepts,
+  section = {new_dist_cli},
+  title  = {W1316: the dist name lowercase, module=section, and a --title for the new section},
+  claim  = {W1316: the dist name lowercase, module=section, and a --title for the new section.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_new_dist_cli.py -k test_the_printed_gen_warrants_step_is_the_form_the_generator_accepts},
+}
+
+@misc{hooks-ratchet-pace-wired-group-needs-an-admission-exactly-when-the-pace-refuses-it,
+  section = {ratchet_pace},
+  title  = {B1: the train ends its round before a group the pace refuses; a paydown needs none},
+  claim  = {B1: the train ends its round before a group the pace refuses; a paydown needs none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_group_needs_an_admission_exactly_when_the_pace_refuses_it},
+}

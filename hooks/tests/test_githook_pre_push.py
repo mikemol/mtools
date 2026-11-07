@@ -12,11 +12,11 @@ from __future__ import annotations
 import io
 import os
 import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
 
+from mikemol.hooks import runproc
 from mikemol.hooks.githook_pre_push import main
 
 _REPO_STUB = Path(__file__).parent.parent.parent / ".githooks" / "pre-push"
@@ -43,7 +43,7 @@ def _decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     if git is None:
         pytest.skip("git is not installed")
     repo = tmp_path / "decoy"
-    subprocess.run([git, "init", "--quiet", str(repo)], check=True)
+    assert runproc.run([git, "init", "--quiet", str(repo)]).returncode == 0
     (repo / ".githooks").mkdir()
     monkeypatch.chdir(repo)
     return repo
@@ -111,7 +111,7 @@ def test_an_operation_in_flight_refuses_before_the_local_hook_runs(
 _LAUNCHER_EXIT = 7
 
 
-def _run_stub(repo: Path, stdin: bytes) -> subprocess.CompletedProcess[bytes]:
+def _run_stub(repo: Path, stdin: bytes) -> runproc.Result:
     """Run this repository's `.githooks/pre-push` stub from inside a decoy repository.
 
     Returns:
@@ -120,9 +120,7 @@ def _run_stub(repo: Path, stdin: bytes) -> subprocess.CompletedProcess[bytes]:
     """
     bash = shutil.which("bash")
     assert bash is not None
-    return subprocess.run(
-        [bash, str(_REPO_STUB), *_ARGS], input=stdin, cwd=repo, capture_output=True, check=False
-    )
+    return runproc.run([bash, str(_REPO_STUB), *_ARGS], cwd=repo, stdin_text=stdin.decode())
 
 
 def test_the_repo_stub_hands_the_launcher_its_arguments_and_stdin(
@@ -159,5 +157,5 @@ def test_the_repo_stub_refuses_when_its_launcher_is_absent(
     repo = _decoy(tmp_path, monkeypatch)
     done = _run_stub(repo, _REFS)
     assert done.returncode == 1
-    assert b"mikemol-githook-pre-push is missing or not executable" in done.stderr
-    assert b"push refused" in done.stderr
+    assert "mikemol-githook-pre-push is missing or not executable" in done.stderr
+    assert "push refused" in done.stderr
