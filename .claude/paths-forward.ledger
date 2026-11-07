@@ -6278,3 +6278,26 @@
 2026-11-07T18:30:15Z  interrupt W2344 minted    -         "Clause R README token counted as a pin move: moved counts pin texts only and a named wheel must carry the sha (github-14 BLOCK of ebfd1f6e, B1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2342
 2026-11-07T18:30:15Z  interrupt W2345 minted    -         "Clause R notes from the ebfd1f6e review: N1 surviving undeclared mutants and a wired catch-up test, N2 the lock-name test agrees with the loose one, N3 a pre-existing disagreement refuses other dists, N4 rollback passes as catch-up and the stale-digest limit returns to the header, N5 linux-sources pins by git URL"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2342
 2026-11-07T18:30:52Z  status W2344 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:31:32Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T18:43:10Z  status W1939 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:00:52Z  status W2343 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:01:58Z  status W1944 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:27:09Z  status W1949 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:38:04Z  status W1960 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:52:55Z  status W1336 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:52:55Z  status W1944 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:52:55Z  status W1949 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:52:55Z  status W1960 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T19:52:55Z  status W2344 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T20:07:07Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T20:26:02Z  status W1944 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T20:48:03Z  status W1949 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:06:51Z  status W1960 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:08:49Z  status W1963 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:13:10Z  status W1975 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:16:14Z  status W1978 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:18:07Z  status W1984 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:27:27Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:27:27Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:27:27Z  status W2289 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T21:27:27Z  status W2332 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
