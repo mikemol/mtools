@@ -234,3 +234,4 @@ verdict	A checker verdict is clean, flagged or could-not-run, and the last two n
 warrant_crosscheck	The prune cross-check
 build_failure	The build-failure hook's log reader
 admission	A pinned row admits exactly one reviewed change
+repin-admission	Clause R: a repin changes only the vendored sha

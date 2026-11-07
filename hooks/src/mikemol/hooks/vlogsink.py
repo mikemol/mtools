@@ -24,10 +24,11 @@ CONSUMED BY: the `mikemol-vlog` command (W1169).
 """
 
 import http.client
-import subprocess
 import urllib.parse
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
+
+from mikemol.hooks import runproc
 
 INGEST_PATH = "/insert/jsonline"
 CONTENT_TYPE = "application/stream+json"
@@ -122,7 +123,7 @@ def run_resolver(argv: Sequence[str]) -> tuple[int, str]:
 
     """
     try:
-        done = subprocess.run(list(argv), capture_output=True, text=True, check=False)
+        done = runproc.run(list(argv))
     except OSError as exc:
         return 127, f"{type(exc).__name__}: {exc}"
     return done.returncode, done.stdout

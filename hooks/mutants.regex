@@ -1072,3 +1072,11 @@ src/mikemol/hooks/runproc.py|run-ignores-the-timeout|            timeout=timeout
 src/mikemol/hooks/runproc.py|start-merges-the-streams|        stderr=subprocess\.PIPE,|        stderr=subprocess.STDOUT,|def=start
 src/mikemol/hooks/runproc.py|start-ignores-the-directory|        cwd=cwd,|        cwd=None,|def=start
 src/mikemol/hooks/runproc.py|kill-leaves-the-child|            self\._process\.kill\(\)|            pass|def=Handle.kill
+src/mikemol/hooks/repin_admission.py|a-file-a-repin-does-not-own-is-owned|    return path in TEXT_FILES or _WHEEL\.fullmatch\(path\) is not None|    return True|def=_owned
+src/mikemol/hooks/repin_admission.py|a-changed-line-beyond-the-sha-passes|    if _mask\(before\) != _mask\(after\):|    if False:|def=_file_reason
+src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(shas\) != 1:|    if len(shas) > 1:|def=admits
+src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|            shas\.add\(named\.group\("sha"\)\)|            pass|def=admits
+src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", line\)|        return line|def=_mask_line
+src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\("S", line\)\)\)|        return line|def=_mask_line
+src/mikemol/hooks/repin_admission.py|every-lock-package-is-a-mikemol-package|            inside = "mikemol" in line|            inside = True|def=_mikemol_lines
+src/mikemol/hooks/vlogsink.py|a-failed-resolver-reads-as-success|    return done\.returncode, done\.stdout|    return 0, done.stdout|def=run_resolver

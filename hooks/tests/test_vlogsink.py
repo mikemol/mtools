@@ -12,6 +12,7 @@ each report not-taken with a reason, or "taken" has stopped meaning anything.
 from __future__ import annotations
 
 import http.server
+import sys
 import threading
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, cast
@@ -24,6 +25,8 @@ if TYPE_CHECKING:
 _ACCEPTED = 204
 _REFUSED = 503
 _LINES = ['{"_msg": "a"}', '{"_msg": "b"}']
+_NOT_FOUND = 127
+_FAILED = 3
 
 
 class _Server(http.server.ThreadingHTTPServer):
@@ -154,3 +157,12 @@ def test_resolve_is_none_for_no_template_a_failing_resolver_or_an_empty_answer()
     assert not seen
     assert vlogsink.resolve("x", ["q", "{name}"], _resolver(1, "http://store", seen)) is None
     assert vlogsink.resolve("x", ["q", "{name}"], _resolver(0, "  \n", seen)) is None
+
+
+def test_the_resolver_runner_keeps_status_and_stdout_and_says_127_for_no_program() -> None:
+    """The runner's two answers: the child's exit and output, and 127 where nothing starts."""
+    assert vlogsink.run_resolver([sys.executable, "-c", "print('base')"]) == (0, "base\n")
+    failed, _ = vlogsink.run_resolver([sys.executable, "-c", "raise SystemExit(3)"])
+    assert failed == _FAILED
+    missing, _ = vlogsink.run_resolver(["/no/such/resolver-program"])
+    assert missing == _NOT_FOUND

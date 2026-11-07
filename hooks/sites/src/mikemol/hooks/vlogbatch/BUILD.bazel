@@ -10,6 +10,7 @@ mutant_site(
     tests = "tests/test_vlogbatch.py tests/test_vlogcli.py tests/test_vlogcli_follow.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:src/mikemol/hooks/vlogbatch.py",
         "//hooks:src/mikemol/hooks/vlogcli.py",
         "//hooks:src/mikemol/hooks/vlogconfig.py",
@@ -34,6 +35,7 @@ mutant_site(
     tests = "tests/test_vlogbatch.py tests/test_vlogcli.py tests/test_vlogcli_follow.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:src/mikemol/hooks/vlogbatch.py",
         "//hooks:src/mikemol/hooks/vlogcli.py",
         "//hooks:src/mikemol/hooks/vlogconfig.py",
@@ -58,6 +60,7 @@ mutant_site(
     tests = "tests/test_vlogbatch.py tests/test_vlogcli.py tests/test_vlogcli_follow.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:src/mikemol/hooks/vlogbatch.py",
         "//hooks:src/mikemol/hooks/vlogcli.py",
         "//hooks:src/mikemol/hooks/vlogconfig.py",
@@ -82,6 +85,7 @@ mutant_site(
     tests = "tests/test_vlogbatch.py tests/test_vlogcli.py tests/test_vlogcli_follow.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:src/mikemol/hooks/vlogbatch.py",
         "//hooks:src/mikemol/hooks/vlogcli.py",
         "//hooks:src/mikemol/hooks/vlogconfig.py",
@@ -107,6 +111,7 @@ mutant_site(
     tests = "tests/test_vlogbatch.py tests/test_vlogcli.py tests/test_vlogcli_follow.py",
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:src/mikemol/hooks/vlogbatch.py",
         "//hooks:src/mikemol/hooks/vlogcli.py",
         "//hooks:src/mikemol/hooks/vlogconfig.py",

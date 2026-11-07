@@ -428,7 +428,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 "src/mikemol/hooks/snapshot.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "hardcoded-temp-file", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/vlogdetach.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/vlogforms.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
-"src/mikemol/hooks/vlogsink.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/snaplinks.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # W901: its witnesses build decoy repositories, a private index and a snapshot under tmp_path and

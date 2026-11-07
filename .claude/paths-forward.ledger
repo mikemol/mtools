@@ -6101,3 +6101,15 @@
 2026-11-07T00:06:41Z  status W2321 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T00:07:51Z  interrupt W2322 minted    -         "Stack submit judges the submitted stack's own waypoints against the round, not the queue's working marks (W2316 review block 2)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2321
 2026-11-07T00:08:19Z  status W2322 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T00:16:52Z  status W2289 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:11:14Z  status W2289 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:11:14Z  status W2322 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:11:14Z  interrupt W2323 minted    -         "Rehearsed, checked sweep of leftover scratch worktrees (194 trees, 66 for done cards): list, verify merged/clean, remove"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2322
+2026-11-07T01:16:46Z  status W2322 done>working writer    "done -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:22:59Z  interrupt W2324 minted    -         "Round check W2322 review remainder: test through the real main order, say when worktree records are unreadable, survivors (scratch_cli os.environ, fullmatch, continue, ready-card cited test, in_gate empty at submit)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2322
+2026-11-07T01:23:57Z  status W2322 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:25:30Z  status W2322 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:26:10Z  status W2322 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:30:22Z  status W2322 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:35:23Z  status W2311 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:42:10Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

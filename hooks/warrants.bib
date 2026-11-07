@@ -18354,3 +18354,80 @@
   claim  = {W2322: the submit judges the stack's own cards; an unreadable file names none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_the_round_check_is_handed_the_waypoints_the_stack_carries},
 }
+
+@misc{hooks-repin-admission-repin-of-the-text-files-and-the-wheels-is-admitted,
+  section = {repin-admission},
+  title  = {The control: four text files change their sha, hash and prose only; a wheel is renamed},
+  claim  = {The control: four text files change their sha, hash and prose only; a wheel is renamed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_repin_of_the_text_files_and_the_wheels_is_admitted},
+}
+
+@misc{hooks-repin-admission-g-spelling-of-the-sha-is-the-same-sha,
+  section = {repin-admission},
+  title  = {`+g<sha>` in the names and the text is admitted, as `+<sha>` is},
+  claim  = {`+g<sha>` in the names and the text is admitted, as `+<sha>` is.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_the_g_spelling_of_the_sha_is_the_same_sha},
+}
+
+@misc{hooks-repin-admission-one-stray-line-in-a-text-file-refuses-the-stack-and-names-the-file,
+  section = {repin-admission},
+  title  = {A new dependency in pyproject.toml is more than a sha},
+  claim  = {A new dependency in pyproject.toml is more than a sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_one_stray_line_in_a_text_file_refuses_the_stack_and_names_the_file},
+}
+
+@misc{hooks-repin-admission-third-party-version-in-the-lock-is-not-a-repin,
+  section = {repin-admission},
+  title  = {Only the mikemol packages' versions move; `attrs` going to 1.2.4 refuses the stack},
+  claim  = {Only the mikemol packages' versions move; `attrs` going to 1.2.4 refuses the stack.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_third_party_version_in_the_lock_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-file-a-repin-does-not-own-refuses-the-stack,
+  section = {repin-admission},
+  title  = {A source file beside the repin is named and refused},
+  claim  = {A source file beside the repin is named and refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_file_a_repin_does_not_own_refuses_the_stack},
+}
+
+@misc{hooks-repin-admission-two-shas-in-one-stack-refuse-it,
+  section = {repin-admission},
+  title  = {The lock at another sha than the pyproject is two repins, not one},
+  claim  = {The lock at another sha than the pyproject is two repins, not one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_two_shas_in_one_stack_refuse_it},
+}
+
+@misc{hooks-repin-admission-wheel-named-for-another-sha-refuses-the-stack,
+  section = {repin-admission},
+  title  = {The texts say 636e39b and an added wheel says abc1234},
+  claim  = {The texts say 636e39b and an added wheel says abc1234.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_wheel_named_for_another_sha_refuses_the_stack},
+}
+
+@misc{hooks-repin-admission-stack-that-names-no-sha-is-not-a-repin,
+  section = {repin-admission},
+  title  = {Texts that change nothing a repin changes name no sha, and a repin names one},
+  claim  = {Texts that change nothing a repin changes name no sha, and a repin names one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_stack_that_names_no_sha_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-third-party-local-version-is-not-a-second-sha,
+  section = {repin-admission},
+  title  = {A package that is not mikemol's keeps its own `+local` version and counts for nothing},
+  claim  = {A package that is not mikemol's keeps its own `+local` version and counts for nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_third_party_local_version_is_not_a_second_sha},
+}
+
+@misc{hooks-repin-admission-text-file-added-or-removed-and-an-empty-stack-are-not-repins,
+  section = {repin-admission},
+  title  = {The controls: nothing changed, and uv.lock created by the stack},
+  claim  = {The controls: nothing changed, and uv.lock created by the stack.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_text_file_added_or_removed_and_an_empty_stack_are_not_repins},
+}
+
+@misc{hooks-vlogsink-resolver-runner-keeps-status-and-stdout-and-says-127-for-no-program,
+  section = {vlogsink},
+  title  = {The runner's two answers: the child's exit and output, and 127 where nothing starts},
+  claim  = {The runner's two answers: the child's exit and output, and 127 where nothing starts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_the_resolver_runner_keeps_status_and_stdout_and_says_127_for_no_program},
+}

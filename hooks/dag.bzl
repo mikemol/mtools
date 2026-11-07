@@ -788,6 +788,11 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/repin_admission.py": {
+      "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/repin_cli.py": {
       "imports": [
         "src/mikemol/hooks/musthave.py",
@@ -1386,7 +1391,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/vlogsink.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -2877,6 +2884,13 @@ GRAPH = {
     "tests/test_repin.py": {
       "imports": [
         "src/mikemol/hooks/repin.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_repin_admission.py": {
+      "imports": [
+        "src/mikemol/hooks/repin_admission.py"
       ],
       "reads": [],
       "typing_only": []
