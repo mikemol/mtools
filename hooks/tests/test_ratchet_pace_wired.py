@@ -369,3 +369,73 @@ def test_a_nested_ratchet_already_at_head_and_a_non_utf8_name_both_refuse(tmp_pa
     _git(odd, "add", "-A")
     _git(odd, "commit", "-q", "-m", "odd name")
     assert ratchet_pace.landing_refusal(odd, landing2, env, [row2]) is not None
+
+
+_OLD_SHA = "459a112"
+_NEW_SHA = "636e39b"
+
+
+def _pyproject(sha: str, extra: str = "") -> str:
+    row = f'mikemol-fence = {{ path = "vendor/wheels/mikemol_fence-0.1.0+{sha}-py3-none-any.whl" }}'
+    return f"[tool.uv.sources]\n{row}\n{extra}"
+
+
+def _wheel(sha: str) -> str:
+    return f"vendor/wheels/mikemol_fence-0.1.0+{sha}-py3-none-any.whl"
+
+
+def _repin_repo(root: Path) -> None:
+    """Commit a repo vendoring one wheel at the old sha."""
+    _git(root, "init", "-q")
+    _git(root, "config", "user.email", "t@example.invalid")
+    _git(root, "config", "user.name", "t")
+    (root / "vendor" / "wheels").mkdir(parents=True)
+    (root / "pyproject.toml").write_text(_pyproject(_OLD_SHA), encoding="utf-8")
+    (root / _wheel(_OLD_SHA)).write_bytes(b"old wheel")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "vendor the wheel")
+
+
+def _repin_items(root: Path, pyproject: str, wheel_sha: str = _NEW_SHA) -> list[Item]:
+    """Item for a stack that renames the wheel and rewrites pyproject.toml.
+
+    Returns:
+        the one item, its files frozen with blobs really stored in the repository.
+
+    """
+    toml = _git(root, "hash-object", "-w", "--stdin", text=pyproject)
+    wheel = _git(root, "hash-object", "-w", "--stdin", text="new wheel")
+    files = (
+        stacksnap.Frozen("pyproject.toml", _MODE, toml),
+        stacksnap.Frozen(_wheel(wheel_sha), _MODE, wheel),
+        stacksnap.Frozen(_wheel(_OLD_SHA), _MODE, ""),
+    )
+    return [Item("W1", "s", "", tuple(f.path for f in files), files)]
+
+
+def test_a_repin_is_admitted_by_clause_r_and_a_stray_line_or_a_second_sha_is_not(
+    tmp_path: Path,
+) -> None:
+    """W2329: only the vendored sha changes in the text files; anything else keeps the refusal."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))
+    assert ratchet_pace.landing_refusal(root, clean, env, [], now) is None
+    stray = _repin_items(root, _pyproject(_NEW_SHA, 'rich = "13"\n'))
+    assert ratchet_pace.landing_refusal(root, stray, env, [], now) is not None
+    split = _repin_items(root, _pyproject(_NEW_SHA), wheel_sha="abc1234")
+    assert ratchet_pace.landing_refusal(root, split, env, [], now) is not None
+
+
+def test_the_submit_refusal_admits_a_repin_the_same_way(tmp_path: Path) -> None:
+    """The submit asks clause R too, on the frozen snapshot, and still refuses a stray line."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    for text, refused in ((_pyproject(_NEW_SHA), False), (_pyproject(_NEW_SHA, "x = 1\n"), True)):
+        item = _repin_items(root, text)[0]
+        stack = _stack(tmp_path, *item.paths)
+        snap = tmp_path / "snapshot.json"
+        stacksnap.dump(snap, [list(item.files or ())])
+        reason = ratchet_pace.refusal(root, stack, {**env, SNAP_ENV: str(snap)}, [])
+        assert (reason is not None) is refused

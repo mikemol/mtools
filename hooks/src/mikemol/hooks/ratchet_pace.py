@@ -25,7 +25,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
-from mikemol.hooks import admission, runproc, stacksnap
+from mikemol.hooks import admission, repin_admission, runproc, stacksnap
 from mikemol.hooks.round_wire import STALE, published_at
 from mikemol.hooks.stackfreeze import SNAP_ENV
 from mikemol.hooks.stackrun import Item, items_of
@@ -353,6 +353,29 @@ def _birth_clear(row: admission.Row, root: Path, files: Sequence[stacksnap.Froze
     return admission.accident(row, frozenset(listing.split("\0")), entry) is None
 
 
+def _repin_clear(root: Path, files: Sequence[stacksnap.Frozen]) -> bool:
+    # Clause R (W2301 v4, W2311): the stack is a repin when every non-queue file is repin-owned
+    # and each text file differs from HEAD's only by the vendored sha. The judgement is
+    # `repin_admission.admits`; this reads HEAD's and the frozen text for it.
+    # ⚑ FAILS CLOSED: a path whose text cannot be read, or HEAD that cannot be listed, is no repin.
+    listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"])
+    if listing is None:
+        return False
+    head = frozenset(listing.split("\0"))
+    old: dict[str, str | None] = {}
+    new: dict[str, str | None] = {}
+    for file in files:
+        if file.path in QUEUE_FILES:
+            continue
+        if file.path in repin_admission.TEXT_FILES:
+            old[file.path] = _git_text(root, ["show", f"HEAD:{file.path}"])
+            new[file.path] = _git_text(root, ["cat-file", "blob", file.blob]) if file.blob else None
+        else:
+            old[file.path] = "" if file.path in head else None
+            new[file.path] = "" if file.blob else None
+    return repin_admission.admits(old, new) is None
+
+
 def _admitted_by(
     root: Path, waypoints: Sequence[str], env: Mapping[str, str], rows: Sequence[admission.Row]
 ) -> Callable[[], bool]:
@@ -365,7 +388,9 @@ def _admitted_by(
             return False
         files = [f for entry in frozen for f in entry]
         row = admission.admitting(rows, root.name, waypoints, files)
-        return row is not None and _birth_clear(row, root, files)
+        if row is not None:
+            return _birth_clear(row, root, files)
+        return _repin_clear(root, files)
 
     return check
 
@@ -428,6 +453,8 @@ def landing_refusal(
     frozen = [file for item in items for file in item.files or ()]
     row = admission.admitting(rows, root.name, [item.waypoint for item in items], frozen)
     if row is not None and _birth_clear(row, root, frozen):
+        return None
+    if row is None and _repin_clear(root, frozen):
         return None
     return reason
 
