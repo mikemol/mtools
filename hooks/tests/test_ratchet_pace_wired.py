@@ -12,7 +12,7 @@ import json
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
-from mikemol.hooks import admission, ratchet_pace, stacksnap
+from mikemol.hooks import admission, ratchet_pace, runproc, stacksnap
 from mikemol.hooks.stackfreeze import SNAP_ENV
 from mikemol.hooks.stackrun import Item
 
@@ -179,3 +179,105 @@ def test_an_item_that_was_not_frozen_is_never_admitted(tmp_path: Path) -> None:
     row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
     unfrozen = [Item("W1", "s", "", ("hooks/x.py",))]
     assert ratchet_pace.admitted_ident(root, unfrozen, env, [row], datetime.now(UTC)) is None
+
+
+_BIRTH_FILE = "codon-edges-baseline.json"
+_RECORD = "bde02714-1533-475a-b934-d2ce58024a15:104181"
+
+
+def _git(root: Path, *args: str, text: str | None = None) -> str:
+    done = runproc.run(["git", "-C", str(root), *args], stdin_text=text)
+    assert done.returncode == 0, done.stderr
+    return done.stdout.strip()
+
+
+def _entry(record: str) -> str:
+    row: dict[str, object] = {
+        "ratchet": _BIRTH_FILE,
+        "old": 0,
+        "new": 3,
+        "reason": "birth",
+        "warrant": record,
+    }
+    body: dict[str, object] = {"rebaselines": [row]}
+    return json.dumps(body)
+
+
+def _birth(root: Path, record: str) -> tuple[admission.Row, list[stacksnap.Frozen]]:
+    """Make a git repo with one commit, a birth row, and the stack's frozen files.
+
+    Returns:
+        the row and the frozen files, the rebaselines blob really stored in the repository.
+
+    """
+    _git(root, "init", "-q")
+    _git(root, "config", "user.email", "t@example.invalid")
+    _git(root, "config", "user.name", "t")
+    _git(root, "add", ".")
+    _git(root, "commit", "-q", "-m", "first")
+    stored = _git(root, "hash-object", "-w", "--stdin", text=_entry(record))
+    files = [
+        stacksnap.Frozen(_BIRTH_FILE, _MODE, _BLOB),
+        stacksnap.Frozen("rebaselines.json", _MODE, stored),
+    ]
+    row = admission.Row(
+        repo="r",
+        card="W1",
+        blobs={_BIRTH_FILE: _BLOB, "rebaselines.json": stored},
+        kind=admission.BIRTH,
+        ratchet=_BIRTH_FILE,
+        old=0,
+        new=3,
+        record=_RECORD,
+    )
+    return row, files
+
+
+def test_a_birth_row_admits_only_when_its_accident_checks_pass(tmp_path: Path) -> None:
+    """The control, then each accident: another record, and a ratchet file already at HEAD."""
+    root, env = _repo(tmp_path)
+    row, files = _birth(root, _RECORD)
+    landing = [Item("W1", "s", "", (_BIRTH_FILE, "rebaselines.json"), tuple(files))]
+    now = datetime.now(UTC)
+    assert ratchet_pace.admitted_ident(root, landing, env, [row], now) == "r/W1"
+    wrong = _git(root, "hash-object", "-w", "--stdin", text=_entry(_RECORD.replace("1041", "9999")))
+    tampered = [files[0], stacksnap.Frozen("rebaselines.json", _MODE, wrong)]
+    swapped = admission.Row(
+        repo="r",
+        card="W1",
+        blobs={_BIRTH_FILE: _BLOB, "rebaselines.json": wrong},
+        kind=admission.BIRTH,
+        ratchet=_BIRTH_FILE,
+        old=0,
+        new=3,
+        record=_RECORD,
+    )
+    other = [Item("W1", "s", "", (_BIRTH_FILE, "rebaselines.json"), tuple(tampered))]
+    assert ratchet_pace.admitted_ident(root, other, env, [swapped], now) is None
+    (root / _BIRTH_FILE).write_text("{}", encoding="utf-8")
+    _git(root, "add", _BIRTH_FILE)
+    _git(root, "commit", "-q", "-m", "second")
+    assert ratchet_pace.admitted_ident(root, landing, env, [row], now) is None
+
+
+def test_a_birth_row_is_judged_at_submit_too_and_never_admitted_without_git(
+    tmp_path: Path,
+) -> None:
+    """The submit refusal asks the accident checks; a root git cannot read admits nothing."""
+    root, env = _repo(tmp_path)
+    row, files = _birth(root, _RECORD)
+    paths = (_BIRTH_FILE, "rebaselines.json")
+    stack = _stack(tmp_path, *paths)
+    snap = tmp_path / "snapshot.json"
+    stacksnap.dump(snap, [files])
+    submit_env = {**env, SNAP_ENV: str(snap)}
+    assert ratchet_pace.refusal(root, stack, submit_env, [row]) is None
+    (root / _BIRTH_FILE).write_text("{}", encoding="utf-8")
+    _git(root, "add", _BIRTH_FILE)
+    _git(root, "commit", "-q", "-m", "second")
+    assert ratchet_pace.refusal(root, stack, submit_env, [row]) is not None
+    bare = tmp_path / "bare" / "r"
+    (bare / ".claude").mkdir(parents=True)
+    (bare / ".claude" / "paths-forward.json").write_text('{"waypoints": []}', encoding="utf-8")
+    landing = [Item("W1", "s", "", paths, tuple(files))]
+    assert ratchet_pace.admitted_ident(bare, landing, env, [row], datetime.now(UTC)) is None

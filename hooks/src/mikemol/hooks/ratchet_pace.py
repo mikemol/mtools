@@ -25,7 +25,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
-from mikemol.hooks import admission, stacksnap
+from mikemol.hooks import admission, runproc, stacksnap
 from mikemol.hooks.round_wire import STALE, published_at
 from mikemol.hooks.stackfreeze import SNAP_ENV
 from mikemol.hooks.stackrun import Item, items_of
@@ -323,6 +323,30 @@ def stack_reason(
     )
 
 
+REBASELINES = "rebaselines.json"
+
+
+def _git_text(root: Path, argv: Sequence[str]) -> str | None:
+    # What git printed for `argv` in `root`; None when git failed, so a failed read never
+    # reads as an empty one.
+    done = runproc.run(["git", "-C", str(root), *argv])
+    return done.stdout if done.returncode == 0 else None
+
+
+def _birth_clear(row: admission.Row, root: Path, files: Sequence[stacksnap.Frozen]) -> bool:
+    # A birth row also passes its accident checks (W2309): the ratchet file is new at HEAD and
+    # the stack's frozen rebaselines.json carries the entry citing the pinned record.
+    # ⚑ FAILS CLOSED: a git read that fails, or a rebaselines blob that cannot be read, refuses.
+    if row.kind != admission.BIRTH:
+        return True
+    listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"])
+    if listing is None:
+        return False
+    blob = next((f.blob for f in files if f.path == REBASELINES), "")
+    entry = _git_text(root, ["cat-file", "blob", blob]) if blob else None
+    return admission.accident(row, frozenset(listing.split("\0")), entry) is None
+
+
 def _admitted_by(
     root: Path, waypoints: Sequence[str], env: Mapping[str, str], rows: Sequence[admission.Row]
 ) -> Callable[[], bool]:
@@ -334,7 +358,8 @@ def _admitted_by(
         if frozen is None:
             return False
         files = [f for entry in frozen for f in entry]
-        return admission.admitting(rows, root.name, waypoints, files) is not None
+        row = admission.admitting(rows, root.name, waypoints, files)
+        return row is not None and _birth_clear(row, root, files)
 
     return check
 
@@ -365,7 +390,9 @@ def admitted_ident(
         return None
     frozen = [file for item in items for file in item.files or ()]
     row = admission.admitting(rows, root.name, [item.waypoint for item in items], frozen)
-    return None if row is None else row.ident()
+    if row is None or not _birth_clear(row, root, frozen):
+        return None
+    return row.ident()
 
 
 def refusal(
