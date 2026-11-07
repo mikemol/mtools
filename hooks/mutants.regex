@@ -63,8 +63,7 @@ src/mikemol/hooks/testgate.py|the-test-gate-drops-the-error-stream|    return do
 src/mikemol/hooks/round_wire.py|a-tree-excuses-a-ready-card-from-the-round|        if text_of\(card\.get\("symbol"\)\) in built and card\.get\("status"\) == "working"|        if text_of(card.get("symbol")) in built|def=without_built
 src/mikemol/hooks/round_wire.py|a-directory-where-the-map-should-be-reads-as-fine|    if not path\.exists\(\):|    if not path.is_file():|def=queue_readable
 src/mikemol/hooks/round_wire.py|a-non-object-map-reads-as-readable|    return isinstance\(doc, dict\)|    return True|def=queue_readable
-src/mikemol/hooks/round_wire.py|a-path-that-is-a-file-is-a-held-tree|        if named is not None and tree\.is_dir\(\):|        if named is not None and tree.exists():|def=held_trees
-src/mikemol/hooks/round_wire.py|a-vanished-tree-still-holds-its-card|        if named is not None and tree\.is_dir\(\):|        if named is not None:|def=held_trees
+src/mikemol/hooks/round_wire.py|a-vanished-tree-still-holds-its-card|        if named is not None and \(tree / "\.git"\)\.is_file\(\):|        if named is not None:|def=held_trees
 src/mikemol/hooks/round_wire.py|the-worktree-records-are-read-from-the-wrong-place|    base = directory / ".git" / "worktrees"|    base = directory / "worktrees"|def=held_trees
 src/mikemol/hooks/round_wire.py|a-torn-commit-queue-reads-as-fine|        return False|        return True|def=queue_readable
 src/mikemol/hooks/round_wire.py|a-blind-refusal-does-not-say-so|        if queue_readable\(directory\)|        if True|def=round_reason
@@ -860,10 +859,10 @@ src/mikemol/hooks/watchdog.py|reversed-window-accepted|    if not 0 < floor <= c
 src/mikemol/hooks/watchdog.py|bad-window-not-refused-at-start|    except ValueError as caught:|    except KeyError as caught:|def=main
 src/mikemol/hooks/round_wire.py|ready-card-in-the-gate-still-demanded|    waiting = \[symbol for symbol in _symbols\(queue, "ready"\) if symbol not in cited\]|    waiting = [symbol for symbol in _symbols(queue, "ready")]|def=refusals
 src/mikemol/hooks/round_wire.py|queued-card-still-outside| if symbol not in cited\]|]|def=refusals
-src/mikemol/hooks/round_wire.py|submission-map-ignored|directory\.name, now, in_gate\(directory\)\)|directory.name, now, frozenset())|def=round_reason
-src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|text, directory\.name, now, in_gate|text, "", now, in_gate|def=round_reason
-src/mikemol/hooks/round_wire.py|a-card-the-stack-names-is-not-the-working-set|    if text_of\(card\.get\("symbol"\)\) in stack:|    if False:|def=_submitted_status
-src/mikemol/hooks/round_wire.py|a-stray-working-mark-still-counts-at-submit|return "building" if card|return "working" if card|def=_submitted_status
+src/mikemol/hooks/round_wire.py|submission-map-ignored|    cited = in_gate\(directory\) - \(stack or frozenset\(\)\)|    cited = frozenset()|def=round_reason
+src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|text, directory\.name, now, cited|text, "", now, cited|def=round_reason
+src/mikemol/hooks/round_wire.py|a-card-the-stack-names-is-not-the-working-set|    if symbol in working:|    if False:|def=_submitted_status
+src/mikemol/hooks/round_wire.py|a-stray-working-mark-still-counts-at-submit|return "ready" if card|return "working" if card|def=_submitted_status
 src/mikemol/hooks/round_wire.py|the-submit-judges-marks-not-the-stack|held_trees\(directory\)\) if stack is None else|held_trees(directory)) if True else|def=round_reason
 src/mikemol/hooks/commit_kata.py|the-round-check-is-handed-no-stack|or _round_refusal\(root, stack_cards\(stack_file\)\)|or _round_refusal(root, frozenset())|def=submit_problem
 src/mikemol/hooks/pycheck_closure.py|a-hung-planner-raises-past-the-advice|isinstance\(caught, \(OSError, runproc\.TimeoutExpired\)\)|isinstance(caught, (OSError,))|def=run_planner
@@ -1148,3 +1147,11 @@ src/mikemol/hooks/repin_admission.py|the-wheels-head-holds-are-not-counted|    p
 src/mikemol/hooks/repin_admission.py|a-readme-token-counts-as-a-moved-pin|        into = moved if path in PIN_TEXTS else set\(\)|        into = moved|def=_moved_pins
 src/mikemol/hooks/repin_admission.py|a-sha-no-named-wheel-carries-is-a-repin|    if reason is None and not _carried\(sha, named\):|    if False:|def=_verdict
 src/mikemol/hooks/repin_admission.py|a-wheel-at-another-sha-carries-it|    return any\(str\(hit\.group\("sha"\)\) == sha for hits in found for hit in hits\)|    return any(str(hit.group("sha")) != sha for hits in found for hit in hits)|def=_carried
+src/mikemol/hooks/round_wire.py|a-tree-without-its-git-file-is-a-held-tree|        if named is not None and \(tree / "\.git"\)\.is_file\(\):|        if named is not None and tree.is_dir():|def=held_trees
+src/mikemol/hooks/round_wire.py|a-relative-gitdir-is-read-against-the-cwd|        tree = \(record / pointer\)\.parent|        tree = Path(pointer).parent|def=held_trees
+src/mikemol/hooks/round_wire.py|an-unreadable-gitdir-raises|        except \(OSError, ValueError\):|        except OSError:|def=held_trees
+src/mikemol/hooks/round_wire.py|the-submitting-stacks-own-entry-excuses-it|    cited = in_gate\(directory\) - \(stack or frozenset\(\)\)|    cited = in_gate(directory)|def=round_reason
+src/mikemol/hooks/round_wire.py|a-card-the-queue-lacks-is-not-the-stacks|    absent = \[\{"symbol": s, "status": "working"\} for s in sorted\(working - named\)\]|    absent = []|def=as_submitted
+src/mikemol/hooks/round_wire.py|a-mark-on-a-round-card-stands-for-the-stack|return "ready" if card|return "building" if card|def=_submitted_status
+src/mikemol/hooks/round_wire.py|the-co-lander-is-outside-the-round|    working = \(stack - \{CO_LANDER\}\) or stack|    working = stack|def=as_submitted
+src/mikemol/hooks/round_wire.py|a-lone-co-lander-is-no-working-set|    working = \(stack - \{CO_LANDER\}\) or stack|    working = stack - {CO_LANDER}|def=as_submitted

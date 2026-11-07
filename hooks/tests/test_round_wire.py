@@ -166,19 +166,41 @@ def _checkout(tmp_path: Path, **status: str) -> tuple[Path, Path]:
 
 
 def _worktree(
-    checkout: Path, name: str, branch: str, *, tree_exists: bool = True, tree_is_file: bool = False
+    checkout: Path,
+    name: str,
+    branch: str,
+    *,
+    state: str = "git",
+    relative: bool = False,
 ) -> None:
     """Record a linked worktree the way git does: HEAD in the record, the tree's path in gitdir."""
     record = checkout / ".git" / "worktrees" / name
     record.mkdir(parents=True)
     (record / "HEAD").write_text(f"ref: refs/heads/{branch}\n", encoding="utf-8")
     tree = checkout.parent / "trees" / name
-    if tree_is_file:
+    if state == "file":
         tree.parent.mkdir(parents=True, exist_ok=True)
         tree.write_text("not a directory\n", encoding="utf-8")
-    elif tree_exists:
+    elif state != "gone":
         tree.mkdir(parents=True)
-    (record / "gitdir").write_text(f"{tree}/.git\n", encoding="utf-8")
+        if state == "git":
+            (tree / ".git").write_text(f"gitdir: {record}\n", encoding="utf-8")
+    pointer = os.path.relpath(tree / ".git", record) if relative else f"{tree}/.git"
+    (record / "gitdir").write_text(f"{pointer}\n", encoding="utf-8")
+
+
+def _live(checkout: Path, *cards: str) -> None:
+    """Write a live commit-queue entry of this process naming `cards`, as a submit does."""
+    mapdir = checkout / ".git" / "mtools"
+    mapdir.mkdir(parents=True, exist_ok=True)
+    live: dict[str, object] = {
+        "state": "queued",
+        "pid": os.getpid(),
+        "start": proc_start(os.getpid()),
+        "waypoints": list(cards),
+    }
+    body: dict[str, object] = {"1": live}
+    (mapdir / "commit.counts").write_text(json.dumps(body), encoding="utf-8")
 
 
 def test_a_working_card_with_a_held_scratch_tree_is_being_built_not_outside(tmp_path: Path) -> None:
@@ -195,7 +217,7 @@ def test_only_a_scratch_branch_whose_tree_still_exists_is_a_held_tree(tmp_path: 
     """A worktree on another branch, and a record whose tree is gone, hold nothing (W2321)."""
     checkout, round_file = _checkout(tmp_path, W1="ready", W7="working")
     _worktree(checkout, "by-hand", "feature/W7")
-    _worktree(checkout, "reaped", "scratch/W7", tree_exists=False)
+    _worktree(checkout, "reaped", "scratch/W7", state="gone")
     assert round_wire.held_trees(checkout) == frozenset()
     assert round_wire.round_reason(checkout, _NOW, round_file) is not None
     _worktree(checkout, "mtools-W7", "scratch/W7")
@@ -205,7 +227,7 @@ def test_only_a_scratch_branch_whose_tree_still_exists_is_a_held_tree(tmp_path: 
 def test_a_tree_path_that_is_a_file_is_not_a_held_tree(tmp_path: Path) -> None:
     """The path must be a directory, not merely exist."""
     checkout, _round_file = _checkout(tmp_path, W1="ready", W7="working")
-    _worktree(checkout, "mtools-W7", "scratch/W7", tree_is_file=True)
+    _worktree(checkout, "mtools-W7", "scratch/W7", state="file")
     assert round_wire.held_trees(checkout) == frozenset()
 
 
@@ -326,6 +348,44 @@ def test_the_submit_judges_the_stacks_cards_not_the_queues_marks(
     assert round_wire.now_reason(checkout, frozenset()) is None
 
 
+def test_the_stacks_own_live_entry_and_a_mark_on_a_round_card_excuse_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2322 (github-14): the submit writes its entry first, and the round is still asked."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="ready")
+    monkeypatch.setenv(round_wire.ENV, str(round_file))
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}'
+    round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
+    stack = frozenset({"W7"})
+    _live(checkout, "W7")
+    assert "take W1 first" in str(round_wire.now_reason(checkout, stack))
+    queue_file = checkout / ".claude" / "paths-forward.json"
+    queue_file.write_text(json.dumps(_queue(W1="working", W7="ready")), encoding="utf-8")
+    assert "take W1 first" in str(round_wire.now_reason(checkout, stack))
+    queue_file.write_text(json.dumps(_queue(W1="ready")), encoding="utf-8")
+    assert "take W1 first" in str(round_wire.now_reason(checkout, stack))
+
+
+def test_a_record_that_is_stale_relative_or_unreadable_is_read_as_git_reads_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A bare tree holds nothing; a relative pointer ignores the cwd; bytes do not raise."""
+    checkout, _ = _checkout(tmp_path, W1="ready", W7="working")
+    _worktree(checkout, "pruned", "scratch/W5", state="bare")
+    assert round_wire.held_trees(checkout) == frozenset()
+    _worktree(checkout, "mtools-W7", "scratch/W7", relative=True)
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    assert round_wire.held_trees(checkout) == frozenset({"W7"})
+    torn = checkout / ".git" / "worktrees" / "torn"
+    torn.mkdir()
+    (torn / "HEAD").write_text("ref: refs/heads/scratch/W9\n", encoding="utf-8")
+    (torn / "gitdir").write_bytes(b"\xff\xfe")
+    assert round_wire.held_trees(checkout) == frozenset({"W7"})
+
+
 def test_a_done_cards_leftover_tree_exempts_nothing(tmp_path: Path) -> None:
     """W2321 review: a tree for a DONE card is no build; the outside working mark still refuses."""
     checkout, round_file = _checkout(tmp_path, W1="ready", W7="done", W8="working")
@@ -333,3 +393,29 @@ def test_a_done_cards_leftover_tree_exempts_nothing(tmp_path: Path) -> None:
     assert "W1 is in this repository's round" in str(
         round_wire.round_reason(checkout, _NOW, round_file)
     )
+
+
+def test_the_standing_paydown_card_rides_with_round_cards_and_never_alone(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The co-lander: W2219 beside a round card passes; beside an outside card, or alone, not."""
+    checkout = tmp_path / "mtools"
+    (checkout / ".claude").mkdir(parents=True)
+    queue_file = checkout / ".claude" / "paths-forward.json"
+    round_file = tmp_path / "round.json"
+    monkeypatch.setenv(round_wire.ENV, str(round_file))
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    rows = [
+        '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}',
+        '{"repo": "mtools", "symbol": "W2", "rank": "2", "salience": "1"}',
+    ]
+    body = f'{{"as_of": "{stamp}"}}\n' + "\n".join(rows) + "\n"
+    round_file.write_text(body, encoding="utf-8")
+    queue_file.write_text(
+        json.dumps(_queue(W1="ready", W2="ready", W2219="ready")), encoding="utf-8"
+    )
+    assert round_wire.now_reason(checkout, frozenset({"W1", "W2219"})) is None
+    outside = round_wire.now_reason(checkout, frozenset({"W7", "W2219"}))
+    assert "W1" in str(outside)
+    alone = round_wire.now_reason(checkout, frozenset({"W2219"}))
+    assert "W1" in str(alone)

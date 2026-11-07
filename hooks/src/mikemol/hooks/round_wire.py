@@ -162,7 +162,9 @@ def held_trees(directory: Path) -> frozenset[str]:
     """Name the cards a scratch worktree of `directory` is cut for, read from git's own records.
 
     ⚑ A RECORD COUNTS ONLY WHILE ITS TREE STILL EXISTS: `.../gitdir` names the tree's `.git` file,
-    and a tree whose directory is gone (reaped, or removed by hand) is not held.
+    and a tree whose directory or `.git` file is gone (reaped, removed by hand, or a prunable
+    record) is not held. A relative `gitdir` (worktree.useRelativePaths) is read against the
+    record, as git does, never against this process's directory.
 
     Returns:
         the symbols of the worktrees on a branch `scratch/W<n>` whose path exists; empty when the
@@ -178,11 +180,12 @@ def held_trees(directory: Path) -> frozenset[str]:
     for record in records:
         try:
             head = (record / "HEAD").read_text(encoding="utf-8").strip()
-            tree = Path((record / "gitdir").read_text(encoding="utf-8").strip()).parent
-        except OSError:
+            pointer = (record / "gitdir").read_text(encoding="utf-8").strip()
+        except (OSError, ValueError):
             continue
+        tree = (record / pointer).parent
         named = _SCRATCH_BRANCH.fullmatch(head)
-        if named is not None and tree.is_dir():
+        if named is not None and (tree / ".git").is_file():
             held.add(named.group(1))
     return frozenset(held)
 
@@ -211,17 +214,30 @@ def without_built(queue: object, built: frozenset[str]) -> object:
     return {**as_record(queue), "waypoints": swapped}
 
 
-def _submitted_status(card: dict[str, object], stack: frozenset[str]) -> str:
+# ⚑ THE ONE CO-LANDING CARD (github-14's ruling, W2322): W2219 is the standing hooks paydown, the
+# real fall the pace guard asks of every stack, so a stack pairs a round card with a W2219 batch.
+# It rides with the stack's other cards and never alone, and it is a rule for this one card, not
+# a class: the fall itself is the pace guard's to verify, not this check's.
+CO_LANDER = "W2219"
+
+
+def _submitted_status(
+    card: dict[str, object], working: frozenset[str], aside: frozenset[str]
+) -> str:
     """Give a card the status a stack submit judges it by.
 
     Returns:
-        `working` for a card the stack names, `building` for any other working card, else the
-        card's own status.
+        `working` for a card of the working set, `building` for the co-lander riding beside
+        it (neither working nor ready), `ready` for any other working card (a mark says
+        nothing at submit), else the card's own status.
 
     """
-    if text_of(card.get("symbol")) in stack:
+    symbol = text_of(card.get("symbol"))
+    if symbol in working:
         return "working"
-    return "building" if card.get("status") == "working" else text_of(card.get("status"))
+    if symbol in aside:
+        return "building"
+    return "ready" if card.get("status") == "working" else text_of(card.get("status"))
 
 
 def as_submitted(queue: object, stack: frozenset[str]) -> object:
@@ -229,8 +245,11 @@ def as_submitted(queue: object, stack: frozenset[str]) -> object:
 
     ⚑ THE SUBMIT JUDGES WHAT IT IS GIVEN, NOT MARKS (github-14, W2316 review block 2): a stack is
     work in hand whatever its cards' marks say, and a working mark nothing is building says nothing.
-    Each card the stack names counts as working; every other working card becomes `building`, so a
-    stray mark neither refuses a stack inside the round nor excuses one outside it.
+    Each card the stack names counts as working, one the queue does not hold included; every other
+    working card reads as ready, so a stray mark neither refuses a stack inside the round nor
+    excuses one outside it, and a mark on a round card does not stand for the stack. THE
+    CO-LANDER: when the stack names cards besides W2219, W2219 is set aside, so it is neither
+    outside the round nor a skipped card; a stack of W2219 alone is judged as any other.
 
     Returns:
         a copy of the queue with those statuses swapped; the queue itself when it has no card list.
@@ -239,8 +258,13 @@ def as_submitted(queue: object, stack: frozenset[str]) -> object:
     raw = as_record(queue).get("waypoints")
     if not isinstance(raw, list):
         return queue
-    swapped = [{**card, "status": _submitted_status(card, stack)} for card in map(as_record, raw)]
-    return {**as_record(queue), "waypoints": swapped}
+    working = (stack - {CO_LANDER}) or stack
+    aside = stack - working
+    cards = [as_record(card) for card in raw]
+    swapped = [{**card, "status": _submitted_status(card, working, aside)} for card in cards]
+    named = {text_of(card.get("symbol")) for card in cards}
+    absent = [{"symbol": s, "status": "working"} for s in sorted(working - named)]
+    return {**as_record(queue), "waypoints": [*swapped, *absent]}
 
 
 def refusals(
@@ -291,7 +315,11 @@ def round_reason(
     judged = (
         without_built(queue, held_trees(directory)) if stack is None else as_submitted(queue, stack)
     )
-    found = refusals(judged, text, directory.name, now, in_gate(directory))
+    # ⚑ THE SUBMITTING STACK'S OWN LIVE ENTRY CITES ITS CARDS (github-14, 4c7ecc64): the submit
+    # writes its entry before it asks the round, so those cards leave the cited set or the
+    # stack would excuse itself.
+    cited = in_gate(directory) - (stack or frozenset())
+    found = refusals(judged, text, directory.name, now, cited)
     if not found:
         return None
     blind = (

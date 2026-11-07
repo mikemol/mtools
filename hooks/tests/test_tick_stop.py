@@ -220,6 +220,7 @@ def test_a_mark_on_a_card_with_a_scratch_worktree_is_admitted_through_the_stop_h
     (record / "HEAD").write_text("ref: refs/heads/scratch/W7\n", encoding="utf-8")
     tree = tmp_path / "trees" / "mtools-W7"
     tree.mkdir(parents=True)
+    (tree / ".git").write_text(f"gitdir: {record}\n", encoding="utf-8")
     (record / "gitdir").write_text(f"{tree}/.git\n", encoding="utf-8")
     free = io.StringIO()
     assert tick_stop.run({"cwd": str(root)}, NOW, free, err) == 0
