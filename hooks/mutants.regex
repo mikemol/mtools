@@ -1074,7 +1074,7 @@ src/mikemol/hooks/runproc.py|start-ignores-the-directory|        cwd=cwd,|      
 src/mikemol/hooks/runproc.py|kill-leaves-the-child|            self\._process\.kill\(\)|            pass|def=Handle.kill
 src/mikemol/hooks/repin_admission.py|a-file-a-repin-does-not-own-is-owned|    return path in TEXT_FILES or _WHEEL\.fullmatch\(path\) is not None|    return True|def=_owned
 src/mikemol/hooks/repin_admission.py|a-changed-line-beyond-the-sha-passes|        if e0 != e1 or w0 != w1 or _mask_line\(b0, belongs=w0\) != _mask_line\(b1, belongs=w1\):|        if False:|def=_file_verdict
-src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(moved\) != 1:|    if len(moved) > 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if reason is None and len\(moved\) != 1:|    if reason is None and len(moved) > 1:|def=_verdict
 src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|        if f"\{_WHEEL_DIR\}\{file\}" not in present:|        if False:|def=_wheels_reason
 src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", body\)|        return body|def=_mask_line
 src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\(r"\\g<head>S", body\)\)\)|        return body|def=_mask_line
@@ -1128,7 +1128,7 @@ src/mikemol/hooks/ratchet_pace.py|the-landing-refusal-drops-its-birth-reason|   
 src/mikemol/hooks/traindrive.py|an-admission-group-rides-the-round|        if at and seams\.needs_admission\(group\.items\):|        if False:|def=_round_of
 src/mikemol/hooks/traindrive.py|the-held-groups-are-lost|            return list\(remaining\[:at\]\), list\(remaining\[at:\]\)|            return list(remaining[:at]), []|def=_round_of
 src/mikemol/hooks/new_dist_cli.py|the-printed-warrants-step-names-the-dist-in-capitals|--write \{name\} smoke=smoke|--write {name.upper()} smoke=smoke|def=scaffold
-src/mikemol/hooks/repin_admission.py|two-pins-moving-to-two-shas-pass|    if len\(moved\) != 1:|    if len(moved) < 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|two-pins-moving-to-two-shas-pass|    if reason is None and len\(moved\) != 1:|    if reason is None and len(moved) < 1:|def=_verdict
 src/mikemol/hooks/repin_admission.py|a-deleted-wheel-still-named-passes|    present = \{path for path in wheels if new\.get\(path, "kept"\) is not None\}|    present = set(wheels)|def=_wheels_reason
 src/mikemol/hooks/repin_admission.py|a-wheel-at-other-bytes-passes|        if old\.get\(path\) is not None and new\.get\(path\) is not None and old\[path\] != new\[path\]:|        if False:|def=_wheels_reason
 src/mikemol/hooks/ratchet_pace.py|the-git-read-folds-line-endings|        done = runproc\.run_exact\(\["git", "-C", str\(root\), \*argv\]\)|        done = runproc.run(["git", "-C", str(root), *argv])|def=_git_text
@@ -1145,3 +1145,6 @@ src/mikemol/hooks/repin_admission.py|only-the-first-wheel-of-a-line-is-read|    
 src/mikemol/hooks/repin_admission.py|a-comment-line-names-a-pin|        if body\.lstrip\(\)\.startswith\("#"\):|        if False:|def=_mentions
 src/mikemol/hooks/ratchet_pace.py|an-unreadable-untouched-text-is-skipped|            if text is None:|            if False:|def=_repin_sha
 src/mikemol/hooks/repin_admission.py|the-wheels-head-holds-are-not-counted|    present = \{path for path in wheels if|    present = {path for path in () if|def=_wheels_reason
+src/mikemol/hooks/repin_admission.py|a-readme-token-counts-as-a-moved-pin|        into = moved if path in PIN_TEXTS else set\(\)|        into = moved|def=_moved_pins
+src/mikemol/hooks/repin_admission.py|a-sha-no-named-wheel-carries-is-a-repin|    if reason is None and not _carried\(sha, named\):|    if False:|def=_verdict
+src/mikemol/hooks/repin_admission.py|a-wheel-at-another-sha-carries-it|    return any\(str\(hit\.group\("sha"\)\) == sha for hits in found for hit in hits\)|    return any(str(hit.group("sha")) != sha for hits in found for hit in hits)|def=_carried

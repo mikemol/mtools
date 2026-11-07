@@ -221,6 +221,39 @@ def _wheels_reason(old: Side, new: Side, wheels: Mapping[str, str], named: set[s
     return None
 
 
+def _moved_pins(old: Side, new: Side) -> tuple[str | None, set[str]]:
+    """Judge every changed text line by line and collect the shas its PIN texts moved to.
+
+    ⚑ ONLY A PIN TEXT'S TOKENS COUNT AS A MOVE (the ebfd1f6e review, B1): the README is owned, so
+    its lines may carry a changed sha, but its prose names no pin, and a stack that moves only a
+    README token moved no pin at all.
+
+    Returns:
+        (why a text is more than a repin, or None; the shas the pin texts moved to).
+
+    """
+    moved: set[str] = set()
+    for path in sorted(set(old) | set(new)):
+        if _WHEEL.fullmatch(path) is not None:
+            continue
+        into = moved if path in PIN_TEXTS else set()
+        reason = _file_verdict(path, old.get(path), new.get(path), into)
+        if reason is not None:
+            return reason, set()
+    return None, moved
+
+
+def _carried(sha: str, named: set[str]) -> bool:
+    """Say whether a wheel file a pin text names carries `sha`.
+
+    Returns:
+        True when some named wheel file is at that sha.
+
+    """
+    found = (_MENTION.finditer(name) for name in named)
+    return any(str(hit.group("sha")) == sha for hits in found for hit in hits)
+
+
 def _verdict(old: Side, new: Side, held: Side, wheels: Mapping[str, str]) -> tuple[str | None, str]:
     """Judge a change as a repin.
 
@@ -234,17 +267,17 @@ def _verdict(old: Side, new: Side, held: Side, wheels: Mapping[str, str]) -> tup
     stray = [path for path in paths if not _owned(path)]
     if stray:
         return f"{', '.join(stray)} is not a repin-owned file", ""
-    moved: set[str] = set()
-    for path in paths:
-        if _WHEEL.fullmatch(path) is None:
-            reason = _file_verdict(path, old.get(path), new.get(path), moved)
-            if reason is not None:
-                return reason, ""
-    if len(moved) != 1:
-        return f"a repin moves every pin to one sha; this stack moves them to {len(moved)}", ""
+    reason, moved = _moved_pins(old, new)
+    if reason is None and len(moved) != 1:
+        reason = f"a repin moves every pin to one sha; this stack moves them to {len(moved)}"
+    if reason is not None:
+        return reason, ""
     disagreement, named = _disagreement({**held, **new})
+    sha = next(iter(moved))
     reason = disagreement or _wheels_reason(old, new, wheels, named)
-    return (reason, "") if reason is not None else (None, next(iter(moved)))
+    if reason is None and not _carried(sha, named):
+        reason = f"no wheel a pin text names carries the new sha {sha}"
+    return (reason, "") if reason is not None else (None, sha)
 
 
 def admits(

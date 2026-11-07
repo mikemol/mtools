@@ -411,3 +411,24 @@ def test_a_comment_naming_the_old_wheel_in_a_pin_text_is_not_a_pin() -> None:
     old[_PYPROJECT] = note + str(old[_PYPROJECT])
     new[_PYPROJECT] = note + str(new[_PYPROJECT])
     assert _admits(old, new) is None
+
+
+def test_a_stack_that_moves_only_a_readme_token_moved_no_pin() -> None:
+    """B1: the README is owned but is no pin text; its token moving alone is not a repin."""
+    row = "mikemol_hooks-0.1.0+{sha}-py3-none-any.whl sha256:{digest}\n"
+    old: Texts = {_README: row.format(sha=_OLD, digest=_DIGEST_OLD)}
+    new: Texts = {_README: row.format(sha=_NEW, digest=_DIGEST_NEW)}
+    reason = _admits(old, new)
+    assert reason is not None
+    assert "moves them to 0" in reason
+    assert repin_admission.new_sha(old, new, None, _head()) is None
+
+
+def test_a_sha_moved_on_a_version_line_that_no_named_wheel_carries_is_not_a_repin() -> None:
+    """B1: no pin text names a wheel, so no wheel carries the new sha: refused by that rule."""
+    package = 'name = "mikemol-hooks"\nversion = "0.1.0+{sha}"\n'
+    old: Texts = {_LOCK: "[[package]]\n" + package.format(sha=_OLD)}
+    new: Texts = {_LOCK: "[[package]]\n" + package.format(sha=_NEW)}
+    reason = _admits(old, new)
+    assert reason is not None
+    assert f"no wheel a pin text names carries the new sha {_NEW}" in reason

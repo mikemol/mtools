@@ -18916,3 +18916,24 @@
             passes.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_an_unreadable_untouched_pin_text_is_no_repin},
 }
+
+@misc{hooks-repin-admission-stack-that-moves-only-a-readme-token-moved-no-pin,
+  section = {repin-admission},
+  title  = {B1: the README is owned but is no pin text; its token moving alone is not a repin},
+  claim  = {B1: the README is owned but is no pin text; its token moving alone is not a repin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_stack_that_moves_only_a_readme_token_moved_no_pin},
+}
+
+@misc{hooks-repin-admission-sha-moved-on-a-version-line-that-no-named-wheel-carries-is-not-a-repin,
+  section = {repin-admission},
+  title  = {B1: no pin text names a wheel, so no wheel carries the new sha: refused by that rule},
+  claim  = {B1: no pin text names a wheel, so no wheel carries the new sha: refused by that rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_sha_moved_on_a_version_line_that_no_named_wheel_carries_is_not_a_repin},
+}
+
+@misc{hooks-ratchet-pace-wired-stack-that-moves-only-a-readme-token-is-not-admitted-and-writes-no-trailer,
+  section = {ratchet_pace},
+  title  = {B1 wired: the README alone moving a wheel name's sha is no repin, wheel or none},
+  claim  = {B1 wired: the README alone moving a wheel name's sha is no repin, wheel or none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_stack_that_moves_only_a_readme_token_is_not_admitted_and_writes_no_trailer},
+}

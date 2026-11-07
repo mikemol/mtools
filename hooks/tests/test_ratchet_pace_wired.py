@@ -608,3 +608,22 @@ def test_an_unreadable_untouched_pin_text_is_no_repin(
 
     monkeypatch.setattr(runproc, "run_exact", blind)
     assert ratchet_pace.landing_refusal(root, clean, env, [], now) is not None
+
+
+def test_a_stack_that_moves_only_a_readme_token_is_not_admitted_and_writes_no_trailer(
+    tmp_path: Path,
+) -> None:
+    """B1 wired: the README alone moving a wheel name's sha is no repin, wheel or none."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    readme = "vendor/wheels/README.md"
+    row = f"- mikemol_fence-0.1.0+{{sha}}-py3-none-any.whl sha256:{'a' * 64}\n"
+    (root / readme).write_text(row.format(sha=_OLD_SHA), encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "a readme")
+    blob = _git(root, "hash-object", "-w", "--stdin", text=row.format(sha=_NEW_SHA))
+    files = (stacksnap.Frozen(readme, _MODE, blob),)
+    item = [Item("W1", "s", "", (readme,), files)]
+    now = datetime.now(UTC)
+    assert ratchet_pace.landing_refusal(root, item, env, [], now) is not None
+    assert ratchet_pace.admitted_ident(root, item, env, [], now) is None
