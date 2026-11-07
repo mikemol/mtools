@@ -6235,3 +6235,28 @@
 2026-11-07T14:14:41Z  status W2338 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T14:14:42Z  status W1308 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T14:27:50Z  interrupt W2339 minted    -         "Clause R: one arriving wheel for several moved pins, a deleted wheel named by untouched texts, two surviving mutants (github-14 BLOCK of 04a83d9e, B1 to B3)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2334
+2026-11-07T14:30:57Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T14:45:21Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T14:54:47Z  status W1388 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T14:57:52Z  interrupt W2340 minted    -         "mutate_runner has no unmutated control: a baseline that fails turns every mutant into a false kill (local ruff 0.16.10 against the lock's 0.16.6 did exactly that)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2317
+2026-11-07T14:58:47Z  status W1389 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:03:15Z  status W1415 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:12:11Z  interrupt W2341 minted    -         "mikemol-katas status shows a stale commit-log verdict as current: show the log's age or sha, or read UNKNOWN when the log does not describe the newest sha, and check pending= is real"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-07T15:13:05Z  status W1416 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:16:02Z  status W1428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1334 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1336 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1388 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1389 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1415 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1416 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W1428 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:31Z  status W2339 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:32Z  status W1308 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:26:32Z  status W2338 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:32:53Z  status W2340 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:33:34Z  status W1308 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:35:11Z  interrupt W2342 minted    -         "Clause R as one invariant over the pin texts after the stack, never the README (github-14 BLOCK of 3f44ba69: X1 a real nemik repin refused, X2 a forgotten text admitted)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2339
+2026-11-07T15:43:54Z  interrupt W2343 minted    -         "Does TMPDIR reach the gate's test actions, so a hermetic guard that admits tempfile.gettempdir() lets undeclared reads pass in snapshots (github-14, luthen Guard.read)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-07T15:51:34Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T15:51:34Z  status W2342 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

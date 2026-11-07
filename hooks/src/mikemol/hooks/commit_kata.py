@@ -894,7 +894,7 @@ def lock_state(claim: str) -> str:
     return f"none ({claim})" if claim else "held"
 
 
-def routing_line(isolated: bool, reason: str, lock: str) -> str:
+def routing_line(*, isolated: bool, reason: str, lock: str) -> str:
     """Name the path this commit took and its lock, so a repo can tell a fallback from a choice.
 
     ⚑ A HOOK THAT DOES NOT NAME MIKEMOL_REAL_ROOT FALLS TO THE PLAIN PATH WITHOUT A WORD (the
@@ -970,8 +970,9 @@ def run_stack_mode(
     root: Path,
     stack_file: Path,
     env: Mapping[str, str],
-    isolated: bool,
     started: tuple[int, int],
+    *,
+    isolated: bool,
 ) -> int:
     """Land the stack in `stack_file`: build, gate the tip once, move HEAD, one verdict each.
 
@@ -1022,7 +1023,7 @@ def run_stack_mode(
 
 
 def commit_buffered(
-    root: Path, request: Request, isolated: bool, after: Callable[[str], None]
+    root: Path, request: Request, after: Callable[[str], None], *, isolated: bool
 ) -> int:
     """Commit, print the output as ever, then hand its text to `after` (W1168, W1441).
 
@@ -1058,7 +1059,7 @@ def submitted_ns(env: Mapping[str, str]) -> int:
 
 
 def after_of(
-    shipping: bool, env: Mapping[str, str], waypoint: str, started: tuple[int, int]
+    env: Mapping[str, str], waypoint: str, started: tuple[int, int], *, shipping: bool
 ) -> Callable[[str], None]:
     """Build what runs on a finished commit's output: ship the verdict lines, start the spans.
 
@@ -1501,8 +1502,8 @@ def run_held(
     sys.stdout.write(routing_line(isolated=isolated, reason=reason, lock=lock) + "\n")
     started = (held.submitted, held.lease)
     if stacked is not None:
-        return run_stack_mode(root, stacked[1], held.env, isolated, started)
+        return run_stack_mode(root, stacked[1], held.env, started, isolated=isolated)
     if parsed is None:
         return EXIT_USAGE
-    after = after_of(held.shipping, held.env, parsed[1].waypoint, started)
-    return commit_buffered(root, parsed[1], isolated, after)
+    after = after_of(held.env, parsed[1].waypoint, started, shipping=held.shipping)
+    return commit_buffered(root, parsed[1], after, isolated=isolated)

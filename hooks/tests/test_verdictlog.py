@@ -242,7 +242,7 @@ def test_the_ship_flag_is_not_a_path_of_the_request(
     _git(root, "init", "--quiet", "-b", "main")
     seen: list[tuple[str, ...]] = []
 
-    def capture(_root: Path, request: ck.Request, *_rest: object) -> int:
+    def capture(_root: Path, request: ck.Request, *_rest: object, **_named: object) -> int:
         seen.append(request.paths)
         return 0
 
