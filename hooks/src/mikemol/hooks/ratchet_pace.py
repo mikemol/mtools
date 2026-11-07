@@ -329,7 +329,11 @@ REBASELINES = "rebaselines.json"
 def _git_text(root: Path, argv: Sequence[str]) -> str | None:
     # What git printed for `argv` in `root`; None when git failed, so a failed read never
     # reads as an empty one.
-    done = runproc.run(["git", "-C", str(root), *argv])
+    # N8: a name git prints that is not UTF-8 cannot be read as text, and is no answer.
+    try:
+        done = runproc.run(["git", "-C", str(root), *argv])
+    except UnicodeDecodeError:
+        return None
     return done.stdout if done.returncode == 0 else None
 
 
@@ -342,7 +346,9 @@ def _birth_clear(row: admission.Row, root: Path, files: Sequence[stacksnap.Froze
     listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"])
     if listing is None:
         return False
-    blob = next((f.blob for f in files if f.path == REBASELINES), "")
+    # N1: the landing keeps the LAST file for a path, so the last blob is what lands.
+    blobs = [f.blob for f in files if f.path == REBASELINES]
+    blob = blobs[-1] if blobs else ""
     entry = _git_text(root, ["cat-file", "blob", blob]) if blob else None
     return admission.accident(row, frozenset(listing.split("\0")), entry) is None
 
@@ -393,6 +399,37 @@ def admitted_ident(
     if row is None or not _birth_clear(row, root, frozen):
         return None
     return row.ident()
+
+
+def landing_refusal(
+    root: Path,
+    items: Sequence[Item],
+    env: Mapping[str, str],
+    rows: Sequence[admission.Row] = admission.ROWS,
+    now: datetime | None = None,
+) -> str | None:
+    """Judge the items being landed against the pace, again, at the landing (W2330, B1).
+
+    ⚑ THE LANDING FAILS CLOSED: the submit admitted the stack on the pace of THEN, and a row's
+    accident checks can fail between then and now (a peer lands the ratchet file). A stack
+    the pace still refuses, that no row clears on the bytes that land, must not become a
+    commit, whether or not a trailer would have been written.
+
+    Returns:
+        what `stack_reason` says when it refuses and no row clears it; None otherwise.
+
+    """
+    named = env.get(ENV)
+    paths = [path for item in items for path in item.paths]
+    pace = Path(named) if named else None
+    reason = stack_reason(root, paths, now or datetime.now(UTC), pace)
+    if reason is None:
+        return None
+    frozen = [file for item in items for file in item.files or ()]
+    row = admission.admitting(rows, root.name, [item.waypoint for item in items], frozen)
+    if row is not None and _birth_clear(row, root, frozen):
+        return None
+    return reason
 
 
 def refusal(

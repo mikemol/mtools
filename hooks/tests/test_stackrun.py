@@ -14,14 +14,14 @@ import json
 import os
 from typing import TYPE_CHECKING
 
+import pytest
+
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import scratch, stackrun
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
-
-    import pytest
 
 
 _EXECUTABLE = 0o755
@@ -450,3 +450,36 @@ def test_output_with_no_failing_section_adds_nothing() -> None:
     """The control: a refusal that printed no section gets no reprint."""
     assert not stackrun.refusal_tail("gate says no\n")
     assert not stackrun.refusal_tail("")
+
+
+def test_a_stack_the_landing_refuses_never_becomes_a_commit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2330 B1: the pace judged again at the landing refuses; HEAD does not move; rc is 1."""
+    root, _remote = _repo(tmp_path, monkeypatch, _PASSING)
+    before = _git(root, "rev-parse", "HEAD").strip()
+    seams = stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path / "gate",
+        message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
+        published=lambda _sha: "PUSHED",
+        landing_refusal=lambda _items: "behind its ratchet paydown",
+    )
+    out = io.StringIO()
+    assert stackrun.run_stack(root, _items(), out, seams) == 1
+    assert "refused at the landing: behind its ratchet paydown" in out.getvalue()
+    assert _git(root, "rev-parse", "HEAD").strip() == before
+
+
+def test_entries_for_raises_refused_whatever_the_admission_says(tmp_path: Path) -> None:
+    """Both landing paths build through entries_for, so the refusal is raised there."""
+    seams = stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path,
+        message_of=lambda item: item.subject,
+        published=lambda _sha: "x",
+        admission=lambda _items: "nemik/W1660",
+        landing_refusal=lambda _items: "still refused",
+    )
+    with pytest.raises(stackrun.RefusedError, match="still refused"):
+        stackrun.entries_for([stackrun.Item("W1", "s", "", ("a.txt",))], seams)

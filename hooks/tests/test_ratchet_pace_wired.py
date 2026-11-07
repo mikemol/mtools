@@ -9,6 +9,7 @@ touches the owed ratchet are admitted, and a stack file that cannot be read refu
 from __future__ import annotations
 
 import json
+import os
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
@@ -96,7 +97,7 @@ def _admitted_stack(tmp_path: Path, blob: str) -> tuple[Path, dict[str, str]]:
 def test_a_pinned_row_admits_exactly_its_change_on_the_frozen_snapshot(tmp_path: Path) -> None:
     """The control: the row's blob admits; another blob, no row, and no snapshot all refuse."""
     root, env = _repo(tmp_path)
-    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB}, review="r")
     stack, snap_env = _admitted_stack(tmp_path, _BLOB)
     assert ratchet_pace.refusal(root, stack, {**env, **snap_env}, [row]) is None
     assert ratchet_pace.refusal(root, stack, {**env, **snap_env}) is not None
@@ -108,7 +109,7 @@ def test_a_pinned_row_admits_exactly_its_change_on_the_frozen_snapshot(tmp_path:
 def test_an_unreadable_snapshot_never_admits(tmp_path: Path) -> None:
     """A snapshot the env names that is not there or not a snapshot is no admission."""
     root, env = _repo(tmp_path)
-    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB}, review="r")
     stack = _stack(tmp_path, "hooks/x.py")
     absent = {**env, SNAP_ENV: str(tmp_path / "absent.json")}
     assert ratchet_pace.refusal(root, stack, absent, [row]) is not None
@@ -151,7 +152,7 @@ def test_the_trailer_names_the_row_only_when_the_pace_needed_it_and_the_row_matc
 ) -> None:
     """W2312: needed and matched gives the id; a paydown, another blob and no row give None."""
     root, env = _repo(tmp_path)
-    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB}, review="r")
     now = datetime.now(UTC)
     assert (
         ratchet_pace.admitted_ident(root, _landing("hooks/x.py", _BLOB), env, [row], now) == "r/W1"
@@ -166,9 +167,11 @@ def test_a_stack_the_pace_would_admit_anyway_never_spends_a_row(tmp_path: Path) 
     """A paydown and a queue-state stack answer None even when a row matches them exactly."""
     root, env = _repo(tmp_path)
     now = datetime.now(UTC)
-    paying = admission.Row(repo="r", card="W1", blobs={_RATCHET: _BLOB})
+    paying = admission.Row(repo="r", card="W1", blobs={_RATCHET: _BLOB}, review="r")
     assert ratchet_pace.admitted_ident(root, _landing(_RATCHET, _BLOB), env, [paying], now) is None
-    queue = admission.Row(repo="r", card="W1", blobs={".claude/paths-forward.json": _BLOB})
+    queue = admission.Row(
+        repo="r", card="W1", blobs={".claude/paths-forward.json": _BLOB}, review="r"
+    )
     landing = _landing(".claude/paths-forward.json", _BLOB)
     assert ratchet_pace.admitted_ident(root, landing, env, [queue], now) is None
 
@@ -176,7 +179,7 @@ def test_a_stack_the_pace_would_admit_anyway_never_spends_a_row(tmp_path: Path) 
 def test_an_item_that_was_not_frozen_is_never_admitted(tmp_path: Path) -> None:
     """No frozen files means no blobs to match: a row cannot admit what it cannot read."""
     root, env = _repo(tmp_path)
-    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB})
+    row = admission.Row(repo="r", card="W1", blobs={"hooks/x.py": _BLOB}, review="r")
     unfrozen = [Item("W1", "s", "", ("hooks/x.py",))]
     assert ratchet_pace.admitted_ident(root, unfrozen, env, [row], datetime.now(UTC)) is None
 
@@ -191,9 +194,9 @@ def _git(root: Path, *args: str, text: str | None = None) -> str:
     return done.stdout.strip()
 
 
-def _entry(record: str) -> str:
+def _entry(record: str, ratchet: str = _BIRTH_FILE) -> str:
     row: dict[str, object] = {
-        "ratchet": _BIRTH_FILE,
+        "ratchet": ratchet,
         "old": 0,
         "new": 3,
         "reason": "birth",
@@ -222,6 +225,7 @@ def _birth(root: Path, record: str) -> tuple[admission.Row, list[stacksnap.Froze
     ]
     row = admission.Row(
         repo="r",
+        review="r",
         card="W1",
         blobs={_BIRTH_FILE: _BLOB, "rebaselines.json": stored},
         kind=admission.BIRTH,
@@ -244,6 +248,7 @@ def test_a_birth_row_admits_only_when_its_accident_checks_pass(tmp_path: Path) -
     tampered = [files[0], stacksnap.Frozen("rebaselines.json", _MODE, wrong)]
     swapped = admission.Row(
         repo="r",
+        review="r",
         card="W1",
         blobs={_BIRTH_FILE: _BLOB, "rebaselines.json": wrong},
         kind=admission.BIRTH,
@@ -281,3 +286,86 @@ def test_a_birth_row_is_judged_at_submit_too_and_never_admitted_without_git(
     (bare / ".claude" / "paths-forward.json").write_text('{"waypoints": []}', encoding="utf-8")
     landing = [Item("W1", "s", "", paths, tuple(files))]
     assert ratchet_pace.admitted_ident(bare, landing, env, [row], datetime.now(UTC)) is None
+
+
+def test_the_landing_refuses_a_stack_the_pace_still_refuses_unless_a_row_clears_it(
+    tmp_path: Path,
+) -> None:
+    """B1: no row refuses; a paydown does not; a birth whose file a peer landed does."""
+    root, env = _repo(tmp_path)
+    now = datetime.now(UTC)
+    plain = [Item("W1", "s", "", ("hooks/x.py",))]
+    assert ratchet_pace.landing_refusal(root, plain, env, [], now) is not None
+    paying = [Item("W1", "s", "", ("hooks/x.py", _RATCHET))]
+    assert ratchet_pace.landing_refusal(root, paying, env, [], now) is None
+    row, files = _birth(root, _RECORD)
+    paths = (_BIRTH_FILE, "rebaselines.json")
+    landing = [Item("W1", "s", "", paths, tuple(files))]
+    assert ratchet_pace.landing_refusal(root, landing, env, [row], now) is None
+    (root / _BIRTH_FILE).write_text("{}", encoding="utf-8")
+    _git(root, "add", _BIRTH_FILE)
+    _git(root, "commit", "-q", "-m", "a peer lands the ratchet file")
+    assert ratchet_pace.landing_refusal(root, landing, env, [row], now) is not None
+
+
+def _birth_at(
+    root: Path, *, ratchet: str, tracked: str | None = None, commit: bool = True
+) -> tuple[admission.Row, list[Item]]:
+    """Make a git repo, optionally with a tracked file, and a birth of `ratchet` over it.
+
+    Returns:
+        the row and the landing items.
+
+    """
+    _git(root, "init", "-q")
+    _git(root, "config", "user.email", "t@example.invalid")
+    _git(root, "config", "user.name", "t")
+    if tracked is not None:
+        target = root / tracked
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("{}", encoding="utf-8")
+        _git(root, "add", "--", tracked)
+    if commit:
+        _git(root, "commit", "-q", "-m", "first", "--allow-empty")
+    stored = _git(root, "hash-object", "-w", "--stdin", text=_entry(_RECORD, ratchet))
+    files = (
+        stacksnap.Frozen(ratchet, _MODE, _BLOB),
+        stacksnap.Frozen("rebaselines.json", _MODE, stored),
+    )
+    row = admission.Row(
+        repo="r",
+        card="W1",
+        blobs={ratchet: _BLOB, "rebaselines.json": stored},
+        review="r",
+        kind=admission.BIRTH,
+        ratchet=ratchet,
+        old=0,
+        new=3,
+        record=_RECORD,
+    )
+    return row, [Item("W1", "s", "", (ratchet, "rebaselines.json"), files)]
+
+
+def test_a_head_git_cannot_list_refuses_even_when_the_rebaselines_blob_is_readable(
+    tmp_path: Path,
+) -> None:
+    """B2: an unborn HEAD fails ls-tree while the blob reads; it must not read as an empty HEAD."""
+    root, env = _repo(tmp_path)
+    row, landing = _birth_at(root, ratchet=_BIRTH_FILE, commit=False)
+    assert ratchet_pace.landing_refusal(root, landing, env, [row]) is not None
+
+
+def test_a_nested_ratchet_already_at_head_and_a_non_utf8_name_both_refuse(tmp_path: Path) -> None:
+    """N2 and N8: -r reaches a nested file; a name that is not UTF-8 refuses instead of raising."""
+    nested = "sub/dir/baseline.json"
+    root, env = _repo(tmp_path)
+    row, landing = _birth_at(root, ratchet=nested, tracked=nested)
+    assert ratchet_pace.landing_refusal(root, landing, env, [row]) is not None
+    odd = tmp_path / "odd" / "r"
+    (odd / ".claude").mkdir(parents=True)
+    (odd / ".claude" / "paths-forward.json").write_text('{"waypoints": []}', encoding="utf-8")
+    row2, landing2 = _birth_at(odd, ratchet=_BIRTH_FILE)
+    (odd / os.fsdecode(b"\xff.txt")).write_text("x", encoding="utf-8")
+    _git(odd, "add", "-A")
+    _git(odd, "commit", "-q", "-m", "odd name")
+    assert ratchet_pace.landing_refusal(odd, landing2, env, [row2]) is not None

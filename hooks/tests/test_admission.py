@@ -84,9 +84,9 @@ def test_a_deletion_is_not_the_pinned_blob() -> None:
     assert "the stack holds a deletion" in str(admission.refusal(_ROW, ["W1660"], frozen))
 
 
-def test_a_path_frozen_twice_is_judged_by_its_last_blob() -> None:
-    """A later entry's file replaces an earlier one's, as the landing does."""
-    frozen = _stack(("src/series.py", _C), ("src/series.py", _A), ("tests/test_series.py", _B))
+def test_a_path_frozen_twice_with_the_same_pinned_blob_is_one_file() -> None:
+    """Two entries carrying the pinned bytes are one file (an earlier other blob is N6)."""
+    frozen = _stack(("src/series.py", _A), ("src/series.py", _A), ("tests/test_series.py", _B))
     assert admission.refusal(_ROW, ["W1660"], frozen) is None
 
 
@@ -149,3 +149,40 @@ def test_a_birth_row_is_refused_for_an_existing_file_a_missing_entry_or_another_
     assert admission.accident(_BIRTH, {"src/a.py"}, None) is not None
     other = _ENTRY.replace("104181", "104182")
     assert admission.accident(_BIRTH, {"src/a.py"}, other) is not None
+
+
+def _birth_row(*, record: str, ratchet: str) -> admission.Row:
+    return admission.Row(
+        repo="nemik",
+        card="W1978",
+        blobs={"baseline.json": _A},
+        review="r",
+        kind=admission.BIRTH,
+        ratchet=ratchet,
+        record=record,
+    )
+
+
+def test_a_row_must_cite_a_review_and_a_birth_row_its_record_and_its_ratchet() -> None:
+    """N4 and N5: an empty review, an empty record and a ratchet not among the blobs each refuse."""
+    unreviewed = admission.Row(repo="nemik", card="W1660", blobs={"a.py": _A})
+    assert "no cold review" in str(admission.refusal(unreviewed, ["W1660"], _stack(("a.py", _A))))
+    held = _stack(("baseline.json", _A))
+    no_record = _birth_row(record="", ratchet="baseline.json")
+    assert "no operator record" in str(admission.refusal(no_record, ["W1978"], held))
+    stray = _birth_row(record="u:1", ratchet="other.json")
+    assert "not among its pinned paths" in str(admission.refusal(stray, ["W1978"], held))
+    assert (
+        admission.refusal(_birth_row(record="u:1", ratchet="baseline.json"), ["W1978"], held)
+        is None
+    )
+
+
+def test_an_earlier_entry_with_unpinned_bytes_and_a_non_regular_mode_are_refused() -> None:
+    """N6: the pin covers every entry's bytes for the path, and the file mode."""
+    row = admission.Row(repo="nemik", card="W1660", blobs={"a.py": _A}, review="r")
+    earlier = _stack(("a.py", _B), ("a.py", _A))
+    assert "does not pin" in str(admission.refusal(row, ["W1660"], earlier))
+    link = [Frozen("a.py", "120000", _A)]
+    assert "not a regular file" in str(admission.refusal(row, ["W1660"], link))
+    assert admission.refusal(row, ["W1660"], _stack(("a.py", _A))) is None

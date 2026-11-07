@@ -29,6 +29,7 @@ from mikemol.hooks.stacksnap import QUEUE_FILES, Frozen
 
 REPAIR = "repair"
 BIRTH = "birth"
+_REGULAR_MODES = frozenset({"100644", "100755"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,6 +70,48 @@ def _frozen_blobs(frozen: Iterable[Frozen]) -> dict[str, str]:
     return {f.path: f.blob for f in frozen if f.path not in QUEUE_FILES}
 
 
+def _row_problem(row: Row) -> str | None:
+    """Say why a row is not a reviewed, pinned change before any stack is looked at.
+
+    Returns:
+        the reason; None for a row that pins a path, cites its review and, for a birth, pins its
+        operator record and names a ratchet among its pinned paths (N4, N5).
+
+    """
+    if not row.blobs:
+        return "the row pins no path, so it admits nothing"
+    if not row.review:
+        return "the row cites no cold review, so it is not a reviewed change"
+    if row.kind != BIRTH:
+        return None
+    if not row.record:
+        return "the birth row pins no operator record"
+    if row.ratchet not in row.blobs:
+        return f"the birth row's ratchet {row.ratchet!r} is not among its pinned paths"
+    return None
+
+
+def _carried_problem(row: Row, held_files: Sequence[Frozen]) -> str | None:
+    """Say why the bytes the stack carries for a pinned path are not the pin (N6).
+
+    ⚑ AN EARLIER ENTRY'S BYTES COUNT: the landing keeps the last file for a path, so an earlier
+    entry with other bytes would be hidden by a later one that matches. The mode must be a regular
+    file's.
+
+    Returns:
+        the reason; None when every entry before a path's last carries the pinned blob and every
+        pinned file has a regular mode.
+
+    """
+    for path, pinned in row.blobs.items():
+        carried = [f for f in held_files if f.path == path and f.blob]
+        if any(f.blob != pinned for f in carried[:-1]):
+            return f"{path} is carried at a blob the row does not pin"
+        if any(f.mode not in _REGULAR_MODES for f in carried):
+            return f"{path} is not a regular file"
+    return None
+
+
 def refusal(row: Row, waypoints: Iterable[str], frozen: Iterable[Frozen]) -> str | None:
     """Say why a stack is not the change a row pins, if it is not.
 
@@ -78,22 +121,25 @@ def refusal(row: Row, waypoints: Iterable[str], frozen: Iterable[Frozen]) -> str
         blobs.
 
     """
-    if not row.blobs:
-        return "the row pins no path, so it admits nothing"
     named = set(waypoints)
-    if not named or named != {row.card}:
-        return f"the stack's waypoints {sorted(named)} are not only {row.card}"
-    held = _frozen_blobs(frozen)
+    held_files = list(frozen)
+    held = _frozen_blobs(held_files)
     extra = sorted(set(held) - set(row.blobs))
-    if extra:
-        return f"the stack carries a path the row does not pin: {extra[0]}"
     missing = sorted(set(row.blobs) - set(held))
-    if missing:
-        return f"the row pins a path the stack does not carry: {missing[0]}"
-    for path in sorted(row.blobs):
-        if held[path] != row.blobs[path]:
-            return f"{path} is not the pinned blob (the stack holds {held[path] or 'a deletion'})"
-    return None
+    changed = [path for path in sorted(row.blobs) if path in held and held[path] != row.blobs[path]]
+    reasons = [
+        _row_problem(row),
+        None
+        if named == {row.card}
+        else f"the stack's waypoints {sorted(named)} are not only {row.card}",
+        _carried_problem(row, held_files),
+        f"the stack carries a path the row does not pin: {extra[0]}" if extra else None,
+        f"the row pins a path the stack does not carry: {missing[0]}" if missing else None,
+        f"{changed[0]} is not the pinned blob (the stack holds {held[changed[0]] or 'a deletion'})"
+        if changed
+        else None,
+    ]
+    return next((reason for reason in reasons if reason is not None), None)
 
 
 def accident(row: Row, head_paths: Collection[str], rebaselines: str | None) -> str | None:
