@@ -18331,3 +18331,26 @@
   claim  = {Both runners answer a missing git as 127 and a note naming it, where they used to raise.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_scratch.py -k test_a_git_that_is_not_there_is_127_with_a_note_not_a_raise},
 }
+
+@misc{hooks-round-wire-submit-judges-the-stacks-cards-not-the-queues-marks,
+  section = {round_wire},
+  title  = {W2322: a stack outside the round is refused with no mark; one inside passes a stray mark},
+  claim  = {W2322: a stack outside the round is refused with no mark; one inside passes a stray
+            mark.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_the_submit_judges_the_stacks_cards_not_the_queues_marks},
+}
+
+@misc{hooks-round-wire-done-cards-leftover-tree-exempts-nothing,
+  section = {round_wire},
+  title  = {W2321 review: a tree for a DONE card is no build; the outside working mark still refuses},
+  claim  = {W2321 review: a tree for a DONE card is no build; the outside working mark still
+            refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_round_wire.py -k test_a_done_cards_leftover_tree_exempts_nothing},
+}
+
+@misc{hooks-submit-problem-round-check-is-handed-the-waypoints-the-stack-carries,
+  section = {shardgate},
+  title  = {W2322: the submit judges the stack's own cards; an unreadable file names none},
+  claim  = {W2322: the submit judges the stack's own cards; an unreadable file names none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_the_round_check_is_handed_the_waypoints_the_stack_carries},
+}

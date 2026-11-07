@@ -23,12 +23,11 @@ CONSUMED BY: `pycheck_advise` (the `mikemol-hook-pycheck-advise` console script)
 
 import json
 import os
-import subprocess
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
-from mikemol.hooks import tool_path
+from mikemol.hooks import runproc, tool_path
 from mikemol.hooks.payload import as_record, text_of
 
 LEDGER = ".claude/debt-ledger.json"
@@ -77,15 +76,9 @@ def run_planner(argv: Sequence[str]) -> str | None:
 
     """
     try:
-        done = subprocess.run(
-            list(argv),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=PLAN_TIMEOUT_S,
-        )
+        done = runproc.run(list(argv), timeout=PLAN_TIMEOUT_S)
     except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
+        if not isinstance(caught, (OSError, runproc.TimeoutExpired)):
             raise
         return None
     return done.stdout if done.returncode == 0 else None

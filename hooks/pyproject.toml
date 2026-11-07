@@ -409,7 +409,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
     "boolean-default-value-positional-argument",
     "boolean-type-hint-positional-argument",
 ]
-"src/mikemol/hooks/pycheck_closure.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 # Its witness builds a decoy repository with `git init` under tmp_path (the changed-files reader).
 # Its witnesses commit in throwaway repositories made with `git init` under tmp_path.
 "tests/test_commit_kata.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]

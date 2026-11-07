@@ -665,6 +665,7 @@ GRAPH = {
     "src/mikemol/hooks/pycheck_closure.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/tool_path.py"
       ],
       "reads": [],

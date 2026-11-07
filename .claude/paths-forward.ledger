@@ -6093,3 +6093,11 @@
 2026-11-06T22:58:10Z  interrupt W2321 minted    -         "The round check reads a held scratch tree from git's own worktree records, not from MIKEMOL_SCRATCH_ROOT in the hook's environment"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik-6f:W2027
 2026-11-06T22:58:37Z  status W2164 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-06T22:58:38Z  status W2321 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T23:12:42Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T23:23:54Z  status W879 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-06T23:24:35Z  status W2289 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T00:06:41Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T00:06:41Z  status W2289 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T00:06:41Z  status W2321 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T00:07:51Z  interrupt W2322 minted    -         "Stack submit judges the submitted stack's own waypoints against the round, not the queue's working marks (W2316 review block 2)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2321
+2026-11-07T00:08:19Z  status W2322 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

@@ -68,7 +68,7 @@ src/mikemol/hooks/round_wire.py|a-vanished-tree-still-holds-its-card|        if 
 src/mikemol/hooks/round_wire.py|the-worktree-records-are-read-from-the-wrong-place|    base = directory / ".git" / "worktrees"|    base = directory / "worktrees"|def=held_trees
 src/mikemol/hooks/round_wire.py|a-torn-commit-queue-reads-as-fine|        return False|        return True|def=queue_readable
 src/mikemol/hooks/round_wire.py|a-blind-refusal-does-not-say-so|        if queue_readable\(directory\)|        if True|def=round_reason
-src/mikemol/hooks/round_wire.py|the-submit-exempts-a-scratch-tree|    return round_reason\(directory, datetime\.now\(UTC\), None, trees=False\)|    return round_reason(directory, datetime.now(UTC), None)|def=now_reason
+src/mikemol/hooks/round_wire.py|the-submit-exempts-a-scratch-tree|None, stack=stack\)|None)|def=now_reason
 src/mikemol/hooks/worktree_venv.py|a-hung-git-raises-past-the-worktree-fallback|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=_ask_git
 src/mikemol/hooks/standing_facts.py|a-hung-git-raises-past-the-standing-facts|    except \(OSError, runproc\.TimeoutExpired\):|    except OSError:|def=_git
 src/mikemol/hooks/claude_code_census.py|a-refusing-git-reads-as-a-clean-census|    if done\.returncode != 0:|    if False:|def=untracked
@@ -830,8 +830,8 @@ src/mikemol/hooks/tick_stop.py|round-checked-on-a-repeat-stop|    if idle is Non
 src/mikemol/hooks/tick_stop.py|round-never-consulted|        idle = round_reason\(payload_dir\(payload\), now\)|        idle = None|def=idle_block
 src/mikemol/hooks/tick_stop.py|running-reviewer-ignored|    if reviewer_running\(payload, now\):|    if False:|def=idle_block
 src/mikemol/hooks/tick_stop.py|reviewer-folder-read-from-the-wrong-place|    folder = transcript\.with_suffix\(""\) / "subagents"|    folder = transcript.parent / "subagents"|def=reviewer_running
-src/mikemol/hooks/commit_kata.py|round-not-asked-at-submit|        or _round_refusal\(root\)|        or None|def=submit_problem
-src/mikemol/hooks/round_wire.py|wall-clock-judgement-never-refuses|    return round_reason\(directory, datetime\.now\(UTC\), None, trees=False\)|    return None|def=now_reason
+src/mikemol/hooks/commit_kata.py|round-not-asked-at-submit|        or _round_refusal\(root, stack_cards\(stack_file\)\)|        or None|def=submit_problem
+src/mikemol/hooks/round_wire.py|wall-clock-judgement-never-refuses|    return round_reason\(directory, datetime\.now\(UTC\), None, stack=stack\)|    return None|def=now_reason
 src/mikemol/hooks/commitments_emit.py|open-count-always-zero|            value = held\[repo\]\[layer\]|            value = 0|def=rows_of
 src/mikemol/hooks/commitments_emit.py|uncounted-layer-counted|        if layer in layers:|        if True:|def=rows_of
 src/mikemol/hooks/idle_progress.py|round-card-not-preferred|        if symbol in ready:|        if False:|def=idle_card
@@ -862,6 +862,12 @@ src/mikemol/hooks/round_wire.py|ready-card-in-the-gate-still-demanded|    waitin
 src/mikemol/hooks/round_wire.py|queued-card-still-outside| if symbol not in cited\]|]|def=refusals
 src/mikemol/hooks/round_wire.py|submission-map-ignored|directory\.name, now, in_gate\(directory\)\)|directory.name, now, frozenset())|def=round_reason
 src/mikemol/hooks/round_wire.py|repository-name-not-the-directory|text, directory\.name, now, in_gate|text, "", now, in_gate|def=round_reason
+src/mikemol/hooks/round_wire.py|a-card-the-stack-names-is-not-the-working-set|    if text_of\(card\.get\("symbol"\)\) in stack:|    if False:|def=_submitted_status
+src/mikemol/hooks/round_wire.py|a-stray-working-mark-still-counts-at-submit|return "building" if card|return "working" if card|def=_submitted_status
+src/mikemol/hooks/round_wire.py|the-submit-judges-marks-not-the-stack|held_trees\(directory\)\) if stack is None else|held_trees(directory)) if True else|def=round_reason
+src/mikemol/hooks/commit_kata.py|the-round-check-is-handed-no-stack|or _round_refusal\(root, stack_cards\(stack_file\)\)|or _round_refusal(root, frozenset())|def=submit_problem
+src/mikemol/hooks/pycheck_closure.py|a-hung-planner-raises-past-the-advice|isinstance\(caught, \(OSError, runproc\.TimeoutExpired\)\)|isinstance(caught, (OSError,))|def=run_planner
+src/mikemol/hooks/commit_kata.py|an-unreadable-stack-names-a-card|frozenset\(\) if isinstance\(items, str\)|frozenset({"W1"}) if isinstance(items, str)|def=stack_cards
 src/mikemol/hooks/round_wire.py|same-stamp-logged-again|    if kept and kept\[-1\] == line:|    if False:|def=note_stamp
 src/mikemol/hooks/round_wire.py|round-stamp-never-kept|        note_stamp\(directory, seen\)|        pass|def=round_reason
 src/mikemol/hooks/queuecarry.py|named-queue-file-carried-again|    added = \[p for p in sorted\(QUEUE_FILES\) if p not in named and _differs\(root, p, run\)\]|    added = [p for p in sorted(QUEUE_FILES) if _differs(root, p, run)]|def=carry
