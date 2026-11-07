@@ -419,9 +419,10 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # The snapshot is git plus a command the caller names, and its fixed namespaced path under /var/tmp is
 # the operator's ruling (2026-10-06), not an accident: a hardcoded temp path is the point.
 "src/mikemol/hooks/runproc.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]
-# ⚑ ONE RESPONSIBILITY EACH (W1461): the probe runs the pinned compiler (subprocess) and downloads it
-# from the https URL the repo's own MODULE.bazel pins (urlopen), verified by sha256 before it is opened.
-"src/mikemol/hooks/codon_probe.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "suspicious-url-open-usage"]
+# ⚑ ONE RESPONSIBILITY (W1461): the probe downloads the pinned compiler from the https URL the
+# repo's own MODULE.bazel pins (urlopen), verified by sha256 before it is opened; it runs the
+# compiler through runproc, so it holds no subprocess rule (W2219).
+"src/mikemol/hooks/codon_probe.py" = ["suspicious-url-open-usage"]
 "src/mikemol/hooks/new_dist_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "boolean-default-value-positional-argument", "boolean-type-hint-positional-argument"]
 "src/mikemol/hooks/presubmit.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 "src/mikemol/hooks/siblingcensus_cli.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true", "start-process-with-partial-path"]

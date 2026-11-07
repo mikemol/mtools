@@ -158,6 +158,12 @@ def test_the_compiler_child_runs_with_a_core_limit_of_one() -> None:
     assert codon_probe.run_codon(["/bin/sh", "-c", "ulimit -c"]) == (0, expected)
 
 
+def test_the_compiler_runner_returns_the_status_and_both_streams() -> None:
+    """A rejection is printed on standard error: the runner keeps it after standard output."""
+    script = "echo out; echo err >&2; exit 3"
+    assert codon_probe.run_codon(["/bin/sh", "-c", script]) == (3, "out\nerr\n")
+
+
 def test_main_refuses_a_download_that_is_not_the_pinned_bytes(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

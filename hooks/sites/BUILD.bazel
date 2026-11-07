@@ -12,6 +12,7 @@ test_suite(
         "//hooks/sites/src/mikemol/hooks/bazelshim:suite",
         "//hooks/sites/src/mikemol/hooks/bazelstop:suite",
         "//hooks/sites/src/mikemol/hooks/beat:suite",
+        "//hooks/sites/src/mikemol/hooks/birth_checks:suite",
         "//hooks/sites/src/mikemol/hooks/build_failure:suite",
         "//hooks/sites/src/mikemol/hooks/checker_context:suite",
         "//hooks/sites/src/mikemol/hooks/checkers:suite",

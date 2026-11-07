@@ -6113,3 +6113,13 @@
 2026-11-07T01:30:22Z  status W2322 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T01:35:23Z  status W2311 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T01:42:10Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:46:39Z  status W2309 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:46:51Z  status W2309 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:46:52Z  interrupt W2325 minted    -         "Leftover scratch tree mtools-W2309 holds uncommitted W1959 work (ratchet starting.py, test_starting.py, registry edits, base f36661fe): finish and land it under W1959 or save and close it, so W2309 can open its own tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2323
+2026-11-07T01:47:43Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:59:20Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T01:59:58Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T02:35:53Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T02:35:53Z  status W2311 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T02:36:30Z  status W2060 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T02:37:34Z  status W2309 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

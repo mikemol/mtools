@@ -18431,3 +18431,45 @@
   claim  = {The runner's two answers: the child's exit and output, and 127 where nothing starts.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogsink.py -k test_the_resolver_runner_keeps_status_and_stdout_and_says_127_for_no_program},
 }
+
+@misc{hooks-birth-checks-ratchet-file-not-at-head-is-a-birth-and-one-that-is-there-is-not,
+  section = {birth-checks},
+  title  = {The control and the failure: the path in HEAD's listing is named in the refusal},
+  claim  = {The control and the failure: the path in HEAD's listing is named in the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_birth_checks.py -k test_a_ratchet_file_not_at_head_is_a_birth_and_one_that_is_there_is_not},
+}
+
+@misc{hooks-birth-checks-entry-for-exactly-this-rise-passes,
+  section = {birth-checks},
+  title  = {The control: ratchet, old and new all equal},
+  claim  = {The control: ratchet, old and new all equal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_birth_checks.py -k test_an_entry_for_exactly_this_rise_passes},
+}
+
+@misc{hooks-birth-checks-missing-file-a-torn-file-and-a-different-rise-have-no-entry,
+  section = {birth-checks},
+  title  = {None, bytes that are not JSON, another value and another ratchet each refuse},
+  claim  = {None, bytes that are not JSON, another value and another ratchet each refuse.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_birth_checks.py -k test_a_missing_file_a_torn_file_and_a_different_rise_have_no_entry},
+}
+
+@misc{hooks-birth-checks-entry-must-cite-the-pinned-record,
+  section = {birth-checks},
+  title  = {The right record passes; another uuid or line is named in the refusal},
+  claim  = {The right record passes; another uuid or line is named in the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_birth_checks.py -k test_the_entry_must_cite_the_pinned_record},
+}
+
+@misc{hooks-birth-checks-no-entry-is-refused-by-the-record-check-too,
+  section = {birth-checks},
+  title  = {The record check does not pass an absent entry},
+  claim  = {The record check does not pass an absent entry.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_birth_checks.py -k test_no_entry_is_refused_by_the_record_check_too},
+}
+
+@misc{hooks-codon-probe-compiler-runner-returns-the-status-and-both-streams,
+  section = {codon_probe},
+  title  = {A rejection is printed on standard error: the runner keeps it after standard output},
+  claim  = {A rejection is printed on standard error: the runner keeps it after standard output.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codon_probe.py -k test_the_compiler_runner_returns_the_status_and_both_streams},
+}

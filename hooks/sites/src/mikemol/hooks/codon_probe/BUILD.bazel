@@ -11,6 +11,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
     ],
 )
@@ -23,6 +24,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
     ],
 )
@@ -35,6 +37,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
     ],
 )
@@ -47,6 +50,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
     ],
 )
@@ -59,6 +63,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
     ],
 )
@@ -71,6 +76,7 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
     ],
 )
@@ -83,6 +89,21 @@ mutant_site(
     data = [
         "//hooks:src/mikemol/hooks/__init__.py",
         "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:tests/test_codon_probe.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_a-rejection-on-standard-error-is-lost",
+    dist = "hooks",
+    site = "src/mikemol/hooks/codon_probe.py::a-rejection-on-standard-error-is-lost",
+    tests = "tests/test_codon_probe.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/codon_probe.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_codon_probe.py",
         "//hooks:mutants.regex",
     ],
@@ -98,6 +119,7 @@ test_suite(
         ":_options",
         ":main",
         ":declared_triple-quoted-text-kept-in-the-block",
+        ":declared_a-rejection-on-standard-error-is-lost",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

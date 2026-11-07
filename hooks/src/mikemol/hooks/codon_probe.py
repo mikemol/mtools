@@ -24,13 +24,14 @@ import http.client
 import io
 import re
 import shutil
-import subprocess
 import sys
 import tarfile
 import urllib.parse
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+
+from mikemol.hooks import runproc
 
 EXIT_USAGE = 2
 EXIT_REFUSED = 4
@@ -173,7 +174,7 @@ def run_codon(argv: Sequence[str]) -> tuple[int, str]:
     # and systemd-coredump logs the abort, which pages a host watcher. The limit is 1, NOT 0: with
     # core_pattern piped to the handler the kernel still invokes it at 0 (measured 2026-10-24).
     quiet = ["/bin/sh", "-c", 'ulimit -Sc 1 2>/dev/null; exec "$@"', "sh", *argv]
-    done = subprocess.run(quiet, capture_output=True, text=True, check=False)
+    done = runproc.run(quiet)
     return done.returncode, done.stdout + done.stderr
 
 

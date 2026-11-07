@@ -63,6 +63,13 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "src/mikemol/hooks/birth_checks.py": {
+      "imports": [
+        "src/mikemol/hooks/payload.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "src/mikemol/hooks/build_failure.py": {
       "imports": [
         "src/mikemol/hooks/payload.py",
@@ -102,7 +109,9 @@ GRAPH = {
       "typing_only": []
     },
     "src/mikemol/hooks/codon_probe.py": {
-      "imports": [],
+      "imports": [
+        "src/mikemol/hooks/runproc.py"
+      ],
       "reads": [],
       "typing_only": []
     },
@@ -1667,6 +1676,13 @@ GRAPH = {
     },
     "tests/test_bin_launchers_regular.py": {
       "imports": [],
+      "reads": [],
+      "typing_only": []
+    },
+    "tests/test_birth_checks.py": {
+      "imports": [
+        "src/mikemol/hooks/birth_checks.py"
+      ],
       "reads": [],
       "typing_only": []
     },

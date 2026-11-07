@@ -1079,4 +1079,10 @@ src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|            sha
 src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", line\)|        return line|def=_mask_line
 src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\("S", line\)\)\)|        return line|def=_mask_line
 src/mikemol/hooks/repin_admission.py|every-lock-package-is-a-mikemol-package|            inside = "mikemol" in line|            inside = True|def=_mikemol_lines
+src/mikemol/hooks/birth_checks.py|a-ratchet-already-at-head-is-a-birth|    if ratchet in head_paths:|    if False:|def=absent_at_head
+src/mikemol/hooks/birth_checks.py|an-entry-for-another-rise-is-this-rise|        if row\.get\("ratchet"\) == ratchet and row\.get\("old"\) == old and row\.get\("new"\) == new:|        if row.get("ratchet") == ratchet:|def=_entry_for
+src/mikemol/hooks/birth_checks.py|any-record-warrants-the-entry|    if entry\.get\("warrant"\) != record:|    if False:|def=warrant_matches
+src/mikemol/hooks/birth_checks.py|no-entry-passes-the-record-check|        return entry_matches\(text, ratchet, old, new\)|        return None|def=warrant_matches
+src/mikemol/hooks/birth_checks.py|an-absent-file-is-read-as-json|    if text is None:|    if False:|def=_entries
+src/mikemol/hooks/codon_probe.py|a-rejection-on-standard-error-is-lost|    return done\.returncode, done\.stdout \+ done\.stderr|    return done.returncode, done.stdout|def=run_codon
 src/mikemol/hooks/vlogsink.py|a-failed-resolver-reads-as-success|    return done\.returncode, done\.stdout|    return 0, done.stdout|def=run_resolver
