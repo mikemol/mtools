@@ -70,9 +70,11 @@ def test_the_printed_gen_warrants_step_is_the_form_the_generator_accepts(tmp_pat
 def test_a_refusal_leaves_the_tree_untouched(tmp_path: Path) -> None:
     """Bad name, existing directory and a missing template are each refused before any write."""
     _repo(tmp_path)
+    (tmp_path / "taken").mkdir()
     before = _snapshot(tmp_path)
     assert _run(tmp_path, "Bad", "d") == new_dist_cli.EXIT_REFUSED
     assert _run(tmp_path, "pathwalk", "d") == new_dist_cli.EXIT_REFUSED
+    assert _run(tmp_path, "taken", "d") == new_dist_cli.EXIT_REFUSED
     assert _run(tmp_path, "only") == new_dist_cli.EXIT_USAGE
     assert _snapshot(tmp_path) == before
     (tmp_path / "pathwalk" / "paper.toml").unlink()
